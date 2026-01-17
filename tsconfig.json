@@ -24,25 +24,25 @@
     ],
     "paths": {
       "@/*": [
-        "./*"
+        "./src/*"
       ],
       "@/constants": [
-        "./lib/constants"
+        "./src/lib/constants"
       ],
       "@/hooks": [
-        "./hooks"
+        "./src/hooks"
       ],
       "@/hooks/*": [
-        "./hooks/*"
+        "./src/hooks/*"
       ],
       "@/types": [
-        "./types/index"
+        "./src/types/index"
       ],
       "@/lib/*": [
-        "./lib/*"
+        "./src/lib/*"
       ],
       "@/views/*": [
-        "./views/*"
+        "./src/views/*"
       ]
     }
   },
