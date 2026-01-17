@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 40, "column": 0}, "map": {"version":3,"sources":["file:///Users/faraga4/Desktop/Moro/Personal/Projects/Findeg.com/27-10-2025ecommerceV2/proxy.ts"],"sourcesContent":["// Next.js 16 proxy.ts\n// This replaces middleware.ts for clearer network boundary semantics.\n\nexport default async function proxy(request: Request) {\n  const url = new URL(request.url);\n  \n  // Example: Handle locale detection or redirects\n  // For now, we just pass through\n  \n  return;\n}\n\nexport const config = {\n  matcher: [\n    /*\n     * Match all request paths except for the ones starting with:\n     * - api (API routes)\n     * - _next/static (static files)\n     * - _next/image (image optimization files)\n     * - favicon.ico (favicon file)\n     */\n    '/((?!api|_next/static|_next/image|favicon.ico).*)',\n  ],\n};\n"],"names":[],"mappings":"AAAA,sBAAsB;AACtB,sEAAsE;;;;;;;AAEvD,eAAe,MAAM,OAAgB;IAClD,MAAM,MAAM,IAAI,IAAI,QAAQ,GAAG;IAE/B,gDAAgD;IAChD,gCAAgC;IAEhC;AACF;AAEO,MAAM,SAAS;IACpB,SAAS;QACP;;;;;;KAMC,GACD;KACD;AACH"}}]
-}
