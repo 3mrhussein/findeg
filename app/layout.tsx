@@ -10,8 +10,39 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: 'FindEg.com - Modern E-commerce Platform',
-  description: 'Your one-stop shop for stationary, kids toys, and school supplies',
+  title: {
+    default: 'FindEg.com - Modern E-commerce Platform',
+    template: '%s | FindEg.com',
+  },
+  description: 'Your one-stop shop for stationary, kids toys, and school supplies. Find the best deals on high-quality products.',
+  keywords: ['ecommerce', 'stationary', 'toys', 'school supplies', 'online shopping', 'FindEg'],
+  authors: [{ name: 'FindEg Team' }],
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://findeg.com',
+    siteName: 'FindEg.com',
+    title: 'FindEg.com - Modern E-commerce Platform',
+    description: 'Your one-stop shop for stationary, kids toys, and school supplies.',
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'FindEg.com',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'FindEg.com - Modern E-commerce Platform',
+    description: 'Your one-stop shop for stationary, kids toys, and school supplies.',
+    images: ['/og-image.jpg'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export const viewport: Viewport = {
@@ -21,6 +52,15 @@ export const viewport: Viewport = {
   ],
 };
 
+/**
+ * The root layout component for the application.
+ * 
+ * This component wraps all pages and provides the base HTML structure,
+ * including the `html` and `body` tags. It also wraps the application
+ * with global providers (theme, context, etc.) and applies global styles.
+ * 
+ * @param {React.ReactNode} children - The content to render within the layout.
+ */
 export default function RootLayout({
   children,
 }: {

@@ -2,6 +2,14 @@ import React from 'react';
 import type { NavigationItem } from '@/types';
 import { Icon } from '@/components/atoms/Icon';
 
+/**
+ * Defines the main navigation structure of the application.
+ * 
+ * This schema is used to generate the header navigation menu, including the mega menu.
+ * It supports nested links, icons, and "New" badges.
+ * 
+ * @type {NavigationItem[]}
+ */
 export const navigationSchema: NavigationItem[] = [
     { labelKey: 'nav_shop', href: '/shop' },
     { 

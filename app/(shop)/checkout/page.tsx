@@ -1,5 +1,5 @@
-import CheckoutPage from '@/views/CheckoutPage';
+import CheckoutTemplate from '@/components/templates/CheckoutTemplate';
 
 export default function Page() {
-  return <CheckoutPage />;
+  return <CheckoutTemplate />;
 }

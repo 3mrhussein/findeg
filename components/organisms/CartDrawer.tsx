@@ -25,6 +25,15 @@ interface CartDrawerUIProps {
     onShopNow: () => void;
 }
 
+/**
+ * The shopping cart drawer component.
+ * 
+ * This component slides in from the right (or left in RTL) to display the contents
+ * of the shopping cart. It allows users to view items, update quantities, remove items,
+ * and proceed to checkout.
+ * 
+ * @param {CartDrawerUIProps} props - The component props.
+ */
 export const CartDrawerUI: React.FC<CartDrawerUIProps> = ({ 
     isOpen, 
     onToggle, 

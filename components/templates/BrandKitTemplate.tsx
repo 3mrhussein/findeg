@@ -1,7 +1,5 @@
-'use client';
-
 import React from 'react';
-import { useTranslation } from '@/hooks';
+import { getTranslation } from '@/lib/i18n-server';
 import { Container } from '@/components/layout/Container';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Logo } from '@/components/molecules/Logo';
@@ -18,8 +16,12 @@ const ColorSwatch = ({ name, colorClass, hex }: { name: string, colorClass: stri
     </div>
 );
 
-const BrandKitPage: React.FC = () => {
-    const { t } = useTranslation();
+interface BrandKitTemplateProps {
+  language?: 'en' | 'ar';
+}
+
+const BrandKitTemplate: React.FC<BrandKitTemplateProps> = ({ language = 'en' }) => {
+    const { t } = getTranslation(language);
 
     const lightColors = [
         { name: 'Primary', class: 'bg-primary', hex: '#14b8a6' },
@@ -148,4 +150,4 @@ const BrandKitPage: React.FC = () => {
     );
 };
 
-export default BrandKitPage;
+export default BrandKitTemplate;

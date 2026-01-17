@@ -1,3 +1,13 @@
+/**
+ * Centralized translation strings for the application.
+ * 
+ * This object contains all user-facing text, organized by language code ('en', 'ar').
+ * It is used by the `useTranslation` hook to provide internationalization support.
+ * 
+ * Pattern:
+ * - Keys should be descriptive (e.g., 'nav_home', 'product_add_to_cart').
+ * - Values are the actual text displayed to the user.
+ */
 export const translations = {
   en: {
     logo_aria_label: 'FindEg.com Homepage',

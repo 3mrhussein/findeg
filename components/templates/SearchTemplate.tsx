@@ -1,17 +1,17 @@
-'use client';
-
 import React from 'react';
-import { useSearchParams } from 'next/navigation';
-import { useTranslation } from '@/hooks';
+import { getTranslation } from '@/lib/i18n-server';
 import { Container } from '@/components/layout/Container';
 import { Grid } from '@/components/layout/Grid';
 import { ProductCard } from '@/components/molecules/ProductCard';
 import { products } from '@/constants';
 
-const SearchPage: React.FC = () => {
-    const { t } = useTranslation();
-    const searchParams = useSearchParams();
-    const searchQuery = searchParams.get('q') || '';
+interface SearchTemplateProps {
+  language?: 'en' | 'ar';
+  searchQuery?: string;
+}
+
+const SearchTemplate: React.FC<SearchTemplateProps> = ({ language = 'en', searchQuery = '' }) => {
+    const { t } = getTranslation(language);
 
     const filteredProducts = products.filter(product =>
         product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -52,4 +52,4 @@ const SearchPage: React.FC = () => {
     );
 };
 
-export default SearchPage;
+export default SearchTemplate;

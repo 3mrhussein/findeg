@@ -1,5 +1,5 @@
-import RegistrationPage from '@/views/RegistrationPage';
+import RegistrationTemplate from '@/components/templates/RegistrationTemplate';
 
 export default function Page() {
-  return <RegistrationPage />;
+  return <RegistrationTemplate />;
 }

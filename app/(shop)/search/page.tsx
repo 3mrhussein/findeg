@@ -1,10 +1,17 @@
 import { Suspense } from 'react';
-import SearchPage from '@/views/SearchPage';
+import SearchTemplate from '@/components/templates/SearchTemplate';
 
-export default function Page() {
+export default async function Page({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const { q } = await searchParams;
+  const query = typeof q === 'string' ? q : '';
+
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <SearchPage />
+      <SearchTemplate searchQuery={query} />
     </Suspense>
   );
 }

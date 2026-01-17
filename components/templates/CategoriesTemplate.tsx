@@ -1,13 +1,15 @@
-'use client';
-
 import React from 'react';
 import { categories } from '@/constants';
-import { useTranslation } from '@/hooks';
+import { getTranslation } from '@/lib/i18n-server';
 import { Container } from '@/components/layout/Container';
 import { CategoryCard } from '@/components/molecules/CategoryCard';
 
-const CategoriesPage: React.FC = () => {
-    const { t } = useTranslation();
+interface CategoriesTemplateProps {
+  language?: 'en' | 'ar';
+}
+
+const CategoriesTemplate: React.FC<CategoriesTemplateProps> = ({ language = 'en' }) => {
+    const { t } = getTranslation(language);
 
     return (
         <div className="bg-muted">
@@ -28,4 +30,4 @@ const CategoriesPage: React.FC = () => {
     );
 };
 
-export default CategoriesPage;
+export default CategoriesTemplate;

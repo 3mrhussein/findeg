@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
-const RegistrationPage: React.FC = () => {
+export const RegistrationContent: React.FC = () => {
     const { t } = useTranslation();
     const { login } = useUser();
     const router = useRouter();
@@ -112,5 +112,3 @@ const RegistrationPage: React.FC = () => {
         </div>
     );
 };
-
-export default RegistrationPage;

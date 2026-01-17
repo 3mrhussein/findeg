@@ -146,6 +146,15 @@ interface HeaderUIProps {
     onLogout: () => void;
 }
 
+/**
+ * The main header component for the application.
+ * 
+ * This component includes the logo, navigation menu, search bar, theme switcher,
+ * language switcher, cart button, and user account controls. It handles responsive
+ * design with a mobile menu drawer.
+ * 
+ * @param {HeaderUIProps} props - The component props.
+ */
 export const HeaderUI: React.FC<HeaderUIProps> = ({ 
     handleSearch,
     t,

@@ -1,5 +1,5 @@
-import BrandKitPage from '@/views/BrandKitPage';
+import BrandKitTemplate from '@/components/templates/BrandKitTemplate';
 
 export default function Page() {
-  return <BrandKitPage />;
+  return <BrandKitTemplate />;
 }

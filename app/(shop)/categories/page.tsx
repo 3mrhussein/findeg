@@ -1,5 +1,5 @@
-import CategoriesPage from '@/views/CategoriesPage';
+import CategoriesTemplate from '@/components/templates/CategoriesTemplate';
 
 export default function Page() {
-  return <CategoriesPage />;
+  return <CategoriesTemplate />;
 }

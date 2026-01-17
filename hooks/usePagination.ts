@@ -1,5 +1,13 @@
 import { useState, useMemo, useEffect } from 'react';
 
+/**
+ * Custom hook for handling pagination logic.
+ * 
+ * @template T - The type of data items.
+ * @param {T[]} data - The full array of data to paginate.
+ * @param {number} itemsPerPage - The number of items to display per page.
+ * @returns {object} An object containing pagination state and helper functions.
+ */
 export const usePagination = <T,>(data: T[], itemsPerPage: number) => {
     const [currentPage, setCurrentPage] = useState(1);
     

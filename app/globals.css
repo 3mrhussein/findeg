@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * Global CSS styles for the application.
+ * 
+ * This file imports Tailwind CSS directives and defines custom base styles
+ * and component classes. It uses CSS variables for theming (light/dark mode).
+ */
+
 @layer base {
   :root {
     --color-primary: 20 184 166;

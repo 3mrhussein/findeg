@@ -1,5 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 
+/**
+ * Custom hook for animating a number from 0 to a specified end value.
+ * 
+ * This hook uses `requestAnimationFrame` for smooth animation.
+ * 
+ * @param {number} endValue - The final value to count up to.
+ * @param {number} [duration=2000] - The duration of the animation in milliseconds.
+ * @returns {number} The current animated value.
+ */
 export const useCountUp = (endValue: number, duration: number = 2000): number => {
     const [count, setCount] = useState(0);
     // FIX: Pass undefined as the initial value to useRef to resolve the "Expected 1 arguments, but got 0" error.

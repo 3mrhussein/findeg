@@ -1,5 +1,5 @@
-import ShopPage from '@/views/ShopPage';
+import ShopTemplate from '@/components/templates/ShopTemplate';
 
 export default function Page() {
-  return <ShopPage />;
+  return <ShopTemplate />;
 }

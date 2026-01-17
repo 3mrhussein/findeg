@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-const CheckoutPage: React.FC = () => {
+export const CheckoutContent: React.FC = () => {
     const { t } = useTranslation();
     const { cartItems, cartTotal } = useCart();
     const router = useRouter();
@@ -74,5 +74,3 @@ const CheckoutPage: React.FC = () => {
         </div>
     );
 };
-
-export default CheckoutPage;

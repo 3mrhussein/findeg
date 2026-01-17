@@ -1,5 +1,12 @@
 import { Suspense } from 'react';
-import ProductDetailPage from '@/views/ProductDetailPage';
+import ProductDetailTemplate from '@/components/templates/ProductDetailTemplate';
+import { products } from '@/lib/constants';
+
+export async function generateStaticParams() {
+  return products.map((product) => ({
+    id: product.id.toString(),
+  }));
+}
 
 export default async function Page({
   params,
@@ -9,7 +16,7 @@ export default async function Page({
   const { id } = await params;
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <ProductDetailPage productId={parseInt(id)} />
+      <ProductDetailTemplate productId={parseInt(id)} />
     </Suspense>
   );
 }

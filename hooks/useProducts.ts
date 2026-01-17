@@ -1,6 +1,12 @@
 import { useState, useMemo } from 'react';
 import type { Product, SortOption } from '@/types';
 
+/**
+ * Custom hook for managing product filtering and sorting.
+ * 
+ * @param {Product[]} initialProducts - The initial list of products.
+ * @returns {object} An object containing the sorted products, current sort option, and state setters.
+ */
 export const useProducts = (initialProducts: Product[]) => {
     const [filteredProducts, setFilteredProducts] = useState<Product[]>(initialProducts);
     const [sortOption, setSortOption] = useState<SortOption>('featured');

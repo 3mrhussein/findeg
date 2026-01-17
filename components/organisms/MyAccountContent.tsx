@@ -22,7 +22,7 @@ const OrderStatusBadge: React.FC<{status: string}> = ({ status }) => {
     return <span className={`px-2 py-1 text-xs font-medium rounded-full ${statusClasses[status]}`}>{status}</span>
 }
 
-const MyAccountPage: React.FC = () => {
+export const MyAccountContent: React.FC = () => {
     const { t } = useTranslation();
     const { currentUser, isLoggedIn, logout } = useUser();
     const router = useRouter();
@@ -143,5 +143,3 @@ const MyAccountPage: React.FC = () => {
         </div>
     );
 };
-
-export default MyAccountPage;

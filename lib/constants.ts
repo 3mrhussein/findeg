@@ -1,5 +1,28 @@
 import type { Product, Order, Review } from '@/types';
 
+/**
+ * Centralized configuration and mock data.
+ * 
+ * This file contains structured data used throughout the application, such as:
+ * - Product lists (mock database)
+ * - Navigation menus
+ * - FAQ items
+ * - Cookie settings
+ * 
+ * Pattern:
+ * - Data here defines the *structure* and *logic* (e.g., links, IDs, prices).
+ * - Text labels often use keys (e.g., `labelKey`) that map to `lib/i18n.ts`.
+ *   This separates data from presentation text, enabling easy translation.
+ */
+
+/**
+ * Mock data for products.
+ * 
+ * This array simulates a database of products, including details like price, description,
+ * category, and variants.
+ * 
+ * @type {Product[]}
+ */
 export const products: Product[] = [
   {
     id: 1,

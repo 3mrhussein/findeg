@@ -1,7 +1,5 @@
-'use client';
-
 import React from 'react';
-import { useTranslation } from '@/hooks';
+import { getTranslation } from '@/lib/i18n-server';
 import { Container } from '@/components/layout/Container';
 import { BrandShowcase } from '@/components/molecules/BrandShowcase';
 import { Button } from '@/components/ui/button';
@@ -11,8 +9,12 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
 
-const AboutPage: React.FC = () => {
-    const { t } = useTranslation();
+interface AboutTemplateProps {
+  language?: 'en' | 'ar';
+}
+
+const AboutTemplate: React.FC<AboutTemplateProps> = ({ language = 'en' }) => {
+    const { t } = getTranslation(language);
 
     const values = [
         { key: 'quality', title: t('about_value_quality'), text: t('about_value_quality_text') },
@@ -126,4 +128,4 @@ const AboutPage: React.FC = () => {
     );
 };
 
-export default AboutPage;
+export default AboutTemplate;

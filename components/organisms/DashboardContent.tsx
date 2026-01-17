@@ -6,13 +6,12 @@ import { useTranslation } from '@/hooks';
 import { Logo } from '@/components/molecules/Logo';
 import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/atoms/Icon';
-import { Overview } from './dashboard/Overview';
-import { Products } from './dashboard/Products';
-import { Orders } from './dashboard/Orders';
-import { Customers } from './dashboard/Customers';
+import { Overview } from '@/views/dashboard/Overview';
+import { Products } from '@/views/dashboard/Products';
+import { Orders } from '@/views/dashboard/Orders';
+import { Customers } from '@/views/dashboard/Customers';
 import { Tooltip } from '@/components/molecules/Tooltip';
 import { cn } from '@/lib/utils';
-
 
 type DashboardView = 'overview' | 'products' | 'orders' | 'customers';
 
@@ -41,7 +40,7 @@ const LogoIcon = () => (
       </svg>
 )
 
-const DashboardPage: React.FC = () => {
+export const DashboardContent: React.FC = () => {
     const { t, language } = useTranslation();
     const router = useRouter();
     const [activeView, setActiveView] = useState<DashboardView>('overview');
@@ -147,5 +146,3 @@ const DashboardPage: React.FC = () => {
         </div>
     );
 };
-
-export default DashboardPage;
