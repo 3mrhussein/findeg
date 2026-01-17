@@ -1,0 +1,31 @@
+import React from 'react';
+import { useTranslation, usePagination } from '../../hooks';
+import { orders as allOrders } from '../../constants';
+import { OrderTable } from '../../components/organisms/OrderTable';
+import { Pagination } from '../../components/molecules/Pagination';
+import { Card, CardContent } from '../../components/ui/card';
+
+export const Orders: React.FC = () => {
+    const { t } = useTranslation();
+    const {
+        currentPage,
+        totalPages,
+        currentPageData,
+        setCurrentPage,
+    } = usePagination(allOrders, 10);
+
+    return (
+        <>
+            <Card>
+                <CardContent className="p-0">
+                    <OrderTable orders={currentPageData} />
+                </CardContent>
+            </Card>
+             <Pagination 
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+            />
+        </>
+    );
+};
