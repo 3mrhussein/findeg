@@ -1,0 +1,18 @@
+{
+  "status": 200,
+  "headers": {
+    "link": "</_next/static/media/47fe1b7cd6e6ed85-s.p.855a563b.woff2>; rel=preload; as=\"font\"; crossorigin=\"\"; type=\"font/woff2\", </_next/static/media/8e6fa89aa22d24ec-s.p.3aec397d.woff2>; rel=preload; as=\"font\"; crossorigin=\"\"; type=\"font/woff2\", </_next/static/media/a218039a3287bcfd-s.p.4a23d71b.woff2>; rel=preload; as=\"font\"; crossorigin=\"\"; type=\"font/woff2\", </_next/static/media/e2334d715941921e-s.p.d82a9aff.woff2>; rel=preload; as=\"font\"; crossorigin=\"\"; type=\"font/woff2\", <https://picsum.photos/seed/aboutus/800/600>; rel=preload; as=\"image\", <https://tailwindui.com/img/logos/158x48/transistor-logo-gray-400.svg>; rel=preload; as=\"image\", <https://tailwindui.com/img/logos/158x48/reform-logo-gray-400.svg>; rel=preload; as=\"image\", <https://tailwindui.com/img/logos/158x48/tuple-logo-gray-400.svg>; rel=preload; as=\"image\", <https://tailwindui.com/img/logos/158x48/savvycal-logo-gray-400.svg>; rel=preload; as=\"image\", <https://tailwindui.com/img/logos/158x48/statamic-logo-gray-400.svg>; rel=preload; as=\"image\"",
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/(shop)/layout,_N_T_/(shop)/about/layout,_N_T_/(shop)/about/page,_N_T_/about"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/!KHNob3Ap/about/__PAGE__",
+    "/!KHNob3Ap/about",
+    "/!KHNob3Ap",
+    "/_index",
+    "/_head"
+  ]
+}

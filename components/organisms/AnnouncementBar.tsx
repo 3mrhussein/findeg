@@ -1,7 +1,8 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-// FIX: Use the Icon component instead of a non-existent XIcon export.
 import { Icon } from '../atoms/Icon';
-import { useTranslation } from '../../hooks';
+import { useTranslation } from '@/hooks';
 
 interface AnnouncementBarUIProps {
     isVisible: boolean;
@@ -25,7 +26,6 @@ export const AnnouncementBarUI: React.FC<AnnouncementBarUIProps> = ({ isVisible,
                         aria-label={closeLabel}
                         className="absolute ltr:right-0 rtl:left-0 p-1 rounded-full hover:bg-white/20 transition-colors"
                     >
-                        {/* FIX: Use the Icon component with the 'x' name. */}
                         <Icon name="x" className="w-4 h-4" />
                     </button>
                 </div>
@@ -34,7 +34,6 @@ export const AnnouncementBarUI: React.FC<AnnouncementBarUIProps> = ({ isVisible,
     );
 };
 
-// FIX: Add container component to handle logic and provide props to UI component.
 export const AnnouncementBar: React.FC = () => {
     const { t } = useTranslation();
     const [isVisible, setIsVisible] = useState(false);

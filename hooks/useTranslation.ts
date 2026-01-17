@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { I18nContext } from '../contexts';
+import { I18nContext } from '@/components/providers/I18nProvider';
 
 export const useTranslation = () => {
   const context = useContext(I18nContext);

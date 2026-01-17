@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import type { Product, SortOption } from '../types';
+import type { Product, SortOption } from '@/types';
 
 export const useProducts = (initialProducts: Product[]) => {
     const [filteredProducts, setFilteredProducts] = useState<Product[]>(initialProducts);

@@ -1,6 +1,8 @@
+'use client';
+
 import React from 'react';
 import { Button } from '../ui/button';
-import { useTranslation } from '../../hooks';
+import { useTranslation } from '@/hooks';
 import { Icon } from '../atoms/Icon';
 
 interface PaginationProps {

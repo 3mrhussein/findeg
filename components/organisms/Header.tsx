@@ -1,14 +1,18 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Logo } from '../molecules/Logo';
 import {
   navigationSchema,
-} from '../../constants';
+} from '@/lib/navigation';
 import { Button } from '../ui/button';
-import type { NavigationItem, Page, PageProps, Theme } from '../../types';
+import type { NavigationItem, Theme } from '@/types';
 import { CartDrawer } from './CartDrawer';
 import { Badge } from '../atoms/Badge';
 import { IndicatorCircle } from '../atoms/IndicatorCircle';
-import { useTranslation, useTheme, useCart, useUser } from '../../hooks';
+import { useTranslation, useTheme, useCart, useUser } from '@/hooks';
 import { Icon } from '../atoms/Icon';
 import { Input } from '../ui/input';
 
@@ -39,22 +43,19 @@ const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({ theme, onToggleTheme }) =
 interface NavLinkProps {
     item: NavigationItem;
     onClick: () => void;
-    navigateTo: PageProps['navigateTo'];
-    t: (key: string) => string;
+    t: (key: any) => string;
 }
-const NavLink: React.FC<NavLinkProps> = ({ item, onClick, navigateTo, t }) => {
+const NavLink: React.FC<NavLinkProps> = ({ item, onClick, t }) => {
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
+  const router = useRouter();
 
   const handleClick = (e: React.MouseEvent, href: string) => {
-    e.preventDefault();
-
     if (item.labelKey === 'nav_ai_generator') {
-        navigateTo('home');
+        e.preventDefault();
+        router.push('/');
         setTimeout(() => {
             document.querySelector('#ai-generator')?.scrollIntoView({ behavior: 'smooth' });
         }, 100);
-    } else if (href && href !== '#') {
-        navigateTo(href as any);
     }
     
     onClick();
@@ -67,9 +68,13 @@ const NavLink: React.FC<NavLinkProps> = ({ item, onClick, navigateTo, t }) => {
         onMouseEnter={() => setIsMegaMenuOpen(true)}
         onMouseLeave={() => setIsMegaMenuOpen(false)}
       >
-        <a href={item.href} onClick={(e) => handleClick(e, item.href)} className="relative text-foreground hover:text-primary transition-colors font-medium group text-lg md:text-base flex items-center gap-1">
+        <Link 
+          href={item.href} 
+          onClick={(e) => handleClick(e, item.href)} 
+          className="relative text-foreground hover:text-primary transition-colors font-medium group text-lg md:text-base flex items-center gap-1"
+        >
           {t(item.labelKey)} <Icon name="chevronDown" className="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" />
-        </a>
+        </Link>
         {isMegaMenuOpen && (
           <div className="absolute top-full ltr:left-1/2 rtl:right-1/2 ltr:-translate-x-1/2 rtl:translate-x-1/2 mt-2 w-max max-w-4xl bg-card rounded-lg shadow-lg border p-6 z-50">
             <div className="grid grid-cols-3 gap-x-12 gap-y-6">
@@ -79,17 +84,25 @@ const NavLink: React.FC<NavLinkProps> = ({ item, onClick, navigateTo, t }) => {
                   <ul className="space-y-3">
                     {col.links.map(link => (
                       <li key={link.labelKey}>
-                        <a href={link.href} onClick={(e) => handleClick(e, link.href)} className="text-muted-foreground hover:text-primary transition-colors flex items-center justify-between">
+                        <Link 
+                          href={link.href} 
+                          onClick={(e) => handleClick(e, link.href)} 
+                          className="text-muted-foreground hover:text-primary transition-colors flex items-center justify-between"
+                        >
                           {t(link.labelKey)}
                           {link.isNew && <Badge variant="primary" className="ltr:ml-2 rtl:mr-2">NEW</Badge>}
-                        </a>
+                        </Link>
                         {link.subLinks && (
                           <ul className="ltr:pl-4 rtl:pr-4 mt-2 space-y-2 border-l-2 border-border ltr:border-l-primary rtl:border-r-primary">
                             {link.subLinks.map(sub => (
                               <li key={sub.labelKey}>
-                                <a href={sub.href} onClick={(e) => handleClick(e, sub.href)} className="flex items-center gap-2 text-sm text-muted-foreground/80 hover:text-primary">
+                                <Link 
+                                  href={sub.href} 
+                                  onClick={(e) => handleClick(e, sub.href)} 
+                                  className="flex items-center gap-2 text-sm text-muted-foreground/80 hover:text-primary"
+                                >
                                   {sub.icon} {t(sub.labelKey)}
-                                </a>
+                                </Link>
                               </li>
                             ))}
                           </ul>
@@ -107,18 +120,21 @@ const NavLink: React.FC<NavLinkProps> = ({ item, onClick, navigateTo, t }) => {
   }
   
   return (
-    <a href={item.href} onClick={(e) => handleClick(e, item.href)} className="relative text-foreground hover:text-primary transition-colors font-medium group text-lg md:text-base">
+    <Link 
+      href={item.href} 
+      onClick={(e) => handleClick(e, item.href)} 
+      className="relative text-foreground hover:text-primary transition-colors font-medium group text-lg md:text-base"
+    >
       {t(item.labelKey)}
       <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
-    </a>
+    </Link>
   );
 };
 
 
 interface HeaderUIProps {
-    navigateTo: (page: Page, productId?: number) => void;
     handleSearch: (query: string) => void;
-    t: (key: string, options?: { [key: string]: string | number }) => string;
+    t: (key: any, options?: { [key: string]: string | number }) => string;
     language: string;
     onToggleLanguage: () => void;
     theme: Theme;
@@ -131,7 +147,6 @@ interface HeaderUIProps {
 }
 
 export const HeaderUI: React.FC<HeaderUIProps> = ({ 
-    navigateTo, 
     handleSearch,
     t,
     language,
@@ -146,6 +161,7 @@ export const HeaderUI: React.FC<HeaderUIProps> = ({
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const router = useRouter();
 
   const onSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -160,7 +176,7 @@ export const HeaderUI: React.FC<HeaderUIProps> = ({
     document.body.style.overflow = isMenuOpen || isCartOpen ? 'hidden' : 'auto';
   }, [isMenuOpen, isCartOpen]);
 
-  const mainNavItems = navigationSchema.filter(item => isLoggedIn || (item.href !== 'my-account' && item.href !== 'dashboard'));
+  const mainNavItems = navigationSchema.filter(item => isLoggedIn || (item.href !== '/my-account' && item.href !== '/dashboard'));
 
   return (
     <>
@@ -168,11 +184,11 @@ export const HeaderUI: React.FC<HeaderUIProps> = ({
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="flex w-full justify-between items-center py-4 gap-4">
             <div className="flex-shrink-0">
-                <Logo navigateTo={navigateTo} />
+                <Logo />
             </div>
             
             <nav className="hidden md:flex items-center gap-8">
-              {mainNavItems.map(item => <NavLink key={item.labelKey} item={item} onClick={() => setIsMenuOpen(false)} navigateTo={navigateTo} t={t} />)}
+              {mainNavItems.map(item => <NavLink key={item.labelKey} item={item} onClick={() => setIsMenuOpen(false)} t={t} />)}
             </nav>
             
             <div className="flex items-center space-x-2">
@@ -201,10 +217,10 @@ export const HeaderUI: React.FC<HeaderUIProps> = ({
                <div className="hidden sm:flex items-center gap-2">
                 {!isLoggedIn ? (
                   <>
-                    <Button variant="ghost" onClick={() => navigateTo('registration')}>
+                    <Button variant="ghost" onClick={() => router.push('/registration')}>
                         {t('header_signin_button')}
                     </Button>
-                    <Button onClick={() => navigateTo('registration')}>
+                    <Button onClick={() => router.push('/registration')}>
                         {t('header_signup_button')}
                     </Button>
                   </>
@@ -231,7 +247,7 @@ export const HeaderUI: React.FC<HeaderUIProps> = ({
       <div className={`fixed inset-0 bg-card z-50 transform ${isMenuOpen ? 'translate-x-0' : 'ltr:translate-x-full rtl:-translate-x-full'} transition-transform duration-300 ease-in-out md:hidden`}>
         <div className="container mx-auto px-4 flex flex-col h-full">
             <div className="flex justify-between items-center py-4 border-b">
-                <Logo navigateTo={navigateTo}/>
+                <Logo />
                 <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(false)} aria-label="Close menu">
                     <Icon name="x" className="w-6 h-6 text-foreground" />
                 </Button>
@@ -251,7 +267,7 @@ export const HeaderUI: React.FC<HeaderUIProps> = ({
               </form>
             </div>
             <nav className="flex flex-col items-start space-y-6 p-4">
-                {mainNavItems.map(item => <NavLink key={item.labelKey} item={item} onClick={() => setIsMenuOpen(false)} navigateTo={navigateTo} t={t} />)}
+                {mainNavItems.map(item => <NavLink key={item.labelKey} item={item} onClick={() => setIsMenuOpen(false)} t={t} />)}
             </nav>
             <div className="mt-auto p-4 border-t">
                 <div className="flex justify-around items-center mb-4">
@@ -260,10 +276,10 @@ export const HeaderUI: React.FC<HeaderUIProps> = ({
                 </div>
                 {!isLoggedIn ? (
                   <>
-                    <Button size="lg" className="w-full" onClick={() => {setIsMenuOpen(false); navigateTo('registration');}}>
+                    <Button size="lg" className="w-full" onClick={() => {setIsMenuOpen(false); router.push('/registration');}}>
                         {t('header_signup_button')}
                     </Button>
-                    <Button variant="outline" size="lg" className="w-full mt-2" onClick={() => {setIsMenuOpen(false); navigateTo('registration');}}>
+                    <Button variant="outline" size="lg" className="w-full mt-2" onClick={() => {setIsMenuOpen(false); router.push('/registration');}}>
                         {t('header_signin_button')}
                     </Button>
                   </>
@@ -275,21 +291,17 @@ export const HeaderUI: React.FC<HeaderUIProps> = ({
             </div>
         </div>
       </div>
-      <CartDrawer navigateTo={navigateTo} />
+      <CartDrawer />
     </>
   );
 };
 
-interface HeaderProps {
-    navigateTo: (page: Page, productId?: number) => void;
-    handleSearch: (query: string) => void;
-}
-
-export const Header: React.FC<HeaderProps> = ({ navigateTo, handleSearch }) => {
+export const Header: React.FC = () => {
   const { t, language, setLanguage } = useTranslation();
   const { theme, setTheme } = useTheme();
   const { cartCount, isCartOpen, toggleCart } = useCart();
   const { isLoggedIn, logout } = useUser();
+  const router = useRouter();
 
   const handleToggleLanguage = () => {
     setLanguage(language === 'en' ? 'ar' : 'en');
@@ -301,12 +313,15 @@ export const Header: React.FC<HeaderProps> = ({ navigateTo, handleSearch }) => {
   
   const handleLogout = () => {
     logout();
-    navigateTo('home');
+    router.push('/');
   }
+
+  const handleSearch = (query: string) => {
+    router.push(`/search?q=${encodeURIComponent(query)}`);
+  };
 
   return (
     <HeaderUI
-      navigateTo={navigateTo}
       handleSearch={handleSearch}
       t={t}
       language={language}

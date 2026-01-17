@@ -1,18 +1,18 @@
+'use client';
+
 import React from 'react';
-// FIX: Import the Logo container component.
+import Link from 'next/link';
 import { Logo } from '../molecules/Logo';
-import type { Page, PageProps } from '../../types';
-import { useTranslation } from '../../hooks';
+import { useTranslation } from '@/hooks';
 import { Button } from '../ui/button';
 import { Icon, IconName } from '../atoms/Icon';
 
 interface FooterLink {
     label: string;
-    page: (page: Page, productId?: number) => void;
-    pageName: Page;
+    href: string;
 }
 
-interface FooterUIProps extends PageProps {
+interface FooterUIProps {
     onSettingsClick: () => void;
     tagline: string;
     shopTitle: string;
@@ -25,7 +25,6 @@ interface FooterUIProps extends PageProps {
 }
 
 export const FooterUI: React.FC<FooterUIProps> = ({ 
-    navigateTo, 
     onSettingsClick,
     tagline,
     shopTitle,
@@ -47,7 +46,7 @@ export const FooterUI: React.FC<FooterUIProps> = ({
       <div className="container mx-auto px-4 pt-16 pb-8">
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
           <div className="col-span-2 lg:col-span-1">
-            <Logo navigateTo={navigateTo} />
+            <Logo />
             <p className="mt-4 text-white/80">
               {tagline}
             </p>
@@ -56,7 +55,11 @@ export const FooterUI: React.FC<FooterUIProps> = ({
             <h4 className="font-semibold text-lg mb-4">{shopTitle}</h4>
             <ul className="space-y-2">
               {shopLinks.map(link => (
-                  <li key={link.label}><a href="#" onClick={(e) => { e.preventDefault(); link.page(link.pageName)}} className="text-white/80 hover:text-white transition-colors">{link.label}</a></li>
+                  <li key={link.label}>
+                    <Link href={link.href} className="text-white/80 hover:text-white transition-colors">
+                      {link.label}
+                    </Link>
+                  </li>
               ))}
             </ul>
           </div>
@@ -64,7 +67,11 @@ export const FooterUI: React.FC<FooterUIProps> = ({
             <h4 className="font-semibold text-lg mb-4">{aboutTitle}</h4>
             <ul className="space-y-2">
                {aboutLinks.map(link => (
-                  <li key={link.label}><a href="#" onClick={(e) => { e.preventDefault(); link.page(link.pageName)}} className="text-white/80 hover:text-white transition-colors">{link.label}</a></li>
+                  <li key={link.label}>
+                    <Link href={link.href} className="text-white/80 hover:text-white transition-colors">
+                      {link.label}
+                    </Link>
+                  </li>
               ))}
             </ul>
           </div>
@@ -80,7 +87,7 @@ export const FooterUI: React.FC<FooterUIProps> = ({
           </div>
         </div>
         <div className="mt-12 border-t border-white/20 pt-8 flex flex-col sm:flex-row justify-between items-center text-center text-white/70">
-          <p>&copy; {new Date().getFullYear()} FindEg.com. {copyrightText}</p>
+          <p>&copy; 2024 FindEg.com. {copyrightText}</p>
           <Button 
             variant="link"
             onClick={onSettingsClick} 
@@ -94,28 +101,26 @@ export const FooterUI: React.FC<FooterUIProps> = ({
   );
 };
 
-// FIX: Add container component to handle logic and provide props to UI component.
-interface FooterProps extends PageProps {
+interface FooterProps {
     onSettingsClick: () => void;
 }
-export const Footer: React.FC<FooterProps> = ({ navigateTo, onSettingsClick }) => {
+export const Footer: React.FC<FooterProps> = ({ onSettingsClick }) => {
     const { t } = useTranslation();
 
     const shopLinks: FooterLink[] = [
-        { label: t('nav_shop'), page: navigateTo, pageName: 'shop' },
-        { label: t('nav_categories'), page: navigateTo, pageName: 'categories' },
-        { label: t('featured_products_title'), page: navigateTo, pageName: 'shop' },
+        { label: t('nav_shop'), href: '/shop' },
+        { label: t('nav_categories'), href: '/categories' },
+        { label: t('featured_products_title'), href: '/shop' },
     ];
     const aboutLinks: FooterLink[] = [
-        { label: t('footer_about_story'), page: navigateTo, pageName: 'about' },
-        { label: t('footer_about_contact'), page: navigateTo, pageName: 'about' },
-        { label: t('faq_title'), page: navigateTo, pageName: 'shop' },
-        { label: t('nav_brand_kit'), page: navigateTo, pageName: 'brand-kit' }
+        { label: t('footer_about_story'), href: '/about' },
+        { label: t('footer_about_contact'), href: '/about' },
+        { label: t('faq_title'), href: '/shop' },
+        { label: t('nav_brand_kit'), href: '/brand-kit' }
     ];
 
     return (
         <FooterUI
-            navigateTo={navigateTo}
             onSettingsClick={onSettingsClick}
             tagline={t('footer_tagline')}
             shopTitle={t('footer_shop_title')}

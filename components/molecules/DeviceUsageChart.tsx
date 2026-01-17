@@ -1,5 +1,7 @@
+'use client';
+
 import React from 'react';
-import { useTranslation } from '../../hooks';
+import { useTranslation } from '@/hooks';
 
 interface DeviceData {
     name: string;
@@ -73,7 +75,6 @@ export const DeviceUsageChartUI: React.FC<DeviceUsageChartUIProps> = ({ data, ti
     );
 };
 
-// FIX: Add container component to handle logic and provide props to UI component.
 interface DeviceUsageChartProps {
     data: DeviceData[];
 }

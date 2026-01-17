@@ -1,6 +1,8 @@
+'use client';
+
 import React from 'react';
-import type { Category } from '../../types';
-import { useTranslation } from '../../hooks';
+import type { Category } from '@/types';
+import { useTranslation } from '@/hooks';
 
 interface CategoryCardUIProps {
   category: Category;
@@ -21,7 +23,6 @@ export const CategoryCardUI: React.FC<CategoryCardUIProps> = ({ category, name, 
   );
 };
 
-// FIX: Add container component to handle logic and provide props to UI component.
 interface CategoryCardProps {
     category: Category;
 }

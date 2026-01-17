@@ -1,10 +1,12 @@
-import React from 'react';
-import { Button } from '../ui/button';
-import type { PageProps } from '../../types';
-import { Container } from '../layout/Container';
-import { useTranslation } from '../../hooks';
+'use client';
 
-interface HeroUIProps extends PageProps {
+import React from 'react';
+import { useRouter } from 'next/navigation';
+import { Button } from '../ui/button';
+import { Container } from '../layout/Container';
+import { useTranslation } from '@/hooks';
+
+interface HeroUIProps {
     imageUrl?: string;
     titlePart1: string;
     titleLearning: string;
@@ -12,17 +14,18 @@ interface HeroUIProps extends PageProps {
     subtitle: string;
     shopButtonText: string;
     exploreButtonText: string;
+    onShopClick: () => void;
 }
 
 export const HeroUI: React.FC<HeroUIProps> = ({ 
-    navigateTo, 
     imageUrl, 
     titlePart1, 
     titleLearning, 
     titlePlay,
     subtitle,
     shopButtonText,
-    exploreButtonText
+    exploreButtonText,
+    onShopClick
 }) => {
   return (
     <section className="bg-muted dark:bg-card/50 overflow-hidden">
@@ -36,7 +39,7 @@ export const HeroUI: React.FC<HeroUIProps> = ({
                         {subtitle}
                     </p>
                     <div className="mt-10 flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
-                        <Button size="lg" onClick={() => navigateTo('shop')}>{shopButtonText}</Button>
+                        <Button size="lg" onClick={onShopClick}>{shopButtonText}</Button>
                         <Button variant="outline" size="lg" onClick={() => document.querySelector('#categories')?.scrollIntoView({ behavior: 'smooth' })}>{exploreButtonText}</Button>
                     </div>
                 </div>
@@ -58,16 +61,20 @@ export const HeroUI: React.FC<HeroUIProps> = ({
   );
 };
 
-// FIX: Add container component to handle logic and provide props to UI component.
-interface HeroProps extends PageProps {
+interface HeroProps {
     imageUrl?: string;
 }
 
-export const Hero: React.FC<HeroProps> = ({ navigateTo, imageUrl }) => {
+export const Hero: React.FC<HeroProps> = ({ imageUrl }) => {
     const { t } = useTranslation();
+    const router = useRouter();
+
+    const handleShopClick = () => {
+        router.push('/shop');
+    };
+
     return (
         <HeroUI
-            navigateTo={navigateTo}
             imageUrl={imageUrl}
             titlePart1={t('hero_title_part1')}
             titleLearning={t('hero_title_learning')}
@@ -75,6 +82,7 @@ export const Hero: React.FC<HeroProps> = ({ navigateTo, imageUrl }) => {
             subtitle={t('hero_subtitle')}
             shopButtonText={t('hero_button_shop')}
             exploreButtonText={t('hero_button_explore')}
+            onShopClick={handleShopClick}
         />
     );
 };

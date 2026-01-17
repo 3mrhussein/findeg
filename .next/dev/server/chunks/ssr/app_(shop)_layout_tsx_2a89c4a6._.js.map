@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///Users/faraga4/Desktop/Moro/Personal/Projects/Findeg.com/27-10-2025ecommerceV2/app/%28shop%29/layout.tsx"],"sourcesContent":["import { Suspense } from 'react';\n\nexport default function ShopLayout({\n  children,\n}: {\n  children: React.ReactNode;\n}) {\n  return (\n    <>\n      <AnnouncementBar />\n      <Header />\n      <main className=\"flex-grow\">\n        <Suspense fallback={null}>\n          {children}\n        </Suspense>\n      </main>\n      <ShopClientLayout />\n      <Chatbot />\n    </>\n  );\n}\n"],"names":[],"mappings":";;;;;AAAA;;;AAEe,SAAS,WAAW,EACjC,QAAQ,EAGT;IACC,qBACE;;0BACE,8OAAC;;;;;0BACD,8OAAC;;;;;0BACD,8OAAC;gBAAK,WAAU;0BACd,cAAA,8OAAC,iNAAQ;oBAAC,UAAU;8BACjB;;;;;;;;;;;0BAGL,8OAAC;;;;;0BACD,8OAAC;;;;;;;AAGP"}}]
+}

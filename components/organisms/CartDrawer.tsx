@@ -1,11 +1,14 @@
+'use client';
+
 import React from 'react';
-import type { PageProps, CartItem } from '../../types';
+import { useRouter } from 'next/navigation';
+import type { CartItem } from '@/types';
 import { Button } from '../ui/button';
 import { QuantityInput } from '../atoms/QuantityInput';
-import { useCart, useTranslation } from '../../hooks';
+import { useCart, useTranslation } from '@/hooks';
 import { Icon } from '../atoms/Icon';
 
-interface CartDrawerUIProps extends PageProps {
+interface CartDrawerUIProps {
     isOpen: boolean;
     onToggle: () => void;
     items: CartItem[];
@@ -18,10 +21,11 @@ interface CartDrawerUIProps extends PageProps {
     checkoutText: string;
     removeItemText: string;
     shopNowText: string;
+    onCheckout: () => void;
+    onShopNow: () => void;
 }
 
 export const CartDrawerUI: React.FC<CartDrawerUIProps> = ({ 
-    navigateTo, 
     isOpen, 
     onToggle, 
     items, 
@@ -33,13 +37,10 @@ export const CartDrawerUI: React.FC<CartDrawerUIProps> = ({
     subtotalText,
     checkoutText,
     removeItemText,
-    shopNowText
+    shopNowText,
+    onCheckout,
+    onShopNow
 }) => {
-    const handleCheckout = () => {
-        onToggle();
-        navigateTo('checkout');
-    }
-    
     return (
         <>
             {/* Overlay */}
@@ -86,13 +87,13 @@ export const CartDrawerUI: React.FC<CartDrawerUIProps> = ({
                                     <span>{subtotalText}</span>
                                     <span>${total.toFixed(2)}</span>
                                 </div>
-                                <Button size="lg" className="w-full" onClick={handleCheckout}>{checkoutText}</Button>
+                                <Button size="lg" className="w-full" onClick={onCheckout}>{checkoutText}</Button>
                             </div>
                         </>
                     ) : (
                         <div className="flex-grow flex flex-col items-center justify-center text-center p-6">
                             <p className="text-muted-foreground">{emptyText}</p>
-                            <Button onClick={() => {onToggle(); navigateTo('shop')}} className="mt-4">{shopNowText}</Button>
+                            <Button onClick={onShopNow} className="mt-4">{shopNowText}</Button>
                         </div>
                     )}
                 </div>
@@ -101,14 +102,23 @@ export const CartDrawerUI: React.FC<CartDrawerUIProps> = ({
     );
 };
 
-// FIX: Add container component to handle logic and provide props to UI component.
-export const CartDrawer: React.FC<PageProps> = ({ navigateTo }) => {
+export const CartDrawer: React.FC = () => {
     const { isCartOpen, toggleCart, cartItems, removeFromCart, updateQuantity, cartTotal } = useCart();
     const { t } = useTranslation();
+    const router = useRouter();
     
+    const handleCheckout = () => {
+        toggleCart();
+        router.push('/checkout');
+    };
+
+    const handleShopNow = () => {
+        toggleCart();
+        router.push('/shop');
+    };
+
     return (
         <CartDrawerUI 
-            navigateTo={navigateTo}
             isOpen={isCartOpen}
             onToggle={toggleCart}
             items={cartItems}
@@ -121,6 +131,8 @@ export const CartDrawer: React.FC<PageProps> = ({ navigateTo }) => {
             checkoutText={t('cart_checkout')}
             removeItemText={t('cart_remove_item')}
             shopNowText={t('hero_button_shop')}
+            onCheckout={handleCheckout}
+            onShopNow={handleShopNow}
         />
     );
 };

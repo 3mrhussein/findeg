@@ -1,25 +1,25 @@
+'use client';
+
 import React from 'react';
-import type { Product, PageProps } from '../../types';
+import { useRouter } from 'next/navigation';
+import type { Product } from '@/types';
 import { Button } from '../ui/button';
 import { Price } from '../atoms/Price';
-import { useCart, useTranslation } from '../../hooks';
+import { useCart, useTranslation } from '@/hooks';
 import { Icon } from '../atoms/Icon';
 
-interface ProductListItemUIProps extends PageProps {
+interface ProductListItemUIProps {
   product: Product;
   onAddToCart: (e: React.MouseEvent) => void;
   addToCartText: string;
+  onCardClick: () => void;
 }
 
-export const ProductListItemUI: React.FC<ProductListItemUIProps> = ({ product, navigateTo, onAddToCart, addToCartText }) => {
-  const handleCardClick = () => {
-    navigateTo('product', product.id);
-  };
-
+export const ProductListItemUI: React.FC<ProductListItemUIProps> = ({ product, onAddToCart, addToCartText, onCardClick }) => {
   return (
     <div 
         className="bg-card rounded-lg shadow-md overflow-hidden group transition-all duration-300 hover:shadow-xl border flex flex-col sm:flex-row cursor-pointer"
-        onClick={handleCardClick}
+        onClick={onCardClick}
     >
       <div className="sm:w-1/3">
         <img src={product.imageUrl} alt={product.name} className="w-full h-48 sm:h-full object-cover" />
@@ -41,14 +41,14 @@ export const ProductListItemUI: React.FC<ProductListItemUIProps> = ({ product, n
   );
 };
 
-// FIX: Add container component to handle logic and provide props to UI component.
-interface ProductListItemProps extends PageProps {
+interface ProductListItemProps {
     product: Product;
 }
 
-export const ProductListItem: React.FC<ProductListItemProps> = ({ product, navigateTo }) => {
+export const ProductListItem: React.FC<ProductListItemProps> = ({ product }) => {
     const { t } = useTranslation();
     const { addToCart } = useCart();
+    const router = useRouter();
     
     const handleAddToCart = (e: React.MouseEvent) => {
         e.stopPropagation();
@@ -66,12 +66,16 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product, navig
         addToCart(product, 1, selectedVariant);
     };
 
+    const handleCardClick = () => {
+        router.push(`/product/${product.id}`);
+    };
+
     return (
         <ProductListItemUI
             product={product}
-            navigateTo={navigateTo}
             onAddToCart={handleAddToCart}
             addToCartText={t('product_card_add_to_cart')}
+            onCardClick={handleCardClick}
         />
     );
 };

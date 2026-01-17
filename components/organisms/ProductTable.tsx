@@ -1,13 +1,15 @@
+'use client';
+
 import React from 'react';
-import type { Product } from '../../types';
-import { useTranslation } from '../../hooks';
+import type { Product } from '@/types';
+import { useTranslation } from '@/hooks';
 import { Button } from '../ui/button';
 import { Icon } from '../atoms/Icon';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 
 interface ProductTableUIProps {
     products: Product[];
-    t: (key: string) => string;
+    t: (key: any) => string;
     getStock: (product: Product) => number;
 }
 

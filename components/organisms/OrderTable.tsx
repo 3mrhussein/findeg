@@ -1,21 +1,23 @@
+'use client';
+
 import React from 'react';
-import type { Order } from '../../types';
-import { useTranslation } from '../../hooks';
+import type { Order } from '@/types';
+import { useTranslation } from '@/hooks';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 
 const OrderStatusBadge: React.FC<{status: Order['status']}> = ({ status }) => {
     const statusClasses = {
-        Processing: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300',
-        Shipped: 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300',
-        Delivered: 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300',
-        Cancelled: 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300',
+        processing: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300',
+        shipped: 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300',
+        delivered: 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300',
+        cancelled: 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300',
     };
     return <span className={`px-2 py-1 text-xs font-medium rounded-full ${statusClasses[status]}`}>{status}</span>
 }
 
 interface OrderTableUIProps {
     orders: Order[];
-    t: (key: string) => string;
+    t: (key: any) => string;
 }
 
 export const OrderTableUI: React.FC<OrderTableUIProps> = ({ orders, t }) => (

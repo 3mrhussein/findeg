@@ -1,8 +1,9 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
-import { categories } from '../../constants';
-import type { Product } from '../../types';
-import { useTranslation } from '../../hooks';
-import { Icon } from '../atoms/Icon';
+import { categories } from '@/constants';
+import type { Product } from '@/types';
+import { useTranslation } from '@/hooks';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/card';
 
@@ -75,7 +76,6 @@ export const FilterSidebarUI: React.FC<FilterSidebarUIProps> = ({
     );
 };
 
-// FIX: Add container component to handle logic and provide props to UI component.
 interface FilterSidebarProps {
     allProducts: Product[];
     onFilterChange: (filteredProducts: Product[]) => void;

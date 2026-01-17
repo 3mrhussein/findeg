@@ -1,5 +1,7 @@
+'use client';
+
 import React from 'react';
-import { useTranslation } from '../../hooks';
+import { useTranslation } from '@/hooks';
 
 interface SalesData {
     name: string;
@@ -86,7 +88,6 @@ export const SalesChartUI: React.FC<SalesChartUIProps> = ({ data, title }) => {
     );
 };
 
-// FIX: Add container component to handle logic and provide props to UI component.
 interface SalesChartProps {
     data: SalesData[];
 }

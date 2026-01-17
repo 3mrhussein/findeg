@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useState } from 'react';
-import { useTranslation } from '../../hooks';
+import { useTranslation } from '@/hooks';
 import { Button } from '../ui/button';
 import { Icon } from '../atoms/Icon';
 import { Input } from '../ui/input';
@@ -72,7 +74,6 @@ export const ChatbotUI: React.FC<ChatbotUIProps> = ({ title, placeholder, sendLa
     );
 };
 
-// FIX: Add container component to handle logic and provide props to UI component.
 export const Chatbot: React.FC = () => {
     const { t } = useTranslation();
 

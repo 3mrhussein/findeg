@@ -1,5 +1,5 @@
 import React from 'react';
-import { brandLogos } from '../../constants';
+import { brandLogos } from '@/constants';
 
 interface ScrollingLogoCloudProps {
     direction?: 'left' | 'right';

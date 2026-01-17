@@ -1,14 +1,16 @@
-import React from 'react';
-import type { PageProps } from '../../types';
-import { useTranslation } from '../../hooks';
+'use client';
 
-interface LogoUIProps extends PageProps {
+import React from 'react';
+import Link from 'next/link';
+import { useTranslation } from '@/hooks';
+
+interface LogoUIProps {
     ariaLabel: string;
 }
 
-export const LogoUI: React.FC<LogoUIProps> = ({ navigateTo, ariaLabel }) => {
+export const LogoUI: React.FC<LogoUIProps> = ({ ariaLabel }) => {
   return (
-    <a href="#" onClick={(e) => {e.preventDefault(); navigateTo('home')}} className="flex items-center group" aria-label={ariaLabel}>
+    <Link href="/" className="flex items-center group" aria-label={ariaLabel}>
       {/* Premium Pencil Icon */}
       <svg
         className="w-9 h-9 transition-transform duration-300 group-hover:rotate-[-12deg]"
@@ -72,14 +74,11 @@ export const LogoUI: React.FC<LogoUIProps> = ({ navigateTo, ariaLabel }) => {
         {/* Period */}
         <circle cx="128.5" cy="20.5" r="2.5" className="text-secondary" />
       </svg>
-    </a>
+    </Link>
   );
 };
 
-// FIX: Add container component to handle logic and provide props to UI component.
-interface LogoProps extends PageProps {}
-
-export const Logo: React.FC<LogoProps> = ({ navigateTo }) => {
+export const Logo: React.FC = () => {
     const { t } = useTranslation();
-    return <LogoUI navigateTo={navigateTo} ariaLabel={t('logo_aria_label')} />;
+    return <LogoUI ariaLabel={t('logo_aria_label')} />;
 };

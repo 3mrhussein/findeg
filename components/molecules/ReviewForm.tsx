@@ -1,6 +1,8 @@
+'use client';
+
 import React, { useState } from 'react';
-import { useTranslation } from '../../hooks';
-import type { Review } from '../../types';
+import { useTranslation } from '@/hooks';
+import type { Review } from '@/types';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';

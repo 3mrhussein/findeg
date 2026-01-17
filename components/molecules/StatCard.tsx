@@ -1,5 +1,7 @@
+'use client';
+
 import React from 'react';
-import { useCountUp } from '../../hooks/useCountUp';
+import { useCountUp } from '@/hooks/useCountUp';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 
 interface StatCardProps {

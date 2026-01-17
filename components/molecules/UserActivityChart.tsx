@@ -1,5 +1,7 @@
+'use client';
+
 import React, { useRef, useEffect } from 'react';
-import { useTranslation } from '../../hooks';
+import { useTranslation } from '@/hooks';
 
 interface ActivityData {
     day: string;
@@ -79,7 +81,7 @@ export const UserActivityChartUI: React.FC<UserActivityChartUIProps> = ({ data, 
 
                         {/* X-axis labels */}
                         {data.map((item, i) => (
-                             <text key={i} x={(width / (data.length - 1)) * i} y={height + 15} textAnchor="middle" className="text-xs fill-current text-muted-foreground">{item.day}</text>
+                            <text key={i} x={(width / (data.length - 1)) * i} y={height + 15} textAnchor="middle" className="text-xs fill-current text-muted-foreground">{item.day}</text>
                         ))}
                         
                         {/* Line */}
@@ -115,7 +117,6 @@ export const UserActivityChartUI: React.FC<UserActivityChartUIProps> = ({ data, 
     );
 };
 
-// FIX: Add container component to handle logic and provide props to UI component.
 interface UserActivityChartProps {
     data: ActivityData[];
 }

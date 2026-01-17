@@ -1,7 +1,9 @@
+'use client';
+
 import React from 'react';
 import { Container } from '../layout/Container';
-import { brandLogos } from '../../constants';
-import { useTranslation } from '../../hooks';
+import { brandLogos } from '@/constants';
+import { useTranslation } from '@/hooks';
 
 interface BrandShowcaseUIProps {
     title: string;
@@ -30,7 +32,6 @@ export const BrandShowcaseUI: React.FC<BrandShowcaseUIProps> = ({ title }) => {
     );
 };
 
-// FIX: Add container component to handle logic and provide props to UI component.
 export const BrandShowcase: React.FC = () => {
     const { t } = useTranslation();
     return <BrandShowcaseUI title={t('brand_showcase_title')} />;

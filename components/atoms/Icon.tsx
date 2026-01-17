@@ -1,5 +1,5 @@
 import React from 'react';
-import { iconPaths } from '../../constants';
+import { iconPaths } from '@/lib/icons';
 
 export type IconName = keyof typeof iconPaths;
 

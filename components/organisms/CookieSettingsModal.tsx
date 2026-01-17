@@ -1,7 +1,9 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '../ui/button';
-import { cookieSettings } from '../../constants';
-import { useTranslation } from '../../hooks';
+import { cookieSettings } from '@/constants';
+import { useTranslation } from '@/hooks';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../ui/accordion';
 import { Switch } from '../ui/switch';

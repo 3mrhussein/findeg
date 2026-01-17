@@ -1,7 +1,9 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
 import { Button } from '../ui/button';
 import { Container } from '../layout/Container';
-import { useTranslation } from '../../hooks';
+import { useTranslation } from '@/hooks';
 
 interface CookieConsentBannerUIProps {
     isVisible: boolean;
@@ -54,7 +56,6 @@ export const CookieConsentBannerUI: React.FC<CookieConsentBannerUIProps> = ({
     );
 };
 
-// FIX: Add container component to handle logic and provide props to UI component.
 interface CookieConsentBannerProps {
     onSettingsClick: () => void;
 }
