@@ -2,124 +2,246 @@
 
 FindEg.com is a modern, trendy e-commerce web application specializing in stationary, kids' toys, and school supplies. This project serves as a comprehensive brand kit and a fully functional storefront, built with a focus on great UI/UX, reusability, and cutting-edge web technologies.
 
-## Key Features
+## 🚀 Getting Started
 
-- **Theming:** Supports both **Light** and **Dark** modes, with a centralized and easily configurable theme system.
-- **Internationalization (i18n):** Full support for English (`en`) and Arabic (`ar`), including Right-to-Left (RTL) layout adjustments.
-- **Atomic Design Structure:** Components are structured following atomic design principles (atoms, molecules, organisms) for maximum reusability and maintainability.
-- **AI-Powered Image Generation:** Integrates the Gemini API to allow users to generate product ideas and visuals based on text prompts.
-- **Comprehensive E-commerce Flow:**
-    - **Dismissible Announcement Bar:** A promotional bar at the top of the site.
-    - **Dynamic Mega Menu:** A creative, multi-level navigation menu.
-    - **Full-Fledged Search:** Site-wide product search with a dedicated results page.
-    - **Advanced Shop Page:** A full-featured shopping page with responsive, collapsible filters (modal on mobile), multiple sorting options, grid/list view toggles, client-side pagination, and an integrated FAQ section.
-    - **Detailed Product Page:** Includes an image gallery, variant selection, scroll-spy navigation, and an interactive customer review system.
-    - **"About Us" Page:** A dedicated page to share the company's story, mission, and a contact form.
-    - **Shopping Cart:** A sleek, slide-out cart drawer.
-    - **Multi-Step Checkout & Registration:** User-friendly forms for checkout and signing up.
-- **User Privacy & Control:**
-    - **Advanced Cookie Consent:** A detailed cookie consent banner with "Accept All", "Reject All", and "Settings" options.
-    - **Cookie Settings Modal:** A modal allowing users to granularly control cookie categories.
-    - **Footer Access:** Users can modify their cookie settings at any time from the site footer.
-- **User Support:**
-    - **Site-wide Chatbot:** A fixed-position chatbot icon that opens a chat window for user support on all pages.
-- **Responsive Design:** Fully responsive layout that works seamlessly across desktops, tablets, and mobile devices.
-- **Accessibility:** Designed with accessibility in mind, ensuring high contrast ratios and proper ARIA attributes.
+### Prerequisites
+- Node.js (v18 or higher)
+- npm or yarn
+
+### Installation
+1. Clone the repository
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+### Running the Project
+We have a custom script to handle port conflicts automatically. Always use:
+```bash
+npm run dev
+```
+*This script checks if port 3000 is in use, kills the process if necessary, and then starts the Next.js server.*
 
 ---
 
-## Brand Kit
+## 🏗️ Architecture & Design Patterns
 
-The FindEg.com brand is designed to be modern, playful, and trustworthy.
+We use a combination of **Next.js App Router**, **Atomic Design**, and the **Container/Presenter Pattern** to ensure scalability and maintainability.
 
-### Colors
+### 1. Next.js App Router Structure
+We use the modern App Router (`app/` directory) for routing, layouts, and data fetching.
 
-The color palette is built around a vibrant Teal primary color and a warm Amber secondary color, ensuring high contrast and accessibility (WCAG AA compliant).
+```mermaid
+graph TD
+    A[app/] --> B[layout.tsx]
+    B --> C[page.tsx]
+    B --> D[loading.tsx]
+    B --> E[error.tsx]
+    A --> F[(shop)]
+    F --> G[layout.tsx]
+    F --> H[page.tsx]
+    A --> I[(dashboard)]
+```
 
-| Role               | Light Mode                               | Dark Mode                                | Tailwind Variable         |
-| ------------------ | ---------------------------------------- | ---------------------------------------- | ------------------------- |
-| **Primary**        | `rgb(20 184 166)` (#14b8a6)              | `rgb(20 184 166)` (#14b8a6)              | `colors.primary`          |
-| **Secondary**      | `rgb(245 158 11)` (#f59e0b)              | `rgb(251 191 36)` (#fbbf24)              | `colors.secondary`        |
-| **Background**     | `rgb(255 255 255)` (#ffffff)             | `rgb(17 24 39)` (#111827)                | `colors.background`       |
-| **Foreground**     | `rgb(17 24 39)` (#111827)                | `rgb(243 244 246)` (#f3f4f6)             | `colors.foreground`       |
-| **Card Background**| `rgb(255 255 255)` (#ffffff)             | `rgb(31 41 55)` (#1f2937)                | `colors.card`             |
-| **Muted Text**     | `rgb(107 114 128)` (#6b7280)             | `rgb(156 163 175)` (#9ca3af)             | `colors.muted-foreground` |
+- **`layout.tsx`**: Defines the shared UI for a segment (e.g., Header, Footer).
+- **`page.tsx`**: The unique UI for a route.
+- **`loading.tsx`**: Instant loading state (Suspense fallback).
+- **`error.tsx`**: Error boundary for the segment.
+- **`(groups)`**: Folders with parentheses (e.g., `(shop)`) are Route Groups. They organize files without affecting the URL path.
 
-### Typography
+### 2. Atomic Design
+We organize components based on their complexity. This helps in understanding the building blocks of the UI.
 
-- **Font Family:** `Poppins` (sans-serif)
-- **Weights Used:** 400 (Regular), 500 (Medium), 600 (Semi-bold), 700 (Bold)
+```mermaid
+graph TD
+    A[Components] --> B[Atoms]
+    A --> C[Molecules]
+    A --> D[Organisms]
+    A --> E[Templates/Layouts]
 
-### Logo
+    B --> B1[Button]
+    B --> B2[Icon]
+    B --> B3[Badge]
 
-The logo combines a stylized pencil icon with custom, handwritten-style typography for the brand name, using the secondary color as an accent.
+    C --> C1[ProductCard]
+    C --> C2[SearchBar]
+
+    D --> D1[Header]
+    D --> D2[ProductGrid]
+    D --> D3[CartDrawer]
+```
+
+- **Atoms**: Basic building blocks (Buttons, Inputs, Icons). They have no dependencies.
+- **Molecules**: Groups of atoms working together (Search Bar = Input + Button).
+- **Organisms**: Complex sections of the interface (Header, Footer, Product Grid).
+- **Templates/Layouts**: Page-level structures.
+
+### 3. Container/Presenter Pattern
+To separate logic from UI, we often split complex components into two parts within the same file.
+
+**Why?**
+- **Separation of Concerns**: Logic (state, effects) is separate from View (JSX, styles).
+- **Reusability**: The UI component can be reused with different data.
+- **Testing**: Easier to test logic and UI independently.
+
+**Example (`Header.tsx`):**
+```tsx
+// 1. Presenter (UI Component)
+// Receives data via props. No hooks or side effects.
+export const HeaderUI = ({ cartCount, onToggleCart }) => {
+  return (
+    <header>
+      <Logo />
+      <button onClick={onToggleCart}>Cart ({cartCount})</button>
+    </header>
+  );
+};
+
+// 2. Container (Logic Component)
+// Handles state, hooks, and data fetching.
+export const Header = () => {
+  const { cartCount, toggleCart } = useCart(); // Custom Hook
+  
+  return <HeaderUI cartCount={cartCount} onToggleCart={toggleCart} />;
+};
+```
 
 ---
 
-## Tech Stack
-
-- **Frontend:** React
-- **Styling:** Tailwind CSS with a custom theme configuration
-- **AI Integration:** Google Gemini API (`@google/genai`) for image generation.
-- **State Management:** React Context API for global state (Theme, Language, Cart).
-- **Internationalization:** Custom i18n solution.
-
-## Project Structure
-
-The project follows a modular and scalable file structure:
+## 📂 Project Structure
 
 ```
 /
+├── app/                  # Next.js App Router (Routes & Pages)
+│   ├── (shop)/           # Shop-related routes (grouped)
+│   ├── (dashboard)/      # Dashboard routes (grouped)
+│   ├── layout.tsx        # Root layout
+│   └── globals.css       # Global styles & Tailwind directives
 ├── components/           # Reusable UI components
-│   ├── atoms/            # Basic building blocks (Icon, Price, Rating, etc.)
-│   ├── molecules/        # Groups of atoms (ProductCard, FilterSidebar, etc.)
-│   ├── organisms/        # Complex components (Header, Footer, ImageGenerator)
-│   ├── layout/           # Layout helpers (Container, Grid)
-│   └── ui/               # Unstyled, reusable UI primitives (shadcn/ui style)
-├── constants.tsx         # Static data, mock products, navigation schema, icons
-├── contexts/             # React Context providers (Theme, Language, Cart)
-├── hooks/                # Custom React hooks (useTheme, useCart, etc.)
-├── pages/                # Top-level page components (HomePage, AboutPage, etc.)
-├── services/             # API service integrations (e.g., Gemini)
-├── stories/              # Storybook component examples (optional)
-├── theme.ts              # Theme configuration (colors, shadows, gradients)
-├── types.ts              # TypeScript type definitions
-├── i18n.ts               # Translation strings
-├── App.tsx               # Main application component with routing
-└── index.tsx             # Application entry point
+│   ├── atoms/            # Smallest units (Button, Icon)
+│   ├── molecules/        # Groups of atoms (ProductCard)
+│   ├── organisms/        # Complex sections (Header, Footer)
+│   └── ui/               # Headless UI primitives (shadcn-like)
+├── hooks/                # Custom React Hooks (Logic reuse)
+├── lib/                  # Utilities, Constants, Helpers
+├── types/                # TypeScript definitions
+└── views/                # Page-specific content (keeps app/ clean)
+```
+
+**Note on `views/` directory:**
+We use a `views/` directory to store the actual page content. The `app/page.tsx` files simply import and render these views. This keeps the routing layer (`app/`) clean and separates it from the page implementation.
+
+---
+
+## 🔄 Data Flow
+
+We use **React Context** for global state management to avoid prop drilling.
+
+```mermaid
+graph TD
+    A[Providers] --> B[CartProvider]
+    A --> C[ThemeProvider]
+    B --> D[Component Tree]
+    C --> D
+    
+    D --> E[useCart Hook]
+    D --> F[useTheme Hook]
+    
+    E --> G[CartDrawer Component]
+    E --> H[Header Component]
+```
+
+- **Providers**: Wrap the application in `app/layout.tsx`.
+- **Hooks**: Custom hooks (`useCart`, `useTheme`) consume these contexts.
+- **Components**: Use hooks to access and modify global state.
+
+---
+
+## 🎨 Styling & Theming
+
+- **Tailwind CSS**: Utility-first CSS framework.
+- **CSS Variables**: Used for theming (Light/Dark mode). Defined in `app/globals.css`.
+- **`cn` Utility**: A helper function in `lib/utils.ts` to merge Tailwind classes conditionally.
+
+**Example Usage:**
+```tsx
+<div className={cn(
+  "bg-primary text-white", 
+  isActive && "font-bold"
+)}>
 ```
 
 ---
 
-## Development Guidelines
+## 🛠️ Key Features Implementation
 
-To ensure the codebase remains clean, scalable, and easy for multiple developers to work on, we follow a few key principles.
+### Internationalization (i18n)
+- We use a custom hook `useTranslation` (`hooks/useTranslation.ts`).
+- Translations are stored in `lib/i18n.ts`.
+- Supports English (`en`) and Arabic (`ar`) with RTL support.
 
-### 1. Container/UI Component Pattern
+### AI Image Generation
+- Located in `components/organisms/ImageGenerator.tsx`.
+- Uses a mock implementation for now (simulating API calls).
 
-This pattern separates a component's logic from its presentation. Almost every component that involves state, context, or side effects is split into two components, often within the same file:
+---
 
--   **Container/Logic Component (e.g., `ProductCard`):**
-    -   This is the "smart" component.
-    -   It handles all logic: state management (`useState`), data fetching, context (`useTranslation`, `useCart`), and event handlers.
-    -   It does **not** render any complex JSX. Its only job is to gather data and functions and pass them as props to its corresponding UI component.
-    -   This is the main component you import into other parts of the app.
+## 🌍 Content Management & Internationalization
 
--   **UI/Presentational Component (e.g., `ProductCardUI`):**
-    -   This is the "dumb" component.
-    -   It contains all the JSX and styling.
-    -   It receives all its data and functions as props from its container.
-    -   It should **never** contain hooks for state or context.
-    -   This makes it highly reusable and easy to test visually (e.g., in Storybook).
+We separate **Static Content** (text, labels) and **Configuration Data** (menus, product lists) from the component logic. This makes the app scalable and easy to translate.
 
-### 2. Contribution Workflow
+### 1. Text & Translations (`lib/i18n.ts`)
+All user-facing text is stored here.
 
-When adding a new feature or component, please follow these steps:
+```mermaid
+graph LR
+    A[Component] -- "useTranslation('key')" --> B[useTranslation Hook]
+    B -- "Reads" --> C[lib/i18n.ts]
+    C -- "Returns Text" --> A
+```
 
-1.  **Define Types:** Add any new TypeScript types to `types.ts`.
-2.  **Add Constants:** If the feature uses static data (e.g., mock reviews, navigation links), add it to `constants.tsx`.
-3.  **Create Components:**
-    -   Create your new component file(s) in the appropriate `components/` subdirectory (`atoms`, `molecules`, etc.).
-    -   Follow the **Container/UI Pattern** described above if the component has any logic.
-4.  **Add Translations:** Add all user-facing strings to `i18n.ts` for both English (`en`) and Arabic (`ar`).
-5.  **Integrate:** Import and use your new component in the relevant page or organism.
+**Benefits:**
+- **Scalability**: Adding a new language (e.g., French) only requires adding a new key in `i18n.ts`. No component code changes needed.
+- **Maintainability**: Copywriters can edit text in one file without touching code.
+
+### 2. Data & Configuration (`lib/constants.ts`)
+Structured data like navigation menus, mock products, and FAQ items live here.
+
+**Pattern:**
+1.  **Define Structure**: `lib/constants.ts` defines the data shape (e.g., `labelKey` for a menu item).
+2.  **Define Text**: `lib/i18n.ts` defines the actual text for that key.
+3.  **Render**: Components iterate over the data and use the key to fetch the text.
+
+**Example:**
+```tsx
+// lib/constants.ts
+export const navItems = [{ labelKey: 'nav_home', href: '/' }];
+
+// lib/i18n.ts
+export const translations = { en: { nav_home: 'Home' } };
+
+// Component
+navItems.map(item => <Link>{t(item.labelKey)}</Link>)
+```
+
+---
+
+## 📝 Contribution Workflow
+
+1.  **Atomic Design**: Place new components in the correct folder (`atoms`, `molecules`, etc.).
+2.  **Types**: Define interfaces in `types/` or co-located with the component.
+3.  **Constants**: Use `lib/constants.ts` for mock data.
+4.  **Hooks**: Extract reusable logic into `hooks/`.
+
+---
+
+## ❓ FAQ for New Developers
+
+**Q: I'm lost in the `app` directory. Where is the code?**
+A: Check the `views/` directory. We import page content from there to keep `app/` focused on routing.
+
+**Q: How do I change the colors?**
+A: Edit the CSS variables in `app/globals.css` or the Tailwind config in `tailwind.config.ts`.
+
+**Q: Why `npm run dev`?**
+A: It runs a custom script (`scripts/dev.js`) that ensures port 3000 is free before starting the server.

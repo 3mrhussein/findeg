@@ -2,13 +2,16 @@
   "name": "findeg-app",
   "version": "1.0.0",
   "description": "FindEg.com E-commerce Application",
+  "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "dev": "node scripts/dev.js",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
+    "next": "^16.0.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },
@@ -16,17 +19,19 @@
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "@vitejs/plugin-react": "^4.4.1",
     "autoprefixer": "^10.4.20",
+    "babel-plugin-react-compiler": "^1.0.0",
+    "eslint": "^9.0.0",
+    "eslint-config-next": "^16.0.0",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.17",
-    "typescript": "^5.7.3",
-    "vite": "^6.0.0"
+    "typescript": "^5.7.3"
   },
   "keywords": [
     "react",
     "ecommerce",
-    "tailwindcss"
+    "tailwindcss",
+    "nextjs"
   ],
   "author": "FindEg Team"
 }

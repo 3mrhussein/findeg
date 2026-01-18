@@ -1,9 +1,8 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   darkMode: 'class',
   content: [
-    "./index.html",
-    "./**/*.{js,ts,jsx,tsx}",
+    "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
@@ -26,6 +25,12 @@ module.exports = {
         muted: 'rgb(var(--muted) / <alpha-value>)',
         'muted-foreground': 'rgb(var(--muted-foreground) / <alpha-value>)',
         border: 'rgb(var(--border) / <alpha-value>)',
+        input: 'rgb(var(--border) / <alpha-value>)',
+        ring: 'rgb(var(--color-primary) / <alpha-value>)',
+        accent: {
+          DEFAULT: 'rgb(var(--muted) / <alpha-value>)',
+          foreground: 'rgb(var(--foreground) / <alpha-value>)',
+        },
       }
     }
   },
