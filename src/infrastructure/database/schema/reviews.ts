@@ -1,53 +1,36 @@
 /**
- * Review Database Schema
+ * Reviews Database Schema
+ *
+ * Handles product ratings and customer feedback.
  */
 
-import {
-  pgTable,
-  serial,
-  integer,
-  text,
-  timestamp,
-  decimal,
-} from "drizzle-orm/pg-core";
+import { pgTable, serial, text, integer, decimal, timestamp, boolean } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
-import { users } from "./users";
 import { products } from "./products";
+import { users } from "./users";
 
-/**
- * Reviews Table
- */
 export const reviews = pgTable("reviews", {
   id: serial("id").primaryKey(),
-  userId: integer("user_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  productId: integer("product_id")
-    .notNull()
-    .references(() => products.id, { onDelete: "cascade" }),
-  rating: integer("rating").notNull(),
+  productId: integer("product_id").notNull().references(() => products.id, { onDelete: "cascade" }),
+  userId: integer("user_id").references(() => users.id, { onDelete: "set null" }),
+  rating: decimal("rating", { precision: 2, scale: 1 }).notNull(),
   comment: text("comment"),
-  language: text("language").default("en").notNull(),
+  isVerifiedPurchase: boolean("is_verified_purchase").default(false),
+  status: text("status").default("approved"), // pending, approved, rejected
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-/**
- * Relations
- */
 export const reviewsRelations = relations(reviews, ({ one }) => ({
-  user: one(users, {
-    fields: [reviews.userId],
-    references: [users.id],
-  }),
   product: one(products, {
     fields: [reviews.productId],
     references: [products.id],
   }),
+  user: one(users, {
+    fields: [reviews.userId],
+    references: [users.id],
+  }),
 }));
 
-/**
- * Type Exports
- */
 export type Review = typeof reviews.$inferSelect;
 export type NewReview = typeof reviews.$inferInsert;

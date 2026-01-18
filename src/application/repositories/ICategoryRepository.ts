@@ -2,17 +2,10 @@
  * Category Repository Interface
  */
 
-export interface CategoryEntity {
-  id: number;
-  slug: string;
-  name: string;
-  description?: string;
-  image?: string;
-  parentId?: number;
-}
+import { Category } from "@/domain/entities/Category";
 
 export interface ICategoryRepository {
-  getById(id: number, language?: string): Promise<CategoryEntity | null>;
-  getAll(language?: string): Promise<CategoryEntity[]>;
-  getBySlug(slug: string, language?: string): Promise<CategoryEntity | null>;
+  getById(id: number, language?: string): Promise<Category | null>;
+  getAll(language?: string): Promise<Category[]>;
+  getBySlug(slug: string, language?: string): Promise<Category | null>;
 }

@@ -4,10 +4,11 @@
 
 import {
   ICategoryRepository,
-  CategoryEntity,
 } from "@/application/repositories/ICategoryRepository";
+import { Category } from "@/domain/entities/Category";
+import { categories } from "@/lib/constants";
 
-const mockCategories: CategoryEntity[] = [
+const mockCategories: Category[] = [
   {
     id: 1,
     slug: "electronics",
@@ -29,11 +30,11 @@ const mockCategories: CategoryEntity[] = [
 ];
 
 export class MockCategoryRepository implements ICategoryRepository {
-  async getAll(language?: string): Promise<CategoryEntity[]> {
+  async getAll(language?: string): Promise<Category[]> {
     return Promise.resolve(mockCategories);
   }
 
-  async getById(id: number, language?: string): Promise<CategoryEntity | null> {
+  async getById(id: number, language?: string): Promise<Category | null> {
     const category = mockCategories.find((c) => c.id === id);
     return Promise.resolve(category || null);
   }
@@ -41,7 +42,7 @@ export class MockCategoryRepository implements ICategoryRepository {
   async getBySlug(
     slug: string,
     language?: string,
-  ): Promise<CategoryEntity | null> {
+  ): Promise<Category | null> {
     const category = mockCategories.find((c) => c.slug === slug);
     return Promise.resolve(category || null);
   }

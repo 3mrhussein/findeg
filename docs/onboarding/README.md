@@ -101,9 +101,11 @@ src/
 │
 ├── presentation/           # UI layer
 │   ├── components/         # React components
-│   │   ├── server/        # Server Components (pure UI)
-│   │   ├── client/        # Client Components (interactivity)
-│   │   └── containers/    # Container Components
+│   │   ├── features/      # Domain-specific components
+│   │   ├── layout/        # Structural components
+│   │   ├── shared/        # Reusable domain components
+│   │   ├── templates/     # Page-level structures
+│   │   └── ui/            # Generic primitives (shadcn)
 │   ├── hooks/             # React hooks
 │   ├── providers/         # Context providers
 │   └── server/            # Server-side utilities

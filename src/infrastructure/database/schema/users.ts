@@ -1,32 +1,28 @@
 /**
- * User Database Schema
+ * Users Database Schema
+ *
+ * Defines user accounts, authentication data, and session preferences.
  */
 
-import { pgTable, serial, text, timestamp, varchar } from "drizzle-orm/pg-core";
+import { pgTable, serial, text, timestamp, boolean, varchar } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
-/**
- * Users Table
- */
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   email: varchar("email", { length: 255 }).notNull().unique(),
   name: text("name"),
-  avatar: text("avatar"),
-  role: varchar("role", { length: 50 }).default("user").notNull(),
+  password: text("password"), // Hashed password
+  role: varchar("role", { length: 20 }).default("user").notNull(), // user, admin
+  emailVerified: timestamp("email_verified"),
+  image: text("image"),
+  isActive: boolean("is_active").default(true).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-/**
- * User Relations
- */
 export const usersRelations = relations(users, ({ many }) => ({
-  // Add relations here (e.g., orders, reviews)
+  // Define relations for orders and reviews when those schemas are ready
 }));
 
-/**
- * Type Exports
- */
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;

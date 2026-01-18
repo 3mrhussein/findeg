@@ -1,29 +1,17 @@
-/**
- * Server-side Service Helpers
- *
- * This file provides easy access to services for Next.js Server Components.
- * Since Server Components run on the server, they can access the ServiceContainer directly.
- */
-
-import { ServiceContainer } from "@/infrastructure/di/ServiceContainer";
+import { container } from "@/infrastructure/di/ServiceContainer";
 
 /**
- * Get the product service
+ * Server-side Service Access
+ * 
+ * This provides a clean way for Server Components to access 
+ * the application services and repositories.
  */
-export function getProductService() {
-  return ServiceContainer.getInstance().getProductService();
-}
-
-/**
- * Get the cart service
- */
-export function getCartService() {
-  return ServiceContainer.getInstance().getCartService();
-}
-
-/**
- * Get the category service
- */
-export function getCategoryService() {
-  return ServiceContainer.getInstance().getCategoryService();
+export function getServices() {
+  return {
+    products: container.productRepository,
+    categories: container.categoryRepository,
+    users: container.userRepository,
+    orders: container.orderRepository,
+    reviews: container.reviewRepository,
+  };
 }

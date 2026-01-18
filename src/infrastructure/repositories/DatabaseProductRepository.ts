@@ -10,7 +10,7 @@
  * The Application layer doesn't know this is using a database.
  */
 
-import { db } from "../database/connection";
+import { db } from "../config/database.config";
 import { products, productTranslations } from "../database/schema/products";
 import { eq, and, or, ilike, desc } from "drizzle-orm";
 import type { IProductRepository } from "@/application/repositories/IProductRepository";

@@ -27,6 +27,31 @@ graph TD
 
 **Key Rule**: Application Layer depends on Domain Layer and defines interfaces that Infrastructure Layer implements.
 
+## Use Cases
+
+```mermaid
+useCaseDiagram
+    actor User
+    actor Admin
+    
+    package "Product Management" {
+        User --> (Browse Products)
+        User --> (Filter & Sort)
+        User --> (Search Products)
+    }
+    
+    package "Cart Operations" {
+        User --> (Add to Cart)
+        User --> (Update Cart)
+        User --> (Checkout)
+    }
+
+    package "Admin Tasks" {
+        Admin --> (Manage Products)
+        Admin --> (View Orders)
+    }
+```
+
 ## Directory Structure
 
 ```

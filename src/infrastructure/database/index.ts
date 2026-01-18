@@ -8,7 +8,7 @@
  */
 
 // Export database connection
-export { db } from './connection';
+export { db } from '../config/database.config';
 
 // Export schemas
 export * from './schema/products';

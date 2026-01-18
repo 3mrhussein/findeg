@@ -13,8 +13,8 @@
 import * as dotenv from 'dotenv';
 import postgres from 'postgres';
 import { drizzle } from 'drizzle-orm/postgres-js';
-import { products, productTranslations } from '../src/infrastructure/database/schema/products.js';
-import { products as mockProducts } from '../src/lib/constants.js';
+import { products, productTranslations } from '../src/infrastructure/database/schema/products.ts';
+import { products as mockProducts } from '../src/lib/constants.ts';
 
 // Load environment variables
 dotenv.config({ path: '.env.local' });

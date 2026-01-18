@@ -34,40 +34,50 @@ graph TD
     style G fill:#e1ffe1
 ```
 
+## Component Interplay
+
+```mermaid
+graph LR
+    Template["Template (Server)"] --> Feature["Feature Component"]
+    Feature --> Shared["Shared Component"]
+    Feature --> UI["UI Primitive"]
+    
+    Template --> Hook["Custom Hook (Client)"]
+    Hook --> Service["Domain Service"]
+```
+
 ## Directory Structure
 
 ```
 src/presentation/
 ├── components/
-│   ├── server/              # Server Components (default, pure UI)
-│   │   ├── atoms/           # Pure UI atoms
-│   │   ├── molecules/       # Pure UI molecules
-│   │   ├── organisms/       # Pure UI organisms
-│   │   └── templates/        # Server Component templates
+│   ├── features/            # Domain-specific components (Logic + UI)
+│   │   ├── shop/           # ProductCard, CartDrawer, etc.
+│   │   ├── dashboard/      # SalesChart, StatCard, etc.
+│   │   └── user/           # LoginForm, ProfileHeader, etc.
 │   │
-│   ├── client/              # Client Components (interactivity)
-│   │   ├── atoms/           # Interactive atoms
-│   │   ├── molecules/        # Interactive molecules
-│   │   └── organisms/        # Interactive organisms
+│   ├── layout/              # Structural components (Pure UI)
+│   │   ├── Header.tsx
+│   │   ├── Footer.tsx
+│   │   └── Container.tsx
 │   │
-│   └── containers/          # Container Components (logic wrappers)
+│   ├── shared/              # Reusable Domain components (Pure UI)
+│   │   ├── Icon.tsx
+│   │   ├── Price.tsx
+│   │   └── Badge.tsx
+│   │
+│   ├── templates/           # Page compositions (Server Components)
+│   │   ├── HomePage.tsx
+│   │   └── ProductDetailTemplate.tsx
+│   │
+│   └── ui/                  # Generic UI primitives (Pure UI - shadcn)
+│       ├── button.tsx
+│       ├── input.tsx
+│       └── card.tsx
 │
 ├── hooks/                   # React hooks (Client Components only)
-│   ├── useProductService.ts
-│   ├── useCartService.ts
-│   └── ...
-│
 ├── providers/               # Context providers (Client Components)
-│   ├── CartProvider.tsx
-│   ├── ThemeProvider.tsx
-│   └── ...
-│
-├── server/                  # Server-side utilities
-│   └── getServices.ts       # Service access helpers
-│
-└── ui/                      # UI adapters
-    └── adapters/
-        └── UIAdapter.ts
+└── server/                  # Server-side utilities (getServices.ts)
 ```
 
 ## Server Components
@@ -78,9 +88,9 @@ Server Components are the **default** in Next.js. They:
 - Are pure UI (no state, no interactivity)
 - Can be async
 
-### Pure UI Server Component
+### Feature Component (e.g., Shop)
 
-**Location**: `src/presentation/components/server/molecules/ProductCard.tsx`
+**Location**: `src/presentation/components/features/shop/ProductCard.tsx`
 
 **Example**:
 ```typescript
@@ -126,7 +136,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
 
 ### Server Component with Direct Service Call
 
-**Location**: `src/presentation/components/server/organisms/ProductList.tsx`
+**Location**: `src/presentation/components/templates/HomePage.tsx`
 
 **Example**:
 ```typescript

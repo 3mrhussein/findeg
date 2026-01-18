@@ -1,4 +1,4 @@
-import CategoriesTemplate from '@/presentation/components/templates/CategoriesTemplate';
+import CategoriesTemplate from '@/presentation/templates/CategoriesTemplate';
 
 export default function Page() {
   return <CategoriesTemplate />;

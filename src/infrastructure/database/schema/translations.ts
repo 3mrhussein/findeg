@@ -18,7 +18,6 @@ import {
 export const translations = pgTable(
   "translations",
   {
-    id: serial("id").primaryKey(),
     key: text("key").notNull(),
     language: text("language").notNull(),
     value: text("value").notNull(),

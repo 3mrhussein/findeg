@@ -1,91 +1,68 @@
-/**
- * Infrastructure Layer: Service Container
- *
- * This provides dependency injection for services.
- * It creates services with appropriate repository implementations
- * based on environment configuration.
- *
- * This follows the Singleton pattern to ensure services are reused
- * throughout the application lifecycle.
- *
- * Usage:
- * ```typescript
- * const container = ServiceContainer.getInstance();
- * const productService = container.getProductService();
- * ```
- */
-
-import { RepositoryFactory } from "../repositories/RepositoryFactory";
-import { ProductService } from "@/application/services/ProductService";
-import { CartService } from "@/application/services/CartService";
-import { CategoryService } from "@/application/services/CategoryService";
+import { DrizzleProductRepository } from "../repositories/DrizzleProductRepository";
+import { DrizzleCategoryRepository } from "../repositories/DrizzleCategoryRepository";
+import { DrizzleUserRepository } from "../repositories/DrizzleUserRepository";
+import { DrizzleOrderRepository } from "../repositories/DrizzleOrderRepository";
+import { DrizzleReviewRepository } from "../repositories/DrizzleReviewRepository";
 
 /**
  * Service Container
- *
- * Provides dependency injection for services.
- * Creates services with appropriate repository implementations.
+ * 
+ * Simple Dependency Injection container to manage singleton instances 
+ * of repositories and services.
  */
 export class ServiceContainer {
   private static instance: ServiceContainer;
-  private productService: ProductService;
-  private cartService: CartService;
-  private categoryService: CategoryService;
 
-  private constructor() {
-    // Create repositories using factory
-    const productRepository = RepositoryFactory.createProductRepository();
-    const categoryRepository = RepositoryFactory.createCategoryRepository();
+  // Repositories
+  private _productRepository?: DrizzleProductRepository;
+  private _categoryRepository?: DrizzleCategoryRepository;
+  private _userRepository?: DrizzleUserRepository;
+  private _orderRepository?: DrizzleOrderRepository;
+  private _reviewRepository?: DrizzleReviewRepository;
 
-    // Create services with injected repositories
-    this.productService = new ProductService(productRepository);
-    this.cartService = new CartService();
-    this.categoryService = new CategoryService(categoryRepository);
-  }
+  private constructor() {}
 
-  /**
-   * Get singleton instance
-   *
-   * Creates the instance on first call, reuses it afterwards.
-   */
-  static getInstance(): ServiceContainer {
+  public static getInstance(): ServiceContainer {
     if (!ServiceContainer.instance) {
       ServiceContainer.instance = new ServiceContainer();
     }
     return ServiceContainer.instance;
   }
 
-  /**
-   * Get product service
-   *
-   * Returns the ProductService instance with injected repository.
-   */
-  getProductService(): ProductService {
-    return this.productService;
+  get productRepository(): DrizzleProductRepository {
+    if (!this._productRepository) {
+      this._productRepository = new DrizzleProductRepository();
+    }
+    return this._productRepository;
   }
 
-  /**
-   * Get cart service
-   *
-   * Returns the CartService instance.
-   */
-  getCartService(): CartService {
-    return this.cartService;
+  get categoryRepository(): DrizzleCategoryRepository {
+    if (!this._categoryRepository) {
+      this._categoryRepository = new DrizzleCategoryRepository();
+    }
+    return this._categoryRepository;
   }
 
-  /**
-   * Get category service
-   */
-  getCategoryService(): CategoryService {
-    return this.categoryService;
+  get userRepository(): DrizzleUserRepository {
+    if (!this._userRepository) {
+      this._userRepository = new DrizzleUserRepository();
+    }
+    return this._userRepository;
   }
 
-  /**
-   * Reset instance (useful for testing)
-   *
-   * @internal
-   */
-  static reset(): void {
-    ServiceContainer.instance = undefined as any;
+  get orderRepository(): DrizzleOrderRepository {
+    if (!this._orderRepository) {
+      this._orderRepository = new DrizzleOrderRepository();
+    }
+    return this._orderRepository;
+  }
+
+  get reviewRepository(): DrizzleReviewRepository {
+    if (!this._reviewRepository) {
+      this._reviewRepository = new DrizzleReviewRepository();
+    }
+    return this._reviewRepository;
   }
 }
+
+export const container = ServiceContainer.getInstance();

@@ -5,8 +5,27 @@ echo "🚀 Starting development database..."
 
 # Check if Docker is running
 if ! docker info > /dev/null 2>&1; then
-    echo "❌ Docker is not running. Please start Docker and try again."
-    exit 1
+    echo "🐳 Docker is not running. Attempting to start Docker Desktop..."
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        open -a Docker
+        echo "⏳ Waiting for Docker to start (this may take a minute)..."
+        # Wait up to 2 minutes for Docker to be ready
+        COUNTER=0
+        until docker info > /dev/null 2>&1 || [ $COUNTER -eq 24 ]; do
+            printf "."
+            sleep 5
+            ((COUNTER++))
+        done
+        echo ""
+        if ! docker info > /dev/null 2>&1; then
+            echo "❌ Docker failed to start in time. Please check Docker Desktop manually."
+            exit 1
+        fi
+        echo "✅ Docker is now running!"
+    else
+        echo "❌ Docker is not running. Please start Docker and try again."
+        exit 1
+    fi
 fi
 
 # Start the database container

@@ -7,6 +7,8 @@
  */
 
 import postgres from 'postgres';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import * as schema from '../database/schema';
 
 /**
  * Get database connection string from environment
@@ -41,14 +43,14 @@ function getDatabaseUrl(): string {
 export function createDatabaseConnection() {
   const connectionString = getDatabaseUrl();
 
-  return postgres(connectionString, {
+  const client = postgres(connectionString, {
     // Connection pool configuration
     max: 10, // Maximum number of connections in the pool
     idle_timeout: 20, // Close idle connections after 20 seconds
     connect_timeout: 10, // Connection timeout in seconds
 
     // SSL configuration (for production)
-    ssl: process.env.NODE_ENV === 'production' ? 'require' : false,
+    ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
 
     // Transform configuration
     transform: {
@@ -56,6 +58,8 @@ export function createDatabaseConnection() {
       undefined: null,
     },
   });
+
+  return drizzle(client, { schema });
 }
 
 /**

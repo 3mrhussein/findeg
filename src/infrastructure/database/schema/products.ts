@@ -81,8 +81,6 @@ export const products = pgTable("products", {
 export const productTranslations = pgTable(
   "product_translations",
   {
-    id: serial("id").primaryKey(),
-
     // Foreign key to products table
     productId: integer("product_id")
       .notNull()

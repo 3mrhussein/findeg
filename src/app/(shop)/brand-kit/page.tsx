@@ -1,4 +1,4 @@
-import BrandKitTemplate from '@/presentation/components/templates/BrandKitTemplate';
+import BrandKitTemplate from '@/presentation/templates/BrandKitTemplate';
 
 export default function Page() {
   return <BrandKitTemplate />;

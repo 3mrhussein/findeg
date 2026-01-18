@@ -110,82 +110,80 @@ npm run db:logs
 docker-compose exec postgres psql -U findeg_user -d findeg_dev
 ```
 
-For more details, see [docs/DATABASE_SETUP.md](docs/DATABASE_SETUP.md)
+For more details, see [docs/database/SETUP.md](docs/database/SETUP.md)
 
 ---
 
 ## 🏗️ Architecture
 
-This project follows **Clean Architecture** principles with clear separation of concerns:
+FindEg follows **Clean Architecture** principles, ensuring that business logic is isolated from technical details like the database or UI framework.
 
+```mermaid
+graph TD
+    subgraph "Framework Layer (app/)"
+        NextJS["Next.js Routes"]
+        Layouts["Global Layouts"]
+    end
+
+    subgraph "Presentation Layer"
+        Templates["Templates (Server)"]
+        Features["Features (Mixed)"]
+        SharedUI["Shared UI Components"]
+    end
+
+    subgraph "Application Layer"
+        Services["Business Services"]
+        RepoInt["Repository Interfaces"]
+    end
+
+    subgraph "Domain Layer (Core)"
+        Entities["Business Entities"]
+        DomainLogic["Domain Types"]
+    end
+
+    subgraph "Infrastructure Layer"
+        Drizzle["Drizzle ORM"]
+        DB["PostgreSQL"]
+        RepoImpl["Repository Implementations"]
+    end
+
+    Framework --> Presentation
+    Presentation --> Application
+    Application --> Domain
+    Infrastructure -.-> RepoInt
+    Application --> RepoInt
 ```
-src/
-├── app/                    # Next.js App Router (Routes & Pages)
-├── domain/                 # Business Entities & Logic
-│   ├── entities/          # Product, Cart, User entities
-│   └── types/             # Domain type definitions
-├── application/            # Application Services & Use Cases
-│   ├── services/          # Business logic services
-│   └── repositories/      # Repository interfaces
-├── infrastructure/         # External Concerns
-│   ├── database/          # Drizzle ORM & PostgreSQL
-│   ├── repositories/      # Database repository implementations
-│   └── config/            # Configuration files
-├── presentation/           # UI Layer
-│   ├── components/
-│   │   ├── server/        # Server Components (default)
-│   │   ├── client/        # Client Components (interactive)
-│   │   └── ui/            # UI primitives (shadcn-style)
-│   ├── hooks/             # React hooks
-│   └── providers/         # Context providers
-└── lib/                    # Utilities & Constants
-```
 
-### Key Architecture Decisions
+### Layer Responsibilities
 
-**Server Components by Default**
-- Pure UI components are Server Components (no `'use client'`)
-- Faster initial page loads
-- Better SEO
-- Direct service calls (no hooks needed)
-
-**Client Components for Interactivity**
-- Only use `'use client'` when needed (forms, animations, browser APIs)
-- Hooks and state management
-- Event handlers and user interactions
-
-**Clean Architecture Layers**
-- **Domain:** Business logic, independent of frameworks
-- **Application:** Use cases and service orchestration
-- **Infrastructure:** Database, external APIs, file system
-- **Presentation:** UI components and user interaction
+- **Domain**: Pure business logic and entities. Zero dependencies.
+- **Application**: Use cases and service orchestration.
+- **Infrastructure**: Database implementation and external services.
+- **Presentation**: UI components (Server/Client) and user interaction.
 
 ---
 
 ## 📂 Project Structure
 
-### Component Organization (Atomic Design)
+### Component Organization (Feature-based)
 
 ```
 presentation/components/
-├── server/                 # Server Components
-│   ├── atoms/             # Basic building blocks (Button, Icon, Badge)
-│   ├── molecules/         # Simple combinations (ProductCard, CategoryCard)
-│   ├── organisms/         # Complex sections (Header, Footer, ProductGrid)
-│   ├── templates/         # Page templates (HomePage, ShopTemplate)
-│   └── layout/            # Layout components (Container, Grid)
-│
-└── client/                # Client Components
-    ├── atoms/             # Interactive atoms (Input, QuantityInput)
-    ├── molecules/         # Interactive molecules (FilterSidebar, Pagination)
-    └── organisms/         # Interactive organisms (CartDrawer, Chatbot)
+├── features/               # Domain-specific features
+│   ├── shop/              # Product cards, Cart, Category UI
+│   ├── dashboard/         # Charts, Stat cards, Order tables
+│   └── user/              # Auth, Profile components
+├── layout/                 # Structural components (Header, Footer, Container)
+├── shared/                 # Reusable domain components (Icon, Price, PriceBadge)
+├── templates/              # Page-level compositions (HomePage, ProductDetail)
+└── ui/                     # Generic UI primitives (Button, Input, Card - shadcn-style)
 ```
 
-**Atomic Design Principles:**
-- **Atoms:** Smallest units, no dependencies (Button, Icon, Badge)
-- **Molecules:** Groups of atoms (ProductCard = Image + Title + Price + Button)
-- **Organisms:** Complex sections (Header = Logo + Nav + Search + Cart)
-- **Templates:** Page-level structures with layout
+**Organization Principles:**
+- **Features:** Grouped by business domain. Contains both logic and specific UI.
+- **Shared:** Reusable components that carry domain meaning (e.g., a specific Currency display).
+- **UI:** Pure, generic primitives with no domain knowledge.
+- **Templates:** Orchestrate features and layout for a specific route.
 
 ---
 
@@ -232,14 +230,27 @@ const { t } = useTranslation();
 
 ---
 
-## 📚 Documentation
+## 📚 Documentation Map
 
-- **[Database Setup](docs/DATABASE_SETUP.md)** - Complete database guide
-- **[Architecture Layers](docs/architecture/)** - Detailed layer documentation
-- **[Cleanup Summary](docs/CLEANUP_SUMMARY.md)** - Recent codebase cleanup
-- **[Implementation Status](docs/IMPLEMENTATION_STATUS.md)** - Migration progress
-- **[Project Summary](PROJECT_SUMMARY.md)** - High-level overview
-- **[Migration Plan](MIGRATION_PLAN.md)** - Complete migration strategy
+All documentation is centralized in the `docs/` directory.
+
+### 🏛️ Core Architecture
+- **[Architecture Overview](docs/architecture/)** - Deep dive into Clean Architecture layers.
+- **[Domain Layer](docs/architecture/01-domain-layer.md)** - Entities and business rules.
+- **[Application Layer](docs/architecture/02-application-layer.md)** - Services and use cases.
+- **[Infrastructure Layer](docs/architecture/03-infrastructure-layer.md)** - Database and persistence.
+- **[Presentation Layer](docs/architecture/04-presentation-layer.md)** - UI components and patterns.
+
+### 📖 Guides
+- **[Development Guide](docs/guides/DEVELOPMENT.md)** - Step-by-step feature implementation & setup.
+- **[Scaling Standards](docs/guides/SCALING.md)** - How to grow the codebase maintainably.
+- **[Static Content Guide](docs/guides/STATIC_CONTENT.md)** - Managing page-scoped UI text and i18n.
+- **[Onboarding](docs/onboarding/README.md)** - Getting started for new developers.
+
+### 📊 Database & Translations
+- **[Database Setup](docs/database/SETUP.md)** - Local and production DB management.
+- **[Database Schema](docs/database/SCHEMA.md)** - Auto-generated ER diagram and table definitions.
+- **[Translation Strategy](docs/translations/README.md)** - Static vs Dynamic translation patterns.
 
 ---
 
