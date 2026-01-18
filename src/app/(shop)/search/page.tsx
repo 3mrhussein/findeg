@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import SearchTemplate from '@/components/templates/SearchTemplate';
+import SearchTemplate from '@/presentation/components/server/templates/SearchTemplate';
 
 export default async function Page({
   searchParams,

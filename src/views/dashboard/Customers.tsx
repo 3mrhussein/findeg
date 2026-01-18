@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTranslation } from '@/hooks';
+import { useTranslation } from '@/presentation/hooks';
 
 export const Customers: React.FC = () => {
     const { t } = useTranslation();

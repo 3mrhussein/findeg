@@ -2,9 +2,9 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { useTranslation } from '@/hooks';
-import { Container } from '@/components/layout/Container';
-import { Button } from '@/components/ui/button';
+import { useTranslation } from '@/presentation/hooks';
+import { Container } from '@/presentation/components/server/layout/Container';
+import { Button } from '@/presentation/components/ui/button';
 
 const ErrorIllustration = () => (
     <svg width="120" height="120" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-primary opacity-30 mb-6">

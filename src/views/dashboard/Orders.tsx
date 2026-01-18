@@ -1,9 +1,9 @@
 import React from 'react';
-import { useTranslation, usePagination } from '@/hooks';
-import { orders as allOrders } from '@/constants';
-import { OrderTable } from '@/components/organisms/OrderTable';
-import { Pagination } from '@/components/molecules/Pagination';
-import { Card, CardContent } from '@/components/ui/card';
+import { useTranslation, usePagination } from '@/presentation/hooks';
+import { orders as allOrders } from '@/lib/constants';
+import { OrderTable } from '@/presentation/components/organisms/OrderTable';
+import { Pagination } from '@/presentation/components/client/molecules/Pagination';
+import { Card, CardContent } from '@/presentation/components/ui/card';
 
 export const Orders: React.FC = () => {
     const { t } = useTranslation();

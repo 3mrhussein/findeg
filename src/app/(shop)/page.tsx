@@ -1,4 +1,4 @@
-import HomePage from '@/components/templates/HomePage';
+import HomePage from '@/presentation/components/server/templates/HomePage';
 
 /**
  * Shop Root Page

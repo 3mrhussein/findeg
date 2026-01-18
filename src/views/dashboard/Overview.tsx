@@ -1,13 +1,13 @@
 import React from 'react';
-import { useTranslation } from '@/hooks';
-import { StatCard } from '@/components/molecules/StatCard';
-import { SalesChart } from '@/components/molecules/SalesChart';
-import { UserActivityChart } from '@/components/molecules/UserActivityChart';
-import { DeviceUsageChart } from '@/components/molecules/DeviceUsageChart';
-import { Icon } from '@/components/atoms/Icon';
-import { products, orders } from '@/constants';
-import { OrderTable } from '@/components/organisms/OrderTable';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useTranslation } from '@/presentation/hooks';
+import { StatCard } from '@/presentation/components/client/molecules/StatCard';
+import { SalesChart } from '@/presentation/components/client/molecules/SalesChart';
+import { UserActivityChart } from '@/presentation/components/client/molecules/UserActivityChart';
+import { DeviceUsageChart } from '@/presentation/components/client/molecules/DeviceUsageChart';
+import { Icon } from '@/presentation/components/server/atoms/Icon';
+import { products, orders } from '@/lib/constants';
+import { OrderTable } from '@/presentation/components/organisms/OrderTable';
+import { Card, CardContent, CardHeader, CardTitle } from '@/presentation/components/ui/card';
 
 export const Overview: React.FC = () => {
     const { t } = useTranslation();
