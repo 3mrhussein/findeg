@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import ProductDetailTemplate from '@/components/templates/ProductDetailTemplate';
+import ProductDetailTemplate from '@/presentation/templates/ProductDetailTemplate';
 import { products } from '@/lib/constants';
 
 export async function generateStaticParams() {

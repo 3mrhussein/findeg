@@ -1,169 +1,200 @@
 # FindEg.com - Modern E-commerce Platform
 
-FindEg.com is a modern, trendy e-commerce web application specializing in stationary, kids' toys, and school supplies. This project serves as a comprehensive brand kit and a fully functional storefront, built with a focus on great UI/UX, reusability, and cutting-edge web technologies.
+FindEg.com is a modern, trendy e-commerce web application specializing in stationary, kids' toys, and school supplies. Built with Next.js 16, clean architecture principles, and a focus on great UI/UX.
 
-## 🚀 Getting Started
+## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js (v18 or higher)
-- npm or yarn
+- **Node.js** (v18 or higher)
+- **Docker** (for database)
+- **npm** or **yarn**
 
 ### Installation
-1. Clone the repository
-2. Install dependencies:
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd 27-10-2025ecommerceV2
+   ```
+
+2. **Install dependencies**
    ```bash
    npm install
    ```
 
-### Running the Project
-We have a custom script to handle port conflicts automatically. Always use:
-```bash
-npm run dev
-```
-*This script checks if port 3000 is in use, kills the process if necessary, and then starts the Next.js server.*
+3. **Set up the database**
+   ```bash
+   # Start PostgreSQL in Docker
+   npm run db:start
+   
+   # Push database schema
+   npm run db:push
+   
+   # (Optional) Seed with sample data
+   npm run db:seed
+   ```
+
+4. **Run the development server**
+   ```bash
+   npm run dev
+   ```
+
+   Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
 
-## 🏗️ Architecture & Design Patterns
+## 🐳 Docker Database Setup
 
-We use a combination of **Next.js App Router**, **Atomic Design**, and the **Container/Presenter Pattern** to ensure scalability and maintainability.
+This project uses **Docker** to run a PostgreSQL database for development, making it easy to get started without installing PostgreSQL locally.
 
-### 1. Next.js App Router Structure
-We use the modern App Router (`app/` directory) for routing, layouts, and data fetching.
+### Database Scripts
+
+| Script | Command | Description |
+|--------|---------|-------------|
+| **Start Database** | `npm run db:start` | Starts the PostgreSQL container and waits for it to be ready |
+| **Stop Database** | `npm run db:stop` | Stops the PostgreSQL container |
+| **Reset Database** | `npm run db:reset` | ⚠️ **Deletes all data** and creates a fresh database |
+| **View Logs** | `npm run db:logs` | Shows database container logs (useful for debugging) |
+| **Push Schema** | `npm run db:push` | Pushes your Drizzle schema to the database |
+| **Generate Migration** | `npm run db:generate` | Generates migration files from schema changes |
+| **Run Migrations** | `npm run db:migrate` | Runs pending database migrations |
+| **Open Studio** | `npm run db:studio` | Opens Drizzle Studio to browse/edit database |
+| **Seed Database** | `npm run db:seed` | Populates database with sample data |
+
+### Why Use These Scripts?
+
+- **`db:start`** - Your first step! Starts PostgreSQL in Docker so your app can connect to a database
+- **`db:push`** - After starting the database, this creates all your tables based on your schema
+- **`db:seed`** - Adds sample products, categories, and users so you can test the app immediately
+- **`db:stop`** - Stops the database when you're done (saves system resources)
+- **`db:reset`** - Use when you want to start fresh or if your database gets into a bad state
+- **`db:logs`** - Check if database is having issues or to see query logs
+- **`db:studio`** - Visual interface to see and edit your data (like phpMyAdmin for PostgreSQL)
+
+### Database Connection Details
+
+- **Host:** `localhost`
+- **Port:** `5432`
+- **Database:** `findeg_dev`
+- **User:** `findeg_user`
+- **Password:** `findeg_dev_password`
+- **Connection String:** `postgresql://findeg_user:findeg_dev_password@localhost:5432/findeg_dev`
+
+> **Note:** These credentials are already configured in `.env.local`. The database URL is automatically set when you run `npm run db:start`.
+
+### Troubleshooting Database Issues
+
+**Port 5432 already in use?**
+```bash
+# Option 1: Stop your local PostgreSQL
+brew services stop postgresql
+
+# Option 2: Change port in docker-compose.yml
+# Change "5432:5432" to "5433:5432" and update .env.local
+```
+
+**Database won't start?**
+```bash
+# Check if Docker is running
+docker info
+
+# View container status
+docker-compose ps
+
+# Check logs for errors
+npm run db:logs
+```
+
+**Need to access database directly?**
+```bash
+docker-compose exec postgres psql -U findeg_user -d findeg_dev
+```
+
+For more details, see [docs/database/SETUP.md](docs/database/SETUP.md)
+
+---
+
+## 🏗️ Architecture
+
+FindEg follows **Clean Architecture** principles, ensuring that business logic is isolated from technical details like the database or UI framework.
 
 ```mermaid
 graph TD
-    A[app/] --> B[layout.tsx]
-    B --> C[page.tsx]
-    B --> D[loading.tsx]
-    B --> E[error.tsx]
-    A --> F[(shop)]
-    F --> G[layout.tsx]
-    F --> H[page.tsx]
-    A --> I[(dashboard)]
+    subgraph "Framework Layer (app/)"
+        NextJS["Next.js Routes"]
+        Layouts["Global Layouts"]
+    end
+
+    subgraph "Presentation Layer"
+        Templates["Templates (Server)"]
+        Features["Features (Mixed)"]
+        SharedUI["Shared UI Components"]
+    end
+
+    subgraph "Application Layer"
+        Services["Business Services"]
+        RepoInt["Repository Interfaces"]
+    end
+
+    subgraph "Domain Layer (Core)"
+        Entities["Business Entities"]
+        DomainLogic["Domain Types"]
+    end
+
+    subgraph "Infrastructure Layer"
+        Drizzle["Drizzle ORM"]
+        DB["PostgreSQL"]
+        RepoImpl["Repository Implementations"]
+    end
+
+    Framework --> Presentation
+    Presentation --> Application
+    Application --> Domain
+    Infrastructure -.-> RepoInt
+    Application --> RepoInt
 ```
 
-- **`layout.tsx`**: Defines the shared UI for a segment (e.g., Header, Footer).
-- **`page.tsx`**: The unique UI for a route.
-- **`loading.tsx`**: Instant loading state (Suspense fallback).
-- **`error.tsx`**: Error boundary for the segment.
-- **`(groups)`**: Folders with parentheses (e.g., `(shop)`) are Route Groups. They organize files without affecting the URL path.
+### Layer Responsibilities
 
-### 2. Atomic Design
-We organize components based on their complexity. This helps in understanding the building blocks of the UI.
-
-```mermaid
-graph TD
-    A[Components] --> B[Atoms]
-    A --> C[Molecules]
-    A --> D[Organisms]
-    A --> E[Templates/Layouts]
-
-    B --> B1[Button]
-    B --> B2[Icon]
-    B --> B3[Badge]
-
-    C --> C1[ProductCard]
-    C --> C2[SearchBar]
-
-    D --> D1[Header]
-    D --> D2[ProductGrid]
-    D --> D3[CartDrawer]
-```
-
-- **Atoms**: Basic building blocks (Buttons, Inputs, Icons). They have no dependencies.
-- **Molecules**: Groups of atoms working together (Search Bar = Input + Button).
-- **Organisms**: Complex sections of the interface (Header, Footer, Product Grid).
-- **Templates/Layouts**: Page-level structures.
-
-### 3. Container/Presenter Pattern
-To separate logic from UI, we often split complex components into two parts within the same file.
-
-**Why?**
-- **Separation of Concerns**: Logic (state, effects) is separate from View (JSX, styles).
-- **Reusability**: The UI component can be reused with different data.
-- **Testing**: Easier to test logic and UI independently.
-
-**Example (`Header.tsx`):**
-```tsx
-// 1. Presenter (UI Component)
-// Receives data via props. No hooks or side effects.
-export const HeaderUI = ({ cartCount, onToggleCart }) => {
-  return (
-    <header>
-      <Logo />
-      <button onClick={onToggleCart}>Cart ({cartCount})</button>
-    </header>
-  );
-};
-
-// 2. Container (Logic Component)
-// Handles state, hooks, and data fetching.
-export const Header = () => {
-  const { cartCount, toggleCart } = useCart(); // Custom Hook
-  
-  return <HeaderUI cartCount={cartCount} onToggleCart={toggleCart} />;
-};
-```
+- **Domain**: Pure business logic and entities. Zero dependencies.
+- **Application**: Use cases and service orchestration.
+- **Infrastructure**: Database implementation and external services.
+- **Presentation**: UI components (Server/Client) and user interaction.
 
 ---
 
 ## 📂 Project Structure
 
+### Component Organization (Feature-based)
+
 ```
-/
-├── app/                  # Next.js App Router (Routes & Pages)
-│   ├── (shop)/           # Shop-related routes (grouped)
-│   ├── (dashboard)/      # Dashboard routes (grouped)
-│   ├── layout.tsx        # Root layout
-│   └── globals.css       # Global styles & Tailwind directives
-├── components/           # Reusable UI components
-│   ├── atoms/            # Smallest units (Button, Icon)
-│   ├── molecules/        # Groups of atoms (ProductCard)
-│   ├── organisms/        # Complex sections (Header, Footer)
-│   └── ui/               # Headless UI primitives (shadcn-like)
-├── hooks/                # Custom React Hooks (Logic reuse)
-├── lib/                  # Utilities, Constants, Helpers
-├── types/                # TypeScript definitions
-└── views/                # Page-specific content (keeps app/ clean)
+presentation/components/
+├── features/               # Domain-specific features
+│   ├── shop/              # Product cards, Cart, Category UI
+│   ├── dashboard/         # Charts, Stat cards, Order tables
+│   └── user/              # Auth, Profile components
+├── layout/                 # Structural components (Header, Footer, Container)
+├── shared/                 # Reusable domain components (Icon, Price, PriceBadge)
+├── templates/              # Page-level compositions (HomePage, ProductDetail)
+└── ui/                     # Generic UI primitives (Button, Input, Card - shadcn-style)
 ```
 
-**Note on `views/` directory:**
-We use a `views/` directory to store the actual page content. The `app/page.tsx` files simply import and render these views. This keeps the routing layer (`app/`) clean and separates it from the page implementation.
-
----
-
-## 🔄 Data Flow
-
-We use **React Context** for global state management to avoid prop drilling.
-
-```mermaid
-graph TD
-    A[Providers] --> B[CartProvider]
-    A --> C[ThemeProvider]
-    B --> D[Component Tree]
-    C --> D
-    
-    D --> E[useCart Hook]
-    D --> F[useTheme Hook]
-    
-    E --> G[CartDrawer Component]
-    E --> H[Header Component]
-```
-
-- **Providers**: Wrap the application in `app/layout.tsx`.
-- **Hooks**: Custom hooks (`useCart`, `useTheme`) consume these contexts.
-- **Components**: Use hooks to access and modify global state.
+**Organization Principles:**
+- **Features:** Grouped by business domain. Contains both logic and specific UI.
+- **Shared:** Reusable components that carry domain meaning (e.g., a specific Currency display).
+- **UI:** Pure, generic primitives with no domain knowledge.
+- **Templates:** Orchestrate features and layout for a specific route.
 
 ---
 
 ## 🎨 Styling & Theming
 
-- **Tailwind CSS**: Utility-first CSS framework.
-- **CSS Variables**: Used for theming (Light/Dark mode). Defined in `app/globals.css`.
-- **`cn` Utility**: A helper function in `lib/utils.ts` to merge Tailwind classes conditionally.
+- **Tailwind CSS:** Utility-first CSS framework
+- **CSS Variables:** Theme colors defined in `app/globals.css`
+- **Dark Mode:** Automatic theme switching support
+- **`cn` Utility:** Helper function in `lib/utils.ts` for conditional classes
 
-**Example Usage:**
+**Example:**
 ```tsx
 <div className={cn(
   "bg-primary text-white", 
@@ -173,75 +204,126 @@ graph TD
 
 ---
 
-## 🛠️ Key Features Implementation
+## 🌍 Internationalization (i18n)
 
-### Internationalization (i18n)
-- We use a custom hook `useTranslation` (`hooks/useTranslation.ts`).
-- Translations are stored in `lib/i18n.ts`.
-- Supports English (`en`) and Arabic (`ar`) with RTL support.
+- **Supported Languages:** English (`en`), Arabic (`ar`)
+- **RTL Support:** Automatic right-to-left layout for Arabic
+- **Translation Hook:** `useTranslation()` for client components
+- **Static Translations:** Stored in `lib/i18n.ts`
 
-### AI Image Generation
-- Located in `components/organisms/ImageGenerator.tsx`.
-- Uses a mock implementation for now (simulating API calls).
-
----
-
-## 🌍 Content Management & Internationalization
-
-We separate **Static Content** (text, labels) and **Configuration Data** (menus, product lists) from the component logic. This makes the app scalable and easy to translate.
-
-### 1. Text & Translations (`lib/i18n.ts`)
-All user-facing text is stored here.
-
-```mermaid
-graph LR
-    A[Component] -- "useTranslation('key')" --> B[useTranslation Hook]
-    B -- "Reads" --> C[lib/i18n.ts]
-    C -- "Returns Text" --> A
-```
-
-**Benefits:**
-- **Scalability**: Adding a new language (e.g., French) only requires adding a new key in `i18n.ts`. No component code changes needed.
-- **Maintainability**: Copywriters can edit text in one file without touching code.
-
-### 2. Data & Configuration (`lib/constants.ts`)
-Structured data like navigation menus, mock products, and FAQ items live here.
-
-**Pattern:**
-1.  **Define Structure**: `lib/constants.ts` defines the data shape (e.g., `labelKey` for a menu item).
-2.  **Define Text**: `lib/i18n.ts` defines the actual text for that key.
-3.  **Render**: Components iterate over the data and use the key to fetch the text.
-
-**Example:**
+**Usage:**
 ```tsx
-// lib/constants.ts
-export const navItems = [{ labelKey: 'nav_home', href: '/' }];
-
-// lib/i18n.ts
-export const translations = { en: { nav_home: 'Home' } };
-
-// Component
-navItems.map(item => <Link>{t(item.labelKey)}</Link>)
+const { t } = useTranslation();
+<h1>{t('welcome_message')}</h1>
 ```
 
 ---
 
-## 📝 Contribution Workflow
+## 🛠️ Development Scripts
 
-1.  **Atomic Design**: Place new components in the correct folder (`atoms`, `molecules`, etc.).
-2.  **Types**: Define interfaces in `types/` or co-located with the component.
-3.  **Constants**: Use `lib/constants.ts` for mock data.
-4.  **Hooks**: Extract reusable logic into `hooks/`.
+| Script | Command | Description |
+|--------|---------|-------------|
+| **Development** | `npm run dev` | Start dev server (auto-kills port 3000 if busy) |
+| **Build** | `npm run build` | Create production build |
+| **Start** | `npm run start` | Run production server |
+| **Lint** | `npm run lint` | Run ESLint |
 
 ---
 
-## ❓ FAQ for New Developers
+## 📚 Documentation Map
 
-**Q: I'm lost in the `app` directory. Where is the code?**
-A: Check the `views/` directory. We import page content from there to keep `app/` focused on routing.
+All documentation is centralized in the `docs/` directory.
 
-**Q: How do I change the colors?**
-A: Edit the CSS variables in `app/globals.css` or the Tailwind config in `tailwind.config.ts`.
+### 🏛️ Core Architecture
+- **[Architecture Overview](docs/architecture/)** - Deep dive into Clean Architecture layers.
+- **[Domain Layer](docs/architecture/01-domain-layer.md)** - Entities and business rules.
+- **[Application Layer](docs/architecture/02-application-layer.md)** - Services and use cases.
+- **[Infrastructure Layer](docs/architecture/03-infrastructure-layer.md)** - Database and persistence.
+- **[Presentation Layer](docs/architecture/04-presentation-layer.md)** - UI components and patterns.
 
-**Q: Why `npm run dev`?**
-A: It runs a custom script (`scripts/dev.js`) that ensures port 3000 is free before starting the server.
+### 📖 Guides
+- **[Development Guide](docs/guides/DEVELOPMENT.md)** - Step-by-step feature implementation & setup.
+- **[Scaling Standards](docs/guides/SCALING.md)** - How to grow the codebase maintainably.
+- **[Static Content Guide](docs/guides/STATIC_CONTENT.md)** - Managing page-scoped UI text and i18n.
+- **[Onboarding](docs/onboarding/README.md)** - Getting started for new developers.
+
+### 📊 Database & Translations
+- **[Database Setup](docs/database/SETUP.md)** - Local and production DB management.
+- **[Database Schema](docs/database/SCHEMA.md)** - Auto-generated ER diagram and table definitions.
+- **[Translation Strategy](docs/translations/README.md)** - Static vs Dynamic translation patterns.
+
+---
+
+## 🔑 Key Features
+
+### E-commerce Functionality
+- Product browsing with categories
+- Advanced filtering and search
+- Shopping cart with variants
+- Product reviews and ratings
+- Wishlist management
+- Checkout process
+
+### Technical Features
+- **Server-Side Rendering (SSR)** - Fast initial page loads
+- **Static Site Generation (SSG)** - Pre-rendered pages
+- **Image Optimization** - Automatic image optimization
+- **Code Splitting** - Optimized bundle sizes
+- **TypeScript** - Full type safety
+- **Clean Architecture** - Maintainable and testable code
+
+---
+
+## 🧪 Testing
+
+```bash
+# Run tests (when implemented)
+npm run test
+
+# Run tests in watch mode
+npm run test:watch
+```
+
+---
+
+## 📝 Contributing
+
+1. **Follow Atomic Design** - Place components in correct folders
+2. **Server Components First** - Only use Client Components when needed
+3. **Type Everything** - Define interfaces for all props
+4. **Use Constants** - Store mock data in `lib/constants.ts`
+5. **Extract Logic** - Create hooks for reusable logic
+
+---
+
+## ❓ FAQ
+
+**Q: Why `npm run dev` instead of `next dev`?**  
+A: Our custom script (`scripts/dev.js`) automatically kills any process using port 3000 before starting the server.
+
+**Q: Where is the actual page code?**  
+A: Page templates are in `src/presentation/components/server/templates/`. The `app/` directory just imports them.
+
+**Q: How do I add a new page?**  
+A: Create a template in `src/presentation/components/server/templates/`, then import it in the corresponding `app/*/page.tsx` file.
+
+**Q: Database not connecting?**  
+A: Make sure you've run `npm run db:start` and that Docker is running. Check `.env.local` has the correct `DATABASE_URL`.
+
+**Q: How do I change colors?**  
+A: Edit CSS variables in `app/globals.css` or update `tailwind.config.js`.
+
+**Q: What's the difference between Server and Client components?**  
+A: Server Components render on the server (no `'use client'`), Client Components run in the browser (have `'use client'` directive).
+
+---
+
+## 📄 License
+
+This project is private and proprietary.
+
+---
+
+## 👥 Team
+
+**FindEg Team** - Building the future of e-commerce in Egypt 🇪🇬

@@ -1,8 +1,8 @@
 import React, { Suspense } from 'react';
-import { Header } from '@/components/organisms/Header';
-import { AnnouncementBar } from '@/components/organisms/AnnouncementBar';
-import { Chatbot } from '@/components/organisms/Chatbot';
-import { ShopClientLayout } from '@/components/layout/ShopClientLayout';
+import { Header } from '@/presentation/shared/layout/Header';
+import { AnnouncementBar } from '@/presentation/shared/layout/AnnouncementBar';
+import { Chatbot } from '@/presentation/shared/components/Chatbot';
+import { ShopClientLayout } from '@/presentation/shared/layout/ShopClientLayout';
 
 export default function ShopLayout({
   children,
