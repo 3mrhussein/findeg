@@ -1,4 +1,4 @@
-import ShopTemplate from '@/presentation/components/server/templates/ShopTemplate';
+import ShopTemplate from '@/presentation/components/templates/ShopTemplate';
 
 export default function Page() {
   return <ShopTemplate />;

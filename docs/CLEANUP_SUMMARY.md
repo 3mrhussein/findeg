@@ -30,29 +30,20 @@ src/
 ├── presentation/           # Presentation layer
 │   ├── components/
 │   │   ├── client/        # Client components
+│   │   │   ├── templates/ # Page templates
 │   │   ├── server/        # Server components
 │   │   └── ui/            # UI primitives (shadcn-style)
 │   ├── hooks/             # React hooks
 │   ├── providers/         # Context providers
 │   └── ui/                # UI adapters
-├── types/                  # TypeScript type definitions
-└── views/                  # Dashboard views (to be migrated)
+└── types/                  # TypeScript type definitions
 ```
 
 ## Recommendations
 
-### Files to Keep (Currently in Use)
-- **`src/views/`** - Still in use by dashboard pages
-  - `ErrorPage.tsx` - Used by error boundaries
-  - `dashboard/Overview.tsx` - Dashboard overview page
-  - `dashboard/Orders.tsx` - Orders management
-  - `dashboard/Products.tsx` - Products management
-  - `dashboard/Customers.tsx` - Customer management
-
 ### Future Cleanup Opportunities
-1. **Migrate `src/views/` to templates** - Move dashboard views to `src/presentation/components/server/templates/`
-2. **Review `src/presentation/ui/adapters/`** - Check if UI adapter pattern is still needed
-3. **Consolidate documentation** - Some docs may be outdated after clean architecture migration
+1. **Review `src/presentation/ui/adapters/`** - Check if UI adapter pattern is still needed
+2. **Consolidate documentation** - Some docs may be outdated after clean architecture migration
 
 ## .gitignore Updated
 The `.gitignore` file already includes `.DS_Store` to prevent future commits of system files.

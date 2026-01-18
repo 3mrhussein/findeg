@@ -1,5 +1,5 @@
 import { Skeleton } from "@/presentation/components/ui/skeleton"
-import { Container } from '@/presentation/components/server/layout/Container';
+import { Container } from '@/presentation/components/layout/Container';
 
 export default function Loading() {
   return (

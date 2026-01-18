@@ -1,4 +1,4 @@
-import MyAccountTemplate from '@/presentation/components/server/templates/MyAccountTemplate';
+import MyAccountTemplate from '@/presentation/components/templates/MyAccountTemplate';
 
 export default function Page() {
   return <MyAccountTemplate />;

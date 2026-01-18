@@ -1,6 +1,6 @@
 import React from 'react';
 import type { NavigationItem } from '@/types';
-import { Icon } from '@/presentation/components/server/atoms/Icon';
+import { Icon } from '@/presentation/components/shared/Icon';
 
 /**
  * Defines the main navigation structure of the application.

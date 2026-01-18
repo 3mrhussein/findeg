@@ -1,4 +1,4 @@
-import CheckoutTemplate from '@/presentation/components/server/templates/CheckoutTemplate';
+import CheckoutTemplate from '@/presentation/components/templates/CheckoutTemplate';
 
 export default function Page() {
   return <CheckoutTemplate />;
