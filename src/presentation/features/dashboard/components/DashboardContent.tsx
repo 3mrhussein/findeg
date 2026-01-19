@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useTranslation } from '@/presentation/shared/hooks';
+import { useTranslations, useLocale } from 'next-intl';
+import { T } from '@/i18n/content';
 import { useUser } from '@/presentation/features/user/hooks/useUser';
 import { Logo } from '@/presentation/shared/components/Logo';
 import { Button } from '@/presentation/shared/ui/button';
@@ -42,17 +43,18 @@ const LogoIcon = () => (
 )
 
 export const DashboardContent: React.FC = () => {
-    const { t, language } = useTranslation();
+    const t = useTranslations();
     const router = useRouter();
     const [activeView, setActiveView] = useState<DashboardView>('overview');
     const [isCollapsed, setIsCollapsed] = useState(false);
-    const isRtl = language === 'ar';
+    const locale = useLocale();
+    const isRtl = locale === 'ar';
 
     const navItems = [
-        { id: 'overview', label: t('dashboard_overview'), icon: <Icon name="dashboard" className="w-5 h-5" /> },
-        { id: 'products', label: t('dashboard_products'), icon: <Icon name="package" className="w-5 h-5" /> },
-        { id: 'orders', label: t('dashboard_orders'), icon: <Icon name="shoppingCart" className="w-5 h-5" /> },
-        { id: 'customers', label: t('dashboard_customers'), icon: <Icon name="users" className="w-5 h-5" /> },
+        { id: 'overview', label: t(T.PAGES.DASHBOARD.OVERVIEW), icon: <Icon name="dashboard" className="w-5 h-5" /> },
+        { id: 'products', label: t(T.PAGES.DASHBOARD.PRODUCTS), icon: <Icon name="package" className="w-5 h-5" /> },
+        { id: 'orders', label: t(T.PAGES.DASHBOARD.ORDERS), icon: <Icon name="shoppingCart" className="w-5 h-5" /> },
+        { id: 'customers', label: t(T.PAGES.DASHBOARD.CUSTOMERS), icon: <Icon name="users" className="w-5 h-5" /> },
     ];
     
     const activeNavItem = navItems.find(item => item.id === activeView);
@@ -114,13 +116,13 @@ export const DashboardContent: React.FC = () => {
                     </ul>
                 </nav>
                  <div className="p-2 border-t border-border">
-                    <Tooltip tip={isCollapsed ? "Expand sidebar" : "Collapse sidebar"} side={isRtl ? 'left' : 'right'}>
+                    <Tooltip tip={isCollapsed ? t(T.PAGES.DASHBOARD.EXPAND_SIDEBAR) : t(T.PAGES.DASHBOARD.COLLAPSE_SIDEBAR)} side={isRtl ? 'left' : 'right'}>
                          <Button
                             variant="ghost"
                             onClick={() => setIsCollapsed(!isCollapsed)}
                             className="w-full justify-center"
                             size="icon"
-                            aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+                            aria-label={isCollapsed ? t(T.PAGES.DASHBOARD.EXPAND_SIDEBAR) : t(T.PAGES.DASHBOARD.COLLAPSE_SIDEBAR)}
                         >
                             <Icon name="chevronRight" className={cn('w-5 h-5 transition-transform duration-300', isCollapsed !== isRtl && 'rotate-180')} />
                         </Button>
@@ -135,7 +137,7 @@ export const DashboardContent: React.FC = () => {
                         {activeView === 'products' && (
                              <Button>
                                 <Icon name="plus" className="w-5 h-5 ltr:mr-2 rtl:ml-2" />
-                                {t('dashboard_add_product')}
+                                {t(T.PAGES.DASHBOARD.ADD_PRODUCT)}
                             </Button>
                         )}
                      </div>

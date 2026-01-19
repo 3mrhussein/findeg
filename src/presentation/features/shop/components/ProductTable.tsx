@@ -2,7 +2,8 @@
 
 import React from 'react';
 import type { Product } from '@/types';
-import { useTranslation } from '@/presentation/shared/hooks';
+import { useTranslations } from 'next-intl';
+import { T } from '@/i18n/content';
 import { Button } from '@/presentation/shared/ui/button';
 import { Icon } from '@/presentation/shared/components/Icon';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/presentation/shared/ui/table';
@@ -17,11 +18,11 @@ export const ProductTableUI: React.FC<ProductTableUIProps> = ({ products, t, get
     <Table>
         <TableHeader>
             <TableRow>
-                <TableHead>{t('table_header_product_name')}</TableHead>
-                <TableHead>{t('table_header_category')}</TableHead>
-                <TableHead>{t('table_header_price')}</TableHead>
-                <TableHead>{t('table_header_stock')}</TableHead>
-                <TableHead>{t('table_header_actions')}</TableHead>
+                <TableHead>{t(T.PAGES.DASHBOARD.TABLE.PRODUCT_NAME)}</TableHead>
+                <TableHead>{t(T.PAGES.DASHBOARD.TABLE.CATEGORY)}</TableHead>
+                <TableHead>{t(T.PAGES.DASHBOARD.TABLE.PRICE)}</TableHead>
+                <TableHead>{t(T.PAGES.DASHBOARD.TABLE.STOCK)}</TableHead>
+                <TableHead>{t(T.PAGES.DASHBOARD.TABLE.ACTIONS)}</TableHead>
             </TableRow>
         </TableHeader>
         <TableBody>
@@ -47,7 +48,7 @@ interface ProductTableProps {
 }
 
 export const ProductTable: React.FC<ProductTableProps> = ({ products }) => {
-    const { t } = useTranslation();
+    const t = useTranslations();
     const getStock = (product: Product) => {
         if (!product.variants) return 10; // Mock stock for non-variant products
         return Object.values(product.variants).flatMap(v => v.options).reduce((sum, opt) => sum + opt.stock, 0);

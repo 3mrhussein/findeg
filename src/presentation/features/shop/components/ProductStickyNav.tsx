@@ -2,20 +2,21 @@
 
 import React, { useState, useEffect } from 'react';
 import { Container } from '@/presentation/shared/layout/Container';
-import { useTranslation } from '@/presentation/shared/hooks';
+import { useTranslations } from 'next-intl';
+import { T } from '@/i18n/content';
 
 interface ProductStickyNavProps {
   offsetTop: number;
 }
 
 export const ProductStickyNav: React.FC<ProductStickyNavProps> = ({ offsetTop }) => {
-  const { t } = useTranslation();
+  const t = useTranslations();
   const [isNavSticky, setIsNavSticky] = useState(false);
 
   const navItems = [
-    { key: 'product_nav_description', href: '#description' },
-    { key: 'product_nav_reviews', href: '#reviews' },
-    { key: 'product_nav_recommended', href: '#recommended' },
+    { label: t(T.PAGES.PRODUCT_DETAIL.NAV_DESCRIPTION), href: '#description' },
+    { label: t(T.PAGES.PRODUCT_DETAIL.NAV_REVIEWS), href: '#reviews' },
+    { label: t(T.PAGES.PRODUCT_DETAIL.NAV_RECOMMENDED), href: '#recommended' },
   ];
 
   useEffect(() => {
@@ -31,8 +32,8 @@ export const ProductStickyNav: React.FC<ProductStickyNavProps> = ({ offsetTop })
       <Container>
         <div className="flex items-center justify-center border-b border-border">
           {navItems.map(item => (
-            <a key={item.key} href={item.href} className="px-6 py-4 font-medium text-muted-foreground hover:text-primary border-b-2 border-transparent hover:border-primary transition-all duration-200">
-              {t(item.key as any)}
+            <a key={item.href} href={item.href} className="px-6 py-4 font-medium text-muted-foreground hover:text-primary border-b-2 border-transparent hover:border-primary transition-all duration-200">
+              {item.label}
             </a>
           ))}
         </div>

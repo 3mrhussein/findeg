@@ -8,7 +8,8 @@ import { Product } from '@/types';
 import { Icon } from '@/presentation/shared/components/Icon';
 import { Price } from '@/presentation/shared/components/Price';
 import { Button } from '@/presentation/shared/components/Button';
-import { useTranslation } from '@/presentation/shared/hooks';
+import { useTranslations } from 'next-intl';
+import { T } from '@/i18n/content';
 import { useCart } from '@/presentation/features/cart/hooks/useCart';
 
 interface ProductListItemUIProps {
@@ -55,7 +56,7 @@ interface ProductListItemProps {
 }
 
 export const ProductListItem: React.FC<ProductListItemProps> = ({ product }) => {
-    const { t } = useTranslation();
+    const t = useTranslations();
     const { addToCart } = useCart();
     const router = useRouter();
     
@@ -83,7 +84,7 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product }) => 
         <ProductListItemUI
             product={product}
             onAddToCart={handleAddToCart}
-            addToCartText={t('product_card_add_to_cart')}
+            addToCartText={t(T.PAGES.PRODUCT_CARD.ADD_TO_CART)}
             onCardClick={handleCardClick}
         />
     );

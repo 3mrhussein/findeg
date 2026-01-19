@@ -1,6 +1,6 @@
-import React from 'react';
+import { useTranslations } from 'next-intl';
+import { T } from '@/i18n/content';
 import { categories } from '@/constants';
-import { getTranslation } from '@/lib/i18n-server';
 import { Container } from '@/presentation/shared/layout/Container';
 import { CategoryCard } from '@/presentation/features/shop/components/CategoryCard';
 
@@ -8,16 +8,16 @@ interface CategoriesTemplateProps {
   language?: 'en' | 'ar';
 }
 
-const CategoriesTemplate: React.FC<CategoriesTemplateProps> = ({ language = 'en' }) => {
-    const { t } = getTranslation(language);
+const CategoriesTemplate: React.FC<CategoriesTemplateProps> = () => {
+    const t = useTranslations();
 
     return (
         <div className="bg-muted">
             <Container className="py-12 lg:py-16">
                 <div className="text-center mb-12">
-                    <h1 className="text-4xl font-bold text-foreground">{t('categories_page_title')}</h1>
+                    <h1 className="text-4xl font-bold text-foreground">{t(T.LAYOUT.NAV.CATEGORIES)}</h1>
                     <p className="text-center text-muted-foreground mt-4 max-w-2xl mx-auto">
-                        {t('shop_by_category_subtitle')}
+                        {t(T.PAGES.HOME.CATEGORIES.SUBTITLE)}
                     </p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">

@@ -2,7 +2,8 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { useTranslation } from '@/presentation/shared/hooks';
+import { useTranslations } from 'next-intl';
+import { T } from '@/i18n/content';
 import { Container } from '@/presentation/shared/layout/Container';
 import { Button } from '@/presentation/shared/ui/button';
 
@@ -15,7 +16,7 @@ const ErrorIllustration = () => (
 
 
 const ErrorPage: React.FC = () => {
-    const { t } = useTranslation();
+    const t = useTranslations();
     const router = useRouter();
 
     return (
@@ -23,13 +24,13 @@ const ErrorPage: React.FC = () => {
             <div>
                 <ErrorIllustration />
                 <h1 className="text-4xl md:text-5xl font-bold text-foreground">
-                    {t('error_page_title')}
+                    {t(T.PAGES.ERROR.PAGE_TITLE)}
                 </h1>
                 <p className="mt-4 text-lg text-muted-foreground max-w-xl mx-auto">
-                    {t('error_page_subtitle')}
+                    {t(T.PAGES.ERROR.PAGE_SUBTITLE)}
                 </p>
                 <Button size="lg" onClick={() => router.push('/')} className="mt-8">
-                    {t('error_page_button')}
+                    {t(T.PAGES.ERROR.BUTTON)}
                 </Button>
             </div>
         </Container>

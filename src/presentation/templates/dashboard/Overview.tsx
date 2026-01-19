@@ -1,5 +1,6 @@
 import React from 'react';
-import { useTranslation } from '@/presentation/shared/hooks';
+import { useTranslations } from 'next-intl';
+import { T } from '@/i18n/content';
 import { StatCard } from '@/presentation/features/dashboard/components/StatCard';
 import { SalesChart } from '@/presentation/features/dashboard/components/SalesChart';
 import { UserActivityChart } from '@/presentation/features/dashboard/components/UserActivityChart';
@@ -10,7 +11,7 @@ import { OrderTable } from '@/presentation/features/dashboard/components/OrderTa
 import { Card, CardContent, CardHeader, CardTitle } from '@/presentation/shared/ui/card';
 
 export const Overview: React.FC = () => {
-    const { t } = useTranslation();
+    const t = useTranslations();
 
     const totalRevenue = orders.reduce((sum, order) => order.status !== 'cancelled' ? sum + order.total : sum, 0);
     const totalOrders = orders.length;
@@ -44,10 +45,10 @@ export const Overview: React.FC = () => {
     return (
         <div className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <StatCard title={t('dashboard_total_revenue')} value={totalRevenue} prefix="$" decimals={2} icon={<Icon name="dashboard" className="w-6 h-6"/>} />
-                <StatCard title={t('dashboard_total_orders')} value={totalOrders} icon={<Icon name="shoppingCart" className="w-6 h-6"/>} />
-                <StatCard title={t('dashboard_total_products')} value={totalProducts} icon={<Icon name="package" className="w-6 h-6"/>} />
-                <StatCard title={t('dashboard_total_customers')} value={153} icon={<Icon name="users" className="w-6 h-6"/>} />
+                <StatCard title={t(T.PAGES.DASHBOARD.TOTAL_REVENUE)} value={totalRevenue} prefix="$" decimals={2} icon={<Icon name="dashboard" className="w-6 h-6"/>} />
+                <StatCard title={t(T.PAGES.DASHBOARD.TOTAL_ORDERS)} value={totalOrders} icon={<Icon name="shoppingCart" className="w-6 h-6"/>} />
+                <StatCard title={t(T.PAGES.DASHBOARD.TOTAL_PRODUCTS)} value={totalProducts} icon={<Icon name="package" className="w-6 h-6"/>} />
+                <StatCard title={t(T.PAGES.DASHBOARD.TOTAL_CUSTOMERS)} value={153} icon={<Icon name="users" className="w-6 h-6"/>} />
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2">
@@ -60,7 +61,7 @@ export const Overview: React.FC = () => {
             </div>
             <Card>
                 <CardHeader>
-                    <CardTitle>{t('dashboard_recent_orders')}</CardTitle>
+                    <CardTitle>{t(T.PAGES.DASHBOARD.RECENT_ORDERS)}</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <OrderTable orders={orders.slice(0, 5)} />

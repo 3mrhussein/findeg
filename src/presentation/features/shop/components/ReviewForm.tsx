@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useTranslation } from '@/presentation/shared/hooks';
+import { useTranslations } from 'next-intl';
+import { T } from '@/i18n/content';
 import type { Review } from '@/types';
 import { Button } from '@/presentation/shared/ui/button';
 import { Input } from '@/presentation/shared/ui/input';
@@ -15,7 +16,7 @@ interface ReviewFormProps {
 }
 
 export const ReviewForm: React.FC<ReviewFormProps> = ({ onSubmit }) => {
-    const { t } = useTranslation();
+    const t = useTranslations();
     const [author, setAuthor] = useState('');
     const [rating, setRating] = useState(0);
     const [hoverRating, setHoverRating] = useState(0);
@@ -37,21 +38,21 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ onSubmit }) => {
     return (
         <Card className="sticky top-28">
             <CardHeader>
-                 <CardTitle>{t('product_write_review')}</CardTitle>
+                 <CardTitle>{t(T.PAGES.PRODUCT_DETAIL.WRITE_REVIEW)}</CardTitle>
             </CardHeader>
             <CardContent>
                 {submitted ? (
                     <div className="text-center p-4 bg-primary/10 text-primary font-medium rounded-md">
-                        {t('product_review_success')}
+                        {t(T.PAGES.PRODUCT_DETAIL.REVIEW_FORM.SUCCESS)}
                     </div>
                 ) : (
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
-                            <Label htmlFor="author">{t('product_review_form_name')}</Label>
+                            <Label htmlFor="author">{t(T.PAGES.PRODUCT_DETAIL.REVIEW_FORM.NAME)}</Label>
                             <Input id="author" value={author} onChange={(e) => setAuthor(e.target.value)} required />
                         </div>
                         <div>
-                            <Label>{t('product_review_form_rating')}</Label>
+                            <Label>{t(T.PAGES.PRODUCT_DETAIL.REVIEW_FORM.RATING)}</Label>
                             <div className="flex items-center gap-1" onMouseLeave={() => setHoverRating(0)}>
                                {[1, 2, 3, 4, 5].map(star => (
                                    <Icon 
@@ -67,10 +68,10 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ onSubmit }) => {
                             </div>
                         </div>
                         <div>
-                             <Label htmlFor="comment">{t('product_review_form_comment')}</Label>
+                             <Label htmlFor="comment">{t(T.PAGES.PRODUCT_DETAIL.REVIEW_FORM.COMMENT)}</Label>
                              <Textarea id="comment" value={comment} onChange={(e) => setComment(e.target.value)} rows={4} required />
                         </div>
-                        <Button type="submit" className="w-full">{t('product_review_form_submit')}</Button>
+                        <Button type="submit" className="w-full">{t(T.PAGES.PRODUCT_DETAIL.REVIEW_FORM.SUBMIT)}</Button>
                     </form>
                 )}
             </CardContent>

@@ -1,5 +1,5 @@
-import React from 'react';
-import { getTranslation } from '@/lib/i18n-server';
+import { useTranslations } from 'next-intl';
+import { T } from '@/i18n/content';
 import { Container } from '@/presentation/shared/layout/Container';
 import { Card, CardContent, CardHeader, CardTitle } from '@/presentation/shared/ui/card';
 import { Logo } from '@/presentation/shared/components/Logo';
@@ -20,8 +20,8 @@ interface BrandKitTemplateProps {
   language?: 'en' | 'ar';
 }
 
-const BrandKitTemplate: React.FC<BrandKitTemplateProps> = ({ language = 'en' }) => {
-    const { t } = getTranslation(language);
+const BrandKitTemplate: React.FC<BrandKitTemplateProps> = () => {
+    const t = useTranslations();
 
     const lightColors = [
         { name: 'Primary', class: 'bg-primary', hex: '#14b8a6' },
@@ -47,15 +47,15 @@ const BrandKitTemplate: React.FC<BrandKitTemplateProps> = ({ language = 'en' }) 
         <>
             <div className="bg-muted">
                 <Container className="text-center py-16 lg:py-24">
-                    <h1 className="text-4xl md:text-5xl font-bold text-primary">{t('brand_kit_title')}</h1>
-                    <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">{t('brand_kit_subtitle')}</p>
+                    <h1 className="text-4xl md:text-5xl font-bold text-primary">{t(T.PAGES.BRAND_KIT.TITLE)}</h1>
+                    <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">{t(T.PAGES.BRAND_KIT.SUBTITLE)}</p>
                 </Container>
             </div>
 
             <Container className="py-16 lg:py-24 space-y-16">
                 {/* Logo Section */}
                 <section>
-                    <h2 className="text-3xl font-bold text-center mb-10">{t('brand_kit_logo_title')}</h2>
+                    <h2 className="text-3xl font-bold text-center mb-10">{t(T.PAGES.BRAND_KIT.LOGO_TITLE)}</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <Card>
                             <CardHeader><CardTitle>Light Mode</CardTitle></CardHeader>
@@ -74,7 +74,7 @@ const BrandKitTemplate: React.FC<BrandKitTemplateProps> = ({ language = 'en' }) 
                 
                 {/* Color Palette Section */}
                 <section>
-                    <h2 className="text-3xl font-bold text-center mb-10">{t('brand_kit_colors_title')}</h2>
+                    <h2 className="text-3xl font-bold text-center mb-10">{t(T.PAGES.BRAND_KIT.COLORS_TITLE)}</h2>
                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <Card>
                             <CardHeader><CardTitle>Light Theme</CardTitle></CardHeader>
@@ -93,7 +93,7 @@ const BrandKitTemplate: React.FC<BrandKitTemplateProps> = ({ language = 'en' }) 
 
                 {/* Typography Section */}
                 <section>
-                     <h2 className="text-3xl font-bold text-center mb-10">{t('brand_kit_typography_title')}</h2>
+                     <h2 className="text-3xl font-bold text-center mb-10">{t(T.PAGES.BRAND_KIT.TYPOGRAPHY_TITLE)}</h2>
                      <Card>
                         <CardHeader>
                             <CardTitle>Poppins</CardTitle>
@@ -121,7 +121,7 @@ const BrandKitTemplate: React.FC<BrandKitTemplateProps> = ({ language = 'en' }) 
                 
                 {/* Components Section */}
                 <section>
-                     <h2 className="text-3xl font-bold text-center mb-10">{t('brand_kit_components_title')}</h2>
+                     <h2 className="text-3xl font-bold text-center mb-10">{t(T.PAGES.BRAND_KIT.COMPONENTS_TITLE)}</h2>
                      <Card>
                         <CardContent className="p-8">
                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">

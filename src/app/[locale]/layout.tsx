@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Poppins } from 'next/font/google';
 import { Providers } from '@/presentation/shared/providers/Providers';
-import './globals.css';
+import '../globals.css';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -61,19 +61,35 @@ export const viewport: Viewport = {
  * 
  * @param {React.ReactNode} children - The content to render within the layout.
  */
-export default function RootLayout({
+import { NextIntlClientProvider } from 'next-intl';
+import { getLocaleMessages } from '@/i18n/content';
+import { routing } from '@/i18n/routing';
+
+export async function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
+
+
+export default async function RootLayout({
   children,
+  params
 }: {
   children: React.ReactNode;
+  params: Promise<{ [key: string]: string | undefined }>;
 }) {
+  const { locale } = (await params) as { locale: string };
+  const messages = getLocaleMessages(locale as any);
+
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <body className={`${poppins.variable} font-sans`}>
-        <Providers>
-          <div className="min-h-screen bg-background text-foreground flex flex-col">
-            {children}
-          </div>
-        </Providers>
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <Providers>
+            <div className="min-h-screen bg-background text-foreground flex flex-col">
+              {children}
+            </div>
+          </Providers>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

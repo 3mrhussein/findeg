@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { useTranslation } from '@/presentation/shared/hooks';
+import { useTranslations } from 'next-intl';
+import { T } from '@/i18n/content';
 
 interface DiscountBadgeUIProps {
   discountText: string;
@@ -24,11 +25,11 @@ interface DiscountBadgeProps {
 }
 
 export const DiscountBadge: React.FC<DiscountBadgeProps> = ({ price, strikePrice, className }) => {
-    const { t } = useTranslation();
+    const t = useTranslations();
     if (strikePrice <= price) return null;
     
     const discount = Math.round(((strikePrice - price) / strikePrice) * 100);
-    const discountText = t('discount_badge', { percent: discount });
+    const discountText = t(T.COMMON.DISCOUNT_BADGE, { percent: discount });
     
     return <DiscountBadgeUI discountText={discountText} className={className} />;
 };

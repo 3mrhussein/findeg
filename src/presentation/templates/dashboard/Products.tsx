@@ -1,12 +1,13 @@
-import React from 'react';
-import { useTranslation, usePagination } from '@/presentation/shared/hooks';
+import { useTranslations } from 'next-intl';
+import { T } from '@/i18n/content';
+import { usePagination } from '@/presentation/shared/hooks';
 import { products as allProducts } from '@/lib/constants';
 import { ProductTable } from '@/presentation/features/shop/components/ProductTable';
 import { Pagination } from '@/presentation/shared/components/Pagination';
 import { Card, CardContent } from '@/presentation/shared/ui/card';
 
 export const Products: React.FC = () => {
-    const { t } = useTranslation();
+    const t = useTranslations();
     const {
         currentPage,
         totalPages,

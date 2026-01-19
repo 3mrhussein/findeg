@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useTranslation } from '@/presentation/shared/hooks';
+import { useTranslations } from 'next-intl';
+import { T } from '@/i18n/content';
 import { Button } from '@/presentation/shared/ui/button';
 import { Icon } from '@/presentation/shared/components/Icon';
 import { Input } from '@/presentation/shared/ui/input';
@@ -76,14 +77,14 @@ export const ChatbotUI: React.FC<ChatbotUIProps> = ({ title, placeholder, sendLa
 };
 
 export const Chatbot: React.FC = () => {
-    const { t } = useTranslation() as { t: (key: string) => string };
+    const t = useTranslations();
 
     return (
         <ChatbotUI
-            title={t('chatbot_title')}
-            placeholder={t('chatbot_placeholder')}
-            sendLabel={t('chatbot_send')}
-            greeting={t('chatbot_greeting')}
+            title={t(T.PAGES.CHATBOT.TITLE)}
+            placeholder={t(T.PAGES.CHATBOT.PLACEHOLDER)}
+            sendLabel={t(T.PAGES.CHATBOT.SEND)}
+            greeting={t(T.PAGES.CHATBOT.GREETING)}
         />
     );
 };

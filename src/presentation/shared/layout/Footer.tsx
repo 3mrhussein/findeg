@@ -3,7 +3,8 @@
 import React from 'react';
 import Link from 'next/link';
 import { Logo } from '@/presentation/shared/components/Logo';
-import { useTranslation } from '@/presentation/shared/hooks';
+import { useTranslations } from 'next-intl';
+import { T } from '@/i18n/content';
 import { Button } from '@/presentation/shared/ui/button';
 import { Icon, IconName } from '@/presentation/shared/components/Icon';
 
@@ -105,29 +106,29 @@ interface FooterProps {
     onSettingsClick: () => void;
 }
 export const Footer: React.FC<FooterProps> = ({ onSettingsClick }) => {
-    const { t } = useTranslation();
+    const t = useTranslations();
 
     const shopLinks: FooterLink[] = [
-        { label: t('nav_shop'), href: '/shop' },
-        { label: t('nav_categories'), href: '/categories' },
-        { label: t('featured_products_title'), href: '/shop' },
+        { label: t(T.NAV.SHOP), href: '/shop' },
+        { label: t(T.NAV.CATEGORIES), href: '/categories' },
+        { label: t(T.PAGES.HOME.FEATURED.TITLE), href: '/shop' },
     ];
     const aboutLinks: FooterLink[] = [
-        { label: t('footer_about_story'), href: '/about' },
-        { label: t('footer_about_contact'), href: '/about' },
-        { label: t('faq_title'), href: '/shop' },
-        { label: t('nav_brand_kit'), href: '/brand-kit' }
+        { label: t(T.LAYOUT.FOOTER.ABOUT_STORY), href: '/about' },
+        { label: t(T.LAYOUT.FOOTER.ABOUT_CONTACT), href: '/about' },
+        { label: t(T.PAGES.SHOP.FAQ_TITLE), href: '/shop' },
+        { label: t(T.LAYOUT.NAV.BRAND_KIT), href: '/brand-kit' }
     ];
 
     return (
         <FooterUI
             onSettingsClick={onSettingsClick}
-            tagline={t('footer_tagline')}
-            shopTitle={t('footer_shop_title')}
-            aboutTitle={t('footer_about_title')}
-            followTitle={t('footer_follow_title')}
-            copyrightText={t('footer_copyright')}
-            cookieSettingsText={t('footer_cookie_settings')}
+            tagline={t(T.LAYOUT.FOOTER.TAGLINE)}
+            shopTitle={t(T.LAYOUT.FOOTER.SHOP_TITLE)}
+            aboutTitle={t(T.LAYOUT.FOOTER.ABOUT_TITLE)}
+            followTitle={t(T.LAYOUT.FOOTER.FOLLOW_TITLE)}
+            copyrightText={t(T.LAYOUT.FOOTER.COPYRIGHT)}
+            cookieSettingsText={t(T.LAYOUT.FOOTER.COOKIE_SETTINGS)}
             shopLinks={shopLinks}
             aboutLinks={aboutLinks}
         />

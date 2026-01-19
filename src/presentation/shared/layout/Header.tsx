@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { Logo } from '@/presentation/shared/components/Logo';
 import {
   navigationSchema,
@@ -12,10 +11,13 @@ import type { NavigationItem, Theme } from '@/types';
 import { CartDrawer } from '../../features/shop/components/CartDrawer';
 import { Badge } from '@/presentation/shared/components/Badge';
 import { IndicatorCircle } from '@/presentation/shared/components/IndicatorCircle';
-import { useTranslation, useTheme } from '@/presentation/shared/hooks';
+import { useTranslations, useLocale } from 'next-intl';
+import { usePathname, useRouter } from '@/i18n/routing';
+import { T } from '@/i18n/content';
 import { useCart } from '@/presentation/features/cart/hooks/useCart';
 import { useUser } from '@/presentation/features/user/hooks/useUser';
 import { Icon } from '@/presentation/shared/components/Icon';
+import { useTheme } from '@/presentation/shared/hooks';
 import { Input } from '@/presentation/shared/ui/input';
 
 interface LanguageSwitcherProps {
@@ -52,7 +54,7 @@ const NavLink: React.FC<NavLinkProps> = ({ item, onClick, t }) => {
   const router = useRouter();
 
   const handleClick = (e: React.MouseEvent, href: string) => {
-    if (item.labelKey === 'nav_ai_generator') {
+    if (item.id === 'nav_ai_generator') {
         e.preventDefault();
         router.push('/');
         setTimeout(() => {
@@ -209,7 +211,7 @@ export const HeaderUI: React.FC<HeaderUIProps> = ({
                         type="text"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder={t('search_placeholder')}
+                        placeholder={t(T.NAV.SEARCH_PLACEHOLDER)}
                         className="w-32 lg:w-48 bg-muted border-transparent h-9 rounded-full ltr:pl-4 rtl:pr-4 ltr:pr-10 rtl:pl-10 text-sm transition-all duration-300 focus:w-48 lg:focus:w-64"
                     />
                     <Button size="icon" variant="ghost" type="submit" className="absolute top-1/2 -translate-y-1/2 ltr:right-0 rtl:left-0 h-9 w-9 text-muted-foreground hover:text-primary" aria-label="Search">
@@ -221,7 +223,7 @@ export const HeaderUI: React.FC<HeaderUIProps> = ({
                 <ThemeSwitcher theme={theme} onToggleTheme={onToggleTheme} />
                 <LanguageSwitcher language={language} onToggleLanguage={onToggleLanguage} />
               </div>
-               <Button variant="ghost" size="icon" onClick={onToggleCart} className="relative" aria-label={t('header_cart_button')}>
+               <Button variant="ghost" size="icon" onClick={onToggleCart} className="relative" aria-label={t(T.LAYOUT.HEADER.CART_BUTTON)}>
                 <Icon name="shoppingCart" className="w-6 h-6 text-foreground" />
                 {cartCount > 0 && <IndicatorCircle count={cartCount} />}
               </Button>
@@ -229,16 +231,16 @@ export const HeaderUI: React.FC<HeaderUIProps> = ({
                 {!isLoggedIn ? (
                   <>
                     <Button variant="ghost" onClick={() => router.push('/registration')}>
-                        {t('header_signin_button')}
+                        {t(T.PAGES.AUTH.LOGIN_TITLE)}
                     </Button>
                     <Button onClick={() => router.push('/registration')}>
-                        {t('header_signup_button')}
+                        {t(T.PAGES.AUTH.REGISTRATION_TITLE)}
                     </Button>
                   </>
                 ) : (
                   <>
                     <Button variant="outline" onClick={onLogout}>
-                        {t('my_account_logout')}
+                        {t(T.PAGES.MY_ACCOUNT.LOGOUT)}
                     </Button>
                   </>
                 )}
@@ -269,7 +271,7 @@ export const HeaderUI: React.FC<HeaderUIProps> = ({
                       type="text"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder={t('search_placeholder')}
+                      placeholder={t(T.NAV.SEARCH_PLACEHOLDER)}
                       className="rounded-full ltr:pr-12 rtl:pl-12 h-11"
                   />
                   <Button size="icon" variant="ghost" type="submit" className="absolute top-1/2 -translate-y-1/2 ltr:right-1 rtl:left-1 text-muted-foreground" aria-label="Search">
@@ -288,15 +290,15 @@ export const HeaderUI: React.FC<HeaderUIProps> = ({
                 {!isLoggedIn ? (
                   <>
                     <Button size="lg" className="w-full" onClick={() => {setIsMenuOpen(false); router.push('/registration');}}>
-                        {t('header_signup_button')}
+                        {t(T.PAGES.AUTH.REGISTRATION_TITLE)}
                     </Button>
                     <Button variant="outline" size="lg" className="w-full mt-2" onClick={() => {setIsMenuOpen(false); router.push('/registration');}}>
-                        {t('header_signin_button')}
+                        {t(T.PAGES.AUTH.LOGIN_TITLE)}
                     </Button>
                   </>
                 ) : (
                    <Button variant="outline" size="lg" className="w-full" onClick={() => {setIsMenuOpen(false); onLogout();}}>
-                        {t('my_account_logout')}
+                        {t(T.PAGES.MY_ACCOUNT.LOGOUT)}
                     </Button>
                 )}
             </div>
@@ -308,14 +310,17 @@ export const HeaderUI: React.FC<HeaderUIProps> = ({
 };
 
 export const Header: React.FC = () => {
-  const { t, language, setLanguage } = useTranslation();
+  const t = useTranslations();
+  const locale = useLocale();
   const { theme, setTheme } = useTheme();
   const { cartCount, isCartOpen, toggleCart } = useCart();
   const { isLoggedIn, logout } = useUser();
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleToggleLanguage = () => {
-    setLanguage(language === 'en' ? 'ar' : 'en');
+    const nextLocale = locale === 'en' ? 'ar' : 'en';
+    router.replace(pathname, { locale: nextLocale });
   };
 
   const handleToggleTheme = () => {
@@ -335,7 +340,7 @@ export const Header: React.FC = () => {
     <HeaderUI
       handleSearch={handleSearch}
       t={t}
-      language={language}
+      language={locale}
       onToggleLanguage={handleToggleLanguage}
       theme={theme}
       onToggleTheme={handleToggleTheme}

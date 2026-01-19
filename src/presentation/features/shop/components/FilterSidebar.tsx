@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { categories } from '@/lib/constants';
 import type { Product } from '@/types';
-import { useTranslation } from '@/presentation/shared/hooks';
+import { useTranslations } from 'next-intl';
+import { T } from '@/i18n/content';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/presentation/shared/ui/accordion';
 import { Card, CardHeader, CardTitle, CardContent } from '@/presentation/shared/ui/card';
 
@@ -82,7 +83,7 @@ interface FilterSidebarProps {
 }
 
 export const FilterSidebar: React.FC<FilterSidebarProps> = ({ allProducts, onFilterChange }) => {
-    const { t } = useTranslation();
+    const t = useTranslations();
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
     const [priceRange, setPriceRange] = useState(100);
 
@@ -105,9 +106,9 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ allProducts, onFil
     
     return (
         <FilterSidebarUI
-            title={t('shop_filters_title')}
-            categoriesTitle={t('shop_filters_categories')}
-            priceTitle={t('shop_filters_price')}
+            title={t(T.PAGES.SHOP.FILTERS_TITLE)}
+            categoriesTitle={t(T.PAGES.SHOP.FILTERS_CATEGORIES)}
+            priceTitle={t(T.PAGES.SHOP.FILTERS_PRICE)}
             selectedCategories={selectedCategories}
             onCategoryChange={handleCategoryChange}
             priceRange={priceRange}

@@ -7,7 +7,8 @@ import type { Product } from '@/domain/entities/Product';
 import { Button } from '@/presentation/shared/ui/button';
 import { Price } from '@/presentation/shared/components/Price';
 import { DiscountBadge } from '@/presentation/shared/components/DiscountBadge';
-import { useTranslation } from '@/presentation/shared/hooks';
+import { useTranslations } from 'next-intl';
+import { T } from '@/i18n/content';
 import { useCart } from '@/presentation/features/cart/hooks/useCart';
 import { useUser } from '@/presentation/features/user/hooks/useUser';
 import { Icon } from '@/presentation/shared/components/Icon';
@@ -99,7 +100,7 @@ interface ProductCardProps {
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-    const { t } = useTranslation();
+    const t = useTranslations();
     const { addToCart } = useCart();
     const { isLoggedIn, currentUser, toggleWishlistItem } = useUser();
     const router = useRouter();
@@ -149,9 +150,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             onAddToCart={handleAddToCart}
             onToggleWishlist={handleToggleWishlist}
             isSaved={isSaved}
-            addToCartText={t('product_card_add_to_cart')}
-            likeText={t('product_card_like')}
-            saveText={t('product_card_save')}
+            addToCartText={t(T.PAGES.PRODUCT_CARD.ADD_TO_CART)}
+            likeText={t(T.PAGES.PRODUCT_CARD.LIKE)}
+            saveText={t(T.PAGES.PRODUCT_CARD.SAVE)}
             onCardClick={handleCardClick}
         />
     );

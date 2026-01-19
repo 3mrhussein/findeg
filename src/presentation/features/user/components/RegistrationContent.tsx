@@ -3,7 +3,8 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { User } from '@/types';
-import { useTranslation } from '@/presentation/shared/hooks';
+import { useTranslations } from 'next-intl';
+import { T } from '@/i18n/content';
 import { useUser } from '@/presentation/features/user/hooks/useUser';
 import { Container } from '@/presentation/shared/layout/Container';
 import { Button } from '@/presentation/shared/ui/button';
@@ -13,7 +14,7 @@ import { Label } from '@/presentation/shared/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/presentation/shared/ui/card';
 
 export const RegistrationContent: React.FC = () => {
-    const { t } = useTranslation();
+    const t = useTranslations();
     const { login } = useUser();
     const router = useRouter();
     const [isLoginView, setIsLoginView] = useState(false);
@@ -42,12 +43,12 @@ export const RegistrationContent: React.FC = () => {
                 <Card className="max-w-md mx-auto">
                     <CardHeader className="text-center">
                         <CardTitle className="text-3xl">
-                            {isLoginView ? t('reg_title_login') : t('reg_title')}
+                            {isLoginView ? t(T.PAGES.AUTH.LOGIN_TITLE) : t(T.PAGES.AUTH.REGISTRATION_TITLE)}
                         </CardTitle>
                         <CardDescription>
-                            {isLoginView ? t('reg_no_account') : t('reg_have_account')}{' '}
+                            {isLoginView ? t(T.PAGES.AUTH.NO_ACCOUNT) : t(T.PAGES.AUTH.HAVE_ACCOUNT)}{' '}
                             <button onClick={() => setIsLoginView(!isLoginView)} className="text-primary hover:underline font-medium">
-                               {isLoginView ? t('reg_signup_link') : t('reg_signin_link')}
+                               {isLoginView ? t(T.PAGES.AUTH.SIGNUP_LINK) : t(T.PAGES.AUTH.SIGNIN_LINK)}
                             </button>
                         </CardDescription>
                     </CardHeader>
@@ -55,7 +56,7 @@ export const RegistrationContent: React.FC = () => {
                         <form className="space-y-6" onSubmit={handleSubmit}>
                             {!isLoginView && (
                                 <div>
-                                    <Label htmlFor="name">{t('reg_name')}</Label>
+                                    <Label htmlFor="name">{t(T.PAGES.AUTH.NAME)}</Label>
                                     <Input 
                                         type="text" 
                                         id="name" 
@@ -66,7 +67,7 @@ export const RegistrationContent: React.FC = () => {
                                 </div>
                             )}
                             <div>
-                                <Label htmlFor="email">{t('reg_email')}</Label>
+                                <Label htmlFor="email">{t(T.PAGES.AUTH.EMAIL)}</Label>
                                 <Input 
                                     type="email" 
                                     id="email" 
@@ -76,7 +77,7 @@ export const RegistrationContent: React.FC = () => {
                                 />
                             </div>
                              <div>
-                                <Label htmlFor="password">{t('reg_password')}</Label>
+                                <Label htmlFor="password">{t(T.PAGES.AUTH.PASSWORD)}</Label>
                                 <Input 
                                     type="password" 
                                     id="password" 
@@ -86,7 +87,7 @@ export const RegistrationContent: React.FC = () => {
                                 />
                             </div>
                             <Button size="lg" className="w-full" type="submit">
-                                {isLoginView ? t('reg_button_login') : t('reg_button')}
+                                {isLoginView ? t(T.PAGES.AUTH.BUTTON_LOGIN) : t(T.PAGES.AUTH.BUTTON_REGISTER)}
                             </Button>
                         </form>
 
@@ -96,7 +97,7 @@ export const RegistrationContent: React.FC = () => {
                             </div>
                             <div className="relative flex justify-center text-sm">
                                 <span className="bg-card px-2 text-muted-foreground">
-                                    {isLoginView ? t('reg_social_prompt_login') : t('reg_social_prompt')}
+                                    {isLoginView ? t(T.PAGES.AUTH.SOCIAL_PROMPT_LOGIN) : t(T.PAGES.AUTH.SOCIAL_PROMPT)}
                                 </span>
                             </div>
                         </div>

@@ -4,7 +4,9 @@ import React, { useState } from 'react';
 import { ReviewItem } from '@/presentation/features/shop/components/ReviewItem';
 import { ReviewForm } from '@/presentation/features/shop/components/ReviewForm';
 import { Pagination } from '@/presentation/shared/components/Pagination';
-import { useTranslation, usePagination } from '@/presentation/shared/hooks';
+import { useTranslations } from 'next-intl';
+import { T } from '@/i18n/content';
+import { usePagination } from '@/presentation/shared/hooks';
 import { Review } from '@/types';
 
 interface ProductReviewsProps {
@@ -13,7 +15,7 @@ interface ProductReviewsProps {
 }
 
 export const ProductReviews: React.FC<ProductReviewsProps> = ({ initialReviews, productId }) => {
-  const { t } = useTranslation();
+  const t = useTranslations();
   const [productReviews, setProductReviews] = useState<Review[]>(initialReviews);
   
   const {
@@ -43,7 +45,7 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({ initialReviews, 
                   </div>
               ) : (
                    <div className="flex items-center justify-center h-full">
-                      <p className="text-muted-foreground">{t('product_no_reviews')}</p>
+                      <p className="text-muted-foreground">{t(T.PAGES.PRODUCT_DETAIL.NO_REVIEWS)}</p>
                   </div>
               )}
           </div>

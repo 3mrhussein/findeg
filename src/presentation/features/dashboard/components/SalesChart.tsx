@@ -1,7 +1,7 @@
 'use client';
 
-import React from 'react';
-import { useTranslation } from '@/presentation/shared/hooks';
+import { useTranslations } from 'next-intl';
+import { T } from '@/i18n/content';
 
 interface SalesData {
     name: string;
@@ -93,6 +93,6 @@ interface SalesChartProps {
 }
 
 export const SalesChart: React.FC<SalesChartProps> = ({ data }) => {
-    const { t } = useTranslation();
-    return <SalesChartUI data={data} title={t('dashboard_monthly_sales')} />;
+    const t = useTranslations();
+    return <SalesChartUI data={data} title={t(T.PAGES.DASHBOARD.MONTHLY_SALES)} />;
 };

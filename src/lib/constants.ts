@@ -300,42 +300,46 @@ export const brandLogos = [
     { name: 'Brand E', logoUrl: 'https://tailwindui.com/img/logos/158x48/statamic-logo-gray-400.svg' },
 ];
 
+import { T } from '@/i18n/content';
+
 export const cookieSettings = [
     {
         id: 'required',
-        titleKey: 'cookie_category_required',
-        descriptionKey: 'cookie_category_required_desc',
+        titleKey: T.PAGES.COOKIES.CATEGORY_REQUIRED,
+        descriptionKey: T.PAGES.COOKIES.CATEGORY_REQUIRED_DESC,
         isMutable: false,
     },
     {
         id: 'analytics',
-        titleKey: 'cookie_category_analytics',
-        descriptionKey: 'cookie_category_analytics_desc',
+        titleKey: T.PAGES.COOKIES.CATEGORY_ANALYTICS,
+        descriptionKey: T.PAGES.COOKIES.CATEGORY_ANALYTICS_DESC,
         isMutable: true,
     },
     {
         id: 'marketing',
-        titleKey: 'cookie_category_marketing',
-        descriptionKey: 'cookie_category_marketing_desc',
+        titleKey: T.PAGES.COOKIES.CATEGORY_MARKETING,
+        descriptionKey: T.PAGES.COOKIES.CATEGORY_MARKETING_DESC,
         isMutable: true,
     },
 ];
 
 export const faqData = [
     {
-        questionKey: 'faq_q1',
-        answerKey: 'faq_a1',
+        questionKey: T.PAGES.FAQ.Q1,
+        answerKey: T.PAGES.FAQ.A1,
     },
     {
-        questionKey: 'faq_q2',
-        answerKey: 'faq_a2',
+        questionKey: T.PAGES.FAQ.Q2,
+        answerKey: T.PAGES.FAQ.A2,
     },
     {
-        questionKey: 'faq_q3',
-        answerKey: 'faq_a3',
+        questionKey: T.PAGES.FAQ.Q3,
+        answerKey: T.PAGES.FAQ.A3,
     },
     {
-        questionKey: 'faq_q4',
-        answerKey: 'faq_a4',
+        questionKey: T.PAGES.FAQ.Q4,
+        answerKey: T.PAGES.FAQ.A4,
     },
 ];
+
+const STATIC_BUILD_LOCALES=['en','ar'];
