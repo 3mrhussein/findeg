@@ -1,4 +1,5 @@
 import type { Product, Order, Review } from '@/types';
+import T from '@/infrastructure/cms/messages/en.json';
 
 /**
  * Centralized configuration and mock data.
@@ -300,42 +301,43 @@ export const brandLogos = [
     { name: 'Brand E', logoUrl: 'https://tailwindui.com/img/logos/158x48/statamic-logo-gray-400.svg' },
 ];
 
+
 export const cookieSettings = [
     {
         id: 'required',
-        titleKey: 'cookie_category_required',
-        descriptionKey: 'cookie_category_required_desc',
+        titleKey: T.Pages.Cookies.CategoryRequired,
+        descriptionKey: T.Pages.Cookies.CategoryRequiredDesc,
         isMutable: false,
     },
     {
         id: 'analytics',
-        titleKey: 'cookie_category_analytics',
-        descriptionKey: 'cookie_category_analytics_desc',
+        titleKey: T.Pages.Cookies.CategoryAnalytics,
+        descriptionKey: T.Pages.Cookies.CategoryAnalyticsDesc,
         isMutable: true,
     },
     {
         id: 'marketing',
-        titleKey: 'cookie_category_marketing',
-        descriptionKey: 'cookie_category_marketing_desc',
+        titleKey: T.Pages.Cookies.CategoryMarketing ,
+        descriptionKey: T.Pages.Cookies.CategoryMarketingDesc ,
         isMutable: true,
     },
 ];
 
 export const faqData = [
     {
-        questionKey: 'faq_q1',
-        answerKey: 'faq_a1',
+        questionKey: T.Pages.Faq.Q1,
+        answerKey: T.Pages.Faq.A1,
     },
     {
-        questionKey: 'faq_q2',
-        answerKey: 'faq_a2',
+        questionKey: T.Pages.Faq.Q2,
+        answerKey: T.Pages.Faq.A2,
     },
     {
-        questionKey: 'faq_q3',
-        answerKey: 'faq_a3',
+        questionKey: T.Pages.Faq.Q3,
+        answerKey: T.Pages.Faq.A3,
     },
     {
-        questionKey: 'faq_q4',
-        answerKey: 'faq_a4',
+        questionKey: T.Pages.Faq.Q4,
+        answerKey: T.Pages.Faq.A4,
     },
 ];

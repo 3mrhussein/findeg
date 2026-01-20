@@ -1,0 +1,77 @@
+import { db } from "@/infrastructure/config/database.config";
+import { orders, orderItems, type Order as DbOrder, type OrderItem as DbOrderItem } from "@/infrastructure/database/schema";
+import { IOrderRepository } from "@/application/repositories/IOrderRepository";
+import { Order, OrderItem } from "@/domain/entities/Order";
+import { eq } from "drizzle-orm";
+
+export class DrizzleOrderRepository implements IOrderRepository {
+  private mapToDomain(dbOrder: DbOrder, items: DbOrderItem[] = []): Order {
+    return {
+      id: dbOrder.id,
+      userId: dbOrder.userId || undefined,
+      status: dbOrder.status,
+      totalAmount: Number(dbOrder.totalAmount),
+      currency: dbOrder.currency,
+      shippingAddress: dbOrder.shippingAddress || undefined,
+      billingAddress: dbOrder.billingAddress || undefined,
+      createdAt: dbOrder.createdAt,
+      updatedAt: dbOrder.updatedAt,
+      items: items.map((item) => ({
+        id: item.id,
+        orderId: item.orderId,
+        productId: item.productId!,
+        quantity: item.quantity,
+        priceAtTime: Number(item.priceAtTime),
+        variantDetails: item.variantDetails || undefined,
+      })),
+    };
+  }
+
+  async getById(id: number): Promise<Order | null> {
+    const orderResult = await db.select().from(orders).where(eq(orders.id, id)).limit(1);
+    if (orderResult.length === 0) return null;
+
+    const itemsResult = await db.select().from(orderItems).where(eq(orderItems.orderId, id));
+    return this.mapToDomain(orderResult[0], itemsResult);
+  }
+
+  async getByUserId(userId: number): Promise<Order[]> {
+    const orderResults = await db.select().from(orders).where(eq(orders.userId, userId));
+    
+    // This is a simple implementation. In a production app, you might want to join 
+    // or batch fetch items to avoid N+1 queries.
+    const ordersWithItems = await Promise.all(
+      orderResults.map(async (order) => {
+        const items = await db.select().from(orderItems).where(eq(orderItems.orderId, order.id));
+        return this.mapToDomain(order, items);
+      })
+    );
+
+    return ordersWithItems;
+  }
+
+  async create(order: Partial<Order>): Promise<Order> {
+    const { items, ...orderData } = order as any;
+    
+    return await db.transaction(async (tx) => {
+      const dbOrderData = orderData as any;
+      const [newOrder] = await tx.insert(orders).values(dbOrderData).returning();
+      
+      let newItems: DbOrderItem[] = [];
+      if (items && items.length > 0) {
+        newItems = await tx.insert(orderItems).values(
+          items.map((item: any) => ({
+            ...item,
+            orderId: newOrder.id,
+          }))
+        ).returning();
+      }
+
+      return this.mapToDomain(newOrder, newItems);
+    });
+  }
+
+  async updateStatus(id: number, status: string): Promise<void> {
+    await db.update(orders).set({ status, updatedAt: new Date() }).where(eq(orders.id, id));
+  }
+}

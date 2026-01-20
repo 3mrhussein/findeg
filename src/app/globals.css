@@ -50,6 +50,14 @@
     scroll-behavior: smooth;
   }
   
+  html[lang="ar"] {
+    direction: rtl;
+  }
+  
+  html[lang="en"] {
+    direction: ltr;
+  }
+  
   body {
     font-family: var(--font-poppins), sans-serif;
   }
