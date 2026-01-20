@@ -5,7 +5,6 @@ import { Button } from '@/presentation/shared/ui/button';
 import { VariantSelector } from '@/presentation/features/shop/components/VariantSelector';
 import { QuantityInput } from '@/presentation/shared/components/QuantityInput';
 import { useTranslations } from 'next-intl';
-import { T } from '@/i18n/content';
 import { useCart } from '@/presentation/features/cart/hooks/useCart';
 import { Product } from '@/types';
 
@@ -37,7 +36,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({ product }) => {
       <div className="flex items-center gap-4 mt-8">
         <QuantityInput quantity={quantity} setQuantity={setQuantity} />
         <Button size="lg" className="w-full" onClick={handleAddToCart}>
-          {t(T.PAGES.PRODUCT_DETAIL.ADD_TO_CART)}
+          {t('Pages.ProductDetail.AddToCart')}
         </Button>
       </div>
     </div>

@@ -5,7 +5,6 @@ import Image from 'next/image';
 import { Container } from '@/presentation/shared/layout/Container';
 import { brandLogos } from '@/lib/constants';
 import { useTranslations } from 'next-intl';
-import { T } from '@/i18n/content';
 
 interface BrandShowcaseUIProps {
     title: string;
@@ -38,5 +37,5 @@ export const BrandShowcaseUI: React.FC<BrandShowcaseUIProps> = ({ title }) => {
 
 export const BrandShowcase: React.FC = () => {
     const t = useTranslations();
-    return <BrandShowcaseUI title={t(T.PAGES.ABOUT.BRAND_SHOWCASE_TITLE)} />;
+    return <BrandShowcaseUI title={t('Pages.About.BrandShowcaseTitle')} />;
 };

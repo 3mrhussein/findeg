@@ -8,7 +8,7 @@
 
 import React from 'react';
 import { HeroUI } from '@/presentation/shared/layout/Hero';
-import { getStaticTranslation } from '@/infrastructure/translations/static';
+import { getTranslations } from 'next-intl/server';
 
 interface HeroProps {
     imageUrl?: string;
@@ -16,17 +16,17 @@ interface HeroProps {
 }
 
 export const Hero = async ({ imageUrl, language = 'en' }: HeroProps) => {
-    const t = await getStaticTranslation(language);
+    const t = await getTranslations();
 
     return (
         <HeroUI
             imageUrl={imageUrl}
-            titlePart1={t['hero_title_part1'] || 'Welcome to'}
-            titleLearning={t['hero_title_learning'] || 'Learning'}
-            titlePlay={t['hero_title_play'] || 'Play'}
-            subtitle={t['hero_subtitle'] || 'Your one-stop shop for premium products.'}
-            shopButtonText={t['hero_button_shop'] || 'Shop Now'}
-            exploreButtonText={t['hero_button_explore'] || 'Explore'}
+            titlePart1={t('Pages.Home.Hero.TitlePart1')}
+            titleLearning={t('Pages.Home.Hero.TitleLearning')}
+            titlePlay={t('Pages.Home.Hero.TitlePlay')}
+            subtitle={t('Pages.Home.Hero.Subtitle')}
+            shopButtonText={t('Pages.Home.Hero.ButtonShop')}
+            exploreButtonText={t('Pages.Home.Hero.ButtonExplore')}
         />
     );
 };

@@ -7,7 +7,6 @@ import { Product } from '@/types';
 import { Button } from '@/presentation/shared/ui/button';
 import { Price } from '@/presentation/shared/components/Price';
 import { useTranslations } from 'next-intl';
-import { T } from '@/i18n/content';
 import { useCart } from '@/presentation/features/cart/hooks/useCart';
 import { Icon } from '@/presentation/shared/components/Icon';
 
@@ -83,7 +82,7 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product }) => 
         <ProductListItemUI
             product={product}
             onAddToCart={handleAddToCart}
-            addToCartText={t(T.PAGES.PRODUCT_CARD.ADD_TO_CART)}
+            addToCartText={t('Pages.ProductCard.AddToCart')}
             onCardClick={handleCardClick}
         />
     );

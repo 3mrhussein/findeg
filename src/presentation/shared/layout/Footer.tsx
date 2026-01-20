@@ -4,7 +4,6 @@ import React from 'react';
 import Link from 'next/link';
 import { Logo } from '@/presentation/shared/components/Logo';
 import { useTranslations } from 'next-intl';
-import { T } from '@/i18n/content';
 import { Button } from '@/presentation/shared/ui/button';
 import { Icon, IconName } from '@/presentation/shared/components/Icon';
 
@@ -109,26 +108,26 @@ export const Footer: React.FC<FooterProps> = ({ onSettingsClick }) => {
     const t = useTranslations();
 
     const shopLinks: FooterLink[] = [
-        { label: t(T.NAV.SHOP), href: '/shop' },
-        { label: t(T.NAV.CATEGORIES), href: '/categories' },
-        { label: t(T.PAGES.HOME.FEATURED.TITLE), href: '/shop' },
+        { label: t('Nav.Shop'), href: '/shop' },
+        { label: t('Nav.Categories'), href: '/categories' },
+        { label: t('Pages.Home.Featured.Title'), href: '/shop' },
     ];
     const aboutLinks: FooterLink[] = [
-        { label: t(T.LAYOUT.FOOTER.ABOUT_STORY), href: '/about' },
-        { label: t(T.LAYOUT.FOOTER.ABOUT_CONTACT), href: '/about' },
-        { label: t(T.PAGES.SHOP.FAQ_TITLE), href: '/shop' },
-        { label: t(T.LAYOUT.NAV.BRAND_KIT), href: '/brand-kit' }
+        { label: t('Layout.Footer.AboutStory'), href: '/about' },
+        { label: t('Layout.Footer.AboutContact'), href: '/about' },
+        { label: t('Layout.Footer.ShopTitle'), href: '/shop' },
+        { label: t('Layout.Footer.AboutTitle'), href: '/brand-kit' }
     ];
 
     return (
         <FooterUI
             onSettingsClick={onSettingsClick}
-            tagline={t(T.LAYOUT.FOOTER.TAGLINE)}
-            shopTitle={t(T.LAYOUT.FOOTER.SHOP_TITLE)}
-            aboutTitle={t(T.LAYOUT.FOOTER.ABOUT_TITLE)}
-            followTitle={t(T.LAYOUT.FOOTER.FOLLOW_TITLE)}
-            copyrightText={t(T.LAYOUT.FOOTER.COPYRIGHT)}
-            cookieSettingsText={t(T.LAYOUT.FOOTER.COOKIE_SETTINGS)}
+            tagline={t('Layout.Footer.Tagline')}
+            shopTitle={t('Layout.Footer.ShopTitle')}
+            aboutTitle={t('Layout.Footer.AboutTitle')}
+            followTitle={t('Layout.Footer.FollowTitle')}
+            copyrightText={t('Layout.Footer.Copyright')}
+            cookieSettingsText={t('Layout.Footer.CookieSettings')}
             shopLinks={shopLinks}
             aboutLinks={aboutLinks}
         />

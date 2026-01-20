@@ -1,13 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import { products as allProducts } from '@/constants';
+import { products as allProducts } from '@/lib/constants';
 import type { SortOption, ViewMode, Product } from '@/types';
 import { Grid } from '@/presentation/shared/layout/Grid';
 import { ProductCard } from '@/presentation/features/shop/components/ProductCard';
 import { FilterSidebar } from '@/presentation/features/shop/components/FilterSidebar';
 import { useTranslations } from 'next-intl';
-import { T } from '@/i18n/content';
 import { usePagination } from '@/presentation/shared/hooks';
 import { useProducts } from '@/presentation/features/shop/hooks/useProducts';
 import { useCart } from '@/presentation/features/cart/hooks/useCart';
@@ -32,10 +31,10 @@ export const ShopContent: React.FC = () => {
   } = usePagination(sortedProducts, 8);
 
   const sortOptions = [
-    { value: 'featured', label: t(T.PAGES.SHOP.SORT_FEATURED) },
-    { value: 'newest', label: t(T.PAGES.SHOP.SORT_NEWEST) },
-    { value: 'price-asc', label: t(T.PAGES.SHOP.SORT_PRICE_ASC) },
-    { value: 'price-desc', label: t(T.PAGES.SHOP.SORT_PRICE_DESC) },
+    { value: 'featured', label: t('Pages.Shop.SortFeatured') },
+    { value: 'newest', label: t('Pages.Shop.SortNewest') },
+    { value: 'price-asc', label: t('Pages.Shop.SortPriceAsc') },
+    { value: 'price-desc', label: t('Pages.Shop.SortPriceDesc') },
   ];
 
   const handleFilterChange = (newFilteredProducts: Product[]) => {
@@ -52,12 +51,12 @@ export const ShopContent: React.FC = () => {
          <Dialog>
            <DialogTrigger asChild>
              <Button variant="outline" className="w-full lg:hidden mb-6">
-               {t(T.PAGES.SHOP.FILTERS_TITLE)}
+               {t('Pages.Shop.FiltersTitle')}
              </Button>
            </DialogTrigger>
            <DialogContent className="p-0">
               <DialogHeader className="p-6 pb-0">
-                  <DialogTitle>{t(T.PAGES.SHOP.FILTERS_TITLE)}</DialogTitle>
+                  <DialogTitle>{t('Pages.Shop.FiltersTitle')}</DialogTitle>
               </DialogHeader>
               <div className="p-6">
                 <FilterSidebar allProducts={allProducts} onFilterChange={handleFilterChange} />
@@ -67,11 +66,11 @@ export const ShopContent: React.FC = () => {
 
         {/* Sort and View Options */}
         <Card className="flex flex-wrap gap-4 justify-between items-center mb-6 p-4">
-          <p className="text-muted-foreground text-sm">{t(T.PAGES.SHOP.SHOWING_RESULTS, {count: sortedProducts.length, total: allProducts.length})}</p>
+          <p className="text-muted-foreground text-sm">{t('Pages.Shop.ShowingResults', {count: sortedProducts.length, total: allProducts.length})}</p>
           <div className='flex items-center gap-2'>
               <Select value={sortOption} onValueChange={(value) => setSortOption(value as SortOption)}>
-                  <SelectTrigger className="w-48" aria-label={t(T.PAGES.SHOP.SORT_BY)}>
-                      <SelectValue placeholder={t(T.PAGES.SHOP.SORT_BY)} />
+                  <SelectTrigger className="w-48" aria-label={t('Pages.Shop.SortBy')}>
+                      <SelectValue placeholder={t('Pages.Shop.SortBy')} />
                   </SelectTrigger>
                   <SelectContent>
                       {sortOptions.map(option => (
@@ -101,7 +100,7 @@ export const ShopContent: React.FC = () => {
             )
         ) : (
             <Card className='text-center py-16'>
-                <p className='text-muted-foreground'>{t(T.PAGES.SHOP.NO_PRODUCTS)}</p>
+                <p className='text-muted-foreground'>{t('Pages.Shop.NoProducts')}</p>
             </Card>
         )}
         

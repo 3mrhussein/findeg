@@ -7,7 +7,6 @@ import type { CartItem } from '@/types';
 import { Button } from '@/presentation/shared/ui/button';
 import { QuantityInput } from '@/presentation/shared/components/QuantityInput';
 import { useTranslations } from 'next-intl';
-import { T } from '@/i18n/content';
 import { useCart } from '@/presentation/features/cart/hooks/useCart';
 import { Icon } from '@/presentation/shared/components/Icon';
 
@@ -143,12 +142,12 @@ export const CartDrawer: React.FC = () => {
             onRemove={removeFromCart}
             onUpdateQuantity={updateQuantity}
             total={cartTotal}
-            title={t(T.PAGES.CART.TITLE)}
-            emptyText={t(T.PAGES.CART.EMPTY)}
-            subtotalText={t(T.PAGES.CART.SUBTOTAL)}
-            checkoutText={t(T.PAGES.CART.CHECKOUT)}
-            removeItemText={t(T.PAGES.CART.REMOVE_ITEM)}
-            shopNowText={t(T.PAGES.HOME.HERO.BUTTON_SHOP)}
+            title={t('Pages.Cart.Title')}
+            emptyText={t('Pages.Cart.Empty')}
+            subtotalText={t('Pages.Cart.Subtotal')}
+            checkoutText={t('Pages.Cart.Checkout')}
+            removeItemText={t('Pages.Cart.RemoveItem')}
+            shopNowText={t('Pages.Home.Hero.ButtonShop')}
             onCheckout={handleCheckout}
             onShopNow={handleShopNow}
         />

@@ -3,7 +3,6 @@
 import React from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { T } from '@/i18n/content';
 
 interface LogoUIProps {
     ariaLabel: string;
@@ -81,5 +80,5 @@ export const LogoUI: React.FC<LogoUIProps> = ({ ariaLabel }) => {
 
 export const Logo: React.FC = () => {
     const t = useTranslations();
-    return <LogoUI ariaLabel={t(T.COMMON.LOGO_ARIA_LABEL)} />;
+    return <LogoUI ariaLabel={t('Common.LogoAriaLabel')} />;
 };

@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { T } from '@/i18n/content';
 import type { Review } from '@/types';
 import { Button } from '@/presentation/shared/ui/button';
 import { Input } from '@/presentation/shared/ui/input';
@@ -38,21 +37,21 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ onSubmit }) => {
     return (
         <Card className="sticky top-28">
             <CardHeader>
-                 <CardTitle>{t(T.PAGES.PRODUCT_DETAIL.WRITE_REVIEW)}</CardTitle>
+                 <CardTitle>{t('Pages.ProductDetail.WriteReview')}</CardTitle>
             </CardHeader>
             <CardContent>
                 {submitted ? (
                     <div className="text-center p-4 bg-primary/10 text-primary font-medium rounded-md">
-                        {t(T.PAGES.PRODUCT_DETAIL.REVIEW_FORM.SUCCESS)}
+                        {t('Pages.ProductDetail.ReviewForm.Success')}
                     </div>
                 ) : (
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
-                            <Label htmlFor="author">{t(T.PAGES.PRODUCT_DETAIL.REVIEW_FORM.NAME)}</Label>
+                            <Label htmlFor="author">{t('Pages.ProductDetail.ReviewForm.Name')}</Label>
                             <Input id="author" value={author} onChange={(e) => setAuthor(e.target.value)} required />
                         </div>
                         <div>
-                            <Label>{t(T.PAGES.PRODUCT_DETAIL.REVIEW_FORM.RATING)}</Label>
+                            <Label>{t('Pages.ProductDetail.ReviewForm.Rating')}</Label>
                             <div className="flex items-center gap-1" onMouseLeave={() => setHoverRating(0)}>
                                {[1, 2, 3, 4, 5].map(star => (
                                    <Icon 
@@ -68,10 +67,10 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ onSubmit }) => {
                             </div>
                         </div>
                         <div>
-                             <Label htmlFor="comment">{t(T.PAGES.PRODUCT_DETAIL.REVIEW_FORM.COMMENT)}</Label>
+                             <Label htmlFor="comment">{t('Pages.ProductDetail.ReviewForm.Comment')}</Label>
                              <Textarea id="comment" value={comment} onChange={(e) => setComment(e.target.value)} rows={4} required />
                         </div>
-                        <Button type="submit" className="w-full">{t(T.PAGES.PRODUCT_DETAIL.REVIEW_FORM.SUBMIT)}</Button>
+                        <Button type="submit" className="w-full">{t('Pages.ProductDetail.ReviewForm.Submit')}</Button>
                     </form>
                 )}
             </CardContent>

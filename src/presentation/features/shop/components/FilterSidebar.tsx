@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { categories } from '@/lib/constants';
 import type { Product } from '@/types';
 import { useTranslations } from 'next-intl';
-import { T } from '@/i18n/content';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/presentation/shared/ui/accordion';
 import { Card, CardHeader, CardTitle, CardContent } from '@/presentation/shared/ui/card';
 
@@ -106,9 +105,9 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ allProducts, onFil
     
     return (
         <FilterSidebarUI
-            title={t(T.PAGES.SHOP.FILTERS_TITLE)}
-            categoriesTitle={t(T.PAGES.SHOP.FILTERS_CATEGORIES)}
-            priceTitle={t(T.PAGES.SHOP.FILTERS_PRICE)}
+            title={t('Pages.Shop.FiltersTitle')}
+            categoriesTitle={t('Pages.Shop.FiltersCategories')}
+            priceTitle={t('Pages.Shop.FiltersPrice')}
             selectedCategories={selectedCategories}
             onCategoryChange={handleCategoryChange}
             priceRange={priceRange}

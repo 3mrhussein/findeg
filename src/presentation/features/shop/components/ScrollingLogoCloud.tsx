@@ -1,6 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
-import { brandLogos } from '@/constants';
+import { brandLogos } from '@/lib/constants';
 
 interface ScrollingLogoCloudProps {
     direction?: 'left' | 'right';

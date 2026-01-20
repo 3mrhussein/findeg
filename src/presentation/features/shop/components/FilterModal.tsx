@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button } from '@/presentation/shared/ui/button';
 import { useTranslations } from 'next-intl';
-import { T } from '@/i18n/content';
 import { Icon } from '@/presentation/shared/components/Icon';
 
 interface FilterModalUIProps {
@@ -67,7 +66,7 @@ export const FilterModal: React.FC<FilterModalProps> = (props) => {
 
     return <FilterModalUI 
         {...props}
-        title={t(T.PAGES.SHOP.FILTERS_TITLE)}
-        viewResultsText={t(T.PAGES.SHOP.VIEW_RESULTS)}
+        title={t('Pages.Shop.FiltersTitle')}
+        viewResultsText={t('Pages.Shop.ViewResults')}
     />;
 };

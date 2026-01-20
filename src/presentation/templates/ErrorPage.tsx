@@ -3,7 +3,7 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { T } from '@/i18n/content';
+// ...removed import for T, use translation key directly
 import { Container } from '@/presentation/shared/layout/Container';
 import { Button } from '@/presentation/shared/ui/button';
 
@@ -24,13 +24,13 @@ const ErrorPage: React.FC = () => {
             <div>
                 <ErrorIllustration />
                 <h1 className="text-4xl md:text-5xl font-bold text-foreground">
-                    {t(T.PAGES.ERROR.PAGE_TITLE)}
+                    {t('Pages.Error.PageTitle')}
                 </h1>
                 <p className="mt-4 text-lg text-muted-foreground max-w-xl mx-auto">
-                    {t(T.PAGES.ERROR.PAGE_SUBTITLE)}
+                    {t('Pages.Error.PageSubtitle')}
                 </p>
                 <Button size="lg" onClick={() => router.push('/')} className="mt-8">
-                    {t(T.PAGES.ERROR.BUTTON)}
+                    {t('Pages.Error.Button')}
                 </Button>
             </div>
         </Container>

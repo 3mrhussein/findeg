@@ -3,7 +3,6 @@
 import React from 'react';
 import type { Product } from '@/types';
 import { useTranslations } from 'next-intl';
-import { T } from '@/i18n/content';
 import { Button } from '@/presentation/shared/ui/button';
 import { Icon } from '@/presentation/shared/components/Icon';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/presentation/shared/ui/table';
@@ -18,11 +17,11 @@ export const ProductTableUI: React.FC<ProductTableUIProps> = ({ products, t, get
     <Table>
         <TableHeader>
             <TableRow>
-                <TableHead>{t(T.PAGES.DASHBOARD.TABLE.PRODUCT_NAME)}</TableHead>
-                <TableHead>{t(T.PAGES.DASHBOARD.TABLE.CATEGORY)}</TableHead>
-                <TableHead>{t(T.PAGES.DASHBOARD.TABLE.PRICE)}</TableHead>
-                <TableHead>{t(T.PAGES.DASHBOARD.TABLE.STOCK)}</TableHead>
-                <TableHead>{t(T.PAGES.DASHBOARD.TABLE.ACTIONS)}</TableHead>
+                <TableHead>{t('Pages.Dashboard.Table.ProductName')}</TableHead>
+                <TableHead>{t('Pages.Dashboard.Table.Category')}</TableHead>
+                <TableHead>{t('Pages.Dashboard.Table.Price')}</TableHead>
+                <TableHead>{t('Pages.Dashboard.Table.Stock')}</TableHead>
+                <TableHead>{t('Pages.Dashboard.Table.Actions')}</TableHead>
             </TableRow>
         </TableHeader>
         <TableBody>

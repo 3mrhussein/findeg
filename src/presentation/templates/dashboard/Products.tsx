@@ -1,5 +1,4 @@
 import { useTranslations } from 'next-intl';
-import { T } from '@/i18n/content';
 import { usePagination } from '@/presentation/shared/hooks';
 import { products as allProducts } from '@/lib/constants';
 import { ProductTable } from '@/presentation/features/shop/components/ProductTable';

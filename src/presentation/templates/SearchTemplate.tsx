@@ -1,9 +1,9 @@
 import { useTranslations } from 'next-intl';
-import { T } from '@/i18n/content';
+// ...removed import for T, use translation key directly
 import { Container } from '@/presentation/shared/layout/Container';
 import { Grid } from '@/presentation/shared/layout/Grid';
 import { ProductCard } from '@/presentation/features/shop/components/ProductCard';
-import { products } from '@/constants';
+import { products } from '@/lib/constants'; 
 
 interface SearchTemplateProps {
   language?: 'en' | 'ar';
@@ -25,11 +25,11 @@ const SearchTemplate: React.FC<SearchTemplateProps> = ({ searchQuery = '' }) => 
                 <div className="text-center mb-12">
                     {searchQuery ? (
                         <h1 className="text-3xl font-bold text-foreground">
-                            {t(T.PAGES.SEARCH.PAGE_TITLE, { query: `"${searchQuery}"` })}
+                            {t('Pages.Search.PageTitle', { query: `"${searchQuery}"` })}
                         </h1>
                     ) : (
                         <h1 className="text-3xl font-bold text-foreground">
-                           {t(T.PAGES.SEARCH.EMPTY_PROMPT)}
+                           {t('Pages.Search.EmptyPrompt')}
                         </h1>
                     )}
                 </div>
@@ -44,7 +44,7 @@ const SearchTemplate: React.FC<SearchTemplateProps> = ({ searchQuery = '' }) => 
                     </Grid>
                 ) : (
                     <div className='text-center py-16 bg-muted rounded-lg'>
-                        <p className='text-lg text-muted-foreground'>{t(T.PAGES.SEARCH.NO_RESULTS)}</p>
+                        <p className='text-lg text-muted-foreground'>{t('Pages.Search.NoResults')}</p>
                     </div>
                 )}
             </Container>

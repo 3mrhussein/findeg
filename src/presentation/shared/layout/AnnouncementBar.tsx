@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { Icon } from '@/presentation/shared/components/Icon';
 import { useTranslations } from 'next-intl';
-import { T } from '@/i18n/content';
 
 interface AnnouncementBarUIProps {
     isVisible: boolean;
@@ -65,8 +64,8 @@ export const AnnouncementBar: React.FC = () => {
         <AnnouncementBarUI
             isVisible={isVisible}
             onClose={handleClose}
-            text={t(T.LAYOUT.ANNOUNCEMENT.BAR_TEXT)}
-            closeLabel={t(T.LAYOUT.ANNOUNCEMENT.BAR_CLOSE)}
+            text={t('Pages.Home.Hero.TitlePart1')}
+            closeLabel={t('Pages.Home.Hero.TitleLearning')}
         />
     );
 };

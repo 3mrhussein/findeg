@@ -3,7 +3,6 @@
 import React from 'react';
 import type { Order } from '@/types';
 import { useTranslations } from 'next-intl';
-import { T } from '@/i18n/content';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/presentation/shared/ui/table';
 
 const OrderStatusBadge: React.FC<{status: Order['status']}> = ({ status }) => {
@@ -25,11 +24,11 @@ export const OrderTableUI: React.FC<OrderTableUIProps> = ({ orders, t }) => (
      <Table>
         <TableHeader>
             <TableRow>
-                <TableHead>{t(T.PAGES.DASHBOARD.TABLE.ORDER_ID)}</TableHead>
-                <TableHead>{t(T.PAGES.DASHBOARD.TABLE.CUSTOMER)}</TableHead>
-                <TableHead>{t(T.PAGES.DASHBOARD.TABLE.DATE)}</TableHead>
-                <TableHead>{t(T.PAGES.DASHBOARD.TABLE.TOTAL)}</TableHead>
-                <TableHead>{t(T.PAGES.DASHBOARD.TABLE.STATUS)}</TableHead>
+                <TableHead>{t('Pages.Dashboard.Table.OrderId')}</TableHead>
+                <TableHead>{t('Pages.Dashboard.Table.Customer')}</TableHead>
+                <TableHead>{t('Pages.Dashboard.Table.Date')}</TableHead>
+                <TableHead>{t('Pages.Dashboard.Table.Total')}</TableHead>
+                <TableHead>{t('Pages.Dashboard.Table.Status')}</TableHead>
             </TableRow>
         </TableHeader>
         <TableBody>

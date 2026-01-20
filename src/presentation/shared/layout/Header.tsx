@@ -13,7 +13,7 @@ import { Badge } from '@/presentation/shared/components/Badge';
 import { IndicatorCircle } from '@/presentation/shared/components/IndicatorCircle';
 import { useTranslations, useLocale } from 'next-intl';
 import { usePathname, useRouter } from '@/i18n/routing';
-import { T } from '@/i18n/content';
+// ...removed import for T, use translation key directly
 import { useCart } from '@/presentation/features/cart/hooks/useCart';
 import { useUser } from '@/presentation/features/user/hooks/useUser';
 import { Icon } from '@/presentation/shared/components/Icon';
@@ -77,7 +77,7 @@ const NavLink: React.FC<NavLinkProps> = ({ item, onClick, t }) => {
           onClick={(e) => handleClick(e, item.href)} 
           className="relative text-foreground hover:text-primary transition-colors font-medium group text-lg md:text-base flex items-center gap-1"
         >
-          {t(item.labelKey)} <Icon name="chevronDown" className="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" />
+          {item.labelKey} <Icon name="chevronDown" className="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" />
         </Link>
         {isMegaMenuOpen && (
           <div className="absolute top-full ltr:left-1/2 rtl:right-1/2 ltr:-translate-x-1/2 rtl:translate-x-1/2 mt-2 w-max max-w-4xl bg-card rounded-lg shadow-lg border p-6 z-50">
@@ -129,7 +129,7 @@ const NavLink: React.FC<NavLinkProps> = ({ item, onClick, t }) => {
       onClick={(e) => handleClick(e, item.href)} 
       className="relative text-foreground hover:text-primary transition-colors font-medium group text-lg md:text-base"
     >
-      {t(item.labelKey)}
+      {item.labelKey}
       <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
     </Link>
   );
@@ -161,7 +161,6 @@ interface HeaderUIProps {
  */
 export const HeaderUI: React.FC<HeaderUIProps> = ({ 
     handleSearch,
-    t,
     language,
     onToggleLanguage,
     theme,
@@ -175,7 +174,7 @@ export const HeaderUI: React.FC<HeaderUIProps> = ({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const router = useRouter();
-
+  const t = useTranslations();
   const onSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
@@ -211,7 +210,7 @@ export const HeaderUI: React.FC<HeaderUIProps> = ({
                         type="text"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder={t(T.NAV.SEARCH_PLACEHOLDER)}
+                        placeholder={t('Nav.SearchPlaceholder')}
                         className="w-32 lg:w-48 bg-muted border-transparent h-9 rounded-full ltr:pl-4 rtl:pr-4 ltr:pr-10 rtl:pl-10 text-sm transition-all duration-300 focus:w-48 lg:focus:w-64"
                     />
                     <Button size="icon" variant="ghost" type="submit" className="absolute top-1/2 -translate-y-1/2 ltr:right-0 rtl:left-0 h-9 w-9 text-muted-foreground hover:text-primary" aria-label="Search">
@@ -223,7 +222,7 @@ export const HeaderUI: React.FC<HeaderUIProps> = ({
                 <ThemeSwitcher theme={theme} onToggleTheme={onToggleTheme} />
                 <LanguageSwitcher language={language} onToggleLanguage={onToggleLanguage} />
               </div>
-               <Button variant="ghost" size="icon" onClick={onToggleCart} className="relative" aria-label={t(T.LAYOUT.HEADER.CART_BUTTON)}>
+               <Button variant="ghost" size="icon" onClick={onToggleCart} className="relative" aria-label={t('Layout.Header.CartButton')}>
                 <Icon name="shoppingCart" className="w-6 h-6 text-foreground" />
                 {cartCount > 0 && <IndicatorCircle count={cartCount} />}
               </Button>
@@ -231,16 +230,16 @@ export const HeaderUI: React.FC<HeaderUIProps> = ({
                 {!isLoggedIn ? (
                   <>
                     <Button variant="ghost" onClick={() => router.push('/registration')}>
-                        {t(T.PAGES.AUTH.LOGIN_TITLE)}
+                        {t('Pages.Auth.LoginTitle')}
                     </Button>
                     <Button onClick={() => router.push('/registration')}>
-                        {t(T.PAGES.AUTH.REGISTRATION_TITLE)}
+                        {t('Pages.Auth.RegistrationTitle')}
                     </Button>
                   </>
                 ) : (
                   <>
                     <Button variant="outline" onClick={onLogout}>
-                        {t(T.PAGES.MY_ACCOUNT.LOGOUT)}
+                        {t('Pages.MyAccount.Logout')}
                     </Button>
                   </>
                 )}
@@ -271,7 +270,7 @@ export const HeaderUI: React.FC<HeaderUIProps> = ({
                       type="text"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder={t(T.NAV.SEARCH_PLACEHOLDER)}
+                        placeholder={t('Nav.SearchPlaceholder')}
                       className="rounded-full ltr:pr-12 rtl:pl-12 h-11"
                   />
                   <Button size="icon" variant="ghost" type="submit" className="absolute top-1/2 -translate-y-1/2 ltr:right-1 rtl:left-1 text-muted-foreground" aria-label="Search">
@@ -290,15 +289,15 @@ export const HeaderUI: React.FC<HeaderUIProps> = ({
                 {!isLoggedIn ? (
                   <>
                     <Button size="lg" className="w-full" onClick={() => {setIsMenuOpen(false); router.push('/registration');}}>
-                        {t(T.PAGES.AUTH.REGISTRATION_TITLE)}
+                        {t('Pages.Auth.RegistrationTitle')}
                     </Button>
                     <Button variant="outline" size="lg" className="w-full mt-2" onClick={() => {setIsMenuOpen(false); router.push('/registration');}}>
-                        {t(T.PAGES.AUTH.LOGIN_TITLE)}
+                        {t('Pages.Auth.LoginTitle')}
                     </Button>
                   </>
                 ) : (
                    <Button variant="outline" size="lg" className="w-full" onClick={() => {setIsMenuOpen(false); onLogout();}}>
-                        {t(T.PAGES.MY_ACCOUNT.LOGOUT)}
+                        {t('Pages.MyAccount.Logout')}
                     </Button>
                 )}
             </div>

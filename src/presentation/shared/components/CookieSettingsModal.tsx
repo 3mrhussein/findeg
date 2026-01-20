@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/presentation/shared/ui/button';
 import { cookieSettings } from '@/lib/constants';
 import { useTranslations } from 'next-intl';
-import { T } from '@/i18n/content';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/presentation/shared/ui/dialog';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/presentation/shared/ui/accordion';
 import { Switch } from '@/presentation/shared/ui/switch';
@@ -61,8 +60,8 @@ export const CookieSettingsModal: React.FC<CookieSettingsModalProps> = ({ isOpen
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>{t(T.PAGES.COOKIES.SETTINGS_TITLE)}</DialogTitle>
-                    <DialogDescription>{t(T.PAGES.COOKIES.SETTINGS_DESCRIPTION)}</DialogDescription>
+                    <DialogTitle>{t('Pages.Cookies.SettingsTitle')}</DialogTitle>
+                    <DialogDescription>{t('Pages.Cookies.SettingsDescription')}</DialogDescription>
                 </DialogHeader>
                 <Accordion type="multiple" className="w-full">
                     {cookieSettings.map(setting => (
@@ -73,18 +72,18 @@ export const CookieSettingsModal: React.FC<CookieSettingsModalProps> = ({ isOpen
                             <AccordionContent>
                                 <div className="flex flex-col gap-2">
                                     <div className="flex items-center justify-between py-2 border-b border-dashed">
-                                        <span className="text-sm font-medium">{t(T.PAGES.COOKIES.ENABLED)}</span>
+                                        <span className="text-sm font-medium">{t('Pages.Cookies.Enabled')}</span>
                                         <div onClick={(e) => e.stopPropagation()}>
                                             <Switch 
                                                 checked={preferences[setting.id] || false}
                                                 onCheckedChange={() => handleToggle(setting.id)}
                                                 disabled={!setting.isMutable}
-                                                aria-label={t(setting.titleKey as any)}
+                                                aria-label={setting.titleKey}
                                             />
                                         </div>
                                     </div>
                                     <p className="text-sm text-muted-foreground mt-2">
-                                        {t(setting.descriptionKey as any)}
+                                        {setting.descriptionKey}
                                     </p>
                                 </div>
                             </AccordionContent>
@@ -92,7 +91,7 @@ export const CookieSettingsModal: React.FC<CookieSettingsModalProps> = ({ isOpen
                     ))}
                 </Accordion>
                 <DialogFooter>
-                    <Button onClick={handleSave} className="w-full">{t(T.PAGES.COOKIES.SETTINGS_SAVE)}</Button>
+                    <Button onClick={handleSave} className="w-full">{t('Pages.Cookies.SettingsSave')}</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

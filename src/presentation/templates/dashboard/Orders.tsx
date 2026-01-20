@@ -1,5 +1,5 @@
 import { useTranslations } from 'next-intl';
-import { T } from '@/i18n/content';
+
 import { usePagination } from '@/presentation/shared/hooks';
 import { orders as allOrders } from '@/lib/constants';
 import { OrderTable } from '@/presentation/features/dashboard/components/OrderTable';

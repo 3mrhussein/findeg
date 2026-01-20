@@ -9,7 +9,7 @@ import { Icon } from '@/presentation/shared/components/Icon';
 import { Price } from '@/presentation/shared/components/Price';
 import { Button } from '@/presentation/shared/components/Button';
 import { useTranslations } from 'next-intl';
-import { T } from '@/i18n/content';
+// ...removed import for T, use translation key directly
 import { useCart } from '@/presentation/features/cart/hooks/useCart';
 
 interface ProductListItemUIProps {
@@ -84,7 +84,7 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product }) => 
         <ProductListItemUI
             product={product}
             onAddToCart={handleAddToCart}
-            addToCartText={t(T.PAGES.PRODUCT_CARD.ADD_TO_CART)}
+            addToCartText={t('Pages.ProductCard.AddToCart')}
             onCardClick={handleCardClick}
         />
     );

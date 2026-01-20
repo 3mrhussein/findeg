@@ -1,7 +1,6 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { T } from '@/i18n/content';
 
 interface SalesData {
     name: string;
@@ -94,5 +93,5 @@ interface SalesChartProps {
 
 export const SalesChart: React.FC<SalesChartProps> = ({ data }) => {
     const t = useTranslations();
-    return <SalesChartUI data={data} title={t(T.PAGES.DASHBOARD.MONTHLY_SALES)} />;
+    return <SalesChartUI data={data} title={t('Pages.Dashboard.MonthlySales')} />;
 };

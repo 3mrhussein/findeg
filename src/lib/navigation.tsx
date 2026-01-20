@@ -1,7 +1,7 @@
 import React from 'react';
 import type { NavigationItem } from '@/types';
 import { Icon } from '@/presentation/shared/components/Icon';
-import { T } from '@/i18n/content';
+// ...removed import for T, use translation key directly
 
 /**
  * Defines the main navigation structure of the application.
@@ -12,48 +12,48 @@ import { T } from '@/i18n/content';
  * @type {NavigationItem[]}
  */
 export const navigationSchema: NavigationItem[] = [
-    { labelKey: T.NAV.SHOP as any, href: '/shop' },
+    { labelKey: 'NAV.SHOP', href: '/shop' },
     { 
-      labelKey: T.NAV.CATEGORIES as any, 
+      labelKey: 'NAV.CATEGORIES', 
       href: '/categories',
       isMegaMenu: true,
       megaMenuColumns: [
         {
-          titleKey: T.NAV.STATIONARY.TITLE as any,
+          titleKey: 'NAV.STATIONARY.TITLE',
           links: [
-            { labelKey: T.NAV.STATIONARY.PENS as any, href: '/shop?category=Stationary', subLinks: [
-              { labelKey: T.NAV.STATIONARY.GEL_PENS as any, href: '/shop?category=Stationary&type=gel', icon: <Icon name="pen" className="w-4 h-4" /> },
-              { labelKey: T.NAV.STATIONARY.BALLPOINT as any, href: '/shop?category=Stationary&type=ballpoint', icon: <Icon name="pen" className="w-4 h-4" /> },
+            { labelKey: 'NAV.STATIONARY.PENS', href: '/shop?category=Stationary', subLinks: [
+              { labelKey: 'NAV.STATIONARY.GEL_PENS', href: '/shop?category=Stationary&type=gel', icon: <Icon name="pen" className="w-4 h-4" /> },
+              { labelKey: 'NAV.STATIONARY.BALLPOINT', href: '/shop?category=Stationary&type=ballpoint', icon: <Icon name="pen" className="w-4 h-4" /> },
             ]},
-            { labelKey: T.NAV.STATIONARY.NOTEBOOKS as any, href: '/shop?category=Stationary' },
-            { labelKey: T.NAV.STATIONARY.ART_SUPPLIES as any, href: '/shop?category=Stationary', isNew: true },
+            { labelKey: 'NAV.STATIONARY.NOTEBOOKS', href: '/shop?category=Stationary' },
+            { labelKey: 'NAV.STATIONARY.ART_SUPPLIES', href: '/shop?category=Stationary', isNew: true },
           ]
         },
         {
-          titleKey: T.NAV.TOYS.TITLE as any,
+          titleKey: 'NAV.TOYS.TITLE',
           links: [
-            { labelKey: T.NAV.TOYS.EDUCATIONAL as any, href: '/shop?category=Toys' },
-            { labelKey: T.NAV.TOYS.BLOCKS as any, href: '/shop?category=Toys' },
-            { labelKey: T.NAV.TOYS.PUZZLES as any, href: '/shop?category=Toys', subLinks: [
-              { labelKey: T.NAV.TOYS.JIGSAW as any, href: '/shop?category=Toys&type=jigsaw', icon: <Icon name="puzzle" className="w-4 h-4" /> },
-              { labelKey: T.NAV.TOYS.THREE_D as any, href: '/shop?category=Toys&type=3d', icon: <Icon name="puzzle" className="w-4 h-4" /> },
+            { labelKey: 'NAV.TOYS.EDUCATIONAL', href: '/shop?category=Toys' },
+            { labelKey: 'NAV.TOYS.BLOCKS', href: '/shop?category=Toys' },
+            { labelKey: 'NAV.TOYS.PUZZLES', href: '/shop?category=Toys', subLinks: [
+              { labelKey: 'NAV.TOYS.JIGSAW', href: '/shop?category=Toys&type=jigsaw', icon: <Icon name="puzzle" className="w-4 h-4" /> },
+              { labelKey: 'NAV.TOYS.THREE_D', href: '/shop?category=Toys&type=3d', icon: <Icon name="puzzle" className="w-4 h-4" /> },
             ]},
           ]
         },
         {
-          titleKey: T.NAV.SCHOOL.TITLE as any,
+          titleKey: 'NAV.SCHOOL.TITLE',
           links: [
-            { labelKey: T.NAV.SCHOOL.BACKPACKS as any, href: '/shop?category=School Items', subLinks: [
-              { labelKey: T.NAV.SCHOOL.ERGONOMIC as any, href: '/shop?category=School Items&type=ergonomic', icon: <Icon name="backpack" className="w-4 h-4" /> },
-              { labelKey: T.NAV.SCHOOL.THEMED as any, href: '/shop?category=School Items&type=themed', icon: <Icon name="backpack" className="w-4 h-4" /> },
+            { labelKey: 'NAV.SCHOOL.BACKPACKS', href: '/shop?category=School Items', subLinks: [
+              { labelKey: 'NAV.SCHOOL.ERGONOMIC', href: '/shop?category=School Items&type=ergonomic', icon: <Icon name="backpack" className="w-4 h-4" /> },
+              { labelKey: 'NAV.SCHOOL.THEMED', href: '/shop?category=School Items&type=themed', icon: <Icon name="backpack" className="w-4 h-4" /> },
             ] },
-            { labelKey: T.NAV.SCHOOL.LUNCHBOXES as any, href: '/shop?category=School Items' },
+            { labelKey: 'NAV.SCHOOL.LUNCHBOXES', href: '/shop?category=School Items' },
           ]
         }
       ]
     },
-    { labelKey: T.NAV.ABOUT as any, href: '/about' },
-    { labelKey: T.NAV.AI_GENERATOR as any, href: '/', id: 'nav_ai_generator' },
-    { labelKey: T.NAV.MY_ACCOUNT as any, href: '/my-account' },
-    { labelKey: T.NAV.DASHBOARD as any, href: '/dashboard' },
+    { labelKey: 'NAV.ABOUT', href: '/about' },
+    { labelKey: 'NAV.AI_GENERATOR', href: '/', id: 'nav_ai_generator' },
+    { labelKey: 'NAV.MY_ACCOUNT', href: '/my-account' },
+    { labelKey: 'NAV.DASHBOARD', href: '/dashboard' },
 ];

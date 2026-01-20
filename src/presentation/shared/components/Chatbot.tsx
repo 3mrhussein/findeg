@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { T } from '@/i18n/content';
 import { Button } from '@/presentation/shared/ui/button';
 import { Icon } from '@/presentation/shared/components/Icon';
 import { Input } from '@/presentation/shared/ui/input';
@@ -81,10 +80,10 @@ export const Chatbot: React.FC = () => {
 
     return (
         <ChatbotUI
-            title={t(T.PAGES.CHATBOT.TITLE)}
-            placeholder={t(T.PAGES.CHATBOT.PLACEHOLDER)}
-            sendLabel={t(T.PAGES.CHATBOT.SEND)}
-            greeting={t(T.PAGES.CHATBOT.GREETING)}
+            title={t('Pages.Chatbot.Title')}
+            placeholder={t('Pages.Chatbot.Placeholder')}
+            sendLabel={t('Pages.Chatbot.Send')}
+            greeting={t('Pages.Chatbot.Greeting')}
         />
     );
 };

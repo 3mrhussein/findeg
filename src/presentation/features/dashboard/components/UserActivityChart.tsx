@@ -2,7 +2,6 @@
 
 import React, { useRef, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
-import { T } from '@/i18n/content';
 
 interface ActivityData {
     day: string;
@@ -124,5 +123,5 @@ interface UserActivityChartProps {
 
 export const UserActivityChart: React.FC<UserActivityChartProps> = ({ data }) => {
     const t = useTranslations();
-    return <UserActivityChartUI data={data} title={t(T.PAGES.DASHBOARD.WEEKLY_ACTIVITY)} />;
+    return <UserActivityChartUI data={data} title={t('Pages.Dashboard.WeeklyActivity')} />;
 };

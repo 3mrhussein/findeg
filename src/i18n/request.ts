@@ -1,15 +1,16 @@
-import { getRequestConfig } from 'next-intl/server';
-import { routing } from '@/i18n/routing';
-import { getLocaleMessages } from './content';
 
-export default getRequestConfig(async ({ locale }) => {
-  // Validate locale or fallback to default
-  const currentLocale = (routing.locales.includes(locale as any) 
-    ? locale 
-    : routing.defaultLocale) as 'en' | 'ar';
-
+import {getRequestConfig} from 'next-intl/server';
+import {hasLocale} from 'next-intl';
+import {routing} from './routing';
+export default getRequestConfig(async ({requestLocale}) => {
+  // Typically corresponds to the `[locale]` segment
+  const requested = await requestLocale;
+  const locale = hasLocale(routing.locales, requested)
+    ? requested
+    : routing.defaultLocale;
+ 
   return {
-    locale: currentLocale,
-    messages: getLocaleMessages(currentLocale)
+    locale,
+    messages: (await import(`../infrastructure/cms/messages/${locale}.json`)).default,
   };
 });

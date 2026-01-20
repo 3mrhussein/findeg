@@ -8,7 +8,6 @@ import { Button } from '@/presentation/shared/ui/button';
 import { Price } from '@/presentation/shared/components/Price';
 import { DiscountBadge } from '@/presentation/shared/components/DiscountBadge';
 import { useTranslations } from 'next-intl';
-import { T } from '@/i18n/content';
 import { useCart } from '@/presentation/features/cart/hooks/useCart';
 import { useUser } from '@/presentation/features/user/hooks/useUser';
 import { Icon } from '@/presentation/shared/components/Icon';
@@ -150,9 +149,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             onAddToCart={handleAddToCart}
             onToggleWishlist={handleToggleWishlist}
             isSaved={isSaved}
-            addToCartText={t(T.PAGES.PRODUCT_CARD.ADD_TO_CART)}
-            likeText={t(T.PAGES.PRODUCT_CARD.LIKE)}
-            saveText={t(T.PAGES.PRODUCT_CARD.SAVE)}
+            addToCartText={t('Pages.ProductCard.AddToCart')}
+            likeText={t('Pages.ProductCard.Like')}
+            saveText={t('Pages.ProductCard.Save')}
             onCardClick={handleCardClick}
         />
     );

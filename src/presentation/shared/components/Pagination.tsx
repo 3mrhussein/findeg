@@ -3,7 +3,6 @@
 import React from 'react';
 import { Button } from '@/presentation/shared/ui/button';
 import { useTranslations, useLocale } from 'next-intl';
-import { T } from '@/i18n/content';
 import { Icon } from '@/presentation/shared/components/Icon';
 
 interface PaginationProps {
@@ -16,8 +15,8 @@ export const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages,
     const t = useTranslations();
     const locale = useLocale();
     const isRtl = locale === 'ar';
-    const prevText = t(T.PAGES.SHOP.PAGINATION_PREVIOUS);
-    const nextText = t(T.PAGES.SHOP.PAGINATION_NEXT);
+    const prevText = t('Pages.Shop.PaginationPrevious');
+    const nextText = t('Pages.Shop.PaginationNext');
 
     const handlePrev = () => {
         if (currentPage > 1) {

@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { User } from '@/types';
 import { useTranslations } from 'next-intl';
-import { T } from '@/i18n/content';
 import { useUser } from '@/presentation/features/user/hooks/useUser';
 import { Container } from '@/presentation/shared/layout/Container';
 import { Button } from '@/presentation/shared/ui/button';
@@ -43,12 +42,12 @@ export const RegistrationContent: React.FC = () => {
                 <Card className="max-w-md mx-auto">
                     <CardHeader className="text-center">
                         <CardTitle className="text-3xl">
-                            {isLoginView ? t(T.PAGES.AUTH.LOGIN_TITLE) : t(T.PAGES.AUTH.REGISTRATION_TITLE)}
+                            {isLoginView ? t('Pages.Auth.LoginTitle') : t('Pages.Auth.RegistrationTitle')}
                         </CardTitle>
                         <CardDescription>
-                            {isLoginView ? t(T.PAGES.AUTH.NO_ACCOUNT) : t(T.PAGES.AUTH.HAVE_ACCOUNT)}{' '}
+                            {isLoginView ? t('Pages.Auth.NoAccount') : t('Pages.Auth.HaveAccount')}{' '}
                             <button onClick={() => setIsLoginView(!isLoginView)} className="text-primary hover:underline font-medium">
-                               {isLoginView ? t(T.PAGES.AUTH.SIGNUP_LINK) : t(T.PAGES.AUTH.SIGNIN_LINK)}
+                               {isLoginView ? t('Pages.Auth.SignupLink') : t('Pages.Auth.SigninLink')}
                             </button>
                         </CardDescription>
                     </CardHeader>
@@ -56,7 +55,7 @@ export const RegistrationContent: React.FC = () => {
                         <form className="space-y-6" onSubmit={handleSubmit}>
                             {!isLoginView && (
                                 <div>
-                                    <Label htmlFor="name">{t(T.PAGES.AUTH.NAME)}</Label>
+                                    <Label htmlFor="name">{t('Pages.Auth.Name')}</Label>
                                     <Input 
                                         type="text" 
                                         id="name" 
@@ -67,7 +66,7 @@ export const RegistrationContent: React.FC = () => {
                                 </div>
                             )}
                             <div>
-                                <Label htmlFor="email">{t(T.PAGES.AUTH.EMAIL)}</Label>
+                                <Label htmlFor="email">{t('Pages.Auth.Email')}</Label>
                                 <Input 
                                     type="email" 
                                     id="email" 
@@ -77,7 +76,7 @@ export const RegistrationContent: React.FC = () => {
                                 />
                             </div>
                              <div>
-                                <Label htmlFor="password">{t(T.PAGES.AUTH.PASSWORD)}</Label>
+                                <Label htmlFor="password">{t('Pages.Auth.Password')}</Label>
                                 <Input 
                                     type="password" 
                                     id="password" 
@@ -87,7 +86,7 @@ export const RegistrationContent: React.FC = () => {
                                 />
                             </div>
                             <Button size="lg" className="w-full" type="submit">
-                                {isLoginView ? t(T.PAGES.AUTH.BUTTON_LOGIN) : t(T.PAGES.AUTH.BUTTON_REGISTER)}
+                                {isLoginView ? t('Pages.Auth.ButtonLogin') : t('Pages.Auth.ButtonRegister')}
                             </Button>
                         </form>
 
@@ -97,7 +96,7 @@ export const RegistrationContent: React.FC = () => {
                             </div>
                             <div className="relative flex justify-center text-sm">
                                 <span className="bg-card px-2 text-muted-foreground">
-                                    {isLoginView ? t(T.PAGES.AUTH.SOCIAL_PROMPT_LOGIN) : t(T.PAGES.AUTH.SOCIAL_PROMPT)}
+                                    {isLoginView ? t('Pages.Auth.SocialPromptLogin') : t('Pages.Auth.SocialPrompt')}
                                 </span>
                             </div>
                         </div>

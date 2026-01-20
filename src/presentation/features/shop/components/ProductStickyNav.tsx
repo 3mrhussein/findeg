@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container } from '@/presentation/shared/layout/Container';
 import { useTranslations } from 'next-intl';
-import { T } from '@/i18n/content';
 
 interface ProductStickyNavProps {
   offsetTop: number;
@@ -14,9 +13,9 @@ export const ProductStickyNav: React.FC<ProductStickyNavProps> = ({ offsetTop })
   const [isNavSticky, setIsNavSticky] = useState(false);
 
   const navItems = [
-    { label: t(T.PAGES.PRODUCT_DETAIL.NAV_DESCRIPTION), href: '#description' },
-    { label: t(T.PAGES.PRODUCT_DETAIL.NAV_REVIEWS), href: '#reviews' },
-    { label: t(T.PAGES.PRODUCT_DETAIL.NAV_RECOMMENDED), href: '#recommended' },
+    { label: t('Pages.ProductDetail.NavDescription'), href: '#description' },
+    { label: t('Pages.ProductDetail.NavReviews'), href: '#reviews' },
+    { label: t('Pages.ProductDetail.NavRecommended'), href: '#recommended' },
   ];
 
   useEffect(() => {

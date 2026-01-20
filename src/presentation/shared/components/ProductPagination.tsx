@@ -6,7 +6,6 @@ import { Grid } from '@/presentation/shared/layout/Grid';
 import { Button } from '@/presentation/shared/ui/button';
 import { Icon } from '@/presentation/shared/components/Icon';
 import { useTranslations, useLocale } from 'next-intl';
-import { T } from '@/i18n/content';
 import { Product } from '@/domain/entities/Product';
 
 interface ProductPaginationProps {
@@ -60,7 +59,7 @@ export const ProductPagination: React.FC<ProductPaginationProps> = ({
             size="icon"
             onClick={() => handlePageChange(currentPage - 1)} 
             disabled={currentPage === 1 || isAnimating}
-            aria-label={t(T.PAGES.SHOP.PAGINATION_PREVIOUS)}
+            aria-label={t('Pages.Shop.PaginationPrevious')}
           >
             <Icon name="chevronRight" className={`w-5 h-5 ${locale === 'en' ? 'rotate-180' : ''}`} />
           </Button>
@@ -72,7 +71,7 @@ export const ProductPagination: React.FC<ProductPaginationProps> = ({
             size="icon"
             onClick={() => handlePageChange(currentPage + 1)} 
             disabled={currentPage === totalPages || isAnimating}
-            aria-label={t(T.PAGES.SHOP.PAGINATION_NEXT)}
+            aria-label={t('Pages.Shop.PaginationNext')}
           >
             <Icon name="chevronRight" className={`w-5 h-5 ${locale === 'ar' ? 'rotate-180' : ''}`} />
           </Button>

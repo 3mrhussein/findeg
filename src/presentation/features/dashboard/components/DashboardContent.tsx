@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations, useLocale } from 'next-intl';
-import { T } from '@/i18n/content';
 import { useUser } from '@/presentation/features/user/hooks/useUser';
 import { Logo } from '@/presentation/shared/components/Logo';
 import { Button } from '@/presentation/shared/ui/button';
@@ -51,10 +50,10 @@ export const DashboardContent: React.FC = () => {
     const isRtl = locale === 'ar';
 
     const navItems = [
-        { id: 'overview', label: t(T.PAGES.DASHBOARD.OVERVIEW), icon: <Icon name="dashboard" className="w-5 h-5" /> },
-        { id: 'products', label: t(T.PAGES.DASHBOARD.PRODUCTS), icon: <Icon name="package" className="w-5 h-5" /> },
-        { id: 'orders', label: t(T.PAGES.DASHBOARD.ORDERS), icon: <Icon name="shoppingCart" className="w-5 h-5" /> },
-        { id: 'customers', label: t(T.PAGES.DASHBOARD.CUSTOMERS), icon: <Icon name="users" className="w-5 h-5" /> },
+        { id: 'overview', label: t('Pages.Dashboard.Overview'), icon: <Icon name="dashboard" className="w-5 h-5" /> },
+        { id: 'products', label: t('Pages.Dashboard.Products'), icon: <Icon name="package" className="w-5 h-5" /> },
+        { id: 'orders', label: t('Pages.Dashboard.Orders'), icon: <Icon name="shoppingCart" className="w-5 h-5" /> },
+        { id: 'customers', label: t('Pages.Dashboard.Customers'), icon: <Icon name="users" className="w-5 h-5" /> },
     ];
     
     const activeNavItem = navItems.find(item => item.id === activeView);
@@ -116,13 +115,13 @@ export const DashboardContent: React.FC = () => {
                     </ul>
                 </nav>
                  <div className="p-2 border-t border-border">
-                    <Tooltip tip={isCollapsed ? t(T.PAGES.DASHBOARD.EXPAND_SIDEBAR) : t(T.PAGES.DASHBOARD.COLLAPSE_SIDEBAR)} side={isRtl ? 'left' : 'right'}>
+                    <Tooltip tip={isCollapsed ? t('Pages.Dashboard.ExpandSidebar') : t('Pages.Dashboard.CollapseSidebar')} side={isRtl ? 'left' : 'right'}>
                          <Button
                             variant="ghost"
                             onClick={() => setIsCollapsed(!isCollapsed)}
                             className="w-full justify-center"
                             size="icon"
-                            aria-label={isCollapsed ? t(T.PAGES.DASHBOARD.EXPAND_SIDEBAR) : t(T.PAGES.DASHBOARD.COLLAPSE_SIDEBAR)}
+                            aria-label={isCollapsed ? t('Pages.Dashboard.ExpandSidebar') : t('Pages.Dashboard.CollapseSidebar')}
                         >
                             <Icon name="chevronRight" className={cn('w-5 h-5 transition-transform duration-300', isCollapsed !== isRtl && 'rotate-180')} />
                         </Button>
@@ -137,7 +136,7 @@ export const DashboardContent: React.FC = () => {
                         {activeView === 'products' && (
                              <Button>
                                 <Icon name="plus" className="w-5 h-5 ltr:mr-2 rtl:ml-2" />
-                                {t(T.PAGES.DASHBOARD.ADD_PRODUCT)}
+                                {t('Pages.Dashboard.AddProduct')}
                             </Button>
                         )}
                      </div>

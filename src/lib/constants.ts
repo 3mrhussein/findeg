@@ -1,4 +1,5 @@
 import type { Product, Order, Review } from '@/types';
+import T from '@/infrastructure/cms/messages/en.json';
 
 /**
  * Centralized configuration and mock data.
@@ -300,46 +301,43 @@ export const brandLogos = [
     { name: 'Brand E', logoUrl: 'https://tailwindui.com/img/logos/158x48/statamic-logo-gray-400.svg' },
 ];
 
-import { T } from '@/i18n/content';
 
 export const cookieSettings = [
     {
         id: 'required',
-        titleKey: T.PAGES.COOKIES.CATEGORY_REQUIRED,
-        descriptionKey: T.PAGES.COOKIES.CATEGORY_REQUIRED_DESC,
+        titleKey: T.Pages.Cookies.CategoryRequired,
+        descriptionKey: T.Pages.Cookies.CategoryRequiredDesc,
         isMutable: false,
     },
     {
         id: 'analytics',
-        titleKey: T.PAGES.COOKIES.CATEGORY_ANALYTICS,
-        descriptionKey: T.PAGES.COOKIES.CATEGORY_ANALYTICS_DESC,
+        titleKey: T.Pages.Cookies.CategoryAnalytics,
+        descriptionKey: T.Pages.Cookies.CategoryAnalyticsDesc,
         isMutable: true,
     },
     {
         id: 'marketing',
-        titleKey: T.PAGES.COOKIES.CATEGORY_MARKETING,
-        descriptionKey: T.PAGES.COOKIES.CATEGORY_MARKETING_DESC,
+        titleKey: T.Pages.Cookies.CategoryMarketing ,
+        descriptionKey: T.Pages.Cookies.CategoryMarketingDesc ,
         isMutable: true,
     },
 ];
 
 export const faqData = [
     {
-        questionKey: T.PAGES.FAQ.Q1,
-        answerKey: T.PAGES.FAQ.A1,
+        questionKey: T.Pages.Faq.Q1,
+        answerKey: T.Pages.Faq.A1,
     },
     {
-        questionKey: T.PAGES.FAQ.Q2,
-        answerKey: T.PAGES.FAQ.A2,
+        questionKey: T.Pages.Faq.Q2,
+        answerKey: T.Pages.Faq.A2,
     },
     {
-        questionKey: T.PAGES.FAQ.Q3,
-        answerKey: T.PAGES.FAQ.A3,
+        questionKey: T.Pages.Faq.Q3,
+        answerKey: T.Pages.Faq.A3,
     },
     {
-        questionKey: T.PAGES.FAQ.Q4,
-        answerKey: T.PAGES.FAQ.A4,
+        questionKey: T.Pages.Faq.Q4,
+        answerKey: T.Pages.Faq.A4,
     },
 ];
-
-const STATIC_BUILD_LOCALES=['en','ar'];
