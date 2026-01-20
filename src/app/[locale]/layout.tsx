@@ -1,7 +1,11 @@
 import type { Metadata, Viewport } from 'next';
 import { Poppins } from 'next/font/google';
-import { Providers } from '@/presentation/shared/providers/Providers';
-import './globals.css';
+import '../globals.css';
+import { hasLocale, Locale, NextIntlClientProvider } from 'next-intl';
+import { routing } from '@/i18n/routing';
+import { notFound } from 'next/navigation';
+import { getMessages, setRequestLocale } from 'next-intl/server';
+import Providers from '@/presentation/shared/providers/Providers';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -61,19 +65,36 @@ export const viewport: Viewport = {
  * 
  * @param {React.ReactNode} children - The content to render within the layout.
  */
-export default function RootLayout({
+
+export async function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
+
+
+export default async function RootLayout({
   children,
+  params
 }: {
   children: React.ReactNode;
+  params :any;
 }) {
+  const { locale } = params;
+    if (!hasLocale(routing.locales, locale)) {
+    notFound();
+  }
+    // Enable static rendering
+  setRequestLocale(locale);
+  const messages = await getMessages();
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'} suppressHydrationWarning>
       <body className={`${poppins.variable} font-sans`}>
-        <Providers>
-          <div className="min-h-screen bg-background text-foreground flex flex-col">
-            {children}
-          </div>
-        </Providers>
+        <NextIntlClientProvider messages={messages}>  
+          <Providers>
+            <div className="min-h-screen bg-background text-foreground flex flex-col">
+              {children}
+            </div>
+          </Providers>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

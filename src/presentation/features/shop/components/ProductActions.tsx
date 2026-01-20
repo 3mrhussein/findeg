@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Button } from '@/presentation/shared/ui/button';
 import { VariantSelector } from '@/presentation/features/shop/components/VariantSelector';
 import { QuantityInput } from '@/presentation/shared/components/QuantityInput';
-import { useTranslation } from '@/presentation/shared/hooks';
+import { useTranslations } from 'next-intl';
 import { useCart } from '@/presentation/features/cart/hooks/useCart';
 import { Product } from '@/types';
 
@@ -13,7 +13,7 @@ interface ProductActionsProps {
 }
 
 export const ProductActions: React.FC<ProductActionsProps> = ({ product }) => {
-  const { t } = useTranslation();
+  const t = useTranslations();
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
   const [selectedVariants, setSelectedVariants] = useState<{ [key: string]: string }>({});
@@ -36,7 +36,7 @@ export const ProductActions: React.FC<ProductActionsProps> = ({ product }) => {
       <div className="flex items-center gap-4 mt-8">
         <QuantityInput quantity={quantity} setQuantity={setQuantity} />
         <Button size="lg" className="w-full" onClick={handleAddToCart}>
-          {t('product_add_to_cart')}
+          {t('Pages.ProductDetail.AddToCart')}
         </Button>
       </div>
     </div>

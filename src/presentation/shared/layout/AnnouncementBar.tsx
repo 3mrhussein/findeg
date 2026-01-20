@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Icon } from '@/presentation/shared/components/Icon';
-import { useTranslation } from '@/presentation/shared/hooks';
+import { useTranslations } from 'next-intl';
 
 interface AnnouncementBarUIProps {
     isVisible: boolean;
@@ -35,7 +35,7 @@ export const AnnouncementBarUI: React.FC<AnnouncementBarUIProps> = ({ isVisible,
 };
 
 export const AnnouncementBar: React.FC = () => {
-    const { t } = useTranslation();
+    const t = useTranslations();
     const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {
@@ -64,8 +64,8 @@ export const AnnouncementBar: React.FC = () => {
         <AnnouncementBarUI
             isVisible={isVisible}
             onClose={handleClose}
-            text={t('announcement_bar_text')}
-            closeLabel={t('announcement_bar_close')}
+            text={t('Pages.Home.Hero.TitlePart1')}
+            closeLabel={t('Pages.Home.Hero.TitleLearning')}
         />
     );
 };

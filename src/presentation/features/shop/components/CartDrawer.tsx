@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import type { CartItem } from '@/types';
 import { Button } from '@/presentation/shared/ui/button';
 import { QuantityInput } from '@/presentation/shared/components/QuantityInput';
-import { useTranslation, useTheme } from '@/presentation/shared/hooks';
+import { useTranslations } from 'next-intl';
 import { useCart } from '@/presentation/features/cart/hooks/useCart';
 import { Icon } from '@/presentation/shared/components/Icon';
 
@@ -121,7 +121,7 @@ export const CartDrawerUI: React.FC<CartDrawerUIProps> = ({
 
 export const CartDrawer: React.FC = () => {
     const { isCartOpen, toggleCart, cartItems, removeFromCart, updateQuantity, cartTotal } = useCart() as { isCartOpen: boolean, toggleCart: () => void, cartItems: CartItem[], removeFromCart: (itemId: number, variantId?: string) => void, updateQuantity: (itemId: number, quantity: number, variantId?: string) => void, cartTotal: number };
-    const { t } = useTranslation() as { t: (key: string) => string };
+    const t = useTranslations();
     const router = useRouter();
     
     const handleCheckout = () => {
@@ -142,12 +142,12 @@ export const CartDrawer: React.FC = () => {
             onRemove={removeFromCart}
             onUpdateQuantity={updateQuantity}
             total={cartTotal}
-            title={t('cart_title')}
-            emptyText={t('cart_empty')}
-            subtotalText={t('cart_subtotal')}
-            checkoutText={t('cart_checkout')}
-            removeItemText={t('cart_remove_item')}
-            shopNowText={t('hero_button_shop')}
+            title={t('Pages.Cart.Title')}
+            emptyText={t('Pages.Cart.Empty')}
+            subtotalText={t('Pages.Cart.Subtotal')}
+            checkoutText={t('Pages.Cart.Checkout')}
+            removeItemText={t('Pages.Cart.RemoveItem')}
+            shopNowText={t('Pages.Home.Hero.ButtonShop')}
             onCheckout={handleCheckout}
             onShopNow={handleShopNow}
         />

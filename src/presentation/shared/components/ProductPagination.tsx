@@ -5,7 +5,7 @@ import { ProductCard } from '@/presentation/features/shop/components/ProductCard
 import { Grid } from '@/presentation/shared/layout/Grid';
 import { Button } from '@/presentation/shared/ui/button';
 import { Icon } from '@/presentation/shared/components/Icon';
-import { useTranslation } from '@/presentation/shared/hooks';
+import { useTranslations, useLocale } from 'next-intl';
 import { Product } from '@/domain/entities/Product';
 
 interface ProductPaginationProps {
@@ -17,7 +17,8 @@ export const ProductPagination: React.FC<ProductPaginationProps> = ({
   products, 
   productsPerPage = 4 
 }) => {
-  const { t, language } = useTranslation();
+  const t = useTranslations();
+  const locale = useLocale();
   const [currentPage, setCurrentPage] = useState(1);
   const [isAnimating, setIsAnimating] = useState(false);
 
@@ -58,9 +59,9 @@ export const ProductPagination: React.FC<ProductPaginationProps> = ({
             size="icon"
             onClick={() => handlePageChange(currentPage - 1)} 
             disabled={currentPage === 1 || isAnimating}
-            aria-label={t('pagination_previous')}
+            aria-label={t('Pages.Shop.PaginationPrevious')}
           >
-            <Icon name="chevronRight" className={`w-5 h-5 ${language === 'en' ? 'rotate-180' : ''}`} />
+            <Icon name="chevronRight" className={`w-5 h-5 ${locale === 'en' ? 'rotate-180' : ''}`} />
           </Button>
           
           <p className="text-muted-foreground font-medium text-sm w-8 text-center">{currentPage} / {totalPages}</p>
@@ -70,9 +71,9 @@ export const ProductPagination: React.FC<ProductPaginationProps> = ({
             size="icon"
             onClick={() => handlePageChange(currentPage + 1)} 
             disabled={currentPage === totalPages || isAnimating}
-            aria-label={t('pagination_next')}
+            aria-label={t('Pages.Shop.PaginationNext')}
           >
-            <Icon name="chevronRight" className={`w-5 h-5 ${language === 'ar' ? 'rotate-180' : ''}`} />
+            <Icon name="chevronRight" className={`w-5 h-5 ${locale === 'ar' ? 'rotate-180' : ''}`} />
           </Button>
         </div>
       )}

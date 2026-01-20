@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { categories } from '@/lib/constants';
 import type { Product } from '@/types';
-import { useTranslation } from '@/presentation/shared/hooks';
+import { useTranslations } from 'next-intl';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/presentation/shared/ui/accordion';
 import { Card, CardHeader, CardTitle, CardContent } from '@/presentation/shared/ui/card';
 
@@ -82,7 +82,7 @@ interface FilterSidebarProps {
 }
 
 export const FilterSidebar: React.FC<FilterSidebarProps> = ({ allProducts, onFilterChange }) => {
-    const { t } = useTranslation();
+    const t = useTranslations();
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
     const [priceRange, setPriceRange] = useState(100);
 
@@ -105,9 +105,9 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ allProducts, onFil
     
     return (
         <FilterSidebarUI
-            title={t('shop_filters_title')}
-            categoriesTitle={t('shop_filters_categories')}
-            priceTitle={t('shop_filters_price')}
+            title={t('Pages.Shop.FiltersTitle')}
+            categoriesTitle={t('Pages.Shop.FiltersCategories')}
+            priceTitle={t('Pages.Shop.FiltersPrice')}
             selectedCategories={selectedCategories}
             onCategoryChange={handleCategoryChange}
             priceRange={priceRange}

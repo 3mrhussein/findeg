@@ -18,6 +18,7 @@ export interface MegaMenuColumn {
 }
 
 export interface NavigationItem {
+  id?: string;
   labelKey:string;
   href: string;
   isMegaMenu?: boolean;

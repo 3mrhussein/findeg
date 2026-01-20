@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/presentation/shared/ui/button';
 import { Container } from '@/presentation/shared/layout/Container';
-import { useTranslation } from '@/presentation/shared/hooks';
+import { useTranslations } from 'next-intl';
 
 interface CookieConsentBannerUIProps {
     isVisible: boolean;
@@ -61,7 +61,7 @@ interface CookieConsentBannerProps {
 }
 
 export const CookieConsentBanner: React.FC<CookieConsentBannerProps> = ({ onSettingsClick }) => {
-    const { t } = useTranslation();
+    const t = useTranslations();
     const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {
@@ -97,11 +97,11 @@ export const CookieConsentBanner: React.FC<CookieConsentBannerProps> = ({ onSett
             isVisible={isVisible}
             onConsent={handleConsent}
             onSettingsClick={onSettingsClick}
-            title={t('cookie_consent_title')}
-            text={t('cookie_consent_text')}
-            acceptText={t('cookie_consent_accept')}
-            rejectText={t('cookie_consent_reject')}
-            settingsText={t('cookie_consent_settings')}
+            title={t('Pages.Cookies.ConsentTitle')}
+            text={t('Pages.Cookies.ConsentText')}
+            acceptText={t('Pages.Cookies.ConsentAccept')}
+            rejectText={t('Pages.Cookies.ConsentReject')}
+            settingsText={t('Pages.Cookies.ConsentSettingsBtn')}
         />
     );
 };

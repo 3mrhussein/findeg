@@ -2,7 +2,7 @@
 
 import React, { useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { useTranslation } from '@/presentation/shared/hooks';
+import { useTranslations } from 'next-intl';
 import { useUser } from '@/presentation/features/user/hooks/useUser';
 import { Container } from '@/presentation/shared/layout/Container';
 import { Button } from '@/presentation/shared/ui/button';
@@ -24,7 +24,7 @@ const OrderStatusBadge: React.FC<{status: string}> = ({ status }) => {
 }
 
 export const MyAccountContent: React.FC = () => {
-    const { t } = useTranslation();
+    const t = useTranslations();
     const { currentUser, isLoggedIn, logout } = useUser();
     const router = useRouter();
 
@@ -45,8 +45,8 @@ export const MyAccountContent: React.FC = () => {
     if (!isLoggedIn || !currentUser) {
         return (
             <Container className="py-20 text-center">
-                <h1 className="text-2xl">Please log in to view your account.</h1>
-                <Button onClick={() => router.push('/registration')} className="mt-4">Sign In</Button>
+                <h1 className="text-2xl">{t('Pages.MyAccount.PleaseLogin')}</h1>
+                <Button onClick={() => router.push('/registration')} className="mt-4">{t('Pages.MyAccount.SignIn')}</Button>
             </Container>
         );
     }
@@ -55,32 +55,32 @@ export const MyAccountContent: React.FC = () => {
         <div className="bg-muted">
             <Container className="py-12 lg:py-16">
                 <div className="text-center mb-12">
-                    <h1 className="text-4xl font-bold text-foreground">{t('my_account_title')}</h1>
-                    <p className="text-muted-foreground mt-2">{t('my_account_welcome', { name: currentUser.name })}</p>
+                    <h1 className="text-4xl font-bold text-foreground">{t('Pages.MyAccount.Title')}</h1>
+                    <p className="text-muted-foreground mt-2">{t('Pages.MyAccount.Welcome', { name: currentUser.name })}</p>
                 </div>
                 
                 <Tabs defaultValue="profile" className="w-full">
                     <TabsList className="grid w-full grid-cols-3 mb-8 max-w-lg mx-auto">
-                        <TabsTrigger value="profile">{t('my_account_profile')}</TabsTrigger>
-                        <TabsTrigger value="orders">{t('my_account_orders')}</TabsTrigger>
-                        <TabsTrigger value="wishlist">{t('my_account_wishlist')}</TabsTrigger>
+                        <TabsTrigger value="profile">{t('Pages.MyAccount.Profile')}</TabsTrigger>
+                        <TabsTrigger value="orders">{t('Pages.MyAccount.Orders')}</TabsTrigger>
+                        <TabsTrigger value="wishlist">{t('Pages.MyAccount.Wishlist')}</TabsTrigger>
                     </TabsList>
 
                     <TabsContent value="profile">
                         <Card>
                             <CardHeader>
-                                <CardTitle>{t('my_account_profile')}</CardTitle>
+                                <CardTitle>{t('Pages.MyAccount.Profile')}</CardTitle>
                             </CardHeader>
                             <CardContent className="space-y-4">
-                                <div><strong className="font-semibold">Name:</strong> {currentUser.name}</div>
-                                <div><strong className="font-semibold">Email:</strong> {currentUser.email}</div>
+                                <div><strong className="font-semibold">{t('Pages.MyAccount.NameLabel')}:</strong> {currentUser.name}</div>
+                                <div><strong className="font-semibold">{t('Pages.MyAccount.EmailLabel')}:</strong> {currentUser.email}</div>
                                 <div className="pt-6 mt-4 flex flex-col sm:flex-row gap-4 border-t">
                                     <Button onClick={() => router.push('/dashboard')}>
                                         <Icon name="dashboard" className="w-4 h-4 ltr:mr-2 rtl:ml-2" />
-                                        {t('nav_dashboard')}
+                                        {t('Layout.Nav.Dashboard')}
                                     </Button>
                                     <Button variant="destructive" onClick={handleLogout}>
-                                        {t('my_account_logout')}
+                                        {t('Pages.MyAccount.Logout')}
                                     </Button>
                                 </div>
                             </CardContent>
@@ -90,7 +90,7 @@ export const MyAccountContent: React.FC = () => {
                     <TabsContent value="orders">
                         <Card>
                             <CardHeader>
-                                <CardTitle>{t('my_account_orders')}</CardTitle>
+                                <CardTitle>{t('Pages.MyAccount.Orders')}</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 {userOrders.length > 0 ? (
@@ -99,8 +99,8 @@ export const MyAccountContent: React.FC = () => {
                                             <div key={order.id} className="border rounded-lg p-4">
                                                 <div className="flex justify-between items-start">
                                                     <div>
-                                                        <div className="font-bold">{t('order_id')}: {order.id}</div>
-                                                        <div className="text-sm text-muted-foreground">{t('order_date')}: {order.date}</div>
+                                                        <div className="font-bold">{t('Pages.MyAccount.OrderId')}: {order.id}</div>
+                                                        <div className="text-sm text-muted-foreground">{t('Pages.MyAccount.OrderDate')}: {order.date}</div>
                                                     </div>
                                                     <OrderStatusBadge status={order.status} />
                                                 </div>
@@ -110,12 +110,12 @@ export const MyAccountContent: React.FC = () => {
                                                         <div key={item.productId}>{item.productName} x {item.quantity}</div>
                                                     ))}
                                                 </div>
-                                                 <div className="text-right font-bold mt-2">{t('order_total')}: ${order.total.toFixed(2)}</div>
+                                                 <div className="text-right font-bold mt-2">{t('Pages.MyAccount.OrderTotal')}: ${order.total.toFixed(2)}</div>
                                             </div>
                                         ))}
                                     </div>
                                 ) : (
-                                    <p className="text-muted-foreground">{t('my_account_no_orders')}</p>
+                                    <p className="text-muted-foreground">{t('Pages.MyAccount.NoOrders')}</p>
                                 )}
                             </CardContent>
                         </Card>
@@ -124,7 +124,7 @@ export const MyAccountContent: React.FC = () => {
                     <TabsContent value="wishlist">
                          <Card>
                             <CardHeader>
-                                <CardTitle>{t('my_account_wishlist')}</CardTitle>
+                                <CardTitle>{t('Pages.MyAccount.Wishlist')}</CardTitle>
                             </CardHeader>
                             <CardContent>
                                  {userWishlist.length > 0 ? (
@@ -134,7 +134,7 @@ export const MyAccountContent: React.FC = () => {
                                         ))}
                                     </Grid>
                                  ) : (
-                                    <p className="text-muted-foreground">{t('my_account_no_wishlist')}</p>
+                                    <p className="text-muted-foreground">{t('Pages.MyAccount.NoWishlist')}</p>
                                  )}
                             </CardContent>
                         </Card>

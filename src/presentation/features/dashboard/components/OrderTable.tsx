@@ -2,7 +2,7 @@
 
 import React from 'react';
 import type { Order } from '@/types';
-import { useTranslation } from '@/presentation/shared/hooks';
+import { useTranslations } from 'next-intl';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/presentation/shared/ui/table';
 
 const OrderStatusBadge: React.FC<{status: Order['status']}> = ({ status }) => {
@@ -24,11 +24,11 @@ export const OrderTableUI: React.FC<OrderTableUIProps> = ({ orders, t }) => (
      <Table>
         <TableHeader>
             <TableRow>
-                <TableHead>{t('table_header_order_id')}</TableHead>
-                <TableHead>{t('table_header_customer')}</TableHead>
-                <TableHead>{t('table_header_date')}</TableHead>
-                <TableHead>{t('table_header_total')}</TableHead>
-                <TableHead>{t('table_header_status')}</TableHead>
+                <TableHead>{t('Pages.Dashboard.Table.OrderId')}</TableHead>
+                <TableHead>{t('Pages.Dashboard.Table.Customer')}</TableHead>
+                <TableHead>{t('Pages.Dashboard.Table.Date')}</TableHead>
+                <TableHead>{t('Pages.Dashboard.Table.Total')}</TableHead>
+                <TableHead>{t('Pages.Dashboard.Table.Status')}</TableHead>
             </TableRow>
         </TableHeader>
         <TableBody>
@@ -50,6 +50,6 @@ interface OrderTableProps {
 }
 
 export const OrderTable: React.FC<OrderTableProps> = ({ orders }) => {
-    const { t } = useTranslation();
+    const t = useTranslations();
     return <OrderTableUI orders={orders} t={t} />;
 };

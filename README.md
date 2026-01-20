@@ -207,14 +207,17 @@ presentation/components/
 ## 🌍 Internationalization (i18n)
 
 - **Supported Languages:** English (`en`), Arabic (`ar`)
-- **RTL Support:** Automatic right-to-left layout for Arabic
-- **Translation Hook:** `useTranslation()` for client components
-- **Static Translations:** Stored in `lib/i18n.ts`
+- **RTL Support:** Automatic right-to-left layout for Arabic via `html[lang="ar"]`
+- **Single Source of Truth:** All translations live in `src/i18n/content.ts`
+- **Type-Safety:** Automatically generated UPPERCASE constants for Intellisense support
 
 **Usage:**
 ```tsx
-const { t } = useTranslation();
-<h1>{t('welcome_message')}</h1>
+import { useTranslations } from 'next-intl';
+import { T } from '@/i18n/content';
+
+const t = useTranslations();
+<h1>{t(T.PAGES.HOME.HERO.TITLE_PART1)}</h1>
 ```
 
 ---

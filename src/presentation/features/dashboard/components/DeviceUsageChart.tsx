@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useTranslation } from '@/presentation/shared/hooks';
+import { useTranslations } from 'next-intl';
 
 interface DeviceData {
     name: string;
@@ -80,6 +80,6 @@ interface DeviceUsageChartProps {
 }
 
 export const DeviceUsageChart: React.FC<DeviceUsageChartProps> = ({ data }) => {
-    const { t } = useTranslation();
-    return <DeviceUsageChartUI data={data} title={t('dashboard_device_usage')} />;
+    const t = useTranslations();
+    return <DeviceUsageChartUI data={data} title={t('Pages.Dashboard.DeviceUsage')} />;
 };

@@ -1,12 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import { products as allProducts } from '@/constants';
+import { products as allProducts } from '@/lib/constants';
 import type { SortOption, ViewMode, Product } from '@/types';
 import { Grid } from '@/presentation/shared/layout/Grid';
 import { ProductCard } from '@/presentation/features/shop/components/ProductCard';
 import { FilterSidebar } from '@/presentation/features/shop/components/FilterSidebar';
-import { useTranslation, usePagination } from '@/presentation/shared/hooks';
+import { useTranslations } from 'next-intl';
+import { usePagination } from '@/presentation/shared/hooks';
 import { useProducts } from '@/presentation/features/shop/hooks/useProducts';
 import { useCart } from '@/presentation/features/cart/hooks/useCart';
 import { Button } from '@/presentation/shared/ui/button';
@@ -18,7 +19,7 @@ import { Card } from '@/presentation/shared/ui/card';
 import { Icon } from '@/presentation/shared/components/Icon';
 
 export const ShopContent: React.FC = () => {
-  const { t } = useTranslation();
+  const t = useTranslations();
   const { sortedProducts, sortOption, setSortOption, setFilteredProducts } = useProducts(allProducts);
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   
@@ -30,10 +31,10 @@ export const ShopContent: React.FC = () => {
   } = usePagination(sortedProducts, 8);
 
   const sortOptions = [
-    { value: 'featured', label: t('shop_sort_featured') },
-    { value: 'newest', label: t('shop_sort_newest') },
-    { value: 'price-asc', label: t('shop_sort_price_asc') },
-    { value: 'price-desc', label: t('shop_sort_price_desc') },
+    { value: 'featured', label: t('Pages.Shop.SortFeatured') },
+    { value: 'newest', label: t('Pages.Shop.SortNewest') },
+    { value: 'price-asc', label: t('Pages.Shop.SortPriceAsc') },
+    { value: 'price-desc', label: t('Pages.Shop.SortPriceDesc') },
   ];
 
   const handleFilterChange = (newFilteredProducts: Product[]) => {
@@ -50,12 +51,12 @@ export const ShopContent: React.FC = () => {
          <Dialog>
            <DialogTrigger asChild>
              <Button variant="outline" className="w-full lg:hidden mb-6">
-               {t('shop_filters_title')}
+               {t('Pages.Shop.FiltersTitle')}
              </Button>
            </DialogTrigger>
            <DialogContent className="p-0">
               <DialogHeader className="p-6 pb-0">
-                  <DialogTitle>{t('shop_filters_title')}</DialogTitle>
+                  <DialogTitle>{t('Pages.Shop.FiltersTitle')}</DialogTitle>
               </DialogHeader>
               <div className="p-6">
                 <FilterSidebar allProducts={allProducts} onFilterChange={handleFilterChange} />
@@ -65,11 +66,11 @@ export const ShopContent: React.FC = () => {
 
         {/* Sort and View Options */}
         <Card className="flex flex-wrap gap-4 justify-between items-center mb-6 p-4">
-          <p className="text-muted-foreground text-sm">{t('shop_showing_results', {count: sortedProducts.length, total: allProducts.length})}</p>
+          <p className="text-muted-foreground text-sm">{t('Pages.Shop.ShowingResults', {count: sortedProducts.length, total: allProducts.length})}</p>
           <div className='flex items-center gap-2'>
               <Select value={sortOption} onValueChange={(value) => setSortOption(value as SortOption)}>
-                  <SelectTrigger className="w-48" aria-label={t('shop_sort_by')}>
-                      <SelectValue placeholder={t('shop_sort_by')} />
+                  <SelectTrigger className="w-48" aria-label={t('Pages.Shop.SortBy')}>
+                      <SelectValue placeholder={t('Pages.Shop.SortBy')} />
                   </SelectTrigger>
                   <SelectContent>
                       {sortOptions.map(option => (
@@ -99,7 +100,7 @@ export const ShopContent: React.FC = () => {
             )
         ) : (
             <Card className='text-center py-16'>
-                <p className='text-muted-foreground'>{t('shop_no_products')}</p>
+                <p className='text-muted-foreground'>{t('Pages.Shop.NoProducts')}</p>
             </Card>
         )}
         
