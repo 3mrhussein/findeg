@@ -94,7 +94,7 @@ export const CookieSettingsModal: React.FC<CookieSettingsModalProps> = ({
           {cookieSettings.map((setting) => (
             <AccordionItem value={setting.id} key={setting.id}>
               <AccordionTrigger>
-                <span className="font-semibold">{t(setting.titleKey as any)}</span>
+                <span className="font-semibold">{t(setting.titleKey)}</span>
               </AccordionTrigger>
               <AccordionContent>
                 <div className="flex flex-col gap-2">

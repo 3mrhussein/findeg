@@ -12,11 +12,36 @@
 import type { IProductRepository } from "@/application/repositories/IProductRepository";
 import type { Product } from "@/domain/entities/Product";
 import { products } from "@/lib/constants";
+import { AdminProductInput } from "@/domain/types/admin";
 
 /**
  *
  */
 export class MockProductRepository implements IProductRepository {
+  /**
+   *
+   */
+  async getByIdWithTranslations(id: number): Promise<(AdminProductInput & { id: number }) | null> {
+    const product = products.find((p) => p.id === id);
+    if (!product) return null;
+
+    // Return a mock structure (for MVP/testing, this is sufficient)
+    return {
+      id: product.id,
+      price: product.price,
+      category: product.category,
+      images: product.images,
+      isNew: product.isNew,
+      translations: [
+        {
+          language: "en",
+          name: product.name,
+          description: product.description,
+          longDescription: product.longDescription,
+        },
+      ],
+    };
+  }
   /**
    *
    */

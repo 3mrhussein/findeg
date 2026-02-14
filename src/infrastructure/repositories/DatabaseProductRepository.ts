@@ -109,6 +109,36 @@ export class DatabaseProductRepository implements IProductRepository {
   }
 
   /**
+   *
+   */
+  async getByIdWithTranslations(id: number): Promise<(AdminProductInput & { id: number }) | null> {
+    const product = await db.query.products.findFirst({
+      where: eq(products.id, id),
+      with: {
+        translations: true,
+      },
+    });
+
+    if (!product) return null;
+
+    return {
+      id: product.id,
+      price: Number(product.price),
+      strikePrice: product.strikePrice ? Number(product.strikePrice) : undefined,
+      category: product.category,
+      images: (product.images as string[]) || [],
+      isNew: product.isNew || false,
+      variants: (product.variants as Record<string, any>) || undefined,
+      translations: product.translations.map((t) => ({
+        language: t.language,
+        name: t.name,
+        description: t.description,
+        longDescription: t.longDescription || "",
+      })),
+    };
+  }
+
+  /**
    * Default language for translations (can be made configurable)
    */
   private defaultLanguage: string = "en";

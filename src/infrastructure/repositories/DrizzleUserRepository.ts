@@ -64,7 +64,7 @@ export class DrizzleUserRepository implements IUserRepository {
   async create(user: Partial<User>): Promise<User> {
     const result = await db
       .insert(users)
-      .values(user as any)
+      .values(user as typeof users.$inferInsert)
       .returning();
     return this.mapToDomain(result[0]);
   }
@@ -75,7 +75,7 @@ export class DrizzleUserRepository implements IUserRepository {
   async update(id: number, user: Partial<User>): Promise<User> {
     const result = await db
       .update(users)
-      .set({ ...user, updatedAt: new Date() } as any)
+      .set({ ...user, updatedAt: new Date() } as Partial<typeof users.$inferInsert>)
       .where(eq(users.id, id))
       .returning();
     return this.mapToDomain(result[0]);

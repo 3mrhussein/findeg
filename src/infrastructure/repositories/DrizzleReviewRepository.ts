@@ -46,7 +46,11 @@ export class DrizzleReviewRepository implements IReviewRepository {
   async create(review: Partial<Review>): Promise<Review> {
     const [result] = await db
       .insert(reviews)
-      .values(review as any)
+      .values({
+        ...review,
+        rating: review.rating ? String(review.rating) : "0", // Default to 0 if undefined, or handle logic
+        productId: review.productId!, // Assume required
+      } as unknown as typeof reviews.$inferInsert)
       .returning();
     return this.mapToDomain(result);
   }

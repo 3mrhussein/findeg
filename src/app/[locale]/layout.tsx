@@ -82,14 +82,15 @@ export default async function RootLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: any;
+  params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  if (!hasLocale(routing.locales, locale)) {
+  const typedLocale = locale as Locale;
+  if (!hasLocale(routing.locales, typedLocale)) {
     notFound();
   }
   // Enable static rendering
-  setRequestLocale(locale);
+  setRequestLocale(typedLocale);
   const messages = await getMessages();
   return (
     <html lang={locale} dir={locale === "ar" ? "rtl" : "ltr"} suppressHydrationWarning>

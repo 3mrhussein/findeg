@@ -68,6 +68,8 @@ export function ProductTable({ data }: ProductTableProps) {
             <Image
               src={row.original.images[0]}
               alt={row.getValue("name")}
+              width={32}
+              height={32}
               className="h-8 w-8 rounded object-cover"
             />
           )}

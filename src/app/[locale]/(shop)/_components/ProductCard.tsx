@@ -51,7 +51,7 @@ export const ProductCardUI: React.FC<ProductCardUIProps> = ({
     <div
       className="bg-card rounded-lg shadow-md overflow-hidden group transform hover:-translate-y-1 transition-all duration-300 hover:shadow-xl border flex flex-col cursor-pointer"
       onClick={onCardClick}
-      style={{ viewTransitionName: `product-${product.id}` } as any}
+      style={{ viewTransitionName: `product-${product.id}` }}
     >
       <div className="relative">
         <Image

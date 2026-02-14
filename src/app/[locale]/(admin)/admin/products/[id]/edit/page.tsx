@@ -20,7 +20,7 @@ export default async function EditProductPage({
   }
 
   const [product, allCategories] = await Promise.all([
-    adminProduct.getById(productId, locale),
+    adminProduct.getByIdWithTranslations(productId),
     categories.getAll(locale),
   ]);
 

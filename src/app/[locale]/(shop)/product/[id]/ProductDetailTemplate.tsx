@@ -64,7 +64,14 @@ const ProductDetailTemplate: React.FC<ProductDetailTemplateProps> = ({ productId
           <ImageGallery images={product.images} />
           <div>
             <span className="text-primary font-semibold">
-              {t(`category_${product.category.toLowerCase().replace(" ", "_")}_title` as any)}
+              {(() => {
+                const categoryMap: Record<string, string> = {
+                  Stationary: "Nav.Stationary.Title",
+                  Toys: "Nav.Toys.Title",
+                  "School Items": "Nav.School.Title",
+                };
+                return t(categoryMap[product.category] || ("Nav.Shop" as any));
+              })()}
             </span>
             <div className="flex items-center gap-4 mt-2">
               <h1 className="text-3xl lg:text-4xl font-bold text-foreground">{product.name}</h1>

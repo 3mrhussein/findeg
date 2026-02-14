@@ -36,6 +36,13 @@ export class AdminProductService implements IAdminProductService {
   /**
    *
    */
+  async getByIdWithTranslations(id: number): Promise<(AdminProductInput & { id: number }) | null> {
+    return this.productRepository.getByIdWithTranslations(id);
+  }
+
+  /**
+   *
+   */
   async create(input: AdminProductInput): Promise<Product> {
     return this.productRepository.create(input);
   }

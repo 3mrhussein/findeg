@@ -1,7 +1,6 @@
 import type { Product } from "@/domain/entities/Product";
 import type { Order } from "@/domain/entities/Order";
 import type { Review } from "@/domain/entities/Review";
-import T from "../infrastructure/cms/messages/en.json";
 
 /**
  * Centralized configuration and mock data.
@@ -510,39 +509,39 @@ export const brandLogos = [
 export const cookieSettings = [
   {
     id: "required",
-    titleKey: T.Pages.Cookies.CategoryRequired,
-    descriptionKey: T.Pages.Cookies.CategoryRequiredDesc,
+    titleKey: "Pages.Cookies.CategoryRequired",
+    descriptionKey: "Pages.Cookies.CategoryRequiredDesc",
     isMutable: false,
   },
   {
     id: "analytics",
-    titleKey: T.Pages.Cookies.CategoryAnalytics,
-    descriptionKey: T.Pages.Cookies.CategoryAnalyticsDesc,
+    titleKey: "Pages.Cookies.CategoryAnalytics",
+    descriptionKey: "Pages.Cookies.CategoryAnalyticsDesc",
     isMutable: true,
   },
   {
     id: "marketing",
-    titleKey: T.Pages.Cookies.CategoryMarketing,
-    descriptionKey: T.Pages.Cookies.CategoryMarketingDesc,
+    titleKey: "Pages.Cookies.CategoryMarketing",
+    descriptionKey: "Pages.Cookies.CategoryMarketingDesc",
     isMutable: true,
   },
-];
+] as const;
 
 export const faqData = [
   {
-    questionKey: T.Pages.Faq.Q1,
-    answerKey: T.Pages.Faq.A1,
+    questionKey: "Pages.Faq.Q1",
+    answerKey: "Pages.Faq.A1",
   },
   {
-    questionKey: T.Pages.Faq.Q2,
-    answerKey: T.Pages.Faq.A2,
+    questionKey: "Pages.Faq.Q2",
+    answerKey: "Pages.Faq.A2",
   },
   {
-    questionKey: T.Pages.Faq.Q3,
-    answerKey: T.Pages.Faq.A3,
+    questionKey: "Pages.Faq.Q3",
+    answerKey: "Pages.Faq.A3",
   },
   {
-    questionKey: T.Pages.Faq.Q4,
-    answerKey: T.Pages.Faq.A4,
+    questionKey: "Pages.Faq.Q4",
+    answerKey: "Pages.Faq.A4",
   },
-];
+] as const;

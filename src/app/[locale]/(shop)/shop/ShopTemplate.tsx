@@ -22,8 +22,8 @@ const ShopTemplate: React.FC<ShopTemplateProps> = () => {
 
   const faqItems = faqData.map((item) => ({
     id: item.questionKey,
-    title: t(item.questionKey as any),
-    content: t(item.answerKey as any),
+    title: t(item.questionKey),
+    content: t(item.answerKey),
   }));
 
   return (

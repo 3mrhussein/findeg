@@ -15,4 +15,5 @@ export interface IProductRepository {
   update(id: number, input: AdminProductInput): Promise<Product>;
   delete(id: number): Promise<void>;
   count(): Promise<number>;
+  getByIdWithTranslations(id: number): Promise<(AdminProductInput & { id: number }) | null>;
 }

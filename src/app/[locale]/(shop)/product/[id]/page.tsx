@@ -24,12 +24,19 @@ export async function generateStaticParams() {
 /**
  *
  */
+import { setRequestLocale } from "next-intl/server";
+import { Locale } from "next-intl";
+
+/**
+ *
+ */
 export default async function Page({
   params,
 }: {
-  params: Promise<{ id: string; locale: string }>;
+  params: Promise<{ id: string; locale: Locale }>;
 }) {
   const { id, locale } = await params;
+  setRequestLocale(locale);
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <ProductDetailTemplate productId={parseInt(id)} />

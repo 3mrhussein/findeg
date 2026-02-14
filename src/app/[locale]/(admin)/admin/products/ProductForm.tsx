@@ -40,8 +40,12 @@ const formSchema = z.object({
   images: z.string().optional(), // Comma separated URLs for simplicity in MVP
 });
 
+interface ProductToEdit extends AdminProductInput {
+  id: number;
+}
+
 interface ProductFormProps {
-  initialData?: any; // Using any for simplicity in mapping existing product to form
+  initialData?: ProductToEdit;
   categories: { id: number; slug: string; name: string }[];
 }
 
@@ -56,12 +60,12 @@ export function ProductForm({ initialData, categories }: ProductFormProps) {
   // Map initial data to form values if editing
   const defaultValues = initialData
     ? {
-        name_en: initialData.translations.find((t: any) => t.language === "en")?.name || "",
+        name_en: initialData.translations.find((t) => t.language === "en")?.name || "",
         description_en:
-          initialData.translations.find((t: any) => t.language === "en")?.description || "",
-        name_ar: initialData.translations.find((t: any) => t.language === "ar")?.name || "",
+          initialData.translations.find((t) => t.language === "en")?.description || "",
+        name_ar: initialData.translations.find((t) => t.language === "ar")?.name || "",
         description_ar:
-          initialData.translations.find((t: any) => t.language === "ar")?.description || "",
+          initialData.translations.find((t) => t.language === "ar")?.description || "",
         price: initialData.price,
         category: initialData.category,
         images: initialData.images?.join(", ") || "",

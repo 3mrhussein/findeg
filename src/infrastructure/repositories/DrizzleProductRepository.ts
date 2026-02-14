@@ -6,7 +6,7 @@ import {
   type ProductTranslation as DbTranslation,
 } from "@/infrastructure/database/schema";
 import { IProductRepository } from "@/application/repositories/IProductRepository";
-import { Product } from "@/domain/entities/Product";
+import { Product, ProductVariant } from "@/domain/entities/Product";
 import { AdminProductInput } from "@/domain/types/admin";
 import { eq, and, ilike, or, count as sqlCount } from "drizzle-orm";
 
@@ -30,7 +30,7 @@ export class DrizzleProductRepository implements IProductRepository {
       isNew: dbProduct.isNew || false,
       rating: Number(dbProduct.rating || 0),
       reviewsCount: dbProduct.reviewsCount || 0,
-      variants: dbProduct.variants as any,
+      variants: (dbProduct.variants as Record<string, ProductVariant>) || undefined,
     };
   }
 
@@ -270,7 +270,37 @@ export class DrizzleProductRepository implements IProductRepository {
    *
    */
   async count(): Promise<number> {
-    const result = await db.select({ value: sqlCount() }).from(products);
+    const result = await db.select({ value: sqlCount(products.id) }).from(products);
     return result[0]?.value || 0;
+  }
+
+  /**
+   *
+   */
+  async getByIdWithTranslations(id: number): Promise<(AdminProductInput & { id: number }) | null> {
+    const product = await db.query.products.findFirst({
+      where: eq(products.id, id),
+      with: {
+        translations: true,
+      },
+    });
+
+    if (!product) return null;
+
+    return {
+      id: product.id,
+      price: Number(product.price),
+      strikePrice: product.strikePrice ? Number(product.strikePrice) : undefined,
+      category: product.category,
+      images: (product.images as string[]) || [],
+      isNew: product.isNew || false,
+      variants: (product.variants as Record<string, any>) || undefined,
+      translations: product.translations.map((t) => ({
+        language: t.language,
+        name: t.name,
+        description: t.description,
+        longDescription: t.longDescription || "",
+      })),
+    };
   }
 }

@@ -30,7 +30,15 @@ const ErrorIllustration = () => (
 /**
  *
  */
-const ErrorPage: React.FC = () => {
+interface ErrorPageProps {
+  title?: string;
+  subtitle?: string;
+}
+
+/**
+ *
+ */
+const ErrorPage: React.FC<ErrorPageProps> = ({ title, subtitle }) => {
   const t = useTranslations();
   const router = useRouter();
 
@@ -39,10 +47,10 @@ const ErrorPage: React.FC = () => {
       <div>
         <ErrorIllustration />
         <h1 className="text-4xl md:text-5xl font-bold text-foreground">
-          {t("Pages.Error.PageTitle")}
+          {title || t("Pages.Error.PageTitle")}
         </h1>
         <p className="mt-4 text-lg text-muted-foreground max-w-xl mx-auto">
-          {t("Pages.Error.PageSubtitle")}
+          {subtitle || t("Pages.Error.PageSubtitle")}
         </p>
         <Button size="lg" onClick={() => router.push("/")} className="mt-8">
           {t("Pages.Error.Button")}

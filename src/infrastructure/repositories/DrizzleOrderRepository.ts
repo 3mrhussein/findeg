@@ -69,10 +69,18 @@ export class DrizzleOrderRepository implements IOrderRepository {
    *
    */
   async create(order: Partial<Order>): Promise<Order> {
-    const { items, ...orderData } = order as any;
+    const { items, ...rest } = order;
 
     return await db.transaction(async (tx) => {
-      const dbOrderData = orderData as any;
+      const dbOrderData: typeof orders.$inferInsert = {
+        userId: rest.userId,
+        status: rest.status || "pending",
+        totalAmount: String(rest.totalAmount || rest.total || 0),
+        currency: rest.currency || "USD",
+        shippingAddress: rest.shippingAddress,
+        billingAddress: rest.billingAddress,
+      };
+
       const [newOrder] = await tx.insert(orders).values(dbOrderData).returning();
 
       let newItems: DbOrderItem[] = [];
@@ -80,9 +88,12 @@ export class DrizzleOrderRepository implements IOrderRepository {
         newItems = await tx
           .insert(orderItems)
           .values(
-            items.map((item: any) => ({
-              ...item,
+            items.map((item) => ({
               orderId: newOrder.id,
+              productId: item.productId,
+              quantity: item.quantity,
+              priceAtTime: String(item.priceAtTime || item.price || 0),
+              variantDetails: item.variantDetails,
             })),
           )
           .returning();

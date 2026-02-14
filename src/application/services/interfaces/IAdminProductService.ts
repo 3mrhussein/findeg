@@ -11,6 +11,7 @@ import { AdminProductInput } from "@/domain/types/admin";
 export interface IAdminProductService {
   getAll(language?: string): Promise<Product[]>;
   getById(id: number, language?: string): Promise<Product | null>;
+  getByIdWithTranslations(id: number): Promise<(AdminProductInput & { id: number }) | null>;
   create(input: AdminProductInput): Promise<Product>;
   update(id: number, input: AdminProductInput): Promise<Product>;
   delete(id: number): Promise<void>;

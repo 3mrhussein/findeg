@@ -11,13 +11,14 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { getTranslations } from "next-intl/server";
 import { loginAction } from "@/application/actions/auth/login";
+import { Locale } from "next-intl";
 
 /**
  *
  */
-export default async function AdminLoginPage({ params }: { params: Promise<{ locale: string }> }) {
+export default async function AdminLoginPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
-  const t = await getTranslations({ locale: locale as any, namespace: "Pages.Auth" });
+  const t = await getTranslations({ locale: locale as Locale, namespace: "Pages.Auth" });
 
   return (
     <div className="flex h-screen w-full items-center justify-center bg-gray-50 dark:bg-gray-900">
