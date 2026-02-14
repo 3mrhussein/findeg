@@ -5,5 +5,9 @@
  * This makes imports cleaner throughout the application.
  */
 
-export * from './Product';
-export * from './Cart';
+export * from "./Product";
+export * from "./Cart";
+export * from "./Category";
+export * from "./User";
+export * from "./Order";
+export * from "./Review";

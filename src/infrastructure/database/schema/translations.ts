@@ -2,13 +2,7 @@
  * Static Translations Database Schema (Optional fallback for CMS)
  */
 
-import {
-  pgTable,
-  serial,
-  text,
-  timestamp,
-  primaryKey,
-} from "drizzle-orm/pg-core";
+import { pgTable, serial, text, timestamp, primaryKey } from "drizzle-orm/pg-core";
 
 /**
  * Translations Table

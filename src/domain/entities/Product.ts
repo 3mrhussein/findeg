@@ -42,6 +42,9 @@ export interface Product {
  * Domain methods for Product entity
  */
 export class ProductEntity {
+  /**
+   *
+   */
   constructor(private product: Product) {}
 
   /**
@@ -54,9 +57,7 @@ export class ProductEntity {
       Object.entries(variantSelections).forEach(([variantKey, optionValue]) => {
         const variant = this.product.variants?.[variantKey];
         if (variant) {
-          const option = variant.options.find(
-            (opt) => opt.value === optionValue,
-          );
+          const option = variant.options.find((opt) => opt.value === optionValue);
           if (option) {
             basePrice += option.priceModifier;
           }
@@ -75,28 +76,21 @@ export class ProductEntity {
       return true; // Assume in stock if no variants
     }
 
-    return Object.entries(variantSelections).every(
-      ([variantKey, optionValue]) => {
-        const variant = this.product.variants![variantKey];
-        if (variant) {
-          const option = variant.options.find(
-            (opt) => opt.value === optionValue,
-          );
-          return option ? option.stock > 0 : true;
-        }
-        return true;
-      },
-    );
+    return Object.entries(variantSelections).every(([variantKey, optionValue]) => {
+      const variant = this.product.variants![variantKey];
+      if (variant) {
+        const option = variant.options.find((opt) => opt.value === optionValue);
+        return option ? option.stock > 0 : true;
+      }
+      return true;
+    });
   }
 
   /**
    * Check if product has discount
    */
   hasDiscount(): boolean {
-    return (
-      !!this.product.strikePrice &&
-      this.product.strikePrice > this.product.price
-    );
+    return !!this.product.strikePrice && this.product.strikePrice > this.product.price;
   }
 
   /**
@@ -105,9 +99,7 @@ export class ProductEntity {
   getDiscountPercentage(): number {
     if (!this.hasDiscount()) return 0;
     return Math.round(
-      ((this.product.strikePrice! - this.product.price) /
-        this.product.strikePrice!) *
-        100,
+      ((this.product.strikePrice! - this.product.price) / this.product.strikePrice!) * 100,
     );
   }
 

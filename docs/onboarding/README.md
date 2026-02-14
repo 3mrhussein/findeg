@@ -23,6 +23,7 @@ Welcome to the FindEg.com e-commerce platform! This guide will help you understa
 ### Setup
 
 1. **Clone and Install**
+
    ```bash
    git clone <repository-url>
    cd 27-10-2025ecommerceV2
@@ -30,18 +31,21 @@ Welcome to the FindEg.com e-commerce platform! This guide will help you understa
    ```
 
 2. **Environment Setup**
+
    ```bash
    cp .env.example .env
    # Edit .env with your configuration
    ```
 
 3. **Database Setup**
+
    ```bash
    npm run db:migrate
    npm run db:seed
    ```
 
 4. **Run Development Server**
+
    ```bash
    npm run dev
    ```
@@ -99,21 +103,24 @@ src/
 │   ├── translations/      # Translation infrastructure
 │   └── di/                # Dependency injection
 │
-├── presentation/           # UI layer
-│   ├── components/         # React components
-│   │   ├── features/      # Domain-specific components
-│   │   ├── layout/        # Structural components
-│   │   ├── shared/        # Reusable domain components
-│   │   ├── templates/     # Page-level structures
-│   │   └── ui/            # Generic primitives (shadcn)
-│   ├── hooks/             # React hooks
-│   ├── providers/         # Context providers
-│   └── server/            # Server-side utilities
+src/
+├── app/[locale]/          # Next.js routes (Features & Pages)
+│   ├── (shop)/            # Shop routes (Co-located components)
+│   ├── (dashboard)/       # Dashboard routes
+│   └── (auth)/            # Auth routes
 │
-└── app/                   # Next.js routes
-    ├── (shop)/            # Shop routes
-    ├── (dashboard)/       # Dashboard routes
-    └── (auth)/            # Auth routes
+├── components/            # Reusable components
+│   ├── common/            # Domain-specific shared components
+│   ├── layout/            # Layout components (Header, Footer)
+│   └── ui/                # Generic primitives (shadcn)
+│
+├── hooks/                 # React hooks
+├── providers/             # Context providers
+├── server/                # Server-side utilities
+│
+├── domain/                # Business entities and types
+├── application/           # Business services
+└── infrastructure/        # External concerns
 ```
 
 ## Key Concepts
@@ -121,18 +128,21 @@ src/
 ### Server vs Client Components
 
 **Server Components** (default):
+
 - Run on the server
 - Can call services directly (no hooks)
 - Pure UI, no state
 - Can be async
 
 **Client Components**:
+
 - Run in the browser
 - Use hooks for state
 - Handle interactivity
 - Must have 'use client'
 
 **Decision Tree**:
+
 ```
 Need interactivity?
 ├─ NO → Server Component (default)
@@ -142,11 +152,13 @@ Need interactivity?
 ### Translation Strategy
 
 **Static Translations** (CMS):
+
 - UI labels, headers, buttons
 - Fetched at build time
 - Embedded in HTML
 
 **Dynamic Translations** (Database):
+
 - Product names, descriptions
 - Fetched at runtime
 - Stored in database
@@ -162,6 +174,7 @@ Need interactivity?
 ### Adding a New Feature
 
 1. **Define Domain Entity** (if needed)
+
    ```typescript
    // src/domain/entities/MyEntity.ts
    export interface MyEntity {
@@ -171,6 +184,7 @@ Need interactivity?
    ```
 
 2. **Create Repository Interface**
+
    ```typescript
    // src/application/repositories/IMyRepository.ts
    export interface IMyRepository {
@@ -179,6 +193,7 @@ Need interactivity?
    ```
 
 3. **Implement Repository**
+
    ```typescript
    // src/infrastructure/repositories/DatabaseMyRepository.ts
    export class DatabaseMyRepository implements IMyRepository {
@@ -189,11 +204,12 @@ Need interactivity?
    ```
 
 4. **Create Server Component**
-   ```typescript
-   // src/presentation/components/server/organisms/MyList.tsx
-   import { getMyService } from '@/presentation/server/getServices';
 
-   export async function MyList() {
+   ```typescript
+   // src/app/[locale]/(feature)/page.tsx
+   import { getMyService } from '@/server/getServices'; // Updated import
+
+   export async function MyPage() {
      const service = getMyService();
      const items = await service.getAll();
      return <div>{/* render items */}</div>;
@@ -203,6 +219,7 @@ Need interactivity?
 ### Adding a New Page
 
 1. **Create Route File**
+
    ```typescript
    // src/app/my-page/page.tsx
    import { MyPageTemplate } from '@/presentation/components/server/templates/MyPageTemplate';
@@ -223,6 +240,7 @@ Need interactivity?
 ### Using Translations
 
 **Static Translation (Server Component)**:
+
 ```typescript
 import { getStaticTranslation } from '@/infrastructure/translations/static';
 
@@ -233,6 +251,7 @@ export async function MyComponent() {
 ```
 
 **Dynamic Translation (Already in Entity)**:
+
 ```typescript
 const product = await productService.getById(id, 'en');
 return <h1>{product.name}</h1>; // Already translated

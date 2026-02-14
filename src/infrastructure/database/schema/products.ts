@@ -136,16 +136,13 @@ export const productsRelations = relations(products, ({ many }) => ({
   images: many(productImages),
 }));
 
-export const productTranslationsRelations = relations(
-  productTranslations,
-  ({ one }) => ({
-    // Each translation belongs to one product
-    product: one(products, {
-      fields: [productTranslations.productId],
-      references: [products.id],
-    }),
+export const productTranslationsRelations = relations(productTranslations, ({ one }) => ({
+  // Each translation belongs to one product
+  product: one(products, {
+    fields: [productTranslations.productId],
+    references: [products.id],
   }),
-);
+}));
 
 export const productImagesRelations = relations(productImages, ({ one }) => ({
   // Each image belongs to one product

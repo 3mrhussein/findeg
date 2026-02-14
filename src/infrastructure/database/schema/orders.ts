@@ -23,7 +23,9 @@ export const orders = pgTable("orders", {
 
 export const orderItems = pgTable("order_items", {
   id: serial("id").primaryKey(),
-  orderId: integer("order_id").notNull().references(() => orders.id, { onDelete: "cascade" }),
+  orderId: integer("order_id")
+    .notNull()
+    .references(() => orders.id, { onDelete: "cascade" }),
   productId: integer("product_id").references(() => products.id, { onDelete: "set null" }),
   quantity: integer("quantity").notNull(),
   priceAtTime: decimal("price_at_time", { precision: 10, scale: 2 }).notNull(),

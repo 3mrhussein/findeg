@@ -11,7 +11,9 @@ import { users } from "./users";
 
 export const reviews = pgTable("reviews", {
   id: serial("id").primaryKey(),
-  productId: integer("product_id").notNull().references(() => products.id, { onDelete: "cascade" }),
+  productId: integer("product_id")
+    .notNull()
+    .references(() => products.id, { onDelete: "cascade" }),
   userId: integer("user_id").references(() => users.id, { onDelete: "set null" }),
   rating: decimal("rating", { precision: 2, scale: 1 }).notNull(),
   comment: text("comment"),

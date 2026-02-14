@@ -6,10 +6,16 @@
 
 import { cmsConfig } from "../config/cms.config";
 
+/**
+ *
+ */
 export class CmsClient {
   private apiUrl: string;
   private apiKey: string;
 
+  /**
+   *
+   */
   constructor() {
     this.apiUrl = cmsConfig.apiUrl;
     this.apiKey = cmsConfig.apiKey;
@@ -25,14 +31,11 @@ export class CmsClient {
     }
 
     try {
-      const response = await fetch(
-        `${this.apiUrl}/translations?lang=${language}`,
-        {
-          headers: {
-            Authorization: `Bearer ${this.apiKey}`,
-          },
+      const response = await fetch(`${this.apiUrl}/translations?lang=${language}`, {
+        headers: {
+          Authorization: `Bearer ${this.apiKey}`,
         },
-      );
+      });
 
       if (!response.ok) {
         throw new Error(`CMS API error: ${response.statusText}`);
