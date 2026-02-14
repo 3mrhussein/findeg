@@ -39,7 +39,7 @@ export const categoryTranslations = pgTable(
   },
   (table) => ({
     pk: primaryKey({ columns: [table.categoryId, table.language] }),
-  })
+  }),
 );
 
 /**

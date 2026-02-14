@@ -1,10 +1,21 @@
 import { db } from "@/infrastructure/config/database.config";
-import { orders, orderItems, type Order as DbOrder, type OrderItem as DbOrderItem } from "@/infrastructure/database/schema";
+import {
+  orders,
+  orderItems,
+  type Order as DbOrder,
+  type OrderItem as DbOrderItem,
+} from "@/infrastructure/database/schema";
 import { IOrderRepository } from "@/application/repositories/IOrderRepository";
 import { Order, OrderItem } from "@/domain/entities/Order";
-import { eq } from "drizzle-orm";
+import { eq, count as sqlCount, sql, desc } from "drizzle-orm";
 
+/**
+ *
+ */
 export class DrizzleOrderRepository implements IOrderRepository {
+  /**
+   *
+   */
   private mapToDomain(dbOrder: DbOrder, items: DbOrderItem[] = []): Order {
     return {
       id: dbOrder.id,
@@ -27,6 +38,9 @@ export class DrizzleOrderRepository implements IOrderRepository {
     };
   }
 
+  /**
+   *
+   */
   async getById(id: number): Promise<Order | null> {
     const orderResult = await db.select().from(orders).where(eq(orders.id, id)).limit(1);
     if (orderResult.length === 0) return null;
@@ -35,43 +49,91 @@ export class DrizzleOrderRepository implements IOrderRepository {
     return this.mapToDomain(orderResult[0], itemsResult);
   }
 
+  /**
+   *
+   */
   async getByUserId(userId: number): Promise<Order[]> {
     const orderResults = await db.select().from(orders).where(eq(orders.userId, userId));
-    
-    // This is a simple implementation. In a production app, you might want to join 
-    // or batch fetch items to avoid N+1 queries.
+
     const ordersWithItems = await Promise.all(
       orderResults.map(async (order) => {
         const items = await db.select().from(orderItems).where(eq(orderItems.orderId, order.id));
         return this.mapToDomain(order, items);
-      })
+      }),
     );
 
     return ordersWithItems;
   }
 
+  /**
+   *
+   */
   async create(order: Partial<Order>): Promise<Order> {
     const { items, ...orderData } = order as any;
-    
+
     return await db.transaction(async (tx) => {
       const dbOrderData = orderData as any;
       const [newOrder] = await tx.insert(orders).values(dbOrderData).returning();
-      
+
       let newItems: DbOrderItem[] = [];
       if (items && items.length > 0) {
-        newItems = await tx.insert(orderItems).values(
-          items.map((item: any) => ({
-            ...item,
-            orderId: newOrder.id,
-          }))
-        ).returning();
+        newItems = await tx
+          .insert(orderItems)
+          .values(
+            items.map((item: any) => ({
+              ...item,
+              orderId: newOrder.id,
+            })),
+          )
+          .returning();
       }
 
       return this.mapToDomain(newOrder, newItems);
     });
   }
 
+  /**
+   *
+   */
   async updateStatus(id: number, status: string): Promise<void> {
     await db.update(orders).set({ status, updatedAt: new Date() }).where(eq(orders.id, id));
+  }
+
+  /**
+   *
+   */
+  async getRecent(limit: number = 5): Promise<Order[]> {
+    const orderResults = await db
+      .select()
+      .from(orders)
+      .orderBy(desc(orders.createdAt))
+      .limit(limit);
+
+    const ordersWithItems = await Promise.all(
+      orderResults.map(async (order) => {
+        const items = await db.select().from(orderItems).where(eq(orderItems.orderId, order.id));
+        return this.mapToDomain(order, items);
+      }),
+    );
+
+    return ordersWithItems;
+  }
+
+  /**
+   *
+   */
+  async count(): Promise<number> {
+    const result = await db.select({ value: sqlCount() }).from(orders);
+    return result[0]?.value || 0;
+  }
+
+  /**
+   *
+   */
+  async getTotalRevenue(): Promise<number> {
+    const result = await db
+      .select({ total: sql<string>`COALESCE(SUM(${orders.totalAmount}), 0)` })
+      .from(orders);
+    return Number(result[0]?.total || 0);
   }
 }

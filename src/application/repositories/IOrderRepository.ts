@@ -5,4 +5,7 @@ export interface IOrderRepository {
   getByUserId(userId: number): Promise<Order[]>;
   create(order: Partial<Order>): Promise<Order>;
   updateStatus(id: number, status: string): Promise<void>;
+  getRecent(limit?: number): Promise<Order[]>;
+  count(): Promise<number>;
+  getTotalRevenue(): Promise<number>;
 }

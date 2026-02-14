@@ -22,7 +22,92 @@ type ProductQueryResult = {
   translation: typeof productTranslations.$inferSelect | null;
 };
 
+import { sql } from "drizzle-orm";
+import { AdminProductInput } from "@/domain/types/admin";
+
+/**
+ *
+ */
 export class DatabaseProductRepository implements IProductRepository {
+  /**
+   * Create a new product
+   */
+  async create(input: AdminProductInput): Promise<Product> {
+    const [newProduct] = await db
+      .insert(products)
+      .values({
+        price: input.price.toString(),
+        category: input.category,
+        images: input.images,
+        isNew: input.isNew,
+        reviewsCount: 0,
+        rating: "0",
+      })
+      .returning();
+
+    if (input.translations && input.translations.length > 0) {
+      await db.insert(productTranslations).values(
+        input.translations.map((t) => ({
+          productId: newProduct.id,
+          language: t.language,
+          name: t.name,
+          description: t.description,
+          longDescription: t.longDescription || t.description,
+        })),
+      );
+    }
+
+    return this.getById(newProduct.id, this.defaultLanguage) as Promise<Product>;
+  }
+
+  /**
+   * Update an existing product
+   */
+  async update(id: number, input: AdminProductInput): Promise<Product> {
+    await db
+      .update(products)
+      .set({
+        price: input.price.toString(),
+        category: input.category,
+        images: input.images,
+        isNew: input.isNew,
+      })
+      .where(eq(products.id, id));
+
+    // Handle translations update (delete all and re-insert for simplicity, or upsert)
+    // For MVP, we'll delete and re-insert
+    if (input.translations && input.translations.length > 0) {
+      await db.delete(productTranslations).where(eq(productTranslations.productId, id));
+
+      await db.insert(productTranslations).values(
+        input.translations.map((t) => ({
+          productId: id,
+          language: t.language,
+          name: t.name,
+          description: t.description,
+          longDescription: t.longDescription || t.description,
+        })),
+      );
+    }
+
+    return this.getById(id, this.defaultLanguage) as Promise<Product>;
+  }
+
+  /**
+   * Delete a product
+   */
+  async delete(id: number): Promise<void> {
+    await db.delete(products).where(eq(products.id, id));
+  }
+
+  /**
+   * Count total products
+   */
+  async count(): Promise<number> {
+    const result = await db.select({ count: sql<number>`count(*)` }).from(products);
+    return Number(result[0].count);
+  }
+
   /**
    * Default language for translations (can be made configurable)
    */
@@ -50,16 +135,11 @@ export class DatabaseProductRepository implements IProductRepository {
       .from(products)
       .leftJoin(
         productTranslations,
-        and(
-          eq(productTranslations.productId, products.id),
-          eq(productTranslations.language, lang),
-        ),
+        and(eq(productTranslations.productId, products.id), eq(productTranslations.language, lang)),
       )
       .orderBy(desc(products.createdAt));
 
-    return result.map((row: ProductQueryResult) =>
-      this.mapToDomain(row.product, row.translation),
-    );
+    return result.map((row: ProductQueryResult) => this.mapToDomain(row.product, row.translation));
   }
 
   /**
@@ -78,10 +158,7 @@ export class DatabaseProductRepository implements IProductRepository {
       .from(products)
       .leftJoin(
         productTranslations,
-        and(
-          eq(productTranslations.productId, products.id),
-          eq(productTranslations.language, lang),
-        ),
+        and(eq(productTranslations.productId, products.id), eq(productTranslations.language, lang)),
       )
       .where(eq(products.id, id))
       .limit(1);
@@ -111,10 +188,7 @@ export class DatabaseProductRepository implements IProductRepository {
       .from(products)
       .leftJoin(
         productTranslations,
-        and(
-          eq(productTranslations.productId, products.id),
-          eq(productTranslations.language, lang),
-        ),
+        and(eq(productTranslations.productId, products.id), eq(productTranslations.language, lang)),
       )
       .where(
         or(
@@ -125,9 +199,7 @@ export class DatabaseProductRepository implements IProductRepository {
       )
       .orderBy(desc(products.createdAt));
 
-    return result.map((row: ProductQueryResult) =>
-      this.mapToDomain(row.product, row.translation),
-    );
+    return result.map((row: ProductQueryResult) => this.mapToDomain(row.product, row.translation));
   }
 
   /**
@@ -146,17 +218,12 @@ export class DatabaseProductRepository implements IProductRepository {
       .from(products)
       .leftJoin(
         productTranslations,
-        and(
-          eq(productTranslations.productId, products.id),
-          eq(productTranslations.language, lang),
-        ),
+        and(eq(productTranslations.productId, products.id), eq(productTranslations.language, lang)),
       )
       .where(eq(products.category, category))
       .orderBy(desc(products.createdAt));
 
-    return result.map((row: ProductQueryResult) =>
-      this.mapToDomain(row.product, row.translation),
-    );
+    return result.map((row: ProductQueryResult) => this.mapToDomain(row.product, row.translation));
   }
 
   /**
@@ -175,18 +242,13 @@ export class DatabaseProductRepository implements IProductRepository {
       .from(products)
       .leftJoin(
         productTranslations,
-        and(
-          eq(productTranslations.productId, products.id),
-          eq(productTranslations.language, lang),
-        ),
+        and(eq(productTranslations.productId, products.id), eq(productTranslations.language, lang)),
       )
       .where(eq(products.isNew, true))
       .orderBy(desc(products.createdAt))
       .limit(limit);
 
-    return result.map((row: ProductQueryResult) =>
-      this.mapToDomain(row.product, row.translation),
-    );
+    return result.map((row: ProductQueryResult) => this.mapToDomain(row.product, row.translation));
   }
 
   /**
@@ -205,8 +267,7 @@ export class DatabaseProductRepository implements IProductRepository {
   ): Product {
     // Convert decimal to number
     const price = parseFloat(dbProduct.price);
-    const strikePrice =
-      dbProduct.strikePrice ? parseFloat(dbProduct.strikePrice) : undefined;
+    const strikePrice = dbProduct.strikePrice ? parseFloat(dbProduct.strikePrice) : undefined;
     const rating = parseFloat(dbProduct.rating || "0");
 
     // Parse JSON fields
@@ -218,8 +279,7 @@ export class DatabaseProductRepository implements IProductRepository {
       // Use translation if available, otherwise fallback (though translations should always exist)
       name: translation?.name || `Product ${dbProduct.id}`,
       description: translation?.description || "",
-      longDescription:
-        translation?.longDescription || translation?.description || "",
+      longDescription: translation?.longDescription || translation?.description || "",
       price,
       strikePrice,
       category: dbProduct.category,

@@ -2,17 +2,26 @@
  * Domain Entity: Cart
  *
  * Represents a shopping cart with business logic for cart operations.
+ *
+ * CartItem is a flat type (Product & { quantity, selectedVariant })
+ * because the presentation layer references item.id, item.name,
+ * item.price, etc. directly.
  */
 
 import type { Product } from "./Product";
 
-export interface CartItem {
-  product: Product;
+export type CartItem = Product & {
   quantity: number;
   selectedVariant?: { [key: string]: string };
-}
+};
 
+/**
+ *
+ */
 export class CartEntity {
+  /**
+   *
+   */
   constructor(private items: CartItem[] = []) {}
 
   /**
@@ -25,9 +34,7 @@ export class CartEntity {
   ): CartItem[] {
     const variantId = this.getVariantId(selectedVariant);
     const existingItemIndex = this.items.findIndex(
-      (item) =>
-        item.product.id === product.id &&
-        this.getVariantId(item.selectedVariant) === variantId,
+      (item) => item.id === product.id && this.getVariantId(item.selectedVariant) === variantId,
     );
 
     if (existingItemIndex >= 0) {
@@ -39,23 +46,16 @@ export class CartEntity {
       return updatedItems;
     }
 
-    return [...this.items, { product, quantity, selectedVariant }];
+    return [...this.items, { ...product, quantity, selectedVariant }];
   }
 
   /**
    * Remove item from cart
    */
-  removeItem(
-    productId: number,
-    selectedVariant?: { [key: string]: string },
-  ): CartItem[] {
+  removeItem(productId: number, selectedVariant?: { [key: string]: string }): CartItem[] {
     const variantId = this.getVariantId(selectedVariant);
     return this.items.filter(
-      (item) =>
-        !(
-          item.product.id === productId &&
-          this.getVariantId(item.selectedVariant) === variantId
-        ),
+      (item) => !(item.id === productId && this.getVariantId(item.selectedVariant) === variantId),
     );
   }
 
@@ -73,12 +73,9 @@ export class CartEntity {
 
     const variantId = this.getVariantId(selectedVariant);
     return this.items.map((item) =>
-      (
-        item.product.id === productId &&
-        this.getVariantId(item.selectedVariant) === variantId
-      ) ?
-        { ...item, quantity }
-      : item,
+      item.id === productId && this.getVariantId(item.selectedVariant) === variantId
+        ? { ...item, quantity }
+        : item,
     );
   }
 
@@ -95,21 +92,17 @@ export class CartEntity {
   getTotalPrice(): number {
     return this.items.reduce((total, item) => {
       // Calculate price including variant modifiers
-      let itemPrice = item.product.price;
-      if (item.selectedVariant && item.product.variants) {
-        Object.entries(item.selectedVariant).forEach(
-          ([variantKey, optionValue]) => {
-            const variant = item.product.variants?.[variantKey];
-            if (variant) {
-              const option = variant.options.find(
-                (opt) => opt.value === optionValue,
-              );
-              if (option) {
-                itemPrice += option.priceModifier;
-              }
+      let itemPrice = item.price;
+      if (item.selectedVariant && item.variants) {
+        Object.entries(item.selectedVariant).forEach(([variantKey, optionValue]) => {
+          const variant = item.variants?.[variantKey];
+          if (variant) {
+            const option = variant.options.find((opt) => opt.value === optionValue);
+            if (option) {
+              itemPrice += option.priceModifier;
             }
-          },
-        );
+          }
+        });
       }
       return total + itemPrice * item.quantity;
     }, 0);

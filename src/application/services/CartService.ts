@@ -6,8 +6,12 @@
 
 import { CartEntity, CartItem } from "@/domain/entities/Cart";
 import { Product } from "@/domain/entities/Product";
+import { ICartService } from "./interfaces/ICartService";
 
-export class CartService {
+/**
+ *
+ */
+export class CartService implements ICartService {
   /**
    * Add product to cart
    */

@@ -1,5 +1,8 @@
-import ErrorPage from '@/presentation/templates/ErrorPage';
+import ErrorPage from "@/components/common/ErrorPage";
 
+/**
+ *
+ */
 export default function NotFound() {
   return <ErrorPage />;
 }

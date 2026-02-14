@@ -1,5 +1,8 @@
-import DashboardTemplate from '@/presentation/templates/DashboardTemplate';
+import DashboardTemplate from "./DashboardTemplate";
 
+/**
+ *
+ */
 export default function Page() {
   return <DashboardTemplate />;
 }

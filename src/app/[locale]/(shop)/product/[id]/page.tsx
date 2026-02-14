@@ -1,11 +1,14 @@
-import { Suspense } from 'react';
-import ProductDetailTemplate from '@/presentation/templates/ProductDetailTemplate';
-import { products } from '@/lib/constants';
+import { Suspense } from "react";
+import ProductDetailTemplate from "./ProductDetailTemplate";
+import { products } from "@/lib/constants";
 
-import { routing } from '@/i18n/routing';
+import { routing } from "@/i18n/routing";
 
+/**
+ *
+ */
 export async function generateStaticParams() {
-  const locales = ['en', 'ar'];
+  const locales = ["en", "ar"];
   const params = [];
   for (const locale of locales) {
     for (const product of products) {
@@ -18,6 +21,9 @@ export async function generateStaticParams() {
   return params;
 }
 
+/**
+ *
+ */
 export default async function Page({
   params,
 }: {

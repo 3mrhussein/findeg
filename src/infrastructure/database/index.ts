@@ -8,10 +8,10 @@
  */
 
 // Export database connection
-export { db } from '../config/database.config';
+export { db } from "../config/database.config";
 
 // Export schemas
-export * from './schema/products';
+export * from "./schema/products";
 
 // Export database utilities
-export * from '../config/database.config';
+export * from "../config/database.config";

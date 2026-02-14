@@ -4,7 +4,13 @@ import { IReviewRepository } from "@/application/repositories/IReviewRepository"
 import { Review } from "@/domain/entities/Review";
 import { eq } from "drizzle-orm";
 
+/**
+ *
+ */
 export class DrizzleReviewRepository implements IReviewRepository {
+  /**
+   *
+   */
   private mapToDomain(dbReview: DbReview): Review {
     return {
       id: dbReview.id,
@@ -18,18 +24,30 @@ export class DrizzleReviewRepository implements IReviewRepository {
     };
   }
 
+  /**
+   *
+   */
   async getByProductId(productId: number): Promise<Review[]> {
     const results = await db.select().from(reviews).where(eq(reviews.productId, productId));
     return results.map(this.mapToDomain);
   }
 
+  /**
+   *
+   */
   async getByUserId(userId: number): Promise<Review[]> {
     const results = await db.select().from(reviews).where(eq(reviews.userId, userId));
     return results.map(this.mapToDomain);
   }
 
+  /**
+   *
+   */
   async create(review: Partial<Review>): Promise<Review> {
-    const [result] = await db.insert(reviews).values(review as any).returning();
+    const [result] = await db
+      .insert(reviews)
+      .values(review as any)
+      .returning();
     return this.mapToDomain(result);
   }
 }

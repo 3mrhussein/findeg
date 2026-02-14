@@ -1,5 +1,8 @@
-import RegistrationTemplate from '@/presentation/templates/RegistrationTemplate';
+import RegistrationTemplate from "./RegistrationTemplate";
 
+/**
+ *
+ */
 export default function Page() {
   return <RegistrationTemplate />;
 }

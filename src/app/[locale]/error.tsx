@@ -1,13 +1,10 @@
-'use client';
+"use client";
 
-import ErrorPage from '@/presentation/templates/ErrorPage';
+import ErrorPage from "@/components/common/ErrorPage";
 
-export default function Error({
-  error,
-  reset,
-}: {
-  error: Error & { digest?: string };
-  reset: () => void;
-}) {
+/**
+ *
+ */
+export default function Error() {
   return <ErrorPage />;
 }

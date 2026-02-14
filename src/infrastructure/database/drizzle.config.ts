@@ -7,11 +7,11 @@
  * - Database introspection
  */
 
-import type { Config } from 'drizzle-kit';
-import * as dotenv from 'dotenv';
+import type { Config } from "drizzle-kit";
+import * as dotenv from "dotenv";
 
 // Load environment variables
-dotenv.config({ path: '.env.local' });
+dotenv.config({ path: ".env.local" });
 dotenv.config();
 
 /**
@@ -24,17 +24,17 @@ dotenv.config();
  */
 export default {
   // Schema files location
-  schema: './src/infrastructure/database/schema/*.ts',
+  schema: "./src/infrastructure/database/schema/*.ts",
 
   // Output directory for migrations
-  out: './drizzle',
+  out: "./drizzle",
 
   // Database driver
-  dialect: 'postgresql',
+  dialect: "postgresql",
 
   // Database connection
   dbCredentials: {
-    url: process.env.DATABASE_URL || '',
+    url: process.env.DATABASE_URL || "",
   },
 
   // Verbose output

@@ -5,6 +5,7 @@ FindEg.com is a modern, trendy e-commerce web application specializing in statio
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - **Node.js** (v18 or higher)
 - **Docker** (for database)
 - **npm** or **yarn**
@@ -12,29 +13,33 @@ FindEg.com is a modern, trendy e-commerce web application specializing in statio
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone <repository-url>
    cd 27-10-2025ecommerceV2
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Set up the database**
+
    ```bash
    # Start PostgreSQL in Docker
    npm run db:start
-   
+
    # Push database schema
    npm run db:push
-   
+
    # (Optional) Seed with sample data
    npm run db:seed
    ```
 
 4. **Run the development server**
+
    ```bash
    npm run dev
    ```
@@ -49,17 +54,17 @@ This project uses **Docker** to run a PostgreSQL database for development, makin
 
 ### Database Scripts
 
-| Script | Command | Description |
-|--------|---------|-------------|
-| **Start Database** | `npm run db:start` | Starts the PostgreSQL container and waits for it to be ready |
-| **Stop Database** | `npm run db:stop` | Stops the PostgreSQL container |
-| **Reset Database** | `npm run db:reset` | ⚠️ **Deletes all data** and creates a fresh database |
-| **View Logs** | `npm run db:logs` | Shows database container logs (useful for debugging) |
-| **Push Schema** | `npm run db:push` | Pushes your Drizzle schema to the database |
-| **Generate Migration** | `npm run db:generate` | Generates migration files from schema changes |
-| **Run Migrations** | `npm run db:migrate` | Runs pending database migrations |
-| **Open Studio** | `npm run db:studio` | Opens Drizzle Studio to browse/edit database |
-| **Seed Database** | `npm run db:seed` | Populates database with sample data |
+| Script                 | Command               | Description                                                  |
+| ---------------------- | --------------------- | ------------------------------------------------------------ |
+| **Start Database**     | `npm run db:start`    | Starts the PostgreSQL container and waits for it to be ready |
+| **Stop Database**      | `npm run db:stop`     | Stops the PostgreSQL container                               |
+| **Reset Database**     | `npm run db:reset`    | ⚠️ **Deletes all data** and creates a fresh database         |
+| **View Logs**          | `npm run db:logs`     | Shows database container logs (useful for debugging)         |
+| **Push Schema**        | `npm run db:push`     | Pushes your Drizzle schema to the database                   |
+| **Generate Migration** | `npm run db:generate` | Generates migration files from schema changes                |
+| **Run Migrations**     | `npm run db:migrate`  | Runs pending database migrations                             |
+| **Open Studio**        | `npm run db:studio`   | Opens Drizzle Studio to browse/edit database                 |
+| **Seed Database**      | `npm run db:seed`     | Populates database with sample data                          |
 
 ### Why Use These Scripts?
 
@@ -85,6 +90,7 @@ This project uses **Docker** to run a PostgreSQL database for development, makin
 ### Troubleshooting Database Issues
 
 **Port 5432 already in use?**
+
 ```bash
 # Option 1: Stop your local PostgreSQL
 brew services stop postgresql
@@ -94,6 +100,7 @@ brew services stop postgresql
 ```
 
 **Database won't start?**
+
 ```bash
 # Check if Docker is running
 docker info
@@ -106,6 +113,7 @@ npm run db:logs
 ```
 
 **Need to access database directly?**
+
 ```bash
 docker-compose exec postgres psql -U findeg_user -d findeg_dev
 ```
@@ -168,22 +176,35 @@ graph TD
 ### Component Organization (Feature-based)
 
 ```
-presentation/components/
-├── features/               # Domain-specific features
-│   ├── shop/              # Product cards, Cart, Category UI
-│   ├── dashboard/         # Charts, Stat cards, Order tables
-│   └── user/              # Auth, Profile components
-├── layout/                 # Structural components (Header, Footer, Container)
-├── shared/                 # Reusable domain components (Icon, Price, PriceBadge)
-├── templates/              # Page-level compositions (HomePage, ProductDetail)
-└── ui/                     # Generic UI primitives (Button, Input, Card - shadcn-style)
+src/
+├── app/[locale]/           # Next.js App Router (Routes & Pages)
+│   ├── (shop)/            # Shop routes (Co-located components)
+│   ├── (dashboard)/       # Dashboard routes
+│   ├── (admin)/           # Admin routes
+│   └── (auth)/            # Authentication routes
+│
+├── components/             # Reusable Components
+│   ├── common/            # Domain-specific shared components (ProductCard, Price)
+│   ├── layout/            # Structural components (Header, Footer)
+│   └── ui/                # Generic UI primitives (shadcn - Button, Input)
+│
+├── hooks/                  # Global Hooks (useCart, useUser)
+├── providers/              # Global Providers (Theme, Auth)
+├── lib/                    # Utilities & Constants
+├── server/                 # Server-side utilities
+│
+├── application/            # Business Logic (Services)
+├── domain/                 # Core Entities & Types
+└── infrastructure/         # Database & External Services
 ```
 
 **Organization Principles:**
-- **Features:** Grouped by business domain. Contains both logic and specific UI.
-- **Shared:** Reusable components that carry domain meaning (e.g., a specific Currency display).
-- **UI:** Pure, generic primitives with no domain knowledge.
-- **Templates:** Orchestrate features and layout for a specific route.
+
+- **Routes (src/app):** Features are co-located with their routes for better cohesion.
+- **Common:** Reusable components that carry domain meaning (e.g., specific ProductCard).
+- **UI:** Pure, generic primitives with no domain knowledge (shadcn).
+- **Layout:** Structural components like Header, Footer, and Containers.
+- **Hooks/Providers:** Global state and logic extracted for reusability.
 
 ---
 
@@ -195,9 +216,10 @@ presentation/components/
 - **`cn` Utility:** Helper function in `lib/utils.ts` for conditional classes
 
 **Example:**
+
 ```tsx
 <div className={cn(
-  "bg-primary text-white", 
+  "bg-primary text-white",
   isActive && "font-bold"
 )}>
 ```
@@ -212,24 +234,25 @@ presentation/components/
 - **Type-Safety:** Automatically generated UPPERCASE constants for Intellisense support
 
 **Usage:**
+
 ```tsx
 import { useTranslations } from 'next-intl';
 import { T } from '@/i18n/content';
 
 const t = useTranslations();
-<h1>{t(T.PAGES.HOME.HERO.TITLE_PART1)}</h1>
+<h1>{t(T.PAGES.HOME.HERO.TITLE_PART1)}</h1>;
 ```
 
 ---
 
 ## 🛠️ Development Scripts
 
-| Script | Command | Description |
-|--------|---------|-------------|
-| **Development** | `npm run dev` | Start dev server (auto-kills port 3000 if busy) |
-| **Build** | `npm run build` | Create production build |
-| **Start** | `npm run start` | Run production server |
-| **Lint** | `npm run lint` | Run ESLint |
+| Script          | Command         | Description                                     |
+| --------------- | --------------- | ----------------------------------------------- |
+| **Development** | `npm run dev`   | Start dev server (auto-kills port 3000 if busy) |
+| **Build**       | `npm run build` | Create production build                         |
+| **Start**       | `npm run start` | Run production server                           |
+| **Lint**        | `npm run lint`  | Run ESLint                                      |
 
 ---
 
@@ -238,19 +261,23 @@ const t = useTranslations();
 All documentation is centralized in the `docs/` directory.
 
 ### 🏛️ Core Architecture
-- **[Architecture Overview](docs/architecture/)** - Deep dive into Clean Architecture layers.
-- **[Domain Layer](docs/architecture/01-domain-layer.md)** - Entities and business rules.
-- **[Application Layer](docs/architecture/02-application-layer.md)** - Services and use cases.
-- **[Infrastructure Layer](docs/architecture/03-infrastructure-layer.md)** - Database and persistence.
-- **[Presentation Layer](docs/architecture/04-presentation-layer.md)** - UI components and patterns.
+
+- **Architecture — Per-Layer Documentation:**
+  - **[Domain Layer](src/domain/README.md)** — Entities, business rules, and import constraints.
+  - **[Application Layer](src/application/README.md)** — Services, repository interfaces, and server actions.
+  - **[Infrastructure Layer](src/infrastructure/README.md)** — Database, DI container, and external integrations.
+  - **[Presentation Layer](src/components/README.md)** — Components, hooks, providers, and co-location strategy.
+  - **[App Layer (Routing)](src/app/README.md)** — Next.js App Router, layouts, and data fetching patterns.
 
 ### 📖 Guides
+
 - **[Development Guide](docs/guides/DEVELOPMENT.md)** - Step-by-step feature implementation & setup.
 - **[Scaling Standards](docs/guides/SCALING.md)** - How to grow the codebase maintainably.
 - **[Static Content Guide](docs/guides/STATIC_CONTENT.md)** - Managing page-scoped UI text and i18n.
 - **[Onboarding](docs/onboarding/README.md)** - Getting started for new developers.
 
 ### 📊 Database & Translations
+
 - **[Database Setup](docs/database/SETUP.md)** - Local and production DB management.
 - **[Database Schema](docs/database/SCHEMA.md)** - Auto-generated ER diagram and table definitions.
 - **[Translation Strategy](docs/translations/README.md)** - Static vs Dynamic translation patterns.
@@ -260,6 +287,7 @@ All documentation is centralized in the `docs/` directory.
 ## 🔑 Key Features
 
 ### E-commerce Functionality
+
 - Product browsing with categories
 - Advanced filtering and search
 - Shopping cart with variants
@@ -268,6 +296,7 @@ All documentation is centralized in the `docs/` directory.
 - Checkout process
 
 ### Technical Features
+
 - **Server-Side Rendering (SSR)** - Fast initial page loads
 - **Static Site Generation (SSG)** - Pre-rendered pages
 - **Image Optimization** - Automatic image optimization
@@ -304,11 +333,11 @@ npm run test:watch
 **Q: Why `npm run dev` instead of `next dev`?**  
 A: Our custom script (`scripts/dev.js`) automatically kills any process using port 3000 before starting the server.
 
-**Q: Where is the actual page code?**  
-A: Page templates are in `src/presentation/components/server/templates/`. The `app/` directory just imports them.
+**Q: Where is the actual page code?**
+A: Page logic is now co-located in `src/app/[locale]/.../page.tsx` and its sibling component files.
 
-**Q: How do I add a new page?**  
-A: Create a template in `src/presentation/components/server/templates/`, then import it in the corresponding `app/*/page.tsx` file.
+**Q: How do I add a new page?**
+A: Create a folder in `src/app/[locale]/` with a `page.tsx`. You can build components right there in the same folder.
 
 **Q: Database not connecting?**  
 A: Make sure you've run `npm run db:start` and that Docker is running. Check `.env.local` has the correct `DATABASE_URL`.

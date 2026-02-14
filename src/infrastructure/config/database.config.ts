@@ -6,9 +6,9 @@
  * a configured database connection.
  */
 
-import postgres from 'postgres';
-import { drizzle } from 'drizzle-orm/postgres-js';
-import * as schema from '../database/schema';
+import postgres from "postgres";
+import { drizzle } from "drizzle-orm/postgres-js";
+import * as schema from "../database/schema";
 
 /**
  * Get database connection string from environment
@@ -21,8 +21,7 @@ function getDatabaseUrl(): string {
 
   if (!url) {
     throw new Error(
-      'DATABASE_URL environment variable is not set. ' +
-      'Please set it in your .env file.'
+      "DATABASE_URL environment variable is not set. " + "Please set it in your .env file.",
     );
   }
 
@@ -50,7 +49,7 @@ export function createDatabaseConnection() {
     connect_timeout: 10, // Connection timeout in seconds
 
     // SSL configuration (for production)
-    ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
+    ssl: process.env.DB_SSL === "true" ? { rejectUnauthorized: false } : false,
 
     // Transform configuration
     transform: {

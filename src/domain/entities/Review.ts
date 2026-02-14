@@ -8,7 +8,10 @@ export interface Review {
   userId?: number;
   rating: number;
   comment?: string;
-  isVerifiedPurchase: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  isVerifiedPurchase?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+  // Presentation-friendly aliases
+  author?: string;
+  date?: string;
 }
