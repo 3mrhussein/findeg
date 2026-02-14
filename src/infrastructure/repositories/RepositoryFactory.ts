@@ -13,25 +13,25 @@
 
 import { MockProductRepository } from "./MockProductRepository";
 import { DatabaseProductRepository } from "./DatabaseProductRepository";
+import { DrizzleProductRepository } from "./DrizzleProductRepository";
 import { MockCategoryRepository } from "./MockCategoryRepository";
+import { DrizzleCategoryRepository } from "./DrizzleCategoryRepository";
+import { DrizzleOrderRepository } from "./DrizzleOrderRepository";
+import { DrizzleBrandRepository } from "./DrizzleBrandRepository";
+import { DrizzleAuditLogRepository } from "./DrizzleAuditLogRepository";
+
 import type { IProductRepository } from "@/application/repositories/IProductRepository";
 import type { ICategoryRepository } from "@/application/repositories/ICategoryRepository";
+import type { IOrderRepository } from "@/application/repositories/IOrderRepository";
+import type { IBrandRepository } from "@/application/repositories/IBrandRepository";
+import type { IAuditLogRepository } from "@/application/repositories/IAuditLogRepository";
 
 /**
  * Repository Factory
- *
- * Creates repository instances based on environment variables.
- *
- * Environment Variables:
- * - USE_DATABASE: Set to 'true' to use database repositories, otherwise uses mock
- * - DATABASE_URL: Required if USE_DATABASE is true
  */
 export class RepositoryFactory {
   /**
    * Check if database should be used
-   *
-   * Uses USE_DATABASE environment variable.
-   * Defaults to false (use mock) for development.
    */
   private static shouldUseDatabase(): boolean {
     const useDatabase = process.env.USE_DATABASE;
@@ -39,57 +39,44 @@ export class RepositoryFactory {
   }
 
   /**
-   * Create product repository
    *
-   * Returns either DatabaseProductRepository or MockProductRepository
-   * based on environment configuration.
    */
   static createProductRepository(): IProductRepository {
     if (this.shouldUseDatabase()) {
-      // Validate database URL is set
-      if (!process.env.DATABASE_URL) {
-        console.warn(
-          "USE_DATABASE is true but DATABASE_URL is not set. " +
-            "Falling back to MockProductRepository.",
-        );
-        return new MockProductRepository();
-      }
-
-      try {
-        const repo = new DatabaseProductRepository();
-        // Set default language from environment if available
-        const language = process.env.DEFAULT_LANGUAGE || "en";
-        repo.setLanguage(language);
-        return repo;
-      } catch (error) {
-        console.error("Failed to create DatabaseProductRepository:", error);
-        console.warn("Falling back to MockProductRepository.");
-        return new MockProductRepository();
-      }
+      return new DrizzleProductRepository();
     }
-
-    // Default to mock repository for development
     return new MockProductRepository();
   }
 
   /**
-   * Create category repository
+   *
    */
   static createCategoryRepository(): ICategoryRepository {
     if (this.shouldUseDatabase()) {
-      // return new DatabaseCategoryRepository();
-      return new MockCategoryRepository();
+      return new DrizzleCategoryRepository();
     }
     return new MockCategoryRepository();
   }
 
   /**
-   * Create order repository (when implemented)
+   *
    */
-  // static createOrderRepository(): IOrderRepository {
-  //   if (this.shouldUseDatabase()) {
-  //     return new DatabaseOrderRepository();
-  //   }
-  //   return new MockOrderRepository();
-  // }
+  static createOrderRepository(): IOrderRepository {
+    // No mock implementation for orders yet
+    return new DrizzleOrderRepository();
+  }
+
+  /**
+   *
+   */
+  static createBrandRepository(): IBrandRepository {
+    return new DrizzleBrandRepository();
+  }
+
+  /**
+   *
+   */
+  static createAuditLogRepository(): IAuditLogRepository {
+    return new DrizzleAuditLogRepository();
+  }
 }

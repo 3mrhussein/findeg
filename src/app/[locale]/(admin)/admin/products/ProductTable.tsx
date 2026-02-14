@@ -78,7 +78,7 @@ export function ProductTable({ data }: ProductTableProps) {
       ),
     },
     {
-      accessorKey: "category",
+      accessorKey: "categoryName",
       header: "Category",
     },
     {

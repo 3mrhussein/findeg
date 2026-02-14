@@ -12,88 +12,88 @@ import { Icon } from "@/components/common/Icon";
  * @type {NavigationItem[]}
  */
 export const navigationSchema: NavigationItem[] = [
-  { labelKey: "NAV.SHOP", href: "/shop" },
+  { labelKey: "Nav.Shop", href: "/shop" },
   {
-    labelKey: "NAV.CATEGORIES",
+    labelKey: "Nav.Categories",
     href: "/categories",
     isMegaMenu: true,
     megaMenuColumns: [
       {
-        titleKey: "NAV.STATIONARY.TITLE",
+        titleKey: "Nav.Stationary.Title",
         links: [
           {
-            labelKey: "NAV.STATIONARY.PENS",
+            labelKey: "Nav.Stationary.Pens",
             href: "/shop?category=Stationary",
             subLinks: [
               {
-                labelKey: "NAV.STATIONARY.GEL_PENS",
+                labelKey: "Nav.Stationary.GelPens",
                 href: "/shop?category=Stationary&type=gel",
-                icon: <Icon name="pen" className="w-4 h-4" />,
+                iconName: "pen",
               },
               {
-                labelKey: "NAV.STATIONARY.BALLPOINT",
+                labelKey: "Nav.Stationary.Ballpoint",
                 href: "/shop?category=Stationary&type=ballpoint",
-                icon: <Icon name="pen" className="w-4 h-4" />,
+                iconName: "pen",
               },
             ],
           },
-          { labelKey: "NAV.STATIONARY.NOTEBOOKS", href: "/shop?category=Stationary" },
+          { labelKey: "Nav.Stationary.Notebooks", href: "/shop?category=Stationary" },
           {
-            labelKey: "NAV.STATIONARY.ART_SUPPLIES",
+            labelKey: "Nav.Stationary.ArtSupplies",
             href: "/shop?category=Stationary",
             isNew: true,
           },
         ],
       },
       {
-        titleKey: "NAV.TOYS.TITLE",
+        titleKey: "Nav.Toys.Title",
         links: [
-          { labelKey: "NAV.TOYS.EDUCATIONAL", href: "/shop?category=Toys" },
-          { labelKey: "NAV.TOYS.BLOCKS", href: "/shop?category=Toys" },
+          { labelKey: "Nav.Toys.Educational", href: "/shop?category=Toys" },
+          { labelKey: "Nav.Toys.Blocks", href: "/shop?category=Toys" },
           {
-            labelKey: "NAV.TOYS.PUZZLES",
+            labelKey: "Nav.Toys.Puzzles",
             href: "/shop?category=Toys",
             subLinks: [
               {
-                labelKey: "NAV.TOYS.JIGSAW",
+                labelKey: "Nav.Toys.Jigsaw",
                 href: "/shop?category=Toys&type=jigsaw",
-                icon: <Icon name="puzzle" className="w-4 h-4" />,
+                iconName: "puzzle",
               },
               {
-                labelKey: "NAV.TOYS.THREE_D",
+                labelKey: "Nav.Toys.ThreeD",
                 href: "/shop?category=Toys&type=3d",
-                icon: <Icon name="puzzle" className="w-4 h-4" />,
+                iconName: "puzzle",
               },
             ],
           },
         ],
       },
       {
-        titleKey: "NAV.SCHOOL.TITLE",
+        titleKey: "Nav.School.Title",
         links: [
           {
-            labelKey: "NAV.SCHOOL.BACKPACKS",
+            labelKey: "Nav.School.Backpacks",
             href: "/shop?category=School Items",
             subLinks: [
               {
-                labelKey: "NAV.SCHOOL.ERGONOMIC",
+                labelKey: "Nav.School.Ergonomic",
                 href: "/shop?category=School Items&type=ergonomic",
-                icon: <Icon name="backpack" className="w-4 h-4" />,
+                iconName: "backpack",
               },
               {
-                labelKey: "NAV.SCHOOL.THEMED",
+                labelKey: "Nav.School.Themed",
                 href: "/shop?category=School Items&type=themed",
-                icon: <Icon name="backpack" className="w-4 h-4" />,
+                iconName: "backpack",
               },
             ],
           },
-          { labelKey: "NAV.SCHOOL.LUNCHBOXES", href: "/shop?category=School Items" },
+          { labelKey: "Nav.School.Lunchboxes", href: "/shop?category=School Items" },
         ],
       },
     ],
   },
-  { labelKey: "NAV.ABOUT", href: "/about" },
-  { labelKey: "NAV.AI_GENERATOR", href: "/", id: "nav_ai_generator" },
-  { labelKey: "NAV.MY_ACCOUNT", href: "/my-account" },
-  { labelKey: "NAV.DASHBOARD", href: "/dashboard" },
+  { labelKey: "Nav.About", href: "/about" },
+  { labelKey: "Nav.AiGenerator", href: "/", id: "nav_ai_generator" },
+  { labelKey: "Nav.MyAccount", href: "/my-account" },
+  { labelKey: "Nav.Dashboard", href: "/dashboard" },
 ];

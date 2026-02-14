@@ -13,22 +13,34 @@ import { DrizzleCategoryRepository } from "../repositories/DrizzleCategoryReposi
 import { DrizzleUserRepository } from "../repositories/DrizzleUserRepository";
 import { DrizzleOrderRepository } from "../repositories/DrizzleOrderRepository";
 import { DrizzleReviewRepository } from "../repositories/DrizzleReviewRepository";
+import { DrizzleBrandRepository } from "../repositories/DrizzleBrandRepository";
+import { DrizzleAuditLogRepository } from "../repositories/DrizzleAuditLogRepository";
 
 import { CookieSessionProvider } from "../auth/CookieSessionProvider";
+import { LocalStorageProvider } from "../storage/LocalStorageProvider";
 
 import { AuthService } from "@/application/services/AuthService";
 import { ProductService } from "@/application/services/ProductService";
 import { CategoryService } from "@/application/services/CategoryService";
 import { CartService } from "@/application/services/CartService";
+import { MediaService } from "@/application/services/MediaService";
+
 import { AdminProductService } from "@/application/services/AdminProductService";
 import { AdminCategoryService } from "@/application/services/AdminCategoryService";
 import { AdminDashboardService } from "@/application/services/AdminDashboardService";
+import { AdminBrandService } from "@/application/services/AdminBrandService";
+import { AdminOrderService } from "@/application/services/AdminOrderService";
+import { AdminInventoryService } from "@/application/services/AdminInventoryService";
+import { AuditLogService } from "@/application/services/AuditLogService";
+import { LoggerService } from "@/application/services/LoggerService";
 
 import { IProductRepository } from "@/application/repositories/IProductRepository";
 import { ICategoryRepository } from "@/application/repositories/ICategoryRepository";
 import { IUserRepository } from "@/application/repositories/IUserRepository";
 import { IOrderRepository } from "@/application/repositories/IOrderRepository";
 import { IReviewRepository } from "@/application/repositories/IReviewRepository";
+import { IBrandRepository } from "@/application/repositories/IBrandRepository";
+import { IAuditLogRepository } from "@/application/repositories/IAuditLogRepository";
 
 import {
   IAuthService,
@@ -38,39 +50,52 @@ import {
   IAdminProductService,
   IAdminCategoryService,
   IAdminDashboardService,
+  IAdminBrandService,
+  IAdminOrderService,
+  IAdminInventoryService,
+  IAuditLogService,
   ISessionProvider,
+  IStorageProvider,
 } from "@/application/services/interfaces";
+import { ILoggerService } from "@/application/services/interfaces/ILoggerService";
 
 /**
- *
+ * Validates dependency injection wiring
  */
 export class ServiceContainer {
   private static instance: ServiceContainer;
 
   // ─── 1. Repositories (Data Access) ────────────────────────────────────
-  // These provide direct access to the database tables.
   private _productRepository?: IProductRepository;
   private _categoryRepository?: ICategoryRepository;
   private _userRepository?: IUserRepository;
   private _orderRepository?: IOrderRepository;
   private _reviewRepository?: IReviewRepository;
+  private _brandRepository?: IBrandRepository;
+  private _auditLogRepository?: IAuditLogRepository;
 
   // ─── 2. Infrastructure Services ───────────────────────────────────────
-  // Low-level services like Auth providers, Email senders, Storage, etc.
   private _sessionProvider?: ISessionProvider;
+  private _storageProvider?: IStorageProvider;
 
   // ─── 3. Application Services (Shop / Customer) ────────────────────────
-  // Business logic for the public-facing shop.
   private _authService?: IAuthService;
   private _productService?: IProductService;
   private _categoryService?: ICategoryService;
   private _cartService?: ICartService;
+  private _mediaService?: MediaService;
+  // MediaService is a concrete class but could implement an interface.
+  // Using concrete type here as it's not in interfaces barrel yet as interface, but we use it as type in constructor params.
 
   // ─── 4. Admin Services (Back-office) ──────────────────────────────────
-  // Business logic for the admin dashboard.
   private _adminProductService?: IAdminProductService;
   private _adminCategoryService?: IAdminCategoryService;
   private _adminDashboardService?: IAdminDashboardService;
+  private _adminBrandService?: IAdminBrandService;
+  private _adminOrderService?: IAdminOrderService;
+  private _adminInventoryService?: IAdminInventoryService;
+  private _auditLogService?: IAuditLogService;
+  private _loggerService?: ILoggerService;
 
   /**
    *
@@ -78,8 +103,7 @@ export class ServiceContainer {
   private constructor() {}
 
   /**
-   * Get the singleton instance of the container.
-   * This ensures we only have one set of services/repositories application-wide.
+   *
    */
   public static getInstance(): ServiceContainer {
     if (!ServiceContainer.instance) {
@@ -142,6 +166,26 @@ export class ServiceContainer {
     return this._reviewRepository;
   }
 
+  /**
+   *
+   */
+  get brandRepository(): IBrandRepository {
+    if (!this._brandRepository) {
+      this._brandRepository = new DrizzleBrandRepository();
+    }
+    return this._brandRepository;
+  }
+
+  /**
+   *
+   */
+  get auditLogRepository(): IAuditLogRepository {
+    if (!this._auditLogRepository) {
+      this._auditLogRepository = new DrizzleAuditLogRepository();
+    }
+    return this._auditLogRepository;
+  }
+
   // ============================================================================
   //  2. INFRASTRUCTURE SERVICES
   // ============================================================================
@@ -156,9 +200,29 @@ export class ServiceContainer {
     return this._sessionProvider;
   }
 
+  /**
+   *
+   */
+  get storageProvider(): IStorageProvider {
+    if (!this._storageProvider) {
+      // Could switch on env vars like STORAGE_PROVIDER=S3
+      this._storageProvider = new LocalStorageProvider();
+    }
+    return this._storageProvider;
+  }
+
+  /**
+   *
+   */
+  get mediaService(): MediaService {
+    if (!this._mediaService) {
+      this._mediaService = new MediaService(this.storageProvider);
+    }
+    return this._mediaService;
+  }
+
   // ============================================================================
   //  3. APPLICATION SERVICES (Shop Facing)
-  //  These inject the repositories above into the service logic.
   // ============================================================================
 
   /**
@@ -203,15 +267,30 @@ export class ServiceContainer {
 
   // ============================================================================
   //  4. ADMIN SERVICES (Back-office)
-  //  Specialized services for admin operations (usually with more permissions).
   // ============================================================================
+
+  /**
+   *
+   */
+  get auditLogService(): IAuditLogService {
+    if (!this._auditLogService) {
+      this._auditLogService = new AuditLogService(this.auditLogRepository);
+    }
+    return this._auditLogService;
+  }
 
   /**
    *
    */
   get adminProductService(): IAdminProductService {
     if (!this._adminProductService) {
-      this._adminProductService = new AdminProductService(this.productRepository);
+      this._adminProductService = new AdminProductService(
+        this.productRepository,
+        this.categoryRepository,
+        this.brandRepository,
+        this.auditLogService,
+        this.mediaService,
+      );
     }
     return this._adminProductService;
   }
@@ -221,7 +300,10 @@ export class ServiceContainer {
    */
   get adminCategoryService(): IAdminCategoryService {
     if (!this._adminCategoryService) {
-      this._adminCategoryService = new AdminCategoryService(this.categoryRepository);
+      this._adminCategoryService = new AdminCategoryService(
+        this.categoryRepository,
+        this.auditLogService,
+      );
     }
     return this._adminCategoryService;
   }
@@ -235,9 +317,53 @@ export class ServiceContainer {
         this.productRepository,
         this.categoryRepository,
         this.orderRepository,
+        this.brandRepository,
       );
     }
     return this._adminDashboardService;
+  }
+
+  /**
+   *
+   */
+  get adminBrandService(): IAdminBrandService {
+    if (!this._adminBrandService) {
+      this._adminBrandService = new AdminBrandService(this.brandRepository, this.auditLogService);
+    }
+    return this._adminBrandService;
+  }
+
+  /**
+   *
+   */
+  get adminOrderService(): IAdminOrderService {
+    if (!this._adminOrderService) {
+      this._adminOrderService = new AdminOrderService(this.orderRepository, this.auditLogService);
+    }
+    return this._adminOrderService;
+  }
+
+  /**
+   *
+   */
+  get adminInventoryService(): IAdminInventoryService {
+    if (!this._adminInventoryService) {
+      this._adminInventoryService = new AdminInventoryService(
+        this.productRepository,
+        this.auditLogService,
+      );
+    }
+    return this._adminInventoryService;
+  }
+
+  /**
+   *
+   */
+  get loggerService(): ILoggerService {
+    if (!this._loggerService) {
+      this._loggerService = new LoggerService();
+    }
+    return this._loggerService;
   }
 }
 

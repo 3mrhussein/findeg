@@ -5,6 +5,7 @@
 import { ICategoryRepository } from "@/application/repositories/ICategoryRepository";
 import { Category } from "@/domain/entities/Category";
 import { categories } from "@/lib/constants";
+import { AdminCategoryInput } from "@/domain/types/admin";
 
 const mockCategories: Category[] = [
   {
@@ -12,18 +13,27 @@ const mockCategories: Category[] = [
     slug: "electronics",
     name: "Electronics",
     description: "Gadgets and more",
+    path: "/1",
+    depth: 0,
+    sortOrder: 0,
   },
   {
     id: 2,
     slug: "clothing",
     name: "Clothing",
     description: "Fashionable attire",
+    path: "/2",
+    depth: 0,
+    sortOrder: 1,
   },
   {
     id: 3,
     slug: "home-garden",
     name: "Home & Garden",
     description: "Everything for your home",
+    path: "/3",
+    depth: 0,
+    sortOrder: 2,
   },
 ];
 
@@ -57,14 +67,56 @@ export class MockCategoryRepository implements ICategoryRepository {
   /**
    *
    */
-  async create(input: any): Promise<Category> {
+  async getTree(language?: string): Promise<Category[]> {
+    return Promise.resolve(mockCategories);
+  }
+
+  /**
+   *
+   */
+  async getRoots(language?: string): Promise<Category[]> {
+    return Promise.resolve(mockCategories);
+  }
+
+  /**
+   *
+   */
+  async getChildren(parentId: number, language?: string): Promise<Category[]> {
+    return Promise.resolve([]);
+  }
+
+  /**
+   *
+   */
+  async getDescendants(categoryId: number, language?: string): Promise<Category[]> {
+    return Promise.resolve([]);
+  }
+
+  /**
+   *
+   */
+  async getByPath(path: string, language?: string): Promise<Category | null> {
+    return Promise.resolve(null);
+  }
+
+  /**
+   *
+   */
+  async create(input: AdminCategoryInput): Promise<Category> {
     throw new Error("Method not implemented.");
   }
 
   /**
    *
    */
-  async update(id: number, input: any): Promise<Category> {
+  async update(id: number, input: AdminCategoryInput): Promise<Category> {
+    throw new Error("Method not implemented.");
+  }
+
+  /**
+   *
+   */
+  async reorder(items: { id: number; sortOrder: number }[]): Promise<void> {
     throw new Error("Method not implemented.");
   }
 
@@ -79,8 +131,6 @@ export class MockCategoryRepository implements ICategoryRepository {
    *
    */
   async count(): Promise<number> {
-    // We don't have direct access to mockCategories array here if it's outside class
-    // actually it is in the same file
-    return Promise.resolve(3); // Hardcoded based on mockCategories in file
+    return Promise.resolve(mockCategories.length);
   }
 }

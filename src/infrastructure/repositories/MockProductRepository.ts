@@ -2,14 +2,12 @@
  * Infrastructure Layer: Mock Product Repository
  *
  * This is a concrete implementation of IProductRepository using mock data.
- * In a real app, you'd have implementations like:
- * - ApiProductRepository (fetches from API)
- * - DatabaseProductRepository (fetches from database)
- *
- * The Application layer doesn't know which implementation is used.
  */
 
-import type { IProductRepository } from "@/application/repositories/IProductRepository";
+import type {
+  IProductRepository,
+  ProductFilters,
+} from "@/application/repositories/IProductRepository";
 import type { Product } from "@/domain/entities/Product";
 import { products } from "@/lib/constants";
 import { AdminProductInput } from "@/domain/types/admin";
@@ -25,11 +23,11 @@ export class MockProductRepository implements IProductRepository {
     const product = products.find((p) => p.id === id);
     if (!product) return null;
 
-    // Return a mock structure (for MVP/testing, this is sufficient)
     return {
       id: product.id,
       price: product.price,
-      category: product.category,
+      // map other fields
+      category: product.categoryName,
       images: product.images,
       isNew: product.isNew,
       translations: [
@@ -42,11 +40,11 @@ export class MockProductRepository implements IProductRepository {
       ],
     };
   }
+
   /**
    *
    */
   async getAll(language?: string): Promise<Product[]> {
-    // Simulate async operation
     return Promise.resolve([...products]);
   }
 
@@ -68,7 +66,7 @@ export class MockProductRepository implements IProductRepository {
         (product) =>
           product.name.toLowerCase().includes(lowerQuery) ||
           product.description.toLowerCase().includes(lowerQuery) ||
-          product.category.toLowerCase().includes(lowerQuery),
+          (product.categoryName && product.categoryName.toLowerCase().includes(lowerQuery)),
       ),
     );
   }
@@ -76,16 +74,74 @@ export class MockProductRepository implements IProductRepository {
   /**
    *
    */
-  async getByCategory(category: string, language?: string): Promise<Product[]> {
-    return Promise.resolve(products.filter((p) => p.category === category));
+  async getByCategory(categoryId: number, language?: string): Promise<Product[]> {
+    // Mock doesn't strictly support numeric category ID mapping, return empty or all
+    return Promise.resolve([]);
   }
+
+  // Legacy string-based method if interface requires it (it doesn't anymore, I changed it to number)
+  // But wait, existing code might call it with string? I updated the interface to `categoryId: number`.
+  // So I should implement `getByCategory(categoryId: number)`.
 
   /**
    *
    */
   async getFeatured(limit: number = 8, language?: string): Promise<Product[]> {
-    // For now, just return first N products
     return Promise.resolve(products.slice(0, limit));
+  }
+
+  /**
+   *
+   */
+  async getByBrand(brandId: number, language?: string): Promise<Product[]> {
+    return Promise.resolve([]);
+  }
+
+  /**
+   *
+   */
+  async getFiltered(
+    filters: ProductFilters,
+    language?: string,
+  ): Promise<{ products: Product[]; total: number }> {
+    return Promise.resolve({ products: [...products], total: products.length });
+  }
+
+  /**
+   *
+   */
+  async getLowStock(threshold?: number, language?: string): Promise<Product[]> {
+    return Promise.resolve([]);
+  }
+
+  /**
+   *
+   */
+  async updateStock(id: number, quantity: number): Promise<void> {
+    // no-op
+    return Promise.resolve();
+  }
+
+  /**
+   * Updates both stock quantity and low stock threshold for a product
+   *
+   * @param id - Product ID
+   * @param config - New quantity and optional low stock threshold
+   */
+  async updateStockConfiguration(
+    id: number,
+    config: { quantity: number; lowStockThreshold?: number },
+  ): Promise<void> {
+    // no-op
+    return Promise.resolve();
+  }
+
+  /**
+   *
+   */
+  async bulkUpdateStock(updates: { id: number; quantity: number }[]): Promise<void> {
+    // no-op
+    return Promise.resolve();
   }
 
   /**

@@ -21,7 +21,7 @@ export const CartContext = createContext<CartContextType | undefined>(undefined)
 /**
  *
  */
-export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
 
@@ -115,4 +115,4 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       {children}
     </CartContext.Provider>
   );
-};
+}

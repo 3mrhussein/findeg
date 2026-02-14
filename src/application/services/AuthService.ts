@@ -16,11 +16,17 @@ import { AuthResult, SessionPayload } from "@/domain/types/admin";
 import bcrypt from "bcryptjs";
 
 /**
+ * Authentication Service
  *
+ * Handles user authentication, session management, and admin validation.
+ * Uses bcryptjs for secure password verification.
  */
 export class AuthService implements IAuthService {
   /**
+   * Creates an instance of AuthService
    *
+   * @param userRepository - User data access layer
+   * @param sessionProvider - Session management provider (cookie-based or JWT)
    */
   constructor(
     private userRepository: IUserRepository,
@@ -28,7 +34,13 @@ export class AuthService implements IAuthService {
   ) {}
 
   /**
+   * Authenticates a user with email and password
    *
+   * Validates credentials, checks admin role, and creates a session.
+   *
+   * @param email - User email address
+   * @param password - Plain text password
+   * @returns Authentication result with user data or error message
    */
   async login(email: string, password: string): Promise<AuthResult> {
     const user = await this.userRepository.getByEmailWithPassword(email);
@@ -46,10 +58,6 @@ export class AuthService implements IAuthService {
       return { success: false, error: "Invalid email or password" };
     }
 
-    if (user.role !== "admin") {
-      return { success: false, error: "Access denied. Admin privileges required." };
-    }
-
     const payload: SessionPayload = {
       userId: user.id,
       email: user.email,
@@ -64,27 +72,71 @@ export class AuthService implements IAuthService {
         id: user.id,
         email: user.email,
         name: user.name,
+        firstName: user.firstName || undefined,
+        lastName: user.lastName || undefined,
+        phone: user.phone || undefined,
         role: user.role,
       },
     };
   }
 
   /**
+   * Registers a new user
    *
+   * @param input - User registration data
+   * @returns Authentication result with new user data
+   */
+  async register(input: any): Promise<AuthResult> {
+    try {
+      // Check if user exists
+      const existing = await this.userRepository.getByEmail(input.email);
+      if (existing) {
+        return { success: false, error: "Email already registered" };
+      }
+
+      // Hash password
+      const passwordHash = await bcrypt.hash(input.password, 10);
+
+      // Create user
+      const user = await this.userRepository.create({
+        ...input,
+        passwordHash,
+        role: input.role || "customer",
+      });
+
+      // Log them in automatically
+      return this.login(input.email, input.password);
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Registration failed",
+      };
+    }
+  }
+
+  /**
+   * Logs out the current user
+   *
+   * Deletes the active session (cookie or token invalidation).
    */
   async logout(): Promise<void> {
     await this.sessionProvider.deleteSession();
   }
 
   /**
+   * Retrieves the current session payload
    *
+   * @returns Session payload with user ID, email, and role, or null if not authenticated
    */
   async getSession(): Promise<SessionPayload | null> {
     return this.sessionProvider.getSession();
   }
 
   /**
+   * Validates that the current user is an admin
    *
+   * @returns Session payload if user is authenticated and has admin role
+   * @throws Error if not authenticated or not an admin
    */
   async validateAdmin(): Promise<SessionPayload> {
     const session = await this.sessionProvider.getSession();

@@ -10,6 +10,7 @@ import { AuthResult, SessionPayload } from "@/domain/types/admin";
 
 export interface IAuthService {
   login(email: string, password: string): Promise<AuthResult>;
+  register(input: any): Promise<AuthResult>;
   logout(): Promise<void>;
   getSession(): Promise<SessionPayload | null>;
   validateAdmin(): Promise<SessionPayload>;

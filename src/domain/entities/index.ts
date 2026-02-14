@@ -11,3 +11,6 @@ export * from "./Category";
 export * from "./User";
 export * from "./Order";
 export * from "./Review";
+export * from "./Brand";
+export * from "./Address";
+export * from "./AuditLogEntry";

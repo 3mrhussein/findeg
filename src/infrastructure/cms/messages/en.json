@@ -301,9 +301,31 @@
       "RecentOrders": "Recent Orders",
       "ProductList": "Product List",
       "AddProduct": "Add Product",
+      "AddCategory": "Add Category",
+      "ManageBrands": "Manage Brands",
+      "QuickActions": "Quick Actions",
       "OrderList": "Order List",
       "ExpandSidebar": "Expand sidebar",
       "CollapseSidebar": "Collapse sidebar",
+      "Sidebar": {
+        "Dashboard": "Dashboard",
+        "Products": "Products",
+        "Categories": "Categories",
+        "Brands": "Brands",
+        "Orders": "Orders",
+        "Inventory": "Inventory",
+        "Media": "Media",
+        "AuditLog": "Audit Log",
+        "Settings": "Settings"
+      },
+      "Topbar": {
+        "RoleAdmin": "Admin",
+        "Profile": "Profile",
+        "Logout": "Logout"
+      },
+      "Stats": {
+        "TotalCategories": "Total Categories"
+      },
       "Table": {
         "ProductName": "Product Name",
         "Category": "Category",

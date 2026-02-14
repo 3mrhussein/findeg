@@ -14,6 +14,14 @@ export type { ICartService } from "./ICartService";
 export type { IAdminProductService } from "./IAdminProductService";
 export type { IAdminCategoryService } from "./IAdminCategoryService";
 export type { IAdminDashboardService } from "./IAdminDashboardService";
+export type { IAdminBrandService } from "./IAdminBrandService";
+export type { IAdminOrderService } from "./IAdminOrderService";
+export type { IAdminInventoryService } from "./IAdminInventoryService";
+export type { IAuditLogService } from "./IAuditLogService";
+export type { ILoggerService } from "./ILoggerService";
+
+// Infrastructure services
+export type { IStorageProvider } from "./IStorageProvider";
 
 // Auth
 export type { IAuthService } from "./IAuthService";

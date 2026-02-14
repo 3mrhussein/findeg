@@ -38,7 +38,7 @@ export const ProductTableUI: React.FC<ProductTableUIProps> = ({ products, t, get
       {products.map((product) => (
         <TableRow key={product.id}>
           <TableCell className="font-medium text-foreground">{product.name}</TableCell>
-          <TableCell>{product.category}</TableCell>
+          <TableCell>{product.categoryName}</TableCell>
           <TableCell>${product.price.toFixed(2)}</TableCell>
           <TableCell>{getStock(product)}</TableCell>
           <TableCell className="flex gap-2">

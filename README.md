@@ -236,8 +236,8 @@ src/
 **Usage:**
 
 ```tsx
-import { useTranslations } from 'next-intl';
-import { T } from '@/i18n/content';
+import { useTranslations } from "next-intl";
+import { T } from "@/i18n/content";
 
 const t = useTranslations();
 <h1>{t(T.PAGES.HOME.HERO.TITLE_PART1)}</h1>;
@@ -258,23 +258,30 @@ const t = useTranslations();
 
 ## 📚 Documentation Map
 
-All documentation is centralized in the `docs/` directory.
+### 📋 Project Status
 
-### 🏛️ Core Architecture
+- **[Project Status](PROJECT_STATUS.md)** — **Phase 1 (MVP) is 100% Complete.** All REST APIs, Services, and Documentation for the Public E-Shop and Admin core are implemented.
 
-- **Architecture — Per-Layer Documentation:**
-  - **[Domain Layer](src/domain/README.md)** — Entities, business rules, and import constraints.
-  - **[Application Layer](src/application/README.md)** — Services, repository interfaces, and server actions.
-  - **[Infrastructure Layer](src/infrastructure/README.md)** — Database, DI container, and external integrations.
-  - **[Presentation Layer](src/components/README.md)** — Components, hooks, providers, and co-location strategy.
-  - **[App Layer (Routing)](src/app/README.md)** — Next.js App Router, layouts, and data fetching patterns.
+### 📋 System Specification
+
+- **[System Specification](project-planning/SYSTEM_SPECIFICATION.md)** — Complete business & technical spec with diagrams: vision, actors, user flows, architecture, database schema, API, features, roadmap, and NFRs.
+
+### 🏛️ Per-Layer Architecture
+
+- **[Domain Layer](src/domain/README.md)** — Entities, business rules, and import constraints.
+- **[Application Layer](src/application/README.md)** — Services, repository interfaces, and server actions.
+- **[Infrastructure Layer](src/infrastructure/README.md)** — Database, DI container, and external integrations.
+- **[Presentation Layer](src/components/README.md)** — Components, hooks, providers, and co-location strategy.
+- **[App Layer (Routing)](src/app/README.md)** — Next.js App Router, layouts, and data fetching patterns.
 
 ### 📖 Guides
 
 - **[Development Guide](docs/guides/DEVELOPMENT.md)** - Step-by-step feature implementation & setup.
 - **[Scaling Standards](docs/guides/SCALING.md)** - How to grow the codebase maintainably.
 - **[Static Content Guide](docs/guides/STATIC_CONTENT.md)** - Managing page-scoped UI text and i18n.
+- **[Logging Guide](docs/guides/LOGGING.md)** - Understanding the multi-tiered logging architecture.
 - **[Onboarding](docs/onboarding/README.md)** - Getting started for new developers.
+- **[Auth Architecture](docs/AUTH_ARCHITECTURE.md)** - Decentralized session management & Phase 2 roadmap.
 
 ### 📊 Database & Translations
 
@@ -303,6 +310,7 @@ All documentation is centralized in the `docs/` directory.
 - **Code Splitting** - Optimized bundle sizes
 - **TypeScript** - Full type safety
 - **Clean Architecture** - Maintainable and testable code
+- **Advanced Logging** - Multi-tiered (File/DB) logging with async middleware integration
 
 ---
 

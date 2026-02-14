@@ -96,10 +96,10 @@ export const ProductCardUI: React.FC<ProductCardUIProps> = ({
         )}
       </div>
       <div className="p-5 flex flex-col flex-grow">
-        <span className="text-sm text-muted-foreground">{product.category}</span>
+        <span className="text-sm text-muted-foreground">{product.categoryName}</span>
         <h3 className="text-lg font-semibold text-card-foreground truncate mt-1">{product.name}</h3>
         <Price price={product.price} strikePrice={product.strikePrice} className="mt-2" />
-        <Button className="w-full mt-4 mt-auto" onClick={onAddToCart}>
+        <Button className="w-full mt-auto" onClick={onAddToCart}>
           <Icon name="shoppingCart" className="w-5 h-5 ltr:mr-2 rtl:ml-2" />
           {addToCartText}
         </Button>

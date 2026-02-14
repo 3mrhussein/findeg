@@ -1,24 +1,23 @@
-import { getServices } from "@/server/getServices";
+import { container } from "@/infrastructure/di/ServiceContainer";
 import { ProductForm } from "../ProductForm";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 /**
  *
  */
-export default async function CreateProductPage({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
-  const { locale } = await params;
-  const { categories } = getServices();
-  const allCategories = await categories.getAll(locale);
+export default async function NewProductPage() {
+  const categories = await container.adminCategoryService.getAll();
+  const brands = await container.adminBrandService.getAll();
 
-  // Transform categories for select
-  const categoryOptions = allCategories.map((c) => ({
+  // Transform for Select
+  const categoryOptions = categories.map((c) => ({
     id: c.id,
     slug: c.slug,
     name: c.name,
+  }));
+
+  const brandOptions = brands.map((b) => ({
+    id: b.id,
+    name: b.name,
   }));
 
   return (
@@ -26,14 +25,9 @@ export default async function CreateProductPage({
       <div className="flex items-center justify-between space-y-2">
         <h2 className="text-3xl font-bold tracking-tight">Create Product</h2>
       </div>
-      <Card>
-        <CardHeader>
-          <CardTitle>Product Details</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ProductForm categories={categoryOptions} />
-        </CardContent>
-      </Card>
+      <div className="max-w-2xl">
+        <ProductForm categories={categoryOptions} brands={brandOptions} />
+      </div>
     </div>
   );
 }

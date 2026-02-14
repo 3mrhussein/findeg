@@ -47,7 +47,7 @@ const NavLink: React.FC<NavLinkProps> = ({ item, onClick, t }) => {
           onClick={(e) => handleClick(e, item.href)}
           className="relative text-foreground hover:text-primary transition-colors font-medium group text-lg md:text-base flex items-center gap-1"
         >
-          {item.labelKey}{" "}
+          {t(item.labelKey)}{" "}
           <Icon
             name="chevronDown"
             className="w-4 h-4 transition-transform duration-200 group-hover:rotate-180"
@@ -83,7 +83,10 @@ const NavLink: React.FC<NavLinkProps> = ({ item, onClick, t }) => {
                                   onClick={(e) => handleClick(e, sub.href)}
                                   className="flex items-center gap-2 text-sm text-muted-foreground/80 hover:text-primary"
                                 >
-                                  {sub.icon} {t(sub.labelKey)}
+                                  {sub.iconName && (
+                                    <Icon name={sub.iconName as any} className="w-4 h-4" />
+                                  )}{" "}
+                                  {t(sub.labelKey)}
                                 </Link>
                               </li>
                             ))}
@@ -107,7 +110,7 @@ const NavLink: React.FC<NavLinkProps> = ({ item, onClick, t }) => {
       onClick={(e) => handleClick(e, item.href)}
       className="relative text-foreground hover:text-primary transition-colors font-medium group text-lg md:text-base"
     >
-      {item.labelKey}
+      {t(item.labelKey)}
       <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300"></span>
     </Link>
   );

@@ -32,4 +32,14 @@ export interface ICartService {
   ): CartItem[];
 
   getTotals(items: CartItem[]): { totalItems: number; totalPrice: number };
+
+  // Server-side/Managed methods (for API compatibility)
+  getCart(cartId: string): Promise<{ items: CartItem[]; subtotal: number; itemCount: number }>;
+  addItem(
+    cartId: string,
+    input: { productId: number; quantity: number; variant?: any },
+  ): Promise<any>;
+  removeItem(cartId: string, itemId: number): Promise<any>;
+  updateItemQuantity(cartId: string, itemId: number, quantity: number): Promise<any>;
+  clearCart(cartId: string): Promise<void>;
 }

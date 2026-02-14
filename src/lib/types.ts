@@ -14,7 +14,7 @@ import React from "react";
 export interface NavigationSubLink {
   labelKey: string;
   href: string;
-  icon?: React.ReactNode;
+  iconName?: string;
 }
 
 export interface NavigationLink {

@@ -41,7 +41,7 @@ export const ProductListItemUI: React.FC<ProductListItemUIProps> = ({
         />
       </div>
       <div className="p-5 flex flex-col flex-grow sm:w-2/3">
-        <span className="text-sm text-muted-foreground">{product.category}</span>
+        <span className="text-sm text-muted-foreground">{product.categoryName}</span>
         <h3 className="text-lg font-semibold text-card-foreground mt-1">{product.name}</h3>
         <p className="text-muted-foreground text-sm mt-2 line-clamp-2">{product.description}</p>
         <div className="flex-grow"></div>

@@ -6,6 +6,7 @@ import { routing } from "@/i18n/routing";
 import { notFound } from "next/navigation";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import Providers from "@/providers/Providers";
+import { Suspense } from "react";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -97,9 +98,11 @@ export default async function RootLayout({
       <body className={`${poppins.variable} font-sans`} suppressHydrationWarning>
         <NextIntlClientProvider messages={messages}>
           <Providers>
-            <div className="min-h-screen bg-background text-foreground flex flex-col">
-              {children}
-            </div>
+            <Suspense>
+              <div className="min-h-screen bg-background text-foreground flex flex-col">
+                {children}
+              </div>
+            </Suspense>
           </Providers>
         </NextIntlClientProvider>
       </body>

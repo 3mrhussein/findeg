@@ -12,5 +12,5 @@ export interface IProductService {
   getById(id: number, language?: string): Promise<Product | null>;
   getFeaturedProducts(limit?: number, language?: string): Promise<Product[]>;
   searchProducts(query: string, language?: string): Promise<Product[]>;
-  getByCategory(category: string, language?: string): Promise<Product[]>;
+  getByCategory(categoryId: number, language?: string): Promise<Product[]>;
 }

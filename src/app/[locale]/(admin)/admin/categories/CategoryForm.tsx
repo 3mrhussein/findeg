@@ -22,6 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { AdminCategoryInput } from "@/domain/types/admin";
 import { createCategoryAction, updateCategoryAction } from "@/application/actions/admin/categories";
 import { useRouter } from "next/navigation";
@@ -40,6 +41,8 @@ const formSchema = z.object({
     .regex(/^[a-z0-9-]+$/, "Slug must only contain lowercase letters, numbers, and hyphens"),
   parentId: z.string().optional(), // String because select values are strings
   icon: z.string().optional(),
+  sortOrder: z.coerce.number().default(0),
+  isActive: z.boolean().default(true),
 });
 
 interface CategoryFormProps {
@@ -55,7 +58,7 @@ export function CategoryForm({ initialData, categories }: CategoryFormProps) {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
 
-  const defaultValues = initialData
+  const defaultValues: z.infer<typeof formSchema> = initialData
     ? {
         name_en: initialData.translations.find((t: any) => t.language === "en")?.name || "",
         description_en:
@@ -66,6 +69,8 @@ export function CategoryForm({ initialData, categories }: CategoryFormProps) {
         slug: initialData.slug,
         parentId: initialData.parentId?.toString() || "none",
         icon: initialData.icon || "",
+        sortOrder: initialData.sortOrder ? Number(initialData.sortOrder) : 0,
+        isActive: initialData.isActive !== undefined ? initialData.isActive : true,
       }
     : {
         name_en: "",
@@ -75,10 +80,12 @@ export function CategoryForm({ initialData, categories }: CategoryFormProps) {
         slug: "",
         parentId: "none",
         icon: "",
+        sortOrder: 0,
+        isActive: true,
       };
 
   const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(formSchema) as any,
     defaultValues,
   });
 
@@ -93,6 +100,8 @@ export function CategoryForm({ initialData, categories }: CategoryFormProps) {
       parentId:
         values.parentId && values.parentId !== "none" ? parseInt(values.parentId) : undefined,
       icon: values.icon,
+      sortOrder: values.sortOrder,
+      isActive: values.isActive,
       translations: [
         { language: "en", name: values.name_en, description: values.description_en },
         { language: "ar", name: values.name_ar, description: values.description_ar },
@@ -122,6 +131,7 @@ export function CategoryForm({ initialData, categories }: CategoryFormProps) {
         });
       }
     } catch (error) {
+      console.error(error);
       toast({
         variant: "destructive",
         title: "Error",
@@ -232,6 +242,39 @@ export function CategoryForm({ initialData, categories }: CategoryFormProps) {
                   </SelectContent>
                 </Select>
                 <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          <FormField
+            control={form.control}
+            name="sortOrder"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Sort Order</FormLabel>
+                <FormControl>
+                  <Input type="number" {...field} />
+                </FormControl>
+                <FormDescription>Priority in lists (lower is first)</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="isActive"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                <div className="space-y-0.5">
+                  <FormLabel className="text-base">Active</FormLabel>
+                  <FormDescription>Visible in store</FormDescription>
+                </div>
+                <FormControl>
+                  <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                </FormControl>
               </FormItem>
             )}
           />

@@ -79,7 +79,7 @@ const MobileNavLink: React.FC<MobileNavLinkProps> = ({ item, onClick, t }) => {
           onClick={(e) => !hasSubItems && handleClick(e, item.href)}
           className="text-lg font-medium py-2 block text-foreground hover:text-primary transition-colors flex-grow"
         >
-          {item.labelKey}
+          {t(item.labelKey)}
         </Link>
         {hasSubItems && (
           <Button
@@ -118,6 +118,24 @@ const MobileNavLink: React.FC<MobileNavLinkProps> = ({ item, onClick, t }) => {
                         </Badge>
                       )}
                     </Link>
+                    {link.subLinks && (
+                      <ul className="pl-4 mt-1 space-y-1 border-l border-border/30 ml-1">
+                        {link.subLinks.map((sub) => (
+                          <li key={sub.labelKey}>
+                            <Link
+                              href={sub.href}
+                              onClick={onClick}
+                              className="text-muted-foreground/70 hover:text-primary transition-colors text-xs flex items-center gap-2 py-1"
+                            >
+                              {sub.iconName && (
+                                <Icon name={sub.iconName as any} className="w-3 h-3" />
+                              )}
+                              {t(sub.labelKey)}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </li>
                 ))}
               </ul>

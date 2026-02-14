@@ -12,16 +12,17 @@ export default async function EditProductPage({
   params: Promise<{ locale: string; id: string }>;
 }) {
   const { locale, id } = await params;
-  const { adminProduct, categories } = getServices();
+  const { adminProduct, categories, adminBrand } = getServices();
   const productId = parseInt(id);
 
   if (isNaN(productId)) {
     notFound();
   }
 
-  const [product, allCategories] = await Promise.all([
+  const [product, allCategories, allBrands] = await Promise.all([
     adminProduct.getByIdWithTranslations(productId),
     categories.getAll(locale),
+    adminBrand.getAll(),
   ]);
 
   if (!product) {
@@ -35,6 +36,12 @@ export default async function EditProductPage({
     name: c.name,
   }));
 
+  // Added: Transform brands for select
+  const brandOptions = allBrands.map((b) => ({
+    id: b.id,
+    name: b.name,
+  }));
+
   return (
     <div className="flex-1 space-y-4 p-8 pt-6">
       <div className="flex items-center justify-between space-y-2">
@@ -45,7 +52,16 @@ export default async function EditProductPage({
           <CardTitle>Product Details</CardTitle>
         </CardHeader>
         <CardContent>
-          <ProductForm initialData={product} categories={categoryOptions} />
+          <div className="max-w-2xl">
+            {" "}
+            {/* Added: div wrapper */}
+            <ProductForm
+              initialData={product}
+              categories={categoryOptions}
+              brands={brandOptions}
+            />{" "}
+            {/* Modified: Added brands prop */}
+          </div>
         </CardContent>
       </Card>
     </div>

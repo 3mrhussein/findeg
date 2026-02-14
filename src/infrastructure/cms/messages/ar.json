@@ -301,9 +301,31 @@
       "RecentOrders": "الطلبات الأخيرة",
       "ProductList": "قائمة المنتجات",
       "AddProduct": "إضافة منتج",
+      "AddCategory": "إضافة فئة",
+      "ManageBrands": "إدارة العلامات التجارية",
+      "QuickActions": "الإجراءات السريعة",
       "OrderList": "قائمة الطلبات",
       "ExpandSidebar": "توسيع الشريط الجانبي",
       "CollapseSidebar": "طي الشريط الجانبي",
+      "Sidebar": {
+        "Dashboard": "لوحة التحكم",
+        "Products": "المنتجات",
+        "Categories": "الفئات",
+        "Brands": "العلامات التجارية",
+        "Orders": "الطلبات",
+        "Inventory": "المخزون",
+        "Media": "الوسائط",
+        "AuditLog": "سجل التدقيق",
+        "Settings": "الإعدادات"
+      },
+      "Topbar": {
+        "RoleAdmin": "مسؤول",
+        "Profile": "الملف الشخصي",
+        "Logout": "تسجيل الخروج"
+      },
+      "Stats": {
+        "TotalCategories": "إجمالي الفئات"
+      },
       "Table": {
         "ProductName": "اسم المنتج",
         "Category": "الفئة",

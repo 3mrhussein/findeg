@@ -20,7 +20,8 @@ const SearchTemplate: React.FC<SearchTemplateProps> = ({ searchQuery = "" }) => 
     (product) =>
       product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.category.toLowerCase().includes(searchQuery.toLowerCase()),
+      (product.categoryName &&
+        product.categoryName.toLowerCase().includes(searchQuery.toLowerCase())),
   );
 
   return (

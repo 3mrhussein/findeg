@@ -16,16 +16,27 @@ export type CartItem = Product & {
 };
 
 /**
+ * Domain Entity: Cart
  *
+ * Represents a shopping cart with business logic for cart operations.
+ *
+ * CartItem is a flat type (Product & { quantity, selectedVariant })
+ * because the presentation layer references item.id, item.name,
+ * item.price, etc. directly.
  */
 export class CartEntity {
   /**
-   *
+   * Creates a new CartEntity.
+   * @param items - Initial items in the cart
    */
   constructor(private items: CartItem[] = []) {}
 
   /**
-   * Add item to cart or update quantity if exists
+   * Add a product to the cart or update its quantity if it already exists with the same variants.
+   * @param product - The product to add
+   * @param quantity - Quantity to add
+   * @param selectedVariant - Optional variant selections
+   * @returns The updated list of cart items
    */
   addItem(
     product: Product,
@@ -50,7 +61,10 @@ export class CartEntity {
   }
 
   /**
-   * Remove item from cart
+   * Remove an item from the cart based on product ID and variant selection.
+   * @param productId - ID of the product to remove
+   * @param selectedVariant - Optional variant selections to identify the specific item
+   * @returns The updated list of cart items
    */
   removeItem(productId: number, selectedVariant?: { [key: string]: string }): CartItem[] {
     const variantId = this.getVariantId(selectedVariant);
@@ -60,7 +74,11 @@ export class CartEntity {
   }
 
   /**
-   * Update item quantity
+   * Update the quantity of a specific item in the cart.
+   * @param productId - ID of the product
+   * @param quantity - New quantity
+   * @param selectedVariant - Optional variant selections
+   * @returns The updated list of cart items
    */
   updateItemQuantity(
     productId: number,
@@ -80,14 +98,16 @@ export class CartEntity {
   }
 
   /**
-   * Calculate total number of items in cart
+   * Calculate total number of items in the cart (sum of quantities).
+   * @returns Total item count
    */
   getTotalItems(): number {
     return this.items.reduce((total, item) => total + item.quantity, 0);
   }
 
   /**
-   * Calculate total price of cart
+   * Calculate total price of all items in the cart, including variant modifiers.
+   * @returns Total cart price
    */
   getTotalPrice(): number {
     return this.items.reduce((total, item) => {
@@ -109,21 +129,25 @@ export class CartEntity {
   }
 
   /**
-   * Clear all items from cart
+   * Clear all items from the cart.
+   * @returns An empty list of cart items
    */
   clear(): CartItem[] {
     return [];
   }
 
   /**
-   * Get all items
+   * Get a shallow copy of the current cart items.
+   * @returns List of cart items
    */
   getItems(): CartItem[] {
     return [...this.items];
   }
 
   /**
-   * Generate a unique identifier for a variant combination
+   * Generate a unique identifier for a variant combination for comparison.
+   * @param selectedVariant - Map of variant keys to option values
+   * @returns Stringified variant ID
    */
   private getVariantId(selectedVariant?: { [key: string]: string }): string {
     if (!selectedVariant) return "";

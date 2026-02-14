@@ -65,7 +65,25 @@ export function CategoryTable({ data }: CategoryTableProps) {
     }
   };
 
-  const columns: ColumnDef<Category>[] = [
+  // Convert flat list to tree structure for display
+  /**
+   *
+   */
+  const buildTree = (
+    cats: Category[],
+    parentId: number | null | undefined = undefined,
+    depth = 0,
+  ): (Category & { depth: number })[] => {
+    return cats
+      .filter((cat) => (parentId === undefined ? cat.parentId == null : cat.parentId === parentId))
+      .reduce<(Category & { depth: number })[]>((acc, cat) => {
+        return [...acc, { ...cat, depth }, ...buildTree(cats, cat.id, depth + 1)];
+      }, []);
+  };
+
+  const treeData = buildTree(data);
+
+  const columns: ColumnDef<Category & { depth: number }>[] = [
     {
       accessorKey: "id",
       header: "ID",
@@ -81,8 +99,11 @@ export function CategoryTable({ data }: CategoryTableProps) {
        *
        */
       cell: ({ row }) => (
-        <div className="flex items-center gap-2">
-          {/* Indentation logic could be added here if we had full tree structure in flat list */}
+        <div
+          className="flex items-center gap-2"
+          style={{ paddingLeft: `${row.original.depth * 24}px` }}
+        >
+          {row.original.depth > 0 && <span className="text-muted-foreground mr-2">└─</span>}
           <span className="font-medium">{row.getValue("name")}</span>
         </div>
       ),
@@ -130,11 +151,11 @@ export function CategoryTable({ data }: CategoryTableProps) {
 
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
-    data,
+    data: treeData,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onSortingChange: setSorting,
+    // getPaginationRowModel: getPaginationRowModel(), // Disable pagination for tree view
+    // onSortingChange: setSorting, // Disable sorting for tree view to keep hierarchy
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),

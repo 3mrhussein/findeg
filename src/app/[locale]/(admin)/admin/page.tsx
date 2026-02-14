@@ -1,5 +1,7 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getServices } from "@/server/getServices";
 import { Package, Users, ShoppingCart, DollarSign, ArrowUpRight } from "lucide-react";
 import {
   Table,
@@ -12,38 +14,101 @@ import {
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Order } from "@/domain/entities/Order";
+import { DashboardStats } from "@/domain/types/admin";
+import { useTranslations } from "next-intl";
 
 /**
  *
  */
-export default async function AdminDashboardPage() {
-  const { adminDashboard } = getServices();
-  const stats = await adminDashboard.getStats();
-  const recentOrders = await adminDashboard.getRecentOrders();
+export default function AdminDashboardPage() {
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [recentOrders, setRecentOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const t = useTranslations("Pages.Dashboard");
+
+  useEffect(() => {
+    /**
+     *
+     */
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const [statsResponse, ordersResponse] = await Promise.all([
+          fetch("/api/v1/admin/dashboard/stats"),
+          fetch("/api/v1/admin/orders?limit=5"),
+        ]);
+
+        if (!statsResponse.ok || !ordersResponse.ok) {
+          throw new Error("Failed to fetch dashboard data");
+        }
+
+        const statsData = await statsResponse.json();
+        const ordersData = await ordersResponse.json();
+
+        setStats(statsData.data);
+        setRecentOrders(ordersData.data || []);
+      } catch (err) {
+        console.error("Error fetching dashboard data:", err);
+        setError("Failed to load dashboard data. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex-1 p-8 pt-6 space-y-4">
+        <div className="flex items-center justify-between space-y-2">
+          <div className="h-8 w-48 bg-gray-200 animate-pulse rounded"></div>
+          <div className="h-10 w-32 bg-gray-200 animate-pulse rounded"></div>
+        </div>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="h-32 bg-gray-200 animate-pulse rounded-lg"></div>
+          ))}
+        </div>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+          <div className="col-span-4 h-96 bg-gray-200 animate-pulse rounded-lg"></div>
+          <div className="col-span-3 h-96 bg-gray-200 animate-pulse rounded-lg"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex-1 p-8 pt-6 flex items-center justify-center text-red-500">{error}</div>
+    );
+  }
 
   const statCards = [
     {
-      title: "Total Revenue",
-      value: `${stats.currency} ${stats.totalRevenue.toLocaleString()}`,
+      title: t("TotalRevenue"),
+      value: `${stats?.currency || "EGP"} ${stats?.totalRevenue?.toLocaleString() || 0}`,
       icon: DollarSign,
       description: "+20.1% from last month",
     },
     {
-      title: "Orders",
-      value: stats.totalOrders.toLocaleString(),
+      title: t("TotalOrders"),
+      value: stats?.totalOrders?.toLocaleString() || 0,
       icon: ShoppingCart,
       description: "+180.1% from last month",
     },
     {
-      title: "Products",
-      value: stats.totalProducts.toLocaleString(),
+      title: t("TotalProducts"),
+      value: stats?.totalProducts?.toLocaleString() || 0,
       icon: Package,
       description: "+19% from last month",
     },
     {
-      title: "Total Categories",
-      value: stats.totalCategories.toLocaleString(),
-      icon: Users, // Using Users icon as placeholder for Categories if no better icon
+      title: t("Stats.TotalCategories"),
+      value: stats?.totalCategories?.toLocaleString() || 0,
+      icon: Users,
       description: "+201 since last hour",
     },
   ];
@@ -51,9 +116,8 @@ export default async function AdminDashboardPage() {
   return (
     <div className="flex-1 space-y-4 p-8 pt-6">
       <div className="flex items-center justify-between space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
+        <h2 className="text-3xl font-bold tracking-tight">{t("Title")}</h2>
         <div className="flex items-center space-x-2">
-          {/* Calendar DatePicker could go here */}
           <Button>Download Reports</Button>
         </div>
       </div>
@@ -79,15 +143,15 @@ export default async function AdminDashboardPage() {
         {/* Recent Orders Overview */}
         <Card className="col-span-4 transition-all hover:shadow-md">
           <CardHeader>
-            <CardTitle>Recent Orders</CardTitle>
+            <CardTitle>{t("RecentOrders")}</CardTitle>
           </CardHeader>
           <CardContent>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Order ID</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Amount</TableHead>
+                  <TableHead>{t("Table.OrderId")}</TableHead>
+                  <TableHead>{t("Table.Status")}</TableHead>
+                  <TableHead className="text-right">{t("Table.Total")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -120,20 +184,44 @@ export default async function AdminDashboardPage() {
         {/* Quick Actions / Recent Sales (Placeholder) */}
         <Card className="col-span-3 transition-all hover:shadow-md">
           <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
+            <CardTitle>{t("QuickActions")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid gap-4">
+            <div className="grid gap-4 grid-cols-2">
               <Button asChild className="w-full justify-start" variant="outline">
                 <Link href="/admin/products/new">
                   <Package className="mr-2 h-4 w-4" />
-                  Add New Product
+                  {t("AddProduct")}
                 </Link>
               </Button>
               <Button asChild className="w-full justify-start" variant="outline">
                 <Link href="/admin/categories/new">
                   <ArrowUpRight className="mr-2 h-4 w-4" />
-                  Create Category
+                  {t("AddCategory")}
+                </Link>
+              </Button>
+              <Button asChild className="w-full justify-start" variant="outline">
+                <Link href="/admin/admin/brands">
+                  <Package className="mr-2 h-4 w-4" />
+                  {t("ManageBrands")}
+                </Link>
+              </Button>
+              <Button asChild className="w-full justify-start" variant="outline">
+                <Link href="/admin/admin/inventory">
+                  <Package className="mr-2 h-4 w-4" />
+                  {t("Sidebar.Inventory")}
+                </Link>
+              </Button>
+              <Button asChild className="w-full justify-start" variant="outline">
+                <Link href="/admin/admin/orders">
+                  <ShoppingCart className="mr-2 h-4 w-4" />
+                  {t("Sidebar.Orders")}
+                </Link>
+              </Button>
+              <Button asChild className="w-full justify-start" variant="outline">
+                <Link href="/admin/admin/audit-log">
+                  <Users className="mr-2 h-4 w-4" />
+                  {t("Sidebar.AuditLog")}
                 </Link>
               </Button>
             </div>

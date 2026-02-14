@@ -105,7 +105,7 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ allProducts, onFil
   useEffect(() => {
     const filtered = allProducts.filter((product) => {
       const categoryMatch =
-        selectedCategories.length === 0 || selectedCategories.includes(product.category);
+        selectedCategories.length === 0 || selectedCategories.includes(product.categoryName || "");
       const priceMatch = product.price <= priceRange;
       return categoryMatch && priceMatch;
     });

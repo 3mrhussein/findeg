@@ -13,7 +13,7 @@
 import { db } from "../config/database.config";
 import { products, productTranslations } from "../database/schema/products";
 import { eq, and, or, ilike, desc } from "drizzle-orm";
-import type { IProductRepository } from "@/application/repositories/IProductRepository";
+import { IProductRepository, ProductFilters } from "@/application/repositories/IProductRepository";
 import type { Product } from "@/domain/entities/Product";
 
 // Type for query result row
@@ -33,15 +33,21 @@ export class DatabaseProductRepository implements IProductRepository {
    * Create a new product
    */
   async create(input: AdminProductInput): Promise<Product> {
+    const defaultLang = "en";
     const [newProduct] = await db
       .insert(products)
       .values({
         price: input.price.toString(),
-        category: input.category,
+        strikePrice: input.strikePrice ? input.strikePrice.toString() : null,
+        categoryId: input.categoryId,
         images: input.images,
         isNew: input.isNew,
         reviewsCount: 0,
         rating: "0",
+        sku: input.sku,
+        stockQuantity: input.stockQuantity,
+        brandId: input.brandId,
+        isActive: input.isActive,
       })
       .returning();
 
@@ -68,9 +74,14 @@ export class DatabaseProductRepository implements IProductRepository {
       .update(products)
       .set({
         price: input.price.toString(),
-        category: input.category,
+        strikePrice: input.strikePrice ? input.strikePrice.toString() : null,
+        categoryId: input.categoryId,
         images: input.images,
         isNew: input.isNew,
+        sku: input.sku,
+        stockQuantity: input.stockQuantity,
+        brandId: input.brandId,
+        isActive: input.isActive,
       })
       .where(eq(products.id, id));
 
@@ -125,9 +136,13 @@ export class DatabaseProductRepository implements IProductRepository {
       id: product.id,
       price: Number(product.price),
       strikePrice: product.strikePrice ? Number(product.strikePrice) : undefined,
-      category: product.category,
+      categoryId: product.categoryId || undefined,
       images: (product.images as string[]) || [],
       isNew: product.isNew || false,
+      sku: product.sku || undefined,
+      stockQuantity: product.stockQuantity || 0,
+      brandId: product.brandId || undefined,
+      isActive: product.isActive ?? true,
       variants: (product.variants as Record<string, any>) || undefined,
       translations: product.translations.map((t) => ({
         language: t.language,
@@ -184,6 +199,7 @@ export class DatabaseProductRepository implements IProductRepository {
       .select({
         product: products,
         translation: productTranslations,
+        // We could also join category name here if needed, but for now we follow simple mapping
       })
       .from(products)
       .leftJoin(
@@ -235,10 +251,10 @@ export class DatabaseProductRepository implements IProductRepository {
   /**
    * Get products by category
    *
-   * @param category - Category slug
+   * @param categoryId - Category ID
    * @param language - Optional language override
    */
-  async getByCategory(category: string, language?: string): Promise<Product[]> {
+  async getByCategory(categoryId: number, language?: string): Promise<Product[]> {
     const lang = language || this.defaultLanguage;
     const result = await db
       .select({
@@ -250,7 +266,7 @@ export class DatabaseProductRepository implements IProductRepository {
         productTranslations,
         and(eq(productTranslations.productId, products.id), eq(productTranslations.language, lang)),
       )
-      .where(eq(products.category, category))
+      .where(eq(products.categoryId, categoryId))
       .orderBy(desc(products.createdAt));
 
     return result.map((row: ProductQueryResult) => this.mapToDomain(row.product, row.translation));
@@ -279,6 +295,178 @@ export class DatabaseProductRepository implements IProductRepository {
       .limit(limit);
 
     return result.map((row: ProductQueryResult) => this.mapToDomain(row.product, row.translation));
+  }
+
+  /**
+   * Get products by brand
+   */
+  async getByBrand(brandId: number, language?: string): Promise<Product[]> {
+    const lang = language || this.defaultLanguage;
+    const result = await db
+      .select({
+        product: products,
+        translation: productTranslations,
+      })
+      .from(products)
+      .leftJoin(
+        productTranslations,
+        and(eq(productTranslations.productId, products.id), eq(productTranslations.language, lang)),
+      )
+      .where(eq(products.brandId, brandId))
+      .orderBy(desc(products.createdAt));
+
+    return result.map((row: ProductQueryResult) => this.mapToDomain(row.product, row.translation));
+  }
+
+  /**
+   * Get filtered products
+   */
+  async getFiltered(
+    filters: ProductFilters,
+    language?: string,
+  ): Promise<{ products: Product[]; total: number }> {
+    const lang = language || this.defaultLanguage;
+
+    // Build where clause
+    const conditions = [];
+
+    if (filters.categoryId) {
+      conditions.push(eq(products.categoryId, filters.categoryId));
+    }
+
+    if (filters.brandId) {
+      conditions.push(eq(products.brandId, filters.brandId));
+    }
+
+    if (filters.minPrice !== undefined) {
+      conditions.push(sql`${products.price} >= ${filters.minPrice}`);
+    }
+
+    if (filters.maxPrice !== undefined) {
+      conditions.push(sql`${products.price} <= ${filters.maxPrice}`);
+    }
+
+    if (filters.isNew !== undefined) {
+      conditions.push(eq(products.isNew, filters.isNew));
+    }
+
+    if (filters.isActive !== undefined) {
+      conditions.push(eq(products.isActive, filters.isActive));
+    }
+
+    if (filters.search) {
+      const searchTerm = `%${filters.search}%`;
+      conditions.push(
+        or(
+          ilike(productTranslations.name, searchTerm),
+          ilike(productTranslations.description, searchTerm),
+        ),
+      );
+    }
+
+    const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+
+    // Get total count
+    const countResult = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(products)
+      .leftJoin(
+        productTranslations,
+        and(eq(productTranslations.productId, products.id), eq(productTranslations.language, lang)),
+      )
+      .where(whereClause);
+
+    const total = Number(countResult[0].count);
+
+    // Get products
+    const page = filters.page || 1; // Default to 1
+    const limit = filters.limit || 20;
+    const offset = (page - 1) * limit;
+    // Handle offset if provided directly
+    const finalOffset = filters.offset !== undefined ? filters.offset : offset;
+
+    const result = await db
+      .select({
+        product: products,
+        translation: productTranslations,
+      })
+      .from(products)
+      .leftJoin(
+        productTranslations,
+        and(eq(productTranslations.productId, products.id), eq(productTranslations.language, lang)),
+      )
+      .where(whereClause)
+      .orderBy(desc(products.createdAt))
+      .limit(limit)
+      .offset(finalOffset);
+
+    return {
+      products: result.map((row: ProductQueryResult) =>
+        this.mapToDomain(row.product, row.translation),
+      ),
+      total,
+    };
+  }
+
+  /**
+   * Get low stock products
+   */
+  async getLowStock(threshold: number = 10, language?: string): Promise<Product[]> {
+    const lang = language || this.defaultLanguage;
+    const result = await db
+      .select({
+        product: products,
+        translation: productTranslations,
+      })
+      .from(products)
+      .leftJoin(
+        productTranslations,
+        and(eq(productTranslations.productId, products.id), eq(productTranslations.language, lang)),
+      )
+      .where(sql`${products.stockQuantity} <= ${threshold}`)
+      .orderBy(products.stockQuantity);
+
+    return result.map((row: ProductQueryResult) => this.mapToDomain(row.product, row.translation));
+  }
+
+  /**
+   * Update stock quantity
+   */
+  async updateStock(id: number, quantity: number): Promise<void> {
+    await db.update(products).set({ stockQuantity: quantity }).where(eq(products.id, id));
+  }
+
+  /**
+   * Updates both stock quantity and low stock threshold for a product
+   *
+   * @param id - Product ID
+   * @param config - New quantity and optional low stock threshold
+   */
+  async updateStockConfiguration(
+    id: number,
+    config: { quantity: number; lowStockThreshold?: number },
+  ): Promise<void> {
+    const data: any = {
+      stockQuantity: config.quantity,
+    };
+    if (config.lowStockThreshold !== undefined) {
+      data.lowStockThreshold = config.lowStockThreshold;
+    }
+    await db.update(products).set(data).where(eq(products.id, id));
+  }
+
+  /**
+   * Bulk update stock
+   */
+  async bulkUpdateStock(updates: { id: number; quantity: number }[]): Promise<void> {
+    await db.transaction(async (tx) => {
+      for (const update of updates) {
+        await tx
+          .update(products)
+          .set({ stockQuantity: update.quantity })
+          .where(eq(products.id, update.id));
+      }
+    });
   }
 
   /**
@@ -312,12 +500,17 @@ export class DatabaseProductRepository implements IProductRepository {
       longDescription: translation?.longDescription || translation?.description || "",
       price,
       strikePrice,
-      category: dbProduct.category,
+      categoryId: dbProduct.categoryId || undefined,
+      categoryName: "", // We don't have category name here, would need join
       images,
       isNew: dbProduct.isNew || false,
       rating,
       reviewsCount: dbProduct.reviewsCount || 0,
       variants: variants || undefined,
+      sku: dbProduct.sku || undefined,
+      stockQuantity: dbProduct.stockQuantity || 0,
+      brandId: dbProduct.brandId || undefined,
+      isActive: dbProduct.isActive ?? true,
     };
   }
 }

@@ -54,7 +54,7 @@ const ProductDetailTemplate: React.FC<ProductDetailTemplateProps> = ({ productId
   })();
 
   const recommendedProducts = products
-    .filter((p) => p.category === product.category && p.id !== product.id)
+    .filter((p) => p.categoryName === product.categoryName && p.id !== product.id)
     .slice(0, 4);
 
   return (
@@ -70,7 +70,7 @@ const ProductDetailTemplate: React.FC<ProductDetailTemplateProps> = ({ productId
                   Toys: "Nav.Toys.Title",
                   "School Items": "Nav.School.Title",
                 };
-                return t(categoryMap[product.category] || ("Nav.Shop" as any));
+                return t(categoryMap[product.categoryName || ""] || ("Nav.Shop" as any));
               })()}
             </span>
             <div className="flex items-center gap-4 mt-2">

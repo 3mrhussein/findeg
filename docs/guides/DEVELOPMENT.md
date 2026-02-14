@@ -56,6 +56,14 @@ Implement business logic in `src/application/services/`.
 Create your route in `src/app/[locale]/...` and build your components there.
 
 - **Server Components**: (Default) `page.tsx` and co-located components.
+  > **Note (Next.js 16)**: `params` and `searchParams` are now **Promises**. You must `await` them before accessing properties:
+  >
+  > ```tsx
+  > export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
+  >   const { slug } = await params;
+  >   // ...
+  > }
+  > ```
 - **Client Components**: (`'use client'`) For user interaction.
 - **Shared Components**: If reusable, check `src/components/common` or `src/components/ui`.
 

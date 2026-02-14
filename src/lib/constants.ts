@@ -35,7 +35,7 @@ export const products: Product[] = [
       "Experience smooth, skip-free writing with our Premium Gel Pen Set. This collection features 12 unique colors, each formulated with high-pigment ink that dries quickly to prevent smudging. The ergonomic grip ensures comfort during long writing sessions, making them ideal for students, artists, and professionals alike. Whether you are color-coding your notes or creating intricate mandalas, these pens deliver consistent performance and brilliant results.",
     price: 19.99,
     strikePrice: 24.99,
-    category: "Stationary",
+    categoryName: "Stationary",
     images: [
       "https://images.unsplash.com/photo-1585336261022-69c66d117f6e?auto=format&fit=crop&q=80&w=800",
       "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&q=80&w=800",
@@ -60,7 +60,7 @@ export const products: Product[] = [
     longDescription:
       "Spark your child's imagination with our Classic Wooden Building Blocks. This 50-piece set includes a variety of shapes and sizes, all crafted from sustainably sourced hardwood and finished with non-toxic, child-safe paints. These blocks are designed to encourage open-ended play, helping children develop fine motor skills, spatial awareness, and problem-solving abilities. From towering castles to futuristic cities, the possibilities are endless with this timeless toy.",
     price: 34.99,
-    category: "Toys",
+    categoryName: "Toys",
     images: [
       "https://images.unsplash.com/photo-1587654780291-39c9404d746b?auto=format&fit=crop&q=80&w=800",
     ],
@@ -76,7 +76,7 @@ export const products: Product[] = [
       "Our Ergonomic School Backpack is designed with your child's comfort and safety in mind. Featuring padded shoulder straps and a breathable back panel, it provides excellent support even when fully loaded. The durable, water-resistant fabric protects school supplies from the elements, while multiple compartments keep everything organized. For added safety, we've included high-visibility reflective strips on the front and sides, ensuring your child is seen during early morning or late afternoon commutes.",
     price: 45.0,
     strikePrice: 55.0,
-    category: "School Items",
+    categoryName: "School Items",
     images: [
       "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&q=80&w=800",
     ],
@@ -101,7 +101,7 @@ export const products: Product[] = [
     longDescription:
       "Unleash your inner artist with our Professional Watercolor Paint Set. This comprehensive kit features 24 highly pigmented, artist-grade colors that blend beautifully to create a vast spectrum of shades. The set includes two high-quality synthetic brushes (round and flat) and a built-in mixing palette in the lid, making it perfect for painting at home or on the go. Whether you are a seasoned professional or just starting your artistic journey, this set provides the quality and versatility you need.",
     price: 29.99,
-    category: "Stationary",
+    categoryName: "Stationary",
     images: [
       "https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80&w=800",
     ],
@@ -116,7 +116,7 @@ export const products: Product[] = [
     longDescription:
       "Embark on a journey through space with our Solar System Puzzle. This 1000-piece challenge features a stunningly detailed and scientifically accurate illustration of our sun, planets, and major moons. Made from high-quality, recycled cardboard with a glare-free finish, each piece is uniquely cut to ensure a perfect fit. It's not just a puzzle; it's an educational experience that provides hours of entertainment for space enthusiasts of all ages.",
     price: 24.5,
-    category: "Toys",
+    categoryName: "Toys",
     images: [
       "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?auto=format&fit=crop&q=80&w=800",
     ],
@@ -132,7 +132,7 @@ export const products: Product[] = [
     longDescription:
       "Keep your meals fresh and delicious with our Insulated Lunch Box. The high-density insulation and leak-proof liner work together to maintain the temperature of your food, whether you want it cold or warm. The spacious interior fits a variety of containers, while the exterior mesh pocket is perfect for a water bottle. Made from durable, BPA-free materials, it features a reinforced handle and a removable shoulder strap for easy carrying. The wipe-clean interior makes maintenance a breeze.",
     price: 18.0,
-    category: "School Items",
+    categoryName: "School Items",
     images: [
       "https://images.unsplash.com/photo-1606787366850-de6330128bfc?auto=format&fit=crop&q=80&w=800",
     ],
@@ -146,7 +146,7 @@ export const products: Product[] = [
     longDescription:
       "Capture your thoughts and inspirations in our Handcrafted Leather Bound Journal. Each journal is made from genuine, top-grain leather that develops a beautiful patina over time. Inside, you'll find 200 pages of acid-free, cream-colored paper that is perfect for writing, sketching, or even light watercolor. The sturdy binding allows the journal to lay flat, providing a comfortable writing surface. It's a sophisticated and durable companion for your daily reflections or creative ideas.",
     price: 39.99,
-    category: "Stationary",
+    categoryName: "Stationary",
     images: [
       "https://images.unsplash.com/photo-1544816153-12ad5d7133a2?auto=format&fit=crop&q=80&w=800",
     ],
@@ -161,7 +161,7 @@ export const products: Product[] = [
       "Meet your new robotic friend! Our Remote Control Robot is packed with interactive features that will delight children and tech enthusiasts alike. Use the included remote or simple voice commands to make it walk, slide, and turn. It features a fun dancing mode with built-in music and gesture sensing technology that allows you to control its movements with your hands. You can even program a sequence of up to 50 actions for the robot to perform. It's a fun and engaging way to introduce children to the basics of robotics and programming.",
     price: 59.99,
     strikePrice: 79.99,
-    category: "Toys",
+    categoryName: "Toys",
     images: [
       "https://images.unsplash.com/photo-1535378917042-10a22c95931a?auto=format&fit=crop&q=80&w=800",
     ],
@@ -176,7 +176,7 @@ export const products: Product[] = [
     longDescription:
       "Our Hardcover A4 Sketchbook is the perfect canvas for your artistic creations. It contains 100 sheets (200 pages) of 150gsm, acid-free paper that is specifically designed for dry media like pencil, charcoal, graphite, and pastels. The heavy-weight paper prevents bleed-through and can even handle light washes of ink. The durable hardcover protects your work, while the elegant black finish gives it a professional look. Whether you are a student or a professional artist, this sketchbook is an essential tool for your kit.",
     price: 14.99,
-    category: "Stationary",
+    categoryName: "Stationary",
     images: [
       "https://images.unsplash.com/photo-1544816153-12ad5d7133a2?auto=format&fit=crop&q=80&w=800",
     ],
@@ -191,7 +191,7 @@ export const products: Product[] = [
     longDescription:
       "Give the gift of comfort with our Ultra-Soft Plush Teddy Bear. Standing 12 inches tall, this classic bear is made from premium, hypoallergenic plush fabric that is incredibly soft to the touch. It's stuffed with high-quality, resilient filling that keeps its shape even after countless hugs. With its friendly embroidered face and soft, squishy paws, it's the perfect companion for children of all ages. It's also machine washable, making it easy to keep clean and fresh for years of love.",
     price: 15.0,
-    category: "Toys",
+    categoryName: "Toys",
     images: [
       "https://images.unsplash.com/photo-1559440666-37443442d766?auto=format&fit=crop&q=80&w=800",
     ],
@@ -206,7 +206,7 @@ export const products: Product[] = [
     longDescription:
       "Master the art of shading and sketching with our Professional Graphite Pencil Set. This collection includes 12 high-quality pencils in a full range of hardness, from the soft and dark 8B to the hard and light 4H. The leads are break-resistant and provide smooth, consistent lines. The set comes in a sleek, protective metal tin, keeping your pencils organized and easy to transport. Whether you are working on detailed technical drawings or expressive portraits, this set offers the precision and versatility required by serious artists.",
     price: 12.5,
-    category: "Stationary",
+    categoryName: "Stationary",
     images: [
       "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&q=80&w=800",
     ],
@@ -221,7 +221,7 @@ export const products: Product[] = [
     longDescription:
       "Create a magical hideaway for your little ones with our Kids Play Tent. This lightweight and portable tent is incredibly easy to assemble, featuring a simple pop-up design or sturdy, easy-to-connect poles. It's perfect for indoor playrooms or sunny days in the backyard. The breathable fabric and mesh windows ensure good ventilation, while the tie-back door provides easy access. It's a wonderful space for reading, playing with toys, or letting their imaginations run wild. When playtime is over, it folds down compactly into its own carrying bag for easy storage.",
     price: 35.0,
-    category: "Toys",
+    categoryName: "Toys",
     images: [
       "https://images.unsplash.com/photo-1560131113-90435970868a?auto=format&fit=crop&q=80&w=800",
     ],

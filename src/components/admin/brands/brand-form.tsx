@@ -1,0 +1,199 @@
+"use client";
+
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { createBrandAction, updateBrandAction } from "@/application/actions/admin/brands";
+import { Loader2, Plus } from "lucide-react";
+import { Brand } from "@/infrastructure/database/schema/brands";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
+
+const brandSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  slug: z.string().min(2, "Slug must be at least 2 characters"),
+  logoUrl: z.string().optional(),
+  isActive: z.boolean().default(true),
+});
+
+type BrandFormValues = z.infer<typeof brandSchema>;
+
+interface BrandFormProps {
+  brand?: Brand;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+/**
+ *
+ */
+export function BrandForm({ brand, open, onOpenChange }: BrandFormProps) {
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const { toast } = useToast();
+
+  const form = useForm<BrandFormValues>({
+    resolver: zodResolver(brandSchema) as any,
+    defaultValues: {
+      name: brand?.name || "",
+      slug: brand?.slug || "",
+      logoUrl: brand?.logoUrl || "",
+      isActive: brand?.isActive ?? true,
+    },
+  });
+
+  /**
+   *
+   */
+  async function onSubmit(data: BrandFormValues) {
+    setLoading(true);
+    try {
+      let result;
+      if (brand) {
+        result = await updateBrandAction(brand.id, data);
+      } else {
+        result = await createBrandAction(data);
+      }
+
+      if (result.success) {
+        toast({
+          title: `Brand ${brand ? "updated" : "created"}`,
+          description: `Successfully ${brand ? "updated" : "created"} brand.`,
+        });
+        onOpenChange(false);
+        form.reset();
+        router.refresh();
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: result.error || "Something went wrong.",
+        });
+      }
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Something went wrong.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>{brand ? "Edit Brand" : "Create Brand"}</DialogTitle>
+          <DialogDescription>
+            {brand ? "Update brand details below." : "Add a new brand to your store."}
+          </DialogDescription>
+        </DialogHeader>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Brand Name"
+                      {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        // Auto-generate slug if creating new
+                        if (!brand && !form.getValues("slug")) {
+                          form.setValue(
+                            "slug",
+                            e.target.value
+                              .toLowerCase()
+                              .replace(/\s+/g, "-")
+                              .replace(/[^\w\-]+/g, ""),
+                          );
+                        }
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="slug"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Slug</FormLabel>
+                  <FormControl>
+                    <Input placeholder="brand-slug" {...field} />
+                  </FormControl>
+                  <FormDescription>URL-friendly identifier.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="logoUrl"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Logo URL</FormLabel>
+                  <FormControl>
+                    <Input placeholder="https://..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="isActive"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                  <FormControl>
+                    <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                  </FormControl>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel>Active</FormLabel>
+                    <FormDescription>Visible in store.</FormDescription>
+                  </div>
+                </FormItem>
+              )}
+            />
+            <DialogFooter>
+              <Button type="submit" disabled={loading}>
+                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                Save
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
+  );
+}

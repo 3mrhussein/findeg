@@ -6,11 +6,19 @@ import { UserWithPassword } from "@/domain/types/admin";
 import { eq } from "drizzle-orm";
 
 /**
+ * Drizzle User Repository
  *
+ * PostgreSQL implementation of user data access using Drizzle ORM.
+ * Handles user authentication and profile management.
  */
 export class DrizzleUserRepository implements IUserRepository {
   /**
+   * Maps database user to domain entity
    *
+   * Excludes sensitive fields like password from the domain model.
+   *
+   * @param dbUser - Database user record
+   * @returns Domain user entity
    */
   private mapToDomain(dbUser: DbUser): User {
     return {
@@ -25,7 +33,10 @@ export class DrizzleUserRepository implements IUserRepository {
   }
 
   /**
+   * Retrieves a user by ID
    *
+   * @param id - User ID
+   * @returns User entity or null if not found
    */
   async getById(id: number): Promise<User | null> {
     const result = await db.select().from(users).where(eq(users.id, id)).limit(1);
@@ -34,7 +45,10 @@ export class DrizzleUserRepository implements IUserRepository {
   }
 
   /**
+   * Retrieves a user by email
    *
+   * @param email - User email address
+   * @returns User entity or null if not found
    */
   async getByEmail(email: string): Promise<User | null> {
     const result = await db.select().from(users).where(eq(users.email, email)).limit(1);
@@ -43,7 +57,12 @@ export class DrizzleUserRepository implements IUserRepository {
   }
 
   /**
+   * Retrieves a user by email with password hash
    *
+   * Used for authentication. Includes the password field.
+   *
+   * @param email - User email address
+   * @returns User with password or null if not found
    */
   async getByEmailWithPassword(email: string): Promise<UserWithPassword | null> {
     const result = await db.select().from(users).where(eq(users.email, email)).limit(1);
@@ -59,7 +78,10 @@ export class DrizzleUserRepository implements IUserRepository {
   }
 
   /**
+   * Creates a new user
    *
+   * @param user - Partial user data
+   * @returns Created user entity
    */
   async create(user: Partial<User>): Promise<User> {
     const result = await db
@@ -70,7 +92,11 @@ export class DrizzleUserRepository implements IUserRepository {
   }
 
   /**
+   * Updates an existing user
    *
+   * @param id - User ID
+   * @param user - Partial user data to update
+   * @returns Updated user entity
    */
   async update(id: number, user: Partial<User>): Promise<User> {
     const result = await db

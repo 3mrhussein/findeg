@@ -13,38 +13,12 @@ import {
   ChevronLeft,
   ChevronRight,
   Menu,
+  Tag,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { logoutAction } from "@/application/actions/auth/logout";
-
-const sidebarItems = [
-  {
-    title: "Dashboard",
-    href: "/admin",
-    icon: LayoutDashboard,
-  },
-  {
-    title: "Products",
-    href: "/admin/products",
-    icon: Package,
-  },
-  {
-    title: "Categories",
-    href: "/admin/categories",
-    icon: FolderTree,
-  },
-  {
-    title: "Orders",
-    href: "/admin/orders",
-    icon: ShoppingCart,
-  },
-  {
-    title: "Settings",
-    href: "/admin/settings",
-    icon: Settings,
-  },
-];
+import { useTranslations } from "next-intl";
 
 /**
  *
@@ -53,6 +27,55 @@ export function Sidebar() {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const t = useTranslations("Pages.Dashboard");
+
+  const sidebarItems = [
+    {
+      title: t("Sidebar.Dashboard"),
+      href: "/admin",
+      icon: LayoutDashboard,
+    },
+    {
+      title: t("Sidebar.Products"),
+      href: "/admin/products",
+      icon: Package,
+    },
+    {
+      title: t("Sidebar.Categories"),
+      href: "/admin/categories",
+      icon: FolderTree,
+    },
+    {
+      title: t("Sidebar.Brands"),
+      href: "/admin/admin/brands",
+      icon: Tag,
+    },
+    {
+      title: t("Sidebar.Orders"),
+      href: "/admin/admin/orders",
+      icon: ShoppingCart,
+    },
+    {
+      title: t("Sidebar.Inventory"),
+      href: "/admin/admin/inventory",
+      icon: FolderTree,
+    },
+    {
+      title: t("Sidebar.Media"),
+      href: "/admin/admin/media",
+      icon: LayoutDashboard,
+    },
+    {
+      title: t("Sidebar.AuditLog"),
+      href: "/admin/admin/audit-log",
+      icon: LayoutDashboard,
+    },
+    {
+      title: t("Sidebar.Settings"),
+      href: "/admin/settings",
+      icon: Settings,
+    },
+  ];
 
   return (
     <>
@@ -112,10 +135,10 @@ export function Sidebar() {
               variant="outline"
               className={cn("w-full gap-2", collapsed && "justify-center px-0")}
               type="submit"
-              title={collapsed ? "Logout" : undefined}
+              title={collapsed ? t("Topbar.Logout") : undefined}
             >
               <LogOut className="h-4 w-4 shrink-0" />
-              {!collapsed && <span>Logout</span>}
+              {!collapsed && <span>{t("Topbar.Logout")}</span>}
             </Button>
           </form>
         </div>

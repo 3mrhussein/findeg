@@ -22,6 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { AdminProductInput } from "@/domain/types/admin";
 import { createProductAction, updateProductAction } from "@/application/actions/admin/products";
 import { useRouter } from "next/navigation";
@@ -36,7 +37,12 @@ const formSchema = z.object({
   name_ar: z.string().min(2, "Name (AR) must be at least 2 characters"),
   description_ar: z.string().min(10, "Description (AR) must be at least 10 characters"),
   price: z.coerce.number().min(0.01, "Price must be greater than 0"),
-  category: z.string().min(1, "Please select a category"),
+  categoryId: z.string().min(1, "Please select a category"), // String from Select, converted to number on submit
+  brandId: z.string().optional(), // String from Select, converted to number
+  sku: z.string().optional(),
+  stockQuantity: z.coerce.number().min(0).default(0),
+  lowStockThreshold: z.coerce.number().min(0).default(5),
+  isActive: z.boolean().default(true),
   images: z.string().optional(), // Comma separated URLs for simplicity in MVP
 });
 
@@ -47,12 +53,13 @@ interface ProductToEdit extends AdminProductInput {
 interface ProductFormProps {
   initialData?: ProductToEdit;
   categories: { id: number; slug: string; name: string }[];
+  brands: { id: number; name: string }[];
 }
 
 /**
  *
  */
-export function ProductForm({ initialData, categories }: ProductFormProps) {
+export function ProductForm({ initialData, categories, brands }: ProductFormProps) {
   const router = useRouter();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
@@ -67,7 +74,14 @@ export function ProductForm({ initialData, categories }: ProductFormProps) {
         description_ar:
           initialData.translations.find((t) => t.language === "ar")?.description || "",
         price: initialData.price,
-        category: initialData.category,
+        categoryId: initialData.categoryId?.toString() || "",
+        // Fallback for legacy 'category' string if categoryId is missing?
+        // ideally we migrate, but for now we assume new products use categoryId
+        brandId: initialData.brandId?.toString() || "",
+        sku: initialData.sku || "",
+        stockQuantity: initialData.stockQuantity || 0,
+        lowStockThreshold: initialData.lowStockThreshold || 5,
+        isActive: initialData.isActive ?? true,
         images: initialData.images?.join(", ") || "",
       }
     : {
@@ -76,7 +90,12 @@ export function ProductForm({ initialData, categories }: ProductFormProps) {
         name_ar: "",
         description_ar: "",
         price: 0,
-        category: "",
+        categoryId: "",
+        brandId: "",
+        sku: "",
+        stockQuantity: 0,
+        lowStockThreshold: 5,
+        isActive: true,
         images: "",
       };
 
@@ -94,7 +113,12 @@ export function ProductForm({ initialData, categories }: ProductFormProps) {
     // Transform form values to AdminProductInput
     const input: AdminProductInput = {
       price: values.price,
-      category: values.category,
+      categoryId: parseInt(values.categoryId),
+      brandId: values.brandId ? parseInt(values.brandId) : undefined,
+      sku: values.sku,
+      stockQuantity: values.stockQuantity,
+      lowStockThreshold: values.lowStockThreshold,
+      isActive: values.isActive,
       images: values.images
         ? values.images
             .split(",")
@@ -141,6 +165,7 @@ export function ProductForm({ initialData, categories }: ProductFormProps) {
         });
       }
     } catch (error) {
+      console.error(error);
       toast({
         variant: "destructive",
         title: "Error",
@@ -154,6 +179,37 @@ export function ProductForm({ initialData, categories }: ProductFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        {/* Basic Info */}
+        <div className="grid gap-4 md:grid-cols-2">
+          {/* SKU & Price */}
+          <FormField
+            control={form.control}
+            name="sku"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>SKU</FormLabel>
+                <FormControl>
+                  <Input placeholder="PROD-001" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="price"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Price</FormLabel>
+                <FormControl>
+                  <Input type="number" step="0.01" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
         {/* English Section */}
         <div className="grid gap-4 md:grid-cols-2">
           <FormField
@@ -213,24 +269,11 @@ export function ProductForm({ initialData, categories }: ProductFormProps) {
           />
         </div>
 
+        {/* Relations & Stock */}
         <div className="grid gap-4 md:grid-cols-3">
           <FormField
             control={form.control}
-            name="price"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Price</FormLabel>
-                <FormControl>
-                  <Input type="number" step="0.01" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="category"
+            name="categoryId"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Category</FormLabel>
@@ -242,13 +285,85 @@ export function ProductForm({ initialData, categories }: ProductFormProps) {
                   </FormControl>
                   <SelectContent>
                     {categories.map((cat) => (
-                      <SelectItem key={cat.id} value={cat.slug}>
+                      <SelectItem key={cat.id} value={cat.id.toString()}>
                         {cat.name}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
                 <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="brandId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Brand</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a brand" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="">None</SelectItem>
+                    {brands.map((brand) => (
+                      <SelectItem key={brand.id} value={brand.id.toString()}>
+                        {brand.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-3">
+          <FormField
+            control={form.control}
+            name="stockQuantity"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Stock Quantity</FormLabel>
+                <FormControl>
+                  <Input type="number" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="lowStockThreshold"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Low Stock Threshold</FormLabel>
+                <FormControl>
+                  <Input type="number" {...field} />
+                </FormControl>
+                <FormDescription>Alert restriction level</FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="isActive"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                <div className="space-y-0.5">
+                  <FormLabel className="text-base">Active</FormLabel>
+                  <FormDescription>Visible in store</FormDescription>
+                </div>
+                <FormControl>
+                  <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                </FormControl>
               </FormItem>
             )}
           />

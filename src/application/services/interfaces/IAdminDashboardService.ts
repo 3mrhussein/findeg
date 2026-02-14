@@ -21,7 +21,7 @@ export interface IAdminDashboardService {
    * @returns {Promise<DashboardStats>} A promise that resolves to the dashboard statistics object.
    * @throws {Error} If there is an issue calculating the statistics from the repositories.
    */
-  getStats(): Promise<DashboardStats>;
+  getDashboardStats(): Promise<DashboardStats>;
 
   /**
    * Fetches the most recent orders placed in the system.
