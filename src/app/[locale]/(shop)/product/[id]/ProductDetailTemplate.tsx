@@ -1,5 +1,5 @@
 import { useTranslations } from "next-intl";
-import type { Product } from "@/domain/entities/Product";
+import type { Product } from "@/features/catalog/domain/entities/Product";
 import { Container } from "@/components/layout/Container";
 import { Button } from "@/components/ui/button";
 import { ImageGallery } from "./ImageGallery";

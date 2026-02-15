@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { container } from "@/infrastructure/di/ServiceContainer";
+import { container } from "@/features/core/infrastructure/di/ServiceContainer";
 
 /**
  *

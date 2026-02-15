@@ -13,7 +13,7 @@ import { getServices } from "@/server/getServices";
 /**
  * Bulk import products (admin)
  *
- * @param request - Request with JSON body: { products: AdminProductInput[] }
+ * @param request - Request with JSON body: { products: ProductInput[] }
  * @returns Import summary with success/error counts
  */
 export async function POST(request: NextRequest) {

@@ -1,4 +1,4 @@
-import { container } from "@/infrastructure/di/ServiceContainer";
+import { container } from "@/features/core/infrastructure/di/ServiceContainer";
 
 /**
  * Server-side Service Access

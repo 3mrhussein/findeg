@@ -1,4 +1,4 @@
-import { container } from "../src/infrastructure/di/ServiceContainer";
+import { container } from "../src/features/core/infrastructure/di/ServiceContainer";
 import { startOfDay, endOfDay, subDays } from "date-fns";
 
 /**

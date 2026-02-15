@@ -14,8 +14,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Order } from "@/domain/entities/Order";
-import { DashboardStats } from "@/domain/types/admin";
+import { Order } from "@/features/order/domain/entities/Order";
+import { DashboardStats } from "@/features/administration/domain/types";
 import { useTranslations } from "next-intl";
 
 /**

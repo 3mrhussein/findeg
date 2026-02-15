@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import createMiddleware from "next-intl/middleware";
 import { routing } from "./i18n/routing";
-import { JwtSessionManager } from "./infrastructure/auth/JwtSessionManager";
+import { JwtSessionManager } from "@/features/core/infrastructure/auth/JwtSessionManager";
 
 const intlMiddleware = createMiddleware(routing);
 const sessionManager = new JwtSessionManager();

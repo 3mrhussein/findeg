@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
 /**
  * Create new product (admin)
  *
- * @param request - Request with JSON body: AdminProductInput
+ * @param request - Request with JSON body: ProductInput
  * @returns Created product
  */
 export async function POST(request: NextRequest) {

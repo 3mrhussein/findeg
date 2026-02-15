@@ -6,7 +6,7 @@ import { ReviewForm } from "./ReviewForm";
 import { Pagination } from "@/components/common/Pagination";
 import { useTranslations } from "next-intl";
 import { usePagination } from "@/hooks";
-import { Review } from "@/domain/entities/Review";
+import { Review } from "@/features/review/domain/entities/Review";
 
 interface ProductReviewsProps {
   initialReviews: Review[];

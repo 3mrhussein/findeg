@@ -23,8 +23,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { AdminProductInput } from "@/domain/types/admin";
-import { createProductAction, updateProductAction } from "@/application/actions/admin/products";
+import { ProductInput } from "@/features/administration/domain/types";
+import { createProductAction, updateProductAction } from "@/features/catalog/application/actions/product";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
@@ -46,7 +46,7 @@ const formSchema = z.object({
   images: z.string().optional(), // Comma separated URLs for simplicity in MVP
 });
 
-interface ProductToEdit extends AdminProductInput {
+interface ProductToEdit extends ProductInput {
   id: number;
 }
 
@@ -110,8 +110,8 @@ export function ProductForm({ initialData, categories, brands }: ProductFormProp
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
 
-    // Transform form values to AdminProductInput
-    const input: AdminProductInput = {
+    // Transform form values to ProductInput
+    const input: ProductInput = {
       price: values.price,
       categoryId: parseInt(values.categoryId),
       brandId: values.brandId ? parseInt(values.brandId) : undefined,

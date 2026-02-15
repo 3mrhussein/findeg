@@ -10,9 +10,9 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Product } from "@/domain/entities/Product";
+import { Product } from "@/features/catalog/domain/entities/Product";
 import { useState } from "react";
-import { updateStockAction } from "@/application/actions/admin/inventory";
+import { updateStockAction } from "@/features/administration/application/actions/inventory";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Save, AlertTriangle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";

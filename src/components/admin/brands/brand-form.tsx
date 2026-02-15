@@ -25,9 +25,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { createBrandAction, updateBrandAction } from "@/application/actions/admin/brands";
+import { createBrandAction, updateBrandAction } from "@/features/catalog/application/actions/brand";
 import { Loader2, Plus } from "lucide-react";
-import { Brand } from "@/infrastructure/database/schema/brands";
+import type { Brand } from "@/features/catalog/domain/entities/Brand";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 

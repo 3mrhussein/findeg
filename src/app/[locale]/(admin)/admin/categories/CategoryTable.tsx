@@ -22,7 +22,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { Category } from "@/domain/entities/Category";
+import { Category } from "@/features/catalog/domain/entities/Category";
 import { Edit, Trash2, MoreHorizontal } from "lucide-react";
 import {
   DropdownMenu,
@@ -33,7 +33,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Link from "next/link";
-import { deleteCategoryAction } from "@/application/actions/admin/categories";
+import { deleteCategoryAction } from "@/features/catalog/application/actions/category";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 

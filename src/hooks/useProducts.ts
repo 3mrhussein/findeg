@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import type { Product } from "@/domain/entities/Product";
+import type { Product } from "@/features/catalog/domain/entities/Product";
 import type { SortOption } from "@/lib/types";
 
 /**

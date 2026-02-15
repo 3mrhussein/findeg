@@ -8,8 +8,8 @@
 import { NextRequest } from "next/server";
 import { apiResponse, apiError, apiPaginatedResponse } from "../_lib/api-response";
 import { withAuth } from "../_lib/middleware";
-import { container } from "@/infrastructure/di/ServiceContainer";
-import { OrderFilters } from "@/application/repositories/IOrderRepository";
+import { container } from "@/features/core/infrastructure/di/ServiceContainer";
+import { OrderFilters } from "@/features/order/application/interfaces/IOrderRepository";
 
 /**
  * List user's orders

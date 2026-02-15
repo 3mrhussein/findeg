@@ -1,0 +1,57 @@
+"use server";
+
+import { container } from "@/features/core/infrastructure/di/ServiceContainer";
+import { revalidatePath } from "next/cache";
+import { BrandInput } from "@/features/administration/domain/types";
+
+/**
+ * Creates a new brand.
+ *
+ * @param input - The brand data payload.
+ * @returns Success status or error message.
+ */
+export async function createBrandAction(input: BrandInput) {
+  try {
+    const service = container.adminBrandService;
+    await service.create(input);
+    revalidatePath("/admin/brands");
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * Updates an existing brand.
+ *
+ * @param id - The ID of the brand to update.
+ * @param input - The updated brand fields.
+ * @returns Success status or error message.
+ */
+export async function updateBrandAction(id: number, input: BrandInput) {
+  try {
+    const service = container.adminBrandService;
+    await service.update(id, input);
+    revalidatePath("/admin/brands");
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}
+
+/**
+ * Deletes a brand by its ID.
+ *
+ * @param id - The brand ID.
+ * @returns Success status or error message.
+ */
+export async function deleteBrandAction(id: number) {
+  try {
+    const service = container.adminBrandService;
+    await service.delete(id);
+    revalidatePath("/admin/brands");
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}

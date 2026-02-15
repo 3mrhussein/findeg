@@ -1,6 +1,6 @@
-import type { Product } from "@/domain/entities/Product";
-import type { Order } from "@/domain/entities/Order";
-import type { Review } from "@/domain/entities/Review";
+import type { Product } from "@/features/catalog/domain/entities/Product";
+import type { Order } from "@/features/order/domain/entities/Order";
+import type { Review } from "@/features/review/domain/entities/Review";
 
 /**
  * Centralized configuration and mock data.

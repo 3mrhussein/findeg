@@ -1,6 +1,19 @@
-# 🟣 Presentation Layer (Components, Hooks, Providers)
+# Presentation Layer (Components, Hooks, Providers)
 
 > **The UI layer.** Contains all React components, hooks, and providers that make up the visual interface. Components consume domain entities as data and use hooks/providers for client-side state.
+
+---
+
+## Architecture Evolution
+
+The codebase is evolving to a **feature-based structure**. In the target architecture:
+
+- Feature-specific components live in `src/features/{feature}/ui/`
+- The **core** feature holds shared UI: layout, primitives (shadcn), Icon, Pagination, ErrorPage
+
+See [DDD & Clean Architecture Refactor Plan](../../docs/architecture/DDD_CLEAN_ARCHITECTURE_REFACTOR_PLAN.md) and [Bounded Contexts](../../docs/architecture/BOUNDED_CONTEXTS.md) for the full target structure.
+
+**Current state**: Components use `components/ui/`, `components/common/`, `components/layout/`. These will move into features post-refactor.
 
 ---
 
@@ -8,9 +21,9 @@
 
 ```mermaid
 graph TD
-    A[Framework Layer<br/>app/ — Routes] --> B[Presentation Layer]
+    A[Framework Layer<br/>app/ - Routes] --> B[Presentation Layer]
     B --> C[Feature Components<br/>Co-located in app/]
-    B --> D[Shared Components<br/>src/components/]
+    B --> D[Shared Components<br/>components/ or features/*/ui/]
     C --> E[Application Services<br/>Server Components]
     C --> F[Hooks<br/>Client Components]
 
@@ -30,12 +43,12 @@ The `components/`, `hooks/`, and `providers/` directories together form the **pr
 
 ---
 
-## Directory Structure
+## Current Directory Structure
 
 ```
 src/
 ├── components/
-│   ├── ui/               # Primitive components (Button, Card, Dialog — shadcn/radix)
+│   ├── ui/               # Primitive components (Button, Card, Dialog - shadcn/radix)
 │   ├── common/           # Shared business components (ProductCard, CartDrawer)
 │   └── layout/           # Layout components (Header, Footer, Container, Hero)
 ├── hooks/                # Custom React hooks
@@ -58,6 +71,12 @@ src/
     └── utils.ts           # Utility functions
 ```
 
+**Target structure (post-refactor)**:
+- `components/common/ProductCard`, `Price`, etc. → `features/catalog/ui/`
+- `components/common/CartDrawer` → `features/cart/ui/`
+- `components/layout/` → `features/core/ui/layout/`
+- `components/ui/` → **KEEP** at `src/components/ui/` (shadcn CLI default path for `npx shadcn add`)
+
 ---
 
 ## Import Rules
@@ -67,8 +86,8 @@ src/
 | Source                                    | Why                                                 |
 | ----------------------------------------- | --------------------------------------------------- |
 | `react`, `next`, `next-intl`              | This IS the React layer                             |
-| `@/domain/entities/*`                     | Components use entity types for props and display   |
-| `@/domain/types/*`                        | For DTOs like `AdminProductInput`                   |
+| `@/domain/entities/*` or `@/features/*/domain/*` | Components use entity types for props and display   |
+| `@/domain/types/*` or `@/features/administration/domain/types/*` | For DTOs like ProductInput                   |
 | `@/lib/*`                                 | UI utilities, types, constants, icons               |
 | `@/components/*`                          | Components compose other components                 |
 | `@/hooks/*`, `@/providers/*`              | Components use hooks and consume context            |
@@ -91,9 +110,10 @@ src/
 
 Place components **as close as possible to where they are used**:
 
-1. **Route-Specific**: Only used in one page → put it in that page's folder
+1. **Route-Specific**: Only used in one page → put it in that page's folder (`_components/` or co-located)
 2. **Group-Specific**: Used across pages in a group (e.g., `(shop)`) → `_components/` in that group
-3. **Global/Shared**: Used everywhere → `src/components/ui` or `src/components/common`
+3. **Feature-Specific**: Used across a feature → `features/{feature}/ui/` (post-refactor)
+4. **Global/Shared**: Used everywhere → `components/ui` or `features/core/ui/` (layout, primitives)
 
 ---
 
@@ -151,11 +171,11 @@ export function ProductActions({ product }: { product: Product }) {
 
 ---
 
-## Adding a New Feature — Checklist
+## Adding a New Component — Checklist
 
-1. If it's a **primitive/generic** component → `components/ui/`
-2. If it's a **shared business** component → `components/common/`
-3. If it's a **layout** component → `components/layout/`
+1. If it's a **primitive/generic** (shadcn) component → `components/ui/` — **always keep here** for CLI consistency
+2. If it's a **shared business** component → `components/common/` or `features/{feature}/ui/` (post-refactor)
+3. If it's a **layout** component → `components/layout/` or `features/core/ui/layout/` (post-refactor)
 4. If it needs **client-side state** → create a hook in `hooks/`
 5. If it needs **context** → create/update a provider in `providers/`
 6. Add any new **UI-specific types** to `lib/types.ts`

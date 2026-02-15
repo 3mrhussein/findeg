@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { getTranslations } from "next-intl/server";
-import { loginAction } from "@/application/actions/auth/login";
+import { loginAction } from "@/features/identity/application/actions/auth";
 import { Locale } from "next-intl";
 
 /**

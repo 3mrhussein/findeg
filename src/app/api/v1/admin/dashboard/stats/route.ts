@@ -8,7 +8,7 @@
 import { NextRequest } from "next/server";
 import { apiResponse, apiError } from "../../../_lib/api-response";
 import { withAdmin } from "../../../_lib/middleware";
-import { container } from "@/infrastructure/di/ServiceContainer";
+import { container } from "@/features/core/infrastructure/di/ServiceContainer";
 
 /**
  * Get dashboard statistics

@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Order } from "@/domain/entities/Order";
+import { Order } from "@/features/order/domain/entities/Order";
 import { Badge } from "@/components/ui/badge";
 import {
   Select,
@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { updateOrderStatusAction } from "@/application/actions/admin/orders";
+import { updateOrderStatusAction } from "@/features/order/application/actions/order";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import Link from "next/link";

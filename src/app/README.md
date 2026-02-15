@@ -71,8 +71,8 @@ app/
 | Source                                    | Why                                                    |
 | ----------------------------------------- | ------------------------------------------------------ |
 | `@/server/getServices`                    | Server Components fetch data via the service layer     |
-| `@/domain/entities/*`, `@/domain/types/*` | For typing data passed to components                   |
-| `@/components/*`                          | Route files render components                          |
+| `@/domain/entities/*`, `@/domain/types/*` or `@/features/*/domain/*` | For typing data passed to components                   |
+| `@/components/*` or `@/features/*/ui/*`   | Route files render components                          |
 | `@/hooks/*`, `@/providers/*`              | Layouts compose providers; client components use hooks |
 | `@/application/actions/*`                 | Client components call server actions                  |
 | `@/lib/*`                                 | Constants, utilities, UI types                         |
@@ -162,5 +162,5 @@ Route groups `(groupName)` don't affect the URL but apply different `layout.tsx`
 3. If the page needs **server data** → use `getServices()` in the Server Component
 4. If the page needs **client interactivity** → create a `'use client'` component
 5. **Page-specific components** → co-locate in the route directory or `_components/`
-6. **Shared components** → place in `src/components/common/` or `src/components/layout/`
+6. **Shared components** → place in `src/components/common/` or `src/components/layout/` (or `features/core/ui/`, `features/*/ui/` post-refactor)
 7. Add `loading.tsx` and/or `error.tsx` if appropriate

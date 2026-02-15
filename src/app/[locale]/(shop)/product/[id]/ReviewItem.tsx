@@ -1,5 +1,5 @@
 import React from "react";
-import type { Review } from "@/domain/entities/Review";
+import type { Review } from "@/features/review/domain/entities/Review";
 import { Rating } from "@/components/common/Rating";
 
 interface ReviewItemProps {

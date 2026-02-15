@@ -22,7 +22,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
-import { Product } from "@/domain/entities/Product";
+import { Product } from "@/features/catalog/domain/entities/Product";
 import { Edit, Trash2, MoreHorizontal } from "lucide-react";
 import {
   DropdownMenu,

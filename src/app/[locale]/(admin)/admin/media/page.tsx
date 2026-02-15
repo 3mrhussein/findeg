@@ -24,7 +24,7 @@ export default async function MediaPage() {
   // For now, assume I update getServices.ts.
 
   // But wait, I can just use container directly here since it's a Server Component.
-  // import { container } from "@/infrastructure/di/ServiceContainer";
+  // import { container } from "@/features/core/infrastructure/di/ServiceContainer";
   // const files = await container.mediaService.getFiles();
 
   return (
@@ -72,7 +72,7 @@ export default async function MediaPage() {
 }
 
 // Separate component for gallery to be async and handle fetching
-import { container } from "@/infrastructure/di/ServiceContainer";
+import { container } from "@/features/core/infrastructure/di/ServiceContainer";
 
 /**
  *

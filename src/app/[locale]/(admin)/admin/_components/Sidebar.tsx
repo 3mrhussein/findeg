@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { logoutAction } from "@/application/actions/auth/logout";
+import { logoutAction } from "@/features/identity/application/actions/auth";
 import { useTranslations } from "next-intl";
 
 /**

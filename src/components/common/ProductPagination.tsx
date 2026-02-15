@@ -6,7 +6,7 @@ import { Grid } from "@/components/layout/Grid";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/common/Icon";
 import { useTranslations, useLocale } from "next-intl";
-import { Product } from "@/domain/entities/Product";
+import { Product } from "@/features/catalog/domain/entities/Product";
 
 interface ProductPaginationProps {
   products: Product[];

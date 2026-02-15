@@ -4,7 +4,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { Category } from "@/domain/entities/Category";
+import { Category } from "@/features/catalog/domain/entities/Category";
 
 interface CategoryCardProps {
   category: Category;

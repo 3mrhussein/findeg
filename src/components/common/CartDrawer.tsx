@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import type { CartItem } from "@/domain/entities/Cart";
+import type { CartItem } from "@/features/cart/domain/entities/Cart";
 import { Button } from "@/components/ui/button";
 import { QuantityInput } from "@/components/common/QuantityInput";
 import { useTranslations } from "next-intl";

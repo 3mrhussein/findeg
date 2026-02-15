@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { products as allProducts } from "@/lib/constants";
 import type { SortOption, ViewMode } from "@/lib/types";
-import type { Product } from "@/domain/entities/Product";
+import type { Product } from "@/features/catalog/domain/entities/Product";
 import { Grid } from "@/components/layout/Grid";
 import { ProductCard } from "../_components/ProductCard";
 import { FilterSidebar } from "./FilterSidebar";

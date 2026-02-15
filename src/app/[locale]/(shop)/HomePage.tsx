@@ -5,7 +5,7 @@ import { AdBanner } from "./_components/AdBanner";
 import { ScrollingLogoCloud } from "./_components/ScrollingLogoCloud";
 import { ProductPagination } from "@/components/common/ProductPagination";
 import { getServices } from "@/server/getServices";
-import { Category } from "@/domain/entities/Category";
+import { Category } from "@/features/catalog/domain/entities/Category";
 import { getTranslations } from "next-intl/server";
 
 /**

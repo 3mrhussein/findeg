@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import type { Product } from "@/domain/entities/Product";
+import type { Product } from "@/features/catalog/domain/entities/Product";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/common/Icon";

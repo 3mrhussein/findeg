@@ -6,7 +6,7 @@ import { VariantSelector } from "./VariantSelector";
 import { QuantityInput } from "@/components/common/QuantityInput";
 import { useTranslations } from "next-intl";
 import { useCart } from "@/hooks/useCart";
-import { Product } from "@/domain/entities/Product";
+import { Product } from "@/features/catalog/domain/entities/Product";
 
 interface ProductActionsProps {
   product: Product;

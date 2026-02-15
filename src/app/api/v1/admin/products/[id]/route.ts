@@ -41,7 +41,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 /**
  * Update product (admin)
  *
- * @param request - Request with JSON body: AdminProductInput
+ * @param request - Request with JSON body: ProductInput
  * @param params - Route params: { id }
  * @returns Updated product
  */

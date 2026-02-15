@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { categories } from "@/lib/constants";
-import type { Product } from "@/domain/entities/Product";
+import type { Product } from "@/features/catalog/domain/entities/Product";
 import { useTranslations } from "next-intl";
 import {
   Accordion,

@@ -11,10 +11,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Edit, Trash, Plus } from "lucide-react";
 import Image from "next/image";
-import { Brand } from "@/infrastructure/database/schema/brands";
+import type { Brand } from "@/features/catalog/domain/entities/Brand";
 import { useState } from "react";
 import { BrandForm } from "./brand-form";
-import { deleteBrandAction } from "@/application/actions/admin/brands";
+import { deleteBrandAction } from "@/features/catalog/application/actions/brand";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import {

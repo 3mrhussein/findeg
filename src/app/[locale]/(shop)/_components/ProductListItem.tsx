@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Product } from "@/domain/entities/Product";
+import { Product } from "@/features/catalog/domain/entities/Product";
 
 import { Icon } from "@/components/common/Icon";
 import { Price } from "@/components/common/Price";

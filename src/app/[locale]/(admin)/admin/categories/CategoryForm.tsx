@@ -23,8 +23,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { AdminCategoryInput } from "@/domain/types/admin";
-import { createCategoryAction, updateCategoryAction } from "@/application/actions/admin/categories";
+import { CategoryInput } from "@/features/administration/domain/types";
+import {
+  createCategoryAction,
+  updateCategoryAction,
+} from "@/features/catalog/application/actions/category";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
@@ -95,7 +98,7 @@ export function CategoryForm({ initialData, categories }: CategoryFormProps) {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setLoading(true);
 
-    const input: AdminCategoryInput = {
+    const input: CategoryInput = {
       slug: values.slug,
       parentId:
         values.parentId && values.parentId !== "none" ? parseInt(values.parentId) : undefined,

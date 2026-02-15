@@ -2,7 +2,7 @@
  * Admin Dashboard - Audit Log
  */
 
-import { container } from "@/infrastructure/di/ServiceContainer";
+import { container } from "@/features/core/infrastructure/di/ServiceContainer";
 import { format } from "date-fns";
 
 /**

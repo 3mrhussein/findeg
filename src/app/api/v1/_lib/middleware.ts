@@ -7,8 +7,8 @@
  */
 
 import { apiError } from "./api-response";
-import { JwtSessionManager } from "@/infrastructure/auth/JwtSessionManager";
-import type { SessionPayload } from "@/domain/types/admin";
+import { JwtSessionManager } from "@/features/core/infrastructure/auth/JwtSessionManager";
+import type { SessionPayload } from "@/features/identity/domain/types/auth";
 
 const sessionManager = new JwtSessionManager();
 

@@ -171,40 +171,54 @@ graph TD
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
-### Component Organization (Feature-based)
+### Current Structure (Flat Layers)
 
 ```
 src/
 ├── app/[locale]/           # Next.js App Router (Routes & Pages)
-│   ├── (shop)/            # Shop routes (Co-located components)
+│   ├── (shop)/            # Shop routes
 │   ├── (dashboard)/       # Dashboard routes
 │   ├── (admin)/           # Admin routes
 │   └── (auth)/            # Authentication routes
 │
 ├── components/             # Reusable Components
-│   ├── common/            # Domain-specific shared components (ProductCard, Price)
-│   ├── layout/            # Structural components (Header, Footer)
-│   └── ui/                # Generic UI primitives (shadcn - Button, Input)
+│   ├── common/            # Domain-specific shared (ProductCard, Price)
+│   ├── layout/            # Header, Footer, Container
+│   └── ui/                # Primitives (shadcn)
 │
-├── hooks/                  # Global Hooks (useCart, useUser)
-├── providers/              # Global Providers (Theme, Auth)
+├── hooks/                  # useCart, useUser
+├── providers/              # Theme, Auth, Cart
 ├── lib/                    # Utilities & Constants
-├── server/                 # Server-side utilities
-│
-├── application/            # Business Logic (Services)
-├── domain/                 # Core Entities & Types
-└── infrastructure/         # Database & External Services
+├── server/                 # getServices
+├── application/            # Services, repository interfaces
+├── domain/                 # Entities & Types
+└── infrastructure/         # Database, auth, repositories
+```
+
+### Target Structure (Feature-Based with Core)
+
+The codebase is evolving to a **feature-based** structure. See [DDD & Clean Architecture Refactor Plan](docs/architecture/DDD_CLEAN_ARCHITECTURE_REFACTOR_PLAN.md).
+
+```
+src/features/
+├── core/              # Shared: auth, persistence, storage, layout
+├── catalog/           # Products, categories, brands
+├── cart/              # Shopping cart
+├── order/             # Checkout, orders
+├── identity/          # Users, auth service
+├── administration/    # Admin CRUD, audit, dashboard
+├── review/            # Product reviews
+└── media/             # File upload, storage
 ```
 
 **Organization Principles:**
 
-- **Routes (src/app):** Features are co-located with their routes for better cohesion.
-- **Common:** Reusable components that carry domain meaning (e.g., specific ProductCard).
-- **UI:** Pure, generic primitives with no domain knowledge (shadcn).
-- **Layout:** Structural components like Header, Footer, and Containers.
-- **Hooks/Providers:** Global state and logic extracted for reusability.
+- **Features:** Each feature has `domain/`, `application/`, `infrastructure/`, `ui/`.
+- **Core:** Shared cross-cutting concerns (auth, DB, layout). shadcn primitives stay at `src/components/ui/`.
+- **Reusability:** Shared code in core; features depend on core.
+- **Readability:** All catalog-related code lives in `features/catalog/`.
 
 ---
 
@@ -265,6 +279,12 @@ const t = useTranslations();
 ### 📋 System Specification
 
 - **[System Specification](project-planning/SYSTEM_SPECIFICATION.md)** — Complete business & technical spec with diagrams: vision, actors, user flows, architecture, database schema, API, features, roadmap, and NFRs.
+
+### Architecture Refactor
+
+- **[DDD & Clean Architecture Refactor Plan](docs/architecture/DDD_CLEAN_ARCHITECTURE_REFACTOR_PLAN.md)** — Full refactor plan for feature-based structure with **core** and bounded contexts (catalog, cart, order, identity, administration, review).
+- **[Bounded Contexts](docs/architecture/BOUNDED_CONTEXTS.md)** — Context map and responsibilities per feature.
+- **[Feature Structure](docs/architecture/FEATURE_STRUCTURE.md)** — Standard layout and conventions for each feature.
 
 ### 🏛️ Per-Layer Architecture
 

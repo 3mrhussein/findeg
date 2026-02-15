@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import type { Order } from "@/domain/entities/Order";
+import type { Order } from "@/features/order/domain/entities/Order";
 import { useTranslations } from "next-intl";
 import {
   Table,
