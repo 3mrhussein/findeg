@@ -1,12 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { VariantSelector } from "./VariantSelector";
-import { QuantityInput } from "@/components/common/QuantityInput";
+import React from "react";
 import { useTranslations } from "next-intl";
-import { useCart } from "@/hooks/useCart";
 import { Product } from "@/features/catalog/domain/entities/Product";
+import { ProductActionsView } from "./ProductActionsView";
+import { useProductActionsController } from "./useProductActionsController";
+import { useToast } from "@/hooks/use-toast";
 
 interface ProductActionsProps {
   product: Product;
@@ -17,37 +16,38 @@ interface ProductActionsProps {
  */
 export const ProductActions: React.FC<ProductActionsProps> = ({ product }) => {
   const t = useTranslations();
-  const { addToCart } = useCart();
-  const [quantity, setQuantity] = useState(1);
-  const [selectedVariants, setSelectedVariants] = useState<{ [key: string]: string }>({});
+  const { toast } = useToast();
+  const {
+    isAddingToCart,
+    quantity,
+    selectedVariants,
+    setQuantity,
+    setSelectedVariantValue,
+    handleAddToCart,
+  } = useProductActionsController(product);
 
   /**
-   *
+   * Handles add-to-cart action and shows a confirmation toast.
    */
-  const handleAddToCart = () => {
-    addToCart(product, quantity, selectedVariants);
+  const onAddToCart = () => {
+    handleAddToCart();
+    toast({
+      title: t("Feedback.CartAddedTitle"),
+      description: t("Feedback.CartAddedDescription", { name: product.name }),
+    });
   };
 
   return (
-    <div className="mt-8">
-      {product.variants &&
-        Object.keys(product.variants).map((variantName) => (
-          <VariantSelector
-            key={variantName}
-            variant={product.variants![variantName]}
-            selectedValue={selectedVariants[variantName]}
-            onValueChange={(value) =>
-              setSelectedVariants((prev) => ({ ...prev, [variantName]: value }))
-            }
-          />
-        ))}
-
-      <div className="flex items-center gap-4 mt-8">
-        <QuantityInput quantity={quantity} setQuantity={setQuantity} />
-        <Button size="lg" className="w-full" onClick={handleAddToCart}>
-          {t("Pages.ProductDetail.AddToCart")}
-        </Button>
-      </div>
-    </div>
+    <ProductActionsView
+      product={product}
+      isAddingToCart={isAddingToCart}
+      quantity={quantity}
+      selectedVariants={selectedVariants}
+      addToCartLabel={t("Pages.ProductDetail.AddToCart")}
+      addToCartLoadingLabel={t("Feedback.AddingToCart")}
+      onQuantityChange={setQuantity}
+      onVariantChange={setSelectedVariantValue}
+      onAddToCart={onAddToCart}
+    />
   );
 };

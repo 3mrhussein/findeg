@@ -9,6 +9,10 @@ import { NextRequest } from "next/server";
 import { apiResponse, apiError } from "../../../_lib/api-response";
 import { withAdmin } from "../../../_lib/middleware";
 import { getServices } from "@/server/getServices";
+import {
+  InventoryUpdateBodySchema,
+  InventoryUpdateSchema,
+} from "@/features/administration/domain/types";
 
 /**
  *
@@ -20,13 +24,19 @@ export async function PATCH(
   return withAdmin(request, async () => {
     try {
       const { productId: productIdParam } = await params;
-      const productId = parseInt(productIdParam);
+      const productId = parseInt(productIdParam, 10);
       const body = await request.json();
 
-      // Validate body manually or use Zod if available
-      if (typeof body.quantity !== "number") {
-        return apiError("Quantity is required and must be a number", 400);
+      const parseResult = InventoryUpdateBodySchema.safeParse(body);
+      if (!parseResult.success) {
+        const msg = parseResult.error.issues[0]?.message ?? "Invalid request";
+        return apiError(msg, 400);
       }
+
+      const update = InventoryUpdateSchema.parse({
+        productId,
+        ...parseResult.data,
+      });
 
       const { adminInventory } = getServices();
 
@@ -42,8 +52,8 @@ export async function PATCH(
       return apiResponse({
         message: "Inventory updated successfully",
         productId,
-        quantity: body.quantity,
-        lowStockThreshold: body.lowStockThreshold,
+        quantity: update.quantity,
+        lowStockThreshold: update.lowStockThreshold,
       });
     } catch (error) {
       return apiError(error instanceof Error ? error.message : "Failed to update inventory", 500);
@@ -61,18 +71,28 @@ export async function PUT(
   return withAdmin(request, async () => {
     try {
       const { productId: productIdParam } = await params;
-      const productId = parseInt(productIdParam);
+      const productId = parseInt(productIdParam, 10);
       const body = await request.json();
-      const { quantity } = body;
 
-      if (quantity === undefined || quantity < 0) {
-        return apiError("Valid quantity is required", 400);
+      const parseResult = InventoryUpdateBodySchema.safeParse(body);
+      if (!parseResult.success) {
+        const msg = parseResult.error.issues[0]?.message ?? "Invalid request";
+        return apiError(msg, 400);
       }
 
-      const { adminInventory } = getServices();
-      await adminInventory.updateStock({ productId, quantity });
+      const update = InventoryUpdateSchema.parse({
+        productId,
+        ...parseResult.data,
+      });
 
-      return apiResponse({ message: "Stock updated successfully", productId, quantity });
+      const { adminInventory } = getServices();
+      await adminInventory.updateStock(update);
+
+      return apiResponse({
+        message: "Stock updated successfully",
+        productId,
+        quantity: update.quantity,
+      });
     } catch (error) {
       return apiError(error instanceof Error ? error.message : "Failed to update stock", 500);
     }

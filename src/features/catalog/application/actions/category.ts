@@ -1,8 +1,10 @@
 "use server";
 
 import { container } from "@/features/core/infrastructure/di/ServiceContainer";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { CategoryInput } from "@/features/administration/domain/types";
+import { CACHE_TAGS } from "@/features/core/domain/constants/cache-tags";
+import { resolveErrorMessage } from "@/features/core/domain/errors";
 
 /**
  * Creates a new product category.
@@ -15,9 +17,11 @@ export async function createCategoryAction(input: CategoryInput) {
     const service = container.adminCategoryService;
     await service.create(input);
     revalidatePath("/admin/categories");
+    revalidateTag(CACHE_TAGS.CATALOG_CATEGORIES, "max");
+    revalidateTag(CACHE_TAGS.CATALOG_PRODUCTS, "max");
     return { success: true };
   } catch (error: any) {
-    return { success: false, error: error.message };
+    return { success: false, error: resolveErrorMessage(error, "SYSTEM_UNEXPECTED_ERROR") };
   }
 }
 
@@ -33,9 +37,11 @@ export async function updateCategoryAction(id: number, input: CategoryInput) {
     const service = container.adminCategoryService;
     await service.update(id, input);
     revalidatePath("/admin/categories");
+    revalidateTag(CACHE_TAGS.CATALOG_CATEGORIES, "max");
+    revalidateTag(CACHE_TAGS.CATALOG_PRODUCTS, "max");
     return { success: true };
   } catch (error: any) {
-    return { success: false, error: error.message };
+    return { success: false, error: resolveErrorMessage(error, "SYSTEM_UNEXPECTED_ERROR") };
   }
 }
 
@@ -50,8 +56,10 @@ export async function deleteCategoryAction(id: number) {
     const service = container.adminCategoryService;
     await service.delete(id);
     revalidatePath("/admin/categories");
+    revalidateTag(CACHE_TAGS.CATALOG_CATEGORIES, "max");
+    revalidateTag(CACHE_TAGS.CATALOG_PRODUCTS, "max");
     return { success: true };
   } catch (error: any) {
-    return { success: false, error: error.message };
+    return { success: false, error: resolveErrorMessage(error, "SYSTEM_UNEXPECTED_ERROR") };
   }
 }

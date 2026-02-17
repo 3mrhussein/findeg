@@ -1,151 +1,15 @@
 "use client";
-import React, { useState } from "react";
+
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
-import { Icon } from "@/components/common/Icon";
 import { Input } from "@/components/ui/input";
 import { Logo } from "@/components/common/Logo";
-import { useRouter } from "@/i18n/routing";
+import { Icon } from "@/components/common/Icon";
+import { HeaderLocaleThemeControls } from "./HeaderLocaleThemeControls";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import type { NavigationItem, Theme } from "@/lib/types";
-import { Badge } from "@/components/ui/badge";
-
-interface LanguageSwitcherProps {
-  language: string;
-  onToggleLanguage: () => void;
-}
-
-/**
- *
- */
-const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ language, onToggleLanguage }) => {
-  return (
-    <Button variant="ghost" onClick={onToggleLanguage} size="sm">
-      {language === "en" ? "AR" : "EN"}
-    </Button>
-  );
-};
-
-interface ThemeSwitcherProps {
-  theme: Theme;
-  onToggleTheme: () => void;
-}
-
-/**
- *
- */
-const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({ theme, onToggleTheme }) => {
-  return (
-    <Button variant="ghost" size="icon" onClick={onToggleTheme} aria-label="Toggle theme">
-      <Icon name={theme === "light" ? "moon" : "sun"} className="w-6 h-6" />
-    </Button>
-  );
-};
-
-interface MobileNavLinkProps {
-  item: NavigationItem;
-  onClick: () => void;
-  t: (key: any) => string;
-}
-
-/**
- *
- */
-const MobileNavLink: React.FC<MobileNavLinkProps> = ({ item, onClick, t }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const router = useRouter();
-
-  /**
-   *
-   */
-  const handleClick = (e: React.MouseEvent, href: string) => {
-    if (item.id === "nav_ai_generator") {
-      e.preventDefault();
-      router.push("/");
-      setTimeout(() => {
-        document.querySelector("#ai-generator")?.scrollIntoView({ behavior: "smooth" });
-      }, 100);
-    }
-    onClick();
-  };
-
-  const hasSubItems = item.isMegaMenu && item.megaMenuColumns && item.megaMenuColumns.length > 0;
-
-  return (
-    <div className="w-full">
-      <div className="flex items-center justify-between w-full">
-        <Link
-          href={item.href}
-          onClick={(e) => !hasSubItems && handleClick(e, item.href)}
-          className="text-lg font-medium py-2 block text-foreground hover:text-primary transition-colors flex-grow"
-        >
-          {t(item.labelKey)}
-        </Link>
-        {hasSubItems && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="p-1 h-auto"
-          >
-            <Icon
-              name="chevronDown"
-              className={`w-5 h-5 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
-            />
-          </Button>
-        )}
-      </div>
-
-      {hasSubItems && isExpanded && (
-        <div className="pl-4 mt-2 space-y-4 border-l-2 border-border/50 ml-2">
-          {item.megaMenuColumns?.map((col) => (
-            <div key={col.titleKey} className="space-y-2">
-              <h4 className="font-semibold text-sm text-foreground/80 uppercase tracking-wider">
-                {t(col.titleKey)}
-              </h4>
-              <ul className="space-y-2">
-                {col.links.map((link) => (
-                  <li key={link.labelKey}>
-                    <Link
-                      href={link.href}
-                      onClick={onClick}
-                      className="text-muted-foreground hover:text-primary transition-colors text-sm flex items-center gap-2 py-1"
-                    >
-                      {t(link.labelKey)}
-                      {link.isNew && (
-                        <Badge variant="default" className="text-[10px] h-4 px-1">
-                          NEW
-                        </Badge>
-                      )}
-                    </Link>
-                    {link.subLinks && (
-                      <ul className="pl-4 mt-1 space-y-1 border-l border-border/30 ml-1">
-                        {link.subLinks.map((sub) => (
-                          <li key={sub.labelKey}>
-                            <Link
-                              href={sub.href}
-                              onClick={onClick}
-                              className="text-muted-foreground/70 hover:text-primary transition-colors text-xs flex items-center gap-2 py-1"
-                            >
-                              {sub.iconName && (
-                                <Icon name={sub.iconName as any} className="w-3 h-3" />
-                              )}
-                              {t(sub.labelKey)}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
+import { useMobileMenuController } from "./useMobileMenuController";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -160,10 +24,27 @@ interface MobileMenuProps {
   onLogout: () => void;
 }
 
-/**
- *
- */
-export const MobileMenu: React.FC<MobileMenuProps> = ({
+function MobileMenuLink({
+  href,
+  label,
+  onNavigate,
+}: {
+  href: string;
+  label: string;
+  onNavigate: () => void;
+}) {
+  return (
+    <Link
+      href={href}
+      onClick={onNavigate}
+      className="block w-full rounded-md px-3 py-2 text-base font-medium text-foreground hover:bg-muted"
+    >
+      {label}
+    </Link>
+  );
+}
+
+export function MobileMenu({
   isOpen,
   onClose,
   items,
@@ -174,108 +55,92 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
   onToggleTheme,
   isLoggedIn,
   onLogout,
-}) => {
-  const [searchQuery, setSearchQuery] = useState("");
+}: MobileMenuProps) {
   const t = useTranslations();
-  const router = useRouter();
-
-  /**
-   *
-   */
-  const onSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      onSearch(searchQuery.trim());
-      setSearchQuery("");
-      onClose();
-    }
-  };
+  const translate = (key: string) => t(key as never);
+  const {
+    searchQuery,
+    setSearchQuery,
+    onSearchSubmit,
+    onGoToSchoolLists,
+    onGoToAuth,
+    onLogoutClick,
+  } = useMobileMenuController({ onSearch, onClose, onLogout });
 
   return (
-    <div
-      className={`fixed inset-0 bg-card z-50 transform ${
-        isOpen ? "translate-x-0" : "ltr:translate-x-full rtl:-translate-x-full"
-      } transition-transform duration-300 ease-in-out md:hidden flex flex-col`}
-    >
-      <div className="container mx-auto px-4 flex flex-col h-full overflow-y-auto">
-        <div className="flex justify-between items-center py-4 border-b flex-shrink-0">
-          <Logo />
-          <Button variant="ghost" size="icon" onClick={onClose} aria-label="Close menu">
-            <Icon name="x" className="w-6 h-6 text-foreground" />
-          </Button>
-        </div>
-
-        <div className="p-4 flex-shrink-0">
-          <form onSubmit={onSearchSubmit} className="w-full relative">
-            <Input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={t("Nav.SearchPlaceholder")}
-              className="rounded-full ltr:pr-12 rtl:pl-12 h-11"
-            />
-            <Button
-              size="icon"
-              variant="ghost"
-              type="submit"
-              className="absolute top-1/2 -translate-y-1/2 ltr:right-1 rtl:left-1 text-muted-foreground"
-              aria-label="Search"
-            >
-              <Icon name="search" className="w-6 h-6" />
+    <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <SheetContent side="right" className="w-full max-w-sm p-0">
+        <SheetHeader className="border-b p-4">
+          <SheetTitle className="sr-only">{t("Layout.Header.OpenMenuButton")}</SheetTitle>
+          <div className="flex items-center justify-between">
+            <Logo />
+            <Button variant="ghost" size="icon" onClick={onClose} className="h-10 w-10">
+              <Icon name="x" className="w-6 h-6 text-foreground" />
             </Button>
-          </form>
-        </div>
-
-        <nav className="flex flex-col items-start space-y-2 p-4 flex-grow">
-          {items.map((item) => (
-            <MobileNavLink key={item.labelKey} item={item} onClick={onClose} t={t} />
-          ))}
-        </nav>
-
-        <div className="mt-auto p-4 border-t flex-shrink-0 bg-card">
-          <div className="flex justify-around items-center mb-4">
-            <ThemeSwitcher theme={theme} onToggleTheme={onToggleTheme} />
-            <LanguageSwitcher language={language} onToggleLanguage={onToggleLanguage} />
           </div>
-          {!isLoggedIn ? (
-            <div className="space-y-2">
+        </SheetHeader>
+
+        <div className="flex h-full flex-col overflow-y-auto pb-8">
+          <div className="border-b p-4">
+            <form onSubmit={onSearchSubmit} className="relative">
+              <Input
+                type="text"
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+                placeholder={t("Nav.SearchPlaceholder")}
+                className="h-11 rounded-full ltr:pr-12 rtl:pl-12"
+              />
               <Button
-                size="lg"
-                className="w-full"
-                onClick={() => {
-                  onClose();
-                  router.push("/registration");
-                }}
+                size="icon"
+                variant="ghost"
+                type="submit"
+                className="absolute top-1/2 h-10 w-10 -translate-y-1/2 ltr:right-1 rtl:left-1"
+                aria-label={t("Layout.Header.SearchButton")}
               >
-                {t("Pages.Auth.RegistrationTitle")}
+                <Icon name="search" className="w-5 h-5" />
               </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                className="w-full"
-                onClick={() => {
-                  onClose();
-                  router.push("/registration");
-                }}
-              >
-                {t("Pages.Auth.LoginTitle")}
-              </Button>
-            </div>
-          ) : (
-            <Button
-              variant="outline"
-              size="lg"
-              className="w-full"
-              onClick={() => {
-                onClose();
-                onLogout();
-              }}
-            >
-              {t("Pages.MyAccount.Logout")}
+            </form>
+            <Button variant="outline" className="mt-3 w-full" onClick={onGoToSchoolLists}>
+              {t("Nav.SchoolLists")}
             </Button>
-          )}
+          </div>
+
+          <nav className="flex flex-col gap-1 p-4">
+            {items.map((item) => (
+              <MobileMenuLink
+                key={item.labelKey}
+                href={item.href}
+                onNavigate={onClose}
+                label={translate(item.labelKey)}
+              />
+            ))}
+          </nav>
+
+          <div className="mt-auto border-t p-4">
+            <HeaderLocaleThemeControls
+              language={language}
+              onToggleLanguage={onToggleLanguage}
+              theme={theme}
+              onToggleTheme={onToggleTheme}
+              className="mb-4 flex justify-around"
+            />
+            {!isLoggedIn ? (
+              <div className="space-y-2">
+                <Button size="lg" className="w-full" onClick={onGoToAuth}>
+                  {t("Pages.Auth.RegistrationTitle")}
+                </Button>
+                <Button variant="outline" size="lg" className="w-full" onClick={onGoToAuth}>
+                  {t("Pages.Auth.LoginTitle")}
+                </Button>
+              </div>
+            ) : (
+              <Button variant="outline" size="lg" className="w-full" onClick={onLogoutClick}>
+                {t("Pages.MyAccount.Logout")}
+              </Button>
+            )}
+          </div>
         </div>
-      </div>
-    </div>
+      </SheetContent>
+    </Sheet>
   );
-};
+}

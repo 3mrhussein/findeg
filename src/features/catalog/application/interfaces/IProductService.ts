@@ -6,6 +6,8 @@
  */
 
 import { Product } from "@/features/catalog/domain/entities/Product";
+import { CustomerGroup, UomCode } from "@/features/core/domain/types/common";
+import { VariantSellOption } from "./IProductRepository";
 
 export interface IProductService {
   /**
@@ -51,4 +53,23 @@ export interface IProductService {
    * @returns A list of products in the category.
    */
   getByCategory(categoryId: number, language?: string): Promise<Product[]>;
+
+  /**
+   * Retrieves sell options (UoM and optional pricing) for a specific variant.
+   */
+  getVariantSellOptions(
+    productId: number,
+    variantKey: string,
+    customerGroup?: CustomerGroup,
+  ): Promise<VariantSellOption[]>;
+
+  /**
+   * Resolves a concrete unit price for a variant/UoM/customer group tuple.
+   */
+  quoteVariantUnitPrice(
+    productId: number,
+    variantKey: string,
+    uomCode: UomCode,
+    customerGroup: CustomerGroup,
+  ): Promise<{ unitPrice: number; currency: string; isSellable: boolean } | null>;
 }

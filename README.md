@@ -173,33 +173,7 @@ graph TD
 
 ## Project Structure
 
-### Current Structure (Flat Layers)
-
-```
-src/
-├── app/[locale]/           # Next.js App Router (Routes & Pages)
-│   ├── (shop)/            # Shop routes
-│   ├── (dashboard)/       # Dashboard routes
-│   ├── (admin)/           # Admin routes
-│   └── (auth)/            # Authentication routes
-│
-├── components/             # Reusable Components
-│   ├── common/            # Domain-specific shared (ProductCard, Price)
-│   ├── layout/            # Header, Footer, Container
-│   └── ui/                # Primitives (shadcn)
-│
-├── hooks/                  # useCart, useUser
-├── providers/              # Theme, Auth, Cart
-├── lib/                    # Utilities & Constants
-├── server/                 # getServices
-├── application/            # Services, repository interfaces
-├── domain/                 # Entities & Types
-└── infrastructure/         # Database, auth, repositories
-```
-
-### Target Structure (Feature-Based with Core)
-
-The codebase is evolving to a **feature-based** structure. See [DDD & Clean Architecture Refactor Plan](docs/architecture/DDD_CLEAN_ARCHITECTURE_REFACTOR_PLAN.md).
+### Current Structure (Feature-Based with Core)
 
 ```
 src/features/
@@ -211,6 +185,16 @@ src/features/
 ├── administration/    # Admin CRUD, audit, dashboard
 ├── review/            # Product reviews
 └── media/             # File upload, storage
+```
+
+```
+src/
+├── app/[locale]/      # Next.js App Router routes
+├── components/        # Shared UI primitives + reusable view components
+├── hooks/             # Cross-feature React hooks
+├── providers/         # App-level providers
+├── lib/               # Utilities
+└── server/            # Service composition / entry utilities
 ```
 
 **Organization Principles:**
@@ -274,29 +258,36 @@ const t = useTranslations();
 
 ### 📋 Project Status
 
-- **[Project Status](PROJECT_STATUS.md)** — **Phase 1 (MVP) is 100% Complete.** All REST APIs, Services, and Documentation for the Public E-Shop and Admin core are implemented.
+- **[Project Status](PROJECT_STATUS.md)** — Current MVP progress, completed foundations, and active backlog.
 
 ### 📋 System Specification
 
 - **[System Specification](project-planning/SYSTEM_SPECIFICATION.md)** — Complete business & technical spec with diagrams: vision, actors, user flows, architecture, database schema, API, features, roadmap, and NFRs.
+- **Dual-Track Goal (B2C + B2B2C)** — Defined in the System Specification section `Current Business Goal (Dual Track)` and reflected in [Project Status](PROJECT_STATUS.md) success criteria.
 
-### Architecture Refactor
+### Architecture
 
-- **[DDD & Clean Architecture Refactor Plan](docs/architecture/DDD_CLEAN_ARCHITECTURE_REFACTOR_PLAN.md)** — Full refactor plan for feature-based structure with **core** and bounded contexts (catalog, cart, order, identity, administration, review).
-- **[Bounded Contexts](docs/architecture/BOUNDED_CONTEXTS.md)** — Context map and responsibilities per feature.
-- **[Feature Structure](docs/architecture/FEATURE_STRUCTURE.md)** — Standard layout and conventions for each feature.
+- **[Architecture Playbook](docs/architecture/ARCHITECTURE_PLAYBOOK.md)** — Consolidated source of truth for context map, feature structure, dependency boundaries, layer contracts, and implementation workflow.
+- **[Bounded Contexts](docs/architecture/BOUNDED_CONTEXTS.md)** — Pointer to merged context map in the Architecture Playbook.
+- **[Feature Structure](docs/architecture/FEATURE_STRUCTURE.md)** — Pointer to merged structure conventions in the Architecture Playbook.
 
-### 🏛️ Per-Layer Architecture
+### 🧩 Feature Docs
 
-- **[Domain Layer](src/domain/README.md)** — Entities, business rules, and import constraints.
-- **[Application Layer](src/application/README.md)** — Services, repository interfaces, and server actions.
-- **[Infrastructure Layer](src/infrastructure/README.md)** — Database, DI container, and external integrations.
+- **[Core](src/features/core/README.md)** — Shared auth/session, persistence, and cross-cutting platform concerns.
+- **[Catalog](src/features/catalog/README.md)** — Categories, brands, products, variants, and pricing foundations.
+- **[Cart](src/features/cart/README.md)** — Cart behavior, pricing snapshots, and cart APIs.
+- **[Order](src/features/order/README.md)** — Checkout, order creation, and order snapshots.
+- **[Identity](src/features/identity/README.md)** — User and auth domain/application flows.
+- **[Administration](src/features/administration/README.md)** — Admin operations, inventory, and audit logging.
+- **[Review](src/features/review/README.md)** — Product review workflows.
+- **[Media](src/features/media/README.md)** — Asset upload and media storage concerns.
 - **[Presentation Layer](src/components/README.md)** — Components, hooks, providers, and co-location strategy.
 - **[App Layer (Routing)](src/app/README.md)** — Next.js App Router, layouts, and data fetching patterns.
 
 ### 📖 Guides
 
 - **[Development Guide](docs/guides/DEVELOPMENT.md)** - Step-by-step feature implementation & setup.
+- **[Implementation Standards](docs/guides/IMPLEMENTATION_STANDARDS.md)** - Clean architecture implementation checklist and layer-specific coding standards.
 - **[Scaling Standards](docs/guides/SCALING.md)** - How to grow the codebase maintainably.
 - **[Static Content Guide](docs/guides/STATIC_CONTENT.md)** - Managing page-scoped UI text and i18n.
 - **[Logging Guide](docs/guides/LOGGING.md)** - Understanding the multi-tiered logging architecture.

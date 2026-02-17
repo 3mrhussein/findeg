@@ -18,7 +18,7 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images }) => {
       <div className="aspect-square w-full bg-card border border-border rounded-lg overflow-hidden relative">
         <Image src={mainImage} alt="Main product" fill className="object-cover" />
       </div>
-      <div className="grid grid-cols-5 gap-4">
+      <div className="grid grid-cols-5 gap-2 sm:gap-4">
         {images.map((img, index) => (
           <div
             key={index}

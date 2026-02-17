@@ -30,6 +30,7 @@ export const Hero = async ({ imageUrl, language = "en" }: HeroProps) => {
       subtitle={t("Pages.Home.Hero.Subtitle") || "Your one-stop shop for premium products."}
       shopButtonText={t("Pages.Home.Hero.ButtonShop") || "Shop Now"}
       exploreButtonText={t("Pages.Home.Hero.ButtonExplore") || "Explore"}
+      schoolListButtonText={t("Pages.Home.Hero.ButtonSchoolList")}
     />
   );
 };

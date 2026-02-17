@@ -1,21 +1,21 @@
+import { ID, Slug } from "@/features/core/domain/types/common";
 import { db } from "@/features/core/infrastructure/persistence";
 import {
   categories,
   categoryTranslations,
-  type Category as DbCategory,
-  type CategoryTranslation as DbTranslation,
 } from "@/features/core/infrastructure/persistence/schema";
 import { ICategoryRepository } from "../../application/interfaces/ICategoryRepository";
 import { Category } from "../../domain/entities/Category";
 import { CategoryInput } from "@/features/administration/domain/types";
-import { eq, and, count as sqlCount, asc, like, isNull } from "drizzle-orm";
+import { eq, and, sql, desc, asc, like, isNull, or, count } from "drizzle-orm";
+
+type DbCategory = typeof categories.$inferSelect;
+type DbTranslation = typeof categoryTranslations.$inferSelect;
 
 /**
  * Drizzle Category Repository
  *
- * PostgreSQL implementation of hierarchical category management using Drizzle ORM.
- * Implements materialized path pattern for efficient tree operations.
- * Supports multi-language translations and nested category structures.
+ * Implements hierarchical category management using Materialized Path pattern for efficient tree queries.
  */
 export class DrizzleCategoryRepository implements ICategoryRepository {
   /**
@@ -29,7 +29,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
   private mapToDomain(
     dbCategory: DbCategory,
     translation?: DbTranslation,
-    children: Category[] = [],
+    children?: Category[],
   ): Category {
     return {
       id: dbCategory.id,
@@ -42,7 +42,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
       depth: dbCategory.depth,
       sortOrder: dbCategory.sortOrder,
       isActive: dbCategory.isActive,
-      children: children.length > 0 ? children : undefined,
+      children: children && children.length > 0 ? children : undefined,
     };
   }
 
@@ -53,7 +53,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
    * @param language - Language code for translation (default 'en').
    * @returns Category entity or null.
    */
-  async getById(id: number, language: string = "en"): Promise<Category | null> {
+  async getById(id: ID, language: string = "en"): Promise<Category | null> {
     const result = await db
       .select({ category: categories, translation: categoryTranslations })
       .from(categories)
@@ -179,7 +179,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
    * @param language - Localization language.
    * @returns Array of child categories.
    */
-  async getChildren(parentId: number, language: string = "en"): Promise<Category[]> {
+  async getChildren(parentId: ID, language: string = "en"): Promise<Category[]> {
     const results = await db
       .select({ category: categories, translation: categoryTranslations })
       .from(categories)
@@ -206,7 +206,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
    * @param language - Localization language.
    * @returns List of all descendant categories.
    */
-  async getDescendants(categoryId: number, language: string = "en"): Promise<Category[]> {
+  async getDescendants(categoryId: ID, language: string = "en"): Promise<Category[]> {
     // Get the category first to find its path
     const parent = await this.getById(categoryId);
     if (!parent || !parent.path) return [];
@@ -342,7 +342,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
    * @param input - Updated fields.
    * @returns Updated Category entity.
    */
-  async update(id: number, input: CategoryInput): Promise<Category> {
+  async update(id: ID, input: CategoryInput): Promise<Category> {
     return await db.transaction(async (tx) => {
       // If parent changed, we need to re-calculate path and depth for this and ALL descendants
       // This is complex, for MVP lets assume simple update or handle path update logic
@@ -395,7 +395,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
    *
    * @param items - Array of objects with ID and new sort order.
    */
-  async reorder(items: { id: number; sortOrder: number }[]): Promise<void> {
+  async reorder(items: { id: ID; sortOrder: number }[]): Promise<void> {
     await db.transaction(async (tx) => {
       for (const item of items) {
         await tx
@@ -411,7 +411,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
    *
    * @param id - Category ID.
    */
-  async delete(id: number): Promise<void> {
+  async delete(id: ID): Promise<void> {
     await db.delete(categories).where(eq(categories.id, id));
   }
 
@@ -419,9 +419,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
    * Counts the total number of categories.
    */
   async count(): Promise<number> {
-    const result = await db.select({ value: sqlCount() }).from(categories);
+    const result = await db.select({ value: count() }).from(categories);
     return result[0]?.value || 0;
   }
 }
-
-import { or } from "drizzle-orm";

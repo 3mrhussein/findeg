@@ -34,15 +34,15 @@ export const ProductStickyNav: React.FC<ProductStickyNavProps> = ({ offsetTop })
 
   return (
     <div
-      className={`sticky top-[73px] bg-card/80 backdrop-blur-lg z-30 shadow-sm transition-all duration-300 ${isNavSticky ? "opacity-100" : "opacity-0 -translate-y-4"}`}
+      className={`hidden md:block sticky top-[73px] bg-card/80 backdrop-blur-lg z-30 shadow-sm transition-all duration-300 ${isNavSticky ? "opacity-100" : "opacity-0 -translate-y-4"}`}
     >
       <Container>
-        <div className="flex items-center justify-center border-b border-border">
+        <div className="flex items-center justify-center border-b border-border overflow-x-auto">
           {navItems.map((item) => (
             <a
               key={item.href}
               href={item.href}
-              className="px-6 py-4 font-medium text-muted-foreground hover:text-primary border-b-2 border-transparent hover:border-primary transition-all duration-200"
+              className="px-5 py-4 whitespace-nowrap font-medium text-muted-foreground hover:text-primary border-b-2 border-transparent hover:border-primary transition-all duration-200"
             >
               {item.label}
             </a>

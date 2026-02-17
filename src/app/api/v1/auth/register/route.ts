@@ -6,12 +6,15 @@
  */
 
 import { NextRequest } from "next/server";
-import { apiResponse, apiError } from "../../_lib/api-response";
+import { apiResponse, apiErrorByCode } from "../../_lib/api-response";
 import { getServices } from "@/server/getServices";
 import { SignJWT } from "jose";
+import { RegisterInputSchema } from "@/features/core/domain/auth";
+import { AUTH_CONSTANTS } from "@/features/core/domain/constants/auth";
+import { getErrorDefinition, validateWithResult } from "@/features/core/domain/errors";
 
 const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || "your-secret-key-change-in-production",
+  process.env.JWT_SECRET || AUTH_CONSTANTS.JWT_SECRET_FALLBACK,
 );
 
 /**
@@ -23,35 +26,23 @@ const JWT_SECRET = new TextEncoder().encode(
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { email, password, firstName, lastName, phone } = body;
-
-    // Validation
-    if (!email || !password) {
-      return apiError("Email and password are required", 400);
-    }
-
-    if (password.length < 8) {
-      return apiError("Password must be at least 8 characters", 400);
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return apiError("Invalid email format", 400);
+    const parsed = validateWithResult(RegisterInputSchema, body);
+    if (!parsed.ok) {
+      return apiErrorByCode(parsed.error.code, parsed.error.details);
     }
 
     const { authService } = getServices();
 
     // Register user
-    const result = await authService.register({
-      email,
-      password,
-      firstName,
-      lastName,
-      phone,
-    });
+    const result = await authService.register(parsed.value);
 
     if (!result.success || !result.user) {
-      return apiError(result.error || "Registration failed", 400);
+      if (result.error === getErrorDefinition("AUTH_EMAIL_ALREADY_REGISTERED").message) {
+        return apiErrorByCode("AUTH_EMAIL_ALREADY_REGISTERED");
+      }
+      return apiErrorByCode("AUTH_REGISTER_FAILED", {
+        reason: result.error,
+      });
     }
 
     const { user } = result;
@@ -62,8 +53,8 @@ export async function POST(request: NextRequest) {
       email: user.email,
       role: user.role,
     })
-      .setProtectedHeader({ alg: "HS256" })
-      .setExpirationTime("7d")
+      .setProtectedHeader({ alg: AUTH_CONSTANTS.JWT_ALGORITHM })
+      .setExpirationTime(AUTH_CONSTANTS.USER_TOKEN_EXPIRY)
       .sign(JWT_SECRET);
 
     return apiResponse(
@@ -81,12 +72,8 @@ export async function POST(request: NextRequest) {
       201,
     );
   } catch (error) {
-    if (error instanceof Error) {
-      if (error.message.includes("already exists")) {
-        return apiError("Email already registered", 409);
-      }
-      return apiError(error.message, 400);
-    }
-    return apiError("Registration failed", 500);
+    return apiErrorByCode("AUTH_REGISTER_FAILED", {
+      reason: error instanceof Error ? error.message : undefined,
+    });
   }
 }

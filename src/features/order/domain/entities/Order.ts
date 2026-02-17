@@ -1,29 +1,30 @@
+import { ID, Price, Sku, Quantity, Email } from "@/features/core/domain/types/common";
 import type { ShippingAddress, VariantSnapshot } from "../value-objects";
 
 /**
  * Order Item with product snapshots at time of purchase.
  */
 export interface OrderItem {
-  id?: number;
-  orderId?: number;
+  id?: ID;
+  orderId?: ID | string;
   /** Reference to the current product */
-  productId: number;
+  productId: ID;
   /** Units purchased */
-  quantity: number;
+  quantity: Quantity;
   /** Price at which the item was purchased (legacy field name) */
-  priceAtTime?: number;
+  priceAtTime?: Price;
   /** Current display price */
-  price?: number;
+  price?: Price;
   /** Product name captured at time of purchase to handle future name changes */
   productNameSnapshot?: string;
   /** SKU captured at time of purchase */
-  productSkuSnapshot?: string;
+  productSkuSnapshot?: Sku;
   /** Per-unit price at time of purchase */
-  unitPriceSnapshot?: number;
+  unitPriceSnapshot?: Price;
   /** Selection snapshots (e.g., color, size) */
   variantSnapshot?: VariantSnapshot;
   /** Total for this line (quantity * unitPriceSnapshot) */
-  totalPrice?: number;
+  totalPrice?: Price;
   /** Human-readable variant summary */
   variantDetails?: string;
   productName?: string;
@@ -37,21 +38,21 @@ export interface OrderItem {
  */
 export interface Order {
   /** Unique Order ID or Reference */
-  id: number | string;
+  id: ID | string;
   /** ID of the registered user (optional for guest checkout) */
-  userId?: number;
+  userId?: ID;
   /** Email used for guest checkout */
-  guestEmail?: string;
+  guestEmail?: Email;
   /** Current logistics status */
   status: string;
   /** Current financial status */
   paymentStatus?: string;
   /** Sum of all order item prices */
-  subtotal?: number;
+  subtotal?: Price;
   /** Shipping and handling fees */
-  shippingCost?: number;
+  shippingCost?: Price;
   /** Final amount charged (subtotal + shippingCost) */
-  totalAmount?: number;
+  totalAmount?: Price;
   /** ISO currency code (e.g., 'EGP') */
   currency?: string;
   /** Method of payment (e.g., 'COD', 'Card') */

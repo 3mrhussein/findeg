@@ -6,9 +6,9 @@
  * Each wrapper adds its own response behavior (401/403 JSON).
  */
 
-import { apiError } from "./api-response";
+import { apiErrorByCode } from "./api-response";
 import { JwtSessionManager } from "@/features/core/infrastructure/auth/JwtSessionManager";
-import type { SessionPayload } from "@/features/identity/domain/types/auth";
+import type { SessionPayload } from "@/features/core/domain/auth";
 
 const sessionManager = new JwtSessionManager();
 
@@ -45,7 +45,7 @@ export async function withAuth(
 ): Promise<Response> {
   const user = await sessionManager.validateSession(request);
   if (!user) {
-    return apiError("Authentication required or session expired", 401);
+    return apiErrorByCode("AUTH_UNAUTHORIZED");
   }
 
   return handler({ user });
@@ -77,7 +77,7 @@ export async function withAdmin(
 ): Promise<Response> {
   return withAuth(request, async (context) => {
     if (!sessionManager.authorizeAdmin(context.user)) {
-      return apiError("Admin access required", 403);
+      return apiErrorByCode("AUTH_ADMIN_REQUIRED");
     }
     return handler(context);
   });

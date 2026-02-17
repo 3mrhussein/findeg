@@ -3,6 +3,7 @@
 import { container } from "@/features/core/infrastructure/di/ServiceContainer";
 import { revalidatePath } from "next/cache";
 import { OrderStatusUpdate } from "@/features/administration/domain/types";
+import { resolveErrorMessage } from "@/features/core/domain/errors/error-catalog";
 
 /**
  * Updates the status of a specific order and triggers necessary side effects (e.g., emails).
@@ -18,6 +19,9 @@ export async function updateOrderStatusAction(id: number, input: OrderStatusUpda
     revalidatePath("/admin/orders");
     return { success: true };
   } catch (error: any) {
-    return { success: false, error: error.message };
+    return {
+      success: false,
+      error: resolveErrorMessage(error, "ACTION_ORDER_STATUS_UPDATE_FAILED"),
+    };
   }
 }

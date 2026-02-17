@@ -1,3 +1,4 @@
+import { ID, Price, Sku, Quantity, Email } from "@/features/core/domain/types/common";
 import { db } from "@/features/core/infrastructure/persistence";
 import {
   orders,
@@ -34,9 +35,9 @@ export class DrizzleOrderRepository implements IOrderRepository {
       guestEmail: dbOrder.guestEmail || undefined,
       status: dbOrder.status,
       paymentStatus: dbOrder.paymentStatus,
-      subtotal: Number(dbOrder.subtotal),
-      shippingCost: Number(dbOrder.shippingCost),
-      totalAmount: Number(dbOrder.totalAmount),
+      subtotal: Number(dbOrder.subtotal) as Price,
+      shippingCost: Number(dbOrder.shippingCost) as Price,
+      totalAmount: Number(dbOrder.totalAmount) as Price,
       currency: dbOrder.currency,
       paymentMethod: dbOrder.paymentMethod || undefined,
       shippingAddressSnapshot: (dbOrder.shippingAddressSnapshot as any) || undefined,
@@ -52,10 +53,12 @@ export class DrizzleOrderRepository implements IOrderRepository {
         id: item.id,
         orderId: item.orderId,
         productId: item.productId!,
-        quantity: item.quantity,
-        priceAtTime: Number(item.priceAtTime),
-        unitPriceSnapshot: item.unitPriceSnapshot ? Number(item.unitPriceSnapshot) : undefined,
-        totalPrice: item.totalPrice ? Number(item.totalPrice) : undefined,
+        quantity: item.quantity as Quantity,
+        priceAtTime: Number(item.priceAtTime) as Price,
+        unitPriceSnapshot: item.unitPriceSnapshot
+          ? (Number(item.unitPriceSnapshot) as Price)
+          : undefined,
+        totalPrice: item.totalPrice ? (Number(item.totalPrice) as Price) : undefined,
         productNameSnapshot: item.productNameSnapshot || undefined,
         productSkuSnapshot: item.productSkuSnapshot || undefined,
         variantDetails: item.variantDetails || undefined,
@@ -67,7 +70,7 @@ export class DrizzleOrderRepository implements IOrderRepository {
   /**
    *
    */
-  async getById(id: number): Promise<Order | null> {
+  async getById(id: ID | string): Promise<Order | null> {
     const orderResult = await db
       .select({
         order: orders,
@@ -75,12 +78,15 @@ export class DrizzleOrderRepository implements IOrderRepository {
       })
       .from(orders)
       .leftJoin(users, eq(orders.userId, users.id))
-      .where(eq(orders.id, id))
+      .where(eq(orders.id, id as any))
       .limit(1);
 
     if (orderResult.length === 0) return null;
 
-    const itemsResult = await db.select().from(orderItems).where(eq(orderItems.orderId, id));
+    const itemsResult = await db
+      .select()
+      .from(orderItems)
+      .where(eq(orderItems.orderId, id as any));
 
     // Fallback name if no user
     const customerName = orderResult[0].user
@@ -100,7 +106,7 @@ export class DrizzleOrderRepository implements IOrderRepository {
   /**
    *
    */
-  async getByUserId(userId: number): Promise<Order[]> {
+  async getByUserId(userId: ID): Promise<Order[]> {
     const orderResults = await db
       .select()
       .from(orders)
@@ -174,7 +180,7 @@ export class DrizzleOrderRepository implements IOrderRepository {
           const items = await db
             .select()
             .from(orderItems)
-            .where(eq(orderItems.orderId, row.order.id));
+            .where(eq(orderItems.orderId, row.order.id as any));
 
           const name = row.user
             ? row.user.firstName
@@ -245,14 +251,17 @@ export class DrizzleOrderRepository implements IOrderRepository {
   /**
    *
    */
-  async updateStatus(id: number, status: string): Promise<void> {
-    await db.update(orders).set({ status, updatedAt: new Date() }).where(eq(orders.id, id));
+  async updateStatus(id: ID | string, status: string): Promise<void> {
+    await db
+      .update(orders)
+      .set({ status, updatedAt: new Date() })
+      .where(eq(orders.id, id as any));
   }
 
   /**
    *
    */
-  async updateStatusWithTracking(id: number, update: OrderStatusUpdate): Promise<void> {
+  async updateStatusWithTracking(id: ID | string, update: OrderStatusUpdate): Promise<void> {
     const data: any = {
       status: update.status,
       updatedAt: new Date(),
@@ -261,7 +270,10 @@ export class DrizzleOrderRepository implements IOrderRepository {
     if (update.trackingNumber) data.trackingNumber = update.trackingNumber;
     if (update.adminNotes) data.adminNotes = update.adminNotes;
 
-    await db.update(orders).set(data).where(eq(orders.id, id));
+    await db
+      .update(orders)
+      .set(data)
+      .where(eq(orders.id, id as any));
   }
 
   /**
@@ -270,11 +282,11 @@ export class DrizzleOrderRepository implements IOrderRepository {
    * @param id - Order ID
    * @param status - New payment status
    */
-  async updatePaymentStatus(id: number, status: string): Promise<void> {
+  async updatePaymentStatus(id: ID | string, status: string): Promise<void> {
     await db
       .update(orders)
       .set({ paymentStatus: status, updatedAt: new Date() })
-      .where(eq(orders.id, id));
+      .where(eq(orders.id, id as any));
   }
 
   /**

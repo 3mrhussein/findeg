@@ -1,6 +1,7 @@
 {
   "Common": {
     "LogoAriaLabel": "FindEg.com Homepage",
+    "LogoSubtitle": "School & Stationery",
     "DiscountBadge": "{percent}% OFF",
     "Loading": "Loading...",
     "ErrorOccurred": "An error occurred. Please try again.",
@@ -11,7 +12,9 @@
   "Nav": {
     "Home": "Home",
     "Shop": "Shop",
+    "Search": "Search",
     "Categories": "Categories",
+    "SchoolLists": "School Lists",
     "About": "About Us",
     "MyAccount": "My Account",
     "Dashboard": "Dashboard",
@@ -44,13 +47,20 @@
   "Layout": {
     "Header": {
       "CartButton": "Open shopping cart",
+      "ToggleThemeButton": "Toggle theme",
+      "OpenMenuButton": "Open menu",
+      "CloseMenuButton": "Close menu",
+      "CloseCartButton": "Close cart",
+      "SearchButton": "Search",
       "SigninButton": "Sign In",
       "SignupButton": "Sign Up"
     },
     "Nav": {
       "Home": "Home",
       "Shop": "Shop",
+      "Search": "Search",
       "Categories": "Categories",
+      "SchoolLists": "School Lists",
       "AiGenerator": "AI Generator",
       "About": "About",
       "MyAccount": "My Account",
@@ -81,7 +91,8 @@
         "TitlePlay": "Play",
         "Subtitle": "Your one-stop shop for high-quality stationary, engaging kids' toys, and essential school supplies. Spark creativity and make learning fun!",
         "ButtonShop": "Shop Now",
-        "ButtonExplore": "Explore Categories"
+        "ButtonExplore": "Explore Categories",
+        "ButtonSchoolList": "Find School List"
       },
       "Featured": {
         "Title": "Featured Products",
@@ -91,6 +102,7 @@
         "Title": "Shop by Category",
         "Subtitle": "Find exactly what you need by exploring our curated categories."
       },
+      "TrustedBrands": "Our Trusted Brands",
       "Generator": {
         "Title": "AI Product Idea Generator",
         "Subtitle": "Can't find what you're for? Describe a toy or stationary item, and let our AI bring your idea to life!",
@@ -116,6 +128,8 @@
       "SortPriceDesc": "Price: High to Low",
       "ShowingResults": "Showing {count} of {total} results",
       "NoProducts": "No products found matching your criteria.",
+      "GridView": "Grid view",
+      "ListView": "List view",
       "ViewResults": "View Results",
       "PaginationPrevious": "Previous",
       "PaginationNext": "Next",
@@ -152,6 +166,7 @@
         "Success": "Thank you for your review!"
       },
       "NotFound": "Product not found.",
+      "NotFoundDescription": "The item may be unavailable or moved to another collection.",
       "BackToShop": "Back to Shop"
     },
     "ProductCard": {
@@ -181,7 +196,22 @@
       "City": "City",
       "PostalCode": "Postal Code",
       "OrderSummary": "Order Summary",
-      "Total": "Total"
+      "Total": "Total",
+      "EmptyDescription": "Add items to your cart before proceeding to checkout."
+    },
+    "Categories": {
+      "EmptyTitle": "No categories available",
+      "EmptyDescription": "Please check back later or browse all products directly."
+    },
+    "SchoolLists": {
+      "Title": "School List Lookup",
+      "Subtitle": "School tools are optional helpers for faster shopping. Enter a list code or link to prefill your journey.",
+      "FormTitle": "Find your list",
+      "Placeholder": "Paste school list code or share link",
+      "Submit": "Find list",
+      "BackToShop": "Continue shopping",
+      "SecondaryCtaTitle": "Buying from a school list?",
+      "SecondaryCtaDescription": "Use the optional school list tool to prefill items, then continue shopping normally."
     },
     "Auth": {
       "RegistrationTitle": "Create an Account",
@@ -233,7 +263,9 @@
       "Placeholder": "Search for products...",
       "PageTitle": "Search Results for \"{query}\"",
       "NoResults": "No products found for your search.",
-      "EmptyPrompt": "Please enter a search term"
+      "NoResultsDescription": "Try another keyword or explore the full catalog.",
+      "EmptyPrompt": "Please enter a search term",
+      "EmptyDescription": "Type a keyword to find products quickly."
     },
     "Cookies": {
       "ConsentTitle": "We value your privacy",
@@ -278,11 +310,19 @@
     },
     "BrandKit": {
       "Title": "Our Brand Identity",
-      "Subtitle": "The core elements that define the look and feel of FindEg.com.",
+      "Subtitle": "A storefront-first visual system for everyday shoppers, with optional school tools as a secondary flow.",
+      "StorefrontFirstBadge": "Storefront First",
       "LogoTitle": "Logo",
+      "LogoDescription": "Single-brand identity for all audiences. School-list features stay integrated as utilities.",
       "ColorsTitle": "Color Palette",
       "TypographyTitle": "Typography",
-      "ComponentsTitle": "Component Showcase"
+      "TypographyBody": "Readable first, conversion friendly, and consistent across web and future mobile surfaces.",
+      "TypographySupport": "Use concise headings and practical copy for parents, students, and school buyers.",
+      "ComponentsTitle": "Component Showcase",
+      "PrimaryAction": "Primary action",
+      "SecondaryAction": "Secondary action",
+      "UtilityAction": "Utility action",
+      "SecondaryFlowBadge": "School utility"
     },
     "Dashboard": {
       "Title": "Dashboard",
@@ -344,5 +384,46 @@
       "PageSubtitle": "Oops! The page you are looking for does not exist. It might have been moved or deleted.",
       "Button": "Go Back Home"
     }
+  },
+  "Seo": {
+    "Home": {
+      "Title": "Home",
+      "Description": "Shop stationery, school supplies, and educational toys in Egypt with fast checkout and trusted quality.",
+      "Keywords": "stationery egypt,school supplies egypt,educational toys,findeg"
+    },
+    "Shop": {
+      "Title": "Shop",
+      "Description": "Browse our full stationery and school supply catalog, compare options, and add essentials to cart quickly.",
+      "Keywords": "shop stationery,school supplies catalog,online stationery store"
+    },
+    "Categories": {
+      "Title": "Categories",
+      "Description": "Explore product categories for writing tools, notebooks, art supplies, toys, and school essentials.",
+      "Keywords": "stationery categories,school categories,art supplies categories"
+    },
+    "Search": {
+      "Title": "Search: {query}",
+      "Description": "Search results for {query} in our stationery and school supplies catalog.",
+      "EmptyTitle": "Search",
+      "EmptyDescription": "Search our catalog for stationery, school supplies, and educational products."
+    },
+    "Product": {
+      "Title": "{name}",
+      "FallbackTitle": "Product",
+      "FallbackDescription": "View product details, pricing, and availability in our stationery marketplace.",
+      "Keywords": "product details,stationery product,school supply product"
+    },
+    "SchoolLists": {
+      "Title": "School Lists",
+      "Description": "Optional school-list lookup to prefill your shopping flow while keeping the main storefront experience."
+    }
+  },
+  "Feedback": {
+    "AddingToCart": "Adding to cart...",
+    "CartAddedTitle": "Added to cart",
+    "CartAddedDescription": "{name} was added to your cart.",
+    "SubmittingReview": "Submitting review...",
+    "ReviewSubmittedTitle": "Review submitted",
+    "ReviewSubmittedDescription": "Thanks for sharing your feedback."
   }
 }

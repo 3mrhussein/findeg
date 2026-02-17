@@ -1,8 +1,9 @@
+import { ID, Email, UserRole } from "@/features/core/domain/types/common";
+import { UserWithPassword } from "@/features/core/domain/auth";
 import { db } from "@/features/core/infrastructure/persistence";
 import { users, type User as DbUser } from "@/features/core/infrastructure/persistence/schema";
 import { IUserRepository } from "../../application/interfaces/IUserRepository";
 import { User } from "../../domain/entities/User";
-import { UserWithPassword } from "../../domain/types/auth";
 import { eq } from "drizzle-orm";
 
 /**
@@ -21,9 +22,9 @@ export class DrizzleUserRepository implements IUserRepository {
   private mapToDomain(dbUser: DbUser): User {
     return {
       id: dbUser.id,
-      email: dbUser.email,
+      email: dbUser.email as Email,
       name: dbUser.name || undefined,
-      role: dbUser.role,
+      role: dbUser.role as UserRole,
       image: dbUser.image || undefined,
       createdAt: dbUser.createdAt,
       updatedAt: dbUser.updatedAt,
@@ -36,7 +37,7 @@ export class DrizzleUserRepository implements IUserRepository {
    * @param id - The user ID.
    * @returns User entity or null if not found.
    */
-  async getById(id: number): Promise<User | null> {
+  async getById(id: ID): Promise<User | null> {
     const result = await db.select().from(users).where(eq(users.id, id)).limit(1);
     if (result.length === 0) return null;
     return this.mapToDomain(result[0]);
@@ -48,7 +49,7 @@ export class DrizzleUserRepository implements IUserRepository {
    * @param email - The email address to search for.
    * @returns User entity or null if not found.
    */
-  async getByEmail(email: string): Promise<User | null> {
+  async getByEmail(email: Email): Promise<User | null> {
     const result = await db.select().from(users).where(eq(users.email, email)).limit(1);
     if (result.length === 0) return null;
     return this.mapToDomain(result[0]);
@@ -61,15 +62,15 @@ export class DrizzleUserRepository implements IUserRepository {
    * @param email - The email address.
    * @returns User entity with password field populated, or null.
    */
-  async getByEmailWithPassword(email: string): Promise<UserWithPassword | null> {
+  async getByEmailWithPassword(email: Email): Promise<UserWithPassword | null> {
     const result = await db.select().from(users).where(eq(users.email, email)).limit(1);
     if (result.length === 0) return null;
     const dbUser = result[0];
     return {
       id: dbUser.id,
-      email: dbUser.email,
+      email: dbUser.email as Email,
       name: dbUser.name || undefined,
-      role: dbUser.role,
+      role: dbUser.role as UserRole,
       password: dbUser.password,
     };
   }
@@ -96,7 +97,7 @@ export class DrizzleUserRepository implements IUserRepository {
    * @param user - Partial object with fields to change.
    * @returns The updated Domain User entity.
    */
-  async update(id: number, user: Partial<User>): Promise<User> {
+  async update(id: ID, user: Partial<User>): Promise<User> {
     const result = await db
       .update(users)
       .set({ ...user, updatedAt: new Date() } as Partial<typeof users.$inferInsert>)

@@ -6,7 +6,7 @@
  */
 
 import { NextRequest } from "next/server";
-import { apiResponse, apiError } from "../../_lib/api-response";
+import { apiResponse, apiErrorByCode } from "../../_lib/api-response";
 import { getServices } from "@/server/getServices";
 
 /**
@@ -21,13 +21,15 @@ export async function GET(request: NextRequest) {
     const session = await auth.getSession();
 
     if (!session) {
-      return apiError("Unauthorized", 401);
+      return apiErrorByCode("AUTH_UNAUTHORIZED");
     }
 
     return apiResponse({
       user: session,
     });
   } catch (error) {
-    return apiError("Failed to fetch user session", 500);
+    return apiErrorByCode("AUTH_ME_FETCH_FAILED", {
+      reason: error instanceof Error ? error.message : undefined,
+    });
   }
 }

@@ -1,3 +1,4 @@
+import { ID } from "@/features/core/domain/types/common";
 import { IAdminCategoryService } from "../interfaces/IAdminCategoryService";
 import { ICategoryRepository } from "@/features/catalog/application/interfaces/ICategoryRepository";
 import { IAuditLogService } from "../interfaces/IAuditLogService";
@@ -53,7 +54,7 @@ export class AdminCategoryService implements IAdminCategoryService {
    * @returns The updated category entity.
    * @throws Error if the category is not found.
    */
-  async update(id: number, input: CategoryInput): Promise<Category> {
+  async update(id: ID, input: CategoryInput): Promise<Category> {
     const existing = await this.categoryRepository.getById(id);
     if (!existing) {
       throw new Error(`Category with ID ${id} not found`);
@@ -81,7 +82,7 @@ export class AdminCategoryService implements IAdminCategoryService {
    * @param id - The ID of the category to remove.
    * @throws Error if the category does not exist.
    */
-  async delete(id: number): Promise<void> {
+  async delete(id: ID): Promise<void> {
     const existing = await this.categoryRepository.getById(id);
     if (!existing) {
       throw new Error(`Category with ID ${id} not found`);
@@ -106,7 +107,7 @@ export class AdminCategoryService implements IAdminCategoryService {
    * @param id - The category ID.
    * @returns The category if found.
    */
-  async getById(id: number): Promise<Category | null> {
+  async getById(id: ID): Promise<Category | null> {
     return this.categoryRepository.getById(id, "en");
   }
 

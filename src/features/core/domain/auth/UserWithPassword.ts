@@ -1,3 +1,5 @@
+import { Email, UserRole } from "../types/common";
+
 /**
  * User with password hash — only for auth verification.
  *
@@ -6,11 +8,11 @@
  */
 export interface UserWithPassword {
   id: number;
-  email: string;
+  email: Email;
   name?: string;
   firstName?: string;
   lastName?: string;
   phone?: string;
-  role: string;
+  role: UserRole;
   password: string | null;
 }

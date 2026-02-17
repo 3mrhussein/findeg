@@ -3,9 +3,11 @@
  *
  * Represents a product brand (e.g., "Staedtler", "Faber-Castell").
  */
+import { ID, Slug } from "@/features/core/domain/types/common";
+
 export interface Brand {
-  id: number;
-  slug: string;
+  id: ID;
+  slug: Slug;
   name: string;
   /** Logo URL; null/undefined when no logo */
   logoUrl?: string | null;

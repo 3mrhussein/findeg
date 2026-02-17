@@ -1,3 +1,4 @@
+import { ID, Slug } from "@/features/core/domain/types/common";
 import type { Category } from "@/features/catalog/domain/entities/Category";
 import type { CategoryInput } from "@/features/administration/domain/types";
 
@@ -10,7 +11,7 @@ export interface ICategoryRepository {
   /**
    * Retrieves a single category by ID.
    */
-  getById(id: number, language?: string): Promise<Category | null>;
+  getById(id: ID, language?: string): Promise<Category | null>;
 
   /**
    * Retrieves all categories.
@@ -20,7 +21,7 @@ export interface ICategoryRepository {
   /**
    * Retrieves a category by its unique URL slug.
    */
-  getBySlug(slug: string, language?: string): Promise<Category | null>;
+  getBySlug(slug: Slug, language?: string): Promise<Category | null>;
 
   /**
    * Retrieves the entire category hierarchy as a tree.
@@ -35,12 +36,12 @@ export interface ICategoryRepository {
   /**
    * Retrieves immediate child categories for a given parent.
    */
-  getChildren(parentId: number, language?: string): Promise<Category[]>;
+  getChildren(parentId: ID, language?: string): Promise<Category[]>;
 
   /**
    * Retrieves all nested categories (children, grandchildren, etc.).
    */
-  getDescendants(categoryId: number, language?: string): Promise<Category[]>;
+  getDescendants(categoryId: ID, language?: string): Promise<Category[]>;
 
   /**
    * Retrieves a category by its full hierarchy path (e.g., "electronics/phones").
@@ -55,17 +56,17 @@ export interface ICategoryRepository {
   /**
    * Updates an existing category and its translations.
    */
-  update(id: number, input: CategoryInput): Promise<Category>;
+  update(id: ID, input: CategoryInput): Promise<Category>;
 
   /**
    * Updates the display sequence of multiple categories.
    */
-  reorder(items: { id: number; sortOrder: number }[]): Promise<void>;
+  reorder(items: { id: ID; sortOrder: number }[]): Promise<void>;
 
   /**
    * Removes a category (typically restricted if it has products).
    */
-  delete(id: number): Promise<void>;
+  delete(id: ID): Promise<void>;
 
   /**
    * Counts total categories in the system.

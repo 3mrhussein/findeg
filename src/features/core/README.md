@@ -1,33 +1,55 @@
 # Core Feature
 
-The `core` feature provides the foundational infrastructure and shared services used by all other features in the application. It follows a hexagonal architecture (Ports and Adapters) to ensure that technical details remain decoupled from business logic.
+Provides shared kernel capabilities used across all features: ports, infrastructure adapters, DI composition, and shared primitives.
 
-## Responsibilities
+## Use Cases
 
-- **Dependency Injection**: Centralized management of service singletons via the `ServiceContainer`.
-- **Infrastructure Abstractions**: Interfaces for logging, storage, sessions, and database persistence.
-- **Shared Components**: Common UI elements, layouts, and utility functions used across the platform.
-- **Internationalization**: Core i18n logic and CMS message management.
+```mermaid
+flowchart LR
+    Feature --> UC1[Resolve service from DI]
+    Feature --> UC2[Persist data via shared DB config]
+    Feature --> UC3[Create/validate session]
+    Feature --> UC4[Log operational events]
+```
 
-## Component Overview
+## UML (Component/Class View)
 
-### Application Layer (`/application`)
+```mermaid
+classDiagram
+    class ServiceContainer
+    class ISessionProvider
+    class CookieSessionProvider
+    class ISessionManager
+    class JwtSessionManager
+    class ILoggerService
+    class LoggerService
 
-- **Ports**: Interfaces defining the contracts for shared infrastructure (e.g., `ILoggerService`, `IStorageProvider`, `ISessionProvider`).
+    CookieSessionProvider ..|> ISessionProvider
+    JwtSessionManager ..|> ISessionManager
+    LoggerService ..|> ILoggerService
+    ServiceContainer --> ISessionProvider
+    ServiceContainer --> ILoggerService
+```
 
-### Infrastructure Layer (`/infrastructure`)
+## Sequence (Route Auth Middleware)
 
-- **DI**: The `ServiceContainer` implementation that assembles the application.
-- **Persistence**: Database connection setup and Drizzle schema definitions.
-- **CMS**: Localized content and message catalogs.
+```mermaid
+sequenceDiagram
+    participant Route as API Route
+    participant MW as withAuth/withAdmin
+    participant JWT as JwtSessionManager
+    Route->>MW: wrapped request
+    MW->>JWT: validateSession(request)
+    JWT-->>MW: SessionPayload|null
+    MW-->>Route: auth context or 401/403
+```
 
-### Presentation Layer (`/presentation`)
+## Layer Notes
+- `domain`: shared auth and primitive types.
+- `application`: cross-cutting ports/services.
+- `infrastructure`: auth, persistence, storage, DI, logging.
 
-- **Components**: Primitive UI components (buttons, inputs, cards) built with Tailwind CSS.
-- **Contexts**: React contexts for global state (e.g., UI state, session data).
+## Clean Architecture Boundaries
+- Core is dependency base; it does not depend on feature modules.
+- New adapters must implement existing ports before DI registration.
 
-## Architectural Boundaries
-
-- **Upward Dependencies**: None. This module is the base level.
-- **Downward Dependencies**: Components in `core/presentation` may be used by any other feature.
-- **Extension Points**: New storage or logging providers should implement the corresponding ports in `application/ports`.

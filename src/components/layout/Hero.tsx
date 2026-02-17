@@ -20,6 +20,7 @@ interface HeroUIProps {
   subtitle: string;
   shopButtonText: string;
   exploreButtonText: string;
+  schoolListButtonText: string;
 }
 
 /**
@@ -33,6 +34,7 @@ export const HeroUI: React.FC<HeroUIProps> = ({
   subtitle,
   shopButtonText,
   exploreButtonText,
+  schoolListButtonText,
 }) => {
   const router = useRouter();
 
@@ -48,6 +50,13 @@ export const HeroUI: React.FC<HeroUIProps> = ({
    */
   const handleExploreClick = () => {
     document.querySelector("#categories")?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  /**
+   *
+   */
+  const handleSchoolListClick = () => {
+    router.push("/school-lists");
   };
 
   return (
@@ -68,6 +77,9 @@ export const HeroUI: React.FC<HeroUIProps> = ({
               </Button>
               <Button variant="outline" size="lg" onClick={handleExploreClick}>
                 {exploreButtonText}
+              </Button>
+              <Button variant="ghost" size="lg" onClick={handleSchoolListClick}>
+                {schoolListButtonText}
               </Button>
             </div>
           </div>

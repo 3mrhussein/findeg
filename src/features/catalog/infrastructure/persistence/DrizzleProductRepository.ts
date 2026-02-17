@@ -6,6 +6,8 @@ import {
   categoryTranslations,
   brands,
   productImages,
+  variantSellableUoms,
+  variantPriceLists,
   type Product as DbProduct,
   type ProductTranslation as DbTranslation,
   type Brand as DbBrand,
@@ -15,8 +17,15 @@ import {
 import {
   IProductRepository,
   ProductFilters,
+  VariantSellOption,
+  VariantSellableUomInput,
+  VariantPriceListInput,
 } from "../../application/interfaces/IProductRepository";
-import { Product, ProductVariant } from "../../domain/entities/Product";
+import {
+  Product,
+  ProductVariant,
+  ProductVariantCommercialConfig,
+} from "../../domain/entities/Product";
 import { ProductInput } from "@/features/administration/domain/types";
 import {
   eq,
@@ -31,6 +40,16 @@ import {
   gte,
   sql,
 } from "drizzle-orm";
+
+import {
+  ID,
+  Price,
+  Sku,
+  Quantity,
+  Rating,
+  CustomerGroup,
+  UomCode,
+} from "@/features/core/domain/types/common";
 
 /**
  * Drizzle Product Repository
@@ -49,6 +68,7 @@ export class DrizzleProductRepository implements IProductRepository {
     categoryName?: string,
     brandName?: string,
     images?: string[],
+    variantCommercialConfig?: Record<string, ProductVariantCommercialConfig>,
   ): Product {
     // If we have normalized images, use them. Otherwise fallback to JSON images
     const finalImages = images && images.length > 0 ? images : (dbProduct.images as string[]) || [];
@@ -57,8 +77,8 @@ export class DrizzleProductRepository implements IProductRepository {
       id: dbProduct.id,
       sku: dbProduct.sku || undefined,
       name: translation?.name || "Untitled Product",
-      price: Number(dbProduct.price),
-      strikePrice: dbProduct.strikePrice ? Number(dbProduct.strikePrice) : undefined,
+      price: Number(dbProduct.price) as Price,
+      strikePrice: dbProduct.strikePrice ? (Number(dbProduct.strikePrice) as Price) : undefined,
       description: translation?.description || "",
       longDescription: translation?.longDescription || "",
       imageUrl: finalImages[0],
@@ -69,12 +89,81 @@ export class DrizzleProductRepository implements IProductRepository {
       brandName: brandName,
       isNew: dbProduct.isNew || false,
       isActive: dbProduct.isActive,
-      stockQuantity: dbProduct.stockQuantity,
-      lowStockThreshold: dbProduct.lowStockThreshold,
-      rating: Number(dbProduct.rating || 0),
+      stockQuantity: dbProduct.stockQuantity as Quantity,
+      lowStockThreshold: dbProduct.lowStockThreshold as Quantity,
+      rating: Number(dbProduct.rating || 0) as Rating,
       reviewsCount: dbProduct.reviewsCount || 0,
       variants: (dbProduct.variants as Record<string, ProductVariant>) || undefined,
+      variantCommercialConfig,
     };
+  }
+
+  /**
+   * Loads all variant-level commercial configuration for a product.
+   */
+  private async getVariantCommercialConfig(
+    productId: ID,
+  ): Promise<Record<string, ProductVariantCommercialConfig>> {
+    const [uomRows, priceRows] = await Promise.all([
+      db
+        .select({
+          variantKey: variantSellableUoms.variantKey,
+          uomCode: variantSellableUoms.uomCode,
+          factorToBase: variantSellableUoms.factorToBase,
+          isEnabled: variantSellableUoms.isEnabled,
+        })
+        .from(variantSellableUoms)
+        .where(eq(variantSellableUoms.productId, productId)),
+      db
+        .select({
+          variantKey: variantPriceLists.variantKey,
+          customerGroup: variantPriceLists.customerGroup,
+          uomCode: variantPriceLists.uomCode,
+          unitPrice: variantPriceLists.unitPrice,
+          currency: variantPriceLists.currency,
+          isSellable: variantPriceLists.isSellable,
+        })
+        .from(variantPriceLists)
+        .where(eq(variantPriceLists.productId, productId)),
+    ]);
+
+    const configMap = new Map<string, ProductVariantCommercialConfig>();
+    /**
+     * Returns existing variant config or initializes an empty one.
+     */
+    const ensureVariant = (variantKey: string): ProductVariantCommercialConfig => {
+      const existing = configMap.get(variantKey);
+      if (existing) return existing;
+      const next: ProductVariantCommercialConfig = {
+        variantKey,
+        sellableUoms: [],
+        priceLists: [],
+      };
+      configMap.set(variantKey, next);
+      return next;
+    };
+
+    for (const row of uomRows) {
+      const config = ensureVariant(row.variantKey);
+      config.sellableUoms.push({
+        uomCode: row.uomCode as UomCode,
+        factorToBase: Number(row.factorToBase),
+        isEnabled: row.isEnabled,
+      });
+    }
+
+    for (const row of priceRows) {
+      const config = ensureVariant(row.variantKey);
+      config.priceLists.push({
+        customerGroup: row.customerGroup as CustomerGroup,
+        uomCode: row.uomCode as UomCode,
+        unitPrice: Number(row.unitPrice) as Price,
+        currency: row.currency,
+        isSellable: row.isSellable,
+      });
+    }
+
+    return Object.fromEntries(configMap.entries());
   }
 
   /**
@@ -84,7 +173,7 @@ export class DrizzleProductRepository implements IProductRepository {
    * @param language - Language code for localized fields (default: 'en').
    * @returns Domain Product entity or null if not found.
    */
-  async getById(id: number, language: string = "en"): Promise<Product | null> {
+  async getById(id: ID, language: string = "en"): Promise<Product | null> {
     const result = await db
       .select({
         product: products,
@@ -118,11 +207,14 @@ export class DrizzleProductRepository implements IProductRepository {
     // const imgs = await db.select().from(productImages).where(eq(productImages.productId, id)).orderBy(productImages.order);
 
     const row = result[0];
+    const variantCommercialConfig = await this.getVariantCommercialConfig(id);
     return this.mapToDomain(
       row.product,
       row.translation || undefined,
       row.categoryTrans?.name,
       row.brand?.name,
+      undefined,
+      Object.keys(variantCommercialConfig).length > 0 ? variantCommercialConfig : undefined,
     );
   }
 
@@ -180,7 +272,7 @@ export class DrizzleProductRepository implements IProductRepository {
   /**
    *
    */
-  async getByCategory(categoryId: number, language: string = "en"): Promise<Product[]> {
+  async getByCategory(categoryId: ID, language: string = "en"): Promise<Product[]> {
     const results = await db
       .select({
         product: products,
@@ -219,7 +311,7 @@ export class DrizzleProductRepository implements IProductRepository {
   /**
    *
    */
-  async getByBrand(brandId: number, language: string = "en"): Promise<Product[]> {
+  async getByBrand(brandId: ID, language: string = "en"): Promise<Product[]> {
     const results = await db
       .select({
         product: products,
@@ -396,7 +488,7 @@ export class DrizzleProductRepository implements IProductRepository {
   /**
    *
    */
-  async getLowStock(threshold?: number, language: string = "en"): Promise<Product[]> {
+  async getLowStock(threshold?: Quantity, language: string = "en"): Promise<Product[]> {
     const results = await db
       .select({
         product: products,
@@ -440,7 +532,7 @@ export class DrizzleProductRepository implements IProductRepository {
   /**
    *
    */
-  async updateStock(id: number, quantity: number): Promise<void> {
+  async updateStock(id: ID, quantity: Quantity): Promise<void> {
     await db.update(products).set({ stockQuantity: quantity }).where(eq(products.id, id));
   }
 
@@ -451,8 +543,8 @@ export class DrizzleProductRepository implements IProductRepository {
    * @param config - New quantity and optional low stock threshold
    */
   async updateStockConfiguration(
-    id: number,
-    config: { quantity: number; lowStockThreshold?: number },
+    id: ID,
+    config: { quantity: Quantity; lowStockThreshold?: Quantity },
   ): Promise<void> {
     const data: any = {
       stockQuantity: config.quantity,
@@ -470,7 +562,7 @@ export class DrizzleProductRepository implements IProductRepository {
    *
    * @param updates - Array of objects containing product ID and new quantity.
    */
-  async bulkUpdateStock(updates: { id: number; quantity: number }[]): Promise<void> {
+  async bulkUpdateStock(updates: { id: ID; quantity: Quantity }[]): Promise<void> {
     await db.transaction(async (tx) => {
       for (const update of updates) {
         await tx
@@ -539,7 +631,7 @@ export class DrizzleProductRepository implements IProductRepository {
   /**
    *
    */
-  async update(id: number, input: ProductInput): Promise<Product> {
+  async update(id: ID, input: ProductInput): Promise<Product> {
     return await db.transaction(async (tx) => {
       const [updated] = await tx
         .update(products)
@@ -596,7 +688,7 @@ export class DrizzleProductRepository implements IProductRepository {
   /**
    *
    */
-  async delete(id: number): Promise<void> {
+  async delete(id: ID): Promise<void> {
     await db.delete(products).where(eq(products.id, id));
   }
 
@@ -629,7 +721,7 @@ export class DrizzleProductRepository implements IProductRepository {
    * @param id - The product ID.
    * @returns ProductInput object with translations, or null.
    */
-  async getByIdWithTranslations(id: number): Promise<(ProductInput & { id: number }) | null> {
+  async getByIdWithTranslations(id: ID): Promise<(ProductInput & { id: ID }) | null> {
     // This uses functional query approach which might need adjustment based on how drizzle relations are set up
     // For safety, implementing with standard query
     const product = await db.select().from(products).where(eq(products.id, id)).limit(1);
@@ -659,6 +751,188 @@ export class DrizzleProductRepository implements IProductRepository {
         description: t.description,
         longDescription: t.longDescription || "",
       })),
+    };
+  }
+
+  /**
+   *
+   */
+  async upsertVariantSellableUoms(
+    productId: ID,
+    variantKey: string,
+    uoms: VariantSellableUomInput[],
+  ): Promise<void> {
+    if (uoms.length === 0) return;
+
+    await db.transaction(async (tx) => {
+      for (const uom of uoms) {
+        await tx
+          .insert(variantSellableUoms)
+          .values({
+            productId,
+            variantKey,
+            uomCode: uom.uomCode,
+            factorToBase: String(uom.factorToBase),
+            isEnabled: uom.isEnabled ?? true,
+          })
+          .onConflictDoUpdate({
+            target: [
+              variantSellableUoms.productId,
+              variantSellableUoms.variantKey,
+              variantSellableUoms.uomCode,
+            ],
+            set: {
+              factorToBase: String(uom.factorToBase),
+              isEnabled: uom.isEnabled ?? true,
+              updatedAt: new Date(),
+            },
+          });
+      }
+    });
+  }
+
+  /**
+   *
+   */
+  async upsertVariantPriceLists(
+    productId: ID,
+    variantKey: string,
+    prices: VariantPriceListInput[],
+  ): Promise<void> {
+    if (prices.length === 0) return;
+
+    await db.transaction(async (tx) => {
+      for (const price of prices) {
+        await tx
+          .insert(variantPriceLists)
+          .values({
+            productId,
+            variantKey,
+            customerGroup: price.customerGroup,
+            uomCode: price.uomCode,
+            unitPrice: String(price.unitPrice),
+            currency: price.currency || "EGP",
+            isSellable: price.isSellable ?? true,
+          })
+          .onConflictDoUpdate({
+            target: [
+              variantPriceLists.productId,
+              variantPriceLists.variantKey,
+              variantPriceLists.customerGroup,
+              variantPriceLists.uomCode,
+            ],
+            set: {
+              unitPrice: String(price.unitPrice),
+              currency: price.currency || "EGP",
+              isSellable: price.isSellable ?? true,
+              updatedAt: new Date(),
+            },
+          });
+      }
+    });
+  }
+
+  /**
+   *
+   */
+  async getVariantSellOptions(
+    productId: ID,
+    variantKey: string,
+    customerGroup?: CustomerGroup,
+  ): Promise<VariantSellOption[]> {
+    const uoms = await db
+      .select({
+        uomCode: variantSellableUoms.uomCode,
+        factorToBase: variantSellableUoms.factorToBase,
+        isEnabled: variantSellableUoms.isEnabled,
+      })
+      .from(variantSellableUoms)
+      .where(
+        and(
+          eq(variantSellableUoms.productId, productId),
+          eq(variantSellableUoms.variantKey, variantKey),
+        ),
+      );
+
+    if (!customerGroup) {
+      return uoms.map((uom) => ({
+        uomCode: uom.uomCode as UomCode,
+        factorToBase: Number(uom.factorToBase),
+        isEnabled: uom.isEnabled,
+      }));
+    }
+
+    const prices = await db
+      .select({
+        uomCode: variantPriceLists.uomCode,
+        unitPrice: variantPriceLists.unitPrice,
+        currency: variantPriceLists.currency,
+        isSellable: variantPriceLists.isSellable,
+      })
+      .from(variantPriceLists)
+      .where(
+        and(
+          eq(variantPriceLists.productId, productId),
+          eq(variantPriceLists.variantKey, variantKey),
+          eq(variantPriceLists.customerGroup, customerGroup),
+        ),
+      );
+
+    const priceByUom = new Map(
+      prices.map((p) => [
+        p.uomCode,
+        {
+          unitPrice: Number(p.unitPrice) as Price,
+          currency: p.currency,
+          isSellable: p.isSellable,
+        },
+      ]),
+    );
+
+    return uoms.map((uom) => {
+      const price = priceByUom.get(uom.uomCode);
+      return {
+        uomCode: uom.uomCode as UomCode,
+        factorToBase: Number(uom.factorToBase),
+        isEnabled: uom.isEnabled,
+        unitPrice: price?.unitPrice,
+        currency: price?.currency,
+        isSellable: price?.isSellable,
+      };
+    });
+  }
+
+  /**
+   *
+   */
+  async resolveVariantUnitPrice(
+    productId: ID,
+    variantKey: string,
+    uomCode: UomCode,
+    customerGroup: CustomerGroup,
+  ): Promise<{ unitPrice: Price; currency: string; isSellable: boolean } | null> {
+    const result = await db
+      .select({
+        unitPrice: variantPriceLists.unitPrice,
+        currency: variantPriceLists.currency,
+        isSellable: variantPriceLists.isSellable,
+      })
+      .from(variantPriceLists)
+      .where(
+        and(
+          eq(variantPriceLists.productId, productId),
+          eq(variantPriceLists.variantKey, variantKey),
+          eq(variantPriceLists.uomCode, uomCode),
+          eq(variantPriceLists.customerGroup, customerGroup),
+        ),
+      )
+      .limit(1);
+
+    if (result.length === 0) return null;
+    return {
+      unitPrice: Number(result[0].unitPrice) as Price,
+      currency: result[0].currency,
+      isSellable: result[0].isSellable,
     };
   }
 }

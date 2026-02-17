@@ -1,6 +1,7 @@
 import { SignJWT, jwtVerify } from "jose";
 import type { SessionPayload } from "@/features/core/domain/auth";
 import type { ISessionManager } from "@/features/core/application/interfaces/ISessionManager";
+import type { UserRole } from "@/features/core/domain/types/common";
 
 /**
  * JWT implementation of SessionManager
@@ -39,7 +40,7 @@ export class JwtSessionManager implements ISessionManager {
       return {
         userId: payload.userId as number,
         email: payload.email as string,
-        role: payload.role as string,
+        role: payload.role as UserRole,
       };
     } catch {
       return null;

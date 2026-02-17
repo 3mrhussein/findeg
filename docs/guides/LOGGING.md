@@ -1,105 +1,40 @@
-# 📝 Logging System Guide
+# Logging Guide
 
 ## Overview
 
-FindEg implements a robust, multi-tiered logging architecture designed for stability and depth of insight. The system captures both high-level application events and detailed server request logs without blocking the main application thread.
+FindEg uses dual logging:
 
-## Architecture
+- File logs for fast local/debug visibility
+- Database logs for queryable operational history
 
-Our logging strategy is built on three key pillars:
+## Core Components
 
-1.  **Multi-Tier Persistence**: Logs are written to both the filesystem (for speed/reliability) and the database (for analysis).
-2.  **Decoupled Execution**: Heavy logging operations are offloaded from critical paths (like Middleware) via a lightweight internal API.
-3.  **Structured Metadata**: All logs include contextual data like `requestId`, `userId`, `duration`, and `method`.
+- `LoggerService`: `src/features/core/application/services/LoggerService.ts`
+- File adapter: `src/features/core/infrastructure/logging/FileLogger.ts`
+- Request logging endpoint: `/api/v1/logging/request`
+- Middleware/proxy emitter: `src/proxy.ts`
 
-### The `LoggerService`
+## Logging Principles
 
-The core of the system is the `LoggerService` (in `src/application/services/LoggerService.ts`), which coordinates:
-
-- **File Logging**: Uses `winston` (via `FileLogger` adapter) to write rotated logs to `logs/app.log`.
-- **Database Logging**: Inserts structured records into the `server_logs` table using Drizzle ORM.
+1. Keep logs structured (`requestId`, `userId`, `path`, `duration`, metadata).
+2. Keep logging non-blocking for request paths.
+3. Keep sensitive values sanitized.
 
 ## Usage
 
-### 1. Basic Logging (Application Service)
-
-Inject `ILoggerService` into your services or use the global container:
-
-```typescript
+```ts
 import { getServices } from "@/server/getServices";
 
-export async function myBusinessLogic() {
-  const { logger } = getServices();
-
-  logger.info("Processing order", { orderId: 123 });
-
-  try {
-    // ... logic
-  } catch (error) {
-    logger.error("Failed to process order", { error: String(error) });
-  }
-}
+const { logger } = getServices();
+logger.info("Processing order", { orderId: 123 });
 ```
 
-### 2. Request Logging (Middleware)
+## Operational Checks
 
-The middleware (`src/proxy.ts`) automatically intercepts every request and logs it. To prevent Edge Runtime crashes or circular dependency issues, it does **not** import the database directly.
+- File logs: `logs/app.log`
+- DB logs: inspect `server_logs` table (`npm run db:studio`)
 
-Instead, it sends a non-blocking `fetch` request to the internal logging API:
+## Notes
 
-```typescript
-// src/proxy.ts (Simplified)
-fetch(`${origin}/api/v1/logging/request`, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    requestId: uuidv4(),
-    method: request.method,
-    path: request.nextUrl.pathname,
-    // ... metadata
-  }),
-});
-```
-
-### 3. Client-Side Logging
-
-Use the `clientLogger` utility to track significant user interactions:
-
-```typescript
-import { clientLogger } from "@/lib/logger/client";
-
-<Button onClick={() => clientLogger.logAction("add_to_cart", { productId: 1 })}>
-  Add to Cart
-</Button>
-```
-
-This sends an event to the server, which is then processed by the `LoggerService`.
-
-## Database Schema (`server_logs`)
-
-The `server_logs` table stores persistent records of server activity:
-
-| Column       | Type    | Description                                  |
-| :----------- | :------ | :------------------------------------------- |
-| `id`         | Serial  | Primary Key                                  |
-| `requestId`  | Varchar | Unique trace ID for the request cycle        |
-| `userId`     | Integer | ID of the authenticated user (if any)        |
-| `method`     | Varchar | HTTP method (GET, POST, etc.)                |
-| `path`       | Text    | Request URL path                             |
-| `statusCode` | Integer | HTTP response code                           |
-| `duration`   | Integer | Execution time in ms                         |
-| `level`      | Varchar | Log level (info, error, warn)                |
-| `message`    | Text    | Human-readable description                   |
-| `metadata`   | JSONB   | Structured context (sanitized headers, body) |
-
-## Stability Notes
-
-To ensure stability during development (especially with Turbopack):
-
-- **No Circular Imports**: The `server_logs` schema does NOT import `users` directly. Relations are strictly defined to avoid cycles.
-- **Lazy Initialization**: The `ServiceContainer` initializes the `LoggerService` only when accessed.
-
-## Viewing Logs
-
-- **File Logs**: `tail -f logs/app.log`
-- **Database Logs**: `npm run db:studio` -> Select `server_logs` table
+- Keep logging concerns in core/infrastructure; do not couple feature domain logic to logging implementations.
+- Audit logs for admin mutations are separate from server request logs and remain mandatory for operational traceability.

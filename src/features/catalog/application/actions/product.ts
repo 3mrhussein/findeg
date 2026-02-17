@@ -1,8 +1,10 @@
 "use server";
 
 import { container } from "@/features/core/infrastructure/di/ServiceContainer";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { ProductInput } from "@/features/administration/domain/types";
+import { resolveErrorMessage } from "@/features/core/domain/errors/error-catalog";
+import { CACHE_TAGS } from "@/features/core/domain/constants/cache-tags";
 
 /**
  * Creates a new product.
@@ -13,11 +15,15 @@ import { ProductInput } from "@/features/administration/domain/types";
 export async function createProductAction(input: ProductInput) {
   try {
     const service = container.adminProductService;
-    await service.create(input);
+    const product = await service.create(input);
     revalidatePath("/admin/products");
-    return { success: true };
+    revalidateTag(CACHE_TAGS.CATALOG_PRODUCTS, "max");
+    return { success: true, productId: product.id };
   } catch (error: any) {
-    return { success: false, error: error.message };
+    return {
+      success: false,
+      error: resolveErrorMessage(error, "ACTION_PRODUCT_CREATE_FAILED"),
+    };
   }
 }
 
@@ -31,11 +37,15 @@ export async function createProductAction(input: ProductInput) {
 export async function updateProductAction(id: number, input: ProductInput) {
   try {
     const service = container.adminProductService;
-    await service.update(id, input);
+    const product = await service.update(id, input);
     revalidatePath("/admin/products");
-    return { success: true };
+    revalidateTag(CACHE_TAGS.CATALOG_PRODUCTS, "max");
+    return { success: true, productId: product.id };
   } catch (error: any) {
-    return { success: false, error: error.message };
+    return {
+      success: false,
+      error: resolveErrorMessage(error, "ACTION_PRODUCT_UPDATE_FAILED"),
+    };
   }
 }
 
@@ -50,8 +60,12 @@ export async function deleteProductAction(id: number) {
     const service = container.adminProductService;
     await service.delete(id);
     revalidatePath("/admin/products");
+    revalidateTag(CACHE_TAGS.CATALOG_PRODUCTS, "max");
     return { success: true };
   } catch (error: any) {
-    return { success: false, error: error.message };
+    return {
+      success: false,
+      error: resolveErrorMessage(error, "ACTION_PRODUCT_DELETE_FAILED"),
+    };
   }
 }

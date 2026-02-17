@@ -7,6 +7,7 @@
 
 import { NextRequest } from "next/server";
 import { apiResponse } from "../../_lib/api-response";
+import { AUTH_SUCCESS_MESSAGES } from "@/features/core/domain/constants/auth";
 
 /**
  * Logout user
@@ -23,6 +24,6 @@ export async function POST(request: NextRequest) {
   // Future enhancement: Add token to blacklist/revocation list
 
   return apiResponse({
-    message: "Logged out successfully",
+    message: AUTH_SUCCESS_MESSAGES.LOGOUT_SUCCESS,
   });
 }

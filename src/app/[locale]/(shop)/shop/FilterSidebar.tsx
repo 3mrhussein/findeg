@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { categories } from "@/lib/constants";
 import type { Product } from "@/features/catalog/domain/entities/Product";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import {
   Accordion,
   AccordionContent,
@@ -11,6 +11,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { DOMAIN_DEFAULTS } from "@/features/core/domain/constants/messages";
 
 interface FilterSidebarUIProps {
   title: string;
@@ -20,6 +21,8 @@ interface FilterSidebarUIProps {
   onCategoryChange: (category: string) => void;
   priceRange: number;
   onPriceChange: (price: number) => void;
+  minimumPriceLabel: string;
+  selectedPriceLabel: string;
 }
 
 /**
@@ -33,6 +36,8 @@ export const FilterSidebarUI: React.FC<FilterSidebarUIProps> = ({
   onCategoryChange,
   priceRange,
   onPriceChange,
+  minimumPriceLabel,
+  selectedPriceLabel,
 }) => {
   return (
     <Card>
@@ -52,7 +57,7 @@ export const FilterSidebarUI: React.FC<FilterSidebarUIProps> = ({
                   >
                     <input
                       type="checkbox"
-                      className="h-4 w-4 rounded border-border bg-background text-primary focus:ring-primary focus:ring-offset-0"
+                      className="h-5 w-5 rounded border-border bg-background text-primary focus:ring-primary focus:ring-offset-0"
                       checked={selectedCategories.includes(cat.name)}
                       onChange={() => onCategoryChange(cat.name)}
                     />
@@ -72,12 +77,12 @@ export const FilterSidebarUI: React.FC<FilterSidebarUIProps> = ({
                   max="100"
                   value={priceRange}
                   onChange={(e) => onPriceChange(Number(e.target.value))}
-                  className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer"
+                  className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer min-h-10"
                 />
                 <div className="flex justify-between text-sm text-muted-foreground mt-2">
-                  <span>$0</span>
+                  <span>{minimumPriceLabel}</span>
                   <span className="font-semibold text-foreground bg-background border rounded-md px-2 py-0.5">
-                    ${priceRange}
+                    {selectedPriceLabel}
                   </span>
                 </div>
               </div>
@@ -99,8 +104,15 @@ interface FilterSidebarProps {
  */
 export const FilterSidebar: React.FC<FilterSidebarProps> = ({ allProducts, onFilterChange }) => {
   const t = useTranslations();
+  const locale = useLocale();
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [priceRange, setPriceRange] = useState(100);
+
+  const currencyFormatter = new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: DOMAIN_DEFAULTS.CURRENCY,
+    maximumFractionDigits: 0,
+  });
 
   useEffect(() => {
     const filtered = allProducts.filter((product) => {
@@ -130,6 +142,8 @@ export const FilterSidebar: React.FC<FilterSidebarProps> = ({ allProducts, onFil
       onCategoryChange={handleCategoryChange}
       priceRange={priceRange}
       onPriceChange={setPriceRange}
+      minimumPriceLabel={currencyFormatter.format(0)}
+      selectedPriceLabel={currencyFormatter.format(priceRange)}
     />
   );
 };

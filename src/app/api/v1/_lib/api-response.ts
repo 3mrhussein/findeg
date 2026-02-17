@@ -5,6 +5,8 @@
  * Ensures consistent JSON structure and HTTP status codes across all endpoints.
  */
 
+import { AppErrorCode, getErrorDefinition } from "@/features/core/domain/errors/error-catalog";
+
 /**
  * Standard API success response
  *
@@ -44,6 +46,33 @@ export function apiError(
       },
     },
     { status },
+  );
+}
+
+/**
+ * Standard API error response using centralized error code catalog.
+ *
+ * @param errorCode - Stable machine-readable error code.
+ * @param details - Optional validation errors or additional details.
+ * @param statusOverride - Optional explicit HTTP status override.
+ * @returns Next.js Response object with standardized error payload.
+ */
+export function apiErrorByCode(
+  errorCode: AppErrorCode,
+  details?: Record<string, unknown>,
+  statusOverride?: number,
+): Response {
+  const definition = getErrorDefinition(errorCode);
+  return Response.json(
+    {
+      success: false,
+      error: {
+        errorCode,
+        message: definition.message,
+        ...(details && { details }),
+      },
+    },
+    { status: statusOverride ?? definition.httpStatus },
   );
 }
 

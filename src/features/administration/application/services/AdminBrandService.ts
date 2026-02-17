@@ -1,3 +1,4 @@
+import { ID, Slug } from "@/features/core/domain/types/common";
 import { IAdminBrandService } from "../interfaces/IAdminBrandService";
 import { IBrandRepository } from "@/features/catalog/application/interfaces/IBrandRepository";
 import { Brand } from "@/features/catalog/domain/entities/Brand";
@@ -38,7 +39,7 @@ export class AdminBrandService implements IAdminBrandService {
    * @param id - Brand ID.
    * @returns The brand if it exists.
    */
-  async getById(id: number): Promise<Brand | null> {
+  async getById(id: ID): Promise<Brand | null> {
     return this.brandRepository.getById(id);
   }
 
@@ -65,7 +66,7 @@ export class AdminBrandService implements IAdminBrandService {
    * @param input - Updated fields.
    * @returns The updated brand.
    */
-  async update(id: number, input: BrandInput): Promise<Brand> {
+  async update(id: ID, input: BrandInput): Promise<Brand> {
     const brand = await this.brandRepository.update(id, {
       slug: input.slug,
       name: input.name,
@@ -80,7 +81,7 @@ export class AdminBrandService implements IAdminBrandService {
    *
    * @param id - Brand unique ID.
    */
-  async delete(id: number): Promise<void> {
+  async delete(id: ID): Promise<void> {
     await this.brandRepository.delete(id);
   }
 }

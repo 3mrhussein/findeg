@@ -4,9 +4,11 @@ import { Container } from "@/components/layout/Container";
 import { AdBanner } from "./_components/AdBanner";
 import { ScrollingLogoCloud } from "./_components/ScrollingLogoCloud";
 import { ProductPagination } from "@/components/common/ProductPagination";
-import { getServices } from "@/server/getServices";
-import { Category } from "@/features/catalog/domain/entities/Category";
 import { getTranslations } from "next-intl/server";
+import { getHomePageData } from "@/features/catalog/application/queries/storefront";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 /**
  * HomePage Template (Server Component)
@@ -22,11 +24,8 @@ interface HomePageProps {
  *
  */
 const HomePage = async ({ language = "en" }: HomePageProps) => {
-  // Use services for data fetching
-  const services = getServices();
   const t = await getTranslations();
-  const featuredProducts = await services.products.getFeaturedProducts(8, language);
-  const categories: Category[] = await services.categories.getAll(language);
+  const { featuredProducts, categories } = await getHomePageData(language);
 
   return (
     <>
@@ -48,6 +47,26 @@ const HomePage = async ({ language = "en" }: HomePageProps) => {
 
       <AdBanner />
 
+      <section className="py-12 bg-background">
+        <Container>
+          <Card className="border-dashed">
+            <CardContent className="py-8 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+              <div>
+                <h3 className="text-xl font-semibold">
+                  {t("Pages.SchoolLists.SecondaryCtaTitle")}
+                </h3>
+                <p className="text-muted-foreground">
+                  {t("Pages.SchoolLists.SecondaryCtaDescription")}
+                </p>
+              </div>
+              <Button asChild variant="outline">
+                <Link href="/school-lists">{t("Nav.SchoolLists")}</Link>
+              </Button>
+            </CardContent>
+          </Card>
+        </Container>
+      </section>
+
       <section id="categories" className="py-16 lg:py-24 bg-background">
         <Container>
           <h2 className="text-3xl font-bold text-center text-foreground mb-2">
@@ -67,7 +86,7 @@ const HomePage = async ({ language = "en" }: HomePageProps) => {
       <section className="bg-background py-16 lg:py-24">
         <Container>
           <h2 className="text-center text-lg font-semibold text-muted-foreground mb-10">
-            {"Our Trusted Brands"}
+            {t("Pages.Home.TrustedBrands")}
           </h2>
           <div className="space-y-8">
             <ScrollingLogoCloud direction="left" />

@@ -1,28 +1,45 @@
 # Review Feature
 
-The `review` feature allows customers to provide feedback and ratings for products they've purchased.
+Owns product feedback lifecycle: submission, moderation state, and rating aggregation inputs.
 
-## Responsibilities
+## Use Cases
 
-- **Product Feedback**: Submitting star ratings and text comments for products.
-- **Review Moderation**: Administrative capability to approve or hide reviews.
-- **Rating Aggregation**: Computing average ratings and review counts for the catalog.
+```mermaid
+flowchart LR
+    Customer --> UC1[Submit review]
+    Admin --> UC2[Approve/reject review]
+    Catalog --> UC3[Display rating summary]
+```
 
-## Component Overview
+## UML (Class View)
 
-### Domain Layer (`/domain`)
+```mermaid
+classDiagram
+    class Review
+    class IReviewRepository
+    class DrizzleReviewRepository
 
-- **Entities**: `Review`.
+    DrizzleReviewRepository ..|> IReviewRepository
+    IReviewRepository --> Review
+```
 
-### Application Layer (`/application`)
+## Sequence (Create Review)
 
-- **Ports**: `IReviewRepository` and `IReviewService`.
+```mermaid
+sequenceDiagram
+    participant API as Product Review Endpoint
+    participant Repo as IReviewRepository
+    API->>Repo: create(review payload)
+    Repo-->>API: persisted review
+    API-->>Client: success response
+```
 
-### Presentation Layer (`/presentation`)
+## Layer Notes
+- `domain`: `Review` entity and validation boundaries.
+- `application`: review repository contract.
+- `infrastructure`: Drizzle repository implementation.
 
-- **Components**: Review lists, Rating summaries, and Submission forms.
+## Clean Architecture Boundaries
+- Depends on `catalog` and `identity` IDs, not their infrastructure adapters.
+- Rating aggregation consumed by catalog views.
 
-## Architectural Boundaries
-
-- **Depends On**: `catalog` (associated products), `identity` (reviewer association).
-- **Communication**: Aggregated ratings are consumed by the `catalog` feature for display in product cards.

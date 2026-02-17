@@ -1,8 +1,9 @@
+import { ID, Slug } from "@/features/core/domain/types/common";
 import type { Brand } from "@/features/catalog/domain/entities/Brand";
 
 /** Input for creating a brand */
 export interface BrandCreateInput {
-  slug: string;
+  slug: Slug;
   name: string;
   logoUrl?: string | null;
   isActive?: boolean;
@@ -10,7 +11,7 @@ export interface BrandCreateInput {
 
 /** Input for updating a brand */
 export interface BrandUpdateInput {
-  slug?: string;
+  slug?: Slug;
   name?: string;
   logoUrl?: string | null;
   isActive?: boolean;
@@ -32,12 +33,12 @@ export interface IBrandRepository {
   /**
    * Retrieves a single brand by its unique identifier.
    */
-  getById(id: number): Promise<Brand | null>;
+  getById(id: ID): Promise<Brand | null>;
 
   /**
    * Retrieves a brand by its URL-friendly slug.
    */
-  getBySlug(slug: string): Promise<Brand | null>;
+  getBySlug(slug: Slug): Promise<Brand | null>;
 
   /**
    * Persists a new brand to storage.
@@ -47,12 +48,12 @@ export interface IBrandRepository {
   /**
    * Updates an existing brand's information.
    */
-  update(id: number, data: BrandUpdateInput): Promise<Brand>;
+  update(id: ID, data: BrandUpdateInput): Promise<Brand>;
 
   /**
    * Removes a brand from storage.
    */
-  delete(id: number): Promise<void>;
+  delete(id: ID): Promise<void>;
 
   /**
    * Counts the total number of brands in the system.

@@ -1,6 +1,4 @@
-import React from "react";
 import type { NavigationItem } from "@/lib/types";
-import { Icon } from "@/components/common/Icon";
 // ...removed import for T, use translation key directly
 
 /**
@@ -13,6 +11,7 @@ import { Icon } from "@/components/common/Icon";
  */
 export const navigationSchema: NavigationItem[] = [
   { labelKey: "Nav.Shop", href: "/shop" },
+  { labelKey: "Nav.Search", href: "/search" },
   {
     labelKey: "Nav.Categories",
     href: "/categories",
@@ -92,8 +91,7 @@ export const navigationSchema: NavigationItem[] = [
       },
     ],
   },
-  { labelKey: "Nav.About", href: "/about" },
-  { labelKey: "Nav.AiGenerator", href: "/", id: "nav_ai_generator" },
+  { labelKey: "Nav.SchoolLists", href: "/school-lists" },
   { labelKey: "Nav.MyAccount", href: "/my-account" },
   { labelKey: "Nav.Dashboard", href: "/dashboard" },
 ];

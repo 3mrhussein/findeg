@@ -1,3 +1,4 @@
+import { ID, Quantity } from "@/features/core/domain/types/common";
 import { IAdminInventoryService } from "../interfaces/IAdminInventoryService";
 import { IProductRepository } from "@/features/catalog/application/interfaces/IProductRepository";
 import { IAuditLogService } from "../interfaces/IAuditLogService";
@@ -96,7 +97,7 @@ export class AdminInventoryService implements IAdminInventoryService {
    * @param threshold - Optional override for the low-stock limit.
    * @returns List of products requiring restock attention.
    */
-  async getLowStockAlerts(threshold?: number): Promise<Product[]> {
+  async getLowStockAlerts(threshold?: Quantity): Promise<Product[]> {
     return this.productRepository.getLowStock(threshold);
   }
 }

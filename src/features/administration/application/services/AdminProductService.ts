@@ -1,3 +1,4 @@
+import { ID } from "@/features/core/domain/types/common";
 import { IAdminProductService } from "../interfaces/IAdminProductService";
 import { IProductRepository } from "@/features/catalog/application/interfaces/IProductRepository";
 import { ICategoryRepository } from "@/features/catalog/application/interfaces/ICategoryRepository";
@@ -79,7 +80,7 @@ export class AdminProductService implements IAdminProductService {
    * @returns The updated product entity.
    * @throws Error if the product, category, or brand is not found.
    */
-  async update(id: number, input: ProductInput): Promise<Product> {
+  async update(id: ID, input: ProductInput): Promise<Product> {
     const existing = await this.productRepository.getById(id);
     if (!existing) {
       throw new Error(`Product with ID ${id} not found`);
@@ -121,7 +122,7 @@ export class AdminProductService implements IAdminProductService {
    * @param id - The ID of the product to remove.
    * @throws Error if the product does not exist.
    */
-  async delete(id: number): Promise<void> {
+  async delete(id: ID): Promise<void> {
     const existing = await this.productRepository.getById(id);
     if (!existing) {
       throw new Error(`Product with ID ${id} not found`);
@@ -147,7 +148,7 @@ export class AdminProductService implements IAdminProductService {
    * @param language - Optional language for localized snapshots.
    * @returns Product or null.
    */
-  async getById(id: number, language?: string): Promise<Product | null> {
+  async getById(id: ID, language?: string): Promise<Product | null> {
     return this.productRepository.getById(id, language);
   }
 
@@ -158,7 +159,7 @@ export class AdminProductService implements IAdminProductService {
    * @param id - Product ID.
    * @returns ProductInput data with all languages, or null.
    */
-  async getByIdWithTranslations(id: number): Promise<(ProductInput & { id: number }) | null> {
+  async getByIdWithTranslations(id: ID): Promise<(ProductInput & { id: ID }) | null> {
     return this.productRepository.getByIdWithTranslations(id);
   }
 

@@ -38,6 +38,7 @@ export const FooterUI: React.FC<FooterUIProps> = ({
   shopLinks,
   aboutLinks,
 }) => {
+  const currentYear = new Date().getFullYear();
   const socialLinks: { name: IconName; href: string; label: string }[] = [
     { name: "facebook", href: "#", label: "Facebook" },
     { name: "instagram", href: "#", label: "Instagram" },
@@ -99,7 +100,9 @@ export const FooterUI: React.FC<FooterUIProps> = ({
           </div>
         </div>
         <div className="mt-12 border-t border-white/20 pt-8 flex flex-col sm:flex-row justify-between items-center text-center text-white/70">
-          <p>&copy; 2024 FindEg.com. {copyrightText}</p>
+          <p>
+            &copy; {currentYear} FindEg.com. {copyrightText}
+          </p>
           <Button
             variant="link"
             onClick={onSettingsClick}
@@ -125,6 +128,7 @@ export const Footer: React.FC<FooterProps> = ({ onSettingsClick }) => {
   const shopLinks: FooterLink[] = [
     { label: t("Nav.Shop"), href: "/shop" },
     { label: t("Nav.Categories"), href: "/categories" },
+    { label: t("Nav.SchoolLists"), href: "/school-lists" },
     { label: t("Pages.Home.Featured.Title"), href: "/shop" },
   ];
   const aboutLinks: FooterLink[] = [

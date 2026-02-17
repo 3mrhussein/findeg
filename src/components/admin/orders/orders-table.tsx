@@ -23,6 +23,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import Link from "next/link";
 import { Eye } from "lucide-react";
+import { OrderStatus } from "@/features/core/domain/types/common";
 
 interface OrdersTableProps {
   orders: Order[];
@@ -38,7 +39,7 @@ export function OrdersTable({ orders }: OrdersTableProps) {
   /**
    *
    */
-  const handleStatusChange = async (orderId: number, newStatus: string) => {
+  const handleStatusChange = async (orderId: number, newStatus: OrderStatus) => {
     setUpdatingId(orderId);
     try {
       const result = await updateOrderStatusAction(orderId, { status: newStatus });
@@ -103,7 +104,9 @@ export function OrdersTable({ orders }: OrdersTableProps) {
                 <TableCell>
                   <Select
                     defaultValue={order.status}
-                    onValueChange={(val) => handleStatusChange(Number(order.id), val)}
+                    onValueChange={(val) =>
+                      handleStatusChange(Number(order.id), val as OrderStatus)
+                    }
                     disabled={updatingId === order.id}
                   >
                     <SelectTrigger className="w-[130px] h-8">

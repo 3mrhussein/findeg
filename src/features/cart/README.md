@@ -1,30 +1,51 @@
 # Cart Feature
 
-The `cart` feature provides temporary storage for products that the user intends to buy. It supports both guest and registered user sessions.
+Owns cart lifecycle for guest and authenticated sessions, including pricing snapshots used at checkout.
 
-## Responsibilities
+## Use Cases
 
-- **Line Item Management**: Adding, updating, and removing products from the cart.
-- **Cart Persistence**: Storing cart state in database (for users) or local storage/cookies (for guests).
-- **Subtotal Calculation**: Real-time pricing updates as items are modified.
-- **Stock Validation**: Ensuring items in the cart are still available in the catalog.
+```mermaid
+flowchart LR
+    Shopper --> UC1[Add item to cart]
+    Shopper --> UC2[Update quantity]
+    Shopper --> UC3[Remove item]
+    Checkout --> UC4[Read cart snapshot]
+```
 
-## Component Overview
+## UML (Class View)
 
-### Domain Layer (`/domain`)
+```mermaid
+classDiagram
+    class CartEntity
+    class CartItem
+    class CartService
+    class ICartService
 
-- **Entities**: `Cart` and `CartItem`.
+    CartService ..|> ICartService
+    CartService --> CartEntity
+    CartEntity --> CartItem
+```
 
-### Application Layer (`/application`)
+## Sequence (Add Item with Pricing Context)
 
-- **Ports**: `ICartRepository` and `ICartService`.
-- **Hooks**: `useCart` (for client-side interactions and state management).
+```mermaid
+sequenceDiagram
+    participant API as POST /api/v1/cart/items
+    participant PS as ProductService
+    participant CS as CartService
+    API->>PS: quoteVariantUnitPrice(...)
+    PS-->>API: unitPriceSnapshot
+    API->>CS: addItem(cartId, {uomCode, customerGroup, unitPriceSnapshot})
+    CS-->>API: updated cart
+```
 
-### Presentation Layer (`/presentation`)
+## Layer Notes
+- `domain`: `CartEntity` and cart totals logic.
+- `application`: cart service contract and managed cart operations.
+- `infrastructure`: currently in-memory cart persistence path.
 
-- **Components**: Cart Sidebar, Cart Page, and "Add to Cart" buttons.
+## Clean Architecture Boundaries
+- Depends on `catalog` for product/price context.
+- Feeds `order` as source of checkout snapshots.
+- Cart logic must remain decoupled from direct DB order writes.
 
-## Architectural Boundaries
-
-- **Depends On**: `catalog` (for product pricing and stock), `identity` (for user association).
-- **Used By**: `order` (as the source for checkout).

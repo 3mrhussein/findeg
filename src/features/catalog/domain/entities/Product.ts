@@ -5,12 +5,22 @@
  * Contains business logic for pricing, stock, and discount calculations.
  */
 
+import {
+  ID,
+  Price,
+  Sku,
+  Quantity,
+  Rating,
+  CustomerGroup,
+  UomCode,
+} from "@/features/core/domain/types/common";
+
 /** Single variant option (e.g., "Blue" for Color variant) */
 export interface ProductVariantOption {
   value: string;
   label: string;
-  priceModifier: number;
-  stock: number;
+  priceModifier: Price;
+  stock: Quantity;
 }
 
 /** A product variant group (e.g., "Color" with multiple options) */
@@ -19,32 +29,56 @@ export interface ProductVariant {
   options: ProductVariantOption[];
 }
 
+/** Sellable unit definition for a variant key */
+export interface ProductVariantSellableUom {
+  uomCode: UomCode;
+  factorToBase: number;
+  isEnabled: boolean;
+}
+
+/** Price-list row for a variant key and customer group */
+export interface ProductVariantPrice {
+  customerGroup: CustomerGroup;
+  uomCode: UomCode;
+  unitPrice: Price;
+  currency: string;
+  isSellable: boolean;
+}
+
+/** Commercial configuration for a single variant key */
+export interface ProductVariantCommercialConfig {
+  variantKey: string;
+  sellableUoms: ProductVariantSellableUom[];
+  priceLists: ProductVariantPrice[];
+}
+
 /**
  * Product Domain Interface
  *
  * Represents a fully-hydrated product with translations resolved to the requested language.
  */
 export interface Product {
-  id: number;
-  sku?: string;
+  id: ID;
+  sku?: Sku;
   name: string;
-  price: number;
-  strikePrice?: number;
+  price: Price;
+  strikePrice?: Price;
   description: string;
   longDescription: string;
   imageUrl?: string;
   images: string[];
-  categoryId?: number;
+  categoryId?: ID;
   categoryName?: string;
-  brandId?: number;
+  brandId?: ID;
   brandName?: string;
   isActive?: boolean;
-  stockQuantity?: number;
-  lowStockThreshold?: number;
+  stockQuantity?: Quantity;
+  lowStockThreshold?: Quantity;
   isNew?: boolean;
-  rating: number;
+  rating: Rating;
   reviewsCount: number;
   variants?: { [key: string]: ProductVariant };
+  variantCommercialConfig?: Record<string, ProductVariantCommercialConfig>;
 }
 
 /**

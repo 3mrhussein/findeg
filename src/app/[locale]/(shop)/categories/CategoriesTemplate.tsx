@@ -2,16 +2,18 @@ import { useTranslations } from "next-intl";
 
 import { Container } from "@/components/layout/Container";
 import { CategoryCard } from "../_components/CategoryCard";
-import { categories } from "@/lib/constants";
+import { Category } from "@/features/catalog/domain/entities/Category";
+import { PageStateEmpty } from "@/components/common/state/PageStateEmpty";
 
 interface CategoriesTemplateProps {
   language?: "en" | "ar";
+  categories: Category[];
 }
 
 /**
  *
  */
-const CategoriesTemplate: React.FC<CategoriesTemplateProps> = () => {
+const CategoriesTemplate: React.FC<CategoriesTemplateProps> = ({ categories }) => {
   const t = useTranslations();
 
   return (
@@ -24,18 +26,19 @@ const CategoriesTemplate: React.FC<CategoriesTemplateProps> = () => {
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {categories.map((category, index) => (
-            <CategoryCard
-              key={category.name}
-              category={{
-                id: index + 1,
-                slug: category.name.toLowerCase().replace(/ /g, "-"),
-                name: category.name,
-                description: category.description,
-                image: category.imageUrl,
-              }}
-            />
-          ))}
+          {categories.length > 0 ? (
+            categories.map((category) => <CategoryCard key={category.id} category={category} />)
+          ) : (
+            <div className="sm:col-span-2 lg:col-span-3">
+              <PageStateEmpty
+                title={t("Pages.Categories.EmptyTitle")}
+                description={t("Pages.Categories.EmptyDescription")}
+                actionLabel={t("Nav.Shop")}
+                actionHref="/shop"
+                iconName="package"
+              />
+            </div>
+          )}
         </div>
       </Container>
     </div>

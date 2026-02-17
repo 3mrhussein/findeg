@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -28,17 +27,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { createBrandAction, updateBrandAction } from "@/features/catalog/application/actions/brand";
 import { Loader2, Plus } from "lucide-react";
 import type { Brand } from "@/features/catalog/domain/entities/Brand";
+import { BrandInputSchema, type BrandInput } from "@/features/administration/domain/types";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 
-const brandSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  slug: z.string().min(2, "Slug must be at least 2 characters"),
-  logoUrl: z.string().optional(),
-  isActive: z.boolean().default(true),
-});
-
-type BrandFormValues = z.infer<typeof brandSchema>;
+type BrandFormValues = BrandInput;
 
 interface BrandFormProps {
   brand?: Brand;
@@ -55,7 +48,7 @@ export function BrandForm({ brand, open, onOpenChange }: BrandFormProps) {
   const { toast } = useToast();
 
   const form = useForm<BrandFormValues>({
-    resolver: zodResolver(brandSchema) as any,
+    resolver: zodResolver(BrandInputSchema) as any,
     defaultValues: {
       name: brand?.name || "",
       slug: brand?.slug || "",

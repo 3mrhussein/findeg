@@ -4,6 +4,8 @@
  * Represents a product category with hierarchical structure.
  */
 
+import { ID, Slug } from "@/features/core/domain/types/common";
+
 /**
  * Category Domain Interface
  *
@@ -12,13 +14,13 @@
  * @property sortOrder - Display order among sibling categories
  */
 export interface Category {
-  id: number;
-  slug: string;
+  id: ID;
+  slug: Slug;
   name: string;
   description?: string;
   image?: string;
   icon?: string;
-  parentId?: number;
+  parentId?: ID;
   path?: string;
   depth?: number;
   sortOrder?: number;

@@ -1,37 +1,53 @@
 # Catalog Feature
 
-The `catalog` feature manages the product inventory, categories, and brand information. It provides the customer-facing shop experience and supports the administration's inventory management.
+Owns product discovery and commercial catalog data: products, categories, brands, and variant sell options.
 
-## Responsibilities
+## Use Cases
 
-- **Product Management**: Retrieval and filtering of products, stock level tracking, and pricing calculations.
-- **Hierarchical Categories**: Organizing products into a tree-based category structure.
-- **Brand Management**: Associating products with manufacturing brands.
-- **Multi-language Search**: Full-text search across localized names and descriptions.
+```mermaid
+flowchart LR
+    Shopper --> UC1[Browse categories]
+    Shopper --> UC2[Search products]
+    Shopper --> UC3[View product details]
+    Admin --> UC4[Maintain product catalog]
+    Admin --> UC5[Configure variant UoM/pricing]
+```
 
-## Component Overview
+## UML (Class View)
 
-### Domain Layer (`/domain`)
+```mermaid
+classDiagram
+    class ProductService
+    class IProductRepository
+    class DrizzleProductRepository
+    class Product
+    class ProductEntity
 
-- **Entities**: Core structures like `Product`, `Category`, and `Brand`.
-- **ProductEntity**: Domain logic for computing prices (with variants) and stock status.
+    ProductService --> IProductRepository
+    DrizzleProductRepository ..|> IProductRepository
+    ProductEntity --> Product
+```
 
-### Application Layer (`/application`)
+## Sequence (Price Quote)
 
-- **Ports**: Interface definitions for repositories (`IProductRepository`) and services (`IProductService`).
-- **Services**: Business flows for fetching shop-facing data.
+```mermaid
+sequenceDiagram
+    participant API as /api/v1/products/{id}/pricing/quote
+    participant S as ProductService
+    participant R as IProductRepository
+    API->>S: quoteVariantUnitPrice(productId, variantKey, uomCode, customerGroup)
+    S->>R: resolveVariantUnitPrice(...)
+    R-->>S: {unitPrice, currency, isSellable}
+    S-->>API: quote payload
+```
 
-### Infrastructure Layer (`/infrastructure`)
+## Layer Notes
+- `domain`: `Product`, `Category`, `Brand`, `ProductEntity`.
+- `application`: service contracts and catalog use cases.
+- `infrastructure`: Drizzle repositories and query composition.
 
-- **Persistence**: Drizzle-based implementations for data access, handling complex joins for localized content.
+## Clean Architecture Boundaries
+- Depends on `core`.
+- Used by `cart`, `order`, and `administration` through interfaces/services.
+- No UI should import repository implementations directly.
 
-### Presentation Layer (`/presentation`)
-
-- **Components**: Shop UI elements like Product Cards, Category Lists, and Filtering Sidebars.
-- **Templates**: Full page layouts for Product Listing, Detail, and Search pages.
-
-## Architectural Boundaries
-
-- **Depends On**: `core` (for persistence and UI tokens).
-- **Used By**: `administration` (for CRUD operations), `cart` (to validate product details).
-- **Communication**: Exposed via `IProductService`. Administration uses `IAdminProductService` which is strictly separated.

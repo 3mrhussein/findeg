@@ -6,7 +6,8 @@
  * through injected dependencies (IUserRepository + ISessionProvider).
  */
 
-import { AuthResult, SessionPayload } from "../../domain/types/auth";
+import { Email } from "@/features/core/domain/types/common";
+import { AuthResult, RegisterInput, SessionPayload } from "@/features/core/domain/auth";
 
 export interface IAuthService {
   /**
@@ -17,7 +18,7 @@ export interface IAuthService {
    * @param password - User's plain-text password.
    * @returns AuthResult containing success status and optional user data or error message.
    */
-  login(email: string, password: string): Promise<AuthResult>;
+  login(email: Email, password: string): Promise<AuthResult>;
 
   /**
    * Registers a new user account.
@@ -25,7 +26,7 @@ export interface IAuthService {
    * @param input - Registration data (name, email, password, etc.).
    * @returns AuthResult containing success status and optional user data or error message.
    */
-  register(input: any): Promise<AuthResult>;
+  register(input: RegisterInput): Promise<AuthResult>;
 
   /**
    * Destroys the current authentication session.

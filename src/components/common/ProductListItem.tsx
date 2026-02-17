@@ -2,32 +2,35 @@
 
 import React from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { Product } from "@/features/catalog/domain/entities/Product";
 
 import { Icon } from "@/components/common/Icon";
 import { Price } from "@/components/common/Price";
 import { Button } from "@/components/ui/button";
 import { useTranslations } from "next-intl";
-// ...removed import for T, use translation key directly
-import { useCart } from "@/hooks/useCart";
+import { useProductListItemController } from "./useProductListItemController";
+import { useToast } from "@/hooks/use-toast";
 
-interface ProductListItemUIProps {
+interface ProductListItemProps {
   product: Product;
-  onAddToCart: (e: React.MouseEvent) => void;
-  addToCartText: string;
-  onCardClick: () => void;
 }
 
 /**
  *
  */
-export const ProductListItemUI: React.FC<ProductListItemUIProps> = ({
-  product,
-  onAddToCart,
-  addToCartText,
-  onCardClick,
-}) => {
+export const ProductListItem: React.FC<ProductListItemProps> = ({ product }) => {
+  const t = useTranslations();
+  const { toast } = useToast();
+  const { isAddingToCart, onAddToCart, onCardClick } = useProductListItemController(product);
+
+  const handleAddToCart = (event: React.MouseEvent) => {
+    onAddToCart(event);
+    toast({
+      title: t("Feedback.CartAddedTitle"),
+      description: t("Feedback.CartAddedDescription", { name: product.name }),
+    });
+  };
+
   return (
     <div
       className="bg-card rounded-lg shadow-md overflow-hidden group transition-all duration-300 hover:shadow-xl border flex flex-col sm:flex-row cursor-pointer"
@@ -49,63 +52,12 @@ export const ProductListItemUI: React.FC<ProductListItemUIProps> = ({
         <div className="flex-grow"></div>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mt-4">
           <Price price={product.price} strikePrice={product.strikePrice} className="mb-3 sm:mb-0" />
-          <Button onClick={onAddToCart}>
+          <Button onClick={handleAddToCart} disabled={isAddingToCart}>
             <Icon name="shoppingCart" className="w-5 h-5 ltr:mr-2 rtl:ml-2" />
-            {addToCartText}
+            {isAddingToCart ? t("Feedback.AddingToCart") : t("Pages.ProductCard.AddToCart")}
           </Button>
         </div>
       </div>
     </div>
-  );
-};
-
-interface ProductListItemProps {
-  product: Product;
-}
-
-/**
- *
- */
-export const ProductListItem: React.FC<ProductListItemProps> = ({ product }) => {
-  const t = useTranslations();
-  const { addToCart } = useCart();
-  const router = useRouter();
-
-  /**
-   *
-   */
-  const handleAddToCart = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    // For products with variants, add the first available variant by default.
-    let selectedVariant;
-    if (product.variants) {
-      selectedVariant = Object.keys(product.variants).reduce(
-        (acc, key) => {
-          const firstAvailableOption = product.variants?.[key].options.find((opt) => opt.stock > 0);
-          if (firstAvailableOption) {
-            acc[key] = firstAvailableOption.value;
-          }
-          return acc;
-        },
-        {} as { [key: string]: string },
-      );
-    }
-    addToCart(product, 1, selectedVariant);
-  };
-
-  /**
-   *
-   */
-  const handleCardClick = () => {
-    router.push(`/product/${product.id}`);
-  };
-
-  return (
-    <ProductListItemUI
-      product={product}
-      onAddToCart={handleAddToCart}
-      addToCartText={t("Pages.ProductCard.AddToCart")}
-      onCardClick={handleCardClick}
-    />
   );
 };

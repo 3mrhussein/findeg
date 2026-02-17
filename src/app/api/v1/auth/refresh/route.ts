@@ -6,12 +6,19 @@
  */
 
 import { NextRequest } from "next/server";
-import { apiResponse, apiError } from "../../_lib/api-response";
+import { apiResponse, apiErrorByCode } from "../../_lib/api-response";
 import { jwtVerify, SignJWT } from "jose";
+import { z } from "zod";
+import { AUTH_CONSTANTS } from "@/features/core/domain/constants/auth";
+import { validateWithResult } from "@/features/core/domain/errors";
 
 const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || "your-secret-key-change-in-production",
+  process.env.JWT_SECRET || AUTH_CONSTANTS.JWT_SECRET_FALLBACK,
 );
+
+const RefreshTokenSchema = z.object({
+  token: z.string().min(1),
+});
 
 /**
  * Refresh JWT token
@@ -22,19 +29,19 @@ const JWT_SECRET = new TextEncoder().encode(
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { token } = body;
-
-    if (!token) {
-      return apiError("Token is required", 400);
+    const parsed = validateWithResult(RefreshTokenSchema, body, "VALIDATION_INVALID_REQUEST_BODY");
+    if (!parsed.ok) {
+      return apiErrorByCode(parsed.error.code, parsed.error.details);
     }
+    const { token } = parsed.value;
 
     // Verify existing token (even if expired, we can still read the payload)
     let payload;
     try {
       const result = await jwtVerify(token, JWT_SECRET);
       payload = result.payload;
-    } catch (error) {
-      return apiError("Invalid token", 401);
+    } catch {
+      return apiErrorByCode("AUTH_INVALID_TOKEN");
     }
 
     // Generate new token with same payload
@@ -43,14 +50,16 @@ export async function POST(request: NextRequest) {
       email: payload.email,
       role: payload.role,
     })
-      .setProtectedHeader({ alg: "HS256" })
-      .setExpirationTime("7d")
+      .setProtectedHeader({ alg: AUTH_CONSTANTS.JWT_ALGORITHM })
+      .setExpirationTime(AUTH_CONSTANTS.USER_TOKEN_EXPIRY)
       .sign(JWT_SECRET);
 
     return apiResponse({
       token: newToken,
     });
   } catch (error) {
-    return apiError("Token refresh failed", 500);
+    return apiErrorByCode("AUTH_REFRESH_FAILED", {
+      reason: error instanceof Error ? error.message : undefined,
+    });
   }
 }

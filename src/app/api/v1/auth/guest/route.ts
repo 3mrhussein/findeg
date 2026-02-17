@@ -6,12 +6,13 @@
  */
 
 import { NextRequest } from "next/server";
-import { apiResponse } from "../../_lib/api-response";
+import { apiResponse, apiErrorByCode } from "../../_lib/api-response";
 import { SignJWT } from "jose";
 import { randomUUID } from "crypto";
+import { AUTH_CONSTANTS } from "@/features/core/domain/constants/auth";
 
 const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || "your-secret-key-change-in-production",
+  process.env.JWT_SECRET || AUTH_CONSTANTS.JWT_SECRET_FALLBACK,
 );
 
 /**
@@ -23,15 +24,15 @@ const JWT_SECRET = new TextEncoder().encode(
 export async function POST(request: NextRequest) {
   try {
     // Generate unique guest ID
-    const guestId = `guest_${randomUUID()}`;
+    const guestId = `${AUTH_CONSTANTS.GUEST_ID_PREFIX}${randomUUID()}`;
 
     // Generate JWT token for guest
     const token = await new SignJWT({
       guestId,
-      role: "guest",
+      role: AUTH_CONSTANTS.GUEST_ROLE,
     })
-      .setProtectedHeader({ alg: "HS256" })
-      .setExpirationTime("30d") // Longer expiry for guest sessions
+      .setProtectedHeader({ alg: AUTH_CONSTANTS.JWT_ALGORITHM })
+      .setExpirationTime(AUTH_CONSTANTS.GUEST_TOKEN_EXPIRY)
       .sign(JWT_SECRET);
 
     return apiResponse({
@@ -39,11 +40,8 @@ export async function POST(request: NextRequest) {
       guestId,
     });
   } catch (error) {
-    return apiResponse(
-      {
-        error: "Failed to create guest session",
-      },
-      500,
-    );
+    return apiErrorByCode("AUTH_GUEST_SESSION_FAILED", {
+      reason: error instanceof Error ? error.message : undefined,
+    });
   }
 }

@@ -1,14 +1,16 @@
-/**
- * Domain Entity: Cart
- *
- * Represents a shopping cart with business logic for cart operations.
- */
-
+import { CustomerGroup, Price, Quantity, UomCode } from "@/features/core/domain/types/common";
 import type { Product } from "@/features/catalog/domain/entities/Product";
+import type { VariantSnapshot } from "@/features/order/domain/value-objects";
 
 export type CartItem = Product & {
-  quantity: number;
-  selectedVariant?: { [key: string]: string };
+  quantity: Quantity;
+  selectedVariant?: VariantSnapshot;
+  variant?: VariantSnapshot;
+  variantKey?: string;
+  uomCode?: UomCode;
+  customerGroup?: CustomerGroup;
+  unitPriceSnapshot?: Price;
+  currency?: string;
 };
 
 /**
@@ -90,12 +92,16 @@ export class CartEntity {
    */
   getTotalPrice(): number {
     return this.items.reduce((total, item) => {
+      if (item.unitPriceSnapshot !== undefined && item.unitPriceSnapshot !== null) {
+        return total + item.unitPriceSnapshot * item.quantity;
+      }
+
       let itemPrice = item.price;
       if (item.selectedVariant && item.variants) {
         Object.entries(item.selectedVariant).forEach(([variantKey, optionValue]) => {
           const variant = item.variants?.[variantKey];
           if (variant) {
-            const option = variant.options.find((opt) => opt.value === optionValue);
+            const option = variant.options.find((opt) => opt.value === String(optionValue));
             if (option) {
               itemPrice += option.priceModifier;
             }
@@ -123,7 +129,7 @@ export class CartEntity {
   /**
    * Generate a unique identifier for a variant combination for comparison.
    */
-  private getVariantId(selectedVariant?: { [key: string]: string }): string {
+  private getVariantId(selectedVariant?: VariantSnapshot): string {
     if (!selectedVariant) return "";
     return JSON.stringify(selectedVariant);
   }

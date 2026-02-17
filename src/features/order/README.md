@@ -1,36 +1,51 @@
 # Order Feature
 
-The `order` feature manages the checkout process and the lifecycle of a customer's purchase. It handles order creation, status tracking, and fulfillment coordination.
+Owns checkout orchestration and order lifecycle, including immutable line-item snapshots.
 
-## Responsibilities
+## Use Cases
 
-- **Checkout Coordination**: Assembling the cart items, shipping address, and payment method into an order.
-- **Order Lifecycle**: Managing status transitions (Pending → Processing → Shipped → Delivered).
-- **Snapshot management**: Capturing product prices and descriptions at time of purchase to ensure historical accuracy.
-- **Financial Tracking**: Calculating subtotals, shipping costs, and final totals.
+```mermaid
+flowchart LR
+    Shopper --> UC1[Validate checkout]
+    Shopper --> UC2[Create order]
+    Shopper --> UC3[View order history]
+    Admin --> UC4[Update order status]
+```
 
-## Component Overview
+## UML (Class View)
 
-### Domain Layer (`/domain`)
+```mermaid
+classDiagram
+    class Order
+    class OrderItem
+    class IOrderRepository
+    class DrizzleOrderRepository
 
-- **Entities**: `Order` and `OrderItem`.
-- **Value Objects**: `ShippingAddress` snapshot and `VariantSnapshot`.
+    Order --> OrderItem
+    DrizzleOrderRepository ..|> IOrderRepository
+```
 
-### Application Layer (`/application`)
+## Sequence (Checkout to Order)
 
-- **Ports**: `IOrderRepository` for order persistence and `IOrderService` for customer actions.
-- **Services**: Logic for order placement, including inventory reservation triggers.
+```mermaid
+sequenceDiagram
+    participant CheckoutAPI as /api/v1/checkout/order
+    participant Cart as CartService
+    participant Product as ProductService
+    participant Repo as IOrderRepository
+    CheckoutAPI->>Cart: getCart(cartId)
+    CheckoutAPI->>Product: getById(...) for snapshots
+    CheckoutAPI->>Repo: create(order + orderItems snapshots)
+    Repo-->>CheckoutAPI: persisted order
+```
 
-### Infrastructure Layer (`/infrastructure`)
+## Layer Notes
+- `domain`: `Order`, `OrderItem`, `ShippingAddress`, `VariantSnapshot`.
+- `application`: repository contracts and checkout-facing actions.
+- `infrastructure`: Drizzle persistence and analytics queries.
 
-- **Persistence**: Drizzle-based repository for orders and their line items.
+## Clean Architecture Boundaries
+- Depends on `cart` and `catalog` contracts for data capture.
+- Must preserve historical snapshot integrity despite catalog changes.
+- Administration reads/updates order lifecycle via service contracts.
 
-### Presentation Layer (`/presentation`)
-
-- **Components**: Checkout flow, Order History lists, and detailed Order Status views.
-
-## Architectural Boundaries
-
-- **Depends On**: `catalog` (for item snapshots), `cart` (source of data), `identity` (user associations).
-- **Used By**: `administration` (for fulfillment and analytics).
-- **External Integration**: Designed to be extended with payment gateway adapters.

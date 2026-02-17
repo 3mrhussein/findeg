@@ -1,8 +1,10 @@
 "use server";
 
 import { container } from "@/features/core/infrastructure/di/ServiceContainer";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { InventoryUpdate } from "@/features/administration/domain/types";
+import { CACHE_TAGS } from "@/features/core/domain/constants/cache-tags";
+import { resolveErrorMessage } from "@/features/core/domain/errors";
 
 /**
  * Updates the stock level for a specific product.
@@ -16,8 +18,9 @@ export async function updateStockAction(input: InventoryUpdate) {
     await service.updateStock(input);
     revalidatePath("/admin/inventory");
     revalidatePath("/admin/products");
+    revalidateTag(CACHE_TAGS.CATALOG_PRODUCTS, "max");
     return { success: true };
   } catch (error: any) {
-    return { success: false, error: error.message };
+    return { success: false, error: resolveErrorMessage(error, "SYSTEM_UNEXPECTED_ERROR") };
   }
 }

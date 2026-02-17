@@ -6,9 +6,11 @@
  */
 
 import { NextRequest } from "next/server";
-import { apiResponse, apiError } from "../../_lib/api-response";
+import { apiResponse, apiErrorByCode } from "../../_lib/api-response";
 import { withOptionalAuth } from "../../_lib/middleware";
 import { getServices } from "@/server/getServices";
+import { CheckoutValidateSchema } from "@/features/order/domain/schemas";
+import { DOMAIN_DEFAULTS } from "@/features/core/domain/constants/messages";
 
 /**
  * Validate checkout
@@ -20,17 +22,15 @@ export async function POST(request: NextRequest) {
   return withOptionalAuth(request, async (context) => {
     try {
       const body = await request.json();
-      const { address, paymentMethod } = body;
+      const parseResult = CheckoutValidateSchema.safeParse(body);
 
-      // Validation
-      if (!address || !address.city || !address.street) {
-        return apiError("Complete address is required", 400);
+      if (!parseResult.success) {
+        return apiErrorByCode("VALIDATION_INVALID_REQUEST", {
+          issues: parseResult.error.issues,
+        });
       }
 
-      if (!paymentMethod) {
-        return apiError("Payment method is required", 400);
-      }
-
+      const { address, paymentMethod } = parseResult.data;
       const { cartService, productService } = getServices();
 
       const cartId = context.user
@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
       const cart = await cartService.getCart(cartId);
 
       if (!cart.items || cart.items.length === 0) {
-        return apiError("Cart is empty", 400);
+        return apiErrorByCode("CART_EMPTY");
       }
 
       // Validate stock for all items
@@ -59,11 +59,16 @@ export async function POST(request: NextRequest) {
       }
 
       if (stockIssues.length > 0) {
-        return apiError("Stock validation failed", 400, { stockIssues });
+        return apiErrorByCode("CART_INSUFFICIENT_STOCK", { stockIssues });
       }
 
-      // Calculate totals
-      const subtotal = cart.subtotal || 0;
+      const computedSubtotal = cart.items.reduce((acc, item) => {
+        const unitPrice = item.unitPriceSnapshot ?? 0;
+        return acc + unitPrice * item.quantity;
+      }, 0);
+
+      // Calculate totals (cod=50 EGP, card=30 EGP)
+      const subtotal = computedSubtotal || cart.subtotal || 0;
       const shippingCost = paymentMethod === "cod" ? 50 : 30; // EGP
       const total = subtotal + shippingCost;
 
@@ -73,11 +78,13 @@ export async function POST(request: NextRequest) {
           subtotal,
           shippingCost,
           total,
-          currency: "EGP",
+          currency: DOMAIN_DEFAULTS.CURRENCY,
         },
       });
     } catch (error) {
-      return apiError(error instanceof Error ? error.message : "Validation failed", 500);
+      return apiErrorByCode("CHECKOUT_VALIDATE_FAILED", {
+        reason: error instanceof Error ? error.message : undefined,
+      });
     }
   });
 }

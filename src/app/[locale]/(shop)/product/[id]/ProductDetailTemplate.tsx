@@ -1,46 +1,53 @@
 import { useTranslations } from "next-intl";
 import type { Product } from "@/features/catalog/domain/entities/Product";
 import { Container } from "@/components/layout/Container";
-import { Button } from "@/components/ui/button";
 import { ImageGallery } from "./ImageGallery";
 import { Grid } from "@/components/layout/Grid";
-import { ProductCard } from "../../_components/ProductCard";
+import { ProductCard } from "@/components/common/ProductCard";
 import { AdBanner } from "../../_components/AdBanner";
 import { Price } from "@/components/common/Price";
 import { DiscountBadge } from "@/components/common/DiscountBadge";
-import { products, reviews as allReviews } from "@/lib/constants";
 import { Rating } from "@/components/common/Rating";
 import { ProductActions } from "./ProductActions";
 import { ProductReviews } from "./ProductReviews";
 import { ProductStickyNav } from "./ProductStickyNav";
-import Link from "next/link";
+import { Review } from "@/features/review/domain/entities/Review";
+import { PageStateError } from "@/components/common/state/PageStateError";
 
 interface ProductDetailTemplateProps {
-  productId: number;
-  language?: "en" | "ar";
+  product: Product | null;
+  productReviews: Review[];
+  recommendedProducts: Product[];
 }
 
 /**
  *
  */
-const ProductDetailTemplate: React.FC<ProductDetailTemplateProps> = ({ productId }) => {
+const ProductDetailTemplate: React.FC<ProductDetailTemplateProps> = ({
+  product,
+  productReviews,
+  recommendedProducts,
+}) => {
   const t = useTranslations();
-  const product = products.find((p) => p.id === productId);
+  const categoryLabel = (() => {
+    if (product?.categoryName === "Stationary") return t("Nav.Stationary.Title");
+    if (product?.categoryName === "Toys") return t("Nav.Toys.Title");
+    if (product?.categoryName === "School Items") return t("Nav.School.Title");
+    return t("Nav.Shop");
+  })();
 
   if (!product) {
     return (
-      <Container className="py-20 text-center">
-        <h1 className="text-2xl">{t("Pages.ProductDetail.NotFound")}</h1>
-        <Link href="/shop">
-          <Button className="mt-4">{t("Pages.ProductDetail.BackToShop")}</Button>
-        </Link>
+      <Container className="py-20">
+        <PageStateError
+          title={t("Pages.ProductDetail.NotFound")}
+          description={t("Pages.ProductDetail.NotFoundDescription")}
+          actionLabel={t("Pages.ProductDetail.BackToShop")}
+          actionHref="/shop"
+        />
       </Container>
     );
   }
-
-  const productReviews = allReviews
-    .filter((r) => r.productId === productId)
-    .sort((a, b) => new Date(b.date ?? "").getTime() - new Date(a.date ?? "").getTime());
 
   const reviewSummary = (() => {
     if (productReviews.length === 0) {
@@ -53,28 +60,17 @@ const ProductDetailTemplate: React.FC<ProductDetailTemplateProps> = ({ productId
     };
   })();
 
-  const recommendedProducts = products
-    .filter((p) => p.categoryName === product.categoryName && p.id !== product.id)
-    .slice(0, 4);
-
   return (
     <>
-      <Container className="py-12 lg:py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <Container className="py-8 lg:py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
           <ImageGallery images={product.images} />
           <div>
-            <span className="text-primary font-semibold">
-              {(() => {
-                const categoryMap: Record<string, string> = {
-                  Stationary: "Nav.Stationary.Title",
-                  Toys: "Nav.Toys.Title",
-                  "School Items": "Nav.School.Title",
-                };
-                return t(categoryMap[product.categoryName || ""] || ("Nav.Shop" as any));
-              })()}
-            </span>
-            <div className="flex items-center gap-4 mt-2">
-              <h1 className="text-3xl lg:text-4xl font-bold text-foreground">{product.name}</h1>
+            <span className="text-primary font-semibold">{categoryLabel}</span>
+            <div className="flex flex-wrap items-center gap-3 mt-2">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground">
+                {product.name}
+              </h1>
               {product.strikePrice && (
                 <DiscountBadge price={product.price} strikePrice={product.strikePrice} />
               )}
@@ -89,9 +85,15 @@ const ProductDetailTemplate: React.FC<ProductDetailTemplateProps> = ({ productId
               </div>
             )}
 
-            <Price price={product.price} strikePrice={product.strikePrice} className="mb-6" />
+            <Price
+              price={product.price}
+              strikePrice={product.strikePrice}
+              className="mb-4 lg:mb-6"
+            />
 
-            <p className="text-muted-foreground leading-relaxed mb-8">{product.description}</p>
+            <p className="text-muted-foreground leading-relaxed mb-6 lg:mb-8">
+              {product.description}
+            </p>
 
             <ProductActions product={product} />
           </div>
@@ -100,19 +102,19 @@ const ProductDetailTemplate: React.FC<ProductDetailTemplateProps> = ({ productId
 
       <ProductStickyNav offsetTop={400} />
 
-      <Container className="py-16">
+      <Container className="py-12 lg:py-16">
         {/* Description Section */}
-        <section id="description" className="scroll-mt-32">
+        <section id="description" className="scroll-mt-28 lg:scroll-mt-32">
           <h2 className="text-2xl font-bold border-b border-border pb-4 mb-6">
             {t("Pages.ProductDetail.Description")}
           </h2>
           <p className="text-muted-foreground leading-relaxed">{product.longDescription}</p>
         </section>
 
-        <AdBanner className="my-16" />
+        <AdBanner className="my-10 lg:my-16" />
 
         {/* Reviews Section */}
-        <section id="reviews" className="scroll-mt-32 mt-16">
+        <section id="reviews" className="scroll-mt-28 lg:scroll-mt-32 mt-10 lg:mt-16">
           <h2 className="text-2xl font-bold border-b border-border pb-4 mb-6">
             {t("Pages.ProductDetail.Reviews")}
           </h2>
@@ -121,7 +123,7 @@ const ProductDetailTemplate: React.FC<ProductDetailTemplateProps> = ({ productId
 
         {/* Recommended Items */}
         {recommendedProducts.length > 0 && (
-          <section id="recommended" className="scroll-mt-32 mt-16">
+          <section id="recommended" className="scroll-mt-28 lg:scroll-mt-32 mt-10 lg:mt-16">
             <h2 className="text-2xl font-bold pb-4 mb-6">
               {t("Pages.ProductDetail.RecommendedItems")}
             </h2>

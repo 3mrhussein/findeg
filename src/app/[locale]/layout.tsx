@@ -16,33 +16,33 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: {
-    default: "FindEg.com - Modern E-commerce Platform",
-    template: "%s | FindEg.com",
+    default: "FindEg - School & Stationery Marketplace",
+    template: "%s | FindEg",
   },
   description:
-    "Your one-stop shop for stationary, kids toys, and school supplies. Find the best deals on high-quality products.",
-  keywords: ["ecommerce", "stationary", "toys", "school supplies", "online shopping", "FindEg"],
+    "Storefront-first marketplace for stationery, school supplies, and educational essentials in Egypt.",
+  keywords: ["ecommerce", "stationery", "school supplies", "online shopping", "FindEg"],
   authors: [{ name: "FindEg Team" }],
   openGraph: {
     type: "website",
     locale: "en_US",
     url: "https://findeg.com",
-    siteName: "FindEg.com",
-    title: "FindEg.com - Modern E-commerce Platform",
-    description: "Your one-stop shop for stationary, kids toys, and school supplies.",
+    siteName: "FindEg",
+    title: "FindEg - School & Stationery Marketplace",
+    description: "Storefront-first marketplace for stationery and school supplies.",
     images: [
       {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "FindEg.com",
+        alt: "FindEg",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "FindEg.com - Modern E-commerce Platform",
-    description: "Your one-stop shop for stationary, kids toys, and school supplies.",
+    title: "FindEg - School & Stationery Marketplace",
+    description: "Storefront-first marketplace for stationery and school supplies.",
     images: ["/og-image.jpg"],
   },
   robots: {

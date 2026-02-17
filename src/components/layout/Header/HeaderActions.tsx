@@ -4,40 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/common/Icon";
 import { IndicatorCircle } from "@/components/common/IndicatorCircle";
 import { useTranslations } from "next-intl";
-import { useRouter } from "@/i18n/routing";
 import { Theme } from "@/lib/types";
-
-interface LanguageSwitcherProps {
-  language: string;
-  onToggleLanguage: () => void;
-}
-
-/**
- *
- */
-const LanguageSwitcher: React.FC<LanguageSwitcherProps> = ({ language, onToggleLanguage }) => {
-  return (
-    <Button variant="ghost" onClick={onToggleLanguage} size="sm">
-      {language === "en" ? "AR" : "EN"}
-    </Button>
-  );
-};
-
-interface ThemeSwitcherProps {
-  theme: Theme;
-  onToggleTheme: () => void;
-}
-
-/**
- *
- */
-const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({ theme, onToggleTheme }) => {
-  return (
-    <Button variant="ghost" size="icon" onClick={onToggleTheme} aria-label="Toggle theme">
-      <Icon name={theme === "light" ? "moon" : "sun"} className="w-6 h-6" />
-    </Button>
-  );
-};
+import { HeaderLocaleThemeControls } from "./HeaderLocaleThemeControls";
+import { useHeaderActionsController } from "./useHeaderActionsController";
 
 interface HeaderActionsProps {
   language: string;
@@ -66,37 +35,41 @@ export const HeaderActions: React.FC<HeaderActionsProps> = ({
   onToggleMobileMenu,
 }) => {
   const t = useTranslations();
-  const router = useRouter();
+  const { onGoToSchoolLists, onGoToAuth, onLogoutClick } = useHeaderActionsController({ onLogout });
 
   return (
     <div className="flex items-center space-x-2">
-      <div className="hidden sm:flex items-center space-x-1">
-        <ThemeSwitcher theme={theme} onToggleTheme={onToggleTheme} />
-        <LanguageSwitcher language={language} onToggleLanguage={onToggleLanguage} />
-      </div>
+      <HeaderLocaleThemeControls
+        language={language}
+        onToggleLanguage={onToggleLanguage}
+        theme={theme}
+        onToggleTheme={onToggleTheme}
+        className="hidden sm:flex items-center space-x-1"
+      />
       <Button
         variant="ghost"
         size="icon"
         onClick={onToggleCart}
-        className="relative"
+        className="relative h-10 w-10"
         aria-label={t("Layout.Header.CartButton")}
       >
         <Icon name="shoppingCart" className="w-6 h-6 text-foreground" />
         {cartCount > 0 && <IndicatorCircle count={cartCount} />}
       </Button>
       <div className="hidden sm:flex items-center gap-2">
+        <Button variant="outline" onClick={onGoToSchoolLists}>
+          {t("Nav.SchoolLists")}
+        </Button>
         {!isLoggedIn ? (
           <>
-            <Button variant="ghost" onClick={() => router.push("/registration")}>
+            <Button variant="ghost" onClick={onGoToAuth}>
               {t("Pages.Auth.LoginTitle")}
             </Button>
-            <Button onClick={() => router.push("/registration")}>
-              {t("Pages.Auth.RegistrationTitle")}
-            </Button>
+            <Button onClick={onGoToAuth}>{t("Pages.Auth.RegistrationTitle")}</Button>
           </>
         ) : (
           <>
-            <Button variant="outline" onClick={onLogout}>
+            <Button variant="outline" onClick={onLogoutClick}>
               {t("Pages.MyAccount.Logout")}
             </Button>
           </>
@@ -104,7 +77,13 @@ export const HeaderActions: React.FC<HeaderActionsProps> = ({
       </div>
 
       <div className="md:hidden">
-        <Button variant="ghost" size="icon" onClick={onToggleMobileMenu} aria-label="Open menu">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onToggleMobileMenu}
+          className="h-10 w-10"
+          aria-label={t("Layout.Header.OpenMenuButton")}
+        >
           <Icon name="menu" className="w-6 h-6 text-foreground" />
         </Button>
       </div>

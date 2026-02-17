@@ -1,3 +1,4 @@
+import { ID } from "@/features/core/domain/types/common";
 import { IAdminOrderService } from "../interfaces/IAdminOrderService";
 import {
   IOrderRepository,
@@ -41,8 +42,8 @@ export class AdminOrderService implements IAdminOrderService {
    * @param id - The order ID.
    * @returns The order if found, null otherwise.
    */
-  async getById(id: number): Promise<Order | null> {
-    return this.orderRepository.getById(id);
+  async getById(id: ID | string): Promise<Order | null> {
+    return this.orderRepository.getById(id as any);
   }
 
   /**
@@ -53,13 +54,13 @@ export class AdminOrderService implements IAdminOrderService {
    * @param update - Status, tracking number, and internal notes.
    * @throws Error if the order is not found.
    */
-  async updateStatus(id: number, update: OrderStatusUpdate): Promise<void> {
-    const order = await this.orderRepository.getById(id);
+  async updateStatus(id: ID | string, update: OrderStatusUpdate): Promise<void> {
+    const order = await this.orderRepository.getById(id as any);
     if (!order) {
       throw new Error(`Order #${id} not found`);
     }
 
-    await this.orderRepository.updateStatusWithTracking(id, update);
+    await this.orderRepository.updateStatusWithTracking(id as any, update);
 
     await this.auditLogService.logAction({
       entityType: "order",
@@ -82,14 +83,14 @@ export class AdminOrderService implements IAdminOrderService {
    * @param status - The new payment status string.
    * @throws Error if the order is not found.
    */
-  async updatePaymentStatus(id: number, status: string): Promise<void> {
-    const order = await this.orderRepository.getById(id);
+  async updatePaymentStatus(id: ID | string, status: string): Promise<void> {
+    const order = await this.orderRepository.getById(id as any);
     if (!order) {
       throw new Error(`Order #${id} not found`);
     }
 
     const oldStatus = order.paymentStatus;
-    await this.orderRepository.updatePaymentStatus(id, status);
+    await this.orderRepository.updatePaymentStatus(id as any, status);
 
     await this.auditLogService.logAction({
       entityType: "order",

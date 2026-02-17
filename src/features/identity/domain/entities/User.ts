@@ -5,11 +5,13 @@
  * for proper display and address form pre-filling.
  */
 
+import { ID, Email, UserRole } from "@/features/core/domain/types/common";
+
 export interface User {
   /** Unique identifier for the user */
-  id: number;
+  id: ID;
   /** Primary contact and login email */
-  email: string;
+  email: Email;
   /** User's given name */
   firstName?: string;
   /** User's family name */
@@ -19,7 +21,7 @@ export interface User {
   /** Egyptian mobile number (formatted for SMS/WhatsApp) */
   phone?: string;
   /** Access level control (e.g., 'user', 'admin') */
-  role: string;
+  role: UserRole;
   /** URL to profile picture */
   image?: string;
   /** Whether the account is active or suspended */

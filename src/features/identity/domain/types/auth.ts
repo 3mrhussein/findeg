@@ -1,9 +1,10 @@
 import { User } from "../entities/User";
+import { Email, UserRole } from "@/features/core/domain/types/common";
 
 export interface SessionPayload {
   userId: number;
-  email: string;
-  role: string;
+  email: Email;
+  role: UserRole;
 }
 
 export interface AuthResult {
@@ -12,9 +13,9 @@ export interface AuthResult {
   error?: string;
 }
 
-export interface UserWithPassword extends Partial<User> {
+export interface UserWithPassword extends Omit<Partial<User>, "role" | "email"> {
   id: number;
-  email: string;
-  role: string;
+  email: Email;
+  role: UserRole;
   password?: string | null;
 }

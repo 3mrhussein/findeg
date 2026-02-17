@@ -1,14 +1,38 @@
 import { eq, desc, and } from "drizzle-orm";
+import { ID, Slug } from "@/features/core/domain/types/common";
 import { db } from "@/features/core/infrastructure/persistence";
-import { brands, NewBrand, Brand } from "@/features/core/infrastructure/persistence/schema";
-import { IBrandRepository } from "../../application/interfaces/IBrandRepository";
+import { brands } from "@/features/core/infrastructure/persistence/schema";
+import {
+  IBrandRepository,
+  BrandCreateInput,
+  BrandUpdateInput,
+} from "../../application/interfaces/IBrandRepository";
+import { Brand } from "../../domain/entities/Brand";
+
+type DbBrand = typeof brands.$inferSelect;
 
 /**
  * Drizzle Brand Repository
  *
- * PostgreSQL implementation of brand data access using Drizzle ORM.
+ * PostgreSQL implementation of brand management using Drizzle ORM.
+ * Results for list queries are ordered by creation date descending.
  */
 export class DrizzleBrandRepository implements IBrandRepository {
+  /**
+   * Maps a database Brand record to the domain Brand entity.
+   */
+  private mapToDomain(dbBrand: DbBrand): Brand {
+    return {
+      id: dbBrand.id,
+      slug: dbBrand.slug as Slug,
+      name: dbBrand.name,
+      logoUrl: dbBrand.logoUrl,
+      isActive: dbBrand.isActive,
+      createdAt: dbBrand.createdAt,
+      updatedAt: dbBrand.updatedAt,
+    };
+  }
+
   /**
    * Retrieves all brands
    *
@@ -22,7 +46,8 @@ export class DrizzleBrandRepository implements IBrandRepository {
       query.where(eq(brands.isActive, true));
     }
 
-    return query.orderBy(desc(brands.createdAt));
+    const dbBrands = await query.orderBy(desc(brands.createdAt));
+    return dbBrands.map(this.mapToDomain);
   }
 
   /**
@@ -31,9 +56,9 @@ export class DrizzleBrandRepository implements IBrandRepository {
    * @param id - Brand ID
    * @returns Brand entity or null if not found
    */
-  async getById(id: number): Promise<Brand | null> {
+  async getById(id: ID): Promise<Brand | null> {
     const result = await db.select().from(brands).where(eq(brands.id, id));
-    return result[0] || null;
+    return result[0] ? this.mapToDomain(result[0]) : null;
   }
 
   /**
@@ -42,9 +67,9 @@ export class DrizzleBrandRepository implements IBrandRepository {
    * @param slug - Brand URL slug
    * @returns Brand entity or null if not found
    */
-  async getBySlug(slug: string): Promise<Brand | null> {
+  async getBySlug(slug: Slug): Promise<Brand | null> {
     const result = await db.select().from(brands).where(eq(brands.slug, slug));
-    return result[0] || null;
+    return result[0] ? this.mapToDomain(result[0]) : null;
   }
 
   /**
@@ -53,9 +78,9 @@ export class DrizzleBrandRepository implements IBrandRepository {
    * @param data - Brand data
    * @returns Created brand entity
    */
-  async create(data: NewBrand): Promise<Brand> {
+  async create(data: BrandCreateInput): Promise<Brand> {
     const result = await db.insert(brands).values(data).returning();
-    return result[0];
+    return this.mapToDomain(result[0]);
   }
 
   /**
@@ -65,13 +90,13 @@ export class DrizzleBrandRepository implements IBrandRepository {
    * @param data - Partial brand data to update
    * @returns Updated brand entity
    */
-  async update(id: number, data: Partial<NewBrand>): Promise<Brand> {
+  async update(id: ID, data: BrandUpdateInput): Promise<Brand> {
     const result = await db
       .update(brands)
       .set({ ...data, updatedAt: new Date() })
       .where(eq(brands.id, id))
       .returning();
-    return result[0];
+    return this.mapToDomain(result[0]);
   }
 
   /**
@@ -79,7 +104,7 @@ export class DrizzleBrandRepository implements IBrandRepository {
    *
    * @param id - Brand ID
    */
-  async delete(id: number): Promise<void> {
+  async delete(id: ID): Promise<void> {
     await db.delete(brands).where(eq(brands.id, id));
   }
 

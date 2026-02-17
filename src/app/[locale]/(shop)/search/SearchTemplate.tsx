@@ -2,27 +2,21 @@ import { useTranslations } from "next-intl";
 // ...removed import for T, use translation key directly
 import { Container } from "@/components/layout/Container";
 import { Grid } from "@/components/layout/Grid";
-import { ProductCard } from "../_components/ProductCard";
-import { products } from "@/lib/constants";
+import { ProductCard } from "@/components/common/ProductCard";
+import type { Product } from "@/features/catalog/domain/entities/Product";
+import { PageStateEmpty } from "@/components/common/state/PageStateEmpty";
 
 interface SearchTemplateProps {
   language?: "en" | "ar";
   searchQuery?: string;
+  products: Product[];
 }
 
 /**
  *
  */
-const SearchTemplate: React.FC<SearchTemplateProps> = ({ searchQuery = "" }) => {
+const SearchTemplate: React.FC<SearchTemplateProps> = ({ searchQuery = "", products }) => {
   const t = useTranslations();
-
-  const filteredProducts = products.filter(
-    (product) =>
-      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (product.categoryName &&
-        product.categoryName.toLowerCase().includes(searchQuery.toLowerCase())),
-  );
 
   return (
     <div className="bg-background min-h-[60vh]">
@@ -36,16 +30,26 @@ const SearchTemplate: React.FC<SearchTemplateProps> = ({ searchQuery = "" }) => 
             <h1 className="text-3xl font-bold text-foreground">{t("Pages.Search.EmptyPrompt")}</h1>
           )}
         </div>
-        {filteredProducts.length > 0 ? (
+        {!searchQuery ? (
+          <PageStateEmpty
+            title={t("Pages.Search.EmptyPrompt")}
+            description={t("Pages.Search.EmptyDescription")}
+            actionLabel={t("Pages.Home.Hero.ButtonShop")}
+            actionHref="/shop"
+          />
+        ) : products.length > 0 ? (
           <Grid>
-            {filteredProducts.map((product) => (
+            {products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </Grid>
         ) : (
-          <div className="text-center py-16 bg-muted rounded-lg">
-            <p className="text-lg text-muted-foreground">{t("Pages.Search.NoResults")}</p>
-          </div>
+          <PageStateEmpty
+            title={t("Pages.Search.NoResults")}
+            description={t("Pages.Search.NoResultsDescription")}
+            actionLabel={t("Nav.Shop")}
+            actionHref="/shop"
+          />
         )}
       </Container>
     </div>

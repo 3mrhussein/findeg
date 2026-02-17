@@ -9,15 +9,17 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ShopContent } from "./ShopContent";
+import type { Product } from "@/features/catalog/domain/entities/Product";
 
 interface ShopTemplateProps {
   language?: "en" | "ar";
+  products: Product[];
 }
 
 /**
  *
  */
-const ShopTemplate: React.FC<ShopTemplateProps> = () => {
+const ShopTemplate: React.FC<ShopTemplateProps> = ({ products }) => {
   const t = useTranslations();
 
   const faqItems = faqData.map((item) => ({
@@ -34,7 +36,7 @@ const ShopTemplate: React.FC<ShopTemplateProps> = () => {
             <h1 className="text-4xl font-bold text-foreground">{t("Pages.Shop.Title")}</h1>
           </div>
 
-          <ShopContent />
+          <ShopContent products={products} />
         </Container>
       </div>
 

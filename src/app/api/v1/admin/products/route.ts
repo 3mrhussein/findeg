@@ -9,6 +9,7 @@ import { NextRequest } from "next/server";
 import { apiResponse, apiError, apiPaginatedResponse } from "../../_lib/api-response";
 import { withAdmin } from "../../_lib/middleware";
 import { getServices } from "@/server/getServices";
+import { ProductInputSchema } from "@/features/administration/domain/types";
 
 /**
  * List all products (admin)
@@ -66,9 +67,15 @@ export async function POST(request: NextRequest) {
   return withAdmin(request, async () => {
     try {
       const body = await request.json();
-      const { adminProduct } = getServices();
+      const parseResult = ProductInputSchema.safeParse(body);
 
-      const product = await adminProduct.create(body);
+      if (!parseResult.success) {
+        const msg = parseResult.error.issues[0]?.message ?? "Invalid request";
+        return apiError(msg, 400);
+      }
+
+      const { adminProduct } = getServices();
+      const product = await adminProduct.create(parseResult.data);
 
       return apiResponse(product, 201);
     } catch (error) {

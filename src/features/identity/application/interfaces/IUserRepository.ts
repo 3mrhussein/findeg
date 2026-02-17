@@ -1,5 +1,6 @@
+import { ID, Email } from "@/features/core/domain/types/common";
+import { UserWithPassword } from "@/features/core/domain/auth";
 import { User } from "../../domain/entities/User";
-import { UserWithPassword } from "../../domain/types/auth";
 
 /**
  * User Repository Interface
@@ -10,18 +11,18 @@ export interface IUserRepository {
   /**
    * Retrieves a safe user profile by ID (no sensitive data).
    */
-  getById(id: number): Promise<User | null>;
+  getById(id: ID): Promise<User | null>;
 
   /**
    * Retrieves a safe user profile by email (no sensitive data).
    */
-  getByEmail(email: string): Promise<User | null>;
+  getByEmail(email: Email): Promise<User | null>;
 
   /**
    * Retrieves a user including their hashed password for authentication.
    * INTERNAL USE ONLY.
    */
-  getByEmailWithPassword(email: string): Promise<UserWithPassword | null>;
+  getByEmailWithPassword(email: Email): Promise<UserWithPassword | null>;
 
   /**
    * Persists a new user to storage.
@@ -31,5 +32,5 @@ export interface IUserRepository {
   /**
    * Updates an existing user's profile information.
    */
-  update(id: number, user: Partial<User>): Promise<User>;
+  update(id: ID, user: Partial<User>): Promise<User>;
 }

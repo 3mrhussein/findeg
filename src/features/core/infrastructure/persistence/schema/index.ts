@@ -14,3 +14,4 @@ export * from "./reviews";
 export * from "./addresses";
 export * from "./audit-log";
 export * from "./server-logs";
+export * from "./variant-pricing";

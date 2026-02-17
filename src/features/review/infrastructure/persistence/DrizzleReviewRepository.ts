@@ -1,3 +1,4 @@
+import { ID, Rating } from "@/features/core/domain/types/common";
 import { db } from "@/features/core/infrastructure/persistence";
 import {
   reviews,
@@ -19,7 +20,7 @@ export class DrizzleReviewRepository implements IReviewRepository {
       id: dbReview.id,
       productId: dbReview.productId,
       userId: dbReview.userId || undefined,
-      rating: Number(dbReview.rating),
+      rating: Number(dbReview.rating) as Rating,
       comment: dbReview.comment || undefined,
       isVerifiedPurchase: dbReview.isVerifiedPurchase || false,
       createdAt: dbReview.createdAt,
@@ -30,16 +31,22 @@ export class DrizzleReviewRepository implements IReviewRepository {
   /**
    * Retrieves reviews by product ID
    */
-  async getByProductId(productId: number): Promise<Review[]> {
-    const results = await db.select().from(reviews).where(eq(reviews.productId, productId));
+  async getByProductId(productId: ID): Promise<Review[]> {
+    const results = await db
+      .select()
+      .from(reviews)
+      .where(eq(reviews.productId, productId as any));
     return results.map(this.mapToDomain);
   }
 
   /**
    * Retrieves reviews by user ID
    */
-  async getByUserId(userId: number): Promise<Review[]> {
-    const results = await db.select().from(reviews).where(eq(reviews.userId, userId));
+  async getByUserId(userId: ID): Promise<Review[]> {
+    const results = await db
+      .select()
+      .from(reviews)
+      .where(eq(reviews.userId, userId as any));
     return results.map(this.mapToDomain);
   }
 

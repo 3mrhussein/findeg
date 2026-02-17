@@ -1,25 +1,46 @@
 # Media Feature
 
-The `media` feature handles asset management, specifically focused on product images and branding logos.
+Owns file upload/storage workflows and URL generation for assets used across features.
 
-## Responsibilities
+## Use Cases
 
-- **File Uploads**: Buffering and storing files in a persistent storage system.
-- **Asset Association**: Linking uploaded URLs to products, categories, or brands.
-- **Cleanup**: Removing physical assets from storage when entities are deleted.
+```mermaid
+flowchart LR
+    Admin --> UC1[Upload product/brand assets]
+    Service --> UC2[Resolve public URL]
+    Admin --> UC3[Delete obsolete assets]
+```
 
-## Component Overview
+## UML (Class View)
 
-### Application Layer (`/application`)
+```mermaid
+classDiagram
+    class MediaService
+    class IStorageProvider
+    class LocalStorageProvider
 
-- **Ports**: `IStorageProvider` defining the abstraction for file systems or cloud storage (e.g., S3).
-- **Services**: `MediaService` coordinating uploads and file naming conventions.
+    MediaService --> IStorageProvider
+    LocalStorageProvider ..|> IStorageProvider
+```
 
-### Infrastructure Layer (`/infrastructure`)
+## Sequence (Upload)
 
-- **Adapters**: Concrete implementations of storage providers (e.g., `LocalStorageProvider`).
+```mermaid
+sequenceDiagram
+    participant API as /api/v1/upload
+    participant Media as MediaService
+    participant Storage as IStorageProvider
+    API->>Media: upload(file)
+    Media->>Storage: save(path, bytes)
+    Storage-->>Media: public URL
+    Media-->>API: upload result
+```
 
-## Architectural Boundaries
+## Layer Notes
+- `application`: `MediaService` orchestration.
+- `infrastructure`: storage provider adapters.
 
-- **Depends On**: `core` (for storage abstractions).
-- **Used By**: `catalog` (product images), `identity` (user avatars), `administration` (logo uploads).
+## Clean Architecture Boundaries
+- Depends on `core` storage ports only.
+- Catalog/admin features consume media URLs; they should not manage storage internals directly.
+

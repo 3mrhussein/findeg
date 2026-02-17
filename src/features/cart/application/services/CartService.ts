@@ -5,6 +5,8 @@
 import { CartEntity, CartItem } from "../../domain/entities/Cart";
 import { Product } from "@/features/catalog/domain/entities/Product";
 import { ICartService } from "../interfaces/ICartService";
+import { CustomerGroup, Price, UomCode } from "@/features/core/domain/types/common";
+import { VariantSnapshot } from "@/features/order/domain/value-objects";
 
 /**
  * Cart Service
@@ -114,18 +116,41 @@ export class CartService implements ICartService {
    */
   async addItem(
     cartId: string,
-    input: { productId: number; quantity: number; variant?: any },
-  ): Promise<any> {
+    input: {
+      productId: number;
+      quantity: number;
+      variant?: VariantSnapshot;
+      variantKey?: string;
+      uomCode?: UomCode;
+      customerGroup?: CustomerGroup;
+      unitPriceSnapshot?: Price;
+      currency?: string;
+    },
+  ): Promise<{ items: CartItem[]; subtotal: number; itemCount: number }> {
     const items = this.carts.get(cartId) || [];
-    const existing = items.find((i) => i.id === input.productId);
+    const existing = items.find(
+      (i) =>
+        i.id === input.productId &&
+        i.variantKey === input.variantKey &&
+        i.uomCode === input.uomCode &&
+        i.customerGroup === input.customerGroup,
+    );
     if (existing) {
       existing.quantity += input.quantity;
+      if (input.unitPriceSnapshot !== undefined) {
+        existing.unitPriceSnapshot = input.unitPriceSnapshot;
+      }
     } else {
       items.push({
         id: input.productId,
         quantity: input.quantity,
         variant: input.variant,
-      } as any);
+        variantKey: input.variantKey,
+        uomCode: input.uomCode,
+        customerGroup: input.customerGroup,
+        unitPriceSnapshot: input.unitPriceSnapshot,
+        currency: input.currency || "EGP",
+      } as CartItem);
     }
     this.carts.set(cartId, items);
     return this.getCart(cartId);
@@ -138,9 +163,29 @@ export class CartService implements ICartService {
    * @param itemId - The ID of the item to remove.
    * @returns The updated cart status.
    */
-  async removeItem(cartId: string, itemId: number): Promise<any> {
+  async removeItem(
+    cartId: string,
+    itemId: number,
+    selectors?: {
+      variantKey?: string;
+      uomCode?: UomCode;
+      customerGroup?: CustomerGroup;
+    },
+  ): Promise<{ items: CartItem[]; subtotal: number; itemCount: number }> {
     let items = this.carts.get(cartId) || [];
-    items = items.filter((i: any) => i.id !== itemId);
+    if (selectors?.variantKey || selectors?.uomCode || selectors?.customerGroup) {
+      items = items.filter(
+        (i) =>
+          !(
+            i.id === itemId &&
+            i.variantKey === selectors.variantKey &&
+            i.uomCode === selectors.uomCode &&
+            i.customerGroup === selectors.customerGroup
+          ),
+      );
+    } else {
+      items = items.filter((i) => i.id !== itemId);
+    }
     this.carts.set(cartId, items);
     return this.getCart(cartId);
   }
@@ -153,9 +198,27 @@ export class CartService implements ICartService {
    * @param quantity - The new quantity to set.
    * @returns The updated cart status.
    */
-  async updateItemQuantity(cartId: string, itemId: number, quantity: number): Promise<any> {
+  async updateItemQuantity(
+    cartId: string,
+    itemId: number,
+    quantity: number,
+    selectors?: {
+      variantKey?: string;
+      uomCode?: UomCode;
+      customerGroup?: CustomerGroup;
+    },
+  ): Promise<{ items: CartItem[]; subtotal: number; itemCount: number }> {
     const items = this.carts.get(cartId) || [];
-    const existing = items.find((i: any) => i.id === itemId);
+    const existing =
+      selectors?.variantKey || selectors?.uomCode || selectors?.customerGroup
+        ? items.find(
+            (i) =>
+              i.id === itemId &&
+              i.variantKey === selectors.variantKey &&
+              i.uomCode === selectors.uomCode &&
+              i.customerGroup === selectors.customerGroup,
+          )
+        : items.find((i) => i.id === itemId);
     if (existing) {
       existing.quantity = quantity;
     }

@@ -6,12 +6,15 @@
  */
 
 import { NextRequest } from "next/server";
-import { apiResponse, apiError } from "../../_lib/api-response";
+import { apiResponse, apiErrorByCode } from "../../_lib/api-response";
 import { getServices } from "@/server/getServices";
 import { SignJWT } from "jose";
+import { AuthCredentialsSchema } from "@/features/core/domain/auth";
+import { AUTH_CONSTANTS } from "@/features/core/domain/constants/auth";
+import { validateWithResult } from "@/features/core/domain/errors";
 
 const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || "your-secret-key-change-in-production",
+  process.env.JWT_SECRET || AUTH_CONSTANTS.JWT_SECRET_FALLBACK,
 );
 
 /**
@@ -23,18 +26,17 @@ const JWT_SECRET = new TextEncoder().encode(
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { email, password } = body;
-
-    // Validation
-    if (!email || !password) {
-      return apiError("Email and password are required", 400);
+    const parsed = validateWithResult(AuthCredentialsSchema, body);
+    if (!parsed.ok) {
+      return apiErrorByCode(parsed.error.code, parsed.error.details);
     }
 
+    const { email, password } = parsed.value;
     const { authService } = getServices();
     const result = await authService.login(email, password);
 
     if (!result.success || !result.user) {
-      return apiError(result.error || "Invalid email or password", 401);
+      return apiErrorByCode("AUTH_INVALID_CREDENTIALS");
     }
 
     const { user } = result;
@@ -45,8 +47,8 @@ export async function POST(request: NextRequest) {
       email: user.email,
       role: user.role,
     })
-      .setProtectedHeader({ alg: "HS256" })
-      .setExpirationTime("7d")
+      .setProtectedHeader({ alg: AUTH_CONSTANTS.JWT_ALGORITHM })
+      .setExpirationTime(AUTH_CONSTANTS.USER_TOKEN_EXPIRY)
       .sign(JWT_SECRET);
 
     return apiResponse({
@@ -61,9 +63,8 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    if (error instanceof Error) {
-      return apiError(error.message, 401);
-    }
-    return apiError("Login failed", 500);
+    return apiErrorByCode("AUTH_LOGIN_FAILED", {
+      reason: error instanceof Error ? error.message : undefined,
+    });
   }
 }

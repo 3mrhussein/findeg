@@ -24,11 +24,56 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ProductInput } from "@/features/administration/domain/types";
-import { createProductAction, updateProductAction } from "@/features/catalog/application/actions/product";
+import {
+  createProductAction,
+  updateProductAction,
+} from "@/features/catalog/application/actions/product";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Loader2, Plus, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { CustomerGroup, UomCode } from "@/features/core/domain/types/common";
+
+const UOM_VALUES = ["pcs", "pack", "carton"] as const;
+const CUSTOMER_GROUP_VALUES = ["public_b2c", "school_b2b"] as const;
+
+const VariantPricingConfigSchema = z.object({
+  variantKey: z.string().min(1, "variantKey is required"),
+  uoms: z.array(
+    z.object({
+      uomCode: z.enum(UOM_VALUES),
+      factorToBase: z.number().positive("factorToBase must be greater than 0"),
+      isEnabled: z.boolean().optional(),
+    }),
+  ),
+  prices: z.array(
+    z.object({
+      customerGroup: z.enum(CUSTOMER_GROUP_VALUES),
+      uomCode: z.enum(UOM_VALUES),
+      unitPrice: z.number().nonnegative("unitPrice must be non-negative"),
+      currency: z.string().length(3).optional(),
+      isSellable: z.boolean().optional(),
+    }),
+  ),
+});
+
+const VariantPricingConfigListSchema = z.array(VariantPricingConfigSchema);
+
+type VariantPricingConfig = z.infer<typeof VariantPricingConfigSchema>;
+
+const DEFAULT_UOM: VariantPricingConfig["uoms"][number] = {
+  uomCode: "pcs",
+  factorToBase: 1,
+  isEnabled: true,
+};
+
+const DEFAULT_PRICE: VariantPricingConfig["prices"][number] = {
+  customerGroup: "public_b2c",
+  uomCode: "pcs",
+  unitPrice: 0,
+  currency: "EGP",
+  isSellable: true,
+};
 
 // Schema validation
 const formSchema = z.object({
@@ -37,13 +82,13 @@ const formSchema = z.object({
   name_ar: z.string().min(2, "Name (AR) must be at least 2 characters"),
   description_ar: z.string().min(10, "Description (AR) must be at least 10 characters"),
   price: z.coerce.number().min(0.01, "Price must be greater than 0"),
-  categoryId: z.string().min(1, "Please select a category"), // String from Select, converted to number on submit
-  brandId: z.string().optional(), // String from Select, converted to number
+  categoryId: z.string().min(1, "Please select a category"),
+  brandId: z.string().optional(),
   sku: z.string().optional(),
   stockQuantity: z.coerce.number().min(0).default(0),
   lowStockThreshold: z.coerce.number().min(0).default(5),
   isActive: z.boolean().default(true),
-  images: z.string().optional(), // Comma separated URLs for simplicity in MVP
+  images: z.string().optional(),
 });
 
 interface ProductToEdit extends ProductInput {
@@ -63,6 +108,8 @@ export function ProductForm({ initialData, categories, brands }: ProductFormProp
   const router = useRouter();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [loadingVariantConfig, setLoadingVariantConfig] = useState(false);
+  const [variantConfigs, setVariantConfigs] = useState<VariantPricingConfig[]>([]);
 
   // Map initial data to form values if editing
   const defaultValues = initialData
@@ -75,8 +122,6 @@ export function ProductForm({ initialData, categories, brands }: ProductFormProp
           initialData.translations.find((t) => t.language === "ar")?.description || "",
         price: initialData.price,
         categoryId: initialData.categoryId?.toString() || "",
-        // Fallback for legacy 'category' string if categoryId is missing?
-        // ideally we migrate, but for now we assume new products use categoryId
         brandId: initialData.brandId?.toString() || "",
         sku: initialData.sku || "",
         stockQuantity: initialData.stockQuantity || 0,
@@ -103,6 +148,175 @@ export function ProductForm({ initialData, categories, brands }: ProductFormProp
     resolver: zodResolver(formSchema) as any,
     defaultValues,
   });
+
+  /**
+   * Updates one variant config item immutably.
+   */
+  const updateVariantConfig = (
+    index: number,
+    updater: (config: VariantPricingConfig) => VariantPricingConfig,
+  ) => {
+    setVariantConfigs((prev) => prev.map((item, i) => (i === index ? updater(item) : item)));
+  };
+
+  /**
+   * Adds a variant pricing block.
+   */
+  const addVariantConfig = () => {
+    setVariantConfigs((prev) => [
+      ...prev,
+      {
+        variantKey: "default",
+        uoms: [DEFAULT_UOM],
+        prices: [DEFAULT_PRICE],
+      },
+    ]);
+  };
+
+  /**
+   * Loads existing variant UoM/pricing config for edit mode.
+   */
+  useEffect(() => {
+    /**
+     * Fetches variant UoM + price list rows from admin APIs and prepares editor state.
+     */
+    const loadVariantPricingConfig = async () => {
+      if (!initialData?.id) return;
+
+      const variantKeys = initialData.variants ? Object.keys(initialData.variants) : [];
+      if (variantKeys.length === 0) return;
+
+      setLoadingVariantConfig(true);
+      try {
+        const config: VariantPricingConfig[] = [];
+
+        for (const variantKey of variantKeys) {
+          const [uomsRes, b2cRes, b2bRes] = await Promise.all([
+            fetch(
+              `/api/v1/admin/products/${initialData.id}/uoms?variantKey=${encodeURIComponent(variantKey)}`,
+            ),
+            fetch(
+              `/api/v1/admin/products/${initialData.id}/pricing?variantKey=${encodeURIComponent(variantKey)}&customerGroup=public_b2c`,
+            ),
+            fetch(
+              `/api/v1/admin/products/${initialData.id}/pricing?variantKey=${encodeURIComponent(variantKey)}&customerGroup=school_b2b`,
+            ),
+          ]);
+
+          if (!uomsRes.ok) continue;
+
+          const uomsJson = await uomsRes.json();
+          const b2cJson = b2cRes.ok ? await b2cRes.json() : null;
+          const b2bJson = b2bRes.ok ? await b2bRes.json() : null;
+
+          const uoms = Array.isArray(uomsJson?.data?.uoms) ? uomsJson.data.uoms : [];
+          const b2cPrices = Array.isArray(b2cJson?.data?.prices) ? b2cJson.data.prices : [];
+          const b2bPrices = Array.isArray(b2bJson?.data?.prices) ? b2bJson.data.prices : [];
+
+          const prices = [...b2cPrices, ...b2bPrices]
+            .filter((p) => p.unitPrice !== undefined && p.unitPrice !== null)
+            .map((p) => ({
+              customerGroup: p.customerGroup,
+              uomCode: p.uomCode,
+              unitPrice: Number(p.unitPrice),
+              currency: p.currency || "EGP",
+              isSellable: p.isSellable ?? true,
+            }));
+
+          if (uoms.length === 0 && prices.length === 0) continue;
+
+          config.push({
+            variantKey,
+            uoms: uoms.map((u: { uomCode: string; factorToBase: number; isEnabled?: boolean }) => ({
+              uomCode: u.uomCode as UomCode,
+              factorToBase: Number(u.factorToBase),
+              isEnabled: u.isEnabled ?? true,
+            })),
+            prices: prices.map((price) => ({
+              customerGroup: price.customerGroup as CustomerGroup,
+              uomCode: price.uomCode as UomCode,
+              unitPrice: Number(price.unitPrice),
+              currency: price.currency || "EGP",
+              isSellable: price.isSellable ?? true,
+            })),
+          });
+        }
+
+        if (config.length > 0) {
+          setVariantConfigs(config);
+          return;
+        }
+
+        // Build default rows for existing variants that do not have pricing config yet.
+        setVariantConfigs(
+          variantKeys.map((variantKey) => ({
+            variantKey,
+            uoms: [DEFAULT_UOM],
+            prices: [],
+          })),
+        );
+      } catch (error) {
+        console.error("Failed to preload variant pricing config", error);
+      } finally {
+        setLoadingVariantConfig(false);
+      }
+    };
+
+    loadVariantPricingConfig();
+  }, [initialData]);
+
+  /**
+   * Applies optional per-variant UoM and price-list configuration via admin APIs.
+   */
+  const applyVariantPricingConfig = async (
+    productId: number,
+    config: VariantPricingConfig[],
+  ): Promise<void> => {
+    if (config.length === 0) return;
+
+    const parsedConfig = VariantPricingConfigListSchema.safeParse(config);
+    if (!parsedConfig.success) {
+      throw new Error(parsedConfig.error.issues[0]?.message || "Invalid Variant Pricing Config.");
+    }
+
+    for (const item of parsedConfig.data) {
+      const uomsRes = await fetch(`/api/v1/admin/products/${productId}/uoms`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          variantKey: item.variantKey,
+          uoms: item.uoms.map((uom) => ({
+            uomCode: uom.uomCode as UomCode,
+            factorToBase: uom.factorToBase,
+            isEnabled: uom.isEnabled ?? true,
+          })),
+        }),
+      });
+
+      if (!uomsRes.ok) {
+        throw new Error(`Failed to save UoMs for variant '${item.variantKey}'.`);
+      }
+
+      const pricingRes = await fetch(`/api/v1/admin/products/${productId}/pricing`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          variantKey: item.variantKey,
+          prices: item.prices.map((price) => ({
+            customerGroup: price.customerGroup as CustomerGroup,
+            uomCode: price.uomCode as UomCode,
+            unitPrice: price.unitPrice,
+            currency: price.currency || "EGP",
+            isSellable: price.isSellable ?? true,
+          })),
+        }),
+      });
+
+      if (!pricingRes.ok) {
+        throw new Error(`Failed to save pricing for variant '${item.variantKey}'.`);
+      }
+    }
+  };
 
   /**
    *
@@ -139,7 +353,7 @@ export function ProductForm({ initialData, categories, brands }: ProductFormProp
           longDescription: values.description_ar,
         },
       ],
-      isNew: true, // Default for new products
+      isNew: true,
     };
 
     try {
@@ -151,6 +365,13 @@ export function ProductForm({ initialData, categories, brands }: ProductFormProp
       }
 
       if (result.success) {
+        const productId = result.productId ?? initialData?.id;
+        if (!productId) {
+          throw new Error("Product saved but no product ID was returned.");
+        }
+
+        await applyVariantPricingConfig(productId, variantConfigs);
+
         toast({
           title: initialData ? "Product updated" : "Product created",
           description: "The product has been successfully saved.",
@@ -388,6 +609,293 @@ export function ProductForm({ initialData, categories, brands }: ProductFormProp
             </FormItem>
           )}
         />
+
+        <div className="space-y-4 rounded-lg border p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-sm font-semibold">Variant Pricing & Sellable UoMs</h3>
+              <p className="text-xs text-muted-foreground">
+                Configure sellable units and per-customer-group prices without writing JSON.
+              </p>
+            </div>
+            <Button type="button" variant="outline" onClick={addVariantConfig}>
+              <Plus className="mr-2 h-4 w-4" />
+              Add Variant Config
+            </Button>
+          </div>
+
+          {loadingVariantConfig && (
+            <div className="text-sm text-muted-foreground">Loading variant pricing config...</div>
+          )}
+
+          {!loadingVariantConfig && variantConfigs.length === 0 && (
+            <div className="text-sm text-muted-foreground">
+              No variant pricing config yet. You can add one or keep default product pricing only.
+            </div>
+          )}
+
+          {variantConfigs.map((config, configIndex) => (
+            <div
+              key={`${config.variantKey}-${configIndex}`}
+              className="space-y-4 rounded-md border p-4"
+            >
+              <div className="flex items-end gap-3">
+                <div className="flex-1 space-y-1">
+                  <FormLabel>Variant Key</FormLabel>
+                  <Input
+                    value={config.variantKey}
+                    onChange={(e) =>
+                      updateVariantConfig(configIndex, (item) => ({
+                        ...item,
+                        variantKey: e.target.value,
+                      }))
+                    }
+                    placeholder="default"
+                  />
+                </div>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className="text-destructive"
+                  onClick={() =>
+                    setVariantConfigs((prev) => prev.filter((_, i) => i !== configIndex))
+                  }
+                >
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Remove Variant
+                </Button>
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <FormLabel>Sellable UoMs</FormLabel>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    onClick={() =>
+                      updateVariantConfig(configIndex, (item) => ({
+                        ...item,
+                        uoms: [...item.uoms, DEFAULT_UOM],
+                      }))
+                    }
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    Add UoM
+                  </Button>
+                </div>
+
+                {config.uoms.map((uom, uomIndex) => (
+                  <div key={`${configIndex}-uom-${uomIndex}`} className="grid gap-3 md:grid-cols-4">
+                    <Select
+                      value={uom.uomCode}
+                      onValueChange={(value) =>
+                        updateVariantConfig(configIndex, (item) => ({
+                          ...item,
+                          uoms: item.uoms.map((u, i) =>
+                            i === uomIndex ? { ...u, uomCode: value as UomCode } : u,
+                          ),
+                        }))
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="UoM" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {UOM_VALUES.map((value) => (
+                          <SelectItem key={value} value={value}>
+                            {value}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
+                    <Input
+                      type="number"
+                      min="0"
+                      step="0.0001"
+                      value={uom.factorToBase}
+                      onChange={(e) =>
+                        updateVariantConfig(configIndex, (item) => ({
+                          ...item,
+                          uoms: item.uoms.map((u, i) =>
+                            i === uomIndex
+                              ? { ...u, factorToBase: Number(e.target.value || 0) }
+                              : u,
+                          ),
+                        }))
+                      }
+                      placeholder="Factor to base"
+                    />
+
+                    <div className="flex items-center rounded-md border px-3">
+                      <Checkbox
+                        checked={uom.isEnabled ?? true}
+                        onCheckedChange={(checked) =>
+                          updateVariantConfig(configIndex, (item) => ({
+                            ...item,
+                            uoms: item.uoms.map((u, i) =>
+                              i === uomIndex ? { ...u, isEnabled: checked === true } : u,
+                            ),
+                          }))
+                        }
+                      />
+                      <span className="ml-2 text-sm">Enabled</span>
+                    </div>
+
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      className="text-destructive"
+                      onClick={() =>
+                        updateVariantConfig(configIndex, (item) => ({
+                          ...item,
+                          uoms: item.uoms.filter((_, i) => i !== uomIndex),
+                        }))
+                      }
+                    >
+                      <Trash2 className="mr-2 h-4 w-4" />
+                      Remove
+                    </Button>
+                  </div>
+                ))}
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <FormLabel>Price Lists</FormLabel>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    onClick={() =>
+                      updateVariantConfig(configIndex, (item) => ({
+                        ...item,
+                        prices: [...item.prices, DEFAULT_PRICE],
+                      }))
+                    }
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    Add Price Row
+                  </Button>
+                </div>
+
+                {config.prices.map((price, priceIndex) => (
+                  <div
+                    key={`${configIndex}-price-${priceIndex}`}
+                    className="grid gap-3 md:grid-cols-6"
+                  >
+                    <Select
+                      value={price.customerGroup}
+                      onValueChange={(value) =>
+                        updateVariantConfig(configIndex, (item) => ({
+                          ...item,
+                          prices: item.prices.map((p, i) =>
+                            i === priceIndex ? { ...p, customerGroup: value as CustomerGroup } : p,
+                          ),
+                        }))
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Customer group" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {CUSTOMER_GROUP_VALUES.map((value) => (
+                          <SelectItem key={value} value={value}>
+                            {value}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
+                    <Select
+                      value={price.uomCode}
+                      onValueChange={(value) =>
+                        updateVariantConfig(configIndex, (item) => ({
+                          ...item,
+                          prices: item.prices.map((p, i) =>
+                            i === priceIndex ? { ...p, uomCode: value as UomCode } : p,
+                          ),
+                        }))
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="UoM" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {UOM_VALUES.map((value) => (
+                          <SelectItem key={value} value={value}>
+                            {value}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+
+                    <Input
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={price.unitPrice}
+                      onChange={(e) =>
+                        updateVariantConfig(configIndex, (item) => ({
+                          ...item,
+                          prices: item.prices.map((p, i) =>
+                            i === priceIndex ? { ...p, unitPrice: Number(e.target.value || 0) } : p,
+                          ),
+                        }))
+                      }
+                      placeholder="Unit price"
+                    />
+
+                    <Input
+                      value={price.currency || "EGP"}
+                      maxLength={3}
+                      onChange={(e) =>
+                        updateVariantConfig(configIndex, (item) => ({
+                          ...item,
+                          prices: item.prices.map((p, i) =>
+                            i === priceIndex ? { ...p, currency: e.target.value.toUpperCase() } : p,
+                          ),
+                        }))
+                      }
+                      placeholder="EGP"
+                    />
+
+                    <div className="flex items-center rounded-md border px-3">
+                      <Checkbox
+                        checked={price.isSellable ?? true}
+                        onCheckedChange={(checked) =>
+                          updateVariantConfig(configIndex, (item) => ({
+                            ...item,
+                            prices: item.prices.map((p, i) =>
+                              i === priceIndex ? { ...p, isSellable: checked === true } : p,
+                            ),
+                          }))
+                        }
+                      />
+                      <span className="ml-2 text-sm">Sellable</span>
+                    </div>
+
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      className="text-destructive"
+                      onClick={() =>
+                        updateVariantConfig(configIndex, (item) => ({
+                          ...item,
+                          prices: item.prices.filter((_, i) => i !== priceIndex),
+                        }))
+                      }
+                    >
+                      <Trash2 className="mr-2 h-4 w-4" />
+                      Remove
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
 
         <div className="flex justify-end gap-4">
           <Button variant="outline" type="button" onClick={() => router.back()}>

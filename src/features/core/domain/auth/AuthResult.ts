@@ -1,3 +1,5 @@
+import { UserRole } from "../types/common";
+
 /**
  * Result of an authentication attempt (login or registration).
  *
@@ -13,6 +15,6 @@ export interface AuthResult {
     firstName?: string;
     lastName?: string;
     phone?: string;
-    role: string;
+    role: UserRole;
   };
 }

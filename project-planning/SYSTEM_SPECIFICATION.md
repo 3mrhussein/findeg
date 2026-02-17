@@ -1,6 +1,6 @@
 # FindEg.com — System Specification
 
-> **Version:** 1.1 · **Updated:** 2026-02-14 · **Current Phase:** Phase 1 (Public E-Shop MVP)
+> **Version:** 1.4 · **Updated:** 2026-02-16 · **Current Phase:** Phase 1 (Public E-Shop MVP, Dual-Track Strategy)
 
 ---
 
@@ -9,6 +9,23 @@
 **FindEg.com** is a modern education-focused e-commerce platform for the Egyptian market, specializing in stationery and school supplies. It combines a **public B2C shop** (web + mobile) with a future **school integration layer (B2B2C)** that automates supply-list distribution and purchasing.
 
 > _From classroom requirements to a ready-to-buy cart in minutes._
+
+### Current Business Goal (Dual Track)
+
+As of **February 16, 2026**, FindEg follows a **balanced dual-track strategy**:
+
+1. **Short-term B2C growth**: maximize conversion and order throughput in the public storefront.
+2. **Mid-term B2B2C readiness**: preserve clean architecture boundaries so school workflows can be introduced without a rewrite of Phase 1 commerce flows.
+
+**Operating goal statement:**
+Become the default back-to-school commerce platform in Egypt by converting retail shoppers efficiently now (`catalog -> cart -> checkout -> fulfillment`) while preparing the platform for school-driven purchasing workflows (lists, templates, institutional journeys) next.
+
+### Core Differentiator
+
+- Schools prepare supply lists.
+- Parents open a shared link/QR and land in a pre-filled cart.
+- Parents can modify options if school policy allows.
+- School co-branding overlays increase trust and conversion.
 
 ### Platform Strategy
 
@@ -60,6 +77,19 @@ One catalog. One checkout. One API. Three client surfaces (web, mobile, admin).
 - **Languages:** Arabic (primary) + English
 - **Peak Season:** August–September (Back to School) — 10–40× normal traffic
 - **Go-to-Market:** Launch public shop (web + mobile) → pilot with 2–3 private schools → scale
+
+### Success Criteria (Dual)
+
+1. **Commerce outcomes:** Improve checkout completion, repeat order rate, and fulfillment reliability.
+2. **Platform readiness outcomes:** Add school-domain features using isolated modules and clear contracts with minimal refactor risk.
+3. **Operational outcomes:** Keep admin operations fully functional for catalog, inventory, order lifecycle, and auditability.
+
+### Current-Phase Design Directives
+
+- Build and operate a production-grade public B2C marketplace now.
+- Keep taxonomy customer-friendly and stable, with admin-controlled category/sub-category linking.
+- Prioritize import automation and deterministic catalog operations in admin.
+- Prepare schema and domain extensions now for school and multi-UoM requirements while keeping web/mobile clients in this repo aligned.
 
 ---
 
@@ -153,6 +183,8 @@ gantt
     Cart & checkout UI                :done, p1b, 2025-12, 2026-02
     Admin dashboard & CRUD            :done, p1c, 2026-01, 2026-02
     REST API layer                    :active, p1api, 2026-02, 2026-04
+    Multi-UoM data model uplift       :active, p1uom, 2026-02, 2026-04
+    Bulk import hardening             :active, p1imp, 2026-02, 2026-04
     Payment integration (Paymob)      :active, p1d, 2026-02, 2026-04
     Order mgmt & fulfillment (admin)  :p1e, 2026-03, 2026-05
     Mobile app (React Native)         :p1m, 2026-03, 2026-06
@@ -214,11 +246,13 @@ graph LR
 - Admin dashboard: product/category/brand CRUD, order lifecycle, inventory, reporting
 - REST API for all features (required for mobile app)
 - i18n (EN/AR), RTL, mobile-first, SEO
+- Phase 1 schema/domain uplift for multi-UoM selling and customer-group pricing
+- Admin-controlled product-to-sub-category linking (no supplier taxonomy mapping layer)
 
 **Out of scope (deferred):**
 
 - School/teacher accounts, supply lists, QR codes, subscriptions
-- Advanced analytics, white-labeling, multi-country pricing
+- Advanced analytics, multi-country pricing
 
 ---
 
@@ -332,7 +366,7 @@ stateDiagram-v2
     cancelled --> [*]
 ```
 
-### School-Context Flow (Phase 3 — Future)
+### School-Context Flow (Phase 2+ — Future)
 
 ```mermaid
 flowchart TD
@@ -370,15 +404,15 @@ graph TD
         REST["REST API Routes<br/>/api/v1/*"]
     end
 
-    subgraph "Application Layer — src/application/"
+    subgraph "Application Layer — src/features/*/application/"
         APP["Services · Repository Interfaces<br/>Auth · Products · Cart · Orders · Admin"]
     end
 
-    subgraph "Domain Layer — src/domain/"
+    subgraph "Domain Layer — src/features/*/domain/"
         DOM["Entities & Business Rules<br/>Product · Cart · Category · Order · User<br/>Zero external dependencies"]
     end
 
-    subgraph "Infrastructure Layer — src/infrastructure/"
+    subgraph "Infrastructure Layer — src/features/*/infrastructure/"
         INFRA["Drizzle ORM Repositories · PostgreSQL<br/>JWT Auth · CMS · DI Container"]
     end
 
@@ -627,6 +661,48 @@ erDiagram
     AUDIT_LOG }o--|| USERS : "performed by"
 ```
 
+### Current Phase Schema & Domain Changes (Phase 1, In Progress)
+
+To support immediate B2C operations and near-term B2B2C readiness, Phase 1 includes schema/domain updates:
+
+1. Multi-sellable UoMs per variant (`pcs`, `pack`, `carton`)
+2. Customer-group specific price lists (starting with `public_b2c`, `school_b2b`)
+
+Phase 1 tables:
+
+```sql
+variant_sellable_uoms (
+  id serial primary key,
+  variant_id integer not null,
+  uom_code text not null,                 -- pcs/pack/carton
+  factor_to_base numeric(12,4) not null, -- conversion to base_uom
+  is_enabled boolean not null default true,
+  unique (variant_id, uom_code)
+);
+
+variant_price_lists (
+  id serial primary key,
+  variant_id integer not null,
+  customer_group text not null,           -- public_b2c/school_b2b
+  uom_code text not null,
+  currency text not null default 'EGP',
+  unit_price numeric(12,2) not null,
+  is_sellable boolean not null default true,
+  unique (variant_id, customer_group, uom_code)
+);
+
+```
+
+Domain entity changes in current phase:
+
+| Domain Entity | Required Change |
+| ------------- | --------------- |
+| `Product` / Variant model | Add `baseUom` and normalized sellable-UoM model per variant |
+| Pricing model | Resolve price by `{ variantId, customerGroup, uom }` |
+| `CartItem` | Persist selected `uom` and effective `customerGroup` snapshot |
+| `OrderItem` | Snapshot `uom`, conversion factor, and group-specific unit price |
+| Import domain/service | Enforce deterministic upsert and explicit category/sub-category linkage |
+
 ### Nested Category Design
 
 Categories use a **materialized path** pattern for efficient hierarchical queries:
@@ -676,17 +752,19 @@ This enables:
 | **`audit_log` table**                  | All admin mutations are tracked with old/new values — required for operations                              |
 | **`addresses` table**                  | Separate from users — supports multiple saved addresses                                                    |
 | **Guest checkout support**             | `user_id` nullable on orders, `guest_email` for non-registered purchases                                   |
+| **`variant_sellable_uoms` table**     | Enables selling each variant in multiple units (pcs/pack/carton) without duplicating variants             |
+| **`variant_price_lists` table**        | Supports per-customer-group pricing by UoM in Phase 1 pricing workflows                                    |
 
 ### Translation Strategy
 
 | Tier                | What                        | Where                                                   | Example                     |
 | ------------------- | --------------------------- | ------------------------------------------------------- | --------------------------- |
-| **Static UI text**  | Buttons, labels, navigation | `src/infrastructure/cms/messages/{locale}.json`         | "Add to Cart" / "أضف للسلة" |
+| **Static UI text**  | Buttons, labels, navigation | `src/features/core/infrastructure/cms/messages/{locale}.json` | "Add to Cart" / "أضف للسلة" |
 | **Dynamic content** | Product names, descriptions | `product_translations` / `category_translations` tables | "Premium Pen" / "قلم ممتاز" |
 
 Each translatable entity has a companion `_translations` table with composite PK `(entity_id, language)`.
 
-### Phase 2–3 Schema Extensions (New Tables Only)
+### Phase 2–3 Schema Extensions (School Tables)
 
 ```mermaid
 erDiagram
@@ -729,13 +807,14 @@ erDiagram
     SUPPLY_TEMPLATES ||--o{ SUPPLY_ITEM_RULES : "defines rules"
 ```
 
-Phase 2–3 will **add** these tables — existing Phase 1 tables remain unchanged.
+Phase 2–3 will add these school-specific tables on top of the Phase 1 commerce foundation (including multi-UoM and group-pricing tables).
 
 ---
 
 ## 7. REST API
 
-The REST API is a **Phase 1 requirement** — it is **fully implemented** and powers both the web dashboard and mobile app.
+The REST API is a **Phase 1 requirement** and powers both the web dashboard and mobile app.
+This section includes current contracts plus current-phase contract extensions required by the multi-UoM and admin-import workstream.
 
 ### API Architecture
 
@@ -779,19 +858,20 @@ flowchart LR
 
 | Method | Endpoint                      | Description                                                                                                           |
 | ------ | ----------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `GET`  | `/products`                   | List with filters: `categoryId` (includes children!), `brandId`, `q`, `minPrice`, `maxPrice`, `sort`, `page`, `limit` |
-| `GET`  | `/products/{slug}`            | Full detail: translations, images, variants, stock, reviews                                                           |
+| `GET`  | `/products`                   | List with filters: `categoryId` (includes children!), `brandId`, `q`, `minPrice`, `maxPrice`, `sort`, `page`, `limit`, optional `customerGroup` |
+| `GET`  | `/products/{slug}`            | Full detail: translations, images, variants, stock, and sellable options by `{uom, customerGroup}`                 |
 | `GET`  | `/categories`                 | Full tree (hierarchical, respects `sort_order`)                                                                       |
 | `GET`  | `/categories/{slug}`          | Single category + immediate children                                                                                  |
 | `GET`  | `/categories/{slug}/products` | Products in category + all descendants                                                                                |
 | `GET`  | `/brands`                     | All active brands                                                                                                     |
+| `POST` | `/products/{id}/pricing/quote`| Resolve effective price by `{ variantId, uom, customerGroup, quantity }`                                             |
 
 ### Cart
 
 | Method   | Endpoint           | Description                             |
 | -------- | ------------------ | --------------------------------------- |
 | `GET`    | `/cart`            | Get cart by JWT / sessionId             |
-| `POST`   | `/cart/items`      | Add `{ productId, quantity, variant? }` |
+| `POST`   | `/cart/items`      | Add `{ productId, quantity, variant?, uom?, customerGroup? }` |
 | `PUT`    | `/cart/items/{id}` | Update quantity                         |
 | `DELETE` | `/cart/items/{id}` | Remove item                             |
 
@@ -813,7 +893,6 @@ flowchart LR
 | ---------------- | ------------------------------ | -------------------------------------- |
 | `GET/POST`       | `/admin/products`              | List / Create product                  |
 | `GET/PUT/DELETE` | `/admin/products/{id}`         | Get / Update / Delete product          |
-| `POST`           | `/admin/products/bulk-import`  | CSV bulk import                        |
 | `GET/POST`       | `/admin/categories`            | List tree / Create category            |
 | `PUT`            | `/admin/categories/{id}`       | Update (including move in tree)        |
 | `PUT`            | `/admin/categories/reorder`    | Batch reorder `[{ id, sortOrder }]`    |
@@ -822,10 +901,13 @@ flowchart LR
 | `PUT/DELETE`     | `/admin/brands/{id}`           | Update / Delete brand                  |
 | `PUT`            | `/admin/inventory/{productId}` | Update stock `{ quantity }`            |
 | `PUT`            | `/admin/inventory/bulk`        | Batch stock update                     |
+| `GET/PUT`        | `/admin/products/{id}/uoms`    | Manage sellable UoMs per variant       |
+| `GET/PUT`        | `/admin/products/{id}/pricing` | Manage per-customer-group price lists  |
 | `GET`            | `/admin/orders`                | List with filters                      |
 | `PUT`            | `/admin/orders/{id}/status`    | Update status + optional tracking #    |
 | `GET`            | `/admin/dashboard`             | KPIs, revenue, top products, low stock |
 | `GET`            | `/admin/audit-log`             | Paginated audit trail                  |
+| `POST`           | `/admin/products/bulk-import`  | Import with explicit category/sub-category linking + deterministic upsert |
 
 ### Error Format
 
@@ -839,6 +921,7 @@ flowchart LR
 X-Context-Type: public | school
 X-School-Id: optional
 X-Class-Id: optional
+X-Customer-Group: public_b2c | school_b2b
 ```
 
 ---
@@ -887,27 +970,24 @@ mindmap
 
 | Feature                    | Status     | Notes                                |
 | -------------------------- | ---------- | ------------------------------------ |
-| Product catalog & search   | ✅ Done    | Filters, sorting, pagination         |
-| Product detail + variants  | ✅ Done    | Images, pricing, variants            |
-| Cart (client-side)         | ✅ Done    | Drawer, quantities, variant-aware    |
-| i18n (EN/AR, RTL)          | ✅ Done    | Static + dynamic content             |
-| Admin dashboard            | ✅ Done    | Stats, charts, sidebar               |
-| Admin product CRUD         | ✅ Done    | Create, edit, list                   |
-| Admin category management  | ✅ Done    | Hierarchy, CRUD                      |
-| User registration & login  | ✅ Done    | JWT cookies, bcrypt                  |
-| Customer dashboard         | ✅ Done    | Orders, account, stats               |
-| REST API layer             | 🟡 Partial | Needed for mobile — in progress      |
-| Checkout flow              | 🟡 Partial | Pages exist, payment pending         |
-| Category nested filtering  | 🟡 Partial | Schema needs `path`/`depth` columns  |
-| Payment (Paymob)           | ⬜ Todo    | Integration planned                  |
-| Order lifecycle (admin)    | ⬜ Todo    | Status, tracking, history            |
-| Admin brand management     | ⬜ Todo    | CRUD planned                         |
-| Admin inventory management | ⬜ Todo    | Inline edit + bulk update            |
-| Admin media/assets         | ⬜ Todo    | Upload, organize, assign to products |
-| Audit logging              | ⬜ Todo    | Track all admin changes              |
-| Mobile app                 | ⬜ Todo    | React Native, shared API             |
-| Automated testing          | ⬜ Todo    | Unit + integration                   |
-| CI/CD pipeline             | ⬜ Todo    | Automated deploy                     |
+| Product catalog & search               | ✅ Done        | Filters, sorting, pagination                               |
+| Product detail + variants              | ✅ Done        | Images, base pricing, variant selection                    |
+| Cart (client-side + API)               | ✅ Done        | Variant-aware cart and session support                     |
+| i18n (EN/AR, RTL)                      | ✅ Done        | Static + dynamic content                                   |
+| Admin dashboard                         | ✅ Done        | Stats, charts, sidebar                                     |
+| Admin catalog CRUD                      | ✅ Done        | Products/categories/brands                                 |
+| User registration & login               | ✅ Done        | JWT cookies, bcrypt                                        |
+| Customer dashboard                      | ✅ Done        | Orders and account flows                                   |
+| REST API layer                          | ✅ Done        | Core `/api/v1/*` implemented for web/mobile parity         |
+| Checkout flow                           | 🟡 Partial     | Payment provider integration pending                        |
+| Multi-UoM schema/domain uplift          | 🟡 In Progress | Variant UoMs + group pricing + order/cart snapshots        |
+| Bulk import hardening                   | 🟡 In Progress | Deterministic upsert + explicit category/sub-category linking |
+| School prefilled-cart flow              | ⬜ Planned     | Phase 2 implementation                                     |
+| Substitution/approval policies          | ⬜ Planned     | Phase 2 policy engine                                      |
+| School co-brand overlays                | ⬜ Planned     | Phase 2 UX layer                                           |
+| Mobile app app-shell                    | ⬜ Planned     | React Native client on shared API                          |
+| Automated testing                       | ⬜ Planned     | Unit + integration                                         |
+| CI/CD pipeline                          | ⬜ Planned     | Automated deploy + checks                                  |
 
 ---
 
@@ -1021,6 +1101,9 @@ findeg.stationary/
 | Product creation time (admin) | < 5 min      | 1     |
 | Order processing time (admin) | < 2 min      | 1     |
 | Category tree query time      | < 50ms       | 1     |
+| Bulk import success rate      | > 99% rows   | 1     |
+| Import rows with valid sub-category link | > 98% rows | 1     |
+| UoM pricing resolution errors | < 0.1% req   | 1     |
 | Time to create supply list    | < 10 min     | 2     |
 | School reuse rate next year   | > 80%        | 3     |
 

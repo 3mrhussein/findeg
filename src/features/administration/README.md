@@ -1,38 +1,57 @@
 # Administration Feature
 
-The `administration` feature provides the backend management tools for store owners. It encompasses product CRUD, inventory adjustments, order fulfillment, and administrative activity logging.
+Owns back-office operations: catalog CRUD, inventory control, order operations, and auditability.
 
-## Responsibilities
+## Use Cases
 
-- **Inventory Control**: Real-time stock updates and low-stock alerting.
-- **Product & Category CRUD**: Full management of the catalog with localization support.
-- **Order Management**: Tracking, status updates, and fulfillment flows.
-- **Audit Trailing**: Logging all administrative actions for accountability.
-- **Dashboard Analytics**: Aggregated statistics on sales, customers, and inventory.
+```mermaid
+flowchart LR
+    Admin --> UC1[Create/Update products]
+    Admin --> UC2[Manage categories/brands]
+    Admin --> UC3[Update inventory]
+    Admin --> UC4[Update order status]
+    Admin --> UC5[View dashboard and audit log]
+```
 
-## Component Overview
+## UML (Class View)
 
-### Domain Layer (`/domain`)
+```mermaid
+classDiagram
+    class AdminProductService
+    class AdminInventoryService
+    class AdminOrderService
+    class AuditLogService
+    class IProductRepository
+    class IOrderRepository
+    class IAuditLogRepository
 
-- **Entities**: `AuditLogEntry`.
-- **Types**: Shared inputs for admin forms (`ProductInput`, `CategoryInput`).
+    AdminProductService --> IProductRepository
+    AdminInventoryService --> IProductRepository
+    AdminOrderService --> IOrderRepository
+    AuditLogService --> IAuditLogRepository
+```
 
-### Application Layer (`/application`)
+## Sequence (Inventory Update)
 
-- **Ports**: Admin-specific service interfaces (`IAdminProductService`, `IAdminInventoryService`, `IAuditLogRepository`).
-- **Services**: Implementations of business logic for admin actions, including validation and audit logging triggers.
+```mermaid
+sequenceDiagram
+    participant API as PATCH /api/v1/admin/inventory/{productId}
+    participant Service as AdminInventoryService
+    participant Repo as IProductRepository
+    participant Audit as AuditLogService
+    API->>Service: updateStock(productId, quantity, threshold)
+    Service->>Repo: updateStockConfiguration(...)
+    Service->>Audit: logAction(inventory update)
+    Service-->>API: success
+```
 
-### Infrastructure Layer (`/infrastructure`)
+## Layer Notes
+- `domain`: admin DTOs + `AuditLogEntry`.
+- `application`: admin services with policy and validation.
+- `infrastructure`: audit and persistence adapters.
 
-- **Persistence**: Repositories for audit logs and extended data access for admin listings.
+## Clean Architecture Boundaries
+- Depends on `catalog`, `order`, `identity` contracts, and `core`.
+- All admin mutations should be auditable.
+- Admin UI/actions should call services/contracts, not raw repositories.
 
-### Presentation Layer (`/presentation`)
-
-- **Components**: Data tables, complex forms, and statistical charts.
-- **Server Actions**: Secured backend entry points for administrative mutations.
-
-## Architectural Boundaries
-
-- **Depends On**: `catalog` (data structures), `identity` (admin auth), `order` (fulfillment), `core` (logging/persistence).
-- **Security**: Strictly protected by the `validateAdmin` guard in `AuthService`.
-- **Communication**: Interacts with other features via their respective repositories but defines its own specialized services.

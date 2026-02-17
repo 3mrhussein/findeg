@@ -1,42 +1,35 @@
-# Scaling & Standards Guide
+# Scaling Guide
 
-This document outlines the standards for maintaining a clean, scalable codebase as the FindEg platform grows.
+This guide covers how to grow the codebase without degrading clean architecture.
 
-## Scaling Strategies
+## 1. Structural Scaling
 
-### 1. Feature-Based Organization
-- Code is organized by **features** (catalog, cart, order, identity, administration, review, media).
-- Each feature is self-contained: `domain/`, `application/`, `infrastructure/`, `ui/`.
-- Shared cross-cutting code lives in the **core** feature.
-- See [DDD & Clean Architecture Refactor Plan](../architecture/DDD_CLEAN_ARCHITECTURE_REFACTOR_PLAN.md) and [Feature Structure](../architecture/FEATURE_STRUCTURE.md).
+- Keep feature ownership clear (`catalog`, `cart`, `order`, `identity`, `administration`, `review`, `media`).
+- Place shared cross-cutting logic in `src/features/core`.
+- Avoid cross-feature infrastructure imports; depend on contracts/interfaces.
 
-### 2. Component Modularization
-- Split large components into smaller files within the feature folder.
-- Add new shadcn components via CLI to `src/components/ui/` (default path).
-- Move feature-specific components to `features/{feature}/ui/`.
+Reference: `docs/architecture/ARCHITECTURE_PLAYBOOK.md`.
 
-### 3. State Management
-- **URL as Truth**: Use search parameters for filters and pagination.
-- **Server State**: Leverage Next.js Cache and `revalidatePath`.
+## 2. Service Scaling
 
-### 4. Service Decomposition
-- Split large services into specialized ones (e.g., `ProductSearchService`).
-- Use the **Service Container** (in `core/infrastructure/di/`) for dependency orchestration.
+- Split large services by use case boundaries (search, pricing, checkout, import).
+- Keep orchestration in application layer.
+- Keep persistence mapping inside infrastructure repositories.
 
----
+## 3. API Scaling
 
-## Code Quality Standards
+- Maintain clear route ownership under `/api/v1/*`.
+- Keep request/response schemas explicit with zod.
+- For MVP, evolve contracts quickly but update all in-repo clients in the same change.
 
-- **Strict Typing**: Avoid `any`. Use interfaces from the `domain/` or `features/*/domain/` layer.
-- **Type Inference**: Prefer inference where types are obvious; use explicit types for public APIs.
-- **JSDoc**: Document public interfaces, service methods, and non-obvious logic with `@param`, `@returns`.
-- **Linting**: Run `npm run lint` regularly.
-- **Performance**: Use `<Image />` from `next/image` and keep bundles small.
-- **i18n**: Add new keys to `lib/i18n.ts` and ensure RTL support.
+## 4. Data Scaling
 
----
+- Keep taxonomy deterministic and admin-managed.
+- Continue migration-driven schema changes; no ad hoc production edits.
+- Preserve order/cart snapshots to keep historical consistency.
 
-## Developer Roadmap
-1. **Caching**: Redis/Edge caching for high-traffic pages.
-2. **Feature Extraction**: Feature-based structure enables extracting features to microservices later.
-3. **Testing**: Add Unit and Integration tests.
+## 5. Operational Scaling
+
+- Add integration tests for critical flows first (cart, checkout, admin inventory updates).
+- Track high-risk metrics (pricing resolution failures, checkout failure rate, import validation errors).
+- Keep audit logging on all admin mutations.

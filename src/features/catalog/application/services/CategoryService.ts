@@ -1,3 +1,4 @@
+import { ID, Slug } from "@/features/core/domain/types/common";
 import type { ICategoryRepository } from "../interfaces/ICategoryRepository";
 import type { ICategoryService } from "@/features/catalog/application/interfaces/ICategoryService";
 import type { Category } from "@/features/catalog/domain/entities/Category";
@@ -20,7 +21,7 @@ export class CategoryService implements ICategoryService {
    * @param language - Optional language for localized content.
    * @returns The category if found, null otherwise.
    */
-  async getById(id: number, language?: string): Promise<Category | null> {
+  async getById(id: ID, language?: string): Promise<Category | null> {
     return this.categoryRepository.getById(id, language);
   }
 
@@ -41,7 +42,7 @@ export class CategoryService implements ICategoryService {
    * @param language - Optional language for localized content.
    * @returns The category if found, null otherwise.
    */
-  async getBySlug(slug: string, language?: string): Promise<Category | null> {
+  async getBySlug(slug: Slug, language?: string): Promise<Category | null> {
     return this.categoryRepository.getBySlug(slug, language);
   }
 }

@@ -1,3 +1,4 @@
+import { ID, Price } from "@/features/core/domain/types/common";
 import { IAdminDashboardService } from "../interfaces/IAdminDashboardService";
 import { IProductRepository } from "@/features/catalog/application/interfaces/IProductRepository";
 import { ICategoryRepository } from "@/features/catalog/application/interfaces/ICategoryRepository";

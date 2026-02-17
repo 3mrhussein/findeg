@@ -12,8 +12,9 @@
 import { IAuthService } from "../interfaces/IAuthService";
 import { IUserRepository } from "../interfaces/IUserRepository";
 import { ISessionProvider } from "@/features/core/application/interfaces/ISessionProvider";
-import { AuthResult, SessionPayload } from "../../domain/types/auth";
+import { AuthResult, RegisterInput, SessionPayload } from "@/features/core/domain/auth";
 import bcrypt from "bcryptjs";
+import { getErrorDefinition, resolveErrorMessage } from "@/features/core/domain/errors";
 
 /**
  * Authentication Service
@@ -46,16 +47,16 @@ export class AuthService implements IAuthService {
     const user = await this.userRepository.getByEmailWithPassword(email);
 
     if (!user) {
-      return { success: false, error: "Invalid email or password" };
+      return { success: false, error: getErrorDefinition("AUTH_INVALID_CREDENTIALS").message };
     }
 
     if (!user.password) {
-      return { success: false, error: "Account has no password set" };
+      return { success: false, error: getErrorDefinition("AUTH_ACCOUNT_NO_PASSWORD").message };
     }
 
     const isValid = await bcrypt.compare(password, user.password);
     if (!isValid) {
-      return { success: false, error: "Invalid email or password" };
+      return { success: false, error: getErrorDefinition("AUTH_INVALID_CREDENTIALS").message };
     }
 
     const payload: SessionPayload = {
@@ -86,12 +87,15 @@ export class AuthService implements IAuthService {
    * @param input - Registration data including email, password, and profile details.
    * @returns Authentication result containing the new user profile or an error message.
    */
-  async register(input: any): Promise<AuthResult> {
+  async register(input: RegisterInput): Promise<AuthResult> {
     try {
       // Check if user exists
       const existing = await this.userRepository.getByEmail(input.email);
       if (existing) {
-        return { success: false, error: "Email already registered" };
+        return {
+          success: false,
+          error: getErrorDefinition("AUTH_EMAIL_ALREADY_REGISTERED").message,
+        };
       }
 
       // Hash password
@@ -101,7 +105,7 @@ export class AuthService implements IAuthService {
       const user = await this.userRepository.create({
         ...input,
         passwordHash,
-        role: input.role || "customer",
+        role: "user",
       } as any);
 
       // Log them in automatically
@@ -109,7 +113,7 @@ export class AuthService implements IAuthService {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : "Registration failed",
+        error: resolveErrorMessage(error, "AUTH_REGISTER_FAILED"),
       };
     }
   }
@@ -141,10 +145,10 @@ export class AuthService implements IAuthService {
   async validateAdmin(): Promise<SessionPayload> {
     const session = await this.sessionProvider.getSession();
     if (!session) {
-      throw new Error("Not authenticated");
+      throw new Error(getErrorDefinition("AUTH_UNAUTHORIZED").message);
     }
     if (session.role !== "admin") {
-      throw new Error("Admin privileges required");
+      throw new Error(getErrorDefinition("AUTH_ADMIN_REQUIRED").message);
     }
     return session;
   }
