@@ -2,6 +2,7 @@ import { SignJWT, jwtVerify } from "jose";
 import type { SessionPayload } from "@/features/core/domain/auth";
 import type { ISessionManager } from "@/features/core/application/interfaces/ISessionManager";
 import type { UserRole } from "@/features/core/domain/types/common";
+import { AUTH_CONSTANTS } from "@/features/core/domain/constants/auth";
 
 /**
  * JWT implementation of SessionManager
@@ -19,7 +20,7 @@ export class JwtSessionManager implements ISessionManager {
    */
   constructor() {
     this.JWT_SECRET = new TextEncoder().encode(
-      process.env.JWT_SECRET || "findeg-admin-secret-key-change-in-production",
+      process.env.JWT_SECRET || AUTH_CONSTANTS.JWT_SECRET_FALLBACK,
     );
   }
 

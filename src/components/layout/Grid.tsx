@@ -1,4 +1,20 @@
+import { cn } from "@/lib/utils";
+import type { HTMLAttributes, ReactNode } from "react";
+
+interface GridProps extends HTMLAttributes<HTMLDivElement> {
+  children: ReactNode;
+}
+
 /**
- * Re-export from core. Prefer importing from @/features/core/ui in new code.
+ *
  */
-export { Grid } from "@/features/core/ui/layout/Grid";
+export function Grid({ children, className, ...props }: GridProps) {
+  return (
+    <div
+      className={cn("grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3", className)}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+}

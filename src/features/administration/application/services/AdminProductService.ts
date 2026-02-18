@@ -7,6 +7,7 @@ import { IAuditLogService } from "../interfaces/IAuditLogService";
 import { MediaService } from "@/features/media/application/services/MediaService";
 import { Product } from "@/features/catalog/domain/entities/Product";
 import { ProductInput } from "../../domain/types/ProductInput";
+import type { Locale } from "@/features/core/domain/value-objects";
 
 /**
  * Admin Product Service
@@ -148,7 +149,7 @@ export class AdminProductService implements IAdminProductService {
    * @param language - Optional language for localized snapshots.
    * @returns Product or null.
    */
-  async getById(id: ID, language?: string): Promise<Product | null> {
+  async getById(id: ID, language?: Locale): Promise<Product | null> {
     return this.productRepository.getById(id, language);
   }
 
@@ -169,7 +170,7 @@ export class AdminProductService implements IAdminProductService {
    * @param language - Optional language filter.
    * @returns List of products.
    */
-  async getAll(language?: string): Promise<Product[]> {
+  async getAll(language?: Locale): Promise<Product[]> {
     return this.productRepository.getAll(language);
   }
 

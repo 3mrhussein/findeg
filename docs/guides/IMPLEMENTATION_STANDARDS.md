@@ -9,8 +9,10 @@ This guide defines engineering standards for implementing and reviewing code in 
 A task is done only when all are true:
 
 1. Spec and plan updated:
-- `project-planning/SYSTEM_SPECIFICATION.md`
-- `project-planning/IMPLEMENTATION_PLAN.md`
+   - `project-planning/SYSTEM_SPECIFICATION.md`
+   - `project-planning/MISSING_FLOWS_MATRIX.md`
+   - `project-planning/USE_CASE_BACKLOG.md`
+   - `docs/testing/FRONTEND_TEST_MASTER_PLAN.md` (when test scope changes)
 
 2. Contracts updated:
 - Domain types and zod schemas are explicit
@@ -77,7 +79,11 @@ When changing persistence:
 2. Add migration SQL in `scripts/migrations/`.
 3. Apply migration on local DB.
 4. Verify tables/indexes and basic CRUD path.
-5. Update spec and implementation plan.
+5. Update planning docs and test plan:
+   - `project-planning/SYSTEM_SPECIFICATION.md`
+   - `project-planning/MISSING_FLOWS_MATRIX.md`
+   - `project-planning/USE_CASE_BACKLOG.md`
+   - `docs/testing/FRONTEND_TEST_MASTER_PLAN.md` (if coverage/scope changed)
 
 ---
 
@@ -91,3 +97,22 @@ Before merge:
 4. Multi-language support preserved for translatable entities
 5. Admin actions are auditable where applicable
 6. Docs + diagrams updated for affected feature
+
+---
+
+## 6. UI Separation Pattern (Required)
+
+For new feature work and refactors, keep UI and behavior separate:
+
+1. Hooks for interactive state and URL/query synchronization.
+- Example: filter/sort state in `use*` hooks.
+
+2. Utility/query modules for data shaping.
+- Parse query params, build view models, sort/filter transformations outside page JSX.
+
+3. HOCs for reusable behavior injection when multiple components share behavior contracts.
+- Use HOCs to inject behavior/state into presentational components instead of duplicating logic.
+
+4. Presentational components should be replaceable.
+- Avoid embedding business rules in JSX files.
+- A UI redesign should mostly touch view files, not hooks/query modules.

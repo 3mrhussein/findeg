@@ -53,7 +53,9 @@ export const OrderTableUI: React.FC<OrderTableUIProps> = ({ orders, t }) => (
         <TableRow key={order.id}>
           <TableCell className="font-medium text-foreground">{order.id}</TableCell>
           <TableCell>{order.customerName}</TableCell>
-          <TableCell>{order.date}</TableCell>
+          <TableCell>
+            {order.createdAt ? new Date(order.createdAt).toLocaleDateString() : order.date || "-"}
+          </TableCell>
           <TableCell>${(order.total ?? order.totalAmount ?? 0).toFixed(2)}</TableCell>
           <TableCell>
             <OrderStatusBadge status={order.status} />

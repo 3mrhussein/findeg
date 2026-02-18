@@ -3,12 +3,14 @@ import { CategoryCard } from "./_components/CategoryCard";
 import { Container } from "@/components/layout/Container";
 import { AdBanner } from "./_components/AdBanner";
 import { ScrollingLogoCloud } from "./_components/ScrollingLogoCloud";
-import { ProductPagination } from "@/components/common/ProductPagination";
 import { getTranslations } from "next-intl/server";
+import type { Locale } from "next-intl";
 import { getHomePageData } from "@/features/catalog/application/queries/storefront";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { buildHomeFeaturedGroups } from "@/features/catalog/application/queries/home-page";
+import { HomeFeaturedTabs } from "@/features/catalog/presentation/components/HomeFeaturedTabs";
+import { Link } from "@/i18n/navigation";
 
 /**
  * HomePage Template (Server Component)
@@ -24,12 +26,21 @@ interface HomePageProps {
  *
  */
 const HomePage = async ({ language = "en" }: HomePageProps) => {
-  const t = await getTranslations();
+  const t = await getTranslations({ locale: language as Locale });
   const { featuredProducts, categories } = await getHomePageData(language);
+  const featuredGroups = buildHomeFeaturedGroups(featuredProducts);
 
   return (
     <>
-      <Hero imageUrl="https://picsum.photos/seed/heroimage/1600/900" />
+      <Hero
+        imageUrl="https://picsum.photos/seed/heroimage/1600/900"
+        title={`${t("Pages.Home.Hero.TitlePart1")} ${t("Pages.Home.Hero.TitleLearning")} & ${t("Pages.Home.Hero.TitlePlay")}`}
+        subtitle={t("Pages.Home.Hero.Subtitle")}
+        primaryCtaLabel={t("Pages.Home.Hero.ButtonShop")}
+        primaryCtaHref="/shop"
+        secondaryCtaLabel={t("Pages.Home.Hero.ButtonExplore")}
+        secondaryCtaHref="/categories"
+      />
 
       <section id="featured-products" className="py-16 lg:py-24 bg-muted">
         <Container>
@@ -41,7 +52,11 @@ const HomePage = async ({ language = "en" }: HomePageProps) => {
               "Discover our handpicked selection of premium products"}
           </p>
 
-          <ProductPagination products={featuredProducts} />
+          <HomeFeaturedTabs
+            allProducts={featuredGroups.all}
+            newestProducts={featuredGroups.newest}
+            topRatedProducts={featuredGroups.topRated}
+          />
         </Container>
       </section>
 

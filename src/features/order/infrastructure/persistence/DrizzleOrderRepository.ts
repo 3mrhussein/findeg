@@ -1,4 +1,12 @@
-import { ID, Price, Sku, Quantity, Email } from "@/features/core/domain/types/common";
+import {
+  ID,
+  Price,
+  Sku,
+  Quantity,
+  Email,
+  OrderStatus,
+  PaymentStatus,
+} from "@/features/core/domain/types/common";
 import { db } from "@/features/core/infrastructure/persistence";
 import {
   orders,
@@ -251,7 +259,7 @@ export class DrizzleOrderRepository implements IOrderRepository {
   /**
    *
    */
-  async updateStatus(id: ID | string, status: string): Promise<void> {
+  async updateStatus(id: ID | string, status: OrderStatus): Promise<void> {
     await db
       .update(orders)
       .set({ status, updatedAt: new Date() })
@@ -282,7 +290,7 @@ export class DrizzleOrderRepository implements IOrderRepository {
    * @param id - Order ID
    * @param status - New payment status
    */
-  async updatePaymentStatus(id: ID | string, status: string): Promise<void> {
+  async updatePaymentStatus(id: ID | string, status: PaymentStatus): Promise<void> {
     await db
       .update(orders)
       .set({ paymentStatus: status, updatedAt: new Date() })
@@ -317,7 +325,7 @@ export class DrizzleOrderRepository implements IOrderRepository {
   /**
    *
    */
-  async getOrdersCountByStatus(): Promise<Record<string, number>> {
+  async getOrdersCountByStatus(): Promise<Partial<Record<OrderStatus, number>>> {
     const counts = await db
       .select({
         status: orders.status,
@@ -331,7 +339,7 @@ export class DrizzleOrderRepository implements IOrderRepository {
         acc[curr.status] = curr.count;
         return acc;
       },
-      {} as Record<string, number>,
+      {} as Partial<Record<OrderStatus, number>>,
     );
   }
 

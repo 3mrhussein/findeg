@@ -2,6 +2,7 @@ import { getServices } from "@/server/getServices";
 import { CategoryForm } from "../../CategoryForm";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { notFound } from "next/navigation";
+import { resolveLocale } from "@/features/core/domain/value-objects";
 
 /**
  *
@@ -12,6 +13,7 @@ export default async function EditCategoryPage({
   params: Promise<{ locale: string; id: string }>;
 }) {
   const { locale, id } = await params;
+  const resolvedLocale = resolveLocale(locale);
   const { adminCategory, categories } = getServices();
   const categoryId = parseInt(id);
 
@@ -35,7 +37,7 @@ export default async function EditCategoryPage({
     // We rely on getById returning the translation for requested language
     categories.getById(categoryId, "en"),
     categories.getById(categoryId, "ar"),
-    categories.getAll(locale),
+    categories.getAll(resolvedLocale),
   ]);
 
   if (!catEn) {

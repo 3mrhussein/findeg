@@ -97,6 +97,10 @@ export const ERROR_CATALOG = {
     message: "Failed to update order status.",
     httpStatus: 500,
   },
+  ACTION_ORDER_PAYMENT_STATUS_UPDATE_FAILED: {
+    message: "Failed to update order payment status.",
+    httpStatus: 500,
+  },
   AUTH_INVALID_CREDENTIALS: {
     message: "Invalid email or password.",
     httpStatus: 401,

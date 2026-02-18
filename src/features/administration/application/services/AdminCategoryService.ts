@@ -4,6 +4,7 @@ import { ICategoryRepository } from "@/features/catalog/application/interfaces/I
 import { IAuditLogService } from "../interfaces/IAuditLogService";
 import { Category } from "@/features/catalog/domain/entities/Category";
 import { CategoryInput } from "../../domain/types/CategoryInput";
+import type { Locale } from "@/features/core/domain/value-objects";
 
 /**
  * Admin Category Service
@@ -117,7 +118,7 @@ export class AdminCategoryService implements IAdminCategoryService {
    * @param language - Optional localization preference.
    * @returns List of categories.
    */
-  async getAll(language?: string): Promise<Category[]> {
+  async getAll(language?: Locale): Promise<Category[]> {
     return this.categoryRepository.getAll(language);
   }
 

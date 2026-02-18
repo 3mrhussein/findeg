@@ -23,6 +23,11 @@ import {
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { products } from "./products";
+import type {
+  CurrencyCode,
+  CustomerGroup,
+  UomCode,
+} from "@/features/core/domain/types/common";
 
 /**
  * variant_sellable_uoms
@@ -42,7 +47,7 @@ export const variantSellableUoms = pgTable(
     /** Stable key for the variant inside product.variants JSON */
     variantKey: text("variant_key").notNull(),
     /** Unit code: pcs | pack | carton (extensible) */
-    uomCode: text("uom_code").notNull(),
+    uomCode: text("uom_code").$type<UomCode>().notNull(),
     /** Conversion factor to base unit (e.g., pack=12 pcs) */
     factorToBase: decimal("factor_to_base", { precision: 12, scale: 4 }).notNull(),
     isEnabled: boolean("is_enabled").notNull().default(true),
@@ -75,9 +80,9 @@ export const variantPriceLists = pgTable(
       .notNull()
       .references(() => products.id, { onDelete: "cascade" }),
     variantKey: text("variant_key").notNull(),
-    customerGroup: text("customer_group").notNull(),
-    uomCode: text("uom_code").notNull(),
-    currency: text("currency").notNull().default("EGP"),
+    customerGroup: text("customer_group").$type<CustomerGroup>().notNull(),
+    uomCode: text("uom_code").$type<UomCode>().notNull(),
+    currency: text("currency").$type<CurrencyCode>().notNull().default("EGP"),
     unitPrice: decimal("unit_price", { precision: 12, scale: 2 }).notNull(),
     isSellable: boolean("is_sellable").notNull().default(true),
     createdAt: timestamp("created_at").defaultNow().notNull(),

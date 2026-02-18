@@ -328,7 +328,7 @@ export function ProductForm({ initialData, categories, brands }: ProductFormProp
     const input: ProductInput = {
       price: values.price,
       categoryId: parseInt(values.categoryId),
-      brandId: values.brandId ? parseInt(values.brandId) : undefined,
+      brandId: values.brandId && values.brandId !== "none" ? parseInt(values.brandId) : undefined,
       sku: values.sku,
       stockQuantity: values.stockQuantity,
       lowStockThreshold: values.lowStockThreshold,
@@ -530,7 +530,7 @@ export function ProductForm({ initialData, categories, brands }: ProductFormProp
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="">None</SelectItem>
+                    <SelectItem value="none">None</SelectItem>
                     {brands.map((brand) => (
                       <SelectItem key={brand.id} value={brand.id.toString()}>
                         {brand.name}

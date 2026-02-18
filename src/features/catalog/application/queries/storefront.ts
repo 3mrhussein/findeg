@@ -4,6 +4,8 @@ import { CACHE_TAGS } from "@/features/core/domain/constants/cache-tags";
 import type { Product } from "@/features/catalog/domain/entities/Product";
 import type { Category } from "@/features/catalog/domain/entities/Category";
 import type { Review } from "@/features/review/domain/entities/Review";
+import { fuzzySearchProducts } from "@/features/catalog/application/utils/fuzzy-search";
+import { resolveLocale, type Locale } from "@/features/core/domain/value-objects";
 
 export interface HomePageData {
   featuredProducts: Product[];
@@ -17,6 +19,8 @@ export interface ShopPageData {
 export interface SearchPageData {
   query: string;
   products: Product[];
+  mode: "exact" | "fallback" | "empty";
+  exactCount: number;
 }
 
 export interface ProductDetailPageData {
@@ -34,10 +38,11 @@ export async function getHomePageData(language: string): Promise<HomePageData> {
   cacheLife("hours");
   cacheTag(CACHE_TAGS.CATALOG_PRODUCTS, CACHE_TAGS.CATALOG_CATEGORIES);
 
+  const locale = resolveLocale(language);
   const { products, categories } = getServices();
   const [featuredProducts, allCategories] = await Promise.all([
-    products.getFeaturedProducts(8, language),
-    categories.getAll(language),
+    products.getFeaturedProducts(8, locale),
+    categories.getAll(locale),
   ]);
 
   return {
@@ -47,16 +52,13 @@ export async function getHomePageData(language: string): Promise<HomePageData> {
 }
 
 /**
- * Cached storefront read model for shop listing page.
+ * Storefront read model for shop listing page.
+ * Kept uncached so newly created/admin-updated products reflect immediately.
  */
 export async function getShopPageData(language: string): Promise<ShopPageData> {
-  "use cache";
-
-  cacheLife("hours");
-  cacheTag(CACHE_TAGS.CATALOG_PRODUCTS);
-
+  const locale = resolveLocale(language);
   const { products } = getServices();
-  const allProducts = await products.getAll(language);
+  const allProducts = await products.getAll(locale);
 
   return {
     products: allProducts,
@@ -72,32 +74,46 @@ export async function getCategoriesPageData(language: string): Promise<Category[
   cacheLife("days");
   cacheTag(CACHE_TAGS.CATALOG_CATEGORIES);
 
+  const locale = resolveLocale(language);
   const { categories } = getServices();
-  return categories.getAll(language);
+  return categories.getAll(locale);
 }
 
 /**
- * Cached storefront read model for search page results.
+ * Storefront read model for search page results.
+ * Kept uncached to avoid stale strict/fallback search behavior.
  */
 export async function getSearchPageData(language: string, query: string): Promise<SearchPageData> {
-  "use cache";
-
-  cacheLife("minutes");
-  cacheTag(CACHE_TAGS.CATALOG_PRODUCTS);
-
+  const locale = resolveLocale(language);
   const normalizedQuery = query.trim();
   if (!normalizedQuery) {
     return {
       query: normalizedQuery,
       products: [],
+      mode: "empty",
+      exactCount: 0,
     };
   }
 
   const { products } = getServices();
-  const results = await products.searchProducts(normalizedQuery, language);
+  const strictResults = await products.searchProducts(normalizedQuery, locale);
+  if (strictResults.length > 0) {
+    return {
+      query: normalizedQuery,
+      products: strictResults,
+      mode: "exact",
+      exactCount: strictResults.length,
+    };
+  }
+
+  const allProducts = await products.getAll(locale);
+  const fallbackResults = fuzzySearchProducts(allProducts, normalizedQuery);
+
   return {
     query: normalizedQuery,
-    products: results,
+    products: fallbackResults,
+    mode: fallbackResults.length > 0 ? "fallback" : "exact",
+    exactCount: 0,
   };
 }
 
@@ -127,13 +143,14 @@ export async function getProductDetailPageData(
   cacheLife("hours");
   cacheTag(CACHE_TAGS.CATALOG_PRODUCTS, CACHE_TAGS.CATALOG_REVIEWS);
 
+  const locale: Locale = resolveLocale(language);
   const { products, repositories } = getServices();
-  const product = await products.getById(productId, language);
+  const product = await products.getById(productId, locale);
 
   if (!product) return null;
 
   const [allProducts, reviews] = await Promise.all([
-    products.getAll(language),
+    products.getAll(locale),
     repositories.reviews.getByProductId(productId),
   ]);
 

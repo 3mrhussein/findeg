@@ -6,6 +6,13 @@
  */
 
 import { z } from "zod";
+import {
+  MoneyAmountSchema,
+  type CurrencyCode,
+  type Locale,
+  type Money,
+  type MoneyAmount,
+} from "@/features/core/domain/value-objects";
 
 // ─── Primitives ─────────────────────────────────────────────────────────────
 
@@ -18,8 +25,8 @@ export const OptionalIdSchema = IdSchema.optional();
 export type OptionalID = z.infer<typeof OptionalIdSchema>;
 
 /** Monetary value in the system's base currency (e.g., EGP) */
-export const PriceSchema = z.number().nonnegative();
-export type Price = z.infer<typeof PriceSchema>;
+export const PriceSchema = MoneyAmountSchema;
+export type Price = MoneyAmount;
 
 /** Stock Keeping Unit - unique alphanumeric product code */
 export const SkuSchema = z
@@ -85,3 +92,11 @@ export type UomCode = z.infer<typeof UomCodeSchema>;
 /** Customer groups for pricing policy */
 export const CustomerGroupSchema = z.enum(["public_b2c", "school_b2b"]);
 export type CustomerGroup = z.infer<typeof CustomerGroupSchema>;
+
+// ─── Re-exported Value Objects ──────────────────────────────────────────────
+
+/**
+ * Re-export value-object types from a single common entrypoint.
+ * This keeps imports stable while moving toward richer domain VO usage.
+ */
+export type { Locale, CurrencyCode, Money };

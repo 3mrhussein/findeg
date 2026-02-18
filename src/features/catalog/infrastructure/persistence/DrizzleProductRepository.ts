@@ -31,6 +31,7 @@ import {
   eq,
   and,
   ilike,
+  like,
   or,
   count as sqlCount,
   desc,
@@ -50,6 +51,14 @@ import {
   CustomerGroup,
   UomCode,
 } from "@/features/core/domain/types/common";
+import {
+  DEFAULT_CURRENCY,
+  DEFAULT_LOCALE,
+  toLocalizedString,
+  toMoney,
+  type CurrencyCode,
+  type Locale,
+} from "@/features/core/domain/value-objects";
 
 /**
  * Drizzle Product Repository
@@ -59,6 +68,19 @@ import {
  * Implements complex queries for featured products, category/brand filtering, and low stock alerts.
  */
 export class DrizzleProductRepository implements IProductRepository {
+  /**
+   * Resolves the materialized path for a category ID.
+   */
+  private async getCategoryPath(categoryId: ID): Promise<string | null> {
+    const result = await db
+      .select({ path: categories.path })
+      .from(categories)
+      .where(eq(categories.id, categoryId))
+      .limit(1);
+
+    return result[0]?.path || null;
+  }
+
   /**
    * Map database result to domain Product entity
    */
@@ -73,14 +95,40 @@ export class DrizzleProductRepository implements IProductRepository {
     // If we have normalized images, use them. Otherwise fallback to JSON images
     const finalImages = images && images.length > 0 ? images : (dbProduct.images as string[]) || [];
 
+    const basePrice = Number(dbProduct.price) as Price;
+    const strikePrice = dbProduct.strikePrice
+      ? (Number(dbProduct.strikePrice) as Price)
+      : undefined;
+    const localizedContent = translation
+      ? {
+          name: toLocalizedString(
+            { [translation.language]: translation.name },
+            translation.name || "Untitled Product",
+          ),
+          description: toLocalizedString(
+            { [translation.language]: translation.description },
+            translation.description || "",
+          ),
+          longDescription: toLocalizedString(
+            { [translation.language]: translation.longDescription },
+            translation.longDescription || "",
+          ),
+        }
+      : undefined;
+
     return {
       id: dbProduct.id,
       sku: dbProduct.sku || undefined,
       name: translation?.name || "Untitled Product",
-      price: Number(dbProduct.price) as Price,
-      strikePrice: dbProduct.strikePrice ? (Number(dbProduct.strikePrice) as Price) : undefined,
+      price: basePrice,
+      strikePrice,
+      currency: DEFAULT_CURRENCY,
+      priceMoney: toMoney(basePrice, DEFAULT_CURRENCY),
+      strikePriceMoney: strikePrice ? toMoney(strikePrice, DEFAULT_CURRENCY) : undefined,
       description: translation?.description || "",
       longDescription: translation?.longDescription || "",
+      locale: (translation?.language || DEFAULT_LOCALE) as Locale,
+      localizedContent,
       imageUrl: finalImages[0],
       images: finalImages,
       categoryId: dbProduct.categoryId || undefined,
@@ -173,7 +221,7 @@ export class DrizzleProductRepository implements IProductRepository {
    * @param language - Language code for localized fields (default: 'en').
    * @returns Domain Product entity or null if not found.
    */
-  async getById(id: ID, language: string = "en"): Promise<Product | null> {
+  async getById(id: ID, language: Locale = DEFAULT_LOCALE): Promise<Product | null> {
     const result = await db
       .select({
         product: products,
@@ -221,7 +269,7 @@ export class DrizzleProductRepository implements IProductRepository {
   /**
    *
    */
-  async getAll(language: string = "en"): Promise<Product[]> {
+  async getAll(language: Locale = DEFAULT_LOCALE): Promise<Product[]> {
     return this.search("", language);
   }
 
@@ -232,7 +280,7 @@ export class DrizzleProductRepository implements IProductRepository {
    * @param language - Localization language.
    * @returns Array of Product entities.
    */
-  async getFeatured(limit: number = 10, language: string = "en"): Promise<Product[]> {
+  async getFeatured(limit: number = 10, language: Locale = DEFAULT_LOCALE): Promise<Product[]> {
     const results = await db
       .select({
         product: products,
@@ -272,7 +320,10 @@ export class DrizzleProductRepository implements IProductRepository {
   /**
    *
    */
-  async getByCategory(categoryId: ID, language: string = "en"): Promise<Product[]> {
+  async getByCategory(categoryId: ID, language: Locale = DEFAULT_LOCALE): Promise<Product[]> {
+    const categoryPath = await this.getCategoryPath(categoryId);
+    if (!categoryPath) return [];
+
     const results = await db
       .select({
         product: products,
@@ -281,6 +332,7 @@ export class DrizzleProductRepository implements IProductRepository {
         brand: brands,
       })
       .from(products)
+      .leftJoin(categories, eq(categories.id, products.categoryId))
       .leftJoin(
         productTranslations,
         and(
@@ -296,7 +348,7 @@ export class DrizzleProductRepository implements IProductRepository {
         ),
       )
       .leftJoin(brands, eq(brands.id, products.brandId))
-      .where(and(eq(products.categoryId, categoryId), eq(products.isActive, true)));
+      .where(and(like(categories.path, `${categoryPath}%`), eq(products.isActive, true)));
 
     return results.map((row) =>
       this.mapToDomain(
@@ -311,7 +363,7 @@ export class DrizzleProductRepository implements IProductRepository {
   /**
    *
    */
-  async getByBrand(brandId: ID, language: string = "en"): Promise<Product[]> {
+  async getByBrand(brandId: ID, language: Locale = DEFAULT_LOCALE): Promise<Product[]> {
     const results = await db
       .select({
         product: products,
@@ -350,7 +402,7 @@ export class DrizzleProductRepository implements IProductRepository {
   /**
    *
    */
-  async search(query: string, language: string = "en"): Promise<Product[]> {
+  async search(query: string, language: Locale = DEFAULT_LOCALE): Promise<Product[]> {
     const results = await db
       .select({
         product: products,
@@ -380,6 +432,7 @@ export class DrizzleProductRepository implements IProductRepository {
           or(
             ilike(productTranslations.name, `%${query}%`),
             ilike(productTranslations.description, `%${query}%`),
+            ilike(products.sku, `%${query}%`),
           ),
         ),
       );
@@ -404,11 +457,21 @@ export class DrizzleProductRepository implements IProductRepository {
    */
   async getFiltered(
     filters: ProductFilters,
-    language: string = "en",
+    language: Locale = DEFAULT_LOCALE,
   ): Promise<{ products: Product[]; total: number }> {
+    let categoryPath: string | null = null;
+    if (filters.categoryId) {
+      categoryPath = await this.getCategoryPath(filters.categoryId);
+      if (!categoryPath) {
+        return { products: [], total: 0 };
+      }
+    }
+
     const conditions = [];
 
-    if (filters.categoryId) conditions.push(eq(products.categoryId, filters.categoryId));
+    if (filters.categoryId && categoryPath) {
+      conditions.push(like(categories.path, `${categoryPath}%`));
+    }
     if (filters.brandId) conditions.push(eq(products.brandId, filters.brandId));
     if (filters.isActive !== undefined) conditions.push(eq(products.isActive, filters.isActive));
     if (filters.isNew !== undefined) conditions.push(eq(products.isNew, filters.isNew));
@@ -440,6 +503,7 @@ export class DrizzleProductRepository implements IProductRepository {
         brand: brands,
       })
       .from(products)
+      .leftJoin(categories, eq(categories.id, products.categoryId))
       .leftJoin(
         productTranslations,
         and(
@@ -463,6 +527,7 @@ export class DrizzleProductRepository implements IProductRepository {
     const totalResult = await db
       .select({ count: sql<number>`cast(count(*) as integer)` })
       .from(products)
+      .leftJoin(categories, eq(categories.id, products.categoryId))
       .leftJoin(
         productTranslations,
         and(
@@ -488,7 +553,7 @@ export class DrizzleProductRepository implements IProductRepository {
   /**
    *
    */
-  async getLowStock(threshold?: Quantity, language: string = "en"): Promise<Product[]> {
+  async getLowStock(threshold?: Quantity, language: Locale = DEFAULT_LOCALE): Promise<Product[]> {
     const results = await db
       .select({
         product: products,
@@ -811,7 +876,7 @@ export class DrizzleProductRepository implements IProductRepository {
             customerGroup: price.customerGroup,
             uomCode: price.uomCode,
             unitPrice: String(price.unitPrice),
-            currency: price.currency || "EGP",
+            currency: price.currency || DEFAULT_CURRENCY,
             isSellable: price.isSellable ?? true,
           })
           .onConflictDoUpdate({
@@ -823,7 +888,7 @@ export class DrizzleProductRepository implements IProductRepository {
             ],
             set: {
               unitPrice: String(price.unitPrice),
-              currency: price.currency || "EGP",
+              currency: price.currency || DEFAULT_CURRENCY,
               isSellable: price.isSellable ?? true,
               updatedAt: new Date(),
             },
@@ -883,7 +948,7 @@ export class DrizzleProductRepository implements IProductRepository {
         p.uomCode,
         {
           unitPrice: Number(p.unitPrice) as Price,
-          currency: p.currency,
+          currency: p.currency as CurrencyCode,
           isSellable: p.isSellable,
         },
       ]),
@@ -910,7 +975,7 @@ export class DrizzleProductRepository implements IProductRepository {
     variantKey: string,
     uomCode: UomCode,
     customerGroup: CustomerGroup,
-  ): Promise<{ unitPrice: Price; currency: string; isSellable: boolean } | null> {
+  ): Promise<{ unitPrice: Price; currency: CurrencyCode; isSellable: boolean } | null> {
     const result = await db
       .select({
         unitPrice: variantPriceLists.unitPrice,
@@ -931,7 +996,7 @@ export class DrizzleProductRepository implements IProductRepository {
     if (result.length === 0) return null;
     return {
       unitPrice: Number(result[0].unitPrice) as Price,
-      currency: result[0].currency,
+      currency: result[0].currency as CurrencyCode,
       isSellable: result[0].isSellable,
     };
   }

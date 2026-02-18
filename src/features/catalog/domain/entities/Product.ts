@@ -14,6 +14,15 @@ import {
   CustomerGroup,
   UomCode,
 } from "@/features/core/domain/types/common";
+import {
+  DEFAULT_CURRENCY,
+  resolveLocalizedString,
+  toMoney,
+  type CurrencyCode,
+  type Locale,
+  type LocalizedString,
+  type Money,
+} from "@/features/core/domain/value-objects";
 
 /** Single variant option (e.g., "Blue" for Color variant) */
 export interface ProductVariantOption {
@@ -41,7 +50,7 @@ export interface ProductVariantPrice {
   customerGroup: CustomerGroup;
   uomCode: UomCode;
   unitPrice: Price;
-  currency: string;
+  currency: CurrencyCode;
   isSellable: boolean;
 }
 
@@ -50,6 +59,26 @@ export interface ProductVariantCommercialConfig {
   variantKey: string;
   sellableUoms: ProductVariantSellableUom[];
   priceLists: ProductVariantPrice[];
+}
+
+/**
+ * Localized content map for a product across supported locales.
+ */
+export type TranslatedProductName = LocalizedString;
+export type TranslatedProductDescription = LocalizedString;
+export type TranslatedProductLongDescription = LocalizedString;
+
+/**
+ * Backward-compatible aliases for previous naming.
+ */
+export type LocalizedProductName = TranslatedProductName;
+export type LocalizedProductDescription = TranslatedProductDescription;
+export type LocalizedProductLongDescription = TranslatedProductLongDescription;
+
+export interface ProductLocalizedContent {
+  name: TranslatedProductName;
+  description: TranslatedProductDescription;
+  longDescription: TranslatedProductLongDescription;
 }
 
 /**
@@ -65,6 +94,23 @@ export interface Product {
   strikePrice?: Price;
   description: string;
   longDescription: string;
+  /**
+   * Current resolved locale used to hydrate string fields above.
+   */
+  locale?: Locale;
+  /**
+   * Full or partial localized value-object payload.
+   */
+  localizedContent?: ProductLocalizedContent;
+  /**
+   * Currency metadata for numeric legacy price fields.
+   */
+  currency?: CurrencyCode;
+  /**
+   * Rich money value-objects (forward-compatible with future pricing model).
+   */
+  priceMoney?: Money;
+  strikePriceMoney?: Money;
   imageUrl?: string;
   images: string[];
   categoryId?: ID;
@@ -91,6 +137,31 @@ export class ProductEntity {
    * @param product - The raw product data.
    */
   constructor(private product: Product) {}
+
+  /**
+   * Returns localized name with fallback to resolved string name.
+   */
+  getName(locale: Locale): string {
+    const localized = resolveLocalizedString(this.product.localizedContent?.name, locale);
+    return localized || this.product.name;
+  }
+
+  /**
+   * Returns localized description with fallback.
+   */
+  getDescription(locale: Locale): string {
+    const localized = resolveLocalizedString(this.product.localizedContent?.description, locale);
+    return localized || this.product.description;
+  }
+
+  /**
+   * Returns normalized money value for base price.
+   */
+  getPriceMoney(): Money {
+    return (
+      this.product.priceMoney || toMoney(this.product.price, this.product.currency || DEFAULT_CURRENCY)
+    );
+  }
 
   /**
    * Calculate the final price including variant modifiers.
@@ -175,6 +246,17 @@ export class ProductEntity {
    * Retrieves a plain representation of the product data.
    */
   getData(): Product {
-    return { ...this.product };
+    const currency = this.product.currency || DEFAULT_CURRENCY;
+    const priceMoney = this.product.priceMoney || toMoney(this.product.price, currency);
+    const strikePriceMoney =
+      this.product.strikePriceMoney ||
+      (this.product.strikePrice !== undefined ? toMoney(this.product.strikePrice, currency) : undefined);
+
+    return {
+      ...this.product,
+      currency,
+      priceMoney,
+      strikePriceMoney,
+    };
   }
 }

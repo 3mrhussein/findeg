@@ -8,6 +8,21 @@ import { ICartService } from "../interfaces/ICartService";
 import { CustomerGroup, Price, UomCode } from "@/features/core/domain/types/common";
 import { VariantSnapshot } from "@/features/order/domain/value-objects";
 
+type GlobalWithManagedCartStore = typeof globalThis & {
+  __findegManagedCartStore?: Map<string, CartItem[]>;
+};
+
+/**
+ * Returns a process-level cart store so API route instances share the same managed cart map.
+ */
+function getManagedCartStore(): Map<string, CartItem[]> {
+  const globalRef = globalThis as GlobalWithManagedCartStore;
+  if (!globalRef.__findegManagedCartStore) {
+    globalRef.__findegManagedCartStore = new Map<string, CartItem[]>();
+  }
+  return globalRef.__findegManagedCartStore;
+}
+
 /**
  * Cart Service
  *
@@ -85,8 +100,8 @@ export class CartService implements ICartService {
     };
   }
 
-  // In-memory cart storage for API compatibility
-  private carts = new Map<string, CartItem[]>();
+  // Process-level cart storage for API compatibility across route handler instances
+  private carts = getManagedCartStore();
 
   /**
    * Retrieves a managed cart by its unique identifier.
@@ -119,6 +134,10 @@ export class CartService implements ICartService {
     input: {
       productId: number;
       quantity: number;
+      name?: string;
+      price?: number;
+      images?: string[];
+      categoryName?: string;
       variant?: VariantSnapshot;
       variantKey?: string;
       uomCode?: UomCode;
@@ -143,8 +162,13 @@ export class CartService implements ICartService {
     } else {
       items.push({
         id: input.productId,
+        name: input.name || `Product #${input.productId}`,
+        price: input.price ?? input.unitPriceSnapshot ?? 0,
+        images: input.images || [],
+        categoryName: input.categoryName,
         quantity: input.quantity,
         variant: input.variant,
+        selectedVariant: input.variant,
         variantKey: input.variantKey,
         uomCode: input.uomCode,
         customerGroup: input.customerGroup,

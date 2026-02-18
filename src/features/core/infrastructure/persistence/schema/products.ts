@@ -28,6 +28,7 @@ import {
 import { relations } from "drizzle-orm";
 import { categories } from "./categories";
 import { brands } from "./brands";
+import type { Locale } from "@/features/core/domain/value-objects";
 
 /**
  * Products Table
@@ -105,7 +106,7 @@ export const productTranslations = pgTable(
       .references(() => products.id, { onDelete: "cascade" }),
 
     /** Language code (e.g., 'en', 'ar') */
-    language: text("language").notNull(),
+    language: text("language").$type<Locale>().notNull(),
 
     // Translated content
     name: text("name").notNull(),

@@ -1,29 +1,31 @@
-"use client";
+import { Container } from "@/components/layout/Container";
+import { Logo } from "@/components/common/Logo";
+import { getHeaderCategoryTree } from "@/features/catalog/application/queries/header-nav";
+import { HeaderNavClient } from "@/components/layout/HeaderNavClient";
+import { getServices } from "@/server/getServices";
+import type { Locale } from "next-intl";
 
-import { HeaderView } from "./Header/HeaderView";
-import { useHeaderController } from "./Header/useHeaderController";
+interface HeaderProps {
+  locale: Locale;
+}
 
 /**
- * Storefront shell header container.
+ *
  */
-export function Header() {
-  const controller = useHeaderController();
+export async function Header({ locale }: HeaderProps) {
+  const { auth } = getServices();
+
+  const [categories, session] = await Promise.all([
+    getHeaderCategoryTree(locale),
+    auth.getSession(),
+  ]);
 
   return (
-    <HeaderView
-      handleSearch={controller.onSearch}
-      language={controller.locale}
-      onToggleLanguage={controller.onToggleLanguage}
-      theme={controller.theme}
-      onToggleTheme={controller.onToggleTheme}
-      cartCount={controller.cartCount}
-      onToggleCart={controller.onToggleCart}
-      isLoggedIn={controller.isLoggedIn}
-      onLogout={controller.onLogout}
-      isMenuOpen={controller.isMenuOpen}
-      onOpenMenu={controller.onOpenMobileMenu}
-      onCloseMenu={controller.onCloseMobileMenu}
-      navItems={controller.navItems}
-    />
+    <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur">
+      <Container className="flex h-16 items-center justify-between">
+        <Logo />
+        <HeaderNavClient categories={categories} isAuthenticated={Boolean(session?.userId)} />
+      </Container>
+    </header>
   );
 }

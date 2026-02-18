@@ -5,9 +5,6 @@ import {
   flexRender,
   getCoreRowModel,
   useReactTable,
-  getPaginationRowModel,
-  SortingState,
-  getSortedRowModel,
   ColumnFiltersState,
   getFilteredRowModel,
 } from "@tanstack/react-table";
@@ -45,7 +42,6 @@ interface CategoryTableProps {
  *
  */
 export function CategoryTable({ data }: CategoryTableProps) {
-  const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const { toast } = useToast();
   const router = useRouter();
@@ -123,7 +119,11 @@ export function CategoryTable({ data }: CategoryTableProps) {
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
+              <Button
+                variant="ghost"
+                className="h-8 w-8 p-0"
+                data-testid={`admin-category-actions-${category.id}`}
+              >
                 <span className="sr-only">Open menu</span>
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
@@ -132,13 +132,17 @@ export function CategoryTable({ data }: CategoryTableProps) {
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <Link href={`/admin/categories/${category.id}/edit`}>
+                <Link
+                  href={`/admin/categories/${category.id}/edit`}
+                  data-testid={`admin-category-edit-${category.id}`}
+                >
                   <Edit className="mr-2 h-4 w-4" /> Edit
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="text-destructive focus:text-destructive"
                 onClick={() => handleDelete(category.id)}
+                data-testid={`admin-category-delete-${category.id}`}
               >
                 <Trash2 className="mr-2 h-4 w-4" /> Delete
               </DropdownMenuItem>
@@ -154,13 +158,9 @@ export function CategoryTable({ data }: CategoryTableProps) {
     data: treeData,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    // getPaginationRowModel: getPaginationRowModel(), // Disable pagination for tree view
-    // onSortingChange: setSorting, // Disable sorting for tree view to keep hierarchy
-    getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     state: {
-      sorting,
       columnFilters,
     },
   });
@@ -169,6 +169,7 @@ export function CategoryTable({ data }: CategoryTableProps) {
     <div className="space-y-4">
       <div className="flex items-center py-4">
         <Input
+          data-testid="admin-categories-filter-input"
           placeholder="Filter categories..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) => table.getColumn("name")?.setFilterValue(event.target.value)}
@@ -195,7 +196,11 @@ export function CategoryTable({ data }: CategoryTableProps) {
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                  data-testid={`admin-category-row-${row.original.id}`}
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -212,24 +217,6 @@ export function CategoryTable({ data }: CategoryTableProps) {
             )}
           </TableBody>
         </Table>
-      </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Previous
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Next
-        </Button>
       </div>
     </div>
   );

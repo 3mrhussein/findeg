@@ -6,12 +6,13 @@
 
 import { Category } from "@/features/catalog/domain/entities/Category";
 import { CategoryInput } from "@/features/administration/domain/types";
+import type { Locale } from "@/features/core/domain/value-objects";
 
 export interface IAdminCategoryService {
   /**
    * Retrieves all categories for administrative listing.
    */
-  getAll(language?: string): Promise<Category[]>;
+  getAll(language?: Locale): Promise<Category[]>;
 
   /**
    * Creates a new category with translations.

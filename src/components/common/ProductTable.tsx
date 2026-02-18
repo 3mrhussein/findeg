@@ -1,10 +1,3 @@
-"use client";
-
-import React from "react";
-import type { Product } from "@/features/catalog/domain/entities/Product";
-import { useTranslations } from "next-intl";
-import { Button } from "@/components/ui/button";
-import { Icon } from "@/components/common/Icon";
 import {
   Table,
   TableBody,
@@ -13,52 +6,19 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-interface ProductTableUIProps {
-  products: Product[];
-  t: (key: any) => string;
-  getStock: (product: Product) => number;
-}
-
-/**
- *
- */
-export const ProductTableUI: React.FC<ProductTableUIProps> = ({ products, t, getStock }) => (
-  <Table>
-    <TableHeader>
-      <TableRow>
-        <TableHead>{t("Pages.Dashboard.Table.ProductName")}</TableHead>
-        <TableHead>{t("Pages.Dashboard.Table.Category")}</TableHead>
-        <TableHead>{t("Pages.Dashboard.Table.Price")}</TableHead>
-        <TableHead>{t("Pages.Dashboard.Table.Stock")}</TableHead>
-        <TableHead>{t("Pages.Dashboard.Table.Actions")}</TableHead>
-      </TableRow>
-    </TableHeader>
-    <TableBody>
-      {products.map((product) => (
-        <TableRow key={product.id}>
-          <TableCell className="font-medium text-foreground">{product.name}</TableCell>
-          <TableCell>{product.categoryName}</TableCell>
-          <TableCell>${product.price.toFixed(2)}</TableCell>
-          <TableCell>{getStock(product)}</TableCell>
-          <TableCell className="flex gap-2">
-            <Button variant="ghost" size="icon" aria-label={`Edit ${product.name}`}>
-              <Icon name="pen" className="w-4 h-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-red-500 hover:text-red-500 hover:bg-red-500/10"
-              aria-label={`Delete ${product.name}`}
-            >
-              <Icon name="trash" className="w-4 h-4" />
-            </Button>
-          </TableCell>
-        </TableRow>
-      ))}
-    </TableBody>
-  </Table>
-);
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { MoreHorizontal, Pencil, Trash2, Eye } from "lucide-react";
+import type { Product } from "@/features/catalog/domain/entities/Product";
+import Image from "next/image";
+import { Badge } from "@/components/ui/badge";
 
 interface ProductTableProps {
   products: Product[];
@@ -67,16 +27,116 @@ interface ProductTableProps {
 /**
  *
  */
-export const ProductTable: React.FC<ProductTableProps> = ({ products }) => {
-  const t = useTranslations();
+export function ProductTable({ products }: ProductTableProps) {
+  // Helper to format currency
   /**
    *
    */
-  const getStock = (product: Product) => {
-    if (!product.variants) return 10; // Mock stock for non-variant products
-    return Object.values(product.variants)
-      .flatMap((v) => v.options)
-      .reduce((sum, opt) => sum + opt.stock, 0);
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    }).format(price);
   };
-  return <ProductTableUI products={products} t={t} getStock={getStock} />;
-};
+
+  return (
+    <div className="rounded-md border bg-card">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-[80px]">Image</TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead>Category</TableHead>
+            <TableHead>Price</TableHead>
+            <TableHead>Rating</TableHead>
+            <TableHead className="text-right">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {products.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={6} className="h-24 text-center">
+                No products found.
+              </TableCell>
+            </TableRow>
+          ) : (
+            products.map((product) => (
+              <TableRow key={product.id}>
+                <TableCell>
+                  <div className="relative h-10 w-10 overflow-hidden rounded-md border">
+                    {product.images && product.images[0] ? (
+                      <Image
+                        src={product.images[0]}
+                        alt={product.name}
+                        fill
+                        className="object-cover"
+                        sizes="40px"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center bg-muted">
+                        <span className="text-xs text-muted-foreground">No Img</span>
+                      </div>
+                    )}
+                  </div>
+                </TableCell>
+                <TableCell className="font-medium">
+                  <div className="flex flex-col">
+                    <span>{product.name}</span>
+                    {product.isNew && (
+                      <Badge variant="secondary" className="w-fit text-[10px] px-1 py-0 h-4 mt-1">
+                        NEW
+                      </Badge>
+                    )}
+                  </div>
+                </TableCell>
+                <TableCell>{product.categoryName}</TableCell>
+                <TableCell>
+                  <div className="flex flex-col">
+                    <span className="font-medium">{formatPrice(product.price)}</span>
+                    {product.strikePrice && (
+                      <span className="text-xs text-muted-foreground line-through">
+                        {formatPrice(product.strikePrice)}
+                      </span>
+                    )}
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center">
+                    <span className="mr-1 font-medium">{product.rating}</span>
+                    <span className="text-xs text-muted-foreground">({product.reviewsCount})</span>
+                  </div>
+                </TableCell>
+                <TableCell className="text-right">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="h-8 w-8 p-0">
+                        <span className="sr-only">Open menu</span>
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                      <DropdownMenuItem>
+                        <Eye className="mr-2 h-4 w-4" />
+                        View details
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Pencil className="mr-2 h-4 w-4" />
+                        Edit product
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem className="text-destructive">
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        Delete product
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))
+          )}
+        </TableBody>
+      </Table>
+    </div>
+  );
+}

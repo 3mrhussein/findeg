@@ -22,6 +22,12 @@ import { users } from "./users";
 import { products } from "./products";
 import type { ShippingAddress } from "@/features/order/domain/value-objects/ShippingAddress";
 import type { VariantSnapshot } from "@/features/order/domain/value-objects/VariantSnapshot";
+import type {
+  CurrencyCode,
+  OrderStatus,
+  PaymentMethod,
+  PaymentStatus,
+} from "@/features/core/domain/types/common";
 
 /** Re-export for consumers */
 export type { ShippingAddress as ShippingAddressSnapshot } from "@/features/order/domain/value-objects/ShippingAddress";
@@ -46,9 +52,12 @@ export const orders = pgTable("orders", {
 
   // Status
   /** Order lifecycle: pending → confirmed → processing → shipped → delivered / cancelled / refunded */
-  status: varchar("status", { length: 50 }).default("pending").notNull(),
+  status: varchar("status", { length: 50 }).$type<OrderStatus>().default("pending").notNull(),
   /** Payment status: unpaid → paid → refunded */
-  paymentStatus: varchar("payment_status", { length: 50 }).default("unpaid").notNull(),
+  paymentStatus: varchar("payment_status", { length: 50 })
+    .$type<PaymentStatus>()
+    .default("unpaid")
+    .notNull(),
 
   // Totals
   /** Sum of all item prices before shipping */
@@ -57,11 +66,11 @@ export const orders = pgTable("orders", {
   shippingCost: decimal("shipping_cost", { precision: 10, scale: 2 }).default("0"),
   /** Final amount: subtotal + shippingCost */
   totalAmount: decimal("total_amount", { precision: 10, scale: 2 }).notNull(),
-  currency: varchar("currency", { length: 3 }).default("EGP").notNull(),
+  currency: varchar("currency", { length: 3 }).$type<CurrencyCode>().default("EGP").notNull(),
 
   // Payment
   /** Payment method identifier (e.g., "cod", "paymob_card", "fawry") */
-  paymentMethod: varchar("payment_method", { length: 50 }),
+  paymentMethod: varchar("payment_method", { length: 50 }).$type<PaymentMethod>(),
 
   // Shipping
   /** Frozen address snapshot at time of order */

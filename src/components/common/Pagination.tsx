@@ -1,121 +1,120 @@
-"use client";
-
-import React from "react";
 import { Button } from "@/components/ui/button";
-import { useTranslations, useLocale } from "next-intl";
-import { Icon } from "@/components/common/Icon";
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
+  className?: string;
 }
 
 /**
  *
  */
-export const Pagination: React.FC<PaginationProps> = ({
+export function Pagination({
   currentPage,
   totalPages,
   onPageChange,
-}) => {
-  const t = useTranslations();
-  const locale = useLocale();
-  const isRtl = locale === "ar";
-  const prevText = t("Pages.Shop.PaginationPrevious");
-  const nextText = t("Pages.Shop.PaginationNext");
-
-  /**
-   *
-   */
-  const handlePrev = () => {
-    if (currentPage > 1) {
-      onPageChange(currentPage - 1);
-    }
-  };
-
-  /**
-   *
-   */
-  const handleNext = () => {
-    if (currentPage < totalPages) {
-      onPageChange(currentPage + 1);
-    }
-  };
-
-  // Simple pagination logic: show first, last, current, and pages around current
+  className = "",
+}: PaginationProps) {
+  // Generate array of page numbers to show
   /**
    *
    */
   const getPageNumbers = () => {
-    const pages = new Set<number>();
-    pages.add(1);
-    pages.add(totalPages);
-    if (currentPage > 2) pages.add(currentPage - 1);
-    pages.add(currentPage);
-    if (currentPage < totalPages - 1) pages.add(currentPage + 1);
+    const pages = [];
+    const maxVisiblePages = 5;
 
-    const pageArray = Array.from(pages).sort((a, b) => a - b);
-    const result: (number | string)[] = [];
-    let lastPage = 0;
-
-    for (const page of pageArray) {
-      if (lastPage > 0 && page - lastPage > 1) {
-        result.push("...");
+    if (totalPages <= maxVisiblePages) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
       }
-      result.push(page);
-      lastPage = page;
+    } else {
+      // Always show first, last, and pages around current
+      if (currentPage <= 3) {
+        for (let i = 1; i <= 4; i++) {
+          pages.push(i);
+        }
+        pages.push(-1); // Ellipsis
+        pages.push(totalPages);
+      } else if (currentPage >= totalPages - 2) {
+        pages.push(1);
+        pages.push(-1);
+        for (let i = totalPages - 3; i <= totalPages; i++) {
+          pages.push(i);
+        }
+      } else {
+        pages.push(1);
+        pages.push(-1);
+        pages.push(currentPage - 1);
+        pages.push(currentPage);
+        pages.push(currentPage + 1);
+        pages.push(-1);
+        pages.push(totalPages);
+      }
     }
-    return result;
+    return pages;
   };
 
-  if (totalPages <= 1) {
-    return null;
-  }
+  if (totalPages <= 1) return null;
 
   return (
-    <div className="mt-8 flex justify-center items-center gap-2">
+    <div className={`flex items-center justify-center space-x-2 ${className}`}>
       <Button
         variant="outline"
-        size="sm"
-        onClick={handlePrev}
+        size="icon"
+        onClick={() => onPageChange(1)}
         disabled={currentPage === 1}
-        className="gap-1"
+        title="First Page"
       >
-        <Icon name="chevronRight" className={`h-4 w-4 ${!isRtl ? "rotate-180" : ""}`} />
-        <span>{prevText}</span>
+        <ChevronsLeft className="h-4 w-4" />
+      </Button>
+      <Button
+        variant="outline"
+        size="icon"
+        onClick={() => onPageChange(currentPage - 1)}
+        disabled={currentPage === 1}
+        title="Previous Page"
+      >
+        <ChevronLeft className="h-4 w-4" />
       </Button>
 
-      <div className="hidden sm:flex items-center gap-1">
-        {getPageNumbers().map((page, index) =>
-          typeof page === "number" ? (
-            <Button
-              key={`${page}-${index}`}
-              variant={currentPage === page ? "default" : "ghost"}
-              size="icon"
-              onClick={() => onPageChange(page)}
-              className="h-9 w-9"
-            >
-              {page}
-            </Button>
-          ) : (
-            <span key={`dots-${index}`} className="px-2 text-muted-foreground">
-              ...
-            </span>
-          ),
-        )}
-      </div>
+      {getPageNumbers().map((page, index) =>
+        page === -1 ? (
+          <span key={`ellipsis-${index}`} className="px-2 text-muted-foreground">
+            ...
+          </span>
+        ) : (
+          <Button
+            key={page}
+            variant={currentPage === page ? "default" : "outline"}
+            size="sm"
+            onClick={() => onPageChange(page)}
+            className="w-9"
+          >
+            {page}
+          </Button>
+        ),
+      )}
 
       <Button
         variant="outline"
-        size="sm"
-        onClick={handleNext}
+        size="icon"
+        onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="gap-1"
+        title="Next Page"
       >
-        <span>{nextText}</span>
-        <Icon name="chevronRight" className={`h-4 w-4 ${isRtl ? "rotate-180" : ""}`} />
+        <ChevronRight className="h-4 w-4" />
+      </Button>
+      <Button
+        variant="outline"
+        size="icon"
+        onClick={() => onPageChange(totalPages)}
+        disabled={currentPage === totalPages}
+        title="Last Page"
+      >
+        <ChevronsRight className="h-4 w-4" />
       </Button>
     </div>
   );
-};
+}

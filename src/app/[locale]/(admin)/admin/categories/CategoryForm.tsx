@@ -157,7 +157,7 @@ export function CategoryForm({ initialData, categories }: CategoryFormProps) {
               <FormItem>
                 <FormLabel>Name (English)</FormLabel>
                 <FormControl>
-                  <Input placeholder="Category Name" {...field} />
+                  <Input placeholder="Category Name" {...field} data-testid="admin-category-name-en" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -170,7 +170,12 @@ export function CategoryForm({ initialData, categories }: CategoryFormProps) {
               <FormItem>
                 <FormLabel>Name (Arabic)</FormLabel>
                 <FormControl>
-                  <Input placeholder="اسم القسم" {...field} className="text-right" />
+                  <Input
+                    placeholder="اسم القسم"
+                    {...field}
+                    className="text-right"
+                    data-testid="admin-category-name-ar"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -186,7 +191,11 @@ export function CategoryForm({ initialData, categories }: CategoryFormProps) {
               <FormItem>
                 <FormLabel>Description (English)</FormLabel>
                 <FormControl>
-                  <Textarea placeholder="Category description..." {...field} />
+                  <Textarea
+                    placeholder="Category description..."
+                    {...field}
+                    data-testid="admin-category-description-en"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -199,7 +208,12 @@ export function CategoryForm({ initialData, categories }: CategoryFormProps) {
               <FormItem>
                 <FormLabel>Description (Arabic)</FormLabel>
                 <FormControl>
-                  <Textarea placeholder="وصف القسم..." {...field} className="text-right" />
+                  <Textarea
+                    placeholder="وصف القسم..."
+                    {...field}
+                    className="text-right"
+                    data-testid="admin-category-description-ar"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -215,7 +229,7 @@ export function CategoryForm({ initialData, categories }: CategoryFormProps) {
               <FormItem>
                 <FormLabel>Slug</FormLabel>
                 <FormControl>
-                  <Input placeholder="category-slug" {...field} />
+                  <Input placeholder="category-slug" {...field} data-testid="admin-category-slug" />
                 </FormControl>
                 <FormDescription>URL-friendly identifier.</FormDescription>
                 <FormMessage />
@@ -231,7 +245,7 @@ export function CategoryForm({ initialData, categories }: CategoryFormProps) {
                 <FormLabel>Parent Category</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
-                    <SelectTrigger>
+                    <SelectTrigger data-testid="admin-category-parent-trigger">
                       <SelectValue placeholder="Select a parent category" />
                     </SelectTrigger>
                   </FormControl>
@@ -258,7 +272,7 @@ export function CategoryForm({ initialData, categories }: CategoryFormProps) {
               <FormItem>
                 <FormLabel>Sort Order</FormLabel>
                 <FormControl>
-                  <Input type="number" {...field} />
+                  <Input type="number" {...field} data-testid="admin-category-sort-order" />
                 </FormControl>
                 <FormDescription>Priority in lists (lower is first)</FormDescription>
                 <FormMessage />
@@ -276,7 +290,11 @@ export function CategoryForm({ initialData, categories }: CategoryFormProps) {
                   <FormDescription>Visible in store</FormDescription>
                 </div>
                 <FormControl>
-                  <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                    data-testid="admin-category-active"
+                  />
                 </FormControl>
               </FormItem>
             )}
@@ -287,7 +305,7 @@ export function CategoryForm({ initialData, categories }: CategoryFormProps) {
           <Button variant="outline" type="button" onClick={() => router.back()}>
             Cancel
           </Button>
-          <Button type="submit" disabled={loading}>
+          <Button type="submit" disabled={loading} data-testid="admin-category-submit">
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {initialData ? "Update Category" : "Create Category"}
           </Button>

@@ -1,95 +1,57 @@
 "use client";
 
-import React, { useState } from "react";
-import { ProductCard } from "@/components/common/ProductCard";
-import { Grid } from "@/components/layout/Grid";
-import { Button } from "@/components/ui/button";
-import { Icon } from "@/components/common/Icon";
-import { useTranslations, useLocale } from "next-intl";
-import { Product } from "@/features/catalog/domain/entities/Product";
+import { usePagination } from "@/hooks/usePagination";
+import type { Product } from "@/features/catalog/domain/entities/Product";
+import { ProductGrid } from "@/features/catalog/presentation/components/ProductGrid";
+import { Pagination } from "@/components/common/Pagination";
 
 interface ProductPaginationProps {
   products: Product[];
-  productsPerPage?: number;
+  itemsPerPage?: number;
+  currentPage?: number;
+  onPageChange?: (page: number) => void;
 }
 
 /**
  *
  */
-export const ProductPagination: React.FC<ProductPaginationProps> = ({
+export function ProductPagination({
   products,
-  productsPerPage = 4,
-}) => {
-  const t = useTranslations();
-  const locale = useLocale();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [isAnimating, setIsAnimating] = useState(false);
+  itemsPerPage = 8,
+  currentPage,
+  onPageChange,
+}: ProductPaginationProps) {
+  const isControlled = typeof currentPage === "number" && typeof onPageChange === "function";
 
-  const totalPages = Math.ceil(products.length / productsPerPage);
+  const {
+    currentPage: localCurrentPage,
+    totalPages: localTotalPages,
+    setCurrentPage: setLocalCurrentPage,
+    currentPageData: localCurrentPageData,
+  } = usePagination(products, itemsPerPage);
 
-  /**
-   *
-   */
-  const handlePageChange = (newPage: number) => {
-    if (newPage < 1 || newPage > totalPages || isAnimating) return;
+  if (isControlled) {
+    const totalPages = products.length > 0 ? Math.ceil(products.length / itemsPerPage) : 1;
+    const safePage = Math.min(Math.max(currentPage!, 1), totalPages);
+    const startIndex = (safePage - 1) * itemsPerPage;
+    const currentPageData = products.slice(startIndex, startIndex + itemsPerPage);
 
-    setIsAnimating(true);
-    setTimeout(() => {
-      setCurrentPage(newPage);
-      setIsAnimating(false);
-    }, 300);
-  };
-
-  const currentProducts = products.slice(
-    (currentPage - 1) * productsPerPage,
-    currentPage * productsPerPage,
-  );
+    return (
+      <div className="space-y-8">
+        <ProductGrid products={currentPageData} />
+        <Pagination currentPage={safePage} totalPages={totalPages} onPageChange={onPageChange!} />
+      </div>
+    );
+  }
 
   return (
-    <>
-      <div
-        className={`transition-opacity duration-300 ${isAnimating ? "opacity-0" : "opacity-100"}`}
-      >
-        <Grid>
-          {currentProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </Grid>
-      </div>
-
-      {totalPages > 1 && (
-        <div className="flex justify-center items-center mt-12 gap-4">
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1 || isAnimating}
-            aria-label={t("Pages.Shop.PaginationPrevious")}
-          >
-            <Icon
-              name="chevronRight"
-              className={`w-5 h-5 ${locale === "en" ? "rotate-180" : ""}`}
-            />
-          </Button>
-
-          <p className="text-muted-foreground font-medium text-sm w-8 text-center">
-            {currentPage} / {totalPages}
-          </p>
-
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages || isAnimating}
-            aria-label={t("Pages.Shop.PaginationNext")}
-          >
-            <Icon
-              name="chevronRight"
-              className={`w-5 h-5 ${locale === "ar" ? "rotate-180" : ""}`}
-            />
-          </Button>
-        </div>
-      )}
-    </>
+    <div className="space-y-8">
+      <ProductGrid products={localCurrentPageData} />
+      <Pagination
+        currentPage={localCurrentPage}
+        totalPages={localTotalPages}
+        onPageChange={setLocalCurrentPage}
+      />
+    </div>
   );
-};
+}

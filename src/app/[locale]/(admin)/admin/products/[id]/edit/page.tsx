@@ -2,6 +2,7 @@ import { getServices } from "@/server/getServices";
 import { ProductForm } from "../../ProductForm";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { notFound } from "next/navigation";
+import { resolveLocale } from "@/features/core/domain/value-objects";
 
 /**
  *
@@ -12,6 +13,7 @@ export default async function EditProductPage({
   params: Promise<{ locale: string; id: string }>;
 }) {
   const { locale, id } = await params;
+  const resolvedLocale = resolveLocale(locale);
   const { adminProduct, categories, adminBrand } = getServices();
   const productId = parseInt(id);
 
@@ -21,7 +23,7 @@ export default async function EditProductPage({
 
   const [product, allCategories, allBrands] = await Promise.all([
     adminProduct.getByIdWithTranslations(productId),
-    categories.getAll(locale),
+    categories.getAll(resolvedLocale),
     adminBrand.getAll(),
   ]);
 

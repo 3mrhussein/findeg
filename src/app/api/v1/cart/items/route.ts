@@ -65,6 +65,10 @@ export async function POST(request: NextRequest) {
       const cart = await cartService.addItem(cartId, {
         productId,
         quantity,
+        name: product.name,
+        price: product.price,
+        images: product.images || [],
+        categoryName: product.categoryName,
         variant,
         variantKey: resolvedVariantKey,
         uomCode,

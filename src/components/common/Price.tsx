@@ -1,42 +1,31 @@
-import React from "react";
+import { cn } from "@/lib/utils";
 
 interface PriceProps {
   price: number;
   strikePrice?: number;
-  currency?: string;
   className?: string;
 }
 
 /**
  *
  */
-export const Price: React.FC<PriceProps> = ({
-  price,
-  strikePrice,
-  currency = "$",
-  className = "",
-}) => {
-  const hasDiscount = typeof strikePrice === "number" && strikePrice > price;
-
-  if (hasDiscount) {
-    return (
-      <div className={`flex items-baseline gap-2 ${className}`}>
-        <span className="text-2xl font-bold text-primary">
-          {currency}
-          {price.toFixed(2)}
-        </span>
-        <span className="text-lg font-medium text-muted-foreground line-through">
-          {currency}
-          {strikePrice.toFixed(2)}
-        </span>
-      </div>
-    );
-  }
-
+export function Price({ price, strikePrice, className }: PriceProps) {
   return (
-    <p className={`text-2xl font-bold text-primary ${className}`}>
-      {currency}
-      {price.toFixed(2)}
-    </p>
+    <div className={cn("flex items-center gap-2", className)}>
+      <span className="font-semibold">
+        {new Intl.NumberFormat("en-EG", {
+          style: "currency",
+          currency: "EGP",
+        }).format(price)}
+      </span>
+      {strikePrice ? (
+        <span className="text-sm text-muted-foreground line-through">
+          {new Intl.NumberFormat("en-EG", {
+            style: "currency",
+            currency: "EGP",
+          }).format(strikePrice)}
+        </span>
+      ) : null}
+    </div>
   );
-};
+}

@@ -79,7 +79,7 @@ export function BrandsTable({ brands }: BrandsTableProps) {
   return (
     <div className="space-y-4">
       <div className="flex justify-end">
-        <Button onClick={handleCreate}>
+        <Button onClick={handleCreate} data-testid="admin-brands-add">
           <Plus className="mr-2 h-4 w-4" /> Add Brand
         </Button>
       </div>
@@ -97,7 +97,7 @@ export function BrandsTable({ brands }: BrandsTableProps) {
           </TableHeader>
           <TableBody>
             {brands.map((brand) => (
-              <TableRow key={brand.id}>
+              <TableRow key={brand.id} data-testid={`admin-brand-row-${brand.id}`}>
                 <TableCell>
                   {brand.logoUrl ? (
                     <div className="relative h-10 w-10">
@@ -121,10 +121,20 @@ export function BrandsTable({ brands }: BrandsTableProps) {
                   </span>
                 </TableCell>
                 <TableCell className="text-right">
-                  <Button variant="ghost" size="icon" onClick={() => handleEdit(brand)}>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleEdit(brand)}
+                    data-testid={`admin-brand-edit-${brand.id}`}
+                  >
                     <Edit className="h-4 w-4" />
                   </Button>
-                  <Button variant="ghost" size="icon" onClick={() => setDeleteId(brand.id)}>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setDeleteId(brand.id)}
+                    data-testid={`admin-brand-delete-${brand.id}`}
+                  >
                     <Trash className="h-4 w-4 text-red-500" />
                   </Button>
                 </TableCell>
@@ -155,7 +165,11 @@ export function BrandsTable({ brands }: BrandsTableProps) {
             <Button variant="outline" onClick={() => setDeleteId(null)}>
               Cancel
             </Button>
-            <Button variant="destructive" onClick={handleDelete}>
+            <Button
+              variant="destructive"
+              onClick={handleDelete}
+              data-testid="admin-brand-delete-confirm"
+            >
               Delete
             </Button>
           </DialogFooter>

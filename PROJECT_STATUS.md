@@ -50,6 +50,10 @@ Comprehensive documentation added to all core layers:
 - Refactored storefront `Header` into controller/view layers:
   - `useHeaderController`
   - `HeaderView`
+- Migrated storefront presentation to feature-oriented module root:
+  - `src/presentation/storefront/shared/*`
+  - `src/presentation/storefront/shell/header/*`
+- Kept shadcn primitives globally shared in `src/components/ui`; composed storefront components now live in presentation layer.
 - Introduced shared storefront view-model/handler interfaces for product and header modules.
 - Simplified product card/list architecture:
   - moved default variant selection into `useDefaultVariantSelection`

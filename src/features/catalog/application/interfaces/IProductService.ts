@@ -7,6 +7,7 @@
 
 import { Product } from "@/features/catalog/domain/entities/Product";
 import { CustomerGroup, UomCode } from "@/features/core/domain/types/common";
+import type { CurrencyCode, Locale } from "@/features/core/domain/value-objects";
 import { VariantSellOption } from "./IProductRepository";
 
 export interface IProductService {
@@ -16,7 +17,7 @@ export interface IProductService {
    * @param language - The ISO language code (e.g., 'en', 'ar').
    * @returns A list of products.
    */
-  getAll(language?: string): Promise<Product[]>;
+  getAll(language?: Locale): Promise<Product[]>;
 
   /**
    * Retrieves a single product by its unique identifier.
@@ -25,7 +26,7 @@ export interface IProductService {
    * @param language - Optional language for localized content.
    * @returns The product if found, null otherwise.
    */
-  getById(id: number, language?: string): Promise<Product | null>;
+  getById(id: number, language?: Locale): Promise<Product | null>;
 
   /**
    * Retrieves a specific number of featured products for promotional displays.
@@ -34,7 +35,7 @@ export interface IProductService {
    * @param language - Optional language for localized content.
    * @returns A list of featured products.
    */
-  getFeaturedProducts(limit?: number, language?: string): Promise<Product[]>;
+  getFeaturedProducts(limit?: number, language?: Locale): Promise<Product[]>;
 
   /**
    * Searches the catalog for products matching a text query.
@@ -43,16 +44,16 @@ export interface IProductService {
    * @param language - Optional language for localized content.
    * @returns A list of matching products.
    */
-  searchProducts(query: string, language?: string): Promise<Product[]>;
+  searchProducts(query: string, language?: Locale): Promise<Product[]>;
 
   /**
-   * Retrieves all products belonging to a specific category.
+   * Retrieves all products in a category subtree (category + descendants).
    *
    * @param categoryId - The unique ID of the category.
    * @param language - Optional language for localized content.
-   * @returns A list of products in the category.
+   * @returns A list of products in the category subtree.
    */
-  getByCategory(categoryId: number, language?: string): Promise<Product[]>;
+  getByCategory(categoryId: number, language?: Locale): Promise<Product[]>;
 
   /**
    * Retrieves sell options (UoM and optional pricing) for a specific variant.
@@ -71,5 +72,5 @@ export interface IProductService {
     variantKey: string,
     uomCode: UomCode,
     customerGroup: CustomerGroup,
-  ): Promise<{ unitPrice: number; currency: string; isSellable: boolean } | null>;
+  ): Promise<{ unitPrice: number; currency: CurrencyCode; isSellable: boolean } | null>;
 }

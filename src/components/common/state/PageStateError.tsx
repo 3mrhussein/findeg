@@ -1,38 +1,34 @@
-import Link from "next/link";
-import { Card, CardContent } from "@/components/ui/card";
+"use client";
+
+import { AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Icon } from "@/components/common/Icon";
+import { Container } from "@/components/layout/Container";
 
 interface PageStateErrorProps {
   title: string;
-  description?: string;
-  actionLabel?: string;
-  actionHref?: string;
+  description: string;
+  retryLabel?: string;
+  onRetry?: () => void;
 }
 
 /**
- * Standardized full-page error state.
+ * Shared page-level error state with optional retry action.
  */
-export function PageStateError({
-  title,
-  description,
-  actionLabel,
-  actionHref,
-}: PageStateErrorProps) {
+export function PageStateError({ title, description, retryLabel, onRetry }: PageStateErrorProps) {
   return (
-    <Card className="max-w-2xl mx-auto border-destructive/30">
-      <CardContent className="py-14 text-center space-y-4">
-        <div className="mx-auto w-12 h-12 rounded-full bg-destructive/10 flex items-center justify-center">
-          <Icon name="x" className="w-5 h-5 text-destructive" />
+    <Container className="py-16">
+      <div className="mx-auto max-w-xl rounded-lg border border-destructive/30 bg-destructive/5 p-8 text-center">
+        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10">
+          <AlertTriangle className="h-6 w-6 text-destructive" aria-hidden="true" />
         </div>
-        <h2 className="text-2xl font-semibold text-foreground">{title}</h2>
-        {description ? <p className="text-muted-foreground">{description}</p> : null}
-        {actionLabel && actionHref ? (
-          <Button asChild variant="outline">
-            <Link href={actionHref}>{actionLabel}</Link>
+        <h1 className="text-2xl font-semibold">{title}</h1>
+        <p className="mt-2 text-muted-foreground">{description}</p>
+        {retryLabel && onRetry ? (
+          <Button className="mt-6" onClick={onRetry}>
+            {retryLabel}
           </Button>
         ) : null}
-      </CardContent>
-    </Card>
+      </div>
+    </Container>
   );
 }

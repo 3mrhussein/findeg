@@ -5,6 +5,20 @@
  */
 
 import { ID, Slug } from "@/features/core/domain/types/common";
+import type { Locale, LocalizedString } from "@/features/core/domain/value-objects";
+
+export type TranslatedCategoryName = LocalizedString;
+export type TranslatedCategoryDescription = LocalizedString;
+export type TranslatedCategorySlug = LocalizedString;
+
+/**
+ * Localized category text payload.
+ */
+export interface CategoryLocalizedContent {
+  slug: TranslatedCategorySlug;
+  name: TranslatedCategoryName;
+  description?: TranslatedCategoryDescription;
+}
 
 /**
  * Category Domain Interface
@@ -18,6 +32,14 @@ export interface Category {
   slug: Slug;
   name: string;
   description?: string;
+  /**
+   * Locale used to resolve the string fields (name/description).
+   */
+  locale?: Locale;
+  /**
+   * Full or partial map of localized content.
+   */
+  localizedContent?: CategoryLocalizedContent;
   image?: string;
   icon?: string;
   parentId?: ID;

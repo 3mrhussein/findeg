@@ -27,7 +27,7 @@ classDiagram
 
 ```mermaid
 sequenceDiagram
-    participant API as /api/v1/upload
+    participant API as /api/v1/media
     participant Media as MediaService
     participant Storage as IStorageProvider
     API->>Media: upload(file)
@@ -43,4 +43,3 @@ sequenceDiagram
 ## Clean Architecture Boundaries
 - Depends on `core` storage ports only.
 - Catalog/admin features consume media URLs; they should not manage storage internals directly.
-

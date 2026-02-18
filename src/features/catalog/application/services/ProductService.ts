@@ -3,6 +3,7 @@ import type { IProductRepository } from "../interfaces/IProductRepository";
 import type { IProductService } from "@/features/catalog/application/interfaces/IProductService";
 import type { Product } from "@/features/catalog/domain/entities/Product";
 import { CustomerGroup, UomCode } from "@/features/core/domain/types/common";
+import type { CurrencyCode, Locale } from "@/features/core/domain/value-objects";
 import { VariantSellOption } from "../interfaces/IProductRepository";
 
 /**
@@ -22,7 +23,7 @@ export class ProductService implements IProductService {
    * @param language - Optional ISO language code (e.g., 'en', 'ar').
    * @returns A list of products.
    */
-  async getAll(language?: string): Promise<Product[]> {
+  async getAll(language?: Locale): Promise<Product[]> {
     return this.productRepository.getAll(language);
   }
 
@@ -33,7 +34,7 @@ export class ProductService implements IProductService {
    * @param language - Optional language for localized content.
    * @returns The product if found, null otherwise.
    */
-  async getById(id: ID, language?: string): Promise<Product | null> {
+  async getById(id: ID, language?: Locale): Promise<Product | null> {
     return this.productRepository.getById(id, language);
   }
 
@@ -44,7 +45,7 @@ export class ProductService implements IProductService {
    * @param language - Optional language for localized content.
    * @returns A list of featured products.
    */
-  async getFeaturedProducts(limit: number = 8, language?: string): Promise<Product[]> {
+  async getFeaturedProducts(limit: number = 8, language?: Locale): Promise<Product[]> {
     return this.productRepository.getFeatured(limit, language);
   }
 
@@ -55,18 +56,18 @@ export class ProductService implements IProductService {
    * @param language - Optional language for localized content.
    * @returns A list of products matching the query.
    */
-  async searchProducts(query: string, language?: string): Promise<Product[]> {
+  async searchProducts(query: string, language?: Locale): Promise<Product[]> {
     return this.productRepository.search(query, language);
   }
 
   /**
-   * Retrieves all products belonging to a specific category.
+   * Retrieves all products for a category subtree (category + descendants).
    *
    * @param categoryId - The unique identifier of the category.
    * @param language - Optional language for localized content.
-   * @returns A list of products in the category.
+   * @returns A list of products in the category subtree.
    */
-  async getByCategory(categoryId: ID, language?: string): Promise<Product[]> {
+  async getByCategory(categoryId: ID, language?: Locale): Promise<Product[]> {
     return this.productRepository.getByCategory(categoryId, language);
   }
 
@@ -98,7 +99,7 @@ export class ProductService implements IProductService {
     variantKey: string,
     uomCode: UomCode,
     customerGroup: CustomerGroup,
-  ): Promise<{ unitPrice: number; currency: string; isSellable: boolean } | null> {
+  ): Promise<{ unitPrice: number; currency: CurrencyCode; isSellable: boolean } | null> {
     return this.productRepository.resolveVariantUnitPrice(
       productId,
       variantKey,

@@ -1,22 +1,45 @@
-import React from "react";
-import { renderLucideIcon, type IconName } from "@/lib/icons";
-import { cn } from "@/lib/utils";
+import {
+  LayoutDashboard,
+  Package,
+  ShoppingCart,
+  Users,
+  ChevronRight,
+  Plus,
+  Chrome,
+  Facebook,
+  type LucideProps,
+} from "lucide-react";
+import type { ComponentType } from "react";
 
-export type { IconName };
+type IconName =
+  | "dashboard"
+  | "package"
+  | "shoppingCart"
+  | "users"
+  | "chevronRight"
+  | "plus"
+  | "google"
+  | "facebook";
 
-interface IconProps extends React.SVGProps<SVGSVGElement> {
+interface IconProps extends Omit<LucideProps, "name"> {
   name: IconName;
-  size?: number | string;
 }
 
+const iconMap = {
+  dashboard: LayoutDashboard,
+  package: Package,
+  shoppingCart: ShoppingCart,
+  users: Users,
+  chevronRight: ChevronRight,
+  plus: Plus,
+  google: Chrome,
+  facebook: Facebook,
+} satisfies Record<IconName, ComponentType<LucideProps>>;
+
 /**
- * Standard Icon component using Lucide React.
- * Replaces custom SVG paths to prevent Turbopack panics.
+ *
  */
-export const Icon: React.FC<IconProps> = ({ name, className, size, ...props }) => {
-  return renderLucideIcon(name, {
-    className: cn("shrink-0", className),
-    size: size || (props.width as any) || (props.height as any) || 24,
-    ...props,
-  } as any);
-};
+export function Icon({ name, ...props }: IconProps) {
+  const Component = iconMap[name];
+  return <Component {...props} />;
+}

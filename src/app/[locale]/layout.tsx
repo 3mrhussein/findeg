@@ -92,11 +92,11 @@ export default async function RootLayout({
   }
   // Enable static rendering
   setRequestLocale(typedLocale);
-  const messages = await getMessages();
+  const messages = await getMessages({ locale: typedLocale });
   return (
     <html lang={locale} dir={locale === "ar" ? "rtl" : "ltr"} suppressHydrationWarning>
       <body className={`${poppins.variable} font-sans`} suppressHydrationWarning>
-        <NextIntlClientProvider messages={messages}>
+        <NextIntlClientProvider locale={typedLocale} messages={messages}>
           <Providers>
             <Suspense>
               <div className="min-h-screen bg-background text-foreground flex flex-col">

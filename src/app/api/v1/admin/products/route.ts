@@ -10,6 +10,7 @@ import { apiResponse, apiError, apiPaginatedResponse } from "../../_lib/api-resp
 import { withAdmin } from "../../_lib/middleware";
 import { getServices } from "@/server/getServices";
 import { ProductInputSchema } from "@/features/administration/domain/types";
+import { resolveLocale } from "@/features/core/domain/value-objects";
 
 /**
  * List all products (admin)
@@ -21,6 +22,7 @@ export async function GET(request: NextRequest) {
   return withAdmin(request, async () => {
     try {
       const { searchParams } = new URL(request.url);
+      const language = resolveLocale(searchParams.get("lang"));
       const page = Number(searchParams.get("page")) || 1;
       const limit = Number(searchParams.get("limit")) || 20;
       const search = searchParams.get("search") || undefined;
@@ -28,29 +30,26 @@ export async function GET(request: NextRequest) {
         ? Number(searchParams.get("categoryId"))
         : undefined;
       const brandId = searchParams.get("brandId") ? Number(searchParams.get("brandId")) : undefined;
+      const isActiveParam = searchParams.get("isActive");
+      const isActive =
+        isActiveParam === "true" ? true : isActiveParam === "false" ? false : undefined;
 
-      const { adminProduct } = getServices();
-
-      // Get all products (could be enhanced with filters)
-      const products = await adminProduct.getAll();
-
-      // Apply filters if needed
-      let filtered = products;
-      if (search) {
-        filtered = filtered.filter((p) => p.name?.toLowerCase().includes(search.toLowerCase()));
-      }
-      if (categoryId) {
-        filtered = filtered.filter((p) => p.categoryId === categoryId);
-      }
-      if (brandId) {
-        filtered = filtered.filter((p) => p.brandId === brandId);
-      }
-
-      // Pagination
       const offset = (page - 1) * limit;
-      const paginated = filtered.slice(offset, offset + limit);
+      const { repositories } = getServices();
+      const result = await repositories.products.getFiltered(
+        {
+          search,
+          categoryId,
+          brandId,
+          isActive,
+          limit,
+          offset,
+          sort: "newest",
+        },
+        language,
+      );
 
-      return apiPaginatedResponse(paginated, filtered.length, page, limit);
+      return apiPaginatedResponse(result.products, result.total, page, limit);
     } catch (error) {
       return apiError(error instanceof Error ? error.message : "Failed to retrieve products", 500);
     }

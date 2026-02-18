@@ -13,8 +13,14 @@ import { Orders } from "./Orders";
 import { Customers } from "./Customers";
 import { Tooltip } from "@/components/common/Tooltip";
 import { cn } from "@/lib/utils";
+import type { Product } from "@/features/catalog/domain/entities/Product";
+import type { Order } from "@/features/order/domain/entities/Order";
 
 type DashboardView = "overview" | "products" | "orders" | "customers";
+interface DashboardContentProps {
+  products: Product[];
+  orders: Order[];
+}
 
 /**
  *
@@ -42,7 +48,7 @@ const LogoIcon = () => (
 /**
  *
  */
-export const DashboardContent: React.FC = () => {
+export const DashboardContent: React.FC<DashboardContentProps> = ({ products, orders }) => {
   const t = useTranslations();
   const router = useRouter();
   const [activeView, setActiveView] = useState<DashboardView>("overview");
@@ -81,14 +87,14 @@ export const DashboardContent: React.FC = () => {
   const renderContent = () => {
     switch (activeView) {
       case "products":
-        return <Products />;
+        return <Products products={products} />;
       case "orders":
-        return <Orders />;
+        return <Orders orders={orders} />;
       case "customers":
         return <Customers />;
       case "overview":
       default:
-        return <Overview />;
+        return <Overview products={products} orders={orders} />;
     }
   };
 

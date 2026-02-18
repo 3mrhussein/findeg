@@ -4,6 +4,9 @@ import { ProductForm } from "../ProductForm";
 /**
  *
  */
+/**
+ *
+ */
 export default async function NewProductPage() {
   const categories = await container.adminCategoryService.getAll();
   const brands = await container.adminBrandService.getAll();

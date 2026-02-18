@@ -5,6 +5,7 @@ This playbook is the single source of truth for:
 - Feature responsibilities and dependencies
 - Layer-specific implementation standards
 - Delivery workflow for new features and changes
+- Domain type/value-object foundation (`docs/architecture/DOMAIN_TYPE_BLOCKS.md`)
 
 It consolidates architecture conventions previously spread across multiple docs.
 
@@ -111,8 +112,10 @@ graph LR
 When implementing any new capability:
 
 1. **Spec first**
-- Update `project-planning/SYSTEM_SPECIFICATION.md` with scope/API/schema implications.
-- Update `project-planning/IMPLEMENTATION_PLAN.md` checklist.
+   - Update `project-planning/SYSTEM_SPECIFICATION.md` with scope/API/schema implications.
+   - Update `project-planning/MISSING_FLOWS_MATRIX.md`.
+   - Update `project-planning/USE_CASE_BACKLOG.md` when priorities/scope shift.
+   - Update `docs/testing/FRONTEND_TEST_MASTER_PLAN.md` when coverage scope changes.
 
 2. **Domain first**
 - Define/extend domain types and value objects.
@@ -156,7 +159,7 @@ When implementing any new capability:
 ### Infrastructure Standards
 - Repositories map DB models to domain models in one place.
 - Keep SQL/ORM types out of UI/application contracts.
-- Use explicit migrations for schema evolution; document any breaking change in spec + implementation plan.
+- Use explicit migrations for schema evolution; document any breaking change in planning docs and test plan.
 
 ### UI Standards
 - Forms own presentation and basic client validation only.
@@ -175,7 +178,10 @@ When implementing any new capability:
 1. Add schema in `src/features/core/infrastructure/persistence/schema/*`.
 2. Add migration SQL in `scripts/migrations/`.
 3. Validate migration on local DB.
-4. Document data/backfill assumptions in spec and implementation plan.
+4. Document data/backfill assumptions in:
+   - `project-planning/SYSTEM_SPECIFICATION.md`
+   - `project-planning/MISSING_FLOWS_MATRIX.md`
+   - `project-planning/USE_CASE_BACKLOG.md`
 
 ---
 

@@ -5,11 +5,8 @@ import {
   flexRender,
   getCoreRowModel,
   useReactTable,
-  getPaginationRowModel,
   SortingState,
   getSortedRowModel,
-  ColumnFiltersState,
-  getFilteredRowModel,
 } from "@tanstack/react-table";
 import {
   Table,
@@ -35,17 +32,116 @@ import {
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
+import { deleteProductAction } from "@/features/catalog/application/actions/product";
+import { useToast } from "@/hooks/use-toast";
+import { usePathname, useRouter } from "next/navigation";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface ProductTableProps {
   data: Product[];
+  page: number;
+  limit: number;
+  total: number;
+  filters: {
+    search: string;
+    categoryId?: number;
+    brandId?: number;
+    isActive: string;
+  };
+  categories: Array<{ id: number; name: string }>;
+  brands: Array<{ id: number; name: string }>;
 }
 
 /**
  *
  */
-export function ProductTable({ data }: ProductTableProps) {
+export function ProductTable({
+  data,
+  page,
+  limit,
+  total,
+  filters,
+  categories,
+  brands,
+}: ProductTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const { toast } = useToast();
+  const router = useRouter();
+  const pathname = usePathname();
+  const totalPages = Math.max(1, Math.ceil(total / limit));
+
+  const updateQuery = (next: {
+    search?: string;
+    categoryId?: string;
+    brandId?: string;
+    isActive?: string;
+    page?: string;
+  }) => {
+    const params = new URLSearchParams();
+
+    const nextSearch = (next.search ?? filters.search).trim();
+    const nextCategoryId = next.categoryId ?? (filters.categoryId ? String(filters.categoryId) : "");
+    const nextBrandId = next.brandId ?? (filters.brandId ? String(filters.brandId) : "");
+    const nextIsActive = next.isActive ?? filters.isActive;
+    const nextPage = next.page ?? "1";
+
+    if (nextSearch) params.set("search", nextSearch);
+    if (nextCategoryId) params.set("categoryId", nextCategoryId);
+    if (nextBrandId) params.set("brandId", nextBrandId);
+    if (nextIsActive && nextIsActive !== "all") params.set("isActive", nextIsActive);
+    params.set("page", nextPage);
+    params.set("limit", String(limit));
+
+    const qs = params.toString();
+    router.push(qs ? `${pathname}?${qs}` : pathname);
+  };
+
+  /**
+   *
+   */
+  const handleDelete = async () => {
+    if (!deleteId) return;
+
+    setIsDeleting(true);
+    try {
+      const result = await deleteProductAction(deleteId);
+      if (result.success) {
+        toast({ title: "Product deleted", description: "The product was deleted successfully." });
+        setDeleteId(null);
+        router.refresh();
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Delete failed",
+          description: result.error || "Unable to delete product.",
+        });
+      }
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Delete failed",
+        description: "An unexpected error occurred while deleting the product.",
+      });
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   const columns: ColumnDef<Product>[] = [
     {
@@ -120,7 +216,11 @@ export function ProductTable({ data }: ProductTableProps) {
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
+              <Button
+                variant="ghost"
+                className="h-8 w-8 p-0"
+                data-testid={`admin-product-actions-${product.id}`}
+              >
                 <span className="sr-only">Open menu</span>
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
@@ -132,11 +232,18 @@ export function ProductTable({ data }: ProductTableProps) {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <Link href={`/admin/products/${product.id}/edit`}>
+                <Link
+                  href={`/admin/products/${product.id}/edit`}
+                  data-testid={`admin-product-edit-${product.id}`}
+                >
                   <Edit className="mr-2 h-4 w-4" /> Edit
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-destructive focus:text-destructive">
+              <DropdownMenuItem
+                className="text-destructive focus:text-destructive"
+                onClick={() => setDeleteId(product.id)}
+                data-testid={`admin-product-delete-${product.id}`}
+              >
                 <Trash2 className="mr-2 h-4 w-4" /> Delete
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -146,31 +253,97 @@ export function ProductTable({ data }: ProductTableProps) {
     },
   ];
 
-  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
-    onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
     state: {
       sorting,
-      columnFilters,
     },
   });
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center py-4">
+      <div className="grid gap-3 py-4 md:grid-cols-2 lg:grid-cols-4">
         <Input
-          placeholder="Filter products..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-          onChange={(event) => table.getColumn("name")?.setFilterValue(event.target.value)}
-          className="max-w-sm"
+          data-testid="admin-products-filter-search"
+          placeholder="Search name, SKU, description..."
+          defaultValue={filters.search}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              updateQuery({ search: (event.target as HTMLInputElement).value, page: "1" });
+            }
+          }}
         />
+        <Select
+          value={filters.categoryId ? String(filters.categoryId) : "all"}
+          onValueChange={(value) =>
+            updateQuery({ categoryId: value === "all" ? "" : value, page: "1" })
+          }
+        >
+          <SelectTrigger data-testid="admin-products-filter-category">
+            <SelectValue placeholder="All categories" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All categories</SelectItem>
+            {categories.map((category) => (
+              <SelectItem key={category.id} value={String(category.id)}>
+                {category.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Select
+          value={filters.brandId ? String(filters.brandId) : "all"}
+          onValueChange={(value) => updateQuery({ brandId: value === "all" ? "" : value, page: "1" })}
+        >
+          <SelectTrigger data-testid="admin-products-filter-brand">
+            <SelectValue placeholder="All brands" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All brands</SelectItem>
+            {brands.map((brand) => (
+              <SelectItem key={brand.id} value={String(brand.id)}>
+                {brand.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Select
+          value={filters.isActive || "all"}
+          onValueChange={(value) => updateQuery({ isActive: value, page: "1" })}
+        >
+          <SelectTrigger data-testid="admin-products-filter-status">
+            <SelectValue placeholder="All statuses" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All statuses</SelectItem>
+            <SelectItem value="true">Active only</SelectItem>
+            <SelectItem value="false">Inactive only</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="flex items-center justify-between">
+        <div className="text-sm text-muted-foreground">
+          Showing {data.length} of {total} products
+        </div>
+        <Button
+          data-testid="admin-products-filter-clear"
+          variant="outline"
+          onClick={() =>
+            updateQuery({
+              search: "",
+              categoryId: "",
+              brandId: "",
+              isActive: "all",
+              page: "1",
+            })
+          }
+        >
+          Clear filters
+        </Button>
       </div>
       <div className="rounded-md border bg-card">
         <Table>
@@ -192,7 +365,11 @@ export function ProductTable({ data }: ProductTableProps) {
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                  data-testid={`admin-product-row-${row.original.id}`}
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -214,20 +391,47 @@ export function ProductTable({ data }: ProductTableProps) {
         <Button
           variant="outline"
           size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
+          onClick={() => updateQuery({ page: String(Math.max(1, page - 1)) })}
+          disabled={page <= 1}
         >
           Previous
         </Button>
+        <span className="text-sm text-muted-foreground">
+          Page {page} of {totalPages}
+        </span>
         <Button
           variant="outline"
           size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
+          onClick={() => updateQuery({ page: String(Math.min(totalPages, page + 1)) })}
+          disabled={page >= totalPages}
         >
           Next
         </Button>
       </div>
+
+      <Dialog open={deleteId !== null} onOpenChange={(open) => !open && setDeleteId(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete product?</DialogTitle>
+            <DialogDescription>
+              This action cannot be undone. This will permanently remove the product.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeleteId(null)} disabled={isDeleting}>
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleDelete}
+              disabled={isDeleting}
+              data-testid="admin-product-delete-confirm"
+            >
+              {isDeleting ? "Deleting..." : "Delete"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

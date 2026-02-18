@@ -8,6 +8,11 @@ import { ICategoryRepository } from "../../application/interfaces/ICategoryRepos
 import { Category } from "../../domain/entities/Category";
 import { CategoryInput } from "@/features/administration/domain/types";
 import { eq, and, sql, desc, asc, like, isNull, or, count } from "drizzle-orm";
+import {
+  DEFAULT_LOCALE,
+  toLocalizedString,
+  type Locale,
+} from "@/features/core/domain/value-objects";
 
 type DbCategory = typeof categories.$inferSelect;
 type DbTranslation = typeof categoryTranslations.$inferSelect;
@@ -18,6 +23,17 @@ type DbTranslation = typeof categoryTranslations.$inferSelect;
  * Implements hierarchical category management using Materialized Path pattern for efficient tree queries.
  */
 export class DrizzleCategoryRepository implements ICategoryRepository {
+  /**
+   * Converts free text into a URL-safe slug format.
+   */
+  private toRouteSlug(value: string): string {
+    return value
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+  }
+
   /**
    * Internal mapper to convert database records into Domain Category entities.
    * Handles optional fields and nested children arrays.
@@ -31,11 +47,34 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
     translation?: DbTranslation,
     children?: Category[],
   ): Category {
+    const translatedSlug =
+      translation?.name && this.toRouteSlug(translation.name)
+        ? this.toRouteSlug(translation.name)
+        : dbCategory.slug;
+
+    const localizedContent = translation
+      ? {
+          slug: toLocalizedString({ [translation.language]: translatedSlug }, dbCategory.slug),
+          name: toLocalizedString(
+            { [translation.language]: translation.name },
+            translation.name || dbCategory.slug,
+          ),
+          description: translation.description
+            ? toLocalizedString(
+                { [translation.language]: translation.description },
+                translation.description,
+              )
+            : undefined,
+        }
+      : undefined;
+
     return {
       id: dbCategory.id,
       slug: dbCategory.slug,
       name: translation?.name || dbCategory.slug,
       description: translation?.description || undefined,
+      locale: (translation?.language || DEFAULT_LOCALE) as Locale,
+      localizedContent,
       icon: dbCategory.icon || undefined,
       parentId: dbCategory.parentId || undefined,
       path: dbCategory.path,
@@ -53,7 +92,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
    * @param language - Language code for translation (default 'en').
    * @returns Category entity or null.
    */
-  async getById(id: ID, language: string = "en"): Promise<Category | null> {
+  async getById(id: ID, language: Locale = DEFAULT_LOCALE): Promise<Category | null> {
     const result = await db
       .select({ category: categories, translation: categoryTranslations })
       .from(categories)
@@ -76,7 +115,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
    * @param language - Localization language.
    * @returns Array of Category entities.
    */
-  async getAll(language: string = "en"): Promise<Category[]> {
+  async getAll(language: Locale = DEFAULT_LOCALE): Promise<Category[]> {
     const results = await db
       .select({ category: categories, translation: categoryTranslations })
       .from(categories)
@@ -101,7 +140,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
    * @param language - Localization language.
    * @returns Category entity or null.
    */
-  async getBySlug(slug: string, language: string = "en"): Promise<Category | null> {
+  async getBySlug(slug: string, language: Locale = DEFAULT_LOCALE): Promise<Category | null> {
     const result = await db
       .select({ category: categories, translation: categoryTranslations })
       .from(categories)
@@ -128,7 +167,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
    * @param language - Localization language.
    * @returns Root categories with popluated 'children' arrays.
    */
-  async getTree(language: string = "en"): Promise<Category[]> {
+  async getTree(language: Locale = DEFAULT_LOCALE): Promise<Category[]> {
     const allCategories = await this.getAll(language);
 
     /**
@@ -153,7 +192,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
    * @param language - Localization language.
    * @returns Array of root Category entities.
    */
-  async getRoots(language: string = "en"): Promise<Category[]> {
+  async getRoots(language: Locale = DEFAULT_LOCALE): Promise<Category[]> {
     const results = await db
       .select({ category: categories, translation: categoryTranslations })
       .from(categories)
@@ -179,7 +218,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
    * @param language - Localization language.
    * @returns Array of child categories.
    */
-  async getChildren(parentId: ID, language: string = "en"): Promise<Category[]> {
+  async getChildren(parentId: ID, language: Locale = DEFAULT_LOCALE): Promise<Category[]> {
     const results = await db
       .select({ category: categories, translation: categoryTranslations })
       .from(categories)
@@ -206,7 +245,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
    * @param language - Localization language.
    * @returns List of all descendant categories.
    */
-  async getDescendants(categoryId: ID, language: string = "en"): Promise<Category[]> {
+  async getDescendants(categoryId: ID, language: Locale = DEFAULT_LOCALE): Promise<Category[]> {
     // Get the category first to find its path
     const parent = await this.getById(categoryId);
     if (!parent || !parent.path) return [];
@@ -236,7 +275,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
    * @param language - Localization language.
    * @returns Category entity or null.
    */
-  async getByPath(path: string, language: string = "en"): Promise<Category | null> {
+  async getByPath(path: string, language: Locale = DEFAULT_LOCALE): Promise<Category | null> {
     const result = await db
       .select({ category: categories, translation: categoryTranslations })
       .from(categories)

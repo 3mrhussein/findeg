@@ -5,9 +5,10 @@ import {
   SkuSchema,
   QuantitySchema,
 } from "@/features/core/domain/types/common";
+import { LocaleSchema } from "@/features/core/domain/value-objects";
 
 const ProductTranslationSchema = z.object({
-  language: z.string().min(2),
+  language: LocaleSchema,
   name: z.string().min(2),
   description: z.string(),
   longDescription: z.string(),

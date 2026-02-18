@@ -1,8 +1,10 @@
-import { getServices } from "@/server/getServices";
 import { notFound } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { OrderDetailControls } from "@/components/admin/orders/order-detail-controls";
+import { OrderAuditTimeline } from "@/components/admin/orders/order-audit-timeline";
+import { container } from "@/features/core/infrastructure/di/ServiceContainer";
 
 interface OrderDetailPageProps {
   params: Promise<{
@@ -14,7 +16,6 @@ interface OrderDetailPageProps {
  *
  */
 export default async function OrderDetailPage({ params }: OrderDetailPageProps) {
-  const { adminOrder } = getServices();
   const { id: idParam } = await params;
   const id = parseInt(idParam);
 
@@ -22,7 +23,10 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
     return notFound();
   }
 
-  const order = await adminOrder.getById(id);
+  const [order, orderAuditLogs] = await Promise.all([
+    container.adminOrderService.getById(id),
+    container.auditLogService.getEntityLogs("order", String(id)),
+  ]);
 
   if (!order) {
     return notFound();
@@ -38,6 +42,14 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <OrderDetailControls
+          orderId={order.id}
+          initialStatus={order.status}
+          initialPaymentStatus={order.paymentStatus}
+          initialTrackingNumber={order.trackingNumber}
+          initialAdminNotes={order.adminNotes}
+        />
+
         <Card>
           <CardHeader>
             <CardTitle>Customer Details</CardTitle>
@@ -60,6 +72,14 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
               <span className="font-bold">
                 {order.currency} {order.total}
               </span>
+            </div>
+            <div className="flex justify-between py-1">
+              <span>Tracking</span>
+              <span className="font-medium">{order.trackingNumber || "-"}</span>
+            </div>
+            <div className="flex justify-between py-1">
+              <span>Payment</span>
+              <span className="font-medium">{order.paymentStatus || "-"}</span>
             </div>
             <div className="text-sm text-muted-foreground mt-2">
               Date: {order.date ? new Date(order.date).toLocaleDateString() : "-"}
@@ -97,6 +117,8 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
           </div>
         </CardContent>
       </Card>
+
+      <OrderAuditTimeline orderId={order.id} logs={orderAuditLogs} />
     </div>
   );
 }

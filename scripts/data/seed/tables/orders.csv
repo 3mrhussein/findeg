@@ -1,0 +1,1 @@
+id,user_id,guest_email,status,payment_status,subtotal,shipping_cost,total_amount,currency,payment_method,shipping_address_snapshot,tracking_number,admin_notes,shipping_address,billing_address,created_at,updated_at

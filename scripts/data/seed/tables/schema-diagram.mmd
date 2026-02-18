@@ -1,0 +1,108 @@
+erDiagram
+  users ||--o{ addresses : has
+  users ||--o{ orders : places
+  users ||--o{ reviews : writes
+  users ||--o{ audit_log : performs
+
+  brands ||--o{ products : brands
+
+  categories ||--o{ categories : parent_of
+  categories ||--o{ category_translations : translates
+  categories ||--o{ products : contains
+
+  products ||--o{ product_translations : translates
+  products ||--o{ product_images : has
+  products ||--o{ order_items : sold_as
+  products ||--o{ reviews : reviewed_as
+  products ||--o{ variant_sellable_uoms : supports_uom
+  products ||--o{ variant_price_lists : priced_for
+
+  orders ||--o{ order_items : contains
+
+  users {
+    int id PK
+    varchar email
+    varchar role
+  }
+  brands {
+    int id PK
+    text slug
+    text name
+  }
+  categories {
+    int id PK
+    text slug
+    int parent_id FK
+    text path
+  }
+  category_translations {
+    int category_id FK
+    varchar language
+    text name
+  }
+  products {
+    int id PK
+    text sku
+    int category_id FK
+    int brand_id FK
+    jsonb images
+  }
+  product_translations {
+    int product_id FK
+    varchar language
+    text name
+  }
+  product_images {
+    int id PK
+    int product_id FK
+    text image_url
+  }
+  variant_sellable_uoms {
+    int id PK
+    int product_id FK
+    text variant_key
+    text uom_code
+  }
+  variant_price_lists {
+    int id PK
+    int product_id FK
+    text variant_key
+    text customer_group
+    text uom_code
+  }
+  addresses {
+    int id PK
+    int user_id FK
+    text city
+    text area
+    text street
+  }
+  orders {
+    int id PK
+    int user_id FK
+    varchar status
+    decimal total_amount
+  }
+  order_items {
+    int id PK
+    int order_id FK
+    int product_id FK
+    int quantity
+  }
+  reviews {
+    int id PK
+    int user_id FK
+    int product_id FK
+    int rating
+  }
+  audit_log {
+    int id PK
+    int admin_user_id FK
+    text entity_type
+    text action
+  }
+  translations {
+    varchar namespace
+    varchar key
+    varchar language
+  }

@@ -23,9 +23,13 @@ export class DrizzleUserRepository implements IUserRepository {
     return {
       id: dbUser.id,
       email: dbUser.email as Email,
+      firstName: dbUser.firstName || undefined,
+      lastName: dbUser.lastName || undefined,
       name: dbUser.name || undefined,
+      phone: dbUser.phone || undefined,
       role: dbUser.role as UserRole,
       image: dbUser.image || undefined,
+      isActive: dbUser.isActive,
       createdAt: dbUser.createdAt,
       updatedAt: dbUser.updatedAt,
     };
@@ -69,7 +73,10 @@ export class DrizzleUserRepository implements IUserRepository {
     return {
       id: dbUser.id,
       email: dbUser.email as Email,
+      firstName: dbUser.firstName || undefined,
+      lastName: dbUser.lastName || undefined,
       name: dbUser.name || undefined,
+      phone: dbUser.phone || undefined,
       role: dbUser.role as UserRole,
       password: dbUser.password,
     };

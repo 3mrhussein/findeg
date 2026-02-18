@@ -11,6 +11,12 @@ const config = [
     },
     ignores: [".next/**", "node_modules/**"],
     rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: ["@/presentation/storefront/*", "src/presentation/storefront/*"],
+        },
+      ],
       "jsdoc/require-jsdoc": [
         "warn",
         {

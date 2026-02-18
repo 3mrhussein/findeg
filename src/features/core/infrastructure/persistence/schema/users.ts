@@ -11,6 +11,7 @@ import { orders } from "./orders";
 import { reviews } from "./reviews";
 import { addresses } from "./addresses";
 import { auditLog } from "./audit-log";
+import type { UserRole } from "@/features/core/domain/types/common";
 
 /**
  * Users Table
@@ -38,7 +39,7 @@ export const users = pgTable("users", {
 
   password: text("password"),
   /** User role: "user" or "admin" */
-  role: varchar("role", { length: 20 }).default("user").notNull(),
+  role: varchar("role", { length: 20 }).$type<UserRole>().default("user").notNull(),
   emailVerified: timestamp("email_verified"),
   image: text("image"),
   isActive: boolean("is_active").default(true).notNull(),
@@ -59,7 +60,7 @@ export const usersRelations = relations(users, ({ many }) => ({
   orders: many(orders),
   reviews: many(reviews),
   addresses: many(addresses),
-  auditLogs: many(auditLog),
+  auditLogs: many(auditLog, { relationName: "user_audit_logs" }),
 }));
 
 // We can also define the other side here if Drizzle supports it in one relations() call,

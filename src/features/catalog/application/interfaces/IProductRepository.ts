@@ -1,4 +1,5 @@
 import { ID, Price, Quantity, CustomerGroup, UomCode } from "@/features/core/domain/types/common";
+import type { CurrencyCode, Locale } from "@/features/core/domain/value-objects";
 import type { Product } from "../../domain/entities/Product";
 import type { ProductInput } from "@/features/administration/domain/types";
 
@@ -12,7 +13,7 @@ export interface VariantPriceListInput {
   customerGroup: CustomerGroup;
   uomCode: UomCode;
   unitPrice: Price;
-  currency?: string;
+  currency?: CurrencyCode;
   isSellable?: boolean;
 }
 
@@ -21,7 +22,7 @@ export interface VariantSellOption {
   factorToBase: number;
   isEnabled: boolean;
   unitPrice?: Price;
-  currency?: string;
+  currency?: CurrencyCode;
   isSellable?: boolean;
 }
 
@@ -52,45 +53,45 @@ export interface IProductRepository {
   /**
    * Retrieves a single product by ID.
    */
-  getById(id: ID, language?: string): Promise<Product | null>;
+  getById(id: ID, language?: Locale): Promise<Product | null>;
 
   /**
    * Retrieves all products.
    */
-  getAll(language?: string): Promise<Product[]>;
+  getAll(language?: Locale): Promise<Product[]>;
 
   /**
    * Retrieves featured products.
    */
-  getFeatured(limit?: number, language?: string): Promise<Product[]>;
+  getFeatured(limit?: number, language?: Locale): Promise<Product[]>;
 
   /**
-   * Retrieves products belonging to a specific category.
+   * Retrieves products belonging to a category subtree (category + descendants).
    */
-  getByCategory(categoryId: ID, language?: string): Promise<Product[]>;
+  getByCategory(categoryId: ID, language?: Locale): Promise<Product[]>;
 
   /**
    * Retrieves products belonging to a specific brand.
    */
-  getByBrand(brandId: ID, language?: string): Promise<Product[]>;
+  getByBrand(brandId: ID, language?: Locale): Promise<Product[]>;
 
   /**
    * Performs full-text search across product name and description.
    */
-  search(query: string, language?: string): Promise<Product[]>;
+  search(query: string, language?: Locale): Promise<Product[]>;
 
   /**
    * Retrieves a paginated list of products matching the given filters.
    */
   getFiltered(
     filters: ProductFilters,
-    language?: string,
+    language?: Locale,
   ): Promise<{ products: Product[]; total: number }>;
 
   /**
    * Retrieves products with stock levels below the given threshold.
    */
-  getLowStock(threshold?: Quantity, language?: string): Promise<Product[]>;
+  getLowStock(threshold?: Quantity, language?: Locale): Promise<Product[]>;
 
   /**
    * Directly updates the stock quantity of a product.
@@ -170,5 +171,5 @@ export interface IProductRepository {
     variantKey: string,
     uomCode: UomCode,
     customerGroup: CustomerGroup,
-  ): Promise<{ unitPrice: Price; currency: string; isSellable: boolean } | null>;
+  ): Promise<{ unitPrice: Price; currency: CurrencyCode; isSellable: boolean } | null>;
 }

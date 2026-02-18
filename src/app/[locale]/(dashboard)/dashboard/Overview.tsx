@@ -5,14 +5,20 @@ import { SalesChart } from "./SalesChart";
 import { UserActivityChart } from "./UserActivityChart";
 import { DeviceUsageChart } from "./DeviceUsageChart";
 import { Icon } from "@/components/common/Icon";
-import { products, orders } from "@/lib/constants";
 import { OrderTable } from "./OrderTable";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { Product } from "@/features/catalog/domain/entities/Product";
+import type { Order } from "@/features/order/domain/entities/Order";
+
+interface OverviewProps {
+  products: Product[];
+  orders: Order[];
+}
 
 /**
  *
  */
-export const Overview: React.FC = () => {
+export const Overview: React.FC<OverviewProps> = ({ products, orders }) => {
   const t = useTranslations();
 
   const totalRevenue = orders.reduce(

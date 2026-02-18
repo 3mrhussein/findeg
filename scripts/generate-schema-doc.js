@@ -1,7 +1,10 @@
 import fs from "fs";
 import path from "path";
 
-const SCHEMA_DIR = path.join(process.cwd(), "src/infrastructure/database/schema");
+const SCHEMA_DIR_CANDIDATES = [
+  path.join(process.cwd(), "src/features/core/infrastructure/persistence/schema"),
+  path.join(process.cwd(), "src/infrastructure/database/schema"),
+];
 const OUTPUT_PATH = path.join(process.cwd(), "docs/database/SCHEMA.md");
 
 const TYPE_MAP = {
@@ -34,13 +37,22 @@ function extractBlock(content, startIndex) {
  *
  */
 function generateERDiagram() {
-  const files = fs.readdirSync(SCHEMA_DIR).filter((f) => f.endsWith(".ts") && f !== "index.ts");
+  const schemaDir = SCHEMA_DIR_CANDIDATES.find((candidate) => fs.existsSync(candidate));
+  if (!schemaDir) {
+    throw new Error(
+      `Schema directory not found. Tried: ${SCHEMA_DIR_CANDIDATES.map((dir) => `\"${dir}\"`).join(", ")}`,
+    );
+  }
+
+  console.log(`Using schema directory: ${path.relative(process.cwd(), schemaDir)}`);
+
+  const files = fs.readdirSync(schemaDir).filter((f) => f.endsWith(".ts") && f !== "index.ts");
   const tableData = {};
   const relationsList = new Set();
   const variableToTable = {};
 
   files.forEach((file) => {
-    const content = fs.readFileSync(path.join(SCHEMA_DIR, file), "utf-8");
+    const content = fs.readFileSync(path.join(schemaDir, file), "utf-8");
 
     // find all pgTable occurrences
     const pgTableMatchRaw = /export const (\w+) = pgTable\s*\(\s*"([^"]+)"\s*,\s*\{/g;

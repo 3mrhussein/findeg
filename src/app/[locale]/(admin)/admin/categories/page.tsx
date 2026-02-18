@@ -3,14 +3,16 @@ import { CategoryTable } from "./CategoryTable";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Plus } from "lucide-react";
+import { resolveLocale } from "@/features/core/domain/value-objects";
 
 /**
  *
  */
 export default async function CategoriesPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
+  const resolvedLocale = resolveLocale(locale);
   const { adminCategory } = getServices();
-  const categories = await adminCategory.getAll(locale);
+  const categories = await adminCategory.getAll(resolvedLocale);
 
   return (
     <div className="flex-1 space-y-4 p-8 pt-6">

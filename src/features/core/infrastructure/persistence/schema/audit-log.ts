@@ -7,7 +7,7 @@
 
 import { pgTable, serial, text, integer, jsonb, timestamp } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
-// Removed: import { users } from "./users";
+import { users } from "./users";
 
 /**
  * Audit Log Table
@@ -21,7 +21,7 @@ import { relations } from "drizzle-orm";
  */
 export const auditLog = pgTable("audit_log", {
   id: serial("id").primaryKey(),
-  adminUserId: integer("admin_user_id"), // Removed direct .references(() => users.id)
+  adminUserId: integer("admin_user_id").references(() => users.id, { onDelete: "set null" }),
   entityType: text("entity_type").notNull(),
   entityId: text("entity_id").notNull(),
   action: text("action").notNull(),
@@ -30,7 +30,13 @@ export const auditLog = pgTable("audit_log", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-// relations will be defined in users.ts to break circular dependency
+export const auditLogRelations = relations(auditLog, ({ one }) => ({
+  adminUser: one(users, {
+    fields: [auditLog.adminUserId],
+    references: [users.id],
+    relationName: "user_audit_logs",
+  }),
+}));
 
 /**
  * Type Exports

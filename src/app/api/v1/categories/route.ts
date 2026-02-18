@@ -1,12 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { container } from "@/features/core/infrastructure/di/ServiceContainer";
+import { resolveLocale } from "@/features/core/domain/value-objects";
 
 /**
  *
  */
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const language = searchParams.get("lang") || "en";
+  const language = resolveLocale(searchParams.get("lang"));
   const type = searchParams.get("type"); // 'tree', 'flat', 'roots'
 
   let data;

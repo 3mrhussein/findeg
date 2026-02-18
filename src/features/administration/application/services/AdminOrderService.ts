@@ -7,6 +7,17 @@ import {
 import { IAuditLogService } from "../interfaces/IAuditLogService";
 import { Order } from "@/features/order/domain/entities/Order";
 import { OrderStatusUpdate } from "../../domain/types/OrderStatusUpdate";
+import { PaymentStatus } from "@/features/core/domain/types/common";
+import {
+  canTransitionOrderStatus,
+  getAllowedOrderStatusTransitions,
+  normalizeOrderStatus,
+} from "@/features/order/application/utils/order-status-transitions";
+import {
+  canTransitionPaymentStatus,
+  getAllowedPaymentStatusTransitions,
+  normalizePaymentStatus,
+} from "@/features/order/application/utils/order-payment-status-transitions";
 
 /**
  * Admin Order Service
@@ -60,6 +71,18 @@ export class AdminOrderService implements IAdminOrderService {
       throw new Error(`Order #${id} not found`);
     }
 
+    const currentStatus = normalizeOrderStatus(order.status);
+    const nextStatus = normalizeOrderStatus(update.status);
+    const isValidTransition = canTransitionOrderStatus(currentStatus, nextStatus);
+
+    if (!isValidTransition) {
+      const allowedTargets = getAllowedOrderStatusTransitions(currentStatus);
+      const allowedList = allowedTargets.length > 0 ? allowedTargets.join(", ") : "none";
+      throw new Error(
+        `Invalid status transition from ${currentStatus} to ${nextStatus}. Allowed: ${allowedList}.`,
+      );
+    }
+
     await this.orderRepository.updateStatusWithTracking(id as any, update);
 
     await this.auditLogService.logAction({
@@ -83,13 +106,24 @@ export class AdminOrderService implements IAdminOrderService {
    * @param status - The new payment status string.
    * @throws Error if the order is not found.
    */
-  async updatePaymentStatus(id: ID | string, status: string): Promise<void> {
+  async updatePaymentStatus(id: ID | string, status: PaymentStatus): Promise<void> {
     const order = await this.orderRepository.getById(id as any);
     if (!order) {
       throw new Error(`Order #${id} not found`);
     }
 
-    const oldStatus = order.paymentStatus;
+    const oldStatus = normalizePaymentStatus(order.paymentStatus);
+    const nextStatus = normalizePaymentStatus(status);
+    const isValidTransition = canTransitionPaymentStatus(oldStatus, nextStatus);
+
+    if (!isValidTransition) {
+      const allowedTargets = getAllowedPaymentStatusTransitions(oldStatus);
+      const allowedList = allowedTargets.length > 0 ? allowedTargets.join(", ") : "none";
+      throw new Error(
+        `Invalid payment status transition from ${oldStatus} to ${nextStatus}. Allowed: ${allowedList}.`,
+      );
+    }
+
     await this.orderRepository.updatePaymentStatus(id as any, status);
 
     await this.auditLogService.logAction({
@@ -97,7 +131,7 @@ export class AdminOrderService implements IAdminOrderService {
       entityId: String(id),
       action: "update_payment_status",
       oldValues: { paymentStatus: oldStatus },
-      newValues: { paymentStatus: status },
+      newValues: { paymentStatus: nextStatus },
     });
   }
 

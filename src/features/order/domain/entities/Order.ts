@@ -1,4 +1,14 @@
-import { ID, Price, Sku, Quantity, Email } from "@/features/core/domain/types/common";
+import {
+  ID,
+  Price,
+  Sku,
+  Quantity,
+  Email,
+  OrderStatus,
+  PaymentMethod,
+  PaymentStatus,
+} from "@/features/core/domain/types/common";
+import type { CurrencyCode } from "@/features/core/domain/value-objects";
 import type { ShippingAddress, VariantSnapshot } from "../value-objects";
 
 /**
@@ -44,9 +54,9 @@ export interface Order {
   /** Email used for guest checkout */
   guestEmail?: Email;
   /** Current logistics status */
-  status: string;
+  status: OrderStatus;
   /** Current financial status */
-  paymentStatus?: string;
+  paymentStatus?: PaymentStatus;
   /** Sum of all order item prices */
   subtotal?: Price;
   /** Shipping and handling fees */
@@ -54,9 +64,9 @@ export interface Order {
   /** Final amount charged (subtotal + shippingCost) */
   totalAmount?: Price;
   /** ISO currency code (e.g., 'EGP') */
-  currency?: string;
+  currency?: CurrencyCode;
   /** Method of payment (e.g., 'COD', 'Card') */
-  paymentMethod?: string;
+  paymentMethod?: PaymentMethod;
   /** Delivery address details captured at time of checkout */
   shippingAddressSnapshot?: ShippingAddress;
   /** Courier tracking reference */

@@ -199,7 +199,7 @@ src/
 
 **Organization Principles:**
 
-- **Features:** Each feature has `domain/`, `application/`, `infrastructure/`, `ui/`.
+- **Features:** Each feature has `domain/`, `application/`, `infrastructure/`, and `presentation/` (legacy modules may still use `ui/`).
 - **Core:** Shared cross-cutting concerns (auth, DB, layout). shadcn primitives stay at `src/components/ui/`.
 - **Reusability:** Shared code in core; features depend on core.
 - **Readability:** All catalog-related code lives in `features/catalog/`.
@@ -251,6 +251,7 @@ const t = useTranslations();
 | **Build**       | `npm run build` | Create production build                         |
 | **Start**       | `npm run start` | Run production server                           |
 | **Lint**        | `npm run lint`  | Run ESLint                                      |
+| **Changelog**   | `npm run changelog` | Generate `CHANGELOG.md` from git commits   |
 
 ---
 
@@ -288,6 +289,7 @@ const t = useTranslations();
 
 - **[Development Guide](docs/guides/DEVELOPMENT.md)** - Step-by-step feature implementation & setup.
 - **[Implementation Standards](docs/guides/IMPLEMENTATION_STANDARDS.md)** - Clean architecture implementation checklist and layer-specific coding standards.
+- **[Changelog Automation](docs/guides/CHANGELOG_AUTOMATION.md)** - How to generate, preview, and validate `CHANGELOG.md`.
 - **[Scaling Standards](docs/guides/SCALING.md)** - How to grow the codebase maintainably.
 - **[Static Content Guide](docs/guides/STATIC_CONTENT.md)** - Managing page-scoped UI text and i18n.
 - **[Logging Guide](docs/guides/LOGGING.md)** - Understanding the multi-tiered logging architecture.
@@ -328,22 +330,28 @@ const t = useTranslations();
 ## 🧪 Testing
 
 ```bash
-# Run tests (when implemented)
-npm run test
+# Type checks
+npm run type-check
+npm run type-check:e2e
 
-# Run tests in watch mode
-npm run test:watch
+# Local E2E (human-readable output)
+npm run e2e:run
+
+# CI E2E (JUnit XML output)
+npm run e2e:run:ci
 ```
+
+`e2e:run` and `e2e:run:ci` execute through `scripts/run-e2e-and-post-seed.js`, which re-seeds the database after the run to keep local state clean for the next execution.
 
 ---
 
 ## 📝 Contributing
 
-1. **Follow Atomic Design** - Place components in correct folders
-2. **Server Components First** - Only use Client Components when needed
-3. **Type Everything** - Define interfaces for all props
-4. **Use Constants** - Store mock data in `lib/constants.ts`
-5. **Extract Logic** - Create hooks for reusable logic
+1. **Respect DDD/Clean Architecture boundaries** - Keep domain/application/infrastructure/presentation responsibilities separated.
+2. **Server Components First** - Use Client Components only when interaction/state requires it.
+3. **Type Everything** - Keep contracts explicit across services, repositories, and route boundaries.
+4. **Constants-First in Cypress** - Reuse `cypress/support/constants/*` instead of duplicating route/messages/test strings.
+5. **Keep docs in sync** - Update planning/test docs and run `npm run changelog` when delivery history changes.
 
 ---
 

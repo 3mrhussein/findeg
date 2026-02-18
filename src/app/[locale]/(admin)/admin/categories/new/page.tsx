@@ -1,6 +1,7 @@
 import { getServices } from "@/server/getServices";
 import { CategoryForm } from "../CategoryForm";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { resolveLocale } from "@/features/core/domain/value-objects";
 
 /**
  *
@@ -11,8 +12,9 @@ export default async function CreateCategoryPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  const resolvedLocale = resolveLocale(locale);
   const { categories } = getServices();
-  const allCategories = await categories.getAll(locale);
+  const allCategories = await categories.getAll(resolvedLocale);
 
   // Transform for select
   const categoryOptions = allCategories.map((c) => ({

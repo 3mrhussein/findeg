@@ -1,17 +1,18 @@
-import { useTranslations } from "next-intl";
-
 import { usePagination } from "@/hooks";
-import { orders as allOrders } from "@/lib/constants";
 import { OrderTable } from "./OrderTable";
 import { Pagination } from "@/components/common/Pagination";
 import { Card, CardContent } from "@/components/ui/card";
+import type { Order } from "@/features/order/domain/entities/Order";
+
+interface OrdersProps {
+  orders: Order[];
+}
 
 /**
  *
  */
-export const Orders: React.FC = () => {
-  const t = useTranslations();
-  const { currentPage, totalPages, currentPageData, setCurrentPage } = usePagination(allOrders, 10);
+export const Orders: React.FC<OrdersProps> = ({ orders }) => {
+  const { currentPage, totalPages, currentPageData, setCurrentPage } = usePagination(orders, 10);
 
   return (
     <>

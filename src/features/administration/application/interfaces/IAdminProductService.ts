@@ -7,17 +7,18 @@
 
 import { Product } from "@/features/catalog/domain/entities/Product";
 import { ProductInput } from "@/features/administration/domain/types";
+import type { Locale } from "@/features/core/domain/value-objects";
 
 export interface IAdminProductService {
   /**
    * Retrieves all products for administrative listing.
    */
-  getAll(language?: string): Promise<Product[]>;
+  getAll(language?: Locale): Promise<Product[]>;
 
   /**
    * Retrieves a single product by ID.
    */
-  getById(id: number, language?: string): Promise<Product | null>;
+  getById(id: number, language?: Locale): Promise<Product | null>;
 
   /**
    * Retrieves a product including all its translations for editing.

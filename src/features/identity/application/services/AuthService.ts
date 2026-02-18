@@ -99,12 +99,17 @@ export class AuthService implements IAuthService {
       }
 
       // Hash password
-      const passwordHash = await bcrypt.hash(input.password, 10);
+      const password = await bcrypt.hash(input.password, 10);
+      const displayName = [input.firstName, input.lastName].filter(Boolean).join(" ").trim();
 
       // Create user
       const user = await this.userRepository.create({
-        ...input,
-        passwordHash,
+        email: input.email,
+        firstName: input.firstName,
+        lastName: input.lastName,
+        name: displayName || undefined,
+        phone: input.phone,
+        password,
         role: "user",
       } as any);
 

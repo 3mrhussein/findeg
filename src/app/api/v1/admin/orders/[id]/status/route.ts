@@ -21,6 +21,10 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       const body = await request.json();
       const { status, trackingNumber, adminNotes } = body;
 
+      if (!Number.isFinite(id)) {
+        return apiError("Invalid order id", 400);
+      }
+
       if (!status) {
         return apiError("Status is required", 400);
       }
@@ -34,6 +38,15 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
 
       return apiResponse(order);
     } catch (error) {
+      if (error instanceof Error) {
+        if (error.message.includes("Invalid status transition")) {
+          return apiError(error.message, 400);
+        }
+        if (error.message.includes("not found")) {
+          return apiError(error.message, 404);
+        }
+      }
+
       return apiError(
         error instanceof Error ? error.message : "Failed to update order status",
         500,

@@ -37,6 +37,10 @@ export interface ICartService {
     input: {
       productId: ID;
       quantity: Quantity;
+      name?: string;
+      price?: Price;
+      images?: string[];
+      categoryName?: string;
       variant?: VariantSnapshot;
       variantKey?: string;
       uomCode?: UomCode;

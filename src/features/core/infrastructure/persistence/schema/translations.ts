@@ -3,6 +3,7 @@
  */
 
 import { pgTable, serial, text, timestamp, primaryKey } from "drizzle-orm/pg-core";
+import type { Locale } from "@/features/core/domain/value-objects";
 
 /**
  * Translations Table
@@ -13,7 +14,7 @@ export const translations = pgTable(
   "translations",
   {
     key: text("key").notNull(),
-    language: text("language").notNull(),
+    language: text("language").$type<Locale>().notNull(),
     value: text("value").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),

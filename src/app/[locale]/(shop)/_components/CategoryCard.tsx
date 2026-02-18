@@ -1,39 +1,27 @@
-/**
- * Category Card Molecule (Server Component)
- */
-
-import React from "react";
-import Image from "next/image";
-import { Category } from "@/features/catalog/domain/entities/Category";
+import Link from "next/link";
+import type { Category } from "@/features/catalog/domain/entities/Category";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface CategoryCardProps {
   category: Category;
+  countLabel?: string;
 }
 
 /**
  *
  */
-export const CategoryCard: React.FC<CategoryCardProps> = ({ category }) => {
+export function CategoryCard({ category, countLabel }: CategoryCardProps) {
   return (
-    <div className="group relative overflow-hidden rounded-xl shadow-lg transform hover:-translate-y-2 transition-all duration-300">
-      {category.image && (
-        <Image
-          src={category.image}
-          alt={category.name}
-          width={600}
-          height={320}
-          className="w-full h-80 object-cover group-hover:scale-110 transition-transform duration-500"
-        />
-      )}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-      <div className="absolute bottom-0 left-0 p-8 w-full">
-        <h3 className="text-2xl font-bold text-white mb-2">{category.name}</h3>
-        {category.description && (
-          <p className="text-white/80 line-clamp-2 transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-            {category.description}
+    <Link href={`/categories/${category.slug}`} data-testid={`category-card-${category.slug}`}>
+      <Card className="transition-shadow hover:shadow-md">
+        <CardContent className="space-y-2 p-6">
+          <h3 className="text-xl font-semibold">{category.name}</h3>
+          <p className="text-sm text-muted-foreground">
+            {category.description || "Browse products"}
           </p>
-        )}
-      </div>
-    </div>
+          {countLabel ? <p className="text-xs text-muted-foreground">{countLabel}</p> : null}
+        </CardContent>
+      </Card>
+    </Link>
   );
-};
+}

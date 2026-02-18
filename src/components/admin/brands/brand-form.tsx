@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Form,
@@ -25,7 +24,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { createBrandAction, updateBrandAction } from "@/features/catalog/application/actions/brand";
-import { Loader2, Plus } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import type { Brand } from "@/features/catalog/domain/entities/Brand";
 import { BrandInputSchema, type BrandInput } from "@/features/administration/domain/types";
 import { useRouter } from "next/navigation";
@@ -56,6 +55,16 @@ export function BrandForm({ brand, open, onOpenChange }: BrandFormProps) {
       isActive: brand?.isActive ?? true,
     },
   });
+
+  useEffect(() => {
+    if (!open) return;
+    form.reset({
+      name: brand?.name || "",
+      slug: brand?.slug || "",
+      logoUrl: brand?.logoUrl || "",
+      isActive: brand?.isActive ?? true,
+    });
+  }, [open, brand, form]);
 
   /**
    *
@@ -117,6 +126,7 @@ export function BrandForm({ brand, open, onOpenChange }: BrandFormProps) {
                     <Input
                       placeholder="Brand Name"
                       {...field}
+                      data-testid="admin-brand-name"
                       onChange={(e) => {
                         field.onChange(e);
                         // Auto-generate slug if creating new
@@ -141,10 +151,10 @@ export function BrandForm({ brand, open, onOpenChange }: BrandFormProps) {
               name="slug"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Slug</FormLabel>
-                  <FormControl>
-                    <Input placeholder="brand-slug" {...field} />
-                  </FormControl>
+                <FormLabel>Slug</FormLabel>
+                <FormControl>
+                    <Input placeholder="brand-slug" {...field} data-testid="admin-brand-slug" />
+                </FormControl>
                   <FormDescription>URL-friendly identifier.</FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -155,10 +165,14 @@ export function BrandForm({ brand, open, onOpenChange }: BrandFormProps) {
               name="logoUrl"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Logo URL</FormLabel>
-                  <FormControl>
-                    <Input placeholder="https://..." {...field} />
-                  </FormControl>
+                <FormLabel>Logo URL</FormLabel>
+                <FormControl>
+                    <Input
+                      placeholder="https://..."
+                      {...field}
+                      data-testid="admin-brand-logo-url"
+                    />
+                </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -169,7 +183,11 @@ export function BrandForm({ brand, open, onOpenChange }: BrandFormProps) {
               render={({ field }) => (
                 <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
                   <FormControl>
-                    <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      data-testid="admin-brand-active"
+                    />
                   </FormControl>
                   <div className="space-y-1 leading-none">
                     <FormLabel>Active</FormLabel>
@@ -179,7 +197,7 @@ export function BrandForm({ brand, open, onOpenChange }: BrandFormProps) {
               )}
             />
             <DialogFooter>
-              <Button type="submit" disabled={loading}>
+              <Button type="submit" disabled={loading} data-testid="admin-brand-submit">
                 {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Save
               </Button>

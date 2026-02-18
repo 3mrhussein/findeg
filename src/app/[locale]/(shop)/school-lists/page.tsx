@@ -1,32 +1,17 @@
-import type { Metadata } from "next";
-import { Locale } from "next-intl";
-import { getTranslations, setRequestLocale } from "next-intl/server";
-import SchoolListsTemplate from "./SchoolListsTemplate";
-import { buildPageMetadata } from "../_lib/metadata";
+import { redirect } from "next/navigation";
 
-type Props = {
-  params: Promise<{ locale: Locale }>;
-};
-
-/**
- * SEO metadata for the optional school-list flow.
- */
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "Seo.SchoolLists" });
-  return buildPageMetadata({
-    title: t("Title"),
-    description: t("Description"),
-    robots: { index: true, follow: true },
-  });
+interface SchoolListsAliasPageProps {
+  searchParams: Promise<{ code?: string }>;
 }
 
 /**
  *
  */
-export default async function Page({ params }: Props) {
-  const { locale } = await params;
-  setRequestLocale(locale);
+export default async function SchoolListsAliasPage({ searchParams }: SchoolListsAliasPageProps) {
+  const { code } = await searchParams;
+  if (code) {
+    redirect(`/school?code=${encodeURIComponent(code)}`);
+  }
 
-  return <SchoolListsTemplate />;
+  redirect("/school");
 }
