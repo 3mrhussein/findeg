@@ -1,5 +1,6 @@
 import { SignJWT, jwtVerify } from "jose";
 import type { SessionPayload } from "@/features/core/domain/auth";
+import { isAdminSession } from "@/features/core/domain/auth/authorization";
 import type { ISessionManager } from "@/features/core/application/interfaces/ISessionManager";
 import type { UserRole } from "@/features/core/domain/types/common";
 import { AUTH_CONSTANTS } from "@/features/core/domain/constants/auth";
@@ -34,14 +35,20 @@ export class JwtSessionManager implements ISessionManager {
 
       const { payload } = await jwtVerify(token, this.JWT_SECRET);
 
-      if (!payload.userId || !payload.email || !payload.role) {
+      if (!payload.userId || !payload.role || !payload.user) {
         return null;
       }
 
       return {
         userId: payload.userId as number,
-        email: payload.email as string,
         role: payload.role as UserRole,
+        user: payload.user as SessionPayload["user"],
+        subjectId: payload.subjectId as string | undefined,
+        actorType: payload.actorType as SessionPayload["actorType"],
+        activeRoleIds: payload.activeRoleIds as string[] | undefined,
+        permissionCodes: payload.permissionCodes as string[] | undefined,
+        organizationId: payload.organizationId as string | undefined,
+        tokenVersion: payload.tokenVersion as number | undefined,
       };
     } catch {
       return null;
@@ -52,7 +59,7 @@ export class JwtSessionManager implements ISessionManager {
    * Checks if user has admin role
    */
   authorizeAdmin(session: SessionPayload): boolean {
-    return session.role === "admin";
+    return isAdminSession(session);
   }
 
   /**

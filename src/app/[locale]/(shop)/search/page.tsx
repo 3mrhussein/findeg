@@ -1,12 +1,12 @@
-import { Container } from "@/components/layout/Container";
+import { Container } from "@/components/shared/Container";
 import { getTranslations } from "next-intl/server";
 import type { Locale } from "next-intl";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { SectionStateEmpty } from "@/components/common/state/SectionStateEmpty";
-import { FilterSidebar } from "@/features/catalog/presentation/components/FilterSidebar";
-import { ShopSortSelect } from "@/features/catalog/presentation/components/ShopSortSelect";
-import { ShopPaginatedResults } from "@/features/catalog/presentation/components/ShopPaginatedResults";
+import { SectionStateEmpty } from "@/components/shared/state/SectionStateEmpty";
+import { FilterSidebar } from "../_components/FilterSidebar";
+import { ShopSortSelect } from "../_components/ShopSortSelect";
+import { ShopPaginatedResults } from "../_components/ShopPaginatedResults";
 import { getSearchPageViewModel } from "@/features/catalog/application/queries/search-page";
 import {
   Sheet,
@@ -122,7 +122,7 @@ export default async function SearchPage({ params, searchParams }: SearchPagePro
             </div>
 
             <aside
-              className="hidden md:block w-64 flex-shrink-0"
+              className="hidden md:block w-64 shrink-0"
               aria-label={t("Pages.Shop.FiltersTitle")}
             >
               <FilterSidebar

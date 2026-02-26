@@ -1,6 +1,6 @@
 import { Hero } from "./_components/ShopHero";
 import { CategoryCard } from "./_components/CategoryCard";
-import { Container } from "@/components/layout/Container";
+import { Container } from "@/components/shared/Container";
 import { AdBanner } from "./_components/AdBanner";
 import { ScrollingLogoCloud } from "./_components/ScrollingLogoCloud";
 import { getTranslations } from "next-intl/server";
@@ -9,8 +9,8 @@ import { getHomePageData } from "@/features/catalog/application/queries/storefro
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { buildHomeFeaturedGroups } from "@/features/catalog/application/queries/home-page";
-import { HomeFeaturedTabs } from "@/features/catalog/presentation/components/HomeFeaturedTabs";
-import { Link } from "@/i18n/navigation";
+import { HomeFeaturedTabs } from "./_components/HomeFeaturedTabs";
+import { Link } from "@/i18n/routing";
 
 /**
  * HomePage Template (Server Component)

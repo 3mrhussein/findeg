@@ -52,6 +52,9 @@ export function canTransitionOrderStatus(from: OrderStatus, to: OrderStatus): bo
   return getAllowedOrderStatusTransitions(from).includes(to);
 }
 
+/**
+ *
+ */
 export function getOrderStatusLabel(status: OrderStatus): string {
   return ORDER_STATUS_LABELS[status];
 }

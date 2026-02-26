@@ -9,6 +9,8 @@
 import { apiErrorByCode } from "./api-response";
 import { JwtSessionManager } from "@/features/core/infrastructure/auth/JwtSessionManager";
 import type { SessionPayload } from "@/features/core/domain/auth";
+import { hasPermission } from "@/features/core/domain/auth";
+import type { PermissionCode } from "@/features/core/domain/value-objects";
 
 const sessionManager = new JwtSessionManager();
 
@@ -54,11 +56,17 @@ export async function withAuth(
 /**
  * Admin authorization middleware
  *
- * Validates JWT token AND verifies user has admin role.
- * Returns 401 if not authenticated, 403 if not admin.
+ * Validates JWT token and enforces privileged access.
+ *
+ * Behavior:
+ * - If `requiredPermission` is provided, authorization is permission-based.
+ * - If omitted, falls back to admin-session authorization.
+ *
+ * Returns 401 if not authenticated, 403 if not authorized.
  *
  * @param request - Request object
  * @param handler - Route handler function that receives auth context
+ * @param requiredPermission - Optional permission code required for access
  * @returns Response from handler or 401/403 error
  *
  * @example
@@ -67,20 +75,42 @@ export async function withAuth(
  *   return withAdmin(request, async (context) => {
  *     await deleteProduct(id);
  *     return apiResponse({ success: true });
- *   });
+ *   }, PERMISSION_CODES.ADMIN_PRODUCTS_WRITE);
  * }
  * ```
  */
 export async function withAdmin(
   request: Request,
   handler: (context: AuthContext) => Promise<Response>,
+  requiredPermission?: PermissionCode,
 ): Promise<Response> {
   return withAuth(request, async (context) => {
+    if (requiredPermission) {
+      if (!hasPermission(context.user, requiredPermission)) {
+        return apiErrorByCode("AUTH_ADMIN_REQUIRED");
+      }
+      return handler(context);
+    }
+
     if (!sessionManager.authorizeAdmin(context.user)) {
       return apiErrorByCode("AUTH_ADMIN_REQUIRED");
     }
+
     return handler(context);
   });
+}
+
+/**
+ * Permission authorization middleware.
+ *
+ * Validates authenticated admin session and required permission code.
+ */
+export async function withPermission(
+  request: Request,
+  requiredPermission: PermissionCode,
+  handler: (context: AuthContext) => Promise<Response>,
+): Promise<Response> {
+  return withAdmin(request, handler, requiredPermission);
 }
 
 /**

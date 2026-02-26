@@ -18,7 +18,7 @@ export async function getDashboardDataOrRedirect(locale: string): Promise<Dashbo
   const session = await auth.getSession();
 
   if (!session?.userId) {
-    redirect("/registration");
+    redirect("/login");
   }
 
   const [allProducts, userOrders] = await Promise.all([

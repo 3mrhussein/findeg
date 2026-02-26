@@ -1,4 +1,5 @@
 import { UserRole } from "../types/common";
+import type { SessionPayload } from "./SessionPayload";
 
 /**
  * Result of an authentication attempt (login or registration).
@@ -16,5 +17,9 @@ export interface AuthResult {
     lastName?: string;
     phone?: string;
     role: UserRole;
+    activeRoleIds?: SessionPayload["activeRoleIds"];
+    permissionCodes?: SessionPayload["permissionCodes"];
+    actorType?: SessionPayload["actorType"];
+    organizationId?: SessionPayload["organizationId"];
   };
 }

@@ -1,6 +1,6 @@
 import React from "react";
-import { Sidebar } from "@/components/layout/Sidebar";
-import { Topbar } from "@/components/layout/Topbar";
+import { Sidebar } from "./_components/Sidebar";
+import { Topbar } from "./_components/Topbar";
 
 /**
  * Dashboard Layout

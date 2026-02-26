@@ -23,11 +23,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { products } from "./products";
-import type {
-  CurrencyCode,
-  CustomerGroup,
-  UomCode,
-} from "@/features/core/domain/types/common";
+import type { CurrencyCode, CustomerGroup, UomCode } from "@/features/core/domain/types/common";
 
 /**
  * variant_sellable_uoms

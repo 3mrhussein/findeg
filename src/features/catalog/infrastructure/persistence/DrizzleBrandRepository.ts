@@ -1,4 +1,4 @@
-import { eq, desc, and } from "drizzle-orm";
+import { eq, desc, or, sql } from "drizzle-orm";
 import { ID, Slug } from "@/features/core/domain/types/common";
 import { db } from "@/features/core/infrastructure/persistence";
 import { brands } from "@/features/core/infrastructure/persistence/schema";
@@ -8,6 +8,12 @@ import {
   BrandUpdateInput,
 } from "../../application/interfaces/IBrandRepository";
 import { Brand } from "../../domain/entities/Brand";
+import {
+  DEFAULT_LOCALE,
+  resolveLocalizedString,
+  toLocalizedString,
+  type Locale,
+} from "@/features/core/domain/value-objects";
 
 type DbBrand = typeof brands.$inferSelect;
 
@@ -21,11 +27,30 @@ export class DrizzleBrandRepository implements IBrandRepository {
   /**
    * Maps a database Brand record to the domain Brand entity.
    */
-  private mapToDomain(dbBrand: DbBrand): Brand {
+  private mapToDomain(dbBrand: DbBrand, language: Locale = DEFAULT_LOCALE): Brand {
+    const localizedSlugDraft = (dbBrand.localizedSlug || {}) as Record<string, string>;
+    const localizedNameDraft = (dbBrand.localizedName || {}) as Record<string, string>;
+    const localizedContent = {
+      slug: toLocalizedString(
+        Object.keys(localizedSlugDraft).length > 0
+          ? localizedSlugDraft
+          : { en: dbBrand.slug, ar: dbBrand.slug },
+        dbBrand.slug,
+      ),
+      name: toLocalizedString(
+        Object.keys(localizedNameDraft).length > 0
+          ? localizedNameDraft
+          : { en: dbBrand.name, ar: dbBrand.name },
+        dbBrand.name,
+      ),
+    };
+
     return {
       id: dbBrand.id,
-      slug: dbBrand.slug as Slug,
-      name: dbBrand.name,
+      slug: resolveLocalizedString(localizedContent.slug, language, DEFAULT_LOCALE) as Slug,
+      name: resolveLocalizedString(localizedContent.name, language, DEFAULT_LOCALE),
+      locale: language,
+      localizedContent,
       logoUrl: dbBrand.logoUrl,
       isActive: dbBrand.isActive,
       createdAt: dbBrand.createdAt,
@@ -39,15 +64,14 @@ export class DrizzleBrandRepository implements IBrandRepository {
    * @param activeOnly - If true, returns only active brands
    * @returns Array of brands sorted by creation date (newest first)
    */
-  async getAll(activeOnly: boolean = false): Promise<Brand[]> {
-    const query = db.select().from(brands);
-
-    if (activeOnly) {
-      query.where(eq(brands.isActive, true));
-    }
-
-    const dbBrands = await query.orderBy(desc(brands.createdAt));
-    return dbBrands.map(this.mapToDomain);
+  async getAll(activeOnly: boolean = false, language: Locale = DEFAULT_LOCALE): Promise<Brand[]> {
+    const whereClause = activeOnly ? eq(brands.isActive, true) : undefined;
+    const dbBrands = await db
+      .select()
+      .from(brands)
+      .where(whereClause)
+      .orderBy(desc(brands.createdAt));
+    return dbBrands.map((brand) => this.mapToDomain(brand, language));
   }
 
   /**
@@ -56,9 +80,9 @@ export class DrizzleBrandRepository implements IBrandRepository {
    * @param id - Brand ID
    * @returns Brand entity or null if not found
    */
-  async getById(id: ID): Promise<Brand | null> {
+  async getById(id: ID, language: Locale = DEFAULT_LOCALE): Promise<Brand | null> {
     const result = await db.select().from(brands).where(eq(brands.id, id));
-    return result[0] ? this.mapToDomain(result[0]) : null;
+    return result[0] ? this.mapToDomain(result[0], language) : null;
   }
 
   /**
@@ -67,9 +91,12 @@ export class DrizzleBrandRepository implements IBrandRepository {
    * @param slug - Brand URL slug
    * @returns Brand entity or null if not found
    */
-  async getBySlug(slug: Slug): Promise<Brand | null> {
-    const result = await db.select().from(brands).where(eq(brands.slug, slug));
-    return result[0] ? this.mapToDomain(result[0]) : null;
+  async getBySlug(slug: Slug, language: Locale = DEFAULT_LOCALE): Promise<Brand | null> {
+    const result = await db
+      .select()
+      .from(brands)
+      .where(or(eq(brands.slug, slug), sql`${brands.localizedSlug} ->> ${language} = ${slug}`));
+    return result[0] ? this.mapToDomain(result[0], language) : null;
   }
 
   /**
@@ -79,8 +106,15 @@ export class DrizzleBrandRepository implements IBrandRepository {
    * @returns Created brand entity
    */
   async create(data: BrandCreateInput): Promise<Brand> {
-    const result = await db.insert(brands).values(data).returning();
-    return this.mapToDomain(result[0]);
+    const result = await db
+      .insert(brands)
+      .values({
+        ...data,
+        localizedSlug: { en: data.slug, ar: data.slug },
+        localizedName: { en: data.name, ar: data.name },
+      })
+      .returning();
+    return this.mapToDomain(result[0], DEFAULT_LOCALE);
   }
 
   /**
@@ -91,12 +125,20 @@ export class DrizzleBrandRepository implements IBrandRepository {
    * @returns Updated brand entity
    */
   async update(id: ID, data: BrandUpdateInput): Promise<Brand> {
+    const localizedSlug = data.slug ? { en: data.slug, ar: data.slug } : undefined;
+    const localizedName = data.name ? { en: data.name, ar: data.name } : undefined;
+
     const result = await db
       .update(brands)
-      .set({ ...data, updatedAt: new Date() })
+      .set({
+        ...data,
+        localizedSlug,
+        localizedName,
+        updatedAt: new Date(),
+      })
       .where(eq(brands.id, id))
       .returning();
-    return this.mapToDomain(result[0]);
+    return this.mapToDomain(result[0], DEFAULT_LOCALE);
   }
 
   /**

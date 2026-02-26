@@ -6,6 +6,7 @@
  */
 
 export * from "./users";
+export * from "./identity-access";
 export * from "./brands";
 export * from "./categories";
 export * from "./products";
@@ -15,3 +16,4 @@ export * from "./addresses";
 export * from "./audit-log";
 export * from "./server-logs";
 export * from "./variant-pricing";
+export * from "./translations";

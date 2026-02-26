@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { OrdersTable } from "@/components/admin/orders/orders-table";
+import { OrdersTable } from "./_components/orders-table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -30,12 +30,18 @@ const PAYMENT_STATUS_OPTIONS = [
   { value: "refunded", label: "Refunded" },
 ];
 
+/**
+ *
+ */
 function buildPageHref(page: number, query: URLSearchParams): string {
   const next = new URLSearchParams(query);
   next.set("page", String(page));
   return `?${next.toString()}`;
 }
 
+/**
+ *
+ */
 export default async function OrdersPage({ searchParams }: OrdersPageProps) {
   const params = await searchParams;
   const data = await getAdminOrdersPageData(params);

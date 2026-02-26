@@ -1,12 +1,7 @@
 import type { Category } from "@/features/catalog/domain/entities/Category";
 import type { Product } from "@/features/catalog/domain/entities/Product";
 
-export const LISTING_SORT_VALUES = [
-  "featured",
-  "price-asc",
-  "price-desc",
-  "rating-desc",
-] as const;
+export const LISTING_SORT_VALUES = ["featured", "price-asc", "price-desc", "rating-desc"] as const;
 
 export type ListingSort = (typeof LISTING_SORT_VALUES)[number];
 
@@ -47,7 +42,9 @@ export function toArray(value: string | string[] | undefined): string[] {
  */
 export function toUniqueArray(value: string | string[] | undefined): string[] {
   const seen = new Set<string>();
-  const normalized = toArray(value).map((entry) => entry.trim()).filter(Boolean);
+  const normalized = toArray(value)
+    .map((entry) => entry.trim())
+    .filter(Boolean);
   const unique: string[] = [];
 
   for (const entry of normalized) {
@@ -95,6 +92,9 @@ export function sanitizePriceRange(
   bounds: [number, number],
 ): [number, number] {
   const [boundMin, boundMax] = bounds[0] <= bounds[1] ? bounds : [bounds[1], bounds[0]];
+  /**
+   *
+   */
   const clamp = (value: number) => Math.min(Math.max(value, boundMin), boundMax);
   const min = clamp(range[0]);
   const max = clamp(range[1]);

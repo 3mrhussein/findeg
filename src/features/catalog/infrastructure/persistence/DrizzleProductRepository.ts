@@ -54,10 +54,16 @@ import {
 import {
   DEFAULT_CURRENCY,
   DEFAULT_LOCALE,
+  resolveLocalizedString,
+  resolvePricing,
   toLocalizedString,
   toMoney,
+  type DiscountRule,
   type CurrencyCode,
   type Locale,
+  type PersistedPricing,
+  type ResolvedPricing,
+  type ResponsiveMediaSet,
 } from "@/features/core/domain/value-objects";
 
 /**
@@ -68,6 +74,17 @@ import {
  * Implements complex queries for featured products, category/brand filtering, and low stock alerts.
  */
 export class DrizzleProductRepository implements IProductRepository {
+  /**
+   * Converts arbitrary text to URL-safe slug.
+   */
+  private toRouteSlug(value: string): string {
+    return value
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+  }
+
   /**
    * Resolves the materialized path for a category ID.
    */
@@ -91,44 +108,110 @@ export class DrizzleProductRepository implements IProductRepository {
     brandName?: string,
     images?: string[],
     variantCommercialConfig?: Record<string, ProductVariantCommercialConfig>,
+    requestedLocale: Locale = DEFAULT_LOCALE,
   ): Product {
     // If we have normalized images, use them. Otherwise fallback to JSON images
     const finalImages = images && images.length > 0 ? images : (dbProduct.images as string[]) || [];
+
+    const localizedSlugDraft = (dbProduct.localizedSlug || {}) as Record<string, string>;
+    const localizedNameDraft = (dbProduct.localizedName || {}) as Record<string, string>;
+    const localizedDescriptionDraft = (dbProduct.localizedDescription || {}) as Record<
+      string,
+      string
+    >;
+    const localizedLongDescriptionDraft = (dbProduct.localizedLongDescription || {}) as Record<
+      string,
+      string
+    >;
 
     const basePrice = Number(dbProduct.price) as Price;
     const strikePrice = dbProduct.strikePrice
       ? (Number(dbProduct.strikePrice) as Price)
       : undefined;
-    const localizedContent = translation
-      ? {
-          name: toLocalizedString(
-            { [translation.language]: translation.name },
-            translation.name || "Untitled Product",
-          ),
-          description: toLocalizedString(
-            { [translation.language]: translation.description },
-            translation.description || "",
-          ),
-          longDescription: toLocalizedString(
-            { [translation.language]: translation.longDescription },
-            translation.longDescription || "",
-          ),
-        }
-      : undefined;
+
+    const translationSlug =
+      translation?.name && this.toRouteSlug(translation.name)
+        ? this.toRouteSlug(translation.name)
+        : undefined;
+
+    const localizedContent = {
+      slug:
+        Object.keys(localizedSlugDraft).length > 0 || translationSlug
+          ? toLocalizedString(
+              Object.keys(localizedSlugDraft).length > 0
+                ? localizedSlugDraft
+                : translationSlug
+                  ? { [translation?.language || DEFAULT_LOCALE]: translationSlug }
+                  : undefined,
+              translationSlug || "",
+            )
+          : undefined,
+      name: toLocalizedString(
+        Object.keys(localizedNameDraft).length > 0
+          ? localizedNameDraft
+          : translation
+            ? { [translation.language]: translation.name }
+            : undefined,
+        translation?.name || "Untitled Product",
+      ),
+      description: toLocalizedString(
+        Object.keys(localizedDescriptionDraft).length > 0
+          ? localizedDescriptionDraft
+          : translation
+            ? { [translation.language]: translation.description }
+            : undefined,
+        translation?.description || "",
+      ),
+      longDescription: toLocalizedString(
+        Object.keys(localizedLongDescriptionDraft).length > 0
+          ? localizedLongDescriptionDraft
+          : translation
+            ? { [translation.language]: translation.longDescription }
+            : undefined,
+        translation?.longDescription || "",
+      ),
+    };
+
+    const priceMoney = toMoney(basePrice, DEFAULT_CURRENCY);
+    const strikePriceMoney = strikePrice ? toMoney(strikePrice, DEFAULT_CURRENCY) : undefined;
+    const pricing =
+      (dbProduct.pricing as PersistedPricing | null) ||
+      ({
+        base: priceMoney,
+        tiers: [],
+      } satisfies PersistedPricing);
+    const discountRules = (dbProduct.discountRules as DiscountRule[] | null) || [];
+    const computedPricing = resolvePricing(pricing, discountRules);
+    const resolvedPricing: ResolvedPricing = {
+      ...computedPricing,
+      strikePrice: computedPricing.strikePrice || strikePriceMoney,
+    };
 
     return {
       id: dbProduct.id,
       sku: dbProduct.sku || undefined,
-      name: translation?.name || "Untitled Product",
+      name: resolveLocalizedString(localizedContent.name, requestedLocale, DEFAULT_LOCALE),
       price: basePrice,
       strikePrice,
       currency: DEFAULT_CURRENCY,
-      priceMoney: toMoney(basePrice, DEFAULT_CURRENCY),
-      strikePriceMoney: strikePrice ? toMoney(strikePrice, DEFAULT_CURRENCY) : undefined,
-      description: translation?.description || "",
-      longDescription: translation?.longDescription || "",
-      locale: (translation?.language || DEFAULT_LOCALE) as Locale,
+      priceMoney,
+      strikePriceMoney,
+      pricing,
+      discountRules,
+      resolvedPricing,
+      description: resolveLocalizedString(
+        localizedContent.description,
+        requestedLocale,
+        DEFAULT_LOCALE,
+      ),
+      longDescription: resolveLocalizedString(
+        localizedContent.longDescription,
+        requestedLocale,
+        DEFAULT_LOCALE,
+      ),
+      locale: requestedLocale,
       localizedContent,
+      mediaSet: (dbProduct.mediaSet as ResponsiveMediaSet | null) || undefined,
       imageUrl: finalImages[0],
       images: finalImages,
       categoryId: dbProduct.categoryId || undefined,
@@ -263,6 +346,7 @@ export class DrizzleProductRepository implements IProductRepository {
       row.brand?.name,
       undefined,
       Object.keys(variantCommercialConfig).length > 0 ? variantCommercialConfig : undefined,
+      language,
     );
   }
 
@@ -313,6 +397,9 @@ export class DrizzleProductRepository implements IProductRepository {
         row.translation || undefined,
         row.categoryTrans?.name,
         row.brand?.name,
+        undefined,
+        undefined,
+        language,
       ),
     );
   }
@@ -356,6 +443,9 @@ export class DrizzleProductRepository implements IProductRepository {
         row.translation || undefined,
         row.categoryTrans?.name,
         row.brand?.name,
+        undefined,
+        undefined,
+        language,
       ),
     );
   }
@@ -395,6 +485,9 @@ export class DrizzleProductRepository implements IProductRepository {
         row.translation || undefined,
         row.categoryTrans?.name,
         row.brand?.name,
+        undefined,
+        undefined,
+        language,
       ),
     );
   }
@@ -403,6 +496,44 @@ export class DrizzleProductRepository implements IProductRepository {
    *
    */
   async search(query: string, language: Locale = DEFAULT_LOCALE): Promise<Product[]> {
+    const normalizedQuery = query.trim();
+    const searchPattern = `%${normalizedQuery}%`;
+    const whereConditions: any[] = [eq(products.isActive, true)];
+
+    if (normalizedQuery) {
+      whereConditions.push(
+        or(
+          ilike(productTranslations.name, searchPattern),
+          ilike(productTranslations.description, searchPattern),
+          ilike(
+            sql<string>`COALESCE(${products.localizedSlug} ->> ${language}, '')`,
+            searchPattern,
+          ),
+          ilike(
+            sql<string>`COALESCE(${products.localizedName} ->> ${language}, '')`,
+            searchPattern,
+          ),
+          ilike(
+            sql<string>`COALESCE(${products.localizedDescription} ->> ${language}, '')`,
+            searchPattern,
+          ),
+          ilike(
+            sql<string>`COALESCE(${products.localizedLongDescription} ->> ${language}, '')`,
+            searchPattern,
+          ),
+          ilike(productTranslations.longDescription, searchPattern),
+          ilike(
+            sql<string>`COALESCE(${categories.localizedName} ->> ${language}, '')`,
+            searchPattern,
+          ),
+          ilike(categoryTranslations.name, searchPattern),
+          ilike(sql<string>`COALESCE(${brands.localizedName} ->> ${language}, '')`, searchPattern),
+          ilike(brands.name, searchPattern),
+          ilike(products.sku, searchPattern),
+        ),
+      );
+    }
+
     const results = await db
       .select({
         product: products,
@@ -411,6 +542,7 @@ export class DrizzleProductRepository implements IProductRepository {
         brand: brands,
       })
       .from(products)
+      .leftJoin(categories, eq(categories.id, products.categoryId))
       .leftJoin(
         productTranslations,
         and(
@@ -426,16 +558,7 @@ export class DrizzleProductRepository implements IProductRepository {
         ),
       )
       .leftJoin(brands, eq(brands.id, products.brandId))
-      .where(
-        and(
-          eq(products.isActive, true),
-          or(
-            ilike(productTranslations.name, `%${query}%`),
-            ilike(productTranslations.description, `%${query}%`),
-            ilike(products.sku, `%${query}%`),
-          ),
-        ),
-      );
+      .where(and(...whereConditions));
 
     return results.map((row) =>
       this.mapToDomain(
@@ -443,6 +566,9 @@ export class DrizzleProductRepository implements IProductRepository {
         row.translation || undefined,
         row.categoryTrans?.name,
         row.brand?.name,
+        undefined,
+        undefined,
+        language,
       ),
     );
   }
@@ -479,13 +605,44 @@ export class DrizzleProductRepository implements IProductRepository {
     if (filters.maxPrice) conditions.push(lte(products.price, String(filters.maxPrice)));
 
     if (filters.search) {
-      conditions.push(
-        or(
-          ilike(productTranslations.name, `%${filters.search}%`),
-          ilike(productTranslations.description, `%${filters.search}%`),
-          ilike(products.sku, `%${filters.search}%`),
-        ),
-      );
+      const normalizedSearch = filters.search.trim();
+      if (normalizedSearch) {
+        const searchPattern = `%${normalizedSearch}%`;
+        conditions.push(
+          or(
+            ilike(productTranslations.name, searchPattern),
+            ilike(productTranslations.description, searchPattern),
+            ilike(
+              sql<string>`COALESCE(${products.localizedSlug} ->> ${language || DEFAULT_LOCALE}, '')`,
+              searchPattern,
+            ),
+            ilike(
+              sql<string>`COALESCE(${products.localizedName} ->> ${language || DEFAULT_LOCALE}, '')`,
+              searchPattern,
+            ),
+            ilike(
+              sql<string>`COALESCE(${products.localizedDescription} ->> ${language || DEFAULT_LOCALE}, '')`,
+              searchPattern,
+            ),
+            ilike(
+              sql<string>`COALESCE(${products.localizedLongDescription} ->> ${language || DEFAULT_LOCALE}, '')`,
+              searchPattern,
+            ),
+            ilike(productTranslations.longDescription, searchPattern),
+            ilike(
+              sql<string>`COALESCE(${categories.localizedName} ->> ${language || DEFAULT_LOCALE}, '')`,
+              searchPattern,
+            ),
+            ilike(categoryTranslations.name, searchPattern),
+            ilike(
+              sql<string>`COALESCE(${brands.localizedName} ->> ${language || DEFAULT_LOCALE}, '')`,
+              searchPattern,
+            ),
+            ilike(brands.name, searchPattern),
+            ilike(products.sku, searchPattern),
+          ),
+        );
+      }
     }
 
     const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
@@ -535,6 +692,14 @@ export class DrizzleProductRepository implements IProductRepository {
           eq(productTranslations.language, language || "en"),
         ),
       )
+      .leftJoin(
+        categoryTranslations,
+        and(
+          eq(categoryTranslations.categoryId, products.categoryId),
+          eq(categoryTranslations.language, language || "en"),
+        ),
+      )
+      .leftJoin(brands, eq(brands.id, products.brandId))
       .where(whereClause);
 
     return {
@@ -544,6 +709,9 @@ export class DrizzleProductRepository implements IProductRepository {
           row.translation || undefined,
           row.categoryTrans?.name,
           row.brand?.name,
+          undefined,
+          undefined,
+          language,
         ),
       ),
       total: totalResult[0]?.count || 0,
@@ -590,6 +758,9 @@ export class DrizzleProductRepository implements IProductRepository {
         row.translation || undefined,
         row.categoryTrans?.name,
         row.brand?.name,
+        undefined,
+        undefined,
+        language,
       ),
     );
   }
@@ -646,6 +817,19 @@ export class DrizzleProductRepository implements IProductRepository {
    */
   async create(input: ProductInput): Promise<Product> {
     return await db.transaction(async (tx) => {
+      const localizedSlug = Object.fromEntries(
+        (input.translations || []).map((t) => [t.language, this.toRouteSlug(t.name)]),
+      );
+      const localizedName = Object.fromEntries(
+        (input.translations || []).map((t) => [t.language, t.name]),
+      );
+      const localizedDescription = Object.fromEntries(
+        (input.translations || []).map((t) => [t.language, t.description]),
+      );
+      const localizedLongDescription = Object.fromEntries(
+        (input.translations || []).map((t) => [t.language, t.longDescription]),
+      );
+
       // Use explicit casting or any to satisfy Drizzle types for complex JSON/optional fields
       const dbValues: any = {
         price: String(input.price),
@@ -653,7 +837,20 @@ export class DrizzleProductRepository implements IProductRepository {
         categoryId: input.categoryId || null,
         brandId: input.brandId || null,
         sku: input.sku || null,
+        localizedSlug,
+        localizedName,
+        localizedDescription,
+        localizedLongDescription,
         images: input.images || [],
+        mediaSet: {},
+        pricing: {
+          base: {
+            amount: input.price,
+            currency: DEFAULT_CURRENCY,
+          },
+          tiers: [],
+        },
+        discountRules: [],
         isNew: input.isNew || false,
         isActive: input.isActive ?? true,
         stockQuantity: input.stockQuantity || 0,
@@ -689,6 +886,11 @@ export class DrizzleProductRepository implements IProductRepository {
               updatedAt: new Date(),
             }
           : undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        (firstTranslation?.language || DEFAULT_LOCALE) as Locale,
       );
     });
   }
@@ -698,6 +900,19 @@ export class DrizzleProductRepository implements IProductRepository {
    */
   async update(id: ID, input: ProductInput): Promise<Product> {
     return await db.transaction(async (tx) => {
+      const localizedSlug = Object.fromEntries(
+        (input.translations || []).map((t) => [t.language, this.toRouteSlug(t.name)]),
+      );
+      const localizedName = Object.fromEntries(
+        (input.translations || []).map((t) => [t.language, t.name]),
+      );
+      const localizedDescription = Object.fromEntries(
+        (input.translations || []).map((t) => [t.language, t.description]),
+      );
+      const localizedLongDescription = Object.fromEntries(
+        (input.translations || []).map((t) => [t.language, t.longDescription]),
+      );
+
       const [updated] = await tx
         .update(products)
         .set({
@@ -706,7 +921,18 @@ export class DrizzleProductRepository implements IProductRepository {
           categoryId: input.categoryId || null,
           brandId: input.brandId || null,
           sku: input.sku || null,
+          localizedSlug,
+          localizedName,
+          localizedDescription,
+          localizedLongDescription,
           images: input.images || [],
+          pricing: {
+            base: {
+              amount: input.price,
+              currency: DEFAULT_CURRENCY,
+            },
+            tiers: [],
+          },
           isNew: input.isNew || false,
           isActive: input.isActive ?? true,
           stockQuantity: input.stockQuantity ?? undefined, // Only update if provided
@@ -746,6 +972,11 @@ export class DrizzleProductRepository implements IProductRepository {
               updatedAt: new Date(),
             }
           : undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        (firstTranslation?.language || DEFAULT_LOCALE) as Locale,
       );
     });
   }

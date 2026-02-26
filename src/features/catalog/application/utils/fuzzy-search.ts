@@ -95,7 +95,9 @@ function scoreProduct(product: Product, normalizedQuery: string): number {
     } else if (haystack.includes(token)) {
       score += 14;
       tokenMatched = true;
-    } else if (Array.from(searchableTokens).some((candidate) => isCloseTokenMatch(token, candidate))) {
+    } else if (
+      Array.from(searchableTokens).some((candidate) => isCloseTokenMatch(token, candidate))
+    ) {
       score += 12;
       tokenMatched = true;
     }

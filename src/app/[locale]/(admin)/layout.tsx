@@ -1,6 +1,6 @@
 import { Suspense } from "react";
-import { Sidebar } from "./admin/_components/Sidebar";
-import { Topbar } from "./admin/_components/Topbar";
+import { Sidebar } from "./_components/Sidebar";
+import { Topbar } from "./_components/Topbar";
 
 /**
  *

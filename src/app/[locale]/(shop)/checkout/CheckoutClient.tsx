@@ -3,14 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/hooks/useCart";
-import { Container } from "@/components/layout/Container";
+import { Container } from "@/components/shared/Container";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useTranslations } from "next-intl";
-import { SectionStateEmpty } from "@/components/common/state/SectionStateEmpty";
+import { SectionStateEmpty } from "@/components/shared/state/SectionStateEmpty";
 import {
   useCheckoutForm,
   type CheckoutValidationError,

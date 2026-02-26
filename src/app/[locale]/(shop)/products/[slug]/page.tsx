@@ -1,9 +1,9 @@
-import { Container } from "@/components/layout/Container";
-import { ProductGallery } from "@/features/catalog/presentation/components/ProductGallery";
+import { Container } from "@/components/shared/Container";
+import { ProductGallery } from "./_components/ProductGallery";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Star, Truck, ShieldCheck } from "lucide-react";
-import { AddToCartButton } from "@/features/order/presentation/components/AddToCartButton";
+import { AddToCartButton } from "../../_components/AddToCartButton";
 import { notFound } from "next/navigation";
 import { getProductDetailPageData } from "@/features/catalog/application/queries/storefront";
 import { getTranslations } from "next-intl/server";

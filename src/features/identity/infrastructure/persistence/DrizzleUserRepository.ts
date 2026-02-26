@@ -1,10 +1,18 @@
 import { ID, Email, UserRole } from "@/features/core/domain/types/common";
 import { UserWithPassword } from "@/features/core/domain/auth";
 import { db } from "@/features/core/infrastructure/persistence";
-import { users, type User as DbUser } from "@/features/core/infrastructure/persistence/schema";
+import {
+  users,
+  userRoles,
+  roles,
+  rolePermissions,
+  permissions,
+  type User as DbUser,
+} from "@/features/core/infrastructure/persistence/schema";
 import { IUserRepository } from "../../application/interfaces/IUserRepository";
 import { User } from "../../domain/entities/User";
 import { eq } from "drizzle-orm";
+import type { PermissionCode, RoleId } from "@/features/core/domain/value-objects";
 
 /**
  * Drizzle User Repository
@@ -12,6 +20,69 @@ import { eq } from "drizzle-orm";
  * PostgreSQL implementation of user data access using Drizzle ORM.
  */
 export class DrizzleUserRepository implements IUserRepository {
+  /**
+   * Resolves role and permission context from RBAC tables for a user.
+   * Falls back safely if identity-access tables are not available yet.
+   */
+  async getAuthorizationContext(userId: ID): Promise<{
+    activeRoleIds: RoleId[];
+    permissionCodes: PermissionCode[];
+    organizationId?: string;
+  }> {
+    try {
+      const [roleRows, permissionRows] = await Promise.all([
+        db
+          .select({
+            roleCode: roles.code,
+            scope: userRoles.scope,
+            organizationId: userRoles.organizationId,
+          })
+          .from(userRoles)
+          .innerJoin(roles, eq(roles.id, userRoles.roleId))
+          .where(eq(userRoles.userId, userId)),
+        db
+          .select({
+            permissionCode: permissions.code,
+          })
+          .from(userRoles)
+          .innerJoin(rolePermissions, eq(rolePermissions.roleId, userRoles.roleId))
+          .innerJoin(permissions, eq(permissions.id, rolePermissions.permissionId))
+          .where(eq(userRoles.userId, userId)),
+      ]);
+
+      const activeRoleIds = Array.from(
+        new Set(
+          roleRows
+            .map((row) => row.roleCode?.trim())
+            .filter((value): value is string => Boolean(value)),
+        ),
+      ) as RoleId[];
+
+      const permissionCodes = Array.from(
+        new Set(
+          permissionRows
+            .map((row) => row.permissionCode?.trim())
+            .filter((value): value is string => Boolean(value)),
+        ),
+      ) as PermissionCode[];
+
+      const scopedRole = roleRows.find(
+        (row) => row.scope === "organization" && row.organizationId !== null,
+      );
+
+      return {
+        activeRoleIds,
+        permissionCodes,
+        organizationId: scopedRole?.organizationId ? String(scopedRole.organizationId) : undefined,
+      };
+    } catch {
+      return {
+        activeRoleIds: [],
+        permissionCodes: [],
+      };
+    }
+  }
+
   /**
    * Transforms a database user record into a clean Domain User entity.
    * Handles null/undefined fields and type conversions.

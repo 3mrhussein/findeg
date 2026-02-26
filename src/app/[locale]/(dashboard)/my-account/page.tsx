@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { logoutAction } from "@/features/identity/application/actions/auth";
-import { SectionStateEmpty } from "@/components/common/state/SectionStateEmpty";
+import { SectionStateEmpty } from "@/components/shared/state/SectionStateEmpty";
 import { Input } from "@/components/ui/input";
 import { updateMyProfileAction } from "@/features/identity/application/actions/profile";
 import { getMyAccountDataOrRedirect } from "@/features/identity/application/queries/my-account";

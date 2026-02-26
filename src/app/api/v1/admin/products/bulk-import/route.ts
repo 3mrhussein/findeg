@@ -9,6 +9,7 @@ import { NextRequest } from "next/server";
 import { apiResponse, apiError } from "../../../_lib/api-response";
 import { withAdmin } from "../../../_lib/middleware";
 import { getServices } from "@/server/getServices";
+import { PERMISSION_CODES } from "@/features/core/domain/auth";
 
 /**
  * Bulk import products (admin)
@@ -17,44 +18,48 @@ import { getServices } from "@/server/getServices";
  * @returns Import summary with success/error counts
  */
 export async function POST(request: NextRequest) {
-  return withAdmin(request, async () => {
-    try {
-      const body = await request.json();
-      const { products } = body;
+  return withAdmin(
+    request,
+    async () => {
+      try {
+        const body = await request.json();
+        const { products } = body;
 
-      if (!Array.isArray(products)) {
-        return apiError("Products must be an array", 400);
-      }
-
-      const { adminProduct } = getServices();
-
-      const results = {
-        total: products.length,
-        success: 0,
-        failed: 0,
-        errors: [] as string[],
-      };
-
-      for (const productData of products) {
-        try {
-          await adminProduct.create(productData);
-          results.success++;
-        } catch (error) {
-          results.failed++;
-          results.errors.push(
-            `Product ${productData.sku || "unknown"}: ${
-              error instanceof Error ? error.message : "Unknown error"
-            }`,
-          );
+        if (!Array.isArray(products)) {
+          return apiError("Products must be an array", 400);
         }
-      }
 
-      return apiResponse({
-        message: "Bulk import completed",
-        results,
-      });
-    } catch (error) {
-      return apiError(error instanceof Error ? error.message : "Bulk import failed", 500);
-    }
-  });
+        const { adminProduct } = getServices();
+
+        const results = {
+          total: products.length,
+          success: 0,
+          failed: 0,
+          errors: [] as string[],
+        };
+
+        for (const productData of products) {
+          try {
+            await adminProduct.create(productData);
+            results.success++;
+          } catch (error) {
+            results.failed++;
+            results.errors.push(
+              `Product ${productData.sku || "unknown"}: ${
+                error instanceof Error ? error.message : "Unknown error"
+              }`,
+            );
+          }
+        }
+
+        return apiResponse({
+          message: "Bulk import completed",
+          results,
+        });
+      } catch (error) {
+        return apiError(error instanceof Error ? error.message : "Bulk import failed", 500);
+      }
+    },
+    PERMISSION_CODES.ADMIN_PRODUCTS_WRITE,
+  );
 }

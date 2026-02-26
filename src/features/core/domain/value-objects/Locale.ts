@@ -21,8 +21,10 @@ export function isLocale(value: string): value is Locale {
 /**
  * Safely resolves any input locale to a supported domain locale.
  */
-export function resolveLocale(value?: string | null): Locale {
+export function toLocale(value?: string | null): Locale {
   if (!value) return DEFAULT_LOCALE;
   return isLocale(value) ? value : DEFAULT_LOCALE;
 }
 
+// ─── Legacy Aliases (to be removed) ─────────────────────────────────────────
+export const resolveLocale = toLocale;

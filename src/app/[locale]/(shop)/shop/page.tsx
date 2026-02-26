@@ -1,9 +1,9 @@
-import { Container } from "@/components/layout/Container";
+import { Container } from "@/components/shared/Container";
 import { getTranslations } from "next-intl/server";
 import type { Locale } from "next-intl";
-import { FilterSidebar } from "@/features/catalog/presentation/components/FilterSidebar";
-import { ShopSortSelect } from "@/features/catalog/presentation/components/ShopSortSelect";
-import { ShopPaginatedResults } from "@/features/catalog/presentation/components/ShopPaginatedResults";
+import { ShopSortSelect } from "../_components/ShopSortSelect";
+import { ShopPaginatedResults } from "../_components/ShopPaginatedResults";
+import { FilterSidebar } from "../_components/FilterSidebar";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -22,7 +22,7 @@ interface ShopPageProps {
 }
 
 /**
- *
+ * Main Shop Page
  */
 export default async function ShopPage({ params, searchParams }: ShopPageProps) {
   const { locale } = await params;
@@ -34,8 +34,9 @@ export default async function ShopPage({ params, searchParams }: ShopPageProps) 
   return (
     <div className="bg-background py-10">
       <Container>
-        <div className="flex flex-col gap-8 md:flex-row">
-          <div className="md:hidden mb-2">
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Mobile Filter Trigger */}
+          <div className="lg:hidden mb-4">
             <Sheet>
               <SheetTrigger asChild>
                 <Button
@@ -63,7 +64,7 @@ export default async function ShopPage({ params, searchParams }: ShopPageProps) 
           </div>
 
           <aside
-            className="hidden md:block w-64 flex-shrink-0"
+            className="hidden lg:block w-64 shrink-0"
             aria-label={t("Pages.Shop.FiltersTitle")}
           >
             <FilterSidebar

@@ -1,6 +1,6 @@
 # FindEg.com — System Specification
 
-> **Version:** 1.4 · **Updated:** 2026-02-16 · **Current Phase:** Phase 1 (Public E-Shop MVP, Dual-Track Strategy)
+> **Version:** 1.5 · **Updated:** 2026-02-18 · **Current Phase:** Phase 1 (Public E-Shop MVP, Dual-Track Strategy)
 
 ---
 
@@ -1106,6 +1106,51 @@ findeg.stationary/
 | UoM pricing resolution errors | < 0.1% req   | 1     |
 | Time to create supply list    | < 10 min     | 2     |
 | School reuse rate next year   | > 80%        | 3     |
+
+---
+
+## 12. Schema + DDD Redesign Program (Catalog + Identity)
+
+This section defines the approved target model for the in-progress internal refactor.
+
+### 12.1 Catalog Model Targets
+
+- Localized content is modeled as locale-keyed objects across product/category/brand names, descriptions, and slugs.
+- Pricing persistence is split into:
+  - persisted `pricing` data (base/cost/wholesale and channel-aware contexts),
+  - persisted `discountRules`,
+  - computed `resolvedPricing` runtime output.
+- `strikePrice` is computed from discount rules and not persisted.
+- Media is modeled for multiple display contexts (for example grid, PDP, zoom).
+
+### 12.2 Identity and Access Targets
+
+- User profile (`users`) is separate from authentication credentials and linked accounts.
+- Identity supports multiple linked auth providers per user.
+- Passwords are persisted as hashes only, with strategy metadata.
+- Authorization is permission-based:
+  - roles map to permissions,
+  - users and organization memberships map to roles,
+  - checks enforce permissions, not role strings.
+- Guest users are represented by persisted guest principals for cart/checkout continuity.
+
+### 12.3 Organization and Business Access Targets
+
+- Organizations are first-class entities for business context.
+- Memberships scope user access per organization.
+- Session payload includes scoped role IDs and actor metadata.
+
+### 12.4 Contract Boundaries
+
+- Domain types are the source of truth for application and infrastructure contracts.
+- Mapping layers should be minimized; only keep adapters at true boundary seams.
+- Locale and pricing types must remain consistent from domain to persistence schemas.
+
+### 12.5 Governance
+
+- Execution tracker: `project-planning/SCHEMA_DDD_REFACTOR_TASKS.md`.
+- Architecture release timeline: `docs/architecture/RELEASE_NOTES.md`.
+- Changelog remains git-history generated (`npm run changelog`), with release notes as curated architecture milestones.
 
 ---
 

@@ -1,5 +1,4 @@
-import { Container } from "@/components/layout/Container";
-import { FilterSidebar } from "@/features/catalog/presentation/components/FilterSidebar";
+import { Container } from "@/components/shared/Container";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -14,9 +13,10 @@ import { getServices } from "@/server/getServices";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import type { Locale } from "next-intl";
-import { ShopSortSelect } from "@/features/catalog/presentation/components/ShopSortSelect";
-import { ShopPaginatedResults } from "@/features/catalog/presentation/components/ShopPaginatedResults";
-import { SectionStateEmpty } from "@/components/common/state/SectionStateEmpty";
+import { ShopSortSelect } from "../../_components/ShopSortSelect";
+import { ShopPaginatedResults } from "../../_components/ShopPaginatedResults";
+import { FilterSidebar } from "../../_components/FilterSidebar";
+import { SectionStateEmpty } from "@/components/shared/state/SectionStateEmpty";
 import {
   applyListingFilters,
   buildBrandOptions,
@@ -61,7 +61,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
   return (
     <div className="bg-background py-8">
       <Container>
-        <div className="flex flex-col md:flex-row gap-8">
+        <div className="flex flex-col lg:flex-row gap-8">
           {/* Mobile Filter Trigger */}
           <div className="md:hidden mb-4">
             <Sheet>
@@ -92,7 +92,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
 
           {/* Desktop Sidebar */}
           <aside
-            className="hidden md:block w-64 flex-shrink-0"
+            className="hidden md:block w-64 shrink-0"
             aria-label={t("Pages.Shop.FiltersTitle")}
           >
             <FilterSidebar

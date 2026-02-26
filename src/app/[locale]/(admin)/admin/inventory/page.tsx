@@ -1,5 +1,5 @@
 import { container } from "@/features/core/infrastructure/di/ServiceContainer";
-import { InventoryTable } from "@/components/admin/inventory/inventory-table";
+import { InventoryTable } from "./_components/InventoryTable";
 
 /**
  *

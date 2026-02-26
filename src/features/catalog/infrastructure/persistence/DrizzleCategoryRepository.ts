@@ -10,6 +10,7 @@ import { CategoryInput } from "@/features/administration/domain/types";
 import { eq, and, sql, desc, asc, like, isNull, or, count } from "drizzle-orm";
 import {
   DEFAULT_LOCALE,
+  resolveLocalizedString,
   toLocalizedString,
   type Locale,
 } from "@/features/core/domain/value-objects";
@@ -46,34 +47,58 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
     dbCategory: DbCategory,
     translation?: DbTranslation,
     children?: Category[],
+    requestedLocale: Locale = DEFAULT_LOCALE,
   ): Category {
+    const localizedSlugDraft = (dbCategory.localizedSlug || {}) as Record<string, string>;
+    const localizedNameDraft = (dbCategory.localizedName || {}) as Record<string, string>;
+    const localizedDescriptionDraft = (dbCategory.localizedDescription || {}) as Record<
+      string,
+      string
+    >;
+
     const translatedSlug =
       translation?.name && this.toRouteSlug(translation.name)
         ? this.toRouteSlug(translation.name)
         : dbCategory.slug;
 
-    const localizedContent = translation
-      ? {
-          slug: toLocalizedString({ [translation.language]: translatedSlug }, dbCategory.slug),
-          name: toLocalizedString(
-            { [translation.language]: translation.name },
-            translation.name || dbCategory.slug,
-          ),
-          description: translation.description
-            ? toLocalizedString(
-                { [translation.language]: translation.description },
-                translation.description,
-              )
+    const localizedContent = {
+      slug: toLocalizedString(
+        Object.keys(localizedSlugDraft).length > 0
+          ? localizedSlugDraft
+          : translation
+            ? { [translation.language]: translatedSlug }
             : undefined,
-        }
-      : undefined;
+        dbCategory.slug,
+      ),
+      name: toLocalizedString(
+        Object.keys(localizedNameDraft).length > 0
+          ? localizedNameDraft
+          : translation
+            ? { [translation.language]: translation.name }
+            : undefined,
+        translation?.name || dbCategory.slug,
+      ),
+      description:
+        Object.keys(localizedDescriptionDraft).length > 0 || translation?.description
+          ? toLocalizedString(
+              Object.keys(localizedDescriptionDraft).length > 0
+                ? localizedDescriptionDraft
+                : translation?.description
+                  ? { [translation.language]: translation.description }
+                  : undefined,
+              translation?.description || "",
+            )
+          : undefined,
+    };
 
     return {
       id: dbCategory.id,
-      slug: dbCategory.slug,
-      name: translation?.name || dbCategory.slug,
-      description: translation?.description || undefined,
-      locale: (translation?.language || DEFAULT_LOCALE) as Locale,
+      slug: resolveLocalizedString(localizedContent.slug, requestedLocale, DEFAULT_LOCALE) as Slug,
+      name: resolveLocalizedString(localizedContent.name, requestedLocale, DEFAULT_LOCALE),
+      description: localizedContent.description
+        ? resolveLocalizedString(localizedContent.description, requestedLocale, DEFAULT_LOCALE)
+        : undefined,
+      locale: requestedLocale,
       localizedContent,
       icon: dbCategory.icon || undefined,
       parentId: dbCategory.parentId || undefined,
@@ -106,7 +131,12 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
       .where(eq(categories.id, id))
       .limit(1);
     if (result.length === 0) return null;
-    return this.mapToDomain(result[0].category, result[0].translation || undefined);
+    return this.mapToDomain(
+      result[0].category,
+      result[0].translation || undefined,
+      undefined,
+      language,
+    );
   }
 
   /**
@@ -129,7 +159,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
       .orderBy(asc(categories.sortOrder));
 
     return results.map(({ category, translation }) =>
-      this.mapToDomain(category, translation || undefined),
+      this.mapToDomain(category, translation || undefined, undefined, language),
     );
   }
 
@@ -151,11 +181,18 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
           eq(categoryTranslations.language, language),
         ),
       )
-      .where(eq(categories.slug, slug))
+      .where(
+        or(eq(categories.slug, slug), sql`${categories.localizedSlug} ->> ${language} = ${slug}`),
+      )
       .limit(1);
 
     if (result.length === 0) return null;
-    return this.mapToDomain(result[0].category, result[0].translation || undefined);
+    return this.mapToDomain(
+      result[0].category,
+      result[0].translation || undefined,
+      undefined,
+      language,
+    );
   }
 
   // Tree Operations
@@ -207,7 +244,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
       .orderBy(asc(categories.sortOrder));
 
     return results.map(({ category, translation }) =>
-      this.mapToDomain(category, translation || undefined),
+      this.mapToDomain(category, translation || undefined, undefined, language),
     );
   }
 
@@ -233,7 +270,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
       .orderBy(asc(categories.sortOrder));
 
     return results.map(({ category, translation }) =>
-      this.mapToDomain(category, translation || undefined),
+      this.mapToDomain(category, translation || undefined, undefined, language),
     );
   }
 
@@ -265,7 +302,9 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
 
     return results
       .filter((r) => r.category.id !== categoryId) // Exclude self
-      .map(({ category, translation }) => this.mapToDomain(category, translation || undefined));
+      .map(({ category, translation }) =>
+        this.mapToDomain(category, translation || undefined, undefined, language),
+      );
   }
 
   /**
@@ -290,7 +329,12 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
       .limit(1);
 
     if (result.length === 0) return null;
-    return this.mapToDomain(result[0].category, result[0].translation || undefined);
+    return this.mapToDomain(
+      result[0].category,
+      result[0].translation || undefined,
+      undefined,
+      language,
+    );
   }
 
   // Admin Operations
@@ -324,6 +368,20 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
         .insert(categories)
         .values({
           slug: input.slug,
+          localizedSlug: Object.fromEntries(
+            (input.translations || []).map((t) => [
+              t.language,
+              this.toRouteSlug(t.name) || input.slug,
+            ]),
+          ),
+          localizedName: Object.fromEntries(
+            (input.translations || []).map((t) => [t.language, t.name]),
+          ),
+          localizedDescription: Object.fromEntries(
+            (input.translations || [])
+              .filter((t) => !!t.description)
+              .map((t) => [t.language, t.description as string]),
+          ),
           parentId: input.parentId || null,
           icon: input.icon || null,
           sortOrder: input.sortOrder || 0,
@@ -369,6 +427,8 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
               updatedAt: new Date(),
             }
           : undefined,
+        undefined,
+        (firstTranslation?.language || DEFAULT_LOCALE) as Locale,
       );
     });
   }
@@ -390,6 +450,20 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
         .update(categories)
         .set({
           slug: input.slug,
+          localizedSlug: Object.fromEntries(
+            (input.translations || []).map((t) => [
+              t.language,
+              this.toRouteSlug(t.name) || input.slug,
+            ]),
+          ),
+          localizedName: Object.fromEntries(
+            (input.translations || []).map((t) => [t.language, t.name]),
+          ),
+          localizedDescription: Object.fromEntries(
+            (input.translations || [])
+              .filter((t) => !!t.description)
+              .map((t) => [t.language, t.description as string]),
+          ),
           parentId: input.parentId || null,
           icon: input.icon || null,
           sortOrder: input.sortOrder,
@@ -425,6 +499,8 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
               updatedAt: new Date(),
             }
           : undefined,
+        undefined,
+        (firstTranslation?.language || DEFAULT_LOCALE) as Locale,
       );
     });
   }

@@ -2,8 +2,8 @@ import { notFound } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { OrderDetailControls } from "@/components/admin/orders/order-detail-controls";
-import { OrderAuditTimeline } from "@/components/admin/orders/order-audit-timeline";
+import { OrderDetailControls } from "../_components/order-detail-controls";
+import { OrderAuditTimeline } from "../_components/order-audit-timeline";
 import { container } from "@/features/core/infrastructure/di/ServiceContainer";
 
 interface OrderDetailPageProps {

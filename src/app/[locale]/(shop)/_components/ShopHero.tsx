@@ -1,6 +1,6 @@
-import { Container } from "@/components/layout/Container";
+import { Container } from "@/components/shared/Container";
 import { Button } from "@/components/ui/button";
-import { Link } from "@/i18n/navigation";
+import { Link } from "@/i18n/routing";
 
 interface HeroProps {
   imageUrl: string;

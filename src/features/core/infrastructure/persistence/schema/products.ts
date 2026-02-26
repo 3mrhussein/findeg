@@ -28,7 +28,13 @@ import {
 import { relations } from "drizzle-orm";
 import { categories } from "./categories";
 import { brands } from "./brands";
-import type { Locale } from "@/features/core/domain/value-objects";
+import type {
+  DiscountRule,
+  Locale,
+  LocalizedStringDraft,
+  PersistedPricing,
+  ResponsiveMediaSet,
+} from "@/features/core/domain/value-objects";
 
 /**
  * Products Table
@@ -49,6 +55,18 @@ export const products = pgTable("products", {
   /** Unique stock-keeping unit identifier */
   sku: text("sku").unique(),
 
+  // Localized content (target model)
+  localizedSlug: jsonb("localized_slug").$type<LocalizedStringDraft>().default({}).notNull(),
+  localizedName: jsonb("localized_name").$type<LocalizedStringDraft>().default({}).notNull(),
+  localizedDescription: jsonb("localized_description")
+    .$type<LocalizedStringDraft>()
+    .default({})
+    .notNull(),
+  localizedLongDescription: jsonb("localized_long_description")
+    .$type<LocalizedStringDraft>()
+    .default({})
+    .notNull(),
+
   // Pricing
   price: decimal("price", { precision: 10, scale: 2 }).notNull(),
   strikePrice: decimal("strike_price", { precision: 10, scale: 2 }),
@@ -61,6 +79,12 @@ export const products = pgTable("products", {
 
   // Images (array of URLs stored as JSON)
   images: jsonb("images").$type<string[]>().default([]),
+  /** Responsive media payload for target rendering model */
+  mediaSet: jsonb("media_set").$type<ResponsiveMediaSet>().default({}),
+
+  // Pricing model (target)
+  pricing: jsonb("pricing").$type<PersistedPricing>(),
+  discountRules: jsonb("discount_rules").$type<DiscountRule[]>().default([]),
 
   // Inventory
   /** Whether this product is visible in the store */

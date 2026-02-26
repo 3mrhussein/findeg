@@ -5,127 +5,141 @@
  * Contains business logic for pricing, stock, and discount calculations.
  */
 
+import { z } from "zod";
 import {
-  ID,
-  Price,
-  Sku,
-  Quantity,
-  Rating,
-  CustomerGroup,
-  UomCode,
+  IdSchema,
+  PriceSchema,
+  SkuSchema,
+  QuantitySchema,
+  RatingSchema,
+  CustomerGroupSchema,
+  UomCodeSchema,
+  type ID,
+  type Price,
+  type Sku,
+  type Quantity,
+  type Rating,
+  type CustomerGroup,
+  type UomCode,
 } from "@/features/core/domain/types/common";
 import {
   DEFAULT_CURRENCY,
   resolveLocalizedString,
+  resolvePricing,
+  LocalizedStringSchema,
+  PersistedPricingSchema,
+  ResolvedPricingSchema,
+  ResponsiveMediaSetSchema,
+  MoneySchema,
+  type DiscountRule,
   toMoney,
   type CurrencyCode,
   type Locale,
   type LocalizedString,
+  type PersistedPricing,
+  type ResolvedPricing,
+  type ResponsiveMediaSet,
   type Money,
 } from "@/features/core/domain/value-objects";
 
 /** Single variant option (e.g., "Blue" for Color variant) */
-export interface ProductVariantOption {
-  value: string;
-  label: string;
-  priceModifier: Price;
-  stock: Quantity;
-}
+export const ProductVariantOptionSchema = z.object({
+  value: z.string(),
+  label: z.string(),
+  priceModifier: PriceSchema,
+  stock: QuantitySchema,
+});
+export type ProductVariantOption = z.infer<typeof ProductVariantOptionSchema>;
 
 /** A product variant group (e.g., "Color" with multiple options) */
-export interface ProductVariant {
-  name: string;
-  options: ProductVariantOption[];
-}
+export const ProductVariantSchema = z.object({
+  name: z.string(),
+  options: z.array(ProductVariantOptionSchema),
+});
+export type ProductVariant = z.infer<typeof ProductVariantSchema>;
 
 /** Sellable unit definition for a variant key */
-export interface ProductVariantSellableUom {
-  uomCode: UomCode;
-  factorToBase: number;
-  isEnabled: boolean;
-}
+export const ProductVariantSellableUomSchema = z.object({
+  uomCode: UomCodeSchema,
+  factorToBase: z.number(),
+  isEnabled: z.boolean(),
+});
+export type ProductVariantSellableUom = z.infer<typeof ProductVariantSellableUomSchema>;
 
 /** Price-list row for a variant key and customer group */
-export interface ProductVariantPrice {
-  customerGroup: CustomerGroup;
-  uomCode: UomCode;
-  unitPrice: Price;
-  currency: CurrencyCode;
-  isSellable: boolean;
-}
+export const ProductVariantPriceSchema = z.object({
+  customerGroup: CustomerGroupSchema,
+  uomCode: UomCodeSchema,
+  unitPrice: PriceSchema,
+  currency: z.string(), // CurrencyCode
+  isSellable: z.boolean(),
+});
+export type ProductVariantPrice = z.infer<typeof ProductVariantPriceSchema>;
 
 /** Commercial configuration for a single variant key */
-export interface ProductVariantCommercialConfig {
-  variantKey: string;
-  sellableUoms: ProductVariantSellableUom[];
-  priceLists: ProductVariantPrice[];
-}
+export const ProductVariantCommercialConfigSchema = z.object({
+  variantKey: z.string(),
+  sellableUoms: z.array(ProductVariantSellableUomSchema),
+  priceLists: z.array(ProductVariantPriceSchema),
+});
+export type ProductVariantCommercialConfig = z.infer<typeof ProductVariantCommercialConfigSchema>;
+
+/** Localized content map for a product */
+export const ProductLocalizedContentSchema = z.object({
+  slug: LocalizedStringSchema.optional(),
+  name: LocalizedStringSchema,
+  description: LocalizedStringSchema,
+  longDescription: LocalizedStringSchema,
+});
+export type ProductLocalizedContent = z.infer<typeof ProductLocalizedContentSchema>;
 
 /**
- * Localized content map for a product across supported locales.
+ * Product Domain Schema
  */
-export type TranslatedProductName = LocalizedString;
-export type TranslatedProductDescription = LocalizedString;
-export type TranslatedProductLongDescription = LocalizedString;
+export const ProductSchema = z.object({
+  id: IdSchema,
+  sku: SkuSchema.optional(),
+  name: z.string(),
+  price: PriceSchema,
+  strikePrice: PriceSchema.optional(),
+  description: z.string(),
+  longDescription: z.string(),
+  locale: z.string().optional(), // Locale
+  localizedContent: ProductLocalizedContentSchema.optional(),
+  currency: z.string().optional(), // CurrencyCode
+  priceMoney: MoneySchema.optional(),
+  strikePriceMoney: MoneySchema.optional(),
+  pricing: PersistedPricingSchema.optional(),
+  discountRules: z.array(z.any()).optional(), // DiscountRule[]
+  resolvedPricing: ResolvedPricingSchema.optional(),
+  mediaSet: ResponsiveMediaSetSchema.optional(),
+  imageUrl: z.string().optional(),
+  images: z.array(z.string()),
+  categoryId: IdSchema.optional(),
+  categoryName: z.string().optional(),
+  brandId: IdSchema.optional(),
+  brandName: z.string().optional(),
+  isActive: z.boolean().optional(),
+  stockQuantity: QuantitySchema.optional(),
+  lowStockThreshold: QuantitySchema.optional(),
+  isNew: z.boolean().optional(),
+  rating: RatingSchema,
+  reviewsCount: z.number(),
+  variants: z.record(z.string(), ProductVariantSchema).optional(),
+  variantCommercialConfig: z.record(z.string(), ProductVariantCommercialConfigSchema).optional(),
+});
 
-/**
- * Backward-compatible aliases for previous naming.
- */
-export type LocalizedProductName = TranslatedProductName;
-export type LocalizedProductDescription = TranslatedProductDescription;
-export type LocalizedProductLongDescription = TranslatedProductLongDescription;
+export type Product = z.infer<typeof ProductSchema>;
 
-export interface ProductLocalizedContent {
-  name: TranslatedProductName;
-  description: TranslatedProductDescription;
-  longDescription: TranslatedProductLongDescription;
-}
+/** Input type for creating a new product */
+export const CreateProductSchema = ProductSchema.omit({ id: true });
+export type CreateProduct = z.infer<typeof CreateProductSchema>;
 
-/**
- * Product Domain Interface
- *
- * Represents a fully-hydrated product with translations resolved to the requested language.
- */
-export interface Product {
-  id: ID;
-  sku?: Sku;
-  name: string;
-  price: Price;
-  strikePrice?: Price;
-  description: string;
-  longDescription: string;
-  /**
-   * Current resolved locale used to hydrate string fields above.
-   */
-  locale?: Locale;
-  /**
-   * Full or partial localized value-object payload.
-   */
-  localizedContent?: ProductLocalizedContent;
-  /**
-   * Currency metadata for numeric legacy price fields.
-   */
-  currency?: CurrencyCode;
-  /**
-   * Rich money value-objects (forward-compatible with future pricing model).
-   */
-  priceMoney?: Money;
-  strikePriceMoney?: Money;
-  imageUrl?: string;
-  images: string[];
-  categoryId?: ID;
-  categoryName?: string;
-  brandId?: ID;
-  brandName?: string;
-  isActive?: boolean;
-  stockQuantity?: Quantity;
-  lowStockThreshold?: Quantity;
-  isNew?: boolean;
-  rating: Rating;
-  reviewsCount: number;
-  variants?: { [key: string]: ProductVariant };
-  variantCommercialConfig?: Record<string, ProductVariantCommercialConfig>;
-}
+/** Input type for updating an existing product */
+export const UpdateProductSchema = CreateProductSchema.partial().extend({
+  id: IdSchema,
+});
+export type UpdateProduct = z.infer<typeof UpdateProductSchema>;
 
 /**
  * Domain methods for Product entity
@@ -159,8 +173,36 @@ export class ProductEntity {
    */
   getPriceMoney(): Money {
     return (
-      this.product.priceMoney || toMoney(this.product.price, this.product.currency || DEFAULT_CURRENCY)
+      this.product.priceMoney ||
+      toMoney(this.product.price, this.product.currency || DEFAULT_CURRENCY)
     );
+  }
+
+  /**
+   * Returns the normalized resolved pricing model.
+   * Falls back to legacy numeric fields when v2 pricing is not populated yet.
+   */
+  getResolvedPricing(): ResolvedPricing {
+    const pricing: PersistedPricing = this.product.pricing || {
+      base: this.getPriceMoney(),
+      tiers: [],
+    };
+    const discountRules = this.product.discountRules || [];
+    const legacyStrike =
+      this.product.strikePriceMoney ||
+      (this.product.strikePrice !== undefined
+        ? toMoney(this.product.strikePrice, this.product.currency || DEFAULT_CURRENCY)
+        : undefined);
+
+    const resolved = this.product.resolvedPricing || resolvePricing(pricing, discountRules);
+    if (resolved.strikePrice || !legacyStrike) {
+      return resolved;
+    }
+
+    return {
+      ...resolved,
+      strikePrice: legacyStrike,
+    };
   }
 
   /**
@@ -250,13 +292,19 @@ export class ProductEntity {
     const priceMoney = this.product.priceMoney || toMoney(this.product.price, currency);
     const strikePriceMoney =
       this.product.strikePriceMoney ||
-      (this.product.strikePrice !== undefined ? toMoney(this.product.strikePrice, currency) : undefined);
+      (this.product.strikePrice !== undefined
+        ? toMoney(this.product.strikePrice, currency)
+        : undefined);
+    const pricing: PersistedPricing = this.product.pricing || { base: priceMoney, tiers: [] };
+    const resolvedPricing = this.getResolvedPricing();
 
     return {
       ...this.product,
       currency,
       priceMoney,
       strikePriceMoney,
+      pricing,
+      resolvedPricing,
     };
   }
 }

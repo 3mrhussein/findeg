@@ -18,10 +18,11 @@ import {
   boolean,
   timestamp,
   primaryKey,
+  jsonb,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { products } from "./products";
-import type { Locale } from "@/features/core/domain/value-objects";
+import type { Locale, LocalizedStringDraft } from "@/features/core/domain/value-objects";
 
 /**
  * Categories Table
@@ -37,6 +38,15 @@ import type { Locale } from "@/features/core/domain/value-objects";
 export const categories = pgTable("categories", {
   id: serial("id").primaryKey(),
   slug: text("slug").notNull().unique(),
+  /** Locale-keyed slug map (target model) */
+  localizedSlug: jsonb("localized_slug").$type<LocalizedStringDraft>().default({}).notNull(),
+  /** Locale-keyed name map (target model) */
+  localizedName: jsonb("localized_name").$type<LocalizedStringDraft>().default({}).notNull(),
+  /** Locale-keyed description map (target model) */
+  localizedDescription: jsonb("localized_description")
+    .$type<LocalizedStringDraft>()
+    .default({})
+    .notNull(),
   parentId: integer("parent_id"),
   icon: text("icon"),
 

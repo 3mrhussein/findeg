@@ -7,11 +7,19 @@
 
 import { z } from "zod";
 import {
+  ActorTypeSchema as CoreActorTypeSchema,
+  PermissionCodeSchema as CorePermissionCodeSchema,
+  RoleIdSchema as CoreRoleIdSchema,
+  RoleScopeSchema as CoreRoleScopeSchema,
   MoneyAmountSchema,
+  type ActorType,
   type CurrencyCode,
   type Locale,
   type Money,
   type MoneyAmount,
+  type PermissionCode,
+  type RoleId,
+  type RoleScope,
 } from "@/features/core/domain/value-objects";
 
 // ─── Primitives ─────────────────────────────────────────────────────────────
@@ -19,11 +27,6 @@ import {
 /** Unique identifier across domain entities */
 export const IdSchema = z.coerce.number().int().positive();
 export type ID = z.infer<typeof IdSchema>;
-
-/** Optional ID (e.g. for nullable FKs) */
-export const OptionalIdSchema = IdSchema.optional();
-export type OptionalID = z.infer<typeof OptionalIdSchema>;
-
 /** Monetary value in the system's base currency (e.g., EGP) */
 export const PriceSchema = MoneyAmountSchema;
 export type Price = MoneyAmount;
@@ -58,10 +61,16 @@ export type Quantity = z.infer<typeof QuantitySchema>;
 export const RatingSchema = z.number().min(0).max(5);
 export type Rating = z.infer<typeof RatingSchema>;
 
-/** User access levels (accepts enum values or string for backward compatibility) */
+/** User access levels */
 export const UserRoleSchema = z.enum(["admin", "user"]);
-export const UserRoleLooseSchema = UserRoleSchema.or(z.string());
 export type UserRole = z.infer<typeof UserRoleSchema>;
+
+export {
+  ActorTypeSchema,
+  PermissionCodeSchema,
+  RoleIdSchema,
+  RoleScopeSchema,
+} from "@/features/core/domain/value-objects";
 
 // ─── Constants ──────────────────────────────────────────────────────────────
 
@@ -99,4 +108,4 @@ export type CustomerGroup = z.infer<typeof CustomerGroupSchema>;
  * Re-export value-object types from a single common entrypoint.
  * This keeps imports stable while moving toward richer domain VO usage.
  */
-export type { Locale, CurrencyCode, Money };
+export type { Locale, CurrencyCode, Money, PermissionCode, RoleId, RoleScope, ActorType };

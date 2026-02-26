@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "@/i18n/navigation";
+import { useRouter } from "@/i18n/routing";
 
 interface UseHeaderSearchParams {
   initialQuery?: string;

@@ -1,6 +1,6 @@
 # Frontend Use Case Backlog
 
-Last updated: 2026-02-17
+Last updated: 2026-02-18
 
 ## P0: Route and Navigation Canonicalization
 
@@ -72,3 +72,36 @@ Last updated: 2026-02-17
 - Scope: automated checks.
 - Done when:
   - checks run in CI for home, product detail, checkout routes.
+
+## P0: Identity and Access Redesign
+
+10. **UC-010: User can link multiple auth accounts to a single profile**
+- Scope: identity model and account linking flows.
+- Done when:
+  - one user can own multiple provider accounts.
+  - duplicate-identity collisions are merged deterministically.
+
+11. **UC-011: Authorization uses permissions instead of role-string checks**
+- Scope: API middleware, server actions, admin guards.
+- Done when:
+  - route/API authorization checks evaluate permission codes.
+  - no direct `role === "admin"` checks remain in protected flows.
+
+12. **UC-012: Business user can belong to organizations with scoped roles**
+- Scope: organization + membership model.
+- Done when:
+  - organization memberships can assign scoped role grants.
+  - effective permissions resolve with organization context.
+
+## P1: Identity and Checkout Expansion
+
+13. **UC-013: Guest principal can be upgraded into registered account without losing cart context**
+- Scope: guest principal persistence and merge workflow.
+- Done when:
+  - guest cart/order intent data can be migrated to user identity on registration/login.
+
+14. **UC-014: User can manage tokenized saved payment methods**
+- Scope: payment method vault model.
+- Done when:
+  - user can list/add/remove saved payment methods.
+  - only provider tokens are persisted, never raw card data.

@@ -86,6 +86,9 @@ export function ProductTable({
   const pathname = usePathname();
   const totalPages = Math.max(1, Math.ceil(total / limit));
 
+  /**
+   *
+   */
   const updateQuery = (next: {
     search?: string;
     categoryId?: string;
@@ -96,7 +99,8 @@ export function ProductTable({
     const params = new URLSearchParams();
 
     const nextSearch = (next.search ?? filters.search).trim();
-    const nextCategoryId = next.categoryId ?? (filters.categoryId ? String(filters.categoryId) : "");
+    const nextCategoryId =
+      next.categoryId ?? (filters.categoryId ? String(filters.categoryId) : "");
     const nextBrandId = next.brandId ?? (filters.brandId ? String(filters.brandId) : "");
     const nextIsActive = next.isActive ?? filters.isActive;
     const nextPage = next.page ?? "1";
@@ -297,7 +301,9 @@ export function ProductTable({
         </Select>
         <Select
           value={filters.brandId ? String(filters.brandId) : "all"}
-          onValueChange={(value) => updateQuery({ brandId: value === "all" ? "" : value, page: "1" })}
+          onValueChange={(value) =>
+            updateQuery({ brandId: value === "all" ? "" : value, page: "1" })
+          }
         >
           <SelectTrigger data-testid="admin-products-filter-brand">
             <SelectValue placeholder="All brands" />

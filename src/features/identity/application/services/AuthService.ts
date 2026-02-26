@@ -12,7 +12,13 @@
 import { IAuthService } from "../interfaces/IAuthService";
 import { IUserRepository } from "../interfaces/IUserRepository";
 import { ISessionProvider } from "@/features/core/application/interfaces/ISessionProvider";
-import { AuthResult, RegisterInput, SessionPayload } from "@/features/core/domain/auth";
+import {
+  AuthResult,
+  RegisterInput,
+  SessionPayload,
+  createUserVO,
+} from "@/features/core/domain/auth";
+import { isAdminSession, PERMISSION_CODES } from "@/features/core/domain/auth/authorization";
 import bcrypt from "bcryptjs";
 import { getErrorDefinition, resolveErrorMessage } from "@/features/core/domain/errors";
 
@@ -59,10 +65,29 @@ export class AuthService implements IAuthService {
       return { success: false, error: getErrorDefinition("AUTH_INVALID_CREDENTIALS").message };
     }
 
+    const authorization = await this.userRepository.getAuthorizationContext(user.id);
+    const activeRoleIds = Array.from(new Set([...(authorization.activeRoleIds || []), user.role]));
+    const permissionCodes = Array.from(
+      new Set([
+        ...(authorization.permissionCodes || []),
+        ...(user.role === "admin" ? [PERMISSION_CODES.ADMIN_PORTAL] : []),
+      ]),
+    );
+
     const payload: SessionPayload = {
       userId: user.id,
-      email: user.email,
       role: user.role,
+      user: createUserVO({
+        email: user.email,
+        firstName: user.firstName || undefined,
+        lastName: user.lastName || undefined,
+      }),
+      subjectId: String(user.id),
+      actorType: "user",
+      activeRoleIds,
+      permissionCodes,
+      organizationId: authorization.organizationId,
+      tokenVersion: 1,
     };
 
     await this.sessionProvider.createSession(payload);
@@ -77,6 +102,10 @@ export class AuthService implements IAuthService {
         lastName: user.lastName || undefined,
         phone: user.phone || undefined,
         role: user.role,
+        activeRoleIds: payload.activeRoleIds,
+        permissionCodes: payload.permissionCodes,
+        actorType: payload.actorType,
+        organizationId: payload.organizationId,
       },
     };
   }
@@ -152,7 +181,7 @@ export class AuthService implements IAuthService {
     if (!session) {
       throw new Error(getErrorDefinition("AUTH_UNAUTHORIZED").message);
     }
-    if (session.role !== "admin") {
+    if (!isAdminSession(session)) {
       throw new Error(getErrorDefinition("AUTH_ADMIN_REQUIRED").message);
     }
     return session;

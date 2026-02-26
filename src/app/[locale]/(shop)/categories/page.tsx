@@ -1,4 +1,4 @@
-import { Container } from "@/components/layout/Container";
+import { Container } from "@/components/shared/Container";
 import { CategoryCard } from "@/app/[locale]/(shop)/_components/CategoryCard";
 import {
   getCategoriesPageData,

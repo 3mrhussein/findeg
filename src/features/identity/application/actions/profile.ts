@@ -10,7 +10,7 @@ import { redirect } from "next/navigation";
 export async function updateMyProfileAction(formData: FormData) {
   const session = await container.authService.getSession();
   if (!session?.userId) {
-    redirect("/registration");
+    redirect("/login");
   }
 
   const name = String(formData.get("name") || "").trim();

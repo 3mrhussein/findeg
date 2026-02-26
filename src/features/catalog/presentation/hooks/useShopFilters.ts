@@ -45,42 +45,48 @@ export function useShopFilters({ minPrice = 0, maxPrice = 1000 }: UseShopFilters
   );
   const [priceRangeQuery, setPriceRangeQuery] = useQueryState(
     "price",
-    parseAsArrayOf(parseAsInteger).withOptions({ shallow: false }).withDefault([minPrice, maxPrice]),
+    parseAsArrayOf(parseAsInteger)
+      .withOptions({ shallow: false })
+      .withDefault([minPrice, maxPrice]),
   );
   const [sortQuery, setSortQuery] = useQueryState(
     "sort",
     parseAsString.withOptions({ shallow: false }).withDefault("featured"),
   );
-  const [, setPage] = useQueryState("page", parseAsInteger.withOptions({ shallow: false }).withDefault(1));
+  const [, setPage] = useQueryState(
+    "page",
+    parseAsInteger.withOptions({ shallow: false }).withDefault(1),
+  );
 
   const selectedCategories = unique(selectedCategoriesQuery);
   const selectedBrands = unique(selectedBrandsQuery);
   const priceRange = toSanitizedPriceRange(priceRangeQuery, minPrice, maxPrice);
   const sort = normalizeListingSort(sortQuery);
-  const [localPrice, setLocalPrice] = useState<number[]>(priceRange);
-
-  useEffect(() => {
-    setLocalPrice(priceRange);
-  }, [priceRange[0], priceRange[1]]);
+  const [draftPriceRange, setDraftPriceRange] = useState<[number, number] | null>(null);
+  const localPrice = draftPriceRange ?? priceRange;
 
   /**
    * Updates local slider state without committing URL changes.
    */
   const setLocalPriceRange = (value: number[]) => {
-    setLocalPrice(toSanitizedPriceRange(value, minPrice, maxPrice));
+    setDraftPriceRange(toSanitizedPriceRange(value, minPrice, maxPrice));
   };
 
   /**
    * Commits price range to URL and resets pagination.
    */
-  const setPriceRange = (value: number[] | null) => {
+  const setPriceRange = async (value: number[] | null) => {
     const nextRange =
       value && value.length === 2
         ? sanitizePriceRange([value[0], value[1]], [minPrice, maxPrice])
         : null;
-
-    void setPage(1);
-    return setPriceRangeQuery(nextRange);
+    setDraftPriceRange(nextRange);
+    await setPage(1);
+    try {
+      return await setPriceRangeQuery(nextRange);
+    } finally {
+      setDraftPriceRange(null);
+    }
   };
 
   /**
@@ -117,6 +123,7 @@ export function useShopFilters({ minPrice = 0, maxPrice = 1000 }: UseShopFilters
    *
    */
   const clearFilters = () => {
+    setDraftPriceRange(null);
     void setSelectedCategoriesQuery(null);
     void setSelectedBrandsQuery(null);
     void setPriceRangeQuery(null);
@@ -147,7 +154,10 @@ export function useShopSort() {
     "sort",
     parseAsString.withOptions({ shallow: false }).withDefault("featured"),
   );
-  const [, setPage] = useQueryState("page", parseAsInteger.withOptions({ shallow: false }).withDefault(1));
+  const [, setPage] = useQueryState(
+    "page",
+    parseAsInteger.withOptions({ shallow: false }).withDefault(1),
+  );
   const sort = normalizeListingSort(sortQuery);
 
   useEffect(() => {
@@ -156,6 +166,9 @@ export function useShopSort() {
     }
   }, [sortQuery, sort, setSortQuery]);
 
+  /**
+   *
+   */
   const setSort = (value: string) => {
     void setPage(1);
     return setSortQuery(normalizeListingSort(value));

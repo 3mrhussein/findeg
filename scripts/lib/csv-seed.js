@@ -6,6 +6,16 @@ export const TABLE_SNAPSHOT_DIR = path.resolve("scripts/data/seed/tables");
 
 export const TABLE_IMPORT_ORDER = [
   "users",
+  "organizations",
+  "roles",
+  "permissions",
+  "role_permissions",
+  "user_roles",
+  "organization_memberships",
+  "auth_accounts",
+  "password_credentials",
+  "payment_methods",
+  "guest_principals",
   "brands",
   "categories",
   "category_translations",
@@ -21,6 +31,23 @@ export const TABLE_IMPORT_ORDER = [
   "audit_log",
   "translations",
 ];
+
+async function getExistingTableSet(sql, tableNames) {
+  const rows = await sql`
+    select table_name as "tableName"
+    from information_schema.tables
+    where table_schema = 'public'
+      and table_name = any(${tableNames})
+  `;
+
+  return new Set(rows.map((row) => row.tableName));
+}
+
+async function getTableRowCount(sql, tableName) {
+  const escapedTableName = tableName.replace(/"/g, '""');
+  const rows = await sql.unsafe(`select count(*)::int as "count" from "${escapedTableName}"`);
+  return Number(rows[0]?.count ?? 0);
+}
 
 function parseCsvLine(line) {
   const values = [];
@@ -142,8 +169,7 @@ async function seedTable(sql, tableName) {
   }
 
   if (rows.length === 0) {
-    console.log(`📄 ${tableName}: 0 rows`);
-    return;
+    return { tableName, insertedRows: 0, sourceRows: 0 };
   }
 
   const values = rows.map((row) => {
@@ -155,7 +181,7 @@ async function seedTable(sql, tableName) {
   });
 
   await sql`insert into ${sql(tableName)} ${sql(values, headers)}`;
-  console.log(`📄 ${tableName}: ${values.length} rows`);
+  return { tableName, insertedRows: values.length, sourceRows: rows.length };
 }
 
 async function resetIdSequenceIfPresent(sql, tableName) {
@@ -167,13 +193,13 @@ async function resetIdSequenceIfPresent(sql, tableName) {
       and column_name = 'id'
     limit 1
   `;
-  if (hasIdColumn.length === 0) return;
+  if (hasIdColumn.length === 0) return false;
 
   const seqRows = await sql`
     select pg_get_serial_sequence(${`public.${tableName}`}, 'id') as "seqName"
   `;
   const seqName = seqRows[0]?.seqName;
-  if (!seqName) return;
+  if (!seqName) return false;
 
   const statement = `
     select setval(
@@ -183,6 +209,7 @@ async function resetIdSequenceIfPresent(sql, tableName) {
     )
   `;
   await sql.unsafe(statement);
+  return true;
 }
 
 export function createSqlClient() {
@@ -195,16 +222,53 @@ export function createSqlClient() {
 }
 
 export async function truncateSeedTables(sql) {
-  const truncateTables = TABLE_IMPORT_ORDER.map((tableName) => `"${tableName}"`).join(", ");
+  const existingTables = await getExistingTableSet(sql, TABLE_IMPORT_ORDER);
+  const truncatedTables = TABLE_IMPORT_ORDER.filter((tableName) => existingTables.has(tableName));
+  const skippedTables = TABLE_IMPORT_ORDER.filter((tableName) => !existingTables.has(tableName));
+  const rowCounts = {};
+  let rowsCleared = 0;
+
+  for (const tableName of truncatedTables) {
+    const count = await getTableRowCount(sql, tableName);
+    rowCounts[tableName] = count;
+    rowsCleared += count;
+  }
+
+  const truncateTables = truncatedTables.map((tableName) => `"${tableName}"`).join(", ");
+  if (!truncateTables) {
+    return { truncatedTables: [], skippedTables, rowCounts, rowsCleared: 0 };
+  }
+
   await sql.unsafe(`TRUNCATE TABLE ${truncateTables} RESTART IDENTITY CASCADE`);
+  return { truncatedTables, skippedTables, rowCounts, rowsCleared };
 }
 
 export async function seedFromCsvSnapshots(sql) {
-  for (const tableName of TABLE_IMPORT_ORDER) {
-    await seedTable(sql, tableName);
+  const existingTables = await getExistingTableSet(sql, TABLE_IMPORT_ORDER);
+  const importableTables = TABLE_IMPORT_ORDER.filter((tableName) => existingTables.has(tableName));
+  const skippedTables = TABLE_IMPORT_ORDER.filter((tableName) => !existingTables.has(tableName));
+  const tableSummaries = [];
+  const sequenceResetTables = [];
+  let insertedRows = 0;
+
+  for (const tableName of importableTables) {
+    const tableSummary = await seedTable(sql, tableName);
+    tableSummaries.push(tableSummary);
+    insertedRows += tableSummary.insertedRows;
   }
 
-  for (const tableName of TABLE_IMPORT_ORDER) {
-    await resetIdSequenceIfPresent(sql, tableName);
+  for (const tableName of importableTables) {
+    const sequenceWasReset = await resetIdSequenceIfPresent(sql, tableName);
+    if (sequenceWasReset) {
+      sequenceResetTables.push(tableName);
+    }
   }
+
+  return {
+    importableTables,
+    skippedTables,
+    tableSummaries,
+    sequenceResetTables,
+    insertedRows,
+  };
 }

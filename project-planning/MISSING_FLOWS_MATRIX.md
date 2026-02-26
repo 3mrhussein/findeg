@@ -1,6 +1,6 @@
 # Missing Flows / Pages Matrix
 
-Last updated: 2026-02-17
+Last updated: 2026-02-18
 
 ## Storefront (Buyer)
 
@@ -25,6 +25,17 @@ Last updated: 2026-02-17
 | `/admin-login` | Partial | Login form exists | Mixed localization + no explicit error boundary UX | Medium |
 | `/my-account` | Partial | Page/template exists | Needs concrete profile/address/order-history workflows | High |
 
+## Identity / RBAC Platform Flows
+
+| Route / Flow | Status | Current State | Gap / Missing Use Case | Priority |
+| --- | --- | --- | --- | --- |
+| Linked auth accounts | Missing | Single account assumptions in auth model | Add provider-linked accounts per user with deterministic merge rules | High |
+| Password credential lifecycle | Partial | Password hashing exists in basic user model | Split credential store and add hash strategy metadata + rotation path | High |
+| Permission guard enforcement | Missing | Some direct role checks still exist | Replace route/API checks with permission-code guards | High |
+| Organization memberships | Missing | No scoped organization membership model | Add org + membership + scoped role grants for business users | High |
+| Guest principal lifecycle | Partial | Guest checkout/cart behavior exists | Persist guest principal model and support upgrade/merge into user identity | Medium |
+| Saved payment methods | Missing | Checkout supports submission but no tokenized vault model | Add payment token entity + ownership and lifecycle policy | Medium |
+
 ## Admin
 
 | Route / Flow | Status | Current State | Gap / Missing Use Case | Priority |
@@ -47,6 +58,7 @@ Last updated: 2026-02-17
 | School list import-to-cart | Missing | No end-to-end lookup and cart injection with real service data | High |
 | Logged-in checkout acceleration | Missing | No profile/address prefill path | Medium |
 | Buyer order history/account management | Partial | Templates present but no complete operational flow | High |
+| Permission-scoped admin operations | Missing | Admin access is role-centric | Transition to permission-based entitlement checks per operation | High |
 
 ## Suggested Delivery Order
 

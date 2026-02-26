@@ -2,11 +2,12 @@
 
 Auto-generated from git commit history.
 
-Latest commit date: 2026-02-17
+Latest commit date: 2026-02-19
 Range: HEAD
 
 ## Added
 
+- Implement checkout flow, add Cypress E2E tests for shop and admin, and refactor product and header components. (`93e07c2`, 2026-02-19)
 - Implement variant pricing, refactor storefront components, and update core features and documentation. (`ae90438`, 2026-02-17)
 - Implement comprehensive admin panel features for product, brand, order, and inventory management, and expand API endpoints for cart, checkout, authentication, and logging. (`f22f13a`, 2026-02-15)
 - Refactor header into modular components and add product translation fetching for admin editing. (`81fa6f1`, 2026-02-14)

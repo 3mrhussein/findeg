@@ -1,108 +1,230 @@
+%% Runtime schema snapshot aligned with seed CSV tables.
+%% Source of truth for full generated schema docs: docs/database/SCHEMA.md.
 erDiagram
   users ||--o{ addresses : has
   users ||--o{ orders : places
   users ||--o{ reviews : writes
-  users ||--o{ audit_log : performs
+  users ||--o{ audit_log : records
+  users ||--o{ auth_accounts : links
+  users ||--o| password_credentials : owns
+  users ||--o{ user_roles : granted
+  users ||--o{ organization_memberships : joins
+  users ||--o{ payment_methods : owns
 
-  brands ||--o{ products : brands
+  organizations ||--o{ organization_memberships : contains
+  organizations ||--o{ user_roles : scopes
+  roles ||--o{ user_roles : assigned
+  roles ||--o{ role_permissions : grants
+  permissions ||--o{ role_permissions : assigned
 
   categories ||--o{ categories : parent_of
-  categories ||--o{ category_translations : translates
-  categories ||--o{ products : contains
+  categories ||--o{ category_translations : translated_as
+  categories ||--o{ products : classifies
+  brands ||--o{ products : brands
 
-  products ||--o{ product_translations : translates
+  products ||--o{ product_translations : translated_as
   products ||--o{ product_images : has
+  products ||--o{ variant_sellable_uoms : sellable_uoms
+  products ||--o{ variant_price_lists : price_lists
   products ||--o{ order_items : sold_as
   products ||--o{ reviews : reviewed_as
-  products ||--o{ variant_sellable_uoms : supports_uom
-  products ||--o{ variant_price_lists : priced_for
 
   orders ||--o{ order_items : contains
 
   users {
-    int id PK
-    varchar email
-    varchar role
+    INT id PK
+    VARCHAR email
+    VARCHAR role
+    BOOLEAN isActive
   }
-  brands {
-    int id PK
-    text slug
-    text name
+
+  auth_accounts {
+    INT id PK
+    INT userId FK
+    VARCHAR provider
+    VARCHAR providerAccountId
   }
+
+  password_credentials {
+    INT userId PK,FK
+    VARCHAR passwordHash
+    VARCHAR hashStrategy
+  }
+
+  organizations {
+    INT id PK
+    VARCHAR code
+    VARCHAR name
+    BOOLEAN isActive
+  }
+
+  roles {
+    INT id PK
+    VARCHAR code
+    VARCHAR name
+  }
+
+  permissions {
+    INT id PK
+    VARCHAR code
+    VARCHAR name
+  }
+
+  role_permissions {
+    INT roleId FK
+    INT permissionId FK
+  }
+
+  user_roles {
+    INT id PK
+    INT userId FK
+    INT roleId FK
+    VARCHAR scope
+    INT organizationId FK
+  }
+
+  organization_memberships {
+    INT id PK
+    INT organizationId FK
+    INT userId FK
+    VARCHAR status
+  }
+
+  payment_methods {
+    INT id PK
+    INT userId FK
+    VARCHAR provider
+    VARCHAR tokenReference
+    BOOLEAN isDefault
+  }
+
+  guest_principals {
+    INT id PK
+    VARCHAR guestKey
+  }
+
   categories {
-    int id PK
-    text slug
-    int parent_id FK
-    text path
+    INT id PK
+    VARCHAR slug
+    JSONB localizedSlug
+    JSONB localizedName
+    JSONB localizedDescription
+    INT parentId FK
+    VARCHAR path
   }
+
   category_translations {
-    int category_id FK
-    varchar language
-    text name
+    INT categoryId FK
+    VARCHAR language
+    VARCHAR name
+    VARCHAR description
   }
+
+  brands {
+    INT id PK
+    VARCHAR slug
+    VARCHAR name
+    JSONB localizedName
+    JSONB localizedSlug
+  }
+
   products {
-    int id PK
-    text sku
-    int category_id FK
-    int brand_id FK
-    jsonb images
+    INT id PK
+    VARCHAR sku
+    INT categoryId FK
+    INT brandId FK
+    JSONB localizedSlug
+    JSONB localizedName
+    JSONB localizedDescription
+    JSONB localizedLongDescription
+    JSONB mediaSet
+    JSONB pricing
+    JSONB discountRules
+    BOOLEAN isActive
   }
+
   product_translations {
-    int product_id FK
-    varchar language
-    text name
+    INT productId FK
+    VARCHAR language
+    VARCHAR name
+    VARCHAR description
+    VARCHAR longDescription
   }
+
   product_images {
-    int id PK
-    int product_id FK
-    text image_url
+    INT id PK
+    INT productId FK
+    VARCHAR url
   }
+
   variant_sellable_uoms {
-    int id PK
-    int product_id FK
-    text variant_key
-    text uom_code
+    INT id PK
+    INT productId FK
+    VARCHAR variantKey
+    VARCHAR uomCode
+    DECIMAL factorToBase
+    BOOLEAN isEnabled
   }
+
   variant_price_lists {
-    int id PK
-    int product_id FK
-    text variant_key
-    text customer_group
-    text uom_code
+    INT id PK
+    INT productId FK
+    VARCHAR variantKey
+    VARCHAR customerGroup
+    VARCHAR uomCode
+    DECIMAL unitPrice
+    VARCHAR currency
+    BOOLEAN isSellable
   }
-  addresses {
-    int id PK
-    int user_id FK
-    text city
-    text area
-    text street
-  }
+
   orders {
-    int id PK
-    int user_id FK
-    varchar status
-    decimal total_amount
+    INT id PK
+    INT userId FK
+    VARCHAR status
+    VARCHAR paymentStatus
+    DECIMAL totalAmount
+    VARCHAR currency
   }
+
   order_items {
-    int id PK
-    int order_id FK
-    int product_id FK
-    int quantity
+    INT id PK
+    INT orderId FK
+    INT productId FK
+    INT quantity
+    DECIMAL totalPrice
   }
+
   reviews {
-    int id PK
-    int user_id FK
-    int product_id FK
-    int rating
+    INT id PK
+    INT userId FK
+    INT productId FK
+    DECIMAL rating
   }
+
+  addresses {
+    INT id PK
+    INT userId FK
+    VARCHAR city
+    VARCHAR area
+    VARCHAR street
+  }
+
   audit_log {
-    int id PK
-    int admin_user_id FK
-    text entity_type
-    text action
+    INT id PK
+    INT adminUserId FK
+    VARCHAR entityType
+    VARCHAR action
   }
+
   translations {
-    varchar namespace
-    varchar key
-    varchar language
+    VARCHAR key PK
+    VARCHAR language PK
+    VARCHAR value
+  }
+
+  server_logs {
+    INT id PK
+    VARCHAR requestId
+    VARCHAR level
+    VARCHAR message
   }

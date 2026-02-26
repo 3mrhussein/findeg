@@ -1,12 +1,12 @@
-import { Container } from "@/components/layout/Container";
+import { Container } from "@/components/shared/Container";
 import { FadeIn } from "@/providers/animation-provider";
 import { getTranslations } from "next-intl/server";
 import type { Locale } from "next-intl";
-import { SchoolListLookupForm } from "@/features/school/presentation/components/SchoolListLookupForm";
+import { SchoolListLookupForm } from "./_components/SchoolListLookupForm";
 import { getSchoolListViewModel } from "@/features/school/application/queries/school-list";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { SchoolListResults } from "@/features/school/presentation/components/SchoolListResults";
-import { SectionStateEmpty } from "@/components/common/state/SectionStateEmpty";
+import { SchoolListResults } from "./_components/SchoolListResults";
+import { SectionStateEmpty } from "@/components/shared/state/SectionStateEmpty";
 
 interface SchoolPageProps {
   params: Promise<{ locale: string }>;

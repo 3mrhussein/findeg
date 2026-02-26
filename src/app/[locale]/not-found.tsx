@@ -1,4 +1,4 @@
-import ErrorPage from "@/components/common/ErrorPage";
+import ErrorPage from "@/components/shared/ErrorPage";
 
 /**
  *

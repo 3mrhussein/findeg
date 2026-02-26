@@ -1,5 +1,5 @@
 import { getServices } from "@/server/getServices";
-import { BrandsTable } from "@/components/admin/brands/brands-table";
+import { BrandsTable } from "./_components/BrandsTable";
 
 /**
  *

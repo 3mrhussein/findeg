@@ -1,4 +1,4 @@
-import { Container } from "@/components/layout/Container";
+import { Container } from "@/components/shared/Container";
 import { getTranslations } from "next-intl/server";
 import type { Locale } from "next-intl";
 

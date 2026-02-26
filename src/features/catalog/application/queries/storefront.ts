@@ -112,7 +112,7 @@ export async function getSearchPageData(language: string, query: string): Promis
   return {
     query: normalizedQuery,
     products: fallbackResults,
-    mode: fallbackResults.length > 0 ? "fallback" : "exact",
+    mode: fallbackResults.length > 0 ? "fallback" : "empty",
     exactCount: 0,
   };
 }

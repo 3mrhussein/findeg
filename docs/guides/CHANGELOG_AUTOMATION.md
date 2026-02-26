@@ -20,6 +20,7 @@ npm run changelog:check
 - Source: `git log --no-merges`
 - Script: `scripts/generate-changelog.js`
 - Output: `CHANGELOG.md`
+- Architecture release notes: `docs/architecture/RELEASE_NOTES.md`
 - Grouping: commits are grouped into sections by conventional commit type when available:
   - `feat` -> `Added`
   - `fix` -> `Fixed`
@@ -28,12 +29,29 @@ npm run changelog:check
   - `revert` -> `Reverted`
   - non-conventional messages -> `Other`
 
+## Release Notes Policy
+
+Update `docs/architecture/RELEASE_NOTES.md` whenever a PR includes major:
+
+- schema redesign or migration strategy changes
+- domain model/value-object redesign
+- auth/identity model changes (sessions, roles, permissions, principals)
+- cross-feature API contract shifts
+
+The changelog remains the full commit-derived log; release notes are a curated architecture decision timeline.
+
 ## Recommended Team Workflow
 
 1. Keep meaningful commit messages (`feat:`, `fix:`, `refactor:`) to improve changelog quality.
-2. Before merge, run `npm run changelog`.
-3. Include `CHANGELOG.md` changes in the same PR as the feature/fix.
-4. Optionally enforce freshness in CI using `npm run changelog:check`.
+2. Use conventional commit messages consistently:
+   - `feat(scope): ...`
+   - `fix(scope): ...`
+   - `refactor(scope): ...`
+   - include `!` for breaking changes (for example `refactor(auth)!: ...`)
+3. Before merge, run `npm run changelog`.
+4. Include `CHANGELOG.md` updates in the same PR as the feature/fix.
+5. If the change is architecture-significant, also update `docs/architecture/RELEASE_NOTES.md`.
+6. Enforce freshness in CI with `npm run changelog:check`.
 
 ## Notes
 

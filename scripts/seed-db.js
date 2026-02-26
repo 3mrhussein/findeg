@@ -14,16 +14,57 @@ import { createSqlClient, seedFromCsvSnapshots, truncateSeedTables } from "./lib
 dotenv.config({ path: ".env.local" });
 dotenv.config();
 
+function formatTableList(tableNames) {
+  if (tableNames.length === 0) return "none";
+  return tableNames.join(", ");
+}
+
+function formatClearedRows(rowCounts) {
+  return Object.entries(rowCounts)
+    .filter(([, count]) => count > 0)
+    .map(([tableName, count]) => `${tableName}:${count}`)
+    .join(", ");
+}
+
 async function main() {
   const sql = createSqlClient();
 
   try {
+    const startedAt = Date.now();
     console.log("🌱 Starting fresh CSV seed...");
-    await sql.begin(async (tx) => {
-      await truncateSeedTables(tx);
-      await seedFromCsvSnapshots(tx);
+    const result = await sql.begin(async (tx) => {
+      const truncateSummary = await truncateSeedTables(tx);
+      const importSummary = await seedFromCsvSnapshots(tx);
+      return { truncateSummary, importSummary };
     });
-    console.log("✨ Fresh CSV seed completed successfully.");
+
+    const { truncateSummary, importSummary } = result;
+    const clearedRowsText = formatClearedRows(truncateSummary.rowCounts);
+
+    console.log(
+      `🧹 Truncated ${truncateSummary.truncatedTables.length} table(s), cleared ${truncateSummary.rowsCleared} row(s).`,
+    );
+    if (clearedRowsText) {
+      console.log(`   Cleared rows by table: ${clearedRowsText}`);
+    }
+
+    console.log(`📥 Imported ${importSummary.insertedRows} row(s) from CSV snapshots.`);
+    for (const tableSummary of importSummary.tableSummaries) {
+      console.log(`   ${tableSummary.tableName}: +${tableSummary.insertedRows}`);
+    }
+
+    console.log(
+      `🔁 Reset ID sequences on ${importSummary.sequenceResetTables.length} table(s): ${formatTableList(importSummary.sequenceResetTables)}`,
+    );
+
+    if (importSummary.skippedTables.length > 0) {
+      console.log(
+        `⚠️ Skipped ${importSummary.skippedTables.length} table(s) not present in DB: ${formatTableList(importSummary.skippedTables)}`,
+      );
+    }
+
+    const durationMs = Date.now() - startedAt;
+    console.log(`✅ Fresh CSV seed completed successfully in ${durationMs}ms.`);
   } finally {
     await sql.end();
   }

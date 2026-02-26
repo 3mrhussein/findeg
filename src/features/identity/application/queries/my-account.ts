@@ -17,7 +17,7 @@ export async function getMyAccountDataOrRedirect(): Promise<MyAccountData> {
   const { auth, repositories } = getServices();
   const session = await auth.getSession();
   if (!session?.userId) {
-    redirect("/registration");
+    redirect("/login");
   }
 
   const [user, orders] = await Promise.all([
@@ -26,7 +26,7 @@ export async function getMyAccountDataOrRedirect(): Promise<MyAccountData> {
   ]);
 
   if (!user) {
-    redirect("/registration");
+    redirect("/login");
   }
 
   return {
@@ -43,7 +43,7 @@ export async function getMyOrderDetailOrNotFound(orderId: number) {
   const { repositories, auth } = getServices();
   const session = await auth.getSession();
   if (!session?.userId) {
-    redirect("/registration");
+    redirect("/login");
   }
 
   const order = await repositories.orders.getById(orderId);

@@ -1,8 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getServices } from "@/server/getServices";
-import { MediaUploadForm } from "@/components/admin/media/media-upload-form";
-import { MediaLibrary } from "@/components/admin/media/media-library";
+import { MediaUploadForm } from "./_components/media-upload-form";
+import { MediaLibrary } from "./_components/media-library";
 
+/**
+ *
+ */
 export default async function MediaPage() {
   const { media } = getServices();
   const assets = await media.getLibraryAssets();

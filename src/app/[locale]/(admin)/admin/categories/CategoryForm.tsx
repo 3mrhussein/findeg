@@ -157,7 +157,11 @@ export function CategoryForm({ initialData, categories }: CategoryFormProps) {
               <FormItem>
                 <FormLabel>Name (English)</FormLabel>
                 <FormControl>
-                  <Input placeholder="Category Name" {...field} data-testid="admin-category-name-en" />
+                  <Input
+                    placeholder="Category Name"
+                    {...field}
+                    data-testid="admin-category-name-en"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

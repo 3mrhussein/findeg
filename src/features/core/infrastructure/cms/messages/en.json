@@ -19,6 +19,10 @@
     "About": "About Us",
     "MyAccount": "My Account",
     "Dashboard": "Dashboard",
+    "Main": "Explore",
+    "Support": "Support",
+    "ViewAll": "View All",
+    "Guest": "Guest",
     "SearchPlaceholder": "Search for products...",
     "AiGenerator": "AI Generator",
     "Stationary": {

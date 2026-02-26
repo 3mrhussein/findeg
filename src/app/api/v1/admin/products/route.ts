@@ -11,6 +11,7 @@ import { withAdmin } from "../../_lib/middleware";
 import { getServices } from "@/server/getServices";
 import { ProductInputSchema } from "@/features/administration/domain/types";
 import { resolveLocale } from "@/features/core/domain/value-objects";
+import { PERMISSION_CODES } from "@/features/core/domain/auth";
 
 /**
  * List all products (admin)
@@ -19,41 +20,50 @@ import { resolveLocale } from "@/features/core/domain/value-objects";
  * @returns Paginated list of products
  */
 export async function GET(request: NextRequest) {
-  return withAdmin(request, async () => {
-    try {
-      const { searchParams } = new URL(request.url);
-      const language = resolveLocale(searchParams.get("lang"));
-      const page = Number(searchParams.get("page")) || 1;
-      const limit = Number(searchParams.get("limit")) || 20;
-      const search = searchParams.get("search") || undefined;
-      const categoryId = searchParams.get("categoryId")
-        ? Number(searchParams.get("categoryId"))
-        : undefined;
-      const brandId = searchParams.get("brandId") ? Number(searchParams.get("brandId")) : undefined;
-      const isActiveParam = searchParams.get("isActive");
-      const isActive =
-        isActiveParam === "true" ? true : isActiveParam === "false" ? false : undefined;
+  return withAdmin(
+    request,
+    async () => {
+      try {
+        const { searchParams } = new URL(request.url);
+        const language = resolveLocale(searchParams.get("lang"));
+        const page = Number(searchParams.get("page")) || 1;
+        const limit = Number(searchParams.get("limit")) || 20;
+        const search = searchParams.get("search") || undefined;
+        const categoryId = searchParams.get("categoryId")
+          ? Number(searchParams.get("categoryId"))
+          : undefined;
+        const brandId = searchParams.get("brandId")
+          ? Number(searchParams.get("brandId"))
+          : undefined;
+        const isActiveParam = searchParams.get("isActive");
+        const isActive =
+          isActiveParam === "true" ? true : isActiveParam === "false" ? false : undefined;
 
-      const offset = (page - 1) * limit;
-      const { repositories } = getServices();
-      const result = await repositories.products.getFiltered(
-        {
-          search,
-          categoryId,
-          brandId,
-          isActive,
-          limit,
-          offset,
-          sort: "newest",
-        },
-        language,
-      );
+        const offset = (page - 1) * limit;
+        const { repositories } = getServices();
+        const result = await repositories.products.getFiltered(
+          {
+            search,
+            categoryId,
+            brandId,
+            isActive,
+            limit,
+            offset,
+            sort: "newest",
+          },
+          language,
+        );
 
-      return apiPaginatedResponse(result.products, result.total, page, limit);
-    } catch (error) {
-      return apiError(error instanceof Error ? error.message : "Failed to retrieve products", 500);
-    }
-  });
+        return apiPaginatedResponse(result.products, result.total, page, limit);
+      } catch (error) {
+        return apiError(
+          error instanceof Error ? error.message : "Failed to retrieve products",
+          500,
+        );
+      }
+    },
+    PERMISSION_CODES.ADMIN_PRODUCTS_READ,
+  );
 }
 
 /**
@@ -63,22 +73,26 @@ export async function GET(request: NextRequest) {
  * @returns Created product
  */
 export async function POST(request: NextRequest) {
-  return withAdmin(request, async () => {
-    try {
-      const body = await request.json();
-      const parseResult = ProductInputSchema.safeParse(body);
+  return withAdmin(
+    request,
+    async () => {
+      try {
+        const body = await request.json();
+        const parseResult = ProductInputSchema.safeParse(body);
 
-      if (!parseResult.success) {
-        const msg = parseResult.error.issues[0]?.message ?? "Invalid request";
-        return apiError(msg, 400);
+        if (!parseResult.success) {
+          const msg = parseResult.error.issues[0]?.message ?? "Invalid request";
+          return apiError(msg, 400);
+        }
+
+        const { adminProduct } = getServices();
+        const product = await adminProduct.create(parseResult.data);
+
+        return apiResponse(product, 201);
+      } catch (error) {
+        return apiError(error instanceof Error ? error.message : "Failed to create product", 500);
       }
-
-      const { adminProduct } = getServices();
-      const product = await adminProduct.create(parseResult.data);
-
-      return apiResponse(product, 201);
-    } catch (error) {
-      return apiError(error instanceof Error ? error.message : "Failed to create product", 500);
-    }
-  });
+    },
+    PERMISSION_CODES.ADMIN_PRODUCTS_WRITE,
+  );
 }

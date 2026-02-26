@@ -1,75 +1,85 @@
 # Domain Type Blocks
 
-This document defines the smallest reusable type/value-object blocks for DDD-driven typing.
+Last updated: 2026-02-18
 
-## Core Blocks
+This document defines reusable value-object/type building blocks used to keep the system strongly typed across domain, application, infrastructure, and database contracts.
 
-1. Locale
-- Source: `src/features/core/domain/value-objects/Locale.ts`
-- Types:
-  - `Locale = "en" | "ar"`
-  - `DEFAULT_LOCALE`
-- Helpers:
-  - `resolveLocale(input)`
-  - `isLocale(input)`
+## 1. Localization Blocks
 
-2. Localized Text
-- Source: `src/features/core/domain/value-objects/Translation.ts`
-- Types:
-  - `LocalizedText = Record<Locale, string>`
-  - `LocalizedTextDraft = Partial<Record<Locale, string>>`
-- Helper:
-  - `resolveLocalizedText(map, locale, fallback)`
+- `Locale`: constrained locale code (`en`, `ar`, extensible by policy).
+- `LocalizedString<L extends string>`: map of locale to translated value.
+- Named aliases (examples):
+  - `TranslatedProductName`
+  - `TranslatedProductDescription`
+  - `TranslatedCategoryName`
+  - `TranslatedSlug`
 
-3. Money
-- Source: `src/features/core/domain/value-objects/Money.ts`
-- Types:
-  - `CurrencyCode`
-  - `MoneyAmount`
-  - `Money = { amount: MoneyAmount; currency: CurrencyCode }`
-- Helpers:
-  - `toMoney(amount, currency)`
+Rules:
 
-## Common Type Bridge
+- Localized business text must not be plain `string` in core entities.
+- Slugs are localized objects, not a single shared slug.
 
-`src/features/core/domain/types/common.ts` remains the stable import point and now bridges to value-objects:
-- `Price` is currently an alias to `MoneyAmount` for backward compatibility.
-- `Locale`, `CurrencyCode`, and `Money` are re-exported from this module.
+## 2. Money and Pricing Blocks
 
-This keeps old call-sites working while enabling richer domain modeling.
+- `Money`: `{ amount: number; currency: CurrencyCode }`
+- `PriceBook`: persisted pricing channels/contexts by customer group and sale unit.
+- `DiscountRule`: persisted discount definition (percent/fixed, schedule, eligibility).
+- `ResolvedPricing`: computed runtime pricing output:
+  - `basePrice`
+  - `finalPrice`
+  - `strikePrice` (computed, not persisted)
+  - `appliedDiscounts`
 
-## Where It Is Applied
+Decision:
 
-1. Domain entities
-- `Product` now supports:
-  - `locale`
-  - `localizedContent`
-  - `currency`
-  - `priceMoney` / `strikePriceMoney`
-- `Category` now supports:
-  - `locale`
-  - `localizedContent`
+- `strikePrice` is derived from pricing + discount rules and is not persisted.
+- Cost/wholesale prices remain persisted for profitability and B2B scenarios.
 
-2. Domain input schemas
-- Product/category translation `language` is now constrained by `LocaleSchema`.
+## 3. Media Blocks
 
-3. Persistence schema typing
-- Translation `language` columns are typed as `Locale`.
-- Order/payment/currency columns are typed as domain enums/value-objects.
-- Variant pricing `customerGroup` / `uomCode` / `currency` are typed.
+- `MediaAsset`: canonical media reference.
+- `ResponsiveMediaSet`: media variants by viewport/context (`thumbnail`, `card`, `pdp`, `zoom`).
+- `LocalizedMediaAlt`: translated alt text per locale.
 
-4. Repository/service contracts
-- Catalog/admin language parameters are typed with `Locale`.
-- Locale conversion at boundaries uses `resolveLocale(...)`.
+## 4. Identity and Access Blocks
 
-## Migration Path: Numeric Price -> Money Object
+- `UserId`, `GuestPrincipalId`, `OrganizationId`, `RoleId`, `PermissionId`.
+- `PermissionCode`: atomic capability code (for example `catalog.write`).
+- `RoleGrant`: role assignment with scope (`global`, `organization`).
+- `ActorContext`: resolved actor identity + scopes used in guards.
+- `SessionPayloadV2`: actor + scoped role IDs, no direct role-string enforcement.
 
-Current model keeps `price: Price` (numeric) for compatibility.
+## 5. Account and Credential Blocks
 
-When you are ready to fully migrate:
-1. Change `Product.price` and related fields to `Money`.
-2. Remove numeric-only assumptions in pricing and UI helpers.
-3. Update repository mappers to return `Money` directly.
-4. Replace formatting logic to use `money.currency` instead of implicit defaults.
+- `AuthAccount`: external/local linked account identity.
+- `PasswordCredential`: hashed password and hash strategy metadata.
+- `EmailAddress`, `PhoneNumber` value objects for normalized identity fields.
+- `UserType`/`AccountType`: buyer/admin/business/guest policy-level categorization.
 
-Because price flows through shared `Price`/`Money` blocks, compiler errors will guide all impacted layers.
+## 6. Organization and Membership Blocks
+
+- `Organization`: business tenant/profile aggregate root.
+- `OrganizationMembership`: user membership with scoped role grants.
+- `MembershipStatus`: active/invited/suspended.
+
+## 7. Payment Method Blocks
+
+- `PaymentMethodToken`: provider token reference (never raw PAN/CVV).
+- `PaymentMethodDescriptor`: masked display data and provider metadata.
+- `BillingAddressSnapshot`: immutable address snapshot for checkout/order.
+
+## 8. Mapping Policy
+
+- Domain blocks are source-of-truth contracts.
+- Infra/DB types should align directly where feasible to reduce mapper sprawl.
+- Mapping is still allowed at external boundaries (API providers, legacy columns), but avoid redundant cross-layer mirror types.
+
+## 9. Migration Policy
+
+When a foundational block changes (for example `Money` or `LocalizedString` shape), update in this order:
+
+1. Domain value object/type aliases.
+2. Application interfaces and DTO schemas.
+3. Infrastructure schema/repositories.
+4. API/view-model contracts.
+5. Tests, seeds, and documentation.

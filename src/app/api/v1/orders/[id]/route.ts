@@ -9,6 +9,7 @@ import { NextRequest } from "next/server";
 import { apiResponse, apiError } from "../../_lib/api-response";
 import { withAuth } from "../../_lib/middleware";
 import { container } from "@/features/core/infrastructure/di/ServiceContainer";
+import { isAdminSession } from "@/features/core/domain/auth";
 
 /**
  * Get order detail
@@ -34,7 +35,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       }
 
       // Security: Users can only view their own orders
-      if (order.userId !== context.user.userId && context.user.role !== "admin") {
+      if (order.userId !== context.user.userId && !isAdminSession(context.user)) {
         return apiError("Access denied", 403);
       }
 

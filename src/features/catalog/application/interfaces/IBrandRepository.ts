@@ -1,5 +1,6 @@
 import { ID, Slug } from "@/features/core/domain/types/common";
 import type { Brand } from "@/features/catalog/domain/entities/Brand";
+import type { Locale } from "@/features/core/domain/value-objects";
 
 /** Input for creating a brand */
 export interface BrandCreateInput {
@@ -28,17 +29,17 @@ export interface IBrandRepository {
    *
    * @param activeOnly - If true, returns only active brands.
    */
-  getAll(activeOnly?: boolean): Promise<Brand[]>;
+  getAll(activeOnly?: boolean, language?: Locale): Promise<Brand[]>;
 
   /**
    * Retrieves a single brand by its unique identifier.
    */
-  getById(id: ID): Promise<Brand | null>;
+  getById(id: ID, language?: Locale): Promise<Brand | null>;
 
   /**
    * Retrieves a brand by its URL-friendly slug.
    */
-  getBySlug(slug: Slug): Promise<Brand | null>;
+  getBySlug(slug: Slug, language?: Locale): Promise<Brand | null>;
 
   /**
    * Persists a new brand to storage.
