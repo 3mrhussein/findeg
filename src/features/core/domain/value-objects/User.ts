@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { EmailSchema } from "../types/common";
 
 /**
  * User Value Object Schema
@@ -8,7 +7,7 @@ import { EmailSchema } from "../types/common";
  * Used in sessions, profiles, and lightweight displays.
  */
 export const UserVOSchema = z.object({
-  email: EmailSchema,
+  email: z.string().email(),
   firstName: z.string().min(1),
   lastName: z.string().min(1),
   fullName: z.string().min(1),

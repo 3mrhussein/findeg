@@ -1,110 +1,71 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Image from "next/image";
-import Link from "next/link";
-import { ShoppingCart, Eye } from "lucide-react";
-
+import { Link } from "@/i18n/routing";
 import { Product } from "@/features/catalog/domain/entities/Product";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { useCart } from "@/hooks/useCart"; // Assuming this exists or will exist
+import { useCart } from "@/hooks/useCart";
 
 interface ProductCardProps {
-  product: Pick<
-    Product,
-    | "id"
-    | "name"
-    | "price"
-    | "images"
-    | "imageUrl"
-    | "categoryName"
-    | "description"
-    | "longDescription"
-    | "rating"
-    | "reviewsCount"
-  >;
+  product: Pick<Product, "id" | "name" | "price" | "images" | "imageUrl" | "categoryName">;
 }
 
 /**
  *
  */
 export function ProductCard({ product }: ProductCardProps) {
-  const { addToCart } = useCart(); // Assuming simplified hook usage
+  const { addToCart } = useCart();
 
   return (
-    <motion.div
-      data-testid={`product-card-${product.id}`}
-      initial={{ opacity: 0, scale: 0.95 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.3 }}
-      whileHover={{ y: -5 }}
-    >
-      <Card className="overflow-hidden h-full flex flex-col group border-0 shadow-sm hover:shadow-md transition-shadow">
-        <div className="relative aspect-square overflow-hidden bg-secondary/10">
-          <Image
-            src={product.images[0] || product.imageUrl || "/placeholder-product.jpg"}
-            alt={product.name}
-            fill
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
-          {/* Status Badge (e.g. New, Sale) - logic can be added */}
-          {/* <Badge className="absolute top-2 left-2 bg-primary text-primary-foreground">New</Badge> */}
-
-          {/* Quick Actions overlay */}
-          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-            <Button
-              variant="secondary"
-              size="icon"
-              className="rounded-full translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-75"
-              asChild
-            >
-              <Link href={`/products/${product.id}`}>
-                <Eye className="h-4 w-4" />
-                <span className="sr-only">View Details</span>
-              </Link>
-            </Button>
-            <Button
-              variant="default"
-              size="icon"
-              data-testid={`product-card-add-${product.id}`}
-              className="rounded-full translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-100"
-              onClick={() => addToCart(product, 1)}
-            >
-              <ShoppingCart className="h-4 w-4" />
-              <span className="sr-only">Add to Cart</span>
-            </Button>
-          </div>
+    <div className="group relative" data-testid={`product-card-${product.id}`}>
+      <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-800">
+        <div className="absolute top-3 left-3 z-10 rounded bg-primary px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-white">
+          New
         </div>
 
-        <CardContent className="p-4 grow">
-          <div className="text-sm text-muted-foreground mb-1">
-            {product.categoryName || "Stationary"}
-          </div>
-          <Link href={`/products/${product.id}`} className="hover:underline">
-            <h3
-              className="font-semibold text-lg leading-tight line-clamp-2 mb-2"
-              data-testid={`product-card-title-${product.id}`}
-            >
-              {product.name}
-            </h3>
-          </Link>
-          <div className="flex items-center gap-2">{/* Rating logic could go here */}</div>
-        </CardContent>
+        <Image
+          src={
+            product.images?.[0] ||
+            product.imageUrl ||
+            `https://picsum.photos/seed/${product.id}/600/600`
+          }
+          alt={product.name}
+          fill
+          className="object-cover object-center group-hover:opacity-75 transition-opacity duration-300"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        />
 
-        <CardFooter className="p-4 pt-0 flex items-center justify-between">
-          <div className="font-bold text-lg" data-testid={`product-card-price-${product.id}`}>
-            {new Intl.NumberFormat("en-EG", {
-              style: "currency",
-              currency: "EGP",
-            }).format(product.price)}
+        <button
+          onClick={() => addToCart(product as Product, 1)}
+          data-testid={`product-card-add-${product.id}`}
+          className="absolute bottom-4 left-1/2 -translate-x-1/2 translate-y-10 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 w-[90%] bg-surface-light dark:bg-surface-dark text-slate-900 dark:text-white shadow-lg font-bold text-sm py-2 rounded-full flex items-center justify-center gap-2 hover:bg-slate-50 z-20"
+        >
+          <span className="material-symbols-outlined text-[18px]">add_shopping_cart</span>
+          Add
+        </button>
+      </div>
+
+      <div className="mt-4 flex justify-between gap-4">
+        <div>
+          <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">
+            {product.categoryName || "Stationery"}
           </div>
-          {/* Add to cart / Buy now can be here too for mobile */}
-        </CardFooter>
-      </Card>
-    </motion.div>
+          <h3 className="text-sm font-medium text-slate-900 dark:text-white line-clamp-2">
+            <Link href={`/products/${product.id}`} data-testid={`product-card-title-${product.id}`}>
+              <span aria-hidden="true" className="absolute inset-0 z-0"></span>
+              {product.name}
+            </Link>
+          </h3>
+        </div>
+        <p
+          className="text-sm font-bold text-slate-900 dark:text-white shrink-0"
+          data-testid={`product-card-price-${product.id}`}
+        >
+          {new Intl.NumberFormat("en-EG", {
+            style: "currency",
+            currency: "EGP",
+          }).format(Number(product.price))}
+        </p>
+      </div>
+    </div>
   );
 }

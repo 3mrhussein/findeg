@@ -1,4 +1,4 @@
-import { cacheLife, cacheTag } from "next/cache";
+import { unstable_cache } from "next/cache";
 import { getServices } from "@/server/getServices";
 import { CACHE_TAGS } from "@/features/core/domain/constants/cache-tags";
 import type { Product } from "@/features/catalog/domain/entities/Product";
@@ -32,24 +32,23 @@ export interface ProductDetailPageData {
 /**
  * Cached storefront read model for home page content.
  */
-export async function getHomePageData(language: string): Promise<HomePageData> {
-  "use cache";
+export const getHomePageData = unstable_cache(
+  async (language: string): Promise<HomePageData> => {
+    const locale = resolveLocale(language);
+    const { products, categories } = getServices();
+    const [featuredProducts, allCategories] = await Promise.all([
+      products.getFeaturedProducts(8, locale),
+      categories.getAll(locale),
+    ]);
 
-  cacheLife("hours");
-  cacheTag(CACHE_TAGS.CATALOG_PRODUCTS, CACHE_TAGS.CATALOG_CATEGORIES);
-
-  const locale = resolveLocale(language);
-  const { products, categories } = getServices();
-  const [featuredProducts, allCategories] = await Promise.all([
-    products.getFeaturedProducts(8, locale),
-    categories.getAll(locale),
-  ]);
-
-  return {
-    featuredProducts,
-    categories: allCategories,
-  };
-}
+    return {
+      featuredProducts,
+      categories: allCategories,
+    };
+  },
+  ["home-page-data"],
+  { revalidate: 3600, tags: [CACHE_TAGS.CATALOG_PRODUCTS, CACHE_TAGS.CATALOG_CATEGORIES] },
+);
 
 /**
  * Storefront read model for shop listing page.
@@ -68,16 +67,15 @@ export async function getShopPageData(language: string): Promise<ShopPageData> {
 /**
  * Cached storefront read model for categories page.
  */
-export async function getCategoriesPageData(language: string): Promise<Category[]> {
-  "use cache";
-
-  cacheLife("days");
-  cacheTag(CACHE_TAGS.CATALOG_CATEGORIES);
-
-  const locale = resolveLocale(language);
-  const { categories } = getServices();
-  return categories.getAll(locale);
-}
+export const getCategoriesPageData = unstable_cache(
+  async (language: string): Promise<Category[]> => {
+    const locale = resolveLocale(language);
+    const { categories } = getServices();
+    return categories.getAll(locale);
+  },
+  ["categories-page-data"],
+  { revalidate: 86400, tags: [CACHE_TAGS.CATALOG_CATEGORIES] },
+);
 
 /**
  * Storefront read model for search page results.
@@ -120,49 +118,44 @@ export async function getSearchPageData(language: string, query: string): Promis
 /**
  * Cached list of product IDs used for static params generation.
  */
-export async function getProductIdsForStaticParams(): Promise<number[]> {
-  "use cache";
-
-  cacheLife("days");
-  cacheTag(CACHE_TAGS.CATALOG_PRODUCTS);
-
-  const { products } = getServices();
-  const allProducts = await products.getAll("en");
-  return allProducts.map((product) => product.id);
-}
+export const getProductIdsForStaticParams = unstable_cache(
+  async (): Promise<number[]> => {
+    const { products } = getServices();
+    const allProducts = await products.getAll("en");
+    return allProducts.map((product) => product.id);
+  },
+  ["product-ids-static-params"],
+  { revalidate: 86400, tags: [CACHE_TAGS.CATALOG_PRODUCTS] },
+);
 
 /**
  * Cached storefront read model for product detail page.
  */
-export async function getProductDetailPageData(
-  productId: number,
-  language: string,
-): Promise<ProductDetailPageData | null> {
-  "use cache";
+export const getProductDetailPageData = unstable_cache(
+  async (productId: number, language: string): Promise<ProductDetailPageData | null> => {
+    const locale: Locale = resolveLocale(language);
+    const { products, repositories } = getServices();
+    const product = await products.getById(productId, locale);
 
-  cacheLife("hours");
-  cacheTag(CACHE_TAGS.CATALOG_PRODUCTS, CACHE_TAGS.CATALOG_REVIEWS);
+    if (!product) return null;
 
-  const locale: Locale = resolveLocale(language);
-  const { products, repositories } = getServices();
-  const product = await products.getById(productId, locale);
+    const [allProducts, reviews] = await Promise.all([
+      products.getAll(locale),
+      repositories.reviews.getByProductId(productId),
+    ]);
 
-  if (!product) return null;
+    const recommendedProducts = allProducts
+      .filter(
+        (candidate) => candidate.id !== product.id && candidate.categoryId === product.categoryId,
+      )
+      .slice(0, 4);
 
-  const [allProducts, reviews] = await Promise.all([
-    products.getAll(locale),
-    repositories.reviews.getByProductId(productId),
-  ]);
-
-  const recommendedProducts = allProducts
-    .filter(
-      (candidate) => candidate.id !== product.id && candidate.categoryId === product.categoryId,
-    )
-    .slice(0, 4);
-
-  return {
-    product,
-    reviews,
-    recommendedProducts,
-  };
-}
+    return {
+      product,
+      reviews,
+      recommendedProducts,
+    };
+  },
+  ["product-detail"],
+  { revalidate: 3600, tags: [CACHE_TAGS.CATALOG_PRODUCTS, CACHE_TAGS.CATALOG_REVIEWS] },
+);

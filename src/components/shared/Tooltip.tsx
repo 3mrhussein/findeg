@@ -1,27 +1,30 @@
-import {
-  Tooltip as UiTooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import type { ReactNode } from "react";
+"use client";
 
-interface TooltipProps {
-  tip: string;
-  children: ReactNode;
-  side?: "top" | "right" | "bottom" | "left";
-}
+import {
+  TooltipProvider,
+  Tooltip as UITooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/components/ui/tooltip";
 
 /**
  *
  */
-export function Tooltip({ tip, children, side = "top" }: TooltipProps) {
+export function Tooltip({
+  children,
+  tip,
+  side,
+}: {
+  children: React.ReactNode;
+  tip: React.ReactNode;
+  side?: "top" | "right" | "bottom" | "left";
+}) {
   return (
     <TooltipProvider>
-      <UiTooltip>
+      <UITooltip>
         <TooltipTrigger asChild>{children}</TooltipTrigger>
         <TooltipContent side={side}>{tip}</TooltipContent>
-      </UiTooltip>
+      </UITooltip>
     </TooltipProvider>
   );
 }

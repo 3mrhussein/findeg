@@ -1,157 +1,127 @@
 "use client";
 
-import type React from "react";
-import { Slider } from "@/components/ui/slider";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
+import { useTranslations } from "next-intl";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
-import { useTranslations } from "next-intl";
-import { withShopFilters } from "@/features/catalog/presentation/hoc/withShopFilters";
-import type { FilterOption } from "@/features/catalog/application/queries/listing";
 
-interface FilterSidebarProps {
-  selectedCategories: string[];
-  selectedBrands: string[];
-  localPrice: number[];
-  setLocalPrice: (value: number[]) => void;
-  setPriceRange: (value: number[] | null) => Promise<URLSearchParams>;
-  setCategory: (id: string, checked: boolean) => void;
-  setBrand: (id: string, checked: boolean) => void;
-  clearFilters: () => void;
+interface BrandOption {
+  id: string;
+  label: string;
+  count?: number;
 }
 
-interface FilterSidebarOwnProps {
-  categories?: FilterOption[];
-  brands?: FilterOption[];
-  minPrice?: number;
-  maxPrice?: number;
+interface CategoryOption {
+  id: string;
+  label: string;
+  count?: number;
+}
+
+interface FilterSidebarProps {
+  categories: CategoryOption[];
+  brands: BrandOption[];
+  minPrice: number;
+  maxPrice: number;
 }
 
 /**
  *
  */
-function FilterSidebarView({
-  categories = [],
-  brands = [],
-  minPrice = 0,
-  maxPrice = 1000,
-  selectedCategories,
-  selectedBrands,
-  localPrice,
-  setLocalPrice,
-  setPriceRange,
-  setCategory,
-  setBrand,
-  clearFilters,
-}: FilterSidebarOwnProps & FilterSidebarProps) {
-  const t = useTranslations();
+export function FilterSidebar({ categories, brands, minPrice, maxPrice }: FilterSidebarProps) {
+  const t = useTranslations("Pages.Shop");
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">{t("Pages.Shop.FiltersTitle")}</h3>
+        <h2 className="text-lg font-bold text-slate-900 dark:text-white">{t("FiltersTitle")}</h2>
         <Button
           variant="ghost"
           size="sm"
-          onClick={clearFilters}
-          className="h-auto p-0 text-muted-foreground hover:text-primary"
+          className="h-8 text-xs text-primary hover:text-primary/80"
         >
-          {t("Pages.Shop.FiltersClearAll")}
+          Clear all
         </Button>
       </div>
 
       <Accordion
         type="multiple"
-        defaultValue={["categories", "price", "brands"]}
+        defaultValue={["categories", "brands", "price"]}
         className="w-full"
       >
         {/* Categories */}
-        <AccordionItem value="categories">
-          <AccordionTrigger>{t("Pages.Shop.FiltersCategories")}</AccordionTrigger>
+        <AccordionItem value="categories" className="border-b-0">
+          <AccordionTrigger className="text-sm font-bold hover:no-underline">
+            Categories
+          </AccordionTrigger>
           <AccordionContent>
-            <div className="space-y-2 pt-1">
+            <div className="mt-2 space-y-3">
               {categories.map((category) => (
-                <div
-                  key={category.id}
-                  className="flex items-center space-x-2"
-                  data-testid={`filter-category-${category.id}`}
-                >
+                <div key={category.id} className="flex items-center space-x-3">
                   <Checkbox
-                    id={`cat-${category.id}`}
-                    checked={selectedCategories.includes(category.id)}
-                    onCheckedChange={(checked) => setCategory(category.id, checked as boolean)}
+                    id={`category-${category.id}`}
+                    className="rounded-[4px] border-slate-300 text-primary focus:ring-primary"
                   />
-                  <Label
-                    htmlFor={`cat-${category.id}`}
-                    className="text-sm font-normal cursor-pointer"
+                  <label
+                    htmlFor={`category-${category.id}`}
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-slate-600 dark:text-slate-300"
                   >
-                    {category.label} ({category.count})
-                  </Label>
+                    {category.label} <span className="text-slate-400">({category.count || 0})</span>
+                  </label>
                 </div>
               ))}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-
-        {/* Price Range */}
-        <AccordionItem value="price">
-          <AccordionTrigger>{t("Pages.Shop.FiltersPrice")}</AccordionTrigger>
-          <AccordionContent>
-            <div className="space-y-4 pt-2">
-              <Slider
-                defaultValue={[minPrice, maxPrice]}
-                min={minPrice}
-                max={maxPrice}
-                step={10}
-                value={localPrice}
-                onValueChange={setLocalPrice}
-                onValueCommit={setPriceRange} // Update URL only on release
-                className="py-4"
-                aria-label={t("Pages.Shop.FiltersPrice")}
-              />
-              <div className="flex items-center justify-between text-sm">
-                <div className="border rounded px-2 py-1 min-w-[60px] text-center">
-                  {localPrice[0]} EGP
-                </div>
-                <div className="text-muted-foreground">-</div>
-                <div className="border rounded px-2 py-1 min-w-[60px] text-center">
-                  {localPrice[1]} EGP
-                </div>
-              </div>
             </div>
           </AccordionContent>
         </AccordionItem>
 
         {/* Brands */}
-        <AccordionItem value="brands">
-          <AccordionTrigger>{t("Pages.Shop.FiltersBrands")}</AccordionTrigger>
+        <AccordionItem value="brands" className="border-b-0">
+          <AccordionTrigger className="text-sm font-bold hover:no-underline">
+            Brands
+          </AccordionTrigger>
           <AccordionContent>
-            <div className="space-y-2 pt-1">
+            <div className="mt-2 space-y-3">
               {brands.map((brand) => (
-                <div
-                  key={brand.id}
-                  className="flex items-center space-x-2"
-                  data-testid={`filter-brand-${brand.id}`}
-                >
+                <div key={brand.id} className="flex items-center space-x-3">
                   <Checkbox
                     id={`brand-${brand.id}`}
-                    checked={selectedBrands.includes(brand.id)}
-                    onCheckedChange={(checked) => setBrand(brand.id, checked as boolean)}
+                    className="rounded-[4px] border-slate-300 text-primary focus:ring-primary"
                   />
-                  <Label
+                  <label
                     htmlFor={`brand-${brand.id}`}
-                    className="text-sm font-normal cursor-pointer"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-slate-600 dark:text-slate-300"
                   >
-                    {brand.label} ({brand.count})
-                  </Label>
+                    {brand.label} <span className="text-slate-400">({brand.count || 0})</span>
+                  </label>
                 </div>
               ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+
+        {/* Price */}
+        <AccordionItem value="price" className="border-b-0">
+          <AccordionTrigger className="text-sm font-bold hover:no-underline">
+            Price Range
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="mt-4 px-2 space-y-6">
+              <Slider
+                defaultValue={[minPrice, maxPrice]}
+                max={maxPrice}
+                min={minPrice}
+                step={1}
+                className="[&_[role=slider]]:h-4 [&_[role=slider]]:w-4 [&_[role=slider]]:bg-primary [&_[role=slider]]:border-none"
+              />
+              <div className="flex items-center justify-between text-sm font-medium text-slate-600 dark:text-slate-300">
+                <span>EGP {minPrice}</span>
+                <span>EGP {maxPrice}</span>
+              </div>
             </div>
           </AccordionContent>
         </AccordionItem>
@@ -159,5 +129,3 @@ function FilterSidebarView({
     </div>
   );
 }
-
-export const FilterSidebar = withShopFilters<FilterSidebarOwnProps>(FilterSidebarView);

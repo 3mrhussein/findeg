@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Poppins } from "next/font/google";
+import { Inter } from "next/font/google";
 import "../globals.css";
 import { hasLocale, Locale, NextIntlClientProvider } from "next-intl";
 import { routing } from "@/i18n/routing";
@@ -8,10 +8,10 @@ import { getMessages, setRequestLocale } from "next-intl/server";
 import Providers from "@/providers/Providers";
 import { Suspense } from "react";
 
-const poppins = Poppins({
+const inter = Inter({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-poppins",
+  weight: ["300", "400", "500", "600", "700", "900"],
+  variable: "--font-sans",
 });
 
 export const metadata: Metadata = {
@@ -95,7 +95,18 @@ export default async function RootLayout({
   const messages = await getMessages({ locale: typedLocale });
   return (
     <html lang={locale} dir={locale === "ar" ? "rtl" : "ltr"} suppressHydrationWarning>
-      <body className={`${poppins.variable} font-sans`} suppressHydrationWarning>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=block"
+          rel="stylesheet"
+        />
+      </head>
+      <body
+        className={`${inter.variable} font-sans bg-background text-foreground`}
+        suppressHydrationWarning
+      >
         <NextIntlClientProvider locale={typedLocale} messages={messages}>
           <Providers>
             <Suspense>

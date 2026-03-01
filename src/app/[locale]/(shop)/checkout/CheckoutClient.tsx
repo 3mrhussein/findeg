@@ -3,20 +3,19 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/hooks/useCart";
-import { Container } from "@/components/shared/Container";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { useTranslations } from "next-intl";
 import { SectionStateEmpty } from "@/components/shared/state/SectionStateEmpty";
 import {
   useCheckoutForm,
   type CheckoutValidationError,
-  type PaymentMethod,
 } from "@/features/order/presentation/hooks/useCheckoutForm";
 import type { CheckoutPrefillData } from "@/features/order/application/queries/checkout-prefill";
+
+import { ShippingForm } from "./_components/ShippingForm";
+import { PaymentForm } from "./_components/PaymentForm";
+import { OrderSummary } from "./_components/OrderSummary";
+import { CheckCircle2 } from "lucide-react";
 
 interface CheckoutTotals {
   subtotal: number;
@@ -85,7 +84,6 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
    */
   function toFieldErrorMessage(error: CheckoutValidationError | null) {
     if (!error) return null;
-
     switch (error) {
       case "fullName_required":
         return t("Pages.Checkout.ErrorFullName");
@@ -185,298 +183,143 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
   }
 
   return (
-    <main className="bg-background py-8 lg:py-12" aria-labelledby="checkout-title">
-      <Container>
-        <h1 id="checkout-title" className="text-3xl font-bold mb-8">
-          {t("Pages.Checkout.Title")}
-        </h1>
+    <main
+      className="bg-slate-50 dark:bg-slate-900/30 min-h-screen py-10 lg:py-16"
+      aria-labelledby="checkout-title"
+    >
+      <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="mb-10 text-center">
+          <h1
+            id="checkout-title"
+            className="text-4xl font-black tracking-tight text-slate-900 dark:text-white mb-4"
+          >
+            {t("Pages.Checkout.Title") || "Secure Checkout"}
+          </h1>
+          {!orderResult?.success && cartItems.length > 0 && (
+            <p className="text-lg text-slate-500 max-w-lg mx-auto">
+              You're almost there! Complete your details below to finalize your order.
+            </p>
+          )}
+        </div>
 
         {cartItems.length === 0 && !orderResult?.success ? (
           <SectionStateEmpty
             title={t("Pages.Cart.Empty")}
             description={t("Pages.Checkout.EmptyDescription")}
             ctaLabel={t("Pages.Checkout.ContinueShopping")}
-            ctaHref="/"
+            ctaHref="/shop"
           />
         ) : null}
 
         {orderResult?.success ? (
-          <Card>
-            <CardHeader>
-              <CardTitle>{t("Pages.Checkout.OrderConfirmed")}</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p aria-live="polite">{orderResult.message}</p>
-              {orderResult.orderId ? (
-                <p>{t("Pages.Checkout.OrderId", { id: orderResult.orderId })}</p>
-              ) : null}
-              <Button onClick={() => router.push("/")}>
+          <div className="max-w-2xl mx-auto rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-surface-dark p-8 md:p-12 text-center shadow-lg">
+            <div className="size-24 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto mb-6">
+              <CheckCircle2 className="w-12 h-12" />
+            </div>
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-white mb-4">
+              {t("Pages.Checkout.OrderConfirmed")}
+            </h2>
+            <p aria-live="polite" className="text-slate-600 dark:text-slate-400 mb-6 text-lg">
+              {orderResult.message}
+            </p>
+            {orderResult.orderId ? (
+              <div className="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800 rounded-lg px-4 py-2 text-slate-900 dark:text-white font-mono font-medium mb-10">
+                <span className="text-slate-500 font-sans text-sm">Order ID:</span> #
+                {orderResult.orderId}
+              </div>
+            ) : null}
+            <div>
+              <Button
+                onClick={() => router.push("/shop")}
+                size="lg"
+                className="rounded-full px-8 h-12 text-base shadow-sm"
+              >
                 {t("Pages.Checkout.ContinueShopping")}
               </Button>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         ) : cartItems.length > 0 ? (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-12">
             <form
-              className="lg:col-span-2 space-y-6 order-2 lg:order-1"
+              className="lg:col-span-2 space-y-10 order-2 lg:order-1"
               onSubmit={handlePlaceOrder}
               noValidate
               aria-busy={isSubmitting}
             >
-              <Card>
-                <CardHeader>
-                  <CardTitle>{t("Pages.Checkout.ShippingInformation")}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="fullName">{t("Pages.Checkout.FullName")}</Label>
-                    <Input
-                      id="fullName"
-                      placeholder={t("Pages.Checkout.PlaceholderFullName")}
-                      value={formValues.fullName}
-                      onChange={(e) => setField("fullName", e.target.value)}
-                      onBlur={() => touchField("fullName")}
-                      autoComplete="name"
-                      required
-                    />
-                    {toFieldErrorMessage(getFieldError("fullName")) ? (
-                      <p className="text-xs text-destructive">
-                        {toFieldErrorMessage(getFieldError("fullName"))}
-                      </p>
-                    ) : null}
+              <div className="space-y-6">
+                <div className="flex items-center gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
+                  <div className="flex size-8 items-center justify-center rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-sm">
+                    1
                   </div>
+                  <h2 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+                    {t("Pages.Checkout.ShippingInformation")}
+                  </h2>
+                </div>
+                <div className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-surface-dark p-6 md:p-8 shadow-sm">
+                  <ShippingForm
+                    formValues={formValues}
+                    setField={setField}
+                    touchField={touchField}
+                    toFieldErrorMessage={toFieldErrorMessage}
+                    getFieldError={getFieldError}
+                    t={t}
+                  />
+                </div>
+              </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="email">{t("Pages.Checkout.EmailRequired")}</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder={t("Pages.Checkout.PlaceholderEmail")}
-                      value={formValues.guestEmail}
-                      onChange={(e) => setField("guestEmail", e.target.value)}
-                      onBlur={() => touchField("guestEmail")}
-                      autoComplete="email"
-                      required
-                    />
-                    {toFieldErrorMessage(getFieldError("guestEmail")) ? (
-                      <p className="text-xs text-destructive">
-                        {toFieldErrorMessage(getFieldError("guestEmail"))}
-                      </p>
-                    ) : null}
+              <div className="space-y-6">
+                <div className="flex items-center gap-3 border-b border-slate-200 dark:border-slate-800 pb-4">
+                  <div className="flex size-8 items-center justify-center rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-sm">
+                    2
                   </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="phone">{t("Pages.Checkout.Phone")}</Label>
-                      <Input
-                        id="phone"
-                        type="tel"
-                        placeholder={t("Pages.Checkout.PlaceholderPhone")}
-                        value={formValues.phone}
-                        onChange={(e) => setField("phone", e.target.value)}
-                        onBlur={() => touchField("phone")}
-                        autoComplete="tel"
-                        inputMode="numeric"
-                        pattern="[0-9+\\-\\s]{11,}"
-                        minLength={11}
-                        required
-                      />
-                      {toFieldErrorMessage(getFieldError("phone")) ? (
-                        <p className="text-xs text-destructive">
-                          {toFieldErrorMessage(getFieldError("phone"))}
-                        </p>
-                      ) : null}
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="city">{t("Pages.Checkout.City")}</Label>
-                      <Input
-                        id="city"
-                        placeholder={t("Pages.Checkout.PlaceholderCity")}
-                        value={formValues.city}
-                        onChange={(e) => setField("city", e.target.value)}
-                        onBlur={() => touchField("city")}
-                        autoComplete="address-level2"
-                        required
-                      />
-                      {toFieldErrorMessage(getFieldError("city")) ? (
-                        <p className="text-xs text-destructive">
-                          {toFieldErrorMessage(getFieldError("city"))}
-                        </p>
-                      ) : null}
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="area">{t("Pages.Checkout.Area")}</Label>
-                      <Input
-                        id="area"
-                        placeholder={t("Pages.Checkout.PlaceholderArea")}
-                        value={formValues.area}
-                        onChange={(e) => setField("area", e.target.value)}
-                        onBlur={() => touchField("area")}
-                        autoComplete="address-level1"
-                        required
-                      />
-                      {toFieldErrorMessage(getFieldError("area")) ? (
-                        <p className="text-xs text-destructive">
-                          {toFieldErrorMessage(getFieldError("area"))}
-                        </p>
-                      ) : null}
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="street">{t("Pages.Checkout.Street")}</Label>
-                      <Input
-                        id="street"
-                        placeholder={t("Pages.Checkout.PlaceholderStreet")}
-                        value={formValues.street}
-                        onChange={(e) => setField("street", e.target.value)}
-                        onBlur={() => touchField("street")}
-                        autoComplete="street-address"
-                        required
-                      />
-                      {toFieldErrorMessage(getFieldError("street")) ? (
-                        <p className="text-xs text-destructive">
-                          {toFieldErrorMessage(getFieldError("street"))}
-                        </p>
-                      ) : null}
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="building">{t("Pages.Checkout.BuildingOptional")}</Label>
-                      <Input
-                        id="building"
-                        placeholder={t("Pages.Checkout.PlaceholderBuilding")}
-                        value={formValues.building}
-                        onChange={(e) => setField("building", e.target.value)}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="floor">{t("Pages.Checkout.FloorOptional")}</Label>
-                      <Input
-                        id="floor"
-                        placeholder={t("Pages.Checkout.PlaceholderFloor")}
-                        value={formValues.floor}
-                        onChange={(e) => setField("floor", e.target.value)}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="apartment">{t("Pages.Checkout.ApartmentOptional")}</Label>
-                      <Input
-                        id="apartment"
-                        placeholder={t("Pages.Checkout.PlaceholderApartment")}
-                        value={formValues.apartment}
-                        onChange={(e) => setField("apartment", e.target.value)}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="notes">{t("Pages.Checkout.DeliveryNotesOptional")}</Label>
-                    <Input
-                      id="notes"
-                      placeholder={t("Pages.Checkout.PlaceholderNotes")}
-                      value={formValues.notes}
-                      onChange={(e) => setField("notes", e.target.value)}
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>{t("Pages.Checkout.PaymentMethod")}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <fieldset className="space-y-3">
-                    <legend className="sr-only">{t("Pages.Checkout.PaymentMethod")}</legend>
-                    <label
-                      htmlFor="payment-cod"
-                      className="flex items-center gap-3 rounded-md border p-3 cursor-pointer"
-                    >
-                      <input
-                        id="payment-cod"
-                        type="radio"
-                        name="payment"
-                        value="cod"
-                        checked={paymentMethod === "cod"}
-                        onChange={() => setPaymentMethod("cod")}
-                        required
-                      />
-                      <span>{t("Pages.Checkout.CashOnDelivery")}</span>
-                    </label>
-                    <label
-                      htmlFor="payment-card"
-                      className="flex items-center gap-3 rounded-md border p-3 cursor-pointer"
-                    >
-                      <input
-                        id="payment-card"
-                        type="radio"
-                        name="payment"
-                        value="card"
-                        checked={paymentMethod === "card"}
-                        onChange={() => setPaymentMethod("card")}
-                        required
-                      />
-                      <span>{t("Pages.Checkout.CardPayment")}</span>
-                    </label>
-                  </fieldset>
-                </CardContent>
-              </Card>
+                  <h2 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+                    {t("Pages.Checkout.PaymentMethod")}
+                  </h2>
+                </div>
+                <div className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-surface-dark p-6 md:p-8 shadow-sm">
+                  <PaymentForm
+                    paymentMethod={paymentMethod}
+                    setPaymentMethod={setPaymentMethod}
+                    t={t}
+                  />
+                </div>
+              </div>
 
               {errorMessage ? (
-                <Card className="border-destructive" role="alert" aria-live="assertive">
-                  <CardContent className="pt-6 text-destructive">{errorMessage}</CardContent>
-                </Card>
+                <div
+                  className="rounded-xl border border-destructive bg-destructive/10 p-4 text-destructive font-medium flex items-start gap-3"
+                  role="alert"
+                  aria-live="assertive"
+                >
+                  <span className="material-symbols-outlined mt-0.5">error</span>
+                  <p>{errorMessage}</p>
+                </div>
               ) : null}
 
               <Button
                 size="lg"
-                className="w-full text-lg h-14"
+                className="w-full text-lg h-16 rounded-full shadow-xl shadow-primary/25 hover:scale-[1.02] transition-transform"
                 disabled={!canSubmit || isSubmitting}
                 type="submit"
               >
-                {isSubmitting ? t("Pages.Checkout.PlacingOrder") : t("Pages.Checkout.PlaceOrder")}
+                {isSubmitting ? (
+                  <span className="flex items-center gap-2">
+                    <div className="size-5 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+                    {t("Pages.Checkout.PlacingOrder")}
+                  </span>
+                ) : (
+                  t("Pages.Checkout.PlaceOrder")
+                )}
               </Button>
             </form>
 
             <div className="lg:col-span-1 order-1 lg:order-2">
-              <Card className="sticky top-24">
-                <CardHeader>
-                  <CardTitle>{t("Pages.Checkout.OrderSummary")}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">{t("Pages.Checkout.Items")}</span>
-                    <span>{cartItems.length}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">{t("Pages.Checkout.Subtotal")}</span>
-                    <span>
-                      {orderSummary.currency} {orderSummary.subtotal.toFixed(2)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">{t("Pages.Checkout.Shipping")}</span>
-                    <span>
-                      {orderSummary.currency} {orderSummary.shippingCost.toFixed(2)}
-                    </span>
-                  </div>
-                  <Separator />
-                  <div className="flex justify-between font-bold text-lg">
-                    <span>{t("Pages.Checkout.Total")}</span>
-                    <span>
-                      {orderSummary.currency} {orderSummary.total.toFixed(2)}
-                    </span>
-                  </div>
-                </CardContent>
-              </Card>
+              <OrderSummary orderSummary={orderSummary} cartItemsCount={cartItems.length} t={t} />
             </div>
           </div>
         ) : null}
-      </Container>
+      </div>
     </main>
   );
 }

@@ -22,12 +22,18 @@ interface AddToCartButtonProps {
   >;
   size?: "default" | "sm" | "lg" | "icon";
   className?: string;
+  quantity?: number;
 }
 
 /**
  *
  */
-export function AddToCartButton({ product, size = "default", className }: AddToCartButtonProps) {
+export function AddToCartButton({
+  product,
+  size = "default",
+  className,
+  quantity = 1,
+}: AddToCartButtonProps) {
   const { addToCart } = useCart();
   const t = useTranslations();
 
@@ -36,7 +42,7 @@ export function AddToCartButton({ product, size = "default", className }: AddToC
    */
   const handleAddToCart = () => {
     if (product) {
-      addToCart(product, 1);
+      addToCart(product, quantity);
     }
   };
 

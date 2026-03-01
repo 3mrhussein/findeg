@@ -1,15 +1,9 @@
 import { getTranslations } from "next-intl/server";
 import type { Locale } from "next-intl";
-import { Container } from "@/components/shared/Container";
-import { Logo } from "@/components/shared/Logo";
-import { Mail, Phone, Facebook, Instagram } from "lucide-react";
 import { Link } from "@/i18n/routing";
 
 const CURRENT_YEAR = new Date().getFullYear();
 
-/**
- *
- */
 interface FooterProps {
   locale: Locale;
 }
@@ -20,112 +14,122 @@ interface FooterProps {
 export async function Footer({ locale }: FooterProps) {
   const t = await getTranslations({ locale });
 
-  const shopLinks = [
-    { label: t("Nav.Home"), href: "/" },
-    { label: t("Nav.Categories"), href: "/categories" },
-    { label: t("Nav.SchoolLists"), href: "/school-lists" },
-    { label: t("Nav.Search"), href: "/search" },
-    { label: t("Pages.Checkout.Title"), href: "/checkout" },
-  ];
-
-  const aboutLinks = [
-    { label: t("Layout.Footer.AboutStory"), href: "/about" },
-    { label: t("Layout.Footer.AboutCareers"), href: "/about#careers" },
-    { label: t("Layout.Footer.AboutContact"), href: "/about#contact" },
-  ];
-
   return (
-    <footer className="border-t bg-muted/30">
-      <Container className="py-10 md:py-14">
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
-          <div className="space-y-4">
-            <Logo />
-            <p className="text-sm text-muted-foreground">{t("Layout.Footer.Tagline")}</p>
+    <footer className="w-full bg-slate-900 text-slate-400 py-16 lg:py-24">
+      <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8">
+        <div className="grid gap-12 lg:grid-cols-5">
+          <div className="lg:col-span-2">
+            <Link href="/" className="mb-6 flex items-center gap-2">
+              <div className="flex size-8 items-center justify-center rounded-lg bg-primary text-white">
+                <span className="material-symbols-outlined text-[20px]">school</span>
+              </div>
+              <span className="text-2xl font-black tracking-tight text-white">
+                Listo<span className="text-primary">.</span>
+              </span>
+            </Link>
+            <p className="mb-6 max-w-sm text-sm leading-relaxed">
+              {t("Layout.Footer.Tagline") ||
+                "Streamlining back-to-school shopping with guaranteed exact matches for your school's official supply lists."}
+            </p>
+            <div className="flex gap-4">
+              <a
+                href="#"
+                className="flex size-10 items-center justify-center rounded-full bg-white/5 text-white hover:bg-primary hover:text-white transition-colors"
+              >
+                <span className="material-symbols-outlined text-[20px]">share</span>
+              </a>
+              <a
+                href="#"
+                className="flex size-10 items-center justify-center rounded-full bg-white/5 text-white hover:bg-primary hover:text-white transition-colors"
+              >
+                <span className="material-symbols-outlined text-[20px]">mail</span>
+              </a>
+            </div>
           </div>
 
-          <div className="space-y-4">
-            <h2 className="text-sm font-semibold tracking-wide uppercase">
-              {t("Layout.Footer.ShopTitle")}
-            </h2>
-            <ul className="space-y-2 text-sm">
-              {shopLinks.map((link) => (
-                <li key={link.href}>
-                  <Link href={link.href} className="text-muted-foreground hover:text-foreground">
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
+          <div>
+            <h4 className="mb-6 text-sm font-bold uppercase tracking-wider text-white">Shop</h4>
+            <ul className="space-y-4 text-sm">
+              <li>
+                <Link href="/shop" className="hover:text-primary transition-colors">
+                  All Products
+                </Link>
+              </li>
+              <li>
+                <Link href="/categories" className="hover:text-primary transition-colors">
+                  Categories
+                </Link>
+              </li>
+              <li>
+                <Link href="/search" className="hover:text-primary transition-colors">
+                  Search
+                </Link>
+              </li>
+              <li>
+                <Link href="/checkout" className="hover:text-primary transition-colors">
+                  Cart
+                </Link>
+              </li>
             </ul>
           </div>
 
-          <div className="space-y-4">
-            <h2 className="text-sm font-semibold tracking-wide uppercase">
-              {t("Layout.Footer.AboutTitle")}
-            </h2>
-            <ul className="space-y-2 text-sm">
-              {aboutLinks.map((link) => (
-                <li key={link.href}>
-                  <Link href={link.href} className="text-muted-foreground hover:text-foreground">
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
+          <div>
+            <h4 className="mb-6 text-sm font-bold uppercase tracking-wider text-white">Schools</h4>
+            <ul className="space-y-4 text-sm">
+              <li>
+                <Link href="/school-lists" className="hover:text-primary transition-colors">
+                  Find Your List
+                </Link>
+              </li>
+              <li>
+                <Link href="/school-lists" className="hover:text-primary transition-colors">
+                  Partner Program
+                </Link>
+              </li>
+              <li>
+                <Link href="/school-lists" className="hover:text-primary transition-colors">
+                  Fundraising
+                </Link>
+              </li>
             </ul>
           </div>
 
-          <div className="space-y-4">
-            <h2 className="text-sm font-semibold tracking-wide uppercase">
-              {t("Layout.Footer.FollowTitle")}
-            </h2>
-            <ul className="space-y-3 text-sm">
+          <div>
+            <h4 className="mb-6 text-sm font-bold uppercase tracking-wider text-white">Help</h4>
+            <ul className="space-y-4 text-sm">
               <li>
-                <a
-                  href="mailto:support@findeg.com"
-                  className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground"
-                >
-                  <Mail className="h-4 w-4" />
-                  support@findeg.com
+                <Link href="/about" className="hover:text-primary transition-colors">
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link href="/about#contact" className="hover:text-primary transition-colors">
+                  Contact Support
+                </Link>
+              </li>
+              <li>
+                <a href="#" className="hover:text-primary transition-colors">
+                  Return Policy
                 </a>
               </li>
               <li>
-                <a
-                  href="tel:+201012345678"
-                  className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground"
-                >
-                  <Phone className="h-4 w-4" />
-                  +20 10 1234 5678
-                </a>
-              </li>
-              <li className="flex items-center gap-2">
-                <a
-                  href="https://facebook.com"
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="Facebook"
-                  className="rounded-md border p-2 text-muted-foreground hover:text-foreground"
-                >
-                  <Facebook className="h-4 w-4" />
-                </a>
-                <a
-                  href="https://instagram.com"
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label="Instagram"
-                  className="rounded-md border p-2 text-muted-foreground hover:text-foreground"
-                >
-                  <Instagram className="h-4 w-4" />
+                <a href="#" className="hover:text-primary transition-colors">
+                  Terms of Service
                 </a>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="mt-10 border-t pt-6 text-xs text-muted-foreground">
-          <p>
-            &copy; {CURRENT_YEAR} FindEg.com. {t("Layout.Footer.Copyright")}
-          </p>
+        <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 sm:flex-row text-sm">
+          <p>&copy; {CURRENT_YEAR} FindEg.com (Listo). All rights reserved.</p>
+          <div className="flex gap-4">
+            <span className="material-symbols-outlined text-[24px]">payments</span>
+            <span className="material-symbols-outlined text-[24px]">credit_card</span>
+            <span className="material-symbols-outlined text-[24px]">account_balance</span>
+          </div>
         </div>
-      </Container>
+      </div>
     </footer>
   );
 }

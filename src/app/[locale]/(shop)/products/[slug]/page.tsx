@@ -1,13 +1,26 @@
-import { Container } from "@/components/shared/Container";
 import { ProductGallery } from "./_components/ProductGallery";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
-import { Star, Truck, ShieldCheck } from "lucide-react";
-import { AddToCartButton } from "../../_components/AddToCartButton";
+import { Suspense } from "react";
+import { AddToCartSection } from "./_components/AddToCartSection";
 import { notFound } from "next/navigation";
-import { getProductDetailPageData } from "@/features/catalog/application/queries/storefront";
-import { getTranslations } from "next-intl/server";
+import {
+  getProductDetailPageData,
+  getProductIdsForStaticParams,
+} from "@/features/catalog/application/queries/storefront";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Locale } from "next-intl";
+
+/**
+ *
+ */
+export async function generateStaticParams() {
+  const productIds = await getProductIdsForStaticParams();
+  return productIds.map((id) => ({
+    slug: id.toString(),
+  }));
+}
+import { ProductTabs } from "./_components/ProductTabs";
+import { Star, Truck, ShieldCheck, ArrowLeft } from "lucide-react";
+import { Link } from "@/i18n/routing";
 
 interface ProductPageProps {
   params: Promise<{ slug: string; locale: string }>;
@@ -17,7 +30,28 @@ interface ProductPageProps {
  *
  */
 export default async function ProductPage({ params }: ProductPageProps) {
+  const { locale } = await params;
+  setRequestLocale(locale as Locale);
+
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen py-16 flex justify-center">
+          <div className="size-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+        </div>
+      }
+    >
+      <ProductPageContent params={params} />
+    </Suspense>
+  );
+}
+
+/**
+ *
+ */
+async function ProductPageContent({ params }: ProductPageProps) {
   const { slug, locale } = await params;
+  setRequestLocale(locale as Locale);
   const t = await getTranslations({ locale: locale as Locale });
   const productId = Number(slug);
   if (!Number.isFinite(productId)) notFound();
@@ -28,126 +62,88 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const { product, reviews } = data;
 
   return (
-    <div className="bg-background py-8 lg:py-12">
-      <Container>
+    <div className="bg-slate-50 dark:bg-slate-900/30 min-h-screen py-8 lg:py-16">
+      <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8">
+        {/* Breadcrumb / Back Navigation */}
+        <div className="mb-8">
+          <Link
+            href="/shop"
+            className="inline-flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-primary transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Shop
+          </Link>
+        </div>
+
         <main
-          className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12"
+          className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start"
           aria-labelledby="product-title"
         >
           {/* Gallery Column */}
-          <div>
-            <ProductGallery images={product.images} />
+          <div className="sticky top-24">
+            <div className="rounded-3xl bg-white dark:bg-surface-dark border border-slate-100 dark:border-slate-800 p-4 lg:p-8 shadow-sm">
+              <ProductGallery images={product.images} />
+            </div>
           </div>
 
           {/* Info Column */}
-          <div className="space-y-6">
+          <div className="flex flex-col gap-8">
             <div>
-              <div className="flex items-center gap-2 mb-2">
-                <Badge variant="secondary">{product.categoryName}</Badge>
-                <div className="flex items-center text-yellow-500 gap-1 text-sm bg-yellow-500/10 px-2 py-0.5 rounded-full">
+              <div className="flex flex-wrap items-center gap-3 mb-4">
+                <div className="inline-flex rounded-full bg-slate-100 dark:bg-slate-800 px-3 py-1 text-xs font-bold text-slate-600 dark:text-slate-300">
+                  {product.categoryName}
+                </div>
+                <div className="flex items-center text-yellow-500 gap-1.5 text-sm bg-yellow-500/10 dark:bg-yellow-500/20 px-3 py-1 rounded-full">
                   <Star className="w-3.5 h-3.5 fill-current" />
-                  <span className="font-medium text-foreground">{product.rating}</span>
-                  <span className="text-muted-foreground">({product.reviewsCount})</span>
+                  <span className="font-bold text-slate-900 dark:text-white">{product.rating}</span>
+                  <span className="text-slate-500">({product.reviewsCount} reviews)</span>
                 </div>
               </div>
-              <h1 id="product-title" className="text-3xl md:text-4xl font-bold">
+
+              <h1
+                id="product-title"
+                className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 dark:text-white mb-4"
+              >
                 {product.name}
               </h1>
-            </div>
 
-            <div className="text-3xl font-bold text-primary">
-              {new Intl.NumberFormat("en-EG", {
-                style: "currency",
-                currency: "EGP",
-              }).format(product.price)}
-            </div>
+              <div className="text-3xl font-bold text-primary mb-6">
+                {new Intl.NumberFormat("en-EG", {
+                  style: "currency",
+                  currency: "EGP",
+                }).format(product.price)}
+              </div>
 
-            <p className="text-muted-foreground leading-relaxed">{product.description}</p>
+              <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+                {product.description}
+              </p>
+            </div>
 
             {/* Actions */}
-            <div className="pt-4 border-t flex items-center gap-4">
-              <div className="flex-1">
-                <AddToCartButton product={product} size="lg" className="w-full text-lg h-12" />
+            <div className="bg-white dark:bg-surface-dark rounded-2xl border border-slate-100 dark:border-slate-800 p-6 shadow-sm">
+              <AddToCartSection product={product as any} />
+
+              {/* Features / Trust Badges */}
+              <div className="grid grid-cols-2 gap-4 text-sm font-medium text-slate-600 dark:text-slate-400 pt-6 mt-6 border-t border-slate-100 dark:border-slate-800">
+                <div className="flex items-center gap-3">
+                  <div className="size-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-900 dark:text-white">
+                    <Truck className="w-4 h-4" />
+                  </div>
+                  <span>Fast Delivery</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="size-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-900 dark:text-white">
+                    <ShieldCheck className="w-4 h-4" />
+                  </div>
+                  <span>Quality Guarantee</span>
+                </div>
               </div>
             </div>
-
-            {/* Features / Trust Badges */}
-            <div className="grid grid-cols-2 gap-4 text-sm text-muted-foreground pt-4">
-              <div className="flex items-center gap-2">
-                <Truck className="w-5 h-5 text-primary" />
-                <span>{t("Pages.ProductDetail.FastDelivery")}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="w-5 h-5 text-primary" />
-                <span>{t("Pages.ProductDetail.QualityGuarantee")}</span>
-              </div>
-            </div>
-
-            {/* Tabs */}
-            <Tabs defaultValue="description" className="w-full pt-6">
-              <TabsList
-                className="w-full justify-start border-b rounded-none h-auto p-0 bg-transparent"
-                aria-label={t("Pages.ProductDetail.TabsLabel")}
-              >
-                <TabsTrigger
-                  value="description"
-                  className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-4 py-2"
-                >
-                  {t("Pages.ProductDetail.Description")}
-                </TabsTrigger>
-                <TabsTrigger
-                  value="specs"
-                  className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-4 py-2"
-                >
-                  {t("Pages.ProductDetail.Specifications")}
-                </TabsTrigger>
-                <TabsTrigger
-                  value="reviews"
-                  className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-4 py-2"
-                >
-                  {t("Pages.ProductDetail.Reviews")}
-                </TabsTrigger>
-              </TabsList>
-              <TabsContent value="description" className="pt-4 animate-in fade-in-50">
-                <p className="leading-relaxed">{product.longDescription}</p>
-              </TabsContent>
-              <TabsContent value="specs" className="pt-4 animate-in fade-in-50">
-                <ul className="list-disc pl-5 space-y-1">
-                  <li>
-                    {t("Pages.ProductDetail.SkuLabel")}: {product.sku}
-                  </li>
-                  <li>
-                    {t("Pages.ProductDetail.CategoryLabel")}: {product.categoryName}
-                  </li>
-                </ul>
-              </TabsContent>
-              <TabsContent value="reviews" className="pt-4 animate-in fade-in-50">
-                {reviews.length > 0 ? (
-                  <div className="space-y-4">
-                    {reviews.map((review) => (
-                      <div key={review.id} className="rounded-md border p-4">
-                        <div className="flex items-center justify-between">
-                          <span className="font-medium">
-                            {review.author || t("Pages.ProductDetail.Anonymous")}
-                          </span>
-                          <span className="text-sm text-muted-foreground">{review.rating}/5</span>
-                        </div>
-                        <p className="mt-2 text-sm text-muted-foreground">
-                          {review.comment || t("Pages.ProductDetail.NoWrittenComment")}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center text-muted-foreground py-8">
-                    {t("Pages.ProductDetail.NoReviews")}
-                  </div>
-                )}
-              </TabsContent>
-            </Tabs>
           </div>
         </main>
-      </Container>
+
+        <ProductTabs product={product} reviews={reviews} />
+      </div>
     </div>
   );
 }

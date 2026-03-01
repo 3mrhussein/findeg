@@ -1,11 +1,13 @@
+"use client";
+
 import ErrorPage from "@/components/shared/ErrorPage";
-import { getTranslations } from "next-intl/server";
+import { useTranslations } from "next-intl";
 
 /**
  *
  */
-export default async function ProductNotFoundPage() {
-  const t = await getTranslations();
+export default function ProductNotFoundPage() {
+  const t = useTranslations();
 
   return (
     <ErrorPage
