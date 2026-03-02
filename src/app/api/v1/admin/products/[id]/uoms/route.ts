@@ -2,7 +2,13 @@
  * Admin Product Variant UoMs Endpoint
  *
  * GET /api/v1/admin/products/[id]/uoms?variantKey=...
+ *   → Returns the sellable UoMs for the given variant.
+ *
  * PUT /api/v1/admin/products/[id]/uoms
+ *   → Upserts sellable UoM definitions for the given variant.
+ *
+ * The route resolves the variantId by looking up the variant with the given
+ * variantKey that belongs to the given product (productId).
  */
 
 import { NextRequest } from "next/server";
@@ -32,6 +38,17 @@ const UpsertVariantUomsBodySchema = z.object({
 });
 
 /**
+ * Resolves a variantId from productId + variantKey.
+ * Returns null if the variant does not exist or does not belong to this product.
+ */
+async function resolveVariantId(productId: number, variantKey: string): Promise<number | null> {
+  const { repositories } = getServices();
+  const variants = await repositories.variants.getByProductId(productId);
+  const match = variants.find((v) => v.variantKey === variantKey);
+  return match?.id ?? null;
+}
+
+/**
  * Gets sellable UoMs for a product variant.
  */
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -56,10 +73,22 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
         }
 
         const { variantKey } = parseResult.data;
-        const { repositories } = getServices();
-        const options = await repositories.products.getVariantSellOptions(productId, variantKey);
 
-        return apiResponse({ productId, variantKey, uoms: options });
+        const variantId = await resolveVariantId(productId, variantKey);
+        if (variantId === null) {
+          return apiErrorByCode("CATALOG_VARIANT_NOT_FOUND");
+        }
+
+        const { repositories } = getServices();
+        // getSellOptions returns UoM + optional price info; extract UoM fields only
+        const sellOptions = await repositories.variants.getSellOptions(variantId);
+        const uoms = sellOptions.map((opt) => ({
+          uomCode: opt.uomCode,
+          factorToBase: opt.factorToBase,
+          isEnabled: opt.isEnabled,
+        }));
+
+        return apiResponse({ productId, variantKey, variantId, uoms });
       } catch (error) {
         return apiErrorByCode("CATALOG_VARIANT_UOMS_FETCH_FAILED", {
           reason: error instanceof Error ? error.message : undefined,
@@ -93,13 +122,27 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
         }
 
         const { variantKey, uoms } = parseResult.data;
+
+        const variantId = await resolveVariantId(productId, variantKey);
+        if (variantId === null) {
+          return apiErrorByCode("CATALOG_VARIANT_NOT_FOUND");
+        }
+
         const { repositories } = getServices();
-        await repositories.products.upsertVariantSellableUoms(productId, variantKey, uoms);
+        await repositories.variants.upsertSellableUoms(
+          variantId,
+          uoms.map((u) => ({
+            uomCode: u.uomCode,
+            factorToBase: u.factorToBase,
+            isEnabled: u.isEnabled,
+          })),
+        );
 
         return apiResponse({
           message: API_SUCCESS_MESSAGES.VARIANT_UOMS_UPDATED,
           productId,
           variantKey,
+          variantId,
         });
       } catch (error) {
         return apiErrorByCode("CATALOG_VARIANT_UOMS_UPDATE_FAILED", {

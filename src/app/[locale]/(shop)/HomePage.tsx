@@ -28,7 +28,7 @@ export default async function HomePage({ language = "en" }: HomePageProps) {
       <HeroSection />
       <HowItWorks />
       <CollectionsGrid categories={categories} />
-      <NewArrivals products={newArrivals as any} />
+      <NewArrivals products={newArrivals} />
       <SchoolBanner locale={language} />
       <NewsletterSection />
     </div>

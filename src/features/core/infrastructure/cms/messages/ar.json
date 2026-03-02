@@ -15,6 +15,7 @@
     "Shop": "تسوق",
     "Search": "بحث",
     "Categories": "الفئات",
+    "Collections": "المجموعات",
     "SchoolLists": "قوائم المدرسة",
     "About": "من نحن",
     "MyAccount": "حسابي",
@@ -22,6 +23,7 @@
     "Main": "استكشف",
     "Support": "الدعم",
     "ViewAll": "عرض الكل",
+    "TrendingCategories": "الفئات الرائجة",
     "Guest": "زائر",
     "SearchPlaceholder": "ابحث عن المنتجات...",
     "AiGenerator": "مولد الصور",
@@ -46,7 +48,12 @@
       "Backpacks": "حقائب ظهر",
       "Ergonomic": "مريحة للظهر",
       "Themed": "ذات طابع خاص",
-      "Lunchboxes": "حقائب غذاء"
+      "Lunchboxes": "حقائب غذاء",
+      "SmartTool": "أداة ذكية",
+      "CreateList": "أنشئ قائمة مدرستك الذكية",
+      "Description": "لا تضيع وقتك في البحث عن كل عنصر على حدة. ارفع قائمة مستلزمات المدرسة أو الصف الدراسي، وسيجد كتالوجنا الذكي المنتجات المناسبة لك.",
+      "TryFree": "جرّب مجاناً",
+      "LearnMore": "اعرف المزيد"
     }
   },
   "Layout": {
@@ -110,7 +117,9 @@
       },
       "Categories": {
         "Title": "تسوق حسب الفئة",
-        "Subtitle": "ابحث عما تحتاجه بالضبط من خلال استكشاف فئاتنا المنسقة."
+        "Subtitle": "ابحث عما تحتاجه بالضبط من خلال استكشاف فئاتنا المنسقة.",
+        "ProductsCount": "{count} منتج",
+        "EmptyDescription": "تصفح مجموعاتنا المنظمة من القرطاسية المصممة لتلبية احتياجاتك."
       },
       "TrustedBrands": "علاماتنا التجارية الموثوقة",
       "Generator": {
@@ -127,12 +136,14 @@
     },
     "Shop": {
       "Title": "اكتشف مجموعتنا",
+      "Description": "تصفح مجموعتنا الكاملة من القرطاسية والمستلزمات المدرسية المتميزة المصممة لجعل التعلم متعة.",
       "FiltersTitle": "الفلاتر",
       "OpenFilters": "فتح الفلاتر",
       "FiltersDialogTitle": "تصفية المنتجات",
       "FiltersDialogDescription": "عدّل فلاتر الفئة والعلامة التجارية والسعر لتحسين النتائج.",
       "FiltersClearAll": "مسح الكل",
       "FiltersCategories": "الفئات",
+      "FiltersAll": "الكل",
       "FiltersPrice": "نطاق السعر",
       "FiltersBrands": "العلامات التجارية",
       "FiltersColor": "اللون",
@@ -143,13 +154,25 @@
       "SortPriceAsc": "السعر: من الأقل إلى الأعلى",
       "SortPriceDesc": "السعر: من الأعلى إلى الأقل",
       "ShowingResults": "عرض {count} من {total} نتيجة",
-      "NoProducts": "لم يتم العثور على منتجات تطابق معاييرك.",
+      "NoProductsTitle": "لم يتم العثور على منتجات",
+      "NoProductsDescription": "حاول ضبط الفلاتر أو تصفح فئة مختلفة لرؤية المزيد من الخيارات.",
+      "LoadMore": "تحميل المزيد",
       "GridView": "عرض شبكي",
       "ListView": "عرض قائمة",
       "ViewResults": "عرض النتائج",
       "PaginationPrevious": "السابق",
       "PaginationNext": "التالي",
-      "FaqTitle": "الأسئلة الشائعة"
+      "FaqTitle": "الأسئلة الشائعة",
+      "CollectionBadge": "مجموعة",
+      "CollectionsTitle": "تسوق حسب المجموعة",
+      "CollectionsDescription": "اكتشف مجموعات منتقاة مصممة لاحتياجاتك وأسلوب حياتك.",
+      "CollectionsExplore": "استكشف هذه المجموعة",
+      "SearchListo": "ابحث في ليستو",
+      "SearchButton": "بحث",
+      "SearchHint": "أدخل كلمة مفتاحية للعثور على ما تحتاجه.",
+      "SearchResultsFor": "نتائج البحث عن \"{query}\"",
+      "SearchFallbackTitle": "لا توجد نتائج مطابقة لـ \"{query}\"",
+      "SearchFallbackDescription": "تم توسيع نطاق البحث لعرض نتائج ذات صلة."
     },
     "Faq": {
       "Q1": "كم يستغرق الشحن؟",
@@ -200,7 +223,9 @@
     "ProductCard": {
       "Like": "إعجاب",
       "Save": "حفظ",
-      "AddToCart": "أضف إلى السلة"
+      "AddToCart": "إضافة",
+      "NewBadge": "جديد",
+      "DefaultCategory": "قرطاسية"
     },
     "Cart": {
       "Title": "عربة التسوق الخاصة بك",

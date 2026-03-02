@@ -9,9 +9,13 @@ interface CartContextType {
   cartItems: CartItem[];
   isCartOpen: boolean;
   setIsCartOpen: (open: boolean) => void;
-  addToCart: (item: Product, quantity: number, selectedVariant?: { [key: string]: string }) => void;
-  removeFromCart: (itemId: number, variantId?: string) => void;
-  updateQuantity: (itemId: number, quantity: number, variantId?: string) => void;
+  addToCart: (
+    productId: number,
+    quantity: number,
+    options: { variantId: number; uomCode: UomCode },
+  ) => void;
+  removeFromCart: (variantId: number, uomCode: UomCode) => void;
+  updateQuantity: (variantId: number, uomCode: UomCode, quantity: number) => void;
   clearCart: () => void;
   toggleCart: () => void;
   cartCount: number;
@@ -63,23 +67,18 @@ function parseVariantId(variantId?: string): CartSelectors {
  */
 function toCartItems(rawItems: any[]): CartItem[] {
   return rawItems.map((item) => ({
-    id: item.id,
-    name: item.name || `Product #${item.id}`,
-    price: item.price ?? item.unitPriceSnapshot ?? 0,
-    images: item.images || [],
-    categoryName: item.categoryName,
-    description: item.description || "",
-    longDescription: item.longDescription || "",
-    rating: item.rating ?? 0,
-    reviewsCount: item.reviewsCount ?? 0,
+    productId: item.productId,
+    variantId: item.variantId,
+    sku: item.sku,
+    productName: item.productName || item.name || `Product #${item.productId}`,
+    variantLabel: item.variantLabel || item.variantKey || "Default",
+    imageUrl: item.imageUrl || (item.images && item.images[0]?.url),
     quantity: item.quantity,
-    selectedVariant: item.selectedVariant || item.variant,
-    variant: item.variant,
-    variantKey: item.variantKey,
     uomCode: item.uomCode,
+    uomFactor: item.uomFactor ?? 1,
+    unitPrice: item.unitPrice ?? item.unitPriceSnapshot ?? item.price ?? 0,
+    currency: item.currency || "EGP",
     customerGroup: item.customerGroup,
-    unitPriceSnapshot: item.unitPriceSnapshot,
-    currency: item.currency,
   }));
 }
 
@@ -126,18 +125,16 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
    *
    */
   const addToCart = (
-    product: Product,
+    productId: number,
     quantity: number,
-    selectedVariant?: { [key: string]: string },
+    options: { variantId: number; uomCode: UomCode },
   ) => {
     const guestId = getGuestId();
     const payload = {
-      productId: product.id,
+      productId,
+      variantId: options.variantId,
+      uomCode: options.uomCode,
       quantity,
-      variant: selectedVariant,
-      variantKey: "default",
-      uomCode: "pcs",
-      customerGroup: "public_b2c",
     };
 
     void fetch("/api/v1/cart/items", {
@@ -155,15 +152,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   /**
    *
    */
-  const removeFromCart = (productId: number, variantId?: string) => {
+  const removeFromCart = (variantId: number, uomCode: UomCode) => {
     const guestId = getGuestId();
-    const selectors = parseVariantId(variantId);
-    const query = new URLSearchParams();
-    if (selectors.variantKey) query.set("variantKey", selectors.variantKey);
-    if (selectors.uomCode) query.set("uomCode", selectors.uomCode);
-    if (selectors.customerGroup) query.set("customerGroup", selectors.customerGroup);
+    const query = new URLSearchParams({
+      variantId: String(variantId),
+      uomCode,
+    });
 
-    void fetch(`/api/v1/cart/items/${productId}?${query.toString()}`, {
+    void fetch(`/api/v1/cart/items?${query.toString()}`, {
       method: "DELETE",
       headers: { "X-Guest-Id": guestId },
     }).then(() => refreshCart());
@@ -172,21 +168,20 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   /**
    *
    */
-  const updateQuantity = (productId: number, quantity: number, variantId?: string) => {
-    if (quantity <= 0) return removeFromCart(productId, variantId);
+  const updateQuantity = (variantId: number, uomCode: UomCode, quantity: number) => {
+    if (quantity <= 0) return removeFromCart(variantId, uomCode);
 
     const guestId = getGuestId();
-    const selectors = parseVariantId(variantId);
-
-    void fetch(`/api/v1/cart/items/${productId}`, {
+    void fetch(`/api/v1/cart/items`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
         "X-Guest-Id": guestId,
       },
       body: JSON.stringify({
+        variantId,
+        uomCode,
         quantity,
-        ...selectors,
       }),
     }).then(() => refreshCart());
   };
@@ -200,11 +195,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
     void Promise.all(
       currentItems.map((item) => {
-        const query = new URLSearchParams();
-        if (item.variantKey) query.set("variantKey", item.variantKey);
-        if (item.uomCode) query.set("uomCode", item.uomCode);
-        if (item.customerGroup) query.set("customerGroup", item.customerGroup);
-        return fetch(`/api/v1/cart/items/${item.id}?${query.toString()}`, {
+        const query = new URLSearchParams({
+          variantId: String(item.variantId),
+          uomCode: item.uomCode,
+        });
+        return fetch(`/api/v1/cart/items?${query.toString()}`, {
           method: "DELETE",
           headers: { "X-Guest-Id": guestId },
         });
@@ -217,11 +212,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     [cartItems],
   );
   const cartTotal = useMemo(
-    () =>
-      cartItems.reduce(
-        (total, item) => total + (item.unitPriceSnapshot ?? item.price ?? 0) * item.quantity,
-        0,
-      ),
+    () => cartItems.reduce((total, item) => total + item.unitPrice * item.quantity, 0),
     [cartItems],
   );
 

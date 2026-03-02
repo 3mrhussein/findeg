@@ -20,6 +20,7 @@ import {
 import { relations } from "drizzle-orm";
 import { users } from "./users";
 import { products } from "./products";
+import { productVariants } from "./product-variants";
 import type { ShippingAddress } from "@/features/order/domain/value-objects/ShippingAddress";
 import type { VariantSnapshot } from "@/features/order/domain/value-objects/VariantSnapshot";
 import type {
@@ -110,13 +111,25 @@ export const orderItems = pgTable("order_items", {
     .notNull()
     .references(() => orders.id, { onDelete: "cascade" }),
   productId: integer("product_id").references(() => products.id, { onDelete: "set null" }),
+
+  /** FK to the specific variant (SKU) that was purchased */
+  variantId: integer("variant_id").references(() => productVariants.id, { onDelete: "set null" }),
+
   quantity: integer("quantity").notNull(),
+
+  /** Which UOM was purchased (EA, PACK_3, etc.) */
+  uomCode: text("uom_code"),
+
+  /** UOM factor at time of purchase */
+  uomFactor: decimal("uom_factor", { precision: 12, scale: 4 }),
 
   // Snapshot fields — preserve data at time of purchase
   /** Product name at time of order */
   productNameSnapshot: text("product_name_snapshot"),
   /** Product SKU at time of order */
   productSkuSnapshot: text("product_sku_snapshot"),
+  /** Variant SKU frozen at purchase time */
+  variantSkuSnapshot: text("variant_sku_snapshot"),
   /** Price per unit at time of order */
   unitPriceSnapshot: decimal("unit_price_snapshot", { precision: 10, scale: 2 }),
   /** Selected variant details at time of order */
@@ -149,6 +162,10 @@ export const orderItemsRelations = relations(orderItems, ({ one }) => ({
   product: one(products, {
     fields: [orderItems.productId],
     references: [products.id],
+  }),
+  variant: one(productVariants, {
+    fields: [orderItems.variantId],
+    references: [productVariants.id],
   }),
 }));
 

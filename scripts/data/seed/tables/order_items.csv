@@ -1,1 +1,1 @@
-id,order_id,product_id,quantity,product_name_snapshot,product_sku_snapshot,unit_price_snapshot,variant_snapshot,total_price,price_at_time,variant_details
+id,order_id,variant_id,uom_code,quantity,unit_price,total_price

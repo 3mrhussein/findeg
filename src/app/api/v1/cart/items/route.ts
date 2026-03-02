@@ -31,18 +31,10 @@ export async function POST(request: NextRequest) {
       const { productId, quantity, variant, variantKey, uomCode, customerGroup } = parsed.value;
       const { cartService, productService } = getServices();
 
-      // Verify product exists and has stock
+      // Verify product exists
       const product = await productService.getById(productId);
       if (!product) {
         return apiErrorByCode("CATALOG_PRODUCT_NOT_FOUND");
-      }
-
-      if (product.stockQuantity !== undefined && product.stockQuantity < quantity) {
-        return apiErrorByCode("CART_INSUFFICIENT_STOCK", {
-          availableQuantity: product.stockQuantity,
-          requestedQuantity: quantity,
-          productId,
-        });
       }
 
       // Determine cart identifier
@@ -50,31 +42,28 @@ export async function POST(request: NextRequest) {
         ? `user_${context.user.userId}`
         : request.headers.get("X-Guest-Id") || "guest_anonymous";
 
-      const resolvedVariantKey = variantKey || DOMAIN_DEFAULTS.VARIANT_KEY;
-      const quote =
-        resolvedVariantKey && uomCode && customerGroup
-          ? await productService.quoteVariantUnitPrice(
-              productId,
-              resolvedVariantKey,
-              uomCode,
-              customerGroup,
-            )
-          : null;
+      // Resolve pricing from the first available variant's base price
+      const firstVariant = product.variants?.[0];
+      const unitPrice = firstVariant?.basePrice ?? 0;
+      const resolvedSku = firstVariant?.sku ?? `PROD-${productId}`;
+      const resolvedVariantId = firstVariant?.id ?? 0;
+      const resolvedUomCode = uomCode ?? DOMAIN_DEFAULTS.UOM_CODE;
+      const resolvedCurrency = firstVariant?.priceLists?.[0]?.currency ?? DOMAIN_DEFAULTS.CURRENCY;
 
-      const fallbackUnitPrice = product.price;
       const cart = await cartService.addItem(cartId, {
         productId,
+        variantId: resolvedVariantId,
+        sku: resolvedSku,
+        productName: product.name,
+        variantLabel:
+          (variant ? JSON.stringify(variant) : null) ?? variantKey ?? DOMAIN_DEFAULTS.VARIANT_KEY,
+        imageUrl: firstVariant?.images?.[0]?.url,
         quantity,
-        name: product.name,
-        price: product.price,
-        images: product.images || [],
-        categoryName: product.categoryName,
-        variant,
-        variantKey: resolvedVariantKey,
-        uomCode,
-        customerGroup,
-        unitPriceSnapshot: quote?.unitPrice ?? fallbackUnitPrice,
-        currency: quote?.currency ?? DOMAIN_DEFAULTS.CURRENCY,
+        uomCode: resolvedUomCode,
+        uomFactor: 1,
+        unitPrice,
+        currency: resolvedCurrency,
+        customerGroup: customerGroup ?? DOMAIN_DEFAULTS.CUSTOMER_GROUP,
       });
 
       return apiResponse(

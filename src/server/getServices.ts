@@ -20,6 +20,8 @@ export function getServices() {
     categoryService: container.categoryService,
     cart: container.cartService,
     cartService: container.cartService,
+    collections: container.collectionService,
+    collectionService: container.collectionService,
     media: container.mediaService,
     mediaService: container.mediaService,
 
@@ -32,12 +34,14 @@ export function getServices() {
     adminBrand: container.adminBrandService,
     adminOrder: container.adminOrderService,
     adminInventory: container.adminInventoryService,
+    schoolLists: container.schoolListService,
     logger: container.loggerService,
     loggerService: container.loggerService,
 
     // Direct repository access (for cases not covered by services)
     repositories: {
       products: container.productRepository,
+      variants: container.variantRepository,
       categories: container.categoryRepository,
       users: container.userRepository,
       orders: container.orderRepository,

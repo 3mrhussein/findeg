@@ -19,8 +19,12 @@ export interface OrderItem {
   orderId?: ID | string;
   /** Reference to the current product */
   productId: ID;
+  /** The specific variant purchased */
+  variantId?: ID;
   /** Units purchased */
   quantity: Quantity;
+  /** Selected Unit of Measure */
+  uomCode?: string;
   /** Price at which the item was purchased (legacy field name) */
   priceAtTime?: Price;
   /** Current display price */

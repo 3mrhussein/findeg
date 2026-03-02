@@ -11,6 +11,12 @@ export interface FilterOption {
   count: number;
 }
 
+/** Extended FilterOption for hierarchical category trees */
+export interface CategoryFilterOption extends FilterOption {
+  parentId?: string; // parent slug
+  children?: CategoryFilterOption[];
+}
+
 export interface ListingFilters {
   selectedCategorySlugs: string[];
   selectedBrandSlugs: string[];
@@ -115,6 +121,7 @@ export function normalizeListingSort(value: string | undefined): ListingSort {
 
 /**
  * Computes stable min/max prices for a result set.
+ * Uses the minimum basePrice of each product's variants.
  */
 export function getPriceBounds(products: Product[]): PriceBounds {
   if (products.length === 0) {
@@ -124,14 +131,20 @@ export function getPriceBounds(products: Product[]): PriceBounds {
     };
   }
 
+  const allMinPrices = products.map((product) => {
+    const variants = product.variants || [];
+    if (variants.length === 0) return 0;
+    return Math.min(...variants.map((v) => v.basePrice));
+  });
+
   return {
-    minPrice: Math.floor(Math.min(...products.map((product) => product.price))),
-    maxPrice: Math.ceil(Math.max(...products.map((product) => product.price))),
+    minPrice: Math.floor(Math.min(...allMinPrices)),
+    maxPrice: Math.ceil(Math.max(...allMinPrices)),
   };
 }
 
 /**
- * Creates category filter options from category entities.
+ * Creates category filter options from category entities (flat list).
  */
 export function buildCategoryOptions(categories: Category[], products: Product[]): FilterOption[] {
   const categoryPathsById = new Map(
@@ -157,6 +170,59 @@ export function buildCategoryOptions(categories: Category[], products: Product[]
         count,
       };
     });
+}
+
+/**
+ * Builds a hierarchical category tree for the filter sidebar.
+ * Root categories (depth=0 or no parentId) are top-level nodes.
+ * Their children are attached recursively.
+ */
+export function buildCategoryTree(
+  categories: Category[],
+  products: Product[],
+): CategoryFilterOption[] {
+  const categoryPathsById = new Map(categories.map((c) => [c.id, c.path || ""]));
+  const categorySlugById = new Map(categories.map((c) => [c.id, c.slug]));
+
+  const activeCategories = categories.filter((c) => c.isActive !== false);
+
+  /**
+   *
+   */
+  const buildCount = (category: Category): number => {
+    const categoryPath = category.path || "";
+    return products.filter((product) => {
+      if (typeof product.categoryId !== "number") return false;
+      const productCategoryPath = categoryPathsById.get(product.categoryId);
+      if (typeof productCategoryPath !== "string") return false;
+      if (!categoryPath) return product.categoryId === category.id;
+      return productCategoryPath.startsWith(categoryPath);
+    }).length;
+  };
+
+  /**
+   *
+   */
+  const toOption = (category: Category): CategoryFilterOption => ({
+    id: category.slug,
+    label: category.name,
+    count: buildCount(category),
+    parentId: category.parentId ? categorySlugById.get(category.parentId) : undefined,
+  });
+
+  // Separate root nodes (depth 0 or no parentId)
+  const roots = activeCategories.filter((c) => !c.parentId || c.depth === 0);
+  const children = activeCategories.filter((c) => c.parentId && c.depth !== 0);
+
+  // Attach children to their parents
+  return roots.map((root) => {
+    const rootOption = toOption(root);
+    const directChildren = children.filter((c) => c.parentId === root.id).map(toOption);
+    if (directChildren.length > 0) {
+      rootOption.children = directChildren;
+    }
+    return rootOption;
+  });
 }
 
 /**
@@ -209,16 +275,26 @@ export function parseListingFilters(
 
 /**
  * Sorts listing results by selected sort strategy.
+ * Price sorting uses the minimum basePrice of the product's variants.
  */
 export function sortProducts(products: Product[], sort: ListingSort): Product[] {
   const sorted = [...products];
 
+  /**
+   *
+   */
+  const getMinPrice = (p: Product) => {
+    const variants = p.variants || [];
+    if (variants.length === 0) return 0;
+    return Math.min(...variants.map((v) => v.basePrice));
+  };
+
   switch (sort) {
     case "price-asc":
-      sorted.sort((a, b) => a.price - b.price);
+      sorted.sort((a, b) => getMinPrice(a) - getMinPrice(b));
       return sorted;
     case "price-desc":
-      sorted.sort((a, b) => b.price - a.price);
+      sorted.sort((a, b) => getMinPrice(b) - getMinPrice(a));
       return sorted;
     case "rating-desc":
       sorted.sort((a, b) => b.rating - a.rating);
@@ -263,9 +339,11 @@ export function applyListingFilters({
       (product.brandName !== undefined &&
         filters.selectedBrandSlugs.includes(toSlug(product.brandName)));
 
-    const priceMatch =
-      product.price >= filters.selectedPriceRange[0] &&
-      product.price <= filters.selectedPriceRange[1];
+    const priceMatch = (product.variants || []).some(
+      (v) =>
+        v.basePrice >= filters.selectedPriceRange[0] &&
+        v.basePrice <= filters.selectedPriceRange[1],
+    );
 
     return categoryMatch && brandMatch && priceMatch;
   });

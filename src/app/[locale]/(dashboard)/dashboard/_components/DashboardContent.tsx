@@ -11,15 +11,18 @@ import { Overview } from "./Overview";
 import { Products } from "./Products";
 import { Orders } from "./Orders";
 import { Customers } from "./Customers";
+import { SchoolLists } from "./SchoolLists";
 import { Tooltip } from "@/components/shared/Tooltip";
 import { cn } from "@/lib/utils";
 import type { Product } from "@/features/catalog/domain/entities/Product";
 import type { Order } from "@/features/order/domain/entities/Order";
+import type { SchoolListResult } from "@/features/catalog/application/interfaces/ISchoolListRepository";
 
-type DashboardView = "overview" | "products" | "orders" | "customers";
+type DashboardView = "overview" | "products" | "orders" | "customers" | "school_lists";
 interface DashboardContentProps {
   products: Product[];
   orders: Order[];
+  schoolLists: SchoolListResult[];
 }
 
 /**
@@ -48,7 +51,11 @@ const LogoIcon = () => (
 /**
  *
  */
-export const DashboardContent: React.FC<DashboardContentProps> = ({ products, orders }) => {
+export const DashboardContent: React.FC<DashboardContentProps> = ({
+  products,
+  orders,
+  schoolLists,
+}) => {
   const t = useTranslations();
   const router = useRouter();
   const [activeView, setActiveView] = useState<DashboardView>("overview");
@@ -77,6 +84,11 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({ products, or
       label: t("Pages.Dashboard.Customers"),
       icon: <Icon name="users" className="w-5 h-5" />,
     },
+    {
+      id: "school_lists",
+      label: t("Pages.Dashboard.SchoolLists"),
+      icon: <Icon name="fileText" className="w-5 h-5" />,
+    },
   ];
 
   const activeNavItem = navItems.find((item) => item.id === activeView);
@@ -92,6 +104,8 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({ products, or
         return <Orders orders={orders} />;
       case "customers":
         return <Customers />;
+      case "school_lists":
+        return <SchoolLists schoolLists={schoolLists} />;
       case "overview":
       default:
         return <Overview products={products} orders={orders} />;

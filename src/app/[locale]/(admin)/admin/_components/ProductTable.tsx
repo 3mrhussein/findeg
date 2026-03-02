@@ -64,9 +64,9 @@ export function ProductTable({ products }: ProductTableProps) {
               <TableRow key={product.id}>
                 <TableCell>
                   <div className="relative h-10 w-10 overflow-hidden rounded-md border">
-                    {product.images && product.images[0] ? (
+                    {product.variants?.[0]?.images?.[0]?.url ? (
                       <Image
-                        src={product.images[0]}
+                        src={product.variants[0].images[0].url}
                         alt={product.name}
                         fill
                         className="object-cover"
@@ -92,10 +92,12 @@ export function ProductTable({ products }: ProductTableProps) {
                 <TableCell>{product.categoryName}</TableCell>
                 <TableCell>
                   <div className="flex flex-col">
-                    <span className="font-medium">{formatPrice(product.price)}</span>
-                    {product.strikePrice && (
+                    <span className="font-medium">
+                      {formatPrice(product.variants?.[0]?.basePrice ?? 0)}
+                    </span>
+                    {product.variants?.[0]?.strikePrice && (
                       <span className="text-xs text-muted-foreground line-through">
-                        {formatPrice(product.strikePrice)}
+                        {formatPrice(product.variants[0].strikePrice)}
                       </span>
                     )}
                   </div>

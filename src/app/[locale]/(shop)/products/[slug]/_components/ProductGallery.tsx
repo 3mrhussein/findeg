@@ -10,6 +10,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 interface ProductGalleryProps {
   images: string[];
@@ -57,10 +58,11 @@ export function ProductGallery({ images }: ProductGalleryProps) {
       {/* Thumbnail strip could go here */}
       <div className="flex gap-2 overflow-x-auto pb-2">
         {images.map((src, index) => (
-          <button
+          <Button
+            variant="outline"
             type="button"
             key={index}
-            className="relative w-20 h-20 flex-shrink-0 cursor-pointer border rounded-md overflow-hidden hover:border-primary transition-colors"
+            className="relative w-20 h-20 shrink-0 cursor-pointer overflow-hidden hover:border-primary transition-colors p-0 rounded-md"
             aria-label={t("Pages.ProductDetail.ThumbnailLabel", { index: index + 1 })}
           >
             <Image
@@ -69,7 +71,7 @@ export function ProductGallery({ images }: ProductGalleryProps) {
               fill
               className="object-cover"
             />
-          </button>
+          </Button>
         ))}
       </div>
     </div>

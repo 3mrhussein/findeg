@@ -1,4 +1,5 @@
 import { Link } from "@/i18n/routing";
+import Image from "next/image";
 
 interface CategoryGroup {
   id: number | string;
@@ -30,14 +31,16 @@ export function CollectionsGrid({ categories }: { categories: CategoryGroup[] })
             <Link
               key={category.id}
               href={`/categories/${category.slug || category.id}`}
-              className={`group relative overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-800 ${idx === 2 ? "aspect-[4/5] sm:aspect-[3/4] sm:col-span-2 lg:col-span-1" : "aspect-[4/5] sm:aspect-[3/4]"}`}
+              className={`group relative overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-800 ${idx === 2 ? "aspect-4/5 sm:aspect-3/4 sm:col-span-2 lg:col-span-1" : "aspect-4/5 sm:aspect-3/4"}`}
             >
-              <img
+              <Image
                 alt={category.name}
-                className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                className="object-cover transition-transform duration-500 group-hover:scale-110"
                 src={`https://picsum.photos/seed/${category.id}/800/1000`}
+                fill
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent p-6 flex flex-col justify-end">
+              <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent p-6 flex flex-col justify-end">
                 <span className="mb-2 inline-block rounded bg-white/20 px-2 py-1 text-xs font-bold text-white backdrop-blur-md w-fit">
                   Category
                 </span>

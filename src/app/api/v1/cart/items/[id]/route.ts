@@ -3,6 +3,8 @@
  *
  * PUT /api/v1/cart/items/[id] - Update item quantity
  * DELETE /api/v1/cart/items/[id] - Remove item from cart
+ *
+ * The route param `[id]` is the variantId.
  */
 
 import { NextRequest } from "next/server";
@@ -14,7 +16,6 @@ import { CustomerGroupSchema, UomCodeSchema } from "@/features/core/domain/types
 
 const UpdateCartItemSchema = z.object({
   quantity: z.coerce.number().int().min(1, "Quantity must be at least 1"),
-  variantKey: z.string().min(1).optional(),
   uomCode: UomCodeSchema.optional(),
   customerGroup: CustomerGroupSchema.optional(),
 });
@@ -23,7 +24,7 @@ const UpdateCartItemSchema = z.object({
  * Update cart item quantity
  *
  * @param request - Request with JSON body: { quantity }
- * @param params - Route params: { id }
+ * @param params - Route params: { id } = variantId
  * @returns Updated cart
  */
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -37,11 +38,11 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
         });
       }
 
-      const { quantity, variantKey, uomCode, customerGroup } = parseResult.data;
+      const { quantity, uomCode, customerGroup } = parseResult.data;
       const { id: idParam } = await params;
-      const itemId = parseInt(idParam);
+      const variantId = parseInt(idParam);
 
-      if (!Number.isInteger(itemId) || itemId <= 0) {
+      if (!Number.isInteger(variantId) || variantId <= 0) {
         return apiErrorByCode("VALIDATION_INVALID_ITEM_ID");
       }
 
@@ -51,8 +52,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
         ? `user_${context.user.userId}`
         : request.headers.get("X-Guest-Id") || "guest_anonymous";
 
-      const cart = await cartService.updateItemQuantity(cartId, itemId, quantity, {
-        variantKey,
+      const cart = await cartService.updateItemQuantity(cartId, variantId, quantity, {
         uomCode,
         customerGroup,
       });
@@ -76,7 +76,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
  * Remove item from cart
  *
  * @param request - Request object
- * @param params - Route params: { id }
+ * @param params - Route params: { id } = variantId
  * @returns Updated cart
  */
 export async function DELETE(
@@ -86,8 +86,8 @@ export async function DELETE(
   return withOptionalAuth(request, async (context) => {
     try {
       const { id: idParam } = await params;
-      const itemId = parseInt(idParam);
-      if (!Number.isInteger(itemId) || itemId <= 0) {
+      const variantId = parseInt(idParam);
+      if (!Number.isInteger(variantId) || variantId <= 0) {
         return apiErrorByCode("VALIDATION_INVALID_ITEM_ID");
       }
       const { cartService } = getServices();
@@ -99,12 +99,10 @@ export async function DELETE(
       const { searchParams } = new URL(request.url);
       const parsedSelectors = z
         .object({
-          variantKey: z.string().min(1).optional(),
           uomCode: UomCodeSchema.optional(),
           customerGroup: CustomerGroupSchema.optional(),
         })
         .safeParse({
-          variantKey: searchParams.get("variantKey") || undefined,
           uomCode: searchParams.get("uomCode") || undefined,
           customerGroup: searchParams.get("customerGroup") || undefined,
         });
@@ -115,7 +113,7 @@ export async function DELETE(
         });
       }
 
-      const cart = await cartService.removeItem(cartId, itemId, parsedSelectors.data);
+      const cart = await cartService.removeItem(cartId, variantId, parsedSelectors.data);
 
       return apiResponse({
         cart: {

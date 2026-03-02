@@ -26,6 +26,7 @@ export const CategorySchema: z.ZodType<any> = z.lazy(() =>
     locale: z.string().optional(), // Locale
     localizedContent: CategoryLocalizedContentSchema.optional(),
     image: z.string().optional(),
+    imageUrl: z.string().optional(),
     icon: z.string().optional(),
     parentId: IdSchema.optional(),
     path: z.string().optional(),
@@ -44,6 +45,7 @@ export type Category = {
   locale?: string;
   localizedContent?: CategoryLocalizedContent;
   image?: string;
+  imageUrl?: string;
   icon?: string;
   parentId?: ID;
   path?: string;

@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
       }
 
       const { address, paymentMethod } = parseResult.data;
-      const { cartService, productService } = getServices();
+      const { cartService } = getServices();
 
       const cartId = context.user
         ? `user_${context.user.userId}`
@@ -43,28 +43,9 @@ export async function POST(request: NextRequest) {
         return apiErrorByCode("CART_EMPTY");
       }
 
-      // Validate stock for all items
-      const stockIssues: string[] = [];
-      for (const item of cart.items) {
-        const product = await productService.getById(item.id);
-        if (!product) {
-          stockIssues.push(`Product ${item.id} not found`);
-          continue;
-        }
-        if (product.stockQuantity !== undefined && product.stockQuantity < item.quantity) {
-          stockIssues.push(
-            `${product.name}: Only ${product.stockQuantity} available (requested ${item.quantity})`,
-          );
-        }
-      }
-
-      if (stockIssues.length > 0) {
-        return apiErrorByCode("CART_INSUFFICIENT_STOCK", { stockIssues });
-      }
-
+      // Compute subtotal from new CartItem shape (unitPrice × quantity)
       const computedSubtotal = cart.items.reduce((acc, item) => {
-        const unitPrice = item.unitPriceSnapshot ?? 0;
-        return acc + unitPrice * item.quantity;
+        return acc + item.unitPrice * item.quantity;
       }, 0);
 
       // Calculate totals (cod=50 EGP, card=30 EGP)

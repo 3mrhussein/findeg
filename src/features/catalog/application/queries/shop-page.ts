@@ -5,16 +5,17 @@ import type { FilterOption } from "./listing";
 import {
   applyListingFilters,
   buildBrandOptions,
-  buildCategoryOptions,
+  buildCategoryTree,
   getPriceBounds,
   parseListingFilters,
+  type CategoryFilterOption,
 } from "./listing";
 import { resolveLocale } from "@/features/core/domain/value-objects";
 
 export interface ShopPageViewModel {
   products: Product[];
   filteredProducts: Product[];
-  categoryOptions: FilterOption[];
+  categoryOptions: CategoryFilterOption[];
   brandOptions: FilterOption[];
   minPrice: number;
   maxPrice: number;
@@ -37,7 +38,7 @@ export async function getShopPageViewModel(
   const products = shopData.products;
   const { minPrice, maxPrice } = getPriceBounds(products);
 
-  const categoryOptions = buildCategoryOptions(allCategories, products);
+  const categoryOptions = buildCategoryTree(allCategories, products);
   const brandOptions = buildBrandOptions(products);
 
   const filters = parseListingFilters(query, [minPrice, maxPrice]);

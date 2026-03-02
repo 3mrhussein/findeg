@@ -2,7 +2,6 @@ import { useTranslations } from "next-intl";
 import { usePagination } from "@/hooks";
 import { ProductTable } from "../../../(admin)/admin/_components/ProductTable";
 import { Pagination } from "@/components/shared/Pagination";
-import { PageHeader } from "@/components/shared/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -21,12 +20,16 @@ export const Products: React.FC<ProductsProps> = ({ products }) => {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Products" description="Manage your catalog, prices, and inventory.">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Products</h1>
+          <p className="text-muted-foreground">Manage your catalog, prices, and inventory.</p>
+        </div>
         <Button>
           <Plus className="mr-2 h-4 w-4" />
           Add Product
         </Button>
-      </PageHeader>
+      </div>
 
       <Card>
         <CardHeader>

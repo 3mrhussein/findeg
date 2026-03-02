@@ -7,32 +7,29 @@ import { Product } from "@/features/catalog/domain/entities/Product";
 import { useTranslations } from "next-intl";
 
 interface AddToCartButtonProps {
-  product?: Pick<
-    Product,
-    | "id"
-    | "name"
-    | "price"
-    | "currency"
-    | "priceMoney"
-    | "description"
-    | "longDescription"
-    | "images"
-    | "rating"
-    | "reviewsCount"
-  >;
+  productId: number;
+  variantId: number;
+  uomCode?: string;
   size?: "default" | "sm" | "lg" | "icon";
   className?: string;
   quantity?: number;
+  disabled?: boolean;
 }
 
 /**
+ * AddToCartButton
  *
+ * A reusable button that interacts with the CartContext.
+ * Now requires a specific variantId and optionally a uomCode.
  */
 export function AddToCartButton({
-  product,
+  productId,
+  variantId,
+  uomCode = "pcs",
   size = "default",
   className,
   quantity = 1,
+  disabled,
 }: AddToCartButtonProps) {
   const { addToCart } = useCart();
   const t = useTranslations();
@@ -41,9 +38,7 @@ export function AddToCartButton({
    *
    */
   const handleAddToCart = () => {
-    if (product) {
-      addToCart(product, quantity);
-    }
+    addToCart(productId, quantity, { variantId, uomCode: uomCode as any });
   };
 
   return (
@@ -51,10 +46,8 @@ export function AddToCartButton({
       size={size}
       className={className}
       onClick={handleAddToCart}
-      disabled={!product}
-      data-testid={
-        product ? `product-detail-add-to-cart-${product.id}` : "product-detail-add-to-cart"
-      }
+      disabled={disabled}
+      data-testid={`add-to-cart-${variantId}`}
     >
       <ShoppingCart className="mr-2 h-4 w-4" />
       {t("Pages.ProductCard.AddToCart")}

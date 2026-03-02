@@ -43,7 +43,13 @@ export async function Header({ locale }: HeaderProps) {
             href="/categories"
             className="text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors"
           >
-            {t("Nav.Categories") || "Collections"}
+            {t("Nav.Categories") || "Categories"}
+          </Link>
+          <Link
+            href="/collections"
+            className="text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors"
+          >
+            {t("Nav.Collections") || "Collections"}
           </Link>
           <Link
             href="/school-lists"

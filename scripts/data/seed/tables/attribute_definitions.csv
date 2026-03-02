@@ -1,0 +1,5 @@
+id,key,localized_label,data_type,is_filterable,sort_order,created_at,updated_at
+1,color,"{""en"": ""Color"", ""ar"": ""اللون""}",string,t,1,2026-03-01 00:00:00,2026-03-01 00:00:00
+2,paper-weight,"{""en"": ""Paper Weight (GSM)"", ""ar"": ""وزن الورق""}",number,t,2,2026-03-01 00:00:00,2026-03-01 00:00:00
+3,material,"{""en"": ""Material"", ""ar"": ""الخامة""}",string,t,3,2026-03-01 00:00:00,2026-03-01 00:00:00
+4,brand-collection,"{""en"": ""Brand Collection"", ""ar"": ""مجموعة العلامة التجارية""}",string,t,4,2026-03-01 00:00:00,2026-03-01 00:00:00

@@ -1,3 +1,6 @@
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+
 /**
  *
  */
@@ -24,17 +27,14 @@ export function NewsletterSection() {
               Get checklist reminders and exclusive discounts on stationery.
             </p>
             <form className="flex gap-3 max-w-md">
-              <input
-                className="flex-1 rounded-full border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 px-4 py-2.5 text-sm focus:border-primary focus:ring-primary"
+              <Input
+                className="flex-1 rounded-full bg-white dark:bg-slate-900 px-4 h-10 text-sm focus-visible:ring-primary"
                 placeholder="Enter your email"
                 type="email"
               />
-              <button
-                className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-2.5 rounded-full text-sm font-bold hover:opacity-90 transition-opacity"
-                type="button"
-              >
+              <Button className="rounded-full px-6 text-sm font-bold" type="button">
                 Subscribe
-              </button>
+              </Button>
             </form>
           </div>
         </div>

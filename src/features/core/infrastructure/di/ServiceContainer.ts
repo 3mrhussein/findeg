@@ -14,7 +14,11 @@ import { DrizzleUserRepository } from "@/features/identity/infrastructure/persis
 import { DrizzleOrderRepository } from "@/features/order/infrastructure/persistence/DrizzleOrderRepository";
 import { DrizzleReviewRepository } from "@/features/review/infrastructure/persistence/DrizzleReviewRepository";
 import { DrizzleBrandRepository } from "@/features/catalog/infrastructure/persistence/DrizzleBrandRepository";
+import { DrizzleCollectionRepository } from "@/features/catalog/infrastructure/persistence/DrizzleCollectionRepository";
 import { DrizzleAuditLogRepository } from "@/features/administration/infrastructure/DrizzleAuditLogRepository";
+import { DrizzleSchoolListRepository } from "@/features/catalog/infrastructure/persistence/DrizzleSchoolListRepository";
+import { DrizzleInventoryRepository } from "@/features/catalog/infrastructure/persistence/DrizzleInventoryRepository";
+import { DrizzleVariantRepository } from "@/features/catalog/infrastructure/persistence/DrizzleVariantRepository";
 
 import { CookieSessionProvider } from "@/features/core/infrastructure/auth/CookieSessionProvider";
 import { LocalStorageProvider } from "../storage/LocalStorageProvider";
@@ -22,8 +26,13 @@ import { LocalStorageProvider } from "../storage/LocalStorageProvider";
 import { AuthService } from "@/features/identity/application/services/AuthService";
 import { ProductService } from "@/features/catalog/application/services/ProductService";
 import { CategoryService } from "@/features/catalog/application/services/CategoryService";
+import { CollectionService } from "@/features/catalog/application/services/CollectionService";
 import { CartService } from "@/features/cart/application/services/CartService";
 import { MediaService } from "@/features/media/application/services/MediaService";
+import {
+  SchoolListService,
+  type ISchoolListService,
+} from "@/features/catalog/application/services/SchoolListService";
 
 import {
   AdminProductService,
@@ -42,11 +51,16 @@ import { IUserRepository } from "@/features/identity/application/interfaces/IUse
 import { IOrderRepository } from "@/features/order/application/interfaces/IOrderRepository";
 import { IReviewRepository } from "@/features/review/application/interfaces/IReviewRepository";
 import { IBrandRepository } from "@/features/catalog/application/interfaces/IBrandRepository";
+import { ICollectionRepository } from "@/features/catalog/application/interfaces/ICollectionRepository";
 import { IAuditLogRepository } from "@/features/administration/application/interfaces/IAuditLogRepository";
+import { ISchoolListRepository } from "@/features/catalog/application/interfaces/ISchoolListRepository";
+import { IInventoryRepository } from "@/features/catalog/application/interfaces/IInventoryRepository";
+import { IVariantRepository } from "@/features/catalog/application/interfaces/IVariantRepository";
 
 import { IAuthService } from "@/features/identity/application/interfaces/IAuthService";
 import { IProductService } from "@/features/catalog/application/interfaces/IProductService";
 import { ICategoryService } from "@/features/catalog/application/interfaces/ICategoryService";
+import { ICollectionService } from "@/features/catalog/application/interfaces/ICollectionService";
 import { ICartService } from "@/features/cart/application/interfaces/ICartService";
 import {
   IAdminProductService,
@@ -74,7 +88,11 @@ export class ServiceContainer {
   private _orderRepository?: IOrderRepository;
   private _reviewRepository?: IReviewRepository;
   private _brandRepository?: IBrandRepository;
+  private _collectionRepository?: ICollectionRepository;
   private _auditLogRepository?: IAuditLogRepository;
+  private _schoolListRepository?: ISchoolListRepository;
+  private _inventoryRepository?: IInventoryRepository;
+  private _variantRepository?: IVariantRepository;
 
   // ─── 2. Infrastructure Services ───────────────────────────────────────
   private _sessionProvider?: ISessionProvider;
@@ -84,7 +102,9 @@ export class ServiceContainer {
   private _authService?: IAuthService;
   private _productService?: IProductService;
   private _categoryService?: ICategoryService;
+  private _collectionService?: ICollectionService;
   private _cartService?: ICartService;
+  private _schoolListService?: ISchoolListService;
   private _mediaService?: MediaService;
   // MediaService is a concrete class but could implement an interface.
   // Using concrete type here as it's not in interfaces barrel yet as interface, but we use it as type in constructor params.
@@ -181,6 +201,16 @@ export class ServiceContainer {
   }
 
   /**
+   * Data access for product collections.
+   */
+  get collectionRepository(): ICollectionRepository {
+    if (!this._collectionRepository) {
+      this._collectionRepository = new DrizzleCollectionRepository();
+    }
+    return this._collectionRepository;
+  }
+
+  /**
    * Data access for administrative audit logs.
    * Tracks all sensitive actions performed in the admin dashboard.
    */
@@ -189,6 +219,36 @@ export class ServiceContainer {
       this._auditLogRepository = new DrizzleAuditLogRepository();
     }
     return this._auditLogRepository;
+  }
+
+  /**
+   * Data access for school supply lists.
+   */
+  get schoolListRepository(): ISchoolListRepository {
+    if (!this._schoolListRepository) {
+      this._schoolListRepository = new DrizzleSchoolListRepository();
+    }
+    return this._schoolListRepository;
+  }
+
+  /**
+   * Data access for inventory balances and movements.
+   */
+  get inventoryRepository(): IInventoryRepository {
+    if (!this._inventoryRepository) {
+      this._inventoryRepository = new DrizzleInventoryRepository();
+    }
+    return this._inventoryRepository;
+  }
+
+  /**
+   * Data access for product variants (SKUs).
+   */
+  get variantRepository(): IVariantRepository {
+    if (!this._variantRepository) {
+      this._variantRepository = new DrizzleVariantRepository();
+    }
+    return this._variantRepository;
   }
 
   // ============================================================================
@@ -261,6 +321,16 @@ export class ServiceContainer {
   }
 
   /**
+   * Application service for public collections exploration.
+   */
+  get collectionService(): ICollectionService {
+    if (!this._collectionService) {
+      this._collectionService = new CollectionService(this.collectionRepository);
+    }
+    return this._collectionService;
+  }
+
+  /**
    * Application service for managing shopping cart state.
    */
   get cartService(): ICartService {
@@ -268,6 +338,16 @@ export class ServiceContainer {
       this._cartService = new CartService();
     }
     return this._cartService;
+  }
+
+  /**
+   * Application service for school lists.
+   */
+  get schoolListService(): ISchoolListService {
+    if (!this._schoolListService) {
+      this._schoolListService = new SchoolListService(this.schoolListRepository);
+    }
+    return this._schoolListService;
   }
 
   // ============================================================================
@@ -355,6 +435,8 @@ export class ServiceContainer {
     if (!this._adminInventoryService) {
       this._adminInventoryService = new AdminInventoryService(
         this.productRepository,
+        this.inventoryRepository,
+        this.variantRepository,
         this.auditLogService,
       );
     }

@@ -173,6 +173,25 @@ erDiagram
         DECIMAL priceAtTime 
         VARCHAR variantDetails 
     }
+    attribute_definitions {
+        INT id PK
+        VARCHAR key 
+        VARCHAR dataType 
+        VARCHAR unit 
+        JSONB localizedLabel 
+        JSONB enumValues 
+        BOOLEAN isFilterable 
+        INT sortOrder 
+        TIMESTAMP createdAt 
+        TIMESTAMP updatedAt 
+    }
+    product_attributes {
+        INT productId FK
+        INT attributeId FK
+        VARCHAR valueText 
+        DECIMAL valueNum 
+        BOOLEAN valueBool 
+    }
     products {
         INT id PK
         VARCHAR sku 
@@ -195,6 +214,7 @@ erDiagram
         DECIMAL rating 
         INT reviewsCount 
         JSONB variants 
+        JSONB displayMeta 
         TIMESTAMP createdAt 
         TIMESTAMP updatedAt 
     }
@@ -240,6 +260,23 @@ erDiagram
         JSONB metadata 
         VARCHAR userAgent 
         VARCHAR ipAddress 
+        TIMESTAMP createdAt 
+    }
+    tags {
+        INT id PK
+        VARCHAR group 
+        VARCHAR key 
+        JSONB localizedLabel 
+        JSONB description 
+        VARCHAR icon 
+        VARCHAR color 
+        BOOLEAN isActive 
+        TIMESTAMP createdAt 
+        TIMESTAMP updatedAt 
+    }
+    product_tags {
+        INT productId FK
+        INT tagId FK
         TIMESTAMP createdAt 
     }
     translations {
@@ -307,14 +344,22 @@ erDiagram
     orders ||--o{ order_items : "orderId"
     products ||--o{ order_items : "productId"
     orders ||--o{ order_items : "items"
+    products ||--o{ product_attributes : "productId"
+    attribute_definitions ||--o{ product_attributes : "attributeId"
+    attribute_definitions ||--o{ product_attributes : "productAttributes"
     categories ||--o{ products : "categoryId"
     brands ||--o{ products : "brandId"
     products ||--o{ product_translations : "productId"
     products ||--o{ product_images : "productId"
     products ||--o{ product_translations : "translations"
     products ||--o{ product_images : "images"
+    products ||--o{ product_tags : "tags"
+    products ||--o{ product_attributes : "attributes"
     products ||--o{ reviews : "productId"
     users ||--o{ reviews : "userId"
+    products ||--o{ product_tags : "productId"
+    tags ||--o{ product_tags : "tagId"
+    tags ||--o{ product_tags : "productTags"
     users ||--o{ orders : "orders"
     users ||--o{ reviews : "reviews"
     users ||--o{ addresses : "addresses"

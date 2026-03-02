@@ -33,20 +33,29 @@ export const ProductListItemUI: React.FC<ProductListItemUIProps> = ({
     >
       <div className="sm:w-1/3">
         <Image
-          src={product.imageUrl || "/placeholder.png"}
+          src={
+            product.variants?.[0]?.images?.[0]?.url ||
+            product.mediaSet?.card?.url ||
+            product.mediaSet?.thumbnail?.url ||
+            "/placeholder.png"
+          }
           alt={product.name}
           width={400}
           height={300}
           className="w-full h-48 sm:h-full object-cover"
         />
       </div>
-      <div className="p-5 flex flex-col flex-grow sm:w-2/3">
+      <div className="p-5 flex flex-col grow sm:w-2/3">
         <span className="text-sm text-muted-foreground">{product.categoryName}</span>
         <h3 className="text-lg font-semibold text-card-foreground mt-1">{product.name}</h3>
         <p className="text-muted-foreground text-sm mt-2 line-clamp-2">{product.description}</p>
-        <div className="flex-grow"></div>
+        <div className="grow"></div>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mt-4">
-          <Price price={product.price} strikePrice={product.strikePrice} className="mb-3 sm:mb-0" />
+          <Price
+            price={product.variants?.[0]?.basePrice || 0}
+            strikePrice={product.variants?.[0]?.strikePrice}
+            className="mb-3 sm:mb-0"
+          />
           <Button onClick={onAddToCart}>
             <Icon name="shoppingCart" className="w-5 h-5 ltr:mr-2 rtl:ml-2" />
             {addToCartText}
@@ -74,21 +83,15 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product }) => 
    */
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
-    // For products with variants, add the first available variant by default.
-    let selectedVariant;
-    if (product.variants) {
-      selectedVariant = Object.keys(product.variants).reduce(
-        (acc, key) => {
-          const firstAvailableOption = product.variants?.[key].options.find((opt) => opt.stock > 0);
-          if (firstAvailableOption) {
-            acc[key] = firstAvailableOption.value;
-          }
-          return acc;
-        },
-        {} as { [key: string]: string },
-      );
+    const variants = product.variants || [];
+    const defaultVariant = variants.find((v) => v.variantKey === "default") || variants[0];
+
+    if (defaultVariant) {
+      addToCart(product.id, 1, {
+        variantId: defaultVariant.id,
+        uomCode: "pcs",
+      });
     }
-    addToCart(product, 1, selectedVariant);
   };
 
   /**

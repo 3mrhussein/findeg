@@ -1,88 +1,31 @@
 /**
- * Domain Entity: Product
+ * Domain Entity: Product (SPU)
  *
- * Core Product entity representing a sellable item in the store.
- * Contains business logic for pricing, stock, and discount calculations.
+ * Products are Standard Product Units — the conceptual item.
+ * Purchasable details (price, stock, images) live on Variant (SKU) entities.
+ *
+ * A Product always has at least one variant. Simple products have a single
+ * "default" variant; multi-variant products have variants for each color/size/etc.
  */
 
 import { z } from "zod";
 import {
   IdSchema,
-  PriceSchema,
-  SkuSchema,
-  QuantitySchema,
   RatingSchema,
-  CustomerGroupSchema,
-  UomCodeSchema,
-  type ID,
-  type Price,
-  type Sku,
-  type Quantity,
-  type Rating,
-  type CustomerGroup,
-  type UomCode,
-} from "@/features/core/domain/types/common";
-import {
-  DEFAULT_CURRENCY,
-  resolveLocalizedString,
-  resolvePricing,
   LocalizedStringSchema,
-  PersistedPricingSchema,
-  ResolvedPricingSchema,
+  type ID,
+  type Rating,
+} from "@/features/core/domain/types/common";
+import { TagSchema } from "./Tag";
+import { ProductAttributeValueSchema } from "./AttributeDefinition";
+import { VariantSchema, type Variant, VariantEntity } from "./Variant";
+import {
+  resolveLocalizedString,
   ResponsiveMediaSetSchema,
-  MoneySchema,
-  type DiscountRule,
-  toMoney,
-  type CurrencyCode,
   type Locale,
   type LocalizedString,
-  type PersistedPricing,
-  type ResolvedPricing,
   type ResponsiveMediaSet,
-  type Money,
 } from "@/features/core/domain/value-objects";
-
-/** Single variant option (e.g., "Blue" for Color variant) */
-export const ProductVariantOptionSchema = z.object({
-  value: z.string(),
-  label: z.string(),
-  priceModifier: PriceSchema,
-  stock: QuantitySchema,
-});
-export type ProductVariantOption = z.infer<typeof ProductVariantOptionSchema>;
-
-/** A product variant group (e.g., "Color" with multiple options) */
-export const ProductVariantSchema = z.object({
-  name: z.string(),
-  options: z.array(ProductVariantOptionSchema),
-});
-export type ProductVariant = z.infer<typeof ProductVariantSchema>;
-
-/** Sellable unit definition for a variant key */
-export const ProductVariantSellableUomSchema = z.object({
-  uomCode: UomCodeSchema,
-  factorToBase: z.number(),
-  isEnabled: z.boolean(),
-});
-export type ProductVariantSellableUom = z.infer<typeof ProductVariantSellableUomSchema>;
-
-/** Price-list row for a variant key and customer group */
-export const ProductVariantPriceSchema = z.object({
-  customerGroup: CustomerGroupSchema,
-  uomCode: UomCodeSchema,
-  unitPrice: PriceSchema,
-  currency: z.string(), // CurrencyCode
-  isSellable: z.boolean(),
-});
-export type ProductVariantPrice = z.infer<typeof ProductVariantPriceSchema>;
-
-/** Commercial configuration for a single variant key */
-export const ProductVariantCommercialConfigSchema = z.object({
-  variantKey: z.string(),
-  sellableUoms: z.array(ProductVariantSellableUomSchema),
-  priceLists: z.array(ProductVariantPriceSchema),
-});
-export type ProductVariantCommercialConfig = z.infer<typeof ProductVariantCommercialConfigSchema>;
 
 /** Localized content map for a product */
 export const ProductLocalizedContentSchema = z.object({
@@ -94,39 +37,65 @@ export const ProductLocalizedContentSchema = z.object({
 export type ProductLocalizedContent = z.infer<typeof ProductLocalizedContentSchema>;
 
 /**
- * Product Domain Schema
+ * Product Domain Schema (SPU)
+ *
+ * Contains only SPU-level data. All pricing, inventory, and images
+ * are on the `variants` array.
  */
 export const ProductSchema = z.object({
   id: IdSchema,
-  sku: SkuSchema.optional(),
+
+  /** Optional family-level SKU prefix */
+  skuPrefix: z.string().optional(),
+
+  // ─── Resolved Localized Content (for current locale) ──────────────
+
+  /** Resolved name for the current locale */
   name: z.string(),
-  price: PriceSchema,
-  strikePrice: PriceSchema.optional(),
+  /** Resolved description for the current locale */
   description: z.string(),
+  /** Resolved long description for the current locale */
   longDescription: z.string(),
-  locale: z.string().optional(), // Locale
+  /** Current locale code */
+  locale: z.string().optional(),
+
+  /** Full localized content object */
   localizedContent: ProductLocalizedContentSchema.optional(),
-  currency: z.string().optional(), // CurrencyCode
-  priceMoney: MoneySchema.optional(),
-  strikePriceMoney: MoneySchema.optional(),
-  pricing: PersistedPricingSchema.optional(),
-  discountRules: z.array(z.any()).optional(), // DiscountRule[]
-  resolvedPricing: ResolvedPricingSchema.optional(),
-  mediaSet: ResponsiveMediaSetSchema.optional(),
-  imageUrl: z.string().optional(),
-  images: z.array(z.string()),
+
+  // ─── Relationships ────────────────────────────────────────────────
+
   categoryId: IdSchema.optional(),
   categoryName: z.string().optional(),
   brandId: IdSchema.optional(),
   brandName: z.string().optional(),
+
+  // ─── Media ────────────────────────────────────────────────────────
+
+  /** SPU-level hero/lifestyle imagery */
+  mediaSet: ResponsiveMediaSetSchema.optional(),
+
+  /** Lightweight display metadata (non-filterable) */
+  displayMeta: z.record(z.string(), z.unknown()).optional(),
+
+  // ─── Flags ────────────────────────────────────────────────────────
+
   isActive: z.boolean().optional(),
-  stockQuantity: QuantitySchema.optional(),
-  lowStockThreshold: QuantitySchema.optional(),
   isNew: z.boolean().optional(),
+
+  // ─── Aggregate Ratings ────────────────────────────────────────────
+
   rating: RatingSchema,
   reviewsCount: z.number(),
-  variants: z.record(z.string(), ProductVariantSchema).optional(),
-  variantCommercialConfig: z.record(z.string(), ProductVariantCommercialConfigSchema).optional(),
+
+  // ─── Variants (SKUs) ──────────────────────────────────────────────
+
+  /** All purchasable SKUs for this product */
+  variants: z.array(VariantSchema).optional(),
+
+  // ─── Tags & Attributes ────────────────────────────────────────────
+
+  tags: z.array(TagSchema).optional(),
+  attributes: z.array(ProductAttributeValueSchema).optional(),
 });
 
 export type Product = z.infer<typeof ProductSchema>;
@@ -142,169 +111,114 @@ export const UpdateProductSchema = CreateProductSchema.partial().extend({
 export type UpdateProduct = z.infer<typeof UpdateProductSchema>;
 
 /**
- * Domain methods for Product entity
+ * Domain methods for Product entity (SPU level)
+ *
+ * All pricing, stock, and discount logic is delegated to the variant layer.
  */
 export class ProductEntity {
   /**
-   * Creates a domain entity wrapper for a Product data object.
    *
-   * @param product - The raw product data.
    */
   constructor(private product: Product) {}
 
-  /**
-   * Returns localized name with fallback to resolved string name.
-   */
+  // ─── Content ──────────────────────────────────────────────────────
+
+  /** Returns localized name with fallback */
   getName(locale: Locale): string {
     const localized = resolveLocalizedString(this.product.localizedContent?.name, locale);
     return localized || this.product.name;
   }
 
-  /**
-   * Returns localized description with fallback.
-   */
+  /** Returns localized description with fallback */
   getDescription(locale: Locale): string {
     const localized = resolveLocalizedString(this.product.localizedContent?.description, locale);
     return localized || this.product.description;
   }
 
+  // ─── Variant Access ───────────────────────────────────────────────
+
+  /** Returns all variants */
+  getVariants(): Variant[] {
+    return this.product.variants || [];
+  }
+
+  /** Returns the default / first active variant */
+  getDefaultVariant(): Variant | undefined {
+    const variants = this.getVariants();
+    return variants.find((v) => v.variantKey === "default") || variants[0];
+  }
+
+  /** Returns a variant by its key */
+  getVariantByKey(key: string): Variant | undefined {
+    return this.getVariants().find((v) => v.variantKey === key);
+  }
+
+  /** Returns a variant by its ID */
+  getVariantById(id: ID): Variant | undefined {
+    return this.getVariants().find((v) => v.id === id);
+  }
+
+  // ─── Price (delegated to default variant) ─────────────────────────
+
   /**
-   * Returns normalized money value for base price.
+   * Returns the display price from the default variant.
+   * This is a convenience for product cards / listing pages.
    */
-  getPriceMoney(): Money {
-    return (
-      this.product.priceMoney ||
-      toMoney(this.product.price, this.product.currency || DEFAULT_CURRENCY)
-    );
+  getDisplayPrice(): number {
+    const variant = this.getDefaultVariant();
+    return variant?.basePrice ?? 0;
   }
 
   /**
-   * Returns the normalized resolved pricing model.
-   * Falls back to legacy numeric fields when v2 pricing is not populated yet.
+   * Returns the strike price from the default variant.
    */
-  getResolvedPricing(): ResolvedPricing {
-    const pricing: PersistedPricing = this.product.pricing || {
-      base: this.getPriceMoney(),
-      tiers: [],
-    };
-    const discountRules = this.product.discountRules || [];
-    const legacyStrike =
-      this.product.strikePriceMoney ||
-      (this.product.strikePrice !== undefined
-        ? toMoney(this.product.strikePrice, this.product.currency || DEFAULT_CURRENCY)
-        : undefined);
-
-    const resolved = this.product.resolvedPricing || resolvePricing(pricing, discountRules);
-    if (resolved.strikePrice || !legacyStrike) {
-      return resolved;
-    }
-
-    return {
-      ...resolved,
-      strikePrice: legacyStrike,
-    };
+  getStrikePrice(): number | undefined {
+    return this.getDefaultVariant()?.strikePrice ?? undefined;
   }
 
   /**
-   * Calculate the final price including variant modifiers.
-   *
-   * @param variantSelections - Map of variant key to selected option value (e.g., { color: 'blue' }).
-   * @returns Final computed price after applying all modifiers.
+   * Checks if ANY variant has a discount (strike > base).
    */
-  calculatePrice(variantSelections?: { [key: string]: string }): number {
-    let basePrice = this.product.price;
-
-    if (variantSelections && this.product.variants) {
-      Object.entries(variantSelections).forEach(([variantKey, optionValue]) => {
-        const variant = this.product.variants?.[variantKey];
-        if (variant) {
-          const option = variant.options.find((opt) => opt.value === optionValue);
-          if (option) {
-            basePrice += option.priceModifier;
-          }
-        }
-      });
-    }
-
-    return basePrice;
-  }
-
-  /**
-   * Check if the product (or a specific variant) is available for purchase.
-   *
-   * @param variantSelections - Optional variant selections to check specific variant stock.
-   * @returns True if the product/variant has at least one item available.
-   */
-  isInStock(variantSelections?: { [key: string]: string }): boolean {
-    if (this.product.stockQuantity !== undefined && this.product.stockQuantity !== null) {
-      if (this.product.stockQuantity <= 0) return false;
-    }
-
-    if (!variantSelections || !this.product.variants) {
-      return (this.product.stockQuantity ?? 0) > 0;
-    }
-
-    return Object.entries(variantSelections).every(([variantKey, optionValue]) => {
-      const variant = this.product.variants![variantKey];
-      if (variant) {
-        const option = variant.options.find((opt) => opt.value === optionValue);
-        return option ? option.stock > 0 : true;
-      }
-      return true;
+  hasDiscount(): boolean {
+    return this.getVariants().some((v) => {
+      const entity = new VariantEntity(v);
+      return entity.getDiscountPercentage() > 0;
     });
   }
 
   /**
-   * Determines if the current stock level is within the warning threshold.
-   *
-   * @returns True if quantity is positive but less than or equal to threshold.
-   */
-  isLowStock(): boolean {
-    const quantity = this.product.stockQuantity ?? 0;
-    const threshold = this.product.lowStockThreshold ?? 10;
-    return quantity > 0 && quantity <= threshold;
-  }
-
-  /**
-   * Checks if the product is currently offered at a discounted rate compared to its strike price.
-   */
-  hasDiscount(): boolean {
-    return !!this.product.strikePrice && this.product.strikePrice > this.product.price;
-  }
-
-  /**
-   * Calculate the discount percentage relative to the strike price.
-   *
-   * @returns Integer percentage (e.g., 25 for 25% off).
+   * Returns the discount percentage of the default variant.
    */
   getDiscountPercentage(): number {
-    if (!this.hasDiscount()) return 0;
-    return Math.round(
-      ((this.product.strikePrice! - this.product.price) / this.product.strikePrice!) * 100,
-    );
+    const variant = this.getDefaultVariant();
+    if (!variant) return 0;
+    return new VariantEntity(variant).getDiscountPercentage();
+  }
+
+  // ─── Stock (delegated to default variant) ─────────────────────────
+
+  /**
+   * Checks if ANY active variant is in stock.
+   */
+  isInStock(): boolean {
+    return this.getVariants()
+      .filter((v) => v.isActive)
+      .some((v) => new VariantEntity(v).isInStock());
   }
 
   /**
-   * Retrieves a plain representation of the product data.
+   * Checks if ALL variants are low on stock.
    */
-  getData(): Product {
-    const currency = this.product.currency || DEFAULT_CURRENCY;
-    const priceMoney = this.product.priceMoney || toMoney(this.product.price, currency);
-    const strikePriceMoney =
-      this.product.strikePriceMoney ||
-      (this.product.strikePrice !== undefined
-        ? toMoney(this.product.strikePrice, currency)
-        : undefined);
-    const pricing: PersistedPricing = this.product.pricing || { base: priceMoney, tiers: [] };
-    const resolvedPricing = this.getResolvedPricing();
+  isLowStock(): boolean {
+    const activeVariants = this.getVariants().filter((v) => v.isActive);
+    if (activeVariants.length === 0) return false;
+    return activeVariants.every((v) => new VariantEntity(v).isLowStock());
+  }
 
-    return {
-      ...this.product,
-      currency,
-      priceMoney,
-      strikePriceMoney,
-      pricing,
-      resolvedPricing,
-    };
+  // ─── Data ─────────────────────────────────────────────────────────
+
+  /** Returns the raw product data */
+  getData(): Product {
+    return this.product;
   }
 }

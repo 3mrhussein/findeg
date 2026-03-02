@@ -1,4 +1,6 @@
 import { Link } from "@/i18n/routing";
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 /**
  *
@@ -22,29 +24,35 @@ export function HeroSection() {
               grade level with ease.
             </p>
             <div className="flex flex-wrap gap-4 pt-2">
-              <Link
-                href="/shop"
-                className="inline-flex h-12 items-center justify-center rounded-full bg-primary px-8 text-sm font-bold text-white transition-transform hover:scale-105 active:scale-95 shadow-lg shadow-primary/25"
+              <Button
+                asChild
+                className="rounded-full px-8 font-bold shadow-lg shadow-primary/25 transition-transform hover:scale-105 active:scale-95 h-12"
               >
-                Shop stationery
-              </Link>
-              <Link
-                href="/school-lists"
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-full px-6 text-sm font-bold text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                <Link href="/shop">Shop stationery</Link>
+              </Button>
+              <Button
+                asChild
+                variant="ghost"
+                className="rounded-full px-6 font-bold hover:bg-slate-100 dark:hover:bg-slate-800 h-12"
               >
-                For schools
-                <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
-              </Link>
+                <Link href="/school-lists" className="gap-2">
+                  For schools
+                  <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+                </Link>
+              </Button>
             </div>
           </div>
           <div className="relative w-full lg:h-[500px] flex items-center justify-center">
             <div className="absolute top-10 right-10 size-32 rounded-full bg-accent/20 blur-3xl"></div>
             <div className="absolute bottom-10 left-10 size-24 rounded-full bg-mint/20 blur-2xl"></div>
             <div className="relative w-full aspect-4/3 lg:aspect-square overflow-hidden rounded-2xl bg-slate-100 dark:bg-slate-800 shadow-2xl">
-              <img
+              <Image
                 alt="Stationery"
-                className="h-full w-full object-cover object-center transform hover:scale-105 transition-transform duration-700 bg-slate-200"
+                className="object-cover object-center transform hover:scale-105 transition-transform duration-700 bg-slate-200"
                 src="https://images.unsplash.com/photo-1456735190827-d1262f71b8a3?q=80&w=1200&auto=format&fit=crop"
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                priority
               />
             </div>
             <div className="absolute -bottom-6 -left-4 lg:bottom-12 lg:-left-12 z-10 w-64 rounded-xl bg-white dark:bg-surface-dark p-4 shadow-xl border border-slate-100 dark:border-slate-700 animate-[bounce_3s_infinite]">

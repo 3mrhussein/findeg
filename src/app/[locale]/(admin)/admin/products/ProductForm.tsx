@@ -35,7 +35,7 @@ import { useToast } from "@/hooks/use-toast";
 import { CustomerGroup, UomCode } from "@/features/core/domain/types/common";
 
 const UOM_VALUES = ["pcs", "pack", "carton"] as const;
-const CUSTOMER_GROUP_VALUES = ["public_b2c", "school_b2b"] as const;
+const CUSTOMER_GROUP_VALUES = ["public_b2c", "school_b2b", "wholesale"] as const;
 
 const VariantPricingConfigSchema = z.object({
   variantKey: z.string().min(1, "variantKey is required"),
@@ -112,6 +112,7 @@ export function ProductForm({ initialData, categories, brands }: ProductFormProp
   const [variantConfigs, setVariantConfigs] = useState<VariantPricingConfig[]>([]);
 
   // Map initial data to form values if editing
+  const firstVariant = initialData?.variants?.[0];
   const defaultValues = initialData
     ? {
         name_en: initialData.translations.find((t) => t.language === "en")?.name || "",
@@ -120,14 +121,14 @@ export function ProductForm({ initialData, categories, brands }: ProductFormProp
         name_ar: initialData.translations.find((t) => t.language === "ar")?.name || "",
         description_ar:
           initialData.translations.find((t) => t.language === "ar")?.description || "",
-        price: initialData.price,
+        price: firstVariant?.basePrice ?? 0,
         categoryId: initialData.categoryId?.toString() || "",
         brandId: initialData.brandId?.toString() || "",
-        sku: initialData.sku || "",
-        stockQuantity: initialData.stockQuantity || 0,
-        lowStockThreshold: initialData.lowStockThreshold || 5,
+        sku: firstVariant?.sku || "",
+        stockQuantity: 0, // inventory not available on VariantInput (read-only from warehouse)
+        lowStockThreshold: firstVariant?.lowStockThreshold ?? 5,
         isActive: initialData.isActive ?? true,
-        images: initialData.images?.join(", ") || "",
+        images: firstVariant?.images?.map((img) => img.url).join(", ") || "",
       }
     : {
         name_en: "",
@@ -326,19 +327,9 @@ export function ProductForm({ initialData, categories, brands }: ProductFormProp
 
     // Transform form values to ProductInput
     const input: ProductInput = {
-      price: values.price,
       categoryId: parseInt(values.categoryId),
       brandId: values.brandId && values.brandId !== "none" ? parseInt(values.brandId) : undefined,
-      sku: values.sku,
-      stockQuantity: values.stockQuantity,
-      lowStockThreshold: values.lowStockThreshold,
       isActive: values.isActive,
-      images: values.images
-        ? values.images
-            .split(",")
-            .map((s) => s.trim())
-            .filter(Boolean)
-        : [],
       translations: [
         {
           language: "en",
@@ -354,6 +345,23 @@ export function ProductForm({ initialData, categories, brands }: ProductFormProp
         },
       ],
       isNew: true,
+      variants: [
+        {
+          sku: values.sku || `PROD-${Date.now()}`,
+          variantKey: "default",
+          displayOrder: 0,
+          basePrice: values.price,
+          lowStockThreshold: values.lowStockThreshold,
+          isActive: values.isActive,
+          images: values.images
+            ? values.images
+                .split(",")
+                .map((s) => s.trim())
+                .filter(Boolean)
+                .map((url) => ({ url, displayOrder: 0 }))
+            : [],
+        },
+      ],
     };
 
     try {

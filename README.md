@@ -245,26 +245,44 @@ const t = useTranslations();
 
 ## 🛠️ Development Scripts
 
-| Script          | Command         | Description                                     |
-| --------------- | --------------- | ----------------------------------------------- |
-| **Development** | `npm run dev`   | Start dev server (auto-kills port 3000 if busy) |
-| **Build**       | `npm run build` | Create production build                         |
-| **Start**       | `npm run start` | Run production server                           |
-| **Lint**        | `npm run lint`  | Run ESLint                                      |
-| **Changelog**   | `npm run changelog` | Generate `CHANGELOG.md` from git commits   |
+| Script          | Command             | Description                                     |
+| --------------- | ------------------- | ----------------------------------------------- |
+| **Development** | `npm run dev`       | Start dev server (auto-kills port 3000 if busy) |
+| **Build**       | `npm run build`     | Create production build                         |
+| **Start**       | `npm run start`     | Run production server                           |
+| **Lint**        | `npm run lint`      | Run ESLint                                      |
+| **Changelog**   | `npm run changelog` | Generate `CHANGELOG.md` from git commits        |
 
 ---
 
 ## 📚 Documentation Map
 
-### 📋 Project Status
+---
 
-- **[Project Status](PROJECT_STATUS.md)** — Current MVP progress, completed foundations, and active backlog.
+## 📈 Current Project Status (MVP Phase 1)
+
+FindEg is currently in **Phase 1: Public E-Shop MVP**. We are focused on a dual-track strategy:
+
+1. **Short-term B2C growth**: Reliable multilingual storefront for school supplies.
+2. **Mid-term B2B2C readiness**: Clean architecture to support future school integrations.
+
+### Key Milestones Completed
+
+- **Core REST API**: JWT auth, catalog, cart, and order management.
+- **Admin Suite**: Dashboard, inventory management, and audit logging.
+- **Multi-tenant UI**: RTL support (AR/EN) and feature-oriented directory structure.
+- **Refactored Listing Pages**: Standardized `ProductListingLayout` and ViewModel pattern across Shop, Search, and Categories.
+
+For the full technical specification and roadmap, see [SYSTEM_SPECIFICATION.md](project-planning/SYSTEM_SPECIFICATION.md).
+
+---
+
+## 📚 Documentation Map
 
 ### 📋 System Specification
 
 - **[System Specification](project-planning/SYSTEM_SPECIFICATION.md)** — Complete business & technical spec with diagrams: vision, actors, user flows, architecture, database schema, API, features, roadmap, and NFRs.
-- **Dual-Track Goal (B2C + B2B2C)** — Defined in the System Specification section `Current Business Goal (Dual Track)` and reflected in [Project Status](PROJECT_STATUS.md) success criteria.
+- **Dual-Track Goal (B2C + B2B2C)** — Defined in the System Specification section `Current Business Goal (Dual Track)`.
 
 ### Architecture
 

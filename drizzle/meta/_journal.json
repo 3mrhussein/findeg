@@ -8,6 +8,13 @@
       "when": 1771543200676,
       "tag": "0000_safe_celestials",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1772324584380,
+      "tag": "0001_dry_hellcat",
+      "breakpoints": true
     }
   ]
 }

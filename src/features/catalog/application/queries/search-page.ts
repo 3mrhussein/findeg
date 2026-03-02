@@ -1,11 +1,11 @@
 import { getServices } from "@/server/getServices";
 import { getSearchPageData } from "./storefront";
 import type { Product } from "@/features/catalog/domain/entities/Product";
-import type { FilterOption } from "./listing";
+import type { FilterOption, CategoryFilterOption } from "./listing";
 import {
   applyListingFilters,
   buildBrandOptions,
-  buildCategoryOptions,
+  buildCategoryTree,
   getPriceBounds,
   parseListingFilters,
 } from "./listing";
@@ -15,7 +15,7 @@ export interface SearchPageViewModel {
   query: string;
   products: Product[];
   filteredProducts: Product[];
-  categoryOptions: FilterOption[];
+  categoryOptions: CategoryFilterOption[];
   brandOptions: FilterOption[];
   minPrice: number;
   maxPrice: number;
@@ -52,7 +52,7 @@ export async function getSearchPageViewModel(
     query: searchData.query,
     products,
     filteredProducts,
-    categoryOptions: buildCategoryOptions(allCategories, products),
+    categoryOptions: buildCategoryTree(allCategories, products),
     brandOptions: buildBrandOptions(products),
     minPrice,
     maxPrice,

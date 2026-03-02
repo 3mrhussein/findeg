@@ -1,12 +1,15 @@
 /**
  * Admin Inventory Update Endpoint
  *
- * PUT /api/v1/admin/inventory/[productId]
- * Updates stock quantity for a single product.
+ * PATCH /api/v1/admin/inventory/[variantId]
+ *   Absolute stock set: sets on-hand quantity to the given value.
+ *
+ * PUT /api/v1/admin/inventory/[variantId]
+ *   Full inventory update: sets quantity + optional lowStockThreshold.
  */
 
 import { NextRequest } from "next/server";
-import { apiResponse, apiError } from "../../../_lib/api-response";
+import { apiResponse, apiError, apiErrorByCode } from "../../../_lib/api-response";
 import { withAdmin } from "../../../_lib/middleware";
 import { getServices } from "@/server/getServices";
 import {
@@ -16,20 +19,23 @@ import {
 import { PERMISSION_CODES } from "@/features/core/domain/auth";
 
 /**
- *
+ * Patches stock quantity for a specific variant (absolute set).
  */
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: Promise<{ productId: string }> },
+  { params }: { params: Promise<{ variantId: string }> },
 ) {
   return withAdmin(
     request,
     async () => {
       try {
-        const { productId: productIdParam } = await params;
-        const productId = parseInt(productIdParam, 10);
-        const body = await request.json();
+        const { variantId: variantIdParam } = await params;
+        const variantId = parseInt(variantIdParam, 10);
+        if (!Number.isInteger(variantId) || variantId <= 0) {
+          return apiErrorByCode("CATALOG_VARIANT_NOT_FOUND");
+        }
 
+        const body = await request.json();
         const parseResult = InventoryUpdateBodySchema.safeParse(body);
         if (!parseResult.success) {
           const msg = parseResult.error.issues[0]?.message ?? "Invalid request";
@@ -37,24 +43,16 @@ export async function PATCH(
         }
 
         const update = InventoryUpdateSchema.parse({
-          productId,
+          variantId,
           ...parseResult.data,
         });
 
         const { adminInventory } = getServices();
+        await adminInventory.updateStock(update);
 
-        await adminInventory.updateStock({
-          productId,
-          quantity: body.quantity,
-          lowStockThreshold: body.lowStockThreshold,
-        });
-
-        // Fetch the updated inventory/product to return
-        // Since updateStock returns void, we can return a success message or fetch details
-        // For now, let's return a success message or the updated fields
         return apiResponse({
           message: "Inventory updated successfully",
-          productId,
+          variantId,
           quantity: update.quantity,
           lowStockThreshold: update.lowStockThreshold,
         });
@@ -67,20 +65,23 @@ export async function PATCH(
 }
 
 /**
- *
+ * Full inventory update for a specific variant (quantity + threshold).
  */
 export async function PUT(
   request: NextRequest,
-  { params }: { params: Promise<{ productId: string }> },
+  { params }: { params: Promise<{ variantId: string }> },
 ) {
   return withAdmin(
     request,
     async () => {
       try {
-        const { productId: productIdParam } = await params;
-        const productId = parseInt(productIdParam, 10);
-        const body = await request.json();
+        const { variantId: variantIdParam } = await params;
+        const variantId = parseInt(variantIdParam, 10);
+        if (!Number.isInteger(variantId) || variantId <= 0) {
+          return apiErrorByCode("CATALOG_VARIANT_NOT_FOUND");
+        }
 
+        const body = await request.json();
         const parseResult = InventoryUpdateBodySchema.safeParse(body);
         if (!parseResult.success) {
           const msg = parseResult.error.issues[0]?.message ?? "Invalid request";
@@ -88,7 +89,7 @@ export async function PUT(
         }
 
         const update = InventoryUpdateSchema.parse({
-          productId,
+          variantId,
           ...parseResult.data,
         });
 
@@ -97,8 +98,9 @@ export async function PUT(
 
         return apiResponse({
           message: "Stock updated successfully",
-          productId,
+          variantId,
           quantity: update.quantity,
+          lowStockThreshold: update.lowStockThreshold,
         });
       } catch (error) {
         return apiError(error instanceof Error ? error.message : "Failed to update stock", 500);

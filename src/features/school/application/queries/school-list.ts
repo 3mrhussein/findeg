@@ -79,6 +79,9 @@ export async function getSchoolListViewModel(
     normalizedCode,
     productIds,
     products: orderedProducts,
-    totalEstimatedCost: orderedProducts.reduce((sum, product) => sum + product.price, 0),
+    totalEstimatedCost: orderedProducts.reduce(
+      (sum, product) => sum + (product.variants?.[0]?.basePrice ?? 0),
+      0,
+    ),
   };
 }

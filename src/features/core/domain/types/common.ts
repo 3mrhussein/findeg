@@ -12,6 +12,7 @@ import {
   RoleIdSchema as CoreRoleIdSchema,
   RoleScopeSchema as CoreRoleScopeSchema,
   MoneyAmountSchema,
+  LocalizedStringSchema,
   type ActorType,
   type CurrencyCode,
   type Locale,
@@ -20,6 +21,7 @@ import {
   type PermissionCode,
   type RoleId,
   type RoleScope,
+  type LocalizedString,
 } from "@/features/core/domain/value-objects";
 
 // ─── Primitives ─────────────────────────────────────────────────────────────
@@ -61,6 +63,10 @@ export type Quantity = z.infer<typeof QuantitySchema>;
 export const RatingSchema = z.number().min(0).max(5);
 export type Rating = z.infer<typeof RatingSchema>;
 
+/** Localized string object (shared) */
+export { LocalizedStringSchema };
+export type { LocalizedString };
+
 /** User access levels */
 export const UserRoleSchema = z.enum(["admin", "user"]);
 export type UserRole = z.infer<typeof UserRoleSchema>;
@@ -99,7 +105,7 @@ export const UomCodeSchema = z.enum(["pcs", "pack", "carton"]);
 export type UomCode = z.infer<typeof UomCodeSchema>;
 
 /** Customer groups for pricing policy */
-export const CustomerGroupSchema = z.enum(["public_b2c", "school_b2b"]);
+export const CustomerGroupSchema = z.enum(["public_b2c", "school_b2b", "wholesale"]);
 export type CustomerGroup = z.infer<typeof CustomerGroupSchema>;
 
 // ─── Re-exported Value Objects ──────────────────────────────────────────────

@@ -1,10 +1,8 @@
 import { ID } from "@/features/core/domain/types/common";
-import type { IProductRepository } from "../interfaces/IProductRepository";
-import type { IProductService } from "@/features/catalog/application/interfaces/IProductService";
-import type { Product } from "@/features/catalog/domain/entities/Product";
-import { CustomerGroup, UomCode } from "@/features/core/domain/types/common";
-import type { CurrencyCode, Locale } from "@/features/core/domain/value-objects";
-import { VariantSellOption } from "../interfaces/IProductRepository";
+import { type IProductRepository, type ProductFilters } from "../interfaces/IProductRepository";
+import { type IProductService } from "../interfaces/IProductService";
+import { type Product } from "@/features/catalog/domain/entities/Product";
+import { type Locale } from "@/features/core/domain/value-objects";
 
 /**
  * Product Service — Handles product retrieval and search for the public shop.
@@ -72,39 +70,12 @@ export class ProductService implements IProductService {
   }
 
   /**
-   * Retrieves sell options for a variant and optional customer group.
-   *
-   * @param productId - Product identifier.
-   * @param variantKey - Stable key for variant in product variants JSON.
-   * @param customerGroup - Optional pricing context.
+   * Retrieves products matching advanced filters.
    */
-  async getVariantSellOptions(
-    productId: ID,
-    variantKey: string,
-    customerGroup?: CustomerGroup,
-  ): Promise<VariantSellOption[]> {
-    return this.productRepository.getVariantSellOptions(productId, variantKey, customerGroup);
-  }
-
-  /**
-   * Resolves effective unit price for variant, uom, and customer group.
-   *
-   * @param productId - Product identifier.
-   * @param variantKey - Stable key for variant in product variants JSON.
-   * @param uomCode - Selected sellable unit.
-   * @param customerGroup - Customer pricing group.
-   */
-  async quoteVariantUnitPrice(
-    productId: ID,
-    variantKey: string,
-    uomCode: UomCode,
-    customerGroup: CustomerGroup,
-  ): Promise<{ unitPrice: number; currency: CurrencyCode; isSellable: boolean } | null> {
-    return this.productRepository.resolveVariantUnitPrice(
-      productId,
-      variantKey,
-      uomCode,
-      customerGroup,
-    );
+  async getFilteredProducts(
+    filters: ProductFilters,
+    language?: Locale,
+  ): Promise<{ products: Product[]; total: number }> {
+    return this.productRepository.getFiltered(filters, language);
   }
 }

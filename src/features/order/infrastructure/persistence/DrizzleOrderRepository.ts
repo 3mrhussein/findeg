@@ -61,7 +61,9 @@ export class DrizzleOrderRepository implements IOrderRepository {
         id: item.id,
         orderId: item.orderId,
         productId: item.productId!,
+        variantId: (item as any).variantId || undefined,
         quantity: item.quantity as Quantity,
+        uomCode: (item as any).uomCode || undefined,
         priceAtTime: Number(item.priceAtTime) as Price,
         unitPriceSnapshot: item.unitPriceSnapshot
           ? (Number(item.unitPriceSnapshot) as Price)
@@ -235,7 +237,9 @@ export class DrizzleOrderRepository implements IOrderRepository {
             items.map((item) => ({
               orderId: newOrder.id,
               productId: item.productId,
+              variantId: item.variantId,
               quantity: item.quantity,
+              uomCode: item.uomCode,
               priceAtTime: String(item.priceAtTime || item.price || 0),
               unitPriceSnapshot: item.unitPriceSnapshot
                 ? String(item.unitPriceSnapshot)

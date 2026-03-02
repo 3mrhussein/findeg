@@ -33,6 +33,10 @@ export const ERROR_CATALOG = {
     message: "No price configured for this variant/UoM/customer group.",
     httpStatus: 404,
   },
+  CATALOG_VARIANT_NOT_FOUND: {
+    message: "Variant not found.",
+    httpStatus: 404,
+  },
   CATALOG_VARIANT_UOMS_FETCH_FAILED: {
     message: "Failed to retrieve variant UoMs.",
     httpStatus: 500,

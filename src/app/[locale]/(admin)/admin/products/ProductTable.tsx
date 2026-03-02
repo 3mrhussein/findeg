@@ -164,9 +164,9 @@ export function ProductTable({
        */
       cell: ({ row }) => (
         <div className="flex items-center gap-2">
-          {row.original.images?.[0] && (
+          {row.original.variants?.[0]?.images?.[0]?.url && (
             <Image
-              src={row.original.images[0]}
+              src={row.original.variants[0].images[0].url}
               alt={row.getValue("name")}
               width={32}
               height={32}
@@ -188,7 +188,8 @@ export function ProductTable({
        *
        */
       cell: ({ row }) => {
-        const amount = parseFloat(row.getValue("price"));
+        const firstVariant = row.original.variants?.[0];
+        const amount = firstVariant?.basePrice ?? 0;
         const formatted = new Intl.NumberFormat("en-US", {
           style: "currency",
           currency: "USD",

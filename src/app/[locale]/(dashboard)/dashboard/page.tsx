@@ -15,5 +15,11 @@ export default async function Page({ params }: Props) {
   setRequestLocale(locale);
   const data = await getDashboardDataOrRedirect(locale);
 
-  return <DashboardContent products={data.products} orders={data.orders} />;
+  return (
+    <DashboardContent
+      products={data.products}
+      orders={data.orders}
+      schoolLists={data.schoolLists}
+    />
+  );
 }

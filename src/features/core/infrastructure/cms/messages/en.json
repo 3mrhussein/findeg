@@ -15,6 +15,7 @@
     "Shop": "Shop",
     "Search": "Search",
     "Categories": "Categories",
+    "Collections": "Collections",
     "SchoolLists": "School Lists",
     "About": "About Us",
     "MyAccount": "My Account",
@@ -22,6 +23,7 @@
     "Main": "Explore",
     "Support": "Support",
     "ViewAll": "View All",
+    "TrendingCategories": "Trending Categories",
     "Guest": "Guest",
     "SearchPlaceholder": "Search for products...",
     "AiGenerator": "AI Generator",
@@ -46,7 +48,12 @@
       "Backpacks": "Backpacks",
       "Ergonomic": "Ergonomic",
       "Themed": "Themed",
-      "Lunchboxes": "Lunch Boxes"
+      "Lunchboxes": "Lunch Boxes",
+      "SmartTool": "Smart Tool",
+      "CreateList": "Create Your Smart School List",
+      "Description": "Don't waste time searching for individual items. Upload your school supply list or grade, and our smart-catalog will find the right items you need.",
+      "TryFree": "Try Free",
+      "LearnMore": "Learn More"
     }
   },
   "Layout": {
@@ -110,7 +117,9 @@
       },
       "Categories": {
         "Title": "Shop by Category",
-        "Subtitle": "Find exactly what you need by exploring our curated categories."
+        "Subtitle": "Find exactly what you need by exploring our curated categories.",
+        "ProductsCount": "{count} Products",
+        "EmptyDescription": "Browse our curated collections of stationery organized perfectly for your needs."
       },
       "TrustedBrands": "Our Trusted Brands",
       "Generator": {
@@ -127,12 +136,14 @@
     },
     "Shop": {
       "Title": "Explore Our Collection",
+      "Description": "Browse our complete collection of premium stationery and school supplies designed to make learning a joy.",
       "FiltersTitle": "Filters",
       "OpenFilters": "Open filters",
       "FiltersDialogTitle": "Filter products",
       "FiltersDialogDescription": "Adjust category, brand, and price filters to refine results.",
       "FiltersClearAll": "Clear All",
       "FiltersCategories": "Categories",
+      "FiltersAll": "All",
       "FiltersPrice": "Price Range",
       "FiltersBrands": "Brands",
       "FiltersColor": "Color",
@@ -143,13 +154,25 @@
       "SortPriceAsc": "Price: Low to High",
       "SortPriceDesc": "Price: High to Low",
       "ShowingResults": "Showing {count} of {total} results",
-      "NoProducts": "No products found matching your criteria.",
+      "NoProductsTitle": "No products found",
+      "NoProductsDescription": "Try adjusting your filters or browsing a different category to see more options.",
+      "LoadMore": "Load More",
       "GridView": "Grid view",
       "ListView": "List view",
       "ViewResults": "View Results",
       "PaginationPrevious": "Previous",
       "PaginationNext": "Next",
-      "FaqTitle": "Frequently Asked Questions"
+      "FaqTitle": "Frequently Asked Questions",
+      "CollectionBadge": "Collection",
+      "CollectionsTitle": "Shop by Collection",
+      "CollectionsDescription": "Discover curated selections designed for your specific needs, aesthetics, and lifestyle.",
+      "CollectionsExplore": "Explore this collection",
+      "SearchListo": "Search Listo",
+      "SearchButton": "Search",
+      "SearchHint": "Enter a keyword above to find exactly what you need.",
+      "SearchResultsFor": "Results for \"{query}\"",
+      "SearchFallbackTitle": "No exact match for \"{query}\"",
+      "SearchFallbackDescription": "We've broadened your search to show related results."
     },
     "Faq": {
       "Q1": "How long does shipping take?",
@@ -200,7 +223,9 @@
     "ProductCard": {
       "Like": "Like",
       "Save": "Save",
-      "AddToCart": "Add to Cart"
+      "AddToCart": "Add",
+      "NewBadge": "New",
+      "DefaultCategory": "Stationery"
     },
     "Cart": {
       "Title": "Your Shopping Cart",
@@ -415,6 +440,7 @@
       "Products": "Products",
       "Orders": "Orders",
       "Customers": "Customers",
+      "SchoolLists": "School Lists",
       "CustomersComingSoon": "Customer management feature coming soon.",
       "TotalRevenue": "Total Revenue",
       "TotalOrders": "Total Orders",
@@ -440,6 +466,7 @@
         "Orders": "Orders",
         "Inventory": "Inventory",
         "Media": "Media",
+        "SchoolLists": "School Lists",
         "AuditLog": "Audit Log",
         "Settings": "Settings"
       },

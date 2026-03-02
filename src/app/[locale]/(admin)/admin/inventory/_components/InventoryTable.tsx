@@ -44,23 +44,28 @@ export function InventoryTable({ products }: InventoryTableProps) {
     const query = searchTerm.trim().toLowerCase();
 
     const filtered = products.filter((product) => {
+      const firstVariant = product.variants?.[0];
+      const sku = firstVariant?.sku ?? "";
       const matchesSearch =
         query.length === 0 ||
         product.name.toLowerCase().includes(query) ||
-        (product.sku || "").toLowerCase().includes(query);
+        sku.toLowerCase().includes(query);
 
+      const stock = firstVariant?.inventory?.[0];
+      const onHand = stock ? stock.onHand - stock.reserved : undefined;
+      const lowStockThreshold = firstVariant?.lowStockThreshold;
       const isLowStock =
-        product.stockQuantity !== undefined &&
-        product.lowStockThreshold !== undefined &&
-        product.stockQuantity <= product.lowStockThreshold;
+        onHand !== undefined && lowStockThreshold !== undefined && onHand <= lowStockThreshold;
 
       const matchesLowStock = !lowStockOnly || isLowStock;
       return matchesSearch && matchesLowStock;
     });
 
     return filtered.sort((a, b) => {
-      if (sortKey === "stock-asc") return (a.stockQuantity || 0) - (b.stockQuantity || 0);
-      if (sortKey === "stock-desc") return (b.stockQuantity || 0) - (a.stockQuantity || 0);
+      const aStock = a.variants?.[0]?.inventory?.[0]?.onHand ?? 0;
+      const bStock = b.variants?.[0]?.inventory?.[0]?.onHand ?? 0;
+      if (sortKey === "stock-asc") return aStock - bStock;
+      if (sortKey === "stock-desc") return bStock - aStock;
       return a.name.localeCompare(b.name);
     });
   }, [products, searchTerm, lowStockOnly, sortKey]);
@@ -74,7 +79,9 @@ export function InventoryTable({ products }: InventoryTableProps) {
    */
   const startEdit = (product: Product) => {
     setEditingId(product.id);
-    setEditStock(product.stockQuantity || 0);
+    const firstVariant = product.variants?.[0];
+    const onHand = firstVariant?.inventory?.[0]?.onHand ?? 0;
+    setEditStock(onHand);
   };
 
   /**
@@ -91,8 +98,9 @@ export function InventoryTable({ products }: InventoryTableProps) {
   const saveEdit = async (productId: number) => {
     setSaving(true);
     try {
+      const product = products.find((p) => p.id === productId);
       const result = await updateStockAction({
-        productId,
+        variantId: product?.variants?.[0]?.id ?? 0,
         quantity: editStock,
       });
 
@@ -142,17 +150,19 @@ export function InventoryTable({ products }: InventoryTableProps) {
     if (selectedProductIds.length === 0) return;
     if (!Number.isFinite(batchDelta) || batchDelta <= 0) return;
 
-    const updates: Array<{ productId: number; quantity: number; lowStockThreshold?: number }> = [];
+    const updates: Array<{ variantId: number; quantity: number; lowStockThreshold?: number }> = [];
     selectedProductIds.forEach((productId) => {
       const product = products.find((item) => item.id === productId);
       if (!product) return;
 
-      const currentStock = product.stockQuantity || 0;
+      const firstVariant = product.variants?.[0];
+      if (!firstVariant) return;
+      const currentStock = firstVariant?.inventory?.[0]?.onHand ?? 0;
       const nextStock = Math.max(0, currentStock + direction * batchDelta);
       updates.push({
-        productId,
+        variantId: firstVariant.id,
         quantity: nextStock,
-        lowStockThreshold: product.lowStockThreshold,
+        lowStockThreshold: firstVariant?.lowStockThreshold,
       });
     });
 
@@ -285,40 +295,48 @@ export function InventoryTable({ products }: InventoryTableProps) {
                 <TableCell className="font-medium">
                   <div className="flex flex-col">
                     <span>{product.name}</span>
-                    {product.stockQuantity !== undefined &&
-                      product.lowStockThreshold !== undefined &&
-                      product.stockQuantity <= product.lowStockThreshold && (
+                    {(() => {
+                      const firstVariant = product.variants?.[0];
+                      const inv = firstVariant?.inventory?.[0];
+                      const onHand = inv ? inv.onHand - inv.reserved : undefined;
+                      const threshold = firstVariant?.lowStockThreshold;
+                      return onHand !== undefined &&
+                        threshold !== undefined &&
+                        onHand <= threshold ? (
                         <span className="text-xs text-red-500 flex items-center mt-1">
-                          <AlertTriangle className="h-3 w-3 mr-1" /> Low Stock (Limit:{" "}
-                          {product.lowStockThreshold})
+                          <AlertTriangle className="h-3 w-3 mr-1" /> Low Stock (Limit: {threshold})
                         </span>
-                      )}
+                      ) : null;
+                    })()}
                   </div>
                 </TableCell>
-                <TableCell className="text-muted-foreground">{product.sku || "-"}</TableCell>
+                <TableCell className="text-muted-foreground">
+                  {product.variants?.[0]?.sku ?? "-"}
+                </TableCell>
                 <TableCell>
-                  {editingId === product.id ? (
-                    <Input
-                      type="number"
-                      data-testid={`admin-inventory-stock-input-${product.id}`}
-                      value={editStock}
-                      onChange={(e) => setEditStock(parseInt(e.target.value) || 0)}
-                      className="w-24 h-8"
-                    />
-                  ) : (
-                    <span
-                      data-testid={`admin-inventory-stock-value-${product.id}`}
-                      className={
-                        product.stockQuantity !== undefined &&
-                        product.lowStockThreshold !== undefined &&
-                        product.stockQuantity <= product.lowStockThreshold
-                          ? "text-red-600 font-bold"
-                          : ""
-                      }
-                    >
-                      {product.stockQuantity || 0}
-                    </span>
-                  )}
+                  {(() => {
+                    const firstVariant = product.variants?.[0];
+                    const inv = firstVariant?.inventory?.[0];
+                    const onHand = inv ? inv.onHand - inv.reserved : 0;
+                    const threshold = firstVariant?.lowStockThreshold;
+                    const isLow = threshold !== undefined && onHand <= threshold;
+                    return editingId === product.id ? (
+                      <Input
+                        type="number"
+                        data-testid={`admin-inventory-stock-input-${product.id}`}
+                        value={editStock}
+                        onChange={(e) => setEditStock(parseInt(e.target.value) || 0)}
+                        className="w-24 h-8"
+                      />
+                    ) : (
+                      <span
+                        data-testid={`admin-inventory-stock-value-${product.id}`}
+                        className={isLow ? "text-red-600 font-bold" : ""}
+                      >
+                        {onHand}
+                      </span>
+                    );
+                  })()}
                 </TableCell>
                 {/* <TableCell>{product.lowStockThreshold}</TableCell> */}
                 <TableCell className="text-right">

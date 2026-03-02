@@ -16,7 +16,7 @@ export default function CategoryError({ reset }: CategoryErrorProps) {
   return (
     <PageStateError
       title={t("Common.ErrorOccurred")}
-      description={t("Pages.Shop.NoProducts")}
+      description={t("Pages.Shop.NoProductsDescription")}
       retryLabel={t("Common.TryAgain")}
       onRetry={reset}
     />

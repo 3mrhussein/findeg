@@ -2,14 +2,22 @@
  * Admin Bulk Inventory Update Endpoint
  *
  * PUT /api/v1/admin/inventory/bulk
- * Updates stock quantities for multiple products.
+ *
+ * Accepts an array of InventoryUpdate objects (each with variantId + quantity).
+ * Applies all updates sequentially via AdminInventoryService.bulkUpdateStock.
  */
 
 import { NextRequest } from "next/server";
+import { z } from "zod";
 import { apiResponse, apiError } from "../../../_lib/api-response";
 import { withAdmin } from "../../../_lib/middleware";
 import { getServices } from "@/server/getServices";
+import { InventoryUpdateSchema } from "@/features/administration/domain/types";
 import { PERMISSION_CODES } from "@/features/core/domain/auth";
+
+const BulkUpdateBodySchema = z.object({
+  updates: z.array(InventoryUpdateSchema).min(1, "At least one update is required"),
+});
 
 /**
  *
@@ -20,12 +28,15 @@ export async function PUT(request: NextRequest) {
     async () => {
       try {
         const body = await request.json();
-        const { updates } = body;
-
-        if (!Array.isArray(updates)) {
-          return apiError("updates must be an array of { productId, quantity }", 400);
+        const parseResult = BulkUpdateBodySchema.safeParse(body);
+        if (!parseResult.success) {
+          return apiError(
+            parseResult.error.issues[0]?.message ?? "Invalid bulk update payload",
+            400,
+          );
         }
 
+        const { updates } = parseResult.data;
         const { adminInventory } = getServices();
         await adminInventory.bulkUpdateStock(updates);
 

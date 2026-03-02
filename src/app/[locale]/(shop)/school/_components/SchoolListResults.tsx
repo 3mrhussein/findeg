@@ -24,7 +24,11 @@ export function SchoolListResults({ products, totalEstimatedCost }: SchoolListRe
    */
   function addBundleToCart() {
     products.forEach((product) => {
-      addToCart(product, 1);
+      const variants = product.variants || [];
+      const defaultVariant = variants.find((v) => v.variantKey === "default") || variants[0];
+      if (defaultVariant) {
+        addToCart(product.id, 1, { variantId: defaultVariant.id, uomCode: "pcs" });
+      }
     });
   }
 
@@ -50,11 +54,26 @@ export function SchoolListResults({ products, totalEstimatedCost }: SchoolListRe
           >
             <div className="space-y-1">
               <p className="font-medium">{product.name}</p>
-              <p className="text-xs text-muted-foreground">{product.categoryName || product.sku}</p>
+              <p className="text-xs text-muted-foreground">
+                {product.categoryName || product.skuPrefix}
+              </p>
             </div>
             <div className="flex items-center gap-3">
-              <Price price={product.price} />
-              <Button variant="outline" onClick={() => addToCart(product, 1)}>
+              <Price
+                price={product.variants?.[0]?.basePrice || 0}
+                strikePrice={product.variants?.[0]?.strikePrice}
+              />
+              <Button
+                variant="outline"
+                onClick={() => {
+                  const variants = product.variants || [];
+                  const defaultVariant =
+                    variants.find((v) => v.variantKey === "default") || variants[0];
+                  if (defaultVariant) {
+                    addToCart(product.id, 1, { variantId: defaultVariant.id, uomCode: "pcs" });
+                  }
+                }}
+              >
                 {t("Pages.ProductCard.AddToCart")}
               </Button>
             </div>

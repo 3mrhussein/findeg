@@ -8,6 +8,9 @@ import {
 } from "@/features/catalog/application/queries/storefront";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Locale } from "next-intl";
+import { ProductTabs } from "./_components/ProductTabs";
+import { Star, Truck, ShieldCheck, ArrowLeft } from "lucide-react";
+import { Link } from "@/i18n/routing";
 
 /**
  *
@@ -18,9 +21,6 @@ export async function generateStaticParams() {
     slug: id.toString(),
   }));
 }
-import { ProductTabs } from "./_components/ProductTabs";
-import { Star, Truck, ShieldCheck, ArrowLeft } from "lucide-react";
-import { Link } from "@/i18n/routing";
 
 interface ProductPageProps {
   params: Promise<{ slug: string; locale: string }>;
@@ -82,7 +82,7 @@ async function ProductPageContent({ params }: ProductPageProps) {
           {/* Gallery Column */}
           <div className="sticky top-24">
             <div className="rounded-3xl bg-white dark:bg-surface-dark border border-slate-100 dark:border-slate-800 p-4 lg:p-8 shadow-sm">
-              <ProductGallery images={product.images} />
+              <ProductGallery images={product.variants?.[0]?.images?.map((img) => img.url) ?? []} />
             </div>
           </div>
 
@@ -111,7 +111,7 @@ async function ProductPageContent({ params }: ProductPageProps) {
                 {new Intl.NumberFormat("en-EG", {
                   style: "currency",
                   currency: "EGP",
-                }).format(product.price)}
+                }).format(product.variants?.[0]?.basePrice ?? 0)}
               </div>
 
               <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
@@ -121,7 +121,7 @@ async function ProductPageContent({ params }: ProductPageProps) {
 
             {/* Actions */}
             <div className="bg-white dark:bg-surface-dark rounded-2xl border border-slate-100 dark:border-slate-800 p-6 shadow-sm">
-              <AddToCartSection product={product as any} />
+              <AddToCartSection product={product} />
 
               {/* Features / Trust Badges */}
               <div className="grid grid-cols-2 gap-4 text-sm font-medium text-slate-600 dark:text-slate-400 pt-6 mt-6 border-t border-slate-100 dark:border-slate-800">

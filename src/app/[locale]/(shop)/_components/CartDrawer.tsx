@@ -68,7 +68,7 @@ export function CartDrawer() {
                   Your cart is empty
                 </h3>
                 <p className="text-sm text-slate-500 dark:text-slate-400 max-w-[250px] mx-auto">
-                  Looks like you haven't added anything to your cart yet.
+                  Looks like you haven&apos;t added anything to your cart yet.
                 </p>
               </div>
               <SheetClose asChild>
@@ -82,93 +82,94 @@ export function CartDrawer() {
             </div>
           ) : (
             <div className="space-y-6 py-6 border-b border-slate-100 dark:border-slate-800/50">
-              {cartItems.map((item) => {
-                const variantId = JSON.stringify({
-                  variantKey: item.variantKey,
-                  uomCode: item.uomCode,
-                  customerGroup: item.customerGroup,
-                });
+              {cartItems.map((item) => (
+                <div
+                  key={`${item.variantId}-${item.uomCode}`}
+                  className="flex gap-5 group"
+                  data-testid={`cart-item-${item.variantId}`}
+                >
+                  <div className="relative w-24 h-24 bg-slate-50 dark:bg-slate-800/50 rounded-2xl overflow-hidden shrink-0 border border-slate-100 dark:border-slate-800/50">
+                    <Image
+                      src={item.imageUrl || "/images/placeholder.webp"}
+                      alt={item.productName}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                  </div>
 
-                return (
-                  <div
-                    key={`${item.id}-${variantId}`}
-                    className="flex gap-5 group"
-                    data-testid={`cart-item-${item.id}`}
-                  >
-                    <div className="relative w-24 h-24 bg-slate-50 dark:bg-slate-800/50 rounded-2xl overflow-hidden shrink-0 border border-slate-100 dark:border-slate-800/50">
-                      <Image
-                        src={item.images?.[0] || "/images/placeholder.webp"}
-                        alt={item.name}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
-                    </div>
-
-                    <div className="flex-1 flex flex-col justify-between py-1">
-                      <div className="flex justify-between items-start gap-2">
-                        <div>
-                          <h4 className="font-bold text-slate-900 dark:text-white line-clamp-2 text-sm leading-snug">
-                            {item.name}
-                          </h4>
-                          {item.variantKey && item.variantKey !== "default" && (
-                            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 capitalize">
-                              {item.variantKey}
-                            </p>
-                          )}
-                        </div>
-                        <p className="font-bold text-primary whitespace-nowrap">
-                          {new Intl.NumberFormat("en-EG", {
-                            style: "currency",
-                            currency: "EGP",
-                          }).format(item.price)}
+                  <div className="flex-1 flex flex-col justify-between py-1">
+                    <div className="flex justify-between items-start gap-2">
+                      <div>
+                        <h4 className="font-bold text-slate-900 dark:text-white line-clamp-2 text-sm leading-snug">
+                          {item.productName}
+                        </h4>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 capitalize">
+                          {item.variantLabel} {item.uomCode !== "pcs" ? `(${item.uomCode})` : ""}
                         </p>
                       </div>
+                      <p className="font-bold text-primary whitespace-nowrap">
+                        {new Intl.NumberFormat("en-EG", {
+                          style: "currency",
+                          currency: "EGP",
+                        }).format(item.unitPrice)}
+                      </p>
+                    </div>
 
-                      <div className="flex items-center justify-between mt-auto pt-4">
-                        <div className="flex items-center bg-slate-50 dark:bg-slate-800/50 rounded-full border border-slate-200 dark:border-slate-700/50 p-1">
-                          <button
-                            className="flex size-7 items-center justify-center rounded-full text-slate-500 hover:bg-white dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition-colors disabled:opacity-50"
-                            onClick={() =>
-                              updateQuantity(item.id, Math.max(1, item.quantity - 1), variantId)
-                            }
-                            disabled={item.quantity <= 1}
-                            aria-label={t("Pages.Cart.DecreaseQuantity")}
-                            data-testid={`cart-decrease-${item.id}`}
-                          >
-                            <Minus className="h-3 w-3" />
-                          </button>
-
-                          <span
-                            className="w-8 text-center text-sm font-bold text-slate-900 dark:text-white"
-                            aria-live="polite"
-                            data-testid={`cart-quantity-${item.id}`}
-                          >
-                            {item.quantity}
-                          </span>
-
-                          <button
-                            className="flex size-7 items-center justify-center rounded-full text-slate-500 hover:bg-white dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition-colors"
-                            onClick={() => updateQuantity(item.id, item.quantity + 1, variantId)}
-                            aria-label={t("Pages.Cart.IncreaseQuantity")}
-                            data-testid={`cart-increase-${item.id}`}
-                          >
-                            <Plus className="h-3 w-3" />
-                          </button>
-                        </div>
-
-                        <button
-                          className="text-xs font-semibold text-slate-400 hover:text-destructive dark:hover:text-red-400 transition-colors uppercase tracking-wider"
-                          onClick={() => removeFromCart(item.id, variantId)}
-                          aria-label={t("Pages.Cart.RemoveItem")}
-                          data-testid={`cart-remove-${item.id}`}
+                    <div className="flex items-center justify-between mt-auto pt-4">
+                      <div className="flex items-center bg-slate-50 dark:bg-slate-800/50 rounded-full border border-slate-200 dark:border-slate-700/50 p-0.5">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-7 w-7 rounded-full text-slate-500 hover:bg-white dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition-colors"
+                          onClick={() =>
+                            updateQuantity(
+                              item.variantId,
+                              item.uomCode,
+                              Math.max(1, item.quantity - 1),
+                            )
+                          }
+                          disabled={item.quantity <= 1}
+                          aria-label={t("Pages.Cart.DecreaseQuantity")}
+                          data-testid={`cart-decrease-${item.variantId}`}
                         >
-                          Remove
-                        </button>
+                          <Minus className="h-3 w-3" />
+                        </Button>
+
+                        <span
+                          className="w-8 text-center text-sm font-bold text-slate-900 dark:text-white"
+                          aria-live="polite"
+                          data-testid={`cart-quantity-${item.variantId}`}
+                        >
+                          {item.quantity}
+                        </span>
+
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-7 w-7 rounded-full text-slate-500 hover:bg-white dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition-colors"
+                          onClick={() =>
+                            updateQuantity(item.variantId, item.uomCode, item.quantity + 1)
+                          }
+                          aria-label={t("Pages.Cart.IncreaseQuantity")}
+                          data-testid={`cart-increase-${item.variantId}`}
+                        >
+                          <Plus className="h-3 w-3" />
+                        </Button>
                       </div>
+
+                      <Button
+                        variant="ghost"
+                        className="h-auto p-0 text-xs font-semibold text-slate-400 hover:text-destructive dark:hover:text-red-400 hover:bg-transparent transition-colors uppercase tracking-wider"
+                        onClick={() => removeFromCart(item.variantId, item.uomCode)}
+                        aria-label={t("Pages.Cart.RemoveItem")}
+                        data-testid={`cart-remove-${item.variantId}`}
+                      >
+                        Remove
+                      </Button>
                     </div>
                   </div>
-                );
-              })}
+                </div>
+              ))}
             </div>
           )}
         </ScrollArea>
