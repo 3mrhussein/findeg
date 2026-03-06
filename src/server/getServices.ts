@@ -15,19 +15,13 @@ export function getServices() {
   return {
     // Shop-facing services
     products: container.productService,
-    productService: container.productService,
     categories: container.categoryService,
-    categoryService: container.categoryService,
     cart: container.cartService,
-    cartService: container.cartService,
     collections: container.collectionService,
-    collectionService: container.collectionService,
     media: container.mediaService,
-    mediaService: container.mediaService,
 
     // Admin services
     auth: container.authService,
-    authService: container.authService,
     adminProduct: container.adminProductService,
     adminCategory: container.adminCategoryService,
     adminDashboard: container.adminDashboardService,
@@ -36,7 +30,8 @@ export function getServices() {
     adminInventory: container.adminInventoryService,
     schoolLists: container.schoolListService,
     logger: container.loggerService,
-    loggerService: container.loggerService,
+    adminUser: container.adminUserService,
+    adminRole: container.adminRoleService,
 
     // Direct repository access (for cases not covered by services)
     repositories: {

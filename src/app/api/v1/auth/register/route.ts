@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
       return apiErrorByCode(parsed.error.code, parsed.error.details);
     }
 
-    const { authService } = getServices();
+    const authService = getServices().auth;
 
     // Register user
     const result = await authService.register(parsed.value);

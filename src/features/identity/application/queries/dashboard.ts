@@ -4,15 +4,18 @@ import type { Product } from "@/features/catalog/domain/entities/Product";
 import type { Order } from "@/features/order/domain/entities/Order";
 import { resolveLocale } from "@/features/core/domain/value-objects";
 import type { SchoolListResult } from "@/features/catalog/application/interfaces/ISchoolListRepository";
+import type { SessionPayload } from "@/features/core/domain/auth";
 
 export interface DashboardData {
   products: Product[];
   orders: Order[];
   schoolLists: SchoolListResult[];
+  session: SessionPayload;
 }
 
 /**
  * Resolves authenticated dashboard data (products + user's orders).
+ * Also returns the session so the page can wire up PermissionsProvider.
  */
 export async function getDashboardDataOrRedirect(locale: string): Promise<DashboardData> {
   const resolvedLocale = resolveLocale(locale);
@@ -33,5 +36,6 @@ export async function getDashboardDataOrRedirect(locale: string): Promise<Dashbo
     products: allProducts,
     orders: userOrders,
     schoolLists: allSchoolLists,
+    session,
   };
 }

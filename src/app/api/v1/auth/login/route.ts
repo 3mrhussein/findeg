@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     }
 
     const { email, password } = parsed.value;
-    const { authService } = getServices();
+    const authService = getServices().auth;
     const result = await authService.login(email, password);
 
     if (!result.success || !result.user) {

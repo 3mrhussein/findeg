@@ -34,6 +34,8 @@ import {
   type ISchoolListService,
 } from "@/features/catalog/application/services/SchoolListService";
 
+import { AdminUserService } from "@/features/identity/application/services/AdminUserService";
+import { AdminRoleService } from "@/features/identity/application/services/AdminRoleService";
 import {
   AdminProductService,
   AdminCategoryService,
@@ -45,6 +47,8 @@ import {
 } from "@/features/administration/application/services";
 import { LoggerService } from "@/features/core/application/services/LoggerService";
 
+import { IAdminUserService } from "@/features/identity/application/interfaces/IAdminUserService";
+import { IAdminRoleService } from "@/features/identity/application/interfaces/IAdminRoleService";
 import { IProductRepository } from "@/features/catalog/application/interfaces/IProductRepository";
 import { ICategoryRepository } from "@/features/catalog/application/interfaces/ICategoryRepository";
 import { IUserRepository } from "@/features/identity/application/interfaces/IUserRepository";
@@ -118,6 +122,8 @@ export class ServiceContainer {
   private _adminInventoryService?: IAdminInventoryService;
   private _auditLogService?: IAuditLogService;
   private _loggerService?: ILoggerService;
+  private _adminUserService?: IAdminUserService;
+  private _adminRoleService?: IAdminRoleService;
 
   /**
    *
@@ -451,6 +457,26 @@ export class ServiceContainer {
       this._loggerService = new LoggerService();
     }
     return this._loggerService;
+  }
+
+  /**
+   * Service for managing admin users, roles, and permission overrides.
+   */
+  get adminUserService(): IAdminUserService {
+    if (!this._adminUserService) {
+      this._adminUserService = new AdminUserService();
+    }
+    return this._adminUserService;
+  }
+
+  /**
+   * Service for managing admin roles and their permission assignments.
+   */
+  get adminRoleService(): IAdminRoleService {
+    if (!this._adminRoleService) {
+      this._adminRoleService = new AdminRoleService();
+    }
+    return this._adminRoleService;
   }
 }
 

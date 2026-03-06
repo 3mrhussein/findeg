@@ -11,6 +11,7 @@ export const TABLE_IMPORT_ORDER = [
   "permissions",
   "role_permissions",
   "user_roles",
+  "user_permissions",
   "organization_memberships",
   "auth_accounts",
   "password_credentials",

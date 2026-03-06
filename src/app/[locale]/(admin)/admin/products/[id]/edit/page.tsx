@@ -3,6 +3,7 @@ import { ProductForm } from "../../ProductForm";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { notFound } from "next/navigation";
 import { resolveLocale } from "@/features/core/domain/value-objects";
+import { Suspense } from "react";
 
 /**
  *
@@ -21,28 +22,17 @@ export default async function EditProductPage({
     notFound();
   }
 
-  const [product, allCategories, allBrands] = await Promise.all([
-    adminProduct.getByIdWithTranslations(productId),
-    categories.getAll(resolvedLocale),
-    adminBrand.getAll(),
-  ]);
+  const categoriesPromise = categories
+    .getAll(resolvedLocale)
+    .then((c) => c.map((x) => ({ id: x.id, slug: x.slug, name: x.name })));
+
+  const brandsPromise = adminBrand.getAll().then((b) => b.map((x) => ({ id: x.id, name: x.name })));
+
+  const product = await adminProduct.getByIdWithTranslations(productId);
 
   if (!product) {
     notFound();
   }
-
-  // Transform categories for select
-  const categoryOptions = allCategories.map((c) => ({
-    id: c.id,
-    slug: c.slug,
-    name: c.name,
-  }));
-
-  // Added: Transform brands for select
-  const brandOptions = allBrands.map((b) => ({
-    id: b.id,
-    name: b.name,
-  }));
 
   return (
     <div className="flex-1 space-y-4 p-8 pt-6">
@@ -55,13 +45,14 @@ export default async function EditProductPage({
         </CardHeader>
         <CardContent>
           <div className="max-w-2xl">
-            {" "}
             {/* Added: div wrapper */}
-            <ProductForm
-              initialData={product}
-              categories={categoryOptions}
-              brands={brandOptions}
-            />{" "}
+            <Suspense fallback={<div className="h-96 w-full animate-pulse rounded-lg bg-muted" />}>
+              <ProductForm
+                initialData={product}
+                categoriesPromise={categoriesPromise}
+                brandsPromise={brandsPromise}
+              />
+            </Suspense>
             {/* Modified: Added brands prop */}
           </div>
         </CardContent>

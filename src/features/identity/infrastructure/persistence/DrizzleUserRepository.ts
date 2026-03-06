@@ -4,6 +4,7 @@ import { db } from "@/features/core/infrastructure/persistence";
 import {
   users,
   userRoles,
+  userPermissions,
   roles,
   rolePermissions,
   permissions,
@@ -30,7 +31,7 @@ export class DrizzleUserRepository implements IUserRepository {
     organizationId?: string;
   }> {
     try {
-      const [roleRows, permissionRows] = await Promise.all([
+      const [roleRows, permissionRows, overrideRows] = await Promise.all([
         db
           .select({
             roleCode: roles.code,
@@ -48,6 +49,15 @@ export class DrizzleUserRepository implements IUserRepository {
           .innerJoin(rolePermissions, eq(rolePermissions.roleId, userRoles.roleId))
           .innerJoin(permissions, eq(permissions.id, rolePermissions.permissionId))
           .where(eq(userRoles.userId, userId)),
+        // Fetch per-user permission overrides
+        db
+          .select({
+            permissionCode: permissions.code,
+            action: userPermissions.action,
+          })
+          .from(userPermissions)
+          .innerJoin(permissions, eq(permissions.id, userPermissions.permissionId))
+          .where(eq(userPermissions.userId, userId)),
       ]);
 
       const activeRoleIds = Array.from(
@@ -58,13 +68,24 @@ export class DrizzleUserRepository implements IUserRepository {
         ),
       ) as RoleId[];
 
-      const permissionCodes = Array.from(
-        new Set(
-          permissionRows
-            .map((row) => row.permissionCode?.trim())
-            .filter((value): value is string => Boolean(value)),
-        ),
-      ) as PermissionCode[];
+      // Start with role-based permissions
+      const effectivePermissions = new Set(
+        permissionRows
+          .map((row) => row.permissionCode?.trim())
+          .filter((value): value is string => Boolean(value)),
+      );
+
+      // Apply user-level overrides: 'grant' adds, 'revoke' removes
+      for (const override of overrideRows) {
+        if (!override.permissionCode) continue;
+        if (override.action === "grant") {
+          effectivePermissions.add(override.permissionCode);
+        } else if (override.action === "revoke") {
+          effectivePermissions.delete(override.permissionCode);
+        }
+      }
+
+      const permissionCodes = Array.from(effectivePermissions) as PermissionCode[];
 
       const scopedRole = roleRows.find(
         (row) => row.scope === "organization" && row.organizationId !== null,

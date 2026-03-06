@@ -3,6 +3,7 @@ import { Locale } from "next-intl";
 import HomePage from "./HomePage";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { buildPageMetadata } from "./_lib/metadata";
+import { use } from "react";
 
 type Props = {
   params: Promise<{ locale: Locale }>;
@@ -26,8 +27,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 /**
  *
  */
-export default async function Page({ params }: Props) {
-  const { locale } = await params;
+export default function Page({ params }: Props) {
+  const { locale } = use(params);
   setRequestLocale(locale);
 
   return <HomePage language={locale} />;

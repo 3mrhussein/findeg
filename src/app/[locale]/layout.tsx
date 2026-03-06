@@ -7,6 +7,8 @@ import { notFound } from "next/navigation";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import Providers from "@/providers/Providers";
 import { Suspense } from "react";
+import { BoundaryProvider } from "@/lib/internal/BoundaryProvider";
+import BoundaryToggle from "@/lib/internal/BoundaryToggle";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -108,13 +110,14 @@ export default async function RootLayout({
         suppressHydrationWarning
       >
         <NextIntlClientProvider locale={typedLocale} messages={messages}>
-          <Providers>
-            <Suspense>
+          <BoundaryProvider>
+            <Providers>
               <div className="min-h-screen bg-background text-foreground flex flex-col">
                 {children}
               </div>
-            </Suspense>
-          </Providers>
+              <BoundaryToggle />
+            </Providers>
+          </BoundaryProvider>
         </NextIntlClientProvider>
       </body>
     </html>

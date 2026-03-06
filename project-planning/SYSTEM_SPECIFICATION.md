@@ -1,6 +1,6 @@
 # FindEg.com — System Specification
 
-> **Version:** 1.5 · **Updated:** 2026-02-18 · **Current Phase:** Phase 1 (Public E-Shop MVP, Dual-Track Strategy)
+> **Version:** 1.6 · **Updated:** 2026-03-06 · **Current Phase:** Phase 1 (Nearing Completion) · **Focus:** Multi-UoM Commerce & School List Scaffolding
 
 ---
 
@@ -182,12 +182,12 @@ gantt
     Product catalog & search          :done, p1a, 2025-10, 2026-01
     Cart & checkout UI                :done, p1b, 2025-12, 2026-02
     Admin dashboard & CRUD            :done, p1c, 2026-01, 2026-02
-    REST API layer                    :active, p1api, 2026-02, 2026-04
-    Multi-UoM data model uplift       :active, p1uom, 2026-02, 2026-04
-    Bulk import hardening             :active, p1imp, 2026-02, 2026-04
+    REST API layer                    :done, p1api, 2026-02, 2026-03
+    Multi-UoM data model uplift       :done, p1uom, 2026-02, 2026-03
+    Bulk import hardening             :done, p1imp, 2026-02, 2026-03
     Payment integration (Paymob)      :active, p1d, 2026-02, 2026-04
-    Order mgmt & fulfillment (admin)  :p1e, 2026-03, 2026-05
-    Mobile app (React Native)         :p1m, 2026-03, 2026-06
+    Order mgmt & fulfillment (admin)  :active, p1e, 2026-03, 2026-05
+    Mobile app (React Native)         :active, p1m, 2026-03, 2026-06
     Web launch                        :milestone, p1f, 2026-05, 0d
     Mobile launch                     :milestone, p1g, 2026-06, 0d
 
@@ -289,6 +289,59 @@ flowchart TD
     style START fill:#4f46e5,color:#fff
     style CONFIRM fill:#059669,color:#fff
     style ADD fill:#f59e0b,color:#000
+```
+
+### Checkout Sequence (Multi-UoM & Pricing Resolution)
+
+This diagram shows how the system resolves the correct price during the checkout journey, accounting for the user's customer group and selected Unit of Measure.
+
+```mermaid
+sequenceDiagram
+    participant C as Customer (Web/Mobile)
+    participant API as API / Server Action
+    participant PS as Product Service
+    participant PR as Pricing Repository
+    participant DB as PostgreSQL
+
+    C->>API: Add to Cart (variantId, uomCode, qty)
+    API->>PS: Resolve Price (variantId, uomCode, customerGroup, qty)
+    PS->>PR: Fetch Price List row
+    PR->>DB: SELECT FROM variant_price_lists
+    DB-->>PR: Price Row (unitPrice, currency, isSellable)
+    PR-->>PS: Price Result
+    PS->>PS: Apply factor_to_base validation
+    PS-->>API: Effective Price
+    API-->>C: Item Added with Snapshotted Price
+```
+
+### Admin Bulk Import Sequence (Deterministic Upsert)
+
+This diagram explains the "Hardened Import" logic that ensures no duplicate products/variants are created during bulk CSV updates.
+
+```mermaid
+sequenceDiagram
+    participant A as Admin
+    participant API as Admin API
+    participant IS as Import Service
+    participant ARS as Admin Product Service
+    participant DB as PostgreSQL
+
+    A->>API: Upload CSV
+    API->>IS: Process Rows
+    loop for each row
+        IS->>ARS: Upsert Product (sku, data)
+        ARS->>DB: Check if SKU exists
+        alt exists
+            ARS->>DB: UPDATE products / variants
+        else not exists
+            ARS->>DB: INSERT products / variants
+        end
+        ARS->>DB: Upsert Translations (en/ar)
+        ARS->>DB: Upsert UoMs & Pricing
+        ARS-->>IS: Success / Error
+    end
+    IS-->>API: Import Results Summary
+    API-->>A: Show Success/Errors Dashboard
 ```
 
 ### Category Browsing — Nested Tree Filtering
@@ -428,6 +481,56 @@ graph TD
     style REST fill:#f59e0b,color:#000
 ```
 
+### Domain Model (UML Class Diagram)
+
+The following diagram illustrates the core domain entities and their structural relationships, adhering to Domain-Driven Design principles.
+
+```mermaid
+classDiagram
+    class Product {
+        +ID id
+        +LocalizedString name
+        +LocalizedString description
+        +Rating rating
+        +Boolean isActive
+        +getFeaturedVariants()
+    }
+    class ProductVariant {
+        +ID id
+        +Sku sku
+        +Price basePrice
+        +Quantity stock
+        +UomCode baseUom
+        +Boolean isActive
+        +resolvePrice(customerGroup, uom)
+    }
+    class Category {
+        +ID id
+        +Slug slug
+        +LocalizedString name
+        +String path
+        +getBreadcrumbs()
+    }
+    class Order {
+        +ID id
+        +OrderStatus status
+        +Price total
+        +DateTime createdAt
+        +calculateTotals()
+    }
+    class User {
+        +ID id
+        +Email email
+        +UserRole role
+        +hasPermission(code)
+    }
+
+    Product "1" *-- "many" ProductVariant : contains
+    Product "many" -- "1" Category : categorized by
+    Order "many" -- "0..1" User : placed by
+    ProductVariant "many" -- "many" Order : appears in
+```
+
 **Dependency rule:** All arrows point inward. Domain has zero dependencies. Infrastructure implements contracts defined by Application. The REST API and Server Actions are two different entry points into the same Application Services.
 
 ### Technology Stack
@@ -487,6 +590,34 @@ graph LR
     A5 --> R1
 ```
 
+### Feature Module Architecture
+
+Findeg follows a modular monolith structure where features are isolated by domain boundaries. Each feature contains its own Domain, Application, and Infrastructure layers.
+
+```mermaid
+componentDiagram
+    [Core Feature] as CORE
+    [Catalog Feature] as CAT
+    [Order Feature] as ORD
+    [Identity Feature] as IDEN
+    [Review Feature] as REV
+
+    CAT ..> CORE : uses common types
+    ORD ..> CAT : references products
+    ORD ..> IDEN : verifies users
+    REV ..> CAT : attaches to products
+    REV ..> IDEN : identifies authors
+
+    package "Shared / Internal" {
+        [UI Components]
+        [Internal Helpers]
+        [Permissions]
+    }
+
+    CAT -- [UI Components]
+    CORE -- [Permissions]
+```
+
 All services expose **interface types** (e.g., `IProductService`) so implementations can be swapped for testing or future changes.
 
 ---
@@ -501,17 +632,9 @@ erDiagram
         serial id PK
         integer category_id FK "FK → categories"
         integer brand_id FK "FK → brands"
-        text sku "Unique product SKU"
-        decimal price "Base price (EGP)"
-        decimal strike_price "Original price for discounts"
-        jsonb images "Array of image URLs"
-        boolean is_new "New arrival flag"
         boolean is_active "Visibility toggle"
         decimal rating "Avg rating (1-5)"
         integer reviews_count "Cached count"
-        jsonb variants "Color/Size variants config"
-        integer stock_quantity "Current inventory"
-        integer low_stock_threshold "Alert threshold"
         timestamp created_at
         timestamp updated_at
     }
@@ -523,30 +646,81 @@ erDiagram
         text description
         text long_description
         timestamp created_at
-        timestamp updated_at
     }
 
-    PRODUCT_IMAGES {
+    PRODUCT_VARIANTS {
         serial id PK
         integer product_id FK
+        text sku "Unique SKU code"
+        text variant_key "e.g., blue-0.7"
+        jsonb localized_label
+        integer display_order
+        boolean is_active
+        decimal base_price "B2C sticker price"
+        decimal strike_price
+        decimal cost_price
+        integer weight_grams
+        text barcode
+        integer low_stock_threshold
+        timestamp created_at
+    }
+
+    VARIANT_IMAGES {
+        serial id PK
+        integer variant_id FK
         text url
         text alt
-        integer sort_order
-        boolean is_primary
-        timestamp created_at
+        integer display_order
+    }
+
+    VARIANT_ATTRIBUTES {
+        integer variant_id FK "PK part 1"
+        integer attribute_id FK "PK part 2"
+        text value_text
+        decimal value_num
+        boolean value_bool
+    }
+
+    ATTRIBUTE_DEFINITIONS {
+        serial id PK
+        text name "e.g., ink_color"
+        text type "text/number/bool"
+        jsonb localized_label
+    }
+
+    VARIANT_SELLABLE_UOMS {
+        serial id PK
+        integer variant_id FK
+        text uom_code "pcs/pack/carton"
+        decimal factor_to_base
+        jsonb localized_label
+        text barcode
+        boolean is_enabled
+    }
+
+    VARIANT_PRICE_LISTS {
+        serial id PK
+        integer variant_id FK
+        text customer_group "public_b2c/school_b2b"
+        text uom_code
+        text currency "EGP"
+        decimal unit_price
+        integer min_qty "Tiered pricing"
+        boolean is_sellable
+        timestamp starts_at
+        timestamp ends_at
     }
 
     CATEGORIES {
         serial id PK
         text slug "Unique, URL-safe"
-        integer parent_id FK "Self-ref → categories"
-        text path "Materialized path: 1/5/12"
-        integer depth "0 = root, 1 = child, etc."
-        integer sort_order "Display ordering"
-        boolean is_active "Visibility toggle"
-        text icon "Icon identifier"
+        integer parent_id FK "Self-ref"
+        text path "Materialized path"
+        integer depth
+        integer sort_order
+        boolean is_active
+        text icon
         timestamp created_at
-        timestamp updated_at
     }
 
     CATEGORY_TRANSLATIONS {
@@ -554,75 +728,121 @@ erDiagram
         text language "PK part 2"
         text name
         text description
-        timestamp created_at
+    }
+
+    WAREHOUSES {
+        serial id PK
+        text code "Unique code (MAIN)"
+        text name
+        boolean is_active
+    }
+
+    INVENTORY_BALANCES {
+        serial id PK
+        integer variant_id FK
+        integer warehouse_id FK
+        integer on_hand "Physical stock"
+        integer reserved "Pending orders"
         timestamp updated_at
+    }
+
+    STOCK_MOVEMENTS {
+        serial id PK
+        integer variant_id FK
+        integer warehouse_id FK
+        text movement_type "receipt/sale/adj/..."
+        integer quantity
+        text reference_type
+        text reference_id
+        integer created_by FK
+        timestamp created_at
     }
 
     BRANDS {
         serial id PK
-        text slug "Unique, URL-safe"
-        text name "Brand display name"
-        text logo_url "Brand logo"
+        text slug "Unique"
+        text name
+        text logo_url
         boolean is_active
-        timestamp created_at
     }
 
     USERS {
         serial id PK
         text email "Unique"
-        text password_hash "bcrypt"
+        text password_hash
         text first_name
         text last_name
-        text phone
-        text role "customer / admin"
-        timestamp created_at
-        timestamp updated_at
+        text role "admin/user"
     }
 
     ADDRESSES {
         serial id PK
         integer user_id FK
-        text label "Home / Work / etc."
+        text label "Home/Work"
         text full_name
         text phone
         text city
         text area
         text street
-        text building
-        text floor
-        text apartment
-        text notes "Delivery instructions"
         boolean is_default
-        timestamp created_at
     }
 
     ORDERS {
         serial id PK
-        integer user_id FK "Nullable for guest"
-        text guest_email "For guest checkout"
-        text status "pending/confirmed/processing/shipped/delivered/cancelled/refunded"
+        integer user_id FK
+        text status "pending/confirmed/processing/..."
         decimal subtotal
         decimal shipping_cost
         decimal total_amount
-        text payment_method "paymob/wallet/cod"
-        text payment_status "pending/paid/failed/refunded"
+        text payment_method
+        text payment_status
         text tracking_number
-        text shipping_address_snapshot "JSON snapshot"
-        text admin_notes
+        jsonb shipping_address_snapshot
         timestamp created_at
-        timestamp updated_at
     }
 
     ORDER_ITEMS {
         serial id PK
         integer order_id FK
-        integer product_id FK
-        text product_name_snapshot "Name at purchase time"
+        integer variant_id FK
+        text product_name_snapshot
         text product_sku_snapshot
-        decimal unit_price_snapshot "Price at purchase time"
+        decimal unit_price_snapshot
         integer quantity
-        decimal total_price
-        jsonb variant_snapshot "Selected variant at purchase"
+        text uom_snapshot
+        decimal conversion_factor_snapshot
+    }
+
+    SCHOOL_LISTS {
+        serial id PK
+        text slug "Unique deep link"
+        text school_name
+        text grade
+        text academic_year
+        jsonb localized_title
+        jsonb localized_description
+        text hero_image_url
+        boolean is_active
+        timestamp published_at
+    }
+
+    SCHOOL_LIST_ITEMS {
+        serial id PK
+        integer school_list_id FK
+        integer display_order
+        jsonb localized_label
+        integer category_id FK
+        integer quantity_required
+        boolean is_locked
+        jsonb match_rules "Auto-matching filters"
+    }
+
+    SCHOOL_LIST_ITEM_ALTERNATIVES {
+        serial id PK
+        integer list_item_id FK
+        integer variant_id FK
+        boolean is_default
+        integer display_order
     }
 
     REVIEWS {
@@ -631,34 +851,46 @@ erDiagram
         integer user_id FK
         integer rating "1-5"
         text comment
-        boolean is_approved "Admin moderation"
+        boolean is_approved
         timestamp created_at
     }
 
     AUDIT_LOG {
         serial id PK
         integer admin_user_id FK
-        text entity_type "product/category/order/inventory"
+        text entity_type
         integer entity_id
-        text action "create/update/delete/status_change"
+        text action
         jsonb old_values
         jsonb new_values
         timestamp created_at
     }
 
-    PRODUCTS ||--o{ PRODUCT_TRANSLATIONS : "has translations"
-    PRODUCTS ||--o{ PRODUCT_IMAGES : "has images"
+    PRODUCTS ||--o{ PRODUCT_TRANSLATIONS : "has"
+    PRODUCTS ||--o{ PRODUCT_VARIANTS : "has SKUs"
     PRODUCTS ||--o{ REVIEWS : "has reviews"
-    PRODUCTS ||--o{ ORDER_ITEMS : "appears in"
-    PRODUCTS }o--|| CATEGORIES : "belongs to category"
-    PRODUCTS }o--|| BRANDS : "belongs to brand"
-    CATEGORIES ||--o{ CATEGORY_TRANSLATIONS : "has translations"
-    CATEGORIES ||--o{ CATEGORIES : "parent → children"
+    PRODUCTS }o--|| CATEGORIES : "belongs to"
+    PRODUCTS }o--|| BRANDS : "belongs to"
+    PRODUCT_VARIANTS ||--o{ VARIANT_IMAGES : "has gallery"
+    PRODUCT_VARIANTS ||--o{ VARIANT_ATTRIBUTES : "has specs"
+    PRODUCT_VARIANTS ||--o{ VARIANT_SELLABLE_UOMS : "has UoMs"
+    PRODUCT_VARIANTS ||--o{ VARIANT_PRICE_LISTS : "has pricing"
+    PRODUCT_VARIANTS ||--o{ ORDER_ITEMS : "purchased as"
+    CATEGORIES ||--o{ CATEGORY_TRANSLATIONS : "has"
+    CATEGORIES ||--o{ CATEGORIES : "parent → child"
     USERS ||--o{ ORDERS : "places"
     USERS ||--o{ REVIEWS : "writes"
-    USERS ||--o{ ADDRESSES : "has addresses"
+    USERS ||--o{ ADDRESSES : "has"
     ORDERS ||--o{ ORDER_ITEMS : "contains"
-    AUDIT_LOG }o--|| USERS : "performed by"
+    AUDIT_LOG }o--|| USERS : "by admin"
+    SCHOOL_LISTS ||--o{ SCHOOL_LIST_ITEMS : "defines"
+    SCHOOL_LIST_ITEMS ||--o{ SCHOOL_LIST_ITEM_ALTERNATIVES : "has curated"
+    SCHOOL_LIST_ITEM_ALTERNATIVES }o--|| PRODUCT_VARIANTS : "selects"
+    INVENTORY_BALANCES }o--|| PRODUCT_VARIANTS : "tracks SKU"
+    INVENTORY_BALANCES }o--|| WAREHOUSES : "at location"
+    STOCK_MOVEMENTS }o--|| PRODUCT_VARIANTS : "audit log"
+    STOCK_MOVEMENTS }o--|| WAREHOUSES : "location"
+    STOCK_MOVEMENTS }o--|| USERS : "by user"
 ```
 
 ### Current Phase Schema & Domain Changes (Phase 1, In Progress)
@@ -673,35 +905,40 @@ Phase 1 tables:
 ```sql
 variant_sellable_uoms (
   id serial primary key,
-  variant_id integer not null,
+  variant_id integer not null references product_variants(id),
   uom_code text not null,                 -- pcs/pack/carton
   factor_to_base numeric(12,4) not null, -- conversion to base_uom
+  localized_label jsonb default '{}',     -- { en: "Pack", ar: "علبة" }
+  barcode text,
   is_enabled boolean not null default true,
   unique (variant_id, uom_code)
 );
 
 variant_price_lists (
   id serial primary key,
-  variant_id integer not null,
+  variant_id integer not null references product_variants(id),
   customer_group text not null,           -- public_b2c/school_b2b
   uom_code text not null,
   currency text not null default 'EGP',
   unit_price numeric(12,2) not null,
+  min_qty integer not null default 1,
   is_sellable boolean not null default true,
-  unique (variant_id, customer_group, uom_code)
+  starts_at timestamp,
+  ends_at timestamp,
+  unique (variant_id, customer_group, uom_code, min_qty)
 );
 
 ```
 
 Domain entity changes in current phase:
 
-| Domain Entity | Required Change |
-| ------------- | --------------- |
-| `Product` / Variant model | Add `baseUom` and normalized sellable-UoM model per variant |
-| Pricing model | Resolve price by `{ variantId, customerGroup, uom }` |
-| `CartItem` | Persist selected `uom` and effective `customerGroup` snapshot |
-| `OrderItem` | Snapshot `uom`, conversion factor, and group-specific unit price |
-| Import domain/service | Enforce deterministic upsert and explicit category/sub-category linkage |
+| Domain Entity             | Required Change                                                         |
+| ------------------------- | ----------------------------------------------------------------------- |
+| `Product` / Variant model | Add `baseUom` and normalized sellable-UoM model per variant             |
+| Pricing model             | Resolve price by `{ variantId, customerGroup, uom }`                    |
+| `CartItem`                | Persist selected `uom` and effective `customerGroup` snapshot           |
+| `OrderItem`               | Snapshot `uom`, conversion factor, and group-specific unit price        |
+| Import domain/service     | Enforce deterministic upsert and explicit category/sub-category linkage |
 
 ### Nested Category Design
 
@@ -752,15 +989,15 @@ This enables:
 | **`audit_log` table**                  | All admin mutations are tracked with old/new values — required for operations                              |
 | **`addresses` table**                  | Separate from users — supports multiple saved addresses                                                    |
 | **Guest checkout support**             | `user_id` nullable on orders, `guest_email` for non-registered purchases                                   |
-| **`variant_sellable_uoms` table**     | Enables selling each variant in multiple units (pcs/pack/carton) without duplicating variants             |
+| **`variant_sellable_uoms` table**      | Enables selling each variant in multiple units (pcs/pack/carton) without duplicating variants              |
 | **`variant_price_lists` table**        | Supports per-customer-group pricing by UoM in Phase 1 pricing workflows                                    |
 
 ### Translation Strategy
 
-| Tier                | What                        | Where                                                   | Example                     |
-| ------------------- | --------------------------- | ------------------------------------------------------- | --------------------------- |
+| Tier                | What                        | Where                                                         | Example                     |
+| ------------------- | --------------------------- | ------------------------------------------------------------- | --------------------------- |
 | **Static UI text**  | Buttons, labels, navigation | `src/features/core/infrastructure/cms/messages/{locale}.json` | "Add to Cart" / "أضف للسلة" |
-| **Dynamic content** | Product names, descriptions | `product_translations` / `category_translations` tables | "Premium Pen" / "قلم ممتاز" |
+| **Dynamic content** | Product names, descriptions | `product_translations` / `category_translations` tables       | "Premium Pen" / "قلم ممتاز" |
 
 Each translatable entity has a companion `_translations` table with composite PK `(entity_id, language)`.
 
@@ -856,24 +1093,24 @@ flowchart LR
 
 ### Products & Catalog
 
-| Method | Endpoint                      | Description                                                                                                           |
-| ------ | ----------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `GET`  | `/products`                   | List with filters: `categoryId` (includes children!), `brandId`, `q`, `minPrice`, `maxPrice`, `sort`, `page`, `limit`, optional `customerGroup` |
-| `GET`  | `/products/{slug}`            | Full detail: translations, images, variants, stock, and sellable options by `{uom, customerGroup}`                 |
-| `GET`  | `/categories`                 | Full tree (hierarchical, respects `sort_order`)                                                                       |
-| `GET`  | `/categories/{slug}`          | Single category + immediate children                                                                                  |
-| `GET`  | `/categories/{slug}/products` | Products in category + all descendants                                                                                |
-| `GET`  | `/brands`                     | All active brands                                                                                                     |
-| `POST` | `/products/{id}/pricing/quote`| Resolve effective price by `{ variantId, uom, customerGroup, quantity }`                                             |
+| Method | Endpoint                       | Description                                                                                                                                     |
+| ------ | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `GET`  | `/products`                    | List with filters: `categoryId` (includes children!), `brandId`, `q`, `minPrice`, `maxPrice`, `sort`, `page`, `limit`, optional `customerGroup` |
+| `GET`  | `/products/{slug}`             | Full detail: translations, images, variants, stock, and sellable options by `{uom, customerGroup}`                                              |
+| `GET`  | `/categories`                  | Full tree (hierarchical, respects `sort_order`)                                                                                                 |
+| `GET`  | `/categories/{slug}`           | Single category + immediate children                                                                                                            |
+| `GET`  | `/categories/{slug}/products`  | Products in category + all descendants                                                                                                          |
+| `GET`  | `/brands`                      | All active brands                                                                                                                               |
+| `POST` | `/products/{id}/pricing/quote` | Resolve effective price by `{ variantId, uom, customerGroup, quantity }`                                                                        |
 
 ### Cart
 
-| Method   | Endpoint           | Description                             |
-| -------- | ------------------ | --------------------------------------- |
-| `GET`    | `/cart`            | Get cart by JWT / sessionId             |
+| Method   | Endpoint           | Description                                                   |
+| -------- | ------------------ | ------------------------------------------------------------- |
+| `GET`    | `/cart`            | Get cart by JWT / sessionId                                   |
 | `POST`   | `/cart/items`      | Add `{ productId, quantity, variant?, uom?, customerGroup? }` |
-| `PUT`    | `/cart/items/{id}` | Update quantity                         |
-| `DELETE` | `/cart/items/{id}` | Remove item                             |
+| `PUT`    | `/cart/items/{id}` | Update quantity                                               |
+| `DELETE` | `/cart/items/{id}` | Remove item                                                   |
 
 ### Checkout & Orders
 
@@ -889,24 +1126,24 @@ flowchart LR
 
 ### Admin API
 
-| Method           | Endpoint                       | Description                            |
-| ---------------- | ------------------------------ | -------------------------------------- |
-| `GET/POST`       | `/admin/products`              | List / Create product                  |
-| `GET/PUT/DELETE` | `/admin/products/{id}`         | Get / Update / Delete product          |
-| `GET/POST`       | `/admin/categories`            | List tree / Create category            |
-| `PUT`            | `/admin/categories/{id}`       | Update (including move in tree)        |
-| `PUT`            | `/admin/categories/reorder`    | Batch reorder `[{ id, sortOrder }]`    |
-| `DELETE`         | `/admin/categories/{id}`       | Delete (cascades to children)          |
-| `GET/POST`       | `/admin/brands`                | List / Create brand                    |
-| `PUT/DELETE`     | `/admin/brands/{id}`           | Update / Delete brand                  |
-| `PUT`            | `/admin/inventory/{productId}` | Update stock `{ quantity }`            |
-| `PUT`            | `/admin/inventory/bulk`        | Batch stock update                     |
-| `GET/PUT`        | `/admin/products/{id}/uoms`    | Manage sellable UoMs per variant       |
-| `GET/PUT`        | `/admin/products/{id}/pricing` | Manage per-customer-group price lists  |
-| `GET`            | `/admin/orders`                | List with filters                      |
-| `PUT`            | `/admin/orders/{id}/status`    | Update status + optional tracking #    |
-| `GET`            | `/admin/dashboard`             | KPIs, revenue, top products, low stock |
-| `GET`            | `/admin/audit-log`             | Paginated audit trail                  |
+| Method           | Endpoint                       | Description                                                               |
+| ---------------- | ------------------------------ | ------------------------------------------------------------------------- |
+| `GET/POST`       | `/admin/products`              | List / Create product                                                     |
+| `GET/PUT/DELETE` | `/admin/products/{id}`         | Get / Update / Delete product                                             |
+| `GET/POST`       | `/admin/categories`            | List tree / Create category                                               |
+| `PUT`            | `/admin/categories/{id}`       | Update (including move in tree)                                           |
+| `PUT`            | `/admin/categories/reorder`    | Batch reorder `[{ id, sortOrder }]`                                       |
+| `DELETE`         | `/admin/categories/{id}`       | Delete (cascades to children)                                             |
+| `GET/POST`       | `/admin/brands`                | List / Create brand                                                       |
+| `PUT/DELETE`     | `/admin/brands/{id}`           | Update / Delete brand                                                     |
+| `PUT`            | `/admin/inventory/{productId}` | Update stock `{ quantity }`                                               |
+| `PUT`            | `/admin/inventory/bulk`        | Batch stock update                                                        |
+| `GET/PUT`        | `/admin/products/{id}/uoms`    | Manage sellable UoMs per variant                                          |
+| `GET/PUT`        | `/admin/products/{id}/pricing` | Manage per-customer-group price lists                                     |
+| `GET`            | `/admin/orders`                | List with filters                                                         |
+| `PUT`            | `/admin/orders/{id}/status`    | Update status + optional tracking #                                       |
+| `GET`            | `/admin/dashboard`             | KPIs, revenue, top products, low stock                                    |
+| `GET`            | `/admin/audit-log`             | Paginated audit trail                                                     |
 | `POST`           | `/admin/products/bulk-import`  | Import with explicit category/sub-category linking + deterministic upsert |
 
 ### Error Format
@@ -964,30 +1201,35 @@ mindmap
       Server components
       Mobile-first design
       Dark mode
+    Listo for Schools (Phase 2+)
+      Deep-linked school lists
+      Auto-matching rules
+      Prefilled parent carts
 ```
 
 ### Feature Status
 
-| Feature                    | Status     | Notes                                |
-| -------------------------- | ---------- | ------------------------------------ |
-| Product catalog & search               | ✅ Done        | Filters, sorting, pagination                               |
-| Product detail + variants              | ✅ Done        | Images, base pricing, variant selection                    |
-| Cart (client-side + API)               | ✅ Done        | Variant-aware cart and session support                     |
-| i18n (EN/AR, RTL)                      | ✅ Done        | Static + dynamic content                                   |
-| Admin dashboard                         | ✅ Done        | Stats, charts, sidebar                                     |
-| Admin catalog CRUD                      | ✅ Done        | Products/categories/brands                                 |
-| User registration & login               | ✅ Done        | JWT cookies, bcrypt                                        |
-| Customer dashboard                      | ✅ Done        | Orders and account flows                                   |
-| REST API layer                          | ✅ Done        | Core `/api/v1/*` implemented for web/mobile parity         |
-| Checkout flow                           | 🟡 Partial     | Payment provider integration pending                        |
-| Multi-UoM schema/domain uplift          | 🟡 In Progress | Variant UoMs + group pricing + order/cart snapshots        |
-| Bulk import hardening                   | 🟡 In Progress | Deterministic upsert + explicit category/sub-category linking |
-| School prefilled-cart flow              | ⬜ Planned     | Phase 2 implementation                                     |
-| Substitution/approval policies          | ⬜ Planned     | Phase 2 policy engine                                      |
-| School co-brand overlays                | ⬜ Planned     | Phase 2 UX layer                                           |
-| Mobile app app-shell                    | ⬜ Planned     | React Native client on shared API                          |
-| Automated testing                       | ⬜ Planned     | Unit + integration                                         |
-| CI/CD pipeline                          | ⬜ Planned     | Automated deploy + checks                                  |
+| Feature                            | Status         | Notes                                                         |
+| ---------------------------------- | -------------- | ------------------------------------------------------------- |
+| Product catalog & search           | ✅ Done        | Filters, sorting, pagination                                  |
+| Product detail + variants          | ✅ Done        | Images, base pricing, variant selection                       |
+| Cart (client-side + API)           | ✅ Done        | Variant-aware cart and session support                        |
+| i18n (EN/AR, RTL)                  | ✅ Done        | Static + dynamic content                                      |
+| Admin dashboard                    | ✅ Done        | Stats, charts, sidebar                                        |
+| Admin catalog CRUD                 | ✅ Done        | Products/categories/brands                                    |
+| User registration & login          | ✅ Done        | JWT cookies, bcrypt                                           |
+| Customer dashboard                 | ✅ Done        | Orders and account flows                                      |
+| REST API layer                     | ✅ Done        | Core `/api/v1/*` implemented for web/mobile parity            |
+| Checkout flow                      | ✅ Done        | Guest/User Checkout + address management                      |
+| Multi-UoM schema/domain uplift     | ✅ Done        | Variant UoMs + group pricing + order/cart snapshots           |
+| Bulk import hardening              | ✅ Done        | Deterministic upsert + explicit category/sub-category linking |
+| School prefilled-cart flow (Listo) | 🟡 In Progress | Schema implemented, FE scaffolding begun                      |
+| Payment Integration (Paymob)       | 🟡 Partial     | Webhook handlers implemented, UI pending                      |
+| Substitution/approval policies     | ⬜ Planned     | Phase 2 policy engine                                         |
+| School co-brand overlays           | ⬜ Planned     | Phase 2 UX layer                                              |
+| Mobile app app-shell               | ⬜ Planned     | React Native client on shared API                             |
+| Automated testing                  | ⬜ Planned     | Unit + integration                                            |
+| CI/CD pipeline                     | ⬜ Planned     | Automated deploy + checks                                     |
 
 ---
 
@@ -1094,18 +1336,18 @@ findeg.stationary/
 
 ## 11. Success Metrics
 
-| Metric                        | Target       | Phase |
-| ----------------------------- | ------------ | ----- |
-| Checkout completion rate      | > 60%        | 1     |
-| Mobile vs web conversion      | Parity ± 10% | 1     |
-| Product creation time (admin) | < 5 min      | 1     |
-| Order processing time (admin) | < 2 min      | 1     |
-| Category tree query time      | < 50ms       | 1     |
-| Bulk import success rate      | > 99% rows   | 1     |
-| Import rows with valid sub-category link | > 98% rows | 1     |
-| UoM pricing resolution errors | < 0.1% req   | 1     |
-| Time to create supply list    | < 10 min     | 2     |
-| School reuse rate next year   | > 80%        | 3     |
+| Metric                                   | Target       | Phase |
+| ---------------------------------------- | ------------ | ----- |
+| Checkout completion rate                 | > 60%        | 1     |
+| Mobile vs web conversion                 | Parity ± 10% | 1     |
+| Product creation time (admin)            | < 5 min      | 1     |
+| Order processing time (admin)            | < 2 min      | 1     |
+| Category tree query time                 | < 50ms       | 1     |
+| Bulk import success rate                 | > 99% rows   | 1     |
+| Import rows with valid sub-category link | > 98% rows   | 1     |
+| UoM pricing resolution errors            | < 0.1% req   | 1     |
+| Time to create supply list               | < 10 min     | 2     |
+| School reuse rate next year              | > 80%        | 3     |
 
 ---
 

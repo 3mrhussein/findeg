@@ -57,7 +57,7 @@ export const ProductListItemUI: React.FC<ProductListItemUIProps> = ({
             className="mb-3 sm:mb-0"
           />
           <Button onClick={onAddToCart}>
-            <Icon name="shoppingCart" className="w-5 h-5 ltr:mr-2 rtl:ml-2" />
+            <Icon name="shopping_cart" className="w-5 h-5 ltr:mr-2 rtl:ml-2" />
             {addToCartText}
           </Button>
         </div>

@@ -1,5 +1,6 @@
 import { container } from "@/features/core/infrastructure/di/ServiceContainer";
 import { ProductForm } from "../ProductForm";
+import { Suspense } from "react";
 
 /**
  *
@@ -8,20 +9,20 @@ import { ProductForm } from "../ProductForm";
  *
  */
 export default async function NewProductPage() {
-  const categories = await container.adminCategoryService.getAll();
-  const brands = await container.adminBrandService.getAll();
+  const categoriesPromise = container.adminCategoryService.getAll().then((c) =>
+    c.map((x) => ({
+      id: x.id,
+      slug: x.slug,
+      name: x.name,
+    })),
+  );
 
-  // Transform for Select
-  const categoryOptions = categories.map((c) => ({
-    id: c.id,
-    slug: c.slug,
-    name: c.name,
-  }));
-
-  const brandOptions = brands.map((b) => ({
-    id: b.id,
-    name: b.name,
-  }));
+  const brandsPromise = container.adminBrandService.getAll().then((b) =>
+    b.map((x) => ({
+      id: x.id,
+      name: x.name,
+    })),
+  );
 
   return (
     <div className="flex-1 space-y-4 p-8 pt-6">
@@ -29,7 +30,9 @@ export default async function NewProductPage() {
         <h2 className="text-3xl font-bold tracking-tight">Create Product</h2>
       </div>
       <div className="max-w-2xl">
-        <ProductForm categories={categoryOptions} brands={brandOptions} />
+        <Suspense fallback={<div className="h-96 w-full animate-pulse rounded-lg bg-muted" />}>
+          <ProductForm categoriesPromise={categoriesPromise} brandsPromise={brandsPromise} />
+        </Suspense>
       </div>
     </div>
   );

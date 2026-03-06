@@ -14,3 +14,11 @@ id,code,name,created_at,updated_at
 13,admin.inventory.write,Write Inventory,2026-02-19 10:00:00,2026-02-19 10:00:00
 14,admin.media.read,Read Media,2026-02-19 10:00:00,2026-02-19 10:00:00
 15,admin.media.write,Write Media,2026-02-19 10:00:00,2026-02-19 10:00:00
+16,admin.users.read,Read Admin Users,2026-02-19 10:00:00,2026-02-19 10:00:00
+17,admin.users.write,Write Admin Users,2026-02-19 10:00:00,2026-02-19 10:00:00
+18,admin.roles.read,Read Roles,2026-02-19 10:00:00,2026-02-19 10:00:00
+19,admin.roles.write,Write Roles,2026-02-19 10:00:00,2026-02-19 10:00:00
+20,admin.schoollists.read,Read School Lists,2026-02-19 10:00:00,2026-02-19 10:00:00
+21,admin.schoollists.write,Write School Lists,2026-02-19 10:00:00,2026-02-19 10:00:00
+22,admin.discountrules.read,Read Discount Rules,2026-02-19 10:00:00,2026-02-19 10:00:00
+23,admin.discountrules.write,Write Discount Rules,2026-02-19 10:00:00,2026-02-19 10:00:00

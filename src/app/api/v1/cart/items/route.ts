@@ -29,7 +29,8 @@ export async function POST(request: NextRequest) {
       }
 
       const { productId, quantity, variant, variantKey, uomCode, customerGroup } = parsed.value;
-      const { cartService, productService } = getServices();
+      const cartService = getServices().cart;
+      const productService = getServices().products;
 
       // Verify product exists
       const product = await productService.getById(productId);

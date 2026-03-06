@@ -28,3 +28,4 @@ cypress/reports
 *.sln
 *.sw?
 fullstack-commerce
+/internal

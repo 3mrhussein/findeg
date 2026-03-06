@@ -36,7 +36,8 @@ export async function POST(request: NextRequest) {
         return apiErrorByCode("CHECKOUT_GUEST_EMAIL_REQUIRED");
       }
 
-      const { cartService, repositories } = getServices();
+      const cartService = getServices().cart;
+      const repositories = getServices().repositories;
 
       const cartId = context.user
         ? `user_${context.user.userId}`

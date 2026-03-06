@@ -44,7 +44,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     }
 
     const { variantId, uomCode, customerGroup } = parseResult.data;
-    const { productService } = getServices();
+    const productService = getServices().products;
 
     // Fetch the product and resolve pricing from its variant's price lists
     const product = await productService.getById(productId);

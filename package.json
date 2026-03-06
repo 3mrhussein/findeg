@@ -22,7 +22,7 @@
     "db:setup": "npm run db:start && npm run db:push && npm run db:seed",
     "db:generate": "drizzle-kit generate --config drizzle.config.ts",
     "db:migrate": "drizzle-kit migrate --config drizzle.config.ts",
-    "db:push": "drizzle-kit push --config drizzle.config.ts",
+    "db:push": "drizzle-kit push --config drizzle.config.ts --force",
     "db:studio": "drizzle-kit studio --config drizzle.config.ts",
     "db:seed": "node scripts/seed-db.js",
     "db:doc": "node scripts/generate-schema-doc.js",

@@ -5,7 +5,7 @@ import Image from "next/image";
 /**
  *
  */
-export function HeroSection() {
+export async function HeroSection() {
   return (
     <section className="w-full bg-slate-50 dark:bg-background py-12 lg:py-20">
       <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8">

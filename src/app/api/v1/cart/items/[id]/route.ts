@@ -46,7 +46,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
         return apiErrorByCode("VALIDATION_INVALID_ITEM_ID");
       }
 
-      const { cartService } = getServices();
+      const cartService = getServices().cart;
 
       const cartId = context.user
         ? `user_${context.user.userId}`
@@ -90,7 +90,7 @@ export async function DELETE(
       if (!Number.isInteger(variantId) || variantId <= 0) {
         return apiErrorByCode("VALIDATION_INVALID_ITEM_ID");
       }
-      const { cartService } = getServices();
+      const cartService = getServices().cart;
 
       const cartId = context.user
         ? `user_${context.user.userId}`

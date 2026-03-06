@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
       }
 
       const { address, paymentMethod } = parseResult.data;
-      const { cartService } = getServices();
+      const cartService = getServices().cart;
 
       const cartId = context.user
         ? `user_${context.user.userId}`

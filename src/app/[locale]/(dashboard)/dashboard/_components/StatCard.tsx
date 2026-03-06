@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { useCountUp } from "@/hooks/useCountUp";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface StatCardProps {
@@ -14,7 +13,7 @@ interface StatCardProps {
 }
 
 /**
- *
+ * Overview stat card — instant value display, subtle hover elevation.
  */
 export const StatCard: React.FC<StatCardProps> = ({
   title,
@@ -24,21 +23,19 @@ export const StatCard: React.FC<StatCardProps> = ({
   suffix = "",
   decimals = 0,
 }) => {
-  const animatedValue = useCountUp(value, 2000);
-
   const formattedValue = new Intl.NumberFormat("en-US", {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
-  }).format(animatedValue);
+  }).format(value);
 
   return (
-    <Card>
+    <Card className="transition-shadow duration-200 hover:shadow-md">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
         <div className="text-muted-foreground">{icon}</div>
       </CardHeader>
       <CardContent>
-        <div className="text-3xl font-bold text-foreground">
+        <div className="text-2xl md:text-3xl font-bold text-foreground tabular-nums">
           {prefix}
           {formattedValue}
           {suffix}

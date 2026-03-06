@@ -54,8 +54,8 @@ export const Overview: React.FC<OverviewProps> = ({ products, orders }) => {
   ];
 
   return (
-    <div className="space-y-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="space-y-6 md:space-y-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6">
         <StatCard
           title={t("Pages.Dashboard.TotalRevenue")}
           value={totalRevenue}
@@ -66,20 +66,20 @@ export const Overview: React.FC<OverviewProps> = ({ products, orders }) => {
         <StatCard
           title={t("Pages.Dashboard.TotalOrders")}
           value={totalOrders}
-          icon={<Icon name="shoppingCart" className="w-6 h-6" />}
+          icon={<Icon name="shopping_cart" className="w-6 h-6" />}
         />
         <StatCard
           title={t("Pages.Dashboard.TotalProducts")}
           value={totalProducts}
-          icon={<Icon name="package" className="w-6 h-6" />}
+          icon={<Icon name="package_2" className="w-6 h-6" />}
         />
         <StatCard
           title={t("Pages.Dashboard.TotalCustomers")}
           value={153}
-          icon={<Icon name="users" className="w-6 h-6" />}
+          icon={<Icon name="group" className="w-6 h-6" />}
         />
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
         <div className="lg:col-span-2">
           <SalesChart data={monthlySalesData} />
         </div>

@@ -158,6 +158,36 @@ export const userRoles = pgTable(
 );
 
 /**
+ * Per-user permission overrides.
+ * Allows system admin to grant or revoke individual permissions per user,
+ * independent of their role assignments.
+ */
+export const userPermissions = pgTable(
+  "user_permissions",
+  {
+    id: serial("id").primaryKey(),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    permissionId: integer("permission_id")
+      .notNull()
+      .references(() => permissions.id, { onDelete: "cascade" }),
+    /** 'grant' adds a permission, 'revoke' removes one even if the role includes it */
+    action: varchar("action", { length: 10 }).notNull().default("grant"),
+    /** Who made this override */
+    grantedBy: integer("granted_by").references(() => users.id, { onDelete: "set null" }),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => ({
+    uqUserPermission: uniqueIndex("uq_user_permissions_user_permission").on(
+      table.userId,
+      table.permissionId,
+    ),
+    idxUserPermissionsUser: index("idx_user_permissions_user_id").on(table.userId),
+  }),
+);
+
+/**
  * User membership in organizations.
  */
 export const organizationMemberships = pgTable(
@@ -250,6 +280,21 @@ export const userRolesRelations = relations(userRoles, ({ one }) => ({
   }),
 }));
 
+export const userPermissionsRelations = relations(userPermissions, ({ one }) => ({
+  user: one(users, {
+    fields: [userPermissions.userId],
+    references: [users.id],
+  }),
+  permission: one(permissions, {
+    fields: [userPermissions.permissionId],
+    references: [permissions.id],
+  }),
+  grantedByUser: one(users, {
+    fields: [userPermissions.grantedBy],
+    references: [users.id],
+  }),
+}));
+
 export const rolePermissionsRelations = relations(rolePermissions, ({ one }) => ({
   role: one(roles, {
     fields: [rolePermissions.roleId],
@@ -291,6 +336,8 @@ export type RolePermission = typeof rolePermissions.$inferSelect;
 export type NewRolePermission = typeof rolePermissions.$inferInsert;
 export type UserRoleAssignment = typeof userRoles.$inferSelect;
 export type NewUserRoleAssignment = typeof userRoles.$inferInsert;
+export type UserPermission = typeof userPermissions.$inferSelect;
+export type NewUserPermission = typeof userPermissions.$inferInsert;
 export type Organization = typeof organizations.$inferSelect;
 export type NewOrganization = typeof organizations.$inferInsert;
 export type OrganizationMembership = typeof organizationMemberships.$inferSelect;

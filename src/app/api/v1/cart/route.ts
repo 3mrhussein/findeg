@@ -19,7 +19,7 @@ import { getServices } from "@/server/getServices";
 export async function GET(request: NextRequest) {
   return withOptionalAuth(request, async (context) => {
     try {
-      const { cartService } = getServices();
+      const cartService = getServices().cart;
 
       // Determine cart identifier (userId or guestId)
       const cartId = context.user
