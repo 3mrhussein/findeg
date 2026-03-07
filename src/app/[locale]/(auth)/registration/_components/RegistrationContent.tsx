@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/shared/Icon";
 import { RegistrationForm } from "./RegistrationForm";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Link } from "@/i18n/routing";
+import { Link } from "@/i18n/navigation";
 import { Logo } from "@/components/shared/Logo";
 
 /**

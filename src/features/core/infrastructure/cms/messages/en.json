@@ -20,6 +20,7 @@
     "About": "About Us",
     "MyAccount": "My Account",
     "Dashboard": "Dashboard",
+    "Login": "Login",
     "Main": "Explore",
     "Support": "Support",
     "ViewAll": "View All",
@@ -416,7 +417,19 @@
       "NameLabel": "Name",
       "EmailLabel": "Email",
       "ProfileUpdated": "Profile updated successfully.",
-      "ProfileUpdateError": "Unable to update profile. Please try again."
+      "ProfileUpdateError": "Unable to update profile. Please try again.",
+      "Settings": "Settings",
+      "SettingsDescription": "Manage your account preferences and security.",
+      "AdminForbidden": {
+        "Title": "Admin Access Only",
+        "Description": "You are currently logged in with an Admin account. This section is reserved for customer accounts and personal user dashboards.",
+        "WhyTitle": "Why am I seeing this?",
+        "WhyText": "To ensure data integrity and security, administrative accounts cannot access customer-facing dashboard features directly.",
+        "AdminPanel": "Admin Panel",
+        "StoreHome": "Store Home",
+        "NeedUserAccount": "Need a user account?",
+        "SwitchAccount": "Switch to User Account"
+      }
     },
     "BrandKit": {
       "Title": "Our Brand Identity",

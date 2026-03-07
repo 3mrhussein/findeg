@@ -1,4 +1,4 @@
-import { unstable_cache } from "next/cache";
+import { cacheTag, cacheLife } from "next/cache";
 import { getServices } from "@/server/getServices";
 import { CACHE_TAGS } from "@/features/core/domain/constants/cache-tags";
 import type { Product } from "@/features/catalog/domain/entities/Product";
@@ -30,31 +30,49 @@ export interface ProductDetailPageData {
 }
 
 /**
- * Cached storefront read model for home page content.
+ * Cached storefront read model for the home page.
+ *
+ * Uses `'use cache'` with the `hours` profile:
+ *   stale: 5 min | revalidate: 1 hr | expire: 1 day
+ *
+ * Tagged with both products + categories so admin writes to either
+ * collection can bust this entry via `revalidateTag`.
+ *
+ * @param language - Locale string (e.g. "en" | "ar"). Must be passed explicitly
+ *   so it becomes part of the cache key — one entry per locale.
  */
-export const getHomePageData = unstable_cache(
-  async (language: string): Promise<HomePageData> => {
-    const locale = resolveLocale(language);
-    const { products, categories } = getServices();
-    const [featuredProducts, allCategories] = await Promise.all([
-      products.getFeaturedProducts(8, locale),
-      categories.getAll(locale),
-    ]);
+export async function getHomePageData(language: string): Promise<HomePageData> {
+  "use cache";
+  cacheTag(CACHE_TAGS.CATALOG_PRODUCTS, CACHE_TAGS.CATALOG_CATEGORIES);
+  cacheLife("hours");
 
-    return {
-      featuredProducts,
-      categories: allCategories,
-    };
-  },
-  ["home-page-data"],
-  { revalidate: 3600, tags: [CACHE_TAGS.CATALOG_PRODUCTS, CACHE_TAGS.CATALOG_CATEGORIES] },
-);
+  const locale = resolveLocale(language);
+  const { products, categories } = getServices();
+  const [featuredProducts, allCategories] = await Promise.all([
+    products.getFeaturedProducts(8, locale),
+    categories.getAll(locale),
+  ]);
+
+  return {
+    featuredProducts,
+    categories: allCategories,
+  };
+}
 
 /**
- * Storefront read model for shop listing page.
- * Kept uncached so newly created/admin-updated products reflect immediately.
+ * Cached storefront read model for the shop listing page.
+ *
+ * Uses `'use cache'` with the `hours` profile. The full product list is
+ * cached; runtime filter/sort logic in `getShopPageViewModel` operates
+ * on this cached data without hitting the database again.
+ *
+ * @param language - Locale string. Part of the cache key.
  */
 export async function getShopPageData(language: string): Promise<ShopPageData> {
+  "use cache";
+  cacheTag(CACHE_TAGS.CATALOG_PRODUCTS);
+  cacheLife("hours");
+
   const locale = resolveLocale(language);
   const { products } = getServices();
   const allProducts = await products.getAll(locale);
@@ -65,21 +83,13 @@ export async function getShopPageData(language: string): Promise<ShopPageData> {
 }
 
 /**
- * Cached storefront read model for categories page.
- */
-export const getCategoriesPageData = unstable_cache(
-  async (language: string): Promise<Category[]> => {
-    const locale = resolveLocale(language);
-    const { categories } = getServices();
-    return categories.getAll(locale);
-  },
-  ["categories-page-data"],
-  { revalidate: 86400, tags: [CACHE_TAGS.CATALOG_CATEGORIES] },
-);
-
-/**
- * Storefront read model for search page results.
- * Kept uncached to avoid stale strict/fallback search behavior.
+ * Storefront read model for the search page.
+ *
+ * Intentionally NOT cached — search results are query-dependent and must
+ * reflect the latest product data on every request.
+ *
+ * @param language - Locale string.
+ * @param query    - Raw search query from the user.
  */
 export async function getSearchPageData(language: string, query: string): Promise<SearchPageData> {
   const locale = resolveLocale(language);
@@ -116,46 +126,77 @@ export async function getSearchPageData(language: string, query: string): Promis
 }
 
 /**
- * Cached list of product IDs used for static params generation.
+ * Cached list of all product IDs used by `generateStaticParams`.
+ *
+ * Uses `'use cache'` with the `days` profile — static params are rebuilt
+ * infrequently and can tolerate a longer revalidation window.
  */
-export const getProductIdsForStaticParams = unstable_cache(
-  async (): Promise<number[]> => {
-    const { products } = getServices();
-    const allProducts = await products.getAll("en");
-    return allProducts.map((product) => product.id);
-  },
-  ["product-ids-static-params"],
-  { revalidate: 86400, tags: [CACHE_TAGS.CATALOG_PRODUCTS] },
-);
+export async function getProductIdsForStaticParams(): Promise<number[]> {
+  "use cache";
+  cacheTag(CACHE_TAGS.CATALOG_PRODUCTS);
+  cacheLife("days");
+
+  const { products } = getServices();
+  const allProducts = await products.getAll("en");
+  return allProducts.map((product) => product.id);
+}
 
 /**
- * Cached storefront read model for product detail page.
+ * Cached storefront read model for the product detail page.
+ *
+ * Uses `'use cache'` with two tags:
+ *   - Collection tag: busted when any product changes (admin writes).
+ *   - Entity tag: busted surgically for this specific product only.
+ *
+ * @param productId - Numeric product ID. Part of the cache key.
+ * @param language  - Locale string. Part of the cache key.
  */
-export const getProductDetailPageData = unstable_cache(
-  async (productId: number, language: string): Promise<ProductDetailPageData | null> => {
-    const locale: Locale = resolveLocale(language);
-    const { products, repositories } = getServices();
-    const product = await products.getById(productId, locale);
+export async function getProductDetailPageData(
+  productId: number,
+  language: string,
+): Promise<ProductDetailPageData | null> {
+  "use cache";
+  cacheTag(CACHE_TAGS.CATALOG_PRODUCTS, CACHE_TAGS.productDetail(productId));
+  cacheLife("hours");
 
-    if (!product) return null;
+  const locale: Locale = resolveLocale(language);
+  const { products, repositories } = getServices();
+  const product = await products.getById(productId, locale);
 
-    const [allProducts, reviews] = await Promise.all([
-      products.getAll(locale),
-      repositories.reviews.getByProductId(productId),
-    ]);
+  if (!product) return null;
 
-    const recommendedProducts = allProducts
-      .filter(
-        (candidate) => candidate.id !== product.id && candidate.categoryId === product.categoryId,
-      )
-      .slice(0, 4);
+  const [allProducts, reviews] = await Promise.all([
+    products.getAll(locale),
+    repositories.reviews.getByProductId(productId),
+  ]);
 
-    return {
-      product,
-      reviews,
-      recommendedProducts,
-    };
-  },
-  ["product-detail"],
-  { revalidate: 3600, tags: [CACHE_TAGS.CATALOG_PRODUCTS, CACHE_TAGS.CATALOG_REVIEWS] },
-);
+  const recommendedProducts = allProducts
+    .filter(
+      (candidate) => candidate.id !== product.id && candidate.categoryId === product.categoryId,
+    )
+    .slice(0, 4);
+
+  return {
+    product,
+    reviews,
+    recommendedProducts,
+  };
+}
+
+/**
+ * Cached storefront read model for the categories listing page.
+ *
+ * Uses `'use cache'` with the `days` profile — categories change
+ * less frequently than products.
+ *
+ * @param language - Locale string. Part of the cache key.
+ */
+export async function getCategoriesPageData(language: string): Promise<Category[]> {
+  "use cache";
+  cacheTag(CACHE_TAGS.CATALOG_CATEGORIES);
+  cacheLife("days");
+
+  const locale = resolveLocale(language);
+  const { categories } = getServices();
+  return categories.getAll(locale);
+}

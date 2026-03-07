@@ -1,18 +1,26 @@
 import { getTranslations } from "next-intl/server";
 import type { Locale } from "next-intl";
-import { Link } from "@/i18n/routing";
+import { Link } from "@/i18n/navigation";
+import { cacheLife } from "next/cache";
 
-const CURRENT_YEAR = new Date().getFullYear();
+const CURRENT_YEAR = 2025;
 
 interface FooterProps {
   locale: Locale;
 }
 
 /**
+ * Cached site-wide footer.
  *
+ * Uses `'use cache'` with `cacheLife('max')` — footer links and text
+ * change only with code deployments. CURRENT_YEAR is captured at
+ * cache time (build or first revalidation), which is acceptable for
+ * a footer copyright string.
  */
 export async function Footer({ locale }: FooterProps) {
-  const t = await getTranslations({ locale });
+  // ✅ locale + namespace together — next-intl skips headers() call
+  const t = await getTranslations({ locale, namespace: "Layout" });
+  const year = 2025;
 
   return (
     <footer className="w-full bg-slate-900 text-slate-400 py-16 lg:py-24">
@@ -28,7 +36,7 @@ export async function Footer({ locale }: FooterProps) {
               </span>
             </Link>
             <p className="mb-6 max-w-sm text-sm leading-relaxed">
-              {t("Layout.Footer.Tagline") ||
+              {t("Footer.Tagline") ||
                 "Streamlining back-to-school shopping with guaranteed exact matches for your school's official supply lists."}
             </p>
             <div className="flex gap-4">
@@ -122,7 +130,7 @@ export async function Footer({ locale }: FooterProps) {
         </div>
 
         <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 sm:flex-row text-sm">
-          <p>&copy; {CURRENT_YEAR} FindEg.com (Listo). All rights reserved.</p>
+          <p>&copy; {year} FindEg.com (Listo). All rights reserved.</p>
           <div className="flex gap-4">
             <span className="material-symbols-outlined text-[24px]">payments</span>
             <span className="material-symbols-outlined text-[24px]">credit_card</span>

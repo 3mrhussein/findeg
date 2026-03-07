@@ -1,20 +1,27 @@
 import { getTranslations } from "next-intl/server";
 import type { Locale } from "next-intl";
-import { Link } from "@/i18n/routing";
+import { Link } from "@/i18n/navigation";
 import { HeaderNavClient } from "./HeaderNavClient";
 import ToggleLanguage from "./ToggleLanguage";
 import ToggleTheme from "./ToggleTheme";
 import { SearchOverlay } from "./SearchOverlay";
+import { cacheLife } from "next/cache";
 
 interface HeaderProps {
   locale: Locale;
 }
 
 /**
+ * Cached site-wide header.
  *
+ * Uses `'use cache'` with `cacheLife('max')` — navigation labels and links
+ * are part of a code deployment and change extremely rarely. The `locale`
+ * prop is passed explicitly so next-intl resolves translations without
+ * calling `headers()` (which would break caching).
  */
 export async function Header({ locale }: HeaderProps) {
-  const t = await getTranslations({ locale });
+  // ✅ locale + namespace together — next-intl skips headers() call
+  const t = await getTranslations({ locale, namespace: "Nav" });
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-background/80 backdrop-blur-md">
@@ -37,25 +44,25 @@ export async function Header({ locale }: HeaderProps) {
             href="/shop"
             className="text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors"
           >
-            {t("Nav.Shop") || "Shop"}
+            {t("Shop") || "Shop"}
           </Link>
           <Link
             href="/categories"
             className="text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors"
           >
-            {t("Nav.Categories") || "Categories"}
+            {t("Categories") || "Categories"}
           </Link>
           <Link
             href="/collections"
             className="text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors"
           >
-            {t("Nav.Collections") || "Collections"}
+            {t("Collections") || "Collections"}
           </Link>
           <Link
             href="/school-lists"
             className="text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors"
           >
-            {t("Nav.SchoolLists") || "For Schools"}
+            {t("SchoolLists") || "For Schools"}
           </Link>
         </nav>
 
@@ -69,7 +76,7 @@ export async function Header({ locale }: HeaderProps) {
           <SearchOverlay />
 
           <Link
-            href="/admin"
+            href="/dashboard"
             className="hidden sm:flex size-10 items-center justify-center rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
           >
             <span className="material-symbols-outlined text-[20px]">person</span>

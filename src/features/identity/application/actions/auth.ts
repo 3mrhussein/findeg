@@ -52,9 +52,11 @@ export async function loginAction(formData: FormData) {
 /**
  * Terminates the current user session and redirects to the home page.
  */
-export async function logoutAction() {
+export async function logoutAction(formData?: FormData) {
   const authService = container.authService;
+  const redirectTo = formData?.get("redirectTo") as string | undefined;
+
   await authService.logout();
   revalidatePath("/");
-  redirect("/");
+  redirect(redirectTo || "/");
 }

@@ -1,6 +1,6 @@
 # FindEg.com — System Specification
 
-> **Version:** 1.6 · **Updated:** 2026-03-06 · **Current Phase:** Phase 1 (Nearing Completion) · **Focus:** Multi-UoM Commerce & School List Scaffolding
+> **Version:** 1.7 · **Updated:** 2026-03-07 · **Current Phase:** Phase 1 (Nearing Completion) · **Focus:** Multi-UoM Commerce & School List Scaffolding
 
 ---
 
@@ -1258,15 +1258,16 @@ Horizontal scaling, stateless backend, CDN for assets, read replica ready.
 
 ### Security
 
-| Concern   | Approach                                  |
-| --------- | ----------------------------------------- |
-| Auth      | JWT (short expiry) + refresh rotation     |
-| Passwords | bcrypt hashing                            |
-| Transport | HTTPS everywhere                          |
-| Cards     | Provider tokenization only                |
-| Mobile    | Certificate pinning, secure token storage |
-| OWASP     | SQL injection, XSS, CSRF protection       |
-| Admin     | Role-based access control, audit logging  |
+| Concern         | Approach                                                                        |
+| --------------- | ------------------------------------------------------------------------------- |
+| Auth            | JWT (short expiry) + refresh rotation                                           |
+| Passwords       | bcrypt hashing                                                                  |
+| Transport       | HTTPS everywhere                                                                |
+| Cards           | Provider tokenization only                                                      |
+| Mobile          | Certificate pinning, secure token storage                                       |
+| OWASP           | SQL injection, XSS, CSRF protection                                             |
+| Admin           | Role-based access control, audit logging                                        |
+| Route Isolation | Admins are blocked from (user) routes via layout guards and custom Forbidden UI |
 
 ### Availability
 
@@ -1295,11 +1296,12 @@ Horizontal scaling, stateless backend, CDN for assets, read replica ready.
 ```
 findeg.stationary/
 ├── src/
-│   ├── app/[locale]/           # Routes & pages
-│   │   ├── (shop)/             # Public storefront
-│   │   ├── (admin)/admin/      # Admin dashboard
-│   │   ├── (dashboard)/        # Customer dashboard
+│   ├── app/[locale]/           # Routes & pages (i18n-prefixed)
 │   │   ├── (auth)/             # Login & registration
+│   │   ├── (storefront)/       # Public storefront context
+│   │   │   ├── (user)/         # Authenticated customer area (Dashboard, Orders, Settings)
+│   │   │   └── shop/           # Catalog browsing
+│   │   ├── admin/              # Admin-only dashboard & portal
 │   │   └── api/v1/             # REST API routes (for mobile + external)
 │   ├── domain/entities/        # Product, Cart, Category, User, Order, Review
 │   ├── application/
@@ -1373,7 +1375,8 @@ This section defines the approved target model for the in-progress internal refa
 - Authorization is permission-based:
   - roles map to permissions,
   - users and organization memberships map to roles,
-  - checks enforce permissions, not role strings.
+  - checks enforce permissions via server-side layout guards (`requireAuth`, `requireAdmin`), not middleware-based logic.
+  - Cross-actor isolation prevents Admins from accessing personal customer dashboards.
 - Guest users are represented by persisted guest principals for cart/checkout continuity.
 
 ### 12.3 Organization and Business Access Targets

@@ -11,7 +11,3 @@ export const routing = defineRouting({
   // Don't use a prefix for the default locale
   localePrefix: "always",
 });
-
-// Lightweight wrappers around Next.js' navigation APIs
-// that will consider the routing configuration
-export const { Link, redirect, usePathname, useRouter, getPathname } = createNavigation(routing);

@@ -30,7 +30,7 @@ import {
   Phone,
   LogIn,
 } from "lucide-react";
-import { Link } from "@/i18n/routing";
+import { Link } from "@/i18n/navigation";
 import type { HeaderCategoryNode } from "@/features/catalog/application/queries/header-nav";
 import ToggleTheme from "@/components/shared/ToggleTheme";
 import ToggleLanguage from "@/components/shared/ToggleLanguage";

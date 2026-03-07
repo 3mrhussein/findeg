@@ -1,18 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { Link } from "@/i18n/routing";
+import { Link } from "@/i18n/navigation";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { CartTrigger } from "@/app/[locale]/(shop)/_components/CartTrigger";
 import ToggleLanguage from "./ToggleLanguage";
 import ToggleTheme from "./ToggleTheme";
-import { Menu } from "lucide-react";
+import { Menu, User, LayoutDashboard } from "lucide-react";
+import { useUser } from "@/hooks/useUser";
+import { CartTrigger } from "@/app/[locale]/(storefront)/_components/CartTrigger";
+import { useTranslations } from "next-intl";
 
 /**
  *
  */
 export function HeaderNavClient() {
   const [open, setOpen] = useState(false);
+  const { isLoggedIn, currentUser, isLoading } = useUser();
+  const t = useTranslations("Nav");
 
   return (
     <>
@@ -31,34 +35,45 @@ export function HeaderNavClient() {
               </SheetTitle>
             </SheetHeader>
             <div className="flex flex-col gap-6">
+              {isLoggedIn && currentUser && (
+                <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800">
+                  <div className="size-10 rounded-full bg-primary/10 flex items-center justify-center">
+                    <User className="size-5 text-primary" />
+                  </div>
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-sm font-bold truncate">{currentUser.name}</span>
+                    <span className="text-xs text-slate-500 truncate">{currentUser.email}</span>
+                  </div>
+                </div>
+              )}
               <nav className="flex flex-col gap-4">
                 <Link
                   href="/shop"
                   onClick={() => setOpen(false)}
-                  className="text-lg font-bold text-slate-900 dark:text-white"
+                  className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-3 hover:text-primary transition-colors"
                 >
                   Shop
                 </Link>
                 <Link
                   href="/categories"
                   onClick={() => setOpen(false)}
-                  className="text-lg font-bold text-slate-900 dark:text-white"
+                  className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-3 hover:text-primary transition-colors"
                 >
                   Collections
                 </Link>
                 <Link
                   href="/school-lists"
                   onClick={() => setOpen(false)}
-                  className="text-lg font-bold text-slate-900 dark:text-white"
+                  className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-3 hover:text-primary transition-colors"
                 >
                   For Schools
                 </Link>
                 <Link
-                  href="/admin"
+                  href={isLoggedIn ? "/dashboard" : "/login"}
                   onClick={() => setOpen(false)}
-                  className="text-lg font-bold text-slate-900 dark:text-white"
+                  className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-3 hover:text-primary transition-colors"
                 >
-                  Account
+                  {isLoggedIn ? t("Dashboard") : t("Login")}
                 </Link>
               </nav>
 
