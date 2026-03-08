@@ -39,6 +39,16 @@ export class DrizzleSchoolListRepository implements ISchoolListRepository {
   }
 
   /**
+   * Gets a school list by its ID.
+   */
+  async getById(id: ID): Promise<SchoolListResult | null> {
+    const [result] = await db.select().from(schoolLists).where(eq(schoolLists.id, id)).limit(1);
+
+    if (!result) return null;
+    return result as SchoolListResult;
+  }
+
+  /**
    * Gets all school lists.
    */
   async getAll(): Promise<SchoolListResult[]> {

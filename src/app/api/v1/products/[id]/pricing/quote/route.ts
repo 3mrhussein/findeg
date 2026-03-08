@@ -17,6 +17,11 @@ const QuoteQuerySchema = z.object({
   variantId: z.string().regex(/^\d+$/, "variantId must be a positive integer").transform(Number),
   uomCode: UomCodeSchema,
   customerGroup: CustomerGroupSchema.default("public_b2c"),
+  quantity: z
+    .string()
+    .regex(/^\d+$/, "quantity must be a positive integer")
+    .transform(Number)
+    .optional(),
 });
 
 /**
@@ -31,10 +36,12 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     }
 
     const { searchParams } = new URL(request.url);
+    const uomCode = searchParams.get("uomCode") || searchParams.get("uom");
     const parseResult = QuoteQuerySchema.safeParse({
       variantId: searchParams.get("variantId") || "",
-      uomCode: searchParams.get("uomCode"),
+      uomCode,
       customerGroup: searchParams.get("customerGroup") || "public_b2c",
+      quantity: searchParams.get("quantity") || undefined,
     });
 
     if (!parseResult.success) {
@@ -43,7 +50,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       });
     }
 
-    const { variantId, uomCode, customerGroup } = parseResult.data;
+    const { variantId, uomCode: parsedUomCode, customerGroup, quantity } = parseResult.data;
     const productService = getServices().products;
 
     // Fetch the product and resolve pricing from its variant's price lists
@@ -60,7 +67,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     // Look for a matching price list entry
     const priceEntry = variant.priceLists?.find(
       (p) =>
-        p.uomCode === uomCode &&
+        p.uomCode === parsedUomCode &&
         (p.customerGroup === customerGroup || p.customerGroup === "public_b2c"),
     );
 
@@ -74,8 +81,9 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     return apiResponse({
       productId,
       variantId,
-      uomCode,
+      uomCode: parsedUomCode,
       customerGroup,
+      quantity: quantity ?? 1,
       unitPrice,
       currency,
       isSellable: true,

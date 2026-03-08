@@ -18,7 +18,9 @@ export function getServices() {
     categories: container.categoryService,
     cart: container.cartService,
     collections: container.collectionService,
+    search: container.searchService,
     media: container.mediaService,
+    email: container.emailService,
 
     // Admin services
     auth: container.authService,
@@ -29,15 +31,23 @@ export function getServices() {
     adminOrder: container.adminOrderService,
     adminInventory: container.adminInventoryService,
     schoolLists: container.schoolListService,
+    schoolAccess: container.schoolAccessService,
+    schoolDirectory: container.schoolDirectoryService,
+    parentList: container.parentListService,
     logger: container.loggerService,
     adminUser: container.adminUserService,
     adminRole: container.adminRoleService,
+    auditLog: container.auditLogService,
+    reviews: container.reviewService,
+    notifications: container.notificationService,
+    adminSearchAnalytics: container.adminSearchAnalyticsService,
 
     // Direct repository access (for cases not covered by services)
     repositories: {
       products: container.productRepository,
       variants: container.variantRepository,
       categories: container.categoryRepository,
+      brands: container.brandRepository,
       users: container.userRepository,
       orders: container.orderRepository,
       reviews: container.reviewRepository,

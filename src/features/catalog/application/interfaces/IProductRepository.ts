@@ -6,7 +6,7 @@
  * Inventory operations have been extracted to IInventoryRepository.
  */
 
-import { type ID, type Quantity } from "@/features/core/domain/types/common";
+import { type ID, type Quantity, type Slug } from "@/features/core/domain/types/common";
 import type { Locale } from "@/features/core/domain/value-objects";
 import type { Product } from "../../domain/entities/Product";
 import type { ProductInput } from "@/features/administration/domain/types";
@@ -35,6 +35,7 @@ export interface ProductFilters {
   tagGroups?: TagGroup[];
   attributeFilters?: AttributeFilter[];
   collectionId?: ID;
+  productIds?: ID[];
 }
 
 /**
@@ -46,6 +47,9 @@ export interface ProductFilters {
 export interface IProductRepository {
   /** Retrieves a single product by ID with hydrated variants */
   getById(id: ID, language?: Locale): Promise<Product | null>;
+
+  /** Retrieves a single product by localized slug with hydrated variants */
+  getBySlug(slug: Slug, language?: Locale): Promise<Product | null>;
 
   /** Retrieves all products */
   getAll(language?: Locale): Promise<Product[]>;

@@ -9,6 +9,7 @@ export interface ProductFilters {
   categoryId?: number;
   brandId?: number;
   isActive: string;
+  stockLevel?: string;
 }
 
 export interface ProductTableProps {
@@ -26,5 +27,6 @@ export interface UpdateQueryParams {
   categoryId?: string;
   brandId?: string;
   isActive?: string;
+  stockLevel?: string;
   page?: string;
 }

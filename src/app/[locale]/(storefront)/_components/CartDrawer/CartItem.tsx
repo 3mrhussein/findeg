@@ -3,7 +3,9 @@
 import Image from "next/image";
 import { Plus, Minus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { IconTooltip } from "@/components/ui/IconTooltip";
 import { useTranslations } from "next-intl";
+import { cn } from "@/lib/utils";
 
 interface CartItemProps {
   variantId: number;
@@ -13,6 +15,7 @@ interface CartItemProps {
   unitPrice: number;
   quantity: number;
   imageUrl?: string;
+  cartKitId?: string;
   onIncrease: () => void;
   onDecrease: () => void;
   onRemove: () => void;
@@ -31,6 +34,7 @@ export function CartItem({
   unitPrice,
   quantity,
   imageUrl,
+  cartKitId,
   onIncrease,
   onDecrease,
   onRemove,
@@ -64,18 +68,25 @@ export function CartItem({
         </div>
 
         <div className="flex items-center justify-between mt-auto pt-4">
-          <div className="flex items-center bg-slate-50 dark:bg-slate-800/50 rounded-full border border-slate-200 dark:border-slate-700/50 p-0.5">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-7 w-7 rounded-full text-slate-500 hover:bg-white dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition-colors"
-              onClick={onDecrease}
-              disabled={quantity <= 1}
-              aria-label={t("Pages.Cart.DecreaseQuantity")}
-              data-testid={`cart-decrease-${variantId}`}
-            >
-              <Minus className="h-3 w-3" />
-            </Button>
+          <div
+            className={cn(
+              "flex items-center bg-slate-50 dark:bg-slate-800/50 rounded-full border border-slate-200 dark:border-slate-700/50 p-0.5",
+              cartKitId && "opacity-50 pointer-events-none",
+            )}
+          >
+            <IconTooltip label={t("Pages.Cart.DecreaseQuantity")} asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-7 w-7 rounded-full text-slate-500 hover:bg-white dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition-colors"
+                onClick={onDecrease}
+                disabled={quantity <= 1 || !!cartKitId}
+                aria-label={t("Pages.Cart.DecreaseQuantity")}
+                data-testid={`cart-decrease-${variantId}`}
+              >
+                <Minus className="h-3 w-3" />
+              </Button>
+            </IconTooltip>
             <span
               className="w-8 text-center text-sm font-bold text-slate-900 dark:text-white"
               aria-live="polite"
@@ -83,26 +94,41 @@ export function CartItem({
             >
               {quantity}
             </span>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-7 w-7 rounded-full text-slate-500 hover:bg-white dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition-colors"
-              onClick={onIncrease}
-              aria-label={t("Pages.Cart.IncreaseQuantity")}
-              data-testid={`cart-increase-${variantId}`}
-            >
-              <Plus className="h-3 w-3" />
-            </Button>
+            <IconTooltip label={t("Pages.Cart.IncreaseQuantity")} asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-7 w-7 rounded-full text-slate-500 hover:bg-white dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition-colors"
+                onClick={onIncrease}
+                disabled={!!cartKitId}
+                aria-label={t("Pages.Cart.IncreaseQuantity")}
+                data-testid={`cart-increase-${variantId}`}
+              >
+                <Plus className="h-3 w-3" />
+              </Button>
+            </IconTooltip>
           </div>
 
           <Button
             variant="ghost"
-            className="h-auto p-0 text-xs font-semibold text-slate-400 hover:text-destructive dark:hover:text-red-400 hover:bg-transparent transition-colors uppercase tracking-wider"
-            onClick={onRemove}
-            aria-label={t("Pages.Cart.RemoveItem")}
-            data-testid={`cart-remove-${variantId}`}
+            className={cn(
+              "h-auto p-0 text-xs font-semibold hover:bg-transparent transition-colors uppercase tracking-wider",
+              cartKitId
+                ? "text-primary hover:text-primary/80"
+                : "text-slate-400 hover:text-destructive dark:hover:text-red-400",
+            )}
+            onClick={() => {
+              if (cartKitId) {
+                // Navigate to edit list or show kit removal?
+                console.log("Edit kit", cartKitId);
+              } else {
+                onRemove();
+              }
+            }}
+            aria-label={cartKitId ? "Edit Kit" : t("Pages.Cart.RemoveItem")}
+            data-testid={`cart-action-${variantId}`}
           >
-            Remove
+            {cartKitId ? "Edit List" : "Remove"}
           </Button>
         </div>
       </div>

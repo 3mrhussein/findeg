@@ -17,6 +17,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { IconTooltip } from "@/components/ui/IconTooltip";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Category } from "@/features/catalog/domain/entities/Category";
@@ -97,9 +98,9 @@ export function CategoryTable({ data }: CategoryTableProps) {
       cell: ({ row }) => (
         <div
           className="flex items-center gap-2"
-          style={{ paddingLeft: `${row.original.depth * 24}px` }}
+          style={{ paddingInlineStart: `${row.original.depth * 24}px` }}
         >
-          {row.original.depth > 0 && <span className="text-muted-foreground mr-2">└─</span>}
+          {row.original.depth > 0 && <span className="text-muted-foreground me-2">└─</span>}
           <span className="font-medium">{row.getValue("name")}</span>
         </div>
       ),
@@ -118,16 +119,19 @@ export function CategoryTable({ data }: CategoryTableProps) {
 
         return (
           <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                className="h-8 w-8 p-0"
-                data-testid={`admin-category-actions-${category.id}`}
-              >
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
+            <IconTooltip label="Open actions menu" asChild>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="h-8 w-8 p-0"
+                  data-testid={`admin-category-actions-${category.id}`}
+                  aria-label="Open actions menu"
+                >
+                  <span className="sr-only">Open menu</span>
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+            </IconTooltip>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuSeparator />

@@ -9,6 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { IconTooltip } from "@/components/ui/IconTooltip";
 import { Edit, Trash, Plus } from "lucide-react";
 import Image from "next/image";
 import type { Brand } from "@/features/catalog/domain/entities/Brand";
@@ -121,22 +122,28 @@ export function BrandsTable({ brands }: BrandsTableProps) {
                   </span>
                 </TableCell>
                 <TableCell className="text-right">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleEdit(brand)}
-                    data-testid={`admin-brand-edit-${brand.id}`}
-                  >
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setDeleteId(brand.id)}
-                    data-testid={`admin-brand-delete-${brand.id}`}
-                  >
-                    <Trash className="h-4 w-4 text-red-500" />
-                  </Button>
+                  <IconTooltip label="Edit brand" asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleEdit(brand)}
+                      data-testid={`admin-brand-edit-${brand.id}`}
+                      aria-label="Edit brand"
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                  </IconTooltip>
+                  <IconTooltip label="Delete brand" asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setDeleteId(brand.id)}
+                      data-testid={`admin-brand-delete-${brand.id}`}
+                      aria-label="Delete brand"
+                    >
+                      <Trash className="h-4 w-4 text-red-500" />
+                    </Button>
+                  </IconTooltip>
                 </TableCell>
               </TableRow>
             ))}

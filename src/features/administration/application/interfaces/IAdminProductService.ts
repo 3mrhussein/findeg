@@ -28,17 +28,17 @@ export interface IAdminProductService {
   /**
    * Creates a new product with translations.
    */
-  create(input: ProductInput): Promise<Product>;
+  create(input: ProductInput, adminUserId?: number): Promise<Product>;
 
   /**
    * Updates an existing product and its translations.
    */
-  update(id: number, input: ProductInput): Promise<Product>;
+  update(id: number, input: ProductInput, adminUserId?: number): Promise<Product>;
 
   /**
    * Permanently deletes a product.
    */
-  delete(id: number): Promise<void>;
+  delete(id: number, adminUserId?: number): Promise<void>;
 
   /**
    * Counts total products in the system.

@@ -36,7 +36,7 @@ export function ProductTableFilters({
       <div className="grid gap-3 py-4 md:grid-cols-2 lg:grid-cols-4">
         <Input
           data-testid="admin-products-filter-search"
-          placeholder="Search name, SKU, description..."
+          placeholder="Search name, SKU, barcode..."
           defaultValue={filters.search}
           onKeyDown={(event) => {
             if (event.key === "Enter") {
@@ -88,7 +88,21 @@ export function ProductTableFilters({
           <SelectContent>
             <SelectItem value="all">All statuses</SelectItem>
             <SelectItem value="true">Active only</SelectItem>
-            <SelectItem value="false">Inactive only</SelectItem>
+            <SelectItem value="false">Draft only</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select
+          value={filters.stockLevel || "all"}
+          onValueChange={(value) => onUpdate({ stockLevel: value, page: "1" })}
+        >
+          <SelectTrigger data-testid="admin-products-filter-stock">
+            <SelectValue placeholder="All stock levels" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All stock levels</SelectItem>
+            <SelectItem value="in_stock">In Stock</SelectItem>
+            <SelectItem value="low_stock">Low Stock</SelectItem>
+            <SelectItem value="out_of_stock">Out of Stock</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -100,7 +114,14 @@ export function ProductTableFilters({
           data-testid="admin-products-filter-clear"
           variant="outline"
           onClick={() =>
-            onUpdate({ search: "", categoryId: "", brandId: "", isActive: "all", page: "1" })
+            onUpdate({
+              search: "",
+              categoryId: "",
+              brandId: "",
+              isActive: "all",
+              stockLevel: "all",
+              page: "1",
+            })
           }
         >
           Clear filters

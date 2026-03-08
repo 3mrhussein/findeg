@@ -15,6 +15,8 @@ const TYPE_MAP = {
   boolean: "BOOLEAN",
   timestamp: "TIMESTAMP",
   jsonb: "JSONB",
+  uuid: "UUID",
+  real: "REAL",
 };
 
 /**
@@ -51,11 +53,14 @@ function generateERDiagram() {
   const relationsList = new Set();
   const variableToTable = {};
 
+  console.log(`Processing ${files.length} schema files...`);
+
   files.forEach((file) => {
     const content = fs.readFileSync(path.join(schemaDir, file), "utf-8");
 
-    // find all pgTable occurrences
-    const pgTableMatchRaw = /export const (\w+) = pgTable\s*\(\s*"([^"]+)"\s*,\s*\{/g;
+    // Improved regex to handle optional whitespace and different quote types
+    const pgTableMatchRaw =
+      /export\s+const\s+(\w+)\s*=\s*pgTable\s*\(\s*["']([^"']+)["']\s*,\s*\{/gs;
     let match;
     while ((match = pgTableMatchRaw.exec(content)) !== null) {
       const varName = match[1];
@@ -64,6 +69,7 @@ function generateERDiagram() {
       const fieldsBlock = extractBlock(content, startIndex);
       const fieldsContent = fieldsBlock.slice(1, -1);
 
+      console.log(`  Found table: ${tableName} (var: ${varName})`);
       variableToTable[varName] = tableName;
       tableData[tableName] = { fields: [], pks: new Set() };
 
@@ -71,6 +77,7 @@ function generateERDiagram() {
       let currentField = null;
 
       lines.forEach((line) => {
+        // Handle field definition: field: type(...)
         const fieldStartMatch = line.match(/^\s*(\w+):\s*(\w+)/);
         if (fieldStartMatch) {
           const fieldName = fieldStartMatch[1];
@@ -91,7 +98,8 @@ function generateERDiagram() {
             currentField.isPK = true;
             tableData[tableName].pks.add(currentField.name);
           }
-          const refMatch = line.match(/\.references\(\(\) => (\w+)\.(\w+)/);
+          // Handle .references(() => var.field)
+          const refMatch = line.match(/\.references\(\s*\(\s*\)\s*=>\s*(\w+)\.(\w+)/);
           if (refMatch) {
             currentField.isFK = true;
             relationsList.add(
@@ -101,9 +109,10 @@ function generateERDiagram() {
         }
       });
 
-      // Check for composite PKs in the callback (simplified search in the whole file for this table's callback)
+      // Check for composite PKs in the extra options (callback)
       const callbackRegex = new RegExp(
-        `${varName}\\s*,\\s*\\{[^}]*\\}\\s*,\\s*\\((?:table|t)\\)\\s*=>\\s*\\(([\\s\\S]*?)\\)\\s*\\)`,
+        `${varName}\\s*,\\s*\\{[^}]*\\}\\s*,\\s*\\((?:table|t)\\)\\s*=>\s*\\(([\\s\\S]*?)\\)\\s*\\)`,
+        "s",
       );
       const cbMatch = content.match(callbackRegex);
       if (cbMatch) {
@@ -124,11 +133,13 @@ function generateERDiagram() {
 
     // Parse relations()
     const relationsRegex =
-      /export const \w+ = relations\s*\(\s*(\w+)\s*,\s*\(\s*{([^}]+)}\s*\)\s*=>\s*\(\s*{([\s\S]*?)}\s*\)\s*\)/g;
+      /export\s+const\s+\w+\s*=\s*relations\s*\(\s*(\w+)\s*,\s*\(\s*{([^}]+)}\s*\)\s*=>\s*\(\s*{([\s\S]*?)}\s*\)\s*\)/gs;
     let relMatch;
     while ((relMatch = relationsRegex.exec(content)) !== null) {
       const baseVar = relMatch[1];
       const baseTable = variableToTable[baseVar];
+      if (!baseTable) continue;
+
       const body = relMatch[3];
       const linkRegex = /(\w+):\s*(many|one)\((\w+)(?:,[\s\S]*?)?\)/g;
       let link;
@@ -141,6 +152,8 @@ function generateERDiagram() {
             JSON.stringify({ from: baseTable, toVar: targetVar, label, type: "1:N" }),
           );
         }
+        // One-to-one or Many-to-one relations are usually inferred via FKs,
+        // but we can add them here if needed for explicit labeling.
       }
     }
   });
@@ -162,6 +175,7 @@ function generateERDiagram() {
       if (rel.type === "1:N") {
         erDiagram += `    ${rel.from} ||--o{ ${targetTable} : "${rel.label}"\n`;
       } else {
+        // Avoid duplicate lines for the same relation if possible
         erDiagram += `    ${targetTable} ||--o{ ${rel.from} : "${rel.label}"\n`;
       }
     }

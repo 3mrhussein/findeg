@@ -54,6 +54,9 @@ export type CartItem = {
 
   /** Customer group used for price resolution */
   customerGroup?: CustomerGroup;
+
+  /** Optional ID grouping items from the same school list kit */
+  cartKitId?: string;
 };
 
 /**

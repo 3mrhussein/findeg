@@ -14,6 +14,9 @@ const ProductTranslationSchema = z.object({
   name: z.string().min(2),
   description: z.string(),
   longDescription: z.string(),
+  seoTitle: z.string().optional(),
+  seoDescription: z.string().optional(),
+  seoKeywords: z.string().optional(),
 });
 
 // ─── Variant Input ───────────────────────────────────────────────────────────
@@ -59,7 +62,15 @@ export const VariantInputSchema = z.object({
   basePrice: PriceSchema,
   strikePrice: PriceSchema.optional(),
   costPrice: PriceSchema.optional(),
+  weight: z.number().optional(),
   weightGrams: z.number().int().optional(),
+  dimensions: z
+    .object({
+      length: z.number().optional(),
+      width: z.number().optional(),
+      height: z.number().optional(),
+    })
+    .optional(),
   barcode: z.string().optional(),
   lowStockThreshold: QuantitySchema.optional().default(10),
   images: z.array(VariantImageInputSchema).optional(),

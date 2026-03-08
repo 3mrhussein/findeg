@@ -96,6 +96,19 @@ export async function POST(request: NextRequest) {
       // Clear cart after order creation
       await cartService.clearCart(cartId);
 
+      // Send Order Confirmation Email
+      getServices()
+        .email.sendOrderConfirmation(order, {
+          email: !context.user ? guestEmail! : context.user.user.email,
+          firstName: context.user?.user.firstName || undefined,
+          name: context.user
+            ? `${context.user.user.firstName || ""} ${context.user.user.lastName || ""}`.trim()
+            : undefined,
+        })
+        .catch((err) => {
+          console.error("[CheckoutAPI] Failed to send order confirmation email:", err);
+        });
+
       return apiResponse(
         {
           order: {

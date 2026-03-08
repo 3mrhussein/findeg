@@ -16,6 +16,7 @@ import {
   Tag,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { IconTooltip } from "@/components/ui/IconTooltip";
 import { useState } from "react";
 import { logoutAction } from "@/features/identity/application/actions/auth";
 import { useTranslations } from "next-intl";
@@ -80,10 +81,17 @@ export function Sidebar() {
   return (
     <>
       <div className="md:hidden fixed top-0 left-0 right-0 h-16 border-b bg-background z-40 flex items-center px-4">
-        <Button variant="ghost" size="icon" onClick={() => setMobileOpen(!mobileOpen)}>
-          <Menu className="h-6 w-6" />
-        </Button>
-        <span className="ml-4 font-semibold">FindEg Admin</span>
+        <IconTooltip label="Toggle admin menu" asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Toggle admin menu"
+          >
+            <Menu className="h-6 w-6" />
+          </Button>
+        </IconTooltip>
+        <span className="ms-4 font-semibold">FindEg Admin</span>
       </div>
 
       <aside
@@ -97,14 +105,21 @@ export function Sidebar() {
           {!collapsed && (
             <span className="text-xl font-bold tracking-tight text-primary">FindEg</span>
           )}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setCollapsed(!collapsed)}
-            className="ml-auto"
-          >
-            {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-          </Button>
+          <IconTooltip label={collapsed ? "Expand sidebar" : "Collapse sidebar"} asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setCollapsed(!collapsed)}
+              className="ms-auto"
+              aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            >
+              {collapsed ? (
+                <ChevronRight className="h-4 w-4" />
+              ) : (
+                <ChevronLeft className="h-4 w-4" />
+              )}
+            </Button>
+          </IconTooltip>
         </div>
 
         <nav className="flex-1 space-y-1 p-2 overflow-y-auto">

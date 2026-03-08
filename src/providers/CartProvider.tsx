@@ -79,6 +79,7 @@ function toCartItems(rawItems: any[]): CartItem[] {
     unitPrice: item.unitPrice ?? item.unitPriceSnapshot ?? item.price ?? 0,
     currency: item.currency || "EGP",
     customerGroup: item.customerGroup,
+    cartKitId: item.cartKitId,
   }));
 }
 

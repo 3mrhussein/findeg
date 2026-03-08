@@ -28,4 +28,9 @@ export interface IAdminOrderService {
    * Retrieves high-level order statistics for the dashboard.
    */
   getDashboardStats(): Promise<any>;
+
+  /**
+   * Retrieves a breakdown of order counts by their lifecycle status.
+   */
+  getStatusCounts(): Promise<Record<string, number>>;
 }

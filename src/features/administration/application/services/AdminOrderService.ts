@@ -5,6 +5,7 @@ import {
   OrderFilters,
 } from "@/features/order/application/interfaces/IOrderRepository";
 import { IAuditLogService } from "../interfaces/IAuditLogService";
+import { IEmailService } from "@/features/notifications/application/services/IEmailService";
 import { Order } from "@/features/order/domain/entities/Order";
 import { OrderStatusUpdate } from "../../domain/types/OrderStatusUpdate";
 import { PaymentStatus } from "@/features/core/domain/types/common";
@@ -31,10 +32,12 @@ export class AdminOrderService implements IAdminOrderService {
    *
    * @param orderRepository - Repository for order data access.
    * @param auditLogService - Service for tracking order modifications.
+   * @param emailService - Service for sending transactional emails.
    */
   constructor(
     private orderRepository: IOrderRepository,
     private auditLogService: IAuditLogService,
+    private emailService: IEmailService,
   ) {}
 
   /**
@@ -97,6 +100,11 @@ export class AdminOrderService implements IAdminOrderService {
         adminNotes: update.adminNotes,
       } as Record<string, unknown>,
     });
+
+    // Send email notification to customer
+    await this.emailService.sendOrderStatusUpdate(order, update.status).catch((err) => {
+      console.error("[AdminOrderService] Failed to send status update email:", err);
+    });
   }
 
   /**
@@ -146,5 +154,13 @@ export class AdminOrderService implements IAdminOrderService {
       totalRevenue: revenue,
       ordersByStatus: statusCounts,
     };
+  }
+
+  /**
+   * Retrieves a breakdown of order counts by their lifecycle status.
+   */
+  async getStatusCounts(): Promise<Record<string, number>> {
+    const counts = await this.orderRepository.getOrdersCountByStatus();
+    return counts as Record<string, number>;
   }
 }

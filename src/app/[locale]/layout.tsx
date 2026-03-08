@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Cairo } from "next/font/google";
 import "../globals.css";
 import { hasLocale, Locale, NextIntlClientProvider } from "next-intl";
 import { routing } from "@/i18n/routing";
@@ -13,7 +13,13 @@ import BoundaryToggle from "@/lib/internal/BoundaryToggle";
 const inter = Inter({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "900"],
-  variable: "--font-sans",
+  variable: "--font-inter",
+});
+
+const cairo = Cairo({
+  subsets: ["arabic"],
+  weight: ["300", "400", "500", "600", "700", "900"],
+  variable: "--font-cairo",
 });
 
 export const metadata: Metadata = {
@@ -106,7 +112,7 @@ export default async function RootLayout({
         />
       </head>
       <body
-        className={`${inter.variable} font-sans bg-background text-foreground`}
+        className={`${inter.variable} ${cairo.variable} font-sans bg-background text-foreground`}
         suppressHydrationWarning
       >
         <NextIntlClientProvider locale={typedLocale} messages={messages}>

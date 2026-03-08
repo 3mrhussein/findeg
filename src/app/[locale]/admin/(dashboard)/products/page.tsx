@@ -2,8 +2,9 @@ import { getServices } from "@/server/getServices";
 import { ProductTable } from "./ProductTable";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Plus } from "lucide-react";
+import { Plus, Upload } from "lucide-react";
 import { resolveLocale } from "@/features/core/domain/value-objects";
+import { Badge } from "@/components/ui/badge";
 
 /**
  *
@@ -55,12 +56,23 @@ export default async function ProductsPage({
   return (
     <div className="flex-1 space-y-4 p-8 pt-6">
       <div className="flex items-center justify-between space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight">Products</h2>
+        <div className="flex items-center gap-3">
+          <h2 className="text-3xl font-bold tracking-tight">📦 Products</h2>
+          <Badge variant="secondary" className="text-base px-2 py-0.5">
+            {total}
+          </Badge>
+        </div>
         <div className="flex items-center space-x-2">
+          <Button variant="outline" asChild>
+            <Link href="/admin/products/import">
+              <Upload className="mr-2 h-4 w-4" />
+              ⬆️ Bulk Import
+            </Link>
+          </Button>
           <Button asChild>
             <Link href="/admin/products/new">
               <Plus className="mr-2 h-4 w-4" />
-              Add Product
+              Create Product
             </Link>
           </Button>
         </div>

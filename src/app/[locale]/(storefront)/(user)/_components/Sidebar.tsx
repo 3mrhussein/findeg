@@ -3,6 +3,7 @@
 import { Link, usePathname } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { IconTooltip } from "@/components/ui/IconTooltip";
 import { LayoutDashboard, Package, ShoppingCart, Users, Settings, Menu } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
@@ -67,12 +68,19 @@ export function Sidebar() {
       </div>
 
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
-        <SheetTrigger asChild>
-          <Button variant="outline" size="icon" className="shrink-0 md:hidden ml-4 mt-4">
-            <Menu className="h-5 w-5" />
-            <span className="sr-only">Toggle navigation menu</span>
-          </Button>
-        </SheetTrigger>
+        <IconTooltip label="Toggle navigation menu" asChild>
+          <SheetTrigger asChild>
+            <Button
+              variant="outline"
+              size="icon"
+              className="shrink-0 md:hidden ms-4 mt-4"
+              aria-label="Toggle navigation menu"
+            >
+              <Menu className="h-5 w-5" />
+              <span className="sr-only">Toggle navigation menu</span>
+            </Button>
+          </SheetTrigger>
+        </IconTooltip>
         <SheetContent side="left" className="flex flex-col p-0 w-72">
           <div className="flex h-full flex-col gap-4">
             <div className="flex h-[60px] items-center border-b px-6">

@@ -33,6 +33,10 @@ import {
   SchoolListService,
   type ISchoolListService,
 } from "@/features/catalog/application/services/SchoolListService";
+import { SearchService } from "@/features/catalog/application/services/SearchService";
+import { type ISearchService } from "@/features/catalog/application/interfaces/ISearchService";
+import { ReviewService } from "@/features/review/application/services/ReviewService";
+import { type IReviewService } from "@/features/review/application/interfaces/IReviewService";
 
 import { AdminUserService } from "@/features/identity/application/services/AdminUserService";
 import { AdminRoleService } from "@/features/identity/application/services/AdminRoleService";
@@ -44,8 +48,11 @@ import {
   AdminOrderService,
   AdminInventoryService,
   AuditLogService,
+  ProductImportService,
 } from "@/features/administration/application/services";
 import { LoggerService } from "@/features/core/application/services/LoggerService";
+import { ResendEmailService } from "@/features/notifications/infrastructure/ResendEmailService";
+import { IEmailService } from "@/features/notifications/application/services/IEmailService";
 
 import { IAdminUserService } from "@/features/identity/application/interfaces/IAdminUserService";
 import { IAdminRoleService } from "@/features/identity/application/interfaces/IAdminRoleService";
@@ -60,6 +67,14 @@ import { IAuditLogRepository } from "@/features/administration/application/inter
 import { ISchoolListRepository } from "@/features/catalog/application/interfaces/ISchoolListRepository";
 import { IInventoryRepository } from "@/features/catalog/application/interfaces/IInventoryRepository";
 import { IVariantRepository } from "@/features/catalog/application/interfaces/IVariantRepository";
+import { ISchoolAccessRepository } from "@/features/school/application/interfaces/ISchoolAccessRepository";
+import { DrizzleSchoolAccessRepository } from "@/features/school/infrastructure/DrizzleSchoolAccessRepository";
+import { DrizzleParentSessionRepository } from "@/features/school/infrastructure/DrizzleParentSessionRepository";
+import { ParentListService } from "@/features/school/application/services/ParentListService";
+import { ISchoolAccessService } from "@/features/school/application/interfaces/ISchoolAccessService";
+import { SchoolAccessService } from "@/features/school/application/services/SchoolAccessService";
+import { ISchoolDirectoryService } from "@/features/school/application/interfaces/ISchoolDirectoryService";
+import { SchoolDirectoryService } from "@/features/school/application/services/SchoolDirectoryService";
 
 import { IAuthService } from "@/features/identity/application/interfaces/IAuthService";
 import { IProductService } from "@/features/catalog/application/interfaces/IProductService";
@@ -74,10 +89,23 @@ import {
   IAdminOrderService,
   IAdminInventoryService,
   IAuditLogService,
+  IProductImportService,
 } from "@/features/administration/application/interfaces";
 import { ISessionProvider } from "@/features/core/application/interfaces/ISessionProvider";
 import { IStorageProvider } from "@/features/core/application/interfaces/IStorageProvider";
 import { ILoggerService } from "@/features/core/application/interfaces/ILoggerService";
+import { IParentListService } from "@/features/school/application/interfaces/IParentListService";
+import { IParentSessionRepository } from "@/features/school/application/interfaces/IParentSessionRepository";
+import { INotificationRepository } from "@/features/notifications/application/interfaces/INotificationRepository";
+import { INotificationService } from "@/features/notifications/application/interfaces/INotificationService";
+import { DrizzleNotificationRepository } from "@/features/notifications/infrastructure/DrizzleNotificationRepository";
+import { NotificationService } from "@/features/notifications/application/services/NotificationService";
+import { NotificationEventService } from "@/features/notifications/application/services/NotificationEventService";
+
+import { IAdminSearchAnalyticsRepository } from "@/features/catalog/application/interfaces/IAdminSearchAnalyticsRepository";
+import { DrizzleAdminSearchAnalyticsRepository } from "@/features/catalog/infrastructure/persistence/DrizzleAdminSearchAnalyticsRepository";
+import { IAdminSearchAnalyticsService } from "@/features/catalog/application/interfaces/IAdminSearchAnalyticsService";
+import { AdminSearchAnalyticsService } from "@/features/catalog/application/services/AdminSearchAnalyticsService";
 
 /**
  * Validates dependency injection wiring
@@ -97,10 +125,14 @@ export class ServiceContainer {
   private _schoolListRepository?: ISchoolListRepository;
   private _inventoryRepository?: IInventoryRepository;
   private _variantRepository?: IVariantRepository;
+  private _schoolAccessRepository?: ISchoolAccessRepository;
+  private _parentSessionRepository?: IParentSessionRepository;
+  private _notificationRepository?: INotificationRepository;
 
   // ─── 2. Infrastructure Services ───────────────────────────────────────
   private _sessionProvider?: ISessionProvider;
   private _storageProvider?: IStorageProvider;
+  private _emailService?: IEmailService;
 
   // ─── 3. Application Services (Shop / Customer) ────────────────────────
   private _authService?: IAuthService;
@@ -108,8 +140,19 @@ export class ServiceContainer {
   private _categoryService?: ICategoryService;
   private _collectionService?: ICollectionService;
   private _cartService?: ICartService;
-  private _schoolListService?: ISchoolListService;
   private _mediaService?: MediaService;
+  private _schoolListService?: ISchoolListService; // Catalog bounded context school list service
+  private _searchService?: ISearchService;
+  private _reviewService?: IReviewService;
+
+  // School Features
+  private _schoolDirectoryService?: ISchoolDirectoryService;
+  private _schoolAccessService?: ISchoolAccessService;
+  private _parentListService?: IParentListService;
+  private _notificationService?: INotificationService;
+  private _notificationEventService?: NotificationEventService;
+  private _adminSearchAnalyticsRepository?: IAdminSearchAnalyticsRepository;
+  private _adminSearchAnalyticsService?: IAdminSearchAnalyticsService;
   // MediaService is a concrete class but could implement an interface.
   // Using concrete type here as it's not in interfaces barrel yet as interface, but we use it as type in constructor params.
 
@@ -121,6 +164,7 @@ export class ServiceContainer {
   private _adminOrderService?: IAdminOrderService;
   private _adminInventoryService?: IAdminInventoryService;
   private _auditLogService?: IAuditLogService;
+  private _productImportService?: IProductImportService;
   private _loggerService?: ILoggerService;
   private _adminUserService?: IAdminUserService;
   private _adminRoleService?: IAdminRoleService;
@@ -257,6 +301,16 @@ export class ServiceContainer {
     return this._variantRepository;
   }
 
+  /**
+   * Data access for school access management.
+   */
+  get schoolAccessRepository(): ISchoolAccessRepository {
+    if (!this._schoolAccessRepository) {
+      this._schoolAccessRepository = new DrizzleSchoolAccessRepository();
+    }
+    return this._schoolAccessRepository;
+  }
+
   // ============================================================================
   //  2. INFRASTRUCTURE SERVICES
   // ============================================================================
@@ -280,6 +334,16 @@ export class ServiceContainer {
       this._storageProvider = new LocalStorageProvider();
     }
     return this._storageProvider;
+  }
+
+  /**
+   * Service for sending transactional emails.
+   */
+  get emailService(): IEmailService {
+    if (!this._emailService) {
+      this._emailService = new ResendEmailService();
+    }
+    return this._emailService;
   }
 
   /**
@@ -347,13 +411,57 @@ export class ServiceContainer {
   }
 
   /**
-   * Application service for school lists.
+   * School list management service.
    */
   get schoolListService(): ISchoolListService {
     if (!this._schoolListService) {
       this._schoolListService = new SchoolListService(this.schoolListRepository);
     }
     return this._schoolListService;
+  }
+
+  /**
+   * Access management for school lists.
+   */
+  get schoolAccessService(): ISchoolAccessService {
+    if (!this._schoolAccessService) {
+      this._schoolAccessService = new SchoolAccessService(
+        this.schoolAccessRepository,
+        this.schoolListRepository,
+        this.userRepository,
+      );
+    }
+    return this._schoolAccessService;
+  }
+
+  /**
+   * Public school browsing and suggestions.
+   */
+  get schoolDirectoryService(): ISchoolDirectoryService {
+    if (!this._schoolDirectoryService) {
+      this._schoolDirectoryService = new SchoolDirectoryService();
+    }
+    return this._schoolDirectoryService;
+  }
+
+  /**
+   * Application service for full-text search and suggestions.
+   */
+  get searchService(): ISearchService {
+    if (!this._searchService) {
+      this._searchService = new SearchService(this.productRepository);
+    }
+    return this._searchService;
+  }
+
+  /**
+   * Application service for product reviews.
+   */
+  get reviewService(): IReviewService {
+    if (!this._reviewService) {
+      this._reviewService = new ReviewService(this.reviewRepository, this.orderRepository);
+    }
+    return this._reviewService;
   }
 
   // ============================================================================
@@ -384,6 +492,19 @@ export class ServiceContainer {
       );
     }
     return this._adminProductService;
+  }
+
+  /**
+   * Backend service for bulk importing products from CSV.
+   */
+  get productImportService(): IProductImportService {
+    if (!this._productImportService) {
+      this._productImportService = new ProductImportService(
+        this.adminProductService,
+        this.productRepository,
+      );
+    }
+    return this._productImportService;
   }
 
   /**
@@ -429,7 +550,11 @@ export class ServiceContainer {
    */
   get adminOrderService(): IAdminOrderService {
     if (!this._adminOrderService) {
-      this._adminOrderService = new AdminOrderService(this.orderRepository, this.auditLogService);
+      this._adminOrderService = new AdminOrderService(
+        this.orderRepository,
+        this.auditLogService,
+        this.emailService,
+      );
     }
     return this._adminOrderService;
   }
@@ -477,6 +602,84 @@ export class ServiceContainer {
       this._adminRoleService = new AdminRoleService();
     }
     return this._adminRoleService;
+  }
+
+  /**
+   *
+   */
+  public get parentSessionRepository(): IParentSessionRepository {
+    if (!this._parentSessionRepository) {
+      this._parentSessionRepository = new DrizzleParentSessionRepository();
+    }
+    return this._parentSessionRepository;
+  }
+
+  /**
+   *
+   */
+  public get parentListService(): IParentListService {
+    if (!this._parentListService) {
+      this._parentListService = new ParentListService(
+        this.parentSessionRepository,
+        this.schoolDirectoryService,
+      );
+    }
+    return this._parentListService;
+  }
+
+  /**
+   *
+   */
+  public get notificationRepository(): INotificationRepository {
+    if (!this._notificationRepository) {
+      this._notificationRepository = new DrizzleNotificationRepository();
+    }
+    return this._notificationRepository;
+  }
+
+  /**
+   *
+   */
+  public get notificationService(): INotificationService {
+    if (!this._notificationService) {
+      this._notificationService = new NotificationService(this.notificationRepository);
+    }
+    return this._notificationService;
+  }
+
+  /**
+   *
+   */
+  public get notificationEventService(): NotificationEventService {
+    if (!this._notificationEventService) {
+      this._notificationEventService = new NotificationEventService(
+        this.notificationService,
+        this.emailService,
+      );
+    }
+    return this._notificationEventService;
+  }
+
+  /**
+   *
+   */
+  public get adminSearchAnalyticsRepository(): IAdminSearchAnalyticsRepository {
+    if (!this._adminSearchAnalyticsRepository) {
+      this._adminSearchAnalyticsRepository = new DrizzleAdminSearchAnalyticsRepository();
+    }
+    return this._adminSearchAnalyticsRepository;
+  }
+
+  /**
+   *
+   */
+  public get adminSearchAnalyticsService(): IAdminSearchAnalyticsService {
+    if (!this._adminSearchAnalyticsService) {
+      this._adminSearchAnalyticsService = new AdminSearchAnalyticsService(
+        this.adminSearchAnalyticsRepository,
+      );
+    }
+    return this._adminSearchAnalyticsService;
   }
 }
 

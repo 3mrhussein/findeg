@@ -39,10 +39,11 @@ export class AdminProductService implements IAdminProductService {
    * Logs the creation event to the audit trail if available.
    *
    * @param input - The product data to create.
+   * @param adminUserId - The IP of the admin user making the change.
    * @returns The newly created product entity.
    * @throws Error if the associated category or brand is not found.
    */
-  async create(input: ProductInput): Promise<Product> {
+  async create(input: ProductInput, adminUserId?: number): Promise<Product> {
     if (input.categoryId) {
       const category = await this.categoryRepository.getById(input.categoryId);
       if (!category) {
@@ -64,7 +65,7 @@ export class AdminProductService implements IAdminProductService {
         entityType: "product",
         entityId: String(product.id),
         action: "create",
-        adminUserId: undefined,
+        adminUserId,
         newValues: input as unknown as Record<string, unknown>,
       });
     }
@@ -78,10 +79,11 @@ export class AdminProductService implements IAdminProductService {
    *
    * @param id - The ID of the product to update.
    * @param input - The updated product fields.
+   * @param adminUserId - The ID of the admin user.
    * @returns The updated product entity.
    * @throws Error if the product, category, or brand is not found.
    */
-  async update(id: ID, input: ProductInput): Promise<Product> {
+  async update(id: ID, input: ProductInput, adminUserId?: number): Promise<Product> {
     const existing = await this.productRepository.getById(id);
     if (!existing) {
       throw new Error(`Product with ID ${id} not found`);
@@ -108,7 +110,7 @@ export class AdminProductService implements IAdminProductService {
         entityType: "product",
         entityId: String(id),
         action: "update",
-        adminUserId: undefined,
+        adminUserId,
         oldValues: existing as unknown as Record<string, unknown>,
         newValues: input as unknown as Record<string, unknown>,
       });
@@ -121,9 +123,10 @@ export class AdminProductService implements IAdminProductService {
    * Permanently deletes a product from the system.
    *
    * @param id - The ID of the product to remove.
+   * @param adminUserId - The ID of the admin updating.
    * @throws Error if the product does not exist.
    */
-  async delete(id: ID): Promise<void> {
+  async delete(id: ID, adminUserId?: number): Promise<void> {
     const existing = await this.productRepository.getById(id);
     if (!existing) {
       throw new Error(`Product with ID ${id} not found`);
@@ -136,7 +139,7 @@ export class AdminProductService implements IAdminProductService {
         entityType: "product",
         entityId: String(id),
         action: "delete",
-        adminUserId: undefined,
+        adminUserId,
         oldValues: existing as unknown as Record<string, unknown>,
       });
     }

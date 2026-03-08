@@ -50,6 +50,24 @@ export const productFormSchema = z.object({
   lowStockThreshold: z.coerce.number().min(0).default(5),
   isActive: z.boolean().default(true),
   images: z.string().optional(),
+
+  // Shipping (Variant)
+  weight: z.coerce.number().min(0).optional(),
+  length: z.coerce.number().min(0).optional(),
+  width: z.coerce.number().min(0).optional(),
+  height: z.coerce.number().min(0).optional(),
+
+  // SEO (Translations)
+  seoTitle_en: z.string().max(60, "SEO Title should be under 60 characters").optional(),
+  seoDescription_en: z
+    .string()
+    .max(160, "SEO Description should be under 160 characters")
+    .optional(),
+  seoTitle_ar: z.string().max(60, "SEO Title should be under 60 characters").optional(),
+  seoDescription_ar: z
+    .string()
+    .max(160, "SEO Description should be under 160 characters")
+    .optional(),
 });
 
 export type ProductFormValues = z.infer<typeof productFormSchema>;

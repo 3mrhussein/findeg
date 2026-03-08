@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import { Header } from "@/components/shared/Header";
+import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/shared/Footer";
 import { CartDrawer } from "./_components/CartDrawer";
 import type { Locale } from "next-intl";
@@ -22,9 +22,13 @@ export default async function ShopLayout({
 
   return (
     <>
-      <Header locale={typedLocale} />
+      <Suspense fallback={null}>
+        <Navbar />
+      </Suspense>
       <Suspense fallback={null}>{children}</Suspense>
-      <Footer locale={typedLocale} />
+      <Suspense fallback={null}>
+        <Footer locale={typedLocale} />
+      </Suspense>
       <CartDrawer />
     </>
   );

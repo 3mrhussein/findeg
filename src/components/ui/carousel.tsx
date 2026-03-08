@@ -2,6 +2,7 @@
 
 import type { ComponentProps, HTMLAttributes } from "react";
 import { Button } from "@/components/ui/button";
+import { IconTooltip } from "@/components/ui/IconTooltip";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -31,16 +32,19 @@ function CarouselItem({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
  */
 function CarouselPrevious({ className, ...props }: ComponentProps<typeof Button>) {
   return (
-    <Button
-      type="button"
-      variant="outline"
-      size="icon"
-      className={cn("absolute top-1/2 -translate-y-1/2", className)}
-      {...props}
-    >
-      <ChevronLeft className="h-4 w-4" />
-      <span className="sr-only">Previous slide</span>
-    </Button>
+    <IconTooltip label="Previous slide" asChild>
+      <Button
+        type="button"
+        variant="outline"
+        size="icon"
+        className={cn("absolute top-1/2 -translate-y-1/2", className)}
+        aria-label="Previous slide"
+        {...props}
+      >
+        <ChevronLeft className="h-4 w-4" />
+        <span className="sr-only">Previous slide</span>
+      </Button>
+    </IconTooltip>
   );
 }
 
@@ -49,16 +53,19 @@ function CarouselPrevious({ className, ...props }: ComponentProps<typeof Button>
  */
 function CarouselNext({ className, ...props }: ComponentProps<typeof Button>) {
   return (
-    <Button
-      type="button"
-      variant="outline"
-      size="icon"
-      className={cn("absolute top-1/2 -translate-y-1/2", className)}
-      {...props}
-    >
-      <ChevronRight className="h-4 w-4" />
-      <span className="sr-only">Next slide</span>
-    </Button>
+    <IconTooltip label="Next slide" asChild>
+      <Button
+        type="button"
+        variant="outline"
+        size="icon"
+        className={cn("absolute top-1/2 -translate-y-1/2", className)}
+        aria-label="Next slide"
+        {...props}
+      >
+        <ChevronRight className="h-4 w-4" />
+        <span className="sr-only">Next slide</span>
+      </Button>
+    </IconTooltip>
   );
 }
 

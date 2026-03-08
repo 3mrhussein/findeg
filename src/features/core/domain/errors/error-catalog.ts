@@ -73,6 +73,38 @@ export const ERROR_CATALOG = {
     message: "Failed to remove cart item.",
     httpStatus: 500,
   },
+  REVIEW_NOT_FOUND: {
+    message: "Review not found.",
+    httpStatus: 404,
+  },
+  REVIEW_INVALID_RATING: {
+    message: "Invalid review rating.",
+    httpStatus: 400,
+  },
+  REVIEW_PURCHASE_REQUIRED: {
+    message: "Only customers who purchased this product can review it.",
+    httpStatus: 403,
+  },
+  REVIEW_ALREADY_SUBMITTED: {
+    message: "You already reviewed this product.",
+    httpStatus: 409,
+  },
+  REVIEW_INVALID_VOTER: {
+    message: "Invalid helpful vote payload.",
+    httpStatus: 400,
+  },
+  REVIEW_FETCH_FAILED: {
+    message: "Failed to fetch product reviews.",
+    httpStatus: 500,
+  },
+  REVIEW_CREATE_FAILED: {
+    message: "Failed to create review.",
+    httpStatus: 500,
+  },
+  REVIEW_HELPFUL_FAILED: {
+    message: "Failed to mark review as helpful.",
+    httpStatus: 500,
+  },
   CHECKOUT_GUEST_EMAIL_REQUIRED: {
     message: "Guest email is required for guest checkout.",
     httpStatus: 400,

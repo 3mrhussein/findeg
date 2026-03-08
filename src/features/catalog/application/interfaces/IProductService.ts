@@ -16,6 +16,9 @@ export interface IProductService {
   /** Retrieves a single product by ID with hydrated variants */
   getById(id: number, language?: Locale): Promise<Product | null>;
 
+  /** Retrieves a single product by slug with hydrated variants */
+  getBySlug(slug: string, language?: Locale): Promise<Product | null>;
+
   /** Retrieves featured products for promotional displays */
   getFeaturedProducts(limit?: number, language?: Locale): Promise<Product[]>;
 

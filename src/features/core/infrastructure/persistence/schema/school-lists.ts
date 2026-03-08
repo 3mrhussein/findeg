@@ -70,6 +70,18 @@ export const schoolLists = pgTable("school_lists", {
   /** Academic year (e.g., "2025-2026") */
   academicYear: text("academic_year").notNull(),
 
+  /** Governorate (e.g., "Cairo", "Alexandria") */
+  governorate: text("governorate"),
+
+  /** Area/Neighborhood (e.g., "Maadi", "Zamalek") */
+  area: text("area"),
+
+  /** School type (e.g., "National", "International") */
+  schoolType: text("school_type"),
+
+  /** Academic system (e.g., "American", "British", "IGCSE") */
+  academicSystem: text("academic_system"),
+
   /** Localized display title */
   localizedTitle: jsonb("localized_title").$type<LocalizedStringDraft>().notNull(),
 
@@ -84,6 +96,12 @@ export const schoolLists = pgTable("school_lists", {
 
   /** When the list was made public */
   publishedAt: timestamp("published_at"),
+
+  /** Access mode (public, code_required, private) */
+  accessMode: text("access_mode").default("public").notNull(),
+
+  /** Hashed code for access (only for code_required mode) */
+  accessCode: text("access_code"),
 
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),

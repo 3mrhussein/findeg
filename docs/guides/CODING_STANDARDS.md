@@ -34,6 +34,8 @@ We follow **Clean Architecture** and **Feature-Oriented** structure.
 - **No `as any`**: Strict type safety is required. If a type mismatch occurs, fix the interface or use a proper type adapter.
 - **Primitive UI**: Use `src/components/ui/` for shadcn primitives only.
 - **Empty States**: Use the `<EmptyState>` component for non-results or empty views.
+- **Design Tokens**: Use semantic Tailwind token classes from `src/app/globals.css` (`bg-primary`, `bg-surface`, `text-foreground`, `text-text-muted`, etc.) instead of hardcoded colors in new code.
+- **Icon Actions**: Wrap Lucide icon-only actionable controls with `<IconTooltip />` and provide a meaningful `label`.
 
 ### Imports
 
@@ -49,6 +51,7 @@ We follow **Clean Architecture** and **Feature-Oriented** structure.
 - **JSON Sources**: All translations live in `src/features/core/infrastructure/cms/messages/{locale}.json`.
 - **No Hardcoded Strings**: Every piece of UI text must be translated.
 - **RTL Support**: Use logical properties (e.g., `ps-4` instead of `pl-4`) and ensure layout works for both EN and AR.
+- **Arabic Typography**: Use `font-sans` as the default app font. Arabic pages (`html[lang=\"ar\"]`) automatically switch to Cairo through global font tokens.
 
 ---
 

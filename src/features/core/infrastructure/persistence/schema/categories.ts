@@ -76,6 +76,7 @@ export const categoryTranslations = pgTable(
       .references(() => categories.id, { onDelete: "cascade" }),
     language: text("language").$type<Locale>().notNull(),
     name: text("name").notNull(),
+    nameNormalized: text("name_normalized"),
     description: text("description"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),

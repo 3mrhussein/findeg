@@ -37,6 +37,13 @@ export class ProductService implements IProductService {
   }
 
   /**
+   * Retrieves a single product by slug.
+   */
+  async getBySlug(slug: string, language?: Locale): Promise<Product | null> {
+    return this.productRepository.getBySlug(slug, language);
+  }
+
+  /**
    * Retrieves a list of featured products to display on the home or landing pages.
    *
    * @param limit - Maximum number of products to return.

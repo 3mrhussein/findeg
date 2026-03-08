@@ -6,6 +6,7 @@ import { Search, X, Clock, TrendingUp } from "lucide-react";
 import { useRouter } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { IconTooltip } from "@/components/ui/IconTooltip";
 
 /**
  *
@@ -59,24 +60,27 @@ export function SearchOverlay() {
           onSubmit={handleSearch}
           className="relative flex items-center border-b border-slate-200 dark:border-slate-800 p-4"
         >
-          <Search className="absolute left-6 w-6 h-6 text-slate-400" />
+          <Search className="absolute start-6 w-6 h-6 text-slate-400" />
           <Input
             type="text"
             placeholder="Search for stationery, backpacks, art supplies..."
-            className="w-full bg-transparent border-0 pl-12 pr-12 text-xl sm:text-2xl font-semibold placeholder:text-slate-400 text-slate-900 dark:text-white h-14 focus-visible:ring-0 shadow-none"
+            className="w-full bg-transparent border-0 ps-12 pe-12 text-xl sm:text-2xl font-semibold placeholder:text-slate-400 text-slate-900 dark:text-white h-14 focus-visible:ring-0 shadow-none"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             autoFocus
           />
-          <Button
-            variant="ghost"
-            size="icon"
-            type="button"
-            onClick={() => setOpen(false)}
-            className="absolute right-6 rounded-full text-slate-500"
-          >
-            <X className="w-5 h-5" />
-          </Button>
+          <IconTooltip label="Close search" asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              type="button"
+              onClick={() => setOpen(false)}
+              className="absolute end-6 rounded-full text-slate-500"
+              aria-label="Close search"
+            >
+              <X className="w-5 h-5" />
+            </Button>
+          </IconTooltip>
         </form>
 
         <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-8 bg-slate-50/50 dark:bg-transparent">

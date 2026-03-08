@@ -15,6 +15,8 @@ import {
   attributeDefinitions,
   productAttributes,
   collectionTags,
+  inventoryBalances,
+  warehouses,
   type Product as DbProduct,
   type ProductTranslation as DbTranslation,
   type VariantImage as DbVariantImage,
@@ -31,7 +33,6 @@ import {
   eq,
   and,
   ilike,
-  like,
   or,
   count as sqlCount,
   desc,
@@ -247,7 +248,7 @@ export class DrizzleProductRepository implements IProductRepository {
     const variantIds = variantRows.map((v) => v.id);
     if (variantIds.length === 0) return {};
 
-    const [images, attrs, uoms, prices] = await Promise.all([
+    const [images, attrs, uoms, prices, inventoryRows] = await Promise.all([
       db
         .select()
         .from(variantImages)
@@ -270,6 +271,17 @@ export class DrizzleProductRepository implements IProductRepository {
         .from(variantSellableUoms)
         .where(inArray(variantSellableUoms.variantId, variantIds)),
       db.select().from(variantPriceLists).where(inArray(variantPriceLists.variantId, variantIds)),
+      db
+        .select({
+          variantId: inventoryBalances.variantId,
+          warehouseId: inventoryBalances.warehouseId,
+          warehouseCode: warehouses.code,
+          onHand: inventoryBalances.onHand,
+          reserved: inventoryBalances.reserved,
+        })
+        .from(inventoryBalances)
+        .leftJoin(warehouses, eq(warehouses.id, inventoryBalances.warehouseId))
+        .where(inArray(inventoryBalances.variantId, variantIds)),
     ]);
 
     const variantsByProduct: Record<number, Variant[]> = {};
@@ -278,6 +290,7 @@ export class DrizzleProductRepository implements IProductRepository {
       const vAttrs = attrs.filter((a) => a.variantId === v.id);
       const vUoms = uoms.filter((u) => u.variantId === v.id);
       const vPrices = prices.filter((p) => p.variantId === v.id);
+      const vInventory = inventoryRows.filter((row) => row.variantId === v.id);
 
       const variant: Variant = {
         id: v.id,
@@ -323,6 +336,12 @@ export class DrizzleProductRepository implements IProductRepository {
           minQty: p.minQty,
           startsAt: p.startsAt?.toISOString() || undefined,
           endsAt: p.endsAt?.toISOString() || undefined,
+        })),
+        inventory: vInventory.map((row) => ({
+          warehouseId: row.warehouseId,
+          warehouseCode: row.warehouseCode || undefined,
+          onHand: row.onHand,
+          reserved: row.reserved,
         })),
       };
 
@@ -386,6 +405,50 @@ export class DrizzleProductRepository implements IProductRepository {
       attributesResult,
       language,
     );
+  }
+
+  /**
+   * Retrieves a single product by localized slug.
+   */
+  async getBySlug(slug: string, language: Locale = DEFAULT_LOCALE): Promise<Product | null> {
+    const normalizedSlug = slug.trim().toLowerCase();
+    if (!normalizedSlug) return null;
+
+    // Backward compatibility with legacy numeric ids.
+    if (/^\d+$/.test(normalizedSlug)) {
+      return this.getById(Number(normalizedSlug), language);
+    }
+
+    const result = await db
+      .select({ id: products.id })
+      .from(products)
+      .where(
+        and(
+          eq(products.isActive, true),
+          or(
+            sql`LOWER(COALESCE(${products.localizedSlug} ->> 'en', '')) = ${normalizedSlug}`,
+            sql`LOWER(COALESCE(${products.localizedSlug} ->> ${language}, '')) = ${normalizedSlug}`,
+            sql`EXISTS (
+              SELECT 1
+              FROM jsonb_each_text(${products.localizedSlug}) AS localized(entry_key, entry_value)
+              WHERE LOWER(localized.entry_value) = ${normalizedSlug}
+            )`,
+            sql`EXISTS (
+              SELECT 1
+              FROM ${productTranslations} AS pt
+              WHERE pt.product_id = ${products.id}
+                AND TRIM(BOTH '-' FROM regexp_replace(LOWER(COALESCE(pt.name, '')), '[^a-z0-9]+', '-', 'g')) = ${normalizedSlug}
+            )`,
+          ),
+        ),
+      )
+      .limit(1);
+
+    if (result.length === 0) {
+      return null;
+    }
+
+    return this.getById(result[0].id, language);
   }
 
   /**
@@ -646,11 +709,21 @@ export class DrizzleProductRepository implements IProductRepository {
     const conditions = [];
 
     if (filters.categoryId && categoryPath) {
-      conditions.push(like(categories.path, `${categoryPath}%`));
+      conditions.push(
+        sql`EXISTS (
+          SELECT 1
+          FROM ${categories}
+          WHERE ${categories.id} = ${products.categoryId}
+            AND ${categories.path} LIKE ${`${categoryPath}%`}
+        )`,
+      );
     }
     if (filters.brandId) conditions.push(eq(products.brandId, filters.brandId));
     if (filters.isActive !== undefined) conditions.push(eq(products.isActive, filters.isActive));
     if (filters.isNew !== undefined) conditions.push(eq(products.isNew, filters.isNew));
+    if (filters.productIds && filters.productIds.length > 0) {
+      conditions.push(inArray(products.id, filters.productIds as number[]));
+    }
 
     // Price range filtering (requires join with variants)
     if (filters.minPrice || filters.maxPrice) {

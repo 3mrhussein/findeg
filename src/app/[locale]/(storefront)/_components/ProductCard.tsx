@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { Product } from "@/features/catalog/domain/entities/Product";
+import { getCanonicalProductHref } from "@/features/catalog/presentation/utils/product-url";
 import { useCart } from "@/hooks/useCart";
 import { useTranslations, useLocale } from "next-intl";
 import { Button } from "@/components/ui/button";
@@ -56,7 +57,7 @@ export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
             </div>
             <h3 className="text-lg font-bold text-slate-900 dark:text-white line-clamp-2 mb-2">
               <Link
-                href={`/products/${product.id}`}
+                href={getCanonicalProductHref(product)}
                 data-testid={`product-card-title-${product.id}`}
               >
                 <span aria-hidden="true" className="absolute inset-0 z-0"></span>
@@ -137,7 +138,7 @@ export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
             {product.categoryName || t("DefaultCategory")}
           </div>
           <h3 className="text-sm font-medium text-slate-900 dark:text-white line-clamp-2">
-            <Link href={`/products/${product.id}`} data-testid={`product-card-title-${product.id}`}>
+            <Link href={getCanonicalProductHref(product)} data-testid={`product-card-title-${product.id}`}>
               <span aria-hidden="true" className="absolute inset-0 z-0"></span>
               {product.name}
             </Link>

@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { IconTooltip } from "@/components/ui/IconTooltip";
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 
 interface PaginationProps {
@@ -59,25 +60,31 @@ export function Pagination({
   if (totalPages <= 1) return null;
 
   return (
-    <div className={`flex items-center justify-center space-x-2 ${className}`}>
-      <Button
-        variant="outline"
-        size="icon"
-        onClick={() => onPageChange(1)}
-        disabled={currentPage === 1}
-        title="First Page"
-      >
-        <ChevronsLeft className="h-4 w-4" />
-      </Button>
-      <Button
-        variant="outline"
-        size="icon"
-        onClick={() => onPageChange(currentPage - 1)}
-        disabled={currentPage === 1}
-        title="Previous Page"
-      >
-        <ChevronLeft className="h-4 w-4" />
-      </Button>
+    <div className={`flex items-center justify-center gap-2 ${className}`}>
+      <IconTooltip label="First page" asChild>
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => onPageChange(1)}
+          disabled={currentPage === 1}
+          aria-label="First page"
+          title="First page"
+        >
+          <ChevronsLeft className="h-4 w-4" />
+        </Button>
+      </IconTooltip>
+      <IconTooltip label="Previous page" asChild>
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => onPageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+          aria-label="Previous page"
+          title="Previous page"
+        >
+          <ChevronLeft className="h-4 w-4" />
+        </Button>
+      </IconTooltip>
 
       {getPageNumbers().map((page, index) =>
         page === -1 ? (
@@ -97,24 +104,30 @@ export function Pagination({
         ),
       )}
 
-      <Button
-        variant="outline"
-        size="icon"
-        onClick={() => onPageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
-        title="Next Page"
-      >
-        <ChevronRight className="h-4 w-4" />
-      </Button>
-      <Button
-        variant="outline"
-        size="icon"
-        onClick={() => onPageChange(totalPages)}
-        disabled={currentPage === totalPages}
-        title="Last Page"
-      >
-        <ChevronsRight className="h-4 w-4" />
-      </Button>
+      <IconTooltip label="Next page" asChild>
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => onPageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          aria-label="Next page"
+          title="Next page"
+        >
+          <ChevronRight className="h-4 w-4" />
+        </Button>
+      </IconTooltip>
+      <IconTooltip label="Last page" asChild>
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => onPageChange(totalPages)}
+          disabled={currentPage === totalPages}
+          aria-label="Last page"
+          title="Last page"
+        >
+          <ChevronsRight className="h-4 w-4" />
+        </Button>
+      </IconTooltip>
     </div>
   );
 }

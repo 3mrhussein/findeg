@@ -38,14 +38,16 @@ export const TABLE_IMPORT_ORDER = [
   "product_attributes",
   "discount_rules",
   "school_lists",
-  "list_items",
-  "alternatives",
+  "school_list_items",
+  "school_list_item_alternatives",
   "addresses",
   "orders",
   "order_items",
   "reviews",
+  "review_helpful_votes",
   "audit_log",
   "translations",
+  "search_logs",
 ];
 
 async function getExistingTableSet(sql, tableNames) {

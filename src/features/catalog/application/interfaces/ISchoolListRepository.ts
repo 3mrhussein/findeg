@@ -88,7 +88,14 @@ export interface ISchoolListRepository {
   /** Deletes a school list and cascading items */
   delete(id: ID): Promise<void>;
 
-  /** Gets a single list item by ID */
+  /**
+   * Gets a school list by its ID.
+   */
+  getById(id: ID): Promise<SchoolListResult | null>;
+
+  /**
+   * Gets a single list item by ID.
+   */
   getItem(id: ID): Promise<SchoolListItemResult | null>;
 
   /** Gets all items for a school list, with hydrated alternatives */

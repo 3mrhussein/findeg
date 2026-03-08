@@ -16,6 +16,7 @@ export interface OrderFilters {
 export interface IOrderRepository {
   getById(id: ID | string): Promise<Order | null>;
   getByUserId(userId: ID): Promise<Order[]>;
+  hasPurchasedProduct(userId: ID, productId: ID): Promise<boolean>;
   getAllFiltered(filters: OrderFilters): Promise<{ orders: Order[]; total: number }>;
 
   create(order: Partial<Order>): Promise<Order>;

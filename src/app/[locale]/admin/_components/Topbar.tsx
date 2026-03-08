@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useTranslations } from "next-intl";
 import { isAdminSession, type SessionPayload } from "@/features/core/domain/auth";
+import { NotificationBell } from "@/components/shared/NotificationBell";
 
 /**
- *
+ * Admin Topbar component
  */
 export function Topbar() {
   const [session, setSession] = useState<SessionPayload | null>(null);
@@ -14,7 +15,7 @@ export function Topbar() {
 
   useEffect(() => {
     /**
-     *
+     * Fetch the current session
      */
     const fetchSession = async () => {
       try {
@@ -34,6 +35,8 @@ export function Topbar() {
   return (
     <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-end border-b bg-background px-6 shadow-sm">
       <div className="flex items-center gap-4">
+        <NotificationBell />
+        <div className="h-4 w-px bg-border mx-1" />
         <div className="flex flex-col text-right">
           <span className="text-sm font-medium">
             {session?.user?.email || t("Topbar.RoleAdmin")}

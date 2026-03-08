@@ -4,6 +4,7 @@ import type React from "react";
 import { useTranslations } from "next-intl";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { IconTooltip } from "@/components/ui/IconTooltip";
 import { Search } from "lucide-react";
 import { useHeaderSearch } from "@/features/catalog/presentation/hooks/useHeaderSearch";
 
@@ -35,9 +36,11 @@ export function HeaderSearchForm({ compact = false }: HeaderSearchFormProps) {
           placeholder={t("Nav.SearchPlaceholder")}
           className="h-9"
         />
-        <Button type="submit" size="icon" aria-label={t("Layout.Header.SearchButton")}>
-          <Search className="h-4 w-4" />
-        </Button>
+        <IconTooltip label={t("Layout.Header.SearchButton")} asChild>
+          <Button type="submit" size="icon" aria-label={t("Layout.Header.SearchButton")}>
+            <Search className="h-4 w-4" />
+          </Button>
+        </IconTooltip>
       </form>
     );
   }

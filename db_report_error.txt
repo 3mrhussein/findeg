@@ -1,0 +1,11 @@
+AggregateError [EPERM]: 
+    at internalConnectMultiple (node:net:1116:18)
+    at internalConnectMultiple (node:net:1184:5)
+    at internalConnectMultiple (node:net:1184:5)
+    at defaultTriggerAsyncIdScope (node:internal/async_hooks:464:18)
+    at GetAddrInfoReqWrap.emitLookup [as callback] (node:net:1520:7)
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:130:8)
+    at cachedError (file:///Users/faraga4/Desktop/Moro/Personal/Projects/Findeg.com/findeg.stationary/node_modules/postgres/src/query.js:170:23)
+    at new Query (file:///Users/faraga4/Desktop/Moro/Personal/Projects/Findeg.com/findeg.stationary/node_modules/postgres/src/query.js:36:24)
+    at sql (file:///Users/faraga4/Desktop/Moro/Personal/Projects/Findeg.com/findeg.stationary/node_modules/postgres/src/index.js:112:11)
+    at run (file:///Users/faraga4/Desktop/Moro/Personal/Projects/Findeg.com/findeg.stationary/scripts/inspect-db.js:12:30)

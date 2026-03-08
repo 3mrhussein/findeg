@@ -9,6 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { IconTooltip } from "@/components/ui/IconTooltip";
 import { Order } from "@/features/order/domain/entities/Order";
 import {
   Select,
@@ -190,11 +191,13 @@ export function OrdersTable({ orders }: OrdersTableProps) {
                     </Select>
                   </TableCell>
                   <TableCell className="text-right">
-                    <Button asChild variant="ghost" size="icon">
-                      <Link href={`/admin/orders/${order.id}`}>
-                        <Eye className="h-4 w-4" />
-                      </Link>
-                    </Button>
+                    <IconTooltip label="View order details" asChild>
+                      <Button asChild variant="ghost" size="icon" aria-label="View order details">
+                        <Link href={`/admin/orders/${order.id}`}>
+                          <Eye className="h-4 w-4" />
+                        </Link>
+                      </Button>
+                    </IconTooltip>
                   </TableCell>
                 </TableRow>
               );

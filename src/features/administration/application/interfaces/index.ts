@@ -6,3 +6,4 @@ export * from "./IAdminDashboardService";
 export * from "./IAdminInventoryService";
 export * from "./IAdminOrderService";
 export * from "./IAdminProductService";
+export * from "./IProductImportService";

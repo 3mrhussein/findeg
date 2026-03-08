@@ -24,6 +24,7 @@ import { buildProductColumns } from "./ProductTableColumns";
 import { ProductTableFilters } from "./ProductTableFilters";
 import { ProductTablePagination } from "./ProductTablePagination";
 import { ProductDeleteDialog } from "./ProductDeleteDialog";
+import { ProductBulkActionBar } from "./ProductBulkActionBar";
 
 /**
  * ProductTable — orchestrates filter toolbar, data grid, pagination, and delete dialog.
@@ -38,6 +39,7 @@ export function ProductTable({
   brands,
 }: ProductTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [rowSelection, setRowSelection] = useState({});
   const [deleteId, setDeleteId] = useState<number | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -56,12 +58,14 @@ export function ProductTable({
       next.categoryId ?? (filters.categoryId ? String(filters.categoryId) : "");
     const nextBrandId = next.brandId ?? (filters.brandId ? String(filters.brandId) : "");
     const nextIsActive = next.isActive ?? filters.isActive;
+    const nextStockLevel = next.stockLevel ?? filters.stockLevel;
     const nextPage = next.page ?? "1";
 
     if (nextSearch) params.set("search", nextSearch);
     if (nextCategoryId) params.set("categoryId", nextCategoryId);
     if (nextBrandId) params.set("brandId", nextBrandId);
     if (nextIsActive && nextIsActive !== "all") params.set("isActive", nextIsActive);
+    if (nextStockLevel && nextStockLevel !== "all") params.set("stockLevel", nextStockLevel);
     params.set("page", nextPage);
     params.set("limit", String(limit));
 
@@ -108,9 +112,12 @@ export function ProductTable({
     columns,
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
+    onRowSelectionChange: setRowSelection,
     getSortedRowModel: getSortedRowModel(),
-    state: { sorting },
+    state: { sorting, rowSelection },
   });
+
+  const selectedIds = table.getSelectedRowModel().flatRows.map((r) => r.original.id);
 
   return (
     <div className="space-y-4">
@@ -182,6 +189,11 @@ export function ProductTable({
         isDeleting={isDeleting}
         onConfirm={handleDelete}
         onCancel={() => setDeleteId(null)}
+      />
+
+      <ProductBulkActionBar
+        selectedIds={selectedIds}
+        onClearSelection={() => setRowSelection({})}
       />
     </div>
   );

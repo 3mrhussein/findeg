@@ -3,7 +3,7 @@
 import { useFormContext } from "react-hook-form";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { RichTextEditor } from "@/components/ui/rich-text-editor";
 
 /**
  *
@@ -50,7 +50,11 @@ export function ProductBasicInfo() {
             <FormItem>
               <FormLabel>Description (English)</FormLabel>
               <FormControl>
-                <Textarea placeholder="Product description..." {...field} />
+                <RichTextEditor
+                  content={field.value}
+                  onChange={field.onChange}
+                  placeholder="Product description..."
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -63,7 +67,12 @@ export function ProductBasicInfo() {
             <FormItem>
               <FormLabel>Description (Arabic)</FormLabel>
               <FormControl>
-                <Textarea placeholder="وصف المنتج..." {...field} className="text-right" dir="rtl" />
+                <RichTextEditor
+                  content={field.value}
+                  onChange={field.onChange}
+                  dir="rtl"
+                  placeholder="وصف المنتج..."
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

@@ -5,11 +5,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
 import { ProductInput } from "@/features/administration/domain/types";
 import {
-  createProductAction,
-  updateProductAction,
-} from "@/features/catalog/application/actions/product";
+  adminCreateProductAction,
+  adminUpdateProductAction,
+} from "@/features/administration/application/actions/admin-product-actions";
 import { useRouter } from "next/navigation";
-import { use, useEffect, useState, useTransition } from "react";
+import { use, useEffect, useState, useTransition, useRef } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { usePermissions } from "@/providers/PermissionsProvider";
 import { PERMISSION_CODES } from "@/features/core/domain/auth";
@@ -18,6 +18,8 @@ import { ProductCategoryBrand } from "../_components/ProductCategoryBrand";
 import { ProductInventory } from "../_components/ProductInventory";
 import { ProductMedia } from "../_components/ProductMedia";
 import { ProductVariants, VariantPricingConfig } from "../_components/ProductVariants";
+import { ProductShipping } from "../_components/ProductShipping";
+import { ProductSEO } from "../_components/ProductSEO";
 import { SubmitButton } from "@/components/ui/submit-button";
 import type {
   ProductFormProps,
@@ -79,9 +81,15 @@ export function ProductForm({
         name_en: initialData.translations.find((t) => t.language === "en")?.name || "",
         description_en:
           initialData.translations.find((t) => t.language === "en")?.description || "",
+        seoTitle_en: initialData.translations.find((t) => t.language === "en")?.seoTitle || "",
+        seoDescription_en:
+          initialData.translations.find((t) => t.language === "en")?.seoDescription || "",
         name_ar: initialData.translations.find((t) => t.language === "ar")?.name || "",
         description_ar:
           initialData.translations.find((t) => t.language === "ar")?.description || "",
+        seoTitle_ar: initialData.translations.find((t) => t.language === "ar")?.seoTitle || "",
+        seoDescription_ar:
+          initialData.translations.find((t) => t.language === "ar")?.seoDescription || "",
         price: firstVariant?.basePrice ?? 0,
         categoryId: initialData.categoryId?.toString() || "",
         brandId: initialData.brandId?.toString() || "",
@@ -90,12 +98,20 @@ export function ProductForm({
         lowStockThreshold: firstVariant?.lowStockThreshold ?? 5,
         isActive: initialData.isActive ?? true,
         images: firstVariant?.images?.map((img) => img.url).join(", ") || "",
+        weight: firstVariant?.weight || 0,
+        length: firstVariant?.dimensions?.length || 0,
+        width: firstVariant?.dimensions?.width || 0,
+        height: firstVariant?.dimensions?.height || 0,
       }
     : {
         name_en: "",
         description_en: "",
+        seoTitle_en: "",
+        seoDescription_en: "",
         name_ar: "",
         description_ar: "",
+        seoTitle_ar: "",
+        seoDescription_ar: "",
         price: 0,
         categoryId: "",
         brandId: "",
@@ -104,6 +120,10 @@ export function ProductForm({
         lowStockThreshold: 5,
         isActive: true,
         images: "",
+        weight: 0,
+        length: 0,
+        width: 0,
+        height: 0,
       };
 
   const form = useForm<ProductFormValues>({
@@ -203,49 +223,101 @@ export function ProductForm({
   /**
    *
    */
+  const buildProductInput = (values: ProductFormValues, isNew: boolean): ProductInput => ({
+    categoryId: parseInt(values.categoryId),
+    brandId: values.brandId && values.brandId !== "none" ? parseInt(values.brandId) : undefined,
+    isActive: values.isActive,
+    translations: [
+      {
+        language: "en",
+        name: values.name_en,
+        description: values.description_en,
+        longDescription: values.description_en,
+        seoTitle: values.seoTitle_en,
+        seoDescription: values.seoDescription_en,
+      },
+      {
+        language: "ar",
+        name: values.name_ar,
+        description: values.description_ar,
+        longDescription: values.description_ar,
+        seoTitle: values.seoTitle_ar,
+        seoDescription: values.seoDescription_ar,
+      },
+    ],
+    isNew,
+    variants: [
+      {
+        sku: values.sku || `PROD-${Date.now()}`,
+        variantKey: "default",
+        displayOrder: 0,
+        basePrice: values.price,
+        lowStockThreshold: values.lowStockThreshold,
+        isActive: values.isActive,
+        images: values.images
+          ? values.images
+              .split(",")
+              .map((s) => s.trim())
+              .filter(Boolean)
+              .map((url) => ({ url, displayOrder: 0 }))
+          : [],
+        weight: values.weight,
+        dimensions: {
+          length: values.length || 0,
+          width: values.width || 0,
+          height: values.height || 0,
+        },
+      },
+    ],
+  });
+
+  const autoSaveTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    // Only auto-save if we are editing an existing product and have permission
+    if (!initialData?.id || !canContent) return;
+
+    const subscription = form.watch(() => {
+      if (isPending) return; // Don't auto-save if already saving manually
+
+      if (autoSaveTimerRef.current) {
+        clearTimeout(autoSaveTimerRef.current);
+      }
+
+      autoSaveTimerRef.current = setTimeout(() => {
+        const values = form.getValues();
+        // Basic check to avoid saving a completely empty product if they backspace everything
+        if (!values.name_en || !values.categoryId) return;
+
+        const input = buildProductInput(values as ProductFormValues, false);
+        adminUpdateProductAction(initialData.id, input).then((res) => {
+          if (res.success) {
+            toast({
+              title: "Auto-saved",
+              description: "Product changes were auto-saved.",
+              duration: 2000,
+            });
+          }
+        });
+      }, 3000); // 3-second debounce
+    });
+
+    return () => {
+      if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+      subscription.unsubscribe();
+    };
+  }, [form.watch, initialData?.id, canContent, isPending]);
+
+  /**
+   *
+   */
   function onSubmit(values: ProductFormValues) {
     startTransition(async () => {
-      const input: ProductInput = {
-        categoryId: parseInt(values.categoryId),
-        brandId: values.brandId && values.brandId !== "none" ? parseInt(values.brandId) : undefined,
-        isActive: values.isActive,
-        translations: [
-          {
-            language: "en",
-            name: values.name_en,
-            description: values.description_en,
-            longDescription: values.description_en,
-          },
-          {
-            language: "ar",
-            name: values.name_ar,
-            description: values.description_ar,
-            longDescription: values.description_ar,
-          },
-        ],
-        isNew: true,
-        variants: [
-          {
-            sku: values.sku || `PROD-${Date.now()}`,
-            variantKey: "default",
-            displayOrder: 0,
-            basePrice: values.price,
-            lowStockThreshold: values.lowStockThreshold,
-            isActive: values.isActive,
-            images: values.images
-              ? values.images
-                  .split(",")
-                  .map((s) => s.trim())
-                  .filter(Boolean)
-                  .map((url) => ({ url, displayOrder: 0 }))
-              : [],
-          },
-        ],
-      };
+      const input = buildProductInput(values, !initialData);
       try {
         const result = initialData
-          ? await updateProductAction(initialData.id, input)
-          : await createProductAction(input);
+          ? await adminUpdateProductAction(initialData.id, input)
+          : await adminCreateProductAction(input);
         if (result.success) {
           const productId = result.productId ?? initialData?.id;
           if (productId) await applyVariantPricingConfig(productId, variantConfigs);
@@ -274,37 +346,50 @@ export function ProductForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {canContent && (
-          <div className="space-y-6">
-            <ProductBasicInfo />
-            <ProductCategoryBrand categories={categoriesUrl} brands={brandsUrl} />
+      <form onSubmit={form.handleSubmit(onSubmit)} className="gap-8 xl:grid xl:grid-cols-3">
+        {/* Main Content Column */}
+        <div className="xl:col-span-2 space-y-8">
+          {canContent && (
+            <div className="space-y-6">
+              <ProductBasicInfo />
+              <ProductSEO />
+            </div>
+          )}
+          {canInventory && (
+            <div className="space-y-6">
+              <ProductMedia />
+              <ProductVariants
+                configs={variantConfigs}
+                setConfigs={setVariantConfigs}
+                loading={loadingVariantConfig}
+              />
+              <ProductInventory />
+            </div>
+          )}
+        </div>
+
+        {/* Sticky Right Panel */}
+        <div className="space-y-8 xl:col-span-1">
+          <div className="sticky top-6 space-y-6">
+            {canContent && <ProductCategoryBrand categories={categoriesUrl} brands={brandsUrl} />}
+            {canInventory && <ProductShipping />}
+
+            <div className="flex gap-4 p-4 border rounded-lg bg-card mt-6">
+              <SubmitButton
+                type="button"
+                variant="outline"
+                onClick={() => router.back()}
+                disabled={isPending}
+                defaultText="Cancel"
+              />
+              <SubmitButton
+                className="flex-1"
+                disabled={isPending}
+                loadingText="Saving product..."
+                defaultText={initialData ? "Update Product" : "Create Product"}
+              />
+            </div>
           </div>
-        )}
-        {canInventory && (
-          <div className="space-y-6">
-            <ProductInventory />
-            <ProductMedia />
-            <ProductVariants
-              configs={variantConfigs}
-              setConfigs={setVariantConfigs}
-              loading={loadingVariantConfig}
-            />
-          </div>
-        )}
-        <div className="flex justify-end gap-4 pb-12">
-          <SubmitButton
-            type="button"
-            variant="outline"
-            onClick={() => router.back()}
-            disabled={isPending}
-            defaultText="Cancel"
-          />
-          <SubmitButton
-            disabled={isPending}
-            loadingText="Saving product..."
-            defaultText={initialData ? "Update Product" : "Create Product"}
-          />
         </div>
       </form>
     </Form>

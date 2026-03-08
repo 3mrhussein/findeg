@@ -96,6 +96,11 @@ export const ProductSchema = z.object({
 
   tags: z.array(TagSchema).optional(),
   attributes: z.array(ProductAttributeValueSchema).optional(),
+
+  // ─── Timestamps ───────────────────────────────────────────────────
+
+  createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
 });
 
 export type Product = z.infer<typeof ProductSchema>;

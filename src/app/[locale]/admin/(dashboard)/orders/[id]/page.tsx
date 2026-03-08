@@ -1,124 +1,66 @@
+import { getServices } from "@/server/getServices";
 import { notFound } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { OrderDetailControls } from "../_components/order-detail-controls";
-import { OrderAuditTimeline } from "../_components/order-audit-timeline";
-import { container } from "@/features/core/infrastructure/di/ServiceContainer";
-
-interface OrderDetailPageProps {
-  params: Promise<{
-    id: string; // URL params are usually strings
-  }>;
-}
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
+import { OrderHeader } from "./_components/OrderHeader";
+import { OrderTimeline } from "./_components/OrderTimeline";
+import { OrderItemsTable } from "./_components/OrderItemsTable";
+import { OrderTotals } from "./_components/OrderTotals";
+import { OrderCustomerInfo } from "./_components/OrderCustomerInfo";
+import { OrderPaymentFulfillment } from "./_components/OrderPaymentFulfillment";
+import { OrderActivityLog } from "./_components/OrderActivityLog";
 
 /**
- *
+ * Admin Order Detail Page
  */
-export default async function OrderDetailPage({ params }: OrderDetailPageProps) {
-  const { id: idParam } = await params;
-  const id = parseInt(idParam);
+export default async function OrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const orderId = Number(id);
 
-  if (isNaN(id)) {
-    return notFound();
-  }
+  if (isNaN(orderId)) notFound();
 
-  const [order, orderAuditLogs] = await Promise.all([
-    container.adminOrderService.getById(id),
-    container.auditLogService.getEntityLogs("order", String(id)),
+  const { adminOrder, auditLog } = getServices();
+
+  const [order, logs] = await Promise.all([
+    adminOrder.getById(orderId),
+    auditLog.getEntityLogs("order", String(orderId)),
   ]);
 
-  if (!order) {
-    return notFound();
-  }
+  if (!order) notFound();
 
   return (
-    <div className="flex-1 space-y-4 p-8 pt-6">
-      <div className="flex items-center justify-between space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight">Order #{order.id}</h2>
-        <Badge variant={order.status === "delivered" ? "default" : "secondary"}>
-          {order.status}
-        </Badge>
+    <div className="flex-1 space-y-6 p-8 pt-6 pb-20">
+      <div className="flex items-center space-x-2">
+        <Button variant="ghost" size="sm" asChild className="mb-2">
+          <Link href="/admin/orders">
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Orders
+          </Link>
+        </Button>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <OrderDetailControls
-          orderId={order.id}
-          initialStatus={order.status}
-          initialPaymentStatus={order.paymentStatus}
-          initialTrackingNumber={order.trackingNumber}
-          initialAdminNotes={order.adminNotes}
-        />
+      <OrderHeader order={order} />
+      <OrderTimeline status={order.status} />
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Customer Details</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-1">
-              <span className="font-semibold">{order.customerName}</span>
-              {/* Add email/phone if available in Order entity */}
-            </div>
-          </CardContent>
-        </Card>
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        {/* Left Column - 65% width on xl screens */}
+        <div className="xl:col-span-2 space-y-6">
+          <OrderItemsTable items={order.items || []} currency={order.currency || "EGP"} />
+          <OrderTotals order={order} />
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Order Summary</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex justify-between py-1">
-              <span>Total</span>
-              <span className="font-bold">
-                {order.currency} {order.total}
-              </span>
-            </div>
-            <div className="flex justify-between py-1">
-              <span>Tracking</span>
-              <span className="font-medium">{order.trackingNumber || "-"}</span>
-            </div>
-            <div className="flex justify-between py-1">
-              <span>Payment</span>
-              <span className="font-medium">{order.paymentStatus || "-"}</span>
-            </div>
-            <div className="text-sm text-muted-foreground mt-2">
-              Date: {order.date ? new Date(order.date).toLocaleDateString() : "-"}
-            </div>
-          </CardContent>
-        </Card>
+          <div className="mt-8 space-y-4">
+            <h3 className="text-lg font-semibold tracking-tight">Activity Timeline</h3>
+            <OrderActivityLog logs={logs} />
+          </div>
+        </div>
 
-        {/* Shipping Address - Add if available in entity */}
+        {/* Right Column - 35% width on xl screens */}
+        <div className="space-y-6 flex flex-col">
+          <OrderPaymentFulfillment order={order} />
+          <OrderCustomerInfo order={order} />
+        </div>
       </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Items</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {order.items?.map((item, index) => (
-              <div key={index} className="flex justify-between items-center">
-                <div className="flex items-center space-x-4">
-                  {/* Product Image if available */}
-                  <div>
-                    <p className="font-medium">{item.productName}</p>
-                    <p className="text-sm text-muted-foreground">Qty: {item.quantity}</p>
-                  </div>
-                </div>
-                <div className="font-medium">
-                  {order.currency} {item.price}
-                </div>
-              </div>
-            ))}
-          </div>
-          <Separator className="my-4" />
-          <div className="flex justify-end font-bold">
-            Total: {order.currency} {order.total}
-          </div>
-        </CardContent>
-      </Card>
-
-      <OrderAuditTimeline orderId={order.id} logs={orderAuditLogs} />
     </div>
   );
 }

@@ -18,7 +18,7 @@ import {
 import { IOrderRepository, OrderFilters } from "../../application/interfaces/IOrderRepository";
 import { Order, OrderItem } from "../../domain/entities/Order";
 import { OrderStatusUpdate } from "@/features/administration/domain/types";
-import { eq, count as sqlCount, sql, desc, and, gte, lte, ilike, or } from "drizzle-orm";
+import { eq, count as sqlCount, sql, desc, and, gte, lte, ilike, or, inArray } from "drizzle-orm";
 
 /**
  * Drizzle Order Repository
@@ -131,6 +131,34 @@ export class DrizzleOrderRepository implements IOrderRepository {
     );
 
     return ordersWithItems;
+  }
+
+  /**
+   * Returns true when a user has at least one non-cancelled purchase of the product.
+   */
+  async hasPurchasedProduct(userId: ID, productId: ID): Promise<boolean> {
+    const purchasableStatuses: OrderStatus[] = [
+      "pending",
+      "confirmed",
+      "processing",
+      "shipped",
+      "delivered",
+    ];
+
+    const rows = await db
+      .select({ id: orderItems.id })
+      .from(orderItems)
+      .innerJoin(orders, eq(orderItems.orderId, orders.id))
+      .where(
+        and(
+          eq(orders.userId, userId as any),
+          eq(orderItems.productId, productId as any),
+          inArray(orders.status, purchasableStatuses),
+        ),
+      )
+      .limit(1);
+
+    return rows.length > 0;
   }
 
   /**
