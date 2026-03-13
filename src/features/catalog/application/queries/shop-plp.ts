@@ -408,7 +408,8 @@ function sortPlpProducts(products: Product[], sort: ShopPlpSort): Product[] {
   switch (sort) {
     case "newest":
       sorted.sort((a, b) => {
-        const isNewDelta = Number(Boolean(b.isNew)) - Number(Boolean(a.isNew));
+        const isNewDelta =
+          Number(new ProductEntity(b).isNew()) - Number(new ProductEntity(a).isNew());
         if (isNewDelta !== 0) return isNewDelta;
         return b.id - a.id;
       });

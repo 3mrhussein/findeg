@@ -16,9 +16,10 @@ import { DrizzleReviewRepository } from "@/features/review/infrastructure/persis
 import { DrizzleBrandRepository } from "@/features/catalog/infrastructure/persistence/DrizzleBrandRepository";
 import { DrizzleCollectionRepository } from "@/features/catalog/infrastructure/persistence/DrizzleCollectionRepository";
 import { DrizzleAuditLogRepository } from "@/features/administration/infrastructure/DrizzleAuditLogRepository";
-import { DrizzleSchoolListRepository } from "@/features/catalog/infrastructure/persistence/DrizzleSchoolListRepository";
+import { DrizzleTagRepository } from "@/features/catalog/infrastructure/persistence/DrizzleTagRepository";
 import { DrizzleInventoryRepository } from "@/features/catalog/infrastructure/persistence/DrizzleInventoryRepository";
 import { DrizzleVariantRepository } from "@/features/catalog/infrastructure/persistence/DrizzleVariantRepository";
+import { DrizzleSchoolListRepository } from "@/features/catalog/infrastructure/persistence/DrizzleSchoolListRepository";
 
 import { CookieSessionProvider } from "@/features/core/infrastructure/auth/CookieSessionProvider";
 import { LocalStorageProvider } from "../storage/LocalStorageProvider";
@@ -47,6 +48,8 @@ import {
   AdminBrandService,
   AdminOrderService,
   AdminInventoryService,
+  AdminTagService,
+  AdminCollectionService,
   AuditLogService,
   ProductImportService,
 } from "@/features/administration/application/services";
@@ -66,8 +69,9 @@ import { ICollectionRepository } from "@/features/catalog/application/interfaces
 import { IAuditLogRepository } from "@/features/administration/application/interfaces/IAuditLogRepository";
 import { ISchoolListRepository } from "@/features/catalog/application/interfaces/ISchoolListRepository";
 import { IInventoryRepository } from "@/features/catalog/application/interfaces/IInventoryRepository";
-import { IVariantRepository } from "@/features/catalog/application/interfaces/IVariantRepository";
-import { ISchoolAccessRepository } from "@/features/school/application/interfaces/ISchoolAccessRepository";
+import { ITagRepository } from "@/features/catalog/application/interfaces/ITagRepository";
+import type { IVariantRepository } from "@/features/catalog/application/interfaces/IVariantRepository";
+import type { ISchoolAccessRepository } from "@/features/school/application/interfaces/ISchoolAccessRepository";
 import { DrizzleSchoolAccessRepository } from "@/features/school/infrastructure/DrizzleSchoolAccessRepository";
 import { DrizzleParentSessionRepository } from "@/features/school/infrastructure/DrizzleParentSessionRepository";
 import { ParentListService } from "@/features/school/application/services/ParentListService";
@@ -88,6 +92,8 @@ import {
   IAdminBrandService,
   IAdminOrderService,
   IAdminInventoryService,
+  IAdminTagService,
+  IAdminCollectionService,
   IAuditLogService,
   IProductImportService,
 } from "@/features/administration/application/interfaces";
@@ -124,6 +130,7 @@ export class ServiceContainer {
   private _auditLogRepository?: IAuditLogRepository;
   private _schoolListRepository?: ISchoolListRepository;
   private _inventoryRepository?: IInventoryRepository;
+  private _tagRepository?: ITagRepository;
   private _variantRepository?: IVariantRepository;
   private _schoolAccessRepository?: ISchoolAccessRepository;
   private _parentSessionRepository?: IParentSessionRepository;
@@ -163,6 +170,8 @@ export class ServiceContainer {
   private _adminBrandService?: IAdminBrandService;
   private _adminOrderService?: IAdminOrderService;
   private _adminInventoryService?: IAdminInventoryService;
+  private _adminTagService?: IAdminTagService;
+  private _adminCollectionService?: IAdminCollectionService;
   private _auditLogService?: IAuditLogService;
   private _productImportService?: IProductImportService;
   private _loggerService?: ILoggerService;
@@ -258,6 +267,16 @@ export class ServiceContainer {
       this._collectionRepository = new DrizzleCollectionRepository();
     }
     return this._collectionRepository;
+  }
+
+  /**
+   * Data access for taxonomy tags.
+   */
+  get tagRepository(): ITagRepository {
+    if (!this._tagRepository) {
+      this._tagRepository = new DrizzleTagRepository();
+    }
+    return this._tagRepository!;
   }
 
   /**
@@ -572,6 +591,29 @@ export class ServiceContainer {
       );
     }
     return this._adminInventoryService;
+  }
+
+  /**
+   * Backend service for administrative tag management.
+   */
+  get adminTagService(): IAdminTagService {
+    if (!this._adminTagService) {
+      this._adminTagService = new AdminTagService(this.tagRepository, this.auditLogService);
+    }
+    return this._adminTagService!;
+  }
+
+  /**
+   * Backend service for administrative collection management.
+   */
+  get adminCollectionService(): IAdminCollectionService {
+    if (!this._adminCollectionService) {
+      this._adminCollectionService = new AdminCollectionService(
+        this.collectionRepository,
+        this.auditLogService,
+      );
+    }
+    return this._adminCollectionService!;
   }
 
   /**

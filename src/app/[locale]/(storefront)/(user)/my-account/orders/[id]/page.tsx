@@ -61,7 +61,7 @@ export default async function MyOrderDetailPage({ params }: MyOrderDetailPagePro
               </div>
               <p className="text-sm text-muted-foreground mt-1">
                 {order.currency || "EGP"}{" "}
-                {(item.unitPriceSnapshot ?? item.priceAtTime ?? item.price ?? 0).toFixed(2)}
+                {(item.unitPrice ?? item.unitPriceSnapshot ?? item.price ?? 0).toFixed(2)}
               </p>
             </div>
           ))}

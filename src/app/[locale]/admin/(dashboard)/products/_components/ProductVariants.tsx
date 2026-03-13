@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { FormLabel } from "@/components/ui/form";
+import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -106,7 +106,7 @@ export function ProductVariants({ configs, setConfigs, loading }: ProductVariant
         >
           <div className="flex items-end gap-3">
             <div className="flex-1 space-y-1">
-              <FormLabel>Variant Key</FormLabel>
+              <Label>Variant Key</Label>
               <Input
                 value={config.variantKey}
                 onChange={(e) =>
@@ -131,7 +131,7 @@ export function ProductVariants({ configs, setConfigs, loading }: ProductVariant
 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <FormLabel>Sellable UoMs</FormLabel>
+              <Label>Sellable UoMs</Label>
               <Button
                 type="button"
                 size="sm"
@@ -218,7 +218,7 @@ export function ProductVariants({ configs, setConfigs, loading }: ProductVariant
 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <FormLabel>Price Lists</FormLabel>
+              <Label>Price Lists</Label>
               <Button
                 type="button"
                 size="sm"

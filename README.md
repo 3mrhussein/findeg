@@ -46,6 +46,20 @@ FindEg.com is a modern, trendy e-commerce web application specializing in statio
 
    Open [http://localhost:3000](http://localhost:3000) in your browser.
 
+### 🧪 Test Accounts
+
+The database comes pre-seeded with Several test accounts representing different roles in the system. The password for all test accounts is `password`.
+
+| Actor / Role           | Email                   | Description                                                        |
+| ---------------------- | ----------------------- | ------------------------------------------------------------------ |
+| **System Admin**       | `superadmin@findeg.com` | Full, unrestricted access to all admin features and settings.      |
+| **Catalog Manager**    | `editorial@findeg.com`  | Can manage products, categories, brands, and view analytics.       |
+| **Inventory Manager**  | `inventory@findeg.com`  | Can manage stock levels, warehouses, and view orders.              |
+| **Operations Manager** | `operations@findeg.com` | Broad access for managing orders, inventory, and viewing catalogs. |
+| **Customer Support**   | `support@findeg.com`    | Can view orders, users, and assist with customer issues.           |
+| **School Liaison**     | `liaison@findeg.com`    | Manages school supply lists and can browse products.               |
+| **B2C Customer**       | `user@findeg.com`       | Standard storefront user with no admin access.                     |
+
 ---
 
 ## 🐳 Docker Database Setup

@@ -12,21 +12,23 @@ We use a three-tier system:
 
 ---
 
-## Tag System
-
-Tags are grouped to provide semantical meaning.
-
-### Common Tag Groups
-
-- `usecase`: Why is the product used? (e.g., bullet-journaling, study-from-home)
-- `style`: Aesthetic classification (e.g., minimalist, vibrant, professional)
-- `seasonality`: Time-based relevancy (e.g., back-to-school, ramadan)
-- `audience`: Who is it for? (e.g., students, artists, professionals)
-
 ### Querying by Tags
 
 You can filter products by a list of `tagIds` or by entire `tagGroups`.
 Multiple tags within the same group acts as an **OR** (unless specified), while tags across groups acts as an **AND**.
+
+---
+
+## Collections
+
+Collections are manually curated marketing-driven groups of products. Unlike categories, they don't follow a strict hierarchy and are often used for landing pages, seasonal promotions, or "Shop by Room" experiences.
+
+### Features
+
+- **Flexible Grouping**: Products are associated with collections via **Tags**.
+- **Dynamic Content**: Collections can automatically pull products that match certain tags.
+- **Visual Control**: Custom hero images and sorting orders for storefront presentation.
+- **Slug-based Links**: Routable via `/collections/[slug]`.
 
 ---
 

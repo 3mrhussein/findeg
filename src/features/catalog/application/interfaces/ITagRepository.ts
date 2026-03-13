@@ -33,4 +33,13 @@ export interface ITagRepository {
 
   /** Retrieves products matching a specific tag */
   getProductsByTag(tagId: ID, language?: Locale): Promise<Product[]>;
+
+  /** Retrieves a unique list of all tag groups currently in use */
+  listDistinctGroups(): Promise<string[]>;
+
+  /** Bulk updates the status of multiple tags */
+  bulkUpdateStatus(ids: ID[], isActive: boolean): Promise<void>;
+
+  /** Bulk deletes multiple tags */
+  bulkDelete(ids: ID[]): Promise<void>;
 }

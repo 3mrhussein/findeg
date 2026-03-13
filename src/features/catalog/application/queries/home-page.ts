@@ -1,4 +1,4 @@
-import type { Product } from "@/features/catalog/domain/entities/Product";
+import { ProductEntity, type Product } from "@/features/catalog/domain/entities/Product";
 
 export interface HomeFeaturedGroups {
   all: Product[];
@@ -11,7 +11,7 @@ export interface HomeFeaturedGroups {
  */
 export function buildHomeFeaturedGroups(products: Product[]): HomeFeaturedGroups {
   const all = products;
-  const newest = products.filter((product) => Boolean(product.isNew));
+  const newest = products.filter((product) => new ProductEntity(product).isNew());
   const topRated = [...products].sort((a, b) => b.rating - a.rating).slice(0, 8);
 
   return {

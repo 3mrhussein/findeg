@@ -7,17 +7,9 @@
  * - Guest checkout support via guestEmail
  */
 
-import {
-  pgTable,
-  serial,
-  text,
-  integer,
-  decimal,
-  timestamp,
-  varchar,
-  jsonb,
-} from "drizzle-orm/pg-core";
+import { serial, text, integer, decimal, timestamp, varchar, jsonb } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
+import { salesSchema } from "./schemas";
 import { users } from "./users";
 import { products } from "./products";
 import { productVariants } from "./product-variants";
@@ -36,16 +28,8 @@ export type { ShippingAddress as ShippingAddressSnapshot } from "@/features/orde
 
 /**
  * Orders Table
- *
- * Tracks the full order lifecycle:
- * - `status` — pending → confirmed → processing → shipped → delivered / cancelled / refunded
- * - `paymentStatus` — unpaid → paid → refunded
- * - `guestEmail` — Allows guest checkout without user account
- * - `shippingAddressSnapshot` — Frozen address at time of order (JSONB)
- * - `trackingNumber` — Shipping carrier tracking
- * - `adminNotes` — Internal notes visible only to admin
  */
-export const orders = pgTable("orders", {
+export const orders = salesSchema.table("orders", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").references(() => users.id, { onDelete: "set null" }),
 
@@ -83,30 +67,14 @@ export const orders = pgTable("orders", {
   /** Internal admin-only notes */
   adminNotes: text("admin_notes"),
 
-  // Legacy fields kept for backward compatibility
-  shippingAddress: text("shipping_address"),
-  billingAddress: text("billing_address"),
-
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 /**
- * Re-export from order domain.
- */
-export type { VariantSnapshot } from "@/features/order/domain/value-objects/VariantSnapshot";
-
-/**
  * Order Items Table
- *
- * Each item stores product snapshots to preserve data at time of purchase:
- * - `productNameSnapshot` — Product name when ordered
- * - `productSkuSnapshot` — SKU when ordered
- * - `unitPriceSnapshot` — Price per unit when ordered
- * - `variantSnapshot` — Selected variant details when ordered
- * - `totalPrice` — quantity × unitPrice
  */
-export const orderItems = pgTable("order_items", {
+export const orderItems = salesSchema.table("order_items", {
   id: serial("id").primaryKey(),
   orderId: integer("order_id")
     .notNull()
@@ -136,14 +104,14 @@ export const orderItems = pgTable("order_items", {
   variantSkuSnapshot: text("variant_sku_snapshot"),
   /** Price per unit at time of order */
   unitPriceSnapshot: decimal("unit_price_snapshot", { precision: 10, scale: 2 }),
+  unitPrice: decimal("unit_price", { precision: 10, scale: 2 }).notNull().default("0"),
+
   /** Selected variant details at time of order */
   variantSnapshot: jsonb("variant_snapshot").$type<VariantSnapshot>(),
-  /** Total price: quantity × unitPriceSnapshot */
-  totalPrice: decimal("total_price", { precision: 10, scale: 2 }),
 
-  // Legacy field kept for backward compatibility
-  priceAtTime: decimal("price_at_time", { precision: 10, scale: 2 }).notNull(),
-  variantDetails: text("variant_details"),
+  /** Total price: quantity × unitPriceSnapshot */
+  totalPrice: decimal("total_price", { precision: 10, scale: 2 }).notNull().default("0"),
+  totalAmount: decimal("total_amount", { precision: 10, scale: 2 }).notNull().default("0"),
 });
 
 /**

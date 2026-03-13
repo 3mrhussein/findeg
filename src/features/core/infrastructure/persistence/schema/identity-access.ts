@@ -1,5 +1,4 @@
 import {
-  pgTable,
   serial,
   integer,
   text,
@@ -11,6 +10,7 @@ import {
   index,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
+import { identitySchema } from "./schemas";
 import { users } from "./users";
 import type {
   AuthProvider,
@@ -22,7 +22,7 @@ import type {
 /**
  * Linked authentication identities per user.
  */
-export const authAccounts = pgTable(
+export const authAccounts = identitySchema.table(
   "auth_accounts",
   {
     id: serial("id").primaryKey(),
@@ -46,7 +46,7 @@ export const authAccounts = pgTable(
 /**
  * Local credential hash storage.
  */
-export const passwordCredentials = pgTable("password_credentials", {
+export const passwordCredentials = identitySchema.table("password_credentials", {
   userId: integer("user_id")
     .primaryKey()
     .references(() => users.id, { onDelete: "cascade" }),
@@ -59,7 +59,7 @@ export const passwordCredentials = pgTable("password_credentials", {
 /**
  * Organizations for business/tenant context.
  */
-export const organizations = pgTable(
+export const organizations = identitySchema.table(
   "organizations",
   {
     id: serial("id").primaryKey(),
@@ -77,7 +77,7 @@ export const organizations = pgTable(
 /**
  * RBAC roles.
  */
-export const roles = pgTable(
+export const roles = identitySchema.table(
   "roles",
   {
     id: serial("id").primaryKey(),
@@ -94,7 +94,7 @@ export const roles = pgTable(
 /**
  * Atomic permissions.
  */
-export const permissions = pgTable(
+export const permissions = identitySchema.table(
   "permissions",
   {
     id: serial("id").primaryKey(),
@@ -111,7 +111,7 @@ export const permissions = pgTable(
 /**
  * Role-to-permission mapping.
  */
-export const rolePermissions = pgTable(
+export const rolePermissions = identitySchema.table(
   "role_permissions",
   {
     roleId: integer("role_id")
@@ -130,7 +130,7 @@ export const rolePermissions = pgTable(
 /**
  * Direct user role grants.
  */
-export const userRoles = pgTable(
+export const userRoles = identitySchema.table(
   "user_roles",
   {
     id: serial("id").primaryKey(),
@@ -159,10 +159,8 @@ export const userRoles = pgTable(
 
 /**
  * Per-user permission overrides.
- * Allows system admin to grant or revoke individual permissions per user,
- * independent of their role assignments.
  */
-export const userPermissions = pgTable(
+export const userPermissions = identitySchema.table(
   "user_permissions",
   {
     id: serial("id").primaryKey(),
@@ -172,9 +170,7 @@ export const userPermissions = pgTable(
     permissionId: integer("permission_id")
       .notNull()
       .references(() => permissions.id, { onDelete: "cascade" }),
-    /** 'grant' adds a permission, 'revoke' removes one even if the role includes it */
     action: varchar("action", { length: 10 }).notNull().default("grant"),
-    /** Who made this override */
     grantedBy: integer("granted_by").references(() => users.id, { onDelete: "set null" }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
@@ -190,7 +186,7 @@ export const userPermissions = pgTable(
 /**
  * User membership in organizations.
  */
-export const organizationMemberships = pgTable(
+export const organizationMemberships = identitySchema.table(
   "organization_memberships",
   {
     id: serial("id").primaryKey(),
@@ -216,7 +212,7 @@ export const organizationMemberships = pgTable(
 /**
  * Tokenized saved payment methods.
  */
-export const paymentMethods = pgTable(
+export const paymentMethods = identitySchema.table(
   "payment_methods",
   {
     id: serial("id").primaryKey(),
@@ -238,7 +234,7 @@ export const paymentMethods = pgTable(
 /**
  * Persistent guest principal records.
  */
-export const guestPrincipals = pgTable(
+export const guestPrincipals = identitySchema.table(
   "guest_principals",
   {
     id: serial("id").primaryKey(),

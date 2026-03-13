@@ -1,5 +1,5 @@
 import { container } from "@/features/core/infrastructure/di/ServiceContainer";
-import { ProductForm } from "../ProductForm";
+import { ProductForm } from "@/features/administration/presentation/components/catalog/ProductForm";
 
 /**
  *
@@ -32,7 +32,12 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
         <h2 className="text-3xl font-bold tracking-tight">Edit Product</h2>
       </div>
       <div className="max-w-2xl">
-        <ProductForm initialData={product} categories={categoryOptions} brands={brandOptions} />
+        <ProductForm
+          mode="edit"
+          initialData={product as any}
+          categories={categoryOptions}
+          brands={brandOptions}
+        />
       </div>
     </div>
   );

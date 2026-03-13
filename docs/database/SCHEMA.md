@@ -6,7 +6,7 @@ For target redesign planning, see `docs/database/SCHEMA_REDESIGN_TARGET.md`.
 
 ```mermaid
 erDiagram
-    addresses {
+    "sales.addresses" {
         INT id PK
         INT userId FK
         VARCHAR label 
@@ -23,7 +23,7 @@ erDiagram
         TIMESTAMP createdAt 
         TIMESTAMP updatedAt 
     }
-    audit_log {
+    "system.audit_log" {
         INT id PK
         INT adminUserId FK
         VARCHAR entityType 
@@ -31,20 +31,30 @@ erDiagram
         VARCHAR action 
         JSONB oldValues 
         JSONB newValues 
+        VARCHAR ipAddress 
+        VARCHAR userAgent 
         TIMESTAMP createdAt 
     }
-    brands {
+    "catalog.brands" {
         INT id PK
         VARCHAR slug 
         VARCHAR name 
         JSONB localizedName 
         JSONB localizedSlug 
+        JSONB localizedDescription 
         VARCHAR logoUrl 
         BOOLEAN isActive 
         TIMESTAMP createdAt 
         TIMESTAMP updatedAt 
     }
-    categories {
+    "school_engine.cart_kits" {
+        INT id PK
+        INT schoolListId FK
+        JSONB localizedName 
+        JSONB itemSnapshots 
+        TIMESTAMP createdAt 
+    }
+    "catalog.categories" {
         INT id PK
         VARCHAR slug 
         JSONB localizedSlug 
@@ -59,15 +69,38 @@ erDiagram
         TIMESTAMP createdAt 
         TIMESTAMP updatedAt 
     }
-    category_translations {
-        INT categoryId FK
-        VARCHAR language 
-        VARCHAR name 
-        VARCHAR description 
+    "catalog.collections" {
+        INT id PK
+        VARCHAR slug 
+        JSONB localizedTitle 
+        JSONB localizedSubtitle 
+        VARCHAR heroImageUrl 
+        INT sortOrder 
+        BOOLEAN isActive 
         TIMESTAMP createdAt 
         TIMESTAMP updatedAt 
     }
-    auth_accounts {
+    "catalog.collection_tags" {
+        INT collectionId FK
+        INT tagId FK
+    }
+    "sales.discount_rules" {
+        INT id PK
+        VARCHAR code 
+        VARCHAR description 
+        VARCHAR type 
+        DECIMAL value 
+        DECIMAL minOrderAmount 
+        TIMESTAMP startDate 
+        TIMESTAMP endDate 
+        INT usageLimit 
+        INT usageCount 
+        INT perUserLimit 
+        BOOLEAN isActive 
+        TIMESTAMP createdAt 
+        TIMESTAMP updatedAt 
+    }
+    "identity.auth_accounts" {
         INT id PK
         INT userId FK
         VARCHAR provider 
@@ -75,14 +108,14 @@ erDiagram
         TIMESTAMP createdAt 
         TIMESTAMP updatedAt 
     }
-    password_credentials {
+    "identity.password_credentials" {
         INT userId PK,FK
         VARCHAR passwordHash 
         VARCHAR hashStrategy 
         TIMESTAMP createdAt 
         TIMESTAMP updatedAt 
     }
-    organizations {
+    "identity.organizations" {
         INT id PK
         VARCHAR code 
         VARCHAR name 
@@ -90,26 +123,26 @@ erDiagram
         TIMESTAMP createdAt 
         TIMESTAMP updatedAt 
     }
-    roles {
+    "identity.roles" {
         INT id PK
         VARCHAR code 
         VARCHAR name 
         TIMESTAMP createdAt 
         TIMESTAMP updatedAt 
     }
-    permissions {
+    "identity.permissions" {
         INT id PK
         VARCHAR code 
         VARCHAR name 
         TIMESTAMP createdAt 
         TIMESTAMP updatedAt 
     }
-    role_permissions {
+    "identity.role_permissions" {
         INT roleId FK
         INT permissionId FK
         TIMESTAMP createdAt 
     }
-    user_roles {
+    "identity.user_roles" {
         INT id PK
         INT userId FK
         INT roleId FK
@@ -117,7 +150,15 @@ erDiagram
         INT organizationId FK
         TIMESTAMP createdAt 
     }
-    organization_memberships {
+    "identity.user_permissions" {
+        INT id PK
+        INT userId FK
+        INT permissionId FK
+        VARCHAR action 
+        INT grantedBy FK
+        TIMESTAMP createdAt 
+    }
+    "identity.organization_memberships" {
         INT id PK
         INT organizationId FK
         INT userId FK
@@ -125,7 +166,7 @@ erDiagram
         TIMESTAMP createdAt 
         TIMESTAMP updatedAt 
     }
-    payment_methods {
+    "identity.payment_methods" {
         INT id PK
         INT userId FK
         VARCHAR provider 
@@ -135,13 +176,52 @@ erDiagram
         TIMESTAMP createdAt 
         TIMESTAMP updatedAt 
     }
-    guest_principals {
+    "identity.guest_principals" {
         INT id PK
         VARCHAR guestKey 
         TIMESTAMP createdAt 
         TIMESTAMP updatedAt 
     }
-    orders {
+    "inventory.warehouses" {
+        INT id PK
+        VARCHAR code 
+        VARCHAR name 
+        BOOLEAN isActive 
+        TIMESTAMP createdAt 
+    }
+    "inventory.inventory_balances" {
+        INT id PK
+        INT variantId FK
+        INT warehouseId FK
+        INT onHand 
+        INT reserved 
+        TIMESTAMP updatedAt 
+    }
+    "inventory.stock_movements" {
+        INT id PK
+        INT variantId FK
+        INT warehouseId FK
+        VARCHAR movementType 
+        INT quantity 
+        VARCHAR referenceType 
+        VARCHAR referenceId 
+        VARCHAR notes 
+        INT createdBy FK
+        TIMESTAMP createdAt 
+    }
+    "system.notifications" {
+        INT id PK
+        INT userId FK
+        VARCHAR titleEn 
+        VARCHAR titleAr 
+        VARCHAR bodyEn 
+        VARCHAR bodyAr 
+        VARCHAR actionUrl 
+        VARCHAR type 
+        BOOLEAN isRead 
+        TIMESTAMP createdAt 
+    }
+    "sales.orders" {
         INT id PK
         INT userId FK
         VARCHAR guestEmail 
@@ -155,98 +235,230 @@ erDiagram
         JSONB shippingAddressSnapshot 
         VARCHAR trackingNumber 
         VARCHAR adminNotes 
-        VARCHAR shippingAddress 
-        VARCHAR billingAddress 
         TIMESTAMP createdAt 
         TIMESTAMP updatedAt 
     }
-    order_items {
+    "sales.order_items" {
         INT id PK
         INT orderId FK
         INT productId FK
+        INT cartKitId FK
+        INT variantId FK
         INT quantity 
+        VARCHAR uomCode 
+        DECIMAL uomFactor 
         VARCHAR productNameSnapshot 
         VARCHAR productSkuSnapshot 
+        VARCHAR variantSkuSnapshot 
         DECIMAL unitPriceSnapshot 
+        DECIMAL unitPrice 
         JSONB variantSnapshot 
         DECIMAL totalPrice 
-        DECIMAL priceAtTime 
-        VARCHAR variantDetails 
+        DECIMAL totalAmount 
     }
-    attribute_definitions {
+    "catalog.attribute_definitions" {
         INT id PK
         VARCHAR key 
         VARCHAR dataType 
         VARCHAR unit 
         JSONB localizedLabel 
         JSONB enumValues 
+        VARCHAR scope 
         BOOLEAN isFilterable 
         INT sortOrder 
+        BOOLEAN isActive 
         TIMESTAMP createdAt 
         TIMESTAMP updatedAt 
     }
-    product_attributes {
+    "catalog.product_attributes" {
         INT productId FK
         INT attributeId FK
         VARCHAR valueText 
         DECIMAL valueNum 
         BOOLEAN valueBool 
+        TIMESTAMP createdAt 
     }
-    products {
+    "catalog.product_variants" {
+        INT id PK
+        INT productId FK
+        VARCHAR sku 
+        VARCHAR variantKey 
+        JSONB localizedLabel 
+        INT displayOrder 
+        BOOLEAN isActive 
+        DECIMAL basePrice 
+        DECIMAL strikePrice 
+        DECIMAL costPrice 
+        INT weightGrams 
+        VARCHAR barcode 
+        INT lowStockThreshold 
+        TIMESTAMP createdAt 
+        TIMESTAMP updatedAt 
+    }
+    "catalog.variant_images" {
+        INT id PK
+        INT variantId FK
+        VARCHAR url 
+        VARCHAR alt 
+        INT displayOrder 
+        TIMESTAMP createdAt 
+    }
+    "catalog.variant_attributes" {
+        INT variantId FK
+        INT attributeId FK
+        VARCHAR valueText 
+        DECIMAL valueNum 
+        BOOLEAN valueBool 
+    }
+    "catalog.products" {
         INT id PK
         VARCHAR sku 
+        VARCHAR skuPrefix 
+        DECIMAL price 
+        DECIMAL strikePrice 
         JSONB localizedSlug 
         JSONB localizedName 
         JSONB localizedDescription 
         JSONB localizedLongDescription 
-        DECIMAL price 
-        DECIMAL strikePrice 
         INT categoryId FK
         INT brandId FK
-        JSONB images 
         JSONB mediaSet 
-        JSONB pricing 
-        JSONB discountRules 
+        JSONB displayMeta 
         BOOLEAN isActive 
-        INT stockQuantity 
-        INT lowStockThreshold 
         BOOLEAN isNew 
         DECIMAL rating 
         INT reviewsCount 
-        JSONB variants 
-        JSONB displayMeta 
         TIMESTAMP createdAt 
         TIMESTAMP updatedAt 
     }
-    product_translations {
-        INT productId FK
-        VARCHAR language 
-        VARCHAR name 
-        VARCHAR description 
-        VARCHAR longDescription 
-        TIMESTAMP createdAt 
-        TIMESTAMP updatedAt 
-    }
-    product_images {
-        INT id PK
-        INT productId FK
-        VARCHAR url 
-        VARCHAR alt 
-        INT order 
-        TIMESTAMP createdAt 
-    }
-    reviews {
+    "catalog.reviews" {
         INT id PK
         INT productId FK
         INT userId FK
         DECIMAL rating 
         VARCHAR comment 
         BOOLEAN isVerifiedPurchase 
+        INT helpfulCount 
         VARCHAR status 
         TIMESTAMP createdAt 
         TIMESTAMP updatedAt 
     }
-    server_logs {
+    "catalog.review_helpful_votes" {
+        INT id PK
+        INT reviewId FK
+        VARCHAR voterKey 
+        TIMESTAMP createdAt 
+    }
+    "school_engine.school_list_access_grants" {
+        INT id PK
+        INT listId FK
+        INT userId FK
+        VARCHAR grantedVia 
+        TIMESTAMP grantedAt 
+        TIMESTAMP expiresAt 
+    }
+    "school_engine.school_list_access_requests" {
+        INT id PK
+        INT listId FK
+        INT userId FK
+        VARCHAR childName 
+        VARCHAR note 
+        VARCHAR parentName 
+        VARCHAR parentEmail 
+        VARCHAR status 
+        INT reviewedBy FK
+        TIMESTAMP createdAt 
+        TIMESTAMP updatedAt 
+    }
+    "school_engine.school_list_access_tokens" {
+        INT id PK
+        INT listId FK
+        VARCHAR token 
+        VARCHAR label 
+        INT maxUses 
+        INT useCount 
+        TIMESTAMP expiresAt 
+        INT createdBy FK
+        TIMESTAMP createdAt 
+    }
+    "school_engine.school_list_code_attempts" {
+        INT id PK
+        INT listId FK
+        INT userId FK
+        INT attemptCount 
+        TIMESTAMP lockedUntil 
+        TIMESTAMP createdAt 
+        TIMESTAMP updatedAt 
+    }
+    "school_engine.school_list_parent_sessions" {
+        INT id PK
+        INT listId FK
+        INT userId FK
+        VARCHAR sessionToken 
+        JSONB itemSelections 
+        INT optionalInclusions 
+        INT optionalExclusions 
+        TIMESTAMP updatedAt 
+        TIMESTAMP createdAt 
+    }
+    "school_engine.school_lists" {
+        INT id PK
+        VARCHAR slug 
+        VARCHAR schoolName 
+        VARCHAR grade 
+        VARCHAR academicYear 
+        VARCHAR governorate 
+        VARCHAR area 
+        VARCHAR schoolType 
+        VARCHAR academicSystem 
+        JSONB localizedTitle 
+        JSONB localizedDescription 
+        VARCHAR heroImageUrl 
+        VARCHAR logoUrl 
+        BOOLEAN isActive 
+        VARCHAR accessMode 
+        VARCHAR accessCode 
+        TIMESTAMP publishedAt 
+        TIMESTAMP createdAt 
+        TIMESTAMP updatedAt 
+        INT categoryId FK
+    }
+    "school_engine.school_list_items" {
+        INT id PK
+        INT schoolListId FK
+        INT variantId FK
+        INT quantity 
+        INT quantityRequired 
+        BOOLEAN isOptional 
+        BOOLEAN isLocked 
+        JSONB localizedLabel 
+        JSONB localizedNote 
+        JSONB matchRules 
+        INT sortOrder 
+        INT displayOrder 
+        INT categoryId FK
+        TIMESTAMP createdAt 
+        TIMESTAMP updatedAt 
+    }
+    "school_engine.school_list_item_alternatives" {
+        INT id PK
+        INT listItemId FK
+        INT variantId FK
+        INT priority 
+        INT displayOrder 
+        BOOLEAN isDefault 
+    }
+    "system.search_logs" {
+        UUID id PK
+        VARCHAR query 
+        VARCHAR locale 
+        INT resultsCount 
+        INT userId FK
+        VARCHAR sessionId 
+        INT clickedProductId 
+        TIMESTAMP createdAt 
+    }
+    "system.server_logs" {
         INT id PK
         VARCHAR requestId 
         INT userId 
@@ -262,31 +474,34 @@ erDiagram
         VARCHAR ipAddress 
         TIMESTAMP createdAt 
     }
-    tags {
+    "catalog.tags" {
         INT id PK
         VARCHAR group 
         VARCHAR key 
+        VARCHAR slug 
         JSONB localizedLabel 
         JSONB description 
         VARCHAR icon 
         VARCHAR color 
         BOOLEAN isActive 
+        VARCHAR scope 
         TIMESTAMP createdAt 
         TIMESTAMP updatedAt 
     }
-    product_tags {
+    "catalog.product_tags" {
         INT productId FK
         INT tagId FK
-        TIMESTAMP createdAt 
     }
-    translations {
+    "catalog.translations" {
+        INT id PK
+        VARCHAR namespace 
         VARCHAR key 
         VARCHAR language 
         VARCHAR value 
         TIMESTAMP createdAt 
         TIMESTAMP updatedAt 
     }
-    users {
+    "identity.users" {
         INT id PK
         VARCHAR email 
         VARCHAR firstName 
@@ -301,70 +516,112 @@ erDiagram
         TIMESTAMP createdAt 
         TIMESTAMP updatedAt 
     }
-    variant_sellable_uoms {
+    "catalog.variant_sellable_uoms" {
         INT id PK
-        INT productId FK
-        VARCHAR variantKey 
+        INT variantId FK
         VARCHAR uomCode 
         DECIMAL factorToBase 
+        JSONB localizedLabel 
+        VARCHAR barcode 
         BOOLEAN isEnabled 
         TIMESTAMP createdAt 
         TIMESTAMP updatedAt 
     }
-    variant_price_lists {
+    "catalog.variant_price_lists" {
         INT id PK
-        INT productId FK
-        VARCHAR variantKey 
+        INT variantId FK
         VARCHAR customerGroup 
         VARCHAR uomCode 
         VARCHAR currency 
         DECIMAL unitPrice 
+        INT minQty 
         BOOLEAN isSellable 
+        TIMESTAMP startsAt 
+        TIMESTAMP endsAt 
         TIMESTAMP createdAt 
         TIMESTAMP updatedAt 
     }
-    users ||--o{ addresses : "userId"
-    users ||--o{ audit_log : "adminUserId"
-    brands ||--o{ products : "products"
-    categories ||--o{ category_translations : "categoryId"
-    categories ||--o{ categories : "children"
-    categories ||--o{ category_translations : "translations"
-    categories ||--o{ products : "products"
-    users ||--o{ auth_accounts : "userId"
-    users ||--o{ password_credentials : "userId"
-    roles ||--o{ role_permissions : "roleId"
-    permissions ||--o{ role_permissions : "permissionId"
-    users ||--o{ user_roles : "userId"
-    roles ||--o{ user_roles : "roleId"
-    organizations ||--o{ user_roles : "organizationId"
-    organizations ||--o{ organization_memberships : "organizationId"
-    users ||--o{ organization_memberships : "userId"
-    users ||--o{ payment_methods : "userId"
-    users ||--o{ orders : "userId"
-    orders ||--o{ order_items : "orderId"
-    products ||--o{ order_items : "productId"
-    orders ||--o{ order_items : "items"
-    products ||--o{ product_attributes : "productId"
-    attribute_definitions ||--o{ product_attributes : "attributeId"
-    attribute_definitions ||--o{ product_attributes : "productAttributes"
-    categories ||--o{ products : "categoryId"
-    brands ||--o{ products : "brandId"
-    products ||--o{ product_translations : "productId"
-    products ||--o{ product_images : "productId"
-    products ||--o{ product_translations : "translations"
-    products ||--o{ product_images : "images"
-    products ||--o{ product_tags : "tags"
-    products ||--o{ product_attributes : "attributes"
-    products ||--o{ reviews : "productId"
-    users ||--o{ reviews : "userId"
-    products ||--o{ product_tags : "productId"
-    tags ||--o{ product_tags : "tagId"
-    tags ||--o{ product_tags : "productTags"
-    users ||--o{ orders : "orders"
-    users ||--o{ reviews : "reviews"
-    users ||--o{ addresses : "addresses"
-    users ||--o{ audit_log : "auditLogs"
-    products ||--o{ variant_sellable_uoms : "productId"
-    products ||--o{ variant_price_lists : "productId"
+    "identity.users" ||--o{ "sales.addresses" : "userId"
+    "identity.users" ||--o{ "system.audit_log" : "adminUserId"
+    "catalog.brands" ||--o{ "catalog.products" : "products"
+    "school_engine.school_lists" ||--o{ "school_engine.cart_kits" : "schoolListId"
+    "catalog.categories" ||--o{ "catalog.categories" : "children"
+    "catalog.categories" ||--o{ "catalog.products" : "products"
+    "catalog.collections" ||--o{ "catalog.collection_tags" : "collectionId"
+    "catalog.tags" ||--o{ "catalog.collection_tags" : "tagId"
+    "catalog.collections" ||--o{ "catalog.collection_tags" : "tags"
+    "identity.users" ||--o{ "identity.auth_accounts" : "userId"
+    "identity.users" ||--o{ "identity.password_credentials" : "userId"
+    "identity.roles" ||--o{ "identity.role_permissions" : "roleId"
+    "identity.permissions" ||--o{ "identity.role_permissions" : "permissionId"
+    "identity.users" ||--o{ "identity.user_roles" : "userId"
+    "identity.roles" ||--o{ "identity.user_roles" : "roleId"
+    "identity.organizations" ||--o{ "identity.user_roles" : "organizationId"
+    "identity.users" ||--o{ "identity.user_permissions" : "userId"
+    "identity.permissions" ||--o{ "identity.user_permissions" : "permissionId"
+    "identity.users" ||--o{ "identity.user_permissions" : "grantedBy"
+    "identity.organizations" ||--o{ "identity.organization_memberships" : "organizationId"
+    "identity.users" ||--o{ "identity.organization_memberships" : "userId"
+    "identity.users" ||--o{ "identity.payment_methods" : "userId"
+    "catalog.product_variants" ||--o{ "inventory.inventory_balances" : "variantId"
+    "inventory.warehouses" ||--o{ "inventory.inventory_balances" : "warehouseId"
+    "catalog.product_variants" ||--o{ "inventory.stock_movements" : "variantId"
+    "inventory.warehouses" ||--o{ "inventory.stock_movements" : "warehouseId"
+    "identity.users" ||--o{ "inventory.stock_movements" : "createdBy"
+    "inventory.warehouses" ||--o{ "inventory.inventory_balances" : "inventoryBalances"
+    "inventory.warehouses" ||--o{ "inventory.stock_movements" : "stockMovements"
+    "identity.users" ||--o{ "system.notifications" : "userId"
+    "identity.users" ||--o{ "sales.orders" : "userId"
+    "sales.orders" ||--o{ "sales.order_items" : "orderId"
+    "catalog.products" ||--o{ "sales.order_items" : "productId"
+    "school_engine.cart_kits" ||--o{ "sales.order_items" : "cartKitId"
+    "catalog.product_variants" ||--o{ "sales.order_items" : "variantId"
+    "sales.orders" ||--o{ "sales.order_items" : "items"
+    "catalog.products" ||--o{ "catalog.product_attributes" : "productId"
+    "catalog.attribute_definitions" ||--o{ "catalog.product_attributes" : "attributeId"
+    "catalog.attribute_definitions" ||--o{ "catalog.product_attributes" : "productAssignments"
+    "catalog.products" ||--o{ "catalog.product_variants" : "productId"
+    "catalog.product_variants" ||--o{ "catalog.variant_images" : "variantId"
+    "catalog.product_variants" ||--o{ "catalog.variant_attributes" : "variantId"
+    "catalog.attribute_definitions" ||--o{ "catalog.variant_attributes" : "attributeId"
+    "catalog.product_variants" ||--o{ "catalog.variant_images" : "images"
+    "catalog.product_variants" ||--o{ "catalog.variant_attributes" : "attributes"
+    "catalog.categories" ||--o{ "catalog.products" : "categoryId"
+    "catalog.brands" ||--o{ "catalog.products" : "brandId"
+    "catalog.products" ||--o{ "catalog.product_variants" : "variants"
+    "catalog.products" ||--o{ "catalog.product_tags" : "tags"
+    "catalog.products" ||--o{ "catalog.product_attributes" : "attributes"
+    "catalog.products" ||--o{ "catalog.reviews" : "productId"
+    "identity.users" ||--o{ "catalog.reviews" : "userId"
+    "catalog.reviews" ||--o{ "catalog.review_helpful_votes" : "reviewId"
+    "school_engine.school_lists" ||--o{ "school_engine.school_list_access_grants" : "listId"
+    "identity.users" ||--o{ "school_engine.school_list_access_grants" : "userId"
+    "school_engine.school_lists" ||--o{ "school_engine.school_list_access_requests" : "listId"
+    "identity.users" ||--o{ "school_engine.school_list_access_requests" : "userId"
+    "identity.users" ||--o{ "school_engine.school_list_access_requests" : "reviewedBy"
+    "school_engine.school_lists" ||--o{ "school_engine.school_list_access_tokens" : "listId"
+    "identity.users" ||--o{ "school_engine.school_list_access_tokens" : "createdBy"
+    "school_engine.school_lists" ||--o{ "school_engine.school_list_code_attempts" : "listId"
+    "identity.users" ||--o{ "school_engine.school_list_code_attempts" : "userId"
+    "school_engine.school_lists" ||--o{ "school_engine.school_list_parent_sessions" : "listId"
+    "identity.users" ||--o{ "school_engine.school_list_parent_sessions" : "userId"
+    "catalog.categories" ||--o{ "school_engine.school_lists" : "categoryId"
+    "school_engine.school_lists" ||--o{ "school_engine.school_list_items" : "schoolListId"
+    "catalog.product_variants" ||--o{ "school_engine.school_list_items" : "variantId"
+    "catalog.categories" ||--o{ "school_engine.school_list_items" : "categoryId"
+    "school_engine.school_list_items" ||--o{ "school_engine.school_list_item_alternatives" : "listItemId"
+    "catalog.product_variants" ||--o{ "school_engine.school_list_item_alternatives" : "variantId"
+    "school_engine.school_lists" ||--o{ "school_engine.school_list_items" : "items"
+    "school_engine.school_lists" ||--o{ "school_engine.school_list_item_alternatives" : "alternatives"
+    "identity.users" ||--o{ "system.search_logs" : "userId"
+    "catalog.products" ||--o{ "catalog.product_tags" : "productId"
+    "catalog.tags" ||--o{ "catalog.product_tags" : "tagId"
+    "catalog.tags" ||--o{ "catalog.product_tags" : "products"
+    "identity.users" ||--o{ "sales.orders" : "orders"
+    "identity.users" ||--o{ "catalog.reviews" : "reviews"
+    "identity.users" ||--o{ "sales.addresses" : "addresses"
+    "identity.users" ||--o{ "system.audit_log" : "auditLogs"
+    "catalog.product_variants" ||--o{ "catalog.variant_sellable_uoms" : "variantId"
+    "catalog.product_variants" ||--o{ "catalog.variant_price_lists" : "variantId"
 
 ```

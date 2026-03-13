@@ -7,6 +7,15 @@ const SCHEMA_DIR_CANDIDATES = [
 ];
 const OUTPUT_PATH = path.join(process.cwd(), "docs/database/SCHEMA.md");
 
+const SCHEMA_MAP = {
+  catalogSchema: "catalog",
+  identitySchema: "identity",
+  salesSchema: "sales",
+  inventorySchema: "inventory",
+  schoolEngineSchema: "school_engine",
+  systemSchema: "system",
+};
+
 const TYPE_MAP = {
   serial: "INT",
   integer: "INT",
@@ -59,12 +68,18 @@ function generateERDiagram() {
     const content = fs.readFileSync(path.join(schemaDir, file), "utf-8");
 
     // Improved regex to handle optional whitespace and different quote types
+    // Updated regex to handle both pgTable("name", ...) and schema.table("name", ...)
     const pgTableMatchRaw =
-      /export\s+const\s+(\w+)\s*=\s*pgTable\s*\(\s*["']([^"']+)["']\s*,\s*\{/gs;
+      /export\s+const\s+(\w+)\s*=\s*(\w+)?\.?(?:pgTable|table)\s*\(\s*["']([^"']+)["']\s*,\s*\{/gs;
     let match;
     while ((match = pgTableMatchRaw.exec(content)) !== null) {
       const varName = match[1];
-      const tableName = match[2];
+      const schemaVar = match[2] || "public";
+      const rawTableName = match[3];
+
+      // Map schema variable names to shorter schema names if needed
+      const schemaName = SCHEMA_MAP[schemaVar] || schemaVar.replace("Schema", "");
+      const tableName = schemaName === "public" ? rawTableName : `${schemaName}.${rawTableName}`;
       const startIndex = match.index + match[0].length - 1;
       const fieldsBlock = extractBlock(content, startIndex);
       const fieldsContent = fieldsBlock.slice(1, -1);
@@ -111,7 +126,7 @@ function generateERDiagram() {
 
       // Check for composite PKs in the extra options (callback)
       const callbackRegex = new RegExp(
-        `${varName}\\s*,\\s*\\{[^}]*\\}\\s*,\\s*\\((?:table|t)\\)\\s*=>\s*\\(([\\s\\S]*?)\\)\\s*\\)`,
+        `${varName}\\s*,\\s*\\{[^}]*\\}\\s*,\\s*\\((?:table|t)\\)\\s*=>\\s*\\(([\\s\\S]*?)\\)\\s*\\)`,
         "s",
       );
       const cbMatch = content.match(callbackRegex);
@@ -133,7 +148,7 @@ function generateERDiagram() {
 
     // Parse relations()
     const relationsRegex =
-      /export\s+const\s+\w+\s*=\s*relations\s*\(\s*(\w+)\s*,\s*\(\s*{([^}]+)}\s*\)\s*=>\s*\(\s*{([\s\S]*?)}\s*\)\s*\)/gs;
+      /export\s+const\s+\w+\s*=\s*relations\s*\(\s*(\w+)\s*,\s*\(\s*{([^}]+)}\s*\)\s*=>\s*\(\s*{([\s\S]*)}\s*\)\s*\)/gs;
     let relMatch;
     while ((relMatch = relationsRegex.exec(content)) !== null) {
       const baseVar = relMatch[1];
@@ -160,7 +175,7 @@ function generateERDiagram() {
 
   let erDiagram = "erDiagram\n";
   Object.entries(tableData).forEach(([tableName, data]) => {
-    erDiagram += `    ${tableName} {\n`;
+    erDiagram += `    "${tableName}" {\n`;
     data.fields.forEach((f) => {
       const indicators = [f.isPK ? "PK" : "", f.isFK ? "FK" : ""].filter(Boolean).join(",");
       erDiagram += `        ${f.type} ${f.name} ${indicators}\n`;
@@ -173,10 +188,10 @@ function generateERDiagram() {
     const targetTable = variableToTable[rel.toVar];
     if (rel.from && targetTable) {
       if (rel.type === "1:N") {
-        erDiagram += `    ${rel.from} ||--o{ ${targetTable} : "${rel.label}"\n`;
+        erDiagram += `    "${rel.from}" ||--o{ "${targetTable}" : "${rel.label}"\n`;
       } else {
         // Avoid duplicate lines for the same relation if possible
-        erDiagram += `    ${targetTable} ||--o{ ${rel.from} : "${rel.label}"\n`;
+        erDiagram += `    "${targetTable}" ||--o{ "${rel.from}" : "${rel.label}"\n`;
       }
     }
   });

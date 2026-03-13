@@ -129,6 +129,34 @@ export const ERROR_CATALOG = {
     message: "Failed to delete product.",
     httpStatus: 500,
   },
+  ACTION_TAG_CREATE_FAILED: {
+    message: "Failed to create tag.",
+    httpStatus: 500,
+  },
+  ACTION_TAG_UPDATE_FAILED: {
+    message: "Failed to update tag.",
+    httpStatus: 500,
+  },
+  ACTION_TAG_DELETE_FAILED: {
+    message: "Failed to delete tag.",
+    httpStatus: 500,
+  },
+  ACTION_COLLECTION_CREATE_FAILED: {
+    message: "Failed to create collection.",
+    httpStatus: 500,
+  },
+  ACTION_COLLECTION_UPDATE_FAILED: {
+    message: "Failed to update collection.",
+    httpStatus: 500,
+  },
+  ACTION_COLLECTION_DELETE_FAILED: {
+    message: "Failed to delete collection.",
+    httpStatus: 500,
+  },
+  ACTION_COLLECTION_REORDER_FAILED: {
+    message: "Failed to reorder collections.",
+    httpStatus: 500,
+  },
   ACTION_ORDER_STATUS_UPDATE_FAILED: {
     message: "Failed to update order status.",
     httpStatus: 500,

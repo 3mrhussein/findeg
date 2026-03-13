@@ -1,6 +1,7 @@
-id,group,key,localized_label,created_at,updated_at
-1,usecase,school-prep,"{""en"": ""School Prep"", ""ar"": ""تجهيز للمدرسة""}",2026-03-01 00:00:00,2026-03-01 00:00:00
-2,usecase,bullet-journaling,"{""en"": ""Bullet Journaling"", ""ar"": ""بوليت جورنالينج""}",2026-03-01 00:00:00,2026-03-01 00:00:00
-3,style,minimalist,"{""en"": ""Minimalist"", ""ar"": ""بسيط""}",2026-03-01 00:00:00,2026-03-01 00:00:00
-4,audience,professional,"{""en"": ""Professional"", ""ar"": ""احترافي""}",2026-03-01 00:00:00,2026-03-01 00:00:00
-5,seasonality,back-to-school,"{""en"": ""Back to School"", ""ar"": ""العودة للمدارس""}",2026-03-01 00:00:00,2026-03-01 00:00:00
+id,group,key,slug,created_at,updated_at
+1,usecase,school-prep,usecase:school-prep,2026-03-01 00:00:00,2026-03-01 00:00:00
+2,usecase,bullet-journaling,usecase:bullet-journaling,2026-03-01 00:00:00,2026-03-01 00:00:00
+3,style,minimalist,style:minimalist,2026-03-01 00:00:00,2026-03-01 00:00:00
+4,audience,professional,audience:professional,2026-03-01 00:00:00,2026-03-01 00:00:00
+5,seasonality,back-to-school,seasonality:back-to-school,2026-03-01 00:00:00,2026-03-01 00:00:00
+6,campaign,new-arrival,campaign:new-arrival,2026-03-01 00:00:00,2026-03-01 00:00:00

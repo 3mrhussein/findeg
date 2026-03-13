@@ -855,6 +855,41 @@ erDiagram
         timestamp created_at
     }
 
+    TAGS {
+        serial id PK
+        text group "free-form group"
+        text key "Unique within group"
+        text slug "Unique"
+        jsonb localized_label
+        jsonb description
+        text icon
+        text color
+        boolean is_active
+        text scope "product/global"
+        timestamp created_at
+    }
+
+    PRODUCT_TAGS {
+        integer product_id FK
+        integer tag_id FK
+    }
+
+    COLLECTIONS {
+        serial id PK
+        text slug "Unique"
+        jsonb localized_title
+        jsonb localized_subtitle
+        text hero_image_url
+        integer sort_order
+        boolean is_active
+        timestamp created_at
+    }
+
+    COLLECTION_TAGS {
+        integer collection_id FK
+        integer tag_id FK
+    }
+
     AUDIT_LOG {
         serial id PK
         integer admin_user_id FK
@@ -891,6 +926,10 @@ erDiagram
     STOCK_MOVEMENTS }o--|| PRODUCT_VARIANTS : "audit log"
     STOCK_MOVEMENTS }o--|| WAREHOUSES : "location"
     STOCK_MOVEMENTS }o--|| USERS : "by user"
+    PRODUCTS ||--o{ PRODUCT_TAGS : "tagged"
+    TAGS ||--o{ PRODUCT_TAGS : "assigned"
+    COLLECTIONS ||--o{ COLLECTION_TAGS : "filtered by"
+    TAGS ||--o{ COLLECTION_TAGS : "defines"
 ```
 
 ### Current Phase Schema & Domain Changes (Phase 1, In Progress)

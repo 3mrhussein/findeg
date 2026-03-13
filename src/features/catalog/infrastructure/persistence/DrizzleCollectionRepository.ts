@@ -24,15 +24,18 @@ import { DEFAULT_LOCALE } from "@/features/core/domain/value-objects";
  */
 export class DrizzleCollectionRepository implements ICollectionRepository {
   /**
-   * Retrieves all active collections sorted by sortOrder.
+   * Retrieves collections sorted by sortOrder.
+   * @param options Filter options
    */
-  async getAll(): Promise<Collection[]> {
-    const results = await db
-      .select()
-      .from(collections)
-      .where(eq(collections.isActive, true))
-      .orderBy(asc(collections.sortOrder));
+  async getAll(options?: { includeInactive?: boolean }): Promise<Collection[]> {
+    let query = db.select().from(collections);
 
+    if (!options?.includeInactive) {
+      // @ts-ignore - Drizzle query builder typing
+      query = query.where(eq(collections.isActive, true));
+    }
+
+    const results = await query.orderBy(asc(collections.sortOrder));
     return results as Collection[];
   }
 
@@ -130,6 +133,42 @@ export class DrizzleCollectionRepository implements ICollectionRepository {
             tagId,
           })),
         );
+      }
+    });
+  }
+
+  /**
+   * Retrieves a single collection by ID, including its associated tags.
+   */
+  async getByIdWithTags(id: ID): Promise<(Collection & { tags: Tag[] }) | null> {
+    const results = await db.select().from(collections).where(eq(collections.id, id)).limit(1);
+
+    const collection = results[0] as Collection | undefined;
+    if (!collection) return null;
+
+    // Fetch associated tags
+    const tagResults = await db
+      .select({ tag: tags })
+      .from(collectionTags)
+      .innerJoin(tags, eq(collectionTags.tagId, tags.id))
+      .where(eq(collectionTags.collectionId, collection.id));
+
+    return {
+      ...collection,
+      tags: tagResults.map((r) => r.tag as Tag),
+    };
+  }
+
+  /**
+   * Updates the sort order for multiple collections in a transaction.
+   */
+  async updateSortOrders(items: { id: ID; sortOrder: number }[]): Promise<void> {
+    await db.transaction(async (tx) => {
+      for (const item of items) {
+        await tx
+          .update(collections)
+          .set({ sortOrder: item.sortOrder, updatedAt: new Date() })
+          .where(eq(collections.id, item.id));
       }
     });
   }

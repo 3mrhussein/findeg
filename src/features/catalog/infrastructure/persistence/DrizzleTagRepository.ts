@@ -19,7 +19,7 @@ export class DrizzleTagRepository implements ITagRepository {
    *
    */
   async getAll(): Promise<Tag[]> {
-    const results = await db.select().from(tags);
+    const results = await db.select().from(tags).orderBy(tags.group, tags.key);
     return results as Tag[];
   }
 
@@ -27,7 +27,7 @@ export class DrizzleTagRepository implements ITagRepository {
    *
    */
   async getByGroup(group: TagGroup): Promise<Tag[]> {
-    const results = await db.select().from(tags).where(eq(tags.group, group));
+    const results = await db.select().from(tags).where(eq(tags.group, group)).orderBy(tags.key);
     return results as Tag[];
   }
 
@@ -35,8 +35,8 @@ export class DrizzleTagRepository implements ITagRepository {
    *
    */
   async getById(id: ID): Promise<Tag | null> {
-    const results = await db.select().from(tags).where(eq(tags.id, id)).limit(1);
-    return (results[0] as Tag) || null;
+    const [row] = await db.select().from(tags).where(eq(tags.id, id)).limit(1);
+    return (row as Tag) || null;
   }
 
   /**
@@ -114,5 +114,32 @@ export class DrizzleTagRepository implements ITagRepository {
     // For now, this is a placeholder to satisfy the interface if needed,
     // but primary product fetching happens in DrizzleProductRepository.
     return [];
+  }
+
+  /**
+   * Retrieves a unique list of all tag groups currently in use.
+   */
+  async listDistinctGroups(): Promise<string[]> {
+    const results = await db.selectDistinct({ group: tags.group }).from(tags);
+    return results.map((r) => r.group);
+  }
+
+  /**
+   * Bulk updates the status of multiple tags.
+   */
+  async bulkUpdateStatus(ids: ID[], isActive: boolean): Promise<void> {
+    if (ids.length === 0) return;
+    await db
+      .update(tags)
+      .set({ isActive, updatedAt: new Date() })
+      .where(inArray(tags.id, ids as number[]));
+  }
+
+  /**
+   * Bulk deletes multiple tags.
+   */
+  async bulkDelete(ids: ID[]): Promise<void> {
+    if (ids.length === 0) return;
+    await db.delete(tags).where(inArray(tags.id, ids as number[]));
   }
 }

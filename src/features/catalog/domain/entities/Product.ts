@@ -74,13 +74,7 @@ export const ProductSchema = z.object({
   /** SPU-level hero/lifestyle imagery */
   mediaSet: ResponsiveMediaSetSchema.optional(),
 
-  /** Lightweight display metadata (non-filterable) */
-  displayMeta: z.record(z.string(), z.unknown()).optional(),
-
-  // ─── Flags ────────────────────────────────────────────────────────
-
   isActive: z.boolean().optional(),
-  isNew: z.boolean().optional(),
 
   // ─── Aggregate Ratings ────────────────────────────────────────────
 
@@ -218,6 +212,15 @@ export class ProductEntity {
     const activeVariants = this.getVariants().filter((v) => v.isActive);
     if (activeVariants.length === 0) return false;
     return activeVariants.every((v) => new VariantEntity(v).isLowStock());
+  }
+
+  // ─── Status ───────────────────────────────────────────────────────
+
+  /**
+   * Checks if the product is "New" based on the presence of the campaign:new-arrival tag.
+   */
+  isNew(): boolean {
+    return this.product.tags?.some((t) => t.key === "campaign:new-arrival") ?? false;
   }
 
   // ─── Data ─────────────────────────────────────────────────────────

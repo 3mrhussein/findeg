@@ -1,7 +1,5 @@
 /**
- * Product Attributes Database Schema
- *
- * This file defines the schema for normalized, filterable product attributes.
+ * Product Attributes Schema
  */
 
 import {
@@ -11,96 +9,69 @@ import {
   integer,
   boolean,
   timestamp,
-  primaryKey,
+  uniqueIndex,
   jsonb,
   decimal,
+  primaryKey,
   index,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
+import { catalogSchema } from "./schemas";
 import { products } from "./products";
-import type { LocalizedStringDraft } from "@/features/core/domain/value-objects";
 
 /**
- * Attribute Definitions Table
- *
- * Registry of available attributes (specs) that can be assigned to products.
- * e.g., 'ink_color', 'tip_size_mm'
+ * Global Attribute Definitions (e.g., "Color", "Size", "Material")
  */
-export const attributeDefinitions = pgTable("attribute_definitions", {
+export const attributeDefinitions = catalogSchema.table("attribute_definitions", {
   id: serial("id").primaryKey(),
-
-  /** Unique identifier for the attribute (e.g. 'ink_color') */
-  key: text("key").notNull().unique(),
-
-  /** Type of data: 'string', 'number', 'boolean', 'enum' */
-  dataType: text("data_type").notNull(),
-
-  /** Optional unit suffix (e.g., 'mm', 'ml') */
+  key: text("key").notNull().unique(), // e.g., "ink-color"
+  dataType: text("data_type").notNull(), // 'text', 'color', 'number'
   unit: text("unit"),
-
-  /** Localized display label */
-  localizedLabel: jsonb("localized_label").$type<LocalizedStringDraft>().notNull(),
-
-  /** Allowed values for 'enum' type */
-  enumValues: jsonb("enum_values").$type<string[]>(),
-
-  /** Hint for whether this attribute should appear in shop filters */
-  isFilterable: boolean("is_filterable").default(true).notNull(),
-
-  /** Whether this attribute is SPU-level, SKU-level, or both */
+  localizedLabel: jsonb("localized_label").notNull(),
+  enumValues: jsonb("enum_values"),
   scope: text("scope").default("product").notNull(),
-
-  /** Sort order for display in spec sheets */
+  isFilterable: boolean("is_filterable").default(true).notNull(),
+  /** When true, the attribute contributes to the variant key (VariantKey.build()) */
+  isVariantDefining: boolean("is_variant_defining").default(false).notNull(),
   sortOrder: integer("sort_order").default(0).notNull(),
-
+  isActive: boolean("is_active").default(true).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 /**
- * Product Attributes Table
- *
- * Stores actual attribute values assigned to specific products.
- * Uses typed columns for performance (B-tree indexing).
+ * Product-specific attribute assignments (SPU level)
  */
-export const productAttributes = pgTable(
+export const productAttributes = catalogSchema.table(
   "product_attributes",
   {
     productId: integer("product_id")
       .notNull()
       .references(() => products.id, { onDelete: "cascade" }),
-    attributeId: integer("attribute_id")
+    attributeId: integer("attribute_id") // Original name
       .notNull()
       .references(() => attributeDefinitions.id, { onDelete: "cascade" }),
 
-    /** Storage for string or enum values */
     valueText: text("value_text"),
-
-    /** Storage for numeric values */
     valueNum: decimal("value_num", { precision: 12, scale: 4 }),
-
-    /** Storage for boolean values */
     valueBool: boolean("value_bool"),
+
+    createdAt: timestamp("created_at").defaultNow().notNull(),
   },
   (table) => ({
     pk: primaryKey({ columns: [table.productId, table.attributeId] }),
-    idxProduct: index("idx_product_attributes_product").on(table.productId),
-    idxAttribute: index("idx_product_attributes_attr").on(table.attributeId),
-    idxTextValue: index("idx_product_attributes_text").on(table.attributeId, table.valueText),
-    idxNumValue: index("idx_product_attributes_num").on(table.attributeId, table.valueNum),
+    idxProductAttributesProduct: index("idx_product_attributes_product").on(table.productId),
+    idxProductAttributesAttr: index("idx_product_attributes_attr").on(table.attributeId),
   }),
 );
 
 /**
- * Attribute Definition Relations
+ * Relations
  */
 export const attributeDefinitionsRelations = relations(attributeDefinitions, ({ many }) => ({
-  productAttributes: many(productAttributes),
+  productAssignments: many(productAttributes),
 }));
 
-/**
- * Product Attribute Relations
- */
 export const productAttributesRelations = relations(productAttributes, ({ one }) => ({
   product: one(products, {
     fields: [productAttributes.productId],
@@ -111,8 +82,3 @@ export const productAttributesRelations = relations(productAttributes, ({ one })
     references: [attributeDefinitions.id],
   }),
 }));
-
-export type AttributeDefinition = typeof attributeDefinitions.$inferSelect;
-export type NewAttributeDefinition = typeof attributeDefinitions.$inferInsert;
-export type ProductAttribute = typeof productAttributes.$inferSelect;
-export type NewProductAttribute = typeof productAttributes.$inferInsert;

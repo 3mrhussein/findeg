@@ -27,22 +27,19 @@ import {
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { products } from "./products";
+import { catalogSchema } from "./schemas";
 import { attributeDefinitions } from "./product-attributes";
 import type { LocalizedStringDraft } from "@/features/core/domain/value-objects";
+import type { ResponsiveMediaSet } from "@/features/core/domain/value-objects";
 
 // ─── Product Variants (SKU rows) ────────────────────────────────────────────
 
 /**
- * product_variants
+ * Product Variants Table (SKU)
  *
- * Each row represents a purchasable Stock Keeping Unit.
- * Examples:
- * - "Stabilo Point 88 – Blue 0.4mm" (sku: STA-88-BLU-04)
- * - "Stabilo Point 88 – Red 0.7mm" (sku: STA-88-RED-07)
- *
- * For simple products with no dimensions, create one row with variant_key = 'default'.
+ * Stores the actual purchasable unit with its unique SKU, pricing, and key features.
  */
-export const productVariants = pgTable(
+export const productVariants = catalogSchema.table(
   "product_variants",
   {
     id: serial("id").primaryKey(),
@@ -110,11 +107,9 @@ export const productVariants = pgTable(
 // ─── Variant Images ──────────────────────────────────────────────────────────
 
 /**
- * variant_images
- *
- * SKU-level image gallery. Each variant can have its own set of images.
+ * Variant Images Table
  */
-export const variantImages = pgTable(
+export const variantImages = catalogSchema.table(
   "variant_images",
   {
     id: serial("id").primaryKey(),
@@ -139,7 +134,7 @@ export const variantImages = pgTable(
  * SKU-level typed attribute values for filtering and school-list matching.
  * E.g., variantId=10 + attribute "ink_color" → value_text = "blue"
  */
-export const variantAttributes = pgTable(
+export const variantAttributes = catalogSchema.table(
   "variant_attributes",
   {
     variantId: integer("variant_id")

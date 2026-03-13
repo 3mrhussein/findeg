@@ -20,6 +20,7 @@ export default defineConfig({
   dbCredentials: {
     url: databaseUrl,
   },
+  schemaFilter: ["public", "identity", "catalog", "sales", "inventory", "school_engine", "system"],
   verbose: true,
   strict: true,
 });

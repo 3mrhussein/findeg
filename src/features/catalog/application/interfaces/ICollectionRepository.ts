@@ -6,14 +6,16 @@
 
 import { ID, Locale } from "@/features/core/domain/types/common";
 import { Collection, CreateCollection } from "../../domain/entities/Collection";
+import { Tag } from "../../domain/entities/Tag";
 import { Product } from "../../domain/entities/Product";
 
 export interface ICollectionRepository {
   /**
-   * Retrieves all active collections.
+   * Retrieves collections.
    * Sorted by sortOrder ASC.
+   * @param options Filter options (e.g., include inactive for admin)
    */
-  getAll(): Promise<Collection[]>;
+  getAll(options?: { includeInactive?: boolean }): Promise<Collection[]>;
 
   /**
    * Retrieves a single collection by its URL-friendly slug.
@@ -54,4 +56,14 @@ export interface ICollectionRepository {
    * This replaces any existing tag associations for the given collection.
    */
   setCollectionTags(collectionId: ID, tagIds: ID[]): Promise<void>;
+
+  /**
+   * Retrieves a single collection by its ID, including its associated tags.
+   */
+  getByIdWithTags(id: ID): Promise<(Collection & { tags: Tag[] }) | null>;
+
+  /**
+   * Updates the sort order for multiple collections.
+   */
+  updateSortOrders(items: { id: ID; sortOrder: number }[]): Promise<void>;
 }

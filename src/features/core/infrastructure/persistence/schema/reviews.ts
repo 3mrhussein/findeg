@@ -17,8 +17,12 @@ import {
 import { relations } from "drizzle-orm";
 import { products } from "./products";
 import { users } from "./users";
+import { catalogSchema } from "./schemas";
 
-export const reviews = pgTable("reviews", {
+/**
+ * reviews Table
+ */
+export const reviews = catalogSchema.table("reviews", {
   id: serial("id").primaryKey(),
   productId: integer("product_id")
     .notNull()
@@ -33,7 +37,10 @@ export const reviews = pgTable("reviews", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export const reviewHelpfulVotes = pgTable(
+/**
+ * review_helpful_votes Table
+ */
+export const reviewHelpfulVotes = catalogSchema.table(
   "review_helpful_votes",
   {
     id: serial("id").primaryKey(),
@@ -51,6 +58,9 @@ export const reviewHelpfulVotes = pgTable(
   }),
 );
 
+/**
+ * Relations
+ */
 export const reviewsRelations = relations(reviews, ({ one }) => ({
   product: one(products, {
     fields: [reviews.productId],
@@ -69,6 +79,9 @@ export const reviewHelpfulVotesRelations = relations(reviewHelpfulVotes, ({ one 
   }),
 }));
 
+/**
+ * Type Exports
+ */
 export type Review = typeof reviews.$inferSelect;
 export type NewReview = typeof reviews.$inferInsert;
 export type ReviewHelpfulVote = typeof reviewHelpfulVotes.$inferSelect;

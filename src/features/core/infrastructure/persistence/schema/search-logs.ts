@@ -1,35 +1,47 @@
-import { pgTable, text, integer, timestamp, uuid } from "drizzle-orm/pg-core";
-import type { Locale } from "@/features/core/domain/value-objects";
+/**
+ * Search Logs Database Schema
+ */
+
+import { pgTable, serial, text, integer, timestamp, uuid } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
+import { users } from "./users";
+import { systemSchema } from "./schemas";
+import { sql } from "drizzle-orm";
 
 /**
- * Search Logs
- *
- * Tracks user search queries, parameters, and outcomes for analytics
- * and tuning of search relevance.
+ * search_logs
  */
-export const searchLogs = pgTable("search_logs", {
-  id: uuid("id").defaultRandom().primaryKey(),
+export const searchLogs = systemSchema.table("search_logs", {
+  id: uuid("id")
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
 
-  /** The raw search query string */
+  /** What was searched */
   query: text("query").notNull(),
 
-  /** Locale/language the search was performed in */
-  locale: text("locale").$type<Locale>().notNull(),
+  /** Search locale */
+  locale: text("locale").notNull(),
 
-  /** Number of results returned */
+  /** Results count shown to user */
   resultsCount: integer("results_count").notNull(),
 
-  /** ID of the user performing the search (null for guests) */
-  userId: integer("user_id"),
+  userId: integer("user_id").references(() => users.id, { onDelete: "set null" }),
 
-  /** Anonymous session identifier for tracking guest searches */
+  /** Anonymized session identifier or userId */
   sessionId: text("session_id"),
 
-  /** If the user clicked a product from the results, its ID is stored here (can be updated later) */
+  /** Optional: recording the first result clicked */
   clickedProductId: integer("clicked_product_id"),
 
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
+
+export const searchLogsRelations = relations(searchLogs, ({ one }) => ({
+  user: one(users, {
+    fields: [searchLogs.userId],
+    references: [users.id],
+  }),
+}));
 
 export type SearchLog = typeof searchLogs.$inferSelect;
 export type NewSearchLog = typeof searchLogs.$inferInsert;

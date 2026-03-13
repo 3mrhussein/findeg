@@ -1,31 +1,39 @@
 /**
- * Static Translations Database Schema (Optional fallback for CMS)
+ * Translations Database Schema
+ *
+ * Generic translation table if localized jsonb isn't enough.
  */
 
-import { pgTable, serial, text, timestamp, primaryKey } from "drizzle-orm/pg-core";
-import type { Locale } from "@/features/core/domain/value-objects";
+import { pgTable, serial, text, varchar, timestamp, uniqueIndex } from "drizzle-orm/pg-core";
+import { catalogSchema } from "./schemas";
 
 /**
- * Translations Table
- *
- * Stores static UI labels if not using a CMS.
+ * translations
  */
-export const translations = pgTable(
+export const translations = catalogSchema.table(
   "translations",
   {
+    id: serial("id").primaryKey(),
+
+    /** Grouping code (e.g., 'UI', 'SEO', 'Email') */
+    namespace: varchar("namespace", { length: 50 }).notNull(),
+
+    /** The key to translate */
     key: text("key").notNull(),
-    language: text("language").$type<Locale>().notNull(),
+
+    /** Language code (e.g., 'en', 'ar') */
+    language: varchar("language", { length: 10 }).notNull(),
+
+    /** The translated string */
     value: text("value").notNull(),
+
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },
   (table) => ({
-    pk: primaryKey({ columns: [table.key, table.language] }),
+    uqTranslation: uniqueIndex("uq_translation").on(table.namespace, table.key, table.language),
   }),
 );
 
-/**
- * Type Exports
- */
 export type Translation = typeof translations.$inferSelect;
 export type NewTranslation = typeof translations.$inferInsert;

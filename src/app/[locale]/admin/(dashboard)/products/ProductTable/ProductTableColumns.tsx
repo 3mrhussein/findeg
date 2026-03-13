@@ -19,6 +19,7 @@ import Image from "next/image";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Copy, Archive } from "lucide-react";
 import { VariantEntity } from "@/features/catalog/domain/entities/Variant";
+import { getCanonicalProductHref } from "@/features/catalog/presentation/utils/product-url";
 
 /**
  * Column definitions for the ProductTable.
@@ -250,10 +251,7 @@ export function buildProductColumns(onDelete: (id: number) => void): ColumnDef<P
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link
-                  href={`/products/${product.localizedContent?.slug || product.id}`}
-                  target="_blank"
-                >
+                <Link href={getCanonicalProductHref(product)} target="_blank">
                   <Copy className="mr-2 h-4 w-4" /> View on site
                 </Link>
               </DropdownMenuItem>

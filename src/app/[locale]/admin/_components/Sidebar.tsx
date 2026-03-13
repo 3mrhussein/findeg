@@ -14,12 +14,16 @@ import {
   ChevronRight,
   Menu,
   Tag,
+  Search,
+  Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { IconTooltip } from "@/components/ui/IconTooltip";
 import { useState } from "react";
 import { logoutAction } from "@/features/identity/application/actions/auth";
 import { useTranslations } from "next-intl";
+import { usePermissions } from "@/providers/PermissionsProvider";
+import { PERMISSION_CODES } from "@/features/core/domain/auth/authorization";
 
 /**
  *
@@ -30,53 +34,91 @@ export function Sidebar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const t = useTranslations("Pages.Dashboard");
 
+  const { hasPermission } = usePermissions();
+
   const sidebarItems = [
     {
       title: t("Sidebar.Dashboard"),
       href: "/admin",
       icon: LayoutDashboard,
+      show: hasPermission(PERMISSION_CODES.ADMIN_DASHBOARD_READ),
     },
     {
       title: t("Sidebar.Products"),
       href: "/admin/products",
       icon: Package,
+      show: hasPermission(PERMISSION_CODES.ADMIN_PRODUCTS_READ),
+    },
+    {
+      title: t("Sidebar.SearchAnalytics"),
+      href: "/admin/editorial/search-analytics",
+      icon: Search,
+      show: hasPermission(PERMISSION_CODES.ADMIN_PRODUCTS_READ),
+      isSubItem: true,
     },
     {
       title: t("Sidebar.Categories"),
       href: "/admin/categories",
       icon: FolderTree,
+      show: hasPermission(PERMISSION_CODES.ADMIN_CATEGORIES_READ),
+    },
+    {
+      title: t("Sidebar.Tags"),
+      href: "/admin/catalog/tags",
+      icon: Tag,
+      show: hasPermission(PERMISSION_CODES.ADMIN_TAGS_READ),
+      isSubItem: true,
+    },
+    {
+      title: t("Sidebar.Collections"),
+      href: "/admin/catalog/collections",
+      icon: LayoutDashboard,
+      show: hasPermission(PERMISSION_CODES.ADMIN_COLLECTIONS_READ),
+      isSubItem: true,
     },
     {
       title: t("Sidebar.Brands"),
       href: "/admin/brands",
       icon: Tag,
+      show: hasPermission(PERMISSION_CODES.ADMIN_BRANDS_READ),
     },
     {
       title: t("Sidebar.Orders"),
       href: "/admin/orders",
       icon: ShoppingCart,
+      show: hasPermission(PERMISSION_CODES.ADMIN_ORDERS_READ),
     },
     {
       title: t("Sidebar.Inventory"),
       href: "/admin/inventory",
       icon: FolderTree,
+      show: hasPermission(PERMISSION_CODES.ADMIN_INVENTORY_READ),
     },
     {
       title: t("Sidebar.Media"),
       href: "/admin/media",
       icon: LayoutDashboard,
+      show: hasPermission(PERMISSION_CODES.ADMIN_MEDIA_READ),
     },
     {
       title: t("Sidebar.AuditLog"),
       href: "/admin/audit-log",
       icon: LayoutDashboard,
+      show: hasPermission(PERMISSION_CODES.ADMIN_AUDIT_LOG_READ),
+    },
+    {
+      title: t("Sidebar.AdminUsers"),
+      href: "/admin/users",
+      icon: Users,
+      show: hasPermission(PERMISSION_CODES.ADMIN_USERS_READ),
     },
     {
       title: t("Sidebar.Settings"),
       href: "/admin/settings",
       icon: Settings,
+      show: hasPermission(PERMISSION_CODES.ADMIN_PORTAL),
     },
-  ];
+  ].filter((item) => item.show);
 
   return (
     <>
@@ -134,6 +176,7 @@ export function Sidebar() {
                   "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground",
                   isActive ? "bg-accent text-accent-foreground" : "text-muted-foreground",
                   collapsed && "justify-center px-2",
+                  item.isSubItem && !collapsed && "ms-4 text-[0.8rem] opacity-80",
                 )}
                 title={collapsed ? item.title : undefined}
               >

@@ -7,6 +7,7 @@
 
 import { pgTable, serial, text, timestamp, boolean, varchar } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
+import { identitySchema } from "./schemas";
 import { orders } from "./orders";
 import { reviews } from "./reviews";
 import { addresses } from "./addresses";
@@ -24,7 +25,7 @@ import type { UserRole } from "@/features/core/domain/types/common";
  * - `role` — "user" or "admin"
  * - `isActive` — Account status toggle
  */
-export const users = pgTable("users", {
+export const users = identitySchema.table("users", {
   id: serial("id").primaryKey(),
   email: varchar("email", { length: 255 }).notNull().unique(),
 
@@ -62,9 +63,6 @@ export const usersRelations = relations(users, ({ many }) => ({
   addresses: many(addresses),
   auditLogs: many(auditLog, { relationName: "user_audit_logs" }),
 }));
-
-// We can also define the other side here if Drizzle supports it in one relations() call,
-// but usually it's per table. The key is that audit-log.ts no longer imports users.ts.
 
 /**
  * Type Exports

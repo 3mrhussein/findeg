@@ -1,5 +1,5 @@
 import type { Category } from "@/features/catalog/domain/entities/Category";
-import type { Product } from "@/features/catalog/domain/entities/Product";
+import { ProductEntity, type Product } from "@/features/catalog/domain/entities/Product";
 
 export const LISTING_SORT_VALUES = ["featured", "price-asc", "price-desc", "rating-desc"] as const;
 
@@ -300,7 +300,9 @@ export function sortProducts(products: Product[], sort: ListingSort): Product[] 
       sorted.sort((a, b) => b.rating - a.rating);
       return sorted;
     default:
-      sorted.sort((a, b) => Number(Boolean(b.isNew)) - Number(Boolean(a.isNew)));
+      sorted.sort(
+        (a, b) => Number(new ProductEntity(b).isNew()) - Number(new ProductEntity(a).isNew()),
+      );
       return sorted;
   }
 }

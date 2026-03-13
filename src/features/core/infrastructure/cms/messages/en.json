@@ -639,14 +639,19 @@
       "CollapseSidebar": "Collapse sidebar",
       "Sidebar": {
         "Dashboard": "Dashboard",
+        "Catalog": "Catalog",
         "Products": "Products",
         "Categories": "Categories",
         "Brands": "Brands",
+        "Tags": "Tags",
+        "Collections": "Collections",
         "Orders": "Orders",
         "Inventory": "Inventory",
         "Media": "Media",
         "SchoolLists": "School Lists",
         "AuditLog": "Audit Log",
+        "SearchAnalytics": "Search Analytics",
+        "AdminUsers": "Admin Users",
         "Settings": "Settings"
       },
       "Topbar": {
@@ -667,7 +672,66 @@
         "Customer": "Customer",
         "Date": "Date",
         "Total": "Total",
-        "Status": "Status"
+        "Status": "Status",
+        "Tag": "Tag",
+        "Group": "Group",
+        "Key": "Key",
+        "Label": "Label",
+        "Scope": "Scope",
+        "Active": "Active"
+      },
+      "Tags": {
+        "Title": "Tags Management",
+        "Subtitle": "Organize your products with groups, keys, and labels for easier discoverability.",
+        "NewTag": "New Tag",
+        "EditTag": "Edit Tag",
+        "SearchPlaceholder": "Search by key or label...",
+        "FilterGroup": "Filter by Group",
+        "FilterScope": "Filter by Scope",
+        "AllGroups": "All Groups",
+        "AllScopes": "All Scopes",
+        "Form": {
+          "Group": "Group",
+          "GroupPlaceholder": "e.g. season, brand, material",
+          "GroupHint": "Select existing or type to create new",
+          "Key": "Key",
+          "KeyPlaceholder": "e.g. back-to-school",
+          "KeyHint": "Unique slug within group",
+          "LabelEn": "English Label",
+          "LabelAr": "Arabic Label",
+          "DescriptionEn": "English Description",
+          "DescriptionAr": "Arabic Description",
+          "Icon": "Icon Name",
+          "IconHint": "Lucide icon name (e.g. star, zap)",
+          "Color": "Color",
+          "Scope": "Visibility Scope",
+          "IsActive": "Is Active",
+          "Preview": "Preview",
+          "GroupKeyPreview": "Group:Key ID"
+        }
+      },
+      "Collections": {
+        "Title": "Collections Management",
+        "Subtitle": "Curate product thematic groups and manage their display order.",
+        "NewCollection": "New Collection",
+        "EditCollection": "Edit Collection",
+        "DragDropHint": "Drag and drop cards to reorder",
+        "SortOrder": "Sort Order",
+        "HeroImage": "Hero Image",
+        "SelectTags": "Assign Tags",
+        "SelectedTags": "{count} tags selected",
+        "TagManagement": "Tag Assignment",
+        "TagPanelDescription": "Select active tags to include in this collection.",
+        "Form": {
+          "TitleEn": "English Title",
+          "TitleAr": "Arabic Title",
+          "SubtitleEn": "English Subtitle",
+          "SubtitleAr": "Arabic Subtitle",
+          "Slug": "Slug",
+          "HeroImageUrl": "Hero Image URL",
+          "IsActive": "Is Active"
+        },
+        "SearchPlaceholder": "Search by title or slug..."
       }
     },
     "Error": {
@@ -849,6 +913,50 @@
       "LowStock": "Low Stock Alert",
       "NewReview": "New Review Submitted",
       "NewAccessRequest": "New Access Request"
+    }
+  },
+  "Administration": {
+    "Catalog": {
+      "Products": {
+        "Titles": {
+          "New": "New Product",
+          "Edit": "Edit Product #{id}",
+          "BasicInfo": "Product Information",
+          "Variants": "Variants",
+          "Pricing": "Pricing",
+          "UnitsOfMeasure": "Units of Measure",
+          "Inventory": "Stock & Identity"
+        },
+        "Fields": {
+          "NameEn": "Name (English)",
+          "NameAr": "Name (Arabic)",
+          "DescriptionEn": "Description (English)",
+          "DescriptionAr": "Description (Arabic)",
+          "Category": "Category",
+          "Brand": "Brand",
+          "Status": "Active Status",
+          "PricingMode": "Pricing Mode",
+          "UoMSharing": "UoM Sharing Mode",
+          "BasePrice": "Base Price",
+          "StrikePrice": "Original Price",
+          "CostPrice": "Cost Price",
+          "Sku": "SKU",
+          "Barcode": "Barcode",
+          "Weight": "Weight",
+          "LowStock": "Low Stock Alert",
+          "UoMFactor": "Multiplier",
+          "MinQty": "Minimum Quantity",
+          "IsSellable": "Available for sale"
+        },
+        "Helpers": {
+          "SharedPricing": "A single price will be applied to all variants.",
+          "SimpleProduct": "No variants — a single default variant will be created.",
+          "WeightUnitG": "grams",
+          "WeightUnitKg": "kg",
+          "SkuHint": "Uppercase, digits, hyphens only",
+          "BarcodeHint": "EAN, UPC, or ISBN"
+        }
+      }
     }
   }
 }

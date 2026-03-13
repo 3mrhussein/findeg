@@ -1,12 +1,10 @@
 import { db } from "@/features/core/infrastructure/persistence";
 import {
   products,
-  productTranslations,
   productVariants,
   variantImages,
   variantAttributes,
   categories,
-  categoryTranslations,
   brands,
   variantSellableUoms,
   variantPriceLists,
@@ -18,7 +16,6 @@ import {
   inventoryBalances,
   warehouses,
   type Product as DbProduct,
-  type ProductTranslation as DbTranslation,
   type VariantImage as DbVariantImage,
 } from "@/features/core/infrastructure/persistence/schema";
 import {
@@ -99,7 +96,6 @@ export class DrizzleProductRepository implements IProductRepository {
   private mapToDomain(
     dbProduct: DbProduct,
     variants: Variant[] = [],
-    translation?: DbTranslation,
     categoryName?: string,
     brandName?: string,
     tags: Tag[] = [],
@@ -117,44 +113,11 @@ export class DrizzleProductRepository implements IProductRepository {
       string
     >;
 
-    const translationSlug =
-      translation?.name && this.toRouteSlug(translation.name)
-        ? this.toRouteSlug(translation.name)
-        : undefined;
-
     const localizedContent = {
-      slug: toLocalizedString(
-        Object.keys(localizedSlugDraft).length > 0
-          ? localizedSlugDraft
-          : translationSlug
-            ? { [translation?.language || DEFAULT_LOCALE]: translationSlug }
-            : undefined,
-        translationSlug || "",
-      ),
-      name: toLocalizedString(
-        Object.keys(localizedNameDraft).length > 0
-          ? localizedNameDraft
-          : translation
-            ? { [translation.language]: translation.name }
-            : undefined,
-        translation?.name || "Untitled Product",
-      ),
-      description: toLocalizedString(
-        Object.keys(localizedDescriptionDraft).length > 0
-          ? localizedDescriptionDraft
-          : translation
-            ? { [translation.language]: translation.description }
-            : undefined,
-        translation?.description || "",
-      ),
-      longDescription: toLocalizedString(
-        Object.keys(localizedLongDescriptionDraft).length > 0
-          ? localizedLongDescriptionDraft
-          : translation
-            ? { [translation.language]: translation.longDescription }
-            : undefined,
-        translation?.longDescription || "",
-      ),
+      slug: toLocalizedString(localizedSlugDraft, dbProduct.skuPrefix || ""),
+      name: toLocalizedString(localizedNameDraft, dbProduct.skuPrefix || ""),
+      description: toLocalizedString(localizedDescriptionDraft, ""),
+      longDescription: toLocalizedString(localizedLongDescriptionDraft, ""),
     };
 
     return {
@@ -178,14 +141,12 @@ export class DrizzleProductRepository implements IProductRepository {
       categoryName: categoryName,
       brandId: dbProduct.brandId || undefined,
       brandName: brandName,
-      isNew: dbProduct.isNew || false,
       isActive: dbProduct.isActive,
       rating: Number(dbProduct.rating || 0) as Rating,
       reviewsCount: dbProduct.reviewsCount || 0,
       variants,
       tags,
       attributes,
-      displayMeta: (dbProduct.displayMeta as Record<string, unknown>) || {},
     };
   }
 
@@ -363,25 +324,9 @@ export class DrizzleProductRepository implements IProductRepository {
     const result = await db
       .select({
         product: products,
-        translation: productTranslations,
-        categoryTrans: categoryTranslations,
         brand: brands,
       })
       .from(products)
-      .leftJoin(
-        productTranslations,
-        and(
-          eq(productTranslations.productId, products.id),
-          eq(productTranslations.language, language),
-        ),
-      )
-      .leftJoin(
-        categoryTranslations,
-        and(
-          eq(categoryTranslations.categoryId, products.categoryId),
-          eq(categoryTranslations.language, language),
-        ),
-      )
       .leftJoin(brands, eq(brands.id, products.brandId))
       .where(eq(products.id, id))
       .limit(1);
@@ -389,6 +334,23 @@ export class DrizzleProductRepository implements IProductRepository {
     if (result.length === 0) return null;
 
     const row = result[0];
+
+    // Fetch category name from localizedName
+    const categoryId = row.product.categoryId;
+    let categoryName: string | undefined;
+
+    if (categoryId) {
+      const categoryResult = await db
+        .select({ localizedName: categories.localizedName })
+        .from(categories)
+        .where(eq(categories.id, categoryId))
+        .limit(1);
+
+      categoryName = categoryResult[0]?.localizedName
+        ? resolveLocalizedString(categoryResult[0].localizedName as any, language, DEFAULT_LOCALE)
+        : undefined;
+    }
+
     const [variantsMap, tagsResult, attributesResult] = await Promise.all([
       this.getHydratedVariants([row.product.id], language),
       this.getProductTags(id),
@@ -398,8 +360,7 @@ export class DrizzleProductRepository implements IProductRepository {
     return this.mapToDomain(
       row.product,
       variantsMap[row.product.id] || [],
-      row.translation || undefined,
-      row.categoryTrans?.name,
+      categoryName,
       row.brand?.name,
       tagsResult,
       attributesResult,
@@ -433,12 +394,6 @@ export class DrizzleProductRepository implements IProductRepository {
               FROM jsonb_each_text(${products.localizedSlug}) AS localized(entry_key, entry_value)
               WHERE LOWER(localized.entry_value) = ${normalizedSlug}
             )`,
-            sql`EXISTS (
-              SELECT 1
-              FROM ${productTranslations} AS pt
-              WHERE pt.product_id = ${products.id}
-                AND TRIM(BOTH '-' FROM regexp_replace(LOWER(COALESCE(pt.name, '')), '[^a-z0-9]+', '-', 'g')) = ${normalizedSlug}
-            )`,
           ),
         ),
       )
@@ -469,27 +424,13 @@ export class DrizzleProductRepository implements IProductRepository {
     const results = await db
       .select({
         product: products,
-        translation: productTranslations,
-        categoryTrans: categoryTranslations,
         brand: brands,
       })
       .from(products)
-      .leftJoin(
-        productTranslations,
-        and(
-          eq(productTranslations.productId, products.id),
-          eq(productTranslations.language, language),
-        ),
-      )
-      .leftJoin(
-        categoryTranslations,
-        and(
-          eq(categoryTranslations.categoryId, products.categoryId),
-          eq(categoryTranslations.language, language),
-        ),
-      )
       .leftJoin(brands, eq(brands.id, products.brandId))
-      .where(and(eq(products.isNew, true), eq(products.isActive, true)))
+      .innerJoin(productTags, eq(productTags.productId, products.id))
+      .innerJoin(tags, eq(tags.id, productTags.tagId))
+      .where(and(eq(tags.key, "campaign:new-arrival"), eq(products.isActive, true)))
       .limit(limit);
 
     if (results.length === 0) return [];
@@ -500,8 +441,7 @@ export class DrizzleProductRepository implements IProductRepository {
       this.mapToDomain(
         row.product,
         variantsMap[row.product.id] || [],
-        row.translation || undefined,
-        row.categoryTrans?.name,
+        undefined, // Category name not hydrated in bulk for performance
         row.brand?.name,
         [], // tags
         [], // attributes
@@ -517,29 +457,25 @@ export class DrizzleProductRepository implements IProductRepository {
     const results = await db
       .select({
         product: products,
-        translation: productTranslations,
-        categoryTrans: categoryTranslations,
         brand: brands,
       })
       .from(products)
-      .leftJoin(
-        productTranslations,
-        and(
-          eq(productTranslations.productId, products.id),
-          eq(productTranslations.language, language),
-        ),
-      )
-      .leftJoin(
-        categoryTranslations,
-        and(
-          eq(categoryTranslations.categoryId, products.categoryId),
-          eq(categoryTranslations.language, language),
-        ),
-      )
       .leftJoin(brands, eq(brands.id, products.brandId))
       .where(and(eq(products.categoryId, categoryId), eq(products.isActive, true)));
 
     if (results.length === 0) return [];
+
+    // Fetch category name
+    const categoryResult = await db
+      .select({ localizedName: categories.localizedName })
+      .from(categories)
+      .where(eq(categories.id, categoryId))
+      .limit(1);
+
+    const categoryName = categoryResult[0]?.localizedName
+      ? resolveLocalizedString(categoryResult[0].localizedName as any, language, DEFAULT_LOCALE)
+      : undefined;
+
     const productIds = results.map((r) => r.product.id);
     const variantsMap = await this.getHydratedVariants(productIds, language);
 
@@ -547,8 +483,7 @@ export class DrizzleProductRepository implements IProductRepository {
       this.mapToDomain(
         row.product,
         variantsMap[row.product.id] || [],
-        row.translation || undefined,
-        row.categoryTrans?.name,
+        categoryName,
         row.brand?.name,
         [], // tags
         [], // attributes
@@ -564,25 +499,9 @@ export class DrizzleProductRepository implements IProductRepository {
     const results = await db
       .select({
         product: products,
-        translation: productTranslations,
-        categoryTrans: categoryTranslations,
         brand: brands,
       })
       .from(products)
-      .leftJoin(
-        productTranslations,
-        and(
-          eq(productTranslations.productId, products.id),
-          eq(productTranslations.language, language),
-        ),
-      )
-      .leftJoin(
-        categoryTranslations,
-        and(
-          eq(categoryTranslations.categoryId, products.categoryId),
-          eq(categoryTranslations.language, language),
-        ),
-      )
       .leftJoin(brands, eq(brands.id, products.brandId))
       .where(and(eq(products.brandId, brandId), eq(products.isActive, true)));
 
@@ -594,8 +513,7 @@ export class DrizzleProductRepository implements IProductRepository {
       this.mapToDomain(
         row.product,
         variantsMap[row.product.id] || [],
-        row.translation || undefined,
-        row.categoryTrans?.name,
+        undefined, // Category name not hydrated in bulk
         row.brand?.name,
         [], // tags
         [], // attributes
@@ -615,8 +533,6 @@ export class DrizzleProductRepository implements IProductRepository {
     if (normalizedQuery) {
       whereConditions.push(
         or(
-          ilike(productTranslations.name, searchPattern),
-          ilike(productTranslations.description, searchPattern),
           ilike(
             sql<string>`COALESCE(${products.localizedSlug} ->> ${language}, '')`,
             searchPattern,
@@ -633,12 +549,10 @@ export class DrizzleProductRepository implements IProductRepository {
             sql<string>`COALESCE(${products.localizedLongDescription} ->> ${language}, '')`,
             searchPattern,
           ),
-          ilike(productTranslations.longDescription, searchPattern),
           ilike(
             sql<string>`COALESCE(${categories.localizedName} ->> ${language}, '')`,
             searchPattern,
           ),
-          ilike(categoryTranslations.name, searchPattern),
           ilike(sql<string>`COALESCE(${brands.localizedName} ->> ${language}, '')`, searchPattern),
           ilike(brands.name, searchPattern),
           // Search variants.sku
@@ -650,26 +564,10 @@ export class DrizzleProductRepository implements IProductRepository {
     const results = await db
       .select({
         product: products,
-        translation: productTranslations,
-        categoryTrans: categoryTranslations,
         brand: brands,
       })
       .from(products)
       .leftJoin(categories, eq(categories.id, products.categoryId))
-      .leftJoin(
-        productTranslations,
-        and(
-          eq(productTranslations.productId, products.id),
-          eq(productTranslations.language, language),
-        ),
-      )
-      .leftJoin(
-        categoryTranslations,
-        and(
-          eq(categoryTranslations.categoryId, products.categoryId),
-          eq(categoryTranslations.language, language),
-        ),
-      )
       .leftJoin(brands, eq(brands.id, products.brandId))
       .where(and(...whereConditions));
 
@@ -681,8 +579,7 @@ export class DrizzleProductRepository implements IProductRepository {
       this.mapToDomain(
         row.product,
         variantsMap[row.product.id] || [],
-        row.translation || undefined,
-        row.categoryTrans?.name,
+        undefined, // Category name not hydrated in bulk
         row.brand?.name,
         [], // tags
         [], // attributes
@@ -720,7 +617,6 @@ export class DrizzleProductRepository implements IProductRepository {
     }
     if (filters.brandId) conditions.push(eq(products.brandId, filters.brandId));
     if (filters.isActive !== undefined) conditions.push(eq(products.isActive, filters.isActive));
-    if (filters.isNew !== undefined) conditions.push(eq(products.isNew, filters.isNew));
     if (filters.productIds && filters.productIds.length > 0) {
       conditions.push(inArray(products.id, filters.productIds as number[]));
     }
@@ -777,9 +673,18 @@ export class DrizzleProductRepository implements IProductRepository {
         const searchPattern = `%${normalizedSearch}%`;
         conditions.push(
           or(
-            ilike(productTranslations.name, searchPattern),
-            ilike(productTranslations.description, searchPattern),
-            ilike(productTranslations.longDescription, searchPattern),
+            ilike(
+              sql<string>`COALESCE(${products.localizedName} ->> ${language}, '')`,
+              searchPattern,
+            ),
+            ilike(
+              sql<string>`COALESCE(${products.localizedDescription} ->> ${language}, '')`,
+              searchPattern,
+            ),
+            ilike(
+              sql<string>`COALESCE(${products.localizedLongDescription} ->> ${language}, '')`,
+              searchPattern,
+            ),
             // Search variants.sku
             sql`EXISTS (SELECT 1 FROM ${productVariants} WHERE ${productVariants.productId} = ${products.id} AND ${productVariants.sku} ILIKE ${searchPattern})`,
           ),
@@ -793,25 +698,9 @@ export class DrizzleProductRepository implements IProductRepository {
       db
         .select({
           product: products,
-          translation: productTranslations,
-          categoryTrans: categoryTranslations,
           brand: brands,
         })
         .from(products)
-        .leftJoin(
-          productTranslations,
-          and(
-            eq(productTranslations.productId, products.id),
-            eq(productTranslations.language, language),
-          ),
-        )
-        .leftJoin(
-          categoryTranslations,
-          and(
-            eq(categoryTranslations.categoryId, products.categoryId),
-            eq(categoryTranslations.language, language),
-          ),
-        )
         .leftJoin(brands, eq(brands.id, products.brandId))
         .where(whereClause)
         .limit(filters.limit || 20)
@@ -835,8 +724,7 @@ export class DrizzleProductRepository implements IProductRepository {
         this.mapToDomain(
           row.product,
           variantsMap[row.product.id] || [],
-          row.translation || undefined,
-          row.categoryTrans?.name,
+          undefined, // Category name not hydrated in bulk for performance
           row.brand?.name,
           [], // tags result omitted for bulk search performance
           [], // attributes result omitted for bulk search performance
@@ -866,25 +754,9 @@ export class DrizzleProductRepository implements IProductRepository {
     const results = await db
       .select({
         product: products,
-        translation: productTranslations,
-        categoryTrans: categoryTranslations,
         brand: brands,
       })
       .from(products)
-      .leftJoin(
-        productTranslations,
-        and(
-          eq(productTranslations.productId, products.id),
-          eq(productTranslations.language, language),
-        ),
-      )
-      .leftJoin(
-        categoryTranslations,
-        and(
-          eq(categoryTranslations.categoryId, products.categoryId),
-          eq(categoryTranslations.language, language),
-        ),
-      )
       .leftJoin(brands, eq(brands.id, products.brandId))
       .where(and(eq(products.isActive, true), inArray(products.id, variantSubquery)));
 
@@ -896,8 +768,7 @@ export class DrizzleProductRepository implements IProductRepository {
       this.mapToDomain(
         row.product,
         variantsMap[row.product.id] || [],
-        row.translation || undefined,
-        row.categoryTrans?.name,
+        undefined, // Category name not hydrated in bulk
         row.brand?.name,
         [], // tags
         [], // attributes
@@ -933,28 +804,15 @@ export class DrizzleProductRepository implements IProductRepository {
           categoryId: input.categoryId,
           brandId: input.brandId,
           isActive: input.isActive ?? true,
-          isNew: input.isNew ?? false,
           localizedName,
           localizedSlug,
           localizedDescription,
           localizedLongDescription,
           mediaSet: input.mediaSet || {},
-          displayMeta: {},
         })
         .returning();
 
-      // 3. Insert translations
-      if (input.translations && input.translations.length > 0) {
-        await tx.insert(productTranslations).values(
-          input.translations.map((t) => ({
-            productId: newProduct.id,
-            language: t.language,
-            name: t.name,
-            description: t.description,
-            longDescription: t.longDescription,
-          })),
-        );
-      }
+      // 3. (Legacy translations skipped)
 
       // 4. Insert variants (normalized)
       if (input.variants && input.variants.length > 0) {
@@ -1067,7 +925,6 @@ export class DrizzleProductRepository implements IProductRepository {
           categoryId: input.categoryId,
           brandId: input.brandId,
           isActive: input.isActive,
-          isNew: input.isNew,
           localizedName,
           localizedSlug,
           localizedDescription,
@@ -1076,19 +933,7 @@ export class DrizzleProductRepository implements IProductRepository {
         })
         .where(eq(products.id, id));
 
-      // 3. Update translations
-      await tx.delete(productTranslations).where(eq(productTranslations.productId, id));
-      if (input.translations && input.translations.length > 0) {
-        await tx.insert(productTranslations).values(
-          input.translations.map((t) => ({
-            productId: id,
-            language: t.language,
-            name: t.name,
-            description: t.description,
-            longDescription: t.longDescription,
-          })),
-        );
-      }
+      // 3. (Legacy translations skipped)
 
       // 4. Update variants (normalized sync)
       if (input.variants !== undefined) {
@@ -1262,12 +1107,31 @@ export class DrizzleProductRepository implements IProductRepository {
     const productResults = await db.select().from(products).where(eq(products.id, id)).limit(1);
     if (productResults.length === 0) return null;
 
-    const [translations, variants] = await Promise.all([
-      db.select().from(productTranslations).where(eq(productTranslations.productId, id)),
-      db.select().from(productVariants).where(eq(productVariants.productId, id)),
-    ]);
+    const variants = await db
+      .select()
+      .from(productVariants)
+      .where(eq(productVariants.productId, id));
 
     const firstProduct = productResults[0];
+
+    // Extract translations from JSONB fields
+    const languages = new Set<string>();
+    const lName = (firstProduct.localizedName || {}) as Record<string, string>;
+    const lSlug = (firstProduct.localizedSlug || {}) as Record<string, string>;
+    const lDesc = (firstProduct.localizedDescription || {}) as Record<string, string>;
+    const lLong = (firstProduct.localizedLongDescription || {}) as Record<string, string>;
+
+    Object.keys(lName).forEach((k) => languages.add(k));
+    Object.keys(lSlug).forEach((k) => languages.add(k));
+    Object.keys(lDesc).forEach((k) => languages.add(k));
+    Object.keys(lLong).forEach((k) => languages.add(k));
+
+    const translations = Array.from(languages).map((lang) => ({
+      language: lang as Locale,
+      name: lName[lang] || "",
+      description: lDesc[lang] || "",
+      longDescription: lLong[lang] || "",
+    }));
 
     return {
       id: firstProduct.id,
@@ -1275,14 +1139,8 @@ export class DrizzleProductRepository implements IProductRepository {
       categoryId: firstProduct.categoryId || undefined,
       brandId: firstProduct.brandId || undefined,
       mediaSet: (firstProduct.mediaSet as ResponsiveMediaSet) || undefined,
-      isNew: firstProduct.isNew || false,
       isActive: firstProduct.isActive,
-      translations: translations.map((t) => ({
-        language: t.language as Locale,
-        name: t.name,
-        description: t.description,
-        longDescription: t.longDescription || "",
-      })),
+      translations,
       variants: variants as any,
     };
   }

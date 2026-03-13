@@ -1,5 +1,7 @@
 export * from "./IAuditLogRepository";
 export * from "./IAuditLogService";
+export * from "./IAdminTagService";
+export * from "./IAdminCollectionService";
 export * from "./IAdminBrandService";
 export * from "./IAdminCategoryService";
 export * from "./IAdminDashboardService";

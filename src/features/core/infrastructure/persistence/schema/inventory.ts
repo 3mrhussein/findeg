@@ -5,11 +5,6 @@
  * - warehouses: Physical stock locations
  * - inventory_balances: Materialized balance per variant per warehouse
  * - stock_movements: Immutable audit ledger of all stock changes
- *
- * Design:
- * - Inventory attaches at the variant (SKU) level, not the product (SPU) level.
- * - Even with one warehouse initially, the model scales without schema changes.
- * - `available = on_hand - reserved` is computed, not stored.
  */
 
 import {
@@ -23,6 +18,7 @@ import {
   index,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
+import { inventorySchema } from "./schemas";
 import { productVariants } from "./product-variants";
 import { users } from "./users";
 
@@ -30,11 +26,8 @@ import { users } from "./users";
 
 /**
  * warehouses
- *
- * Physical stock locations. Start with one (e.g., "MAIN"),
- * scale to multiple when needed.
  */
-export const warehouses = pgTable("warehouses", {
+export const warehouses = inventorySchema.table("warehouses", {
   id: serial("id").primaryKey(),
 
   /** Unique business code (e.g., "MAIN", "CAIRO-WH1") */
@@ -53,11 +46,8 @@ export const warehouses = pgTable("warehouses", {
 
 /**
  * inventory_balances
- *
- * Materialized balance for each variant at each warehouse.
- * `available = on_hand - reserved` is computed at query time.
  */
-export const inventoryBalances = pgTable(
+export const inventoryBalances = inventorySchema.table(
   "inventory_balances",
   {
     id: serial("id").primaryKey(),
@@ -91,19 +81,8 @@ export const inventoryBalances = pgTable(
 
 /**
  * stock_movements
- *
- * Immutable ledger for all inventory changes.
- * Every balance change should produce a movement row for audit.
- *
- * movement_type values:
- *   'receipt'    — goods received
- *   'sale'       — sold and shipped
- *   'adjustment' — manual correction
- *   'return'     — customer return
- *   'reserve'    — committed to an order
- *   'unreserve'  — order cancelled / expired
  */
-export const stockMovements = pgTable(
+export const stockMovements = inventorySchema.table(
   "stock_movements",
   {
     id: serial("id").primaryKey(),

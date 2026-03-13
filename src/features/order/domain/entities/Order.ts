@@ -25,10 +25,9 @@ export interface OrderItem {
   quantity: Quantity;
   /** Selected Unit of Measure */
   uomCode?: string;
-  /** Price at which the item was purchased (legacy field name) */
-  priceAtTime?: Price;
   /** Current display price */
   price?: Price;
+  unitPrice?: Price;
   /** Product name captured at time of purchase to handle future name changes */
   productNameSnapshot?: string;
   /** SKU captured at time of purchase */
@@ -39,8 +38,6 @@ export interface OrderItem {
   variantSnapshot?: VariantSnapshot;
   /** Total for this line (quantity * unitPriceSnapshot) */
   totalPrice?: Price;
-  /** Human-readable variant summary */
-  variantDetails?: string;
   productName?: string;
 }
 
@@ -77,8 +74,6 @@ export interface Order {
   trackingNumber?: string;
   /** Internal staff notes (not visible to customer) */
   adminNotes?: string;
-  shippingAddress?: string;
-  billingAddress?: string;
   createdAt?: Date;
   updatedAt?: Date;
   /** Detailed line items associated with this order */

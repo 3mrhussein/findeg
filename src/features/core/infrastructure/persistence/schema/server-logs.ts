@@ -1,47 +1,38 @@
 /**
  * Server Logs Database Schema
- *
- * Tracks all incoming requests and significant server-side events.
- * Used for monitoring, debugging, and customer support.
  */
 
-import { pgTable, serial, text, integer, jsonb, timestamp, varchar } from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
-// We won't import users directly here either to avoid future circularities.
+import { pgTable, serial, text, varchar, timestamp, jsonb, integer } from "drizzle-orm/pg-core";
+import { systemSchema } from "./schemas";
 
 /**
- * Server Logs Table
- *
- * Tracks:
- * - `requestId` — Unique ID for tracing across services
- * - `userId` — Optional ID of the user who performed the action
- * - `method` — HTTP method (GET, POST, etc.)
- * - `path` — Request URL path
- * - `statusCode` — HTTP response status
- * - `duration` — Execution time in milliseconds
- * - `level` — Log level (info, warn, error)
- * - `message` — Log description
- * - `metadata` — Additional structured data (request body, headers, etc. - sanitized)
+ * server_logs
  */
-export const serverLogs = pgTable("server_logs", {
+export const serverLogs = systemSchema.table("server_logs", {
   id: serial("id").primaryKey(),
+
   requestId: varchar("request_id", { length: 50 }).notNull(),
   userId: integer("user_id"),
   sessionId: varchar("session_id", { length: 50 }),
   method: varchar("method", { length: 10 }),
   path: text("path"),
   statusCode: integer("status_code"),
-  duration: integer("duration"), // ms
+  duration: integer("duration"),
+
+  /** Log level: "info", "warn", "error", "debug" */
   level: varchar("level", { length: 20 }).default("info").notNull(),
+
+  /** Message content */
   message: text("message").notNull(),
+
+  /** Trace metadata (request ID, file source, etc.) */
   metadata: jsonb("metadata").$type<Record<string, unknown>>(),
+
   userAgent: text("user_agent"),
   ipAddress: varchar("ip_address", { length: 45 }),
+
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-/**
- * Type Exports
- */
-export type ServerLogEntry = typeof serverLogs.$inferSelect;
-export type NewServerLogEntry = typeof serverLogs.$inferInsert;
+export type ServerLog = typeof serverLogs.$inferSelect;
+export type NewServerLog = typeof serverLogs.$inferInsert;

@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { IconTooltip } from "@/components/ui/IconTooltip";
 import { MoreHorizontal, Pencil, Trash2, Eye } from "lucide-react";
 import type { Product } from "@/features/catalog/domain/entities/Product";
+import { ProductEntity } from "@/features/catalog/domain/entities/Product";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 
@@ -83,7 +84,7 @@ export function ProductTable({ products }: ProductTableProps) {
                 <TableCell className="font-medium">
                   <div className="flex flex-col">
                     <span>{product.name}</span>
-                    {product.isNew && (
+                    {new ProductEntity(product).isNew() && (
                       <Badge variant="secondary" className="w-fit text-[10px] px-1 py-0 h-4 mt-1">
                         NEW
                       </Badge>

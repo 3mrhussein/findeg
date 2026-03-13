@@ -51,8 +51,6 @@ export class DrizzleOrderRepository implements IOrderRepository {
       shippingAddressSnapshot: (dbOrder.shippingAddressSnapshot as any) || undefined,
       trackingNumber: dbOrder.trackingNumber || undefined,
       adminNotes: dbOrder.adminNotes || undefined,
-      shippingAddress: dbOrder.shippingAddress || undefined,
-      billingAddress: dbOrder.billingAddress || undefined,
       createdAt: dbOrder.createdAt,
       updatedAt: dbOrder.updatedAt,
       customerName: customerName,
@@ -64,14 +62,12 @@ export class DrizzleOrderRepository implements IOrderRepository {
         variantId: (item as any).variantId || undefined,
         quantity: item.quantity as Quantity,
         uomCode: (item as any).uomCode || undefined,
-        priceAtTime: Number(item.priceAtTime) as Price,
         unitPriceSnapshot: item.unitPriceSnapshot
           ? (Number(item.unitPriceSnapshot) as Price)
           : undefined,
         totalPrice: item.totalPrice ? (Number(item.totalPrice) as Price) : undefined,
         productNameSnapshot: item.productNameSnapshot || undefined,
         productSkuSnapshot: item.productSkuSnapshot || undefined,
-        variantDetails: item.variantDetails || undefined,
         variantSnapshot: (item.variantSnapshot as any) || undefined,
       })),
     };
@@ -251,8 +247,6 @@ export class DrizzleOrderRepository implements IOrderRepository {
         currency: rest.currency || "EGP",
         paymentMethod: rest.paymentMethod,
         shippingAddressSnapshot: rest.shippingAddressSnapshot,
-        shippingAddress: rest.shippingAddress,
-        billingAddress: rest.billingAddress,
       };
 
       const [newOrder] = await tx.insert(orders).values(dbOrderData).returning();
@@ -268,7 +262,6 @@ export class DrizzleOrderRepository implements IOrderRepository {
               variantId: item.variantId,
               quantity: item.quantity,
               uomCode: item.uomCode,
-              priceAtTime: String(item.priceAtTime || item.price || 0),
               unitPriceSnapshot: item.unitPriceSnapshot
                 ? String(item.unitPriceSnapshot)
                 : String(item.price || 0),
@@ -278,7 +271,6 @@ export class DrizzleOrderRepository implements IOrderRepository {
               productNameSnapshot: item.productNameSnapshot,
               productSkuSnapshot: item.productSkuSnapshot,
               variantSnapshot: item.variantSnapshot,
-              variantDetails: item.variantDetails,
             })),
           )
           .returning();

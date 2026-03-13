@@ -6,6 +6,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { Heart, Eye, Star, ShoppingCart } from "lucide-react";
 import { Link } from "@/i18n/navigation";
 import type { Product } from "@/features/catalog/domain/entities/Product";
+import { ProductEntity } from "@/features/catalog/domain/entities/Product";
 import { VariantEntity } from "@/features/catalog/domain/entities/Variant";
 import type { UomCode } from "@/features/core/domain/types/common";
 import { getCanonicalProductHref } from "@/features/catalog/presentation/utils/product-url";
@@ -180,14 +181,14 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
         className: "bg-orange-500 text-white",
       };
     }
-    if (product.isNew) {
+    if (new ProductEntity(product).isNew()) {
       return {
         text: t("NewBadge"),
         className: "bg-emerald-600 text-white",
       };
     }
     return null;
-  }, [discountPercentage, product.isNew, stockSnapshot.lowStock, t]);
+  }, [discountPercentage, product, stockSnapshot.lowStock, t]);
 
   /**
    * Adds the selected variant/UOM to cart.

@@ -1,45 +1,37 @@
 /**
- * Collections Database Schema
+ * Product Collections Schema
  *
- * Collections are curated groupings of products powered by tags.
+ * Supports manually curated collections (e.g., "Back to School", "Office Essentials").
  */
 
-import {
-  pgTable,
-  serial,
-  text,
-  timestamp,
-  integer,
-  primaryKey,
-  boolean,
-  jsonb,
-} from "drizzle-orm/pg-core";
+import { pgTable, serial, text, integer, boolean, timestamp, jsonb } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { tags } from "./tags";
+import { catalogSchema } from "./schemas";
 import type { LocalizedStringDraft } from "@/features/core/domain/value-objects";
 
 /**
  * Collections Table
+ *
+ * Used for creating marketing-driven groups of products.
  */
-export const collections = pgTable("collections", {
+export const collections = catalogSchema.table("collections", {
   id: serial("id").primaryKey(),
 
-  /** Unique URL slug (e.g., 'back-to-school') */
+  /** Unique slug for collection URLs */
   slug: text("slug").notNull().unique(),
 
-  /** Localized display title */
-  localizedTitle: jsonb("localized_title").$type<LocalizedStringDraft>().notNull(),
-
-  /** Optional localized subtitle/description for the hero section */
+  /** Metadata for display */
+  localizedTitle: jsonb("localized_title").$type<LocalizedStringDraft>().default({}).notNull(),
   localizedSubtitle: jsonb("localized_subtitle").$type<LocalizedStringDraft>(),
 
-  /** Hero lifestyle image for collection pages */
+  /** Optional hero image for the collection page */
   heroImageUrl: text("hero_image_url"),
 
-  /** Order in lists/navigation */
+  /** Display order (lower = first) */
   sortOrder: integer("sort_order").default(0).notNull(),
 
-  /** Whether the collection is visible */
+  /** Whether the collection is published */
   isActive: boolean("is_active").default(true).notNull(),
 
   createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -47,11 +39,11 @@ export const collections = pgTable("collections", {
 });
 
 /**
- * Collection Tags Join Table
+ * Collection Tags (Join Table)
  *
- * Defines which tags power a collection (Rule-based OR matching).
+ * Collections can be linked to multiple tags for flexible categorization.
  */
-export const collectionTags = pgTable(
+export const collectionTags = catalogSchema.table(
   "collection_tags",
   {
     collectionId: integer("collection_id")
@@ -61,21 +53,18 @@ export const collectionTags = pgTable(
       .notNull()
       .references(() => tags.id, { onDelete: "cascade" }),
   },
-  (table) => ({
-    pk: primaryKey({ columns: [table.collectionId, table.tagId] }),
+  (table: any) => ({
+    pk: { columns: [table.collectionId, table.tagId] },
   }),
 );
 
 /**
- * Collections Relations
+ * Relations
  */
 export const collectionsRelations = relations(collections, ({ many }) => ({
-  collectionTags: many(collectionTags),
+  tags: many(collectionTags),
 }));
 
-/**
- * Collection Tags Relations
- */
 export const collectionTagsRelations = relations(collectionTags, ({ one }) => ({
   collection: one(collections, {
     fields: [collectionTags.collectionId],

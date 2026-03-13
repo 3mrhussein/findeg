@@ -1,9 +1,6 @@
 import { ID, Slug } from "@/features/core/domain/types/common";
 import { db } from "@/features/core/infrastructure/persistence";
-import {
-  categories,
-  categoryTranslations,
-} from "@/features/core/infrastructure/persistence/schema";
+import { categories } from "@/features/core/infrastructure/persistence/schema";
 import { ICategoryRepository } from "../../application/interfaces/ICategoryRepository";
 import { Category } from "../../domain/entities/Category";
 import { CategoryInput } from "@/features/administration/domain/types";
@@ -16,7 +13,6 @@ import {
 } from "@/features/core/domain/value-objects";
 
 type DbCategory = typeof categories.$inferSelect;
-type DbTranslation = typeof categoryTranslations.$inferSelect;
 
 /**
  * Drizzle Category Repository
@@ -45,7 +41,6 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
    */
   private mapToDomain(
     dbCategory: DbCategory,
-    translation?: DbTranslation,
     children?: Category[],
     requestedLocale: Locale = DEFAULT_LOCALE,
   ): Category {
@@ -56,38 +51,12 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
       string
     >;
 
-    const translatedSlug =
-      translation?.name && this.toRouteSlug(translation.name)
-        ? this.toRouteSlug(translation.name)
-        : dbCategory.slug;
-
     const localizedContent = {
-      slug: toLocalizedString(
-        Object.keys(localizedSlugDraft).length > 0
-          ? localizedSlugDraft
-          : translation
-            ? { [translation.language]: translatedSlug }
-            : undefined,
-        dbCategory.slug,
-      ),
-      name: toLocalizedString(
-        Object.keys(localizedNameDraft).length > 0
-          ? localizedNameDraft
-          : translation
-            ? { [translation.language]: translation.name }
-            : undefined,
-        translation?.name || dbCategory.slug,
-      ),
+      slug: toLocalizedString(localizedSlugDraft, dbCategory.slug),
+      name: toLocalizedString(localizedNameDraft, dbCategory.slug),
       description:
-        Object.keys(localizedDescriptionDraft).length > 0 || translation?.description
-          ? toLocalizedString(
-              Object.keys(localizedDescriptionDraft).length > 0
-                ? localizedDescriptionDraft
-                : translation?.description
-                  ? { [translation.language]: translation.description }
-                  : undefined,
-              translation?.description || "",
-            )
+        Object.keys(localizedDescriptionDraft).length > 0
+          ? toLocalizedString(localizedDescriptionDraft, "")
           : undefined,
     };
 
@@ -118,25 +87,9 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
    * @returns Category entity or null.
    */
   async getById(id: ID, language: Locale = DEFAULT_LOCALE): Promise<Category | null> {
-    const result = await db
-      .select({ category: categories, translation: categoryTranslations })
-      .from(categories)
-      .leftJoin(
-        categoryTranslations,
-        and(
-          eq(categoryTranslations.categoryId, categories.id),
-          eq(categoryTranslations.language, language),
-        ),
-      )
-      .where(eq(categories.id, id))
-      .limit(1);
+    const result = await db.select().from(categories).where(eq(categories.id, id)).limit(1);
     if (result.length === 0) return null;
-    return this.mapToDomain(
-      result[0].category,
-      result[0].translation || undefined,
-      undefined,
-      language,
-    );
+    return this.mapToDomain(result[0], undefined, language);
   }
 
   /**
@@ -146,21 +99,9 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
    * @returns Array of Category entities.
    */
   async getAll(language: Locale = DEFAULT_LOCALE): Promise<Category[]> {
-    const results = await db
-      .select({ category: categories, translation: categoryTranslations })
-      .from(categories)
-      .leftJoin(
-        categoryTranslations,
-        and(
-          eq(categoryTranslations.categoryId, categories.id),
-          eq(categoryTranslations.language, language),
-        ),
-      )
-      .orderBy(asc(categories.sortOrder));
+    const results = await db.select().from(categories).orderBy(asc(categories.sortOrder));
 
-    return results.map(({ category, translation }) =>
-      this.mapToDomain(category, translation || undefined, undefined, language),
-    );
+    return results.map((category) => this.mapToDomain(category, undefined, language));
   }
 
   /**
@@ -172,27 +113,15 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
    */
   async getBySlug(slug: string, language: Locale = DEFAULT_LOCALE): Promise<Category | null> {
     const result = await db
-      .select({ category: categories, translation: categoryTranslations })
+      .select()
       .from(categories)
-      .leftJoin(
-        categoryTranslations,
-        and(
-          eq(categoryTranslations.categoryId, categories.id),
-          eq(categoryTranslations.language, language),
-        ),
-      )
       .where(
         or(eq(categories.slug, slug), sql`${categories.localizedSlug} ->> ${language} = ${slug}`),
       )
       .limit(1);
 
     if (result.length === 0) return null;
-    return this.mapToDomain(
-      result[0].category,
-      result[0].translation || undefined,
-      undefined,
-      language,
-    );
+    return this.mapToDomain(result[0], undefined, language);
   }
 
   // Tree Operations
@@ -231,21 +160,12 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
    */
   async getRoots(language: Locale = DEFAULT_LOCALE): Promise<Category[]> {
     const results = await db
-      .select({ category: categories, translation: categoryTranslations })
+      .select()
       .from(categories)
-      .leftJoin(
-        categoryTranslations,
-        and(
-          eq(categoryTranslations.categoryId, categories.id),
-          eq(categoryTranslations.language, language),
-        ),
-      )
       .where(or(isNull(categories.parentId), eq(categories.depth, 0)))
       .orderBy(asc(categories.sortOrder));
 
-    return results.map(({ category, translation }) =>
-      this.mapToDomain(category, translation || undefined, undefined, language),
-    );
+    return results.map((category) => this.mapToDomain(category, undefined, language));
   }
 
   /**
@@ -257,21 +177,12 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
    */
   async getChildren(parentId: ID, language: Locale = DEFAULT_LOCALE): Promise<Category[]> {
     const results = await db
-      .select({ category: categories, translation: categoryTranslations })
+      .select()
       .from(categories)
-      .leftJoin(
-        categoryTranslations,
-        and(
-          eq(categoryTranslations.categoryId, categories.id),
-          eq(categoryTranslations.language, language),
-        ),
-      )
       .where(eq(categories.parentId, parentId))
       .orderBy(asc(categories.sortOrder));
 
-    return results.map(({ category, translation }) =>
-      this.mapToDomain(category, translation || undefined, undefined, language),
-    );
+    return results.map((category) => this.mapToDomain(category, undefined, language));
   }
 
   /**
@@ -288,23 +199,14 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
     if (!parent || !parent.path) return [];
 
     const results = await db
-      .select({ category: categories, translation: categoryTranslations })
+      .select()
       .from(categories)
-      .leftJoin(
-        categoryTranslations,
-        and(
-          eq(categoryTranslations.categoryId, categories.id),
-          eq(categoryTranslations.language, language),
-        ),
-      )
       .where(like(categories.path, `${parent.path}%`))
       .orderBy(asc(categories.depth), asc(categories.sortOrder));
 
     return results
-      .filter((r) => r.category.id !== categoryId) // Exclude self
-      .map(({ category, translation }) =>
-        this.mapToDomain(category, translation || undefined, undefined, language),
-      );
+      .filter((c) => c.id !== categoryId) // Exclude self
+      .map((category) => this.mapToDomain(category, undefined, language));
   }
 
   /**
@@ -315,26 +217,10 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
    * @returns Category entity or null.
    */
   async getByPath(path: string, language: Locale = DEFAULT_LOCALE): Promise<Category | null> {
-    const result = await db
-      .select({ category: categories, translation: categoryTranslations })
-      .from(categories)
-      .leftJoin(
-        categoryTranslations,
-        and(
-          eq(categoryTranslations.categoryId, categories.id),
-          eq(categoryTranslations.language, language),
-        ),
-      )
-      .where(eq(categories.path, path))
-      .limit(1);
+    const result = await db.select().from(categories).where(eq(categories.path, path)).limit(1);
 
     if (result.length === 0) return null;
-    return this.mapToDomain(
-      result[0].category,
-      result[0].translation || undefined,
-      undefined,
-      language,
-    );
+    return this.mapToDomain(result[0], undefined, language);
   }
 
   // Admin Operations
@@ -403,33 +289,12 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
         .where(eq(categories.id, newCategory.id))
         .returning();
 
-      if (input.translations && input.translations.length > 0) {
-        await tx.insert(categoryTranslations).values(
-          input.translations.map((t) => ({
-            categoryId: finalCategory.id,
-            language: t.language,
-            name: t.name,
-            description: t.description || null,
-          })),
-        );
-      }
+      // 3. (Legacy translations skipped)
 
-      const firstTranslation = input.translations?.[0];
       return this.mapToDomain(
         finalCategory,
-        firstTranslation
-          ? {
-              categoryId: finalCategory.id,
-              language: firstTranslation.language,
-              name: firstTranslation.name,
-              nameNormalized: null,
-              description: firstTranslation.description || null,
-              createdAt: new Date(),
-              updatedAt: new Date(),
-            }
-          : undefined,
         undefined,
-        (firstTranslation?.language || DEFAULT_LOCALE) as Locale,
+        (input.translations?.[0]?.language || DEFAULT_LOCALE) as Locale,
       );
     });
   }
@@ -474,35 +339,12 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
         .where(eq(categories.id, id))
         .returning();
 
-      await tx.delete(categoryTranslations).where(eq(categoryTranslations.categoryId, id));
+      // 3. (Legacy translations skipped)
 
-      if (input.translations && input.translations.length > 0) {
-        await tx.insert(categoryTranslations).values(
-          input.translations.map((t) => ({
-            categoryId: id,
-            language: t.language,
-            name: t.name,
-            description: t.description || null,
-          })),
-        );
-      }
-
-      const firstTranslation = input.translations?.[0];
       return this.mapToDomain(
         updated,
-        firstTranslation
-          ? {
-              categoryId: id,
-              language: firstTranslation.language,
-              name: firstTranslation.name,
-              nameNormalized: null,
-              description: firstTranslation.description || null,
-              createdAt: new Date(),
-              updatedAt: new Date(),
-            }
-          : undefined,
         undefined,
-        (firstTranslation?.language || DEFAULT_LOCALE) as Locale,
+        (input.translations?.[0]?.language || DEFAULT_LOCALE) as Locale,
       );
     });
   }

@@ -6,3 +6,5 @@ export * from "./AdminOrderService";
 export * from "./AdminInventoryService";
 export * from "./AdminDashboardService";
 export * from "./ProductImportService";
+export * from "./AdminTagService";
+export * from "./AdminCollectionService";

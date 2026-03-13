@@ -1,38 +1,34 @@
 import { container } from "@/features/core/infrastructure/di/ServiceContainer";
-import { ProductForm } from "../ProductForm";
-import { Suspense } from "react";
+import { ProductForm } from "@/features/administration/presentation/components/catalog/ProductForm";
+import { resolveLocale } from "@/features/core/domain/value-objects";
 
 /**
- *
- */
-/**
- *
+ * /admin/products/new
+ * Create a new product with the redesigned ProductForm.
  */
 export default async function NewProductPage() {
-  const categoriesPromise = container.adminCategoryService.getAll().then((c) =>
-    c.map((x) => ({
-      id: x.id,
-      slug: x.slug,
-      name: x.name,
-    })),
-  );
+  const [categoriesRaw, brandsRaw] = await Promise.all([
+    container.adminCategoryService.getAll(),
+    container.adminBrandService.getAll(),
+  ]);
 
-  const brandsPromise = container.adminBrandService.getAll().then((b) =>
-    b.map((x) => ({
-      id: x.id,
-      name: x.name,
-    })),
-  );
+  const categories = categoriesRaw.map((c) => ({ id: c.id, name: c.name }));
+  const brands = brandsRaw.map((b) => ({ id: b.id, name: b.name }));
 
   return (
-    <div className="flex-1 space-y-4 p-8 pt-6">
-      <div className="flex items-center justify-between space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight">Create Product</h2>
+    <div className="flex-1 space-y-6 p-6 pt-4">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-semibold tracking-tight">New Product</h1>
+          <p className="text-sm text-muted-foreground">
+            Fill in the details below. Variants are optional — simple products get one default
+            variant.
+          </p>
+        </div>
       </div>
-      <div className="max-w-2xl">
-        <Suspense fallback={<div className="h-96 w-full animate-pulse rounded-lg bg-muted" />}>
-          <ProductForm categoriesPromise={categoriesPromise} brandsPromise={brandsPromise} />
-        </Suspense>
+
+      <div className="max-w-4xl">
+        <ProductForm mode="create" categories={categories} brands={brands} />
       </div>
     </div>
   );

@@ -1,61 +1,41 @@
-import {
-  pgTable,
-  serial,
-  integer,
-  text,
-  timestamp,
-  jsonb,
-  uniqueIndex,
-  index,
-} from "drizzle-orm/pg-core";
+/**
+ * School List Sessions Database Schema
+ */
+
+import { pgTable, serial, text, timestamp, integer, jsonb } from "drizzle-orm/pg-core";
+import { schoolEngineSchema } from "./schemas";
 import { schoolLists } from "./school-lists";
 import { users } from "./users";
 
 /**
  * school_list_parent_sessions
  *
- * Tracks the "state" of a parent's customized list.
- * Saves brand swaps and optional item selections.
+ * Tracks user progress as they pick through a school list.
  */
-export const schoolListParentSessions = pgTable(
-  "school_list_parent_sessions",
-  {
-    id: serial("id").primaryKey(),
+export const schoolListParentSessions = schoolEngineSchema.table("school_list_parent_sessions", {
+  id: serial("id").primaryKey(),
 
-    listId: integer("list_id")
-      .notNull()
-      .references(() => schoolLists.id, { onDelete: "cascade" }),
+  listId: integer("list_id")
+    .notNull()
+    .references(() => schoolLists.id, { onDelete: "cascade" }),
 
-    userId: integer("user_id").references(() => users.id, { onDelete: "cascade" }),
+  userId: integer("user_id").references(() => users.id, { onDelete: "cascade" }),
 
-    /** Session token for guest users */
-    sessionToken: text("session_token"),
+  /** Shared session token for guest tracking */
+  sessionToken: text("session_token"),
 
-    /**
-     * Map of item ID to selected variant ID
-     * Example: { "12": 450, "15": 982 }
-     */
-    itemSelections: jsonb("item_selections").$type<Record<string, number>>().default({}).notNull(),
+  /** JSON snapshot of user's current picks */
+  itemSelections: jsonb("item_selections").$type<Record<string, any>>().default({}).notNull(),
 
-    /** IDs of optional items that were explicitly added */
-    optionalInclusions: integer("optional_inclusions").array().default([]).notNull(),
+  /** IDs of optional items the user HAS included/excluded */
+  optionalInclusions: integer("optional_inclusions").array().default([]).notNull(),
+  optionalExclusions: integer("optional_exclusions").array().default([]).notNull(),
 
-    /** IDs of optional items that were explicitly removed (if ever relevant) */
-    optionalExclusions: integer("optional_exclusions").array().default([]).notNull(),
-
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").defaultNow().notNull(),
-  },
-  (table) => ({
-    uqUserSession: uniqueIndex("uq_school_parent_user_session").on(table.listId, table.userId),
-    uqGuestSession: uniqueIndex("uq_school_parent_guest_session").on(
-      table.listId,
-      table.sessionToken,
-    ),
-    idxUser: index("idx_school_parent_session_user").on(table.userId),
-    idxToken: index("idx_school_parent_session_token").on(table.sessionToken),
-  }),
-);
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
 
 export type SchoolListParentSession = typeof schoolListParentSessions.$inferSelect;
 export type NewSchoolListParentSession = typeof schoolListParentSessions.$inferInsert;
+export type SchoolListSession = SchoolListParentSession; // Alias for compatibility
+export type NewSchoolListSession = NewSchoolListParentSession; // Alias for compatibility

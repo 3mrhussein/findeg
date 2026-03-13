@@ -5,6 +5,7 @@
  * Import order matters — tables with no FK dependencies come first.
  */
 
+export * from "./schemas";
 export * from "./users";
 export * from "./identity-access";
 export * from "./brands";
@@ -24,8 +25,9 @@ export * from "./collections";
 export * from "./inventory";
 export * from "./discount-rules";
 export * from "./school-lists";
-export * from "./school-access";
+export * from "./school-lists";
 export * from "./school-list-sessions";
+export * from "./school-access";
 export * from "./cart-kits";
 export * from "./search-logs";
 export * from "./notifications";

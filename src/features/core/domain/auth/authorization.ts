@@ -41,6 +41,12 @@ export const PERMISSION_CODES = {
   ADMIN_ROLES_READ: "admin.roles.read",
   ADMIN_ROLES_WRITE: "admin.roles.write",
 
+  // Taxonomy & Groups
+  ADMIN_TAGS_READ: "admin.tags.read",
+  ADMIN_TAGS_WRITE: "admin.tags.write",
+  ADMIN_COLLECTIONS_READ: "admin.collections.read",
+  ADMIN_COLLECTIONS_WRITE: "admin.collections.write",
+
   // Feature Specific
   ADMIN_SCHOOL_LISTS_READ: "admin.schoollists.read",
   ADMIN_SCHOOL_LISTS_WRITE: "admin.schoollists.write",

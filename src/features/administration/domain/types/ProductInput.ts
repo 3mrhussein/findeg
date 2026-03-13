@@ -104,9 +104,6 @@ export const ProductInputSchema = z.object({
   /** Active/visible status */
   isActive: z.boolean().optional().default(true),
 
-  /** New product flag */
-  isNew: z.boolean().optional().default(false),
-
   /** Localized content — at least one language required */
   translations: z.array(ProductTranslationSchema).min(1, "At least one translation is required"),
 

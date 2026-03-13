@@ -50,10 +50,15 @@ interface ProductPdpLookupResult {
   shouldRedirect: boolean;
 }
 
-function resolveCustomerGroupFromSession(session: {
-  organizationId?: string;
-  activeRoleIds?: string[];
-} | null): CustomerGroup {
+/**
+ *
+ */
+function resolveCustomerGroupFromSession(
+  session: {
+    organizationId?: string;
+    activeRoleIds?: string[];
+  } | null,
+): CustomerGroup {
   if (!session) return "public_b2c";
 
   const roleIds = session.activeRoleIds || [];
@@ -68,6 +73,9 @@ function resolveCustomerGroupFromSession(session: {
   return "public_b2c";
 }
 
+/**
+ *
+ */
 function parseCategoryPath(path?: string): number[] {
   if (!path) return [];
   return path
@@ -76,15 +84,24 @@ function parseCategoryPath(path?: string): number[] {
     .filter((value) => Number.isInteger(value) && value > 0);
 }
 
+/**
+ *
+ */
 function hasExplicitInventory(product: Product): boolean {
   return (product.variants || []).some((variant) => (variant.inventory?.length ?? 0) > 0);
 }
 
+/**
+ *
+ */
 function getPrimaryVariant(product: Product): Variant | undefined {
   const variants = product.variants || [];
   return variants.find((variant) => variant.variantKey === "default") || variants[0];
 }
 
+/**
+ *
+ */
 function getStockSnapshot(product: Product): ProductStockSnapshot {
   if (!hasExplicitInventory(product)) {
     return {
@@ -111,6 +128,9 @@ function getStockSnapshot(product: Product): ProductStockSnapshot {
   };
 }
 
+/**
+ *
+ */
 async function resolveProductLookup(
   locale: Locale,
   slug: string,

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
-import { Product } from "@/features/catalog/domain/entities/Product";
+import { Product, ProductEntity } from "@/features/catalog/domain/entities/Product";
 import { getCanonicalProductHref } from "@/features/catalog/presentation/utils/product-url";
 import { useCart } from "@/hooks/useCart";
 import { useTranslations, useLocale } from "next-intl";
@@ -38,9 +38,11 @@ export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
         data-testid={`product-card-${product.id}`}
       >
         <div className="relative shrink-0 w-full sm:w-[200px] aspect-square rounded-xl overflow-hidden bg-slate-50 dark:bg-slate-900">
-          <Badge className="absolute top-2 left-2 z-10 uppercase tracking-wide">
-            {t("NewBadge")}
-          </Badge>
+          {new ProductEntity(product).isNew() && (
+            <Badge className="absolute top-2 left-2 z-10 uppercase tracking-wide">
+              {t("NewBadge")}
+            </Badge>
+          )}
           <Image
             src={imageUrl}
             alt={product.name}
@@ -103,9 +105,11 @@ export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
   return (
     <div className="group relative" data-testid={`product-card-${product.id}`}>
       <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-800">
-        <Badge className="absolute top-3 left-3 z-10 uppercase tracking-wide">
-          {t("NewBadge")}
-        </Badge>
+        {new ProductEntity(product).isNew() && (
+          <Badge className="absolute top-3 left-3 z-10 uppercase tracking-wide">
+            {t("NewBadge")}
+          </Badge>
+        )}
 
         <Image
           src={imageUrl}
@@ -138,7 +142,10 @@ export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
             {product.categoryName || t("DefaultCategory")}
           </div>
           <h3 className="text-sm font-medium text-slate-900 dark:text-white line-clamp-2">
-            <Link href={getCanonicalProductHref(product)} data-testid={`product-card-title-${product.id}`}>
+            <Link
+              href={getCanonicalProductHref(product)}
+              data-testid={`product-card-title-${product.id}`}
+            >
               <span aria-hidden="true" className="absolute inset-0 z-0"></span>
               {product.name}
             </Link>

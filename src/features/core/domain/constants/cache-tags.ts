@@ -9,6 +9,8 @@ export const CACHE_TAGS = {
   CATALOG_PRODUCTS: "catalog:products",
   CATALOG_CATEGORIES: "catalog:categories",
   CATALOG_BRANDS: "catalog:brands",
+  CATALOG_TAGS: "catalog:tags",
+  CATALOG_COLLECTIONS: "catalog:collections",
   CATALOG_REVIEWS: "catalog:reviews",
 
   // Entity-level tag factories — use for surgical per-item invalidation
@@ -16,4 +18,8 @@ export const CACHE_TAGS = {
   productDetail: (id: number) => `catalog:product:${id}`,
   /** Tag for a single category detail cache entry. */
   categoryDetail: (slug: string) => `catalog:category:${slug}`,
+  /** Tag for a single tag detail cache entry. */
+  tagDetail: (id: number) => `catalog:tag:${id}`,
+  /** Tag for a single collection detail cache entry. */
+  collectionDetail: (id: number) => `catalog:collection:${id}`,
 } as const;

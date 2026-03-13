@@ -639,9 +639,12 @@
       "CollapseSidebar": "طي الشريط الجانبي",
       "Sidebar": {
         "Dashboard": "لوحة التحكم",
+        "Catalog": "الكاتالوج",
         "Products": "المنتجات",
         "Categories": "الفئات",
         "Brands": "العلامات التجارية",
+        "Tags": "الوسوم",
+        "Collections": "المجموعات",
         "Orders": "الطلبات",
         "Inventory": "المخزون",
         "Media": "الوسائط",
@@ -666,7 +669,66 @@
         "Customer": "العميل",
         "Date": "التاريخ",
         "Total": "المجموع",
-        "Status": "الحالة"
+        "Status": "الحالة",
+        "Tag": "الوسم",
+        "Group": "المجموعة",
+        "Key": "المفتاح",
+        "Label": "الاسم",
+        "Scope": "النطاق",
+        "Active": "نشط"
+      },
+      "Tags": {
+        "Title": "إدارة الوسوم",
+        "Subtitle": "نظم منتجاتك باستخدام المجموعات والمفاتيح للوصول الأسرع.",
+        "NewTag": "وسم جديد",
+        "EditTag": "تعديل الوسم",
+        "SearchPlaceholder": "البحث بالمفتاح أو الاسم...",
+        "FilterGroup": "تصفية حسب المجموعة",
+        "FilterScope": "تصفية حسب النطاق",
+        "AllGroups": "جميع المجموعات",
+        "AllScopes": "جميع النطاقات",
+        "Form": {
+          "Group": "المجموعة",
+          "GroupPlaceholder": "مثال: الموسم، العلامة التجارية، الخامة",
+          "GroupHint": "اختر من المجموعات الحالية أو اكتب لإنشاء مجموعة جديدة",
+          "Key": "المفتاح",
+          "KeyPlaceholder": "مثال: back-to-school",
+          "KeyHint": "معرف فريد داخل المجموعة",
+          "LabelEn": "الاسم (بالإنجليزي)",
+          "LabelAr": "الاسم (بالعربي)",
+          "DescriptionEn": "الوصف (بالإنجليزي)",
+          "DescriptionAr": "الوصف (بالعربي)",
+          "Icon": "اسم الأيقونة",
+          "IconHint": "اسم الأيقونة من Lucide (مثال: star, zap)",
+          "Color": "اللون",
+          "Scope": "نطاق الظهور",
+          "IsActive": "نشط",
+          "Preview": "معاينة",
+          "GroupKeyPreview": "معرف المجموعة:المفتاح"
+        }
+      },
+      "Collections": {
+        "Title": "إدارة المجموعات",
+        "Subtitle": "نظم مجموعات المنتجات حسب السمات وتحكم في ترتيب ظهورها.",
+        "NewCollection": "مجموعة جديدة",
+        "EditCollection": "تعديل المجموعة",
+        "DragDropHint": "اسحب البطاقات لتغيير الترتيب",
+        "SortOrder": "الترتيب",
+        "HeroImage": "صورة الواجهة",
+        "SelectTags": "تعيين الوسوم",
+        "SelectedTags": "{count} وسم مختار",
+        "TagManagement": "تعيين الوسوم",
+        "TagPanelDescription": "اختر الوسوم النشطة لتضمينها في هذه المجموعة.",
+        "Form": {
+          "TitleEn": "العنوان (بالإنجليزي)",
+          "TitleAr": "العنوان (بالعربي)",
+          "SubtitleEn": "العنوان الفرعي (بالإنجليزي)",
+          "SubtitleAr": "العنوان الفرعي (بالعربي)",
+          "Slug": "الاسم اللطيف (Slug)",
+          "HeroImageUrl": "رابط الصورة",
+          "IsActive": "نشط"
+        },
+        "SearchPlaceholder": "البحث بالعنوان أو الاسم اللطيف..."
       }
     },
     "Error": {
@@ -848,6 +910,50 @@
       "LowStock": "تنبيه انخفاض المخزون",
       "NewReview": "مراجعة جديدة مقدمة",
       "NewAccessRequest": "طلب دخول جديد"
+    }
+  },
+  "Administration": {
+    "Catalog": {
+      "Products": {
+        "Titles": {
+          "New": "منتج جديد",
+          "Edit": "تعديل المنتج #{id}",
+          "BasicInfo": "معلومات المنتج",
+          "Variants": "الأنواع (Variants)",
+          "Pricing": "التسعير",
+          "UnitsOfMeasure": "وحدات القياس",
+          "Inventory": "المخزون والهوية"
+        },
+        "Fields": {
+          "NameEn": "الاسم (إنجليزي)",
+          "NameAr": "الاسم (عربي)",
+          "DescriptionEn": "الوصف (إنجليزي)",
+          "DescriptionAr": "الوصف (عربي)",
+          "Category": "الفئة",
+          "Brand": "العلامة التجارية",
+          "Status": "حالة النشاط",
+          "PricingMode": "وضع التسعير",
+          "UoMSharing": "وضع مشاركة وحدات القياس",
+          "BasePrice": "السعر الأساسي",
+          "StrikePrice": "السعر الأصلي",
+          "CostPrice": "سعر التكلفة",
+          "Sku": "رمز المخزن (SKU)",
+          "Barcode": "الباركود",
+          "Weight": "الوزن",
+          "LowStock": "تنبيه انخفاض المخزون",
+          "UoMFactor": "المعامل",
+          "MinQty": "الحد الأدنى للكمية",
+          "IsSellable": "متاح للبيع"
+        },
+        "Helpers": {
+          "SharedPricing": "سيتم تطبيق سعر واحد على جميع الأنواع.",
+          "SimpleProduct": "لا توجد أنواع — سيتم إنشاء نوع افتراضي واحد.",
+          "WeightUnitG": "جرام",
+          "WeightUnitKg": "كجم",
+          "SkuHint": "حروف كبيرة، أرقام، وشرطات فقط",
+          "BarcodeHint": "EAN، UPC، أو ISBN"
+        }
+      }
     }
   }
 }

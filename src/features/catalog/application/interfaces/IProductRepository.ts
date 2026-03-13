@@ -24,7 +24,6 @@ export interface ProductFilters {
   /** Filters on the default variant's base_price */
   maxPrice?: number;
   isActive?: boolean;
-  isNew?: boolean;
   onSale?: boolean;
   search?: string;
   limit?: number;
