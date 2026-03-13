@@ -1,10 +1,7 @@
 import { z } from "zod";
 import { IdSchema, SlugSchema, type ID, type Slug } from "@/features/core/domain/types/common";
-import {
-  LocalizedStringSchema,
-  type Locale,
-  type LocalizedString,
-} from "@/features/core/domain/value-objects";
+import { LocalizedStringSchema, type LocalizedString } from "@/features/core/domain/value-objects";
+import { type SupportedLocale } from "@/features/core/domain/types/locale";
 
 export const CategoryLocalizedContentSchema = z.object({
   slug: LocalizedStringSchema,
@@ -68,3 +65,32 @@ export const UpdateCategorySchema = CreateCategorySchema.partial().extend({
   id: IdSchema,
 });
 export type UpdateCategory = z.infer<typeof UpdateCategorySchema>;
+
+export class CategoryEntity {
+  constructor(private category: Category) {}
+
+  getName(locale: SupportedLocale): string {
+    return (
+      this.category.localizedContent?.name?.[locale] ??
+      this.category.localizedContent?.name?.en ??
+      this.category.name
+    );
+  }
+
+  getSlug(locale: SupportedLocale): string {
+    return (
+      this.category.localizedContent?.slug?.[locale] ??
+      this.category.localizedContent?.slug?.en ??
+      this.category.slug
+    );
+  }
+
+  getDescription(locale: SupportedLocale): string {
+    return (
+      this.category.localizedContent?.description?.[locale] ??
+      this.category.localizedContent?.description?.en ??
+      this.category.description ??
+      ""
+    );
+  }
+}

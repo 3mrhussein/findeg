@@ -100,7 +100,6 @@ export class DrizzleProductRepository implements IProductRepository {
     brandName?: string,
     tags: Tag[] = [],
     attributes: any[] = [],
-    requestedLocale: Locale = DEFAULT_LOCALE,
   ): Product {
     const localizedSlugDraft = (dbProduct.localizedSlug || {}) as Record<string, string>;
     const localizedNameDraft = (dbProduct.localizedName || {}) as Record<string, string>;
@@ -123,18 +122,10 @@ export class DrizzleProductRepository implements IProductRepository {
     return {
       id: dbProduct.id,
       skuPrefix: dbProduct.skuPrefix || undefined,
-      name: resolveLocalizedString(localizedContent.name, requestedLocale, DEFAULT_LOCALE),
-      description: resolveLocalizedString(
-        localizedContent.description,
-        requestedLocale,
-        DEFAULT_LOCALE,
-      ),
-      longDescription: resolveLocalizedString(
-        localizedContent.longDescription,
-        requestedLocale,
-        DEFAULT_LOCALE,
-      ),
-      locale: requestedLocale,
+      name: localizedContent.name?.en ?? "",
+      description: localizedContent.description?.en ?? "",
+      longDescription: localizedContent.longDescription?.en ?? "",
+      locale: undefined,
       localizedContent,
       mediaSet: (dbProduct.mediaSet as ResponsiveMediaSet | null) || undefined,
       categoryId: dbProduct.categoryId || undefined,
@@ -364,7 +355,6 @@ export class DrizzleProductRepository implements IProductRepository {
       row.brand?.name,
       tagsResult,
       attributesResult,
-      language,
     );
   }
 
@@ -445,7 +435,6 @@ export class DrizzleProductRepository implements IProductRepository {
         row.brand?.name,
         [], // tags
         [], // attributes
-        language,
       ),
     );
   }
@@ -487,7 +476,6 @@ export class DrizzleProductRepository implements IProductRepository {
         row.brand?.name,
         [], // tags
         [], // attributes
-        language,
       ),
     );
   }
@@ -517,7 +505,6 @@ export class DrizzleProductRepository implements IProductRepository {
         row.brand?.name,
         [], // tags
         [], // attributes
-        language,
       ),
     );
   }
@@ -583,7 +570,6 @@ export class DrizzleProductRepository implements IProductRepository {
         row.brand?.name,
         [], // tags
         [], // attributes
-        language,
       ),
     );
   }
@@ -728,7 +714,6 @@ export class DrizzleProductRepository implements IProductRepository {
           row.brand?.name,
           [], // tags result omitted for bulk search performance
           [], // attributes result omitted for bulk search performance
-          language,
         ),
       ),
       total: totalResult[0]?.count || 0,
@@ -772,7 +757,6 @@ export class DrizzleProductRepository implements IProductRepository {
         row.brand?.name,
         [], // tags
         [], // attributes
-        language,
       ),
     );
   }
@@ -1098,50 +1082,5 @@ export class DrizzleProductRepository implements IProductRepository {
       .where(whereClause);
 
     return result[0]?.value || 0;
-  }
-
-  /**
-   * Retrieves a raw product input object including all translations.
-   */
-  async getByIdWithTranslations(id: ID): Promise<(ProductInput & { id: ID }) | null> {
-    const productResults = await db.select().from(products).where(eq(products.id, id)).limit(1);
-    if (productResults.length === 0) return null;
-
-    const variants = await db
-      .select()
-      .from(productVariants)
-      .where(eq(productVariants.productId, id));
-
-    const firstProduct = productResults[0];
-
-    // Extract translations from JSONB fields
-    const languages = new Set<string>();
-    const lName = (firstProduct.localizedName || {}) as Record<string, string>;
-    const lSlug = (firstProduct.localizedSlug || {}) as Record<string, string>;
-    const lDesc = (firstProduct.localizedDescription || {}) as Record<string, string>;
-    const lLong = (firstProduct.localizedLongDescription || {}) as Record<string, string>;
-
-    Object.keys(lName).forEach((k) => languages.add(k));
-    Object.keys(lSlug).forEach((k) => languages.add(k));
-    Object.keys(lDesc).forEach((k) => languages.add(k));
-    Object.keys(lLong).forEach((k) => languages.add(k));
-
-    const translations = Array.from(languages).map((lang) => ({
-      language: lang as Locale,
-      name: lName[lang] || "",
-      description: lDesc[lang] || "",
-      longDescription: lLong[lang] || "",
-    }));
-
-    return {
-      id: firstProduct.id,
-      skuPrefix: firstProduct.skuPrefix || undefined,
-      categoryId: firstProduct.categoryId || undefined,
-      brandId: firstProduct.brandId || undefined,
-      mediaSet: (firstProduct.mediaSet as ResponsiveMediaSet) || undefined,
-      isActive: firstProduct.isActive,
-      translations,
-      variants: variants as any,
-    };
   }
 }

@@ -7,7 +7,7 @@ import { ProductForm } from "@/features/administration/presentation/components/c
 export default async function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
   const { id: idParam } = await params;
   const id = parseInt(idParam);
-  const product = await container.adminProductService.getByIdWithTranslations(id);
+  const product = await container.adminProductService.getById(id);
   const categories = await container.adminCategoryService.getAll();
   const brands = await container.adminBrandService.getAll();
 

@@ -20,7 +20,6 @@ export * from "./server-logs";
 export * from "./variant-pricing";
 export * from "./tags";
 export * from "./product-attributes";
-export * from "./translations";
 export * from "./collections";
 export * from "./inventory";
 export * from "./discount-rules";

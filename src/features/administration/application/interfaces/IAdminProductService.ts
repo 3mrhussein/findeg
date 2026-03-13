@@ -26,9 +26,6 @@ export interface IAdminProductService {
   /** Retrieves a single product by ID. */
   getById(id: number, language?: Locale): Promise<Product | null>;
 
-  /** Retrieves a product including all its translations for editing. */
-  getByIdWithTranslations(id: number): Promise<(ProductInput & { id: number }) | null>;
-
   /** Counts total products in the system. */
   count(): Promise<number>;
 

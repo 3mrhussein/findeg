@@ -14,6 +14,23 @@ This file captures major architecture-level changes that are too important to re
 
 ## Unreleased
 
+### 2026-03-13 - [Clean Architecture] Locale Resolution Refactor
+
+- Removed dead `catalog.translations` table — JSONB inline is the
+  only localization strategy
+- Deleted `getByIdWithTranslations` from DrizzleProductRepository —
+  repositories are now strictly locale-unaware
+- Added locale resolution methods to domain entities:
+  `Product.getName()`, `getSlug()`, `getDescription()`,
+  `Variant.getLabel()`, `Category.getName()` etc.
+- Created `administration/presentation/mappers/product-form-mapper.ts`
+  as the single source of truth for domain → form transformation
+- Created `core/domain/types/locale.ts` with `SupportedLocale`,
+  `resolveLocalized()` shared utility
+- Established project-wide standard: repositories return raw domain
+  objects, locale resolution belongs in domain entities and
+  presentation mappers
+
 ### 2026-02-19 - Localized Catalog Contract Rollout (Incremental)
 
 - Extended catalog query behavior to use localized JSONB fields in search/filter paths:

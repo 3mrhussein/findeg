@@ -23,6 +23,7 @@ import {
 } from "@/features/core/domain/types/common";
 import type { CurrencyCode, Money } from "@/features/core/domain/value-objects";
 import { DEFAULT_CURRENCY, toMoney, MoneySchema } from "@/features/core/domain/value-objects";
+import { type SupportedLocale } from "@/features/core/domain/types/locale";
 
 // ─── Variant Image ───────────────────────────────────────────────────────────
 
@@ -125,7 +126,11 @@ export type UpdateVariant = z.infer<typeof UpdateVariantSchema>;
 // ─── Domain Methods ──────────────────────────────────────────────────────────
 
 export class VariantEntity {
-    constructor(private variant: Variant) {}
+  constructor(private variant: Variant) {}
+
+  getLabel(locale: SupportedLocale): string {
+    return this.variant.localizedLabel?.[locale] ?? this.variant.localizedLabel?.en ?? "";
+  }
 
   getDisplayPrice(currency: string = DEFAULT_CURRENCY): Money {
     return toMoney(this.variant.basePrice, currency as CurrencyCode);

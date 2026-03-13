@@ -28,11 +28,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
       .replace(/^-+|-+$/g, "");
   }
 
-  private mapToDomain(
-    dbCategory: DbCategory,
-    children?: Category[],
-    requestedLocale: Locale = DEFAULT_LOCALE,
-  ): Category {
+  private mapToDomain(dbCategory: DbCategory, children?: Category[]): Category {
     const localizedSlugDraft = (dbCategory.localizedSlug || {}) as Record<string, string>;
     const localizedNameDraft = (dbCategory.localizedName || {}) as Record<string, string>;
     const localizedDescriptionDraft = (dbCategory.localizedDescription || {}) as Record<
@@ -51,12 +47,10 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
 
     return {
       id: dbCategory.id,
-      slug: resolveLocalizedString(localizedContent.slug, requestedLocale, DEFAULT_LOCALE) as Slug,
-      name: resolveLocalizedString(localizedContent.name, requestedLocale, DEFAULT_LOCALE),
-      description: localizedContent.description
-        ? resolveLocalizedString(localizedContent.description, requestedLocale, DEFAULT_LOCALE)
-        : undefined,
-      locale: requestedLocale,
+      slug: localizedContent.slug?.en ?? dbCategory.slug,
+      name: localizedContent.name?.en ?? dbCategory.slug,
+      description: localizedContent.description?.en ?? undefined,
+      locale: undefined,
       localizedContent,
       icon: dbCategory.icon || undefined,
       parentId: dbCategory.parentId || undefined,
@@ -71,13 +65,13 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
   async getById(id: ID, language: Locale = DEFAULT_LOCALE): Promise<Category | null> {
     const result = await db.select().from(categories).where(eq(categories.id, id)).limit(1);
     if (result.length === 0) return null;
-    return this.mapToDomain(result[0], undefined, language);
+    return this.mapToDomain(result[0]);
   }
 
   async getAll(language: Locale = DEFAULT_LOCALE): Promise<Category[]> {
     const results = await db.select().from(categories).orderBy(asc(categories.sortOrder));
 
-    return results.map((category) => this.mapToDomain(category, undefined, language));
+    return results.map((category) => this.mapToDomain(category));
   }
 
   async getBySlug(slug: string, language: Locale = DEFAULT_LOCALE): Promise<Category | null> {
@@ -90,7 +84,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
       .limit(1);
 
     if (result.length === 0) return null;
-    return this.mapToDomain(result[0], undefined, language);
+    return this.mapToDomain(result[0]);
   }
 
   // Tree Operations
@@ -121,7 +115,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
       .where(or(isNull(categories.parentId), eq(categories.depth, 0)))
       .orderBy(asc(categories.sortOrder));
 
-    return results.map((category) => this.mapToDomain(category, undefined, language));
+    return results.map((category) => this.mapToDomain(category));
   }
 
   async getChildren(parentId: ID, language: Locale = DEFAULT_LOCALE): Promise<Category[]> {
@@ -131,7 +125,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
       .where(eq(categories.parentId, parentId))
       .orderBy(asc(categories.sortOrder));
 
-    return results.map((category) => this.mapToDomain(category, undefined, language));
+    return results.map((category) => this.mapToDomain(category));
   }
 
   /**
@@ -150,14 +144,14 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
 
     return results
       .filter((c) => c.id !== categoryId) // Exclude self
-      .map((category) => this.mapToDomain(category, undefined, language));
+      .map((category) => this.mapToDomain(category));
   }
 
   async getByPath(path: string, language: Locale = DEFAULT_LOCALE): Promise<Category | null> {
     const result = await db.select().from(categories).where(eq(categories.path, path)).limit(1);
 
     if (result.length === 0) return null;
-    return this.mapToDomain(result[0], undefined, language);
+    return this.mapToDomain(result[0]);
   }
 
   // Admin Operations
@@ -225,11 +219,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
 
       // 3. (Legacy translations skipped)
 
-      return this.mapToDomain(
-        finalCategory,
-        undefined,
-        (input.translations?.[0]?.language || DEFAULT_LOCALE) as Locale,
-      );
+      return this.mapToDomain(finalCategory);
     });
   }
 
@@ -271,11 +261,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
 
       // 3. (Legacy translations skipped)
 
-      return this.mapToDomain(
-        updated,
-        undefined,
-        (input.translations?.[0]?.language || DEFAULT_LOCALE) as Locale,
-      );
+      return this.mapToDomain(updated);
     });
   }
 

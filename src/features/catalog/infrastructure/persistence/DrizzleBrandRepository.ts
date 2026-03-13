@@ -24,7 +24,7 @@ type DbBrand = typeof brands.$inferSelect;
  * Results for list queries are ordered by creation date descending.
  */
 export class DrizzleBrandRepository implements IBrandRepository {
-  private mapToDomain(dbBrand: DbBrand, language: Locale = DEFAULT_LOCALE): Brand {
+  private mapToDomain(dbBrand: DbBrand): Brand {
     const localizedSlugDraft = (dbBrand.localizedSlug || {}) as Record<string, string>;
     const localizedNameDraft = (dbBrand.localizedName || {}) as Record<string, string>;
     const localizedContent = {
@@ -44,9 +44,9 @@ export class DrizzleBrandRepository implements IBrandRepository {
 
     return {
       id: dbBrand.id,
-      slug: resolveLocalizedString(localizedContent.slug, language, DEFAULT_LOCALE) as Slug,
-      name: resolveLocalizedString(localizedContent.name, language, DEFAULT_LOCALE),
-      locale: language,
+      slug: (localizedContent.slug?.en ?? dbBrand.slug) as Slug,
+      name: localizedContent.name?.en ?? dbBrand.name,
+      locale: undefined,
       localizedContent,
       logoUrl: dbBrand.logoUrl,
       isActive: dbBrand.isActive,
@@ -62,12 +62,12 @@ export class DrizzleBrandRepository implements IBrandRepository {
       .from(brands)
       .where(whereClause)
       .orderBy(desc(brands.createdAt));
-    return dbBrands.map((brand) => this.mapToDomain(brand, language));
+    return dbBrands.map((brand) => this.mapToDomain(brand));
   }
 
   async getById(id: ID, language: Locale = DEFAULT_LOCALE): Promise<Brand | null> {
     const result = await db.select().from(brands).where(eq(brands.id, id));
-    return result[0] ? this.mapToDomain(result[0], language) : null;
+    return result[0] ? this.mapToDomain(result[0]) : null;
   }
 
   async getBySlug(slug: Slug, language: Locale = DEFAULT_LOCALE): Promise<Brand | null> {
@@ -75,7 +75,7 @@ export class DrizzleBrandRepository implements IBrandRepository {
       .select()
       .from(brands)
       .where(or(eq(brands.slug, slug), sql`${brands.localizedSlug} ->> ${language} = ${slug}`));
-    return result[0] ? this.mapToDomain(result[0], language) : null;
+    return result[0] ? this.mapToDomain(result[0]) : null;
   }
 
   async create(data: BrandCreateInput): Promise<Brand> {
@@ -87,7 +87,7 @@ export class DrizzleBrandRepository implements IBrandRepository {
         localizedName: { en: data.name, ar: data.name },
       })
       .returning();
-    return this.mapToDomain(result[0], DEFAULT_LOCALE);
+    return this.mapToDomain(result[0]);
   }
 
   async update(id: ID, data: BrandUpdateInput): Promise<Brand> {
@@ -104,7 +104,7 @@ export class DrizzleBrandRepository implements IBrandRepository {
       })
       .where(eq(brands.id, id))
       .returning();
-    return this.mapToDomain(result[0], DEFAULT_LOCALE);
+    return this.mapToDomain(result[0]);
   }
 
   async delete(id: ID): Promise<void> {

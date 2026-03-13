@@ -28,7 +28,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
         const id = parseInt(idParam);
         const { adminProduct } = getServices();
 
-        const product = await adminProduct.getByIdWithTranslations(id);
+        const product = await adminProduct.getById(id);
 
         if (!product) {
           return apiError("Product not found", 404);

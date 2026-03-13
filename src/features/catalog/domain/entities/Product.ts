@@ -22,10 +22,10 @@ import { VariantSchema, type Variant, VariantEntity } from "./Variant";
 import {
   resolveLocalizedString,
   ResponsiveMediaSetSchema,
-  type Locale,
   type LocalizedString,
   type ResponsiveMediaSet,
 } from "@/features/core/domain/value-objects";
+import { type SupportedLocale } from "@/features/core/domain/types/locale";
 
 export const ProductLocalizedContentSchema = z.object({
   slug: LocalizedStringSchema.optional(),
@@ -111,14 +111,46 @@ export class ProductEntity {
 
   // ─── Content ──────────────────────────────────────────────────────
 
-  getName(locale: Locale): string {
-    const localized = resolveLocalizedString(this.product.localizedContent?.name, locale);
-    return localized || this.product.name;
+  // ─── Content ────────────
+
+  getName(locale: SupportedLocale): string {
+    return (
+      this.product.localizedContent?.name?.[locale] ??
+      this.product.localizedContent?.name?.en ??
+      this.product.name
+    );
   }
 
-  getDescription(locale: Locale): string {
-    const localized = resolveLocalizedString(this.product.localizedContent?.description, locale);
-    return localized || this.product.description;
+  getSlug(locale: SupportedLocale): string {
+    return (
+      this.product.localizedContent?.slug?.[locale] ?? this.product.localizedContent?.slug?.en ?? ""
+    );
+  }
+
+  getDescription(locale: SupportedLocale): string {
+    return (
+      this.product.localizedContent?.description?.[locale] ??
+      this.product.localizedContent?.description?.en ??
+      this.product.description
+    );
+  }
+
+  getLongDescription(locale: SupportedLocale): string {
+    return (
+      this.product.localizedContent?.longDescription?.[locale] ??
+      this.product.localizedContent?.longDescription?.en ??
+      this.product.longDescription
+    );
+  }
+
+  getAvailableLocales(): SupportedLocale[] {
+    const locales = new Set<SupportedLocale>();
+    if (this.product.localizedContent?.name) {
+      Object.keys(this.product.localizedContent.name).forEach((k) =>
+        locales.add(k as SupportedLocale),
+      );
+    }
+    return Array.from(locales);
   }
 
   // ─── Variant Access ───────────────────────────────────────────────

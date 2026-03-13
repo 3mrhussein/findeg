@@ -61,6 +61,4 @@ export interface IProductRepository {
   delete(id: ID): Promise<void>;
 
   count(filters?: ProductFilters): Promise<number>;
-
-  getByIdWithTranslations(id: ID): Promise<(ProductInput & { id: ID }) | null>;
 }
