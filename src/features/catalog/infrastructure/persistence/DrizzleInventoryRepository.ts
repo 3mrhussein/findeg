@@ -23,9 +23,6 @@ import { ID } from "@/features/core/domain/types/common";
 export class DrizzleInventoryRepository implements IInventoryRepository {
   private variantRepo = new DrizzleVariantRepository();
 
-  /**
-   * Gets the balance for a variant at a specific warehouse.
-   */
   async getBalance(variantId: ID, warehouseId?: ID): Promise<InventoryBalanceResult | null> {
     const conditions = [eq(inventoryBalances.variantId, variantId)];
     if (warehouseId) {
@@ -53,9 +50,6 @@ export class DrizzleInventoryRepository implements IInventoryRepository {
     };
   }
 
-  /**
-   * Gets all warehouse balances for a variant.
-   */
   async getAllBalances(variantId: ID): Promise<InventoryBalanceResult[]> {
     const results = await db
       .select({
@@ -110,9 +104,6 @@ export class DrizzleInventoryRepository implements IInventoryRepository {
     });
   }
 
-  /**
-   * Reserves stock for a pending order.
-   */
   async reserveStock(
     variantId: ID,
     warehouseId: ID,
@@ -166,9 +157,6 @@ export class DrizzleInventoryRepository implements IInventoryRepository {
     });
   }
 
-  /**
-   * Releases a previous reservation.
-   */
   async releaseReservation(
     variantId: ID,
     warehouseId: ID,
@@ -200,9 +188,6 @@ export class DrizzleInventoryRepository implements IInventoryRepository {
     });
   }
 
-  /**
-   * Gets variants with stock below their threshold.
-   */
   async getLowStock(threshold?: number): Promise<LowStockResult[]> {
     const results = await db
       .select({

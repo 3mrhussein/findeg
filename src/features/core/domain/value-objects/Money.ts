@@ -14,9 +14,6 @@ export type CurrencyCode = z.infer<typeof CurrencyCodeSchema>;
 
 export const DEFAULT_CURRENCY: CurrencyCode = "EGP";
 
-/**
- * Numeric money amount used in persistence and calculations.
- */
 export const MoneyAmountSchema = z.number().finite().nonnegative();
 export type MoneyAmount = z.infer<typeof MoneyAmountSchema>;
 
@@ -30,9 +27,6 @@ export const MoneySchema = z.object({
 
 export type Money = z.infer<typeof MoneySchema>;
 
-/**
- *
- */
 export function toMoney(amount: MoneyAmount, currency: CurrencyCode = DEFAULT_CURRENCY): Money {
   return { amount, currency };
 }

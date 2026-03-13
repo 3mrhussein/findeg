@@ -19,14 +19,7 @@ import { eq, asc, inArray } from "drizzle-orm";
 import { ID, Locale } from "@/features/core/domain/types/common";
 import { DEFAULT_LOCALE } from "@/features/core/domain/value-objects";
 
-/**
- *
- */
 export class DrizzleCollectionRepository implements ICollectionRepository {
-  /**
-   * Retrieves collections sorted by sortOrder.
-   * @param options Filter options
-   */
   async getAll(options?: { includeInactive?: boolean }): Promise<Collection[]> {
     let query = db.select().from(collections);
 
@@ -39,9 +32,6 @@ export class DrizzleCollectionRepository implements ICollectionRepository {
     return results as Collection[];
   }
 
-  /**
-   * Retrieves a single collection by slug, including its associated tags.
-   */
   async getBySlug(slug: string): Promise<Collection | null> {
     const results = await db.select().from(collections).where(eq(collections.slug, slug)).limit(1);
 
@@ -61,25 +51,16 @@ export class DrizzleCollectionRepository implements ICollectionRepository {
     };
   }
 
-  /**
-   * Retrieves a collection by ID.
-   */
   async getById(id: ID): Promise<Collection | null> {
     const results = await db.select().from(collections).where(eq(collections.id, id)).limit(1);
     return (results[0] as Collection) || null;
   }
 
-  /**
-   * Creates a new collection.
-   */
   async create(input: CreateCollection): Promise<Collection> {
     const [result] = await db.insert(collections).values(input).returning();
     return result as Collection;
   }
 
-  /**
-   * Updates an existing collection.
-   */
   async update(id: ID, input: Partial<CreateCollection>): Promise<Collection> {
     const [result] = await db
       .update(collections)
@@ -89,9 +70,6 @@ export class DrizzleCollectionRepository implements ICollectionRepository {
     return result as Collection;
   }
 
-  /**
-   * Deletes a collection.
-   */
   async delete(id: ID): Promise<void> {
     await db.delete(collections).where(eq(collections.id, id));
   }
@@ -120,9 +98,6 @@ export class DrizzleCollectionRepository implements ICollectionRepository {
     return [];
   }
 
-  /**
-   * Bulk updates the tag associations for a collection.
-   */
   async setCollectionTags(collectionId: ID, tagIds: ID[]): Promise<void> {
     await db.transaction(async (tx) => {
       await tx.delete(collectionTags).where(eq(collectionTags.collectionId, collectionId));
@@ -137,9 +112,6 @@ export class DrizzleCollectionRepository implements ICollectionRepository {
     });
   }
 
-  /**
-   * Retrieves a single collection by ID, including its associated tags.
-   */
   async getByIdWithTags(id: ID): Promise<(Collection & { tags: Tag[] }) | null> {
     const results = await db.select().from(collections).where(eq(collections.id, id)).limit(1);
 
@@ -159,9 +131,6 @@ export class DrizzleCollectionRepository implements ICollectionRepository {
     };
   }
 
-  /**
-   * Updates the sort order for multiple collections in a transaction.
-   */
   async updateSortOrders(items: { id: ID; sortOrder: number }[]): Promise<void> {
     await db.transaction(async (tx) => {
       for (const item of items) {

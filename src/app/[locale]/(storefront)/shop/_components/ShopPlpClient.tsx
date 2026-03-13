@@ -61,9 +61,6 @@ const SORT_OPTIONS: Array<{ value: ShopPlpSort; key: SortOptionMessageKey }> = [
 
 const PER_PAGE_OPTIONS = [24, 48, 96] as const;
 
-/**
- * Generates condensed page buttons around current page.
- */
 function getVisiblePages(currentPage: number, totalPages: number): Array<number | "ellipsis"> {
   if (totalPages <= 7) {
     return Array.from({ length: totalPages }, (_, index) => index + 1);
@@ -78,9 +75,6 @@ function getVisiblePages(currentPage: number, totalPages: number): Array<number 
   return [1, "ellipsis", currentPage - 1, currentPage, currentPage + 1, "ellipsis", totalPages];
 }
 
-/**
- * URL-driven PLP UI container (layout, toolbar, filters, grid/list, pagination).
- */
 export function ShopPlpClient({ vm }: ShopPlpClientProps) {
   const t = useTranslations("Pages.Shop");
   const router = useRouter();
@@ -93,9 +87,6 @@ export function ShopPlpClient({ vm }: ShopPlpClientProps) {
   useEffect(() => {
     const abort = new AbortController();
 
-    /**
-     * Preloads brands so product cards can show logos before filters are opened.
-     */
     const loadBrands = async () => {
       try {
         const response = await fetch("/api/v1/brands?active=true", {
@@ -132,9 +123,6 @@ export function ShopPlpClient({ vm }: ShopPlpClientProps) {
     return map;
   }, [loadedBrands]);
 
-  /**
-   * Pushes the next URL while preserving unrelated query keys.
-   */
   const pushWithMutation = (
     mutate: (params: URLSearchParams) => void,
     nextPathname: string = pathname,
@@ -145,9 +133,6 @@ export function ShopPlpClient({ vm }: ShopPlpClientProps) {
     router.push(queryString ? `${nextPathname}?${queryString}` : nextPathname);
   };
 
-  /**
-   * Applies filter query params and resets pagination.
-   */
   const handleApplyFilters = (nextFilters: ShopPlpFilters) => {
     pushWithMutation((params) => {
       params.delete("brandId");
@@ -180,9 +165,6 @@ export function ShopPlpClient({ vm }: ShopPlpClientProps) {
     });
   };
 
-  /**
-   * Navigates to selected category path.
-   */
   const handleCategoryChange = (slugPath: string[]) => {
     const nextCategoryPath =
       slugPath.length > 0 ? `${shopRootPath}/${slugPath.join("/")}` : shopRootPath;
@@ -191,9 +173,6 @@ export function ShopPlpClient({ vm }: ShopPlpClientProps) {
     }, nextCategoryPath);
   };
 
-  /**
-   * Resets all URL filter params and category path.
-   */
   const handleClearAll = () => {
     pushWithMutation((params) => {
       [

@@ -35,17 +35,11 @@ interface PriceBounds {
   maxPrice: number;
 }
 
-/**
- * Normalizes a query value into an array.
- */
 export function toArray(value: string | string[] | undefined): string[] {
   if (!value) return [];
   return Array.isArray(value) ? value : [value];
 }
 
-/**
- * Normalizes and deduplicates URL list values.
- */
 export function toUniqueArray(value: string | string[] | undefined): string[] {
   const seen = new Set<string>();
   const normalized = toArray(value)
@@ -62,9 +56,6 @@ export function toUniqueArray(value: string | string[] | undefined): string[] {
   return unique;
 }
 
-/**
- * Converts labels into deterministic URL slugs.
- */
 export function toSlug(value: string): string {
   return value
     .trim()
@@ -73,9 +64,6 @@ export function toSlug(value: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
-/**
- * Parses `[min,max]` style price query values with fallback protection.
- */
 export function parsePriceRange(
   value: string | string[] | undefined,
   fallback: [number, number],
@@ -90,9 +78,6 @@ export function parsePriceRange(
   return sanitizePriceRange([min, max], fallback);
 }
 
-/**
- * Sanitizes a price range using the provided bounds.
- */
 export function sanitizePriceRange(
   range: [number, number],
   bounds: [number, number],
@@ -109,9 +94,6 @@ export function sanitizePriceRange(
   return [min, max];
 }
 
-/**
- * Ensures listing sort values stay inside the canonical whitelist.
- */
 export function normalizeListingSort(value: string | undefined): ListingSort {
   if (LISTING_SORT_VALUES.includes(value as ListingSort)) {
     return value as ListingSort;
@@ -119,10 +101,6 @@ export function normalizeListingSort(value: string | undefined): ListingSort {
   return "featured";
 }
 
-/**
- * Computes stable min/max prices for a result set.
- * Uses the minimum basePrice of each product's variants.
- */
 export function getPriceBounds(products: Product[]): PriceBounds {
   if (products.length === 0) {
     return {
@@ -143,9 +121,6 @@ export function getPriceBounds(products: Product[]): PriceBounds {
   };
 }
 
-/**
- * Creates category filter options from category entities (flat list).
- */
 export function buildCategoryOptions(categories: Category[], products: Product[]): FilterOption[] {
   const categoryPathsById = new Map(
     categories.map((category) => [category.id, category.path || ""]),
@@ -172,11 +147,6 @@ export function buildCategoryOptions(categories: Category[], products: Product[]
     });
 }
 
-/**
- * Builds a hierarchical category tree for the filter sidebar.
- * Root categories (depth=0 or no parentId) are top-level nodes.
- * Their children are attached recursively.
- */
 export function buildCategoryTree(
   categories: Category[],
   products: Product[],
@@ -186,9 +156,6 @@ export function buildCategoryTree(
 
   const activeCategories = categories.filter((c) => c.isActive !== false);
 
-  /**
-   *
-   */
   const buildCount = (category: Category): number => {
     const categoryPath = category.path || "";
     return products.filter((product) => {
@@ -200,9 +167,6 @@ export function buildCategoryTree(
     }).length;
   };
 
-  /**
-   *
-   */
   const toOption = (category: Category): CategoryFilterOption => ({
     id: category.slug,
     label: category.name,
@@ -225,9 +189,6 @@ export function buildCategoryTree(
   });
 }
 
-/**
- * Creates unique brand filter options with stable counts from a product list.
- */
 export function buildBrandOptions(products: Product[]): FilterOption[] {
   const grouped = new Map<string, { label: string; count: number }>();
 
@@ -258,9 +219,6 @@ export function buildBrandOptions(products: Product[]): FilterOption[] {
     .sort((a, b) => a.label.localeCompare(b.label));
 }
 
-/**
- * Parses URL query params into a normalized listing filter model.
- */
 export function parseListingFilters(
   query: { [key: string]: string | string[] | undefined },
   fallbackPriceRange: [number, number],
@@ -273,16 +231,9 @@ export function parseListingFilters(
   };
 }
 
-/**
- * Sorts listing results by selected sort strategy.
- * Price sorting uses the minimum basePrice of the product's variants.
- */
 export function sortProducts(products: Product[], sort: ListingSort): Product[] {
   const sorted = [...products];
 
-  /**
-   *
-   */
   const getMinPrice = (p: Product) => {
     const variants = p.variants || [];
     if (variants.length === 0) return 0;
@@ -307,9 +258,6 @@ export function sortProducts(products: Product[], sort: ListingSort): Product[] 
   }
 }
 
-/**
- * Applies category/brand/price filters and sort to a product listing.
- */
 export function applyListingFilters({
   products,
   categories,

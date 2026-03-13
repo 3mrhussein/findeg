@@ -21,9 +21,6 @@ interface WithShopFilterBounds {
   maxPrice: number;
 }
 
-/**
- * HOC that injects URL-backed shop filter state/actions into a presentational component.
- */
 export function withShopFilters<P extends object>(
   Component: React.ComponentType<P & InjectedShopFilterProps>,
 ) {

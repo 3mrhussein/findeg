@@ -8,9 +8,6 @@ import {
 } from "../interfaces/ISchoolListRepository";
 import { Variant } from "../../domain/entities/Variant";
 
-/**
- * Application Service: ISchoolListService
- */
 export interface ISchoolListService {
   /** Gets a school list by slug with hydrated items and alternatives */
   getListBySlug(slug: string): Promise<SchoolListResult | null>;
@@ -40,13 +37,7 @@ export interface ISchoolListService {
   getSuggestionsForItem(itemId: ID): Promise<Variant[]>;
 }
 
-/**
- * Implementation of SchoolListService
- */
 export class SchoolListService implements ISchoolListService {
-  /**
-   *
-   */
   constructor(private schoolListRepo: ISchoolListRepository) {}
 
   async getListBySlug(slug: string): Promise<SchoolListResult | null> {

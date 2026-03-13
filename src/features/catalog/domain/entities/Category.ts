@@ -6,7 +6,6 @@ import {
   type LocalizedString,
 } from "@/features/core/domain/value-objects";
 
-/** Localized category text payload */
 export const CategoryLocalizedContentSchema = z.object({
   slug: LocalizedStringSchema,
   name: LocalizedStringSchema,
@@ -14,9 +13,6 @@ export const CategoryLocalizedContentSchema = z.object({
 });
 export type CategoryLocalizedContent = z.infer<typeof CategoryLocalizedContentSchema>;
 
-/**
- * Category Domain Schema
- */
 export const CategorySchema: z.ZodType<any> = z.lazy(() =>
   z.object({
     id: IdSchema,
@@ -55,7 +51,6 @@ export type Category = {
   children?: Category[];
 };
 
-/** Create Category Input */
 export const CreateCategorySchema = z.object({
   slug: SlugSchema,
   name: z.string(),
@@ -69,7 +64,6 @@ export const CreateCategorySchema = z.object({
 });
 export type CreateCategory = z.infer<typeof CreateCategorySchema>;
 
-/** Update Category Input */
 export const UpdateCategorySchema = CreateCategorySchema.partial().extend({
   id: IdSchema,
 });

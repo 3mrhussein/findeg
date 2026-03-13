@@ -32,9 +32,6 @@ export function asLocalized(
   };
 }
 
-/**
- * Resolves localized string with deterministic fallback.
- */
 export function localize(
   value: LocalizedString | undefined,
   locale: Locale,

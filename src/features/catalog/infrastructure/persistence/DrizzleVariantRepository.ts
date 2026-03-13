@@ -29,9 +29,6 @@ import {
  * Implements SKU-level data access, pricing resolution, and UOM management.
  */
 export class DrizzleVariantRepository implements IVariantRepository {
-  /**
-   * Internal mapper to convert database records into the Variant domain entity.
-   */
   private mapToDomain(
     v: any,
     images: any[] = [],
@@ -87,9 +84,6 @@ export class DrizzleVariantRepository implements IVariantRepository {
     };
   }
 
-  /**
-   * Retrieves all variants for a product with full hydration.
-   */
   async getByProductId(productId: ID): Promise<Variant[]> {
     const variantRows = await db
       .select()
@@ -135,9 +129,6 @@ export class DrizzleVariantRepository implements IVariantRepository {
     });
   }
 
-  /**
-   * Retrieves a single variant by ID with full hydration.
-   */
   async getById(variantId: ID): Promise<Variant | null> {
     const [v] = await db
       .select()
@@ -172,9 +163,6 @@ export class DrizzleVariantRepository implements IVariantRepository {
     return this.mapToDomain(v, images, attrs, uoms, prices);
   }
 
-  /**
-   * Retrieves a variant by its SKU code.
-   */
   async getBySku(sku: string): Promise<Variant | null> {
     const [v] = await db
       .select()
@@ -186,9 +174,6 @@ export class DrizzleVariantRepository implements IVariantRepository {
     return this.getById(v.id);
   }
 
-  /**
-   * Creates a new variant for a product.
-   */
   async create(productId: ID, input: VariantInput): Promise<Variant> {
     return await db.transaction(async (tx) => {
       const [newVariant] = await tx
@@ -265,9 +250,6 @@ export class DrizzleVariantRepository implements IVariantRepository {
     });
   }
 
-  /**
-   * Updates an existing variant.
-   */
   async update(variantId: ID, input: Partial<VariantInput>): Promise<Variant> {
     return await db.transaction(async (tx) => {
       const [existing] = await tx
@@ -371,9 +353,6 @@ export class DrizzleVariantRepository implements IVariantRepository {
     await db.delete(productVariants).where(eq(productVariants.id, variantId));
   }
 
-  /**
-   * Gets combined sell options for a variant.
-   */
   async getSellOptions(
     variantId: ID,
     customerGroup: CustomerGroup = "public_b2c",
@@ -404,9 +383,6 @@ export class DrizzleVariantRepository implements IVariantRepository {
     });
   }
 
-  /**
-   * Resolves effective unit price for a variant/UoM/customer group.
-   */
   async resolveUnitPrice(
     variantId: ID,
     uomCode: UomCode,
@@ -458,9 +434,6 @@ export class DrizzleVariantRepository implements IVariantRepository {
     return null;
   }
 
-  /**
-   * Upserts sellable UoM definitions for a variant.
-   */
   async upsertSellableUoms(
     variantId: ID,
     uoms: { uomCode: UomCode; factorToBase: number; isEnabled?: boolean }[],
@@ -493,9 +466,6 @@ export class DrizzleVariantRepository implements IVariantRepository {
     });
   }
 
-  /**
-   * Upserts customer-group price lists for a variant.
-   */
   async upsertPriceLists(
     variantId: ID,
     prices: {

@@ -382,8 +382,9 @@ npm run e2e:run:ci
 1. **Respect DDD/Clean Architecture boundaries** - Keep domain/application/infrastructure/presentation responsibilities separated.
 2. **Server Components First** - Use Client Components only when interaction/state requires it.
 3. **Type Everything** - Keep contracts explicit across services, repositories, and route boundaries.
-4. **Constants-First in Cypress** - Reuse `cypress/support/constants/*` instead of duplicating route/messages/test strings.
-5. **Keep docs in sync** - Update planning/test docs and run `npm run changelog` when delivery history changes.
+4. **JSDoc Philosophy** - We prioritize code-as-documentation. Use JSDoc only to explain "why" things are done a certain way, not "what" the code does. Types and names should express the "what".
+5. **Constants-First in Cypress** - Reuse `cypress/support/constants/*` instead of duplicating route/messages/test strings.
+6. **Keep docs in sync** - Update planning/test docs and run `npm run changelog` when delivery history changes.
 
 ---
 

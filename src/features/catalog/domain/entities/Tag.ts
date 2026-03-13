@@ -22,9 +22,6 @@ export type TagGroup = z.infer<typeof TagGroupSchema>;
 export const TagScopeSchema = z.enum(["catalog", "school", "campaign", "system"]);
 export type TagScope = z.infer<typeof TagScopeSchema>;
 
-/**
- * Tag Domain Schema
- */
 export const TagSchema = z.object({
   id: IdSchema,
   group: TagGroupSchema,
@@ -47,8 +44,5 @@ export function tagIdentifier(tag: Pick<Tag, "group" | "key">): string {
   return `${tag.group}:${tag.key}`;
 }
 
-/**
- * Input for creating a new tag
- */
 export const CreateTagSchema = TagSchema.omit({ id: true, createdAt: true, updatedAt: true });
 export type CreateTag = z.infer<typeof CreateTagSchema>;

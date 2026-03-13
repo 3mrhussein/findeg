@@ -1,9 +1,5 @@
 import { Tag } from "@/features/catalog/domain/entities/Tag";
 
-/**
- * Static mapping for storefront tag display names.
- * This is used to resolve the user-facing label for a tag based on its group:key identifier.
- */
 export const TAG_DISPLAY_MAP: Record<string, { en: string; ar: string }> = {
   // Use Case
   "usecase:school-prep": { en: "School Prep", ar: "تجهيز للمدرسة" },
@@ -24,10 +20,6 @@ export const TAG_DISPLAY_MAP: Record<string, { en: string; ar: string }> = {
   // Add more tags as needed
 };
 
-/**
- * Resolves the display label for a tag.
- * Fallback to the key title-cased if no mapping exists.
- */
 export function getTagDisplay(tag: Pick<Tag, "group" | "key">, locale: string = "en"): string {
   const identifier = `${tag.group}:${tag.key}`;
   const mapping = TAG_DISPLAY_MAP[identifier];

@@ -76,42 +76,27 @@ interface CategoryResolution {
   category?: Category;
 }
 
-/**
- * Returns the first variant used for listing display.
- */
 function getPrimaryVariant(product: Product): Variant | undefined {
   const variants = product.variants || [];
   return variants.find((variant) => variant.variantKey === "default") || variants[0];
 }
 
-/**
- * Returns minimum variant price for sorting and bounds.
- */
 function getProductMinPrice(product: Product): number {
   const variants = product.variants || [];
   if (variants.length === 0) return 0;
   return Math.min(...variants.map((variant) => variant.basePrice));
 }
 
-/**
- * Returns true when any variant intersects with range.
- */
 function isWithinPriceRange(product: Product, minPrice: number, maxPrice: number): boolean {
   return (product.variants || []).some(
     (variant) => variant.basePrice >= minPrice && variant.basePrice <= maxPrice,
   );
 }
 
-/**
- * Determines if product has sale pricing.
- */
 function isOnSale(product: Product): boolean {
   return new ProductEntity(product).hasDiscount();
 }
 
-/**
- * Returns true when at least one variant carries explicit inventory balances.
- */
 function hasExplicitInventory(product: Product): boolean {
   return (product.variants || []).some((variant) => (variant.inventory?.length ?? 0) > 0);
 }
@@ -135,9 +120,6 @@ function isBundleDeal(product: Product): boolean {
   return /bundle|set|kit/i.test(`${product.name} ${product.description || ""}`);
 }
 
-/**
- * Converts arbitrary query value to normalized string array.
- */
 function toArray(value: string | string[] | undefined): string[] {
   if (!value) return [];
   return (Array.isArray(value) ? value : [value]).flatMap((entry) =>
@@ -148,25 +130,16 @@ function toArray(value: string | string[] | undefined): string[] {
   );
 }
 
-/**
- * Parses a URL value as finite integer.
- */
 function parseInteger(value: string | undefined): number | undefined {
   if (!value) return undefined;
   const parsed = Number.parseInt(value, 10);
   return Number.isFinite(parsed) ? parsed : undefined;
 }
 
-/**
- * Clamps numeric value to a range.
- */
 function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max);
 }
 
-/**
- * Parses boolean query value where missing means default true.
- */
 function parseInStockOnly(value: string | undefined): boolean {
   if (!value) return true;
   const normalized = value.toLowerCase();
@@ -178,9 +151,6 @@ function parseInStockOnly(value: string | undefined): boolean {
   );
 }
 
-/**
- * Parses sort parameter with whitelist fallback.
- */
 function parseSort(value: string | undefined): ShopPlpSort {
   if (value && SORT_VALUES.includes(value as ShopPlpSort)) {
     return value as ShopPlpSort;
@@ -188,9 +158,6 @@ function parseSort(value: string | undefined): ShopPlpSort {
   return "popular";
 }
 
-/**
- * Parses per-page selector with whitelist fallback.
- */
 function parsePerPage(value: string | undefined): ShopPlpPerPage {
   const parsed = parseInteger(value);
   if (parsed && PER_PAGE_VALUES.includes(parsed as ShopPlpPerPage)) {
@@ -199,18 +166,12 @@ function parsePerPage(value: string | undefined): ShopPlpPerPage {
   return 24;
 }
 
-/**
- * Parses optional rating threshold [1..5].
- */
 function parseRating(value: string | undefined): number | undefined {
   const parsed = parseInteger(value);
   if (!parsed) return undefined;
   return clamp(parsed, 1, 5);
 }
 
-/**
- * Parses URL query object used by PLP.
- */
 function parseShopQuery(query: { [key: string]: string | string[] | undefined }): ParsedShopQuery {
   const brandIds = toArray(query.brandId)
     .map((value) => Number.parseInt(value, 10))
@@ -244,9 +205,6 @@ function parseShopQuery(query: { [key: string]: string | string[] | undefined })
   };
 }
 
-/**
- * Builds category relation map keyed by parent id.
- */
 function buildChildrenByParent(categories: Category[]): Map<number | null, Category[]> {
   const map = new Map<number | null, Category[]>();
 
@@ -268,9 +226,6 @@ function buildChildrenByParent(categories: Category[]): Map<number | null, Categ
   return map;
 }
 
-/**
- * Resolves a category slug chain (/shop/a/b/c) against localized category tree.
- */
 function resolveCategoryFromSlugPath(
   categories: Category[],
   slugPath: string[],
@@ -312,9 +267,6 @@ function resolveCategoryFromSlugPath(
   };
 }
 
-/**
- * Returns listing price bounds for products.
- */
 function getPriceBounds(products: Product[]): [number, number] {
   if (products.length === 0) return [0, 1000];
 
@@ -324,9 +276,6 @@ function getPriceBounds(products: Product[]): [number, number] {
   return [min, max];
 }
 
-/**
- * Applies local filters not fully covered by SearchService.
- */
 function applyPlpFilters(products: Product[], filters: ShopPlpFilters): Product[] {
   const filtered = products.filter((product) => {
     if (filters.brandIds.length > 0) {
@@ -399,9 +348,6 @@ function applyPlpFilters(products: Product[], filters: ShopPlpFilters): Product[
   return filtered;
 }
 
-/**
- * Applies PLP sort strategy.
- */
 function sortPlpProducts(products: Product[], sort: ShopPlpSort): Product[] {
   const sorted = [...products];
 
@@ -430,9 +376,6 @@ function sortPlpProducts(products: Product[], sort: ShopPlpSort): Product[] {
   }
 }
 
-/**
- * Builds category facet counts keyed by slug.
- */
 function buildCategoryFacetCounts(
   products: Product[],
   categories: Category[],
@@ -463,9 +406,6 @@ function buildCategoryFacetCounts(
   return counts;
 }
 
-/**
- * Builds brand facet counts keyed by brand id string.
- */
 function buildBrandFacetCounts(products: Product[]): Record<string, number> {
   const counts: Record<string, number> = {};
   for (const product of products) {
@@ -476,9 +416,6 @@ function buildBrandFacetCounts(products: Product[]): Record<string, number> {
   return counts;
 }
 
-/**
- * Builds rating facet counts for "N stars & above" thresholds.
- */
 function buildRatingFacetCounts(products: Product[]): Record<number, number> {
   const counts: Record<number, number> = {};
   for (let threshold = 1; threshold <= 5; threshold += 1) {
@@ -487,9 +424,6 @@ function buildRatingFacetCounts(products: Product[]): Record<number, number> {
   return counts;
 }
 
-/**
- * Builds discount facet counts.
- */
 function buildDiscountFacetCounts(products: Product[]): { onSale: number; bundleDeals: number } {
   return {
     onSale: products.filter((product) => isOnSale(product)).length,
@@ -497,9 +431,6 @@ function buildDiscountFacetCounts(products: Product[]): { onSale: number; bundle
   };
 }
 
-/**
- * Returns a clamped price filter inside bounds.
- */
 function toPriceFilter(
   parsedMinPrice: number | undefined,
   parsedMaxPrice: number | undefined,
@@ -516,9 +447,6 @@ function toPriceFilter(
       };
 }
 
-/**
- * Creates the shop PLP server view model.
- */
 export async function getShopPlpViewModel(
   locale: string,
   slugPath: string[],
@@ -611,9 +539,6 @@ export async function getShopPlpViewModel(
   };
 }
 
-/**
- * Returns inventory-driven stock metadata for display badges in cards.
- */
 export function getStockSnapshot(product: Product): {
   inStock: boolean;
   lowStock: boolean;

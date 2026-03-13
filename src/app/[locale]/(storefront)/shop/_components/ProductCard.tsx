@@ -39,9 +39,6 @@ interface UomOption {
   strikePrice?: number;
 }
 
-/**
- * Resolves a localized UOM label to the active locale.
- */
 function resolveUomLabel(
   localizedLabel: { en?: string; ar?: string } | string | undefined,
   locale: string,
@@ -53,9 +50,6 @@ function resolveUomLabel(
   return localizedLabel.en || localizedLabel.ar || fallback;
 }
 
-/**
- * Product card supporting grid/list modes for PLP.
- */
 export function ProductCard({ product, view, brand }: ProductCardProps) {
   const locale = useLocale();
   const t = useTranslations("Pages.ProductCard");
@@ -190,9 +184,6 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
     return null;
   }, [discountPercentage, product, stockSnapshot.lowStock, t]);
 
-  /**
-   * Adds the selected variant/UOM to cart.
-   */
   const handleAddToCart = () => {
     if (!primaryVariant || !stockSnapshot.inStock || !selectedUom) return;
     addToCart(product.id, 1, {
@@ -201,9 +192,6 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
     });
   };
 
-  /**
-   * Toggles wishlist state and shows feedback when saved.
-   */
   const handleWishlistToggle = () => {
     const isAdding = !isWishlisted;
     toggleWishlistItem(product.id);
@@ -254,7 +242,7 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
           type="button"
           variant="secondary"
           size="icon-sm"
-          className="absolute end-3 top-3 z-20 rounded-full bg-background/90 hover:bg-background"
+          className="absolute inset-e-3 top-3 z-20 rounded-full bg-background/90 hover:bg-background"
           onClick={handleWishlistToggle}
           aria-label={isWishlisted ? t("RemoveWishlist") : t("SaveToWishlist")}
         >
@@ -318,21 +306,44 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
 
       {uomOptions.length > 1 && (
         <div className="mt-3 flex flex-wrap gap-1.5">
-          {uomOptions.map((option) => (
-            <button
-              key={option.code}
-              type="button"
-              onClick={() => setSelectedUomCode(option.code)}
-              className={cn(
-                "rounded-full border px-2 py-0.5 text-[11px] font-medium",
-                (selectedUomCode || selectedUom?.code) === option.code
-                  ? "border-primary bg-primary/10 text-primary"
-                  : "border-border text-muted-foreground hover:text-foreground",
-              )}
+          {/* Wishlist button overlay */}
+          <div
+            className="absolute top-3 inset-s-3 hidden group-hover:block"
+          >
+            <Button
+              variant="secondary"
+              size="icon"
+              className="h-8 w-8 rounded-full bg-white/90 shadow-sm backdrop-blur-sm hover:bg-white"
+              onClick={(e) => {
+                e.preventDefault();
+                // Add to wishlist logic here
+              }}
             >
-              {option.label}
-            </button>
-          ))}
+              <Heart className="h-4 w-4" />
+            </Button>
+          </div>
+
+          {/* Quick Add overlay */}
+          <div
+            className="absolute bottom-3 inset-e-3 hidden group-hover:block"
+            onClick={(e) => e.preventDefault()}
+          >
+            {uomOptions.map((option) => (
+              <button
+                key={option.code}
+                type="button"
+                onClick={() => setSelectedUomCode(option.code)}
+                className={cn(
+                  "rounded-full border px-2 py-0.5 text-[11px] font-medium",
+                  (selectedUomCode || selectedUom?.code) === option.code
+                    ? "border-primary bg-primary/10 text-primary"
+                    : "border-border text-muted-foreground hover:text-foreground",
+                )}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
         </div>
       )}
 

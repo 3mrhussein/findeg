@@ -1,8 +1,5 @@
 import type { Product } from "@/features/catalog/domain/entities/Product";
 
-/**
- * Returns normalized English slug for a product if present.
- */
 export function getProductEnglishSlug(product: Product): string | null {
   const candidate =
     (product.localizedContent?.slug as Record<string, string> | undefined)?.en ||
@@ -19,9 +16,6 @@ export function getProductEnglishSlug(product: Product): string | null {
   return normalized || null;
 }
 
-/**
- * Canonical storefront PDP href.
- */
 export function getCanonicalProductHref(product: Product): string {
   const slug = getProductEnglishSlug(product);
   return `/shop/products/${slug || product.id}`;

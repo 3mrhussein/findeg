@@ -1,4 +1,4 @@
-import type { Product } from "@/features/catalog/domain/entities/Product";
+import { ProductEntity, type Product } from "@/features/catalog/domain/entities/Product";
 import type { Variant } from "@/features/catalog/domain/entities/Variant";
 import { VariantEntity } from "@/features/catalog/domain/entities/Variant";
 
@@ -20,7 +20,9 @@ export function getProductStatusBadge(params: {
 }): ProductStatusBadge | null {
   const { product, variant, lowStock = false } = params;
   const selectedVariant =
-    variant || (product.variants || []).find((entry) => entry.variantKey === "default") || product.variants?.[0];
+    variant ||
+    (product.variants || []).find((entry) => entry.variantKey === "default") ||
+    product.variants?.[0];
 
   if (selectedVariant) {
     const discountPercentage = new VariantEntity(selectedVariant).getDiscountPercentage();
@@ -36,7 +38,7 @@ export function getProductStatusBadge(params: {
     return { kind: "low-stock" };
   }
 
-  if (product.isNew) {
+  if (new ProductEntity(product).isNew()) {
     return { kind: "new" };
   }
 

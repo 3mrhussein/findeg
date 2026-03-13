@@ -20,9 +20,6 @@ type DbCategory = typeof categories.$inferSelect;
  * Implements hierarchical category management using Materialized Path pattern for efficient tree queries.
  */
 export class DrizzleCategoryRepository implements ICategoryRepository {
-  /**
-   * Converts free text into a URL-safe slug format.
-   */
   private toRouteSlug(value: string): string {
     return value
       .trim()
@@ -31,14 +28,6 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
       .replace(/^-+|-+$/g, "");
   }
 
-  /**
-   * Internal mapper to convert database records into Domain Category entities.
-   * Handles optional fields and nested children arrays.
-   *
-   * @param dbCategory - Raw DB category record.
-   * @param translation - Optional translation record.
-   * @param children - Optional pre-loaded children.
-   */
   private mapToDomain(
     dbCategory: DbCategory,
     children?: Category[],
@@ -79,38 +68,18 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
     };
   }
 
-  /**
-   * Retrieves a category by its numerical ID.
-   *
-   * @param id - Category ID.
-   * @param language - Language code for translation (default 'en').
-   * @returns Category entity or null.
-   */
   async getById(id: ID, language: Locale = DEFAULT_LOCALE): Promise<Category | null> {
     const result = await db.select().from(categories).where(eq(categories.id, id)).limit(1);
     if (result.length === 0) return null;
     return this.mapToDomain(result[0], undefined, language);
   }
 
-  /**
-   * Retrieves all categories as a flat list, ordered by sort order.
-   *
-   * @param language - Localization language.
-   * @returns Array of Category entities.
-   */
   async getAll(language: Locale = DEFAULT_LOCALE): Promise<Category[]> {
     const results = await db.select().from(categories).orderBy(asc(categories.sortOrder));
 
     return results.map((category) => this.mapToDomain(category, undefined, language));
   }
 
-  /**
-   * Retrieves a category by its URL slug.
-   *
-   * @param slug - The unique slug string.
-   * @param language - Localization language.
-   * @returns Category entity or null.
-   */
   async getBySlug(slug: string, language: Locale = DEFAULT_LOCALE): Promise<Category | null> {
     const result = await db
       .select()
@@ -126,13 +95,6 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
 
   // Tree Operations
 
-  /**
-   * Builds the complete category tree structure.
-   * Fetches all categories flat and reconstructs the hierarchy in-memory.
-   *
-   * @param language - Localization language.
-   * @returns Root categories with popluated 'children' arrays.
-   */
   async getTree(language: Locale = DEFAULT_LOCALE): Promise<Category[]> {
     const allCategories = await this.getAll(language);
 
@@ -152,12 +114,6 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
     return buildTree(null);
   }
 
-  /**
-   * Retrieves only the top-level (root) categories.
-   *
-   * @param language - Localization language.
-   * @returns Array of root Category entities.
-   */
   async getRoots(language: Locale = DEFAULT_LOCALE): Promise<Category[]> {
     const results = await db
       .select()
@@ -168,13 +124,6 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
     return results.map((category) => this.mapToDomain(category, undefined, language));
   }
 
-  /**
-   * Retrieves direct children of a specific parent category.
-   *
-   * @param parentId - The parent category ID.
-   * @param language - Localization language.
-   * @returns Array of child categories.
-   */
   async getChildren(parentId: ID, language: Locale = DEFAULT_LOCALE): Promise<Category[]> {
     const results = await db
       .select()
@@ -186,12 +135,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
   }
 
   /**
-   * Retrieves ALL descendants (children, grandchildren, etc.) of a category
-   * efficiently using the materialized path pattern.
-   *
-   * @param categoryId - The ancestor category ID.
-   * @param language - Localization language.
-   * @returns List of all descendant categories.
+   * Retrieves ALL descendants efficiently using the materialized path pattern.
    */
   async getDescendants(categoryId: ID, language: Locale = DEFAULT_LOCALE): Promise<Category[]> {
     // Get the category first to find its path
@@ -209,13 +153,6 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
       .map((category) => this.mapToDomain(category, undefined, language));
   }
 
-  /**
-   * Retrieves a category directly by its materialized path.
-   *
-   * @param path - The exact materialized path string (e.g., "/1/3/").
-   * @param language - Localization language.
-   * @returns Category entity or null.
-   */
   async getByPath(path: string, language: Locale = DEFAULT_LOCALE): Promise<Category | null> {
     const result = await db.select().from(categories).where(eq(categories.path, path)).limit(1);
 
@@ -228,9 +165,6 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
   /**
    * Creates a new category and calculates its materialized path and depth.
    * If a parent is provided, inherits path structure from parent.
-   *
-   * @param input - Category creation data.
-   * @returns The newly created Category entity.
    */
   async create(input: CategoryInput): Promise<Category> {
     return await db.transaction(async (tx) => {
@@ -302,10 +236,6 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
   /**
    * Updates an existing category (including translations).
    * Note: Does NOT fully handle complex path updates if parentId changes (for MVP simplification).
-   *
-   * @param id - Category ID.
-   * @param input - Updated fields.
-   * @returns Updated Category entity.
    */
   async update(id: ID, input: CategoryInput): Promise<Category> {
     return await db.transaction(async (tx) => {
@@ -349,11 +279,6 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
     });
   }
 
-  /**
-   * Bulk updates the sort order of multiple categories in a transaction.
-   *
-   * @param items - Array of objects with ID and new sort order.
-   */
   async reorder(items: { id: ID; sortOrder: number }[]): Promise<void> {
     await db.transaction(async (tx) => {
       for (const item of items) {
@@ -365,18 +290,10 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
     });
   }
 
-  /**
-   * Permanently deletes a category from the database.
-   *
-   * @param id - Category ID.
-   */
   async delete(id: ID): Promise<void> {
     await db.delete(categories).where(eq(categories.id, id));
   }
 
-  /**
-   * Counts the total number of categories.
-   */
   async count(): Promise<number> {
     const result = await db.select({ value: count() }).from(categories);
     return result[0]?.value || 0;

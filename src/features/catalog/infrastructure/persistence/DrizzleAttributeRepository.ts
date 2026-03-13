@@ -1,6 +1,4 @@
-/**
- * Drizzle Attribute Repository
- */
+
 
 import { db } from "@/features/core/infrastructure/persistence";
 import {
@@ -19,13 +17,7 @@ import {
 import { eq, and, sql, inArray, lt, lte, gt, gte } from "drizzle-orm";
 import { ID } from "@/features/core/domain/types/common";
 
-/**
- *
- */
 export class DrizzleAttributeRepository implements IAttributeRepository {
-  /**
-   *
-   */
   async getAllDefinitions(): Promise<AttributeDefinition[]> {
     const results = await db
       .select()
@@ -34,9 +26,6 @@ export class DrizzleAttributeRepository implements IAttributeRepository {
     return results as AttributeDefinition[];
   }
 
-  /**
-   *
-   */
   async getFilterableDefinitions(): Promise<AttributeDefinition[]> {
     const results = await db
       .select()
@@ -46,17 +35,11 @@ export class DrizzleAttributeRepository implements IAttributeRepository {
     return results as AttributeDefinition[];
   }
 
-  /**
-   *
-   */
   async createDefinition(input: CreateAttributeDefinition): Promise<AttributeDefinition> {
     const [result] = await db.insert(attributeDefinitions).values(input).returning();
     return result as AttributeDefinition;
   }
 
-  /**
-   *
-   */
   async updateDefinition(
     id: ID,
     input: Partial<CreateAttributeDefinition>,
@@ -69,16 +52,10 @@ export class DrizzleAttributeRepository implements IAttributeRepository {
     return result as AttributeDefinition;
   }
 
-  /**
-   *
-   */
   async deleteDefinition(id: ID): Promise<void> {
     await db.delete(attributeDefinitions).where(eq(attributeDefinitions.id, id));
   }
 
-  /**
-   *
-   */
   async getProductAttributes(productId: ID): Promise<ProductAttributeValue[]> {
     const results = await db
       .select({
@@ -98,9 +75,6 @@ export class DrizzleAttributeRepository implements IAttributeRepository {
     })) as ProductAttributeValue[];
   }
 
-  /**
-   *
-   */
   async setProductAttributes(productId: ID, values: ProductAttributeValue[]): Promise<void> {
     await db.transaction(async (tx) => {
       await tx.delete(productAttributes).where(eq(productAttributes.productId, productId));
@@ -118,9 +92,6 @@ export class DrizzleAttributeRepository implements IAttributeRepository {
     });
   }
 
-  /**
-   *
-   */
   async getMatchedProductIds(filters: AttributeFilter[]): Promise<ID[]> {
     if (filters.length === 0) return [];
 

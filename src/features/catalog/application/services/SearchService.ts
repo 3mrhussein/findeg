@@ -13,18 +13,9 @@ import {
 import { type Locale } from "@/features/core/domain/value-objects";
 import { type ID } from "@/features/core/domain/types/common";
 
-/**
- *
- */
 export class SearchService implements ISearchService {
-  /**
-   *
-   */
   constructor(private readonly productRepository: IProductRepository) {}
 
-  /**
-   *
-   */
   public parseQuery(query: string): ParsedQuery {
     const arabicRegex = /[\u0600-\u06FF]+/g;
     const arabicTerms: string[] = [];
@@ -47,9 +38,6 @@ export class SearchService implements ISearchService {
     };
   }
 
-  /**
-   *
-   */
   private normalizeArabic(text: string): string {
     if (!text) return text;
     let normalized = text;
@@ -70,9 +58,6 @@ export class SearchService implements ISearchService {
     return normalized.toLowerCase().trim();
   }
 
-  /**
-   *
-   */
   private async logSearch(
     query: string,
     locale: Locale,
@@ -98,9 +83,6 @@ export class SearchService implements ISearchService {
     }
   }
 
-  /**
-   *
-   */
   private async executeScoredSearch(
     term: string,
     locale: Locale,
@@ -168,9 +150,6 @@ export class SearchService implements ISearchService {
     return results as unknown as { productId: number; score: number }[];
   }
 
-  /**
-   *
-   */
   public async search(params: SearchParams): Promise<SearchResult> {
     const { query, locale, limit = 20, offset = 0, sort = "relevance" } = params;
 
@@ -277,9 +256,6 @@ export class SearchService implements ISearchService {
     };
   }
 
-  /**
-   *
-   */
   public async suggest(query: string, locale: Locale): Promise<SuggestResult> {
     if (!query || query.trim().length === 0) {
       return { products: [], categories: [] };

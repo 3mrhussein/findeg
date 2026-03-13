@@ -124,33 +124,18 @@ export type UpdateVariant = z.infer<typeof UpdateVariantSchema>;
 
 // ─── Domain Methods ──────────────────────────────────────────────────────────
 
-/**
- *
- */
 export class VariantEntity {
-  /**
-   *
-   */
-  constructor(private variant: Variant) {}
+    constructor(private variant: Variant) {}
 
-  /**
-   * Returns the B2C sticker price as Money.
-   */
   getDisplayPrice(currency: string = DEFAULT_CURRENCY): Money {
     return toMoney(this.variant.basePrice, currency as CurrencyCode);
   }
 
-  /**
-   * Returns the strike-through price as Money, if any.
-   */
   getStrikePrice(currency: string = DEFAULT_CURRENCY): Money | undefined {
     if (this.variant.strikePrice === undefined) return undefined;
     return toMoney(this.variant.strikePrice, currency as CurrencyCode);
   }
 
-  /**
-   * Returns the discount percentage relative to the strike price.
-   */
   getDiscountPercentage(): number {
     if (!this.variant.strikePrice || this.variant.strikePrice <= this.variant.basePrice) return 0;
     return Math.round(
@@ -191,32 +176,20 @@ export class VariantEntity {
     return null;
   }
 
-  /**
-   * Returns the total available stock across all warehouses.
-   */
   getAvailableStock(): number {
     if (!this.variant.inventory || this.variant.inventory.length === 0) return 0;
     return this.variant.inventory.reduce((sum, bal) => sum + (bal.onHand - bal.reserved), 0);
   }
 
-  /**
-   * Checks if the variant has any stock available for purchase.
-   */
   isInStock(): boolean {
     return this.getAvailableStock() > 0;
   }
 
-  /**
-   * Checks if the variant's stock is within the low-stock warning threshold.
-   */
   isLowStock(): boolean {
     const available = this.getAvailableStock();
     return available > 0 && available <= this.variant.lowStockThreshold;
   }
 
-  /**
-   * Returns the raw variant data.
-   */
   getData(): Variant {
     return this.variant;
   }

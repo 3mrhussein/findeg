@@ -44,18 +44,15 @@ export const SkuRequiredSchema = z
   .regex(/^[A-Za-z0-9\-_]+$/, "Invalid SKU format");
 export type Sku = string;
 
-/** User email address (validated format) */
 export const EmailSchema = z.string().email();
 export type Email = z.infer<typeof EmailSchema>;
 
-/** URL-friendly identifier for entities */
 export const SlugSchema = z
   .string()
   .min(2, "Slug must be at least 2 characters")
   .regex(/^[a-z0-9-]+$/, "Slug must only contain lowercase letters, numbers, and hyphens");
 export type Slug = z.infer<typeof SlugSchema>;
 
-/** Item count for stock, orders, etc. */
 export const QuantitySchema = z.coerce.number().int().nonnegative();
 export type Quantity = z.infer<typeof QuantitySchema>;
 
@@ -63,11 +60,9 @@ export type Quantity = z.infer<typeof QuantitySchema>;
 export const RatingSchema = z.number().min(0).max(5);
 export type Rating = z.infer<typeof RatingSchema>;
 
-/** Localized string object (shared) */
 export { LocalizedStringSchema };
 export type { LocalizedString };
 
-/** User access levels */
 export const UserRoleSchema = z.enum(["admin", "user"]);
 export type UserRole = z.infer<typeof UserRoleSchema>;
 
@@ -80,7 +75,6 @@ export {
 
 // ─── Constants ──────────────────────────────────────────────────────────────
 
-/** Order lifecycle statuses */
 export const OrderStatusSchema = z.enum([
   "pending",
   "confirmed",
@@ -92,15 +86,12 @@ export const OrderStatusSchema = z.enum([
 ]);
 export type OrderStatus = z.infer<typeof OrderStatusSchema>;
 
-/** Payment status */
 export const PaymentStatusSchema = z.enum(["unpaid", "paid", "refunded"]);
 export type PaymentStatus = z.infer<typeof PaymentStatusSchema>;
 
-/** Payment method */
 export const PaymentMethodSchema = z.enum(["cod", "card"]);
 export type PaymentMethod = z.infer<typeof PaymentMethodSchema>;
 
-/** Sellable units of measure */
 export const UomCodeSchema = z.enum(["pcs", "pack", "carton"]);
 export type UomCode = z.infer<typeof UomCodeSchema>;
 

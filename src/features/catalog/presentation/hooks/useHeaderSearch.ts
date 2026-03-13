@@ -7,16 +7,10 @@ interface UseHeaderSearchParams {
   initialQuery?: string;
 }
 
-/**
- * Handles header search input state and search-page navigation.
- */
 export function useHeaderSearch({ initialQuery = "" }: UseHeaderSearchParams = {}) {
   const [query, setQuery] = useState(initialQuery);
   const router = useRouter();
 
-  /**
-   * Navigates to search results when query is present.
-   */
   function submit() {
     const normalized = query.trim();
     if (!normalized) {

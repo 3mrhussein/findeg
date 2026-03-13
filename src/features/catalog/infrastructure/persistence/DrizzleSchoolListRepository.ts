@@ -28,9 +28,6 @@ import { Variant } from "../../domain/entities/Variant";
 export class DrizzleSchoolListRepository implements ISchoolListRepository {
   private variantRepo = new DrizzleVariantRepository();
 
-  /**
-   * Gets a school list by its deep-link slug.
-   */
   async getBySlug(slug: string): Promise<SchoolListResult | null> {
     const [result] = await db.select().from(schoolLists).where(eq(schoolLists.slug, slug)).limit(1);
 
@@ -38,9 +35,6 @@ export class DrizzleSchoolListRepository implements ISchoolListRepository {
     return result as SchoolListResult;
   }
 
-  /**
-   * Gets a school list by its ID.
-   */
   async getById(id: ID): Promise<SchoolListResult | null> {
     const [result] = await db.select().from(schoolLists).where(eq(schoolLists.id, id)).limit(1);
 
@@ -48,33 +42,21 @@ export class DrizzleSchoolListRepository implements ISchoolListRepository {
     return result as SchoolListResult;
   }
 
-  /**
-   * Gets all school lists.
-   */
   async getAll(): Promise<SchoolListResult[]> {
     const results = await db.select().from(schoolLists);
     return results as SchoolListResult[];
   }
 
-  /**
-   * Gets only active/published school lists.
-   */
   async getActive(): Promise<SchoolListResult[]> {
     const results = await db.select().from(schoolLists).where(eq(schoolLists.isActive, true));
     return results as SchoolListResult[];
   }
 
-  /**
-   * Creates a new school list.
-   */
   async create(input: SchoolListInput): Promise<SchoolListResult> {
     const [result] = await db.insert(schoolLists).values(input).returning();
     return result as SchoolListResult;
   }
 
-  /**
-   * Updates an existing school list.
-   */
   async update(id: ID, input: Partial<SchoolListInput>): Promise<SchoolListResult> {
     const [result] = await db
       .update(schoolLists)
@@ -91,9 +73,6 @@ export class DrizzleSchoolListRepository implements ISchoolListRepository {
     await db.delete(schoolLists).where(eq(schoolLists.id, id));
   }
 
-  /**
-   * Gets a single list item by ID.
-   */
   async getItem(id: ID): Promise<SchoolListItemResult | null> {
     const [result] = await db
       .select()
@@ -149,9 +128,6 @@ export class DrizzleSchoolListRepository implements ISchoolListRepository {
     }) as SchoolListItemResult[];
   }
 
-  /**
-   * Adds an item to a school list.
-   */
   async addItem(listId: ID, input: SchoolListItemInput): Promise<SchoolListItemResult> {
     const [result] = await db
       .insert(schoolListItems)

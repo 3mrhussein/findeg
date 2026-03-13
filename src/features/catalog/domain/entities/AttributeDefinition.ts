@@ -7,13 +7,9 @@
 import { z } from "zod";
 import { IdSchema, LocalizedStringSchema } from "@/features/core/domain/types/common";
 
-/** Supported data types for attributes */
 export const AttributeDataTypeSchema = z.enum(["string", "number", "boolean", "enum"]);
 export type AttributeDataType = z.infer<typeof AttributeDataTypeSchema>;
 
-/**
- * Attribute Definition Domain Schema
- */
 export const AttributeDefinitionSchema = z.object({
   id: IdSchema,
   key: z.string(),
@@ -40,6 +36,5 @@ export const ProductAttributeValueSchema = z.object({
 
 export type ProductAttributeValue = z.infer<typeof ProductAttributeValueSchema>;
 
-/** Input for creating a new attribute definition */
 export const CreateAttributeDefinitionSchema = AttributeDefinitionSchema.omit({ id: true });
 export type CreateAttributeDefinition = z.infer<typeof CreateAttributeDefinitionSchema>;

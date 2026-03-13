@@ -6,16 +6,12 @@ import {
   type LocalizedString,
 } from "@/features/core/domain/value-objects";
 
-/** Localized brand text payload */
 export const BrandLocalizedContentSchema = z.object({
   slug: LocalizedStringSchema,
   name: LocalizedStringSchema,
 });
 export type BrandLocalizedContent = z.infer<typeof BrandLocalizedContentSchema>;
 
-/**
- * Brand Domain Schema
- */
 export const BrandSchema = z.object({
   id: IdSchema,
   slug: SlugSchema,
@@ -30,11 +26,9 @@ export const BrandSchema = z.object({
 
 export type Brand = z.infer<typeof BrandSchema>;
 
-/** Create Brand Input */
 export const CreateBrandSchema = BrandSchema.omit({ id: true, createdAt: true, updatedAt: true });
 export type CreateBrand = z.infer<typeof CreateBrandSchema>;
 
-/** Update Brand Input */
 export const UpdateBrandSchema = CreateBrandSchema.partial().extend({
   id: IdSchema,
 });

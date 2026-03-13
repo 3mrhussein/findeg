@@ -54,26 +54,17 @@ export const SchoolListSchema = z.object({
 });
 export type SchoolList = z.infer<typeof SchoolListSchema>;
 
-/**
- * Domain methods for SchoolList entity
- */
 export class SchoolListEntity {
-  /**
-   *
-   */
   constructor(private schoolList: SchoolList) {}
 
-  /** Returns the total number of items in the list */
   getItemCount(): number {
     return this.schoolList.items?.length ?? 0;
   }
 
-  /** Gets all items in display order */
   getSortedItems(): SchoolListItem[] {
     return [...(this.schoolList.items ?? [])].sort((a, b) => a.displayOrder - b.displayOrder);
   }
 
-  /** Returns the raw data */
   getData(): SchoolList {
     return this.schoolList;
   }

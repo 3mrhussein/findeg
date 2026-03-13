@@ -11,13 +11,7 @@ import {
 } from "../../application/interfaces/IAdminSearchAnalyticsRepository";
 import { eq, and, gte, desc, sql, count, avg, sum } from "drizzle-orm";
 
-/**
- *
- */
 export class DrizzleAdminSearchAnalyticsRepository implements IAdminSearchAnalyticsRepository {
-  /**
-   *
-   */
   private getStartDate(days?: number): Date | null {
     if (!days) return null;
     const date = new Date();
@@ -25,9 +19,6 @@ export class DrizzleAdminSearchAnalyticsRepository implements IAdminSearchAnalyt
     return date;
   }
 
-  /**
-   *
-   */
   async getMetrics(days?: number): Promise<SearchAnalyticsMetrics> {
     const startDate = this.getStartDate(days);
     const whereClause = startDate ? gte(searchLogs.createdAt, startDate) : undefined;
@@ -55,9 +46,6 @@ export class DrizzleAdminSearchAnalyticsRepository implements IAdminSearchAnalyt
     };
   }
 
-  /**
-   *
-   */
   async getTopSearches(days?: number, limit: number = 50): Promise<TopSearchQuery[]> {
     const startDate = this.getStartDate(days);
     const whereClause = startDate ? gte(searchLogs.createdAt, startDate) : undefined;
@@ -84,9 +72,6 @@ export class DrizzleAdminSearchAnalyticsRepository implements IAdminSearchAnalyt
     }));
   }
 
-  /**
-   *
-   */
   async getZeroResultSearches(days?: number, limit: number = 50): Promise<ZeroResultSearch[]> {
     const startDate = this.getStartDate(days);
     const filters = [eq(searchLogs.resultsCount, 0)];
@@ -113,9 +98,6 @@ export class DrizzleAdminSearchAnalyticsRepository implements IAdminSearchAnalyt
     }));
   }
 
-  /**
-   *
-   */
   async getLowCTRSearches(
     days?: number,
     limit: number = 50,
@@ -149,9 +131,6 @@ export class DrizzleAdminSearchAnalyticsRepository implements IAdminSearchAnalyt
       .filter((r) => r.ctr < 10);
   }
 
-  /**
-   *
-   */
   async getLanguageBreakdown(days?: number): Promise<LanguageBreakdown[]> {
     const startDate = this.getStartDate(days);
     const whereClause = startDate ? gte(searchLogs.createdAt, startDate) : undefined;

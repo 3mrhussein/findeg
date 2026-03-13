@@ -27,7 +27,6 @@ import {
   type ResponsiveMediaSet,
 } from "@/features/core/domain/value-objects";
 
-/** Localized content map for a product */
 export const ProductLocalizedContentSchema = z.object({
   slug: LocalizedStringSchema.optional(),
   name: LocalizedStringSchema,
@@ -50,16 +49,11 @@ export const ProductSchema = z.object({
 
   // ─── Resolved Localized Content (for current locale) ──────────────
 
-  /** Resolved name for the current locale */
   name: z.string(),
-  /** Resolved description for the current locale */
   description: z.string(),
-  /** Resolved long description for the current locale */
   longDescription: z.string(),
-  /** Current locale code */
   locale: z.string().optional(),
 
-  /** Full localized content object */
   localizedContent: ProductLocalizedContentSchema.optional(),
 
   // ─── Relationships ────────────────────────────────────────────────
@@ -83,7 +77,6 @@ export const ProductSchema = z.object({
 
   // ─── Variants (SKUs) ──────────────────────────────────────────────
 
-  /** All purchasable SKUs for this product */
   variants: z.array(VariantSchema).optional(),
 
   // ─── Tags & Attributes ────────────────────────────────────────────
@@ -99,7 +92,6 @@ export const ProductSchema = z.object({
 
 export type Product = z.infer<typeof ProductSchema>;
 
-/** Input type for creating a new product */
 export const CreateProductSchema = ProductSchema.omit({ id: true });
 export type CreateProduct = z.infer<typeof CreateProductSchema>;
 
@@ -115,20 +107,15 @@ export type UpdateProduct = z.infer<typeof UpdateProductSchema>;
  * All pricing, stock, and discount logic is delegated to the variant layer.
  */
 export class ProductEntity {
-  /**
-   *
-   */
   constructor(private product: Product) {}
 
   // ─── Content ──────────────────────────────────────────────────────
 
-  /** Returns localized name with fallback */
   getName(locale: Locale): string {
     const localized = resolveLocalizedString(this.product.localizedContent?.name, locale);
     return localized || this.product.name;
   }
 
-  /** Returns localized description with fallback */
   getDescription(locale: Locale): string {
     const localized = resolveLocalizedString(this.product.localizedContent?.description, locale);
     return localized || this.product.description;
@@ -136,7 +123,6 @@ export class ProductEntity {
 
   // ─── Variant Access ───────────────────────────────────────────────
 
-  /** Returns all variants */
   getVariants(): Variant[] {
     return this.product.variants || [];
   }
@@ -147,12 +133,10 @@ export class ProductEntity {
     return variants.find((v) => v.variantKey === "default") || variants[0];
   }
 
-  /** Returns a variant by its key */
   getVariantByKey(key: string): Variant | undefined {
     return this.getVariants().find((v) => v.variantKey === key);
   }
 
-  /** Returns a variant by its ID */
   getVariantById(id: ID): Variant | undefined {
     return this.getVariants().find((v) => v.id === id);
   }
@@ -168,16 +152,10 @@ export class ProductEntity {
     return variant?.basePrice ?? 0;
   }
 
-  /**
-   * Returns the strike price from the default variant.
-   */
   getStrikePrice(): number | undefined {
     return this.getDefaultVariant()?.strikePrice ?? undefined;
   }
 
-  /**
-   * Checks if ANY variant has a discount (strike > base).
-   */
   hasDiscount(): boolean {
     return this.getVariants().some((v) => {
       const entity = new VariantEntity(v);
@@ -185,9 +163,6 @@ export class ProductEntity {
     });
   }
 
-  /**
-   * Returns the discount percentage of the default variant.
-   */
   getDiscountPercentage(): number {
     const variant = this.getDefaultVariant();
     if (!variant) return 0;
@@ -196,18 +171,12 @@ export class ProductEntity {
 
   // ─── Stock (delegated to default variant) ─────────────────────────
 
-  /**
-   * Checks if ANY active variant is in stock.
-   */
   isInStock(): boolean {
     return this.getVariants()
       .filter((v) => v.isActive)
       .some((v) => new VariantEntity(v).isInStock());
   }
 
-  /**
-   * Checks if ALL variants are low on stock.
-   */
   isLowStock(): boolean {
     const activeVariants = this.getVariants().filter((v) => v.isActive);
     if (activeVariants.length === 0) return false;
@@ -216,16 +185,12 @@ export class ProductEntity {
 
   // ─── Status ───────────────────────────────────────────────────────
 
-  /**
-   * Checks if the product is "New" based on the presence of the campaign:new-arrival tag.
-   */
   isNew(): boolean {
     return this.product.tags?.some((t) => t.key === "campaign:new-arrival") ?? false;
   }
 
   // ─── Data ─────────────────────────────────────────────────────────
 
-  /** Returns the raw product data */
   getData(): Product {
     return this.product;
   }

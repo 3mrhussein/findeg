@@ -69,9 +69,6 @@ interface CategoryTreeNodeProps {
 
 type GroupId = "categories" | "brands" | "price" | "rating" | "availability" | "discount";
 
-/**
- * Clamps and normalizes price ranges.
- */
 function sanitizePriceRange(
   minPrice: number,
   maxPrice: number,
@@ -83,9 +80,6 @@ function sanitizePriceRange(
   return safeMin <= safeMax ? [safeMin, safeMax] : [safeMax, safeMin];
 }
 
-/**
- * Recursive category node row with branch expansion and current-path highlighting.
- */
 function CategoryTreeNode({
   node,
   path,
@@ -163,9 +157,6 @@ function CategoryTreeNode({
   );
 }
 
-/**
- * Collapsible filter group wrapper.
- */
 function FilterGroup({
   icon,
   title,
@@ -197,9 +188,6 @@ function FilterGroup({
   );
 }
 
-/**
- * PLP filter panel.
- */
 export function FilterPanel({
   locale,
   categorySlugPath,
@@ -241,9 +229,6 @@ export function FilterPanel({
   useEffect(() => {
     const abort = new AbortController();
 
-    /**
-     * Loads category tree and brand list from public APIs.
-     */
     const loadFilters = async () => {
       try {
         const [categoriesResponse, brandsResponse] = await Promise.all([
@@ -310,17 +295,11 @@ export function FilterPanel({
     return sorted.filter((brand) => brand.name.toLowerCase().includes(normalizedSearch));
   }, [brandSearch, brands, facetCounts.brands]);
 
-  /**
-   * Applies a draft update and immediately syncs URL state.
-   */
   const updateAndApply = (next: ShopPlpFilters) => {
     setDraftFilters(next);
     onApplyFilters(next);
   };
 
-  /**
-   * Updates draft price only; URL sync is debounced.
-   */
   const updatePriceDraft = (nextMin: number, nextMax: number) => {
     const [minPrice, maxPrice] = sanitizePriceRange(nextMin, nextMax, minPriceBound, maxPriceBound);
     setDraftFilters((current) => ({
@@ -330,9 +309,6 @@ export function FilterPanel({
     }));
   };
 
-  /**
-   * Toggles brand selection.
-   */
   const handleBrandToggle = (brandId: number, checked: boolean) => {
     const nextBrandIds = checked
       ? Array.from(new Set([...draftFilters.brandIds, brandId]))
@@ -344,9 +320,6 @@ export function FilterPanel({
     });
   };
 
-  /**
-   * Toggles discount chip.
-   */
   const handleDiscountToggle = (discount: ShopPlpDiscount, checked: boolean) => {
     const nextDiscounts = checked
       ? Array.from(new Set([...draftFilters.discounts, discount]))

@@ -24,9 +24,6 @@ type DbBrand = typeof brands.$inferSelect;
  * Results for list queries are ordered by creation date descending.
  */
 export class DrizzleBrandRepository implements IBrandRepository {
-  /**
-   * Maps a database Brand record to the domain Brand entity.
-   */
   private mapToDomain(dbBrand: DbBrand, language: Locale = DEFAULT_LOCALE): Brand {
     const localizedSlugDraft = (dbBrand.localizedSlug || {}) as Record<string, string>;
     const localizedNameDraft = (dbBrand.localizedName || {}) as Record<string, string>;
@@ -58,12 +55,6 @@ export class DrizzleBrandRepository implements IBrandRepository {
     };
   }
 
-  /**
-   * Retrieves all brands
-   *
-   * @param activeOnly - If true, returns only active brands
-   * @returns Array of brands sorted by creation date (newest first)
-   */
   async getAll(activeOnly: boolean = false, language: Locale = DEFAULT_LOCALE): Promise<Brand[]> {
     const whereClause = activeOnly ? eq(brands.isActive, true) : undefined;
     const dbBrands = await db
@@ -74,23 +65,11 @@ export class DrizzleBrandRepository implements IBrandRepository {
     return dbBrands.map((brand) => this.mapToDomain(brand, language));
   }
 
-  /**
-   * Retrieves a brand by ID
-   *
-   * @param id - Brand ID
-   * @returns Brand entity or null if not found
-   */
   async getById(id: ID, language: Locale = DEFAULT_LOCALE): Promise<Brand | null> {
     const result = await db.select().from(brands).where(eq(brands.id, id));
     return result[0] ? this.mapToDomain(result[0], language) : null;
   }
 
-  /**
-   * Retrieves a brand by slug
-   *
-   * @param slug - Brand URL slug
-   * @returns Brand entity or null if not found
-   */
   async getBySlug(slug: Slug, language: Locale = DEFAULT_LOCALE): Promise<Brand | null> {
     const result = await db
       .select()
@@ -99,12 +78,6 @@ export class DrizzleBrandRepository implements IBrandRepository {
     return result[0] ? this.mapToDomain(result[0], language) : null;
   }
 
-  /**
-   * Creates a new brand
-   *
-   * @param data - Brand data
-   * @returns Created brand entity
-   */
   async create(data: BrandCreateInput): Promise<Brand> {
     const result = await db
       .insert(brands)
@@ -117,13 +90,6 @@ export class DrizzleBrandRepository implements IBrandRepository {
     return this.mapToDomain(result[0], DEFAULT_LOCALE);
   }
 
-  /**
-   * Updates an existing brand
-   *
-   * @param id - Brand ID
-   * @param data - Partial brand data to update
-   * @returns Updated brand entity
-   */
   async update(id: ID, data: BrandUpdateInput): Promise<Brand> {
     const localizedSlug = data.slug ? { en: data.slug, ar: data.slug } : undefined;
     const localizedName = data.name ? { en: data.name, ar: data.name } : undefined;
@@ -141,20 +107,10 @@ export class DrizzleBrandRepository implements IBrandRepository {
     return this.mapToDomain(result[0], DEFAULT_LOCALE);
   }
 
-  /**
-   * Deletes a brand
-   *
-   * @param id - Brand ID
-   */
   async delete(id: ID): Promise<void> {
     await db.delete(brands).where(eq(brands.id, id));
   }
 
-  /**
-   * Counts total number of brands
-   *
-   * @returns Total brand count
-   */
   async count(): Promise<number> {
     const result = await db.select({ count: brands.id }).from(brands);
     return result.length;
