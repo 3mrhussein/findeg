@@ -101,9 +101,7 @@ export async function POST(request: NextRequest) {
         .email.sendOrderConfirmation(order, {
           email: !context.user ? guestEmail! : context.user.user.email,
           firstName: context.user?.user.firstName || undefined,
-          name: context.user
-            ? `${context.user.user.firstName || ""} ${context.user.user.lastName || ""}`.trim()
-            : undefined,
+          lastName: context.user?.user.lastName,
         })
         .catch((err) => {
           console.error("[CheckoutAPI] Failed to send order confirmation email:", err);

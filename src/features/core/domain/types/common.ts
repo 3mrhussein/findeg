@@ -63,8 +63,12 @@ export type Rating = z.infer<typeof RatingSchema>;
 export { LocalizedStringSchema };
 export type { LocalizedString };
 
-export const UserRoleSchema = z.enum(["admin", "user"]);
-export type UserRole = z.infer<typeof UserRoleSchema>;
+export const PortalRoleSchema = z.enum(["customer", "staff", "school_staff"]);
+export type PortalRole = z.infer<typeof PortalRoleSchema>;
+
+export const isStaffRole = (role?: PortalRole | null) => role === "staff";
+export const isSchoolRole = (role?: PortalRole | null) => role === "school_staff";
+export const isCustomerRole = (role?: PortalRole | null) => role === "customer" || !role;
 
 export {
   ActorTypeSchema,

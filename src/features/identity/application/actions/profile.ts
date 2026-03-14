@@ -18,7 +18,10 @@ export async function updateMyProfileAction(formData: FormData) {
     redirect("/my-account?profile=error");
   }
 
-  await container.userRepository.update(session.userId, { name });
+  const [firstName, ...lastNameParts] = name.split(" ");
+  const lastName = lastNameParts.join(" ") || undefined;
+
+  await container.userRepository.update(session.userId, { firstName, lastName });
   revalidatePath("/my-account");
   redirect("/my-account?profile=updated");
 }

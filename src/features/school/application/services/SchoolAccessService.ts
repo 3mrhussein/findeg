@@ -129,7 +129,7 @@ export class SchoolAccessService implements ISchoolAccessService {
       userId: userId as number,
       childName: input.childName,
       note: input.note,
-      parentName: `${user.firstName || ""} ${user.lastName || ""}`.trim() || user.name || "Unknown",
+      parentName: `${user.firstName || ""} ${user.lastName || ""}`.trim() || "Unknown",
       parentEmail: user.email,
       status: "pending",
     });

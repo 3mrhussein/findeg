@@ -1,6 +1,7 @@
 import { ID, Email } from "@/features/core/domain/types/common";
 import { UserWithPassword } from "@/features/core/domain/auth";
 import { User } from "../../domain/entities/User";
+import { PasswordCredentials } from "../../domain/entities/PasswordCredentials";
 import type { PermissionCode, RoleId } from "@/features/core/domain/value-objects";
 
 /**
@@ -44,4 +45,17 @@ export interface IUserRepository {
    * Updates an existing user's profile information.
    */
   update(id: ID, user: Partial<User>): Promise<User>;
+
+  /**
+   * Fetches password credentials for a user (if they exist).
+   */
+  findPasswordCredentials(userId: ID): Promise<PasswordCredentials | null>;
+
+  /**
+   * Inserts or updates password credentials for a user.
+   */
+  upsertPasswordCredentials(
+    userId: ID,
+    payload: Omit<PasswordCredentials, "userId" | "createdAt" | "updatedAt">,
+  ): Promise<void>;
 }

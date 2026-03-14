@@ -66,17 +66,19 @@ export class AuthService implements IAuthService {
     }
 
     const authorization = await this.userRepository.getAuthorizationContext(user.id);
-    const activeRoleIds = Array.from(new Set([...(authorization.activeRoleIds || []), user.role]));
+    const activeRoleIds = Array.from(new Set([...(authorization.activeRoleIds || [])]));
     const permissionCodes = Array.from(
       new Set([
         ...(authorization.permissionCodes || []),
-        ...(user.role === "admin" ? [PERMISSION_CODES.ADMIN_PORTAL] : []),
+        ...(user.portalRole === "staff" || user.portalRole === "school_staff"
+          ? [PERMISSION_CODES.ADMIN_PORTAL]
+          : []),
       ]),
     );
 
     const payload: SessionPayload = {
       userId: user.id,
-      role: user.role,
+      portalRole: user.portalRole,
       user: createUserVO({
         email: user.email,
         firstName: user.firstName || undefined,
@@ -97,11 +99,10 @@ export class AuthService implements IAuthService {
       user: {
         id: user.id,
         email: user.email,
-        name: user.name,
         firstName: user.firstName || undefined,
         lastName: user.lastName || undefined,
         phone: user.phone || undefined,
-        role: user.role,
+        portalRole: user.portalRole,
         activeRoleIds: payload.activeRoleIds,
         permissionCodes: payload.permissionCodes,
         actorType: payload.actorType,
@@ -136,11 +137,15 @@ export class AuthService implements IAuthService {
         email: input.email,
         firstName: input.firstName,
         lastName: input.lastName,
-        name: displayName || undefined,
         phone: input.phone,
-        password,
-        role: "user",
+        portalRole: "customer",
       } as any);
+
+      // Save password
+      await this.userRepository.upsertPasswordCredentials(user.id, {
+        passwordHash: password,
+        hashStrategy: "bcrypt",
+      });
 
       // Log them in automatically
       return this.login(input.email, input.password);

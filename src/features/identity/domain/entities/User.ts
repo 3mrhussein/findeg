@@ -5,7 +5,7 @@
  * for proper display and address form pre-filling.
  */
 
-import { ID, Email, UserRole } from "@/features/core/domain/types/common";
+import { ID, Email, PortalRole } from "@/features/core/domain/types/common";
 import type {
   AuthProvider,
   PaymentProvider,
@@ -48,15 +48,13 @@ export interface User {
   /** Primary contact and login email */
   email: Email;
   /** User's given name */
-  firstName?: string;
+  firstName?: string | null;
   /** User's family name */
-  lastName?: string;
-  /** Combined or display name fallback */
-  name?: string;
+  lastName?: string | null;
   /** Egyptian mobile number (formatted for SMS/WhatsApp) */
-  phone?: string;
-  /** Access level control (e.g., 'user', 'admin') */
-  role: UserRole;
+  phone?: string | null;
+  /** Portal routing gate: 'customer', 'staff', 'school_staff' */
+  portalRole: PortalRole;
   /** Additive role IDs for permission-based model migration */
   roleIds?: RoleId[];
   /** Additive permission codes for resolved/flattened authorization checks */
@@ -74,3 +72,11 @@ export interface User {
   createdAt: Date;
   updatedAt: Date;
 }
+
+/**
+ * Derives a full name from a user's `firstName` and `lastName`.
+ * Falls back to an empty string if neither is provided.
+ */
+export const getUserFullName = (user: Pick<User, "firstName" | "lastName">) => {
+  return [user.firstName, user.lastName].filter(Boolean).join(" ").trim();
+};

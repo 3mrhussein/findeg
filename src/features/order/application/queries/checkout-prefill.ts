@@ -1,5 +1,5 @@
 import { getServices } from "@/server/getServices";
-import type { User } from "@/features/identity/domain/entities/User";
+import { User, getUserFullName } from "@/features/identity/domain/entities/User";
 import type { Order } from "@/features/order/domain/entities/Order";
 
 export interface CheckoutPrefillData {
@@ -19,10 +19,7 @@ export interface CheckoutPrefillData {
  * Safely composes a display full name from user fields.
  */
 function resolveFullName(user: User): string {
-  const fromParts = `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim();
-  if (fromParts) return fromParts;
-  if (user.name) return user.name;
-  return "";
+  return getUserFullName({ firstName: user.firstName, lastName: user.lastName });
 }
 
 /**

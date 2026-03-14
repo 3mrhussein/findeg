@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
     // Generate JWT token
     const token = await new SignJWT({
       userId: user.id,
-      role: user.role,
+      portalRole: user.portalRole,
       user: userVO,
       subjectId: String(user.id),
       actorType: "user",
@@ -63,8 +63,7 @@ export async function POST(request: NextRequest) {
       user: {
         id: user.id,
         ...userVO,
-        phone: user.phone,
-        role: user.role,
+        portalRole: user.portalRole,
       },
     });
   } catch (error) {

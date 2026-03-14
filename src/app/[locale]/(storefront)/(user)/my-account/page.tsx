@@ -24,7 +24,8 @@ export default async function Page({ params, searchParams }: Props) {
   const t = await getTranslations({ locale });
   const { user, orders } = await getMyAccountDataOrRedirect();
 
-  const displayName = user.name || user.firstName || user.email;
+  const displayName =
+    [user.firstName, user.lastName].filter(Boolean).join(" ").trim() || user.email;
 
   return (
     <div className="space-y-6">

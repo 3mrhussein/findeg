@@ -2,7 +2,7 @@ import { SignJWT, jwtVerify } from "jose";
 import type { SessionPayload } from "@/features/core/domain/auth";
 import { isAdminSession } from "@/features/core/domain/auth/authorization";
 import type { ISessionManager } from "@/features/core/application/interfaces/ISessionManager";
-import type { UserRole } from "@/features/core/domain/types/common";
+import type { PortalRole } from "@/features/core/domain/types/common";
 import { AUTH_CONSTANTS } from "@/features/core/domain/constants/auth";
 
 /**
@@ -35,13 +35,13 @@ export class JwtSessionManager implements ISessionManager {
 
       const { payload } = await jwtVerify(token, this.JWT_SECRET);
 
-      if (!payload.userId || !payload.role || !payload.user) {
+      if (!payload.userId || !payload.portalRole || !payload.user) {
         return null;
       }
 
       return {
         userId: payload.userId as number,
-        role: payload.role as UserRole,
+        portalRole: payload.portalRole as PortalRole,
         user: payload.user as SessionPayload["user"],
         subjectId: payload.subjectId as string | undefined,
         actorType: payload.actorType as SessionPayload["actorType"],

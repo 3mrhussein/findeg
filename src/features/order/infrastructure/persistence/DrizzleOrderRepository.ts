@@ -96,9 +96,10 @@ export class DrizzleOrderRepository implements IOrderRepository {
 
     // Fallback name if no user
     const customerName = orderResult[0].user
-      ? orderResult[0].user.firstName
-        ? `${orderResult[0].user.firstName} ${orderResult[0].user.lastName || ""}`
-        : orderResult[0].user.name
+      ? [orderResult[0].user.firstName, orderResult[0].user.lastName]
+          .filter(Boolean)
+          .join(" ")
+          .trim()
       : (orderResult[0].order.shippingAddressSnapshot as any)?.fullName || "Guest";
 
     return this.mapToDomain(
@@ -217,9 +218,7 @@ export class DrizzleOrderRepository implements IOrderRepository {
             .where(eq(orderItems.orderId, row.order.id as any));
 
           const name = row.user
-            ? row.user.firstName
-              ? `${row.user.firstName} ${row.user.lastName || ""}`
-              : row.user.name
+            ? [row.user.firstName, row.user.lastName].filter(Boolean).join(" ").trim()
             : (row.order.shippingAddressSnapshot as any)?.fullName || "Guest";
 
           return this.mapToDomain(row.order, items, name || "Guest", row.user?.email);

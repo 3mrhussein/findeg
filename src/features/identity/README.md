@@ -1,54 +1,50 @@
 # Identity Feature
 
-Owns authentication, registration, session boundaries, and user profile/address access.
+This feature module handles everything related to user accounts, authentication, and RBAC (Role-Based Access Control).
 
-## Use Cases
+## Key Architecture Changes (Refactoring 2026)
 
-```mermaid
-flowchart LR
-    Guest --> UC1[Register account]
-    User --> UC2[Login]
-    User --> UC3[Get current session]
-    Admin --> UC4[Authorize admin routes]
-```
+The identity module has been refactored to follow stricter Clean Architecture principles and improve data security.
 
-## UML (Class View)
+### 1. Database Schema Refactor
 
-```mermaid
-classDiagram
-    class AuthService
-    class IAuthService
-    class IUserRepository
-    class ISessionProvider
-    class User
+- **`identity.users`**:
+  - Removed legacy `name` and `password` columns.
+  - Renamed `role` to `portalRole` (Values: `customer`, `staff`, `school_staff`).
+  - `portalRole` acts as a routing gate (e.g., `/admin` requires `staff` or `school_staff`).
+- **`identity.password_credentials`**:
+  - New table to store hashed passwords using different strategies (currently `bcrypt`).
+  - This separates authentication secrets from user profile data.
 
-    AuthService ..|> IAuthService
-    AuthService --> IUserRepository
-    AuthService --> ISessionProvider
-    IUserRepository --> User
-```
+### 2. Domain Models
 
-## Sequence (Login)
+- **`User.ts`**:
+  - `name` property removed. Use `getFullName()` helper for resolution.
+  - `role` replaced by `portalRole`.
+  - Passwords are no longer part of the `User` entity.
+- **`PasswordCredentials.ts`**:
+  - New domain entity defining the structure for credentials stored in the DB.
 
-```mermaid
-sequenceDiagram
-    participant API as POST /api/v1/auth/login
-    participant Auth as AuthService
-    participant UserRepo as IUserRepository
-    participant Session as ISessionProvider
-    API->>Auth: login(email, password)
-    Auth->>UserRepo: getByEmailWithPassword(email)
-    Auth->>Session: createSession(payload)
-    Auth-->>API: AuthResult
-```
+### 3. Repository Standards
 
-## Layer Notes
-- `domain`: user and auth/session DTO contracts.
-- `application`: auth service and user repository ports.
-- `infrastructure`: Drizzle user repository and JWT/cookie providers.
+- **Repositories must be locale-unaware**.
+- `DrizzleUserRepository` returns raw domain objects.
+- All password logic is handled via `IUserRepository.findPasswordCredentials` and `upsertPasswordCredentials`.
 
-## Clean Architecture Boundaries
-- Depends on `core` ports for session management.
-- Used by all authenticated features.
-- Route middleware should depend on session contracts, not repository internals.
+### 4. Authentication Logic
 
+- The project uses custom JWT authentication via `jose` (see `JwtSessionManager.ts`).
+- Authentication secrets are verified using the `AuthService`.
+- JWT payload contains `portalRole`, `organizationId`, and granular `roleIds` for RBAC.
+
+## Important Helpers
+
+- `isStaffRole(role: PortalRole)`: Checks if the user has staff privileges.
+- `isSchoolRole(role: PortalRole)`: Checks if the user belongs to a school portal.
+- `user.getFullName()`: Resolves the display name from first and last name with email fallback.
+
+## Conventions
+
+- **NEVER** add a `name` column back to `users`.
+- **NEVER** store plain text or hashed passwords in the `users` table.
+- Use `portalRole` for top-level access control and `role_permissions` for granular feature access.

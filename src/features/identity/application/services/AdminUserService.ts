@@ -66,7 +66,6 @@ export class AdminUserService implements IAdminUserService {
    */
   async createAdmin(input: CreateAdminInput): Promise<AdminUser> {
     const passwordHash = await bcrypt.hash(input.password, 12);
-    const displayName = [input.firstName, input.lastName].filter(Boolean).join(" ").trim();
 
     const [newUser] = await db
       .insert(users)
@@ -74,8 +73,7 @@ export class AdminUserService implements IAdminUserService {
         email: input.email,
         firstName: input.firstName,
         lastName: input.lastName,
-        name: displayName || undefined,
-        role: "admin",
+        portalRole: "staff",
         isActive: true,
       })
       .returning({ id: users.id });

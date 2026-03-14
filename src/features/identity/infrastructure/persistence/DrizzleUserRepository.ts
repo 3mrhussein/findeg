@@ -1,17 +1,19 @@
-import { ID, Email, UserRole } from "@/features/core/domain/types/common";
+import { ID, Email, PortalRole } from "@/features/core/domain/types/common";
 import { UserWithPassword } from "@/features/core/domain/auth";
 import { db } from "@/features/core/infrastructure/persistence";
 import {
   users,
   userRoles,
   userPermissions,
-  roles,
   rolePermissions,
   permissions,
+  passwordCredentials,
+  roles,
   type User as DbUser,
 } from "@/features/core/infrastructure/persistence/schema";
 import { IUserRepository } from "../../application/interfaces/IUserRepository";
 import { User } from "../../domain/entities/User";
+import { PasswordCredentials } from "../../domain/entities/PasswordCredentials";
 import { eq } from "drizzle-orm";
 import type { PermissionCode, RoleId } from "@/features/core/domain/value-objects";
 
@@ -115,11 +117,10 @@ export class DrizzleUserRepository implements IUserRepository {
     return {
       id: dbUser.id,
       email: dbUser.email as Email,
-      firstName: dbUser.firstName || undefined,
-      lastName: dbUser.lastName || undefined,
-      name: dbUser.name || undefined,
-      phone: dbUser.phone || undefined,
-      role: dbUser.role as UserRole,
+      firstName: dbUser.firstName || null,
+      lastName: dbUser.lastName || null,
+      phone: dbUser.phone || null,
+      portalRole: dbUser.portalRole as PortalRole,
       image: dbUser.image || undefined,
       isActive: dbUser.isActive,
       createdAt: dbUser.createdAt,
@@ -159,18 +160,29 @@ export class DrizzleUserRepository implements IUserRepository {
    * @returns User entity with password field populated, or null.
    */
   async getByEmailWithPassword(email: Email): Promise<UserWithPassword | null> {
-    const result = await db.select().from(users).where(eq(users.email, email)).limit(1);
+    // Note: Temporary shim while AuthService transition occurs
+    // Combines users and passwordCredentials
+    const result = await db
+      .select({
+        user: users,
+        passwordHash: passwordCredentials.passwordHash,
+      })
+      .from(users)
+      .leftJoin(passwordCredentials, eq(users.id, passwordCredentials.userId))
+      .where(eq(users.email, email))
+      .limit(1);
+
     if (result.length === 0) return null;
-    const dbUser = result[0];
+    const { user: dbUser, passwordHash } = result[0];
+
     return {
       id: dbUser.id,
       email: dbUser.email as Email,
-      firstName: dbUser.firstName || undefined,
-      lastName: dbUser.lastName || undefined,
-      name: dbUser.name || undefined,
-      phone: dbUser.phone || undefined,
-      role: dbUser.role as UserRole,
-      password: dbUser.password,
+      firstName: dbUser.firstName || null,
+      lastName: dbUser.lastName || null,
+      phone: dbUser.phone || null,
+      portalRole: dbUser.portalRole as PortalRole,
+      password: passwordHash || null,
     };
   }
 
@@ -203,5 +215,45 @@ export class DrizzleUserRepository implements IUserRepository {
       .where(eq(users.id, id))
       .returning();
     return this.mapToDomain(result[0]);
+  }
+
+  async findPasswordCredentials(userId: ID): Promise<PasswordCredentials | null> {
+    const result = await db
+      .select()
+      .from(passwordCredentials)
+      .where(eq(passwordCredentials.userId, userId))
+      .limit(1);
+
+    if (result.length === 0) return null;
+    const pc = result[0];
+
+    return {
+      userId: pc.userId,
+      passwordHash: pc.passwordHash,
+      hashStrategy: pc.hashStrategy as any,
+      createdAt: pc.createdAt,
+      updatedAt: pc.updatedAt,
+    };
+  }
+
+  async upsertPasswordCredentials(
+    userId: ID,
+    payload: Omit<PasswordCredentials, "userId" | "createdAt" | "updatedAt">,
+  ): Promise<void> {
+    await db
+      .insert(passwordCredentials)
+      .values({
+        userId,
+        passwordHash: payload.passwordHash,
+        hashStrategy: payload.hashStrategy,
+      })
+      .onConflictDoUpdate({
+        target: passwordCredentials.userId,
+        set: {
+          passwordHash: payload.passwordHash,
+          hashStrategy: payload.hashStrategy,
+          updatedAt: new Date(),
+        },
+      });
   }
 }

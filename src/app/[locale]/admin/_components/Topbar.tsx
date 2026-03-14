@@ -44,7 +44,7 @@ export function Topbar() {
           <span className="text-xs text-muted-foreground capitalize">
             {session && isAdminSession(session)
               ? t("Topbar.RoleAdmin")
-              : session?.role || t("Topbar.RoleAdmin")}
+              : session?.portalRole || t("Topbar.RoleAdmin")}
           </span>
         </div>
         <Avatar>

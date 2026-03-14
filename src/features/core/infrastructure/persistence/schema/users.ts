@@ -12,7 +12,6 @@ import { orders } from "./orders";
 import { reviews } from "./reviews";
 import { addresses } from "./addresses";
 import { auditLog } from "./audit-log";
-import type { UserRole } from "@/features/core/domain/types/common";
 
 /**
  * Users Table
@@ -34,13 +33,12 @@ export const users = identitySchema.table("users", {
   /** Last name */
   lastName: text("last_name"),
   /** Legacy display name — kept for backward compatibility */
-  name: text("name"),
+  // name: text("name"), -- Removed during identity architecture refactor
   /** Egyptian phone number (e.g., "+201234567890") */
   phone: varchar("phone", { length: 20 }),
 
-  password: text("password"),
-  /** User role: "user" or "admin" */
-  role: varchar("role", { length: 20 }).$type<UserRole>().default("user").notNull(),
+  /** Portal routing gate: "customer" | "staff" | "school_staff" */
+  portalRole: varchar("portal_role", { length: 20 }).default("customer").notNull(),
   emailVerified: timestamp("email_verified"),
   image: text("image"),
   isActive: boolean("is_active").default(true).notNull(),

@@ -1,5 +1,5 @@
 import { User } from "../entities/User";
-import { Email, UserRole } from "@/features/core/domain/types/common";
+import { Email, PortalRole } from "@/features/core/domain/types/common";
 import type { SessionPayload as CoreSessionPayload } from "@/features/core/domain/auth";
 
 export type SessionPayload = CoreSessionPayload;
@@ -10,9 +10,9 @@ export interface AuthResult {
   error?: string;
 }
 
-export interface UserWithPassword extends Omit<Partial<User>, "role" | "email"> {
+export interface UserWithPassword extends Omit<Partial<User>, "portalRole" | "email"> {
   id: number;
   email: Email;
-  role: UserRole;
+  portalRole: PortalRole;
   password?: string | null;
 }

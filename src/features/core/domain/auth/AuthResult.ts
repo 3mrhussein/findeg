@@ -1,4 +1,4 @@
-import { UserRole } from "../types/common";
+import { PortalRole } from "../types/common";
 import type { SessionPayload } from "./SessionPayload";
 
 /**
@@ -16,7 +16,7 @@ export interface AuthResult {
     firstName?: string;
     lastName?: string;
     phone?: string;
-    role: UserRole;
+    portalRole: PortalRole;
     activeRoleIds?: SessionPayload["activeRoleIds"];
     permissionCodes?: SessionPayload["permissionCodes"];
     actorType?: SessionPayload["actorType"];

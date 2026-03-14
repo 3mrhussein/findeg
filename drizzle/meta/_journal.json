@@ -43,6 +43,13 @@
       "when": 1773368503695,
       "tag": "0005_domain_modularization",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1773441818330,
+      "tag": "0006_drop_translations_and_add_portal_role",
+      "breakpoints": true
     }
   ]
 }

@@ -97,7 +97,7 @@ export function isSystemAdmin(session: SessionPayload): boolean {
  * @param session - The active user session payload.
  */
 export function isAdminSession(session: SessionPayload): boolean {
-  if (session.role === "admin") return true;
+  if (session.portalRole === "staff" || session.portalRole === "school_staff") return true;
 
   if (session.activeRoleIds?.some((roleId) => ADMIN_ROLE_IDS.has(roleId))) {
     return true;

@@ -82,7 +82,7 @@ export class ResendEmailService implements IEmailService {
    */
   async sendOrderConfirmation(
     order: Order,
-    customer: { email: string; firstName?: string; name?: string; locale?: string | null },
+    customer: { email: string; firstName?: string; lastName?: string; locale?: string | null },
   ): Promise<void> {
     const locale = this.resolveLocale(customer.locale);
     const subject = locale === "ar" ? `تأكيد طلبك #${order.id}` : `Order Confirmation #${order.id}`;
@@ -102,7 +102,8 @@ export class ResendEmailService implements IEmailService {
 
     const template = React.createElement(OrderConfirmationEmail, {
       orderId: order.id.toString(),
-      customerName: customer.firstName || customer.name || "Customer",
+      customerName:
+        [customer.firstName, customer.lastName].filter(Boolean).join(" ").trim() || "Customer",
       items,
       total: formatCurrency(order.totalAmount || 0, order.currency, locale),
       deliveryAddress: address,
@@ -139,7 +140,7 @@ export class ResendEmailService implements IEmailService {
    *
    */
   async sendPasswordReset(
-    user: { email: string; firstName?: string; name?: string; locale?: string | null },
+    user: { email: string; firstName?: string; lastName?: string; locale?: string | null },
     resetToken: string,
   ): Promise<void> {
     const locale = this.resolveLocale(user.locale);
@@ -148,7 +149,7 @@ export class ResendEmailService implements IEmailService {
     const resetLink = `${baseUrl}/${locale}/reset-password?token=${resetToken}`;
 
     const template = React.createElement(PasswordResetEmail, {
-      customerName: user.firstName || user.name || "User",
+      customerName: [user.firstName, user.lastName].filter(Boolean).join(" ").trim() || "User",
       resetLink,
       locale,
     });
@@ -160,14 +161,14 @@ export class ResendEmailService implements IEmailService {
    *
    */
   async sendSchoolListAccessApproved(
-    user: { email: string; firstName?: string; name?: string; locale?: string | null },
+    user: { email: string; firstName?: string; lastName?: string; locale?: string | null },
     list: EmailSchoolList,
   ): Promise<void> {
     const locale = this.resolveLocale(user.locale);
     const subject = locale === "ar" ? "تمت الموافقة على وصولك" : "Access Approved";
 
     const template = React.createElement(SchoolListAccessApprovedEmail, {
-      customerName: user.firstName || user.name || "Parent",
+      customerName: [user.firstName, user.lastName].filter(Boolean).join(" ").trim() || "Parent",
       listName: list.listName,
       schoolName: list.schoolName,
       listId: list.id,
@@ -181,14 +182,15 @@ export class ResendEmailService implements IEmailService {
    *
    */
   async sendSchoolListAccessRequest(
-    schoolAdmin: { email: string; firstName?: string; name?: string; locale?: string | null },
+    schoolAdmin: { email: string; firstName?: string; lastName?: string; locale?: string | null },
     request: AccessRequest,
   ): Promise<void> {
     const locale = this.resolveLocale(schoolAdmin.locale);
     const subject = locale === "ar" ? "طلب وصول جديد إلى القائمة" : "New List Access Request";
 
     const template = React.createElement(SchoolListAccessRequestEmail, {
-      adminName: schoolAdmin.firstName || schoolAdmin.name || "Admin",
+      adminName:
+        [schoolAdmin.firstName, schoolAdmin.lastName].filter(Boolean).join(" ").trim() || "Admin",
       requesterName: request.requesterName,
       requesterEmail: request.requesterEmail,
       schoolName: request.schoolName,
@@ -203,7 +205,7 @@ export class ResendEmailService implements IEmailService {
    *
    */
   async sendAdminInvitation(
-    admin: { email: string; firstName?: string; name?: string; locale?: string | null },
+    admin: { email: string; firstName?: string; lastName?: string; locale?: string | null },
     inviteToken: string,
   ): Promise<void> {
     const locale = this.resolveLocale(admin.locale);
@@ -212,7 +214,7 @@ export class ResendEmailService implements IEmailService {
     const inviteLink = `${baseUrl}/admin/accept-invite?token=${inviteToken}`;
 
     const template = React.createElement(AdminInvitationEmail, {
-      adminName: admin.firstName || admin.name || "Admin",
+      adminName: [admin.firstName, admin.lastName].filter(Boolean).join(" ").trim() || "Admin",
       inviteLink,
       locale,
     });

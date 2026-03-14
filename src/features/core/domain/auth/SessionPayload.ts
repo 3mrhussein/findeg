@@ -6,7 +6,7 @@
 
 import { z } from "zod";
 import { EmailSchema } from "../types/common";
-import { UserRoleSchema } from "../types/common";
+import { PortalRoleSchema } from "../types/common";
 import {
   ActorTypeSchema,
   OrganizationIdSchema,
@@ -17,7 +17,7 @@ import {
 
 export const SessionPayloadSchema = z.object({
   userId: z.number().int().positive(),
-  role: UserRoleSchema,
+  portalRole: PortalRoleSchema,
   user: UserVOSchema,
 
   // Additive v2 identity/session fields.

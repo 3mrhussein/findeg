@@ -31,7 +31,7 @@ export async function loginAction(formData: FormData) {
           firstName: result.user.firstName,
           lastName: result.user.lastName,
         }),
-        role: result.user.role,
+        portalRole: result.user.portalRole,
         activeRoleIds: result.user.activeRoleIds,
         permissionCodes: result.user.permissionCodes,
         actorType: result.user.actorType,

@@ -24,7 +24,7 @@ export class NotificationEventService {
       id: number;
       email: string;
       firstName?: string;
-      name?: string;
+      lastName?: string;
       locale?: string | null;
     },
   ) {
@@ -68,7 +68,13 @@ export class NotificationEventService {
    * School List Access Approved
    */
   async onAccessRequestApproved(
-    user: { id: number; email: string; firstName?: string; name?: string; locale?: string | null },
+    user: {
+      id: number;
+      email: string;
+      firstName?: string;
+      lastName?: string;
+      locale?: string | null;
+    },
     list: { id: string; listName: string; schoolName: string; grade: string; academicYear: string },
   ) {
     await this.notificationService.create({

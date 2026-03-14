@@ -101,10 +101,10 @@ export class DrizzleReviewRepository implements IReviewRepository {
    */
   private mapToDomain(
     dbReview: SelectedReviewRow,
-    dbUser?: { firstName: string | null; lastName: string | null; name: string | null } | null,
+    dbUser?: { firstName: string | null; lastName: string | null } | null,
   ): Review {
     const resolvedAuthor = dbUser
-      ? [dbUser.firstName, dbUser.lastName].filter(Boolean).join(" ").trim() || dbUser.name
+      ? [dbUser.firstName, dbUser.lastName].filter(Boolean).join(" ").trim()
       : undefined;
 
     return {
@@ -152,7 +152,6 @@ export class DrizzleReviewRepository implements IReviewRepository {
         user: {
           firstName: users.firstName,
           lastName: users.lastName,
-          name: users.name,
         },
       })
       .from(reviews)
@@ -192,7 +191,6 @@ export class DrizzleReviewRepository implements IReviewRepository {
           user: {
             firstName: users.firstName,
             lastName: users.lastName,
-            name: users.name,
           },
         })
         .from(reviews)
@@ -260,7 +258,6 @@ export class DrizzleReviewRepository implements IReviewRepository {
         user: {
           firstName: users.firstName,
           lastName: users.lastName,
-          name: users.name,
         },
       })
       .from(reviews)
@@ -283,7 +280,6 @@ export class DrizzleReviewRepository implements IReviewRepository {
         user: {
           firstName: users.firstName,
           lastName: users.lastName,
-          name: users.name,
         },
       })
       .from(reviews)

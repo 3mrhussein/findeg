@@ -29,7 +29,7 @@ export interface IEmailService {
    */
   sendOrderConfirmation(
     order: Order,
-    customer: { email: string; firstName?: string; name?: string },
+    customer: { email: string; firstName?: string; lastName?: string },
   ): Promise<void>;
 
   /**
@@ -41,7 +41,7 @@ export interface IEmailService {
    * Sent when a user requests a password reset.
    */
   sendPasswordReset(
-    user: { email: string; firstName?: string; name?: string },
+    user: { email: string; firstName?: string; lastName?: string },
     resetToken: string,
   ): Promise<void>;
 
@@ -49,7 +49,7 @@ export interface IEmailService {
    * Sent when a school administrator approves a parent's access to a private list.
    */
   sendSchoolListAccessApproved(
-    user: { email: string; firstName?: string; name?: string },
+    user: { email: string; firstName?: string; lastName?: string },
     list: EmailSchoolList,
   ): Promise<void>;
 
@@ -57,7 +57,7 @@ export interface IEmailService {
    * Sent to a school administrator when a parent requests access to a private list.
    */
   sendSchoolListAccessRequest(
-    schoolAdmin: { email: string; firstName?: string; name?: string },
+    schoolAdmin: { email: string; firstName?: string; lastName?: string },
     request: AccessRequest,
   ): Promise<void>;
 
@@ -65,7 +65,7 @@ export interface IEmailService {
    * Sent to a newly invited admin user with a link to set their password.
    */
   sendAdminInvitation(
-    admin: { email: string; firstName?: string; name?: string },
+    admin: { email: string; firstName?: string; lastName?: string },
     inviteToken: string,
   ): Promise<void>;
 }
