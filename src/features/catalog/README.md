@@ -53,6 +53,12 @@ sequenceDiagram
 - Used by `cart`, `order`, and `administration` through interfaces/services.
 - No UI should import repository implementations directly.
 
+## Component Placement
+
+React components live in route `_components` folders (`src/app/**/_components/`) or in `src/components/shared/`.
+Feature `presentation/` code is hooks/mappers/config only (no JSX).
+See: `docs/development/component-placement.md`
+
 ## Localization Strategy
 
 The catalog feature utilizes JSONB inline fields for localized content (e.g., `localizedName`, `localizedSlug`).

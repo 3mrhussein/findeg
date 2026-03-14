@@ -13,9 +13,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { BilingualInput } from "../shared/BilingualInput";
-import { BilingualTextarea } from "../shared/BilingualTextarea";
-import type { ProductFormValues } from "../types";
+import { BilingualInput } from "@/components/shared/BilingualInput";
+import { BilingualTextarea } from "@/components/shared/BilingualTextarea";
+import type { ProductFormValues } from "@/features/administration/presentation/forms/product-form";
 
 interface ProductInfoZoneProps {
   categories: { id: number; name: string }[];

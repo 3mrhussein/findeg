@@ -1,7 +1,7 @@
 import { getServices } from "@/server/getServices";
 import { getOptionalSession } from "@/lib/auth-guard";
-import { SchoolAuthWall } from "@/features/school/presentation/components/SchoolAuthWall";
-import { SchoolCard } from "@/features/school/presentation/components/SchoolCard";
+import { SchoolAuthWall } from "@/app/[locale]/(storefront)/school/_components/SchoolAuthWall";
+import { SchoolCard } from "@/app/[locale]/(storefront)/school/_components/SchoolCard";
 import {
   SchoolSearchParams,
   ISchoolDirectoryService,
@@ -75,7 +75,7 @@ export default async function SchoolsPage({ params, searchParams }: PageProps) {
         >
           <Link href="/schools/suggest">
             <PlusCircle className="w-4 h-4" />
-            Can't find your school?
+            Can&apos;t find your school?
           </Link>
         </Button>
       </div>

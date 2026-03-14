@@ -149,7 +149,7 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
           </h1>
           {!orderResult?.success && cartItems.length > 0 && (
             <p className="text-lg text-slate-500 max-w-lg mx-auto">
-              You're almost there! Complete your details below to finalize your order.
+              You&apos;re almost there! Complete your details below to finalize your order.
             </p>
           )}
         </div>

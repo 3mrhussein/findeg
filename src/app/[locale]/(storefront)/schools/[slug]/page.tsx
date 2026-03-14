@@ -1,6 +1,6 @@
 import { getServices } from "@/server/getServices";
 import { getOptionalSession } from "@/lib/auth-guard";
-import { SchoolAuthWall } from "@/features/school/presentation/components/SchoolAuthWall";
+import { SchoolAuthWall } from "@/app/[locale]/(storefront)/school/_components/SchoolAuthWall";
 import { SchoolProfileClient } from "./SchoolProfileClient";
 import { notFound } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -149,8 +149,8 @@ export default async function SchoolProfilePage({ params }: PageProps) {
                 <div className="space-y-1">
                   <p className="font-bold">Shop Essentials</p>
                   <p className="text-muted-foreground">
-                    Once access is granted, you'll see the exact items required. Add them to your
-                    cart in one click!
+                    Once access is granted, you&apos;ll see the exact items required. Add them to
+                    your cart in one click!
                   </p>
                 </div>
               </div>

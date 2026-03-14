@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tag } from "@/features/catalog/domain/entities/Tag";
-import { TagBadge } from "./TagBadge";
+import { TagBadge } from "@/components/shared/TagBadge";
 import { cn } from "@/lib/utils";
 
 interface TagSelectProps {

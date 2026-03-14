@@ -48,4 +48,16 @@ See: `catalog/presentation/config/tag-display.ts`
 ### 6. No Translations Table
 
 The project uses JSONB inline localization exclusively.
-`catalog.translations` was removed — do not recreate it.
+
+### 7. Identity Secrets Separation
+
+Never store passwords, hashes, or MFA secrets in `identity.users`. Use `identity.password_credentials` and separate repository methods.
+
+### 8. Use portalRole for Routing
+
+Use `users.portalRole` only for top-level routing gates (`staff` vs `customer`). For specific feature access, use the RBAC permission system.
+
+### 9. Component Placement (Strict)
+
+React components (JSX) do not live in `src/features/**/presentation/**`.
+See: `docs/development/component-placement.md`

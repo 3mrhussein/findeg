@@ -7,7 +7,10 @@ import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Loader2, Save, X } from "lucide-react";
-import { ProductFormSchema, type ProductFormValues } from "./types";
+import {
+  ProductFormSchema,
+  type ProductFormValues,
+} from "@/features/administration/presentation/forms/product-form";
 import { ProductInfoZone } from "./zones/ProductInfoZone";
 import { PricingZone } from "./zones/PricingZone";
 import { ProductStockSection } from "./zones/ProductStockSection";

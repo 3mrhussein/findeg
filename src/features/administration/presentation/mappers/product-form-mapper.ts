@@ -1,5 +1,5 @@
 import type { Product } from "@/features/catalog/domain/entities/Product";
-import type { ProductFormValues } from "@/features/administration/presentation/components/catalog/ProductForm/types";
+import type { ProductFormValues } from "@/features/administration/presentation/forms/product-form";
 import { ProductEntity } from "@/features/catalog/domain/entities/Product";
 
 /**

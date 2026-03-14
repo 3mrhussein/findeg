@@ -22,8 +22,8 @@ import {
 import { PricingZone } from "./PricingZone";
 import { ProductStockSection } from "./ProductStockSection";
 import { UoMSection } from "../uom/UoMSection";
-import { BilingualInput } from "../shared/BilingualInput";
-import type { ProductFormValues } from "../types";
+import { BilingualInput } from "@/components/shared/BilingualInput";
+import type { ProductFormValues } from "@/features/administration/presentation/forms/product-form";
 import { generateVariantMatrix } from "@/features/catalog/domain/types/VariantDimension";
 import { Sku } from "@/features/catalog/domain/value-objects/Sku";
 

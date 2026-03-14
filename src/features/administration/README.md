@@ -57,6 +57,12 @@ sequenceDiagram
 - All admin mutations should be auditable.
 - Admin UI/actions should call services/contracts, not raw repositories.
 
+## Component Placement
+
+Admin UI components must be route-colocated under `src/app/**/_components/` (or cross-cutting in `src/components/shared/`).
+Feature `presentation/` code is for hooks/mappers/config only (no JSX).
+See: `docs/development/component-placement.md`
+
 ## Presentation Mappers
 
 The `presentation/mappers/` directory contains transformation

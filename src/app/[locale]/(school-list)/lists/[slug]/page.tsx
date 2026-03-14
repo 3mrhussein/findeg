@@ -1,6 +1,6 @@
 import { getServices } from "@/server/getServices";
 import { getOptionalSession } from "@/lib/auth-guard";
-import { SchoolAuthWall } from "@/features/school/presentation/components/SchoolAuthWall";
+import { SchoolAuthWall } from "@/app/[locale]/(storefront)/school/_components/SchoolAuthWall";
 import { notFound, redirect } from "next/navigation";
 import { ListPageClient } from "./ListPageClient";
 

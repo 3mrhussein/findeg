@@ -1,9 +1,9 @@
 import { getServices } from "@/server/getServices";
-import { ProductForm } from "@/features/administration/presentation/components/catalog/ProductForm";
+import { ProductForm } from "@/app/[locale]/admin/(dashboard)/products/_components/ProductForm";
 import { toProductFormValues } from "@/features/administration/presentation/mappers/product-form-mapper";
 import { notFound } from "next/navigation";
 import { resolveLocale } from "@/features/core/domain/value-objects";
-import type { ProductFormValues } from "@/features/administration/presentation/components/catalog/ProductForm/types";
+import type { ProductFormValues } from "@/features/administration/presentation/forms/product-form";
 
 /**
  * /admin/products/[id]/edit

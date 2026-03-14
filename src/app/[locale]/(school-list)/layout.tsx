@@ -1,5 +1,5 @@
 import React from "react";
-import { SchoolListLayout } from "@/features/school/presentation/components/SchoolListLayout";
+import { SchoolListLayout } from "@/app/[locale]/(storefront)/school/_components/SchoolListLayout";
 import { setRequestLocale } from "next-intl/server";
 
 /**

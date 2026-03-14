@@ -42,7 +42,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { IconPicker } from "./IconPicker";
-import { TagBadge } from "@/features/administration/presentation/components/catalog/TagBadge";
+import { TagBadge } from "@/components/shared/TagBadge";
 
 interface TagDrawerProps {
   open: boolean;

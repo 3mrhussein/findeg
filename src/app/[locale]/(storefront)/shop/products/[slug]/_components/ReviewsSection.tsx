@@ -195,7 +195,9 @@ export function ReviewsSection({
       <div className="grid gap-6 rounded-2xl border bg-card p-4 md:grid-cols-[200px_1fr_auto] md:items-center">
         <div>
           <div className="text-4xl font-black text-foreground">{avgLabel}</div>
-          <div className="mt-1 text-sm text-muted-foreground">{t("BasedOnReviews", { count: total })}</div>
+          <div className="mt-1 text-sm text-muted-foreground">
+            {t("BasedOnReviews", { count: total })}
+          </div>
         </div>
 
         <div className="space-y-2">
@@ -222,12 +224,14 @@ export function ReviewsSection({
       </div>
 
       <div className="flex flex-wrap gap-2">
-        {([
-          { id: "all", label: t("FilterAll") },
-          { id: "5", label: t("Filter5Star") },
-          { id: "4", label: t("Filter4Star") },
-          { id: "verified", label: t("FilterVerified") },
-        ] as Array<{ id: ReviewFilter; label: string }>).map((item) => (
+        {(
+          [
+            { id: "all", label: t("FilterAll") },
+            { id: "5", label: t("Filter5Star") },
+            { id: "4", label: t("Filter4Star") },
+            { id: "verified", label: t("FilterVerified") },
+          ] as Array<{ id: ReviewFilter; label: string }>
+        ).map((item) => (
           <Button
             key={item.id}
             variant={filter === item.id ? "default" : "outline"}

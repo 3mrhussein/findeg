@@ -16,7 +16,7 @@ export function ProductSEO() {
       <div>
         <h3 className="text-sm font-semibold">Search Engine Optimization</h3>
         <p className="text-xs text-muted-foreground">
-          Improve your product's visibility in search engines.
+          Improve your product&apos;s visibility in search engines.
         </p>
       </div>
 

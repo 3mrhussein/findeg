@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { InfoIcon } from "lucide-react";
 import { PriceInput } from "../shared/PriceInput";
-import type { ProductFormValues } from "../types";
+import type { ProductFormValues } from "@/features/administration/presentation/forms/product-form";
 
 interface PricingZoneProps {
   /** When true, shows a per-variant warning if switching pricing mode */

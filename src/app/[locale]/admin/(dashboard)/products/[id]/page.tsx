@@ -1,5 +1,5 @@
 import { container } from "@/features/core/infrastructure/di/ServiceContainer";
-import { ProductForm } from "@/features/administration/presentation/components/catalog/ProductForm";
+import { ProductForm } from "@/app/[locale]/admin/(dashboard)/products/_components/ProductForm";
 
 /**
  *

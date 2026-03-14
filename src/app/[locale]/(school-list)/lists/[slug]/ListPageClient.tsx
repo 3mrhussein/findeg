@@ -3,10 +3,10 @@
 import React, { useState } from "react";
 import { useTranslations } from "next-intl";
 import { SessionState } from "@/features/school/application/interfaces/IParentListService";
-import { ListReturnDialog } from "@/features/school/presentation/components/ListReturnDialog";
-import { ListProgressBar } from "@/features/school/presentation/components/ListProgressBar";
-import { StickyActionBar } from "@/features/school/presentation/components/StickyActionBar";
-import { ListSummaryOverlay } from "@/features/school/presentation/components/ListSummaryOverlay";
+import { ListReturnDialog } from "@/app/[locale]/(storefront)/school/_components/ListReturnDialog";
+import { ListProgressBar } from "@/app/[locale]/(storefront)/school/_components/ListProgressBar";
+import { StickyActionBar } from "@/app/[locale]/(storefront)/school/_components/StickyActionBar";
+import { ListSummaryOverlay } from "@/app/[locale]/(storefront)/school/_components/ListSummaryOverlay";
 
 interface ListPageClientProps {
   list: any;

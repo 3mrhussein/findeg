@@ -307,9 +307,7 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
       {uomOptions.length > 1 && (
         <div className="mt-3 flex flex-wrap gap-1.5">
           {/* Wishlist button overlay */}
-          <div
-            className="absolute top-3 inset-s-3 hidden group-hover:block"
-          >
+          <div className="absolute top-3 inset-s-3 hidden group-hover:block">
             <Button
               variant="secondary"
               size="icon"

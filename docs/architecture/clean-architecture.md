@@ -50,4 +50,27 @@ duplicated elsewhere.
 
 - Dynamic content → JSONB inline on entity tables
 - Static UI text → next-intl message files (en.json / ar.json)
-- No translations table — ever
+
+## Identity & Security
+
+### Rule: Secrets Are Separated from Profiles
+
+Authentication secrets (password hashes, tokens, MFA seeds) are **never** stored in the `identity.users` table. They live in specialized tables like `identity.password_credentials`.
+
+- **User Entity**: No `password` or `passwordHash` field.
+- **Repository**: Uses `findPasswordCredentials(userId)` for authentication flows.
+
+### Rule: Portal Roles are Routing Gates
+
+The `users.portalRole` column is a strict application-level gate (`customer`, `staff`, `school_staff`).
+
+- **Authentication**: `portalRole` is burned into the JWT.
+- **Authorization**: Top-level route guards (e.g., `/admin/**`) check `portalRole`.
+- **Granular Access**: Feature-level permissions (e.g., "CAN_EDIT_PRODUCT") are resolved from the RBAC tables (`user_roles` -> `permissions`).
+
+### Rule: No Computed Full Names in DB
+
+The `users.name` column is deleted and forbidden. Full names are resolved at the domain level:
+
+- Use `user.firstName` and `user.lastName`.
+- Resolve via `user.getUserFullName()` in domain logic.

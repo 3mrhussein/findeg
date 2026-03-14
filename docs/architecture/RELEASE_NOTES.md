@@ -14,7 +14,14 @@ This file captures major architecture-level changes that are too important to re
 
 ## Unreleased
 
-### 2026-03-13 - [Clean Architecture] Locale Resolution Refactor
+### 2026-03-14 - [Security] Identity & Authentication Refactor
+
+- **Dropped Legacy Columns**: Removed `name`, `password`, and `role` from `identity.users`.
+- **Separated Credentials**: Created `identity.password_credentials` table; migrated all existing password hashes to separate secret storage.
+- **Standardized RBAC**: Renamed `role` to `portalRole` (`customer`, `staff`, `school_staff`) to serve as strict portal routing gates.
+- **Improved Name Resolution**: Implemented `User.getUserFullName()` in domain entities; all presentation layers updated to use split name fields instead of legacy computed name.
+- **JWT Update**: Session payload now includes `portalRole` and organization context for comprehensive authorization checks.
+- **Documentation**: Established new clean architecture rules regarding secret separation and identity structure.
 
 - Removed dead `catalog.translations` table — JSONB inline is the
   only localization strategy

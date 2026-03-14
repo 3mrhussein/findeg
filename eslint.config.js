@@ -32,7 +32,14 @@ const config = [
       "no-restricted-imports": [
         "error",
         {
-          patterns: ["@/presentation/storefront/*", "src/presentation/storefront/*"],
+          patterns: [
+            "@/presentation/storefront/*",
+            "src/presentation/storefront/*",
+            "@/features/**/presentation/components/**",
+            "@/features/**/presentation/hoc/**",
+            "src/features/**/presentation/components/**",
+            "src/features/**/presentation/hoc/**",
+          ],
         },
       ],
       "jsdoc/check-alignment": "warn",
@@ -42,6 +49,24 @@ const config = [
       "jsdoc/check-types": "warn",
       "jsdoc/check-values": "warn",
       "jsdoc/no-multi-asterisks": "warn",
+    },
+  },
+  {
+    files: ["src/features/**/presentation/**/*.{tsx}"],
+    rules: {
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector: "JSXElement",
+          message:
+            "JSX is not allowed in src/features/**/presentation/**. Move components into src/app/**/_components or src/components/shared.",
+        },
+        {
+          selector: "JSXFragment",
+          message:
+            "JSX is not allowed in src/features/**/presentation/**. Move components into src/app/**/_components or src/components/shared.",
+        },
+      ],
     },
   },
 ];

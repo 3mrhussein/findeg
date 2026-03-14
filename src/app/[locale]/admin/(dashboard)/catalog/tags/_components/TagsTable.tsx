@@ -37,7 +37,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { Tag, TagScope } from "@/features/catalog/domain/entities/Tag";
-import { TagBadge } from "@/features/administration/presentation/components/catalog/TagBadge";
+import { TagBadge } from "@/components/shared/TagBadge";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";

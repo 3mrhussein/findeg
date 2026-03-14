@@ -63,7 +63,11 @@ function isColorKey(key: string): boolean {
 }
 
 function isCssColorCandidate(value: string): boolean {
-  return /^#([0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})$/i.test(value) || /^(rgb|rgba|hsl|hsla)\(/i.test(value) || /^[a-z]+$/i.test(value);
+  return (
+    /^#([0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})$/i.test(value) ||
+    /^(rgb|rgba|hsl|hsla)\(/i.test(value) ||
+    /^[a-z]+$/i.test(value)
+  );
 }
 
 function resolveUomLabel(uom: UomOption, locale: string): string {
@@ -102,7 +106,11 @@ function resolveVariantStock(product: Product, variant?: Variant) {
   };
 }
 
-function getFallbackUomPrice(variant: Variant, uom: UomOption, customerGroup: CustomerGroup): number {
+function getFallbackUomPrice(
+  variant: Variant,
+  uom: UomOption,
+  customerGroup: CustomerGroup,
+): number {
   const exact = variant.priceLists?.find(
     (entry) => entry.customerGroup === customerGroup && entry.uomCode === uom.code,
   );
@@ -135,7 +143,9 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
   const { addToCart } = useCart();
   const { currentUser, toggleWishlistItem } = useUser();
 
-  const [selectedVariantId, setSelectedVariantId] = useState<number | undefined>(vm.selectedVariant?.id);
+  const [selectedVariantId, setSelectedVariantId] = useState<number | undefined>(
+    vm.selectedVariant?.id,
+  );
   const variants = useMemo(
     () => (vm.product.variants || []).filter((variant) => variant.isActive !== false),
     [vm.product.variants],
@@ -214,7 +224,11 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
         }
 
         setPriceState({
-          unitPrice: getFallbackUomPrice(vm.product.variants?.find((v) => v.id === selectedVariant.id) || selectedVariant, selectedUom, vm.customerGroup),
+          unitPrice: getFallbackUomPrice(
+            vm.product.variants?.find((v) => v.id === selectedVariant.id) || selectedVariant,
+            selectedUom,
+            vm.customerGroup,
+          ),
           currency: "EGP",
           loading: false,
         });
@@ -385,7 +399,8 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
     const matched = variants.find((variant) => {
       const variantMap = getAttributeMap(variant);
       return Object.entries(nextAttributes).every(
-        ([attributeKey, selectedValue]) => !selectedValue || variantMap[attributeKey] === selectedValue,
+        ([attributeKey, selectedValue]) =>
+          !selectedValue || variantMap[attributeKey] === selectedValue,
       );
     });
 
@@ -426,7 +441,9 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
             </Link>
           ) : null}
 
-          <h1 className="text-3xl font-black leading-tight text-foreground md:text-4xl">{vm.product.name}</h1>
+          <h1 className="text-3xl font-black leading-tight text-foreground md:text-4xl">
+            {vm.product.name}
+          </h1>
 
           <button
             type="button"
@@ -434,12 +451,16 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
             className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
           >
             <Star className="size-4 fill-amber-400 text-amber-400" />
-            <span className="font-medium text-foreground">{vm.reviewSummary.averageRating.toFixed(1)}</span>
+            <span className="font-medium text-foreground">
+              {vm.reviewSummary.averageRating.toFixed(1)}
+            </span>
             <span>({vm.reviewSummary.totalReviews})</span>
           </button>
 
           <details className="rounded-xl border bg-card px-4 py-3 text-sm">
-            <summary className="cursor-pointer font-medium text-foreground">{t("SkuDetails")}</summary>
+            <summary className="cursor-pointer font-medium text-foreground">
+              {t("SkuDetails")}
+            </summary>
             <div className="mt-2 space-y-1 text-muted-foreground">
               <div>
                 {t("SkuLabel")}: {selectedVariant?.sku || "-"}
@@ -452,13 +473,21 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
 
           <div className="rounded-2xl border bg-card p-4">
             <div className="flex flex-wrap items-center gap-2">
-              <span className={cn("text-3xl font-black", priceState.loading ? "opacity-60" : "text-primary")}>
+              <span
+                className={cn(
+                  "text-3xl font-black",
+                  priceState.loading ? "opacity-60" : "text-primary",
+                )}
+              >
                 {egpFormatter.format(priceState.unitPrice || 0)}
               </span>
 
-              {selectedVariant?.strikePrice && selectedVariant.strikePrice > (priceState.unitPrice || 0) ? (
+              {selectedVariant?.strikePrice &&
+              selectedVariant.strikePrice > (priceState.unitPrice || 0) ? (
                 <span className="text-sm text-muted-foreground line-through">
-                  {egpFormatter.format(selectedVariant.strikePrice * (selectedUom?.factorToBase || 1))}
+                  {egpFormatter.format(
+                    selectedVariant.strikePrice * (selectedUom?.factorToBase || 1),
+                  )}
                 </span>
               ) : null}
 
@@ -481,7 +510,9 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
                   )}
                 >
                   <span>{resolveUomLabel(uom, locale)}</span>
-                  {bestValueCode === uom.code ? <Badge variant="outline">{t("BestValue")}</Badge> : null}
+                  {bestValueCode === uom.code ? (
+                    <Badge variant="outline">{t("BestValue")}</Badge>
+                  ) : null}
                 </button>
               ))}
             </div>
@@ -514,9 +545,10 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
                           );
                         });
 
-                        const colorStyle = isColorKey(key) && isCssColorCandidate(value)
-                          ? { backgroundColor: value }
-                          : undefined;
+                        const colorStyle =
+                          isColorKey(key) && isCssColorCandidate(value)
+                            ? { backgroundColor: value }
+                            : undefined;
 
                         return (
                           <IconTooltip key={`${key}-${value}`} label={value} asChild>
@@ -573,7 +605,11 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
                 />
 
                 <IconTooltip
-                  label={quantity >= maxQuantity ? t("MaximumQuantity", { count: maxQuantity }) : t("IncreaseQuantity")}
+                  label={
+                    quantity >= maxQuantity
+                      ? t("MaximumQuantity", { count: maxQuantity })
+                      : t("IncreaseQuantity")
+                  }
                   asChild
                 >
                   <button
@@ -588,7 +624,11 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
                 </IconTooltip>
               </div>
 
-              <Button className="h-11 flex-1" onClick={onAddToCart} disabled={!stockSnapshot.inStock || !selectedVariant}>
+              <Button
+                className="h-11 flex-1"
+                onClick={onAddToCart}
+                disabled={!stockSnapshot.inStock || !selectedVariant}
+              >
                 {isAdded ? <Check className="size-4" /> : <ShoppingCart className="size-4" />}
                 {isAdded ? t("Added") : tCard("AddToCartFull")}
               </Button>

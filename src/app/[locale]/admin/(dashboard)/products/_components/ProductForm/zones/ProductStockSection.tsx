@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { SkuInput } from "../shared/SkuInput";
 import { WeightInput } from "../shared/WeightInput";
-import type { ProductFormValues } from "../types";
+import type { ProductFormValues } from "@/features/administration/presentation/forms/product-form";
 
 interface ProductStockSectionProps {
   variantIndex?: number;

@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { ListAccessCard } from "@/features/school/presentation/components/ListAccessCard";
-import { CodeEntryDialog } from "@/features/school/presentation/components/CodeEntryDialog";
-import { AccessRequestDialog } from "@/features/school/presentation/components/AccessRequestDialog";
+import { ListAccessCard } from "@/app/[locale]/(storefront)/school/_components/ListAccessCard";
+import { CodeEntryDialog } from "@/app/[locale]/(storefront)/school/_components/CodeEntryDialog";
+import { AccessRequestDialog } from "@/app/[locale]/(storefront)/school/_components/AccessRequestDialog";
 import { useRouter } from "next/navigation";
 import { AccessState } from "@/features/school/application/interfaces/ISchoolAccessService";
 

@@ -19,9 +19,10 @@ import { Badge } from "@/components/ui/badge";
 import { Plus, Trash2, ChevronDown, ChevronRight, Package2 } from "lucide-react";
 import { PREDEFINED_UOMS } from "@/features/catalog/domain/types/UoMTypes";
 import { CUSTOMER_GROUPS } from "@/features/catalog/domain/types/UoMTypes";
+import { PriceInput } from "../shared/PriceInput";
 import { BilingualInput } from "@/components/shared/BilingualInput";
+import type { ProductFormValues } from "@/features/administration/presentation/forms/product-form";
 import { cn } from "@/lib/utils";
-import { ProductFormValues } from "@/features/administration/presentation/forms/product-form";
 
 interface UoMSectionProps {
   /** Path prefix in form — e.g. "sharedUoMs" or "variants.0.uoms" */
