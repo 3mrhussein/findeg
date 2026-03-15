@@ -42,13 +42,11 @@ export function AdminShell({
           <AdminHeader userEmail={userEmail} userName={userName} locale={locale} />
 
           {/* Scrollable Content Container */}
-          <main className="flex-1 overflow-y-auto mt-[60px] flex flex-col relative w-full h-[calc(100vh-60px)]">
-            <div className="sticky top-0 z-30">
+          <main className="flex-1 overflow-y-auto flex flex-col relative w-full">
+            <div className="sticky top-0 z-30 border-b border-gray-100 dark:border-slate-800 bg-white/95 dark:bg-slate-950/95 backdrop-blur-sm shadow-sm transition-all duration-300">
               <AdminBreadcrumb locale={locale} />
             </div>
-            <div className="flex-1 w-full mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-              {children}
-            </div>
+            <div className="flex-1 w-full p-6 lg:p-8">{children}</div>
           </main>
         </div>
       </div>

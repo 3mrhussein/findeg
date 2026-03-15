@@ -8,6 +8,8 @@ export interface BrandCreateInput {
   name: string;
   logoUrl?: string | null;
   isActive?: boolean;
+  localizedName?: Record<string, string>;
+  localizedDescription?: Record<string, string>;
 }
 
 /** Input for updating a brand */
@@ -16,6 +18,8 @@ export interface BrandUpdateInput {
   name?: string;
   logoUrl?: string | null;
   isActive?: boolean;
+  localizedName?: Record<string, string>;
+  localizedDescription?: Record<string, string>;
 }
 
 /**
@@ -60,4 +64,9 @@ export interface IBrandRepository {
    * Counts the total number of brands in the system.
    */
   count(): Promise<number>;
+
+  /**
+   * Counts products by brand ID.
+   */
+  countProductsByBrandId(id: ID): Promise<number>;
 }

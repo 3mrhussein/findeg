@@ -8,6 +8,7 @@ import {
 
 export const BrandLocalizedContentSchema = z.object({
   name: LocalizedStringSchema,
+  description: LocalizedStringSchema.optional(),
 });
 export type BrandLocalizedContent = z.infer<typeof BrandLocalizedContentSchema>;
 
@@ -18,6 +19,7 @@ export const BrandSchema = z.object({
   locale: z.string().optional(), // Locale
   localizedContent: BrandLocalizedContentSchema.optional(),
   logoUrl: z.string().nullable().optional(),
+  productCount: z.number().optional(),
   isActive: z.boolean(),
   createdAt: z.date(),
   updatedAt: z.date(),

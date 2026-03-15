@@ -180,12 +180,15 @@ export class AdminDashboardService implements IAdminDashboardService {
       .orderBy(desc(sql`count(${products.id})`))
       .limit(6);
 
+    const totalProducts = results.reduce((sum, r) => sum + r.productCount, 0);
+
     return results.map((r) => {
       const nameMap = (r.localizedName || {}) as Record<string, string>;
       return {
-        categoryId: r.categoryId,
+        categoryId: String(r.categoryId),
         categoryName: nameMap.en || r.slug || "Unknown",
         productCount: r.productCount,
+        percentage: totalProducts > 0 ? Math.round((r.productCount / totalProducts) * 100) : 0,
       };
     });
   }

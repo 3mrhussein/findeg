@@ -14,7 +14,7 @@ import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
-  rectSortingStrategy,
+  verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { Collection } from "@/features/catalog/domain/entities/Collection";
 import { CollectionCard } from "./CollectionCard";
@@ -94,8 +94,11 @@ export function CollectionGrid({ collections, onDelete }: CollectionGridProps) {
 
   return (
     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-      <SortableContext items={items.map((i) => i.id as number)} strategy={rectSortingStrategy}>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <SortableContext
+        items={items.map((i) => i.id as number)}
+        strategy={verticalListSortingStrategy}
+      >
+        <div className="flex flex-col gap-3">
           {items.map((collection) => (
             <CollectionCard key={collection.id} collection={collection} onDelete={onDelete} />
           ))}

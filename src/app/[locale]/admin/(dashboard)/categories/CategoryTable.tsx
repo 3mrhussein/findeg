@@ -21,15 +21,8 @@ import { IconTooltip } from "@/components/ui/IconTooltip";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Category } from "@/features/catalog/domain/entities/Category";
-import { Edit, Trash2, MoreHorizontal } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Pencil, Trash2 } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import Link from "next/link";
 import { deleteCategoryAction } from "@/features/catalog/application/actions/category";
 import { useToast } from "@/hooks/use-toast";
@@ -116,42 +109,48 @@ export function CategoryTable({ data }: CategoryTableProps) {
        */
       cell: ({ row }) => {
         const category = row.original;
-
         return (
-          <DropdownMenu>
-            <IconTooltip label="Open actions menu" asChild>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="h-8 w-8 p-0"
-                  data-testid={`admin-category-actions-${category.id}`}
-                  aria-label="Open actions menu"
-                >
-                  <span className="sr-only">Open menu</span>
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-            </IconTooltip>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link
-                  href={`/admin/categories/${category.id}/edit`}
-                  data-testid={`admin-category-edit-${category.id}`}
-                >
-                  <Edit className="mr-2 h-4 w-4" /> Edit
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="text-destructive focus:text-destructive"
-                onClick={() => handleDelete(category.id)}
-                data-testid={`admin-category-delete-${category.id}`}
-              >
-                <Trash2 className="mr-2 h-4 w-4" /> Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="flex items-center gap-1">
+            <TooltipProvider delayDuration={300}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    asChild
+                    className="h-8 w-8 rounded-md text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 transition-colors"
+                  >
+                    <Link
+                      href={`/admin/categories/${category.id}/edit`}
+                      data-testid={`admin-category-edit-${category.id}`}
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Link>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Edit category</p>
+                </TooltipContent>
+              </Tooltip>
+
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 rounded-md text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors"
+                    onClick={() => handleDelete(category.id)}
+                    data-testid={`admin-category-delete-${category.id}`}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Delete category</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
         );
       },
     },

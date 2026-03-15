@@ -26,7 +26,7 @@ import {
   FolderOpen,
   FileText,
   GripVertical,
-  Edit,
+  Pencil,
   Plus,
   Trash2,
   ArrowUp,
@@ -171,8 +171,8 @@ export function CategoryRow({
             <TooltipTrigger asChild>
               <Button
                 variant="ghost"
-                size="sm"
-                className="h-8 w-8 p-0"
+                size="icon"
+                className="h-8 w-8 rounded-md text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 transition-colors"
                 onClick={() => onAddChild?.(category.id)}
               >
                 <Plus className="h-4 w-4" />
@@ -188,8 +188,8 @@ export function CategoryRow({
             <TooltipTrigger asChild>
               <Button
                 variant="ghost"
-                size="sm"
-                className="h-8 w-8 p-0"
+                size="icon"
+                className="h-8 w-8 rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                 onClick={() => onMoveUp?.(category.id)}
               >
                 <ArrowUp className="h-4 w-4" />
@@ -205,8 +205,8 @@ export function CategoryRow({
             <TooltipTrigger asChild>
               <Button
                 variant="ghost"
-                size="sm"
-                className="h-8 w-8 p-0"
+                size="icon"
+                className="h-8 w-8 rounded-md text-slate-400 hover:text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                 onClick={() => onMoveDown?.(category.id)}
               >
                 <ArrowDown className="h-4 w-4" />
@@ -222,15 +222,15 @@ export function CategoryRow({
             <TooltipTrigger asChild>
               <Button
                 variant="ghost"
-                size="sm"
-                className="h-8 w-8 p-0"
+                size="icon"
+                className="h-8 w-8 rounded-md text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-950/30 transition-colors"
                 onClick={() => onEdit?.(category)}
               >
-                <Edit className="h-3.5 w-3.5" />
+                <Pencil className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>{t("Form.Edit") || "Edit"}</p>
+              <p>{t("Form.Edit") || "Edit category"}</p>
             </TooltipContent>
           </Tooltip>
 

@@ -1410,7 +1410,8 @@
           "DisplayOrderHint": "Lower numbers appear first",
           "IsActive": "Is Active",
           "IsActiveHint": "Hidden categories won't show in storefront",
-          "ProductCount": "{count} products"
+          "ProductCount": "{count} products",
+          "Edit": "Edit"
         },
         "Tree": {
           "Empty": "No categories found.",
@@ -1422,6 +1423,45 @@
           "SearchPlaceholder": "Search categories by name or slug...",
           "DeleteBlockedTitle": "Cannot Delete Category"
         }
+      },
+      "Brands": {
+        "Title": "Brands",
+        "Subtitle": "Manage your product brands",
+        "AddBrand": "Add Brand",
+        "SearchPlaceholder": "Search brands by name...",
+        "FilterAll": "All",
+        "FilterActive": "Active",
+        "FilterInactive": "Inactive",
+        "NoResults": "No brands found",
+        "NoPreview": "No logo",
+        "ProductsCount": "{count} products",
+        "NoProducts": "No products",
+        "ToggleActivate": "Set Active",
+        "ToggleDeactivate": "Set Inactive",
+        "Delete": "Delete",
+        "PanelCreateTitle": "Add Brand",
+        "PanelEditTitle": "Edit Brand",
+        "FieldLogoUrl": "Logo URL",
+        "FieldLogoHint": "Recommended: SVG or PNG, transparent background, 200×80px",
+        "FieldNameEn": "Name (English)",
+        "FieldNameAr": "Name (Arabic)",
+        "FieldSlug": "Slug",
+        "FieldDescriptionEn": "Description (English)",
+        "FieldDescriptionAr": "Description (Arabic)",
+        "FieldStatus": "Status",
+        "SlugAvailable": "Available",
+        "SlugTaken": "Already taken",
+        "Save": "Save Brand",
+        "Cancel": "Cancel",
+        "DeleteConfirmTitle": "Delete \"{name}\"?",
+        "DeleteConfirmDesc": "This action cannot be undone.",
+        "DeleteBlockedTitle": "Cannot delete \"{name}\"",
+        "DeleteBlockedDesc": "This brand has {count} products assigned. Please reassign all products before deleting.",
+        "ToastActivated": "Brand activated",
+        "ToastDeactivated": "Brand deactivated",
+        "ToastCreated": "Brand created",
+        "ToastUpdated": "Brand updated",
+        "ToastDeleted": "Brand deleted"
       }
     }
   }

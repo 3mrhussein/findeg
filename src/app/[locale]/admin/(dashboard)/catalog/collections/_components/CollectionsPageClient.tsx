@@ -62,14 +62,19 @@ export function CollectionsPageClient({ collections }: CollectionsPageClientProp
   };
 
   return (
-    <div className="flex-1 space-y-4 p-8 pt-6">
-      <div className="flex items-center justify-between space-y-2">
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight">{t("Title")}</h2>
-          <p className="text-muted-foreground text-sm">{t("Subtitle")}</p>
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 px-1">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100">
+            {t("Title")}
+          </h1>
+          <p className="text-muted-foreground text-sm font-medium">{t("Subtitle")}</p>
         </div>
         <div className="flex items-center space-x-2">
-          <Button asChild>
+          <Button
+            asChild
+            className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-lg shadow-indigo-200 dark:shadow-none transition-all hover:scale-[1.02] active:scale-[0.98]"
+          >
             <Link href={`/${locale}/admin/catalog/collections/new`}>
               <Plus className="mr-2 h-4 w-4" /> {t("NewCollection")}
             </Link>
@@ -77,12 +82,12 @@ export function CollectionsPageClient({ collections }: CollectionsPageClientProp
         </div>
       </div>
 
-      <div className="flex items-center gap-2 max-w-sm mb-6">
-        <div className="relative w-full">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+      <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
+        <div className="relative w-full sm:w-72">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder={t("SearchPlaceholder")}
-            className="pl-8"
+            className="pl-9 h-10 rounded-xl bg-white dark:bg-slate-900 border-gray-200 dark:border-slate-800"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />

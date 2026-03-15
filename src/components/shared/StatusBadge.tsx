@@ -14,7 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import type { OrderStatus } from "@/features/core/domain/types/common";
 
-type ProductStatus = "active" | "draft";
+type ProductStatus = "active" | "draft" | "inactive";
 type StockStatus = "healthy" | "low" | "out";
 
 export type StatusType = OrderStatus | ProductStatus | StockStatus;
@@ -51,6 +51,7 @@ const STATUS_COLORS: Record<StatusType, string> = {
   healthy: "var(--stock-healthy)",
   low: "var(--stock-low)",
   out: "var(--stock-out)",
+  inactive: "var(--status-draft)",
 };
 
 /**
@@ -59,6 +60,7 @@ const STATUS_COLORS: Record<StatusType, string> = {
 const STATUS_LABELS: Record<StatusType, string> = {
   active: "Active",
   draft: "Draft",
+  inactive: "Inactive",
   pending: "Pending",
   confirmed: "Confirmed",
   processing: "Processing",

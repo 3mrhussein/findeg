@@ -20,6 +20,9 @@ import {
   Tag,
   Box,
   Hash,
+  Layers,
+  Award,
+  CheckCircle2,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -29,6 +32,9 @@ const ICON_MAP = {
   tag: Tag,
   box: Box,
   hash: Hash,
+  layers: Layers,
+  award: Award,
+  "check-circle": CheckCircle2,
 };
 
 export interface KpiChange {

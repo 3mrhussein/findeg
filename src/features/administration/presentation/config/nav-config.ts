@@ -21,6 +21,7 @@ export interface NavItem {
   permission?: string;
   portalRoles?: PortalRole[];
   children?: NavItem[];
+  persistent?: boolean;
 }
 
 export interface NavGroup {
@@ -57,6 +58,7 @@ export const ADMIN_NAV: NavGroup[] = [
         href: "/admin/categories",
         icon: "FolderTree",
         permission: "categories.view",
+        persistent: true,
         children: [
           {
             label: "Tags",

@@ -34,12 +34,16 @@ export function NavItem({ item, collapsed = false, locale = "en", depth = 0 }: N
 
   const label = locale === "ar" ? item.labelAr : item.label;
 
-  // Auto-expand if a child is active
+  // Auto-expand if a child is active OR if it's a persistent item
   React.useEffect(() => {
+    if (item.persistent) {
+      setIsOpen(true);
+      return;
+    }
     if (item.children && item.children.some((child) => normalizedPathname.startsWith(child.href))) {
       setIsOpen(true);
     }
-  }, [normalizedPathname, item.children]);
+  }, [normalizedPathname, item.children, item.persistent]);
 
   // Permission check
   if (item.permission && !isSystemAdmin && !can(item.permission)) {
@@ -62,10 +66,11 @@ export function NavItem({ item, collapsed = false, locale = "en", depth = 0 }: N
   const rowContent = (
     <div
       onClick={() => {
-        if (hasChildren) setIsOpen(!isOpen);
+        if (hasChildren && !item.persistent) setIsOpen(!isOpen);
       }}
       className={cn(
-        "flex items-center cursor-pointer rounded-md transition-all duration-200",
+        "flex items-center rounded-md transition-all duration-200",
+        hasChildren && !item.persistent ? "cursor-pointer" : "cursor-default",
         depth === 0 ? "h-[40px] px-[12px] py-[8px]" : "h-[36px] py-[8px] pr-[12px]",
         // Dynamic horizontal padding based on depth for children
         depth > 0 && `pl-[${12 + depth * 20}px]`,
@@ -93,7 +98,7 @@ export function NavItem({ item, collapsed = false, locale = "en", depth = 0 }: N
           >
             {label}
           </span>
-          {hasChildren && (
+          {hasChildren && !item.persistent && (
             <ChevronRight
               className={cn(
                 "h-[12px] w-[12px] shrink-0 transition-transform duration-200",
@@ -107,9 +112,7 @@ export function NavItem({ item, collapsed = false, locale = "en", depth = 0 }: N
     </div>
   );
 
-  const clickableRow = hasChildren ? (
-    <div className="block group">{rowContent}</div>
-  ) : (
+  const clickableRow = (
     <Link href={`/${locale}${item.href}`} className="block group">
       {rowContent}
     </Link>

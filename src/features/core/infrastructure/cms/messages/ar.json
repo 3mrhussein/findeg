@@ -1402,7 +1402,8 @@
           "DisplayOrderHint": "الأرقام الأقل تظهر أولاً",
           "IsActive": "نشط",
           "IsActiveHint": "الفئات المخفية لن تظهر في الموقع",
-          "ProductCount": "{count} منتج"
+          "ProductCount": "{count} منتج",
+          "Edit": "تعديل"
         },
         "Tree": {
           "Empty": "لم يتم العثور على فئات.",
@@ -1414,6 +1415,45 @@
           "SearchPlaceholder": "ابحث في الفئات بالاسم أو الرابط...",
           "DeleteBlockedTitle": "لا يمكن حذف الفئة"
         }
+      },
+      "Brands": {
+        "Title": "العلامات التجارية",
+        "Subtitle": "إدارة العلامات التجارية الخاصة بمنتجاتك",
+        "AddBrand": "إضافة علامة تجارية",
+        "SearchPlaceholder": "ابحث عن العلامات التجارية بالاسم...",
+        "FilterAll": "الكل",
+        "FilterActive": "نشط",
+        "FilterInactive": "غير نشط",
+        "NoResults": "لم يتم العثور على علامات تجارية",
+        "NoPreview": "لا يوجد شعار",
+        "ProductsCount": "{count} منتج",
+        "NoProducts": "لا توجد منتجات",
+        "ToggleActivate": "تنشيط",
+        "ToggleDeactivate": "إلغاء التنشيط",
+        "Delete": "حذف",
+        "PanelCreateTitle": "إضافة علامة تجارية",
+        "PanelEditTitle": "تعديل العلامة التجارية",
+        "FieldLogoUrl": "رابط الشعار",
+        "FieldLogoHint": "يفضل: SVG أو PNG، خلفية شفافة، 200×80 بكسل",
+        "FieldNameEn": "الاسم (إنجليزي)",
+        "FieldNameAr": "الاسم (عربي)",
+        "FieldSlug": "الاسم اللطيف (Slug)",
+        "FieldDescriptionEn": "الوصف (إنجليزي)",
+        "FieldDescriptionAr": "الوصف (عربي)",
+        "FieldStatus": "الحالة",
+        "SlugAvailable": "متاح",
+        "SlugTaken": "مستخدم بالفعل",
+        "Save": "حفظ العلامة التجارية",
+        "Cancel": "إلغاء",
+        "DeleteConfirmTitle": "حذف \"{name}\"؟",
+        "DeleteConfirmDesc": "هذا الإجراء لا يمكن التراجع عنه.",
+        "DeleteBlockedTitle": "لا يمكن حذف \"{name}\"",
+        "DeleteBlockedDesc": "هذه العلامة التجارية مرتبطة بـ {count} منتجات. يرجى إعادة تعيين المنتجات قبل الحذف.",
+        "ToastActivated": "تم تنشيط العلامة التجارية",
+        "ToastDeactivated": "تم إلغاء تنشيط العلامة التجارية",
+        "ToastCreated": "تم إنشاء العلامة التجارية بنجاح",
+        "ToastUpdated": "تم تحديث العلامة التجارية بنجاح",
+        "ToastDeleted": "تم حذف العلامة التجارية"
       }
     }
   }

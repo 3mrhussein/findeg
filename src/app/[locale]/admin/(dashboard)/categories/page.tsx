@@ -96,8 +96,15 @@ export default async function CategoriesPage({ params }: { params: Promise<{ loc
   }
 
   return (
-    <div className="flex flex-col gap-6 p-8 pt-6 flex-1">
-      <PageHeader title={t("Title")} description={t("Subtitle", { count: categories.length })} />
+    <div className="space-y-6">
+      <div className="flex flex-col gap-1 px-1">
+        <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100">
+          {t("Title")}
+        </h1>
+        <p className="text-muted-foreground text-sm font-medium">
+          {t("Subtitle", { count: categories.length })}
+        </p>
+      </div>
 
       <CategoryTree
         categories={categories}

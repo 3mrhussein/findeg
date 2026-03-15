@@ -330,13 +330,14 @@ export function CategoryTree({ categories, onReorder, onSave, onDelete }: Catego
         <div
           className={cn(
             "hidden lg:flex flex-col",
-            "w-[420px] shrink-0 ms-6",
-            "border border-gray-200 dark:border-border rounded-xl overflow-hidden",
-            "bg-white dark:bg-card",
+            "shrink-0",
+            "border rounded-xl overflow-hidden",
+            "bg-white dark:bg-card border-gray-200 dark:border-border",
             "sticky top-6 self-start",
             "transition-all duration-300 ease-in-out",
-            panelOpen ? "opacity-100 translate-x-0" : "opacity-0 pointer-events-none translate-x-8",
-            // Fixed height so it's scrollable inside
+            panelOpen
+              ? "w-[420px] opacity-100 translate-x-0 ms-6"
+              : "w-0 opacity-0 pointer-events-none translate-x-8 ms-0 border-0",
             "h-[calc(100vh-160px)]",
           )}
         >

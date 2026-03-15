@@ -54,9 +54,9 @@ export default async function AdminDashboardPage({ params }: AdminDashboardPageP
   });
 
   return (
-    <div className="flex-1 space-y-6 pt-4">
+    <div className="space-y-6">
       {/* ── Greeting ────────────────────────────────────────────── */}
-      <div className="space-y-1 px-4">
+      <div className="space-y-1 px-1">
         <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
           {t(greetingKey)}, {session.user.firstName || "Admin"} 👋
         </h1>
@@ -64,7 +64,7 @@ export default async function AdminDashboardPage({ params }: AdminDashboardPageP
       </div>
 
       {/* ── KPI Cards ───────────────────────────────────────────── */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 px-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 px-1">
         <KpiCard
           title={t("TotalProducts")}
           value={catalogStats.totalProducts.toLocaleString(locale)}
@@ -109,12 +109,12 @@ export default async function AdminDashboardPage({ params }: AdminDashboardPageP
       </div>
 
       {/* ── Catalog Completion Board ────────────────────────────── */}
-      <div id="catalog-board" className="pt-2 px-4">
+      <div id="catalog-board" className="pt-2 px-1">
         <CatalogCompletionBoard stats={catalogStats} />
       </div>
 
       {/* ── Two Columns: Coverage & Quick Actions ───────────────── */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7 px-4">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7 px-1">
         <div id="category-coverage" className="md:col-span-1 lg:col-span-4 h-full">
           <CategoryCoverageWidget distributions={categoryDist} />
         </div>
@@ -124,7 +124,7 @@ export default async function AdminDashboardPage({ params }: AdminDashboardPageP
       </div>
 
       {/* ── Recent Activity ─────────────────────────────────────── */}
-      <div id="recent-activity" className="pt-2 px-4">
+      <div id="recent-activity" className="pt-2 px-1">
         <RecentActivityWidget logs={recentActivity} locale={locale} />
       </div>
     </div>

@@ -51,10 +51,12 @@ export class AdminBrandService implements IAdminBrandService {
    */
   async create(input: BrandInput): Promise<Brand> {
     const brand = await this.brandRepository.create({
-      slug: input.slug,
-      name: input.name,
+      slug: input.slug as Slug,
+      name: input.nameEn!,
       logoUrl: input.logoUrl,
       isActive: input.isActive ?? true,
+      localizedName: { en: input.nameEn!, ar: input.nameAr! },
+      localizedDescription: { en: input.descriptionEn || "", ar: input.descriptionAr || "" },
     });
     return brand;
   }
@@ -68,10 +70,12 @@ export class AdminBrandService implements IAdminBrandService {
    */
   async update(id: ID, input: BrandInput): Promise<Brand> {
     const brand = await this.brandRepository.update(id, {
-      slug: input.slug,
-      name: input.name,
+      slug: input.slug as Slug,
+      name: input.nameEn,
       logoUrl: input.logoUrl,
       isActive: input.isActive,
+      localizedName: { en: input.nameEn!, ar: input.nameAr! },
+      localizedDescription: { en: input.descriptionEn || "", ar: input.descriptionAr || "" },
     });
     return brand;
   }
@@ -83,5 +87,37 @@ export class AdminBrandService implements IAdminBrandService {
    */
   async delete(id: ID): Promise<void> {
     await this.brandRepository.delete(id);
+  }
+
+  /**
+   * Checks if a slug is available.
+   */
+  async checkSlugAvailable(slug: string, excludeId?: number): Promise<boolean> {
+    const existing = await this.brandRepository.getBySlug(slug as Slug);
+    if (!existing) return true;
+    return existing.id === excludeId;
+  }
+
+  /**
+   * Toggles the active status.
+   */
+  async toggleBrandStatus(id: ID): Promise<Brand> {
+    const brand = await this.getById(id);
+    if (!brand) throw new Error("Brand not found");
+    return this.update(id, {
+      slug: brand.slug,
+      nameEn: brand.localizedContent?.name?.en || brand.name,
+      nameAr: brand.localizedContent?.name?.ar || brand.name,
+      descriptionEn: (brand.localizedContent as any)?.description?.en || "",
+      descriptionAr: (brand.localizedContent as any)?.description?.ar || "",
+      isActive: !brand.isActive,
+    } as any);
+  }
+
+  /**
+   * Gets product count.
+   */
+  async getBrandProductCount(id: ID): Promise<number> {
+    return this.brandRepository.countProductsByBrandId(id);
   }
 }
