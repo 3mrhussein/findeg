@@ -44,6 +44,30 @@ export class AuditLogService implements IAuditLogService {
   }
 
   /**
+   * Retrieves recent activity across the system, optionally filtered by entity types.
+   */
+  async getRecentActivity(opts: { limit: number; entityTypes?: string[] }) {
+    // AuditLogFilters currently doesn't support an array of entityTypes in IAuditLogRepository.
+    // We fetch a larger batch and filter in memory as a simple workaround for the dashboard display,
+    // or rely on a future repository update.
+    const filters: AuditLogFilters = {
+      limit: opts.limit * (opts.entityTypes ? 3 : 1), // fetch more if we intend to filter
+      offset: 0,
+    };
+
+    const { data } = await this.auditLogRepository.getAll(filters);
+
+    if (opts.entityTypes && opts.entityTypes.length > 0) {
+      const targetTypes = opts.entityTypes.map((t) => t.toLowerCase());
+      return data
+        .filter((log) => targetTypes.includes(log.entityType.toLowerCase()))
+        .slice(0, opts.limit);
+    }
+
+    return data.slice(0, opts.limit);
+  }
+
+  /**
    * Retrieves all historical actions related to a specific domain entity.
    *
    * @param entityType - The type (e.g., 'product').

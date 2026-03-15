@@ -40,7 +40,6 @@ erDiagram
         VARCHAR slug 
         VARCHAR name 
         JSONB localizedName 
-        JSONB localizedSlug 
         JSONB localizedDescription 
         VARCHAR logoUrl 
         BOOLEAN isActive 
@@ -57,7 +56,6 @@ erDiagram
     "catalog.categories" {
         INT id PK
         VARCHAR slug 
-        JSONB localizedSlug 
         JSONB localizedName 
         JSONB localizedDescription 
         INT parentId 
@@ -265,6 +263,7 @@ erDiagram
         JSONB enumValues 
         VARCHAR scope 
         BOOLEAN isFilterable 
+        BOOLEAN isVariantDefining 
         INT sortOrder 
         BOOLEAN isActive 
         TIMESTAMP createdAt 
@@ -314,8 +313,6 @@ erDiagram
         INT id PK
         VARCHAR sku 
         VARCHAR skuPrefix 
-        DECIMAL price 
-        DECIMAL strikePrice 
         JSONB localizedSlug 
         JSONB localizedName 
         JSONB localizedDescription 
@@ -323,9 +320,7 @@ erDiagram
         INT categoryId FK
         INT brandId FK
         JSONB mediaSet 
-        JSONB displayMeta 
         BOOLEAN isActive 
-        BOOLEAN isNew 
         DECIMAL rating 
         INT reviewsCount 
         TIMESTAMP createdAt 
@@ -479,8 +474,6 @@ erDiagram
         VARCHAR group 
         VARCHAR key 
         VARCHAR slug 
-        JSONB localizedLabel 
-        JSONB description 
         VARCHAR icon 
         VARCHAR color 
         BOOLEAN isActive 
@@ -492,24 +485,13 @@ erDiagram
         INT productId FK
         INT tagId FK
     }
-    "catalog.translations" {
-        INT id PK
-        VARCHAR namespace 
-        VARCHAR key 
-        VARCHAR language 
-        VARCHAR value 
-        TIMESTAMP createdAt 
-        TIMESTAMP updatedAt 
-    }
     "identity.users" {
         INT id PK
         VARCHAR email 
         VARCHAR firstName 
         VARCHAR lastName 
-        VARCHAR name 
         VARCHAR phone 
-        VARCHAR password 
-        VARCHAR role 
+        VARCHAR portalRole 
         TIMESTAMP emailVerified 
         VARCHAR image 
         BOOLEAN isActive 

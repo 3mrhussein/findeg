@@ -75,6 +75,8 @@ export const ProductFormSchema = z.object({
   sharedUoMs: z.array(UoMRowSchema).default([]),
 
   variants: z.array(VariantFormSchema).min(1, "At least one variant is required"),
+  localizedMetaTitle: LocalizedStringSchema.optional(),
+  localizedMetaDescription: LocalizedStringSchema.optional(),
 });
 
 export type ProductFormValues = z.infer<typeof ProductFormSchema>;

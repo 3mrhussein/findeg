@@ -25,15 +25,8 @@ type DbBrand = typeof brands.$inferSelect;
  */
 export class DrizzleBrandRepository implements IBrandRepository {
   private mapToDomain(dbBrand: DbBrand): Brand {
-    const localizedSlugDraft = (dbBrand.localizedSlug || {}) as Record<string, string>;
     const localizedNameDraft = (dbBrand.localizedName || {}) as Record<string, string>;
     const localizedContent = {
-      slug: toLocalizedString(
-        Object.keys(localizedSlugDraft).length > 0
-          ? localizedSlugDraft
-          : { en: dbBrand.slug, ar: dbBrand.slug },
-        dbBrand.slug,
-      ),
       name: toLocalizedString(
         Object.keys(localizedNameDraft).length > 0
           ? localizedNameDraft
@@ -44,7 +37,7 @@ export class DrizzleBrandRepository implements IBrandRepository {
 
     return {
       id: dbBrand.id,
-      slug: (localizedContent.slug?.en ?? dbBrand.slug) as Slug,
+      slug: dbBrand.slug as Slug,
       name: localizedContent.name?.en ?? dbBrand.name,
       locale: undefined,
       localizedContent,
@@ -71,10 +64,7 @@ export class DrizzleBrandRepository implements IBrandRepository {
   }
 
   async getBySlug(slug: Slug, language: Locale = DEFAULT_LOCALE): Promise<Brand | null> {
-    const result = await db
-      .select()
-      .from(brands)
-      .where(or(eq(brands.slug, slug), sql`${brands.localizedSlug} ->> ${language} = ${slug}`));
+    const result = await db.select().from(brands).where(eq(brands.slug, slug));
     return result[0] ? this.mapToDomain(result[0]) : null;
   }
 
@@ -83,7 +73,6 @@ export class DrizzleBrandRepository implements IBrandRepository {
       .insert(brands)
       .values({
         ...data,
-        localizedSlug: { en: data.slug, ar: data.slug },
         localizedName: { en: data.name, ar: data.name },
       })
       .returning();
@@ -91,14 +80,12 @@ export class DrizzleBrandRepository implements IBrandRepository {
   }
 
   async update(id: ID, data: BrandUpdateInput): Promise<Brand> {
-    const localizedSlug = data.slug ? { en: data.slug, ar: data.slug } : undefined;
     const localizedName = data.name ? { en: data.name, ar: data.name } : undefined;
 
     const result = await db
       .update(brands)
       .set({
         ...data,
-        localizedSlug,
         localizedName,
         updatedAt: new Date(),
       })

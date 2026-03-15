@@ -16,7 +16,6 @@ export const brands = catalogSchema.table("brands", {
   slug: text("slug").notNull().unique(),
   name: text("name").notNull(),
   localizedName: jsonb("localized_name").$type<LocalizedStringDraft>().default({}).notNull(),
-  localizedSlug: jsonb("localized_slug").$type<LocalizedStringDraft>().default({}).notNull(),
   localizedDescription: jsonb("localized_description").$type<LocalizedStringDraft>(),
   logoUrl: text("logo_url"),
   isActive: boolean("is_active").default(true).notNull(),

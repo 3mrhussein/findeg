@@ -1,4 +1,5 @@
 export * from "./DashboardStats";
+export * from "./CatalogHealthStats";
 export * from "./ProductInput";
 export * from "./CategoryInput";
 export * from "./BrandInput";

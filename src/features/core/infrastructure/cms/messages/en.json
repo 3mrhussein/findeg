@@ -637,6 +637,18 @@
       "OrderList": "Order List",
       "ExpandSidebar": "Expand sidebar",
       "CollapseSidebar": "Collapse sidebar",
+      "Shell": {
+        "SearchPlaceholder": "Search products, orders, customers...",
+        "SearchPalettePlaceholder": "Search...",
+        "Products": "Products",
+        "Orders": "Orders",
+        "Notifications": "Notifications",
+        "MarkAllRead": "Mark all read",
+        "NoNotifications": "No notifications yet",
+        "ViewProfile": "View Profile",
+        "SwitchToStorefront": "Switch to Storefront",
+        "Logout": "Logout"
+      },
       "Sidebar": {
         "Dashboard": "Dashboard",
         "Catalog": "Catalog",
@@ -916,6 +928,415 @@
     }
   },
   "Administration": {
+    "Shell": {
+      "Nav": {
+        "Dashboard": "Dashboard",
+        "Catalog": "Catalog",
+        "Products": "Products",
+        "Categories": "Categories",
+        "Brands": "Brands",
+        "Collections": "Collections",
+        "Tags": "Tags",
+        "Orders": "Orders",
+        "Customers": "Customers",
+        "Inventory": "Inventory",
+        "Marketing": "Marketing",
+        "Analytics": "Analytics",
+        "Settings": "Settings",
+        "Team": "Team"
+      },
+      "Header": {
+        "SearchPlaceholder": "Search...",
+        "Notifications": "Notifications",
+        "Profile": "Profile",
+        "SignOut": "Sign Out"
+      },
+      "Breadcrumb": {
+        "Home": "Admin"
+      }
+    },
+    "Shared": {
+      "PageHeader": {
+        "Count": "{count} items"
+      },
+      "EmptyState": {
+        "NoData": "No data available",
+        "TryAdjustingFilters": "Try adjusting your filters"
+      },
+      "ConfirmDialog": {
+        "AreYouSure": "Are you sure?",
+        "CannotUndo": "This action cannot be undone",
+        "Confirm": "Confirm",
+        "Cancel": "Cancel"
+      },
+      "BulkActions": {
+        "Selected": "{count} selected",
+        "ClearSelection": "Clear selection",
+        "Export": "Export",
+        "Delete": "Delete",
+        "Activate": "Activate",
+        "Deactivate": "Deactivate",
+        "Archive": "Archive"
+      },
+      "StatusBadge": {
+        "Active": "Active",
+        "Draft": "Draft",
+        "Pending": "Pending",
+        "Confirmed": "Confirmed",
+        "Processing": "Processing",
+        "Shipped": "Shipped",
+        "Delivered": "Delivered",
+        "Cancelled": "Cancelled",
+        "Refunded": "Refunded",
+        "Healthy": "Healthy",
+        "Low": "Low Stock",
+        "Out": "Out of Stock"
+      }
+    },
+    "Dashboard": {
+      "GoodMorning": "Good morning",
+      "GoodAfternoon": "Good afternoon",
+      "GoodEvening": "Good evening",
+      "Title": "Dashboard",
+      "TotalProducts": "Total Products",
+      "TotalCategories": "Total Categories",
+      "TotalBrands": "Total Brands",
+      "CatalogCompletion": "Catalog Completion",
+      "Description": "Overview of your store performance",
+      "Kpi": {
+        "TotalRevenue": "Total Revenue",
+        "TotalOrders": "Total Orders",
+        "ActiveProducts": "Active Products",
+        "PendingOrders": "Pending Orders",
+        "VsLastMonth": "vs last month"
+      },
+      "RevenueChart": {
+        "Title": "Revenue Overview",
+        "Last30Days": "Last 30 days"
+      },
+      "OrderStatusChart": {
+        "Title": "Order Status",
+        "Distribution": "Current distribution"
+      },
+      "RecentOrders": {
+        "Title": "Recent Orders",
+        "ViewAll": "View all orders",
+        "Order": "Order",
+        "Customer": "Customer",
+        "Total": "Total",
+        "Status": "Status"
+      },
+      "ActionRequired": {
+        "Title": "Action Required",
+        "PendingOrders": "{count} pending orders",
+        "LowStock": "{count} low stock items",
+        "PendingReviews": "{count} pending reviews",
+        "ViewPendingOrders": "View pending orders",
+        "ViewLowStock": "View low stock",
+        "ViewReviews": "View reviews"
+      },
+      "TopProducts": {
+        "Title": "Top Products",
+        "ThisMonth": "This month",
+        "Sales": "sales"
+      },
+      "KPIs": {
+        "TotalProducts": "Total Products",
+        "FullyComplete": "Fully Complete",
+        "DraftProducts": "Draft Products",
+        "MissingPrice": "Missing Price",
+        "OfCatalog": "of catalog"
+      },
+      "Entities": {
+        "product": "Product",
+        "category": "Category",
+        "brand": "Brand",
+        "tag": "Tag"
+      },
+      "CatalogHealth": {
+        "Title": "Catalog Health",
+        "Description": "Real-time overview of your product catalog completeness.",
+        "TotalProducts": "Total Products",
+        "CompleteProducts": "Complete Products",
+        "LiveOrReady": "Live or ready to go live",
+        "IncompleteProducts": "Incomplete Products",
+        "MissingInformation": "Missing required information",
+        "ActionRequired": "Action Required",
+        "ProductsNeedAttention": "{count} products need attention before they can go live.",
+        "OverallScore": "Overall Score",
+        "FullyComplete": "Fully Complete",
+        "MissingCategory": "Missing Category",
+        "NeedsAttention": "Needs Attention",
+        "AllSet": "All Set",
+        "MissingImages": "Missing Images",
+        "MissingPrice": "Missing Price",
+        "DraftProducts": "Draft Products"
+      },
+      "Widgets": {
+        "CategoryCoverage": {
+          "Title": "Category Coverage",
+          "Description": "Distribution of complete and incomplete products across top categories.",
+          "Covered": "Covered",
+          "CoverageDetails": "{complete} / {total} products complete",
+          "NoCategories": "No categories found.",
+          "ViewAll": "View All Categories",
+          "NoData": "There are currently no categories to display coverage for.",
+          "ProductsCount": "{count, plural, =0 {No products} =1 {1 product} other {# products}}"
+        },
+        "QuickActions": {
+          "Title": "Quick Actions",
+          "Description": "Common tasks to manage your catalog.",
+          "AddProduct": "Create Product",
+          "AddProductDesc": "Add a new product to your catalog.",
+          "AddCategory": "Create Category",
+          "AddCategoryDesc": "Organize products into a new category.",
+          "ManageBrands": "Manage Brands",
+          "ManageBrandsDesc": "View and edit existing brands.",
+          "ManageTags": "Manage Tags",
+          "ManageTagsDesc": "Create tags to group products."
+        },
+        "RecentActivity": {
+          "Title": "Recent Activity",
+          "Description": "Latest updates to your catalog.",
+          "CreatedAction": "{type} created",
+          "UpdatedAction": "{type} updated",
+          "DeletedAction": "{type} deleted",
+          "ActionDeactivated": "{type} deactivated",
+          "ActionUnknown": "{type} modified",
+          "NoActivity": "Activity will appear here as you manage your catalog."
+        }
+      }
+    },
+    "Products": {
+      "Title": "Products",
+      "Description": "Manage your product catalog",
+      "CreateProduct": "Create Product",
+      "BulkImport": "Bulk Import",
+      "List": {
+        "EmptyTitle": "No products found",
+        "EmptyDescription": "Try adjusting your filters or create a new product",
+        "Search": "Search products...",
+        "FilterByCategory": "Filter by category",
+        "FilterByBrand": "Filter by brand",
+        "FilterByStatus": "Filter by status",
+        "AllCategories": "All categories",
+        "AllBrands": "All brands",
+        "AllStatuses": "All statuses"
+      },
+      "Row": {
+        "Sku": "SKU",
+        "Stock": "Stock",
+        "Price": "Price",
+        "Status": "Status",
+        "LastUpdated": "Updated",
+        "Variants": "variants",
+        "Tags": "Tags",
+        "StockHealth": "Stock Health",
+        "Actions": {
+          "Edit": "Edit",
+          "Duplicate": "Duplicate",
+          "Preview": "Preview",
+          "CopySku": "Copy SKU",
+          "SkuCopied": "SKU copied!"
+        }
+      },
+      "Edit": {
+        "Title": "Edit Product",
+        "Sidebar": {
+          "Status": "Status",
+          "Category": "Category",
+          "Brand": "Brand",
+          "SelectCategory": "Select category",
+          "SelectBrand": "Select brand",
+          "Summary": "Summary",
+          "TotalVariants": "{count} variants",
+          "InStock": "In stock",
+          "LowStock": "Low stock",
+          "OutOfStock": "Out of stock",
+          "LastSaved": "Last saved"
+        },
+        "StatusBar": {
+          "Live": "Live",
+          "Draft": "Draft",
+          "SavedAt": "Saved {time}"
+        },
+        "Tabs": {
+          "Info": "Info",
+          "Variants": "Variants",
+          "Media": "Media",
+          "Pricing": "Pricing",
+          "Seo": "SEO"
+        },
+        "InfoTab": {
+          "BasicInformation": "Basic Information",
+          "NameEn": "Name (English)",
+          "NameAr": "Name (Arabic)",
+          "DescriptionEn": "Description (English)",
+          "DescriptionAr": "Description (Arabic)",
+          "Tags": "Tags",
+          "SelectTags": "Select tags"
+        },
+        "VariantsTab": {
+          "Title": "Product Variants",
+          "AddVariant": "Add Variant",
+          "NoVariants": "No variants added yet",
+          "VariantName": "Variant Name",
+          "Sku": "SKU",
+          "Price": "Price",
+          "Stock": "Stock"
+        },
+        "MediaTab": {
+          "Title": "Product Media",
+          "UploadImages": "Upload Images",
+          "DragDrop": "Drag & drop images here",
+          "NoImages": "No images uploaded"
+        },
+        "PricingTab": {
+          "Title": "Pricing",
+          "BasePrice": "Base Price",
+          "SalePrice": "Sale Price",
+          "CostPrice": "Cost Price",
+          "Currency": "Currency"
+        },
+        "SeoTab": {
+          "Title": "SEO & Metadata",
+          "MetaTitle": "Meta Title",
+          "MetaDescription": "Meta Description",
+          "Slug": "URL Slug"
+        }
+      },
+      "BulkActions": {
+        "ActivateSelected": "Activate selected",
+        "DeactivateSelected": "Deactivate selected",
+        "ExportSelected": "Export selected",
+        "ArchiveSelected": "Archive selected"
+      }
+    },
+    "Categories": {
+      "Title": "Categories",
+      "Description": "Organize your product catalog",
+      "CreateCategory": "Create Category",
+      "Tree": {
+        "EmptyTitle": "No categories found",
+        "EmptyDescription": "Create your first category to organize products",
+        "ExpandAll": "Expand all",
+        "CollapseAll": "Collapse all"
+      },
+      "Row": {
+        "Products": "{count} products",
+        "Subcategories": "{count} subcategories",
+        "Actions": {
+          "Edit": "Edit",
+          "AddChild": "Add Child",
+          "Delete": "Delete"
+        }
+      },
+      "Drawer": {
+        "CreateTitle": "Create Category",
+        "EditTitle": "Edit Category",
+        "BasicInfo": "Basic Information",
+        "NameEn": "Name (English)",
+        "NameAr": "Name (Arabic)",
+        "SlugEn": "Slug (English)",
+        "SlugAr": "Slug (Arabic)",
+        "DescriptionEn": "Description (English)",
+        "DescriptionAr": "Description (Arabic)",
+        "Parent": "Parent Category",
+        "NoParent": "No parent (root category)",
+        "Icon": "Icon",
+        "SelectIcon": "Select an icon",
+        "SortOrder": "Sort Order",
+        "Status": "Active",
+        "Delete": "Delete Category",
+        "DeleteConfirm": "Are you sure you want to delete this category?",
+        "DeleteWarning": "All subcategories and products will be unassigned."
+      }
+    },
+    "Orders": {
+      "Title": "Orders",
+      "Description": "Manage customer orders and track fulfillment",
+      "StatusTabs": {
+        "All": "All Orders",
+        "Pending": "Pending",
+        "Confirmed": "Confirmed",
+        "Processing": "Processing",
+        "Shipped": "Shipped",
+        "Delivered": "Delivered",
+        "Cancelled": "Cancelled"
+      },
+      "List": {
+        "EmptyTitle": "No orders found",
+        "EmptyDescription": "Try adjusting your filters or wait for new orders",
+        "OrderNumber": "Order #",
+        "Customer": "Customer",
+        "Items": "Items",
+        "Total": "Total",
+        "Status": "Status",
+        "Date": "Date",
+        "Guest": "Guest"
+      },
+      "Row": {
+        "Items": "{count} items",
+        "ViewDetails": "View Full Order Details"
+      },
+      "Timeline": {
+        "Pending": "Pending",
+        "Confirmed": "Confirmed",
+        "Processing": "Processing",
+        "Shipped": "Shipped",
+        "Delivered": "Delivered",
+        "Cancelled": "Order Cancelled"
+      },
+      "Detail": {
+        "Title": "Order Details",
+        "PlacedAt": "Placed {date}",
+        "Customer": "Customer Information",
+        "CustomerName": "Name",
+        "CustomerEmail": "Email",
+        "UserId": "User ID",
+        "OrderStatus": "Order Status",
+        "OrderItems": "Order Items",
+        "SkuLabel": "SKU",
+        "VariantLabel": "Variant",
+        "Quantity": "Qty",
+        "Subtotal": "Subtotal",
+        "Shipping": "Shipping",
+        "Total": "Total",
+        "PaymentMethod": "Payment Method",
+        "PaymentStatus": "Payment",
+        "TrackingNumber": "Tracking Number",
+        "ShippingAddress": "Shipping Address",
+        "AdminNotes": "Admin Notes",
+        "Timestamps": "Timestamps",
+        "Created": "Created",
+        "Updated": "Updated"
+      },
+      "BulkActions": {
+        "ExportSelected": "Export Selected",
+        "CancelOrders": "Cancel Orders"
+      }
+    },
+    "Table": {
+      "Pagination": {
+        "Previous": "Previous",
+        "Next": "Next",
+        "Page": "Page {page} of {total}",
+        "RowsPerPage": "Rows per page",
+        "Showing": "Showing {from}-{to} of {total}"
+      },
+      "Filters": {
+        "Search": "Search...",
+        "FilterBy": "Filter by",
+        "ClearFilters": "Clear filters",
+        "ApplyFilters": "Apply"
+      },
+      "Actions": {
+        "SelectAll": "Select all",
+        "DeselectAll": "Deselect all",
+        "ExpandRow": "Expand row",
+        "CollapseRow": "Collapse row"
+      }
+    },
     "Catalog": {
       "Products": {
         "Titles": {

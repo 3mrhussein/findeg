@@ -52,6 +52,7 @@ The database comes pre-seeded with Several test accounts representing different 
 
 | Actor / Role           | Email                   | Description                                                        |
 | ---------------------- | ----------------------- | ------------------------------------------------------------------ |
+| **System Admin (New)** | `admin@findeg.com`      | Use password `Admin1234!` for the new dashboard health cockpit.    |
 | **System Admin**       | `superadmin@findeg.com` | Full, unrestricted access to all admin features and settings.      |
 | **Catalog Manager**    | `editorial@findeg.com`  | Can manage products, categories, brands, and view analytics.       |
 | **Inventory Manager**  | `inventory@findeg.com`  | Can manage stock levels, warehouses, and view orders.              |

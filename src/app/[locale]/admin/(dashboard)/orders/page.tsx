@@ -1,14 +1,14 @@
 import { getServices } from "@/server/getServices";
-import { OrderTable } from "./OrderTable";
+import { OrdersTable } from "./_components/OrdersTable";
+import { PageHeader } from "@/app/[locale]/admin/_components/shared/PageHeader";
 import { resolveLocale } from "@/features/core/domain/value-objects";
-import { Badge } from "@/components/ui/badge";
 import { OrderStatus, PaymentStatus } from "@/features/core/domain/types/common";
 
 /**
  * Admin Orders List Page
  *
  * Displays a filtered, paginated list of all orders.
- * Includes status quick-filters, date range, and bulk actions.
+ * Includes status tabs, enriched row pattern, and bulk actions.
  */
 export default async function OrdersPage({
   params,
@@ -40,44 +40,30 @@ export default async function OrdersPage({
 
   const { adminOrder } = getServices();
 
-  const [{ orders, total }, statusCounts] = await Promise.all([
-    adminOrder.getAll({
-      limit,
-      offset,
-      search: search || undefined,
-      status: (status as any) !== "all" ? status : undefined,
-      paymentStatus: (paymentStatus as any) !== "all" ? paymentStatus : undefined,
-      startDate,
-      endDate,
-    }),
-    adminOrder.getStatusCounts(),
-  ]);
+  const { orders, total } = await adminOrder.getAll({
+    limit,
+    offset,
+    search: search || undefined,
+    status: (status as any) !== "all" ? status : undefined,
+    paymentStatus: (paymentStatus as any) !== "all" ? paymentStatus : undefined,
+    startDate,
+    endDate,
+  });
 
   return (
-    <div className="flex-1 space-y-4 p-8 pt-6">
-      <div className="flex items-center justify-between space-y-2">
-        <div className="flex items-center gap-3">
-          <h2 className="text-3xl font-bold tracking-tight">📋 Orders</h2>
-          <Badge variant="secondary" className="text-base px-2 py-0.5">
-            {total}
-          </Badge>
-        </div>
-        {/* Export CSV Button could go here */}
-      </div>
+    <div className="flex-1 space-y-6">
+      <PageHeader
+        title="Orders"
+        description="Manage customer orders and track fulfillment"
+        count={total}
+      />
 
-      <OrderTable
-        data={orders}
-        page={page}
-        limit={limit}
-        total={total}
-        statusCounts={statusCounts}
-        filters={{
-          search,
-          status: query.status || "all",
-          paymentStatus: query.paymentStatus || "all",
-          startDate,
-          endDate,
-        }}
+      <OrdersTable
+        orders={orders}
+        totalCount={total}
+        currentPage={page}
+        pageSize={limit}
+        statusFilter={query.status}
       />
     </div>
   );

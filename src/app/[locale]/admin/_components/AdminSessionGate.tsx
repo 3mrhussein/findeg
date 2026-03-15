@@ -1,5 +1,7 @@
 import { requireAdmin } from "@/lib/auth-guard";
 import { PermissionsProvider } from "@/providers/PermissionsProvider";
+import { SessionProvider } from "@/providers/SessionProvider";
+import { AdminShell } from "./shell/AdminShell";
 import type { Locale } from "next-intl";
 
 interface AdminSessionGateProps {
@@ -15,5 +17,18 @@ interface AdminSessionGateProps {
 export async function AdminSessionGate({ children, locale }: AdminSessionGateProps) {
   const session = await requireAdmin(locale as any);
 
-  return <PermissionsProvider session={session}>{children}</PermissionsProvider>;
+  return (
+    <SessionProvider session={session}>
+      <PermissionsProvider session={session}>
+        <AdminShell
+          userEmail={session.user.email}
+          userName={session.user.fullName}
+          userRole={session.portalRole}
+          locale={locale}
+        >
+          {children}
+        </AdminShell>
+      </PermissionsProvider>
+    </SessionProvider>
+  );
 }

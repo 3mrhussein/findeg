@@ -24,7 +24,7 @@ export function createUserVO(data: {
   firstName?: string;
   lastName?: string;
 }): UserVO {
-  const fName = data.firstName?.trim() || "Guest";
+  const fName = data.firstName?.trim() || "Admin";
   const lName = data.lastName?.trim() || "";
 
   return {

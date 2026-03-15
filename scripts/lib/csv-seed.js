@@ -44,7 +44,6 @@ export const TABLE_IMPORT_ORDER = [
   "reviews",
   "review_helpful_votes",
   "audit_log",
-  "translations",
   "search_logs",
 ];
 

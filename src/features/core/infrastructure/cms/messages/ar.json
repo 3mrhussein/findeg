@@ -637,6 +637,18 @@
       "OrderList": "قائمة الطلبات",
       "ExpandSidebar": "توسيع الشريط الجانبي",
       "CollapseSidebar": "طي الشريط الجانبي",
+      "Shell": {
+        "SearchPlaceholder": "ابحث عن المنتجات والطلبات والعملاء...",
+        "SearchPalettePlaceholder": "بحث...",
+        "Products": "المنتجات",
+        "Orders": "الطلبات",
+        "Notifications": "الإشعارات",
+        "MarkAllRead": "تحديد الكل كمقروء",
+        "NoNotifications": "لا توجد إشعارات بعد",
+        "ViewProfile": "عرض الملف الشخصي",
+        "SwitchToStorefront": "الانتقال إلى المتجر",
+        "Logout": "تسجيل الخروج"
+      },
       "Sidebar": {
         "Dashboard": "لوحة التحكم",
         "Catalog": "الكاتالوج",
@@ -913,6 +925,410 @@
     }
   },
   "Administration": {
+    "Shell": {
+      "Nav": {
+        "Dashboard": "لوحة التحكم",
+        "Catalog": "الكتالوج",
+        "Products": "المنتجات",
+        "Categories": "الفئات",
+        "Brands": "العلامات التجارية",
+        "Collections": "المجموعات",
+        "Tags": "الوسوم",
+        "Orders": "الطلبات",
+        "Customers": "العملاء",
+        "Inventory": "المخزون",
+        "Marketing": "التسويق",
+        "Analytics": "التحليلات",
+        "Settings": "الإعدادات",
+        "Team": "الفريق"
+      },
+      "Header": {
+        "SearchPlaceholder": "بحث...",
+        "Notifications": "الإشعارات",
+        "Profile": "الملف الشخصي",
+        "SignOut": "تسجيل الخروج"
+      },
+      "Breadcrumb": {
+        "Home": "الإدارة"
+      }
+    },
+    "Shared": {
+      "PageHeader": {
+        "Count": "{count} عنصر"
+      },
+      "EmptyState": {
+        "NoData": "لا توجد بيانات متاحة",
+        "TryAdjustingFilters": "حاول تعديل الفلاتر"
+      },
+      "ConfirmDialog": {
+        "AreYouSure": "هل أنت متأكد؟",
+        "CannotUndo": "لا يمكن التراجع عن هذا الإجراء",
+        "Confirm": "تأكيد",
+        "Cancel": "إلغاء"
+      },
+      "BulkActions": {
+        "Selected": "{count} محدد",
+        "ClearSelection": "إلغاء التحديد",
+        "Export": "تصدير",
+        "Delete": "حذف",
+        "Activate": "تفعيل",
+        "Deactivate": "إلغاء التفعيل",
+        "Archive": "أرشفة"
+      },
+      "StatusBadge": {
+        "Active": "نشط",
+        "Draft": "مسودة",
+        "Pending": "قيد الانتظار",
+        "Confirmed": "مؤكد",
+        "Processing": "قيد المعالجة",
+        "Shipped": "تم الشحن",
+        "Delivered": "تم التوصيل",
+        "Cancelled": "ملغي",
+        "Refunded": "مسترد",
+        "Healthy": "جيد",
+        "Low": "مخزون منخفض",
+        "Out": "نفذ المخزون"
+      }
+    },
+    "Dashboard": {
+      "GoodMorning": "صباح الخير",
+      "GoodAfternoon": "مساء الخير",
+      "GoodEvening": "مساء الخير",
+      "Title": "لوحة التحكم",
+      "Description": "نظرة عامة على أداء متجرك",
+      "Kpi": {
+        "TotalRevenue": "إجمالي الإيرادات",
+        "TotalOrders": "إجمالي الطلبات",
+        "ActiveProducts": "المنتجات النشطة",
+        "PendingOrders": "الطلبات المعلقة",
+        "VsLastMonth": "مقارنة بالشهر الماضي"
+      },
+      "RevenueChart": {
+        "Title": "نظرة عامة على الإيرادات",
+        "Last30Days": "آخر 30 يومًا"
+      },
+      "OrderStatusChart": {
+        "Title": "حالة الطلبات",
+        "Distribution": "التوزيع الحالي"
+      },
+      "RecentOrders": {
+        "Title": "الطلبات الأخيرة",
+        "ViewAll": "عرض جميع الطلبات",
+        "Order": "الطلب",
+        "Customer": "العميل",
+        "Total": "المجموع",
+        "Status": "الحالة"
+      },
+      "ActionRequired": {
+        "Title": "يتطلب إجراء",
+        "PendingOrders": "{count} طلبات معلقة",
+        "LowStock": "{count} منتجات منخفضة المخزون",
+        "PendingReviews": "{count} مراجعات معلقة",
+        "ViewPendingOrders": "عرض الطلبات المعلقة",
+        "ViewLowStock": "عرض المخزون المنخفض",
+        "ViewReviews": "عرض المراجعات"
+      },
+      "TopProducts": {
+        "Title": "أفضل المنتجات",
+        "ThisMonth": "هذا الشهر",
+        "Sales": "مبيعات"
+      },
+      "KPIs": {
+        "TotalProducts": "إجمالي المنتجات",
+        "FullyComplete": "مكتملة بالكامل",
+        "DraftProducts": "منتجات في المسودة",
+        "MissingPrice": "ينقصها السعر",
+        "OfCatalog": "من الكتالوج"
+      },
+      "Entities": {
+        "product": "المنتج",
+        "category": "الفئة",
+        "brand": "العلامة التجارية",
+        "tag": "الوسم"
+      },
+      "CatalogHealth": {
+        "Title": "صحة الكتالوج",
+        "Description": "نظرة عامة في الوقت الفعلي على اكتمال كتالوج منتجاتك.",
+        "TotalProducts": "إجمالي المنتجات",
+        "CompleteProducts": "المنتجات المكتملة",
+        "LiveOrReady": "نشطة أو جاهزة للنشر",
+        "IncompleteProducts": "المنتجات غير المكتملة",
+        "MissingInformation": "معلومات مطلوبة مفقودة",
+        "ActionRequired": "إجراء مطلوب",
+        "ProductsNeedAttention": "{count} منتجات تحتاج إلى اهتمام قبل نشرها.",
+        "OverallScore": "النتيجة الإجمالية",
+        "MissingCategory": "ينقصها فئة",
+        "NeedsAttention": "تحتاج اهتمام",
+        "AllSet": "جاهزة",
+        "MissingImages": "ينقصها صور",
+        "MissingPrice": "ينقصها السعر",
+        "DraftProducts": "منتجات في المسودة"
+      },
+      "Widgets": {
+        "CategoryCoverage": {
+          "Title": "تغطية الفئات",
+          "Description": "توزيع المنتجات المكتملة وغير المكتملة عبر الفئات الرئيسية.",
+          "Covered": "مغطى",
+          "CoverageDetails": "{complete} / {total} منتجات مكتملة",
+          "NoCategories": "لم يتم العثور على فئات.",
+          "ViewAll": "عرض كافة الفئات",
+          "NoData": "لا توجد فئات حاليا لعرض التغطية.",
+          "ProductsCount": "{count, plural, =0 {لا توجد منتجات} =1 {منتج واحد} =2 {منتجان} =3 {3 منتجات} =4 {4 منتجات} other {# منتج}}"
+        },
+        "QuickActions": {
+          "Title": "إجراءات سريعة",
+          "Description": "المهام الشائعة لإدارة الكتالوج الخاص بك.",
+          "AddProduct": "إنشاء منتج",
+          "AddProductDesc": "إضافة منتج جديد إلى الكتالوج.",
+          "AddCategory": "إنشاء فئة",
+          "AddCategoryDesc": "تنظيم المنتجات في فئة جديدة.",
+          "ManageBrands": "إدارة العلامات التجارية",
+          "ManageBrandsDesc": "عرض وتعديل العلامات التجارية الحالية.",
+          "ManageTags": "إدارة الوسوم",
+          "ManageTagsDesc": "إنشاء وسوم لتجميع المنتجات."
+        },
+        "RecentActivity": {
+          "Title": "النشاط الأخير",
+          "Description": "أحدث التحديثات في الكتالوج الخاص بك.",
+          "CreatedAction": "تم إنشاء {type}",
+          "UpdatedAction": "تم تحديث {type}",
+          "DeletedAction": "تم حذف {type}",
+          "ActionDeactivated": "تم تعطيل {type}",
+          "ActionUnknown": "تم تعديل {type}",
+          "NoActivity": "لم يتم العثور على نشاط أخير."
+        }
+      }
+    },
+    "Products": {
+      "Title": "المنتجات",
+      "Description": "إدارة كتالوج المنتجات",
+      "CreateProduct": "إنشاء منتج",
+      "BulkImport": "استيراد جماعي",
+      "List": {
+        "EmptyTitle": "لم يتم العثور على منتجات",
+        "EmptyDescription": "حاول تعديل الفلاتر أو قم بإنشاء منتج جديد",
+        "Search": "بحث عن منتجات...",
+        "FilterByCategory": "فلترة حسب الفئة",
+        "FilterByBrand": "فلترة حسب العلامة التجارية",
+        "FilterByStatus": "فلترة حسب الحالة",
+        "AllCategories": "جميع الفئات",
+        "AllBrands": "جميع العلامات التجارية",
+        "AllStatuses": "جميع الحالات"
+      },
+      "Row": {
+        "Sku": "رمز المخزن",
+        "Stock": "المخزون",
+        "Price": "السعر",
+        "Status": "الحالة",
+        "LastUpdated": "آخر تحديث",
+        "Variants": "أنواع",
+        "Tags": "الوسوم",
+        "StockHealth": "حالة المخزون",
+        "Actions": {
+          "Edit": "تعديل",
+          "Duplicate": "نسخ",
+          "Preview": "معاينة",
+          "CopySku": "نسخ رمز المخزن",
+          "SkuCopied": "تم نسخ رمز المخزن!"
+        }
+      },
+      "Edit": {
+        "Title": "تعديل المنتج",
+        "Sidebar": {
+          "Status": "الحالة",
+          "Category": "الفئة",
+          "Brand": "العلامة التجارية",
+          "SelectCategory": "اختر الفئة",
+          "SelectBrand": "اختر العلامة التجارية",
+          "Summary": "ملخص",
+          "TotalVariants": "{count} نوع",
+          "InStock": "متوفر",
+          "LowStock": "مخزون منخفض",
+          "OutOfStock": "نفذ المخزون",
+          "LastSaved": "آخر حفظ"
+        },
+        "StatusBar": {
+          "Live": "منشور",
+          "Draft": "مسودة",
+          "SavedAt": "تم الحفظ {time}"
+        },
+        "Tabs": {
+          "Info": "المعلومات",
+          "Variants": "الأنواع",
+          "Media": "الوسائط",
+          "Pricing": "التسعير",
+          "Seo": "SEO"
+        },
+        "InfoTab": {
+          "BasicInformation": "المعلومات الأساسية",
+          "NameEn": "الاسم (إنجليزي)",
+          "NameAr": "الاسم (عربي)",
+          "DescriptionEn": "الوصف (إنجليزي)",
+          "DescriptionAr": "الوصف (عربي)",
+          "Tags": "الوسوم",
+          "SelectTags": "اختر الوسوم"
+        },
+        "VariantsTab": {
+          "Title": "أنواع المنتج",
+          "AddVariant": "إضافة نوع",
+          "NoVariants": "لم تتم إضافة أنواع بعد",
+          "VariantName": "اسم النوع",
+          "Sku": "رمز المخزن",
+          "Price": "السعر",
+          "Stock": "المخزون"
+        },
+        "MediaTab": {
+          "Title": "وسائط المنتج",
+          "UploadImages": "تحميل الصور",
+          "DragDrop": "اسحب وأفلت الصور هنا",
+          "NoImages": "لم يتم تحميل صور"
+        },
+        "PricingTab": {
+          "Title": "التسعير",
+          "BasePrice": "السعر الأساسي",
+          "SalePrice": "سعر التخفيض",
+          "CostPrice": "سعر التكلفة",
+          "Currency": "العملة"
+        },
+        "SeoTab": {
+          "Title": "SEO والبيانات الوصفية",
+          "MetaTitle": "عنوان Meta",
+          "MetaDescription": "وصف Meta",
+          "Slug": "الرابط المخصص"
+        }
+      },
+      "BulkActions": {
+        "ActivateSelected": "تفعيل المحدد",
+        "DeactivateSelected": "إلغاء تفعيل المحدد",
+        "ExportSelected": "تصدير المحدد",
+        "ArchiveSelected": "أرشفة المحدد"
+      }
+    },
+    "Categories": {
+      "Title": "الفئات",
+      "Description": "تنظيم كتالوج المنتجات",
+      "CreateCategory": "إنشاء فئة",
+      "Tree": {
+        "EmptyTitle": "لم يتم العثور على فئات",
+        "EmptyDescription": "قم بإنشاء أول فئة لتنظيم المنتجات",
+        "ExpandAll": "توسيع الكل",
+        "CollapseAll": "طي الكل"
+      },
+      "Row": {
+        "Products": "{count} منتج",
+        "Subcategories": "{count} فئة فرعية",
+        "Actions": {
+          "Edit": "تعديل",
+          "AddChild": "إضافة فئة فرعية",
+          "Delete": "حذف"
+        }
+      },
+      "Drawer": {
+        "CreateTitle": "إنشاء فئة",
+        "EditTitle": "تعديل الفئة",
+        "BasicInfo": "المعلومات الأساسية",
+        "NameEn": "الاسم (إنجليزي)",
+        "NameAr": "الاسم (عربي)",
+        "SlugEn": "الرابط (إنجليزي)",
+        "SlugAr": "الرابط (عربي)",
+        "DescriptionEn": "الوصف (إنجليزي)",
+        "DescriptionAr": "الوصف (عربي)",
+        "Parent": "الفئة الأم",
+        "NoParent": "بدون فئة أم (فئة جذرية)",
+        "Icon": "الأيقونة",
+        "SelectIcon": "اختر أيقونة",
+        "SortOrder": "ترتيب العرض",
+        "Status": "نشط",
+        "Delete": "حذف الفئة",
+        "DeleteConfirm": "هل أنت متأكد من حذف هذه الفئة؟",
+        "DeleteWarning": "سيتم إلغاء تعيين جميع الفئات الفرعية والمنتجات."
+      }
+    },
+    "Orders": {
+      "Title": "الطلبات",
+      "Description": "إدارة طلبات العملاء وتتبع التنفيذ",
+      "StatusTabs": {
+        "All": "جميع الطلبات",
+        "Pending": "قيد الانتظار",
+        "Confirmed": "مؤكد",
+        "Processing": "قيد المعالجة",
+        "Shipped": "تم الشحن",
+        "Delivered": "تم التوصيل",
+        "Cancelled": "ملغي"
+      },
+      "List": {
+        "EmptyTitle": "لم يتم العثور على طلبات",
+        "EmptyDescription": "حاول تعديل الفلاتر أو انتظر طلبات جديدة",
+        "OrderNumber": "رقم الطلب",
+        "Customer": "العميل",
+        "Items": "العناصر",
+        "Total": "المجموع",
+        "Status": "الحالة",
+        "Date": "التاريخ",
+        "Guest": "زائر"
+      },
+      "Row": {
+        "Items": "{count} عنصر",
+        "ViewDetails": "عرض تفاصيل الطلب الكاملة"
+      },
+      "Timeline": {
+        "Pending": "قيد الانتظار",
+        "Confirmed": "مؤكد",
+        "Processing": "قيد المعالجة",
+        "Shipped": "تم الشحن",
+        "Delivered": "تم التوصيل",
+        "Cancelled": "تم إلغاء الطلب"
+      },
+      "Detail": {
+        "Title": "تفاصيل الطلب",
+        "PlacedAt": "تم الطلب {date}",
+        "Customer": "معلومات العميل",
+        "CustomerName": "الاسم",
+        "CustomerEmail": "البريد الإلكتروني",
+        "UserId": "معرف المستخدم",
+        "OrderStatus": "حالة الطلب",
+        "OrderItems": "عناصر الطلب",
+        "SkuLabel": "رمز المخزن",
+        "VariantLabel": "النوع",
+        "Quantity": "الكمية",
+        "Subtotal": "المجموع الفرعي",
+        "Shipping": "الشحن",
+        "Total": "المجموع",
+        "PaymentMethod": "طريقة الدفع",
+        "PaymentStatus": "حالة الدفع",
+        "TrackingNumber": "رقم التتبع",
+        "ShippingAddress": "عنوان الشحن",
+        "AdminNotes": "ملاحظات المسؤول",
+        "Timestamps": "الطوابع الزمنية",
+        "Created": "تم الإنشاء",
+        "Updated": "تم التحديث"
+      },
+      "BulkActions": {
+        "ExportSelected": "تصدير المحدد",
+        "CancelOrders": "إلغاء الطلبات"
+      }
+    },
+    "Table": {
+      "Pagination": {
+        "Previous": "السابق",
+        "Next": "التالي",
+        "Page": "صفحة {page} من {total}",
+        "RowsPerPage": "صفوف لكل صفحة",
+        "Showing": "عرض {from}-{to} من {total}"
+      },
+      "Filters": {
+        "Search": "بحث...",
+        "FilterBy": "فلترة حسب",
+        "ClearFilters": "مسح الفلاتر",
+        "ApplyFilters": "تطبيق"
+      },
+      "Actions": {
+        "SelectAll": "تحديد الكل",
+        "DeselectAll": "إلغاء تحديد الكل",
+        "ExpandRow": "توسيع الصف",
+        "CollapseRow": "طي الصف"
+      }
+    },
     "Catalog": {
       "Products": {
         "Titles": {

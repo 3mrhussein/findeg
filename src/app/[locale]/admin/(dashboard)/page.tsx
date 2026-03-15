@@ -1,232 +1,131 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Package, Users, ShoppingCart, DollarSign, ArrowUpRight } from "lucide-react";
+import * as React from "react";
+import { getTranslations } from "next-intl/server";
+import { ServiceContainer } from "@/features/core/infrastructure/di/ServiceContainer";
+import { requireAdmin } from "@/lib/auth-guard";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Order } from "@/features/order/domain/entities/Order";
-import { DashboardStats } from "@/features/administration/domain/types";
-import { useTranslations } from "next-intl";
+  KpiCard,
+  CatalogCompletionBoard,
+  CategoryCoverageWidget,
+  QuickActionsWidget,
+  RecentActivityWidget,
+} from "../_components/dashboard";
 
-/**
- *
- */
-export default function AdminDashboardPage() {
-  const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [recentOrders, setRecentOrders] = useState<Order[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const t = useTranslations("Pages.Dashboard");
+interface AdminDashboardPageProps {
+  params: Promise<{ locale: string }>;
+}
 
-  useEffect(() => {
-    /**
-     *
-     */
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const [statsResponse, ordersResponse] = await Promise.all([
-          fetch("/api/v1/admin/dashboard/stats"),
-          fetch("/api/v1/admin/orders?limit=5"),
-        ]);
+export default async function AdminDashboardPage({ params }: AdminDashboardPageProps) {
+  const { locale } = await params;
+  const session = await requireAdmin(locale as any);
+  const t = await getTranslations({ locale: locale as any, namespace: "Administration.Dashboard" });
 
-        if (!statsResponse.ok || !ordersResponse.ok) {
-          throw new Error("Failed to fetch dashboard data");
-        }
+  const dashboardService = ServiceContainer.getInstance().adminDashboardService;
+  const auditLogService = ServiceContainer.getInstance().auditLogService;
 
-        const statsData = await statsResponse.json();
-        const ordersData = await ordersResponse.json();
+  const [rawCatalogStats, rawCategoryDist, rawRecentActivity] = await Promise.all([
+    dashboardService.getCatalogHealthStats(),
+    dashboardService.getCategoryProductDistribution(),
+    (
+      await auditLogService.getRecentActivity({
+        limit: 8,
+        entityTypes: ["product", "category", "brand", "tag"],
+      })
+    ).map((log) => ({
+      ...log,
+      createdAt: log.createdAt.toISOString(),
+    })),
+  ]);
 
-        setStats(statsData.data);
-        setRecentOrders(ordersData.data || []);
-      } catch (err) {
-        console.error("Error fetching dashboard data:", err);
-        setError("Failed to load dashboard data. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Ensure all data passed to client components are plain objects
+  const catalogStats = JSON.parse(JSON.stringify(rawCatalogStats));
+  const categoryDist = JSON.parse(JSON.stringify(rawCategoryDist));
+  const recentActivity = JSON.parse(JSON.stringify(rawRecentActivity));
 
-    fetchData();
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="flex-1 p-8 pt-6 space-y-4">
-        <div className="flex items-center justify-between space-y-2">
-          <div className="h-8 w-48 bg-gray-200 animate-pulse rounded"></div>
-          <div className="h-10 w-32 bg-gray-200 animate-pulse rounded"></div>
-        </div>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="h-32 bg-gray-200 animate-pulse rounded-lg"></div>
-          ))}
-        </div>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-          <div className="col-span-4 h-96 bg-gray-200 animate-pulse rounded-lg"></div>
-          <div className="col-span-3 h-96 bg-gray-200 animate-pulse rounded-lg"></div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex-1 p-8 pt-6 flex items-center justify-center text-red-500">{error}</div>
-    );
-  }
-
-  const statCards = [
-    {
-      title: t("TotalRevenue"),
-      value: `${stats?.currency || "EGP"} ${stats?.totalRevenue?.toLocaleString() || 0}`,
-      icon: DollarSign,
-      description: "+20.1% from last month",
-    },
-    {
-      title: t("TotalOrders"),
-      value: stats?.totalOrders?.toLocaleString() || 0,
-      icon: ShoppingCart,
-      description: "+180.1% from last month",
-    },
-    {
-      title: t("TotalProducts"),
-      value: stats?.totalProducts?.toLocaleString() || 0,
-      icon: Package,
-      description: "+19% from last month",
-    },
-    {
-      title: t("Stats.TotalCategories"),
-      value: stats?.totalCategories?.toLocaleString() || 0,
-      icon: Users,
-      description: "+201 since last hour",
-    },
-  ];
+  const now = new Date();
+  const hour = now.getHours();
+  const greetingKey = (
+    hour < 12 ? "GoodMorning" : hour < 18 ? "GoodAfternoon" : "GoodEvening"
+  ) as any;
+  const dateFormatted = now.toLocaleDateString(locale === "ar" ? "ar-EG" : "en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 
   return (
-    <div className="flex-1 space-y-4 p-8 pt-6">
-      <div className="flex items-center justify-between space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight">{t("Title")}</h2>
-        <div className="flex items-center space-x-2">
-          <Button>Download Reports</Button>
+    <div className="flex-1 space-y-6 pt-4">
+      {/* ── Greeting ────────────────────────────────────────────── */}
+      <div className="space-y-1 px-4">
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+          {t(greetingKey)}, {session.user.firstName || "Admin"} 👋
+        </h1>
+        <p className="text-sm text-slate-500">{dateFormatted}</p>
+      </div>
+
+      {/* ── KPI Cards ───────────────────────────────────────────── */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 px-4">
+        <KpiCard
+          title={t("TotalProducts")}
+          value={catalogStats.totalProducts.toLocaleString(locale)}
+          iconName="package"
+          href={`/${locale}/admin/products`}
+          iconColor="text-blue-600"
+          iconBg="bg-blue-50"
+        />
+        <KpiCard
+          title={t("TotalCategories")}
+          value={catalogStats.totalCategories.toLocaleString(locale)}
+          iconName="layers"
+          href={`/${locale}/admin/categories`}
+          iconColor="text-purple-600"
+          iconBg="bg-purple-50"
+        />
+        <KpiCard
+          title={t("TotalBrands")}
+          value={catalogStats.totalBrands.toLocaleString(locale)}
+          iconName="award"
+          href={`/${locale}/admin/brands`}
+          iconColor="text-orange-600"
+          iconBg="bg-orange-50"
+        />
+        <KpiCard
+          title={t("CatalogCompletion")}
+          value={`${
+            catalogStats.totalProducts > 0
+              ? Math.round((catalogStats.fullyComplete / catalogStats.totalProducts) * 100)
+              : 0
+          }%`}
+          iconName="check-circle"
+          href={`/${locale}/admin/products`}
+          iconColor="text-emerald-600"
+          iconBg="bg-emerald-50"
+          change={{
+            value: catalogStats.fullyComplete,
+            label: t("KPIs.FullyComplete"), // Reusing existing key if appropriate or just passing string
+            direction: "up",
+          }}
+        />
+      </div>
+
+      {/* ── Catalog Completion Board ────────────────────────────── */}
+      <div id="catalog-board" className="pt-2 px-4">
+        <CatalogCompletionBoard stats={catalogStats} />
+      </div>
+
+      {/* ── Two Columns: Coverage & Quick Actions ───────────────── */}
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7 px-4">
+        <div id="category-coverage" className="md:col-span-1 lg:col-span-4 h-full">
+          <CategoryCoverageWidget distributions={categoryDist} />
+        </div>
+        <div id="quick-actions" className="md:col-span-1 lg:col-span-3 h-full">
+          <QuickActionsWidget />
         </div>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {statCards.map((stat, index) => (
-          <Card key={index}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
-              <stat.icon className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stat.value}</div>
-              <p className="text-xs text-muted-foreground">{stat.description}</p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {/* Main Content Area */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-        {/* Recent Orders Overview */}
-        <Card className="col-span-4 transition-all hover:shadow-md">
-          <CardHeader>
-            <CardTitle>{t("RecentOrders")}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{t("Table.OrderId")}</TableHead>
-                  <TableHead>{t("Table.Status")}</TableHead>
-                  <TableHead className="text-right">{t("Table.Total")}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {recentOrders.map((order) => (
-                  <TableRow key={order.id}>
-                    <TableCell className="font-medium">#{order.id}</TableCell>
-                    <TableCell>
-                      <Badge
-                        variant={
-                          order.status === "delivered"
-                            ? "default"
-                            : order.status === "pending"
-                              ? "secondary"
-                              : "outline"
-                        }
-                      >
-                        {order.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      {order.currency} {order.totalAmount}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-
-        {/* Quick Actions / Recent Sales (Placeholder) */}
-        <Card className="col-span-3 transition-all hover:shadow-md">
-          <CardHeader>
-            <CardTitle>{t("QuickActions")}</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid gap-4 grid-cols-2">
-              <Button asChild className="w-full justify-start" variant="outline">
-                <Link href="/admin/products/new">
-                  <Package className="mr-2 h-4 w-4" />
-                  {t("AddProduct")}
-                </Link>
-              </Button>
-              <Button asChild className="w-full justify-start" variant="outline">
-                <Link href="/admin/categories/new">
-                  <ArrowUpRight className="mr-2 h-4 w-4" />
-                  {t("AddCategory")}
-                </Link>
-              </Button>
-              <Button asChild className="w-full justify-start" variant="outline">
-                <Link href="/admin/brands">
-                  <Package className="mr-2 h-4 w-4" />
-                  {t("ManageBrands")}
-                </Link>
-              </Button>
-              <Button asChild className="w-full justify-start" variant="outline">
-                <Link href="/admin/inventory">
-                  <Package className="mr-2 h-4 w-4" />
-                  {t("Sidebar.Inventory")}
-                </Link>
-              </Button>
-              <Button asChild className="w-full justify-start" variant="outline">
-                <Link href="/admin/orders">
-                  <ShoppingCart className="mr-2 h-4 w-4" />
-                  {t("Sidebar.Orders")}
-                </Link>
-              </Button>
-              <Button asChild className="w-full justify-start" variant="outline">
-                <Link href="/admin/audit-log">
-                  <Users className="mr-2 h-4 w-4" />
-                  {t("Sidebar.AuditLog")}
-                </Link>
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+      {/* ── Recent Activity ─────────────────────────────────────── */}
+      <div id="recent-activity" className="pt-2 px-4">
+        <RecentActivityWidget logs={recentActivity} locale={locale} />
       </div>
     </div>
   );

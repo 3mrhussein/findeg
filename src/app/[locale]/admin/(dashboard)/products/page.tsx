@@ -1,10 +1,11 @@
 import { getServices } from "@/server/getServices";
-import { ProductTable } from "./ProductTable";
+import { ProductsTable } from "./_components/ProductsTable";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Plus, Upload } from "lucide-react";
 import { resolveLocale } from "@/features/core/domain/value-objects";
 import { Badge } from "@/components/ui/badge";
+import { PageHeader } from "@/app/[locale]/admin/_components/shared/PageHeader";
 
 /**
  *
@@ -55,42 +56,32 @@ export default async function ProductsPage({
 
   return (
     <div className="flex-1 space-y-4 p-8 pt-6">
-      <div className="flex items-center justify-between space-y-2">
-        <div className="flex items-center gap-3">
-          <h2 className="text-3xl font-bold tracking-tight">📦 Products</h2>
-          <Badge variant="secondary" className="text-base px-2 py-0.5">
-            {total}
-          </Badge>
-        </div>
-        <div className="flex items-center space-x-2">
-          <Button variant="outline" asChild>
-            <Link href="/admin/products/import">
-              <Upload className="mr-2 h-4 w-4" />
-              ⬆️ Bulk Import
-            </Link>
-          </Button>
-          <Button asChild>
-            <Link href="/admin/products/new">
-              <Plus className="mr-2 h-4 w-4" />
-              Create Product
-            </Link>
-          </Button>
-        </div>
-      </div>
+      <PageHeader
+        title="Products"
+        description={`${total} products in catalog`}
+        actions={
+          <>
+            <Button asChild>
+              <Link href="/admin/products/new">
+                <Plus className="h-4 w-4 me-2" />
+                Create Product
+              </Link>
+            </Button>
+          </>
+        }
+      />
 
-      <ProductTable
-        data={products}
-        page={page}
-        limit={limit}
+      <ProductsTable
+        products={products}
         total={total}
-        filters={{
-          search,
-          categoryId,
-          brandId,
-          isActive: query.isActive || "all",
-        }}
-        categories={categories.map((category) => ({ id: category.id, name: category.name }))}
-        brands={brands.map((brand) => ({ id: brand.id, name: brand.name }))}
+        categories={categories}
+        brands={brands}
+        currentSearch={search}
+        currentCategoryId={categoryId}
+        currentBrandId={brandId}
+        currentIsActive={isActive}
+        currentPage={page}
+        currentLimit={limit}
       />
     </div>
   );

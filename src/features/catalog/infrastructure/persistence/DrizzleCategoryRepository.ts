@@ -29,7 +29,6 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
   }
 
   private mapToDomain(dbCategory: DbCategory, children?: Category[]): Category {
-    const localizedSlugDraft = (dbCategory.localizedSlug || {}) as Record<string, string>;
     const localizedNameDraft = (dbCategory.localizedName || {}) as Record<string, string>;
     const localizedDescriptionDraft = (dbCategory.localizedDescription || {}) as Record<
       string,
@@ -37,7 +36,6 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
     >;
 
     const localizedContent = {
-      slug: toLocalizedString(localizedSlugDraft, dbCategory.slug),
       name: toLocalizedString(localizedNameDraft, dbCategory.slug),
       description:
         Object.keys(localizedDescriptionDraft).length > 0
@@ -47,7 +45,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
 
     return {
       id: dbCategory.id,
-      slug: localizedContent.slug?.en ?? dbCategory.slug,
+      slug: dbCategory.slug,
       name: localizedContent.name?.en ?? dbCategory.slug,
       description: localizedContent.description?.en ?? undefined,
       locale: undefined,
@@ -75,13 +73,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
   }
 
   async getBySlug(slug: string, language: Locale = DEFAULT_LOCALE): Promise<Category | null> {
-    const result = await db
-      .select()
-      .from(categories)
-      .where(
-        or(eq(categories.slug, slug), sql`${categories.localizedSlug} ->> ${language} = ${slug}`),
-      )
-      .limit(1);
+    const result = await db.select().from(categories).where(eq(categories.slug, slug)).limit(1);
 
     if (result.length === 0) return null;
     return this.mapToDomain(result[0]);
@@ -182,12 +174,6 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
         .insert(categories)
         .values({
           slug: input.slug,
-          localizedSlug: Object.fromEntries(
-            (input.translations || []).map((t) => [
-              t.language,
-              this.toRouteSlug(t.name) || input.slug,
-            ]),
-          ),
           localizedName: Object.fromEntries(
             (input.translations || []).map((t) => [t.language, t.name]),
           ),
@@ -236,12 +222,6 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
         .update(categories)
         .set({
           slug: input.slug,
-          localizedSlug: Object.fromEntries(
-            (input.translations || []).map((t) => [
-              t.language,
-              this.toRouteSlug(t.name) || input.slug,
-            ]),
-          ),
           localizedName: Object.fromEntries(
             (input.translations || []).map((t) => [t.language, t.name]),
           ),

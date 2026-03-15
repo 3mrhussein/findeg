@@ -1,10 +1,11 @@
 import { Suspense } from "react";
-import { Sidebar } from "../_components/Sidebar";
-import { Topbar } from "../_components/Topbar";
 import { AdminSessionGate } from "../_components/AdminSessionGate";
 
 /**
  * Protected Admin Dashboard Layout
+ *
+ * Uses the new AdminShell component for consistent admin navigation and layout.
+ * AdminSessionGate handles authentication and wraps content in AdminShell.
  */
 export default async function AdminDashboardLayout({
   children,
@@ -18,24 +19,16 @@ export default async function AdminDashboardLayout({
   return (
     <Suspense
       fallback={
-        <div className="flex min-h-screen bg-gray-50/50 animate-pulse">
-          <div className="w-64 bg-gray-100 hidden md:block" />
-          <div className="flex-1 flex flex-col">
-            <div className="h-16 bg-gray-100 border-b" />
+        <div className="flex h-screen bg-background">
+          <div className="w-[240px] border-e bg-sidebar animate-pulse" />
+          <div className="flex flex-1 flex-col">
+            <div className="h-16 border-b bg-background animate-pulse" />
             <div className="flex-1 p-6" />
           </div>
         </div>
       }
     >
-      <AdminSessionGate locale={locale}>
-        <div className="flex min-h-screen bg-gray-50/50 dark:bg-gray-900/50">
-          <Sidebar />
-          <div className="flex-1 flex flex-col md:pl-64 transition-all duration-300">
-            <Topbar />
-            <main className="flex-1 p-6 overflow-x-hidden">{children}</main>
-          </div>
-        </div>
-      </AdminSessionGate>
+      <AdminSessionGate locale={locale}>{children}</AdminSessionGate>
     </Suspense>
   );
 }

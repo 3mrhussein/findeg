@@ -15,4 +15,9 @@ export interface IAuditLogService {
    * Retrieves all logged actions associated with a specific entity (e.g., a specific Product).
    */
   getEntityLogs(entityType: string, entityId: string): Promise<AuditLogEntry[]>;
+
+  /**
+   * Retrieves recent activity across the system, optionally filtered by entity types.
+   */
+  getRecentActivity(opts: { limit: number; entityTypes?: string[] }): Promise<AuditLogEntry[]>;
 }

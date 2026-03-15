@@ -1,5 +1,6 @@
 import { redirectIfAuthenticated } from "@/lib/auth-guard";
 import type { Locale } from "next-intl";
+import { Suspense } from "react";
 
 /**
  * Admin Login Layout
@@ -15,7 +16,15 @@ export default async function AdminLoginLayout({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  await redirectIfAuthenticated(locale as Locale);
 
+  return (
+    <Suspense>
+      <AuthGuard locale={locale as Locale}>{children}</AuthGuard>
+    </Suspense>
+  );
+}
+
+async function AuthGuard({ children, locale }: { children: React.ReactNode; locale: Locale }) {
+  await redirectIfAuthenticated(locale);
   return <>{children}</>;
 }

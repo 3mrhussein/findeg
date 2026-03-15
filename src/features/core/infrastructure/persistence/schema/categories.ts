@@ -17,8 +17,6 @@ import type { LocalizedStringDraft } from "@/features/core/domain/value-objects"
 export const categories = catalogSchema.table("categories", {
   id: serial("id").primaryKey(),
   slug: text("slug").notNull().unique(),
-  /** Locale-keyed slug map */
-  localizedSlug: jsonb("localized_slug").$type<LocalizedStringDraft>().default({}).notNull(),
   /** Locale-keyed name map */
   localizedName: jsonb("localized_name").$type<LocalizedStringDraft>().default({}).notNull(),
   /** Locale-keyed description map */

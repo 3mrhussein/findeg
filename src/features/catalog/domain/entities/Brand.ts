@@ -7,7 +7,6 @@ import {
 } from "@/features/core/domain/value-objects";
 
 export const BrandLocalizedContentSchema = z.object({
-  slug: LocalizedStringSchema,
   name: LocalizedStringSchema,
 });
 export type BrandLocalizedContent = z.infer<typeof BrandLocalizedContentSchema>;

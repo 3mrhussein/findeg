@@ -142,6 +142,31 @@
   --sidebar-accent-foreground: var(--text-primary);
   --sidebar-border: var(--border);
   --sidebar-ring: var(--ring);
+
+  /* ─── Admin Dashboard Tokens ─────────────────────────────────────── */
+  /* Status Colors */
+  --status-active: #16a34a;
+  --status-draft: #6b7280;
+  --status-pending: #d97706;
+  --status-confirmed: #3b82f6;
+  --status-processing: #8b5cf6;
+  --status-shipped: #2563eb;
+  --status-delivered: #059669;
+  --status-cancelled: #dc2626;
+
+  /* Stock Health */
+  --stock-healthy: #16a34a;
+  --stock-low: #d97706;
+  --stock-out: #dc2626;
+
+  /* Admin Layout Dimensions */
+  --admin-sidebar-width: 240px;
+  --admin-sidebar-collapsed-width: 64px;
+  --admin-header-height: 60px;
+
+  /* Admin UI Accents */
+  --admin-sidebar-active-border: #4f46e5;
+  --admin-sidebar-active-bg: #eef2ff;
 }
 
 .dark {
@@ -186,6 +211,31 @@
   --sidebar-accent-foreground: var(--text-primary);
   --sidebar-border: var(--border);
   --sidebar-ring: var(--ring);
+
+  /* ─── Admin Dashboard Tokens (Dark Mode) ────────────────────────── */
+  /* Status Colors */
+  --status-active: #22c55e;
+  --status-draft: #9ca3af;
+  --status-pending: #f59e0b;
+  --status-confirmed: #60a5fa;
+  --status-processing: #a78bfa;
+  --status-shipped: #3b82f6;
+  --status-delivered: #10b981;
+  --status-cancelled: #f87171;
+
+  /* Stock Health */
+  --stock-healthy: #22c55e;
+  --stock-low: #f59e0b;
+  --stock-out: #f87171;
+
+  /* Admin Layout Dimensions (same as light) */
+  --admin-sidebar-width: 240px;
+  --admin-sidebar-collapsed-width: 64px;
+  --admin-header-height: 60px;
+
+  /* Admin UI Accents */
+  --admin-sidebar-active-border: #6366f1;
+  --admin-sidebar-active-bg: #1e1b4b;
 }
 
 @layer base {

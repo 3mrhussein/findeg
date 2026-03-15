@@ -4,7 +4,6 @@ import { LocalizedStringSchema, type LocalizedString } from "@/features/core/dom
 import { type SupportedLocale } from "@/features/core/domain/types/locale";
 
 export const CategoryLocalizedContentSchema = z.object({
-  slug: LocalizedStringSchema,
   name: LocalizedStringSchema,
   description: LocalizedStringSchema.optional(),
 });
@@ -78,11 +77,7 @@ export class CategoryEntity {
   }
 
   getSlug(locale: SupportedLocale): string {
-    return (
-      this.category.localizedContent?.slug?.[locale] ??
-      this.category.localizedContent?.slug?.en ??
-      this.category.slug
-    );
+    return this.category.slug;
   }
 
   getDescription(locale: SupportedLocale): string {

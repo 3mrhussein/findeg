@@ -100,6 +100,7 @@ export class DrizzleProductRepository implements IProductRepository {
     brandName?: string,
     tags: Tag[] = [],
     attributes: any[] = [],
+    language: Locale = DEFAULT_LOCALE,
   ): Product {
     const localizedSlugDraft = (dbProduct.localizedSlug || {}) as Record<string, string>;
     const localizedNameDraft = (dbProduct.localizedName || {}) as Record<string, string>;
@@ -122,9 +123,11 @@ export class DrizzleProductRepository implements IProductRepository {
     return {
       id: dbProduct.id,
       skuPrefix: dbProduct.skuPrefix || undefined,
-      name: localizedContent.name?.en ?? "",
-      description: localizedContent.description?.en ?? "",
-      longDescription: localizedContent.longDescription?.en ?? "",
+      name: resolveLocalizedString(localizedContent.name, language, DEFAULT_LOCALE) || "",
+      description:
+        resolveLocalizedString(localizedContent.description, language, DEFAULT_LOCALE) || "",
+      longDescription:
+        resolveLocalizedString(localizedContent.longDescription, language, DEFAULT_LOCALE) || "",
       locale: undefined,
       localizedContent,
       mediaSet: (dbProduct.mediaSet as ResponsiveMediaSet | null) || undefined,
@@ -355,6 +358,7 @@ export class DrizzleProductRepository implements IProductRepository {
       row.brand?.name,
       tagsResult,
       attributesResult,
+      language,
     );
   }
 
@@ -435,6 +439,7 @@ export class DrizzleProductRepository implements IProductRepository {
         row.brand?.name,
         [], // tags
         [], // attributes
+        language,
       ),
     );
   }
@@ -476,6 +481,7 @@ export class DrizzleProductRepository implements IProductRepository {
         row.brand?.name,
         [], // tags
         [], // attributes
+        language,
       ),
     );
   }
@@ -505,6 +511,7 @@ export class DrizzleProductRepository implements IProductRepository {
         row.brand?.name,
         [], // tags
         [], // attributes
+        language,
       ),
     );
   }
@@ -570,6 +577,7 @@ export class DrizzleProductRepository implements IProductRepository {
         row.brand?.name,
         [], // tags
         [], // attributes
+        language,
       ),
     );
   }
@@ -714,6 +722,7 @@ export class DrizzleProductRepository implements IProductRepository {
           row.brand?.name,
           [], // tags result omitted for bulk search performance
           [], // attributes result omitted for bulk search performance
+          language,
         ),
       ),
       total: totalResult[0]?.count || 0,
@@ -757,6 +766,7 @@ export class DrizzleProductRepository implements IProductRepository {
         row.brand?.name,
         [], // tags
         [], // attributes
+        language,
       ),
     );
   }
