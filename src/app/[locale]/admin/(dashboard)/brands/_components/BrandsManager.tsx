@@ -58,18 +58,20 @@ export function BrandsManager({
   }, []);
 
   const filteredBrands = useMemo(() => {
-    return brands.filter((brand) => {
-      const matchesSearch =
-        brand.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        brand.slug.toLowerCase().includes(searchQuery.toLowerCase());
+    return brands
+      .filter((brand) => {
+        const matchesSearch =
+          brand.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          brand.slug.toLowerCase().includes(searchQuery.toLowerCase());
 
-      const matchesStatus =
-        statusFilter === "all" ||
-        (statusFilter === "active" && brand.isActive) ||
-        (statusFilter === "inactive" && !brand.isActive);
+        const matchesStatus =
+          statusFilter === "all" ||
+          (statusFilter === "active" && brand.isActive) ||
+          (statusFilter === "inactive" && !brand.isActive);
 
-      return matchesSearch && matchesStatus;
-    });
+        return matchesSearch && matchesStatus;
+      })
+      .sort((a, b) => (a.id as number) - (b.id as number));
   }, [brands, searchQuery, statusFilter]);
 
   const handleEdit = (brand: Brand) => {

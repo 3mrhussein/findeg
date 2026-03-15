@@ -38,7 +38,7 @@ export function BrandCard({ brand, isSelected, onEdit, onDelete, onToggleStatus 
       )}
     >
       {/* Status Badge - Top Right */}
-      <div className="absolute top-4 right-4 z-10">
+      <div className="absolute top-4 right-4 z-10 flex gap-2">
         <StatusBadge status={brand.isActive ? "active" : "inactive"} />
       </div>
 
@@ -83,7 +83,7 @@ export function BrandCard({ brand, isSelected, onEdit, onDelete, onToggleStatus 
       </div>
 
       {/* Actions - Direct Icons */}
-      <div className="flex items-center gap-1 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity z-10">
+      <div className="flex items-center gap-1 opacity-100 z-10 mr-16 sm:mr-24 shrink-0">
         <TooltipProvider>
           {/* Edit Button */}
           <Tooltip>
