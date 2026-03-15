@@ -70,7 +70,7 @@ export function KpiCard({
       className={cn(
         "transition-all hover:shadow-md h-full flex flex-col justify-between",
         alert
-          ? "border-l-4 border-l-amber-500 border-amber-200 bg-amber-50"
+          ? "border-l-4 border-l-amber-500 border-amber-200 dark:border-amber-900/50 bg-amber-50 dark:bg-amber-950/30"
           : "hover:border-primary/50",
         className,
       )}
@@ -95,9 +95,9 @@ export function KpiCard({
               <span
                 className={cn(
                   "flex items-center font-medium mr-1.5",
-                  isPositive && "text-emerald-600",
-                  isNegative && "text-rose-600",
-                  isNeutral && "text-slate-600",
+                  isPositive && "text-emerald-600 dark:text-emerald-400",
+                  isNegative && "text-rose-600 dark:text-rose-400",
+                  isNeutral && "text-slate-600 dark:text-slate-400",
                 )}
               >
                 {isPositive && <TrendingUp className="mr-1 h-3.5 w-3.5" />}

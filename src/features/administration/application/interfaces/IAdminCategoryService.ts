@@ -15,6 +15,11 @@ export interface IAdminCategoryService {
   getAll(language?: Locale): Promise<Category[]>;
 
   /**
+   * Retrieves categories in a hierarchical tree structure.
+   */
+  getTree(language?: Locale): Promise<Category[]>;
+
+  /**
    * Creates a new category with translations.
    */
   create(input: CategoryInput): Promise<Category>;
@@ -33,4 +38,29 @@ export interface IAdminCategoryService {
    * Counts total categories in the system.
    */
   count(): Promise<number>;
+
+  /**
+   * Checks if a slug is available.
+   */
+  checkSlugAvailable(slug: string, excludeId?: number): Promise<boolean>;
+
+  /**
+   * Moves a category up among its siblings.
+   */
+  moveCategoryUp(id: number): Promise<void>;
+
+  /**
+   * Moves a category down among its siblings.
+   */
+  moveCategoryDown(id: number): Promise<void>;
+
+  /**
+   * Reorders multiple categories directly.
+   */
+  reorderCategories(items: { id: number; sortOrder: number }[]): Promise<void>;
+
+  /**
+   * Gets the number of products assigned to a category.
+   */
+  getCategoryProductCount(categoryId: number): Promise<number>;
 }

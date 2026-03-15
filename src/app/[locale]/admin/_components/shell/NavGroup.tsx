@@ -29,7 +29,7 @@ export function NavGroup({ group, collapsed = false, locale = "en" }: NavGroupPr
           <h3 className="px-[12px] text-[10px] uppercase font-medium tracking-[0.08em] text-gray-400">
             {label}
           </h3>
-          <div className="h-px w-full bg-gray-100 mt-2" />
+          <div className="h-px w-full bg-gray-100 dark:bg-slate-800 mt-2" />
         </div>
       )}
 

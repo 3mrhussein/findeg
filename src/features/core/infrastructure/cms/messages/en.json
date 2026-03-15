@@ -1377,6 +1377,51 @@
           "SkuHint": "Uppercase, digits, hyphens only",
           "BarcodeHint": "EAN, UPC, or ISBN"
         }
+      },
+      "Categories": {
+        "Title": "Categories",
+        "Subtitle": "{count} categories organized hierarchically",
+        "SearchPlaceholder": "Search categories...",
+        "AddCategory": "Add Category",
+        "EditCategory": "Edit Category",
+        "NewCategory": "New Category",
+        "DeleteCategory": "Delete Category",
+        "DeleteConfirmTitle": "Delete Category?",
+        "DeleteConfirmDescription": "Are you sure you want to delete \"{name}\"? This will also delete all sub-categories and cannot be undone.",
+        "DeleteSuccess": "Category deleted successfully",
+        "DeleteError": "Failed to delete category",
+        "Confirm": "Confirm",
+        "SaveSuccess": "Category saved successfully",
+        "SaveError": "Failed to save category",
+        "Form": {
+          "NameEn": "English Name",
+          "NameAr": "Arabic Name",
+          "Slug": "Slug",
+          "SlugPlaceholder": "category-slug",
+          "SlugHint": "URL-friendly name. Must be unique.",
+          "Parent": "Parent Category",
+          "ParentNone": "None (Top Level)",
+          "DescriptionEn": "English Description",
+          "DescriptionAr": "Arabic Description",
+          "Icon": "Icon",
+          "IconPlaceholder": "e.g. Folder",
+          "IconHint": "Lucide icon name",
+          "DisplayOrder": "Display Order",
+          "DisplayOrderHint": "Lower numbers appear first",
+          "IsActive": "Is Active",
+          "IsActiveHint": "Hidden categories won't show in storefront",
+          "ProductCount": "{count} products"
+        },
+        "Tree": {
+          "Empty": "No categories found.",
+          "ExpandAll": "Expand All",
+          "CollapseAll": "Collapse All",
+          "MoveUp": "Move Up",
+          "MoveDown": "Move Down",
+          "AddSub": "Add Sub-category",
+          "SearchPlaceholder": "Search categories by name or slug...",
+          "DeleteBlockedTitle": "Cannot Delete Category"
+        }
       }
     }
   }

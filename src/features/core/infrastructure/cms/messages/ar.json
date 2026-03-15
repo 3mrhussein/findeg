@@ -1369,6 +1369,51 @@
           "SkuHint": "حروف كبيرة، أرقام، وشرطات فقط",
           "BarcodeHint": "EAN، UPC، أو ISBN"
         }
+      },
+      "Categories": {
+        "Title": "الفئات",
+        "Subtitle": "{count} فئة منظمة بشكل هرمي",
+        "SearchPlaceholder": "ابحث في الفئات...",
+        "AddCategory": "إضافة فئة",
+        "EditCategory": "تعديل الفئة",
+        "NewCategory": "فئة جديدة",
+        "DeleteCategory": "حذف الفئة",
+        "DeleteConfirmTitle": "حذف الفئة؟",
+        "DeleteConfirmDescription": "هل أنت متأكد من حذف \"{name}\"؟ سيؤدي ذلك أيضاً إلى حذف جميع الفئات الفرعية ولا يمكن التراجع عن هذا الإجراء.",
+        "DeleteSuccess": "تم حذف الفئة بنجاح",
+        "DeleteError": "فشل حذف الفئة",
+        "Confirm": "تأكيد",
+        "SaveSuccess": "تم حفظ الفئة بنجاح",
+        "SaveError": "فشل حفظ الفئة",
+        "Form": {
+          "NameEn": "الاسم بالإنجليزي",
+          "NameAr": "الاسم بالعربي",
+          "Slug": "الرابط (Slug)",
+          "SlugPlaceholder": "category-slug",
+          "SlugHint": "اسم مناسب للرابط. يجب أن يكون فريداً.",
+          "Parent": "الفئة الأم",
+          "ParentNone": "بدون (مستوى علوي)",
+          "DescriptionEn": "الوصف بالإنجليزي",
+          "DescriptionAr": "الوصف بالعربي",
+          "Icon": "الأيقونة",
+          "IconPlaceholder": "مثال: Folder",
+          "IconHint": "اسم الأيقونة من Lucide",
+          "DisplayOrder": "ترتيب العرض",
+          "DisplayOrderHint": "الأرقام الأقل تظهر أولاً",
+          "IsActive": "نشط",
+          "IsActiveHint": "الفئات المخفية لن تظهر في الموقع",
+          "ProductCount": "{count} منتج"
+        },
+        "Tree": {
+          "Empty": "لم يتم العثور على فئات.",
+          "ExpandAll": "توسيع الكل",
+          "CollapseAll": "طي الكل",
+          "MoveUp": "تحريك للأعلى",
+          "MoveDown": "تحريك للأسفل",
+          "AddSub": "إضافة فئة فرعية",
+          "SearchPlaceholder": "ابحث في الفئات بالاسم أو الرابط...",
+          "DeleteBlockedTitle": "لا يمكن حذف الفئة"
+        }
       }
     }
   }

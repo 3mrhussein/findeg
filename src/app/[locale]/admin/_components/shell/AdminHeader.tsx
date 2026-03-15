@@ -12,6 +12,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import ToggleTheme from "@/components/shared/ToggleTheme";
+import ToggleLanguage from "@/components/shared/ToggleLanguage";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { useSidebar } from "./SidebarContext";
@@ -119,7 +121,7 @@ export function AdminHeader({
   };
 
   return (
-    <header className="sticky top-0 z-40 flex h-[60px] w-full items-center justify-between border-b border-gray-200 bg-white px-6">
+    <header className="sticky top-0 z-40 flex h-[60px] w-full items-center justify-between border-b border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-6">
       {/* Spacer to push content to the right of fixed sidebar? 
           No, the specification says "Width: full width of the main content area (NOT including sidebar)."
           Ah, if this is inside the flex-1 flex-col, its width WILL automatically be 100% of the remaining area!
@@ -131,9 +133,9 @@ export function AdminHeader({
       <div className="flex items-center gap-3">
         <button
           onClick={toggleSidebar}
-          className="flex h-[36px] w-[36px] items-center justify-center rounded-md hover:bg-gray-100 transition-colors"
+          className="flex h-[36px] w-[36px] items-center justify-center rounded-md hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
         >
-          <Menu className="h-[20px] w-[20px] text-gray-500" />
+          <Menu className="h-[20px] w-[20px] text-gray-500 dark:text-gray-400" />
         </button>
         <div className="flex items-center">
           <span className="text-[14px] text-gray-400 font-medium">FindEg</span>
@@ -147,18 +149,18 @@ export function AdminHeader({
           <input
             type="text"
             placeholder="Search products, orders, customers..."
-            className="h-[36px] w-full rounded-lg border border-gray-200 bg-gray-50 pl-[36px] pr-[48px] text-[14px] outline-none placeholder:text-gray-400 focus:border-indigo-400 focus:bg-white focus:ring-1 focus:ring-indigo-400 transition-all pointer-events-none"
+            className="h-[36px] w-full rounded-lg border border-gray-200 dark:border-slate-800 bg-gray-50 dark:bg-slate-800/50 pl-[36px] pr-[48px] text-[14px] outline-none placeholder:text-gray-400 focus:border-indigo-400 focus:bg-white dark:focus:bg-slate-900 focus:ring-1 focus:ring-indigo-400 transition-all pointer-events-none"
             readOnly
           />
-          <kbd className="absolute right-[10px] top-1/2 -translate-y-1/2 rounded border border-gray-200 bg-gray-100 px-1 py-px text-[10px] text-gray-500">
+          <kbd className="absolute right-[10px] top-1/2 -translate-y-1/2 rounded border border-gray-200 dark:border-slate-700 bg-gray-100 dark:bg-slate-800 px-1 py-px text-[10px] text-gray-500 dark:text-gray-400">
             {typeof window !== "undefined" && navigator.platform.includes("Mac") ? "⌘K" : "Ctrl+K"}
           </kbd>
         </div>
 
         {/* Command Palette Dropdown Panel */}
         {isSearchOpen && (
-          <div className="absolute left-0 top-full mt-1 w-full rounded-lg border border-gray-200 bg-white shadow-xl z-50 overflow-hidden flex flex-col">
-            <div className="relative border-b border-gray-100 p-2">
+          <div className="absolute left-0 top-full mt-1 w-full rounded-lg border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl z-50 overflow-hidden flex flex-col">
+            <div className="relative border-b border-gray-100 dark:border-slate-800 p-2">
               <Search className="absolute left-4 top-1/2 h-[16px] w-[16px] -translate-y-1/2 text-gray-400" />
               <input
                 ref={searchInputRef}
@@ -166,7 +168,7 @@ export function AdminHeader({
                 placeholder="Search..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-transparent pl-8 pr-4 text-[14px] outline-none placeholder:text-gray-400 h-[36px]"
+                className="w-full bg-transparent pl-8 pr-4 text-[14px] text-gray-800 dark:text-gray-200 outline-none placeholder:text-gray-400 h-[36px]"
               />
             </div>
 
@@ -180,16 +182,16 @@ export function AdminHeader({
                     </span>
                   </div>
                   <div className="flex flex-col">
-                    <div className="flex h-[44px] cursor-pointer items-center px-[12px] hover:bg-indigo-50">
+                    <div className="flex h-[44px] cursor-pointer items-center px-[12px] hover:bg-indigo-50 dark:hover:bg-indigo-900/20">
                       <div className="flex h-[24px] w-[24px] items-center justify-center rounded-full bg-indigo-500 text-[10px] text-white font-bold">
                         FC
                       </div>
-                      <span className="ml-3 text-[14px] text-gray-800">
+                      <span className="ml-3 text-[14px] text-gray-800 dark:text-gray-200">
                         Faber-Castell Grip Pencil
                       </span>
                       <span className="ml-auto text-[12px] text-gray-500">FC-GRIP</span>
                     </div>
-                    <div className="flex h-[44px] cursor-pointer items-center px-[12px] hover:bg-indigo-50">
+                    <div className="flex h-[44px] cursor-pointer items-center px-[12px] hover:bg-indigo-50 dark:hover:bg-indigo-900/20">
                       <div className="flex h-[24px] w-[24px] items-center justify-center rounded-full bg-sky-500 text-[10px] text-white font-bold">
                         B
                       </div>
@@ -208,9 +210,11 @@ export function AdminHeader({
                       <span className="ml-3 text-[12px] text-gray-500">Ahmed Hassan</span>
                       <span className="ml-auto text-[12px] text-gray-500">EGP 76</span>
                     </div>
-                    <div className="flex h-[44px] cursor-pointer items-center px-[12px] hover:bg-indigo-50">
+                    <div className="flex h-[44px] cursor-pointer items-center px-[12px] hover:bg-indigo-50 dark:hover:bg-indigo-900/20">
                       <ShoppingCart className="h-[16px] w-[16px] text-gray-400" />
-                      <span className="ml-3 text-[14px] text-gray-800">#1041</span>
+                      <span className="ml-3 text-[14px] text-gray-800 dark:text-gray-200">
+                        #1041
+                      </span>
                       <span className="ml-3 text-[12px] text-gray-500">Sara Mohamed</span>
                       <span className="ml-auto text-[12px] text-gray-500">EGP 45</span>
                     </div>
@@ -228,13 +232,16 @@ export function AdminHeader({
 
       {/* Right Section */}
       <div className="flex items-center gap-2">
+        <ToggleLanguage />
+        <ToggleTheme />
+        <div className="h-6 w-px bg-gray-200 dark:bg-slate-800 mx-1" />
         {/* Notification Bell */}
         <div className="relative" ref={notificationsRef}>
           <button
             onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
-            className="relative flex h-[36px] w-[36px] items-center justify-center rounded-md hover:bg-gray-100 transition-colors"
+            className="relative flex h-[36px] w-[36px] items-center justify-center rounded-md hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
           >
-            <Bell className="h-[20px] w-[20px] text-gray-600" />
+            <Bell className="h-[20px] w-[20px] text-gray-600 dark:text-gray-400" />
             {unreadCount > 0 && (
               <span className="absolute -right-1 -top-1 flex h-[16px] min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
                 {unreadCount > 9 ? "9+" : unreadCount}
@@ -316,29 +323,29 @@ export function AdminHeader({
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="end"
-            className="w-[200px] mt-2 border-gray-200 shadow-xl rounded-lg"
+            className="w-[200px] mt-2 border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl rounded-lg"
           >
-            <div className="flex flex-col px-3 py-2 border-b border-gray-100">
-              <p className="text-[13px] font-medium text-gray-800 leading-none mb-1">
+            <div className="flex flex-col px-3 py-2 border-b border-gray-100 dark:border-slate-800">
+              <p className="text-[13px] font-medium text-gray-800 dark:text-gray-200 leading-none mb-1">
                 {displayName}
               </p>
               <p className="text-[11px] text-gray-500 leading-none">{displayEmail}</p>
             </div>
             <div className="py-1">
               <DropdownMenuItem
-                className="text-[13px] text-gray-700 cursor-pointer"
+                className="text-[13px] text-gray-700 dark:text-gray-300 cursor-pointer focus:bg-gray-50 dark:focus:bg-slate-800"
                 onClick={() => router.push(`/${locale}/admin/settings/profile`)}
               >
                 <span className="mr-2">👤</span> View Profile
               </DropdownMenuItem>
               <DropdownMenuItem
-                className="text-[13px] text-gray-700 cursor-pointer"
+                className="text-[13px] text-gray-700 dark:text-gray-300 cursor-pointer focus:bg-gray-50 dark:focus:bg-slate-800"
                 onClick={() => window.open(`/${locale}`, "_blank")}
               >
                 <span className="mr-2">↗</span> Switch to Storefront
               </DropdownMenuItem>
             </div>
-            <DropdownMenuSeparator className="bg-gray-100" />
+            <DropdownMenuSeparator className="bg-gray-100 dark:bg-slate-800" />
             <div className="py-1">
               <DropdownMenuItem
                 onClick={onLogout}

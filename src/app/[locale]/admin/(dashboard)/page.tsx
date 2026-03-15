@@ -57,10 +57,10 @@ export default async function AdminDashboardPage({ params }: AdminDashboardPageP
     <div className="flex-1 space-y-6 pt-4">
       {/* ── Greeting ────────────────────────────────────────────── */}
       <div className="space-y-1 px-4">
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
           {t(greetingKey)}, {session.user.firstName || "Admin"} 👋
         </h1>
-        <p className="text-sm text-slate-500">{dateFormatted}</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400">{dateFormatted}</p>
       </div>
 
       {/* ── KPI Cards ───────────────────────────────────────────── */}
@@ -70,24 +70,24 @@ export default async function AdminDashboardPage({ params }: AdminDashboardPageP
           value={catalogStats.totalProducts.toLocaleString(locale)}
           iconName="package"
           href={`/${locale}/admin/products`}
-          iconColor="text-blue-600"
-          iconBg="bg-blue-50"
+          iconColor="text-blue-600 dark:text-blue-400"
+          iconBg="bg-blue-50 dark:bg-blue-500/10"
         />
         <KpiCard
           title={t("TotalCategories")}
           value={catalogStats.totalCategories.toLocaleString(locale)}
           iconName="layers"
           href={`/${locale}/admin/categories`}
-          iconColor="text-purple-600"
-          iconBg="bg-purple-50"
+          iconColor="text-purple-600 dark:text-purple-400"
+          iconBg="bg-purple-50 dark:bg-purple-500/10"
         />
         <KpiCard
           title={t("TotalBrands")}
           value={catalogStats.totalBrands.toLocaleString(locale)}
           iconName="award"
           href={`/${locale}/admin/brands`}
-          iconColor="text-orange-600"
-          iconBg="bg-orange-50"
+          iconColor="text-orange-600 dark:text-orange-400"
+          iconBg="bg-orange-50 dark:bg-orange-500/10"
         />
         <KpiCard
           title={t("CatalogCompletion")}
@@ -98,8 +98,8 @@ export default async function AdminDashboardPage({ params }: AdminDashboardPageP
           }%`}
           iconName="check-circle"
           href={`/${locale}/admin/products`}
-          iconColor="text-emerald-600"
-          iconBg="bg-emerald-50"
+          iconColor="text-emerald-600 dark:text-emerald-400"
+          iconBg="bg-emerald-50 dark:bg-emerald-500/10"
           change={{
             value: catalogStats.fullyComplete,
             label: t("KPIs.FullyComplete"), // Reusing existing key if appropriate or just passing string

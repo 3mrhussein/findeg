@@ -70,9 +70,9 @@ export function NavItem({ item, collapsed = false, locale = "en", depth = 0 }: N
         // Dynamic horizontal padding based on depth for children
         depth > 0 && `pl-[${12 + depth * 20}px]`,
         isActive
-          ? "border-l-[3px] border-indigo-600 bg-indigo-50 text-indigo-700 font-semibold"
-          : "hover:bg-gray-50 text-gray-700 border-l-[3px] border-transparent font-medium",
-        !isActive && "text-gray-500 hover:text-gray-700",
+          ? "border-l-[3px] border-indigo-600 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-400 font-semibold"
+          : "hover:bg-gray-50 dark:hover:bg-slate-800/50 text-gray-700 dark:text-gray-300 border-l-[3px] border-transparent font-medium",
+        !isActive && "text-gray-500 hover:text-gray-700 dark:hover:text-gray-200",
         collapsed && "justify-center px-0",
       )}
       style={depth > 0 ? { paddingLeft: `${12 + depth * 20}px` } : {}}

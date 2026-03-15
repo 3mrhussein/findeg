@@ -28,15 +28,39 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
       .replace(/^-+|-+$/g, "");
   }
 
-  private mapToDomain(dbCategory: DbCategory, children?: Category[]): Category {
-    const localizedNameDraft = (dbCategory.localizedName || {}) as Record<string, string>;
-    const localizedDescriptionDraft = (dbCategory.localizedDescription || {}) as Record<
-      string,
-      string
-    >;
+  private mapToDomain(
+    dbCategory: DbCategory,
+    children?: Category[],
+    productCount?: number,
+  ): Category {
+    let localizedNameDraft: Record<string, string> = {};
+    let localizedDescriptionDraft: Record<string, string> = {};
+
+    try {
+      if (typeof dbCategory.localizedName === "string") {
+        localizedNameDraft = JSON.parse(dbCategory.localizedName);
+      } else if (dbCategory.localizedName && typeof dbCategory.localizedName === "object") {
+        localizedNameDraft = dbCategory.localizedName as Record<string, string>;
+      }
+    } catch {
+      // fallback to empty if parse fails
+    }
+
+    try {
+      if (typeof dbCategory.localizedDescription === "string") {
+        localizedDescriptionDraft = JSON.parse(dbCategory.localizedDescription);
+      } else if (
+        dbCategory.localizedDescription &&
+        typeof dbCategory.localizedDescription === "object"
+      ) {
+        localizedDescriptionDraft = dbCategory.localizedDescription as Record<string, string>;
+      }
+    } catch {
+      // fallback to empty if parse fails
+    }
 
     const localizedContent = {
-      name: toLocalizedString(localizedNameDraft, dbCategory.slug),
+      name: toLocalizedString(localizedNameDraft, ""),
       description:
         Object.keys(localizedDescriptionDraft).length > 0
           ? toLocalizedString(localizedDescriptionDraft, "")
@@ -46,7 +70,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
     return {
       id: dbCategory.id,
       slug: dbCategory.slug,
-      name: localizedContent.name?.en ?? dbCategory.slug,
+      name: localizedContent.name?.en || dbCategory.slug,
       description: localizedContent.description?.en ?? undefined,
       locale: undefined,
       localizedContent,
@@ -57,6 +81,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
       sortOrder: dbCategory.sortOrder,
       isActive: dbCategory.isActive,
       children: children && children.length > 0 ? children : undefined,
+      ...(productCount !== undefined && { productCount }),
     };
   }
 
@@ -83,17 +108,48 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
 
   async getTree(language: Locale = DEFAULT_LOCALE): Promise<Category[]> {
     const allCategories = await this.getAll(language);
+    const { products } = await import("@/features/core/infrastructure/persistence/schema/products");
+
+    // Get direct product counts for all categories in one query
+    const productCountsResult = await db
+      .select({
+        categoryId: products.categoryId,
+        count: count(),
+      })
+      .from(products)
+      .where(or(...allCategories.map((c) => eq(products.categoryId, c.id))))
+      .groupBy(products.categoryId);
+
+    const directCounts = new Map<number, number>();
+    productCountsResult.forEach((row) => {
+      if (row.categoryId) {
+        directCounts.set(row.categoryId, Number(row.count));
+      }
+    });
 
     /**
-     * Recursively builds the tree from the flat list.
+     * Recursively builds the tree from the flat list and calculates total product count.
      */
     const buildTree = (parentId: number | null = null): Category[] => {
       return allCategories
         .filter((c) => (c.parentId === undefined && parentId === null) || c.parentId === parentId)
-        .map((c) => ({
-          ...c,
-          children: buildTree(c.id),
-        }))
+        .map((c) => {
+          const children = buildTree(c.id);
+
+          // Calculate product count (direct products + all products in descendants)
+          const childrenProductCount = children.reduce(
+            (sum, child) => sum + ((child as any).productCount || 0),
+            0,
+          );
+          const directProductCount = directCounts.get(c.id as number) || 0;
+          const totalProductCount = directProductCount + childrenProductCount;
+
+          return {
+            ...c,
+            children: children.length > 0 ? children : undefined,
+            productCount: totalProductCount,
+          };
+        })
         .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
     };
 
@@ -215,8 +271,43 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
    */
   async update(id: ID, input: CategoryInput): Promise<Category> {
     return await db.transaction(async (tx) => {
-      // If parent changed, we need to re-calculate path and depth for this and ALL descendants
-      // This is complex, for MVP lets assume simple update or handle path update logic
+      const existing = await tx.select().from(categories).where(eq(categories.id, id)).limit(1);
+      if (existing.length === 0) throw new Error("Category not found");
+
+      const oldPath = existing[0].path;
+      const oldDepth = existing[0].depth;
+      const oldParentId = existing[0].parentId;
+
+      let newPath = oldPath;
+      let newDepth = oldDepth;
+
+      if (input.parentId !== oldParentId) {
+        let parentPath = "/";
+        let parentDepth = 0;
+
+        if (input.parentId) {
+          const parentResult = await tx
+            .select()
+            .from(categories)
+            .where(eq(categories.id, input.parentId))
+            .limit(1);
+          if (parentResult.length > 0) {
+            parentPath = parentResult[0].path;
+            parentDepth = parentResult[0].depth;
+          }
+        }
+        newPath = parentPath === "/" ? `/${id}/` : `${parentPath}${id}/`;
+        newDepth = parentDepth + 1;
+
+        // Update all descendants
+        const depthDelta = newDepth - oldDepth;
+        await tx.execute(sql`
+          UPDATE ${categories}
+          SET path = REPLACE(path, ${oldPath}, ${newPath}),
+              depth = depth + ${depthDelta}
+          WHERE path LIKE ${oldPath} || '%'
+        `);
+      }
 
       const [updated] = await tx
         .update(categories)
@@ -232,14 +323,14 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
           ),
           parentId: input.parentId || null,
           icon: input.icon || null,
-          sortOrder: input.sortOrder,
-          isActive: input.isActive,
+          sortOrder: input.sortOrder ?? existing[0].sortOrder,
+          isActive: input.isActive ?? existing[0].isActive,
+          path: newPath,
+          depth: newDepth,
           updatedAt: new Date(),
         })
         .where(eq(categories.id, id))
         .returning();
-
-      // 3. (Legacy translations skipped)
 
       return this.mapToDomain(updated);
     });
@@ -262,6 +353,15 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
 
   async count(): Promise<number> {
     const result = await db.select({ value: count() }).from(categories);
+    return result[0]?.value || 0;
+  }
+
+  async getProductCount(categoryId: number): Promise<number> {
+    const { products } = await import("@/features/core/infrastructure/persistence/schema/products");
+    const result = await db
+      .select({ value: count() })
+      .from(products)
+      .where(eq(products.categoryId, categoryId));
     return result[0]?.value || 0;
   }
 }

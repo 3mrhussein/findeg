@@ -94,8 +94,8 @@ export function EnrichedTableRow({
       <TableRow
         className={cn(
           "group transition-colors",
-          canExpand && "cursor-pointer hover:bg-muted/50",
-          isExpanded && "bg-muted/30",
+          canExpand && "cursor-pointer hover:bg-muted/50 dark:hover:bg-slate-800/50",
+          isExpanded && "bg-muted/30 dark:bg-slate-800/30",
           className,
         )}
         onClick={handleRowClick}
@@ -128,7 +128,7 @@ export function EnrichedTableRow({
 
       {/* Expanded Row */}
       {isExpanded && expandedContent && (
-        <TableRow className="bg-muted/30 hover:bg-muted/30">
+        <TableRow className="bg-muted/30 dark:bg-slate-800/30 hover:bg-muted/30 dark:hover:bg-slate-800/30">
           <TableCell colSpan={columnCount} className="py-4">
             <div className="animate-in fade-in-50 duration-200">{expandedContent}</div>
           </TableCell>

@@ -123,9 +123,85 @@ export class AdminCategoryService implements IAdminCategoryService {
   }
 
   /**
+   * Retrieves categories in a hierarchical tree structure.
+   */
+  async getTree(language?: Locale): Promise<Category[]> {
+    return this.categoryRepository.getTree(language);
+  }
+
+  /**
    * Returns the total number of categories in the system.
    */
   async count(): Promise<number> {
     return this.categoryRepository.count();
+  }
+
+  /**
+   * Checks if a slug is available.
+   *
+   * @param slug - The slug to check.
+   * @param excludeId - ID to exclude (useful for edit mode).
+   */
+  async checkSlugAvailable(slug: string, excludeId?: number): Promise<boolean> {
+    const existing = await this.categoryRepository.getBySlug(slug);
+    if (!existing) return true;
+    return existing.id === excludeId;
+  }
+
+  /**
+   * Moves a category up among its siblings (same parent, same depth).
+   */
+  async moveCategoryUp(id: number): Promise<void> {
+    const category = await this.categoryRepository.getById(id);
+    if (!category) throw new Error("Category not found");
+
+    const siblings = await this.categoryRepository.getChildren(category.parentId || 0);
+    // filter by same depth if repository doesn't guarantee it (materialized path usually does)
+    const sortedSiblings = siblings.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+
+    const currentIndex = sortedSiblings.findIndex((s) => s.id === id);
+    if (currentIndex <= 0) return; // Already at top
+
+    const prevSibling = sortedSiblings[currentIndex - 1];
+
+    await this.categoryRepository.reorder([
+      { id: category.id, sortOrder: prevSibling.sortOrder || 0 },
+      { id: prevSibling.id, sortOrder: category.sortOrder || 0 },
+    ]);
+  }
+
+  /**
+   * Moves a category down among its siblings (same parent, same depth).
+   */
+  async moveCategoryDown(id: number): Promise<void> {
+    const category = await this.categoryRepository.getById(id);
+    if (!category) throw new Error("Category not found");
+
+    const siblings = await this.categoryRepository.getChildren(category.parentId || 0);
+    const sortedSiblings = siblings.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+
+    const currentIndex = sortedSiblings.findIndex((s) => s.id === id);
+    if (currentIndex === -1 || currentIndex >= sortedSiblings.length - 1) return; // Already at bottom
+
+    const nextSibling = sortedSiblings[currentIndex + 1];
+
+    await this.categoryRepository.reorder([
+      { id: category.id, sortOrder: nextSibling.sortOrder || 0 },
+      { id: nextSibling.id, sortOrder: category.sortOrder || 0 },
+    ]);
+  }
+
+  /**
+   * Reorders multiple categories directly.
+   */
+  async reorderCategories(items: { id: number; sortOrder: number }[]): Promise<void> {
+    await this.categoryRepository.reorder(items);
+  }
+
+  /**
+   * Gets the number of products assigned to a category.
+   */
+  async getCategoryProductCount(categoryId: number): Promise<number> {
+    return this.categoryRepository.getProductCount(categoryId);
   }
 }

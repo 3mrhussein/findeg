@@ -27,7 +27,7 @@ export function AdminShell({
 
   return (
     <SidebarProvider>
-      <div className="flex h-screen w-full bg-gray-50 overflow-hidden font-sans">
+      <div className="flex h-screen w-full bg-gray-50 dark:bg-slate-950 overflow-hidden font-sans">
         {/* Left Sidebar */}
         <AdminSidebar
           userEmail={userEmail}

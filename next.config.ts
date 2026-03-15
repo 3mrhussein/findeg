@@ -25,7 +25,7 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: false,
   },
   experimental: {
-    turbopackFileSystemCacheForDev: true,
+    //   turbopackFileSystemCacheForDev: true,
   },
 };
 

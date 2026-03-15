@@ -40,4 +40,9 @@ export interface ICategoryRepository {
   delete(id: ID): Promise<void>;
 
   count(): Promise<number>;
+
+  /**
+   * Gets the number of products assigned to a category.
+   */
+  getProductCount(categoryId: number): Promise<number>;
 }

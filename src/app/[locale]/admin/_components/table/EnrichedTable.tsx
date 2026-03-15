@@ -67,7 +67,12 @@ export function EnrichedTable({
   className,
 }: EnrichedTableProps) {
   return (
-    <div className={cn("rounded-md border", className)}>
+    <div
+      className={cn(
+        "rounded-md border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/50",
+        className,
+      )}
+    >
       <Table>
         <TableHeader>
           <TableRow>

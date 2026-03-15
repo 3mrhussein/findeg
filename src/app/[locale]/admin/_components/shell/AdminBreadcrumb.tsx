@@ -71,7 +71,7 @@ export function AdminBreadcrumb({ locale = "en" }: AdminBreadcrumbProps) {
   });
 
   return (
-    <div className="flex items-center h-[48px] px-6 border-b border-gray-200 bg-white shrink-0">
+    <div className="flex items-center h-[48px] px-6 border-b border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 backdrop-blur-sm shrink-0">
       <nav aria-label="Breadcrumb" className="flex items-center space-x-2 text-[13px]">
         {/* Dynamic Breadcrumbs */}
         {breadcrumbs
@@ -80,15 +80,20 @@ export function AdminBreadcrumb({ locale = "en" }: AdminBreadcrumbProps) {
           )
           .map((crumb, index) => (
             <React.Fragment key={crumb.href}>
-              {index > 0 && <ChevronRight className="h-[14px] w-[14px] text-gray-300 mx-1" />}
+              {index > 0 && (
+                <ChevronRight className="h-[14px] w-[14px] text-gray-300 dark:text-slate-600 mx-1" />
+              )}
               {crumb.isLast ? (
-                <span className="text-gray-800 font-semibold" aria-current="page">
+                <span
+                  className="text-gray-800 dark:text-gray-200 font-semibold"
+                  aria-current="page"
+                >
                   {crumb.label}
                 </span>
               ) : (
                 <Link
                   href={crumb.href}
-                  className="text-gray-500 hover:text-indigo-600 transition-colors"
+                  className="text-gray-500 dark:text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                 >
                   {crumb.label}
                 </Link>

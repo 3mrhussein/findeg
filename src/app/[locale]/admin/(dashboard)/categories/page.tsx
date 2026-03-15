@@ -6,18 +6,22 @@ import {
   createCategoryAction,
   updateCategoryAction,
   deleteCategoryAction,
+  reorderCategoriesAction,
 } from "@/features/catalog/application/actions/category";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+
+import { getTranslations } from "next-intl/server";
 
 /**
  * Categories Page — Hierarchical tree view of product categories
  */
 export default async function CategoriesPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
+  const t = await getTranslations("Administration.Catalog.Categories");
   const resolvedLocale = resolveLocale(locale);
   const { adminCategory } = getServices();
-  const categories = await adminCategory.getAll(resolvedLocale);
+  const categories = await adminCategory.getTree(resolvedLocale);
 
   // Server action for creating/updating categories
   async function handleSaveCategory(data: any, categoryId?: number) {
@@ -32,8 +36,14 @@ export default async function CategoriesPage({ params }: { params: Promise<{ loc
       icon: data.icon,
       sortOrder: data.sortOrder,
       isActive: data.isActive,
-      // Auto-generate slug from name if not provided
-      slug: data.localizedName?.en?.toLowerCase().replace(/\s+/g, "-") || "",
+      // Use slug from form data (already auto-generated or manually entered)
+      slug:
+        data.slug ||
+        (data.localizedName?.en ?? "untitled")
+          .trim()
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-+|-+$/g, ""),
       name: data.localizedName?.en || "Untitled",
     };
 
@@ -73,24 +83,21 @@ export default async function CategoriesPage({ params }: { params: Promise<{ loc
   async function handleReorderCategories(reorderedCategories: any[]) {
     "use server";
 
-    // TODO: Implement bulk reorder logic
-    // For now, update sort order for each category
-    for (let i = 0; i < reorderedCategories.length; i++) {
-      const category = reorderedCategories[i];
-      await updateCategoryAction(category.id, {
-        sortOrder: i,
-      } as any);
+    // Call the dedicated transaction route
+    const items = reorderedCategories.map((c, i) => ({ id: c.id, sortOrder: i }));
+    const result = await reorderCategoriesAction(items);
+
+    if (!result.success) {
+      console.error("Reorder failed:", result.error);
+      return;
     }
 
     revalidatePath(`/${locale}/admin/categories`);
   }
 
   return (
-    <div className="flex-1 space-y-6 p-8 pt-6">
-      <PageHeader
-        title="Categories"
-        description={`${categories.length} categories organized hierarchically`}
-      />
+    <div className="flex flex-col gap-6 p-8 pt-6 flex-1">
+      <PageHeader title={t("Title")} description={t("Subtitle", { count: categories.length })} />
 
       <CategoryTree
         categories={categories}

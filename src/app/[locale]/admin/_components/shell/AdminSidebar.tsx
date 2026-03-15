@@ -39,14 +39,14 @@ export function AdminSidebar({
   return (
     <aside
       className={cn(
-        "flex h-screen flex-col bg-white border-r border-gray-200 transition-all duration-300 ease-in-out shrink-0",
+        "flex h-screen flex-col bg-white dark:bg-slate-900 border-r border-gray-200 dark:border-slate-800 transition-all duration-300 ease-in-out shrink-0",
         isCollapsed ? "w-[64px]" : "w-[240px]",
       )}
     >
       {/* Top Logo Area (60px) */}
       <div
         className={cn(
-          "flex items-center h-[60px] border-b border-gray-200 px-4 shrink-0",
+          "flex items-center h-[60px] border-b border-gray-200 dark:border-slate-800 px-4 shrink-0",
           isCollapsed ? "justify-center" : "justify-between",
         )}
       >
@@ -57,7 +57,7 @@ export function AdminSidebar({
         )}
         <button
           onClick={toggleSidebar}
-          className="flex items-center justify-center h-8 w-8 hover:bg-gray-100 rounded-md transition-colors"
+          className="flex items-center justify-center h-8 w-8 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-md transition-colors"
           title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
           {isCollapsed ? (
@@ -76,7 +76,7 @@ export function AdminSidebar({
       </ScrollArea>
 
       {/* User Profile Area */}
-      <div className="mt-auto border-t border-gray-200 p-[12px] flex flex-col shrink-0">
+      <div className="mt-auto border-t border-gray-200 dark:border-slate-800 p-[12px] flex flex-col shrink-0">
         {!isCollapsed ? (
           <div className="flex flex-col">
             <div className="flex items-center gap-3 mb-3">
@@ -88,7 +88,7 @@ export function AdminSidebar({
                 </AvatarFallback>
               </Avatar>
               <div className="flex flex-col min-w-0 flex-1">
-                <span className="text-[13px] font-medium text-gray-800 truncate">
+                <span className="text-[13px] font-medium text-gray-800 dark:text-gray-200 truncate">
                   {displayName}
                 </span>
                 <span className="text-[11px] text-gray-500 truncate">{displayEmail}</span>
@@ -98,7 +98,7 @@ export function AdminSidebar({
 
             <button
               onClick={onLogout}
-              className="w-full h-[32px] flex items-center justify-center gap-2 rounded-md text-[12px] text-gray-500 bg-transparent hover:text-red-600 hover:bg-red-50 transition-colors duration-150"
+              className="w-full h-[32px] flex items-center justify-center gap-2 rounded-md text-[12px] text-gray-500 bg-transparent hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-150"
             >
               <LogOut className="h-[14px] w-[14px]" />
               <span>Logout</span>
