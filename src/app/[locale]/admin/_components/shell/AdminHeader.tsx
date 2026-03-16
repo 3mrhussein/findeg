@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import ToggleTheme from "@/components/shared/ToggleTheme";
 import ToggleLanguage from "@/components/shared/ToggleLanguage";
+import { WebMCPBadge } from "@/components/shared/WebMCPBadge";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { useSidebar } from "./SidebarContext";
@@ -234,6 +235,7 @@ export function AdminHeader({
       <div className="flex items-center gap-2">
         <ToggleLanguage />
         <ToggleTheme />
+        <WebMCPBadge />
         <div className="h-6 w-px bg-gray-200 dark:bg-slate-800 mx-1" />
         {/* Notification Bell */}
         <div className="relative" ref={notificationsRef}>

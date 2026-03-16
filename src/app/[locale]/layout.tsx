@@ -9,6 +9,7 @@ import Providers from "@/providers/Providers";
 import { Suspense } from "react";
 import { BoundaryProvider } from "@/lib/internal/BoundaryProvider";
 import BoundaryToggle from "@/lib/internal/BoundaryToggle";
+import { WebMCPInitializer } from "@/components/shared/WebMCPInitializer";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -122,6 +123,7 @@ export default async function RootLayout({
                 {children}
               </div>
               <BoundaryToggle />
+              <WebMCPInitializer />
             </Providers>
           </BoundaryProvider>
         </NextIntlClientProvider>

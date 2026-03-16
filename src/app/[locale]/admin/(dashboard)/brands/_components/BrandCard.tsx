@@ -58,7 +58,12 @@ export function BrandCard({ brand, isSelected, onEdit, onDelete, onToggleStatus 
       {/* Brand Info */}
       <div className="flex-1 min-w-0 mx-4">
         <div className="flex flex-col mb-0.5">
-          <h3 className="font-semibold text-slate-900 dark:text-slate-100 truncate">{nameEn}</h3>
+          <div className="flex items-center gap-2">
+            <h3 className="font-semibold text-slate-900 dark:text-slate-100 truncate">{nameEn}</h3>
+            <span className="text-[10px] font-mono text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">
+              #{brand.id}
+            </span>
+          </div>
           <span className="text-xs font-medium text-slate-500 dark:text-slate-400 dir-rtl font-arabic line-clamp-1">
             {nameAr}
           </span>
