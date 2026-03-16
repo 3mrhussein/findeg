@@ -7,8 +7,22 @@ export default getRequestConfig(async ({ requestLocale }) => {
   const requested = await requestLocale;
   const locale = hasLocale(routing.locales, requested) ? requested : routing.defaultLocale;
 
+  const base = `../features/core/infrastructure/cms/messages`;
+  const [storefront, dashboard] = await Promise.all([
+    import(`${base}/storefront.${locale}.json`).then((m) => m.default),
+    import(`${base}/dashboard.${locale}.json`).then((m) => m.default),
+  ]);
+
   return {
     locale,
-    messages: (await import(`../features/core/infrastructure/cms/messages/${locale}.json`)).default,
+    messages: {
+      ...storefront,
+      ...dashboard,
+      // Deep-merge `Pages` since both files contribute sub-keys under it
+      Pages: {
+        ...storefront.Pages,
+        ...dashboard.Pages,
+      },
+    },
   };
 });
