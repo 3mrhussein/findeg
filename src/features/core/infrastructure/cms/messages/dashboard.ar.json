@@ -149,36 +149,6 @@
         "Scope": "النطاق",
         "Active": "نشط"
       },
-      "Tags": {
-        "Title": "إدارة الوسوم",
-        "Subtitle": "نظم منتجاتك باستخدام المجموعات والمفاتيح للوصول الأسرع.",
-        "NewTag": "وسم جديد",
-        "EditTag": "تعديل الوسم",
-        "SearchPlaceholder": "البحث بالمفتاح أو الاسم...",
-        "FilterGroup": "تصفية حسب المجموعة",
-        "FilterScope": "تصفية حسب النطاق",
-        "AllGroups": "جميع المجموعات",
-        "AllScopes": "جميع النطاقات",
-        "Form": {
-          "Group": "المجموعة",
-          "GroupPlaceholder": "مثال: الموسم، العلامة التجارية، الخامة",
-          "GroupHint": "اختر من المجموعات الحالية أو اكتب لإنشاء مجموعة جديدة",
-          "Key": "المفتاح",
-          "KeyPlaceholder": "مثال: back-to-school",
-          "KeyHint": "معرف فريد داخل المجموعة",
-          "LabelEn": "الاسم (بالإنجليزي)",
-          "LabelAr": "الاسم (بالعربي)",
-          "DescriptionEn": "الوصف (بالإنجليزي)",
-          "DescriptionAr": "الوصف (بالعربي)",
-          "Icon": "اسم الأيقونة",
-          "IconHint": "اسم الأيقونة من Lucide (مثال: star, zap)",
-          "Color": "اللون",
-          "Scope": "نطاق الظهور",
-          "IsActive": "نشط",
-          "Preview": "معاينة",
-          "GroupKeyPreview": "معرف المجموعة:المفتاح"
-        }
-      },
       "Collections": {
         "Title": "إدارة المجموعات",
         "Subtitle": "نظم مجموعات المنتجات حسب السمات وتحكم في ترتيب ظهورها.",
@@ -385,6 +355,152 @@
       }
     },
     "Catalog": {
+      "Products": {
+        "Title": "المنتجات",
+        "Subtitle": "إدارة كتالوج المنتجات، الأنواع، والمخزون",
+        "SearchPlaceholder": "البحث بالاسم، SKU...",
+        "AddProduct": "إضافة منتج",
+        "Form": {
+          "editProduct": "تعديل المنتج",
+          "newProduct": "منتج جديد",
+          "saveDraft": "حفظ كمسودة",
+          "publish": "نشر المنتج",
+          "updated": "تم تحديث المنتج بنجاح",
+          "created": "تم إنشاء المنتج بنجاح",
+          "Tabs": {
+            "info": "معلومات أساسية",
+            "variants": "الأنواع / الموديلات",
+            "media": "الصور والوسائط",
+            "pricing": "التسعير ووحدات القياس",
+            "seo": "السيو وبيانات الميتا",
+            "Info": {
+              "basicInfo": "المعلومات الأساسية",
+              "nameEn": "الاسم (إنجليزي)",
+              "nameAr": "الاسم (عربي)",
+              "descriptionEn": "وصف مختصر (إنجليزي)",
+              "descriptionAr": "وصف مختصر (عربي)",
+              "identifiers": "المعرفات",
+              "skuPrefix": "بادئة عائلة SKU",
+              "skuPrefixDesc": "تستخدم كبادئة لجميع أنواع هذا المنتج (مثال: STA-PEN)"
+            },
+            "Variants": {
+              "productVariants": "أنواع المنتج",
+              "variantsDesc": "إدارة المقاسات أو الألوان أو الأنماط المختلفة لهذا المنتج.",
+              "addVariant": "إضافة نوع",
+              "noVariants": "لا يوجد أنواع بعد",
+              "noVariantsDesc": "يجب أن تحتوي المنتجات البسيطة على نوع افتراضي واحد على الأقل.",
+              "createFirstVariant": "إنشاء النوع الأول"
+            },
+            "Media": {
+              "imageGallery": "معرض الصور",
+              "addByUrl": "إضافة صورة عبر الرابط...",
+              "add": "إضافة",
+              "upload": "رفع صورة"
+            },
+            "Pricing": {
+              "unitsOfMeasure": "وحدات القياس",
+              "uomDesc": "حدد كيف يباع هذا المنتج (مثال: قطعة، كرتونة، باكت).",
+              "addUom": "إضافة وحدة",
+              "code": "الكود",
+              "label": "الاسم",
+              "factor": "المعامل",
+              "noCustomUoms": "لا يوجد وحدات مخصصة. ستتوفر الوحدة الأساسية فقط.",
+              "priceLists": "قوائم الأسعار",
+              "priceListDesc": "تحديد أسعار خاصة لمجموعات العملاء المختلفة.",
+              "priceListIntegrated": "تتم إدارة قوائم الأسعار عند مستوى وحدة القياس لكل نوع."
+            },
+            "Seo": {
+              "urlHandle": "الرابط والمعرف",
+              "slugEn": "الرابط اللطيف للمنتج (إنجليزي)",
+              "slugDesc": "يستخدم في الرابط. يجب أن يكون فريداً.",
+              "searchEngines": "محركات البحث",
+              "metaTitleEn": "عنوان الميتا (إنجليزي)",
+              "metaTitleAr": "عنوان الميتا (عربي)",
+              "metaDescriptionEn": "وصف الميتا (إنجليزي)",
+              "metaDescriptionAr": "وصف الميتا (عربي)",
+              "searchPreview": "معاينة نتائج البحث"
+            }
+          },
+          "Sidebar": {
+            "status": "الحالة",
+            "active": "نشط / منشور",
+            "draft": "مسودة / مخفي",
+            "organization": "التنظيم",
+            "category": "الفئة",
+            "brand": "الماركة",
+            "selectBrand": "اختر ماركة",
+            "noBrand": "بدون ماركة (عام)",
+            "tags": "الوسوم"
+          }
+        },
+        "Filters": {
+          "AllCategories": "جميع الفئات",
+          "AllBrands": "جميع الماركات",
+          "AllStatuses": "جميع الحالات",
+          "AllCompleteness": "أي حالة اكتمال",
+          "Clear": "مسح الفلاتر"
+        },
+        "Status": {
+          "Active": "نشط",
+          "Inactive": "غير نشط"
+        },
+        "Completeness": {
+          "Complete": "مكتمل",
+          "NoCategory": "فئة مفقودة",
+          "NoImages": "بدون صور",
+          "NoPrice": "بدون سعر",
+          "Draft": "مسودة"
+        },
+        "Table": {
+          "Product": "المنتج",
+          "Category": "الفئة",
+          "Brand": "الماركة",
+          "Price": "السعر",
+          "Stock": "المخزون",
+          "Status": "الحالة",
+          "Completeness": "الاكتمال",
+          "LastUpdated": "آخر تحديث",
+          "Actions": "الإجراءات",
+          "Variants": "{count} أنواع",
+          "VariantsPlural": "{count} أنواع",
+          "VariantsSingular": "نوع واحد",
+          "NoStock": "نفد من المخزون",
+          "InStock": "{count} في المخزون"
+        },
+        "Actions": {
+          "Edit": "تعديل المنتج",
+          "Duplicate": "نسخ",
+          "Delete": "حذف المنتج",
+          "Activate": "تنشيط",
+          "Deactivate": "تعطيل"
+        },
+        "Bulk": {
+          "Selected": "تم اختيار {count}",
+          "Activate": "تنشيط",
+          "Deactivate": "تعطيل",
+          "Delete": "حذف"
+        },
+        "Pagination": {
+          "Showing": "عرض {start} إلى {end} من {total} منتجات",
+          "ItemsPerPage": "عدد العناصر في الصفحة",
+          "Next": "التالي",
+          "Previous": "السابق"
+        },
+        "Toasts": {
+          "Duplicating": "جاري نسخ المنتج...",
+          "DuplicateSuccess": "تم نسخ المنتج بنجاح",
+          "DuplicateError": "فشل نسخ المنتج",
+          "Activating": "جاري تنشيط المنتجات...",
+          "ActivateSuccess": "تم تنشيط المنتجات بنجاح",
+          "ActivateError": "فشل تنشيط المنتجات",
+          "Deactivating": "جاري تعطيل المنتجات...",
+          "DeactivateSuccess": "تم تعطيل المنتجات بنجاح",
+          "DeactivateError": "فشل تعطيل المنتجات",
+          "Deleting": "جاري حذف المنتجات...",
+          "DeleteSuccess": "تم حذف المنتجات بنجاح",
+          "DeleteError": "فشل حذف المنتجات"
+        }
+      },
       "Categories": {
         "Title": "الفئات",
         "Subtitle": "{count} فئة منظمة بشكل هرمي",
@@ -469,6 +585,54 @@
         "ToastCreated": "تم إنشاء العلامة التجارية بنجاح",
         "ToastUpdated": "تم تحديث العلامة التجارية بنجاح",
         "ToastDeleted": "تم حذف العلامة التجارية"
+      },
+      "Tags": {
+        "Title": "الوسوم",
+        "Subtitle": "نظم منتجاتك باستخدام الوسوم الداخلية",
+        "AddTag": "إضافة وسم",
+        "EditTag": "تعديل الوسم",
+        "DeleteTag": "حذف الوسم",
+        "ToggleTag": "تبديل الظهور",
+        "SearchPlaceholder": "البحث عن الوسوم...",
+        "NoResults": "لم يتم العثور على وسوم",
+        "GroupCampaign": "الحملات",
+        "GroupAudience": "الجمهور",
+        "GroupQuality": "الجودة",
+        "ScopeCampaign": "حملة إعلانية",
+        "ScopeCatalog": "الكاتالوج",
+        "ProductsCount": "{count} منتج",
+        "NoProducts": "لا توجد منتجات",
+        "PanelCreateTitle": "إضافة وسم",
+        "PanelEditTitle": "تعديل وسم",
+        "FieldGroup": "المجموعة",
+        "FieldKey": "المفتاح",
+        "FieldKeyHint": "معرف فريد، مثل best-seller",
+        "FieldSlug": "الاسم اللطيف (Slug)",
+        "FieldIcon": "الأيقونة",
+        "FieldColor": "اللون",
+        "FieldScope": "النطاق",
+        "FieldStatus": "الحالة",
+        "ScopeCampaignDesc": "يستخدم في الحملات التسويقية والعروض",
+        "ScopeCatalogDesc": "يستخدم لتصنيف المنتجات والتصفية",
+        "SlugAvailable": "متاح",
+        "SlugTaken": "مستخدم بالفعل",
+        "Save": "حفظ الوسم",
+        "Cancel": "إلغاء",
+        "DeleteConfirmTitle": "حذف \"{key}\"؟",
+        "DeleteConfirmNoProducts": "سيتم إزالة هذا الوسم من جميع المنتجات.",
+        "DeleteConfirmWithProducts": "هذا الوسم مرتبط بـ {count} منتجات. حذفه سيؤدي إلى إزالته من جميع هذه المنتجات.",
+        "DeleteAnyway": "احذف على أي حال",
+        "ToastCreated": "تم إنشاء الوسم",
+        "ToastUpdated": "تم تحديث الوسم",
+        "ToastDeleted": "تم حذف الوسم",
+        "ToastActivated": "تم تفعيل الوسم",
+        "ToastDeactivated": "تم تعطيل الوسم",
+        "Active": "نشط",
+        "Inactive": "غير نشط",
+        "FilterGroup": "تصفية حسب المجموعة",
+        "CannotUndo": "لا يمكن التراجع عن هذا الإجراء.",
+        "Preview": "معاينة",
+        "GroupKeyPreview": "معرف النظام"
       }
     }
   }

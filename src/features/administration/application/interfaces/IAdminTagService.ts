@@ -6,6 +6,9 @@ export interface IAdminTagService {
   /** Retrieves all tags */
   getAll(): Promise<Tag[]>;
 
+  /** Retrieves all tags grouped by group name */
+  getAllTagsGrouped(): Promise<Record<string, Tag[]>>;
+
   /** Retrieves a single tag by its ID */
   getById(id: ID): Promise<Tag | null>;
 
@@ -26,4 +29,13 @@ export interface IAdminTagService {
 
   /** Bulk updates tag status */
   bulkUpdateStatus(ids: ID[], isActive: boolean, adminUserId?: number): Promise<void>;
+
+  /** Toggles a tag's active status */
+  toggleTagStatus(id: number, adminUserId?: number): Promise<Tag>;
+
+  /** Checks if a slug is available */
+  checkSlugAvailable(slug: string, excludeId?: number): Promise<boolean>;
+
+  /** Gets the number of products assigned to a tag */
+  getTagProductCount(id: number): Promise<number>;
 }

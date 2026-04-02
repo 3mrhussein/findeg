@@ -4,6 +4,9 @@ import { ITagRepository } from "@/features/catalog/application/interfaces/ITagRe
 import { Tag } from "@/features/catalog/domain/entities/Tag";
 import { TagInput } from "../../domain/types/TagInput";
 import { IAuditLogService } from "../interfaces/IAuditLogService";
+import { db } from "@/features/core/infrastructure/persistence";
+import { tags, productTags } from "@/features/core/infrastructure/persistence/schema/tags";
+import { eq, and, ne, count } from "drizzle-orm";
 
 /**
  * Admin Tag Service
@@ -24,6 +27,24 @@ export class AdminTagService implements IAdminTagService {
    */
   async getAll(): Promise<Tag[]> {
     return this.tagRepository.getAll();
+  }
+
+  /**
+   * Retrieves all tags grouped by group name.
+   */
+  async getAllTagsGrouped(): Promise<Record<string, Tag[]>> {
+    const allTags = await this.tagRepository.getAll();
+    return allTags.reduce(
+      (acc, tag) => {
+        const group = tag.group;
+        if (!acc[group]) {
+          acc[group] = [];
+        }
+        acc[group].push(tag);
+        return acc;
+      },
+      {} as Record<string, Tag[]>,
+    );
   }
 
   /**
@@ -120,5 +141,44 @@ export class AdminTagService implements IAdminTagService {
       action: "bulk_status_update",
       newValues: { ids, isActive },
     });
+  }
+
+  /**
+   * Toggles a tag's active status.
+   */
+  async toggleTagStatus(id: number, adminUserId?: number): Promise<Tag> {
+    const tag = await this.tagRepository.getById(id);
+    if (!tag) throw new Error("Tag not found");
+
+    const newStatus = !tag.isActive;
+    return this.update(id, { isActive: newStatus }, adminUserId);
+  }
+
+  /**
+   * Checks if a slug is available.
+   */
+  async checkSlugAvailable(slug: string, excludeId?: number): Promise<boolean> {
+    let query = db.select({ count: count() }).from(tags).where(eq(tags.slug, slug));
+
+    if (excludeId) {
+      query = db
+        .select({ count: count() })
+        .from(tags)
+        .where(and(eq(tags.slug, slug), ne(tags.id, excludeId)));
+    }
+
+    const result = await query;
+    return Number(result[0].count) === 0;
+  }
+
+  /**
+   * Gets the number of products assigned to a tag.
+   */
+  async getTagProductCount(id: number): Promise<number> {
+    const result = await db
+      .select({ value: count() })
+      .from(productTags)
+      .where(eq(productTags.tagId, id));
+    return Number(result[0].value);
   }
 }

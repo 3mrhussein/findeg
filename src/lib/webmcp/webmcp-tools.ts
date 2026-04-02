@@ -210,11 +210,18 @@ export const tools: WebMCPTool[] = [
 /**
  * Registers all FindEg tools with the browser's Model Context.
  */
+let toolsRegistered = false;
+
 export function registerAllTools() {
   const nav = navigator as any;
   if (!nav.modelContext || !nav.modelContext.registerTool) {
     console.warn("WebMCP is not supported in this browser.");
     return false;
+  }
+
+  if (toolsRegistered) {
+    console.log("[WebMCP]: Tools already registered, skipping.");
+    return true;
   }
 
   try {
@@ -226,6 +233,7 @@ export function registerAllTools() {
         execute: tool.execute,
       });
     });
+    toolsRegistered = true;
     console.log(`[WebMCP]: Successfully registered ${tools.length} tools.`);
     return true;
   } catch (error) {

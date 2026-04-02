@@ -29,8 +29,16 @@ import {
   variantPriceLists,
   productTags,
   attributeDefinitions,
+  categories,
+  brands,
 } from "@/features/core/infrastructure/persistence/schema";
-import { eq, and, ne, inArray } from "drizzle-orm";
+import { eq, and, ne, inArray, sql, desc, asc, or, ilike, count } from "drizzle-orm";
+import {
+  ProductListFilters,
+  ProductListItem,
+  ProductListResult,
+  ProductEditData,
+} from "../interfaces/IAdminProductService";
 
 /**
  * Admin Product Service
@@ -55,6 +63,199 @@ export class AdminProductService implements IAdminProductService {
   ) {}
 
   // ─── Read ──────────────────────────────────────────────────────────────────
+
+  /**
+   * Retrieves all products for administrative listing with filters, sort, and pagination.
+   * Single efficient JOIN query.
+   */
+  async getProductsList(filters: ProductListFilters): Promise<ProductListResult> {
+    const page = filters.page ?? 1;
+    const pageSize = filters.pageSize ?? 20;
+    const offset = (page - 1) * pageSize;
+
+    // Subqueries for variant-level statistics
+    const pricingAndVariants = sql`
+      (SELECT 
+        "product_id",
+        MIN(CAST("base_price" AS DECIMAL)) as min_price,
+        COUNT("id") as v_count,
+        MAX(CASE WHEN "is_active" = true THEN 1 ELSE 0 END) as has_active_v
+       FROM "catalog"."product_variants"
+       GROUP BY "product_id"
+      )
+    `;
+
+    const inventorySub = sql`
+      (SELECT 
+        pv."product_id",
+        SUM(COALESCE(ib."on_hand", 0) - COALESCE(ib."reserved", 0)) as total_stock
+       FROM "catalog"."product_variants" pv
+       LEFT JOIN "inventory"."inventory_balances" ib ON pv."id" = ib."variant_id"
+       GROUP BY pv."product_id"
+      )
+    `;
+
+    const imagesSub = sql`
+      (SELECT 
+        pv."product_id",
+        COUNT(vi."id") as img_count,
+        (SELECT "url" FROM "catalog"."variant_images" vvi 
+         WHERE vvi."variant_id" IN (SELECT "id" FROM "catalog"."product_variants" ppv WHERE ppv."product_id" = pv."product_id")
+         ORDER BY vvi."display_order" ASC, vvi."id" ASC LIMIT 1) as thumb_url
+       FROM "catalog"."product_variants" pv
+       LEFT JOIN "catalog"."variant_images" vi ON pv."id" = vi."variant_id"
+       GROUP BY pv."product_id"
+      )
+    `;
+
+    // Base clauses
+    const whereClauses = [];
+
+    if (filters.search) {
+      const search = `%${filters.search}%`;
+      whereClauses.push(
+        or(
+          sql`${products.localizedName}->>'en' ILIKE ${search}`,
+          sql`${products.localizedName}->>'ar' ILIKE ${search}`,
+          ilike(products.sku, search),
+          sql`EXISTS (SELECT 1 FROM "catalog"."product_variants" pv WHERE pv."product_id" = ${products.id} AND pv."sku" ILIKE ${search})`,
+        ),
+      );
+    }
+
+    if (filters.categoryIds?.length) {
+      whereClauses.push(inArray(products.categoryId, filters.categoryIds));
+    }
+
+    if (filters.brandIds?.length) {
+      whereClauses.push(inArray(products.brandId, filters.brandIds));
+    }
+
+    if (filters.status) {
+      whereClauses.push(eq(products.isActive, filters.status === "active"));
+    }
+
+    // Completeness filter logic handled in subquery or post-filter
+    // For performance, we'll apply it in a HAVING-like clause or subquery-based WHERE
+    if (filters.completeness) {
+      switch (filters.completeness) {
+        case "no-category":
+          whereClauses.push(sql`${products.categoryId} IS NULL`);
+          break;
+        case "draft":
+          whereClauses.push(eq(products.isActive, false));
+          break;
+        case "no-images":
+          whereClauses.push(
+            sql`NOT EXISTS (SELECT 1 FROM "catalog"."product_variants" pv 
+                JOIN "catalog"."variant_images" vi ON pv."id" = vi."variant_id" 
+                WHERE pv."product_id" = ${products.id})`,
+          );
+          break;
+        case "no-price":
+          whereClauses.push(
+            sql`NOT EXISTS (SELECT 1 FROM "catalog"."product_variants" pv 
+                WHERE pv."product_id" = ${products.id} AND CAST(pv."base_price" AS DECIMAL) > 0)`,
+          );
+          break;
+        case "complete":
+          whereClauses.push(
+            and(
+              sql`${products.categoryId} IS NOT NULL`,
+              eq(products.isActive, true),
+              sql`EXISTS (SELECT 1 FROM "catalog"."product_variants" pv 
+                  JOIN "catalog"."variant_images" vi ON pv."id" = vi."variant_id" 
+                  WHERE pv."product_id" = ${products.id})`,
+              sql`EXISTS (SELECT 1 FROM "catalog"."product_variants" pv 
+                  WHERE pv."product_id" = ${products.id} AND CAST(pv."base_price" AS DECIMAL) > 0)`,
+            ),
+          );
+          break;
+      }
+    }
+
+    const where = whereClauses.length > 0 ? and(...whereClauses) : undefined;
+
+    // Sorting
+    let orderBy: any = desc(products.updatedAt);
+    if (filters.sortBy) {
+      const dir = filters.sortDir === "asc" ? asc : desc;
+      switch (filters.sortBy) {
+        case "name":
+          orderBy = dir(sql`${products.localizedName}->>'en'`);
+          break;
+        case "price":
+          orderBy = dir(sql`pv_stats.min_price`);
+          break;
+        case "stock":
+          orderBy = dir(sql`inv_stats.total_stock`);
+          break;
+        case "updatedAt":
+          orderBy = dir(products.updatedAt);
+          break;
+      }
+    }
+
+    const mainRows = await db
+      .select({
+        id: products.id,
+        sku: products.sku,
+        localizedName: products.localizedName,
+        categoryId: products.categoryId,
+        categoryName: sql<string>`${categories.localizedName}->>'en'`,
+        brandId: products.brandId,
+        brandName: brands.name,
+        isActive: products.isActive,
+        updatedAt: products.updatedAt,
+        defaultVariantPrice: sql<number | null>`pv_stats.min_price`,
+        variantCount: sql<number>`COALESCE(pv_stats.v_count, 0)`,
+        totalStock: sql<number>`COALESCE(inv_stats.total_stock, 0)`,
+        hasImages: sql<boolean>`COALESCE(img_stats.img_count, 0) > 0`,
+        thumbnailUrl: sql<string | null>`img_stats.thumb_url`,
+      })
+      .from(products)
+      .leftJoin(categories, eq(products.categoryId, categories.id))
+      .leftJoin(brands, eq(products.brandId, brands.id))
+      .leftJoin(sql`(${pricingAndVariants}) pv_stats`, eq(products.id, sql`pv_stats.product_id`))
+      .leftJoin(sql`(${inventorySub}) inv_stats`, eq(products.id, sql`inv_stats.product_id`))
+      .leftJoin(sql`(${imagesSub}) img_stats`, eq(products.id, sql`img_stats.product_id`))
+      .where(where)
+      .orderBy(orderBy)
+      .limit(pageSize)
+      .offset(offset);
+
+    const [{ total }] = await db
+      .select({ total: count(products.id) })
+      .from(products)
+      .where(where);
+
+    const items: ProductListItem[] = mainRows.map((row) => {
+      // Determine completeness
+      let completeness: ProductListItem["completeness"] = "complete";
+      if (!row.categoryId) completeness = "no-category";
+      else if (!row.isActive) completeness = "draft";
+      else if (!row.hasImages) completeness = "no-images";
+      else if (!row.defaultVariantPrice || Number(row.defaultVariantPrice) === 0)
+        completeness = "no-price";
+
+      return {
+        ...row,
+        sku: row.sku || "N/A",
+        localizedName: row.localizedName as { en: string; ar: string },
+        defaultVariantPrice: row.defaultVariantPrice ? Number(row.defaultVariantPrice) : null,
+        totalStock: Number(row.totalStock),
+        variantCount: Number(row.variantCount),
+        completeness,
+      };
+    });
+
+    return {
+      products: items,
+      total,
+      page,
+      pageSize,
+    };
+  }
 
   /**
    *
@@ -265,6 +466,140 @@ export class AdminProductService implements IAdminProductService {
       action: "update",
       adminUserId,
       newValues: input as Record<string, unknown>,
+    });
+  }
+
+  /**
+   * Duplicates an existing product and its variants.
+   */
+  async duplicateProduct(id: number, adminUserId?: number): Promise<{ newId: number }> {
+    const existing = await db.select().from(products).where(eq(products.id, id)).limit(1);
+    const product = existing[0];
+    if (!product) throw new Error(`Product ${id} not found`);
+
+    const allVariants = await db
+      .select()
+      .from(productVariants)
+      .where(eq(productVariants.productId, id));
+
+    const result = await db.transaction(async (tx) => {
+      // 1. Duplicate SPU
+      const [newSpu] = await tx
+        .insert(products)
+        .values({
+          sku: `${product.sku}-copy-${Date.now()}`,
+          localizedName: {
+            en: `${(product.localizedName as any).en} (Copy)`,
+            ar: `${(product.localizedName as any).ar} (نسخة)`,
+          },
+          localizedDescription: product.localizedDescription,
+          localizedLongDescription: product.localizedLongDescription,
+          localizedSlug: {
+            en: `${(product.localizedSlug as any).en}-copy`,
+            ar: `${(product.localizedSlug as any).ar}-copy`,
+          },
+          categoryId: product.categoryId,
+          brandId: product.brandId,
+          isActive: false, // Default to inactive for safety
+        })
+        .returning({ id: products.id });
+
+      // 2. Duplicate Variants
+      for (const v of allVariants) {
+        const [newV] = await tx
+          .insert(productVariants)
+          .values({
+            productId: newSpu.id,
+            sku: `${v.sku}-copy`,
+            variantKey: v.variantKey,
+            localizedLabel: v.localizedLabel as Record<string, string>,
+            isActive: v.isActive,
+            basePrice: v.basePrice,
+            strikePrice: v.strikePrice,
+            costPrice: v.costPrice,
+            weightGrams: v.weightGrams,
+            barcode: v.barcode,
+            lowStockThreshold: v.lowStockThreshold,
+            displayOrder: v.displayOrder,
+          })
+          .returning({ id: productVariants.id });
+
+        // 3. Duplicate Images
+        const imgs = await tx.select().from(variantImages).where(eq(variantImages.variantId, v.id));
+        if (imgs.length) {
+          await tx.insert(variantImages).values(
+            imgs.map((i) => ({
+              variantId: newV.id,
+              url: i.url,
+              alt: i.alt,
+              displayOrder: i.displayOrder,
+            })),
+          );
+        }
+      }
+
+      return { newId: newSpu.id };
+    });
+
+    await this.auditLogService?.logAction({
+      entityType: "product",
+      entityId: String(id),
+      action: "duplicate",
+      adminUserId,
+      newValues: { newProductId: result.newId },
+    });
+
+    return result;
+  }
+
+  // ─── Bulk Mutations ─────────────────────────────────────────────────────────
+
+  /**
+   * Activates multiple products at once.
+   */
+  async bulkActivate(ids: number[], adminUserId?: number): Promise<void> {
+    if (!ids.length) return;
+    await db.update(products).set({ isActive: true }).where(inArray(products.id, ids));
+
+    await this.auditLogService?.logAction({
+      entityType: "product",
+      entityId: "multiple",
+      action: "bulk_activate",
+      adminUserId,
+      newValues: { ids },
+    });
+  }
+
+  /**
+   * Deactivates multiple products at once.
+   */
+  async bulkDeactivate(ids: number[], adminUserId?: number): Promise<void> {
+    if (!ids.length) return;
+    await db.update(products).set({ isActive: false }).where(inArray(products.id, ids));
+
+    await this.auditLogService?.logAction({
+      entityType: "product",
+      entityId: "multiple",
+      action: "bulk_deactivate",
+      adminUserId,
+      newValues: { ids },
+    });
+  }
+
+  /**
+   * Deletes multiple products at once.
+   */
+  async bulkDelete(ids: number[], adminUserId?: number): Promise<void> {
+    if (!ids.length) return;
+    // Note: repositories usually handle cascading or we rely on DB FKs
+    await db.delete(products).where(inArray(products.id, ids));
+
+    await this.auditLogService?.logAction({
+      entityType: "product",
+      entityId: "multiple",
+      action: "bulk_delete",
+      adminUserId,
+      newValues: { ids },
     });
   }
 
@@ -663,5 +998,103 @@ export class AdminProductService implements IAdminProductService {
         );
       }
     }
+  }
+
+  // ─── Fetch for Edit ────────────────────────────────────────────────────────
+
+  /**
+   * Retrieves full product data for the edit form.
+   * Uses Drizzle relational API for deep hydration.
+   */
+  async getProductForEdit(id: number): Promise<ProductEditData | null> {
+    const data = await db.query.products.findFirst({
+      where: eq(products.id, id),
+      with: {
+        variants: {
+          with: {
+            images: {
+              orderBy: [asc(variantImages.displayOrder)],
+            },
+            attributes: true,
+            sellableUoms: {
+              with: {
+                // Price lists are shared at the variant level but keyed by uomCode
+                // In this schema, variantPriceLists is a separate many-relation of variant
+              },
+            },
+            priceLists: true,
+          },
+          orderBy: [asc(productVariants.displayOrder)],
+        },
+        tags: {
+          with: {
+            // productTags is a join table
+            tag: true,
+          },
+        },
+      },
+    });
+
+    if (!data) return null;
+
+    // Map the relational data to ProductEditData interface
+    return {
+      ...data,
+      rating: Number(data.rating),
+      variants: data.variants.map((v) => ({
+        ...v,
+        basePrice: Number(v.basePrice),
+        strikePrice: v.strikePrice ? Number(v.strikePrice) : null,
+        costPrice: v.costPrice ? Number(v.costPrice) : null,
+        sellableUoms: v.sellableUoms.map((u) => ({
+          ...u,
+          factorToBase: Number(u.factorToBase),
+          priceLists: v.priceLists
+            .filter((p) => p.uomCode === u.uomCode)
+            .map((p) => ({
+              ...p,
+              unitPrice: Number(p.unitPrice),
+            })),
+        })),
+        images: v.images,
+        attributes: v.attributes,
+      })),
+      tags: data.tags.map((pt) => pt.tag),
+    } as any;
+  }
+
+  /**
+   * Checks if a slug is available (not used by another product).
+   * Note: This checks the 'en' slug specifically as the primary handle.
+   */
+  async checkSlugAvailable(slug: string, excludeProductId?: number): Promise<boolean> {
+    const condition = excludeProductId
+      ? and(sql`${products.localizedSlug}->>'en' = ${slug}`, ne(products.id, excludeProductId))
+      : sql`${products.localizedSlug}->>'en' = ${slug}`;
+
+    const [existing] = await db
+      .select({ id: products.id })
+      .from(products)
+      .where(condition as any)
+      .limit(1);
+
+    return !existing;
+  }
+
+  /**
+   * Checks if a SKU prefix is available.
+   */
+  async checkSkuPrefixAvailable(prefix: string, excludeProductId?: number): Promise<boolean> {
+    const condition = excludeProductId
+      ? and(eq(products.skuPrefix, prefix), ne(products.id, excludeProductId))
+      : eq(products.skuPrefix, prefix);
+
+    const [existing] = await db
+      .select({ id: products.id })
+      .from(products)
+      .where(condition)
+      .limit(1);
+
+    return !existing;
   }
 }

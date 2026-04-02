@@ -149,36 +149,6 @@
         "Scope": "Scope",
         "Active": "Active"
       },
-      "Tags": {
-        "Title": "Tags Management",
-        "Subtitle": "Organize your products with groups, keys, and labels for easier discoverability.",
-        "NewTag": "New Tag",
-        "EditTag": "Edit Tag",
-        "SearchPlaceholder": "Search by key or label...",
-        "FilterGroup": "Filter by Group",
-        "FilterScope": "Filter by Scope",
-        "AllGroups": "All Groups",
-        "AllScopes": "All Scopes",
-        "Form": {
-          "Group": "Group",
-          "GroupPlaceholder": "e.g. season, brand, material",
-          "GroupHint": "Select existing or type to create new",
-          "Key": "Key",
-          "KeyPlaceholder": "e.g. back-to-school",
-          "KeyHint": "Unique slug within group",
-          "LabelEn": "English Label",
-          "LabelAr": "Arabic Label",
-          "DescriptionEn": "English Description",
-          "DescriptionAr": "Arabic Description",
-          "Icon": "Icon Name",
-          "IconHint": "Lucide icon name (e.g. star, zap)",
-          "Color": "Color",
-          "Scope": "Visibility Scope",
-          "IsActive": "Is Active",
-          "Preview": "Preview",
-          "GroupKeyPreview": "Group:Key ID"
-        }
-      },
       "Collections": {
         "Title": "Collections Management",
         "Subtitle": "Curate product thematic groups and manage their display order.",
@@ -385,6 +355,154 @@
       }
     },
     "Catalog": {
+      "Products": {
+        "Title": "Products",
+        "Subtitle": "Manage your product catalog, variants, and stock",
+        "SearchPlaceholder": "Search by name, SKU...",
+        "AddProduct": "Add Product",
+        "Form": {
+          "editProduct": "Edit Product",
+          "newProduct": "New Product",
+          "saveDraft": "Save Draft",
+          "publish": "Publish Product",
+          "updated": "Product updated successfully",
+          "created": "Product created successfully",
+          "Tabs": {
+            "info": "Basic Info",
+            "variants": "Variants",
+            "media": "Media",
+            "pricing": "Pricing & UoMs",
+            "seo": "SEO & Meta",
+            "Info": {
+              "basicInfo": "Basic Information",
+              "nameEn": "Name (English)",
+              "nameAr": "Name (Arabic)",
+              "descriptionEn": "Brief Description (English)",
+              "descriptionAr": "Brief Description (Arabic)",
+              "identifiers": "Identifiers",
+              "skuPrefix": "SKU Family Prefix",
+              "skuPrefixDesc": "Used as a prefix for all variants of this product (e.g. STA-PEN)"
+            },
+            "Variants": {
+              "productVariants": "Product Variants",
+              "variantsDesc": "Manage different sizes, colors, or styles of this product.",
+              "addVariant": "Add Variant",
+              "noVariants": "No variants yet",
+              "noVariantsDesc": "Simple products should have at least one default variant.",
+              "createFirstVariant": "Create First Variant",
+              "sku": "SKU",
+              "basePrice": "Base Price"
+            },
+            "Media": {
+              "imageGallery": "Image Gallery",
+              "addByUrl": "Add image by URL...",
+              "add": "Add",
+              "upload": "Upload Image"
+            },
+            "Pricing": {
+              "unitsOfMeasure": "Units of Measure",
+              "uomDesc": "Define how this product is sold (e.g. Piece, Box, Pack).",
+              "addUom": "Add UoM",
+              "code": "Code",
+              "label": "Label",
+              "factor": "Factor",
+              "noCustomUoms": "No custom units defined. Only base unit will be available.",
+              "priceLists": "Price Lists",
+              "priceListDesc": "Define specific pricing for different customer groups.",
+              "priceListIntegrated": "Price list management is integrated at the UoM level for each variant."
+            },
+            "Seo": {
+              "urlHandle": "URL & Handle",
+              "slugEn": "Product Slug (English)",
+              "slugDesc": "Used in the URL. Must be unique.",
+              "searchEngines": "Search Engines",
+              "metaTitleEn": "Meta Title (English)",
+              "metaTitleAr": "Meta Title (Arabic)",
+              "metaDescriptionEn": "Meta Description (English)",
+              "metaDescriptionAr": "Meta Description (Arabic)",
+              "searchPreview": "Search Result Preview"
+            }
+          },
+          "Sidebar": {
+            "status": "Status",
+            "active": "Active / Published",
+            "draft": "Draft / Hidden",
+            "organization": "Organization",
+            "category": "Category",
+            "brand": "Brand",
+            "selectBrand": "Select a brand",
+            "noBrand": "No Brand (Generic)",
+            "tags": "Tags"
+          }
+        },
+        "Filters": {
+          "AllCategories": "All Categories",
+          "AllBrands": "All Brands",
+          "AllStatuses": "All Statuses",
+          "AllCompleteness": "Any completeness",
+          "Clear": "Clear filters"
+        },
+        "Status": {
+          "Active": "Active",
+          "Inactive": "Inactive"
+        },
+        "Completeness": {
+          "Complete": "Complete",
+          "NoCategory": "Missing Category",
+          "NoImages": "No Images",
+          "NoPrice": "No Price",
+          "Draft": "Draft"
+        },
+        "Table": {
+          "Product": "Product",
+          "Category": "Category",
+          "Brand": "Brand",
+          "Price": "Price",
+          "Stock": "Stock",
+          "Status": "Status",
+          "Completeness": "Completeness",
+          "LastUpdated": "Last Updated",
+          "Actions": "Actions",
+          "Variants": "{count} variants",
+          "VariantsPlural": "{count} variants",
+          "VariantsSingular": "1 variant",
+          "NoStock": "Out of stock",
+          "InStock": "{count} in stock"
+        },
+        "Actions": {
+          "Edit": "Edit Product",
+          "Duplicate": "Duplicate",
+          "Delete": "Delete Product",
+          "Activate": "Activate",
+          "Deactivate": "Deactivate"
+        },
+        "Bulk": {
+          "Selected": "{count} selected",
+          "Activate": "Activate",
+          "Deactivate": "Deactivate",
+          "Delete": "Delete"
+        },
+        "Pagination": {
+          "Showing": "Showing {start} to {end} of {total} products",
+          "ItemsPerPage": "Items per page",
+          "Next": "Next",
+          "Previous": "Previous"
+        },
+        "Toasts": {
+          "Duplicating": "Duplicating product...",
+          "DuplicateSuccess": "Product duplicated successfully",
+          "DuplicateError": "Failed to duplicate product",
+          "Activating": "Activating products...",
+          "ActivateSuccess": "Products activated successfully",
+          "ActivateError": "Failed to activate products",
+          "Deactivating": "Deactivating products...",
+          "DeactivateSuccess": "Products deactivated successfully",
+          "DeactivateError": "Failed to deactivate products",
+          "Deleting": "Deleting products...",
+          "DeleteSuccess": "Products deleted successfully",
+          "DeleteError": "Failed to delete products"
+        }
+      },
       "Categories": {
         "Title": "Categories",
         "Subtitle": "{count} categories organized hierarchically",
@@ -469,6 +587,54 @@
         "ToastCreated": "Brand created",
         "ToastUpdated": "Brand updated",
         "ToastDeleted": "Brand deleted"
+      },
+      "Tags": {
+        "Title": "Tags",
+        "Subtitle": "Organize products with internal tags",
+        "AddTag": "Add Tag",
+        "EditTag": "Edit Tag",
+        "DeleteTag": "Delete Tag",
+        "ToggleTag": "Toggle Visibility",
+        "SearchPlaceholder": "Search tags...",
+        "NoResults": "No tags found",
+        "GroupCampaign": "Campaign",
+        "GroupAudience": "Audience",
+        "GroupQuality": "Quality",
+        "ScopeCampaign": "Campaign",
+        "ScopeCatalog": "Catalog",
+        "ProductsCount": "{count} products",
+        "NoProducts": "No products",
+        "PanelCreateTitle": "Add Tag",
+        "PanelEditTitle": "Edit Tag",
+        "FieldGroup": "Group",
+        "FieldKey": "Key",
+        "FieldKeyHint": "Unique identifier, e.g. best-seller",
+        "FieldSlug": "Slug",
+        "FieldIcon": "Icon",
+        "FieldColor": "Color",
+        "FieldScope": "Scope",
+        "FieldStatus": "Status",
+        "ScopeCampaignDesc": "Used in marketing campaigns",
+        "ScopeCatalogDesc": "Used for product classification",
+        "SlugAvailable": "Available",
+        "SlugTaken": "Already taken",
+        "Save": "Save Tag",
+        "Cancel": "Cancel",
+        "DeleteConfirmTitle": "Delete \"{key}\"?",
+        "DeleteConfirmNoProducts": "This tag will be removed from all products.",
+        "DeleteConfirmWithProducts": "This tag is assigned to {count} products. Deleting it will remove it from all those products.",
+        "DeleteAnyway": "Delete anyway",
+        "ToastCreated": "Tag created",
+        "ToastUpdated": "Tag updated",
+        "ToastDeleted": "Tag deleted",
+        "ToastActivated": "Tag activated",
+        "ToastDeactivated": "Tag deactivated",
+        "Active": "Active",
+        "Inactive": "Inactive",
+        "FilterGroup": "Filter by Group",
+        "CannotUndo": "This action cannot be undone.",
+        "Preview": "Preview",
+        "GroupKeyPreview": "System ID"
       }
     }
   }

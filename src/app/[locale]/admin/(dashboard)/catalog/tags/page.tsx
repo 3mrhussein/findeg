@@ -1,5 +1,5 @@
-import { getServices } from "@/server/getServices";
-import { TagsPageClient } from "./_components/TagsPageClient";
+import { container } from "@/features/core/infrastructure/di/ServiceContainer";
+import { TagsClient } from "./_components/TagsClient";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,14 +7,13 @@ export const metadata: Metadata = {
   description: "Manage catalog tags and groupings.",
 };
 
-/**
- *
- */
 export default async function TagsPage() {
-  const { adminTag } = getServices();
+  const adminTagService = container.adminTagService;
+  const groupedTags = await adminTagService.getAllTagsGrouped();
 
-  // Fetch data in parallel
-  const [tags, groups] = await Promise.all([adminTag.getAll(), adminTag.getDistinctGroups()]);
-
-  return <TagsPageClient tags={tags} groups={groups} />;
+  return (
+    <div className="flex-1">
+      <TagsClient initialTags={groupedTags} />
+    </div>
+  );
 }

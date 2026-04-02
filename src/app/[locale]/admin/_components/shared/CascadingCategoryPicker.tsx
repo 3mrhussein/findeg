@@ -7,15 +7,15 @@ import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-interface Category {
+export interface Category {
   id: number;
   parentId?: number;
   name: string;
-  depth: number;
-  path: string;
+  depth?: number;
+  path?: string;
 }
 
-interface CategoryTreeNode extends Category {
+export interface CategoryTreeNode extends Category {
   children?: CategoryTreeNode[];
 }
 
@@ -95,7 +95,7 @@ export function CascadingCategoryPicker({
     if (!nodes || nodes.length === 0) return null;
 
     return (
-      <ScrollArea key={depth} className="h-[300px] w-[220px] border-r last:border-r-0">
+      <ScrollArea key={depth} className="h-[300px] w-[220px]">
         <div className="p-1">
           {nodes.map((node) => {
             const hasChildren = node.children && node.children.length > 0;
@@ -174,8 +174,8 @@ export function CascadingCategoryPicker({
           </div>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
-        <div className="flex overflow-hidden">
+      <PopoverContent className="w-auto min-w-[240px] p-0" align="start">
+        <div className="flex overflow-hidden divide-x">
           {columns.map((nodes, i) => renderColumn(nodes, i))}
         </div>
       </PopoverContent>

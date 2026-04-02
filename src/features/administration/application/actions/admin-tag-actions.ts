@@ -151,3 +151,46 @@ export async function adminBulkDeleteTagsAction(ids: number[]) {
     };
   }
 }
+
+/**
+ * Toggles the active status of a tag.
+ */
+export async function adminToggleTagStatusAction(id: number) {
+  try {
+    const session = await container.authService.validateAdmin();
+    const isAuthorized =
+      isSystemAdmin(session) || session.activeRoleIds?.includes("catalog_manager");
+    if (!isAuthorized) throw new Error("Forbidden: requires Catalog Manager or Super Admin role");
+
+    const service = container.adminTagService;
+    const tag = await service.toggleTagStatus(id, Number(session.userId));
+
+    revalidatePath("/admin/tags");
+    revalidateTag(CACHE_TAGS.CATALOG_TAGS, "max");
+    revalidateTag(CACHE_TAGS.tagDetail(id), "max");
+
+    return { success: true, isActive: tag.isActive };
+  } catch (error: any) {
+    return {
+      success: false,
+      error: resolveErrorMessage(error, "ACTION_TAG_UPDATE_FAILED" as any),
+    };
+  }
+}
+
+/**
+ * Gets the number of products assigned to a tag.
+ */
+export async function adminGetTagProductCountAction(id: number) {
+  try {
+    const session = await container.authService.validateAdmin();
+    if (!session) throw new Error("Unauthorized");
+
+    const service = container.adminTagService;
+    const count = await service.getTagProductCount(id);
+
+    return { success: true, count };
+  } catch (error: any) {
+    return { success: false, error: error.message };
+  }
+}

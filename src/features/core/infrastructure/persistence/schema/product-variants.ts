@@ -29,6 +29,7 @@ import { relations } from "drizzle-orm";
 import { products } from "./products";
 import { catalogSchema } from "./schemas";
 import { attributeDefinitions } from "./product-attributes";
+import { variantSellableUoms, variantPriceLists } from "./variant-pricing";
 import type { LocalizedStringDraft } from "@/features/core/domain/value-objects";
 import type { ResponsiveMediaSet } from "@/features/core/domain/value-objects";
 
@@ -170,6 +171,8 @@ export const productVariantsRelations = relations(productVariants, ({ one, many 
   }),
   images: many(variantImages),
   attributes: many(variantAttributes),
+  sellableUoms: many(variantSellableUoms),
+  priceLists: many(variantPriceLists),
 }));
 
 export const variantImagesRelations = relations(variantImages, ({ one }) => ({

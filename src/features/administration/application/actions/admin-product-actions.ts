@@ -416,3 +416,33 @@ export const adminDeleteProductAction = deleteProductAction;
  */
 export const adminArchiveProductAction = async (id: number) => setProductStatusAction(id, false);
 export const adminSetProductStatusAction = setProductStatusAction;
+
+// ─── Real-time Checks ────────────────────────────────────────────────────────
+
+/**
+ * Server action to check if a product slug is available.
+ */
+export async function checkSlugAction(slug: string, excludeId?: number) {
+  try {
+    await requireCatalogRole();
+    const adminProductService = container.adminProductService;
+    const available = await adminProductService.checkSlugAvailable(slug, excludeId);
+    return { success: true, available };
+  } catch (error) {
+    return { success: false, error: resolveErrorMessage(error) };
+  }
+}
+
+/**
+ * Server action to check if a product SKU prefix is available.
+ */
+export async function checkSkuPrefixAction(prefix: string, excludeId?: number) {
+  try {
+    await requireCatalogRole();
+    const adminProductService = container.adminProductService;
+    const available = await adminProductService.checkSkuPrefixAvailable(prefix, excludeId);
+    return { success: true, available };
+  } catch (error) {
+    return { success: false, error: resolveErrorMessage(error) };
+  }
+}

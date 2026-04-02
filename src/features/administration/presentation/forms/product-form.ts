@@ -65,6 +65,7 @@ export const ProductFormSchema = z.object({
   tagIds: z.array(z.number()).default([]),
   isActive: z.boolean().default(true),
   sku: z.string().optional(),
+  skuPrefix: z.string().optional(),
 
   pricingMode: z.enum(["shared", "per-variant"]).default("per-variant"),
   uomSharingMode: z.enum(["shared", "per-variant"]).default("shared"),

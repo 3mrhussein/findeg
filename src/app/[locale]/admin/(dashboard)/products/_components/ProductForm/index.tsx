@@ -1,197 +1,219 @@
 "use client";
 
-import * as React from "react";
-import { useForm, FormProvider, type SubmitHandler } from "react-hook-form";
+import React, { useState, useTransition, useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useToast } from "@/hooks/use-toast";
-import { Button } from "@/components/ui/button";
-import { Loader2, Save, X } from "lucide-react";
+import { toast } from "sonner";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
+import { Form } from "@/components/ui/form";
 import {
   ProductFormSchema,
   type ProductFormValues,
 } from "@/features/administration/presentation/forms/product-form";
-import { ProductInfoZone } from "./zones/ProductInfoZone";
-import { PricingZone } from "./zones/PricingZone";
-import { ProductStockSection } from "./zones/ProductStockSection";
-import { UoMSection } from "./uom/UoMSection";
-import { VariantsZone } from "./zones/VariantsZone";
+import { ProductFormHeader } from "./ProductFormHeader";
+import { ProductFormTabs } from "./ProductFormTabs";
+import { ProductFormSidebar } from "../ProductFormSidebar";
+import { InfoTab } from "./tabs/InfoTab";
+import { VariantsTab } from "./tabs/VariantsTab";
+import { MediaTab } from "./tabs/MediaTab";
+import { PricingTab } from "./tabs/PricingTab";
+import { SeoTab } from "./tabs/SeoTab";
+import type { ProductEditData } from "@/features/administration/application/interfaces/IAdminProductService";
+import type { Category, Brand, Tag } from "@/features/catalog/domain/entities";
 import {
   createProductAction,
   updateProductAction,
 } from "@/features/administration/application/actions/admin-product-actions";
 
 interface ProductFormProps {
-  mode: "create" | "edit";
-  productId?: number;
-  initialData?: Partial<ProductFormValues>;
-  categories: { id: number; name: string }[];
-  brands: { id: number; name: string }[];
+  initialData?: ProductEditData | null;
+  categories: Category[];
+  brands: Brand[];
+  tags: Tag[];
+  locale: string;
 }
 
 /**
- * ProductForm — Main Orchestrator
- *
- * Progressive disclosure layout:
- * - Zone 1: Product Info (always visible)
- * - Zone 2: Variants (collapsible)
- * - Zone 3: Pricing (visible, collapses per-variant into VariantCard)
- * - UoM section (visible at SPU level for shared UoMs)
- *
- * Handles both create and edit modes with the same component tree.
+ * Unified Product Create/Edit Form
  */
-export function ProductForm({
-  mode,
-  productId,
-  initialData,
-  categories,
-  brands,
-}: ProductFormProps) {
+export function ProductForm({ initialData, categories, brands, tags, locale }: ProductFormProps) {
+  const t = useTranslations("Administration.Catalog.Products.Form");
   const router = useRouter();
-  const { toast } = useToast();
-  const [isPending, startTransition] = React.useTransition();
+  const [isPending, startTransition] = useTransition();
+  const [activeTab, setActiveTab] = useState("info");
 
-  const defaultValues: ProductFormValues = {
-    localizedName: { en: "", ar: "" },
-    localizedDescription: { en: "", ar: "" },
-    localizedLongDescription: { en: "", ar: "" },
-    localizedSlug: { en: "", ar: "" },
-    categoryId: null,
-    brandId: null,
-    tagIds: [],
-    isActive: true,
-    sku: undefined,
-    pricingMode: "per-variant",
-    uomSharingMode: "shared",
-    sharedBasePrice: undefined,
-    sharedStrikePrice: null,
-    sharedCostPrice: null,
-    sharedUoMs: [],
-    variants: [
-      {
-        sku: "",
-        localizedLabel: { en: "", ar: "" },
-        displayOrder: 0,
-        isActive: true,
-        basePrice: 0,
-        strikePrice: null,
-        costPrice: null,
-        weightGrams: null,
-        barcode: null,
-        lowStockThreshold: 10,
-        images: [],
-        attributes: [],
-        uoms: [],
-      },
-    ],
-    ...initialData,
-  };
-
-  const methods = useForm<ProductFormValues>({
-    resolver: zodResolver(ProductFormSchema) as any,
-    defaultValues,
+  const form = useForm<ProductFormValues>({
+    resolver: zodResolver(ProductFormSchema),
+    defaultValues: (initialData
+      ? {
+          localizedName: initialData.localizedName ||
+            (initialData as any).localizedContent?.name || { en: "", ar: "" },
+          localizedDescription: initialData.localizedDescription ||
+            (initialData as any).localizedContent?.description || { en: "", ar: "" },
+          localizedLongDescription: initialData.localizedLongDescription ||
+            (initialData as any).localizedContent?.longDescription || { en: "", ar: "" },
+          localizedSlug: initialData.localizedSlug ||
+            (initialData as any).localizedContent?.slug || { en: "", ar: "" },
+          categoryId: initialData.categoryId,
+          brandId: initialData.brandId,
+          tagIds: initialData.tags.map((t) => t.id),
+          isActive: initialData.isActive,
+          skuPrefix: initialData.skuPrefix || undefined,
+          pricingMode: (initialData as any).pricingMode || "per-variant",
+          uomSharingMode: (initialData as any).uomSharingMode || "shared",
+          variants: initialData.variants.map((v) => ({
+            sku: v.sku,
+            basePrice: Number(v.basePrice),
+            isActive: v.isActive,
+            displayOrder: v.displayOrder,
+            images: v.images.map((img) => ({
+              url: img.url,
+              alt: img.alt || "",
+              displayOrder: img.displayOrder,
+            })),
+            attributes: v.attributes.map((attr) => ({
+              attributeKey: attr.attributeKey,
+              value: attr.valueText || "",
+              isVariantDefining: true,
+            })),
+            uoms: v.sellableUoms.map((u) => ({
+              uomCode: u.uomCode,
+              factorToBase: Number(u.factorToBase),
+              localizedLabel: u.localizedLabel,
+              isEnabled: u.isEnabled,
+              priceLists: u.priceLists.map((pl) => ({
+                customerGroup: pl.customerGroup as any,
+                uomCode: pl.uomCode,
+                unitPrice: Number(pl.unitPrice),
+                minQty: pl.minQty,
+                isSellable: pl.isSellable,
+              })),
+            })),
+          })),
+        }
+      : {
+          isActive: true,
+          localizedName: { en: "", ar: "" },
+          localizedDescription: { en: "", ar: "" },
+          localizedLongDescription: { en: "", ar: "" },
+          localizedSlug: { en: "", ar: "" },
+          variants: [
+            {
+              sku: "",
+              localizedLabel: { en: "Standard", ar: "قياسي" },
+              basePrice: 0,
+              costPrice: 0,
+              strikePrice: null,
+              weightGrams: null,
+              barcode: "",
+              lowStockThreshold: 10,
+              isActive: true,
+              displayOrder: 0,
+              images: [],
+              attributes: [],
+              uoms: [
+                {
+                  uomCode: "pcs",
+                  factorToBase: 1,
+                  localizedLabel: { en: "Piece", ar: "قطعة" },
+                  isEnabled: true,
+                  priceLists: [
+                    {
+                      customerGroup: "public_b2c" as const,
+                      uomCode: "pcs",
+                      unitPrice: 0,
+                      minQty: 1,
+                      isSellable: true,
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+          pricingMode: "per-variant",
+          uomSharingMode: "shared",
+          tagIds: [],
+        }) as any,
     mode: "onChange",
   });
 
-  const {
-    handleSubmit,
-    formState: { errors },
-  } = methods;
-  const hasVariants = (methods.watch("variants") ?? []).length > 1;
-
-  /**
-   *
-   */
-  const onSubmit: SubmitHandler<ProductFormValues> = async (data) => {
+  const onSubmit = async (values: ProductFormValues) => {
     startTransition(async () => {
-      try {
-        let result;
+      const result = initialData
+        ? await updateProductAction(initialData.id, values)
+        : await createProductAction(values);
 
-        if (mode === "create") {
-          result = await createProductAction(data);
-          if (result.success) {
-            toast({
-              title: "Success",
-              description: "Product created successfully",
-            });
-            router.push(`/admin/products/${result.productId}/edit`);
-          }
-        } else if (mode === "edit" && productId) {
-          result = await updateProductAction(productId, data);
-          if (result.success) {
-            toast({
-              title: "Success",
-              description: "Product updated successfully",
-            });
-          }
+      if (result.success) {
+        toast.success(initialData ? t("updated") : t("created"));
+        if (!initialData && (result as any).productId) {
+          router.push(`/admin/products/${(result as any).productId}/edit`);
         }
-
-        if (result && !result.success) {
-          toast({
-            variant: "destructive",
-            title: "Error",
-            description: result.error ?? "An error occurred",
-          });
-        }
-      } catch (err) {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Unexpected error. Please try again.",
-        });
-        console.error("[ProductForm.onSubmit]", err);
+      } else {
+        toast.error(result.error || "Save failed");
       }
     });
   };
 
+  // Auto-save logic
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (form.formState.isDirty) {
+        // Implement auto-save to temporary storage or draft endpoint
+      }
+    }, 30000);
+    return () => clearInterval(timer);
+  }, [form.formState.isDirty]);
+
   return (
-    <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 pb-24">
-        {/* Zone 1: Product Info */}
-        <ProductInfoZone categories={categories} brands={brands} />
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="relative flex flex-col h-screen max-h-screen bg-background"
+      >
+        {/* Sticky header — always visible */}
+        <ProductFormHeader
+          isEdit={!!initialData}
+          isPending={isPending}
+          onSaveDraft={() => form.handleSubmit(onSubmit)()}
+          productName={
+            initialData?.localizedName?.en || (initialData as any)?.localizedContent?.name?.en
+          }
+        />
 
-        {/* Zone 2: Variants */}
-        <VariantsZone />
+        {/* Sticky tab bar — below header */}
+        <ProductFormTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
-        {/* Zone 3: Pricing (at SPU level for simple or shared-price products) */}
-        <PricingZone hasVariants={hasVariants} />
-
-        {/* Shared UoMs (visible when uomSharingMode = "shared") */}
-        <UoMSection fieldArrayName="sharedUoMs" title="Units of Measure (Shared)" />
-
-        {/* Stock info for simple product (no variants) */}
-        {!hasVariants && <ProductStockSection />}
-
-        {/* ─── Sticky Footer ─────────────────────────────────────────────────── */}
-        <div className="fixed bottom-0 left-0 right-0 z-40 border-t bg-background/95 px-6 py-3 backdrop-blur-sm">
-          <div className="ml-auto flex max-w-7xl items-center justify-between">
-            <p className="text-xs text-muted-foreground">
-              {mode === "create" ? "Creating new product" : `Editing product #${productId}`}
-            </p>
-            <div className="flex items-center gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                className="h-8"
-                onClick={() => router.push("/admin/products")}
-                disabled={isPending}
-              >
-                <X className="mr-1.5 h-3.5 w-3.5" />
-                Cancel
-              </Button>
-              <Button type="submit" size="sm" className="h-8" disabled={isPending}>
-                {isPending ? (
-                  <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
-                ) : (
-                  <Save className="mr-1.5 h-3.5 w-3.5" />
-                )}
-                {mode === "create" ? "Create Product" : "Save Changes"}
-              </Button>
+        {/* Scrollable content + sidebar */}
+        <div className="flex-1 flex overflow-hidden">
+          <div className="flex-1 overflow-y-auto minimal-scrollbar bg-muted/10 p-8 pb-24">
+            <div className="max-w-5xl mx-auto w-full">
+              <Tabs value={activeTab} className="w-full">
+                <TabsContent value="info" className="mt-0 focus-visible:outline-none">
+                  <InfoTab />
+                </TabsContent>
+                <TabsContent value="variants" className="mt-0 focus-visible:outline-none">
+                  <VariantsTab />
+                </TabsContent>
+                <TabsContent value="media" className="mt-0 focus-visible:outline-none">
+                  <MediaTab />
+                </TabsContent>
+                <TabsContent value="pricing" className="mt-0 focus-visible:outline-none">
+                  <PricingTab />
+                </TabsContent>
+                <TabsContent value="seo" className="mt-0 focus-visible:outline-none">
+                  <SeoTab />
+                </TabsContent>
+              </Tabs>
             </div>
           </div>
+
+          <aside className="w-80 border-l bg-background overflow-y-auto minimal-scrollbar p-6 hidden xl:block">
+            <ProductFormSidebar categories={categories} brands={brands} tags={tags} />
+          </aside>
         </div>
       </form>
-    </FormProvider>
+    </Form>
   );
 }
