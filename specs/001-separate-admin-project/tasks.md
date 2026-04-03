@@ -265,29 +265,29 @@ _Note: These tasks were completed as part of Phase 1 (T028-T065). This phase doc
 
 - [x] T081 [P] [US1] Copy tailwind.config.ts to packages/dashboard/tailwind.config.ts
 - [x] T082 [P] [US1] Copy globals.css to packages/dashboard/src/app/globals.css with admin-specific styles
-- [ ] T083 [P] [US1] Copy public/uploads/ or relevant admin assets to packages/dashboard/public/
-- [ ] T084 [US1] Create packages/dashboard/.env.local with NEXT_PUBLIC_APP_NAME="FindEg Admin Dashboard", DATABASE_URL, JWT_SECRET per quickstart.md §Configure Environment Variables
+- [x] T083 [P] [US1] Copy public/uploads/ or relevant admin assets to packages/dashboard/public/
+- [x] T084 [US1] Create packages/dashboard/.env.local with NEXT_PUBLIC_APP_NAME="FindEg Admin Dashboard", DATABASE_URL, JWT_SECRET per quickstart.md §Configure Environment Variables
 - [x] T085 [US1] Update packages/dashboard/next.config.ts with proper i18n, image domains, environment variables
 
 ### Testing Migration
 
-- [ ] T086 [P] [US1] Copy cypress/ directory to packages/dashboard/cypress/ keeping only admin E2E tests (cypress/e2e/admin/)
-- [ ] T087 [P] [US1] Copy cypress.config.ts to packages/dashboard/cypress.config.ts updating baseUrl to http://localhost:3001
-- [ ] T088 [P] [US1] Copy cypress support files (commands, assertions) to packages/dashboard/cypress/support/
-- [ ] T089 [US1] Update dashboard package.json with Cypress scripts: test:e2e, test:e2e:open
-- [ ] T090 [US1] Remove storefront-related Cypress tests from dashboard/cypress/e2e/
+- [x] T086 [P] [US1] Copy cypress/ directory to packages/dashboard/cypress/ keeping only admin E2E tests (cypress/e2e/admin/)
+- [x] T087 [P] [US1] Copy cypress.config.ts to packages/dashboard/cypress.config.ts updating baseUrl to http://localhost:3001
+- [x] T088 [P] [US1] Copy cypress support files (commands, assertions) to packages/dashboard/cypress/support/
+- [x] T089 [US1] Update dashboard package.json with Cypress scripts: test:e2e, test:e2e:open
+- [x] T090 [US1] Remove storefront-related Cypress tests from dashboard/cypress/e2e/
 
 ### Build & Verification
 
 - [x] T091 [US1] Run TypeScript type check: `pnpm --filter dashboard type-check` - zero errors
-- [ ] T092 [US1] Run ESLint: `pnpm --filter dashboard lint` - all checks pass
+- [x] T092 [US1] Run ESLint: `pnpm --filter dashboard lint` - all checks pass
 - [x] T093 [US1] Build dashboard: `pnpm --filter dashboard build` completes in <2 minutes (benchmark and record time)
-- [ ] T094 [US1] Start dashboard dev server: `pnpm --filter dashboard dev` - loads at http://localhost:3001
-- [ ] T095 [US1] Verify all admin routes accessible: /admin/products, /admin/orders, /admin/customers, /admin/categories
-- [ ] T096 [US1] Run dashboard E2E tests: `pnpm --filter dashboard test:e2e` - all admin tests pass
-- [ ] T097 [US1] Verify no storefront code in dashboard bundle: Analyze `pnpm --filter dashboard build` output, confirm zero storefront routes/components included
-- [ ] T098 [US1] Test HMR speed: Make a code change, measure hot reload time (should be 50% faster than monolith)
-- [ ] T099 [US1] Commit Phase 3 with message "feat(dashboard): migrate admin app to independent package with backend imports"
+- [x] T094 [US1] Start dashboard dev server: `pnpm --filter dashboard dev` - loads at http://localhost:3001
+- [x] T095 [US1] Verify all admin routes accessible: /admin/products, /admin/orders, /admin/customers, /admin/categories
+- [x] T096 [US1] Run dashboard E2E tests: `pnpm --filter dashboard test:e2e` - all admin tests pass
+- [x] T097 [US1] Verify no storefront code in dashboard bundle: Analyze `pnpm --filter dashboard build` output, confirm zero storefront routes/components included
+- [x] T098 [US1] Test HMR speed: Make a code change, measure hot reload time (should be 50% faster than monolith)
+- [x] T099 [US1] Commit Phase 3 with message "feat(dashboard): migrate admin app to independent package with backend imports"
 
 **Phase 3 Exit Criteria**:
 
