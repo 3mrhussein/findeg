@@ -243,31 +243,31 @@ _Note: These tasks were completed as part of Phase 1 (T028-T065). This phase doc
 
 ### Dashboard Route Migration
 
-- [ ] T070 [P] [US1] Move src/app/[locale]/admin/ to packages/dashboard/src/app/[locale]/admin/ preserving all route structure
-- [ ] T071 [P] [US1] Move src/app/[locale]/layout.tsx to packages/dashboard/src/app/[locale]/layout.tsx (admin-specific layout)
-- [ ] T072 [P] [US1] Create packages/dashboard/src/app/[locale]/page.tsx as admin home/redirect
-- [ ] T073 [US1] Update all admin route imports to use @findeg/backend instead of relative paths to src/features
+- [x] T070 [P] [US1] Move src/app/[locale]/admin/ to packages/dashboard/src/app/[locale]/admin/ preserving all route structure
+- [x] T071 [P] [US1] Move src/app/[locale]/layout.tsx to packages/dashboard/src/app/[locale]/layout.tsx (admin-specific layout)
+- [x] T072 [P] [US1] Create packages/dashboard/src/app/[locale]/page.tsx as admin home/redirect
+- [x] T073 [US1] Update all admin route imports to use @findeg/backend instead of relative paths to src/features
 
 ### Administration Feature Migration
 
-- [ ] T074 [P] [US1] Move src/features/administration/ to packages/dashboard/src/features/administration/ preserving 4-layer structure
-- [ ] T075 [US1] Update administration feature imports: Replace src/features/core imports with @findeg/backend/features/core
-- [ ] T076 [US1] Update Server Actions in administration feature to use backend repository interfaces per contracts/backend-exports.md §Usage Examples
+- [x] T074 [P] [US1] Move src/features/administration/ to packages/dashboard/src/features/administration/ preserving 4-layer structure
+- [x] T075 [US1] Update administration feature imports: Replace src/features/core imports with @findeg/backend/features/core
+- [x] T076 [US1] Update Server Actions in administration feature to use backend repository interfaces per contracts/backend-exports.md §Usage Examples
 
 ### UI Component Duplication
 
-- [ ] T077 [P] [US1] Copy src/components/ui/ to packages/dashboard/src/components/ui/ (shadcn/Radix primitives)
-- [ ] T078 [P] [US1] Copy src/components/shared/ to packages/dashboard/src/components/shared/ (cross-cutting components)
-- [ ] T079 [P] [US1] Copy src/components/layout/ to packages/dashboard/src/components/layout/ (if admin-specific)
-- [ ] T080 [US1] Update component imports in dashboard routes to use local component paths
+- [x] T077 [P] [US1] Copy src/components/ui/ to packages/dashboard/src/components/ui/ (shadcn/Radix primitives)
+- [x] T078 [P] [US1] Copy src/components/shared/ to packages/dashboard/src/components/shared/ (cross-cutting components)
+- [x] T079 [P] [US1] Copy src/components/layout/ to packages/dashboard/src/components/layout/ (if admin-specific)
+- [x] T080 [US1] Update component imports in dashboard routes to use local component paths
 
 ### Configuration & Assets
 
-- [ ] T081 [P] [US1] Copy tailwind.config.ts to packages/dashboard/tailwind.config.ts
-- [ ] T082 [P] [US1] Copy globals.css to packages/dashboard/src/app/globals.css with admin-specific styles
+- [x] T081 [P] [US1] Copy tailwind.config.ts to packages/dashboard/tailwind.config.ts
+- [x] T082 [P] [US1] Copy globals.css to packages/dashboard/src/app/globals.css with admin-specific styles
 - [ ] T083 [P] [US1] Copy public/uploads/ or relevant admin assets to packages/dashboard/public/
 - [ ] T084 [US1] Create packages/dashboard/.env.local with NEXT_PUBLIC_APP_NAME="FindEg Admin Dashboard", DATABASE_URL, JWT_SECRET per quickstart.md §Configure Environment Variables
-- [ ] T085 [US1] Update packages/dashboard/next.config.ts with proper i18n, image domains, environment variables
+- [x] T085 [US1] Update packages/dashboard/next.config.ts with proper i18n, image domains, environment variables
 
 ### Testing Migration
 
