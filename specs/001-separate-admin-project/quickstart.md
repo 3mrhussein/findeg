@@ -356,16 +356,52 @@ turbo run build
 
 ### Scenario 2: I changed the backend package and frontend isn't updating
 
-**Solution**:
-```bash
-# Rebuild backend package
-pnpm --filter backend build
+**Problem**: You modified code in `packages/backend` but the frontend packages (dashboard/storefront) aren't reflecting the changes.
 
-# Restart frontend dev server
-pnpm --filter dashboard dev  # or storefront
+**Solution Workflow**:
+
+1. **Rebuild the backend package**:
+   ```bash
+   pnpm --filter backend build
+   ```
+
+2. **Verify TypeScript types are updated**:
+   ```bash
+   # Type check frontend package
+   pnpm --filter dashboard type-check  # or storefront
+   ```
+
+3. **Restart frontend dev server**:
+   ```bash
+   pnpm --filter dashboard dev  # or storefront
+   ```
+
+**How Dependencies Work**:
+- Dashboard and storefront depend on `@findeg/backend` via pnpm workspace linking
+- When backend builds, it generates `dist/` output
+- Frontend packages import from backend's `dist/` (via `package.json` exports)
+- TypeScript type checking validates imports at compile time
+
+**Breaking Change Detection**:
+If you make a breaking change to backend exports (e.g., change function signature, rename interface), TypeScript will catch it:
+
+```bash
+pnpm --filter dashboard type-check
+# Error: Property 'oldMethod' does not exist on type 'Service'...
 ```
 
-Turborepo should detect changes automatically, but manual rebuild may be needed if watch mode fails.
+This ensures type safety across package boundaries - no runtime surprises!
+
+**Turborepo Caching**:
+Turborepo caches build outputs. If frontend isn't updating:
+- Clear cache: `rm -rf node_modules/.cache/turbo`
+- Force rebuild: `pnpm turbo run build --force`
+
+**Common Issues**:
+- **Stale TypeScript cache**: Delete `packages/*/tsconfig.tsbuildinfo` and rebuild
+- **Import path errors**: Ensure imports use correct paths (`@findeg/backend` not relative `../backend`)
+- **Missing exports**: Check `packages/backend/package.json` exports field defines your new module
+
 
 ### Scenario 3: I need to add a new shadcn component
 

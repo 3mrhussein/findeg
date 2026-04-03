@@ -52,6 +52,10 @@ export async function getMessages(
  * @param locale - Locale code ('en' or 'ar')
  * @param currency - Currency code (default: 'EGP' for Egyptian Pound)
  * @returns Formatted currency string
+ *
+ * @example
+ * formatCurrency(99.99, 'en', 'EGP') // "EGP 99.99"
+ * formatCurrency(99.99, 'ar', 'EGP') // "٩٩٫٩٩ ج.م"
  */
 export function formatCurrency(
   amount: number,

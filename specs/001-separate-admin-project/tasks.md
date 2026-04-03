@@ -218,10 +218,10 @@ _Note: These tasks were completed as part of Phase 1 (T028-T065). This phase doc
 
 **Verification Tasks**:
 
-- [ ] T066 [US3] Test shared code update workflow: Modify a backend utility function, verify dashboard auto-rebuilds on next dev server start
-- [ ] T067 [US3] Test type safety: Change a backend interface, verify TypeScript compilation errors appear in frontend packages
-- [ ] T068 [US3] Document shared code update workflow in quickstart.md §Scenario 2: I changed the backend package
-- [ ] T069 [US3] Add pre-commit hook or GitHub Action validating backend exports don't have breaking changes without version bump
+- [x] T066 [US3] Test shared code update workflow: Modify a backend utility function, verify dashboard auto-rebuilds on next dev server start
+- [x] T067 [US3] Test type safety: Change a backend interface, verify TypeScript compilation errors appear in frontend packages
+- [x] T068 [US3] Document shared code update workflow in quickstart.md §Scenario 2: I changed the backend package
+- [x] T069 [US3] Add pre-commit hook or GitHub Action validating backend exports don't have breaking changes without version bump
 
 **Phase 2 Exit Criteria**:
 
