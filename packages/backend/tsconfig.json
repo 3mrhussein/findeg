@@ -5,6 +5,7 @@
     "outDir": "dist",
     "noEmit": false,
     "rootDir": "src",
+    "jsx": "react-jsx",
     "paths": {
       "@/*": [
         "./src/*"
@@ -15,6 +16,15 @@
     }
   },
   "include": [
-    "src"
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/__tests__/**/*",
+    "src/components/**/*.tsx",
+    "src/components/**/*.jsx"
   ]
 }
