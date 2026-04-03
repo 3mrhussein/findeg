@@ -1,0 +1,65 @@
+{
+  "node": {
+    "00b455b7890a42d0f5f2f985dc9ac0403a43f979c4": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/inventory/page": {
+          "moduleId": 391033,
+          "async": false,
+          "exportedName": "$$RSC_SERVER_ACTION_0",
+          "filename": "packages/dashboard/src/app/[locale]/admin/_components/shell/AdminShell.tsx"
+        }
+      },
+      "exportedName": "$$RSC_SERVER_ACTION_0",
+      "filename": "packages/dashboard/src/app/[locale]/admin/_components/shell/AdminShell.tsx"
+    },
+    "4045ea857c8c5f30552fd1855588d49042e9680e63": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/inventory/page": {
+          "moduleId": 391033,
+          "async": false,
+          "exportedName": "logoutAction",
+          "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+        }
+      },
+      "exportedName": "logoutAction",
+      "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+    },
+    "40af0a900331f5d89bbafc55a2413818d74d299f65": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/inventory/page": {
+          "moduleId": 391033,
+          "async": false,
+          "exportedName": "loginAction",
+          "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+        }
+      },
+      "exportedName": "loginAction",
+      "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+    },
+    "40174a65f2ebb55b0e9038cedbeec0a28c51b2826c": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/inventory/page": {
+          "moduleId": 391033,
+          "async": false,
+          "exportedName": "bulkUpdateStockAction",
+          "filename": "packages/backend/src/features/administration/application/actions/inventory.ts"
+        }
+      },
+      "exportedName": "bulkUpdateStockAction",
+      "filename": "packages/backend/src/features/administration/application/actions/inventory.ts"
+    },
+    "405c8e6f105b05cec7526bfc0ff32c3a3fc0910f81": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/inventory/page": {
+          "moduleId": 391033,
+          "async": false,
+          "exportedName": "updateStockAction",
+          "filename": "packages/backend/src/features/administration/application/actions/inventory.ts"
+        }
+      },
+      "exportedName": "updateStockAction",
+      "filename": "packages/backend/src/features/administration/application/actions/inventory.ts"
+    }
+  },
+  "edge": {}
+}

@@ -1,0 +1,65 @@
+{
+  "node": {
+    "00b455b7890a42d0f5f2f985dc9ac0403a43f979c4": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/catalog/collections/[id]/page": {
+          "moduleId": 461628,
+          "async": false,
+          "exportedName": "$$RSC_SERVER_ACTION_0",
+          "filename": "packages/dashboard/src/app/[locale]/admin/_components/shell/AdminShell.tsx"
+        }
+      },
+      "exportedName": "$$RSC_SERVER_ACTION_0",
+      "filename": "packages/dashboard/src/app/[locale]/admin/_components/shell/AdminShell.tsx"
+    },
+    "4045ea857c8c5f30552fd1855588d49042e9680e63": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/catalog/collections/[id]/page": {
+          "moduleId": 461628,
+          "async": false,
+          "exportedName": "logoutAction",
+          "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+        }
+      },
+      "exportedName": "logoutAction",
+      "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+    },
+    "40af0a900331f5d89bbafc55a2413818d74d299f65": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/catalog/collections/[id]/page": {
+          "moduleId": 461628,
+          "async": false,
+          "exportedName": "loginAction",
+          "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+        }
+      },
+      "exportedName": "loginAction",
+      "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+    },
+    "405a0e5415d36ccf4194775aa5ad1d4b1fe734744b": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/catalog/collections/[id]/page": {
+          "moduleId": 461628,
+          "async": false,
+          "exportedName": "adminCreateCollectionAction",
+          "filename": "packages/backend/src/features/administration/application/actions/admin-collection-actions.ts"
+        }
+      },
+      "exportedName": "adminCreateCollectionAction",
+      "filename": "packages/backend/src/features/administration/application/actions/admin-collection-actions.ts"
+    },
+    "6051f88b8160bafd400db4a33c1843e656671bc718": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/catalog/collections/[id]/page": {
+          "moduleId": 461628,
+          "async": false,
+          "exportedName": "adminUpdateCollectionAction",
+          "filename": "packages/backend/src/features/administration/application/actions/admin-collection-actions.ts"
+        }
+      },
+      "exportedName": "adminUpdateCollectionAction",
+      "filename": "packages/backend/src/features/administration/application/actions/admin-collection-actions.ts"
+    }
+  },
+  "edge": {}
+}

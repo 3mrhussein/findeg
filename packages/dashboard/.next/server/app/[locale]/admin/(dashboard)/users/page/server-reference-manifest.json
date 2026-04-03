@@ -1,0 +1,65 @@
+{
+  "node": {
+    "00b455b7890a42d0f5f2f985dc9ac0403a43f979c4": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/users/page": {
+          "moduleId": 319918,
+          "async": false,
+          "exportedName": "$$RSC_SERVER_ACTION_0",
+          "filename": "packages/dashboard/src/app/[locale]/admin/_components/shell/AdminShell.tsx"
+        }
+      },
+      "exportedName": "$$RSC_SERVER_ACTION_0",
+      "filename": "packages/dashboard/src/app/[locale]/admin/_components/shell/AdminShell.tsx"
+    },
+    "4045ea857c8c5f30552fd1855588d49042e9680e63": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/users/page": {
+          "moduleId": 319918,
+          "async": false,
+          "exportedName": "logoutAction",
+          "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+        }
+      },
+      "exportedName": "logoutAction",
+      "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+    },
+    "40af0a900331f5d89bbafc55a2413818d74d299f65": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/users/page": {
+          "moduleId": 319918,
+          "async": false,
+          "exportedName": "loginAction",
+          "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+        }
+      },
+      "exportedName": "loginAction",
+      "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+    },
+    "40f880f4381b1dcd31f7c9281498072338d98c2e3e": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/users/page": {
+          "moduleId": 319918,
+          "async": false,
+          "exportedName": "createAdminAction",
+          "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/users/_actions/adminUsers.ts"
+        }
+      },
+      "exportedName": "createAdminAction",
+      "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/users/_actions/adminUsers.ts"
+    },
+    "601590372a93a7cb9e8bf03f80a7b239014e2de78f": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/users/page": {
+          "moduleId": 319918,
+          "async": false,
+          "exportedName": "updateAdminAction",
+          "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/users/_actions/adminUsers.ts"
+        }
+      },
+      "exportedName": "updateAdminAction",
+      "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/users/_actions/adminUsers.ts"
+    }
+  },
+  "edge": {}
+}

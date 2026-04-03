@@ -102,12 +102,12 @@ Phase 2 (US3 - Shared Code Management) ← Must complete before frontend package
 ### Build Pipeline Verification
 
 - [x] T018 Install all dependencies: `pnpm install` from root
-- [ ] T019 Verify workspace linking: `pnpm list --depth 0` shows @findeg/backend in dashboard and storefront
+- [x] T019 Verify workspace linking: `pnpm list --depth 0` shows @findeg/backend in dashboard and storefront
 - [x] T020 Create minimal backend exports: packages/backend/src/index.ts exporting placeholder types
 - [x] T021 Build backend package: `pnpm --filter backend build` produces dist/ output
 - [x] T022 [P] Create minimal dashboard Next.js app with hello world page
 - [x] T023 [P] Create minimal storefront Next.js app with hello world page
-- [ ] T024 Build all packages: `turbo run build` completes successfully for all three packages
+- [x] T024 Build all packages: `turbo run build` completes successfully for all three packages
 - [ ] T025 Verify build caching: Run `turbo run build` twice, second build uses cache (0 tasks rebuilt)
 - [ ] T026 Test dev mode: `turbo run dev` starts dashboard (port 3001) and storefront (port 3000) without errors
 - [x] T027 Commit Phase 0 with message "feat: initialize turborepo monorepo with three packages"

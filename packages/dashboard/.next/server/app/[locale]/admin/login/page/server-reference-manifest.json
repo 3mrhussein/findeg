@@ -1,0 +1,29 @@
+{
+  "node": {
+    "4045ea857c8c5f30552fd1855588d49042e9680e63": {
+      "workers": {
+        "app/[locale]/admin/login/page": {
+          "moduleId": 949347,
+          "async": false,
+          "exportedName": "logoutAction",
+          "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+        }
+      },
+      "exportedName": "logoutAction",
+      "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+    },
+    "40af0a900331f5d89bbafc55a2413818d74d299f65": {
+      "workers": {
+        "app/[locale]/admin/login/page": {
+          "moduleId": 949347,
+          "async": false,
+          "exportedName": "loginAction",
+          "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+        }
+      },
+      "exportedName": "loginAction",
+      "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+    }
+  },
+  "edge": {}
+}

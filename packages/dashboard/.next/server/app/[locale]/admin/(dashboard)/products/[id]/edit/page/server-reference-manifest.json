@@ -1,0 +1,65 @@
+{
+  "node": {
+    "00b455b7890a42d0f5f2f985dc9ac0403a43f979c4": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/products/[id]/edit/page": {
+          "moduleId": 16023,
+          "async": false,
+          "exportedName": "$$RSC_SERVER_ACTION_0",
+          "filename": "packages/dashboard/src/app/[locale]/admin/_components/shell/AdminShell.tsx"
+        }
+      },
+      "exportedName": "$$RSC_SERVER_ACTION_0",
+      "filename": "packages/dashboard/src/app/[locale]/admin/_components/shell/AdminShell.tsx"
+    },
+    "4045ea857c8c5f30552fd1855588d49042e9680e63": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/products/[id]/edit/page": {
+          "moduleId": 16023,
+          "async": false,
+          "exportedName": "logoutAction",
+          "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+        }
+      },
+      "exportedName": "logoutAction",
+      "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+    },
+    "40af0a900331f5d89bbafc55a2413818d74d299f65": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/products/[id]/edit/page": {
+          "moduleId": 16023,
+          "async": false,
+          "exportedName": "loginAction",
+          "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+        }
+      },
+      "exportedName": "loginAction",
+      "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+    },
+    "40f8f0fd578da8e30c8383059c49292cb9909de9a6": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/products/[id]/edit/page": {
+          "moduleId": 16023,
+          "async": false,
+          "exportedName": "createProductAction",
+          "filename": "packages/backend/src/features/administration/application/actions/admin-product-actions.ts"
+        }
+      },
+      "exportedName": "createProductAction",
+      "filename": "packages/backend/src/features/administration/application/actions/admin-product-actions.ts"
+    },
+    "60501298bde0d45aa5a7ffc3c9da970c934846948f": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/products/[id]/edit/page": {
+          "moduleId": 16023,
+          "async": false,
+          "exportedName": "updateProductAction",
+          "filename": "packages/backend/src/features/administration/application/actions/admin-product-actions.ts"
+        }
+      },
+      "exportedName": "updateProductAction",
+      "filename": "packages/backend/src/features/administration/application/actions/admin-product-actions.ts"
+    }
+  },
+  "edge": {}
+}

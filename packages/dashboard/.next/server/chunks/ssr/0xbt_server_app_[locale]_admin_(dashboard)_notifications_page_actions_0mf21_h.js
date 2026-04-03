@@ -1,0 +1,3 @@
+module.exports=[932123,a=>{"use strict";var b=a.i(616800),c=a.i(923238);a.s([],487127),a.i(487127),a.s(["00b455b7890a42d0f5f2f985dc9ac0403a43f979c4",()=>b.$$RSC_SERVER_ACTION_0,"4045ea857c8c5f30552fd1855588d49042e9680e63",()=>c.logoutAction,"40af0a900331f5d89bbafc55a2413818d74d299f65",()=>c.loginAction],932123)}];
+
+//# sourceMappingURL=0xbt_server_app_%5Blocale%5D_admin_%28dashboard%29_notifications_page_actions_0mf21_h.js.map

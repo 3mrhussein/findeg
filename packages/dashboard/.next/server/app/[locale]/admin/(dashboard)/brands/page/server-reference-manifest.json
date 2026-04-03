@@ -1,0 +1,125 @@
+{
+  "node": {
+    "00b455b7890a42d0f5f2f985dc9ac0403a43f979c4": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/brands/page": {
+          "moduleId": 607822,
+          "async": false,
+          "exportedName": "$$RSC_SERVER_ACTION_0",
+          "filename": "packages/dashboard/src/app/[locale]/admin/_components/shell/AdminShell.tsx"
+        }
+      },
+      "exportedName": "$$RSC_SERVER_ACTION_0",
+      "filename": "packages/dashboard/src/app/[locale]/admin/_components/shell/AdminShell.tsx"
+    },
+    "4045ea857c8c5f30552fd1855588d49042e9680e63": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/brands/page": {
+          "moduleId": 607822,
+          "async": false,
+          "exportedName": "logoutAction",
+          "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+        }
+      },
+      "exportedName": "logoutAction",
+      "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+    },
+    "40af0a900331f5d89bbafc55a2413818d74d299f65": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/brands/page": {
+          "moduleId": 607822,
+          "async": false,
+          "exportedName": "loginAction",
+          "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+        }
+      },
+      "exportedName": "loginAction",
+      "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+    },
+    "40106abdf5f28012c7f2cdcdc5974a0c52b271c9bf": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/brands/page": {
+          "moduleId": 607822,
+          "async": false,
+          "exportedName": "$$RSC_SERVER_ACTION_2",
+          "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/brands/page.tsx"
+        }
+      },
+      "exportedName": "$$RSC_SERVER_ACTION_2",
+      "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/brands/page.tsx"
+    },
+    "40f3e6dd914e0eab363ca0e27fa58572d985693226": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/brands/page": {
+          "moduleId": 607822,
+          "async": false,
+          "exportedName": "$$RSC_SERVER_ACTION_1",
+          "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/brands/page.tsx"
+        }
+      },
+      "exportedName": "$$RSC_SERVER_ACTION_1",
+      "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/brands/page.tsx"
+    },
+    "600ed99b1f3b0bf860e45afa32bb4a52f02dc0b299": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/brands/page": {
+          "moduleId": 607822,
+          "async": false,
+          "exportedName": "$$RSC_SERVER_ACTION_0",
+          "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/brands/page.tsx"
+        }
+      },
+      "exportedName": "$$RSC_SERVER_ACTION_0",
+      "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/brands/page.tsx"
+    },
+    "40b5942493d0bd2809caaa71162894b45320cb8ffd": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/brands/page": {
+          "moduleId": 607822,
+          "async": false,
+          "exportedName": "createBrandAction",
+          "filename": "packages/backend/src/features/catalog/application/actions/brand.ts"
+        }
+      },
+      "exportedName": "createBrandAction",
+      "filename": "packages/backend/src/features/catalog/application/actions/brand.ts"
+    },
+    "40bbe22402ce264e4b4320d292b468469c9a0698d6": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/brands/page": {
+          "moduleId": 607822,
+          "async": false,
+          "exportedName": "deleteBrandAction",
+          "filename": "packages/backend/src/features/catalog/application/actions/brand.ts"
+        }
+      },
+      "exportedName": "deleteBrandAction",
+      "filename": "packages/backend/src/features/catalog/application/actions/brand.ts"
+    },
+    "40e92ce06b58de4657a58517c0f46dd23061089508": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/brands/page": {
+          "moduleId": 607822,
+          "async": false,
+          "exportedName": "toggleBrandStatusAction",
+          "filename": "packages/backend/src/features/catalog/application/actions/brand.ts"
+        }
+      },
+      "exportedName": "toggleBrandStatusAction",
+      "filename": "packages/backend/src/features/catalog/application/actions/brand.ts"
+    },
+    "60e36ca24537d60c498fde83c80b25ab30bdf2b131": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/brands/page": {
+          "moduleId": 607822,
+          "async": false,
+          "exportedName": "updateBrandAction",
+          "filename": "packages/backend/src/features/catalog/application/actions/brand.ts"
+        }
+      },
+      "exportedName": "updateBrandAction",
+      "filename": "packages/backend/src/features/catalog/application/actions/brand.ts"
+    }
+  },
+  "edge": {}
+}

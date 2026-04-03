@@ -1,0 +1,101 @@
+{
+  "node": {
+    "00b455b7890a42d0f5f2f985dc9ac0403a43f979c4": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/catalog/tags/page": {
+          "moduleId": 770642,
+          "async": false,
+          "exportedName": "$$RSC_SERVER_ACTION_0",
+          "filename": "packages/dashboard/src/app/[locale]/admin/_components/shell/AdminShell.tsx"
+        }
+      },
+      "exportedName": "$$RSC_SERVER_ACTION_0",
+      "filename": "packages/dashboard/src/app/[locale]/admin/_components/shell/AdminShell.tsx"
+    },
+    "4045ea857c8c5f30552fd1855588d49042e9680e63": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/catalog/tags/page": {
+          "moduleId": 770642,
+          "async": false,
+          "exportedName": "logoutAction",
+          "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+        }
+      },
+      "exportedName": "logoutAction",
+      "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+    },
+    "40af0a900331f5d89bbafc55a2413818d74d299f65": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/catalog/tags/page": {
+          "moduleId": 770642,
+          "async": false,
+          "exportedName": "loginAction",
+          "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+        }
+      },
+      "exportedName": "loginAction",
+      "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+    },
+    "408d93c09de53f31a6dcd74f3e461da9de8dc4b434": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/catalog/tags/page": {
+          "moduleId": 770642,
+          "async": false,
+          "exportedName": "adminCreateTagAction",
+          "filename": "packages/backend/src/features/administration/application/actions/admin-tag-actions.ts"
+        }
+      },
+      "exportedName": "adminCreateTagAction",
+      "filename": "packages/backend/src/features/administration/application/actions/admin-tag-actions.ts"
+    },
+    "60347788de2ce6e1f736d7a0f55c9483c74b6f9daf": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/catalog/tags/page": {
+          "moduleId": 770642,
+          "async": false,
+          "exportedName": "adminUpdateTagAction",
+          "filename": "packages/backend/src/features/administration/application/actions/admin-tag-actions.ts"
+        }
+      },
+      "exportedName": "adminUpdateTagAction",
+      "filename": "packages/backend/src/features/administration/application/actions/admin-tag-actions.ts"
+    },
+    "40628a39cbbb1f2b231de68b26ec2c3494db468f4a": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/catalog/tags/page": {
+          "moduleId": 770642,
+          "async": false,
+          "exportedName": "adminGetTagProductCountAction",
+          "filename": "packages/backend/src/features/administration/application/actions/admin-tag-actions.ts"
+        }
+      },
+      "exportedName": "adminGetTagProductCountAction",
+      "filename": "packages/backend/src/features/administration/application/actions/admin-tag-actions.ts"
+    },
+    "40bb0bf2c0803d2df00b6090985e9fbe485799fb6b": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/catalog/tags/page": {
+          "moduleId": 770642,
+          "async": false,
+          "exportedName": "adminDeleteTagAction",
+          "filename": "packages/backend/src/features/administration/application/actions/admin-tag-actions.ts"
+        }
+      },
+      "exportedName": "adminDeleteTagAction",
+      "filename": "packages/backend/src/features/administration/application/actions/admin-tag-actions.ts"
+    },
+    "408e863aaa721b1b42ebeba960cd1eeff1b459fe55": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/catalog/tags/page": {
+          "moduleId": 770642,
+          "async": false,
+          "exportedName": "adminToggleTagStatusAction",
+          "filename": "packages/backend/src/features/administration/application/actions/admin-tag-actions.ts"
+        }
+      },
+      "exportedName": "adminToggleTagStatusAction",
+      "filename": "packages/backend/src/features/administration/application/actions/admin-tag-actions.ts"
+    }
+  },
+  "edge": {}
+}

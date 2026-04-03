@@ -1,0 +1,65 @@
+{
+  "node": {
+    "00b455b7890a42d0f5f2f985dc9ac0403a43f979c4": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/categories/new/page": {
+          "moduleId": 298601,
+          "async": false,
+          "exportedName": "$$RSC_SERVER_ACTION_0",
+          "filename": "packages/dashboard/src/app/[locale]/admin/_components/shell/AdminShell.tsx"
+        }
+      },
+      "exportedName": "$$RSC_SERVER_ACTION_0",
+      "filename": "packages/dashboard/src/app/[locale]/admin/_components/shell/AdminShell.tsx"
+    },
+    "4045ea857c8c5f30552fd1855588d49042e9680e63": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/categories/new/page": {
+          "moduleId": 298601,
+          "async": false,
+          "exportedName": "logoutAction",
+          "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+        }
+      },
+      "exportedName": "logoutAction",
+      "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+    },
+    "40af0a900331f5d89bbafc55a2413818d74d299f65": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/categories/new/page": {
+          "moduleId": 298601,
+          "async": false,
+          "exportedName": "loginAction",
+          "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+        }
+      },
+      "exportedName": "loginAction",
+      "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+    },
+    "40a1bdc57f294cd7e37cc3facf77eb11f67147f633": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/categories/new/page": {
+          "moduleId": 298601,
+          "async": false,
+          "exportedName": "createCategoryAction",
+          "filename": "packages/backend/src/features/catalog/application/actions/category.ts"
+        }
+      },
+      "exportedName": "createCategoryAction",
+      "filename": "packages/backend/src/features/catalog/application/actions/category.ts"
+    },
+    "602d2a140808b7da1152e8e0ab3c31ad8f74136b3d": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/categories/new/page": {
+          "moduleId": 298601,
+          "async": false,
+          "exportedName": "updateCategoryAction",
+          "filename": "packages/backend/src/features/catalog/application/actions/category.ts"
+        }
+      },
+      "exportedName": "updateCategoryAction",
+      "filename": "packages/backend/src/features/catalog/application/actions/category.ts"
+    }
+  },
+  "edge": {}
+}

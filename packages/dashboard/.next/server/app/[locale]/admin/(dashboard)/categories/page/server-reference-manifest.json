@@ -1,0 +1,161 @@
+{
+  "node": {
+    "00b455b7890a42d0f5f2f985dc9ac0403a43f979c4": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/categories/page": {
+          "moduleId": 773654,
+          "async": false,
+          "exportedName": "$$RSC_SERVER_ACTION_0",
+          "filename": "packages/dashboard/src/app/[locale]/admin/_components/shell/AdminShell.tsx"
+        }
+      },
+      "exportedName": "$$RSC_SERVER_ACTION_0",
+      "filename": "packages/dashboard/src/app/[locale]/admin/_components/shell/AdminShell.tsx"
+    },
+    "4045ea857c8c5f30552fd1855588d49042e9680e63": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/categories/page": {
+          "moduleId": 773654,
+          "async": false,
+          "exportedName": "logoutAction",
+          "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+        }
+      },
+      "exportedName": "logoutAction",
+      "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+    },
+    "40af0a900331f5d89bbafc55a2413818d74d299f65": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/categories/page": {
+          "moduleId": 773654,
+          "async": false,
+          "exportedName": "loginAction",
+          "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+        }
+      },
+      "exportedName": "loginAction",
+      "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+    },
+    "601de6b95df5bf898f44c32cc2ecde1712a0a009b5": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/categories/page": {
+          "moduleId": 773654,
+          "async": false,
+          "exportedName": "$$RSC_SERVER_ACTION_1",
+          "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/categories/page.tsx"
+        }
+      },
+      "exportedName": "$$RSC_SERVER_ACTION_1",
+      "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/categories/page.tsx"
+    },
+    "60335fdb29e4cb9c505a3ea03ff71a46c9fba6a823": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/categories/page": {
+          "moduleId": 773654,
+          "async": false,
+          "exportedName": "$$RSC_SERVER_ACTION_2",
+          "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/categories/page.tsx"
+        }
+      },
+      "exportedName": "$$RSC_SERVER_ACTION_2",
+      "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/categories/page.tsx"
+    },
+    "70f78d9193bfd2a08c0fbd69c021a2a0945fe3738e": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/categories/page": {
+          "moduleId": 773654,
+          "async": false,
+          "exportedName": "$$RSC_SERVER_ACTION_0",
+          "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/categories/page.tsx"
+        }
+      },
+      "exportedName": "$$RSC_SERVER_ACTION_0",
+      "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/categories/page.tsx"
+    },
+    "608542637ff0395eac6eaadc3f6d811a3c4fa138ba": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/categories/page": {
+          "moduleId": 773654,
+          "async": false,
+          "exportedName": "checkSlugAvailableAction",
+          "filename": "packages/backend/src/features/catalog/application/actions/category.ts"
+        }
+      },
+      "exportedName": "checkSlugAvailableAction",
+      "filename": "packages/backend/src/features/catalog/application/actions/category.ts"
+    },
+    "4041b582c5973b92de09b2ea6ce780a1de4b2e3046": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/categories/page": {
+          "moduleId": 773654,
+          "async": false,
+          "exportedName": "moveCategoryUpAction",
+          "filename": "packages/backend/src/features/catalog/application/actions/category.ts"
+        }
+      },
+      "exportedName": "moveCategoryUpAction",
+      "filename": "packages/backend/src/features/catalog/application/actions/category.ts"
+    },
+    "4007fa241e63a8ed45041eaa991dba1b8569199b18": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/categories/page": {
+          "moduleId": 773654,
+          "async": false,
+          "exportedName": "moveCategoryDownAction",
+          "filename": "packages/backend/src/features/catalog/application/actions/category.ts"
+        }
+      },
+      "exportedName": "moveCategoryDownAction",
+      "filename": "packages/backend/src/features/catalog/application/actions/category.ts"
+    },
+    "4024ff25cb7fcd5ff54e8b9ffdfd85eeaf2b2174da": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/categories/page": {
+          "moduleId": 773654,
+          "async": false,
+          "exportedName": "deleteCategoryAction",
+          "filename": "packages/backend/src/features/catalog/application/actions/category.ts"
+        }
+      },
+      "exportedName": "deleteCategoryAction",
+      "filename": "packages/backend/src/features/catalog/application/actions/category.ts"
+    },
+    "40a1bdc57f294cd7e37cc3facf77eb11f67147f633": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/categories/page": {
+          "moduleId": 773654,
+          "async": false,
+          "exportedName": "createCategoryAction",
+          "filename": "packages/backend/src/features/catalog/application/actions/category.ts"
+        }
+      },
+      "exportedName": "createCategoryAction",
+      "filename": "packages/backend/src/features/catalog/application/actions/category.ts"
+    },
+    "40b137a022bdbbe8d65bca8f2cfc8c97d3161b1a08": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/categories/page": {
+          "moduleId": 773654,
+          "async": false,
+          "exportedName": "reorderCategoriesAction",
+          "filename": "packages/backend/src/features/catalog/application/actions/category.ts"
+        }
+      },
+      "exportedName": "reorderCategoriesAction",
+      "filename": "packages/backend/src/features/catalog/application/actions/category.ts"
+    },
+    "602d2a140808b7da1152e8e0ab3c31ad8f74136b3d": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/categories/page": {
+          "moduleId": 773654,
+          "async": false,
+          "exportedName": "updateCategoryAction",
+          "filename": "packages/backend/src/features/catalog/application/actions/category.ts"
+        }
+      },
+      "exportedName": "updateCategoryAction",
+      "filename": "packages/backend/src/features/catalog/application/actions/category.ts"
+    }
+  },
+  "edge": {}
+}

@@ -1,0 +1,89 @@
+{
+  "node": {
+    "00b455b7890a42d0f5f2f985dc9ac0403a43f979c4": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/products/page": {
+          "moduleId": 160503,
+          "async": false,
+          "exportedName": "$$RSC_SERVER_ACTION_0",
+          "filename": "packages/dashboard/src/app/[locale]/admin/_components/shell/AdminShell.tsx"
+        }
+      },
+      "exportedName": "$$RSC_SERVER_ACTION_0",
+      "filename": "packages/dashboard/src/app/[locale]/admin/_components/shell/AdminShell.tsx"
+    },
+    "4045ea857c8c5f30552fd1855588d49042e9680e63": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/products/page": {
+          "moduleId": 160503,
+          "async": false,
+          "exportedName": "logoutAction",
+          "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+        }
+      },
+      "exportedName": "logoutAction",
+      "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+    },
+    "40af0a900331f5d89bbafc55a2413818d74d299f65": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/products/page": {
+          "moduleId": 160503,
+          "async": false,
+          "exportedName": "loginAction",
+          "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+        }
+      },
+      "exportedName": "loginAction",
+      "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
+    },
+    "609cb5c0f62f5565a1cb90fe94ce076ec4afec27e2": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/products/page": {
+          "moduleId": 160503,
+          "async": false,
+          "exportedName": "duplicateProductAction",
+          "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/products/actions.ts"
+        }
+      },
+      "exportedName": "duplicateProductAction",
+      "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/products/actions.ts"
+    },
+    "6050ff350d548406905c6db06d982123cd1a6a0db8": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/products/page": {
+          "moduleId": 160503,
+          "async": false,
+          "exportedName": "bulkActivateAction",
+          "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/products/actions.ts"
+        }
+      },
+      "exportedName": "bulkActivateAction",
+      "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/products/actions.ts"
+    },
+    "609bc410deabdd3306222d101a8258a9990d84f388": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/products/page": {
+          "moduleId": 160503,
+          "async": false,
+          "exportedName": "bulkDeactivateAction",
+          "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/products/actions.ts"
+        }
+      },
+      "exportedName": "bulkDeactivateAction",
+      "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/products/actions.ts"
+    },
+    "60de9f71f5957619c034396ead087a53f05da6bb67": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/products/page": {
+          "moduleId": 160503,
+          "async": false,
+          "exportedName": "bulkDeleteAction",
+          "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/products/actions.ts"
+        }
+      },
+      "exportedName": "bulkDeleteAction",
+      "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/products/actions.ts"
+    }
+  },
+  "edge": {}
+}
