@@ -26,19 +26,24 @@
       "@/*": [
         "./src/*"
       ],
+      "@/app/*": [
+        "./packages/storefront/src/app/*",
+        "./packages/backend/src/app/*",
+        "./packages/dashboard/src/app/*",
+        "./src/app/*"
+      ],
       "@/features/*": [
         "./packages/backend/src/features/*",
         "./src/features/*"
       ]
     }
   },
-  "include": [
+    "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
     "**/*.mts",
-    ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts"
+    ".next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",
