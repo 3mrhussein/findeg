@@ -29,3 +29,15 @@ cypress/reports
 *.sw?
 fullstack-commerce
 /internal
+
+# Monorepo / turborepo
+.turbo/
+# pnpm
+pnpm-lock.yaml
+# Environment
+.env*
+# Coverage and build
+coverage/
+build/
+# Package dist outputs
+packages/**/dist
