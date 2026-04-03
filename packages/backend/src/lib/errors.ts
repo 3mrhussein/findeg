@@ -1,6 +1,6 @@
 /**
  * Application Error Classes
- * 
+ *
  * Standardized error types for consistent error handling across the application.
  * All errors extend AppError base class with status codes for HTTP responses.
  */
@@ -22,7 +22,7 @@ export class AppError extends Error {
  * 401 Unauthorized - Authentication required or failed
  */
 export class UnauthorizedError extends AppError {
-  constructor(message: string = 'Unauthorized') {
+  constructor(message: string = "Unauthorized") {
     super(message, 401);
   }
 }
@@ -31,7 +31,7 @@ export class UnauthorizedError extends AppError {
  * 403 Forbidden - User lacks necessary permissions
  */
 export class ForbiddenError extends AppError {
-  constructor(message: string = 'Forbidden') {
+  constructor(message: string = "Forbidden") {
     super(message, 403);
   }
 }
@@ -40,7 +40,7 @@ export class ForbiddenError extends AppError {
  * 404 Not Found - Requested resource does not exist
  */
 export class NotFoundError extends AppError {
-  constructor(message: string = 'Not Found') {
+  constructor(message: string = "Not Found") {
     super(message, 404);
   }
 }
@@ -51,7 +51,7 @@ export class NotFoundError extends AppError {
 export class ValidationError extends AppError {
   public readonly errors?: Record<string, string[]>;
 
-  constructor(message: string = 'Validation failed', errors?: Record<string, string[]>) {
+  constructor(message: string = "Validation failed", errors?: Record<string, string[]>) {
     super(message, 400);
     this.errors = errors;
   }
@@ -61,7 +61,7 @@ export class ValidationError extends AppError {
  * 409 Conflict - Resource already exists or state conflict
  */
 export class ConflictError extends AppError {
-  constructor(message: string = 'Conflict') {
+  constructor(message: string = "Conflict") {
     super(message, 409);
   }
 }
@@ -70,7 +70,7 @@ export class ConflictError extends AppError {
  * 500 Internal Server Error - Unexpected server error
  */
 export class InternalServerError extends AppError {
-  constructor(message: string = 'Internal Server Error') {
+  constructor(message: string = "Internal Server Error") {
     super(message, 500, false); // Not operational - indicates a bug
   }
 }
@@ -79,7 +79,7 @@ export class InternalServerError extends AppError {
  * 503 Service Unavailable - External service unavailable
  */
 export class ServiceUnavailableError extends AppError {
-  constructor(message: string = 'Service Unavailable') {
+  constructor(message: string = "Service Unavailable") {
     super(message, 503);
   }
 }

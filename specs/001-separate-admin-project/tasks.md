@@ -10,6 +10,7 @@
 ## Task Execution Overview
 
 This feature implements a three-package Turborepo monorepo splitting the current FindEg monolith into:
+
 - `packages/backend` - TypeScript library (shared business logic, database access)
 - `packages/dashboard` - Next.js admin app
 - `packages/storefront` - Next.js customer app
@@ -55,10 +56,12 @@ Phase 2 (US3 - Shared Code Management) ← Must complete before frontend package
 ## Parallel Execution Opportunities
 
 **After Phase 2 completes**, the following can run in parallel:
+
 - Phase 3 (Dashboard Migration) - Tasks T030 to T044
 - Phase 4 (Storefront Migration) - Tasks T045 to T059
 
 **Requirements for parallel execution**:
+
 - Backend package fully built and exporting all interfaces
 - Two separate developer workstreams or git branches
 - Independent E2E test environments (different ports)
@@ -94,10 +97,11 @@ Phase 2 (US3 - Shared Code Management) ← Must complete before frontend package
 [x] T011 [P] Create packages/backend/src/ directory structure: features/, lib/, types/
 [x] T012 [P] Create packages/dashboard/package.json with Next.js 16, React 19, workspace dependency @findeg/backend
 [x] T013 [P] Create packages/dashboard/tsconfig.json extending base config
- - [x] T014 [P] Create packages/dashboard/next.config.ts with basePath and environment configuration
-[x] T015 [P] Create packages/storefront/package.json with Next.js 16, React 19, workspace dependency @findeg/backend
-[x] T016 [P] Create packages/storefront/tsconfig.json extending base config
- - [x] T017 [P] Create packages/storefront/next.config.ts with basePath and environment configuration
+
+- [x] T014 [P] Create packages/dashboard/next.config.ts with basePath and environment configuration
+      [x] T015 [P] Create packages/storefront/package.json with Next.js 16, React 19, workspace dependency @findeg/backend
+      [x] T016 [P] Create packages/storefront/tsconfig.json extending base config
+- [x] T017 [P] Create packages/storefront/next.config.ts with basePath and environment configuration
 
 ### Build Pipeline Verification
 
@@ -113,6 +117,7 @@ Phase 2 (US3 - Shared Code Management) ← Must complete before frontend package
 - [x] T027 Commit Phase 0 with message "feat: initialize turborepo monorepo with three packages"
 
 **Phase 0 Exit Criteria**:
+
 - ✅ All packages build successfully
 - ✅ Turborepo caching operational
 - ✅ Dashboard accessible at localhost:3001
@@ -140,12 +145,12 @@ Phase 2 (US3 - Shared Code Management) ← Must complete before frontend package
 - [x] T031 [US3] Move Drizzle schema files from src/features/core/infrastructure/persistence/schema/ to packages/backend/src/features/core/infrastructure/persistence/schema/
 - [ ] T032 [US3] Move migration scripts from scripts/migrations/ to packages/backend/migrations/ or keep at root
 - [x] T033 [US3] Update drizzle.config.ts to point to backend package schema directory
-- [ ] T034 [US3] Create packages/backend/src/features/core/infrastructure/persistence/contracts/ for repository interfaces per contracts/backend-exports.md
-- [ ] T035 [P] [US3] Implement IUserRepository interface and PostgresUserRepository in packages/backend/src/features/core/infrastructure/persistence/repositories/user-repository.ts
-- [ ] T036 [P] [US3] Implement IProductRepository interface and PostgresProductRepository
-- [ ] T037 [P] [US3] Implement ICategoryRepository interface and PostgresCategoryRepository
-- [ ] T038 [P] [US3] Implement IOrderRepository interface and PostgresOrderRepository
-- [ ] T039 [US3] Create repository factory functions (getUserRepository, getProductRepository, etc.) in packages/backend/src/features/core/index.ts
+- [x] T034 [US3] Create packages/backend/src/features/core/infrastructure/persistence/contracts/ for repository interfaces per contracts/backend-exports.md
+- [x] T035 [P] [US3] Implement IUserRepository interface and PostgresUserRepository in packages/backend/src/features/core/infrastructure/persistence/repositories/user-repository.ts
+- [x] T036 [P] [US3] Implement IProductRepository interface and PostgresProductRepository
+- [x] T037 [P] [US3] Implement ICategoryRepository interface and PostgresCategoryRepository
+- [x] T038 [P] [US3] Implement IOrderRepository interface and PostgresOrderRepository
+- [x] T039 [US3] Create repository factory functions (getUserRepository, getProductRepository, etc.) in packages/backend/src/features/core/index.ts
 
 ### Authentication & Authorization
 
@@ -153,8 +158,8 @@ Phase 2 (US3 - Shared Code Management) ← Must complete before frontend package
 - [x] T041 [US3] Implement JWT token generation (generateTokens) with HS256 signing, 15min access token, 7-day refresh token
 - [x] T042 [US3] Implement JWT token verification (verifyToken) with expiration and signature checks
 - [x] T043 [US3] Implement token refresh logic (refreshTokens) with rotation
-- [ ] T044 [US3] Implement IPermissionService interface with hasPermission and hasRole methods
-- [ ] T045 [US3] Create helper functions: getAuthenticatedUser, requirePermission, requireRole per contracts/backend-exports.md
+- [x] T044 [US3] Implement IPermissionService interface with hasPermission and hasRole methods
+- [x] T045 [US3] Create helper functions: getAuthenticatedUser, requirePermission, requireRole per contracts/backend-exports.md
 
 ### Type Definitions & Validation
 
@@ -180,8 +185,8 @@ Phase 2 (US3 - Shared Code Management) ← Must complete before frontend package
 
 ### Testing & Verification
 
-- [x] T059 [P] [US3] Write unit tests for IAuthService: token generation, verification, refresh, revocation in packages/backend/src/features/identity/__tests__/auth-service.test.ts
-- [ ] T060 [P] [US3] Write unit tests for repository interfaces using in-memory implementations
+- [x] T059 [P] [US3] Write unit tests for IAuthService: token generation, verification, refresh, revocation in packages/backend/src/features/identity/**tests**/auth-service.test.ts
+- [x] T060 [P] [US3] Write unit tests for repository interfaces using in-memory implementations
 - [x] T061 [P] [US3] Write unit tests for Zod validation schemas with valid and invalid inputs
 - [x] T062 [US3] Build backend package: `pnpm --filter backend build` produces complete dist/ output
 - [x] T063 [US3] Run backend tests: `pnpm --filter backend test` 51/53 tests pass (96.2% pass rate)
@@ -189,6 +194,7 @@ Phase 2 (US3 - Shared Code Management) ← Must complete before frontend package
 - [x] T065 [US3] Commit Phase 1 with message "feat(backend): migrate core features, database access, and auth to backend package"
 
 **Phase 1 Exit Criteria**:
+
 - ✅ Backend package exports all repository interfaces defined in contracts/backend-exports.md
 - ✅ Authentication service functional with JWT token generation/verification
 - ✅ All database migrations accessible via backend package
@@ -208,7 +214,7 @@ Phase 2 (US3 - Shared Code Management) ← Must complete before frontend package
 
 ### Shared Code Infrastructure (Completed in Phase 1)
 
-*Note: These tasks were completed as part of Phase 1 (T028-T065). This phase documents the ongoing workflow.*
+_Note: These tasks were completed as part of Phase 1 (T028-T065). This phase documents the ongoing workflow._
 
 **Verification Tasks**:
 
@@ -218,6 +224,7 @@ Phase 2 (US3 - Shared Code Management) ← Must complete before frontend package
 - [ ] T069 [US3] Add pre-commit hook or GitHub Action validating backend exports don't have breaking changes without version bump
 
 **Phase 2 Exit Criteria**:
+
 - ✅ Backend changes trigger frontend rebuilds via Turborepo dependency graph
 - ✅ TypeScript ensures compile-time type safety across package boundaries
 - ✅ Documentation exists for shared code update workflow
@@ -283,6 +290,7 @@ Phase 2 (US3 - Shared Code Management) ← Must complete before frontend package
 - [ ] T099 [US1] Commit Phase 3 with message "feat(dashboard): migrate admin app to independent package with backend imports"
 
 **Phase 3 Exit Criteria**:
+
 - ✅ Dashboard builds in <2 minutes (50% improvement from 4+ min baseline)
 - ✅ All admin E2E tests pass (zero regression)
 - ✅ Dashboard bundle contains zero storefront code (<500KB gzipped)
@@ -357,6 +365,7 @@ Phase 2 (US3 - Shared Code Management) ← Must complete before frontend package
 - [ ] T137 [US2] Commit Phase 4 with message "feat(storefront): migrate customer app to independent package with backend imports"
 
 **Phase 4 Exit Criteria**:
+
 - ✅ Storefront builds in <2.5 minutes (37.5% improvement from 4+ min baseline)
 - ✅ All storefront E2E tests pass (zero regression)
 - ✅ Storefront bundle contains zero admin code (<800KB gzipped)
@@ -400,6 +409,7 @@ Phase 2 (US3 - Shared Code Management) ← Must complete before frontend package
 - [ ] T155 [US4] Commit Phase 5 with message "feat(ci): add independent deployment pipelines for dashboard and storefront"
 
 **Phase 5 Exit Criteria**:
+
 - ✅ Dashboard and storefront have separate CI/CD workflows
 - ✅ Deployments can run independently without affecting each other
 - ✅ Deployments can run in parallel without conflicts
@@ -421,7 +431,7 @@ Phase 2 (US3 - Shared Code Management) ← Must complete before frontend package
 - [ ] T158 Remove old package.json scripts that reference src/: Update root package.json to use only Turborepo commands
 - [ ] T159 Remove old tsconfig.json configurations: Clean up root tsconfig to only define base config for packages
 - [ ] T160 Remove old next.config.ts if it exists at root
-- [ ] T161 Update .gitignore: Remove src/-specific entries, ensure packages/*/.next and packages/*/dist ignored
+- [ ] T161 Update .gitignore: Remove src/-specific entries, ensure packages/_/.next and packages/_/dist ignored
 - [ ] T162 Clean up old Cypress configuration: Remove root cypress/ directory, cypress.config.ts
 
 ### Performance Validation
@@ -467,6 +477,7 @@ Phase 2 (US3 - Shared Code Management) ← Must complete before frontend package
 - [ ] T191 Tag release: Create git tag v2.0.0-monorepo-migration with release notes
 
 **Phase 6 Exit Criteria**:
+
 - ✅ All old monolith code removed (src/ directory deleted)
 - ✅ All performance targets met (build times, bundle sizes, HMR speed)
 - ✅ 100% E2E test pass rate (zero regression)
@@ -480,16 +491,16 @@ Phase 2 (US3 - Shared Code Management) ← Must complete before frontend package
 
 ### Task Breakdown by Phase
 
-| Phase | Task Count | Duration | Parallel Opportunities |
-|-------|-----------|----------|------------------------|
-| Phase 0: Setup | 27 tasks | 2-3 days | High (T003-T008, T009-T011, T012-T017, T022-T023) |
-| Phase 1: Foundational | 38 tasks | 3-5 days | Medium (T028-T030, T035-T038, T046-T048, T050-T052, T059-T061) |
-| Phase 2: US3 (Shared Code) | 4 tasks | Integrated | Verification only |
-| Phase 3: US1 (Dashboard) | 30 tasks | 4-6 days | High (Can parallel with Phase 4 after Phase 1) |
-| Phase 4: US2 (Storefront) | 38 tasks | 4-6 days | High (Can parallel with Phase 3 after Phase 1) |
-| Phase 5: US4 (Deployment) | 18 tasks | 2-3 days | Medium (T144-T146) |
-| Phase 6: Polish | 36 tasks | 2-3 days | Low (sequential verification) |
-| **Total** | **191 tasks** | **15-20 days** | |
+| Phase                      | Task Count    | Duration       | Parallel Opportunities                                         |
+| -------------------------- | ------------- | -------------- | -------------------------------------------------------------- |
+| Phase 0: Setup             | 27 tasks      | 2-3 days       | High (T003-T008, T009-T011, T012-T017, T022-T023)              |
+| Phase 1: Foundational      | 38 tasks      | 3-5 days       | Medium (T028-T030, T035-T038, T046-T048, T050-T052, T059-T061) |
+| Phase 2: US3 (Shared Code) | 4 tasks       | Integrated     | Verification only                                              |
+| Phase 3: US1 (Dashboard)   | 30 tasks      | 4-6 days       | High (Can parallel with Phase 4 after Phase 1)                 |
+| Phase 4: US2 (Storefront)  | 38 tasks      | 4-6 days       | High (Can parallel with Phase 3 after Phase 1)                 |
+| Phase 5: US4 (Deployment)  | 18 tasks      | 2-3 days       | Medium (T144-T146)                                             |
+| Phase 6: Polish            | 36 tasks      | 2-3 days       | Low (sequential verification)                                  |
+| **Total**                  | **191 tasks** | **15-20 days** |                                                                |
 
 ### Critical Path (Sequential Dependencies)
 
@@ -502,6 +513,7 @@ Phase 2 (US3 - Shared Code Management) ← Must complete before frontend package
 ### Success Metrics
 
 **Performance Targets (from spec.md Success Criteria)**:
+
 - ✅ SC-001: Dashboard build <2 min (T163)
 - ✅ SC-002: Storefront build <2.5 min (T164)
 - ✅ SC-003: Dashboard bundle <500KB gzipped (T167)
@@ -511,6 +523,7 @@ Phase 2 (US3 - Shared Code Management) ← Must complete before frontend package
 - ✅ SC-008: TypeScript compilation <30 sec/package (T165)
 
 **User Story Acceptance**:
+
 - ✅ US1 (P1): Dashboard developers work independently (Phase 3 exit criteria)
 - ✅ US2 (P1): Storefront developers work independently (Phase 4 exit criteria)
 - ✅ US3 (P2): Shared code management via backend package (Phase 2 exit criteria)
@@ -519,6 +532,7 @@ Phase 2 (US3 - Shared Code Management) ← Must complete before frontend package
 ### Risk Mitigation
 
 **Highest Risk Tasks** (require extra attention):
+
 - T031: Database migration move (test thoroughly)
 - T073: Admin route import updates (400+ imports)
 - T105: Storefront route import updates (500+ imports)
@@ -527,6 +541,7 @@ Phase 2 (US3 - Shared Code Management) ← Must complete before frontend package
 - T156: Old src/ removal (point of no return without git revert)
 
 **Rollback Points** (git commits after each phase):
+
 - After T027: Can rollback to before monorepo setup
 - After T065: Can rollback backend migration, keep monolith structure
 - After T099: Can rollback dashboard migration
@@ -538,22 +553,26 @@ Phase 2 (US3 - Shared Code Management) ← Must complete before frontend package
 ## Implementation Notes
 
 **Parallelization Strategy**:
+
 - Use two developer workstreams or git branches after Phase 1 complete
 - Dashboard team works on Phase 3 tasks (T070-T099)
 - Storefront team works on Phase 4 tasks (T100-T137)
 - Merge both branches before Phase 5
 
 **Testing Strategy**:
+
 - Run E2E tests after every 10-15 tasks to catch regressions early
 - Keep old monolith running in parallel during Phases 3-4 for comparison
 - Use Cypress visual regression testing (optional) to catch UI differences
 
 **Performance Monitoring**:
+
 - Baseline measurements before starting (T163-T168 current state)
 - Measure after each phase complete
 - Document improvements in CHANGELOG.md
 
 **Communication**:
+
 - Daily standups during migration (15-20 day window)
 - Demo deployments to stakeholders after Phases 3, 4, 5
 - Feature freeze communicated to all team members before Phase 1 starts

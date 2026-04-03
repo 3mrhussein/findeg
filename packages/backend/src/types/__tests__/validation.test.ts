@@ -1,10 +1,10 @@
 /**
  * Validation Schemas Unit Tests
- * 
+ *
  * Tests Zod schema validation for all domain models.
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect } from "vitest";
 import {
   CreateUserSchema,
   UpdateUserSchema,
@@ -15,74 +15,74 @@ import {
   CreateOrderSchema,
   UpdateOrderSchema,
   OrderStatusSchema,
-} from '../validation';
+} from "../validation";
 
-describe('User Validation Schemas', () => {
-  describe('CreateUserSchema', () => {
-    it('should validate valid user input', () => {
+describe("User Validation Schemas", () => {
+  describe("CreateUserSchema", () => {
+    it("should validate valid user input", () => {
       const validData = {
-        email: 'test@example.com',
-        name: 'Test User',
-        password: 'password123',
-        roles: ['customer'],
+        email: "test@example.com",
+        name: "Test User",
+        password: "password123",
+        roles: ["customer"],
       };
 
       const result = CreateUserSchema.safeParse(validData);
       expect(result.success).toBe(true);
     });
 
-    it('should reject invalid email', () => {
+    it("should reject invalid email", () => {
       const invalidData = {
-        email: 'invalid-email',
-        name: 'Test User',
-        password: 'password123',
+        email: "invalid-email",
+        name: "Test User",
+        password: "password123",
       };
 
       const result = CreateUserSchema.safeParse(invalidData);
       expect(result.success).toBe(false);
     });
 
-    it('should reject short password', () => {
+    it("should reject short password", () => {
       const invalidData = {
-        email: 'test@example.com',
-        name: 'Test User',
-        password: 'short',
+        email: "test@example.com",
+        name: "Test User",
+        password: "short",
       };
 
       const result = CreateUserSchema.safeParse(invalidData);
       expect(result.success).toBe(false);
     });
 
-    it('should default roles to customer', () => {
+    it("should default roles to customer", () => {
       const data = {
-        email: 'test@example.com',
-        name: 'Test User',
-        password: 'password123',
+        email: "test@example.com",
+        name: "Test User",
+        password: "password123",
       };
 
       const result = CreateUserSchema.parse(data);
-      expect(result.roles).toEqual(['customer']);
+      expect(result.roles).toEqual(["customer"]);
     });
   });
 
-  describe('UpdateUserSchema', () => {
-    it('should allow partial updates', () => {
-      const validData = { name: 'New Name' };
+  describe("UpdateUserSchema", () => {
+    it("should allow partial updates", () => {
+      const validData = { name: "New Name" };
       const result = UpdateUserSchema.safeParse(validData);
       expect(result.success).toBe(true);
     });
   });
 });
 
-describe('Product Validation Schemas', () => {
-  describe('CreateProductSchema', () => {
-    it('should validate valid product input', () => {
+describe("Product Validation Schemas", () => {
+  describe("CreateProductSchema", () => {
+    it("should validate valid product input", () => {
       const validData = {
-        nameEn: 'Test Product',
-        nameAr: 'منتج تجريبي',
-        slug: 'test-product',
+        nameEn: "Test Product",
+        nameAr: "منتج تجريبي",
+        slug: "test-product",
         price: 99.99,
-        categoryId: '123e4567-e89b-12d3-a456-426614174000',
+        categoryId: "123e4567-e89b-12d3-a456-426614174000",
         stock: 10,
         isActive: true,
         isFeatured: false,
@@ -94,39 +94,39 @@ describe('Product Validation Schemas', () => {
       expect(result.success).toBe(true);
     });
 
-    it('should reject negative price', () => {
+    it("should reject negative price", () => {
       const invalidData = {
-        nameEn: 'Test Product',
-        nameAr: 'منتج تجريبي',
-        slug: 'test-product',
+        nameEn: "Test Product",
+        nameAr: "منتج تجريبي",
+        slug: "test-product",
         price: -10,
-        categoryId: '123e4567-e89b-12d3-a456-426614174000',
+        categoryId: "123e4567-e89b-12d3-a456-426614174000",
       };
 
       const result = CreateProductSchema.safeParse(invalidData);
       expect(result.success).toBe(false);
     });
 
-    it('should reject invalid slug format', () => {
+    it("should reject invalid slug format", () => {
       const invalidData = {
-        nameEn: 'Test Product',
-        nameAr: 'منتج تجريبي',
-        slug: 'Invalid Slug!',
+        nameEn: "Test Product",
+        nameAr: "منتج تجريبي",
+        slug: "Invalid Slug!",
         price: 99.99,
-        categoryId: '123e4567-e89b-12d3-a456-426614174000',
+        categoryId: "123e4567-e89b-12d3-a456-426614174000",
       };
 
       const result = CreateProductSchema.safeParse(invalidData);
       expect(result.success).toBe(false);
     });
 
-    it('should default stock to 0', () => {
+    it("should default stock to 0", () => {
       const data = {
-        nameEn: 'Test Product',
-        nameAr: 'منتج تجريبي',
-        slug: 'test-product',
+        nameEn: "Test Product",
+        nameAr: "منتج تجريبي",
+        slug: "test-product",
         price: 99.99,
-        categoryId: '123e4567-e89b-12d3-a456-426614174000',
+        categoryId: "123e4567-e89b-12d3-a456-426614174000",
       };
 
       const result = CreateProductSchema.parse(data);
@@ -135,13 +135,13 @@ describe('Product Validation Schemas', () => {
   });
 });
 
-describe('Category Validation Schemas', () => {
-  describe('CreateCategorySchema', () => {
-    it('should validate valid category input', () => {
+describe("Category Validation Schemas", () => {
+  describe("CreateCategorySchema", () => {
+    it("should validate valid category input", () => {
       const validData = {
-        nameEn: 'Electronics',
-        nameAr: 'إلكترونيات',
-        slug: 'electronics',
+        nameEn: "Electronics",
+        nameAr: "إلكترونيات",
+        slug: "electronics",
         displayOrder: 1,
         isActive: true,
       };
@@ -150,11 +150,11 @@ describe('Category Validation Schemas', () => {
       expect(result.success).toBe(true);
     });
 
-    it('should allow null parent ID', () => {
+    it("should allow null parent ID", () => {
       const data = {
-        nameEn: 'Root Category',
-        nameAr: 'فئة جذرية',
-        slug: 'root',
+        nameEn: "Root Category",
+        nameAr: "فئة جذرية",
+        slug: "root",
         parentId: null,
       };
 
@@ -164,16 +164,16 @@ describe('Category Validation Schemas', () => {
   });
 });
 
-describe('Order Validation Schemas', () => {
-  describe('CreateOrderSchema', () => {
-    it('should validate valid order input', () => {
+describe("Order Validation Schemas", () => {
+  describe("CreateOrderSchema", () => {
+    it("should validate valid order input", () => {
       const validData = {
-        userId: '123e4567-e89b-12d3-a456-426614174000',
-        status: 'pending' as const,
+        userId: "123e4567-e89b-12d3-a456-426614174000",
+        status: "pending" as const,
         items: [
           {
-            productId: '123e4567-e89b-12d3-a456-426614174001',
-            productName: 'Test Product',
+            productId: "123e4567-e89b-12d3-a456-426614174001",
+            productName: "Test Product",
             variantId: null,
             quantity: 2,
             unitPrice: 50,
@@ -184,24 +184,24 @@ describe('Order Validation Schemas', () => {
         tax: 10,
         shipping: 5,
         total: 115,
-        shippingAddress: '123 Main St, City, Country',
-        billingAddress: '123 Main St, City, Country',
-        paymentMethod: 'credit_card',
+        shippingAddress: "123 Main St, City, Country",
+        billingAddress: "123 Main St, City, Country",
+        paymentMethod: "credit_card",
       };
 
       const result = CreateOrderSchema.safeParse(validData);
       expect(result.success).toBe(true);
     });
 
-    it('should reject order with no items', () => {
+    it("should reject order with no items", () => {
       const invalidData = {
-        userId: '123e4567-e89b-12d3-a456-426614174000',
+        userId: "123e4567-e89b-12d3-a456-426614174000",
         items: [],
         subtotal: 0,
         total: 0,
-        shippingAddress: '123 Main St',
-        billingAddress: '123 Main St',
-        paymentMethod: 'credit_card',
+        shippingAddress: "123 Main St",
+        billingAddress: "123 Main St",
+        paymentMethod: "credit_card",
       };
 
       const result = CreateOrderSchema.safeParse(invalidData);
@@ -209,16 +209,16 @@ describe('Order Validation Schemas', () => {
     });
   });
 
-  describe('OrderStatusSchema', () => {
-    it('should validate valid statuses', () => {
+  describe("OrderStatusSchema", () => {
+    it("should validate valid statuses", () => {
       const validStatuses = [
-        'pending',
-        'confirmed',
-        'processing',
-        'shipped',
-        'delivered',
-        'cancelled',
-        'refunded',
+        "pending",
+        "confirmed",
+        "processing",
+        "shipped",
+        "delivered",
+        "cancelled",
+        "refunded",
       ];
 
       validStatuses.forEach((status) => {
@@ -227,8 +227,8 @@ describe('Order Validation Schemas', () => {
       });
     });
 
-    it('should reject invalid status', () => {
-      const result = OrderStatusSchema.safeParse('invalid-status');
+    it("should reject invalid status", () => {
+      const result = OrderStatusSchema.safeParse("invalid-status");
       expect(result.success).toBe(false);
     });
   });

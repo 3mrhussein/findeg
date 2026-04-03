@@ -10,7 +10,6 @@ import {
 import { Brand } from "../../domain/entities/Brand";
 import {
   DEFAULT_LOCALE,
-  resolveLocalizedString,
   toLocalizedString,
   type Locale,
 } from "@/features/core/domain/value-objects";

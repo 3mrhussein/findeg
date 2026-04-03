@@ -74,16 +74,16 @@ openssl rand -base64 32
 
 ```typescript
 // Server Actions
-import { JWTService, IUserRepository } from '@findeg/backend';
-import { CreateUserSchema } from '@findeg/backend/types';
+import { JWTService, IUserRepository } from "@findeg/backend";
+import { CreateUserSchema } from "@findeg/backend/types";
 
 export async function createUser(formData: FormData) {
-  'use server';
-  
+  "use server";
+
   const data = CreateUserSchema.parse(Object.fromEntries(formData));
   const userRepo = getUserRepository();
   const user = await userRepo.create(data);
-  
+
   return { success: true, user };
 }
 ```
@@ -98,7 +98,7 @@ import { IProductRepository } from '@findeg/backend';
 export default async function ProductPage({ params }: Props) {
   const productRepo = getProductRepository();
   const product = await productRepo.findBySlug(params.slug);
-  
+
   return (
     <div>
       <h1>{product.nameEn}</h1>
@@ -119,67 +119,54 @@ import {
   IProductRepository,
   ICategoryRepository,
   IOrderRepository,
-} from '@findeg/backend/features/core';
+} from "@findeg/backend/features/core";
 ```
 
 ### Authentication
 
 ```typescript
-import { JWTService, TokenPair, JWTPayload } from '@findeg/backend/features/identity';
+import { JWTService, TokenPair, JWTPayload } from "@findeg/backend/features/identity";
 
 const jwtService = new JWTService(accessSecret, refreshSecret);
 const tokens = jwtService.generateTokens(userId, email, roles);
-const payload = jwtService.verifyToken(tokens.accessToken, 'access');
+const payload = jwtService.verifyToken(tokens.accessToken, "access");
 ```
 
 ### Validation
 
 ```typescript
-import {
-  CreateUserSchema,
-  CreateProductSchema,
-  CreateOrderSchema,
-} from '@findeg/backend/types';
+import { CreateUserSchema, CreateProductSchema, CreateOrderSchema } from "@findeg/backend/types";
 
 const result = CreateUserSchema.safeParse(data);
 if (!result.success) {
-  throw new ValidationError('Invalid input', result.error.flatten().fieldErrors);
+  throw new ValidationError("Invalid input", result.error.flatten().fieldErrors);
 }
 ```
 
 ### Error Handling
 
 ```typescript
-import {
-  AppError,
-  UnauthorizedError,
-  NotFoundError,
-  ValidationError,
-} from '@findeg/backend/lib';
+import { AppError, UnauthorizedError, NotFoundError, ValidationError } from "@findeg/backend/lib";
 
 if (!user) {
-  throw new NotFoundError('User not found');
+  throw new NotFoundError("User not found");
 }
 
 if (!hasPermission) {
-  throw new ForbiddenError('Insufficient permissions');
+  throw new ForbiddenError("Insufficient permissions");
 }
 ```
 
 ### i18n Utilities
 
 ```typescript
-import {
-  formatCurrency,
-  formatDate,
-  formatRelativeTime,
-} from '@findeg/backend/lib';
+import { formatCurrency, formatDate, formatRelativeTime } from "@findeg/backend/lib";
 
-formatCurrency(99.99, 'en', 'EGP'); // "EGP 99.99"
-formatCurrency(99.99, 'ar', 'EGP'); // "٩٩٫٩٩ ج.م"
+formatCurrency(99.99, "en", "EGP"); // "EGP 99.99"
+formatCurrency(99.99, "ar", "EGP"); // "٩٩٫٩٩ ج.م"
 
-formatDate(new Date(), 'en'); // "March 15, 2024"
-formatRelativeTime(pastDate, 'en'); // "2 days ago"
+formatDate(new Date(), "en"); // "March 15, 2024"
+formatRelativeTime(pastDate, "en"); // "2 days ago"
 ```
 
 ## Package Exports
@@ -210,6 +197,7 @@ pnpm --filter @findeg/backend test --watch
 ```
 
 Test coverage goals:
+
 - Services: >80%
 - Repositories: >70%
 - Validation: 100%
@@ -219,8 +207,8 @@ Test coverage goals:
 All exports are fully typed with TypeScript. Import types:
 
 ```typescript
-import type { User, Product, Order } from '@findeg/backend';
-import type { CreateUserInput, UpdateProductInput } from '@findeg/backend/types';
+import type { User, Product, Order } from "@findeg/backend";
+import type { CreateUserInput, UpdateProductInput } from "@findeg/backend/types";
 ```
 
 ## Contributing

@@ -9,17 +9,17 @@ This test file verifies that all exported modules can be imported correctly from
 import {
   // Core features
   ISessionProvider,
-  
-  // Repository contracts  
+
+  // Repository contracts
   IUserRepository,
   IProductRepository,
   ICategoryRepository,
   IOrderRepository,
-  
+
   // Auth & Identity
   JWTService,
   AuthService,
-  
+
   // Error classes
   AppError,
   UnauthorizedError,
@@ -27,14 +27,14 @@ import {
   NotFoundError,
   ValidationError,
   ConflictError,
-  
+
   // i18n utilities
   formatCurrency,
   formatDate,
   formatDateTime,
   formatRelativeTime,
   formatNumber,
-} from '@findeg/backend';
+} from "@findeg/backend";
 
 // Validation schemas
 import {
@@ -47,11 +47,11 @@ import {
   CreateOrderSchema,
   UpdateOrderSchema,
   OrderStatusSchema,
-} from '@findeg/backend/types';
+} from "@findeg/backend/types";
 
 // Feature-specific exports
-import { MediaService } from '@findeg/backend/features/media';
-import { DrizzleCategoryRepository } from '@findeg/backend/features/catalog';
+import { MediaService } from "@findeg/backend/features/media";
+import { DrizzleCategoryRepository } from "@findeg/backend/features/catalog";
 ```
 
 ## Verification Status
