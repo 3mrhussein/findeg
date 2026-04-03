@@ -2,6 +2,13 @@ import { Suspense } from "react";
 import { AdminSessionGate } from "../_components/AdminSessionGate";
 
 /**
+ * Generate static params for supported locales
+ */
+export async function generateStaticParams() {
+  return [{ locale: "en" }, { locale: "ar" }];
+}
+
+/**
  * Protected Admin Dashboard Layout
  *
  * Uses the new AdminShell component for consistent admin navigation and layout.

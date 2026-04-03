@@ -279,9 +279,9 @@ _Note: These tasks were completed as part of Phase 1 (T028-T065). This phase doc
 
 ### Build & Verification
 
-- [ ] T091 [US1] Run TypeScript type check: `pnpm --filter dashboard type-check` - zero errors
+- [x] T091 [US1] Run TypeScript type check: `pnpm --filter dashboard type-check` - zero errors
 - [ ] T092 [US1] Run ESLint: `pnpm --filter dashboard lint` - all checks pass
-- [ ] T093 [US1] Build dashboard: `pnpm --filter dashboard build` completes in <2 minutes (benchmark and record time)
+- [x] T093 [US1] Build dashboard: `pnpm --filter dashboard build` completes in <2 minutes (benchmark and record time)
 - [ ] T094 [US1] Start dashboard dev server: `pnpm --filter dashboard dev` - loads at http://localhost:3001
 - [ ] T095 [US1] Verify all admin routes accessible: /admin/products, /admin/orders, /admin/customers, /admin/categories
 - [ ] T096 [US1] Run dashboard E2E tests: `pnpm --filter dashboard test:e2e` - all admin tests pass

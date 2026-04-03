@@ -14,6 +14,13 @@ import { loginAction } from "@/features/identity/application/actions/auth";
 import { Locale } from "next-intl";
 
 /**
+ * Generate static params for supported locales
+ */
+export async function generateStaticParams() {
+  return [{ locale: "en" }, { locale: "ar" }];
+}
+
+/**
  * Admin Login Page — /admin/login
  *
  * Renders inside the passthrough (admin) layout without the admin shell,
