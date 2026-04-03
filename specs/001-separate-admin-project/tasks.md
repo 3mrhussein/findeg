@@ -94,16 +94,16 @@ Phase 2 (US3 - Shared Code Management) ← Must complete before frontend package
 [x] T011 [P] Create packages/backend/src/ directory structure: features/, lib/, types/
 [x] T012 [P] Create packages/dashboard/package.json with Next.js 16, React 19, workspace dependency @findeg/backend
 [x] T013 [P] Create packages/dashboard/tsconfig.json extending base config
- - [ ] T014 [P] Create packages/dashboard/next.config.ts with basePath and environment configuration
+ - [x] T014 [P] Create packages/dashboard/next.config.ts with basePath and environment configuration
 [x] T015 [P] Create packages/storefront/package.json with Next.js 16, React 19, workspace dependency @findeg/backend
 [x] T016 [P] Create packages/storefront/tsconfig.json extending base config
- - [ ] T017 [P] Create packages/storefront/next.config.ts with basePath and environment configuration
+ - [x] T017 [P] Create packages/storefront/next.config.ts with basePath and environment configuration
 
 ### Build Pipeline Verification
 
 - [ ] T018 Install all dependencies: `pnpm install` from root
 - [ ] T019 Verify workspace linking: `pnpm list --depth 0` shows @findeg/backend in dashboard and storefront
-- [ ] T020 Create minimal backend exports: packages/backend/src/index.ts exporting placeholder types
+- [x] T020 Create minimal backend exports: packages/backend/src/index.ts exporting placeholder types
 - [ ] T021 Build backend package: `pnpm --filter backend build` produces dist/ output
 - [ ] T022 [P] Create minimal dashboard Next.js app with hello world page
 - [ ] T023 [P] Create minimal storefront Next.js app with hello world page
@@ -165,17 +165,17 @@ Phase 2 (US3 - Shared Code Management) ← Must complete before frontend package
 
 ### i18n & Utilities
 
-- [ ] T050 [P] [US3] Move translation files from src/features/core/infrastructure/cms/messages/ to packages/backend/src/features/core/infrastructure/cms/messages/
+- [x] T050 [P] [US3] Move translation files from src/features/core/infrastructure/cms/messages/ to packages/backend/src/features/core/infrastructure/cms/messages/
 - [ ] T051 [P] [US3] Create i18n utilities in packages/backend/src/lib/i18n.ts: getMessages, formatCurrency, formatDate per contracts/backend-exports.md §i18n Contract
-- [ ] T052 [P] [US3] Move shared utilities from src/lib/ and src/helpers/ to packages/backend/src/lib/
-- [ ] T053 [US3] Update all internal imports within backend package to use relative paths
+- [x] T052 [P] [US3] Move shared utilities from src/lib/ and src/helpers/ to packages/backend/src/lib/
+- [x] T053 [US3] Update all internal imports within backend package to use relative paths
 
 ### Backend Package Exports
 
-- [ ] T054 [US3] Create packages/backend/src/index.ts exporting all public interfaces per contracts/backend-exports.md
-- [ ] T055 [US3] Create packages/backend/src/features/core/index.ts exporting core feature contracts
-- [ ] T056 [US3] Create packages/backend/src/features/identity/index.ts exporting identity feature contracts
- - [ ] T057 [US3] Create packages/backend/src/features/media/index.ts exporting media feature contracts
+- [x] T054 [US3] Create packages/backend/src/index.ts exporting all public interfaces per contracts/backend-exports.md
+- [x] T055 [US3] Create packages/backend/src/features/core/index.ts exporting core feature contracts
+- [x] T056 [US3] Create packages/backend/src/features/identity/index.ts exporting identity feature contracts
+ - [x] T057 [US3] Create packages/backend/src/features/media/index.ts exporting media feature contracts
 - [ ] T058 [US3] Update packages/backend/package.json exports field defining subpath exports per contracts/backend-exports.md §Package Entry Points
 
 ### Testing & Verification
