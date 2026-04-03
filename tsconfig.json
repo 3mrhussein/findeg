@@ -50,6 +50,9 @@
     "fullstack-ecommerce",
     "cypress",
     "cypress.config.ts",
-    "src/features._migrated"
+    "src/features._migrated",
+    "packages/*/src/**",
+    "packages/*/*/.next",
+    "packages/*/dist"
   ]
 }

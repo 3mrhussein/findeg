@@ -3,7 +3,7 @@
 import React, { createContext, useState, useMemo, useEffect } from "react";
 import type { ClientUser as User } from "@/lib/types";
 
-export interface UserContextType {
+interface UserContextType {
   currentUser: User | null;
   isLoggedIn: boolean;
   isLoading: boolean;
@@ -20,7 +20,6 @@ export const UserContext = createContext<UserContextType | undefined>(undefined)
  * Manages the current user session on the client.
  * Fetches the session from /api/v1/auth/me on mount.
  */
-
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);

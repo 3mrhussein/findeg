@@ -78,24 +78,26 @@ Phase 2 (US3 - Shared Code Management) ← Must complete before frontend package
 
 ### Monorepo Initialization
 
+### Monorepo Initialization
+
 - [ ] T003 [P] Install Turborepo globally and verify version: `pnpm add -g turbo@latest`
-- [ ] T004 [P] Create root `turbo.json` with build/dev/test/lint task configuration per research.md §Turborepo
-- [ ] T005 [P] Create `pnpm-workspace.yaml` defining packages/backend, packages/dashboard, packages/storefront
-- [ ] T006 Create root `package.json` with workspace scripts (dev, build, test, lint, type-check) using Turborepo
-- [ ] T007 [P] Create packages/ directory structure: backend/, dashboard/, storefront/
+- [x] T004 [P] Create root `turbo.json` with build/dev/test/lint task configuration per research.md §Turborepo
+- [x] T005 [P] Create `pnpm-workspace.yaml` defining packages/backend, packages/dashboard, packages/storefront
+- [x] T006 Create root `package.json` with workspace scripts (dev, build, test, lint, type-check) using Turborepo
+- [x] T007 [P] Create packages/ directory structure: backend/, dashboard/, storefront/
 - [ ] T008 [P] Initialize .gitignore with Turborepo cache directories (.turbo/), package dist/ folders, node_modules
 
 ### Package Scaffolding
 
-- [ ] T009 [P] Create packages/backend/package.json with name @findeg/backend, TypeScript, Drizzle, Zod dependencies per plan.md §Technical Context
-- [ ] T010 [P] Create packages/backend/tsconfig.json with composite: true for project references
-- [ ] T011 [P] Create packages/backend/src/ directory structure: features/, lib/, types/
-- [ ] T012 [P] Create packages/dashboard/package.json with Next.js 16, React 19, workspace dependency @findeg/backend
-- [ ] T013 [P] Create packages/dashboard/tsconfig.json extending base config
-- [ ] T014 [P] Create packages/dashboard/next.config.ts with basePath and environment configuration
-- [ ] T015 [P] Create packages/storefront/package.json with Next.js 16, React 19, workspace dependency @findeg/backend
-- [ ] T016 [P] Create packages/storefront/tsconfig.json extending base config
-- [ ] T017 [P] Create packages/storefront/next.config.ts with basePath and environment configuration
+[x] T009 [P] Create packages/backend/package.json with name @findeg/backend, TypeScript, Drizzle, Zod dependencies per plan.md §Technical Context
+[x] T010 [P] Create packages/backend/tsconfig.json with composite: true for project references
+[x] T011 [P] Create packages/backend/src/ directory structure: features/, lib/, types/
+[x] T012 [P] Create packages/dashboard/package.json with Next.js 16, React 19, workspace dependency @findeg/backend
+[x] T013 [P] Create packages/dashboard/tsconfig.json extending base config
+ - [ ] T014 [P] Create packages/dashboard/next.config.ts with basePath and environment configuration
+[x] T015 [P] Create packages/storefront/package.json with Next.js 16, React 19, workspace dependency @findeg/backend
+[x] T016 [P] Create packages/storefront/tsconfig.json extending base config
+ - [ ] T017 [P] Create packages/storefront/next.config.ts with basePath and environment configuration
 
 ### Build Pipeline Verification
 
@@ -129,9 +131,9 @@ Phase 2 (US3 - Shared Code Management) ← Must complete before frontend package
 
 ### Core Feature Migration
 
-- [ ] T028 [P] [US3] Move src/features/core/ to packages/backend/src/features/core/ preserving 4-layer structure
-- [ ] T029 [P] [US3] Move src/features/identity/ to packages/backend/src/features/identity/
-- [ ] T030 [P] [US3] Move src/features/media/ to packages/backend/src/features/media/
+- [x] T028 [P] [US3] Move src/features/core/ to packages/backend/src/features/core/ preserving 4-layer structure
+- [x] T029 [P] [US3] Move src/features/identity/ to packages/backend/src/features/identity/
+- [x] T030 [P] [US3] Move src/features/media/ to packages/backend/src/features/media/
 
 ### Database & Persistence Layer
 
