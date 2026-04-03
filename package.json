@@ -12,7 +12,7 @@
     "lint:eslint": "eslint src",
     "lint:fix": "eslint src --fix",
     "i18n:check": "node scripts/validate-i18n.mjs",
-    "type-check": "pnpm -w -r type-check",
+    "type-check": "pnpm -w -r --if-present run type-check",
     "db:start": "./scripts/db-start.sh",
     "db:stop": "./scripts/db-stop.sh",
     "db:reset": "./scripts/db-reset.sh",
