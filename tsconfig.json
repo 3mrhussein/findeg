@@ -27,6 +27,7 @@
         "./src/*"
       ],
       "@/features/*": [
+        "./packages/backend/src/features/*",
         "./src/features/*"
       ]
     }
@@ -43,6 +44,7 @@
     "node_modules",
     "fullstack-ecommerce",
     "cypress",
-    "cypress.config.ts"
+    "cypress.config.ts",
+    "src/features._migrated"
   ]
 }

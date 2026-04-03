@@ -123,3 +123,10 @@ Follow `docs/guides/DEVELOPMENT.md` + `docs/architecture/ARCHITECTURE_PLAYBOOK.m
 - New strings added to both locales
 - Architecture boundaries respected
 - Docs updated when behavior/architecture changes
+
+## Active Technologies
+- TypeScript 5.x with Next.js 16 (App Router), React 19 + Turborepo (monorepo orchestration), pnpm workspaces (dependency linking), Next.js 16, React 19, Drizzle ORM, Zod (validation), next-intl (i18n), shadcn/ui with Radix UI primitives, Tailwind CSS (001-separate-admin-project)
+- PostgreSQL (shared database accessed via backend package's repository interfaces) (001-separate-admin-project)
+
+## Recent Changes
+- 001-separate-admin-project: Added TypeScript 5.x with Next.js 16 (App Router), React 19 + Turborepo (monorepo orchestration), pnpm workspaces (dependency linking), Next.js 16, React 19, Drizzle ORM, Zod (validation), next-intl (i18n), shadcn/ui with Radix UI primitives, Tailwind CSS

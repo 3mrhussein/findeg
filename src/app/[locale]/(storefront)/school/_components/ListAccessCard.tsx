@@ -13,7 +13,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { AccessState } from "../../../../../features/school/application/interfaces/ISchoolAccessService";
+import { AccessState } from "@/features/school/application/interfaces/ISchoolAccessService";
 
 interface ListAccessCardProps {
   list: any; // Type from schoolLists table

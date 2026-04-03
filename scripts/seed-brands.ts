@@ -1,5 +1,5 @@
-import { db } from "../src/features/core/infrastructure/persistence";
-import { brands } from "../src/features/core/infrastructure/persistence/schema";
+import { db } from "@/features/core/infrastructure/persistence";
+import { brands } from "@/features/core/infrastructure/persistence/schema";
 import { eq } from "drizzle-orm";
 
 async function seedBrands() {

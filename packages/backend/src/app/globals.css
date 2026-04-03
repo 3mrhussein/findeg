@@ -1,0 +1,266 @@
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0");
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: var(--font-inter);
+  --font-arabic: var(--font-cairo);
+  --font-mono: var(--font-geist-mono);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-background: var(--background);
+  --color-background-dark: var(--background-dark);
+  --color-surface: var(--surface);
+  --color-surface-light: var(--surface-light);
+  --color-surface-dark: var(--surface-dark);
+  --color-border: var(--border);
+  --color-foreground: var(--foreground);
+  --color-text-primary: var(--text-primary);
+  --color-text-muted: var(--text-muted);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  /* Backward-compatible shadcn aliases */
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+
+  --animate-fade-in: fade-in 200ms ease-out both;
+  --animate-slide-up: slide-up 240ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-slide-right: slide-right 240ms cubic-bezier(0.16, 1, 0.3, 1) both;
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      translate: 0 0.5rem;
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+
+  @keyframes slide-right {
+    from {
+      opacity: 0;
+      translate: 0.75rem 0;
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+}
+
+:root {
+  /* Canonical FindEg tokens */
+  --primary: #4338ca;
+  --primary-foreground: #ffffff;
+  --accent: #f59e0b;
+  --accent-foreground: #111827;
+  --background: #f8f9fa;
+  --background-dark: #0f172a;
+  --surface: #ffffff;
+  --surface-light: #ffffff;
+  --surface-dark: #111827;
+  --border: #e5e7eb;
+  --text-primary: #111827;
+  --text-muted: #6b7280;
+  --success: #059669;
+  --success-foreground: #ffffff;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+
+  /* Backward-compatible aliases */
+  --foreground: var(--text-primary);
+  --card: var(--surface);
+  --card-foreground: var(--text-primary);
+  --popover: var(--surface);
+  --popover-foreground: var(--text-primary);
+  --secondary: #eef2f7;
+  --secondary-foreground: var(--text-primary);
+  --muted: #eef2f7;
+  --muted-foreground: var(--text-muted);
+  --input: var(--surface);
+  --ring: #818cf8;
+  --chart-1: #3b82f6;
+  --chart-2: #0ea5e9;
+  --chart-3: #06b6d4;
+  --chart-4: #14b8a6;
+  --chart-5: #10b981;
+  --radius: 0.625rem;
+  --sidebar: var(--surface);
+  --sidebar-foreground: var(--text-primary);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: #eef2f7;
+  --sidebar-accent-foreground: var(--text-primary);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
+
+  /* ─── Admin Dashboard Tokens ─────────────────────────────────────── */
+  /* Status Colors */
+  --status-active: #16a34a;
+  --status-draft: #6b7280;
+  --status-pending: #d97706;
+  --status-confirmed: #3b82f6;
+  --status-processing: #8b5cf6;
+  --status-shipped: #2563eb;
+  --status-delivered: #059669;
+  --status-cancelled: #dc2626;
+
+  /* Stock Health */
+  --stock-healthy: #16a34a;
+  --stock-low: #d97706;
+  --stock-out: #dc2626;
+
+  /* Admin Layout Dimensions */
+  --admin-sidebar-width: 240px;
+  --admin-sidebar-collapsed-width: 64px;
+  --admin-header-height: 60px;
+
+  /* Admin UI Accents */
+  --admin-sidebar-active-border: #4f46e5;
+  --admin-sidebar-active-bg: #eef2ff;
+}
+
+.dark {
+  --primary: #818cf8;
+  --primary-foreground: #111827;
+  --accent: #fbbf24;
+  --accent-foreground: #111827;
+  --background: #0f172a;
+  --background-dark: #020617;
+  --surface: #111827;
+  --surface-light: #ffffff;
+  --surface-dark: #111827;
+  --border: #1f2937;
+  --text-primary: #f9fafb;
+  --text-muted: #9ca3af;
+  --success: #10b981;
+  --success-foreground: #052e24;
+  --destructive: #f87171;
+  --destructive-foreground: #1f1111;
+
+  --foreground: var(--text-primary);
+  --card: var(--surface);
+  --card-foreground: var(--text-primary);
+  --popover: var(--surface);
+  --popover-foreground: var(--text-primary);
+  --secondary: #1f2937;
+  --secondary-foreground: var(--text-primary);
+  --muted: #1f2937;
+  --muted-foreground: var(--text-muted);
+  --input: #1f2937;
+  --ring: #6366f1;
+  --chart-1: #60a5fa;
+  --chart-2: #38bdf8;
+  --chart-3: #22d3ee;
+  --chart-4: #2dd4bf;
+  --chart-5: #34d399;
+  --sidebar: #0b1220;
+  --sidebar-foreground: var(--text-primary);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: #1f2937;
+  --sidebar-accent-foreground: var(--text-primary);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
+
+  /* ─── Admin Dashboard Tokens (Dark Mode) ────────────────────────── */
+  /* Status Colors */
+  --status-active: #22c55e;
+  --status-draft: #9ca3af;
+  --status-pending: #f59e0b;
+  --status-confirmed: #60a5fa;
+  --status-processing: #a78bfa;
+  --status-shipped: #3b82f6;
+  --status-delivered: #10b981;
+  --status-cancelled: #f87171;
+
+  /* Stock Health */
+  --stock-healthy: #22c55e;
+  --stock-low: #f59e0b;
+  --stock-out: #f87171;
+
+  /* Admin Layout Dimensions (same as light) */
+  --admin-sidebar-width: 240px;
+  --admin-sidebar-collapsed-width: 64px;
+  --admin-header-height: 60px;
+
+  /* Admin UI Accents */
+  --admin-sidebar-active-border: #6366f1;
+  --admin-sidebar-active-bg: #1e1b4b;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html[lang="ar"] {
+    --font-sans: var(--font-arabic);
+  }
+
+  html[dir="ltr"] {
+    direction: ltr;
+  }
+
+  html[dir="rtl"] {
+    direction: rtl;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    text-align: start;
+  }
+
+  :where(button, input, textarea, select) {
+    text-align: start;
+  }
+}

@@ -2,13 +2,13 @@ import * as dotenv from "dotenv";
 dotenv.config({ path: ".env.local" });
 dotenv.config();
 
-import { db } from "../src/features/core/infrastructure/persistence";
+import { db } from "@/features/core/infrastructure/persistence";
 import {
   products,
   productVariants,
   variantImages,
   inventoryBalances,
-} from "../src/features/core/infrastructure/persistence/schema";
+} from "@/features/core/infrastructure/persistence/schema";
 
 async function seedProducts() {
   console.log("🌱 Seeding realistic stationery products...");

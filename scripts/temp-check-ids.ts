@@ -1,10 +1,10 @@
-import { db } from "../src/features/core/infrastructure/persistence";
+import { db } from "@/features/core/infrastructure/persistence";
 import {
   products,
   categories,
   brands,
   warehouses,
-} from "../src/features/core/infrastructure/persistence/schema";
+} from "@/features/core/infrastructure/persistence/schema";
 import { count } from "drizzle-orm";
 
 async function checkIds() {
