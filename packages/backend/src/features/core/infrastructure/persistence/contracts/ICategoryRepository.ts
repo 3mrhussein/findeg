@@ -1,6 +1,6 @@
 /**
  * Category Repository Contract
- * 
+ *
  * Defines the interface for category data access operations.
  * Backend package exports this interface; frontend packages import it.
  */
@@ -28,7 +28,7 @@ export type CategoryFilters = {
   search?: string;
 };
 
-export type CreateCategoryInput = Omit<Category, 'id' | 'createdAt' | 'updatedAt'>;
+export type CreateCategoryInput = Omit<Category, "id" | "createdAt" | "updatedAt">;
 export type UpdateCategoryInput = Partial<CreateCategoryInput>;
 
 export interface ICategoryRepository {

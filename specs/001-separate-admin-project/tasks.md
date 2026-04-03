@@ -184,8 +184,8 @@ Phase 2 (US3 - Shared Code Management) ← Must complete before frontend package
 - [ ] T060 [P] [US3] Write unit tests for repository interfaces using in-memory implementations
 - [x] T061 [P] [US3] Write unit tests for Zod validation schemas with valid and invalid inputs
 - [x] T062 [US3] Build backend package: `pnpm --filter backend build` produces complete dist/ output
-- [x] T063 [US3] Run backend tests: `pnpm --filter backend test` 27/29 tests pass (93% pass rate)
-- [ ] T064 [US3] Verify exports: Create test file importing from @findeg/backend, @findeg/backend/features/core, compile successfully
+- [x] T063 [US3] Run backend tests: `pnpm --filter backend test` 51/53 tests pass (96.2% pass rate)
+- [x] T064 [US3] Verify exports: Create test file importing from @findeg/backend, @findeg/backend/features/core, compile successfully
 - [ ] T065 [US3] Commit Phase 1 with message "feat(backend): migrate core features, database access, and auth to backend package"
 
 **Phase 1 Exit Criteria**:

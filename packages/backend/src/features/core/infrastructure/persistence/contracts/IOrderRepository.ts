@@ -1,18 +1,18 @@
 /**
  * Order Repository Contract
- * 
+ *
  * Defines the interface for order data access operations.
  * Backend package exports this interface; frontend packages import it.
  */
 
-export type OrderStatus = 
-  | 'pending'
-  | 'confirmed'
-  | 'processing'
-  | 'shipped'
-  | 'delivered'
-  | 'cancelled'
-  | 'refunded';
+export type OrderStatus =
+  | "pending"
+  | "confirmed"
+  | "processing"
+  | "shipped"
+  | "delivered"
+  | "cancelled"
+  | "refunded";
 
 export type OrderItem = {
   id: string;
@@ -50,12 +50,14 @@ export type OrderFilters = {
   search?: string; // search by order number
   limit?: number;
   offset?: number;
-  sortBy?: 'createdAt' | 'total' | 'status';
-  sortOrder?: 'asc' | 'desc';
+  sortBy?: "createdAt" | "total" | "status";
+  sortOrder?: "asc" | "desc";
 };
 
-export type CreateOrderInput = Omit<Order, 'id' | 'orderNumber' | 'createdAt' | 'updatedAt'>;
-export type UpdateOrderInput = Partial<Pick<Order, 'status' | 'notes' | 'shippingAddress' | 'billingAddress'>>;
+export type CreateOrderInput = Omit<Order, "id" | "orderNumber" | "createdAt" | "updatedAt">;
+export type UpdateOrderInput = Partial<
+  Pick<Order, "status" | "notes" | "shippingAddress" | "billingAddress">
+>;
 
 export interface IOrderRepository {
   findById(id: string): Promise<Order | null>;
