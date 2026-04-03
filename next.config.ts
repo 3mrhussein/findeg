@@ -24,6 +24,9 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: false,
   },
+  experimental: {
+    //   turbopackFileSystemCacheForDev: true,
+  },
 };
 
 export default withNextIntl(nextConfig);

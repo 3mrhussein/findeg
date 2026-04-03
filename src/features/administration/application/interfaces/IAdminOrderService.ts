@@ -1,6 +1,7 @@
 import { Order } from "@/features/order/domain/entities/Order";
 import { OrderStatusUpdate } from "@/features/administration/domain/types";
 import { OrderFilters } from "@/features/order/application/interfaces/IOrderRepository";
+import { PaymentStatus } from "@/features/core/domain/types/common";
 
 export interface IAdminOrderService {
   /**
@@ -21,10 +22,15 @@ export interface IAdminOrderService {
   /**
    * Updates the financial payment status of an order.
    */
-  updatePaymentStatus(id: number, status: string): Promise<void>;
+  updatePaymentStatus(id: number, status: PaymentStatus): Promise<void>;
 
   /**
    * Retrieves high-level order statistics for the dashboard.
    */
   getDashboardStats(): Promise<any>;
+
+  /**
+   * Retrieves a breakdown of order counts by their lifecycle status.
+   */
+  getStatusCounts(): Promise<Record<string, number>>;
 }

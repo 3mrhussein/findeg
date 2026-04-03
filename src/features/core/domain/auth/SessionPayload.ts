@@ -6,12 +6,27 @@
 
 import { z } from "zod";
 import { EmailSchema } from "../types/common";
-import { UserRoleSchema } from "../types/common";
+import { PortalRoleSchema } from "../types/common";
+import {
+  ActorTypeSchema,
+  OrganizationIdSchema,
+  PermissionCodeSchema,
+  RoleIdSchema,
+  UserVOSchema,
+} from "../value-objects";
 
 export const SessionPayloadSchema = z.object({
   userId: z.number().int().positive(),
-  email: EmailSchema,
-  role: UserRoleSchema,
+  portalRole: PortalRoleSchema,
+  user: UserVOSchema,
+
+  // Additive v2 identity/session fields.
+  subjectId: z.string().min(1).optional(),
+  actorType: ActorTypeSchema.optional(),
+  activeRoleIds: z.array(RoleIdSchema).default([]).optional(),
+  permissionCodes: z.array(PermissionCodeSchema).default([]).optional(),
+  organizationId: OrganizationIdSchema.optional(),
+  tokenVersion: z.number().int().positive().default(1).optional(),
 });
 
 export type SessionPayload = z.infer<typeof SessionPayloadSchema>;

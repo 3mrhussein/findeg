@@ -1,39 +1,37 @@
 /**
- * Audit Log Database Schema
+ * Audit Logs Database Schema
  *
- * Records all admin mutations for accountability and debugging.
  * Stores before/after snapshots of changed data as JSONB.
  */
 
 import { pgTable, serial, text, integer, jsonb, timestamp } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
-// Removed: import { users } from "./users";
+import { users } from "./users";
+import { systemSchema } from "./schemas";
 
 /**
  * Audit Log Table
- *
- * Tracks every admin action:
- * - `adminUserId` — Who performed the action
- * - `entityType` — What type of entity was affected (e.g., "product", "order")
- * - `entityId` — The ID of the affected entity
- * - `action` — What was done (e.g., "create", "update", "delete")
- * - `oldValues` / `newValues` — Before/after data snapshots
  */
-export const auditLog = pgTable("audit_log", {
+export const auditLog = systemSchema.table("audit_log", {
   id: serial("id").primaryKey(),
-  adminUserId: integer("admin_user_id"), // Removed direct .references(() => users.id)
-  entityType: text("entity_type").notNull(),
+  adminUserId: integer("admin_user_id").references(() => users.id, { onDelete: "set null" }),
+  entityType: text("entity_type").notNull(), // e.g., "Product", "Order"
   entityId: text("entity_id").notNull(),
-  action: text("action").notNull(),
-  oldValues: jsonb("old_values").$type<Record<string, unknown>>(),
-  newValues: jsonb("new_values").$type<Record<string, unknown>>(),
+  action: text("action").notNull(), // "create", "update", "delete"
+  oldValues: jsonb("old_values"),
+  newValues: jsonb("new_values"),
+  ipAddress: text("ip_address"),
+  userAgent: text("user_agent"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-// relations will be defined in users.ts to break circular dependency
+export const auditLogRelations = relations(auditLog, ({ one }) => ({
+  adminUser: one(users, {
+    fields: [auditLog.adminUserId],
+    references: [users.id],
+    relationName: "user_audit_logs",
+  }),
+}));
 
-/**
- * Type Exports
- */
-export type AuditLogEntry = typeof auditLog.$inferSelect;
-export type NewAuditLogEntry = typeof auditLog.$inferInsert;
+export type AuditLog = typeof auditLog.$inferSelect;
+export type NewAuditLog = typeof auditLog.$inferInsert;

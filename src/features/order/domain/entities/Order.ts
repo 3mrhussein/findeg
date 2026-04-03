@@ -1,4 +1,14 @@
-import { ID, Price, Sku, Quantity, Email } from "@/features/core/domain/types/common";
+import {
+  ID,
+  Price,
+  Sku,
+  Quantity,
+  Email,
+  OrderStatus,
+  PaymentMethod,
+  PaymentStatus,
+} from "@/features/core/domain/types/common";
+import type { CurrencyCode } from "@/features/core/domain/value-objects";
 import type { ShippingAddress, VariantSnapshot } from "../value-objects";
 
 /**
@@ -9,12 +19,15 @@ export interface OrderItem {
   orderId?: ID | string;
   /** Reference to the current product */
   productId: ID;
+  /** The specific variant purchased */
+  variantId?: ID;
   /** Units purchased */
   quantity: Quantity;
-  /** Price at which the item was purchased (legacy field name) */
-  priceAtTime?: Price;
+  /** Selected Unit of Measure */
+  uomCode?: string;
   /** Current display price */
   price?: Price;
+  unitPrice?: Price;
   /** Product name captured at time of purchase to handle future name changes */
   productNameSnapshot?: string;
   /** SKU captured at time of purchase */
@@ -25,8 +38,6 @@ export interface OrderItem {
   variantSnapshot?: VariantSnapshot;
   /** Total for this line (quantity * unitPriceSnapshot) */
   totalPrice?: Price;
-  /** Human-readable variant summary */
-  variantDetails?: string;
   productName?: string;
 }
 
@@ -44,9 +55,9 @@ export interface Order {
   /** Email used for guest checkout */
   guestEmail?: Email;
   /** Current logistics status */
-  status: string;
+  status: OrderStatus;
   /** Current financial status */
-  paymentStatus?: string;
+  paymentStatus?: PaymentStatus;
   /** Sum of all order item prices */
   subtotal?: Price;
   /** Shipping and handling fees */
@@ -54,17 +65,15 @@ export interface Order {
   /** Final amount charged (subtotal + shippingCost) */
   totalAmount?: Price;
   /** ISO currency code (e.g., 'EGP') */
-  currency?: string;
+  currency?: CurrencyCode;
   /** Method of payment (e.g., 'COD', 'Card') */
-  paymentMethod?: string;
+  paymentMethod?: PaymentMethod;
   /** Delivery address details captured at time of checkout */
   shippingAddressSnapshot?: ShippingAddress;
   /** Courier tracking reference */
   trackingNumber?: string;
   /** Internal staff notes (not visible to customer) */
   adminNotes?: string;
-  shippingAddress?: string;
-  billingAddress?: string;
   createdAt?: Date;
   updatedAt?: Date;
   /** Detailed line items associated with this order */

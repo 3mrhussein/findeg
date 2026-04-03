@@ -1,0 +1,9 @@
+id,code,name,created_at,updated_at
+1,system_admin,System Administrator,2026-02-19 10:00:00,2026-02-19 10:00:00
+2,user,User,2026-02-19 10:00:00,2026-02-19 10:00:00
+3,inventory_manager,Inventory Manager,2026-02-19 10:00:00,2026-02-19 10:00:00
+4,editorial,Editorial,2026-02-19 10:00:00,2026-02-19 10:00:00
+5,operations_manager,Operations Manager,2026-02-19 10:00:00,2026-02-19 10:00:00
+6,customer_support,Customer Support,2026-02-19 10:00:00,2026-02-19 10:00:00
+7,business_analyst,Business Analyst,2026-02-19 10:00:00,2026-02-19 10:00:00
+8,school_liaison,School Liaison,2026-02-19 10:00:00,2026-02-19 10:00:00

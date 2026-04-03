@@ -3,6 +3,8 @@
 import { container } from "@/features/core/infrastructure/di/ServiceContainer";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { isAdminSession, createUserVO } from "@/features/core/domain/auth";
+import type { SessionPayload } from "@/features/core/domain/auth";
 
 /**
  * Authenticates a user using email and password credentials.
@@ -20,10 +22,27 @@ export async function loginAction(formData: FormData) {
 
   if (result.success) {
     revalidatePath("/");
-    // Check if it was an admin login
-    if (result.user?.role === "admin") {
-      redirect("/admin");
+
+    if (result.user) {
+      const sessionLike: SessionPayload = {
+        userId: result.user.id,
+        user: createUserVO({
+          email: result.user.email,
+          firstName: result.user.firstName,
+          lastName: result.user.lastName,
+        }),
+        portalRole: result.user.portalRole,
+        activeRoleIds: result.user.activeRoleIds,
+        permissionCodes: result.user.permissionCodes,
+        actorType: result.user.actorType,
+        organizationId: result.user.organizationId,
+      };
+
+      if (isAdminSession(sessionLike)) {
+        redirect("/admin");
+      }
     }
+
     redirect("/");
   }
 
@@ -33,9 +52,11 @@ export async function loginAction(formData: FormData) {
 /**
  * Terminates the current user session and redirects to the home page.
  */
-export async function logoutAction() {
+export async function logoutAction(formData?: FormData) {
   const authService = container.authService;
+  const redirectTo = formData?.get("redirectTo") as string | undefined;
+
   await authService.logout();
   revalidatePath("/");
-  redirect("/");
+  redirect(redirectTo || "/");
 }

@@ -36,7 +36,8 @@ export async function POST(request: NextRequest) {
         return apiErrorByCode("CHECKOUT_GUEST_EMAIL_REQUIRED");
       }
 
-      const { cartService, productService, repositories } = getServices();
+      const cartService = getServices().cart;
+      const repositories = getServices().repositories;
 
       const cartId = context.user
         ? `user_${context.user.userId}`
@@ -49,34 +50,33 @@ export async function POST(request: NextRequest) {
       }
 
       const subtotal = cart.items.reduce((acc, item) => {
-        const unitPrice = item.unitPriceSnapshot ?? 0;
-        return acc + unitPrice * item.quantity;
+        return acc + item.unitPrice * item.quantity;
       }, 0);
       const shippingCost = paymentMethod === "cod" ? 50 : 30; // EGP
       const totalAmount = subtotal + shippingCost;
 
       // Create order items with snapshots
-      const orderItems = await Promise.all(
-        cart.items.map(async (item) => {
-          const product = await productService.getById(item.id);
-          const unitPriceSnapshot = item.unitPriceSnapshot ?? product?.price ?? 0;
-          return {
-            productId: item.id,
-            quantity: item.quantity,
-            productNameSnapshot: product?.name || DOMAIN_DEFAULTS.PRODUCT_NAME_FALLBACK,
-            productSkuSnapshot: product?.sku || "",
-            unitPriceSnapshot,
-            variantSnapshot: {
-              ...(item.variant || {}),
-              variantKey: item.variantKey || DOMAIN_DEFAULTS.VARIANT_KEY,
-              uomCode: item.uomCode || DOMAIN_DEFAULTS.UOM_CODE,
-              customerGroup: item.customerGroup || DOMAIN_DEFAULTS.CUSTOMER_GROUP,
-            },
-            totalPrice: unitPriceSnapshot * item.quantity,
-            priceAtTime: unitPriceSnapshot,
-          };
-        }),
-      );
+      const orderItems = cart.items.map((item) => {
+        const unitPriceSnapshot = item.unitPrice;
+        return {
+          productId: item.productId,
+          variantId: item.variantId,
+          quantity: item.quantity,
+          productNameSnapshot: item.productName || DOMAIN_DEFAULTS.PRODUCT_NAME_FALLBACK,
+          productSkuSnapshot: item.sku || "",
+          unitPriceSnapshot,
+          uomCode: item.uomCode,
+          variantSnapshot: {
+            variantId: item.variantId,
+            sku: item.sku,
+            label: item.variantLabel,
+            uomCode: item.uomCode,
+            customerGroup: item.customerGroup || DOMAIN_DEFAULTS.CUSTOMER_GROUP,
+          },
+          totalPrice: unitPriceSnapshot * item.quantity,
+          priceAtTime: unitPriceSnapshot,
+        };
+      });
 
       // Persist order with snapshots
       const order = await repositories.orders.create({
@@ -95,6 +95,17 @@ export async function POST(request: NextRequest) {
 
       // Clear cart after order creation
       await cartService.clearCart(cartId);
+
+      // Send Order Confirmation Email
+      getServices()
+        .email.sendOrderConfirmation(order, {
+          email: !context.user ? guestEmail! : context.user.user.email,
+          firstName: context.user?.user.firstName || undefined,
+          lastName: context.user?.user.lastName,
+        })
+        .catch((err) => {
+          console.error("[CheckoutAPI] Failed to send order confirmation email:", err);
+        });
 
       return apiResponse(
         {

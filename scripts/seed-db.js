@@ -1,186 +1,76 @@
 /**
- * Database Seed Script
+ * Database Fresh Seed Script (CSV Snapshot Mode)
  *
- * This script populates the database with initial data from src/lib/constants.ts
- * and creates a default admin user.
+ * 1) Clears seeded tables
+ * 2) Imports CSV snapshots
  *
  * Usage:
  *   npm run db:seed
  */
 
 import * as dotenv from "dotenv";
-import postgres from "postgres";
-import { drizzle } from "drizzle-orm/postgres-js";
-import { products, productTranslations } from "../src/infrastructure/database/schema/products.ts";
-import {
-  categories,
-  categoryTranslations,
-} from "../src/infrastructure/database/schema/categories.ts";
-import { users } from "../src/infrastructure/database/schema/users.ts";
-import { products as mockProducts } from "../src/lib/constants.ts";
-import { eq } from "drizzle-orm";
-import bcrypt from "bcryptjs";
+import { createSqlClient, seedFromCsvSnapshots, truncateSeedTables } from "./lib/csv-seed.js";
 
-// Load environment variables
 dotenv.config({ path: ".env.local" });
 dotenv.config();
 
-function slugify(text) {
-  return text
-    .toString()
-    .toLowerCase()
-    .replace(/\s+/g, "-") // Replace spaces with -
-    .replace(/[^\w\-]+/g, "") // Remove all non-word chars
-    .replace(/\-\-+/g, "-") // Replace multiple - with single -
-    .replace(/^-+/, "") // Trim - from start of text
-    .replace(/-+$/, ""); // Trim - from end of text
+function formatTableList(tableNames) {
+  if (tableNames.length === 0) return "none";
+  return tableNames.join(", ");
 }
 
-/**
- * Seed the database with products, translations, categories, and admin user
- */
-async function seed() {
-  let client;
+function formatClearedRows(rowCounts) {
+  return Object.entries(rowCounts)
+    .filter(([, count]) => count > 0)
+    .map(([tableName, count]) => `${tableName}:${count}`)
+    .join(", ");
+}
+
+async function main() {
+  const sql = createSqlClient();
 
   try {
-    // Get database URL
-    const databaseUrl = process.env.DATABASE_URL;
-    if (!databaseUrl) {
-      throw new Error("DATABASE_URL environment variable is not set");
+    const startedAt = Date.now();
+    console.log("🌱 Starting fresh CSV seed...");
+    const result = await sql.begin(async (tx) => {
+      const truncateSummary = await truncateSeedTables(tx);
+      const importSummary = await seedFromCsvSnapshots(tx);
+      return { truncateSummary, importSummary };
+    });
+
+    const { truncateSummary, importSummary } = result;
+    const clearedRowsText = formatClearedRows(truncateSummary.rowCounts);
+
+    console.log(
+      `🧹 Truncated ${truncateSummary.truncatedTables.length} table(s), cleared ${truncateSummary.rowsCleared} row(s).`,
+    );
+    if (clearedRowsText) {
+      console.log(`   Cleared rows by table: ${clearedRowsText}`);
     }
 
-    // Create postgres client
-    client = postgres(databaseUrl);
-    const db = drizzle(client);
-
-    console.log("🌱 Starting database seed...");
-
-    // --- Create/Update Admin User ---
-    console.log("👤 Seeding admin user...");
-
-    // Admin credentials
-    const adminEmail = "admin@findeg.com";
-    const adminPassword = "admin";
-    const adminName = "Admin User";
-
-    const hashedPassword = await bcrypt.hash(adminPassword, 10);
-
-    // Check if user exists
-    const existingUsers = await db.select().from(users).where(eq(users.email, adminEmail));
-
-    if (existingUsers.length > 0) {
-      console.log("⚠️  Admin user already exists. Updating password...");
-      await db
-        .update(users)
-        .set({
-          password: hashedPassword,
-          role: "admin",
-          name: adminName,
-          isActive: true,
-        })
-        .where(eq(users.email, adminEmail));
-      console.log("✅ Admin user updated.");
-    } else {
-      await db.insert(users).values({
-        email: adminEmail,
-        password: hashedPassword,
-        name: adminName,
-        role: "admin",
-        isActive: true,
-      });
-      console.log("✅ Admin user created.");
+    console.log(`📥 Imported ${importSummary.insertedRows} row(s) from CSV snapshots.`);
+    for (const tableSummary of importSummary.tableSummaries) {
+      console.log(`   ${tableSummary.tableName}: +${tableSummary.insertedRows}`);
     }
 
-    // --- Seed Data ---
-    console.log("🗑️  Clearing existing data...");
-    // Clear in correct order due to FK constraints
-    await db.delete(productTranslations);
-    await db.delete(products);
-    await db.delete(categoryTranslations);
-    await db.delete(categories);
+    console.log(
+      `🔁 Reset ID sequences on ${importSummary.sequenceResetTables.length} table(s): ${formatTableList(importSummary.sequenceResetTables)}`,
+    );
 
-    // --- Seed Categories ---
-    console.log("📂 Seeding categories...");
-    const uniqueCategories = [...new Set(mockProducts.map((p) => p.category))].filter(Boolean);
-    const categoryMap = new Map(); // Name -> ID
-
-    for (const catName of uniqueCategories) {
-      if (!catName) continue;
-
-      const slug = slugify(catName);
-
-      const [insertedCategory] = await db
-        .insert(categories)
-        .values({
-          slug: slug,
-          isActive: true,
-          path: "/",
-          depth: 0,
-        })
-        .returning();
-
-      await db.insert(categoryTranslations).values({
-        categoryId: insertedCategory.id,
-        language: "en",
-        name: catName,
-        description: `Everything for ${catName}`,
-      });
-
-      categoryMap.set(catName, insertedCategory.id);
-      console.log(`folder ✅ Category created: ${catName}`);
+    if (importSummary.skippedTables.length > 0) {
+      console.log(
+        `⚠️ Skipped ${importSummary.skippedTables.length} table(s) not present in DB: ${formatTableList(importSummary.skippedTables)}`,
+      );
     }
 
-    // --- Seed Products ---
-    console.log(`📦 Seeding ${mockProducts.length} products...`);
-
-    for (const mockProduct of mockProducts) {
-      const categoryId = mockProduct.category ? categoryMap.get(mockProduct.category) : null;
-
-      // Insert base product
-      const [insertedProduct] = await db
-        .insert(products)
-        .values({
-          price: mockProduct.price.toString(),
-          strikePrice: mockProduct.strikePrice?.toString(),
-          categoryId: categoryId, // Mapped ID
-          // category: mockProduct.category, // Removed column
-          images: mockProduct.images || [],
-          isNew: mockProduct.isNew || false,
-          rating: (mockProduct.rating || 0).toString(),
-          reviewsCount: mockProduct.reviewsCount || 0,
-          variants: mockProduct.variants || null,
-        })
-        .returning();
-
-      if (!insertedProduct) {
-        console.error(`❌ Failed to insert product: ${mockProduct.name}`);
-        continue;
-      }
-
-      // Insert English translation
-      await db.insert(productTranslations).values({
-        productId: insertedProduct.id,
-        language: "en",
-        name: mockProduct.name,
-        description: mockProduct.description,
-        longDescription: mockProduct.longDescription || mockProduct.description,
-      });
-
-      console.log(`✅ Seeded product: ${mockProduct.name} (ID: ${insertedProduct.id})`);
-    }
-
-    console.log("✨ Database seed completed successfully!");
-    console.log(`📊 Total products seeded: ${mockProducts.length}`);
-  } catch (error) {
-    console.error("❌ Error seeding database:", error);
-    process.exit(1);
+    const durationMs = Date.now() - startedAt;
+    console.log(`✅ Fresh CSV seed completed successfully in ${durationMs}ms.`);
   } finally {
-    // Close database connection
-    if (client) {
-      await client.end();
-    }
+    await sql.end();
   }
 }
 
-// Run seed
-seed();
+main().catch((error) => {
+  console.error("❌ Error seeding database:", error);
+  process.exit(1);
+});

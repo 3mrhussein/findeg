@@ -3,16 +3,25 @@
 import { ThemeProvider } from "./ThemeProvider";
 import { CartProvider } from "@/providers/CartProvider";
 import { UserProvider } from "@/providers/UserProvider";
+import { AnimationProvider } from "./animation-provider";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 /**
  *
  */
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeProvider>
-      <UserProvider>
-        <CartProvider>{children}</CartProvider>
-      </UserProvider>
-    </ThemeProvider>
+    <NuqsAdapter>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <TooltipProvider>
+          <AnimationProvider>
+            <UserProvider>
+              <CartProvider>{children}</CartProvider>
+            </UserProvider>
+          </AnimationProvider>
+        </TooltipProvider>
+      </ThemeProvider>
+    </NuqsAdapter>
   );
 }

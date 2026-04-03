@@ -1,4 +1,12 @@
-import { ID, Price, Sku, Quantity, Email } from "@/features/core/domain/types/common";
+import {
+  ID,
+  Price,
+  Sku,
+  Quantity,
+  Email,
+  OrderStatus,
+  PaymentStatus,
+} from "@/features/core/domain/types/common";
 import { db } from "@/features/core/infrastructure/persistence";
 import {
   orders,
@@ -10,7 +18,7 @@ import {
 import { IOrderRepository, OrderFilters } from "../../application/interfaces/IOrderRepository";
 import { Order, OrderItem } from "../../domain/entities/Order";
 import { OrderStatusUpdate } from "@/features/administration/domain/types";
-import { eq, count as sqlCount, sql, desc, and, gte, lte, ilike, or } from "drizzle-orm";
+import { eq, count as sqlCount, sql, desc, and, gte, lte, ilike, or, inArray } from "drizzle-orm";
 
 /**
  * Drizzle Order Repository
@@ -43,8 +51,6 @@ export class DrizzleOrderRepository implements IOrderRepository {
       shippingAddressSnapshot: (dbOrder.shippingAddressSnapshot as any) || undefined,
       trackingNumber: dbOrder.trackingNumber || undefined,
       adminNotes: dbOrder.adminNotes || undefined,
-      shippingAddress: dbOrder.shippingAddress || undefined,
-      billingAddress: dbOrder.billingAddress || undefined,
       createdAt: dbOrder.createdAt,
       updatedAt: dbOrder.updatedAt,
       customerName: customerName,
@@ -53,15 +59,15 @@ export class DrizzleOrderRepository implements IOrderRepository {
         id: item.id,
         orderId: item.orderId,
         productId: item.productId!,
+        variantId: (item as any).variantId || undefined,
         quantity: item.quantity as Quantity,
-        priceAtTime: Number(item.priceAtTime) as Price,
+        uomCode: (item as any).uomCode || undefined,
         unitPriceSnapshot: item.unitPriceSnapshot
           ? (Number(item.unitPriceSnapshot) as Price)
           : undefined,
         totalPrice: item.totalPrice ? (Number(item.totalPrice) as Price) : undefined,
         productNameSnapshot: item.productNameSnapshot || undefined,
         productSkuSnapshot: item.productSkuSnapshot || undefined,
-        variantDetails: item.variantDetails || undefined,
         variantSnapshot: (item.variantSnapshot as any) || undefined,
       })),
     };
@@ -90,9 +96,10 @@ export class DrizzleOrderRepository implements IOrderRepository {
 
     // Fallback name if no user
     const customerName = orderResult[0].user
-      ? orderResult[0].user.firstName
-        ? `${orderResult[0].user.firstName} ${orderResult[0].user.lastName || ""}`
-        : orderResult[0].user.name
+      ? [orderResult[0].user.firstName, orderResult[0].user.lastName]
+          .filter(Boolean)
+          .join(" ")
+          .trim()
       : (orderResult[0].order.shippingAddressSnapshot as any)?.fullName || "Guest";
 
     return this.mapToDomain(
@@ -121,6 +128,34 @@ export class DrizzleOrderRepository implements IOrderRepository {
     );
 
     return ordersWithItems;
+  }
+
+  /**
+   * Returns true when a user has at least one non-cancelled purchase of the product.
+   */
+  async hasPurchasedProduct(userId: ID, productId: ID): Promise<boolean> {
+    const purchasableStatuses: OrderStatus[] = [
+      "pending",
+      "confirmed",
+      "processing",
+      "shipped",
+      "delivered",
+    ];
+
+    const rows = await db
+      .select({ id: orderItems.id })
+      .from(orderItems)
+      .innerJoin(orders, eq(orderItems.orderId, orders.id))
+      .where(
+        and(
+          eq(orders.userId, userId as any),
+          eq(orderItems.productId, productId as any),
+          inArray(orders.status, purchasableStatuses),
+        ),
+      )
+      .limit(1);
+
+    return rows.length > 0;
   }
 
   /**
@@ -183,9 +218,7 @@ export class DrizzleOrderRepository implements IOrderRepository {
             .where(eq(orderItems.orderId, row.order.id as any));
 
           const name = row.user
-            ? row.user.firstName
-              ? `${row.user.firstName} ${row.user.lastName || ""}`
-              : row.user.name
+            ? [row.user.firstName, row.user.lastName].filter(Boolean).join(" ").trim()
             : (row.order.shippingAddressSnapshot as any)?.fullName || "Guest";
 
           return this.mapToDomain(row.order, items, name || "Guest", row.user?.email);
@@ -213,8 +246,6 @@ export class DrizzleOrderRepository implements IOrderRepository {
         currency: rest.currency || "EGP",
         paymentMethod: rest.paymentMethod,
         shippingAddressSnapshot: rest.shippingAddressSnapshot,
-        shippingAddress: rest.shippingAddress,
-        billingAddress: rest.billingAddress,
       };
 
       const [newOrder] = await tx.insert(orders).values(dbOrderData).returning();
@@ -227,8 +258,9 @@ export class DrizzleOrderRepository implements IOrderRepository {
             items.map((item) => ({
               orderId: newOrder.id,
               productId: item.productId,
+              variantId: item.variantId,
               quantity: item.quantity,
-              priceAtTime: String(item.priceAtTime || item.price || 0),
+              uomCode: item.uomCode,
               unitPriceSnapshot: item.unitPriceSnapshot
                 ? String(item.unitPriceSnapshot)
                 : String(item.price || 0),
@@ -238,7 +270,6 @@ export class DrizzleOrderRepository implements IOrderRepository {
               productNameSnapshot: item.productNameSnapshot,
               productSkuSnapshot: item.productSkuSnapshot,
               variantSnapshot: item.variantSnapshot,
-              variantDetails: item.variantDetails,
             })),
           )
           .returning();
@@ -251,7 +282,7 @@ export class DrizzleOrderRepository implements IOrderRepository {
   /**
    *
    */
-  async updateStatus(id: ID | string, status: string): Promise<void> {
+  async updateStatus(id: ID | string, status: OrderStatus): Promise<void> {
     await db
       .update(orders)
       .set({ status, updatedAt: new Date() })
@@ -282,7 +313,7 @@ export class DrizzleOrderRepository implements IOrderRepository {
    * @param id - Order ID
    * @param status - New payment status
    */
-  async updatePaymentStatus(id: ID | string, status: string): Promise<void> {
+  async updatePaymentStatus(id: ID | string, status: PaymentStatus): Promise<void> {
     await db
       .update(orders)
       .set({ paymentStatus: status, updatedAt: new Date() })
@@ -317,7 +348,7 @@ export class DrizzleOrderRepository implements IOrderRepository {
   /**
    *
    */
-  async getOrdersCountByStatus(): Promise<Record<string, number>> {
+  async getOrdersCountByStatus(): Promise<Partial<Record<OrderStatus, number>>> {
     const counts = await db
       .select({
         status: orders.status,
@@ -331,7 +362,7 @@ export class DrizzleOrderRepository implements IOrderRepository {
         acc[curr.status] = curr.count;
         return acc;
       },
-      {} as Record<string, number>,
+      {} as Partial<Record<OrderStatus, number>>,
     );
   }
 

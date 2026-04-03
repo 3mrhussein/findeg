@@ -1,0 +1,9 @@
+id,email,first_name,last_name,phone,portal_role,email_verified,image,is_active,created_at,updated_at
+1,admin@findeg.com,Amr,Hussein,01015515615,staff,,,t,2026-02-14 19:51:04.731329,2026-02-17 16:04:52.465863
+2,user@findeg.com,Test,User,0123456789,customer,,,t,2026-03-07 12:00:00,2026-03-07 12:00:00
+3,superadmin@findeg.com,Super,Admin,,staff,,,t,2026-03-08 10:00:00,2026-03-08 10:00:00
+4,editorial@findeg.com,Catalog,Manager,,staff,,,t,2026-03-08 10:00:00,2026-03-08 10:00:00
+5,inventory@findeg.com,Inventory,Manager,,staff,,,t,2026-03-08 10:00:00,2026-03-08 10:00:00
+6,operations@findeg.com,Operations,Manager,,staff,,,t,2026-03-08 10:00:00,2026-03-08 10:00:00
+7,support@findeg.com,Customer,Support,,staff,,,t,2026-03-08 10:00:00,2026-03-08 10:00:00
+8,liaison@findeg.com,School,Liaison,,staff,,,t,2026-03-08 10:00:00,2026-03-08 10:00:00

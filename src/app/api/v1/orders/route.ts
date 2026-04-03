@@ -10,6 +10,7 @@ import { apiResponse, apiError, apiPaginatedResponse } from "../_lib/api-respons
 import { withAuth } from "../_lib/middleware";
 import { container } from "@/features/core/infrastructure/di/ServiceContainer";
 import { OrderFilters } from "@/features/order/application/interfaces/IOrderRepository";
+import { OrderStatusSchema } from "@/features/core/domain/types/common";
 
 /**
  * List user's orders
@@ -21,7 +22,12 @@ export async function GET(request: NextRequest) {
   return withAuth(request, async (context) => {
     try {
       const { searchParams } = new URL(request.url);
-      const status = searchParams.get("status") || undefined;
+      const rawStatus = searchParams.get("status") || undefined;
+      const parsedStatus = rawStatus ? OrderStatusSchema.safeParse(rawStatus) : null;
+      if (parsedStatus && !parsedStatus.success) {
+        return apiError("Invalid order status filter", 400);
+      }
+      const status = parsedStatus?.success ? parsedStatus.data : undefined;
       const page = Number(searchParams.get("page")) || 1;
       const limit = Number(searchParams.get("limit")) || 20;
       const offset = (page - 1) * limit;

@@ -1,4 +1,4 @@
-import { Email, UserRole } from "../types/common";
+import { Email, PortalRole } from "../types/common";
 
 /**
  * User with password hash — only for auth verification.
@@ -9,10 +9,9 @@ import { Email, UserRole } from "../types/common";
 export interface UserWithPassword {
   id: number;
   email: Email;
-  name?: string;
-  firstName?: string;
-  lastName?: string;
-  phone?: string;
-  role: UserRole;
+  firstName?: string | null;
+  lastName?: string | null;
+  phone?: string | null;
+  portalRole: PortalRole;
   password: string | null;
 }

@@ -1,6 +1,8 @@
 import { ID, Email } from "@/features/core/domain/types/common";
 import { UserWithPassword } from "@/features/core/domain/auth";
 import { User } from "../../domain/entities/User";
+import { PasswordCredentials } from "../../domain/entities/PasswordCredentials";
+import type { PermissionCode, RoleId } from "@/features/core/domain/value-objects";
 
 /**
  * User Repository Interface
@@ -8,6 +10,16 @@ import { User } from "../../domain/entities/User";
  * Defines the contract for user data access and profile management.
  */
 export interface IUserRepository {
+  /**
+   * Resolves authorization context for session creation.
+   * Returns effective role IDs and permission codes assigned to the user.
+   */
+  getAuthorizationContext(userId: ID): Promise<{
+    activeRoleIds: RoleId[];
+    permissionCodes: PermissionCode[];
+    organizationId?: string;
+  }>;
+
   /**
    * Retrieves a safe user profile by ID (no sensitive data).
    */
@@ -33,4 +45,17 @@ export interface IUserRepository {
    * Updates an existing user's profile information.
    */
   update(id: ID, user: Partial<User>): Promise<User>;
+
+  /**
+   * Fetches password credentials for a user (if they exist).
+   */
+  findPasswordCredentials(userId: ID): Promise<PasswordCredentials | null>;
+
+  /**
+   * Inserts or updates password credentials for a user.
+   */
+  upsertPasswordCredentials(
+    userId: ID,
+    payload: Omit<PasswordCredentials, "userId" | "createdAt" | "updatedAt">,
+  ): Promise<void>;
 }

@@ -5,6 +5,8 @@ This playbook is the single source of truth for:
 - Feature responsibilities and dependencies
 - Layer-specific implementation standards
 - Delivery workflow for new features and changes
+- Domain type/value-object foundation (`docs/architecture/DOMAIN_TYPE_BLOCKS.md`)
+- Identity and permission guard boundaries (`docs/AUTH_ARCHITECTURE.md`)
 
 It consolidates architecture conventions previously spread across multiple docs.
 
@@ -44,6 +46,9 @@ flowchart TB
 ### Core Rule
 Features may depend on `core`, and may depend on other features only through interfaces/contracts.  
 No feature may import another feature's infrastructure implementation directly.
+
+Authorization rule:
+- Permission checks must use application guard interfaces (for example `IPermissionService`), never role-string checks in delivery/UI.
 
 ---
 
@@ -111,8 +116,10 @@ graph LR
 When implementing any new capability:
 
 1. **Spec first**
-- Update `project-planning/SYSTEM_SPECIFICATION.md` with scope/API/schema implications.
-- Update `project-planning/IMPLEMENTATION_PLAN.md` checklist.
+   - Update `project-planning/SYSTEM_SPECIFICATION.md` with scope/API/schema implications.
+   - Update `project-planning/MISSING_FLOWS_MATRIX.md`.
+   - Update `project-planning/USE_CASE_BACKLOG.md` when priorities/scope shift.
+   - Update `docs/testing/FRONTEND_TEST_MASTER_PLAN.md` when coverage scope changes.
 
 2. **Domain first**
 - Define/extend domain types and value objects.
@@ -152,11 +159,15 @@ When implementing any new capability:
 - Every side-effectful use case goes through a service.
 - Service interfaces are stable contracts; implementations are swappable.
 - Validate all incoming DTOs at boundaries before orchestration.
+- Authorization decisions are expressed as permission codes, not hard-coded role names.
+- Session payload consumption must go through actor-context resolvers.
 
 ### Infrastructure Standards
 - Repositories map DB models to domain models in one place.
 - Keep SQL/ORM types out of UI/application contracts.
-- Use explicit migrations for schema evolution; document any breaking change in spec + implementation plan.
+- Use explicit migrations for schema evolution; document any breaking change in planning docs and test plan.
+- Identity infrastructure owns token verification, credential hashing, and role/permission lookup adapters.
+- Payment adapters store tokenized instruments only; no raw payment secrets in domain/application layers.
 
 ### UI Standards
 - Forms own presentation and basic client validation only.
@@ -167,19 +178,48 @@ When implementing any new capability:
 - Keep endpoint contracts explicit and versioned at `/api/v1`.
 - Use consistent error shape `{ errorCode, message, details }`.
 - Validate params/body/query with zod schemas.
+- Protect privileged endpoints via permission-based guards.
+- Keep auth/session middleware and permission resolution centralized in shared wrappers.
 
 ---
 
-## 6. Migration Standards
+## 6. Identity & Authorization Contract
+
+Mandatory boundaries:
+
+1. Delivery layer (middleware/routes/server actions)
+- parses request context
+- calls auth application services to resolve actor/session context
+- delegates authorization to permission guard service
+
+2. Application layer
+- defines `IAuthService`, `ISessionService`, `IPermissionService`
+- returns explicit allow/deny outcomes with typed reasons
+
+3. Infrastructure layer
+- implements JWT/session adapters
+- persists and resolves users, linked accounts, memberships, roles, and permissions
+
+Prohibited:
+
+- direct `role === "admin"` checks in UI/routes
+- direct DB/ORM imports inside middleware/page components for auth decisions
+
+---
+
+## 7. Migration Standards
 
 1. Add schema in `src/features/core/infrastructure/persistence/schema/*`.
 2. Add migration SQL in `scripts/migrations/`.
 3. Validate migration on local DB.
-4. Document data/backfill assumptions in spec and implementation plan.
+4. Document data/backfill assumptions in:
+   - `project-planning/SYSTEM_SPECIFICATION.md`
+   - `project-planning/MISSING_FLOWS_MATRIX.md`
+   - `project-planning/USE_CASE_BACKLOG.md`
 
 ---
 
-## 7. Feature Documentation Rule
+## 8. Feature Documentation Rule
 
 Each feature README must include:
 - Responsibilities

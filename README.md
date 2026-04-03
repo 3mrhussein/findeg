@@ -46,6 +46,21 @@ FindEg.com is a modern, trendy e-commerce web application specializing in statio
 
    Open [http://localhost:3000](http://localhost:3000) in your browser.
 
+### 🧪 Test Accounts
+
+The database comes pre-seeded with Several test accounts representing different roles in the system. The password for all test accounts is `password`.
+
+| Actor / Role           | Email                   | Description                                                        |
+| ---------------------- | ----------------------- | ------------------------------------------------------------------ |
+| **System Admin (New)** | `admin@findeg.com`      | Use password `Admin1234!` for the new dashboard health cockpit.    |
+| **System Admin**       | `superadmin@findeg.com` | Full, unrestricted access to all admin features and settings.      |
+| **Catalog Manager**    | `editorial@findeg.com`  | Can manage products, categories, brands, and view analytics.       |
+| **Inventory Manager**  | `inventory@findeg.com`  | Can manage stock levels, warehouses, and view orders.              |
+| **Operations Manager** | `operations@findeg.com` | Broad access for managing orders, inventory, and viewing catalogs. |
+| **Customer Support**   | `support@findeg.com`    | Can view orders, users, and assist with customer issues.           |
+| **School Liaison**     | `liaison@findeg.com`    | Manages school supply lists and can browse products.               |
+| **B2C Customer**       | `user@findeg.com`       | Standard storefront user with no admin access.                     |
+
 ---
 
 ## 🐳 Docker Database Setup
@@ -199,7 +214,7 @@ src/
 
 **Organization Principles:**
 
-- **Features:** Each feature has `domain/`, `application/`, `infrastructure/`, `ui/`.
+- **Features:** Each feature has `domain/`, `application/`, `infrastructure/`, and `presentation/` (legacy modules may still use `ui/`).
 - **Core:** Shared cross-cutting concerns (auth, DB, layout). shadcn primitives stay at `src/components/ui/`.
 - **Reusability:** Shared code in core; features depend on core.
 - **Readability:** All catalog-related code lives in `features/catalog/`.
@@ -245,25 +260,44 @@ const t = useTranslations();
 
 ## 🛠️ Development Scripts
 
-| Script          | Command         | Description                                     |
-| --------------- | --------------- | ----------------------------------------------- |
-| **Development** | `npm run dev`   | Start dev server (auto-kills port 3000 if busy) |
-| **Build**       | `npm run build` | Create production build                         |
-| **Start**       | `npm run start` | Run production server                           |
-| **Lint**        | `npm run lint`  | Run ESLint                                      |
+| Script          | Command             | Description                                     |
+| --------------- | ------------------- | ----------------------------------------------- |
+| **Development** | `npm run dev`       | Start dev server (auto-kills port 3000 if busy) |
+| **Build**       | `npm run build`     | Create production build                         |
+| **Start**       | `npm run start`     | Run production server                           |
+| **Lint**        | `npm run lint`      | Run ESLint                                      |
+| **Changelog**   | `npm run changelog` | Generate `CHANGELOG.md` from git commits        |
 
 ---
 
 ## 📚 Documentation Map
 
-### 📋 Project Status
+---
 
-- **[Project Status](PROJECT_STATUS.md)** — Current MVP progress, completed foundations, and active backlog.
+## 📈 Current Project Status (MVP Phase 1)
+
+FindEg is currently in **Phase 1: Public E-Shop MVP**. We are focused on a dual-track strategy:
+
+1. **Short-term B2C growth**: Reliable multilingual storefront for school supplies.
+2. **Mid-term B2B2C readiness**: Clean architecture to support future school integrations.
+
+### Key Milestones Completed
+
+- **Core REST API**: JWT auth, catalog, cart, and order management.
+- **Admin Suite**: Dashboard, inventory management, and audit logging.
+- **Multi-tenant UI**: RTL support (AR/EN) and feature-oriented directory structure.
+- **Refactored Listing Pages**: Standardized `ProductListingLayout` and ViewModel pattern across Shop, Search, and Categories.
+
+For the full technical specification and roadmap, see [SYSTEM_SPECIFICATION.md](project-planning/SYSTEM_SPECIFICATION.md).
+
+---
+
+## 📚 Documentation Map
 
 ### 📋 System Specification
 
 - **[System Specification](project-planning/SYSTEM_SPECIFICATION.md)** — Complete business & technical spec with diagrams: vision, actors, user flows, architecture, database schema, API, features, roadmap, and NFRs.
-- **Dual-Track Goal (B2C + B2B2C)** — Defined in the System Specification section `Current Business Goal (Dual Track)` and reflected in [Project Status](PROJECT_STATUS.md) success criteria.
+- **Dual-Track Goal (B2C + B2B2C)** — Defined in the System Specification section `Current Business Goal (Dual Track)`.
 
 ### Architecture
 
@@ -288,6 +322,7 @@ const t = useTranslations();
 
 - **[Development Guide](docs/guides/DEVELOPMENT.md)** - Step-by-step feature implementation & setup.
 - **[Implementation Standards](docs/guides/IMPLEMENTATION_STANDARDS.md)** - Clean architecture implementation checklist and layer-specific coding standards.
+- **[Changelog Automation](docs/guides/CHANGELOG_AUTOMATION.md)** - How to generate, preview, and validate `CHANGELOG.md`.
 - **[Scaling Standards](docs/guides/SCALING.md)** - How to grow the codebase maintainably.
 - **[Static Content Guide](docs/guides/STATIC_CONTENT.md)** - Managing page-scoped UI text and i18n.
 - **[Logging Guide](docs/guides/LOGGING.md)** - Understanding the multi-tiered logging architecture.
@@ -328,22 +363,29 @@ const t = useTranslations();
 ## 🧪 Testing
 
 ```bash
-# Run tests (when implemented)
-npm run test
+# Type checks
+npm run type-check
+npm run type-check:e2e
 
-# Run tests in watch mode
-npm run test:watch
+# Local E2E (human-readable output)
+npm run e2e:run
+
+# CI E2E (JUnit XML output)
+npm run e2e:run:ci
 ```
+
+`e2e:run` and `e2e:run:ci` execute through `scripts/run-e2e-and-post-seed.js`, which re-seeds the database after the run to keep local state clean for the next execution.
 
 ---
 
 ## 📝 Contributing
 
-1. **Follow Atomic Design** - Place components in correct folders
-2. **Server Components First** - Only use Client Components when needed
-3. **Type Everything** - Define interfaces for all props
-4. **Use Constants** - Store mock data in `lib/constants.ts`
-5. **Extract Logic** - Create hooks for reusable logic
+1. **Respect DDD/Clean Architecture boundaries** - Keep domain/application/infrastructure/presentation responsibilities separated.
+2. **Server Components First** - Use Client Components only when interaction/state requires it.
+3. **Type Everything** - Keep contracts explicit across services, repositories, and route boundaries.
+4. **JSDoc Philosophy** - We prioritize code-as-documentation. Use JSDoc only to explain "why" things are done a certain way, not "what" the code does. Types and names should express the "what".
+5. **Constants-First in Cypress** - Reuse `cypress/support/constants/*` instead of duplicating route/messages/test strings.
+6. **Keep docs in sync** - Update planning/test docs and run `npm run changelog` when delivery history changes.
 
 ---
 

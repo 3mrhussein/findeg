@@ -9,7 +9,7 @@ import { NextRequest } from "next/server";
 import { apiResponse, apiErrorByCode } from "../../_lib/api-response";
 import { getServices } from "@/server/getServices";
 import { SignJWT } from "jose";
-import { RegisterInputSchema } from "@/features/core/domain/auth";
+import { RegisterInputSchema, createUserVO } from "@/features/core/domain/auth";
 import { AUTH_CONSTANTS } from "@/features/core/domain/constants/auth";
 import { getErrorDefinition, validateWithResult } from "@/features/core/domain/errors";
 
@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
       return apiErrorByCode(parsed.error.code, parsed.error.details);
     }
 
-    const { authService } = getServices();
+    const authService = getServices().auth;
 
     // Register user
     const result = await authService.register(parsed.value);
@@ -46,12 +46,19 @@ export async function POST(request: NextRequest) {
     }
 
     const { user } = result;
+    const userVO = createUserVO({
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+    });
 
     // Generate JWT token
     const token = await new SignJWT({
       userId: user.id,
-      email: user.email,
-      role: user.role,
+      portalRole: user.portalRole,
+      user: userVO,
+      subjectId: String(user.id),
+      actorType: "user",
     })
       .setProtectedHeader({ alg: AUTH_CONSTANTS.JWT_ALGORITHM })
       .setExpirationTime(AUTH_CONSTANTS.USER_TOKEN_EXPIRY)
@@ -62,11 +69,9 @@ export async function POST(request: NextRequest) {
         token,
         user: {
           id: user.id,
-          email: user.email,
-          firstName: user.firstName,
-          lastName: user.lastName,
+          ...userVO,
           phone: user.phone,
-          role: user.role,
+          portalRole: user.portalRole,
         },
       },
       201,

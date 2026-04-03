@@ -10,6 +10,7 @@ import { NextRequest } from "next/server";
 import { apiResponse, apiError } from "../../../_lib/api-response";
 import { withAdmin } from "../../../_lib/middleware";
 import { getServices } from "@/server/getServices";
+import { PERMISSION_CODES } from "@/features/core/domain/auth";
 
 /**
  * Get single product (admin)
@@ -19,23 +20,27 @@ import { getServices } from "@/server/getServices";
  * @returns Product with all translations
  */
 export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  return withAdmin(request, async () => {
-    try {
-      const { id: idParam } = await params;
-      const id = parseInt(idParam);
-      const { adminProduct } = getServices();
+  return withAdmin(
+    request,
+    async () => {
+      try {
+        const { id: idParam } = await params;
+        const id = parseInt(idParam);
+        const { adminProduct } = getServices();
 
-      const product = await adminProduct.getByIdWithTranslations(id);
+        const product = await adminProduct.getById(id);
 
-      if (!product) {
-        return apiError("Product not found", 404);
+        if (!product) {
+          return apiError("Product not found", 404);
+        }
+
+        return apiResponse(product);
+      } catch (error) {
+        return apiError(error instanceof Error ? error.message : "Failed to retrieve product", 500);
       }
-
-      return apiResponse(product);
-    } catch (error) {
-      return apiError(error instanceof Error ? error.message : "Failed to retrieve product", 500);
-    }
-  });
+    },
+    PERMISSION_CODES.ADMIN_PRODUCTS_READ,
+  );
 }
 
 /**
@@ -46,18 +51,22 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
  * @returns Updated product
  */
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  return withAdmin(request, async () => {
-    try {
-      const { id: idParam } = await params;
-      const id = parseInt(idParam);
-      const body = await request.json();
-      const { adminProduct } = getServices();
-      const product = await adminProduct.update(id, body);
-      return apiResponse(product);
-    } catch (error) {
-      return apiError(error instanceof Error ? error.message : "Failed to update product", 500);
-    }
-  });
+  return withAdmin(
+    request,
+    async () => {
+      try {
+        const { id: idParam } = await params;
+        const id = parseInt(idParam);
+        const body = await request.json();
+        const { adminProduct } = getServices();
+        const product = await adminProduct.update(id, body);
+        return apiResponse(product);
+      } catch (error) {
+        return apiError(error instanceof Error ? error.message : "Failed to update product", 500);
+      }
+    },
+    PERMISSION_CODES.ADMIN_PRODUCTS_WRITE,
+  );
 }
 
 /**
@@ -71,15 +80,19 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  return withAdmin(request, async () => {
-    try {
-      const { id: idParam } = await params;
-      const id = parseInt(idParam);
-      const { adminProduct } = getServices();
-      await adminProduct.delete(id);
-      return apiResponse({ message: "Product deleted successfully" });
-    } catch (error) {
-      return apiError(error instanceof Error ? error.message : "Failed to delete product", 500);
-    }
-  });
+  return withAdmin(
+    request,
+    async () => {
+      try {
+        const { id: idParam } = await params;
+        const id = parseInt(idParam);
+        const { adminProduct } = getServices();
+        await adminProduct.delete(id);
+        return apiResponse({ message: "Product deleted successfully" });
+      } catch (error) {
+        return apiError(error instanceof Error ? error.message : "Failed to delete product", 500);
+      }
+    },
+    PERMISSION_CODES.ADMIN_PRODUCTS_WRITE,
+  );
 }

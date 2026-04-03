@@ -26,4 +26,19 @@ export interface IAdminBrandService {
    * Deletes a brand.
    */
   delete(id: number): Promise<void>;
+
+  /**
+   * Checks if a slug is available.
+   */
+  checkSlugAvailable(slug: string, excludeId?: number): Promise<boolean>;
+
+  /**
+   * Toggles the active status of a brand.
+   */
+  toggleBrandStatus(id: number): Promise<Brand>;
+
+  /**
+   * Gets the number of products associated with a brand.
+   */
+  getBrandProductCount(id: number): Promise<number>;
 }

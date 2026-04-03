@@ -63,3 +63,65 @@ export async function deleteCategoryAction(id: number) {
     return { success: false, error: resolveErrorMessage(error, "SYSTEM_UNEXPECTED_ERROR") };
   }
 }
+
+/**
+ * Moves a category up among its siblings.
+ */
+export async function moveCategoryUpAction(id: number) {
+  try {
+    const service = container.adminCategoryService;
+    await service.moveCategoryUp(id);
+    revalidatePath("/admin/categories");
+    revalidateTag(CACHE_TAGS.CATALOG_CATEGORIES, "max");
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: resolveErrorMessage(error, "SYSTEM_UNEXPECTED_ERROR") };
+  }
+}
+
+/**
+ * Moves a category down among its siblings.
+ */
+export async function moveCategoryDownAction(id: number) {
+  try {
+    const service = container.adminCategoryService;
+    await service.moveCategoryDown(id);
+    revalidatePath("/admin/categories");
+    revalidateTag(CACHE_TAGS.CATALOG_CATEGORIES, "max");
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: resolveErrorMessage(error, "SYSTEM_UNEXPECTED_ERROR") };
+  }
+}
+
+/**
+ * Reorders an array of categories efficiently.
+ */
+export async function reorderCategoriesAction(items: { id: number; sortOrder: number }[]) {
+  try {
+    const service = container.adminCategoryService;
+    await service.reorderCategories(items);
+    revalidatePath("/admin/categories");
+    revalidateTag(CACHE_TAGS.CATALOG_CATEGORIES, "max");
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: resolveErrorMessage(error, "SYSTEM_UNEXPECTED_ERROR") };
+  }
+}
+
+/**
+ * Checks if a category slug is available for use.
+ *
+ * @param slug - The slug string to check.
+ * @param excludeId - Optional ID to exclude from the check (current category ID).
+ * @returns Boolean indicating availability.
+ */
+export async function checkSlugAvailableAction(slug: string, excludeId?: number) {
+  try {
+    const service = container.adminCategoryService;
+    const available = await service.checkSlugAvailable(slug, excludeId);
+    return { success: true, available };
+  } catch (error: any) {
+    return { success: false, error: resolveErrorMessage(error, "SYSTEM_UNEXPECTED_ERROR") };
+  }
+}

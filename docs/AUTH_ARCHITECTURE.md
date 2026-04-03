@@ -1,70 +1,95 @@
 # Authentication & Authorization Architecture
 
-This document describes the current authentication and authorization architecture and the roadmap for Phase 2.
+Last updated: 2026-02-19
 
-## Current Architecture (Phase 1)
+This document defines the target concrete identity model and guard strategy used by FindEg.
 
-The system uses a **Clean Architecture** approach to encapsulate session management, ensuring the logic is reusable across different Next.js runtimes (Edge and Node.js).
+## 1. Principles
 
-### Core Components
+- Authentication proves actor identity.
+- Authorization is permission-based, not role-string based.
+- Roles are assignment containers; permissions are enforcement primitives.
+- Session payloads carry stable IDs; permission resolution happens server-side.
+- Guest flows are first-class via persisted guest principals.
 
-1.  **`ISessionManager` (Interface)**: Defines the contract for authentication and authorization.
-    - `validateSession(request: Request)`: Verifies credentials from headers or cookies.
-    - `authorizeAdmin(session)`: Checks for the admin role.
-    - `createToken(payload)`: Generates a new session token.
-    - `getCookieSettings()`: Provides standardized cookie attributes.
+## 2. Target Identity Model
 
-2.  **`JwtSessionManager` (Implementation)**:
-    - **Edge Compatible**: Uses the `jose` library for JWT operations.
-    - **Centralized**: Holds the `JWT_SECRET` and session duration configurations.
-    - **Usage**:
-      - `src/proxy.ts`: Used in Edge Middleware for page-level access control (redirects to login).
-      - `src/app/api/v1/_lib/middleware.ts`: Used in API wrappers (`withAuth`, `withAdmin`) for endpoint-level security (401/403 responses).
+## Core Tables
 
-3.  **`CookieSessionProvider` (Storage Layer)**:
-    - Implements `ISessionProvider`.
-    - Uses `next/headers` to persist the JWT in HttpOnly cookies.
-    - Delegates all crypto and validation logic back to `JwtSessionManager`.
+- `users`: canonical user profile (person/business account owner).
+- `auth_accounts`: linked external/local account identities (`provider`, `providerAccountId`).
+- `password_credentials`: hashed password material for local auth only.
+- `roles`: role catalog (`admin_ops`, `catalog_manager`, `buyer`, `business_buyer`).
+- `permissions`: atomic permissions (`catalog.read`, `catalog.write`, `order.refund`).
+- `role_permissions`: role-to-permission mapping.
+- `user_roles`: direct role assignments.
+- `organizations`: business entities/tenants.
+- `organization_memberships`: user membership + scoped role assignments in org context.
+- `payment_methods`: tokenized saved payment methods (never raw PAN/CVV).
+- `guest_principals`: persisted guest actor records used by cart/checkout/session continuity.
+- `sessions`: optional persisted session index/revocation tracking (token hash/jti lifecycle).
 
----
+## Authentication Credentials
 
-## Phase 2 Roadmap: Permission-Based Authorization
+- Local login reads from `password_credentials.passwordHash`.
+- OAuth/social login resolves through `auth_accounts`.
+- A user may have multiple linked auth accounts.
 
-In Phase 2, the system will evolve from a simple role-check (Admin vs. User) to a granular **Permission-Based System** to support various user types and fine-grained access control.
+## 3. Session Contract
 
-### Proposed Structure
+Target session payload carries identity and scope identifiers:
 
-#### 1. Permissions & User Types
+```ts
+type SessionActorType = "guest" | "user" | "service";
 
-- **Guest**: `VIEW_PRODUCTS`, `ADD_TO_CART`, `LOGIN`.
-- **User**: `CREATE_ORDER`, `VIEW_OWN_PROFILE`, `MANAGE_OWN_ADDRESS`.
-- **Admin**: `MANAGE_INVENTORY`, `VIEW_SALES_STATS`, `MANAGE_USERS`, `REFUND_ORDER`.
-
-#### 2. Updated Payload
-
-The `SessionPayload` will be expanded to include specific permissions or a permission bitmask:
-
-```typescript
-interface SessionPayload {
-  userId: number;
-  email: string;
-  role: string;
-  permissions: string[]; // e.g., ["ADMIN_DASHBOARD", "EDIT_PRODUCTS"]
+interface SessionPayloadV2 {
+  subjectId: string; // userId or guestPrincipalId
+  actorType: SessionActorType;
+  activeRoleIds: string[];
+  organizationId?: string;
+  tokenVersion: number;
 }
 ```
 
-#### 3. Granular Guards
+Current transitional implementation also carries optional `permissionCodes` in session for compatibility and performance during cutover.
 
-The `SessionManager` will be updated with a `hasPermission` method:
+Guard strategy:
 
-```typescript
-authorize(session: SessionPayload, requiredPermission: string): boolean {
-  return session.permissions.includes(requiredPermission);
-}
-```
+- Middleware verifies token validity and baseline actor constraints.
+- Route/API guards call permission service:
+  - `hasPermission(actorContext, permissionCode)`
+  - `hasAnyPermission(actorContext, permissionCodes[])`
+  - `hasAllPermissions(actorContext, permissionCodes[])`
 
-#### 4. Scalability Benefits
+No direct checks like `session.role === "admin"` are allowed in new code outside compatibility helpers.
 
-- **Multi-Tenancy**: Support for vendors who can only manage their own products.
-- **Custom Roles**: Easily create "Support" or "Editor" roles by grouping existing permissions.
-- **Third-Party Friendly**: The interface remains stable even if we switch to an external Identity Provider (IDP).
+## 4. Authorization Resolution Flow
+
+1. Validate token and load actor context.
+2. Resolve scoped roles:
+   - global user roles
+   - organization membership roles (if `organizationId` present)
+3. Resolve effective permission set from role mappings.
+4. Evaluate requested permission(s).
+5. Return allow/deny with structured denial reason for logs/audit.
+
+## 5. Guest Model
+
+- Anonymous sessions map to `guest_principals`.
+- Guest principal can own cart and checkout intent data.
+- Upon registration/login, guest state can be merged into user state through explicit application service.
+
+## 6. Security and Compliance Rules
+
+- Passwords are hashed (`bcrypt`/Argon2) with versioned strategy metadata.
+- Sensitive tokens are encrypted or hashed at rest as applicable.
+- Payment methods store provider token references only.
+- Session revocation uses `tokenVersion` or server-side deny list.
+- Audit logging is required for privileged operations and permission denials.
+
+## 7. Clean Architecture Boundaries
+
+- Domain: identity entities/value objects (`User`, `Role`, `Permission`, `Membership`, `GuestPrincipal`).
+- Application: auth services and permission evaluators.
+- Infrastructure: JWT/session adapter, credential repository, RBAC repository, payment token adapter.
+- Delivery: API/middleware/page guards consume application contracts only.

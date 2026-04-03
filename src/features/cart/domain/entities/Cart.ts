@@ -1,82 +1,115 @@
-import { CustomerGroup, Price, Quantity, UomCode } from "@/features/core/domain/types/common";
-import type { Product } from "@/features/catalog/domain/entities/Product";
-import type { VariantSnapshot } from "@/features/order/domain/value-objects";
+/**
+ * Domain Entity: Cart
+ *
+ * Represents a shopping cart with business logic for cart operations.
+ * Cart items now reference specific variants (SKUs) with resolved pricing.
+ */
 
-export type CartItem = Product & {
+import {
+  type CustomerGroup,
+  type Price,
+  type Quantity,
+  type UomCode,
+} from "@/features/core/domain/types/common";
+
+/**
+ * A single item in the cart, referencing a specific variant (SKU).
+ *
+ * All pricing is pre-resolved at add-to-cart time using the variant's
+ * price list for the customer's group and selected UOM.
+ */
+export type CartItem = {
+  /** Product SPU ID */
+  productId: number;
+
+  /** Variant (SKU) ID — the canonical identifier for de-duplication */
+  variantId: number;
+
+  /** SKU code frozen at add-to-cart time */
+  sku: string;
+
+  /** Resolved localized product name */
+  productName: string;
+
+  /** Resolved localized variant label (e.g., "Blue 0.7mm") */
+  variantLabel: string;
+
+  /** First image from the variant */
+  imageUrl?: string;
+
+  /** How many of this variant */
   quantity: Quantity;
-  selectedVariant?: VariantSnapshot;
-  variant?: VariantSnapshot;
-  variantKey?: string;
-  uomCode?: UomCode;
+
+  /** Which UOM was selected (EA, PACK_3, etc.) */
+  uomCode: UomCode;
+
+  /** UOM factor at time of add (for display purposes) */
+  uomFactor: number;
+
+  /** Resolved unit price for the customer's group + UOM */
+  unitPrice: Price;
+
+  /** Currency code */
+  currency: string;
+
+  /** Customer group used for price resolution */
   customerGroup?: CustomerGroup;
-  unitPriceSnapshot?: Price;
-  currency?: string;
+
+  /** Optional ID grouping items from the same school list kit */
+  cartKitId?: string;
 };
 
 /**
  * Domain Entity: Cart
  *
  * Represents a shopping cart with business logic for cart operations.
+ * Items are keyed by (variantId + uomCode) for de-duplication.
  */
 export class CartEntity {
   /**
-   * Creates a new CartEntity.
-   * @param items - Initial items in the cart
+   *
    */
   constructor(private items: CartItem[] = []) {}
 
   /**
-   * Add a product to the cart or update its quantity if it already exists with the same variants.
+   * Add a variant to the cart or increment quantity if already present.
+   * Matches by variantId + uomCode.
    */
-  addItem(
-    product: Product,
-    quantity: number,
-    selectedVariant?: { [key: string]: string },
-  ): CartItem[] {
-    const variantId = this.getVariantId(selectedVariant);
-    const existingItemIndex = this.items.findIndex(
-      (item) => item.id === product.id && this.getVariantId(item.selectedVariant) === variantId,
+  addItem(item: CartItem): CartItem[] {
+    const existingIndex = this.items.findIndex(
+      (existing) => existing.variantId === item.variantId && existing.uomCode === item.uomCode,
     );
 
-    if (existingItemIndex >= 0) {
+    if (existingIndex >= 0) {
       const updatedItems = [...this.items];
-      updatedItems[existingItemIndex] = {
-        ...updatedItems[existingItemIndex],
-        quantity: updatedItems[existingItemIndex].quantity + quantity,
+      updatedItems[existingIndex] = {
+        ...updatedItems[existingIndex],
+        quantity: updatedItems[existingIndex].quantity + item.quantity,
       };
       return updatedItems;
     }
 
-    return [...this.items, { ...product, quantity, selectedVariant }];
+    return [...this.items, item];
   }
 
   /**
-   * Remove an item from the cart based on product ID and variant selection.
+   * Remove an item from the cart by variantId + uomCode.
    */
-  removeItem(productId: number, selectedVariant?: { [key: string]: string }): CartItem[] {
-    const variantId = this.getVariantId(selectedVariant);
-    return this.items.filter(
-      (item) => !(item.id === productId && this.getVariantId(item.selectedVariant) === variantId),
-    );
+  removeItem(variantId: number, uomCode: UomCode): CartItem[] {
+    return this.items.filter((item) => !(item.variantId === variantId && item.uomCode === uomCode));
   }
 
   /**
-   * Update the quantity of a specific item in the cart.
+   * Update the quantity of a specific item.
+   * Removes the item if quantity is 0 or negative.
    */
-  updateItemQuantity(
-    productId: number,
-    quantity: number,
-    selectedVariant?: { [key: string]: string },
-  ): CartItem[] {
+  updateItemQuantity(variantId: number, uomCode: UomCode, quantity: number): CartItem[] {
     if (quantity <= 0) {
-      return this.removeItem(productId, selectedVariant);
+      return this.removeItem(variantId, uomCode);
     }
 
-    const variantId = this.getVariantId(selectedVariant);
     return this.items.map((item) =>
-      item.id === productId && this.getVariantId(item.selectedVariant) === variantId
-        ? { ...item, quantity }
-        : item,
+      item.variantId === variantId && item.uomCode === uomCode ? { ...item, quantity } : item,
     );
   }
 
@@ -88,49 +121,20 @@ export class CartEntity {
   }
 
   /**
-   * Calculate total price of all items in the cart, including variant modifiers.
+   * Calculate total price of all items in the cart.
+   * Simple: unitPrice × quantity for each item.
    */
   getTotalPrice(): number {
-    return this.items.reduce((total, item) => {
-      if (item.unitPriceSnapshot !== undefined && item.unitPriceSnapshot !== null) {
-        return total + item.unitPriceSnapshot * item.quantity;
-      }
-
-      let itemPrice = item.price;
-      if (item.selectedVariant && item.variants) {
-        Object.entries(item.selectedVariant).forEach(([variantKey, optionValue]) => {
-          const variant = item.variants?.[variantKey];
-          if (variant) {
-            const option = variant.options.find((opt) => opt.value === String(optionValue));
-            if (option) {
-              itemPrice += option.priceModifier;
-            }
-          }
-        });
-      }
-      return total + itemPrice * item.quantity;
-    }, 0);
+    return this.items.reduce((total, item) => total + item.unitPrice * item.quantity, 0);
   }
 
-  /**
-   * Clear all items from the cart.
-   */
+  /** Clear all items from the cart */
   clear(): CartItem[] {
     return [];
   }
 
-  /**
-   * Get a shallow copy of the current cart items.
-   */
+  /** Get a shallow copy of the current cart items */
   getItems(): CartItem[] {
     return [...this.items];
-  }
-
-  /**
-   * Generate a unique identifier for a variant combination for comparison.
-   */
-  private getVariantId(selectedVariant?: VariantSnapshot): string {
-    if (!selectedVariant) return "";
-    return JSON.stringify(selectedVariant);
   }
 }

@@ -9,6 +9,7 @@
  */
 
 import React from "react";
+import type { Locale } from "@/features/core/domain/value-objects";
 
 // Navigation Types
 export interface NavigationSubLink {
@@ -39,7 +40,7 @@ export interface NavigationItem {
 
 // Global State Types
 export type Theme = "light" | "dark";
-export type Language = "en" | "ar";
+export type Language = Locale;
 
 // Shop Page Types
 export type SortOption = "featured" | "newest" | "price-asc" | "price-desc";

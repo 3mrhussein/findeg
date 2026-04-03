@@ -33,6 +33,10 @@ export const ERROR_CATALOG = {
     message: "No price configured for this variant/UoM/customer group.",
     httpStatus: 404,
   },
+  CATALOG_VARIANT_NOT_FOUND: {
+    message: "Variant not found.",
+    httpStatus: 404,
+  },
   CATALOG_VARIANT_UOMS_FETCH_FAILED: {
     message: "Failed to retrieve variant UoMs.",
     httpStatus: 500,
@@ -69,6 +73,38 @@ export const ERROR_CATALOG = {
     message: "Failed to remove cart item.",
     httpStatus: 500,
   },
+  REVIEW_NOT_FOUND: {
+    message: "Review not found.",
+    httpStatus: 404,
+  },
+  REVIEW_INVALID_RATING: {
+    message: "Invalid review rating.",
+    httpStatus: 400,
+  },
+  REVIEW_PURCHASE_REQUIRED: {
+    message: "Only customers who purchased this product can review it.",
+    httpStatus: 403,
+  },
+  REVIEW_ALREADY_SUBMITTED: {
+    message: "You already reviewed this product.",
+    httpStatus: 409,
+  },
+  REVIEW_INVALID_VOTER: {
+    message: "Invalid helpful vote payload.",
+    httpStatus: 400,
+  },
+  REVIEW_FETCH_FAILED: {
+    message: "Failed to fetch product reviews.",
+    httpStatus: 500,
+  },
+  REVIEW_CREATE_FAILED: {
+    message: "Failed to create review.",
+    httpStatus: 500,
+  },
+  REVIEW_HELPFUL_FAILED: {
+    message: "Failed to mark review as helpful.",
+    httpStatus: 500,
+  },
   CHECKOUT_GUEST_EMAIL_REQUIRED: {
     message: "Guest email is required for guest checkout.",
     httpStatus: 400,
@@ -93,8 +129,40 @@ export const ERROR_CATALOG = {
     message: "Failed to delete product.",
     httpStatus: 500,
   },
+  ACTION_TAG_CREATE_FAILED: {
+    message: "Failed to create tag.",
+    httpStatus: 500,
+  },
+  ACTION_TAG_UPDATE_FAILED: {
+    message: "Failed to update tag.",
+    httpStatus: 500,
+  },
+  ACTION_TAG_DELETE_FAILED: {
+    message: "Failed to delete tag.",
+    httpStatus: 500,
+  },
+  ACTION_COLLECTION_CREATE_FAILED: {
+    message: "Failed to create collection.",
+    httpStatus: 500,
+  },
+  ACTION_COLLECTION_UPDATE_FAILED: {
+    message: "Failed to update collection.",
+    httpStatus: 500,
+  },
+  ACTION_COLLECTION_DELETE_FAILED: {
+    message: "Failed to delete collection.",
+    httpStatus: 500,
+  },
+  ACTION_COLLECTION_REORDER_FAILED: {
+    message: "Failed to reorder collections.",
+    httpStatus: 500,
+  },
   ACTION_ORDER_STATUS_UPDATE_FAILED: {
     message: "Failed to update order status.",
+    httpStatus: 500,
+  },
+  ACTION_ORDER_PAYMENT_STATUS_UPDATE_FAILED: {
+    message: "Failed to update order payment status.",
     httpStatus: 500,
   },
   AUTH_INVALID_CREDENTIALS: {

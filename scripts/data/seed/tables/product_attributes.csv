@@ -1,0 +1,10 @@
+product_id,attribute_id,value_text,value_num,value_bool
+13,1,Blue,,
+13,2,,80,
+13,3,Metal,,
+14,1,Black,,
+14,2,,100,
+14,3,Plastic,,
+15,1,Red,,
+15,2,,120,
+16,1,Green,,

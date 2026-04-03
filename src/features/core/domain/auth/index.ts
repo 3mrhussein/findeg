@@ -5,6 +5,15 @@
  */
 export { AuthCredentialsSchema, type AuthCredentials } from "./AuthCredentials";
 export type { AuthResult } from "./AuthResult";
+export {
+  PERMISSION_CODES,
+  isSystemAdmin,
+  isAdminSession,
+  hasPermission,
+  hasAnyPermission,
+  hasAllPermissions,
+} from "./authorization";
 export { RegisterInputSchema, type RegisterInput } from "./RegisterInput";
 export { SessionPayloadSchema, type SessionPayload } from "./SessionPayload";
 export type { UserWithPassword } from "./UserWithPassword";
+export { UserVOSchema, type UserVO, createUserVO } from "../value-objects/User";

@@ -6,9 +6,11 @@ This guide helps a new developer become productive on FindEg's MVP codebase.
 
 1. `README.md`
 2. `project-planning/SYSTEM_SPECIFICATION.md`
-3. `project-planning/IMPLEMENTATION_PLAN.md`
-4. `docs/architecture/ARCHITECTURE_PLAYBOOK.md`
-5. `docs/guides/IMPLEMENTATION_STANDARDS.md`
+3. `project-planning/MISSING_FLOWS_MATRIX.md`
+4. `project-planning/USE_CASE_BACKLOG.md`
+5. `docs/testing/FRONTEND_TEST_MASTER_PLAN.md`
+6. `docs/architecture/ARCHITECTURE_PLAYBOOK.md`
+7. `docs/guides/IMPLEMENTATION_STANDARDS.md`
 
 ## 2. Quick Setup
 
@@ -23,7 +25,7 @@ npm run dev
 ## 3. Architecture Mental Model
 
 - The app is feature-based under `src/features/*`.
-- Each feature follows clean layers: `domain`, `application`, `infrastructure`, `ui`.
+- Each feature follows clean layers: `domain`, `application`, `infrastructure`, `presentation` (with some legacy `ui` folders).
 - Shared concerns live in `src/features/core`.
 - Routes are in `src/app/[locale]/...`.
 
@@ -32,7 +34,7 @@ npm run dev
 - Business rules/types: feature `domain/`
 - Use cases/contracts: feature `application/`
 - DB/adapters: feature `infrastructure/`
-- Screens/forms/components: feature `ui/` or route-level components
+- Screens/forms/components: feature `presentation/` (or legacy `ui/`) and route-level components
 
 ## 5. MVP Reality
 
@@ -42,7 +44,12 @@ npm run dev
 
 ## 6. Before You Open a PR
 
-1. Update spec/plan docs if behavior or schema changed.
+1. Update impacted planning docs if behavior or schema changed:
+   - `project-planning/SYSTEM_SPECIFICATION.md`
+   - `project-planning/MISSING_FLOWS_MATRIX.md`
+   - `project-planning/USE_CASE_BACKLOG.md`
+   - `docs/testing/FRONTEND_TEST_MASTER_PLAN.md` (when test scope changes)
 2. Run `npm run type-check`.
 3. Run `npm run lint`.
-4. Update affected feature README diagrams and notes.
+4. Run `npm run changelog` when commit history for the delivery changed.
+5. Update affected feature README diagrams and notes.

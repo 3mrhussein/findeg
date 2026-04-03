@@ -24,3 +24,22 @@ export async function updateStockAction(input: InventoryUpdate) {
     return { success: false, error: resolveErrorMessage(error, "SYSTEM_UNEXPECTED_ERROR") };
   }
 }
+
+/**
+ * Applies stock updates for multiple products in one operation.
+ *
+ * @param updates - Array of inventory updates.
+ * @returns Object indicating success or failure with error message.
+ */
+export async function bulkUpdateStockAction(updates: InventoryUpdate[]) {
+  try {
+    const service = container.adminInventoryService;
+    await service.bulkUpdateStock(updates);
+    revalidatePath("/admin/inventory");
+    revalidatePath("/admin/products");
+    revalidateTag(CACHE_TAGS.CATALOG_PRODUCTS, "max");
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: resolveErrorMessage(error, "SYSTEM_UNEXPECTED_ERROR") };
+  }
+}

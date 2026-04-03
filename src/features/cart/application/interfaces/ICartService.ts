@@ -4,65 +4,59 @@
 
 import { ID, Quantity, Price, CustomerGroup, UomCode } from "@/features/core/domain/types/common";
 import { CartItem } from "../../domain/entities/Cart";
-import { Product } from "@/features/catalog/domain/entities/Product";
-import { VariantSnapshot } from "@/features/order/domain/value-objects";
 
 export interface ICartService {
-  addToCart(
-    items: CartItem[],
-    product: Product,
-    quantity: Quantity,
-    selectedVariant?: { [key: string]: string },
-  ): CartItem[];
+  /**
+   * Adds a CartItem to a list of items, merging if the same (variantId + uomCode) exists.
+   */
+  addToCart(items: CartItem[], item: CartItem): CartItem[];
 
-  removeFromCart(
-    items: CartItem[],
-    productId: ID,
-    selectedVariant?: { [key: string]: string },
-  ): CartItem[];
+  /**
+   * Removes an item from a list of items by variantId and uomCode.
+   */
+  removeFromCart(items: CartItem[], variantId: ID, uomCode: UomCode): CartItem[];
 
+  /**
+   * Updates the quantity of a specific item.
+   */
   updateQuantity(
     items: CartItem[],
-    productId: ID,
+    variantId: ID,
+    uomCode: UomCode,
     quantity: Quantity,
-    selectedVariant?: { [key: string]: string },
   ): CartItem[];
 
   getTotals(items: CartItem[]): { totalItems: Quantity; totalPrice: Price };
 
   // Server-side/Managed methods (for API compatibility)
   getCart(cartId: string): Promise<{ items: CartItem[]; subtotal: Price; itemCount: Quantity }>;
+
+  /**
+   * Adds a CartItem to a managed server-side cart.
+   */
   addItem(
     cartId: string,
-    input: {
-      productId: ID;
-      quantity: Quantity;
-      variant?: VariantSnapshot;
-      variantKey?: string;
-      uomCode?: UomCode;
-      customerGroup?: CustomerGroup;
-      unitPriceSnapshot?: Price;
-      currency?: string;
-    },
+    input: CartItem,
   ): Promise<{ items: CartItem[]; subtotal: Price; itemCount: Quantity }>;
+
   removeItem(
     cartId: string,
-    itemId: ID,
+    variantId: ID,
     selectors?: {
-      variantKey?: string;
       uomCode?: UomCode;
       customerGroup?: CustomerGroup;
     },
   ): Promise<{ items: CartItem[]; subtotal: Price; itemCount: Quantity }>;
+
   updateItemQuantity(
     cartId: string,
-    itemId: ID,
+    variantId: ID,
     quantity: Quantity,
     selectors?: {
-      variantKey?: string;
       uomCode?: UomCode;
       customerGroup?: CustomerGroup;
     },
   ): Promise<{ items: CartItem[]; subtotal: Price; itemCount: Quantity }>;
+
   clearCart(cartId: string): Promise<void>;
 }

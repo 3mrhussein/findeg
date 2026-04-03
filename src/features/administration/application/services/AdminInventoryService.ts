@@ -1,6 +1,8 @@
 import { ID, Quantity } from "@/features/core/domain/types/common";
 import { IAdminInventoryService } from "../interfaces/IAdminInventoryService";
 import { IProductRepository } from "@/features/catalog/application/interfaces/IProductRepository";
+import { IInventoryRepository } from "@/features/catalog/application/interfaces/IInventoryRepository";
+import { IVariantRepository } from "@/features/catalog/application/interfaces/IVariantRepository";
 import { IAuditLogService } from "../interfaces/IAuditLogService";
 import { Product } from "@/features/catalog/domain/entities/Product";
 import { InventoryUpdate } from "../../domain/types/InventoryUpdate";
@@ -15,12 +17,11 @@ import { InventoryUpdate } from "../../domain/types/InventoryUpdate";
 export class AdminInventoryService implements IAdminInventoryService {
   /**
    * Creates an instance of AdminInventoryService.
-   *
-   * @param productRepository - Repository for accessing and updating product stock.
-   * @param auditLogService - Service for tracking stock adjustment history.
    */
   constructor(
     private productRepository: IProductRepository,
+    private inventoryRepository: IInventoryRepository,
+    private variantRepository: IVariantRepository,
     private auditLogService: IAuditLogService,
   ) {}
 
@@ -38,10 +39,17 @@ export class AdminInventoryService implements IAdminInventoryService {
     offset: number = 0,
   ): Promise<{ products: Product[]; total: number }> {
     if (lowStockOnly) {
-      const lowStockProducts = await this.productRepository.getLowStock();
+      const lowStockResults = await this.inventoryRepository.getLowStock();
+      const productIds = Array.from(new Set(lowStockResults.map((r) => r.variant.productId)));
+      const paginatedProductIds = productIds.slice(offset, offset + limit);
+
+      const products = await Promise.all(
+        paginatedProductIds.map((id) => this.productRepository.getById(id)),
+      );
+
       return {
-        products: lowStockProducts.slice(offset, offset + limit),
-        total: lowStockProducts.length,
+        products: products.filter((p): p is Product => p !== null),
+        total: productIds.length,
       };
     }
 
@@ -49,33 +57,49 @@ export class AdminInventoryService implements IAdminInventoryService {
   }
 
   /**
-   * Updates the stock level for a specific product.
+   * Updates the stock level for a specific variant.
    * Triggers an audit log entry with the old and new values.
    *
-   * @param update - The inventory update payload (product ID, quantity, threshold).
-   * @throws Error if the product is not found.
+   * @param update - The inventory update payload (variant ID, quantity, threshold).
+   * @throws Error if the variant is not found.
    */
   async updateStock(update: InventoryUpdate): Promise<void> {
-    const product = await this.productRepository.getById(update.productId);
-    if (!product) throw new Error(`Product #${update.productId} not found`);
+    const variant = await this.variantRepository.getById(update.variantId);
+    if (!variant) throw new Error(`Variant #${update.variantId} not found`);
 
-    await this.productRepository.updateStockConfiguration(update.productId, {
-      quantity: update.quantity,
-      lowStockThreshold: update.lowStockThreshold,
-    });
+    const balance = await this.inventoryRepository.getBalance(update.variantId, update.warehouseId);
+    const currentQty = balance?.onHand || 0;
+    const diff = update.quantity - currentQty;
+
+    // Default to primary warehouse (ID 1) if not specified
+    const warehouseId = update.warehouseId || 1;
+
+    if (diff !== 0) {
+      await this.inventoryRepository.adjustStock(update.variantId, warehouseId as any, {
+        movementType: "adjustment",
+        quantity: diff,
+        notes: update.notes || "Admin manual update",
+      });
+    }
+
+    if (update.lowStockThreshold !== undefined) {
+      await this.variantRepository.update(update.variantId, {
+        lowStockThreshold: update.lowStockThreshold,
+      });
+    }
 
     await this.auditLogService.logAction({
-      entityType: "product",
-      entityId: String(update.productId),
+      entityType: "variant",
+      entityId: String(update.variantId),
       action: "update_inventory",
-      adminUserId: undefined,
       oldValues: {
-        stock: product.stockQuantity,
-        lowStockThreshold: product.lowStockThreshold,
+        onHand: currentQty,
+        lowStockThreshold: variant.lowStockThreshold,
       },
       newValues: {
-        stock: update.quantity,
-        lowStockThreshold: update.lowStockThreshold ?? product.lowStockThreshold,
+        onHand: update.quantity,
+        lowStockThreshold: update.lowStockThreshold ?? variant.lowStockThreshold,
+        notes: update.notes,
       },
     });
   }
@@ -97,7 +121,12 @@ export class AdminInventoryService implements IAdminInventoryService {
    * @param threshold - Optional override for the low-stock limit.
    * @returns List of products requiring restock attention.
    */
-  async getLowStockAlerts(threshold?: Quantity): Promise<Product[]> {
-    return this.productRepository.getLowStock(threshold);
+  async getLowStockAlerts(threshold?: number): Promise<Product[]> {
+    const lowStockResults = await this.inventoryRepository.getLowStock(threshold);
+    const productIds = Array.from(new Set(lowStockResults.map((r) => r.variant.productId)));
+
+    const products = await Promise.all(productIds.map((id) => this.productRepository.getById(id)));
+
+    return products.filter((p): p is Product => p !== null);
   }
 }

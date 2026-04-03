@@ -1,4 +1,7 @@
 import type { IStorageProvider } from "@/features/core/application/interfaces/IStorageProvider";
+import type { MediaAsset } from "@/features/media/domain/entities/MediaAsset";
+
+export const MANAGED_MEDIA_FOLDERS = ["", "products", "brands"] as const;
 
 /**
  * Media Service
@@ -66,5 +69,31 @@ export class MediaService {
    */
   async getFiles(folder: string = ""): Promise<{ url: string; name: string }[]> {
     return this.storageProvider.listFiles(folder);
+  }
+
+  /**
+   * Retrieves a flattened media library for admin management.
+   *
+   * @param folders - Folder scopes to include.
+   */
+  async getLibraryAssets(
+    folders: readonly string[] = MANAGED_MEDIA_FOLDERS,
+  ): Promise<MediaAsset[]> {
+    const grouped = await Promise.all(
+      folders.map(async (folder) => {
+        const files = await this.getFiles(folder);
+        return files.map(
+          (file): MediaAsset => ({
+            url: file.url,
+            name: file.name,
+            folder: folder || "general",
+          }),
+        );
+      }),
+    );
+
+    return grouped
+      .flat()
+      .sort((a, b) => a.folder.localeCompare(b.folder) || a.name.localeCompare(b.name));
   }
 }

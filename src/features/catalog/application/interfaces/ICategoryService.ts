@@ -6,6 +6,7 @@
  */
 
 import { Category } from "@/features/catalog/domain/entities/Category";
+import type { Locale } from "@/features/core/domain/value-objects";
 
 export interface ICategoryService {
   /**
@@ -15,7 +16,7 @@ export interface ICategoryService {
    * @param language - Optional language for localized content.
    * @returns The category if found, null otherwise.
    */
-  getById(id: number, language?: string): Promise<Category | null>;
+  getById(id: number, language?: Locale): Promise<Category | null>;
 
   /**
    * Retrieves all categories, optionally localized.
@@ -24,7 +25,7 @@ export interface ICategoryService {
    * @param language - Optional language for localized content.
    * @returns A list of categories.
    */
-  getAll(language?: string): Promise<Category[]>;
+  getAll(language?: Locale): Promise<Category[]>;
 
   /**
    * Retrieves a category by its URL-friendly slug.
@@ -33,5 +34,5 @@ export interface ICategoryService {
    * @param language - Optional language for localized content.
    * @returns The category if found, null otherwise.
    */
-  getBySlug(slug: string, language?: string): Promise<Category | null>;
+  getBySlug(slug: string, language?: Locale): Promise<Category | null>;
 }

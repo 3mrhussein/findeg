@@ -1,75 +1,29 @@
 /**
- * Product Service Interface
+ * Product Service Interface (SPU Level)
  *
  * Defines read-only operations for the shop-facing product catalog.
- * Separate from IAdminProductService which includes CRUD operations.
+ * Variant-specific pricing (sell options, price quotes) has been moved to IVariantService.
  */
 
-import { Product } from "@/features/catalog/domain/entities/Product";
-import { CustomerGroup, UomCode } from "@/features/core/domain/types/common";
-import { VariantSellOption } from "./IProductRepository";
+import { type Product } from "@/features/catalog/domain/entities/Product";
+import type { Locale } from "@/features/core/domain/value-objects";
+import { type ProductFilters } from "./IProductRepository";
 
 export interface IProductService {
-  /**
-   * Retrieves all products, optionally localized to a specific language.
-   *
-   * @param language - The ISO language code (e.g., 'en', 'ar').
-   * @returns A list of products.
-   */
-  getAll(language?: string): Promise<Product[]>;
+  getAll(language?: Locale): Promise<Product[]>;
 
-  /**
-   * Retrieves a single product by its unique identifier.
-   *
-   * @param id - The product ID.
-   * @param language - Optional language for localized content.
-   * @returns The product if found, null otherwise.
-   */
-  getById(id: number, language?: string): Promise<Product | null>;
+  getById(id: number, language?: Locale): Promise<Product | null>;
 
-  /**
-   * Retrieves a specific number of featured products for promotional displays.
-   *
-   * @param limit - Maximum number of products to return.
-   * @param language - Optional language for localized content.
-   * @returns A list of featured products.
-   */
-  getFeaturedProducts(limit?: number, language?: string): Promise<Product[]>;
+  getBySlug(slug: string, language?: Locale): Promise<Product | null>;
 
-  /**
-   * Searches the catalog for products matching a text query.
-   *
-   * @param query - The search term.
-   * @param language - Optional language for localized content.
-   * @returns A list of matching products.
-   */
-  searchProducts(query: string, language?: string): Promise<Product[]>;
+  getFeaturedProducts(limit?: number, language?: Locale): Promise<Product[]>;
 
-  /**
-   * Retrieves all products belonging to a specific category.
-   *
-   * @param categoryId - The unique ID of the category.
-   * @param language - Optional language for localized content.
-   * @returns A list of products in the category.
-   */
-  getByCategory(categoryId: number, language?: string): Promise<Product[]>;
+  searchProducts(query: string, language?: Locale): Promise<Product[]>;
 
-  /**
-   * Retrieves sell options (UoM and optional pricing) for a specific variant.
-   */
-  getVariantSellOptions(
-    productId: number,
-    variantKey: string,
-    customerGroup?: CustomerGroup,
-  ): Promise<VariantSellOption[]>;
+  getByCategory(categoryId: number, language?: Locale): Promise<Product[]>;
 
-  /**
-   * Resolves a concrete unit price for a variant/UoM/customer group tuple.
-   */
-  quoteVariantUnitPrice(
-    productId: number,
-    variantKey: string,
-    uomCode: UomCode,
-    customerGroup: CustomerGroup,
-  ): Promise<{ unitPrice: number; currency: string; isSellable: boolean } | null>;
+  getFilteredProducts(
+    filters: ProductFilters,
+    language?: Locale,
+  ): Promise<{ products: Product[]; total: number }>;
 }

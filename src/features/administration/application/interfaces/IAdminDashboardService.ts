@@ -5,7 +5,11 @@
  * It interacts with multiple repositories to provide a unified view of the system's status.
  */
 
-import { DashboardStats } from "@/features/administration/domain/types";
+import {
+  DashboardStats,
+  CatalogHealthStats,
+  CategoryProductDistribution,
+} from "@/features/administration/domain/types";
 import { Order } from "@/features/order/domain/entities/Order";
 
 export interface IAdminDashboardService {
@@ -32,4 +36,15 @@ export interface IAdminDashboardService {
    * @returns {Promise<Order[]>} A promise that resolves to an array of recent Order entities, sorted by date descending.
    */
   getRecentOrders(limit?: number): Promise<Order[]>;
+
+  /**
+   * Retrieves specific catalog health completion metrics.
+   * Compares products against minimum go-live criteria: category assigned, images uploaded, price set, active status.
+   */
+  getCatalogHealthStats(): Promise<CatalogHealthStats>;
+
+  /**
+   * Evaluates catalog coverage distributed across top categories.
+   */
+  getCategoryProductDistribution(limit?: number): Promise<CategoryProductDistribution[]>;
 }

@@ -18,6 +18,8 @@ export interface Review {
   comment?: string;
   /** Whether the user is confirmed to have purchased the item */
   isVerifiedPurchase?: boolean;
+  /** Number of users who marked this review as helpful */
+  helpfulCount?: number;
   createdAt?: Date;
   updatedAt?: Date;
   /** Resolved name of the reviewer for display */

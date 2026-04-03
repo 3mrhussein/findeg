@@ -63,3 +63,18 @@ export async function deleteBrandAction(id: number) {
     return { success: false, error: resolveErrorMessage(error, "SYSTEM_UNEXPECTED_ERROR") };
   }
 }
+
+/**
+ * Toggles a brand's active status.
+ */
+export async function toggleBrandStatusAction(id: number) {
+  try {
+    const service = container.adminBrandService;
+    await service.toggleBrandStatus(id);
+    revalidatePath("/admin/brands");
+    revalidateTag(CACHE_TAGS.CATALOG_BRANDS, "max");
+    return { success: true };
+  } catch (error: any) {
+    return { success: false, error: resolveErrorMessage(error, "SYSTEM_UNEXPECTED_ERROR") };
+  }
+}

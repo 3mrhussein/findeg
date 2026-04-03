@@ -1,9 +1,10 @@
 /**
  * Product Variant Pricing Quote Endpoint
  *
- * GET /api/v1/products/[id]/pricing/quote?variantKey=...&uomCode=...&customerGroup=...
+ * GET /api/v1/products/[id]/pricing/quote?variantId=...&uomCode=...&customerGroup=...
  *
  * Resolves effective unit price for a concrete variant/UoM/customer-group tuple.
+ * Reads directly from the variant's price list in the product entity.
  */
 
 import { NextRequest } from "next/server";
@@ -13,9 +14,14 @@ import { getServices } from "@/server/getServices";
 import { CustomerGroupSchema, UomCodeSchema } from "@/features/core/domain/types/common";
 
 const QuoteQuerySchema = z.object({
-  variantKey: z.string().min(1, "variantKey is required"),
+  variantId: z.string().regex(/^\d+$/, "variantId must be a positive integer").transform(Number),
   uomCode: UomCodeSchema,
   customerGroup: CustomerGroupSchema.default("public_b2c"),
+  quantity: z
+    .string()
+    .regex(/^\d+$/, "quantity must be a positive integer")
+    .transform(Number)
+    .optional(),
 });
 
 /**
@@ -30,10 +36,12 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     }
 
     const { searchParams } = new URL(request.url);
+    const uomCode = searchParams.get("uomCode") || searchParams.get("uom");
     const parseResult = QuoteQuerySchema.safeParse({
-      variantKey: searchParams.get("variantKey") || "",
-      uomCode: searchParams.get("uomCode"),
+      variantId: searchParams.get("variantId") || "",
+      uomCode,
       customerGroup: searchParams.get("customerGroup") || "public_b2c",
+      quantity: searchParams.get("quantity") || undefined,
     });
 
     if (!parseResult.success) {
@@ -42,28 +50,43 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       });
     }
 
-    const { variantKey, uomCode, customerGroup } = parseResult.data;
-    const { productService } = getServices();
+    const { variantId, uomCode: parsedUomCode, customerGroup, quantity } = parseResult.data;
+    const productService = getServices().products;
 
-    const quote = await productService.quoteVariantUnitPrice(
-      productId,
-      variantKey,
-      uomCode,
-      customerGroup,
+    // Fetch the product and resolve pricing from its variant's price lists
+    const product = await productService.getById(productId);
+    if (!product) {
+      return apiErrorByCode("CATALOG_PRODUCT_NOT_FOUND");
+    }
+
+    const variant = product.variants?.find((v) => v.id === variantId);
+    if (!variant) {
+      return apiErrorByCode("CATALOG_VARIANT_PRICE_NOT_FOUND");
+    }
+
+    // Look for a matching price list entry
+    const priceEntry = variant.priceLists?.find(
+      (p) =>
+        p.uomCode === parsedUomCode &&
+        (p.customerGroup === customerGroup || p.customerGroup === "public_b2c"),
     );
 
-    if (!quote) {
+    const unitPrice = priceEntry?.unitPrice ?? variant.basePrice;
+    const currency = priceEntry?.currency ?? "EGP";
+
+    if (!unitPrice) {
       return apiErrorByCode("CATALOG_VARIANT_PRICE_NOT_FOUND");
     }
 
     return apiResponse({
       productId,
-      variantKey,
-      uomCode,
+      variantId,
+      uomCode: parsedUomCode,
       customerGroup,
-      unitPrice: quote.unitPrice,
-      currency: quote.currency,
-      isSellable: quote.isSellable,
+      quantity: quantity ?? 1,
+      unitPrice,
+      currency,
+      isSellable: true,
     });
   } catch (error) {
     return apiErrorByCode("SYSTEM_UNEXPECTED_ERROR", {

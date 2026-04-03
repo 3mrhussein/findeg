@@ -1,16 +1,18 @@
 import { ID, Slug } from "@/features/core/domain/types/common";
 import { db } from "@/features/core/infrastructure/persistence";
-import {
-  categories,
-  categoryTranslations,
-} from "@/features/core/infrastructure/persistence/schema";
+import { categories } from "@/features/core/infrastructure/persistence/schema";
 import { ICategoryRepository } from "../../application/interfaces/ICategoryRepository";
 import { Category } from "../../domain/entities/Category";
 import { CategoryInput } from "@/features/administration/domain/types";
 import { eq, and, sql, desc, asc, like, isNull, or, count } from "drizzle-orm";
+import {
+  DEFAULT_LOCALE,
+  resolveLocalizedString,
+  toLocalizedString,
+  type Locale,
+} from "@/features/core/domain/value-objects";
 
 type DbCategory = typeof categories.$inferSelect;
-type DbTranslation = typeof categoryTranslations.$inferSelect;
 
 /**
  * Drizzle Category Repository
@@ -18,24 +20,60 @@ type DbTranslation = typeof categoryTranslations.$inferSelect;
  * Implements hierarchical category management using Materialized Path pattern for efficient tree queries.
  */
 export class DrizzleCategoryRepository implements ICategoryRepository {
-  /**
-   * Internal mapper to convert database records into Domain Category entities.
-   * Handles optional fields and nested children arrays.
-   *
-   * @param dbCategory - Raw DB category record.
-   * @param translation - Optional translation record.
-   * @param children - Optional pre-loaded children.
-   */
+  private toRouteSlug(value: string): string {
+    return value
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+  }
+
   private mapToDomain(
     dbCategory: DbCategory,
-    translation?: DbTranslation,
     children?: Category[],
+    productCount?: number,
   ): Category {
+    let localizedNameDraft: Record<string, string> = {};
+    let localizedDescriptionDraft: Record<string, string> = {};
+
+    try {
+      if (typeof dbCategory.localizedName === "string") {
+        localizedNameDraft = JSON.parse(dbCategory.localizedName);
+      } else if (dbCategory.localizedName && typeof dbCategory.localizedName === "object") {
+        localizedNameDraft = dbCategory.localizedName as Record<string, string>;
+      }
+    } catch {
+      // fallback to empty if parse fails
+    }
+
+    try {
+      if (typeof dbCategory.localizedDescription === "string") {
+        localizedDescriptionDraft = JSON.parse(dbCategory.localizedDescription);
+      } else if (
+        dbCategory.localizedDescription &&
+        typeof dbCategory.localizedDescription === "object"
+      ) {
+        localizedDescriptionDraft = dbCategory.localizedDescription as Record<string, string>;
+      }
+    } catch {
+      // fallback to empty if parse fails
+    }
+
+    const localizedContent = {
+      name: toLocalizedString(localizedNameDraft, ""),
+      description:
+        Object.keys(localizedDescriptionDraft).length > 0
+          ? toLocalizedString(localizedDescriptionDraft, "")
+          : undefined,
+    };
+
     return {
       id: dbCategory.id,
       slug: dbCategory.slug,
-      name: translation?.name || dbCategory.slug,
-      description: translation?.description || undefined,
+      name: localizedContent.name?.en || dbCategory.slug,
+      description: localizedContent.description?.en ?? undefined,
+      locale: undefined,
+      localizedContent,
       icon: dbCategory.icon || undefined,
       parentId: dbCategory.parentId || undefined,
       path: dbCategory.path,
@@ -43,215 +81,125 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
       sortOrder: dbCategory.sortOrder,
       isActive: dbCategory.isActive,
       children: children && children.length > 0 ? children : undefined,
+      ...(productCount !== undefined && { productCount }),
     };
   }
 
-  /**
-   * Retrieves a category by its numerical ID.
-   *
-   * @param id - Category ID.
-   * @param language - Language code for translation (default 'en').
-   * @returns Category entity or null.
-   */
-  async getById(id: ID, language: string = "en"): Promise<Category | null> {
-    const result = await db
-      .select({ category: categories, translation: categoryTranslations })
-      .from(categories)
-      .leftJoin(
-        categoryTranslations,
-        and(
-          eq(categoryTranslations.categoryId, categories.id),
-          eq(categoryTranslations.language, language),
-        ),
-      )
-      .where(eq(categories.id, id))
-      .limit(1);
+  async getById(id: ID, language: Locale = DEFAULT_LOCALE): Promise<Category | null> {
+    const result = await db.select().from(categories).where(eq(categories.id, id)).limit(1);
     if (result.length === 0) return null;
-    return this.mapToDomain(result[0].category, result[0].translation || undefined);
+    return this.mapToDomain(result[0]);
   }
 
-  /**
-   * Retrieves all categories as a flat list, ordered by sort order.
-   *
-   * @param language - Localization language.
-   * @returns Array of Category entities.
-   */
-  async getAll(language: string = "en"): Promise<Category[]> {
-    const results = await db
-      .select({ category: categories, translation: categoryTranslations })
-      .from(categories)
-      .leftJoin(
-        categoryTranslations,
-        and(
-          eq(categoryTranslations.categoryId, categories.id),
-          eq(categoryTranslations.language, language),
-        ),
-      )
-      .orderBy(asc(categories.sortOrder));
+  async getAll(language: Locale = DEFAULT_LOCALE): Promise<Category[]> {
+    const results = await db.select().from(categories).orderBy(asc(categories.sortOrder));
 
-    return results.map(({ category, translation }) =>
-      this.mapToDomain(category, translation || undefined),
-    );
+    return results.map((category) => this.mapToDomain(category));
   }
 
-  /**
-   * Retrieves a category by its URL slug.
-   *
-   * @param slug - The unique slug string.
-   * @param language - Localization language.
-   * @returns Category entity or null.
-   */
-  async getBySlug(slug: string, language: string = "en"): Promise<Category | null> {
-    const result = await db
-      .select({ category: categories, translation: categoryTranslations })
-      .from(categories)
-      .leftJoin(
-        categoryTranslations,
-        and(
-          eq(categoryTranslations.categoryId, categories.id),
-          eq(categoryTranslations.language, language),
-        ),
-      )
-      .where(eq(categories.slug, slug))
-      .limit(1);
+  async getBySlug(slug: string, language: Locale = DEFAULT_LOCALE): Promise<Category | null> {
+    const result = await db.select().from(categories).where(eq(categories.slug, slug)).limit(1);
 
     if (result.length === 0) return null;
-    return this.mapToDomain(result[0].category, result[0].translation || undefined);
+    return this.mapToDomain(result[0]);
   }
 
   // Tree Operations
 
-  /**
-   * Builds the complete category tree structure.
-   * Fetches all categories flat and reconstructs the hierarchy in-memory.
-   *
-   * @param language - Localization language.
-   * @returns Root categories with popluated 'children' arrays.
-   */
-  async getTree(language: string = "en"): Promise<Category[]> {
+  async getTree(language: Locale = DEFAULT_LOCALE): Promise<Category[]> {
     const allCategories = await this.getAll(language);
+    const { products } = await import("@/features/core/infrastructure/persistence/schema/products");
+
+    // Get direct product counts for all categories in one query
+    const productCountsResult = await db
+      .select({
+        categoryId: products.categoryId,
+        count: count(),
+      })
+      .from(products)
+      .where(or(...allCategories.map((c) => eq(products.categoryId, c.id))))
+      .groupBy(products.categoryId);
+
+    const directCounts = new Map<number, number>();
+    productCountsResult.forEach((row) => {
+      if (row.categoryId) {
+        directCounts.set(row.categoryId, Number(row.count));
+      }
+    });
 
     /**
-     * Recursively builds the tree from the flat list.
+     * Recursively builds the tree from the flat list and calculates total product count.
      */
     const buildTree = (parentId: number | null = null): Category[] => {
       return allCategories
         .filter((c) => (c.parentId === undefined && parentId === null) || c.parentId === parentId)
-        .map((c) => ({
-          ...c,
-          children: buildTree(c.id),
-        }))
+        .map((c) => {
+          const children = buildTree(c.id);
+
+          // Calculate product count (direct products + all products in descendants)
+          const childrenProductCount = children.reduce(
+            (sum, child) => sum + ((child as any).productCount || 0),
+            0,
+          );
+          const directProductCount = directCounts.get(c.id as number) || 0;
+          const totalProductCount = directProductCount + childrenProductCount;
+
+          return {
+            ...c,
+            children: children.length > 0 ? children : undefined,
+            productCount: totalProductCount,
+          };
+        })
         .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
     };
 
     return buildTree(null);
   }
 
-  /**
-   * Retrieves only the top-level (root) categories.
-   *
-   * @param language - Localization language.
-   * @returns Array of root Category entities.
-   */
-  async getRoots(language: string = "en"): Promise<Category[]> {
+  async getRoots(language: Locale = DEFAULT_LOCALE): Promise<Category[]> {
     const results = await db
-      .select({ category: categories, translation: categoryTranslations })
+      .select()
       .from(categories)
-      .leftJoin(
-        categoryTranslations,
-        and(
-          eq(categoryTranslations.categoryId, categories.id),
-          eq(categoryTranslations.language, language),
-        ),
-      )
       .where(or(isNull(categories.parentId), eq(categories.depth, 0)))
       .orderBy(asc(categories.sortOrder));
 
-    return results.map(({ category, translation }) =>
-      this.mapToDomain(category, translation || undefined),
-    );
+    return results.map((category) => this.mapToDomain(category));
   }
 
-  /**
-   * Retrieves direct children of a specific parent category.
-   *
-   * @param parentId - The parent category ID.
-   * @param language - Localization language.
-   * @returns Array of child categories.
-   */
-  async getChildren(parentId: ID, language: string = "en"): Promise<Category[]> {
+  async getChildren(parentId: ID, language: Locale = DEFAULT_LOCALE): Promise<Category[]> {
     const results = await db
-      .select({ category: categories, translation: categoryTranslations })
+      .select()
       .from(categories)
-      .leftJoin(
-        categoryTranslations,
-        and(
-          eq(categoryTranslations.categoryId, categories.id),
-          eq(categoryTranslations.language, language),
-        ),
-      )
       .where(eq(categories.parentId, parentId))
       .orderBy(asc(categories.sortOrder));
 
-    return results.map(({ category, translation }) =>
-      this.mapToDomain(category, translation || undefined),
-    );
+    return results.map((category) => this.mapToDomain(category));
   }
 
   /**
-   * Retrieves ALL descendants (children, grandchildren, etc.) of a category
-   * efficiently using the materialized path pattern.
-   *
-   * @param categoryId - The ancestor category ID.
-   * @param language - Localization language.
-   * @returns List of all descendant categories.
+   * Retrieves ALL descendants efficiently using the materialized path pattern.
    */
-  async getDescendants(categoryId: ID, language: string = "en"): Promise<Category[]> {
+  async getDescendants(categoryId: ID, language: Locale = DEFAULT_LOCALE): Promise<Category[]> {
     // Get the category first to find its path
     const parent = await this.getById(categoryId);
     if (!parent || !parent.path) return [];
 
     const results = await db
-      .select({ category: categories, translation: categoryTranslations })
+      .select()
       .from(categories)
-      .leftJoin(
-        categoryTranslations,
-        and(
-          eq(categoryTranslations.categoryId, categories.id),
-          eq(categoryTranslations.language, language),
-        ),
-      )
       .where(like(categories.path, `${parent.path}%`))
       .orderBy(asc(categories.depth), asc(categories.sortOrder));
 
     return results
-      .filter((r) => r.category.id !== categoryId) // Exclude self
-      .map(({ category, translation }) => this.mapToDomain(category, translation || undefined));
+      .filter((c) => c.id !== categoryId) // Exclude self
+      .map((category) => this.mapToDomain(category));
   }
 
-  /**
-   * Retrieves a category directly by its materialized path.
-   *
-   * @param path - The exact materialized path string (e.g., "/1/3/").
-   * @param language - Localization language.
-   * @returns Category entity or null.
-   */
-  async getByPath(path: string, language: string = "en"): Promise<Category | null> {
-    const result = await db
-      .select({ category: categories, translation: categoryTranslations })
-      .from(categories)
-      .leftJoin(
-        categoryTranslations,
-        and(
-          eq(categoryTranslations.categoryId, categories.id),
-          eq(categoryTranslations.language, language),
-        ),
-      )
-      .where(eq(categories.path, path))
-      .limit(1);
+  async getByPath(path: string, language: Locale = DEFAULT_LOCALE): Promise<Category | null> {
+    const result = await db.select().from(categories).where(eq(categories.path, path)).limit(1);
 
     if (result.length === 0) return null;
-    return this.mapToDomain(result[0].category, result[0].translation || undefined);
+    return this.mapToDomain(result[0]);
   }
 
   // Admin Operations
@@ -259,9 +207,6 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
   /**
    * Creates a new category and calculates its materialized path and depth.
    * If a parent is provided, inherits path structure from parent.
-   *
-   * @param input - Category creation data.
-   * @returns The newly created Category entity.
    */
   async create(input: CategoryInput): Promise<Category> {
     return await db.transaction(async (tx) => {
@@ -285,6 +230,14 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
         .insert(categories)
         .values({
           slug: input.slug,
+          localizedName: Object.fromEntries(
+            (input.translations || []).map((t) => [t.language, t.name]),
+          ),
+          localizedDescription: Object.fromEntries(
+            (input.translations || [])
+              .filter((t) => !!t.description)
+              .map((t) => [t.language, t.description as string]),
+          ),
           parentId: input.parentId || null,
           icon: input.icon || null,
           sortOrder: input.sortOrder || 0,
@@ -306,95 +259,83 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
         .where(eq(categories.id, newCategory.id))
         .returning();
 
-      if (input.translations && input.translations.length > 0) {
-        await tx.insert(categoryTranslations).values(
-          input.translations.map((t) => ({
-            categoryId: finalCategory.id,
-            language: t.language,
-            name: t.name,
-            description: t.description || null,
-          })),
-        );
-      }
+      // 3. (Legacy translations skipped)
 
-      const firstTranslation = input.translations?.[0];
-      return this.mapToDomain(
-        finalCategory,
-        firstTranslation
-          ? {
-              categoryId: finalCategory.id,
-              language: firstTranslation.language,
-              name: firstTranslation.name,
-              description: firstTranslation.description || null,
-              createdAt: new Date(),
-              updatedAt: new Date(),
-            }
-          : undefined,
-      );
+      return this.mapToDomain(finalCategory);
     });
   }
 
   /**
    * Updates an existing category (including translations).
    * Note: Does NOT fully handle complex path updates if parentId changes (for MVP simplification).
-   *
-   * @param id - Category ID.
-   * @param input - Updated fields.
-   * @returns Updated Category entity.
    */
   async update(id: ID, input: CategoryInput): Promise<Category> {
     return await db.transaction(async (tx) => {
-      // If parent changed, we need to re-calculate path and depth for this and ALL descendants
-      // This is complex, for MVP lets assume simple update or handle path update logic
+      const existing = await tx.select().from(categories).where(eq(categories.id, id)).limit(1);
+      if (existing.length === 0) throw new Error("Category not found");
+
+      const oldPath = existing[0].path;
+      const oldDepth = existing[0].depth;
+      const oldParentId = existing[0].parentId;
+
+      let newPath = oldPath;
+      let newDepth = oldDepth;
+
+      if (input.parentId !== oldParentId) {
+        let parentPath = "/";
+        let parentDepth = 0;
+
+        if (input.parentId) {
+          const parentResult = await tx
+            .select()
+            .from(categories)
+            .where(eq(categories.id, input.parentId))
+            .limit(1);
+          if (parentResult.length > 0) {
+            parentPath = parentResult[0].path;
+            parentDepth = parentResult[0].depth;
+          }
+        }
+        newPath = parentPath === "/" ? `/${id}/` : `${parentPath}${id}/`;
+        newDepth = parentDepth + 1;
+
+        // Update all descendants
+        const depthDelta = newDepth - oldDepth;
+        await tx.execute(sql`
+          UPDATE ${categories}
+          SET path = REPLACE(path, ${oldPath}, ${newPath}),
+              depth = depth + ${depthDelta}
+          WHERE path LIKE ${oldPath} || '%'
+        `);
+      }
 
       const [updated] = await tx
         .update(categories)
         .set({
           slug: input.slug,
+          localizedName: Object.fromEntries(
+            (input.translations || []).map((t) => [t.language, t.name]),
+          ),
+          localizedDescription: Object.fromEntries(
+            (input.translations || [])
+              .filter((t) => !!t.description)
+              .map((t) => [t.language, t.description as string]),
+          ),
           parentId: input.parentId || null,
           icon: input.icon || null,
-          sortOrder: input.sortOrder,
-          isActive: input.isActive,
+          sortOrder: input.sortOrder ?? existing[0].sortOrder,
+          isActive: input.isActive ?? existing[0].isActive,
+          path: newPath,
+          depth: newDepth,
           updatedAt: new Date(),
         })
         .where(eq(categories.id, id))
         .returning();
 
-      await tx.delete(categoryTranslations).where(eq(categoryTranslations.categoryId, id));
-
-      if (input.translations && input.translations.length > 0) {
-        await tx.insert(categoryTranslations).values(
-          input.translations.map((t) => ({
-            categoryId: id,
-            language: t.language,
-            name: t.name,
-            description: t.description || null,
-          })),
-        );
-      }
-
-      const firstTranslation = input.translations?.[0];
-      return this.mapToDomain(
-        updated,
-        firstTranslation
-          ? {
-              categoryId: id,
-              language: firstTranslation.language,
-              name: firstTranslation.name,
-              description: firstTranslation.description || null,
-              createdAt: new Date(),
-              updatedAt: new Date(),
-            }
-          : undefined,
-      );
+      return this.mapToDomain(updated);
     });
   }
 
-  /**
-   * Bulk updates the sort order of multiple categories in a transaction.
-   *
-   * @param items - Array of objects with ID and new sort order.
-   */
   async reorder(items: { id: ID; sortOrder: number }[]): Promise<void> {
     await db.transaction(async (tx) => {
       for (const item of items) {
@@ -406,20 +347,21 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
     });
   }
 
-  /**
-   * Permanently deletes a category from the database.
-   *
-   * @param id - Category ID.
-   */
   async delete(id: ID): Promise<void> {
     await db.delete(categories).where(eq(categories.id, id));
   }
 
-  /**
-   * Counts the total number of categories.
-   */
   async count(): Promise<number> {
     const result = await db.select({ value: count() }).from(categories);
+    return result[0]?.value || 0;
+  }
+
+  async getProductCount(categoryId: number): Promise<number> {
+    const { products } = await import("@/features/core/infrastructure/persistence/schema/products");
+    const result = await db
+      .select({ value: count() })
+      .from(products)
+      .where(eq(products.categoryId, categoryId));
     return result[0]?.value || 0;
   }
 }

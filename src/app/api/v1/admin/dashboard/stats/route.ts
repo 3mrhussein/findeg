@@ -9,6 +9,7 @@ import { NextRequest } from "next/server";
 import { apiResponse, apiError } from "../../../_lib/api-response";
 import { withAdmin } from "../../../_lib/middleware";
 import { container } from "@/features/core/infrastructure/di/ServiceContainer";
+import { PERMISSION_CODES } from "@/features/core/domain/auth";
 
 /**
  * Get dashboard statistics
@@ -17,22 +18,26 @@ import { container } from "@/features/core/infrastructure/di/ServiceContainer";
  * @returns Dashboard KPIs (revenue, orders, low stock, etc.)
  */
 export async function GET(request: NextRequest) {
-  return withAdmin(request, async () => {
-    try {
-      const { searchParams } = new URL(request.url);
-      const startDate = searchParams.get("startDate") || undefined;
-      const endDate = searchParams.get("endDate") || undefined;
+  return withAdmin(
+    request,
+    async () => {
+      try {
+        const { searchParams } = new URL(request.url);
+        const startDate = searchParams.get("startDate") || undefined;
+        const endDate = searchParams.get("endDate") || undefined;
 
-      // Note: getDashboardStats currently doesn't accept parameters
-      // Future enhancement: Add date range filtering
-      const stats = await container.adminDashboardService.getDashboardStats();
+        // Note: getDashboardStats currently doesn't accept parameters
+        // Future enhancement: Add date range filtering
+        const stats = await container.adminDashboardService.getDashboardStats();
 
-      return apiResponse(stats);
-    } catch (error) {
-      return apiError(
-        error instanceof Error ? error.message : "Failed to fetch dashboard stats",
-        500,
-      );
-    }
-  });
+        return apiResponse(stats);
+      } catch (error) {
+        return apiError(
+          error instanceof Error ? error.message : "Failed to fetch dashboard stats",
+          500,
+        );
+      }
+    },
+    PERMISSION_CODES.ADMIN_DASHBOARD_READ,
+  );
 }

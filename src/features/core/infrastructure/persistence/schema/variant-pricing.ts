@@ -1,17 +1,10 @@
 /**
  * Variant Pricing & Sellable UoM Schema
  *
- * Additive schema for:
- * - sellable units of measure per product variant
- * - customer-group price lists per product variant + UoM
- *
- * Note:
- * Variants are currently modeled as JSON in `products.variants`, so this schema
- * uses `variantKey` (string) to reference a deterministic variant identifier.
+ * Pricing and UOM definitions that attach directly to product_variants (SKU level).
  */
 
 import {
-  pgTable,
   serial,
   integer,
   text,
@@ -20,94 +13,121 @@ import {
   timestamp,
   uniqueIndex,
   index,
+  jsonb,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
-import { products } from "./products";
+import { productVariants } from "./product-variants";
+import { catalogSchema } from "./schemas";
+import type { CurrencyCode, CustomerGroup, UomCode } from "@/features/core/domain/types/common";
+import type { LocalizedStringDraft } from "@/features/core/domain/value-objects";
 
 /**
- * variant_sellable_uoms
- *
- * Defines which UoMs are sellable for a given product variant.
- * Example:
- * - variantKey="blue-0.7" + uomCode="pcs" + factorToBase=1
- * - variantKey="blue-0.7" + uomCode="pack" + factorToBase=12
+ * Variant Sellable Units of Measure (UOM)
  */
-export const variantSellableUoms = pgTable(
+export const variantSellableUoms = catalogSchema.table(
   "variant_sellable_uoms",
   {
     id: serial("id").primaryKey(),
-    productId: integer("product_id")
+
+    /** FK to the specific variant (SKU) */
+    variantId: integer("variant_id")
       .notNull()
-      .references(() => products.id, { onDelete: "cascade" }),
-    /** Stable key for the variant inside product.variants JSON */
-    variantKey: text("variant_key").notNull(),
-    /** Unit code: pcs | pack | carton (extensible) */
-    uomCode: text("uom_code").notNull(),
-    /** Conversion factor to base unit (e.g., pack=12 pcs) */
+      .references(() => productVariants.id, { onDelete: "cascade" }),
+
+    /** Unit code: EA, PACK_3, BOX_12, etc. */
+    uomCode: text("uom_code").$type<UomCode>().notNull(),
+
+    /** Conversion factor to base unit (EA). E.g., PACK_3 = 3 */
     factorToBase: decimal("factor_to_base", { precision: 12, scale: 4 }).notNull(),
+
+    /** Localized display label */
+    localizedLabel: jsonb("localized_label").$type<LocalizedStringDraft>().default({}),
+
+    /** UOM-specific barcode */
+    barcode: text("barcode"),
+
     isEnabled: boolean("is_enabled").notNull().default(true),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },
   (table) => ({
     uqVariantUom: uniqueIndex("uq_variant_sellable_uoms_variant_uom").on(
-      table.productId,
-      table.variantKey,
+      table.variantId,
       table.uomCode,
     ),
-    idxProduct: index("idx_variant_sellable_uoms_product_id").on(table.productId),
+    idxVariant: index("idx_variant_sellable_uoms_variant").on(table.variantId),
   }),
 );
 
 /**
- * variant_price_lists
- *
- * Stores effective unit prices by customer group for each variant/UoM.
- * Example:
- * - public_b2c + pcs = 15 EGP
- * - school_b2b + pack = 160 EGP
+ * Variant Price Lists
  */
-export const variantPriceLists = pgTable(
+export const variantPriceLists = catalogSchema.table(
   "variant_price_lists",
   {
     id: serial("id").primaryKey(),
-    productId: integer("product_id")
+
+    /** FK to the specific variant (SKU) */
+    variantId: integer("variant_id")
       .notNull()
-      .references(() => products.id, { onDelete: "cascade" }),
-    variantKey: text("variant_key").notNull(),
-    customerGroup: text("customer_group").notNull(),
-    uomCode: text("uom_code").notNull(),
-    currency: text("currency").notNull().default("EGP"),
+      .references(() => productVariants.id, { onDelete: "cascade" }),
+
+    /** Which pricing group: public_b2c, school_b2b, wholesale */
+    customerGroup: text("customer_group").$type<CustomerGroup>().notNull(),
+
+    /** Which unit of measure this price applies to */
+    uomCode: text("uom_code").$type<UomCode>().notNull(),
+
+    /** Default currency */
+    currency: text("currency").$type<CurrencyCode>().notNull().default("EGP"),
+
+    /** Price per single UOM unit */
     unitPrice: decimal("unit_price", { precision: 12, scale: 2 }).notNull(),
+
+    /** Minimum quantity for tiered pricing breakpoint */
+    minQty: integer("min_qty").default(1).notNull(),
+
+    /** Whether this variant/UOM combo can be purchased via this group */
     isSellable: boolean("is_sellable").notNull().default(true),
+
+    /** Time-bounded pricing start */
+    startsAt: timestamp("starts_at"),
+
+    /** Time-bounded pricing end */
+    endsAt: timestamp("ends_at"),
+
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },
   (table) => ({
     uqVariantPriceList: uniqueIndex("uq_variant_price_lists_variant_group_uom").on(
-      table.productId,
-      table.variantKey,
+      table.variantId,
       table.customerGroup,
       table.uomCode,
+      table.minQty,
     ),
-    idxProduct: index("idx_variant_price_lists_product_id").on(table.productId),
+    idxVariant: index("idx_variant_price_lists_variant").on(table.variantId),
     idxCustomerGroup: index("idx_variant_price_lists_customer_group").on(table.customerGroup),
   }),
 );
 
+// ─── Relations ───────────────────────────────────────────────────────────────
+
 export const variantSellableUomsRelations = relations(variantSellableUoms, ({ one }) => ({
-  product: one(products, {
-    fields: [variantSellableUoms.productId],
-    references: [products.id],
+  variant: one(productVariants, {
+    fields: [variantSellableUoms.variantId],
+    references: [productVariants.id],
   }),
 }));
 
 export const variantPriceListsRelations = relations(variantPriceLists, ({ one }) => ({
-  product: one(products, {
-    fields: [variantPriceLists.productId],
-    references: [products.id],
+  variant: one(productVariants, {
+    fields: [variantPriceLists.variantId],
+    references: [productVariants.id],
   }),
 }));
+
+// ─── Type Exports ────────────────────────────────────────────────────────────
 
 export type VariantSellableUom = typeof variantSellableUoms.$inferSelect;
 export type NewVariantSellableUom = typeof variantSellableUoms.$inferInsert;

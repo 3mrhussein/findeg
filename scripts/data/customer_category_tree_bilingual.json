@@ -1,0 +1,619 @@
+[
+  {
+    "label_en": "Party, Gift & Seasonal",
+    "label_ar": "حفلات وهدايا وموسمي",
+    "slug_en": "party-gift-and-seasonal",
+    "slug_ar": "حفلات-وهدايا-وموسمي",
+    "count": 930,
+    "children": [
+      {
+        "label_en": "Accessories",
+        "label_ar": "إكسسوارات",
+        "slug_en": "accessories",
+        "slug_ar": "اكسسوارات",
+        "count": 409,
+        "children": [
+          {
+            "label_en": "Keychains",
+            "label_ar": "ميداليات",
+            "slug_en": "keychains",
+            "slug_ar": "ميداليات",
+            "count": 170
+          },
+          {
+            "label_en": "Watches",
+            "label_ar": "ساعات",
+            "slug_en": "watches",
+            "slug_ar": "ساعات",
+            "count": 121
+          },
+          {
+            "label_en": "Badges",
+            "label_ar": "بدجات",
+            "slug_en": "badges",
+            "slug_ar": "بدجات",
+            "count": 80
+          },
+          {
+            "label_en": "Frames",
+            "label_ar": "براويز",
+            "slug_en": "frames",
+            "slug_ar": "براويز",
+            "count": 38
+          }
+        ]
+      },
+      {
+        "label_en": "Party Supplies",
+        "label_ar": "مستلزمات حفلات",
+        "slug_en": "party-supplies",
+        "slug_ar": "مستلزمات-حفلات",
+        "count": 286,
+        "children": [
+          {
+            "label_en": "Balloons",
+            "label_ar": "بالونات",
+            "slug_en": "balloons",
+            "slug_ar": "بالونات",
+            "count": 185
+          },
+          {
+            "label_en": "Posters",
+            "label_ar": "بوسترات",
+            "slug_en": "posters",
+            "slug_ar": "بوسترات",
+            "count": 101
+          }
+        ]
+      },
+      {
+        "label_en": "Seasonal Collections",
+        "label_ar": "موسميات",
+        "slug_en": "seasonal-collections",
+        "slug_ar": "موسميات",
+        "count": 179,
+        "children": [
+          {
+            "label_en": "Ramadan Lanterns",
+            "label_ar": "فوانيس رمضان",
+            "slug_en": "ramadan-lanterns",
+            "slug_ar": "فوانيس-رمضان",
+            "count": 179
+          }
+        ]
+      },
+      {
+        "label_en": "Stationery Gifts",
+        "label_ar": "هدايا مكتبية",
+        "slug_en": "stationery-gifts",
+        "slug_ar": "هدايا-مكتبيه",
+        "count": 56,
+        "children": [
+          {
+            "label_en": "Certificates",
+            "label_ar": "شهادات",
+            "slug_en": "certificates",
+            "slug_ar": "شهادات",
+            "count": 56
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label_en": "School Essentials",
+    "label_ar": "مستلزمات المدرسة",
+    "slug_en": "school-essentials",
+    "slug_ar": "مستلزمات-المدرسه",
+    "count": 771,
+    "children": [
+      {
+        "label_en": "Lunchboxes & Water Bottles",
+        "label_ar": "لانش بوكس وزمزميات",
+        "slug_en": "lunchboxes-and-water-bottles",
+        "slug_ar": "لانش-بوكس-وزمزميات",
+        "count": 556,
+        "children": [
+          {
+            "label_en": "Water Bottles",
+            "label_ar": "زمزميات",
+            "slug_en": "water-bottles",
+            "slug_ar": "زمزميات",
+            "count": 387
+          },
+          {
+            "label_en": "Lunchboxes",
+            "label_ar": "لانش بوكس",
+            "slug_en": "lunchboxes",
+            "slug_ar": "لانش-بوكس",
+            "count": 169
+          }
+        ]
+      },
+      {
+        "label_en": "Geometry Tools",
+        "label_ar": "أدوات هندسية",
+        "slug_en": "geometry-tools",
+        "slug_ar": "ادوات-هندسيه",
+        "count": 215,
+        "children": [
+          {
+            "label_en": "Rulers",
+            "label_ar": "مساطر",
+            "slug_en": "rulers",
+            "slug_ar": "مساطر",
+            "count": 94
+          },
+          {
+            "label_en": "Math Sets",
+            "label_ar": "أطقم هندسية",
+            "slug_en": "math-sets",
+            "slug_ar": "اطقم-هندسيه",
+            "count": 47
+          },
+          {
+            "label_en": "Set Squares",
+            "label_ar": "مثلث",
+            "slug_en": "set-squares",
+            "slug_ar": "مثلث",
+            "count": 32
+          },
+          {
+            "label_en": "Compasses",
+            "label_ar": "برجل",
+            "slug_en": "compasses",
+            "slug_ar": "برجل",
+            "count": 31
+          },
+          {
+            "label_en": "Protractors",
+            "label_ar": "منقلات",
+            "slug_en": "protractors",
+            "slug_ar": "منقلات",
+            "count": 11
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label_en": "Writing Instruments",
+    "label_ar": "أدوات الكتابة",
+    "slug_en": "writing-instruments",
+    "slug_ar": "ادوات-الكتابه",
+    "count": 537,
+    "children": [
+      {
+        "label_en": "Writing Accessories",
+        "label_ar": "إكسسوارات الكتابة",
+        "slug_en": "writing-accessories",
+        "slug_ar": "اكسسوارات-الكتابه",
+        "count": 395,
+        "children": [
+          {
+            "label_en": "Erasers",
+            "label_ar": "استيكة",
+            "slug_en": "erasers",
+            "slug_ar": "استيكه",
+            "count": 198
+          },
+          {
+            "label_en": "Sharpeners",
+            "label_ar": "براية",
+            "slug_en": "sharpeners",
+            "slug_ar": "برايه",
+            "count": 197
+          }
+        ]
+      },
+      {
+        "label_en": "Highlighters & Markers",
+        "label_ar": "هايلايتر وماركر",
+        "slug_en": "highlighters-and-markers",
+        "slug_ar": "هايلايتر-وماركر",
+        "count": 114,
+        "children": [
+          {
+            "label_en": "Whiteboard Markers",
+            "label_ar": "ماركر سبورة",
+            "slug_en": "whiteboard-markers",
+            "slug_ar": "ماركر-سبوره",
+            "count": 86
+          },
+          {
+            "label_en": "Permanent Markers",
+            "label_ar": "ماركر ثابت",
+            "slug_en": "permanent-markers",
+            "slug_ar": "ماركر-ثابت",
+            "count": 21
+          },
+          {
+            "label_en": "Highlighters",
+            "label_ar": "هايلايتر",
+            "slug_en": "highlighters",
+            "slug_ar": "هايلايتر",
+            "count": 7
+          }
+        ]
+      },
+      {
+        "label_en": "Pens",
+        "label_ar": "أقلام",
+        "slug_en": "pens",
+        "slug_ar": "اقلام",
+        "count": 17,
+        "children": [
+          {
+            "label_en": "Gel Pens",
+            "label_ar": "أقلام جيل",
+            "slug_en": "gel-pens",
+            "slug_ar": "اقلام-جيل",
+            "count": 15
+          },
+          {
+            "label_en": "Ballpoint Pens",
+            "label_ar": "أقلام جاف",
+            "slug_en": "ballpoint-pens",
+            "slug_ar": "اقلام-جاف",
+            "count": 1
+          },
+          {
+            "label_en": "Fountain Pens",
+            "label_ar": "أقلام حبر",
+            "slug_en": "fountain-pens",
+            "slug_ar": "اقلام-حبر",
+            "count": 1
+          }
+        ]
+      },
+      {
+        "label_en": "Refills",
+        "label_ar": "إعادة تعبئة",
+        "slug_en": "refills",
+        "slug_ar": "اعاده-تعبيه",
+        "count": 11,
+        "children": [
+          {
+            "label_en": "Mechanical Pencil Leads",
+            "label_ar": "سنون",
+            "slug_en": "mechanical-pencil-leads",
+            "slug_ar": "سنون",
+            "count": 11
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label_en": "Toys, Games & Learning Tools",
+    "label_ar": "ألعاب وتعليم",
+    "slug_en": "toys-games-and-learning-tools",
+    "slug_ar": "العاب-وتعليم",
+    "count": 422,
+    "children": [
+      {
+        "label_en": "Toys & Games",
+        "label_ar": "ألعاب",
+        "slug_en": "toys-and-games",
+        "slug_ar": "العاب",
+        "count": 422,
+        "children": [
+          {
+            "label_en": "Vehicles",
+            "label_ar": "عربيات",
+            "slug_en": "vehicles",
+            "slug_ar": "عربيات",
+            "count": 263
+          },
+          {
+            "label_en": "Dolls",
+            "label_ar": "عرائس",
+            "slug_en": "dolls",
+            "slug_ar": "عرايس",
+            "count": 159
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label_en": "Art & Craft Supplies",
+    "label_ar": "أدوات الفن والحرف",
+    "slug_en": "art-and-craft-supplies",
+    "slug_ar": "ادوات-الفن-والحرف",
+    "count": 341,
+    "children": [
+      {
+        "label_en": "Craft Materials",
+        "label_ar": "خامات هاند ميد",
+        "slug_en": "craft-materials",
+        "slug_ar": "خامات-هاند-ميد",
+        "count": 177,
+        "children": [
+          {
+            "label_en": "Foam Sheets",
+            "label_ar": "فوم",
+            "slug_en": "foam-sheets",
+            "slug_ar": "فوم",
+            "count": 124
+          },
+          {
+            "label_en": "Glitter",
+            "label_ar": "جليتر",
+            "slug_en": "glitter",
+            "slug_ar": "جليتر",
+            "count": 39
+          },
+          {
+            "label_en": "Stickers",
+            "label_ar": "استيكر",
+            "slug_en": "stickers",
+            "slug_ar": "استيكر",
+            "count": 14
+          }
+        ]
+      },
+      {
+        "label_en": "Cutting Tools",
+        "label_ar": "أدوات القص",
+        "slug_en": "cutting-tools",
+        "slug_ar": "ادوات-القص",
+        "count": 96,
+        "children": [
+          {
+            "label_en": "Scissors",
+            "label_ar": "مقص",
+            "slug_en": "scissors",
+            "slug_ar": "مقص",
+            "count": 72
+          },
+          {
+            "label_en": "Cutters",
+            "label_ar": "قطاعات",
+            "slug_en": "cutters",
+            "slug_ar": "قطاعات",
+            "count": 24
+          }
+        ]
+      },
+      {
+        "label_en": "Coloring Tools",
+        "label_ar": "أدوات التلوين",
+        "slug_en": "coloring-tools",
+        "slug_ar": "ادوات-التلوين",
+        "count": 68,
+        "children": [
+          {
+            "label_en": "Crayons",
+            "label_ar": "Crayons",
+            "slug_en": "crayons",
+            "slug_ar": "",
+            "count": 67
+          },
+          {
+            "label_en": "Oil Pastels",
+            "label_ar": "Oil Pastels",
+            "slug_en": "oil-pastels",
+            "slug_ar": "",
+            "count": 1
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label_en": "Office Supplies",
+    "label_ar": "مستلزمات المكتب",
+    "slug_en": "office-supplies",
+    "slug_ar": "مستلزمات-المكتب",
+    "count": 325,
+    "children": [
+      {
+        "label_en": "Desk Accessories",
+        "label_ar": "أدوات مكتب",
+        "slug_en": "desk-accessories",
+        "slug_ar": "ادوات-مكتب",
+        "count": 256,
+        "children": [
+          {
+            "label_en": "Staplers",
+            "label_ar": "دباسات",
+            "slug_en": "staplers",
+            "slug_ar": "دباسات",
+            "count": 151
+          },
+          {
+            "label_en": "Hole Punchers",
+            "label_ar": "خرامات",
+            "slug_en": "hole-punchers",
+            "slug_ar": "خرامات",
+            "count": 57
+          },
+          {
+            "label_en": "Clips",
+            "label_ar": "كليبس",
+            "slug_en": "clips",
+            "slug_ar": "كليبس",
+            "count": 48
+          }
+        ]
+      },
+      {
+        "label_en": "Business Forms",
+        "label_ar": "نماذج مكتبية",
+        "slug_en": "business-forms",
+        "slug_ar": "نماذج-مكتبيه",
+        "count": 42,
+        "children": [
+          {
+            "label_en": "Envelopes",
+            "label_ar": "مظاريف",
+            "slug_en": "envelopes",
+            "slug_ar": "مظاريف",
+            "count": 42
+          }
+        ]
+      },
+      {
+        "label_en": "Labels",
+        "label_ar": "ملصقات",
+        "slug_en": "labels",
+        "slug_ar": "ملصقات",
+        "count": 27,
+        "children": [
+          {
+            "label_en": "Labels",
+            "label_ar": "ملصقات",
+            "slug_en": "labels",
+            "slug_ar": "ملصقات",
+            "count": 27
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label_en": "Bags, Cases & Storage",
+    "label_ar": "شنط وحافظات وتخزين",
+    "slug_en": "bags-cases-and-storage",
+    "slug_ar": "شنط-وحافظات-وتخزين",
+    "count": 255,
+    "children": [
+      {
+        "label_en": "Display",
+        "label_ar": "ستاند عرض",
+        "slug_en": "display",
+        "slug_ar": "ستاند-عرض",
+        "count": 212,
+        "children": [
+          {
+            "label_en": "Stands",
+            "label_ar": "Stands",
+            "slug_en": "stands",
+            "slug_ar": "",
+            "count": 212
+          }
+        ]
+      },
+      {
+        "label_en": "Storage",
+        "label_ar": "تخزين",
+        "slug_en": "storage",
+        "slug_ar": "تخزين",
+        "count": 43,
+        "children": [
+          {
+            "label_en": "Cabinets",
+            "label_ar": "Cabinets",
+            "slug_en": "cabinets",
+            "slug_ar": "",
+            "count": 43
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label_en": "Household & Lifestyle",
+    "label_ar": "منزل ومستلزمات",
+    "slug_en": "household-and-lifestyle",
+    "slug_ar": "منزل-ومستلزمات",
+    "count": 251,
+    "children": [
+      {
+        "label_en": "Home",
+        "label_ar": "مستلزمات منزل",
+        "slug_en": "home",
+        "slug_ar": "مستلزمات-منزل",
+        "count": 105,
+        "children": [
+          {
+            "label_en": "Blankets",
+            "label_ar": "بطاطين",
+            "slug_en": "blankets",
+            "slug_ar": "بطاطين",
+            "count": 43
+          },
+          {
+            "label_en": "Buckets",
+            "label_ar": "جردل",
+            "slug_en": "buckets",
+            "slug_ar": "جردل",
+            "count": 31
+          },
+          {
+            "label_en": "Rugs",
+            "label_ar": "سجاد",
+            "slug_en": "rugs",
+            "slug_ar": "سجاد",
+            "count": 31
+          }
+        ]
+      },
+      {
+        "label_en": "Drinkware",
+        "label_ar": "أكواب ومج",
+        "slug_en": "drinkware",
+        "slug_ar": "اكواب-ومج",
+        "count": 104,
+        "children": [
+          {
+            "label_en": "Cups",
+            "label_ar": "أكواب",
+            "slug_en": "cups",
+            "slug_ar": "اكواب",
+            "count": 58
+          },
+          {
+            "label_en": "Mugs",
+            "label_ar": "مج",
+            "slug_en": "mugs",
+            "slug_ar": "مج",
+            "count": 46
+          }
+        ]
+      },
+      {
+        "label_en": "Kitchenware",
+        "label_ar": "أدوات مطبخ",
+        "slug_en": "kitchenware",
+        "slug_ar": "ادوات-مطبخ",
+        "count": 42,
+        "children": [
+          {
+            "label_en": "Plates",
+            "label_ar": "أطباق",
+            "slug_en": "plates",
+            "slug_ar": "اطباق",
+            "count": 42
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "label_en": "Organization & Filing",
+    "label_ar": "تنظيم وأرشفة",
+    "slug_en": "organization-and-filing",
+    "slug_ar": "تنظيم-وارشفه",
+    "count": 48,
+    "children": [
+      {
+        "label_en": "Desk Organizers",
+        "label_ar": "منظمات مكتب",
+        "slug_en": "desk-organizers",
+        "slug_ar": "منظمات-مكتب",
+        "count": 48,
+        "children": [
+          {
+            "label_en": "Holders",
+            "label_ar": "حامل",
+            "slug_en": "holders",
+            "slug_ar": "حامل",
+            "count": 48
+          }
+        ]
+      }
+    ]
+  }
+]

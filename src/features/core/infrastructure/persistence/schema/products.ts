@@ -1,156 +1,92 @@
 /**
- * Product Database Schema
+ * Product Database Schema (SPU Layer)
  *
- * This file defines the database schema for products using Drizzle ORM.
- *
- * Schema Structure:
- * - products: Base product table (language-independent fields)
- * - productTranslations: Language-specific product information
- * - productImages: Product images (separate table for normalization)
- *
- * Translation Strategy:
- * - Base product data (price, category, stock, etc.) in products table
- * - Translated content (name, description) in productTranslations table
- * - Supports multiple languages (en, ar, etc.)
+ * Products are now Standard Product Units (SPUs) — the conceptual item.
+ * Purchasable details (price, stock, images) live on product_variants (SKUs).
  */
 
 import {
   pgTable,
   serial,
   text,
-  decimal,
   integer,
   jsonb,
   boolean,
   timestamp,
-  primaryKey,
+  decimal,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
+import { catalogSchema } from "./schemas";
 import { categories } from "./categories";
 import { brands } from "./brands";
+import { productTags } from "./tags";
+import { productAttributes } from "./product-attributes";
+import { productVariants } from "./product-variants";
+import type {
+  LocalizedStringDraft,
+  ResponsiveMediaSet,
+} from "@/features/core/domain/value-objects";
 
 /**
- * Products Table
+ * Products Table (SPU)
  *
- * Stores base product information that is language-independent:
- * - Pricing (price, strikePrice)
- * - Inventory (sku, stockQuantity, lowStockThreshold)
- * - Relationships (categoryId FK, brandId FK)
- * - Flags (isNew, isActive)
- * - Ratings (rating, reviewsCount)
- * - Variants (JSON for flexibility)
- *
- * Language-specific content (name, description) is in productTranslations.
+ * Stores the conceptual product — brand, category, localized content, flags.
+ * All pricing, inventory, and images are on product_variants.
  */
-export const products = pgTable("products", {
+export const products = catalogSchema.table("products", {
   id: serial("id").primaryKey(),
-
-  /** Unique stock-keeping unit identifier */
   sku: text("sku").unique(),
+  /** Optional family-level SKU prefix (e.g., "STA-PEN") */
+  skuPrefix: text("sku_prefix"),
 
-  // Pricing
-  price: decimal("price", { precision: 10, scale: 2 }).notNull(),
-  strikePrice: decimal("strike_price", { precision: 10, scale: 2 }),
+  // ─── Localized Content ──────────────────────────────────────────────
 
-  // Foreign keys
-  /** FK to categories table — replaces old text-based category */
+  localizedSlug: jsonb("localized_slug").$type<LocalizedStringDraft>().default({}).notNull(),
+  localizedName: jsonb("localized_name").$type<LocalizedStringDraft>().default({}).notNull(),
+  localizedDescription: jsonb("localized_description")
+    .$type<LocalizedStringDraft>()
+    .default({})
+    .notNull(),
+  localizedLongDescription: jsonb("localized_long_description")
+    .$type<LocalizedStringDraft>()
+    .default({})
+    .notNull(),
+
+  // ─── Relationships ──────────────────────────────────────────────────
+
+  /** FK to categories — primary navigation category */
   categoryId: integer("category_id").references(() => categories.id, { onDelete: "set null" }),
-  /** FK to brands table */
+  /** FK to brands */
   brandId: integer("brand_id").references(() => brands.id, { onDelete: "set null" }),
 
-  // Images (array of URLs stored as JSON)
-  images: jsonb("images").$type<string[]>().default([]),
+  // ─── Media ──────────────────────────────────────────────────────────
 
-  // Inventory
+  /** SPU-level hero/lifestyle imagery */
+  mediaSet: jsonb("media_set").$type<ResponsiveMediaSet>().default({}),
+
+  // ─── Flags ──────────────────────────────────────────────────────────
+
   /** Whether this product is visible in the store */
   isActive: boolean("is_active").default(true).notNull(),
-  /** Current stock quantity */
-  stockQuantity: integer("stock_quantity").default(0).notNull(),
-  /** Alert threshold — triggers low-stock warnings when stock falls below */
-  lowStockThreshold: integer("low_stock_threshold").default(10).notNull(),
 
-  // Flags
-  isNew: boolean("is_new").default(false),
+  // ─── Aggregate Ratings ──────────────────────────────────────────────
 
-  // Ratings
   rating: decimal("rating", { precision: 3, scale: 2 }).default("0"),
   reviewsCount: integer("reviews_count").default(0),
 
-  // Variants (stored as JSON for flexibility)
-  // Format: { "Color": { name: "Color", options: [...] }, ... }
-  variants: jsonb("variants").$type<Record<string, unknown>>(),
+  // ─── Timestamps ─────────────────────────────────────────────────────
 
-  // Timestamps
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-/**
- * Product Translations Table
- *
- * Stores language-specific product information:
- * - Name, description, long description
- * - One row per product per language
- *
- * This allows us to have:
- * - Product 1 in English: "Premium Pen"
- * - Product 1 in Arabic: "قلم ممتاز"
- */
-export const productTranslations = pgTable(
-  "product_translations",
-  {
-    /** Foreign key to products table */
-    productId: integer("product_id")
-      .notNull()
-      .references(() => products.id, { onDelete: "cascade" }),
-
-    /** Language code (e.g., 'en', 'ar') */
-    language: text("language").notNull(),
-
-    // Translated content
-    name: text("name").notNull(),
-    description: text("description").notNull(),
-    longDescription: text("long_description").notNull(),
-
-    // Timestamps
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").defaultNow().notNull(),
-  },
-  (table) => ({
-    /** Composite primary key: one translation per product per language */
-    pk: primaryKey({ columns: [table.productId, table.language] }),
-  }),
-);
-
-/**
- * Product Images Table
- *
- * Normalized image storage with ordering and alt text.
- * Allows for richer image management than the JSON array approach.
- */
-export const productImages = pgTable("product_images", {
-  id: serial("id").primaryKey(),
-  productId: integer("product_id")
-    .notNull()
-    .references(() => products.id, { onDelete: "cascade" }),
-  url: text("url").notNull(),
-  alt: text("alt"),
-  /** Display order — lower numbers appear first */
-  order: integer("order").default(0),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-});
+// ─── Relations ───────────────────────────────────────────────────────────────
 
 /**
  * Product Relations
- *
- * - translations: One product has many translations (one per language)
- * - images: One product has many images (normalized table)
- * - category: Each product belongs to one category (optional)
- * - brand: Each product belongs to one brand (optional)
  */
 export const productsRelations = relations(products, ({ one, many }) => ({
-  translations: many(productTranslations),
-  images: many(productImages),
+  variants: many(productVariants),
   category: one(categories, {
     fields: [products.categoryId],
     references: [categories.id],
@@ -159,32 +95,11 @@ export const productsRelations = relations(products, ({ one, many }) => ({
     fields: [products.brandId],
     references: [brands.id],
   }),
+  tags: many(productTags),
+  attributes: many(productAttributes),
 }));
 
-/** Each translation belongs to one product */
-export const productTranslationsRelations = relations(productTranslations, ({ one }) => ({
-  product: one(products, {
-    fields: [productTranslations.productId],
-    references: [products.id],
-  }),
-}));
+// ─── Type Exports ────────────────────────────────────────────────────────────
 
-/** Each image belongs to one product */
-export const productImagesRelations = relations(productImages, ({ one }) => ({
-  product: one(products, {
-    fields: [productImages.productId],
-    references: [products.id],
-  }),
-}));
-
-/**
- * Type Exports
- *
- * Export types for use in repositories and services.
- */
 export type Product = typeof products.$inferSelect;
 export type NewProduct = typeof products.$inferInsert;
-export type ProductTranslation = typeof productTranslations.$inferSelect;
-export type NewProductTranslation = typeof productTranslations.$inferInsert;
-export type ProductImage = typeof productImages.$inferSelect;
-export type NewProductImage = typeof productImages.$inferInsert;
