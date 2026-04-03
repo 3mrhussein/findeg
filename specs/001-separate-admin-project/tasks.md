@@ -310,46 +310,46 @@ _Note: These tasks were completed as part of Phase 1 (T028-T065). This phase doc
 
 ### Storefront Route Migration
 
-- [ ] T100 [P] [US2] Move src/app/[locale]/(storefront)/ to packages/storefront/src/app/[locale]/(storefront)/
-- [ ] T101 [P] [US2] Move src/app/[locale]/(auth)/ to packages/storefront/src/app/[locale]/(auth)/
-- [ ] T102 [P] [US2] Move src/app/[locale]/(school-list)/ to packages/storefront/src/app/[locale]/(school-list)/
-- [ ] T103 [P] [US2] Move src/app/[locale]/layout.tsx to packages/storefront/src/app/[locale]/layout.tsx (customer-facing layout)
-- [ ] T104 [P] [US2] Move src/app/[locale]/page.tsx to packages/storefront/src/app/[locale]/page.tsx (storefront home)
-- [ ] T105 [US2] Update all storefront route imports to use @findeg/backend instead of relative paths
+- [x] T100 [P] [US2] Move src/app/[locale]/(storefront)/ to packages/storefront/src/app/[locale]/(storefront)/
+- [x] T101 [P] [US2] Move src/app/[locale]/(auth)/ to packages/storefront/src/app/[locale]/(auth)/
+- [x] T102 [P] [US2] Move src/app/[locale]/(school-list)/ to packages/storefront/src/app/[locale]/(school-list)/
+- [x] T103 [P] [US2] Move src/app/[locale]/layout.tsx to packages/storefront/src/app/[locale]/layout.tsx (customer-facing layout)
+- [x] T104 [P] [US2] Move src/app/[locale]/page.tsx to packages/storefront/src/app/[locale]/page.tsx (storefront home)
+- [x] T105 [US2] Update all storefront route imports to use @findeg/backend instead of relative paths
 
 ### Storefront Feature Migration
 
-- [ ] T106 [P] [US2] Move src/features/cart/ to packages/storefront/src/features/cart/ preserving 4-layer structure
-- [ ] T107 [P] [US2] Move src/features/catalog/ to packages/storefront/src/features/catalog/
-- [ ] T108 [P] [US2] Move src/features/order/ to packages/storefront/src/features/order/
-- [ ] T109 [P] [US2] Move src/features/review/ to packages/storefront/src/features/review/
-- [ ] T110 [P] [US2] Move src/features/school/ to packages/storefront/src/features/school/
-- [ ] T111 [P] [US2] Move src/features/notifications/ to packages/storefront/src/features/notifications/
-- [ ] T112 [US2] Update all storefront feature imports: Replace src/features/core imports with @findeg/backend/features/core
-- [ ] T113 [US2] Update Server Actions in storefront features to use backend repository interfaces
+- [x] T106 [P] [US2] Move src/features/cart/ to packages/storefront/src/features/cart/ preserving 4-layer structure
+- [x] T107 [P] [US2] Move src/features/catalog/ to packages/storefront/src/features/catalog/
+- [x] T108 [P] [US2] Move src/features/order/ to packages/storefront/src/features/order/
+- [x] T109 [P] [US2] Move src/features/review/ to packages/storefront/src/features/review/
+- [x] T110 [P] [US2] Move src/features/school/ to packages/storefront/src/features/school/
+- [x] T111 [P] [US2] Move src/features/notifications/ to packages/storefront/src/features/notifications/
+- [x] T112 [US2] Update all storefront feature imports: Replace src/features/core imports with @findeg/backend/features/core
+- [x] T113 [US2] Update Server Actions in storefront features to use backend repository interfaces
 
 ### UI Component Duplication
 
-- [ ] T114 [P] [US2] Copy src/components/ui/ to packages/storefront/src/components/ui/
-- [ ] T115 [P] [US2] Copy src/components/shared/ to packages/storefront/src/components/shared/
-- [ ] T116 [P] [US2] Copy src/components/layout/ to packages/storefront/src/components/layout/ (if customer-specific)
-- [ ] T117 [US2] Update component imports in storefront routes to use local component paths
+- [x] T114 [P] [US2] Copy src/components/ui/ to packages/storefront/src/components/ui/
+- [x] T115 [P] [US2] Copy src/components/shared/ to packages/storefront/src/components/shared/
+- [x] T116 [P] [US2] Copy src/components/layout/ to packages/storefront/src/components/layout/ (if customer-specific)
+- [x] T117 [US2] Update component imports in storefront routes to use local component paths
 
 ### Configuration & Assets
 
-- [ ] T118 [P] [US2] Copy tailwind.config.ts to packages/storefront/tailwind.config.ts
-- [ ] T119 [P] [US2] Copy globals.css to packages/storefront/src/app/globals.css
-- [ ] T120 [P] [US2] Copy public/ assets (images, icons) to packages/storefront/public/
-- [ ] T121 [US2] Create packages/storefront/.env.local with NEXT_PUBLIC_APP_NAME="FindEg Storefront", DATABASE_URL, JWT_SECRET
-- [ ] T122 [US2] Update packages/storefront/next.config.ts with i18n, image domains, environment variables
+- [x] T118 [P] [US2] Copy tailwind.config.ts to packages/storefront/tailwind.config.ts
+- [x] T119 [P] [US2] Copy globals.css to packages/storefront/src/app/globals.css
+- [x] T120 [P] [US2] Copy public/ assets (images, icons) to packages/storefront/public/
+- [x] T121 [US2] Create packages/storefront/.env.local with NEXT_PUBLIC_APP_NAME="FindEg Storefront", DATABASE_URL, JWT_SECRET
+- [x] T122 [US2] Update packages/storefront/next.config.ts with i18n, image domains, environment variables
 
 ### Testing Migration
 
-- [ ] T123 [P] [US2] Copy cypress/ directory to packages/storefront/cypress/ keeping storefront tests (cypress/e2e/shop/, cypress/e2e/auth/, cypress/e2e/contracts/)
-- [ ] T124 [P] [US2] Copy cypress.config.ts to packages/storefront/cypress.config.ts updating baseUrl to http://localhost:3000
-- [ ] T125 [P] [US2] Copy cypress support files to packages/storefront/cypress/support/
-- [ ] T126 [US2] Update storefront package.json with Cypress scripts: test:e2e, test:e2e:open
-- [ ] T127 [US2] Remove admin-related Cypress tests from storefront/cypress/e2e/
+- [x] T123 [P] [US2] Copy cypress/ directory to packages/storefront/cypress/ keeping storefront tests (cypress/e2e/shop/, cypress/e2e/auth/, cypress/e2e/contracts/)
+- [x] T124 [P] [US2] Copy cypress.config.ts to packages/storefront/cypress.config.ts updating baseUrl to http://localhost:3000
+- [x] T125 [P] [US2] Copy cypress support files to packages/storefront/cypress/support/
+- [x] T126 [US2] Update storefront package.json with Cypress scripts: test:e2e, test:e2e:open
+- [x] T127 [US2] Remove admin-related Cypress tests from storefront/cypress/e2e/
 
 ### Build & Verification
 
