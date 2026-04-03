@@ -73,7 +73,7 @@ Phase 2 (US3 - Shared Code Management) ← Must complete before frontend package
 
 ### Constitution Compliance Tasks
 
-- [ ] T001 Review Clean Architecture boundaries for package separation in docs/architecture/ARCHITECTURE_PLAYBOOK.md
+- [x] T001 Review Clean Architecture boundaries for package separation in docs/architecture/ARCHITECTURE_PLAYBOOK.md
 - [ ] T002 Document migration strategy in project-planning/001-separate-admin-project-migration.md
 
 ### Monorepo Initialization
@@ -85,7 +85,7 @@ Phase 2 (US3 - Shared Code Management) ← Must complete before frontend package
 - [x] T005 [P] Create `pnpm-workspace.yaml` defining packages/backend, packages/dashboard, packages/storefront
 - [x] T006 Create root `package.json` with workspace scripts (dev, build, test, lint, type-check) using Turborepo
 - [x] T007 [P] Create packages/ directory structure: backend/, dashboard/, storefront/
-- [ ] T008 [P] Initialize .gitignore with Turborepo cache directories (.turbo/), package dist/ folders, node_modules
+- [x] T008 [P] Initialize .gitignore with Turborepo cache directories (.turbo/), package dist/ folders, node_modules
 
 ### Package Scaffolding
 
@@ -101,16 +101,16 @@ Phase 2 (US3 - Shared Code Management) ← Must complete before frontend package
 
 ### Build Pipeline Verification
 
-- [ ] T018 Install all dependencies: `pnpm install` from root
+- [x] T018 Install all dependencies: `pnpm install` from root
 - [ ] T019 Verify workspace linking: `pnpm list --depth 0` shows @findeg/backend in dashboard and storefront
 - [x] T020 Create minimal backend exports: packages/backend/src/index.ts exporting placeholder types
-- [ ] T021 Build backend package: `pnpm --filter backend build` produces dist/ output
-- [ ] T022 [P] Create minimal dashboard Next.js app with hello world page
-- [ ] T023 [P] Create minimal storefront Next.js app with hello world page
+- [x] T021 Build backend package: `pnpm --filter backend build` produces dist/ output
+- [x] T022 [P] Create minimal dashboard Next.js app with hello world page
+- [x] T023 [P] Create minimal storefront Next.js app with hello world page
 - [ ] T024 Build all packages: `turbo run build` completes successfully for all three packages
 - [ ] T025 Verify build caching: Run `turbo run build` twice, second build uses cache (0 tasks rebuilt)
 - [ ] T026 Test dev mode: `turbo run dev` starts dashboard (port 3001) and storefront (port 3000) without errors
-- [ ] T027 Commit Phase 0 with message "feat: initialize turborepo monorepo with three packages"
+- [x] T027 Commit Phase 0 with message "feat: initialize turborepo monorepo with three packages"
 
 **Phase 0 Exit Criteria**:
 - ✅ All packages build successfully
@@ -137,9 +137,9 @@ Phase 2 (US3 - Shared Code Management) ← Must complete before frontend package
 
 ### Database & Persistence Layer
 
-- [ ] T031 [US3] Move Drizzle schema files from src/features/core/infrastructure/persistence/schema/ to packages/backend/src/features/core/infrastructure/persistence/schema/
+- [x] T031 [US3] Move Drizzle schema files from src/features/core/infrastructure/persistence/schema/ to packages/backend/src/features/core/infrastructure/persistence/schema/
 - [ ] T032 [US3] Move migration scripts from scripts/migrations/ to packages/backend/migrations/ or keep at root
-- [ ] T033 [US3] Update drizzle.config.ts to point to backend package schema directory
+- [x] T033 [US3] Update drizzle.config.ts to point to backend package schema directory
 - [ ] T034 [US3] Create packages/backend/src/features/core/infrastructure/persistence/contracts/ for repository interfaces per contracts/backend-exports.md
 - [ ] T035 [P] [US3] Implement IUserRepository interface and PostgresUserRepository in packages/backend/src/features/core/infrastructure/persistence/repositories/user-repository.ts
 - [ ] T036 [P] [US3] Implement IProductRepository interface and PostgresProductRepository
@@ -175,7 +175,7 @@ Phase 2 (US3 - Shared Code Management) ← Must complete before frontend package
 - [x] T054 [US3] Create packages/backend/src/index.ts exporting all public interfaces per contracts/backend-exports.md
 - [x] T055 [US3] Create packages/backend/src/features/core/index.ts exporting core feature contracts
 - [x] T056 [US3] Create packages/backend/src/features/identity/index.ts exporting identity feature contracts
- - [x] T057 [US3] Create packages/backend/src/features/media/index.ts exporting media feature contracts
+- [x] T057 [US3] Create packages/backend/src/features/media/index.ts exporting media feature contracts
 - [ ] T058 [US3] Update packages/backend/package.json exports field defining subpath exports per contracts/backend-exports.md §Package Entry Points
 
 ### Testing & Verification
