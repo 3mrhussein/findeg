@@ -6,6 +6,7 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import { resolveErrorMessage } from "@/features/core/domain/errors/error-catalog";
 import { CACHE_TAGS } from "@/features/core/domain/constants/cache-tags";
 import { isSystemAdmin } from "@/features/core/domain/auth/authorization";
+import { type ProductFormValues } from "@/features/administration/presentation/forms/product-form";
 
 // ─── Auth helper ──────────────────────────────────────────────────────────────
 
@@ -319,7 +320,10 @@ export async function checkSkuAction(sku: string, excludeVariantId?: number) {
     const available = await container.adminProductService.checkSkuAvailable(sku, excludeVariantId);
     return { success: true as const, available };
   } catch (error) {
-    return { success: false as const, error: "Could not check SKU" };
+    return {
+      success: false as const,
+      error: resolveErrorMessage(error, "SYSTEM_UNEXPECTED_ERROR"),
+    };
   }
 }
 
@@ -429,7 +433,7 @@ export async function checkSlugAction(slug: string, excludeId?: number) {
     const available = await adminProductService.checkSlugAvailable(slug, excludeId);
     return { success: true, available };
   } catch (error) {
-    return { success: false, error: resolveErrorMessage(error) };
+    return { success: false, error: resolveErrorMessage(error, "ACTION_PRODUCT_UPDATE_FAILED") };
   }
 }
 
@@ -443,6 +447,6 @@ export async function checkSkuPrefixAction(prefix: string, excludeId?: number) {
     const available = await adminProductService.checkSkuPrefixAvailable(prefix, excludeId);
     return { success: true, available };
   } catch (error) {
-    return { success: false, error: resolveErrorMessage(error) };
+    return { success: false, error: resolveErrorMessage(error, "ACTION_PRODUCT_UPDATE_FAILED") };
   }
 }

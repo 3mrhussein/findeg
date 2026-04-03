@@ -15,17 +15,6 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
     return <div>Product not found</div>;
   }
 
-  const categoryOptions = categories.map((c) => ({
-    id: c.id,
-    slug: c.slug,
-    name: c.name,
-  }));
-
-  const brandOptions = brands.map((b) => ({
-    id: b.id,
-    name: b.name,
-  }));
-
   return (
     <div className="flex-1 space-y-4 p-8 pt-6">
       <div className="flex items-center justify-between space-y-2">
@@ -33,10 +22,11 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
       </div>
       <div className="max-w-2xl">
         <ProductForm
-          mode="edit"
           initialData={product as any}
-          categories={categoryOptions}
-          brands={brandOptions}
+          categories={categories}
+          brands={brands}
+          tags={[]}
+          locale="en"
         />
       </div>
     </div>

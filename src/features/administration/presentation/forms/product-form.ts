@@ -59,7 +59,7 @@ export const ProductFormSchema = z.object({
   localizedName: LocalizedStringSchema,
   localizedDescription: LocalizedStringSchema.optional().default({ en: "", ar: "" }),
   localizedLongDescription: LocalizedStringSchema.optional().default({ en: "", ar: "" }),
-  localizedSlug: LocalizedStringSchema.optional(),
+  localizedSlug: LocalizedStringSchema.optional().default({ en: "", ar: "" }),
   categoryId: z.number().nullable().optional(),
   brandId: z.number().nullable().optional(),
   tagIds: z.array(z.number()).default([]),
@@ -76,8 +76,8 @@ export const ProductFormSchema = z.object({
   sharedUoMs: z.array(UoMRowSchema).default([]),
 
   variants: z.array(VariantFormSchema).min(1, "At least one variant is required"),
-  localizedMetaTitle: LocalizedStringSchema.optional(),
-  localizedMetaDescription: LocalizedStringSchema.optional(),
+  localizedMetaTitle: LocalizedStringSchema.optional().default({ en: "", ar: "" }),
+  localizedMetaDescription: LocalizedStringSchema.optional().default({ en: "", ar: "" }),
 });
 
 export type ProductFormValues = z.infer<typeof ProductFormSchema>;

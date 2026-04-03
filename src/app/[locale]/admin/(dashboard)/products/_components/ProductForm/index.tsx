@@ -28,8 +28,8 @@ import {
 } from "@/features/administration/application/actions/admin-product-actions";
 
 interface ProductFormProps {
-  initialData?: ProductEditData | null;
-  categories: Category[];
+  initialData?: ProductEditData;
+  categories: any[];
   brands: Brand[];
   tags: Tag[];
   locale: string;
@@ -45,46 +45,47 @@ export function ProductForm({ initialData, categories, brands, tags, locale }: P
   const [activeTab, setActiveTab] = useState("info");
 
   const form = useForm<ProductFormValues>({
-    resolver: zodResolver(ProductFormSchema),
+    resolver: zodResolver(ProductFormSchema) as any,
     defaultValues: (initialData
       ? {
-          localizedName: initialData.localizedName ||
-            (initialData as any).localizedContent?.name || { en: "", ar: "" },
-          localizedDescription: initialData.localizedDescription ||
-            (initialData as any).localizedContent?.description || { en: "", ar: "" },
-          localizedLongDescription: initialData.localizedLongDescription ||
-            (initialData as any).localizedContent?.longDescription || { en: "", ar: "" },
-          localizedSlug: initialData.localizedSlug ||
-            (initialData as any).localizedContent?.slug || { en: "", ar: "" },
+          localizedName: initialData.localizedContent?.name || { en: "", ar: "" },
+          localizedDescription: initialData.localizedContent?.description || { en: "", ar: "" },
+          localizedLongDescription: initialData.localizedContent?.longDescription || {
+            en: "",
+            ar: "",
+          },
+          localizedSlug: initialData.localizedContent?.slug || { en: "", ar: "" },
           categoryId: initialData.categoryId,
           brandId: initialData.brandId,
-          tagIds: initialData.tags.map((t) => t.id),
+          tagIds: initialData.tags?.map((t) => t.id) || [],
           isActive: initialData.isActive,
           skuPrefix: initialData.skuPrefix || undefined,
           pricingMode: (initialData as any).pricingMode || "per-variant",
           uomSharingMode: (initialData as any).uomSharingMode || "shared",
           variants: initialData.variants.map((v) => ({
+            id: v.id,
             sku: v.sku,
             basePrice: Number(v.basePrice),
             isActive: v.isActive,
             displayOrder: v.displayOrder,
-            images: v.images.map((img) => ({
+            localizedLabel: v.localizedLabel || { en: "", ar: "" },
+            images: (v.images || []).map((img) => ({
               url: img.url,
               alt: img.alt || "",
               displayOrder: img.displayOrder,
             })),
-            attributes: v.attributes.map((attr) => ({
-              attributeKey: attr.attributeKey,
+            attributes: (v.attributes || []).map((attr) => ({
+              attributeKey: attr.key,
               value: attr.valueText || "",
               isVariantDefining: true,
             })),
-            uoms: v.sellableUoms.map((u) => ({
+            uoms: (v.sellableUoms || []).map((u) => ({
               uomCode: u.uomCode,
               factorToBase: Number(u.factorToBase),
-              localizedLabel: u.localizedLabel,
+              localizedLabel: u.localizedLabel || { en: "", ar: "" },
               isEnabled: u.isEnabled,
-              priceLists: u.priceLists.map((pl) => ({
-                customerGroup: pl.customerGroup as any,
+              priceLists: ((u as any).priceLists || []).map((pl: any) => ({
+                customerGroup: pl.customerGroup,
                 uomCode: pl.uomCode,
                 unitPrice: Number(pl.unitPrice),
                 minQty: pl.minQty,
@@ -177,9 +178,7 @@ export function ProductForm({ initialData, categories, brands, tags, locale }: P
           isEdit={!!initialData}
           isPending={isPending}
           onSaveDraft={() => form.handleSubmit(onSubmit)()}
-          productName={
-            initialData?.localizedName?.en || (initialData as any)?.localizedContent?.name?.en
-          }
+          productName={initialData?.localizedContent?.name?.en || ""}
         />
 
         {/* Sticky tab bar — below header */}

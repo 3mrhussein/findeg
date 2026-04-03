@@ -28,7 +28,7 @@ export function ProductFormHeader({
 
   const displayTitle = isEdit
     ? productName
-      ? `${t("edit")} ${productName.length > 40 ? productName.slice(0, 40) + "…" : productName}`
+      ? `${t("editProduct")} ${productName.length > 40 ? productName.slice(0, 40) + "…" : productName}`
       : t("editProduct")
     : t("newProduct");
 
