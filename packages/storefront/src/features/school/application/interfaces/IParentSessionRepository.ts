@@ -1,7 +1,4 @@
-import {
-  SchoolListParentSession,
-  NewSchoolListParentSession,
-} from "../../../core/infrastructure/persistence/schema/school-list-sessions";
+import type { SchemaTypes } from "@findeg/backend/features/core";
 
 export interface IParentSessionRepository {
   /**
@@ -11,12 +8,12 @@ export interface IParentSessionRepository {
     listId: number,
     userId?: number,
     sessionToken?: string,
-  ): Promise<SchoolListParentSession | null>;
+  ): Promise<SchemaTypes.SchoolListParentSession | null>;
 
   /**
    * Creates or updates a session.
    */
-  upsertSession(session: NewSchoolListParentSession): Promise<SchoolListParentSession>;
+  upsertSession(session: SchemaTypes.NewSchoolListParentSession): Promise<SchemaTypes.SchoolListParentSession>;
 
   /**
    * Merges a guest session into a user session.

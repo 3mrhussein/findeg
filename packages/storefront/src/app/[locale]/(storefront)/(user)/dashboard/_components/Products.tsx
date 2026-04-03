@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import type { Product } from "@/features/catalog/domain/entities/Product";
-import { ProductTable } from "@/app/[locale]/admin/(dashboard)/_components/ProductTable";
+// TODO: Replace with storefront-specific product display component
+// import { ProductTable } from "@/app/[locale]/admin/(dashboard)/_components/ProductTable";
 
 interface ProductsProps {
   products: Product[];
@@ -39,7 +40,8 @@ export const Products: React.FC<ProductsProps> = ({ products }) => {
           </CardDescription>
         </CardHeader>
         <CardContent className="p-0">
-          <ProductTable products={currentPageData} />
+          {/* TODO: Implement storefront-specific product display */}
+          <div className="p-4 text-muted-foreground">Product list coming soon...</div>
         </CardContent>
       </Card>
 
