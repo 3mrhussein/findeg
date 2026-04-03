@@ -8,7 +8,11 @@
     "start": "next start",
     "type-check": "tsc --noEmit",
     "lint": "eslint .",
-    "test": "vitest"
+    "test": "vitest",
+    "e2e": "cypress run",
+    "e2e:run": "cypress run",
+    "e2e:run:ci": "cypress run --browser chrome --headless",
+    "e2e:open": "cypress open"
   },
   "dependencies": {
     "@findeg/backend": "workspace:*",
@@ -17,6 +21,7 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "cypress": "^15.10.0",
     "typescript": "^5.7.3"
   }
 }
