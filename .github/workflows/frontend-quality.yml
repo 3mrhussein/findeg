@@ -25,6 +25,16 @@ jobs:
       - name: Enable corepack and prepare pnpm
         run: corepack enable && corepack prepare pnpm@8.8.0 --activate
 
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pnpm-store
+            ~/.cache/pnpm
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -36,3 +46,7 @@ jobs:
 
       - name: Build
         run: pnpm -w -r --if-present run build
+
+      - name: Run E2E (main only)
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: pnpm -w -r --if-present run e2e:run:ci
