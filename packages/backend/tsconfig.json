@@ -25,6 +25,10 @@
     "**/*.spec.ts",
     "**/__tests__/**/*",
     "src/components/**/*.tsx",
-    "src/components/**/*.jsx"
+    "src/components/**/*.jsx",
+    "src/hooks/**/*",
+    "src/providers/**/*",
+    "src/**/presentation/hooks/**/*",
+    "src/**/presentation/hoc/**/*"
   ]
 }

@@ -158,10 +158,10 @@ Phase 2 (US3 - Shared Code Management) ← Must complete before frontend package
 
 ### Type Definitions & Validation
 
-- [ ] T046 [P] [US3] Create Zod schemas in packages/backend/src/types/: CreateUserSchema, CreateProductSchema, CreateCategorySchema, CreateOrderSchema per contracts/backend-exports.md §Validation Schemas
-- [ ] T047 [P] [US3] Export TypeScript types derived from Zod schemas: CreateUserInput, CreateProductInput, etc.
-- [ ] T048 [P] [US3] Define domain types in packages/backend/src/types/domain.ts: User, Product, Category, Order, OrderStatus, Address
-- [ ] T049 [US3] Create error classes in packages/backend/src/lib/errors.ts: AppError, UnauthorizedError, ForbiddenError, NotFoundError, ValidationError, ConflictError per contracts/backend-exports.md §Error Handling
+- [x] T046 [P] [US3] Create Zod schemas in packages/backend/src/types/: CreateUserSchema, CreateProductSchema, CreateCategorySchema, CreateOrderSchema per contracts/backend-exports.md §Validation Schemas
+- [x] T047 [P] [US3] Export TypeScript types derived from Zod schemas: CreateUserInput, CreateProductInput, etc.
+- [x] T048 [P] [US3] Define domain types in packages/backend/src/types/domain.ts: User, Product, Category, Order, OrderStatus, Address
+- [x] T049 [US3] Create error classes in packages/backend/src/lib/errors.ts: AppError, UnauthorizedError, ForbiddenError, NotFoundError, ValidationError, ConflictError per contracts/backend-exports.md §Error Handling
 
 ### i18n & Utilities
 
@@ -182,7 +182,7 @@ Phase 2 (US3 - Shared Code Management) ← Must complete before frontend package
 
 - [x] T059 [P] [US3] Write unit tests for IAuthService: token generation, verification, refresh, revocation in packages/backend/src/features/identity/__tests__/auth-service.test.ts
 - [ ] T060 [P] [US3] Write unit tests for repository interfaces using in-memory implementations
-- [ ] T061 [P] [US3] Write unit tests for Zod validation schemas with valid and invalid inputs
+- [x] T061 [P] [US3] Write unit tests for Zod validation schemas with valid and invalid inputs
 - [x] T062 [US3] Build backend package: `pnpm --filter backend build` produces complete dist/ output
 - [x] T063 [US3] Run backend tests: `pnpm --filter backend test` 27/29 tests pass (93% pass rate)
 - [ ] T064 [US3] Verify exports: Create test file importing from @findeg/backend, @findeg/backend/features/core, compile successfully

@@ -17,3 +17,6 @@ export * from "./features/review";
 export * from "./features/school";
 export * from "./features/notifications";
 export * from "./features/administration";
+
+// Shared libraries (i18n utilities, error classes)
+export * from "./lib";
