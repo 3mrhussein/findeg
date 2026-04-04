@@ -32,9 +32,9 @@ export async function getCategoryPageViewModel(
   locale: string,
   query: { [key: string]: string | string[] | undefined },
 ): Promise<CategoryPageViewModel | null> {
-  "use cache";
-  cacheTag(CACHE_TAGS.CATALOG_CATEGORIES, CACHE_TAGS.CATALOG_PRODUCTS);
-  cacheLife("hours");
+  // "use cache"; // TODO: Re-enable after proper cache configuration
+  // cacheTag(CACHE_TAGS.CATALOG_CATEGORIES, CACHE_TAGS.CATALOG_PRODUCTS);
+  // cacheLife("hours");
 
   const resolvedLocale = resolveLocale(locale);
   const { categories, products } = getServices();

@@ -1,6 +1,6 @@
 {
   "node": {
-    "00b455b7890a42d0f5f2f985dc9ac0403a43f979c4": {
+    "002579aa487c2dbc94df84e9a246288439c8e5af76": {
       "workers": {
         "app/[locale]/admin/(dashboard)/catalog/tags/page": {
           "moduleId": 770642,
@@ -12,7 +12,7 @@
       "exportedName": "$$RSC_SERVER_ACTION_0",
       "filename": "packages/dashboard/src/app/[locale]/admin/_components/shell/AdminShell.tsx"
     },
-    "4045ea857c8c5f30552fd1855588d49042e9680e63": {
+    "40a2ebfbd92453b5dfdf38e487c4545c83ec2b1fa6": {
       "workers": {
         "app/[locale]/admin/(dashboard)/catalog/tags/page": {
           "moduleId": 770642,
@@ -24,7 +24,7 @@
       "exportedName": "logoutAction",
       "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
     },
-    "40af0a900331f5d89bbafc55a2413818d74d299f65": {
+    "40c5f1e946a2ed3abc7ec2de0dc7df8238db0f5990": {
       "workers": {
         "app/[locale]/admin/(dashboard)/catalog/tags/page": {
           "moduleId": 770642,
@@ -36,7 +36,7 @@
       "exportedName": "loginAction",
       "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
     },
-    "408d93c09de53f31a6dcd74f3e461da9de8dc4b434": {
+    "400d9091968a3fd89ec5458de3a3f4f110a0a7bef9": {
       "workers": {
         "app/[locale]/admin/(dashboard)/catalog/tags/page": {
           "moduleId": 770642,
@@ -48,7 +48,7 @@
       "exportedName": "adminCreateTagAction",
       "filename": "packages/backend/src/features/administration/application/actions/admin-tag-actions.ts"
     },
-    "60347788de2ce6e1f736d7a0f55c9483c74b6f9daf": {
+    "6081adfae11568612bdf4d4350ce89763512f46f17": {
       "workers": {
         "app/[locale]/admin/(dashboard)/catalog/tags/page": {
           "moduleId": 770642,
@@ -60,7 +60,7 @@
       "exportedName": "adminUpdateTagAction",
       "filename": "packages/backend/src/features/administration/application/actions/admin-tag-actions.ts"
     },
-    "40628a39cbbb1f2b231de68b26ec2c3494db468f4a": {
+    "406824a788590a8d4e47f907650195927de4745388": {
       "workers": {
         "app/[locale]/admin/(dashboard)/catalog/tags/page": {
           "moduleId": 770642,
@@ -72,7 +72,7 @@
       "exportedName": "adminGetTagProductCountAction",
       "filename": "packages/backend/src/features/administration/application/actions/admin-tag-actions.ts"
     },
-    "40bb0bf2c0803d2df00b6090985e9fbe485799fb6b": {
+    "408f637ab85a05ebf7cf0a876b3ac9793b9e80ffdd": {
       "workers": {
         "app/[locale]/admin/(dashboard)/catalog/tags/page": {
           "moduleId": 770642,
@@ -84,7 +84,7 @@
       "exportedName": "adminDeleteTagAction",
       "filename": "packages/backend/src/features/administration/application/actions/admin-tag-actions.ts"
     },
-    "408e863aaa721b1b42ebeba960cd1eeff1b459fe55": {
+    "40253cc0ce0637f834616e0d63c618ca3fc0e71e93": {
       "workers": {
         "app/[locale]/admin/(dashboard)/catalog/tags/page": {
           "moduleId": 770642,

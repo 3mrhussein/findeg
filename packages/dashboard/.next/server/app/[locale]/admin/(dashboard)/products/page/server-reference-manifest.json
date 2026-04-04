@@ -1,6 +1,6 @@
 {
   "node": {
-    "00b455b7890a42d0f5f2f985dc9ac0403a43f979c4": {
+    "002579aa487c2dbc94df84e9a246288439c8e5af76": {
       "workers": {
         "app/[locale]/admin/(dashboard)/products/page": {
           "moduleId": 160503,
@@ -12,7 +12,7 @@
       "exportedName": "$$RSC_SERVER_ACTION_0",
       "filename": "packages/dashboard/src/app/[locale]/admin/_components/shell/AdminShell.tsx"
     },
-    "4045ea857c8c5f30552fd1855588d49042e9680e63": {
+    "40a2ebfbd92453b5dfdf38e487c4545c83ec2b1fa6": {
       "workers": {
         "app/[locale]/admin/(dashboard)/products/page": {
           "moduleId": 160503,
@@ -24,7 +24,7 @@
       "exportedName": "logoutAction",
       "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
     },
-    "40af0a900331f5d89bbafc55a2413818d74d299f65": {
+    "40c5f1e946a2ed3abc7ec2de0dc7df8238db0f5990": {
       "workers": {
         "app/[locale]/admin/(dashboard)/products/page": {
           "moduleId": 160503,
@@ -36,7 +36,7 @@
       "exportedName": "loginAction",
       "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
     },
-    "609cb5c0f62f5565a1cb90fe94ce076ec4afec27e2": {
+    "60c2ffc91316a60911780de640d4e96f0d058ce634": {
       "workers": {
         "app/[locale]/admin/(dashboard)/products/page": {
           "moduleId": 160503,
@@ -48,7 +48,7 @@
       "exportedName": "duplicateProductAction",
       "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/products/actions.ts"
     },
-    "6050ff350d548406905c6db06d982123cd1a6a0db8": {
+    "607457f93b9935d5b4a726b54e4aa23ca7f4209d54": {
       "workers": {
         "app/[locale]/admin/(dashboard)/products/page": {
           "moduleId": 160503,
@@ -60,7 +60,7 @@
       "exportedName": "bulkActivateAction",
       "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/products/actions.ts"
     },
-    "609bc410deabdd3306222d101a8258a9990d84f388": {
+    "60945d9e51bf4c3e61d1832be7b874f4e70d439869": {
       "workers": {
         "app/[locale]/admin/(dashboard)/products/page": {
           "moduleId": 160503,
@@ -72,7 +72,7 @@
       "exportedName": "bulkDeactivateAction",
       "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/products/actions.ts"
     },
-    "60de9f71f5957619c034396ead087a53f05da6bb67": {
+    "607663cd8f63fdbfcad7a8159ee6bb2eeb2c573a54": {
       "workers": {
         "app/[locale]/admin/(dashboard)/products/page": {
           "moduleId": 160503,

@@ -13,7 +13,9 @@ export interface IParentSessionRepository {
   /**
    * Creates or updates a session.
    */
-  upsertSession(session: SchemaTypes.NewSchoolListParentSession): Promise<SchemaTypes.SchoolListParentSession>;
+  upsertSession(
+    session: SchemaTypes.NewSchoolListParentSession,
+  ): Promise<SchemaTypes.SchoolListParentSession>;
 
   /**
    * Merges a guest session into a user session.

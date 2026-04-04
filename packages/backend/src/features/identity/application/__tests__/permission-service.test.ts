@@ -40,7 +40,7 @@ describe("PermissionService", () => {
 
       const result = await permissionService.hasPermission(
         "user-123" as ID,
-        "products:create" as PermissionCode
+        "products:create" as PermissionCode,
       );
 
       expect(result).toBe(true);
@@ -55,7 +55,7 @@ describe("PermissionService", () => {
 
       const result = await permissionService.hasPermission(
         "user-123" as ID,
-        "products:delete" as PermissionCode
+        "products:delete" as PermissionCode,
       );
 
       expect(result).toBe(false);
@@ -64,12 +64,12 @@ describe("PermissionService", () => {
     it("should return false and log error on exception", async () => {
       const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
       vi.spyOn(mockUserRepository, "getAuthorizationContext").mockRejectedValue(
-        new Error("Database error")
+        new Error("Database error"),
       );
 
       const result = await permissionService.hasPermission(
         "user-123" as ID,
-        "products:create" as PermissionCode
+        "products:create" as PermissionCode,
       );
 
       expect(result).toBe(false);
@@ -106,8 +106,12 @@ describe("PermissionService", () => {
 
   describe("getUserPermissions", () => {
     it("should return all user permissions", async () => {
-      const expectedPermissions = ["products:create", "products:update", "products:read"] as PermissionCode[];
-      
+      const expectedPermissions = [
+        "products:create",
+        "products:update",
+        "products:read",
+      ] as PermissionCode[];
+
       vi.spyOn(mockUserRepository, "getAuthorizationContext").mockResolvedValue({
         activeRoleIds: ["admin" as RoleId],
         permissionCodes: expectedPermissions,
@@ -122,7 +126,7 @@ describe("PermissionService", () => {
     it("should return empty array on error", async () => {
       const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
       vi.spyOn(mockUserRepository, "getAuthorizationContext").mockRejectedValue(
-        new Error("Database error")
+        new Error("Database error"),
       );
 
       const result = await permissionService.getUserPermissions("user-123" as ID);
@@ -135,7 +139,7 @@ describe("PermissionService", () => {
   describe("getUserRoles", () => {
     it("should return all user roles", async () => {
       const expectedRoles = ["admin", "warehouse_manager"] as RoleId[];
-      
+
       vi.spyOn(mockUserRepository, "getAuthorizationContext").mockResolvedValue({
         activeRoleIds: expectedRoles,
         permissionCodes: [],
@@ -150,7 +154,7 @@ describe("PermissionService", () => {
     it("should return empty array on error", async () => {
       const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
       vi.spyOn(mockUserRepository, "getAuthorizationContext").mockRejectedValue(
-        new Error("Database error")
+        new Error("Database error"),
       );
 
       const result = await permissionService.getUserRoles("user-123" as ID);

@@ -16,6 +16,7 @@
 - Q: Where should shared UI components live in the monorepo structure? → A: Duplicate in both frontend packages; each frontend app has its own copy of components/ui and components/shared allowing per-app customization
 
 **Additional Technical Requirements**:
+
 - All UI components MUST be shadcn-based (shadcn/ui with Radix UI primitives)
 - Implementation MUST follow latest React and Next.js 16 best practices as documented in Technical Constraints section below
 
@@ -173,6 +174,7 @@ As a DevOps engineer, I want separate deployment pipelines for admin and storefr
 ### Technical Constraints & Best Practices _(Next.js 16 & React)_
 
 **Next.js 16 App Router Requirements**:
+
 - Use Server Components by default for all pages and layouts (mark Client Components with `'use client'` only when interactivity required)
 - Leverage Server Actions for mutations (form submissions, data updates) instead of API routes where possible
 - Use `async` Server Components for data fetching at the component level (colocation of data + UI)
@@ -184,6 +186,7 @@ As a DevOps engineer, I want separate deployment pipelines for admin and storefr
 - Use `unstable_cache` for data caching with granular revalidation strategies
 
 **React Best Practices (React 19-compatible patterns)**:
+
 - Use React 19 `use` hook for unwrapping Promises and Context in components
 - Implement `useOptimistic` for optimistic UI updates in forms and mutations
 - Use `useFormStatus` and `useFormState` for form state management with Server Actions
@@ -193,6 +196,7 @@ As a DevOps engineer, I want separate deployment pipelines for admin and storefr
 - Use `loading.tsx` for instant loading states during navigation
 
 **Performance & Optimization**:
+
 - Code-split by route automatically via App Router; use `dynamic()` for heavy client components
 - Implement font optimization with `next/font` (local fonts or Google Fonts)
 - Use `revalidatePath()` and `revalidateTag()` for granular cache invalidation
@@ -201,6 +205,7 @@ As a DevOps engineer, I want separate deployment pipelines for admin and storefr
 - Implement proper TypeScript strict mode with no `any` types
 
 **Data Fetching Patterns**:
+
 - Fetch data in Server Components using async/await (no useEffect for data fetching)
 - Parallel data fetching: multiple `fetch()` calls in same component render in parallel automatically
 - Sequential data fetching: use `await` when one request depends on another
@@ -208,6 +213,7 @@ As a DevOps engineer, I want separate deployment pipelines for admin and storefr
 - Implement proper error handling with try/catch in Server Components
 
 **Routing & Navigation**:
+
 - Use Route Groups `(groupName)` for organization without affecting URL structure
 - Implement Parallel Routes for complex dashboard layouts (e.g., modal overlays)
 - Use Intercepting Routes for modal-based navigation patterns
@@ -215,6 +221,7 @@ As a DevOps engineer, I want separate deployment pipelines for admin and storefr
 - Use `<Link>` component for declarative navigation with automatic prefetching
 
 **Styling & UI (shadcn/ui specific)**:
+
 - All components MUST use shadcn/ui components from `components/ui/` directory
 - Customize shadcn components via Tailwind CSS classes and CSS variables (no inline styles)
 - Use Radix UI primitives as foundation (via shadcn) for accessibility compliance
@@ -223,6 +230,7 @@ As a DevOps engineer, I want separate deployment pipelines for admin and storefr
 - Define semantic color tokens in `globals.css` using HSL CSS variables
 
 **Internationalization (next-intl)**:
+
 - Use server-side i18n with next-intl for translations (no client-side translation loading)
 - Implement `[locale]` dynamic segment for language routing
 - Use `useTranslations()` in Client Components, `getTranslations()` in Server Components
@@ -230,6 +238,7 @@ As a DevOps engineer, I want separate deployment pipelines for admin and storefr
 - Support bidirectional text with proper RTL styling
 
 **Authentication & Security**:
+
 - JWT tokens stored in HTTP-only cookies (not localStorage) for XSS protection
 - Implement CSRF protection for Server Actions
 - Use middleware for route protection and authentication checks
@@ -237,12 +246,14 @@ As a DevOps engineer, I want separate deployment pipelines for admin and storefr
 - Never expose sensitive backend logic or database queries to client bundles
 
 **Testing Requirements**:
+
 - E2E tests with Cypress for critical user journeys
 - Unit tests for utility functions and business logic in backend package
 - Integration tests for Server Actions and Route Handlers
 - Visual regression testing for UI components (optional but recommended)
 
 **Build & Bundle Optimization**:
+
 - Configure `bundlePagesRouterDependencies` and `serverExternalPackages` in next.config.ts
 - Use `outputFileTracing` for minimal production builds
 - Enable SWC minification (default in Next.js 16)

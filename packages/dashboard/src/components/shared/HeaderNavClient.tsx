@@ -7,11 +7,10 @@ import ToggleLanguage from "./ToggleLanguage";
 import ToggleTheme from "./ToggleTheme";
 import { Menu, User, LayoutDashboard } from "lucide-react";
 import { useUser } from "@/hooks/useUser";
-import { CartTrigger } from "@/app/[locale]/(storefront)/_components/CartTrigger";
 import { useTranslations } from "next-intl";
 
 /**
- *
+ * Admin Header Navigation Client Component
  */
 export function HeaderNavClient() {
   const [open, setOpen] = useState(false);
@@ -20,8 +19,6 @@ export function HeaderNavClient() {
 
   return (
     <>
-      <CartTrigger />
-
       {/* Mobile Menu Toggle */}
       <div className="md:hidden flex items-center">
         <Sheet open={open} onOpenChange={setOpen}>

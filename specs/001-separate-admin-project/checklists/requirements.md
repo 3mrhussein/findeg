@@ -37,12 +37,12 @@
 ✅ **Database Ownership**: Backend package owns all schema/migrations; frontend apps access via repository interfaces  
 ✅ **Authentication Strategy**: JWT tokens issued by backend's shared auth service  
 ✅ **Deployment Model**: Two Next.js apps (dashboard, storefront); backend as library-only (no deployment)  
-✅ **UI Components**: Duplicated in both frontend packages for independent customization  
+✅ **UI Components**: Duplicated in both frontend packages for independent customization
 
 **Additional Technical Requirements Added:**
 
 ✅ **UI Framework**: All components must use shadcn/ui (with Radix UI primitives)  
-✅ **Best Practices**: Comprehensive Next.js 16 and React best practices documented in Technical Constraints section  
+✅ **Best Practices**: Comprehensive Next.js 16 and React best practices documented in Technical Constraints section
 
 **Coverage Status**: All critical ambiguities resolved. Specification includes detailed technical guidance for Next.js 16 App Router, React 19 patterns, shadcn/ui requirements, performance optimization, data fetching, routing, i18n, authentication, and testing strategies.
 

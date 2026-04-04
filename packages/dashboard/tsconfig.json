@@ -23,10 +23,5 @@
     "src/**/*.js",
     "src/**/*.jsx"
   ],
-  "exclude": [
-    "node_modules",
-    ".next",
-    "dist",
-    "cypress"
-  ]
+  "exclude": ["node_modules", ".next", "dist", "cypress"]
 }

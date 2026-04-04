@@ -1,6 +1,6 @@
 {
   "node": {
-    "00b455b7890a42d0f5f2f985dc9ac0403a43f979c4": {
+    "002579aa487c2dbc94df84e9a246288439c8e5af76": {
       "workers": {
         "app/[locale]/admin/(dashboard)/audit-log/page": {
           "moduleId": 658645,
@@ -132,7 +132,7 @@
       "filename": "packages/dashboard/src/app/[locale]/admin/_components/shell/AdminShell.tsx",
       "exportedName": "$$RSC_SERVER_ACTION_0"
     },
-    "4045ea857c8c5f30552fd1855588d49042e9680e63": {
+    "40a2ebfbd92453b5dfdf38e487c4545c83ec2b1fa6": {
       "workers": {
         "app/[locale]/admin/(dashboard)/audit-log/page": {
           "moduleId": 658645,
@@ -270,7 +270,7 @@
       "filename": "packages/backend/src/features/identity/application/actions/auth.ts",
       "exportedName": "logoutAction"
     },
-    "40af0a900331f5d89bbafc55a2413818d74d299f65": {
+    "40c5f1e946a2ed3abc7ec2de0dc7df8238db0f5990": {
       "workers": {
         "app/[locale]/admin/(dashboard)/audit-log/page": {
           "moduleId": 658645,
@@ -408,19 +408,7 @@
       "filename": "packages/backend/src/features/identity/application/actions/auth.ts",
       "exportedName": "loginAction"
     },
-    "40106abdf5f28012c7f2cdcdc5974a0c52b271c9bf": {
-      "workers": {
-        "app/[locale]/admin/(dashboard)/brands/page": {
-          "moduleId": 607822,
-          "async": false,
-          "exportedName": "$$RSC_SERVER_ACTION_2",
-          "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/brands/page.tsx"
-        }
-      },
-      "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/brands/page.tsx",
-      "exportedName": "$$RSC_SERVER_ACTION_2"
-    },
-    "40f3e6dd914e0eab363ca0e27fa58572d985693226": {
+    "40356b59d8e6981655bb89b9796d04be3a922d6fe9": {
       "workers": {
         "app/[locale]/admin/(dashboard)/brands/page": {
           "moduleId": 607822,
@@ -432,7 +420,19 @@
       "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/brands/page.tsx",
       "exportedName": "$$RSC_SERVER_ACTION_1"
     },
-    "600ed99b1f3b0bf860e45afa32bb4a52f02dc0b299": {
+    "405e4805d3203a4223628c79b6ec3acb3da7d395c1": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/brands/page": {
+          "moduleId": 607822,
+          "async": false,
+          "exportedName": "$$RSC_SERVER_ACTION_2",
+          "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/brands/page.tsx"
+        }
+      },
+      "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/brands/page.tsx",
+      "exportedName": "$$RSC_SERVER_ACTION_2"
+    },
+    "60714f3deb1b77ef2bb3e4f3706d77747e97cc21b6": {
       "workers": {
         "app/[locale]/admin/(dashboard)/brands/page": {
           "moduleId": 607822,
@@ -444,7 +444,7 @@
       "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/brands/page.tsx",
       "exportedName": "$$RSC_SERVER_ACTION_0"
     },
-    "40b5942493d0bd2809caaa71162894b45320cb8ffd": {
+    "404a08946dfd78cb12b0d0d51dc6dbf36734a2825a": {
       "workers": {
         "app/[locale]/admin/(dashboard)/brands/page": {
           "moduleId": 607822,
@@ -456,7 +456,7 @@
       "filename": "packages/backend/src/features/catalog/application/actions/brand.ts",
       "exportedName": "createBrandAction"
     },
-    "40bbe22402ce264e4b4320d292b468469c9a0698d6": {
+    "405ccc1cea7e2251cd28c6455f81afa980d2827327": {
       "workers": {
         "app/[locale]/admin/(dashboard)/brands/page": {
           "moduleId": 607822,
@@ -468,7 +468,7 @@
       "filename": "packages/backend/src/features/catalog/application/actions/brand.ts",
       "exportedName": "deleteBrandAction"
     },
-    "40e92ce06b58de4657a58517c0f46dd23061089508": {
+    "40812c3815b91077a352090cd581e2206758da5285": {
       "workers": {
         "app/[locale]/admin/(dashboard)/brands/page": {
           "moduleId": 607822,
@@ -480,7 +480,7 @@
       "filename": "packages/backend/src/features/catalog/application/actions/brand.ts",
       "exportedName": "toggleBrandStatusAction"
     },
-    "60e36ca24537d60c498fde83c80b25ab30bdf2b131": {
+    "600a4759a3d066544d09c82feed4f74d015fbc91ac": {
       "workers": {
         "app/[locale]/admin/(dashboard)/brands/page": {
           "moduleId": 607822,
@@ -492,7 +492,7 @@
       "filename": "packages/backend/src/features/catalog/application/actions/brand.ts",
       "exportedName": "updateBrandAction"
     },
-    "40ad80f30c09dfad78479761bccac524c6619abbe4": {
+    "400a2670f6e73008f127d2c4312a27e260c55aada3": {
       "workers": {
         "app/[locale]/admin/(dashboard)/catalog/collections/page": {
           "moduleId": 677205,
@@ -504,7 +504,7 @@
       "filename": "packages/backend/src/features/administration/application/actions/admin-collection-actions.ts",
       "exportedName": "adminReorderCollectionsAction"
     },
-    "402779495ee683b2c7d1c5754c71086a6ee455fd8e": {
+    "40e771934234231f65885931ab5d9890d472fdd51c": {
       "workers": {
         "app/[locale]/admin/(dashboard)/catalog/collections/page": {
           "moduleId": 677205,
@@ -516,7 +516,7 @@
       "filename": "packages/backend/src/features/administration/application/actions/admin-collection-actions.ts",
       "exportedName": "adminDeleteCollectionAction"
     },
-    "405a0e5415d36ccf4194775aa5ad1d4b1fe734744b": {
+    "40276cc38e8c3cc2ade49dddbbe16413c56d5ff186": {
       "workers": {
         "app/[locale]/admin/(dashboard)/catalog/collections/[id]/page": {
           "moduleId": 461628,
@@ -534,7 +534,7 @@
       "filename": "packages/backend/src/features/administration/application/actions/admin-collection-actions.ts",
       "exportedName": "adminCreateCollectionAction"
     },
-    "6051f88b8160bafd400db4a33c1843e656671bc718": {
+    "60d260bde9990cf015104973379282a150f05cccbe": {
       "workers": {
         "app/[locale]/admin/(dashboard)/catalog/collections/[id]/page": {
           "moduleId": 461628,
@@ -552,7 +552,7 @@
       "filename": "packages/backend/src/features/administration/application/actions/admin-collection-actions.ts",
       "exportedName": "adminUpdateCollectionAction"
     },
-    "408d93c09de53f31a6dcd74f3e461da9de8dc4b434": {
+    "400d9091968a3fd89ec5458de3a3f4f110a0a7bef9": {
       "workers": {
         "app/[locale]/admin/(dashboard)/catalog/tags/page": {
           "moduleId": 770642,
@@ -564,7 +564,7 @@
       "filename": "packages/backend/src/features/administration/application/actions/admin-tag-actions.ts",
       "exportedName": "adminCreateTagAction"
     },
-    "60347788de2ce6e1f736d7a0f55c9483c74b6f9daf": {
+    "6081adfae11568612bdf4d4350ce89763512f46f17": {
       "workers": {
         "app/[locale]/admin/(dashboard)/catalog/tags/page": {
           "moduleId": 770642,
@@ -576,7 +576,7 @@
       "filename": "packages/backend/src/features/administration/application/actions/admin-tag-actions.ts",
       "exportedName": "adminUpdateTagAction"
     },
-    "40628a39cbbb1f2b231de68b26ec2c3494db468f4a": {
+    "406824a788590a8d4e47f907650195927de4745388": {
       "workers": {
         "app/[locale]/admin/(dashboard)/catalog/tags/page": {
           "moduleId": 770642,
@@ -588,7 +588,7 @@
       "filename": "packages/backend/src/features/administration/application/actions/admin-tag-actions.ts",
       "exportedName": "adminGetTagProductCountAction"
     },
-    "40bb0bf2c0803d2df00b6090985e9fbe485799fb6b": {
+    "408f637ab85a05ebf7cf0a876b3ac9793b9e80ffdd": {
       "workers": {
         "app/[locale]/admin/(dashboard)/catalog/tags/page": {
           "moduleId": 770642,
@@ -600,7 +600,7 @@
       "filename": "packages/backend/src/features/administration/application/actions/admin-tag-actions.ts",
       "exportedName": "adminDeleteTagAction"
     },
-    "408e863aaa721b1b42ebeba960cd1eeff1b459fe55": {
+    "40253cc0ce0637f834616e0d63c618ca3fc0e71e93": {
       "workers": {
         "app/[locale]/admin/(dashboard)/catalog/tags/page": {
           "moduleId": 770642,
@@ -612,7 +612,7 @@
       "filename": "packages/backend/src/features/administration/application/actions/admin-tag-actions.ts",
       "exportedName": "adminToggleTagStatusAction"
     },
-    "601de6b95df5bf898f44c32cc2ecde1712a0a009b5": {
+    "600e13be87dc42bcd5136a8466472e060a331f0d0c": {
       "workers": {
         "app/[locale]/admin/(dashboard)/categories/page": {
           "moduleId": 773654,
@@ -624,7 +624,7 @@
       "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/categories/page.tsx",
       "exportedName": "$$RSC_SERVER_ACTION_1"
     },
-    "60335fdb29e4cb9c505a3ea03ff71a46c9fba6a823": {
+    "60627a06465169a3795d83e6a2b7e1b5476248d407": {
       "workers": {
         "app/[locale]/admin/(dashboard)/categories/page": {
           "moduleId": 773654,
@@ -636,7 +636,7 @@
       "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/categories/page.tsx",
       "exportedName": "$$RSC_SERVER_ACTION_2"
     },
-    "70f78d9193bfd2a08c0fbd69c021a2a0945fe3738e": {
+    "702c6fea21a5e5bec1564cb8f1d6fdaba66eaac06a": {
       "workers": {
         "app/[locale]/admin/(dashboard)/categories/page": {
           "moduleId": 773654,
@@ -648,7 +648,7 @@
       "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/categories/page.tsx",
       "exportedName": "$$RSC_SERVER_ACTION_0"
     },
-    "608542637ff0395eac6eaadc3f6d811a3c4fa138ba": {
+    "605ee92f84e6b84c512f26ef6d06904603e264f2cd": {
       "workers": {
         "app/[locale]/admin/(dashboard)/categories/page": {
           "moduleId": 773654,
@@ -660,7 +660,7 @@
       "filename": "packages/backend/src/features/catalog/application/actions/category.ts",
       "exportedName": "checkSlugAvailableAction"
     },
-    "4041b582c5973b92de09b2ea6ce780a1de4b2e3046": {
+    "40bcf68fd1b2e8dd15ba2f5f1ea38149158b42df18": {
       "workers": {
         "app/[locale]/admin/(dashboard)/categories/page": {
           "moduleId": 773654,
@@ -672,7 +672,7 @@
       "filename": "packages/backend/src/features/catalog/application/actions/category.ts",
       "exportedName": "moveCategoryUpAction"
     },
-    "4007fa241e63a8ed45041eaa991dba1b8569199b18": {
+    "408d7accbdd67216e2f8a4f8693aa7cf7da000f624": {
       "workers": {
         "app/[locale]/admin/(dashboard)/categories/page": {
           "moduleId": 773654,
@@ -684,19 +684,7 @@
       "filename": "packages/backend/src/features/catalog/application/actions/category.ts",
       "exportedName": "moveCategoryDownAction"
     },
-    "4024ff25cb7fcd5ff54e8b9ffdfd85eeaf2b2174da": {
-      "workers": {
-        "app/[locale]/admin/(dashboard)/categories/page": {
-          "moduleId": 773654,
-          "async": false,
-          "exportedName": "deleteCategoryAction",
-          "filename": "packages/backend/src/features/catalog/application/actions/category.ts"
-        }
-      },
-      "filename": "packages/backend/src/features/catalog/application/actions/category.ts",
-      "exportedName": "deleteCategoryAction"
-    },
-    "40a1bdc57f294cd7e37cc3facf77eb11f67147f633": {
+    "4032651bf051fb241bd0d37f9f54d582266ccf3db8": {
       "workers": {
         "app/[locale]/admin/(dashboard)/categories/[id]/edit/page": {
           "moduleId": 669542,
@@ -720,7 +708,7 @@
       "filename": "packages/backend/src/features/catalog/application/actions/category.ts",
       "exportedName": "createCategoryAction"
     },
-    "40b137a022bdbbe8d65bca8f2cfc8c97d3161b1a08": {
+    "40a913aa84177e095e8573146082cb7e5eda01ef5f": {
       "workers": {
         "app/[locale]/admin/(dashboard)/categories/page": {
           "moduleId": 773654,
@@ -732,7 +720,19 @@
       "filename": "packages/backend/src/features/catalog/application/actions/category.ts",
       "exportedName": "reorderCategoriesAction"
     },
-    "602d2a140808b7da1152e8e0ab3c31ad8f74136b3d": {
+    "40b68fd71ec147f1f812473e2fabde7d8bddcf8413": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/categories/page": {
+          "moduleId": 773654,
+          "async": false,
+          "exportedName": "deleteCategoryAction",
+          "filename": "packages/backend/src/features/catalog/application/actions/category.ts"
+        }
+      },
+      "filename": "packages/backend/src/features/catalog/application/actions/category.ts",
+      "exportedName": "deleteCategoryAction"
+    },
+    "60ab92a62696f8aca709f430197e92c21539333102": {
       "workers": {
         "app/[locale]/admin/(dashboard)/categories/[id]/edit/page": {
           "moduleId": 669542,
@@ -756,7 +756,7 @@
       "filename": "packages/backend/src/features/catalog/application/actions/category.ts",
       "exportedName": "updateCategoryAction"
     },
-    "40174a65f2ebb55b0e9038cedbeec0a28c51b2826c": {
+    "409858460b1c4a353f082fd1d96ce4565eda79bdd8": {
       "workers": {
         "app/[locale]/admin/(dashboard)/inventory/page": {
           "moduleId": 391033,
@@ -768,7 +768,7 @@
       "filename": "packages/backend/src/features/administration/application/actions/inventory.ts",
       "exportedName": "bulkUpdateStockAction"
     },
-    "405c8e6f105b05cec7526bfc0ff32c3a3fc0910f81": {
+    "402625b16e808326dc717b1dee16f00a884fde0690": {
       "workers": {
         "app/[locale]/admin/(dashboard)/inventory/page": {
           "moduleId": 391033,
@@ -780,7 +780,7 @@
       "filename": "packages/backend/src/features/administration/application/actions/inventory.ts",
       "exportedName": "updateStockAction"
     },
-    "601ae04b4722bdaf621ae1564049e1ceb42aabd313": {
+    "6019f49f9043b605847837c578b81ca9ed14b86070": {
       "workers": {
         "app/[locale]/admin/(dashboard)/orders/[id]/page": {
           "moduleId": 954341,
@@ -792,7 +792,7 @@
       "filename": "packages/backend/src/features/administration/application/actions/admin-order-actions.ts",
       "exportedName": "adminUpdateOrderStatusAction"
     },
-    "609cb5c0f62f5565a1cb90fe94ce076ec4afec27e2": {
+    "60c2ffc91316a60911780de640d4e96f0d058ce634": {
       "workers": {
         "app/[locale]/admin/(dashboard)/products/page": {
           "moduleId": 160503,
@@ -804,7 +804,7 @@
       "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/products/actions.ts",
       "exportedName": "duplicateProductAction"
     },
-    "6050ff350d548406905c6db06d982123cd1a6a0db8": {
+    "607457f93b9935d5b4a726b54e4aa23ca7f4209d54": {
       "workers": {
         "app/[locale]/admin/(dashboard)/products/page": {
           "moduleId": 160503,
@@ -816,7 +816,7 @@
       "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/products/actions.ts",
       "exportedName": "bulkActivateAction"
     },
-    "609bc410deabdd3306222d101a8258a9990d84f388": {
+    "60945d9e51bf4c3e61d1832be7b874f4e70d439869": {
       "workers": {
         "app/[locale]/admin/(dashboard)/products/page": {
           "moduleId": 160503,
@@ -828,7 +828,7 @@
       "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/products/actions.ts",
       "exportedName": "bulkDeactivateAction"
     },
-    "60de9f71f5957619c034396ead087a53f05da6bb67": {
+    "607663cd8f63fdbfcad7a8159ee6bb2eeb2c573a54": {
       "workers": {
         "app/[locale]/admin/(dashboard)/products/page": {
           "moduleId": 160503,
@@ -840,7 +840,7 @@
       "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/products/actions.ts",
       "exportedName": "bulkDeleteAction"
     },
-    "40f8f0fd578da8e30c8383059c49292cb9909de9a6": {
+    "40f6603d8e6ac196e717a67a0806ccedfef630039c": {
       "workers": {
         "app/[locale]/admin/(dashboard)/products/[id]/edit/page": {
           "moduleId": 16023,
@@ -864,7 +864,7 @@
       "filename": "packages/backend/src/features/administration/application/actions/admin-product-actions.ts",
       "exportedName": "createProductAction"
     },
-    "60501298bde0d45aa5a7ffc3c9da970c934846948f": {
+    "604ec618b33b5c2fdbc30b38354e0b8a7355140cbb": {
       "workers": {
         "app/[locale]/admin/(dashboard)/products/[id]/edit/page": {
           "moduleId": 16023,
@@ -888,7 +888,7 @@
       "filename": "packages/backend/src/features/administration/application/actions/admin-product-actions.ts",
       "exportedName": "updateProductAction"
     },
-    "40f880f4381b1dcd31f7c9281498072338d98c2e3e": {
+    "406eb0d17486948d4ebeb4e9da3aa940981b733100": {
       "workers": {
         "app/[locale]/admin/(dashboard)/users/page": {
           "moduleId": 319918,
@@ -900,7 +900,7 @@
       "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/users/_actions/adminUsers.ts",
       "exportedName": "createAdminAction"
     },
-    "601590372a93a7cb9e8bf03f80a7b239014e2de78f": {
+    "6096c89d5f5a0c0601f1d971cd4fefb9b318c9ba96": {
       "workers": {
         "app/[locale]/admin/(dashboard)/users/page": {
           "moduleId": 319918,
@@ -914,5 +914,5 @@
     }
   },
   "edge": {},
-  "encryptionKey": "uI2EcpSlf6vkMHopVyOShecFRc21JULuYLlcem9LfsQ="
+  "encryptionKey": "oVWO7Mg/gtJU9xNM5Sev45v2TxB9xF6yJQeEGaCW2c8="
 }

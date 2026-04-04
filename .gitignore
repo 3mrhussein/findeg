@@ -8,10 +8,9 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
-dist
+/dist
 dist-ssr
 *.local
-.next/*
 cypress/screenshots
 cypress/videos
 cypress/downloads
@@ -32,6 +31,11 @@ fullstack-commerce
 
 # Monorepo / turborepo
 .turbo/
+packages/**/.next
+packages/**/out
+packages/**/dist
+packages/**/.turbo
+
 # pnpm
 pnpm-lock.yaml
 # Environment

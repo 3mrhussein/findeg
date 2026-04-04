@@ -18,14 +18,17 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-
-  // Cache Components configuration
-  cacheComponents: true,
+  // Cache Components - disabled until data fetching patterns are refactored for compatibility
+  // TODO: Re-enable after migrating to compatible caching patterns
+  // cacheComponents: true,
   typescript: {
     ignoreBuildErrors: false,
   },
   experimental: {
     //   turbopackFileSystemCacheForDev: true,
+    // Enable Partial Prerendering (Next.js 16 feature)
+    // Note: Requires compatible data fetching patterns
+    ppr: false, // Set to true when data patterns are PPR-compatible
   },
 };
 

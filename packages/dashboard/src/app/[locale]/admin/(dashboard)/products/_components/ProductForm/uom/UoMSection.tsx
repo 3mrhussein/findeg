@@ -17,8 +17,7 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Trash2, ChevronDown, ChevronRight, Package2 } from "lucide-react";
-import { PREDEFINED_UOMS } from "@/features/catalog/domain/types/UoMTypes";
-import { CUSTOMER_GROUPS } from "@/features/catalog/domain/types/UoMTypes";
+import { PREDEFINED_UOMS, CUSTOMER_GROUPS } from "@findeg/backend/features/catalog";
 import { BilingualInput } from "@/components/shared/BilingualInput";
 import { cn } from "@/lib/utils";
 import { ProductFormValues } from "@/features/administration/presentation/forms/product-form";

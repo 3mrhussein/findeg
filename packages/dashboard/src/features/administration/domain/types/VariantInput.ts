@@ -1,4 +1,4 @@
-import type { UoMCode, CustomerGroup } from "../../../catalog/domain/types/UoMTypes";
+import type { UoMCode, CustomerGroup } from "@findeg/backend/features/catalog";
 
 export type PricingMode = "shared" | "per-variant";
 export type UoMSharingMode = "shared" | "per-variant";

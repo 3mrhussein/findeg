@@ -1,6 +1,6 @@
 {
   "node": {
-    "00b455b7890a42d0f5f2f985dc9ac0403a43f979c4": {
+    "002579aa487c2dbc94df84e9a246288439c8e5af76": {
       "workers": {
         "app/[locale]/admin/(dashboard)/brands/page": {
           "moduleId": 607822,
@@ -12,7 +12,7 @@
       "exportedName": "$$RSC_SERVER_ACTION_0",
       "filename": "packages/dashboard/src/app/[locale]/admin/_components/shell/AdminShell.tsx"
     },
-    "4045ea857c8c5f30552fd1855588d49042e9680e63": {
+    "40a2ebfbd92453b5dfdf38e487c4545c83ec2b1fa6": {
       "workers": {
         "app/[locale]/admin/(dashboard)/brands/page": {
           "moduleId": 607822,
@@ -24,7 +24,7 @@
       "exportedName": "logoutAction",
       "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
     },
-    "40af0a900331f5d89bbafc55a2413818d74d299f65": {
+    "40c5f1e946a2ed3abc7ec2de0dc7df8238db0f5990": {
       "workers": {
         "app/[locale]/admin/(dashboard)/brands/page": {
           "moduleId": 607822,
@@ -36,19 +36,7 @@
       "exportedName": "loginAction",
       "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
     },
-    "40106abdf5f28012c7f2cdcdc5974a0c52b271c9bf": {
-      "workers": {
-        "app/[locale]/admin/(dashboard)/brands/page": {
-          "moduleId": 607822,
-          "async": false,
-          "exportedName": "$$RSC_SERVER_ACTION_2",
-          "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/brands/page.tsx"
-        }
-      },
-      "exportedName": "$$RSC_SERVER_ACTION_2",
-      "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/brands/page.tsx"
-    },
-    "40f3e6dd914e0eab363ca0e27fa58572d985693226": {
+    "40356b59d8e6981655bb89b9796d04be3a922d6fe9": {
       "workers": {
         "app/[locale]/admin/(dashboard)/brands/page": {
           "moduleId": 607822,
@@ -60,7 +48,19 @@
       "exportedName": "$$RSC_SERVER_ACTION_1",
       "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/brands/page.tsx"
     },
-    "600ed99b1f3b0bf860e45afa32bb4a52f02dc0b299": {
+    "405e4805d3203a4223628c79b6ec3acb3da7d395c1": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/brands/page": {
+          "moduleId": 607822,
+          "async": false,
+          "exportedName": "$$RSC_SERVER_ACTION_2",
+          "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/brands/page.tsx"
+        }
+      },
+      "exportedName": "$$RSC_SERVER_ACTION_2",
+      "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/brands/page.tsx"
+    },
+    "60714f3deb1b77ef2bb3e4f3706d77747e97cc21b6": {
       "workers": {
         "app/[locale]/admin/(dashboard)/brands/page": {
           "moduleId": 607822,
@@ -72,7 +72,7 @@
       "exportedName": "$$RSC_SERVER_ACTION_0",
       "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/brands/page.tsx"
     },
-    "40b5942493d0bd2809caaa71162894b45320cb8ffd": {
+    "404a08946dfd78cb12b0d0d51dc6dbf36734a2825a": {
       "workers": {
         "app/[locale]/admin/(dashboard)/brands/page": {
           "moduleId": 607822,
@@ -84,7 +84,7 @@
       "exportedName": "createBrandAction",
       "filename": "packages/backend/src/features/catalog/application/actions/brand.ts"
     },
-    "40bbe22402ce264e4b4320d292b468469c9a0698d6": {
+    "405ccc1cea7e2251cd28c6455f81afa980d2827327": {
       "workers": {
         "app/[locale]/admin/(dashboard)/brands/page": {
           "moduleId": 607822,
@@ -96,7 +96,7 @@
       "exportedName": "deleteBrandAction",
       "filename": "packages/backend/src/features/catalog/application/actions/brand.ts"
     },
-    "40e92ce06b58de4657a58517c0f46dd23061089508": {
+    "40812c3815b91077a352090cd581e2206758da5285": {
       "workers": {
         "app/[locale]/admin/(dashboard)/brands/page": {
           "moduleId": 607822,
@@ -108,7 +108,7 @@
       "exportedName": "toggleBrandStatusAction",
       "filename": "packages/backend/src/features/catalog/application/actions/brand.ts"
     },
-    "60e36ca24537d60c498fde83c80b25ab30bdf2b131": {
+    "600a4759a3d066544d09c82feed4f74d015fbc91ac": {
       "workers": {
         "app/[locale]/admin/(dashboard)/brands/page": {
           "moduleId": 607822,

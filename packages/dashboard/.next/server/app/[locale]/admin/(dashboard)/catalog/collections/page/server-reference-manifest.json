@@ -1,6 +1,6 @@
 {
   "node": {
-    "00b455b7890a42d0f5f2f985dc9ac0403a43f979c4": {
+    "002579aa487c2dbc94df84e9a246288439c8e5af76": {
       "workers": {
         "app/[locale]/admin/(dashboard)/catalog/collections/page": {
           "moduleId": 677205,
@@ -12,7 +12,7 @@
       "exportedName": "$$RSC_SERVER_ACTION_0",
       "filename": "packages/dashboard/src/app/[locale]/admin/_components/shell/AdminShell.tsx"
     },
-    "4045ea857c8c5f30552fd1855588d49042e9680e63": {
+    "40a2ebfbd92453b5dfdf38e487c4545c83ec2b1fa6": {
       "workers": {
         "app/[locale]/admin/(dashboard)/catalog/collections/page": {
           "moduleId": 677205,
@@ -24,7 +24,7 @@
       "exportedName": "logoutAction",
       "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
     },
-    "40af0a900331f5d89bbafc55a2413818d74d299f65": {
+    "40c5f1e946a2ed3abc7ec2de0dc7df8238db0f5990": {
       "workers": {
         "app/[locale]/admin/(dashboard)/catalog/collections/page": {
           "moduleId": 677205,
@@ -36,7 +36,7 @@
       "exportedName": "loginAction",
       "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
     },
-    "40ad80f30c09dfad78479761bccac524c6619abbe4": {
+    "400a2670f6e73008f127d2c4312a27e260c55aada3": {
       "workers": {
         "app/[locale]/admin/(dashboard)/catalog/collections/page": {
           "moduleId": 677205,
@@ -48,7 +48,7 @@
       "exportedName": "adminReorderCollectionsAction",
       "filename": "packages/backend/src/features/administration/application/actions/admin-collection-actions.ts"
     },
-    "402779495ee683b2c7d1c5754c71086a6ee455fd8e": {
+    "40e771934234231f65885931ab5d9890d472fdd51c": {
       "workers": {
         "app/[locale]/admin/(dashboard)/catalog/collections/page": {
           "moduleId": 677205,

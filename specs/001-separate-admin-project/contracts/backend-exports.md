@@ -39,7 +39,7 @@ export interface IAuthService {
    * @returns Token pair with access and refresh tokens
    */
   generateTokens(userId: string, roles: string[]): Promise<TokenPair>;
-  
+
   /**
    * Verify and decode a JWT token
    * @param token - JWT token string
@@ -47,7 +47,7 @@ export interface IAuthService {
    * @throws {UnauthorizedError} if token is invalid or expired
    */
   verifyToken(token: string): Promise<JWTPayload>;
-  
+
   /**
    * Refresh access token using refresh token
    * @param refreshToken - Valid refresh token
@@ -55,7 +55,7 @@ export interface IAuthService {
    * @throws {UnauthorizedError} if refresh token is invalid
    */
   refreshTokens(refreshToken: string): Promise<TokenPair>;
-  
+
   /**
    * Revoke a token (logout)
    * @param token - Token to revoke
@@ -71,7 +71,7 @@ export interface IPermissionService {
    * @returns True if user has permission
    */
   hasPermission(userId: string, permission: string): Promise<boolean>;
-  
+
   /**
    * Check if user has specific role
    * @param userId - User to check
@@ -168,7 +168,7 @@ export type CreateUserInput = {
   roles?: string[];
 };
 
-export type UpdateUserInput = Partial<Omit<CreateUserInput, 'email'>>;
+export type UpdateUserInput = Partial<Omit<CreateUserInput, "email">>;
 ```
 
 ### IProductRepository
@@ -216,11 +216,11 @@ export type ProductFilters = {
   tags?: string[];
   limit?: number;
   offset?: number;
-  sortBy?: 'price' | 'name' | 'createdAt' | 'updatedAt';
-  sortOrder?: 'asc' | 'desc';
+  sortBy?: "price" | "name" | "createdAt" | "updatedAt";
+  sortOrder?: "asc" | "desc";
 };
 
-export type CreateProductInput = Omit<Product, 'id' | 'createdAt' | 'updatedAt'>;
+export type CreateProductInput = Omit<Product, "id" | "createdAt" | "updatedAt">;
 export type UpdateProductInput = Partial<CreateProductInput>;
 ```
 
@@ -259,7 +259,7 @@ export type CategoryFilters = {
   isActive?: boolean;
 };
 
-export type CreateCategoryInput = Omit<Category, 'id' | 'createdAt' | 'updatedAt'>;
+export type CreateCategoryInput = Omit<Category, "id" | "createdAt" | "updatedAt">;
 export type UpdateCategoryInput = Partial<CreateCategoryInput>;
 ```
 
@@ -275,7 +275,13 @@ export interface IOrderRepository {
   count(filters?: OrderFilters): Promise<number>;
 }
 
-export type OrderStatus = 'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+export type OrderStatus =
+  | "pending"
+  | "confirmed"
+  | "processing"
+  | "shipped"
+  | "delivered"
+  | "cancelled";
 
 export type Order = {
   id: string;
@@ -290,7 +296,7 @@ export type Order = {
   shippingAddress: Address;
   billingAddress: Address;
   paymentMethod: string;
-  paymentStatus: 'pending' | 'paid' | 'failed' | 'refunded';
+  paymentStatus: "pending" | "paid" | "failed" | "refunded";
   notes: string | null;
   createdAt: Date;
   updatedAt: Date;
@@ -319,14 +325,14 @@ export type Address = {
 export type OrderFilters = {
   userId?: string;
   status?: OrderStatus | OrderStatus[];
-  paymentStatus?: 'pending' | 'paid' | 'failed' | 'refunded';
+  paymentStatus?: "pending" | "paid" | "failed" | "refunded";
   fromDate?: Date;
   toDate?: Date;
   limit?: number;
   offset?: number;
 };
 
-export type CreateOrderInput = Omit<Order, 'id' | 'createdAt' | 'updatedAt'>;
+export type CreateOrderInput = Omit<Order, "id" | "createdAt" | "updatedAt">;
 ```
 
 ---
@@ -338,26 +344,26 @@ export type CreateOrderInput = Omit<Order, 'id' | 'createdAt' | 'updatedAt'>;
 All repository inputs have corresponding Zod schemas for validation:
 
 ```typescript
-import { z } from 'zod';
+import { z } from "zod";
 
 export const CreateUserSchema = z.object({
-  email: z.string().email('Invalid email address'),
-  name: z.string().min(1, 'Name is required').max(100),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
+  email: z.string().email("Invalid email address"),
+  name: z.string().min(1, "Name is required").max(100),
+  password: z.string().min(8, "Password must be at least 8 characters"),
   roles: z.array(z.string()).optional(),
 });
 
 export const CreateProductSchema = z.object({
-  nameEn: z.string().min(1, 'English name is required'),
-  nameAr: z.string().min(1, 'Arabic name is required'),
+  nameEn: z.string().min(1, "English name is required"),
+  nameAr: z.string().min(1, "Arabic name is required"),
   descriptionEn: z.string().nullable().optional(),
   descriptionAr: z.string().nullable().optional(),
-  slug: z.string().regex(/^[a-z0-9-]+$/, 'Invalid slug format'),
-  price: z.number().positive('Price must be positive'),
+  slug: z.string().regex(/^[a-z0-9-]+$/, "Invalid slug format"),
+  price: z.number().positive("Price must be positive"),
   compareAtPrice: z.number().positive().nullable().optional(),
-  categoryId: z.string().uuid('Invalid category ID'),
+  categoryId: z.string().uuid("Invalid category ID"),
   brandId: z.string().uuid().nullable().optional(),
-  stock: z.number().int().nonnegative('Stock cannot be negative'),
+  stock: z.number().int().nonnegative("Stock cannot be negative"),
   sku: z.string().nullable().optional(),
   isActive: z.boolean().default(true),
   isFeatured: z.boolean().default(false),
@@ -377,10 +383,14 @@ export const CreateCategorySchema = z.object({
 
 export const CreateOrderSchema = z.object({
   userId: z.string().uuid(),
-  items: z.array(z.object({
-    productId: z.string().uuid(),
-    quantity: z.number().int().positive(),
-  })).min(1, 'Order must have at least one item'),
+  items: z
+    .array(
+      z.object({
+        productId: z.string().uuid(),
+        quantity: z.number().int().positive(),
+      }),
+    )
+    .min(1, "Order must have at least one item"),
   shippingAddress: z.object({
     fullName: z.string().min(1),
     phone: z.string().min(10),
@@ -394,7 +404,7 @@ export const CreateOrderSchema = z.object({
   billingAddress: z.object({
     // ... same as shippingAddress
   }),
-  paymentMethod: z.enum(['cash', 'card', 'wallet']),
+  paymentMethod: z.enum(["cash", "card", "wallet"]),
   notes: z.string().max(500).nullable().optional(),
 });
 ```
@@ -406,7 +416,7 @@ export const CreateOrderSchema = z.object({
 **Import Path**: `@findeg/backend/lib/i18n`
 
 ```typescript
-export type SupportedLocale = 'en' | 'ar';
+export type SupportedLocale = "en" | "ar";
 
 /**
  * Get all translation messages for a locale
@@ -431,9 +441,9 @@ export function formatCurrency(amount: number, locale: SupportedLocale): string;
  * @returns Formatted date string
  */
 export function formatDate(
-  date: Date, 
-  locale: SupportedLocale, 
-  format?: 'short' | 'medium' | 'long'
+  date: Date,
+  locale: SupportedLocale,
+  format?: "short" | "medium" | "long",
 ): string;
 
 export type Messages = {
@@ -456,7 +466,7 @@ export class AppError extends Error {
     message: string,
     public code: string,
     public statusCode: number = 500,
-    public details?: unknown
+    public details?: unknown,
   ) {
     super(message);
     this.name = this.constructor.name;
@@ -467,8 +477,8 @@ export class AppError extends Error {
  * 401 Unauthorized - User is not authenticated
  */
 export class UnauthorizedError extends AppError {
-  constructor(message = 'Unauthorized', details?: unknown) {
-    super(message, 'UNAUTHORIZED', 401, details);
+  constructor(message = "Unauthorized", details?: unknown) {
+    super(message, "UNAUTHORIZED", 401, details);
   }
 }
 
@@ -476,8 +486,8 @@ export class UnauthorizedError extends AppError {
  * 403 Forbidden - User lacks permission
  */
 export class ForbiddenError extends AppError {
-  constructor(message = 'Forbidden', details?: unknown) {
-    super(message, 'FORBIDDEN', 403, details);
+  constructor(message = "Forbidden", details?: unknown) {
+    super(message, "FORBIDDEN", 403, details);
   }
 }
 
@@ -485,8 +495,8 @@ export class ForbiddenError extends AppError {
  * 404 Not Found - Resource not found
  */
 export class NotFoundError extends AppError {
-  constructor(message = 'Not found', details?: unknown) {
-    super(message, 'NOT_FOUND', 404, details);
+  constructor(message = "Not found", details?: unknown) {
+    super(message, "NOT_FOUND", 404, details);
   }
 }
 
@@ -494,8 +504,8 @@ export class NotFoundError extends AppError {
  * 400 Bad Request - Validation failed
  */
 export class ValidationError extends AppError {
-  constructor(message = 'Validation failed', details?: unknown) {
-    super(message, 'VALIDATION_ERROR', 400, details);
+  constructor(message = "Validation failed", details?: unknown) {
+    super(message, "VALIDATION_ERROR", 400, details);
   }
 }
 
@@ -503,8 +513,8 @@ export class ValidationError extends AppError {
  * 409 Conflict - Resource conflict (e.g., duplicate email)
  */
 export class ConflictError extends AppError {
-  constructor(message = 'Conflict', details?: unknown) {
-    super(message, 'CONFLICT', 409, details);
+  constructor(message = "Conflict", details?: unknown) {
+    super(message, "CONFLICT", 409, details);
   }
 }
 ```
@@ -517,35 +527,35 @@ export class ConflictError extends AppError {
 
 ```typescript
 // packages/dashboard/src/app/[locale]/admin/products/actions.ts
-'use server';
+"use server";
 
-import { revalidatePath } from 'next/cache';
-import { 
+import { revalidatePath } from "next/cache";
+import {
   getProductRepository,
   CreateProductSchema,
   type CreateProductInput,
   getAuthenticatedUser,
-  requirePermission
-} from '@findeg/backend';
-import { cookies } from 'next/headers';
+  requirePermission,
+} from "@findeg/backend";
+import { cookies } from "next/headers";
 
 export async function createProduct(data: CreateProductInput) {
   // 1. Authenticate user
   const user = await getAuthenticatedUser(cookies());
-  
+
   // 2. Check permissions
-  await requirePermission(user.id, 'products:create');
-  
+  await requirePermission(user.id, "products:create");
+
   // 3. Validate input
   const validated = CreateProductSchema.parse(data);
-  
+
   // 4. Create product via repository
   const productRepo = await getProductRepository();
   const product = await productRepo.create(validated);
-  
+
   // 5. Revalidate cache
-  revalidatePath('/[locale]/admin/products', 'page');
-  
+  revalidatePath("/[locale]/admin/products", "page");
+
   return { success: true, product };
 }
 ```
@@ -565,14 +575,14 @@ export default async function ProductPage({ params }: Props) {
   // 1. Fetch product
   const productRepo = await getProductRepository();
   const product = await productRepo.findBySlug(params.slug);
-  
+
   if (!product || !product.isActive) {
     notFound();
   }
-  
+
   // 2. Get translations
   const t = await getMessages(params.locale);
-  
+
   // 3. Render
   return (
     <div>
@@ -593,6 +603,7 @@ export default async function ProductPage({ params }: Props) {
 ### Semantic Versioning
 
 Backend package follows semver:
+
 - **MAJOR**: Breaking changes to exported interfaces (requires frontend updates)
 - **MINOR**: New exports added (backward compatible)
 - **PATCH**: Bug fixes, internal changes (no API changes)

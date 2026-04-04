@@ -42,9 +42,9 @@ export interface ProductDetailPageData {
  *   so it becomes part of the cache key — one entry per locale.
  */
 export async function getHomePageData(language: string): Promise<HomePageData> {
-  "use cache";
-  cacheTag(CACHE_TAGS.CATALOG_PRODUCTS, CACHE_TAGS.CATALOG_CATEGORIES);
-  cacheLife("hours");
+  // "use cache"; // TODO: Re-enable after proper cache configuration
+  // cacheTag(CACHE_TAGS.CATALOG_PRODUCTS, CACHE_TAGS.CATALOG_CATEGORIES);
+  // cacheLife("hours");
 
   const locale = resolveLocale(language);
   const { products, categories } = getServices();
@@ -69,9 +69,9 @@ export async function getHomePageData(language: string): Promise<HomePageData> {
  * @param language - Locale string. Part of the cache key.
  */
 export async function getShopPageData(language: string): Promise<ShopPageData> {
-  "use cache";
-  cacheTag(CACHE_TAGS.CATALOG_PRODUCTS);
-  cacheLife("hours");
+  // "use cache"; // TODO: Re-enable after proper cache configuration
+  // cacheTag(CACHE_TAGS.CATALOG_PRODUCTS);
+  // cacheLife("hours");
 
   const locale = resolveLocale(language);
   const { products } = getServices();
@@ -132,9 +132,9 @@ export async function getSearchPageData(language: string, query: string): Promis
  * infrequently and can tolerate a longer revalidation window.
  */
 export async function getProductIdsForStaticParams(): Promise<number[]> {
-  "use cache";
-  cacheTag(CACHE_TAGS.CATALOG_PRODUCTS);
-  cacheLife("days");
+  // "use cache"; // TODO: Re-enable after proper cache configuration
+  // cacheTag(CACHE_TAGS.CATALOG_PRODUCTS);
+  // cacheLife("days");
 
   const { products } = getServices();
   const allProducts = await products.getAll("en");
@@ -155,9 +155,9 @@ export async function getProductDetailPageData(
   productId: number,
   language: string,
 ): Promise<ProductDetailPageData | null> {
-  "use cache";
-  cacheTag(CACHE_TAGS.CATALOG_PRODUCTS, CACHE_TAGS.productDetail(productId));
-  cacheLife("hours");
+  // "use cache"; // TODO: Re-enable after proper cache configuration
+  // cacheTag(CACHE_TAGS.CATALOG_PRODUCTS, CACHE_TAGS.productDetail(productId));
+  // cacheLife("hours");
 
   const locale: Locale = resolveLocale(language);
   const { products, repositories } = getServices();
@@ -192,9 +192,9 @@ export async function getProductDetailPageData(
  * @param language - Locale string. Part of the cache key.
  */
 export async function getCategoriesPageData(language: string): Promise<Category[]> {
-  "use cache";
-  cacheTag(CACHE_TAGS.CATALOG_CATEGORIES);
-  cacheLife("days");
+  // "use cache"; // TODO: Re-enable after proper cache configuration
+  // cacheTag(CACHE_TAGS.CATALOG_CATEGORIES);
+  // cacheLife("days");
 
   const locale = resolveLocale(language);
   const { categories } = getServices();

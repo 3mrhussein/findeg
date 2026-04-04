@@ -1,6 +1,6 @@
 {
   "node": {
-    "00b455b7890a42d0f5f2f985dc9ac0403a43f979c4": {
+    "002579aa487c2dbc94df84e9a246288439c8e5af76": {
       "workers": {
         "app/[locale]/admin/(dashboard)/inventory/page": {
           "moduleId": 391033,
@@ -12,7 +12,7 @@
       "exportedName": "$$RSC_SERVER_ACTION_0",
       "filename": "packages/dashboard/src/app/[locale]/admin/_components/shell/AdminShell.tsx"
     },
-    "4045ea857c8c5f30552fd1855588d49042e9680e63": {
+    "40a2ebfbd92453b5dfdf38e487c4545c83ec2b1fa6": {
       "workers": {
         "app/[locale]/admin/(dashboard)/inventory/page": {
           "moduleId": 391033,
@@ -24,7 +24,7 @@
       "exportedName": "logoutAction",
       "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
     },
-    "40af0a900331f5d89bbafc55a2413818d74d299f65": {
+    "40c5f1e946a2ed3abc7ec2de0dc7df8238db0f5990": {
       "workers": {
         "app/[locale]/admin/(dashboard)/inventory/page": {
           "moduleId": 391033,
@@ -36,7 +36,7 @@
       "exportedName": "loginAction",
       "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
     },
-    "40174a65f2ebb55b0e9038cedbeec0a28c51b2826c": {
+    "409858460b1c4a353f082fd1d96ce4565eda79bdd8": {
       "workers": {
         "app/[locale]/admin/(dashboard)/inventory/page": {
           "moduleId": 391033,
@@ -48,7 +48,7 @@
       "exportedName": "bulkUpdateStockAction",
       "filename": "packages/backend/src/features/administration/application/actions/inventory.ts"
     },
-    "405c8e6f105b05cec7526bfc0ff32c3a3fc0910f81": {
+    "402625b16e808326dc717b1dee16f00a884fde0690": {
       "workers": {
         "app/[locale]/admin/(dashboard)/inventory/page": {
           "moduleId": 391033,

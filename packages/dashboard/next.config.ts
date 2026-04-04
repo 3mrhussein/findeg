@@ -19,13 +19,16 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  // Cache Components configuration
-  cacheComponents: true,
+  // Cache Components - disabled for now
+  // c acheComponents: true,
   typescript: {
     ignoreBuildErrors: false,
   },
   experimental: {
     //   turbopackFileSystemCacheForDev: true,
+    // Enable Partial Prerendering (Next.js 16 feature)
+    // Note: Requires compatible data fetching patterns
+    ppr: false, // Set to true when data patterns are PPR-compatible
   },
 };
 

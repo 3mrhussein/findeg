@@ -1,14 +1,28 @@
-# FindEg.com - Modern E-commerce Platform
+# FindEg.com - Modern E-commerce Platform (Turborepo Monorepo)
 
-FindEg.com is a modern, trendy e-commerce web application specializing in stationary, kids' toys, and school supplies. Built with Next.js 16, clean architecture principles, and a focus on great UI/UX.
+FindEg.com is a modern, trendy e-commerce web application specializing in stationary, kids' toys, and school supplies. Built with Next.js 16, Turborepo monorepo architecture, and clean architecture principles with a focus on great UI/UX.
+
+## 🏗️ Monorepo Architecture
+
+This project is structured as a **Turborepo monorepo** with three packages:
+
+- **`packages/backend`** - TypeScript library containing all business logic, database access, and shared utilities
+- **`packages/dashboard`** - Next.js admin app for managing products, orders, and customers (port 3001)
+- **`packages/storefront`** - Next.js customer-facing app for shopping and checkout (port 3000)
+
+**Key Benefits:**
+- Independent development and deployment of admin and storefront apps
+- Shared business logic in backend package (single source of truth)
+- Faster build times with Turborepo caching
+- Better TypeScript performance with project references
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
 - **Node.js** (v18 or higher)
+- **pnpm** (v8 or higher) - Required for workspace management
 - **Docker** (for database)
-- **npm** or **yarn**
 
 ### Installation
 
@@ -16,35 +30,71 @@ FindEg.com is a modern, trendy e-commerce web application specializing in statio
 
    ```bash
    git clone <repository-url>
-   cd 27-10-2025ecommerceV2
+   cd findeg.stationary
    ```
 
-2. **Install dependencies**
+2. **Install pnpm (if not installed)**
 
    ```bash
-   npm install
+   npm install -g pnpm@latest
    ```
 
-3. **Set up the database**
+3. **Install dependencies**
+
+   ```bash
+   pnpm install
+   ```
+
+4. **Set up the database**
 
    ```bash
    # Start PostgreSQL in Docker
-   npm run db:start
+   pnpm db:start
 
    # Push database schema
-   npm run db:push
+   pnpm db:push
 
    # (Optional) Seed with sample data
-   npm run db:seed
+   pnpm db:seed
    ```
 
-4. **Run the development server**
+5. **Run the development servers**
 
    ```bash
-   npm run dev
+   # Start all packages in dev mode
+   pnpm dev
+
+   # Or start individual packages:
+   pnpm --filter @findeg/dashboard dev  # Admin at http://localhost:3001
+   pnpm --filter @findeg/storefront dev # Shop at http://localhost:3000
    ```
 
-   Open [http://localhost:3000](http://localhost:3000) in your browser.
+### 📦 Monorepo Commands
+
+| Command | Description |
+|---------|-------------|
+| `pnpm dev` | Start all packages in development mode |
+| `pnpm build` | Build all packages (with Turborepo caching) |
+| `pnpm type-check` | Run TypeScript checks across all packages |
+| `pnpm lint` | Run ESLint and i18n checks |
+| `pnpm --filter <package> <cmd>` | Run command in specific package |
+
+**Examples:**
+```bash
+# Work on dashboard only
+pnpm --filter @findeg/dashboard dev
+pnpm --filter @findeg/dashboard build
+pnpm --filter @findeg/dashboard test
+
+# Work on storefront only
+pnpm --filter @findeg/storefront dev
+pnpm --filter @findeg/storefront build
+
+# Build backend package
+pnpm --filter @findeg/backend build
+```
+
+For detailed development workflows, see [specs/001-separate-admin-project/quickstart.md](specs/001-separate-admin-project/quickstart.md)
 
 ### 🧪 Test Accounts
 

@@ -1,6 +1,6 @@
 {
   "node": {
-    "00b455b7890a42d0f5f2f985dc9ac0403a43f979c4": {
+    "002579aa487c2dbc94df84e9a246288439c8e5af76": {
       "workers": {
         "app/[locale]/admin/(dashboard)/categories/page": {
           "moduleId": 773654,
@@ -12,7 +12,7 @@
       "exportedName": "$$RSC_SERVER_ACTION_0",
       "filename": "packages/dashboard/src/app/[locale]/admin/_components/shell/AdminShell.tsx"
     },
-    "4045ea857c8c5f30552fd1855588d49042e9680e63": {
+    "40a2ebfbd92453b5dfdf38e487c4545c83ec2b1fa6": {
       "workers": {
         "app/[locale]/admin/(dashboard)/categories/page": {
           "moduleId": 773654,
@@ -24,7 +24,7 @@
       "exportedName": "logoutAction",
       "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
     },
-    "40af0a900331f5d89bbafc55a2413818d74d299f65": {
+    "40c5f1e946a2ed3abc7ec2de0dc7df8238db0f5990": {
       "workers": {
         "app/[locale]/admin/(dashboard)/categories/page": {
           "moduleId": 773654,
@@ -36,7 +36,7 @@
       "exportedName": "loginAction",
       "filename": "packages/backend/src/features/identity/application/actions/auth.ts"
     },
-    "601de6b95df5bf898f44c32cc2ecde1712a0a009b5": {
+    "600e13be87dc42bcd5136a8466472e060a331f0d0c": {
       "workers": {
         "app/[locale]/admin/(dashboard)/categories/page": {
           "moduleId": 773654,
@@ -48,7 +48,7 @@
       "exportedName": "$$RSC_SERVER_ACTION_1",
       "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/categories/page.tsx"
     },
-    "60335fdb29e4cb9c505a3ea03ff71a46c9fba6a823": {
+    "60627a06465169a3795d83e6a2b7e1b5476248d407": {
       "workers": {
         "app/[locale]/admin/(dashboard)/categories/page": {
           "moduleId": 773654,
@@ -60,7 +60,7 @@
       "exportedName": "$$RSC_SERVER_ACTION_2",
       "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/categories/page.tsx"
     },
-    "70f78d9193bfd2a08c0fbd69c021a2a0945fe3738e": {
+    "702c6fea21a5e5bec1564cb8f1d6fdaba66eaac06a": {
       "workers": {
         "app/[locale]/admin/(dashboard)/categories/page": {
           "moduleId": 773654,
@@ -72,7 +72,7 @@
       "exportedName": "$$RSC_SERVER_ACTION_0",
       "filename": "packages/dashboard/src/app/[locale]/admin/(dashboard)/categories/page.tsx"
     },
-    "608542637ff0395eac6eaadc3f6d811a3c4fa138ba": {
+    "605ee92f84e6b84c512f26ef6d06904603e264f2cd": {
       "workers": {
         "app/[locale]/admin/(dashboard)/categories/page": {
           "moduleId": 773654,
@@ -84,7 +84,7 @@
       "exportedName": "checkSlugAvailableAction",
       "filename": "packages/backend/src/features/catalog/application/actions/category.ts"
     },
-    "4041b582c5973b92de09b2ea6ce780a1de4b2e3046": {
+    "40bcf68fd1b2e8dd15ba2f5f1ea38149158b42df18": {
       "workers": {
         "app/[locale]/admin/(dashboard)/categories/page": {
           "moduleId": 773654,
@@ -96,7 +96,7 @@
       "exportedName": "moveCategoryUpAction",
       "filename": "packages/backend/src/features/catalog/application/actions/category.ts"
     },
-    "4007fa241e63a8ed45041eaa991dba1b8569199b18": {
+    "408d7accbdd67216e2f8a4f8693aa7cf7da000f624": {
       "workers": {
         "app/[locale]/admin/(dashboard)/categories/page": {
           "moduleId": 773654,
@@ -108,19 +108,7 @@
       "exportedName": "moveCategoryDownAction",
       "filename": "packages/backend/src/features/catalog/application/actions/category.ts"
     },
-    "4024ff25cb7fcd5ff54e8b9ffdfd85eeaf2b2174da": {
-      "workers": {
-        "app/[locale]/admin/(dashboard)/categories/page": {
-          "moduleId": 773654,
-          "async": false,
-          "exportedName": "deleteCategoryAction",
-          "filename": "packages/backend/src/features/catalog/application/actions/category.ts"
-        }
-      },
-      "exportedName": "deleteCategoryAction",
-      "filename": "packages/backend/src/features/catalog/application/actions/category.ts"
-    },
-    "40a1bdc57f294cd7e37cc3facf77eb11f67147f633": {
+    "4032651bf051fb241bd0d37f9f54d582266ccf3db8": {
       "workers": {
         "app/[locale]/admin/(dashboard)/categories/page": {
           "moduleId": 773654,
@@ -132,7 +120,7 @@
       "exportedName": "createCategoryAction",
       "filename": "packages/backend/src/features/catalog/application/actions/category.ts"
     },
-    "40b137a022bdbbe8d65bca8f2cfc8c97d3161b1a08": {
+    "40a913aa84177e095e8573146082cb7e5eda01ef5f": {
       "workers": {
         "app/[locale]/admin/(dashboard)/categories/page": {
           "moduleId": 773654,
@@ -144,7 +132,19 @@
       "exportedName": "reorderCategoriesAction",
       "filename": "packages/backend/src/features/catalog/application/actions/category.ts"
     },
-    "602d2a140808b7da1152e8e0ab3c31ad8f74136b3d": {
+    "40b68fd71ec147f1f812473e2fabde7d8bddcf8413": {
+      "workers": {
+        "app/[locale]/admin/(dashboard)/categories/page": {
+          "moduleId": 773654,
+          "async": false,
+          "exportedName": "deleteCategoryAction",
+          "filename": "packages/backend/src/features/catalog/application/actions/category.ts"
+        }
+      },
+      "exportedName": "deleteCategoryAction",
+      "filename": "packages/backend/src/features/catalog/application/actions/category.ts"
+    },
+    "60ab92a62696f8aca709f430197e92c21539333102": {
       "workers": {
         "app/[locale]/admin/(dashboard)/categories/page": {
           "moduleId": 773654,

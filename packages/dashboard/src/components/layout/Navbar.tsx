@@ -10,9 +10,6 @@ import { useUser } from "@/hooks/useUser";
 import ToggleLanguage from "@/components/shared/ToggleLanguage";
 import ToggleTheme from "@/components/shared/ToggleTheme";
 import { IconTooltip } from "@/components/ui/IconTooltip";
-// Assuming CartTrigger exists in _components, we'll wrap it or use directly.
-// For now we'll put a placeholder cart icon until CartSheet context is clear.
-import { CartTrigger } from "@/app/[locale]/(storefront)/_components/CartTrigger";
 import { NotificationBell } from "@/components/shared/NotificationBell";
 
 import { SearchBar } from "./SearchBar";
@@ -109,16 +106,11 @@ export function Navbar() {
 
           {isLoggedIn && <NotificationBell />}
 
-          <Link href={isLoggedIn ? "/dashboard/wishlist" : "/login?returnUrl=/dashboard/wishlist"}>
+          <Link href={isLoggedIn ? "/admin/dashboard" : "/login"}>
             <div className="flex size-10 items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors">
-              <IconTooltip icon={Heart} label="Saved Items" size={20} />
+              <IconTooltip icon={User} label="Dashboard" size={20} />
             </div>
           </Link>
-
-          {/* Cart Trigger wrapped with Tooltip */}
-          <div className="relative">
-            <CartTrigger />
-          </div>
         </div>
       </div>
 
