@@ -4,10 +4,10 @@ import * as React from "react";
 import * as LucideIcons from "lucide-react";
 import { Check, ChevronsUpDown, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@findeg/ui";
+import { Popover, PopoverContent, PopoverTrigger } from "@findeg/ui";
+import { Input } from "@findeg/ui";
+import { ScrollArea } from "@findeg/ui";
 
 const COMMON_ICONS = [
   "Tag",

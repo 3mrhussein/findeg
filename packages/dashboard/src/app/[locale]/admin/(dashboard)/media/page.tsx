@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
 import { getServices } from "@/server/getServices";
 import { MediaUploadForm } from "./_components/media-upload-form";
 import { MediaLibrary } from "./_components/media-library";

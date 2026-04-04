@@ -2,9 +2,9 @@
 
 import * as React from "react";
 import { useFormContext } from "react-hook-form";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
+import { Input } from "@findeg/ui";
+import { Label } from "@findeg/ui";
+import { Button } from "@findeg/ui";
 import { cn } from "@/lib/utils";
 
 interface WeightInputProps {

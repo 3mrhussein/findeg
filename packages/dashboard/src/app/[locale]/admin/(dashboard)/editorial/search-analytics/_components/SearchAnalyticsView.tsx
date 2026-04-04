@@ -12,16 +12,16 @@ import {
   Download,
   Plus,
 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@findeg/ui";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@findeg/ui";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
+} from "@findeg/ui";
+import { Button } from "@findeg/ui";
 import {
   Table,
   TableBody,
@@ -29,7 +29,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@findeg/ui";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
 import Link from "next/link";
 import {

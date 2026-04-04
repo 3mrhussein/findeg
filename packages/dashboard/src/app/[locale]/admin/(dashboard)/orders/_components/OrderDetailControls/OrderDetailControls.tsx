@@ -2,18 +2,18 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
+import { Label } from "@findeg/ui";
+import { Input } from "@findeg/ui";
+import { Textarea } from "@findeg/ui";
+import { Button } from "@findeg/ui";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@findeg/ui";
 import {
   updateOrderPaymentStatusAction,
   updateOrderStatusAction,

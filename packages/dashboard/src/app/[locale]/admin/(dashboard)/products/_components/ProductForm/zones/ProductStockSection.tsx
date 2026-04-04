@@ -2,10 +2,10 @@
 
 import * as React from "react";
 import { useFormContext } from "react-hook-form";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
+import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
+import { Label } from "@findeg/ui";
+import { Input } from "@findeg/ui";
+import { Separator } from "@findeg/ui";
 import { SkuInput } from "../shared/SkuInput";
 import { WeightInput } from "../shared/WeightInput";
 import type { ProductFormValues } from "@/features/administration/presentation/forms/product-form";

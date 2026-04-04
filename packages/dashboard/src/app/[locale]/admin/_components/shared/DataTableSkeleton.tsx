@@ -10,7 +10,7 @@
 "use client";
 
 import * as React from "react";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@findeg/ui";
 import {
   TableHeader,
   TableRow,
@@ -18,7 +18,7 @@ import {
   TableBody,
   TableCell,
   Table,
-} from "@/components/ui/table";
+} from "@findeg/ui";
 import { cn } from "@/lib/utils";
 
 export interface DataTableSkeletonProps {

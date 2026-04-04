@@ -4,13 +4,14 @@ FindEg.com is a modern, trendy e-commerce web application specializing in statio
 
 ## 🏗️ Monorepo Architecture
 
-This project is structured as a **Turborepo monorepo** with three packages:
+This project is structured as a **Turborepo monorepo** with three main folders:
 
-- **`packages/backend`** - TypeScript library containing all business logic, database access, and shared utilities
-- **`packages/dashboard`** - Next.js admin app for managing products, orders, and customers (port 3001)
-- **`packages/storefront`** - Next.js customer-facing app for shopping and checkout (port 3000)
+- **`backend/`** - TypeScript library containing all business logic, database access, and shared utilities
+- **`dashboard/`** - Next.js admin app for managing products, orders, and customers (port 3001)
+- **`storefront/`** - Next.js customer-facing app for shopping and checkout (port 3000)
 
 **Key Benefits:**
+
 - Independent development and deployment of admin and storefront apps
 - Shared business logic in backend package (single source of truth)
 - Faster build times with Turborepo caching
@@ -71,15 +72,16 @@ This project is structured as a **Turborepo monorepo** with three packages:
 
 ### 📦 Monorepo Commands
 
-| Command | Description |
-|---------|-------------|
-| `pnpm dev` | Start all packages in development mode |
-| `pnpm build` | Build all packages (with Turborepo caching) |
-| `pnpm type-check` | Run TypeScript checks across all packages |
-| `pnpm lint` | Run ESLint and i18n checks |
-| `pnpm --filter <package> <cmd>` | Run command in specific package |
+| Command                         | Description                                 |
+| ------------------------------- | ------------------------------------------- |
+| `pnpm dev`                      | Start all packages in development mode      |
+| `pnpm build`                    | Build all packages (with Turborepo caching) |
+| `pnpm type-check`               | Run TypeScript checks across all packages   |
+| `pnpm lint`                     | Run ESLint and i18n checks                  |
+| `pnpm --filter <package> <cmd>` | Run command in specific package             |
 
 **Examples:**
+
 ```bash
 # Work on dashboard only
 pnpm --filter @findeg/dashboard dev
@@ -183,7 +185,7 @@ npm run db:logs
 docker-compose exec postgres psql -U findeg_user -d findeg_dev
 ```
 
-For more details, see [docs/database/SETUP.md](docs/database/SETUP.md)
+For more details, see [backend/docs/database/SETUP.md](backend/docs/database/SETUP.md)
 
 ---
 
@@ -377,13 +379,13 @@ For the full technical specification and roadmap, see [SYSTEM_SPECIFICATION.md](
 - **[Static Content Guide](docs/guides/STATIC_CONTENT.md)** - Managing page-scoped UI text and i18n.
 - **[Logging Guide](docs/guides/LOGGING.md)** - Understanding the multi-tiered logging architecture.
 - **[Onboarding](docs/onboarding/README.md)** - Getting started for new developers.
-- **[Auth Architecture](docs/AUTH_ARCHITECTURE.md)** - Decentralized session management & Phase 2 roadmap.
+- **[Auth Architecture](backend/docs/AUTH_ARCHITECTURE.md)** - Decentralized session management & Phase 2 roadmap.
 
 ### 📊 Database & Translations
 
-- **[Database Setup](docs/database/SETUP.md)** - Local and production DB management.
-- **[Database Schema](docs/database/SCHEMA.md)** - Auto-generated ER diagram and table definitions.
-- **[Translation Strategy](docs/translations/README.md)** - Static vs Dynamic translation patterns.
+- **[Database Setup](backend/docs/database/SETUP.md)** - Local and production DB management.
+- **[Database Schema](backend/docs/database/SCHEMA.md)** - Auto-generated ER diagram and table definitions.
+- **[Translation Strategy](backend/docs/translations/README.md)** - Static vs Dynamic translation patterns.
 
 ---
 

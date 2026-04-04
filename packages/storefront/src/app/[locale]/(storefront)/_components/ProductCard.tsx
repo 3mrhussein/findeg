@@ -6,8 +6,8 @@ import { Product, ProductEntity } from "@/features/catalog/domain/entities/Produ
 import { getCanonicalProductHref } from "@/features/catalog/presentation/utils/product-url";
 import { useCart } from "@/hooks/useCart";
 import { useTranslations, useLocale } from "next-intl";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@findeg/ui";
+import { Badge } from "@findeg/ui";
 
 interface ProductCardProps {
   product: Product;

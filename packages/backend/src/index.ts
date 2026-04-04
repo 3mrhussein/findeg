@@ -10,7 +10,6 @@ export * from "./features/identity";
 export { MediaService } from "./features/media/application/services";
 
 // Other features - export as they provide their own index.ts
-export * from "./features/catalog";
 export * from "./features/cart";
 export * from "./features/order";
 export * from "./features/review";

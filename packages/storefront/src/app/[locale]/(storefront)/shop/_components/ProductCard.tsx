@@ -13,11 +13,11 @@ import { getCanonicalProductHref } from "@/features/catalog/presentation/utils/p
 import { useCart } from "@/hooks/useCart";
 import { useToast } from "@/hooks/use-toast";
 import { useUser } from "@/hooks/useUser";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { IconTooltip } from "@/components/ui/IconTooltip";
+import { Button } from "@findeg/ui";
+import { Badge } from "@findeg/ui";
+import { Skeleton } from "@findeg/ui";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@findeg/ui";
+import { IconTooltip } from "@findeg/ui";
 import { cn } from "@/lib/utils";
 
 export interface ProductCardBrand {

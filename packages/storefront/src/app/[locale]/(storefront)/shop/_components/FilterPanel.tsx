@@ -16,13 +16,13 @@ import {
   RotateCcw,
   SlidersHorizontal,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Slider } from "@/components/ui/slider";
-import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
-import { IconTooltip } from "@/components/ui/IconTooltip";
+import { Button } from "@findeg/ui";
+import { Checkbox } from "@findeg/ui";
+import { Input } from "@findeg/ui";
+import { Slider } from "@findeg/ui";
+import { Switch } from "@findeg/ui";
+import { Badge } from "@findeg/ui";
+import { IconTooltip } from "@findeg/ui";
 import { useDebounce } from "@/hooks/use-debounce";
 import { cn } from "@/lib/utils";
 import type {

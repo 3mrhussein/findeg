@@ -7,17 +7,11 @@
     "rootDir": "src",
     "jsx": "react-jsx",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@/features/*": [
-        "./src/features/*"
-      ]
+      "@/*": ["./src/*"],
+      "@/features/*": ["./src/features/*"]
     }
   },
-  "include": [
-    "src/**/*"
-  ],
+  "include": ["src/**/*"],
   "exclude": [
     "node_modules",
     "dist",
@@ -29,6 +23,8 @@
     "src/hooks/**/*",
     "src/providers/**/*",
     "src/**/presentation/hooks/**/*",
-    "src/**/presentation/hoc/**/*"
+    "src/**/presentation/hoc/**/*",
+    "src/lib/internal/**/*.tsx",
+    "src/proxy.ts"
   ]
 }

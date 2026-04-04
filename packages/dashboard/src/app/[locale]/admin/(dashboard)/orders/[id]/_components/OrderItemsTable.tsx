@@ -7,10 +7,10 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
+} from "@findeg/ui";
+import { Badge } from "@findeg/ui";
 import { AlertCircle } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@findeg/ui";
 
 interface OrderItem {
   productId: number;

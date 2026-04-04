@@ -1,7 +1,7 @@
 import { Locale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
 import { getMyAccountDataOrRedirect } from "@/features/identity/application/queries/my-account";
 import { SectionStateEmpty } from "@/components/shared/state/SectionStateEmpty";
 

@@ -2,8 +2,8 @@
 
 import type React from "react";
 import { useTranslations } from "next-intl";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Input } from "@findeg/ui";
+import { Button } from "@findeg/ui";
 import { useSchoolListLookup } from "@/features/school/presentation/hooks/useSchoolListLookup";
 
 interface SchoolListLookupFormProps {

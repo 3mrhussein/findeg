@@ -11,11 +11,11 @@
 
 import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@findeg/ui";
+import { Popover, PopoverContent, PopoverTrigger } from "@findeg/ui";
+import { Badge } from "@findeg/ui";
+import { Input } from "@findeg/ui";
+import { Checkbox } from "@findeg/ui";
 import { cn } from "@/lib/utils";
 
 export interface Collection {

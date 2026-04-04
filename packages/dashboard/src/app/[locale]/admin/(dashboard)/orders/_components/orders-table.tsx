@@ -7,9 +7,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { IconTooltip } from "@/components/ui/IconTooltip";
+} from "@findeg/ui";
+import { Button } from "@findeg/ui";
+import { IconTooltip } from "@findeg/ui";
 import { Order } from "@/features/order/domain/entities/Order";
 import {
   Select,
@@ -17,7 +17,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@findeg/ui";
 import {
   updateOrderPaymentStatusAction,
   updateOrderStatusAction,

@@ -14,8 +14,8 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge } from "@findeg/ui";
+import { Button } from "@findeg/ui";
 import { ExternalLink, Clock } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { cn } from "@/lib/utils";

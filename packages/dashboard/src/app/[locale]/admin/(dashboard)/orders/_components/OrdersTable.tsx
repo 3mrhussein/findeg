@@ -8,7 +8,7 @@ import { OrderStatusTabs } from "./OrderStatusTabs";
 import { OrderRow } from "./OrderRow";
 import { OrderDetailDrawer } from "./OrderDetailDrawer";
 import type { Order } from "@/features/order/domain/entities/Order";
-import { EmptyState } from "@/components/shared/EmptyState";
+import { EmptyState } from "@findeg/ui";
 
 interface OrdersTableProps {
   orders: Order[];

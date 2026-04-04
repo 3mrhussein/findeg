@@ -1,19 +1,19 @@
 "use client";
 
 import { useTransition, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
 import { CreditCard, Package, Truck, CheckCircle2, AlertCircle } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge } from "@findeg/ui";
+import { Button } from "@findeg/ui";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from "@findeg/ui";
+import { Input } from "@findeg/ui";
+import { Label } from "@findeg/ui";
 import { adminUpdateOrderStatusAction } from "@/features/administration/application/actions/admin-order-actions";
 import { useToast } from "@/hooks/use-toast";
 import { OrderStatus } from "@/features/core/domain/types/common";

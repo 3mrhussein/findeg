@@ -18,7 +18,7 @@
 
 import * as React from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@findeg/ui";
 import { FileText, Layers, Image, DollarSign, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 

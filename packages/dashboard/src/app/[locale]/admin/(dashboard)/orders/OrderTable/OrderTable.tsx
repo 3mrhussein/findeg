@@ -13,7 +13,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@findeg/ui";
 import { useState, useTransition } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import type { OrderTableProps, UpdateOrderQueryParams } from "./OrderTable.interface";

@@ -1,8 +1,8 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { TableCell, TableRow } from "@/components/ui/table";
+import { Button } from "@findeg/ui";
+import { Input } from "@findeg/ui";
+import { TableCell, TableRow } from "@findeg/ui";
 import { AlertTriangle, Loader2, Save } from "lucide-react";
 import type { Product } from "@/features/catalog/domain/entities/Product";
 

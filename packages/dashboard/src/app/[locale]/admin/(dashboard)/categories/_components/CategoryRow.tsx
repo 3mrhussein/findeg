@@ -16,8 +16,8 @@
 import * as React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge } from "@findeg/ui";
+import { Button } from "@findeg/ui";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import {
   ChevronRight,
@@ -32,7 +32,7 @@ import {
   ArrowUp,
   ArrowDown,
 } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@findeg/ui";
 import { cn } from "@/lib/utils";
 import type { Category } from "@/features/catalog/domain/entities/Category";
 

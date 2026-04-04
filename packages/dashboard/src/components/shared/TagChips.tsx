@@ -10,8 +10,8 @@
 "use client";
 
 import * as React from "react";
-import { Badge } from "@/components/ui/badge";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Badge } from "@findeg/ui";
+import { Popover, PopoverContent, PopoverTrigger } from "@findeg/ui";
 import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
 

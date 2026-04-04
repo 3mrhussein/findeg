@@ -1,8 +1,8 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Badge } from "@findeg/ui";
+import { ScrollArea } from "@findeg/ui";
 import type { Permission, OverrideAction } from "./AdminUserDialog.interface";
 
 interface OverridesTabProps {

@@ -11,15 +11,15 @@
 
 import * as React from "react";
 import { Search, X } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Input } from "@findeg/ui";
+import { Button } from "@findeg/ui";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@findeg/ui";
 import { cn } from "@/lib/utils";
 
 export interface FilterOption {

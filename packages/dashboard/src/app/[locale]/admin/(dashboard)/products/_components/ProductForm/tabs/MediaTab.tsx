@@ -3,10 +3,10 @@
 import React from "react";
 import { useFormContext, useFieldArray } from "react-hook-form";
 import { useTranslations } from "next-intl";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@findeg/ui";
+import { Input } from "@findeg/ui";
+import { Button } from "@findeg/ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
 import { Link as LinkIcon, Star, Trash2, ImageIcon } from "lucide-react";
 import { type ProductFormValues } from "@/features/administration/presentation/forms/product-form";
 

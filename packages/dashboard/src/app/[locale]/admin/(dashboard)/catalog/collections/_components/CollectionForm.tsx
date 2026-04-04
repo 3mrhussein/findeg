@@ -20,19 +20,19 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+} from "@findeg/ui";
+import { Input } from "@findeg/ui";
+import { Button } from "@findeg/ui";
+import { Switch } from "@findeg/ui";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@findeg/ui";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@findeg/ui";
+import { Badge } from "@findeg/ui";
 import { ChevronLeft, Save, Loader2, Image as ImageIcon, Tag as TagIcon } from "lucide-react";
 import {
   adminCreateCollectionAction,
   adminUpdateCollectionAction,
 } from "@/features/administration/application/actions/admin-collection-actions";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from "@findeg/ui";
 
 interface CollectionFormProps {
   collection?: Collection;

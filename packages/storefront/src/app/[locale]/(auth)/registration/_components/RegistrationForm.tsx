@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { Button } from "@findeg/ui";
 import {
   Form,
   FormControl,
@@ -13,8 +13,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from "@findeg/ui";
+import { Input } from "@findeg/ui";
 import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { persistSessionToken } from "@/features/identity/presentation/utils/session-cookie";

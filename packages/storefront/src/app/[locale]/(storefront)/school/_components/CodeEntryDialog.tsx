@@ -10,14 +10,14 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from "@/components/ui/dialog";
+} from "@findeg/ui";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
   InputOTPSeparator,
-} from "@/components/ui/input-otp";
-import { Button } from "@/components/ui/button";
+} from "@findeg/ui";
+import { Button } from "@findeg/ui";
 import { useToast } from "@/hooks/use-toast";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 

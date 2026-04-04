@@ -2,7 +2,7 @@
 
 import { FileText, Package, Ruler, Star } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@findeg/ui";
 import type { Product } from "@/features/catalog/domain/entities/Product";
 import type { Variant } from "@/features/catalog/domain/entities/Variant";
 import type { ProductReviewSummary } from "@/features/review/application/interfaces/IReviewRepository";

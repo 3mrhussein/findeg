@@ -10,8 +10,8 @@
 
 import * as React from "react";
 import { useFormContext } from "react-hook-form";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@findeg/ui";
+import { Label } from "@findeg/ui";
 import { BilingualInput } from "@/components/shared/BilingualInput";
 import { BilingualTextarea } from "@/components/shared/BilingualTextarea";
 import { Search } from "lucide-react";

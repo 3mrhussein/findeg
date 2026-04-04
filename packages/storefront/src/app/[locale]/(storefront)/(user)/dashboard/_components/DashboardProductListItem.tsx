@@ -4,11 +4,11 @@ import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Product } from "@/features/catalog/domain/entities/Product";
-import { Button } from "@/components/ui/button";
-import { Price } from "@/components/shared/Price";
+import { Button } from "@findeg/ui";
+import { Price } from "@findeg/ui";
 import { useTranslations } from "next-intl";
 import { useCart } from "@/hooks/useCart";
-import { Icon } from "@/components/shared/Icon";
+import { Icon } from "@findeg/ui";
 
 interface ProductListItemUIProps {
   product: Product;

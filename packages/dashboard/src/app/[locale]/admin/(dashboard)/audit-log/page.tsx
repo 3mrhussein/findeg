@@ -5,9 +5,9 @@
 import { container } from "@/features/core/infrastructure/di/ServiceContainer";
 import { format } from "date-fns";
 import Link from "next/link";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Input } from "@findeg/ui";
+import { Button } from "@findeg/ui";
+import { Badge } from "@findeg/ui";
 
 const LIMIT = 50;
 

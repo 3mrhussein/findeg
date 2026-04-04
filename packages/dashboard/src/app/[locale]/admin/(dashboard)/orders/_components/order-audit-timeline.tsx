@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { AuditLogEntry } from "@/features/administration/domain/entities/AuditLogEntry";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
+import { Badge } from "@findeg/ui";
 import {
   getOrderStatusLabel,
   normalizeOrderStatus,

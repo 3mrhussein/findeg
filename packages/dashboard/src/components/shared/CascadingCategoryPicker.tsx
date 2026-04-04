@@ -16,9 +16,9 @@
 import * as React from "react";
 import { ChevronRight, Check, Search, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@findeg/ui";
+import { Popover, PopoverContent, PopoverTrigger } from "@findeg/ui";
+import { ScrollArea } from "@findeg/ui";
 import type { Category } from "@/features/catalog/domain/entities/Category";
 import { useTranslations } from "next-intl";
 

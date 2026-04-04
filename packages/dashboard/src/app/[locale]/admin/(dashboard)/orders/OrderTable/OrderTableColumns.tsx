@@ -2,9 +2,9 @@
 
 import { type ColumnDef } from "@tanstack/react-table";
 import { type Order } from "@/features/order/domain/entities/Order";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@findeg/ui";
+import { Button } from "@findeg/ui";
+import { Badge } from "@findeg/ui";
 import { MoreHorizontal, Phone, Eye, Check } from "lucide-react";
 import {
   DropdownMenu,
@@ -12,7 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@findeg/ui";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 

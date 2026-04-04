@@ -31,13 +31,13 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@findeg/ui";
+import { Input } from "@findeg/ui";
 import { Plus, Search } from "lucide-react";
 import { CategoryRow } from "./CategoryRow";
 import { CategoryFormPanel } from "./CategoryFormPanel";
 import { CategoryDrawer } from "./CategoryDrawer";
-import { EmptyState } from "@/components/shared/EmptyState";
+import { EmptyState } from "@findeg/ui";
 import type { Category } from "@/features/catalog/domain/entities/Category";
 import { useTranslations } from "next-intl";
 import {
@@ -52,7 +52,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@findeg/ui";
 import { cn } from "@/lib/utils";
 
 interface CategoryTreeProps {

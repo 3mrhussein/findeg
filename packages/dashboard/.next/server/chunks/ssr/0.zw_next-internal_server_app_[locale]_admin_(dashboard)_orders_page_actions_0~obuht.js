@@ -1,3 +1,0 @@
-module.exports=[865082,a=>{"use strict";var b=a.i(616800),c=a.i(923238);a.s([],582079),a.i(582079),a.s(["002579aa487c2dbc94df84e9a246288439c8e5af76",()=>b.$$RSC_SERVER_ACTION_0,"40a2ebfbd92453b5dfdf38e487c4545c83ec2b1fa6",()=>c.logoutAction,"40c5f1e946a2ed3abc7ec2de0dc7df8238db0f5990",()=>c.loginAction],865082)}];
-
-//# sourceMappingURL=0.zw_next-internal_server_app_%5Blocale%5D_admin_%28dashboard%29_orders_page_actions_0~obuht.js.map

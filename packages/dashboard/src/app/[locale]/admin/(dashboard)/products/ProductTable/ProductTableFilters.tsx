@@ -1,14 +1,14 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Input } from "@findeg/ui";
+import { Button } from "@findeg/ui";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@findeg/ui";
 import type { ProductFilters, UpdateQueryParams } from "./ProductTable.interface";
 
 interface ProductTableFiltersProps {

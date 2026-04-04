@@ -15,9 +15,9 @@ import {
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { IconTooltip } from "@/components/ui/IconTooltip";
+import { Button } from "@findeg/ui";
+import { Badge } from "@findeg/ui";
+import { IconTooltip } from "@findeg/ui";
 import { useCart } from "@/hooks/useCart";
 import { useUser } from "@/hooks/useUser";
 import type { Product } from "@/features/catalog/domain/entities/Product";

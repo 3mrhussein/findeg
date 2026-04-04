@@ -8,8 +8,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+} from "@findeg/ui";
+import { Button } from "@findeg/ui";
 import { Link } from "@/i18n/navigation";
 import { ShieldAlert, LogIn, LayoutDashboard, Home } from "lucide-react";
 import { logoutAction } from "@/features/identity/application/actions/auth";

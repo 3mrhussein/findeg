@@ -4,8 +4,8 @@ import React, { useState, useMemo } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { Tag } from "@/features/catalog/domain/entities/Tag";
 import { Plus, Search, Filter, AlertTriangle, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@findeg/ui";
+import { Input } from "@findeg/ui";
 import { TagCard } from "./TagCard";
 import { TagDrawer } from "./TagDrawer";
 import {
@@ -23,7 +23,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+} from "@findeg/ui";
 import { getTagDisplayName } from "@/features/catalog/presentation/config/tag-display";
 
 interface TagsClientProps {

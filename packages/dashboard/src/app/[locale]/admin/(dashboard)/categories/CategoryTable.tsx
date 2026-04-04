@@ -15,14 +15,14 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { IconTooltip } from "@/components/ui/IconTooltip";
-import { Input } from "@/components/ui/input";
+} from "@findeg/ui";
+import { Button } from "@findeg/ui";
+import { IconTooltip } from "@findeg/ui";
+import { Input } from "@findeg/ui";
 import { useState } from "react";
 import { Category } from "@/features/catalog/domain/entities/Category";
 import { Pencil, Trash2 } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@findeg/ui";
 import Link from "next/link";
 import { deleteCategoryAction } from "@/features/catalog/application/actions/category";
 import { useToast } from "@/hooks/use-toast";

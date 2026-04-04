@@ -15,18 +15,18 @@ import {
   Hash,
   Zap,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@findeg/ui";
+import { Input } from "@findeg/ui";
+import { Label } from "@findeg/ui";
+import { RadioGroup, RadioGroupItem } from "@findeg/ui";
+import { Badge } from "@findeg/ui";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@findeg/ui";
 import { TagInput, TagInputSchema } from "@/features/administration/domain/types/TagInput";
 import { slugify } from "@/lib/slugify";
 import { Tag } from "@/features/catalog/domain/entities/Tag";

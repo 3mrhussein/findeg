@@ -2,11 +2,11 @@
 
 import * as React from "react";
 import { X, Plus, Search, Check } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Badge } from "@findeg/ui";
+import { Button } from "@findeg/ui";
+import { Input } from "@findeg/ui";
+import { Popover, PopoverContent, PopoverTrigger } from "@findeg/ui";
+import { ScrollArea } from "@findeg/ui";
 import { cn } from "@/lib/utils";
 import { type Tag } from "@/features/catalog/domain/entities";
 

@@ -10,7 +10,7 @@
 "use client";
 
 import * as React from "react";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@findeg/ui";
 import { cn } from "@/lib/utils";
 import type { OrderStatus } from "@/features/core/domain/types/common";
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@findeg/ui";
 import type { OrderStatus } from "@/features/core/domain/types/common";
 
 interface OrderStatusTabsProps {

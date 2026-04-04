@@ -7,16 +7,16 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
+} from "@findeg/ui";
+import { Input } from "@findeg/ui";
+import { Checkbox } from "@findeg/ui";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@findeg/ui";
 import type { UseFormReturn } from "react-hook-form";
 import type { CategoryFormValues } from "./CategoryForm.interface";
 

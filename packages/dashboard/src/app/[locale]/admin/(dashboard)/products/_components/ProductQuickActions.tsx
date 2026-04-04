@@ -5,7 +5,7 @@
 
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@findeg/ui";
 import { Edit, Copy, Eye, FileStack } from "lucide-react";
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";

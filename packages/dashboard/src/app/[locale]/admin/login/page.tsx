@@ -5,10 +5,10 @@ import {
   CardHeader,
   CardTitle,
   CardFooter,
-} from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+} from "@findeg/ui";
+import { Label } from "@findeg/ui";
+import { Input } from "@findeg/ui";
+import { Button } from "@findeg/ui";
 import { getTranslations } from "next-intl/server";
 import { loginAction } from "@/features/identity/application/actions/auth";
 import { Locale } from "next-intl";

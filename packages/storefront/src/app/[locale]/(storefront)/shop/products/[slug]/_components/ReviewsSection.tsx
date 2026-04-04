@@ -3,11 +3,11 @@
 import { useMemo, useState } from "react";
 import { MessageSquare, Star, ThumbsUp } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
-import { IconTooltip } from "@/components/ui/IconTooltip";
+import { Button } from "@findeg/ui";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@findeg/ui";
+import { Textarea } from "@findeg/ui";
+import { Badge } from "@findeg/ui";
+import { IconTooltip } from "@findeg/ui";
 import type { ProductReviewSummary } from "@/features/review/application/interfaces/IReviewRepository";
 import type { Review } from "@/features/review/domain/entities/Review";
 import { cn } from "@/lib/utils";

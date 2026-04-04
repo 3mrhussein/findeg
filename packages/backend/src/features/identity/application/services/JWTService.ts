@@ -80,11 +80,15 @@ export class JWTService implements IJWTService {
     roles: string[],
     permissions: string[] = [],
   ): TokenPair {
+    // Add jti (JWT ID) with timestamp + random component for token uniqueness
+    const jti = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}`;
+
     const payload = {
       userId,
       email,
       roles,
       permissions,
+      jti,
     };
 
     const accessToken = jwt.sign(payload, this.accessTokenSecret, {
@@ -92,10 +96,14 @@ export class JWTService implements IJWTService {
       expiresIn: "15m",
     });
 
-    const refreshToken = jwt.sign({ userId, email }, this.refreshTokenSecret, {
-      algorithm: "HS256" as const,
-      expiresIn: "7d",
-    });
+    const refreshToken = jwt.sign(
+      { userId, email, roles, permissions, jti: `${jti}-refresh` },
+      this.refreshTokenSecret,
+      {
+        algorithm: "HS256" as const,
+        expiresIn: "7d",
+      },
+    );
 
     return {
       accessToken,

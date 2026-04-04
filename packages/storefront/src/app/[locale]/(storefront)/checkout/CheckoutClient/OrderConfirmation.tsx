@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@findeg/ui";
 import { CheckCircle2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import type { PlaceOrderResult } from "./CheckoutClient.interface";

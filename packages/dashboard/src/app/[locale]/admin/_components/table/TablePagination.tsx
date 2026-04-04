@@ -11,14 +11,14 @@
 
 import * as React from "react";
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@findeg/ui";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@findeg/ui";
 import { cn } from "@/lib/utils";
 
 export interface TablePaginationProps {

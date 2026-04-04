@@ -1,6 +1,6 @@
 import { getServices } from "@/server/getServices";
 import { CategoryForm } from "../CategoryForm";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
 import { resolveLocale } from "@/features/core/domain/value-objects";
 
 /**

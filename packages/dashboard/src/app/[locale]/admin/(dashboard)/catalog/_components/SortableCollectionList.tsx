@@ -21,7 +21,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { Collection } from "@/features/catalog/domain/entities/Collection";
 import { GripVertical, Eye, EyeOff } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@findeg/ui";
 
 interface SortableCollectionListProps {
   collections: Collection[];
@@ -161,4 +161,4 @@ function SortableItem({ collection, onEdit }: SortableItemProps) {
 }
 
 // Minimal Button component to avoid heavy imports if possible, but we use shadcn usually
-import { Button } from "@/components/ui/button";
+import { Button } from "@findeg/ui";

@@ -2,8 +2,8 @@
 
 import { useTransition } from "react";
 import { type Order } from "@/features/order/domain/entities/Order";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@findeg/ui";
+import { Badge } from "@findeg/ui";
 import { Printer, RefreshCcw } from "lucide-react";
 import { adminUpdateOrderStatusAction } from "@/features/administration/application/actions/admin-order-actions";
 import { useToast } from "@/hooks/use-toast";

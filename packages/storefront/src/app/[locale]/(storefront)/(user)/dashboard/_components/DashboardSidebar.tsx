@@ -13,8 +13,8 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations, useLocale } from "next-intl";
-import { Logo } from "@/components/shared/Logo";
-import { Icon } from "@/components/shared/Icon";
+import { Logo } from "@findeg/ui";
+import { Icon } from "@findeg/ui";
 import { PERMISSION_CODES } from "@/features/core/domain/auth";
 import { usePermissions } from "@/providers/PermissionsProvider";
 import {
@@ -30,8 +30,8 @@ import {
   SidebarRail,
   SidebarSeparator,
   useSidebar,
-} from "@/components/ui/sidebar";
-import ToggleTheme from "@/components/shared/ToggleTheme";
+} from "@findeg/ui";
+import ToggleTheme from "@findeg/ui";
 import ToggleLanguage from "@/components/shared/ToggleLanguage";
 
 type DashboardView =

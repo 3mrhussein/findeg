@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Container } from "@/components/shared/Container";
+import { Button } from "@findeg/ui";
+import { Container } from "@findeg/ui";
 
 interface ErrorPageProps {
   title?: string;

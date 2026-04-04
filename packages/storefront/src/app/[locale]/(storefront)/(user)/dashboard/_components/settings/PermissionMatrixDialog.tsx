@@ -15,10 +15,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { ScrollArea } from "@/components/ui/scroll-area";
+} from "@findeg/ui";
+import { Button } from "@findeg/ui";
+import { Checkbox } from "@findeg/ui";
+import { ScrollArea } from "@findeg/ui";
 import {
   Table,
   TableBody,
@@ -26,8 +26,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Icon } from "@/components/shared/Icon";
+} from "@findeg/ui";
+import { Icon } from "@findeg/ui";
 import type {
   RoleWithPermissions,
   Permission,

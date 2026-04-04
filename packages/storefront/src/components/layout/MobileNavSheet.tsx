@@ -6,24 +6,12 @@ import { useTranslations } from "next-intl";
 import { useUser } from "@/hooks/useUser";
 import { useCategories, type Category } from "@/hooks/useCategories";
 
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-  SheetClose,
-} from "@/components/ui/sheet";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from "@findeg/ui";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@findeg/ui";
 import { Menu, User, Settings, Heart, Image as ImageIcon, Search } from "lucide-react";
 
 import ToggleLanguage from "@/components/shared/ToggleLanguage";
-import ToggleTheme from "@/components/shared/ToggleTheme";
+import { ToggleTheme } from "@findeg/ui";
 
 /**
  * Mobile Navigation Sheet
@@ -35,7 +23,7 @@ export function MobileNavSheet() {
   const t = useTranslations("Nav");
   const { categories, isLoading } = useCategories();
 
-  const topLevelCategories = categories.filter((c) => !c.parentId || c.depth === 0) || [];
+  const topLevelCategories = categories.filter((c: Category) => !c.parentId || c.depth === 0) || [];
 
   return (
     <div className="md:hidden flex items-center mr-2">
@@ -119,7 +107,7 @@ export function MobileNavSheet() {
               ) : (
                 <Accordion type="single" collapsible className="w-full">
                   {topLevelCategories.map((cat: Category) => {
-                    const subCats = categories.filter((c) => c.parentId === cat.id);
+                    const subCats = categories.filter((c: Category) => c.parentId === cat.id);
                     return (
                       <AccordionItem value={`cat-${cat.id}`} key={cat.id} className="border-b-0">
                         <AccordionTrigger className="px-3 py-3 hover:no-underline hover:bg-slate-50 dark:hover:bg-slate-900 rounded-lg transition-colors data-[state=open]:bg-slate-50 dark:data-[state=open]:bg-slate-900">
@@ -141,7 +129,7 @@ export function MobileNavSheet() {
                         <AccordionContent className="pb-2 pt-1 pl-12 pr-4">
                           <div className="flex flex-col space-y-1">
                             {subCats.length > 0 ? (
-                              subCats.map((sub) => (
+                              subCats.map((sub: Category) => (
                                 <Link
                                   key={sub.id}
                                   href={`/shop/${sub.slug}`}

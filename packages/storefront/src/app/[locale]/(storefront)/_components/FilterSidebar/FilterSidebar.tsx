@@ -8,8 +8,8 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
+} from "@findeg/ui";
+import { Button } from "@findeg/ui";
 import type { FilterSidebarProps } from "./FilterSidebar.interface";
 import { applyCategories } from "./FilterSidebar.interface";
 import { CategoryTree } from "./CategoryTree";

@@ -4,9 +4,9 @@ import { StatCard } from "./StatCard";
 import { SalesChart } from "./SalesChart";
 import { UserActivityChart } from "./UserActivityChart";
 import { DeviceUsageChart } from "./DeviceUsageChart";
-import { Icon } from "@/components/shared/Icon";
+import { Icon } from "@findeg/ui";
 import { OrderTable } from "./OrderTable";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
 import type { Product } from "@/features/catalog/domain/entities/Product";
 import type { Order } from "@/features/order/domain/entities/Order";
 

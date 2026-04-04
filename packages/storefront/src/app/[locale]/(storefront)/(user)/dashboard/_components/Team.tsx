@@ -19,9 +19,9 @@
 
 import React, { useState, useEffect, useMemo, useTransition } from "react";
 import { useTranslations } from "next-intl";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "@findeg/ui";
+import { Input } from "@findeg/ui";
+import { Badge } from "@findeg/ui";
 import {
   Table,
   TableBody,
@@ -29,8 +29,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Icon } from "@/components/shared/Icon";
+} from "@findeg/ui";
+import { Icon } from "@findeg/ui";
 import { PERMISSION_CODES } from "@/features/core/domain/auth";
 import { usePermissions } from "@/providers/PermissionsProvider";
 import { useAdminUsers } from "@/features/identity/application/hooks/useAdminUsers";

@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { SheetClose, SheetFooter } from "@/components/ui/sheet";
+import { Button } from "@findeg/ui";
+import { Separator } from "@findeg/ui";
+import { SheetClose, SheetFooter } from "@findeg/ui";
 import { useTranslations } from "next-intl";
 
 const egpFormatter = new Intl.NumberFormat("en-EG", { style: "currency", currency: "EGP" });

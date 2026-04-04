@@ -1,16 +1,16 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@findeg/ui";
+import { Label } from "@findeg/ui";
+import { Input } from "@findeg/ui";
+import { Checkbox } from "@findeg/ui";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@findeg/ui";
 import { Loader2, Plus, Trash2 } from "lucide-react";
 import { CustomerGroup, UomCode } from "@/features/core/domain/types/common";
 

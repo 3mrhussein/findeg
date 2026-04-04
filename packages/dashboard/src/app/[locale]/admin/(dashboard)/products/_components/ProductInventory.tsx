@@ -8,9 +8,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
+} from "@findeg/ui";
+import { Input } from "@findeg/ui";
+import { Checkbox } from "@findeg/ui";
 
 /**
  *

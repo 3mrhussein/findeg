@@ -6,8 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Tabs, TabsContent } from "@/components/ui/tabs";
-import { Form } from "@/components/ui/form";
+import { Tabs, TabsContent } from "@findeg/ui";
+import { Form } from "@findeg/ui";
 import {
   ProductFormSchema,
   type ProductFormValues,

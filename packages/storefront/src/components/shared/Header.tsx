@@ -3,7 +3,7 @@ import type { Locale } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { HeaderNavClient } from "./HeaderNavClient";
 import ToggleLanguage from "./ToggleLanguage";
-import ToggleTheme from "./ToggleTheme";
+import { ToggleTheme } from "@findeg/ui";
 import { SearchOverlay } from "./SearchOverlay";
 import { cacheLife } from "next/cache";
 

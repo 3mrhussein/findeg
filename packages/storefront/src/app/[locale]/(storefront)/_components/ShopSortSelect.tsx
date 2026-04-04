@@ -7,7 +7,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@findeg/ui";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
 /**

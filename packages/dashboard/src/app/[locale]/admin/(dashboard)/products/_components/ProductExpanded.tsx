@@ -8,7 +8,7 @@ import Link from "next/link";
 import { ExternalLink, Edit, Eye } from "lucide-react";
 import { TagChips } from "@/components/shared/TagChips";
 import { StockHealthBar } from "@/app/[locale]/admin/_components/shared/StockHealthBar";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@findeg/ui";
 import { format } from "date-fns";
 
 // Helper to calculate available stock from inventory

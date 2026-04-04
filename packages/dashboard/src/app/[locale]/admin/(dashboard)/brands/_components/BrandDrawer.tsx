@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@findeg/ui";
 import { BrandFormPanel } from "./BrandFormPanel";
 import { Brand } from "@/features/catalog/domain/entities/Brand";
 import { BrandInput } from "@/features/administration/domain/types";

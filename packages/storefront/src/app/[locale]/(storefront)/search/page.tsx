@@ -1,8 +1,8 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Suspense } from "react";
 import type { Locale } from "next-intl";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Input } from "@findeg/ui";
+import { Button } from "@findeg/ui";
 import { Search } from "lucide-react";
 import { getSearchPageViewModel } from "@/features/catalog/application/queries/search-page";
 import { PageShell } from "../_components/PageShell";

@@ -7,12 +7,12 @@ import {
   SheetDescription,
   SheetHeader,
   SheetTitle,
-} from "@/components/ui/sheet";
-import { ScrollArea } from "@/components/ui/scroll-area";
+} from "@findeg/ui";
+import { ScrollArea } from "@findeg/ui";
 import { CartEmptyState } from "./CartEmptyState";
 import { CartItem } from "./CartItem";
 import { CartSummary } from "./CartSummary";
-import { Button } from "@/components/ui/button";
+import { Button } from "@findeg/ui";
 import { cn } from "@/lib/utils";
 
 /**

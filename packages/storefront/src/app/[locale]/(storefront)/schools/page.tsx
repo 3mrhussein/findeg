@@ -6,11 +6,11 @@ import {
   SchoolSearchParams,
   ISchoolDirectoryService,
 } from "@/features/school/application/interfaces/ISchoolDirectoryService";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@findeg/ui";
 import { governorates, schoolTypes, academicSystems } from "@/features/school/domain/constants";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@findeg/ui";
+import { Input } from "@findeg/ui";
+import { Button } from "@findeg/ui";
 import { Search, SlidersHorizontal, PlusCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";

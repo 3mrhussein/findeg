@@ -16,8 +16,8 @@ import * as React from "react";
 import { ChevronRight, ChevronDown, Plus, Minus, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { Category } from "@/features/catalog/domain/entities/Category";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@findeg/ui";
+import { ScrollArea } from "@findeg/ui";
 
 interface CollapsibleCategoryPickerProps {
   categories: Category[];

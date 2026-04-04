@@ -14,17 +14,17 @@ import {
   X,
 } from "lucide-react";
 import { Link } from "@/i18n/navigation";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { IconTooltip } from "@/components/ui/IconTooltip";
+import { Badge } from "@findeg/ui";
+import { Button } from "@findeg/ui";
+import { IconTooltip } from "@findeg/ui";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+} from "@findeg/ui";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@findeg/ui";
 import { FilterPanel, type FilterPanelBrand } from "./FilterPanel";
 import { ProductCard, type ProductCardBrand } from "./ProductCard";
 import type {

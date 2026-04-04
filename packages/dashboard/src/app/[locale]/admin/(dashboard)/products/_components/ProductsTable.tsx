@@ -8,8 +8,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Checkbox } from "@/components/ui/checkbox";
+} from "@findeg/ui";
+import { Checkbox } from "@findeg/ui";
 import { ProductRow } from "./ProductRow";
 import type { ProductListItem } from "@/features/administration/application/interfaces";
 

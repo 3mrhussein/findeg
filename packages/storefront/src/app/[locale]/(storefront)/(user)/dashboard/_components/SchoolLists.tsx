@@ -2,8 +2,8 @@
 
 import React from "react";
 import { useTranslations } from "next-intl";
-import { Button } from "@/components/ui/button";
-import { Icon } from "@/components/shared/Icon";
+import { Button } from "@findeg/ui";
+import { Icon } from "@findeg/ui";
 import type { SchoolListResult } from "@/features/catalog/application/interfaces/ISchoolListRepository";
 
 interface SchoolListsProps {

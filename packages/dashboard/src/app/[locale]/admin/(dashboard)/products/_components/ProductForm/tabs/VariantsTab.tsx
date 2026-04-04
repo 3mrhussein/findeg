@@ -10,14 +10,14 @@ import {
   FormLabel,
   FormMessage,
   FormDescription,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+} from "@findeg/ui";
+import { Input } from "@findeg/ui";
+import { Button } from "@findeg/ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
 import { Plus, Trash2, Layers, GripVertical, ChevronDown, ChevronRight } from "lucide-react";
 import { type ProductFormValues } from "@/features/administration/presentation/forms/product-form";
-import { Badge } from "@/components/ui/badge";
-import { Switch } from "@/components/ui/switch";
+import { Badge } from "@findeg/ui";
+import { Switch } from "@findeg/ui";
 import { cn } from "@/lib/utils";
 
 /**

@@ -2,9 +2,9 @@
 
 import { useTranslations } from "next-intl";
 import { MapPin, School, GraduationCap, ChevronRight, CheckCircle2, History } from "lucide-react";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter } from "@findeg/ui";
+import { Badge } from "@findeg/ui";
+import { Button } from "@findeg/ui";
 import Link from "next/link";
 import { SchoolSearchResult } from "@/features/school/application/interfaces/ISchoolDirectoryService";
 

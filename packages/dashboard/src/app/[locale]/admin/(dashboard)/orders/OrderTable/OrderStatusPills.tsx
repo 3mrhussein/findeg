@@ -2,9 +2,9 @@
 
 import { useTransition } from "react";
 import { type OrderStatus } from "@/features/core/domain/types/common";
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { Button } from "@/components/ui/button";
+import { Badge } from "@findeg/ui";
+import { ScrollArea, ScrollBar } from "@findeg/ui";
+import { Button } from "@findeg/ui";
 
 interface OrderStatusPillsProps {
   statusCounts: Record<string, number>;

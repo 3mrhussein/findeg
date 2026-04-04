@@ -3,7 +3,7 @@ import { ProductsClient } from "./_components/ProductsClient";
 import { resolveLocale } from "@/features/core/domain/value-objects";
 import { getTranslations } from "next-intl/server";
 import { PageHeader } from "@/app/[locale]/admin/_components/shared/PageHeader";
-import { Button } from "@/components/ui/button";
+import { Button } from "@findeg/ui";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import type { ProductListFilters } from "@/features/administration/application/interfaces";

@@ -2,8 +2,8 @@
 
 import { useTranslations } from "next-intl";
 import { Search, X, ChevronDown, Filter } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Input } from "@findeg/ui";
+import { Button } from "@findeg/ui";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -11,9 +11,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+} from "@findeg/ui";
+import { Badge } from "@findeg/ui";
+import { Separator } from "@findeg/ui";
 import { cn } from "@/lib/utils";
 import { Options } from "nuqs";
 

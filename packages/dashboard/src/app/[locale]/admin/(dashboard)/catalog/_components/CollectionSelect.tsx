@@ -2,15 +2,15 @@
 
 import * as React from "react";
 import { Check, ChevronsUpDown, X } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge } from "@findeg/ui";
+import { Button } from "@findeg/ui";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { ScrollArea } from "@/components/ui/scroll-area";
+} from "@findeg/ui";
+import { ScrollArea } from "@findeg/ui";
 import { Collection } from "@/features/catalog/domain/entities/Collection";
 import { cn } from "@/lib/utils";
 

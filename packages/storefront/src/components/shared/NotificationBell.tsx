@@ -3,10 +3,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { Bell, Check, ExternalLink, Loader2 } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Popover, PopoverContent, PopoverTrigger } from "@findeg/ui";
+import { Button } from "@findeg/ui";
+import { Badge } from "@findeg/ui";
+import { ScrollArea } from "@findeg/ui";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import type { Notification } from "@/features/core/infrastructure/persistence/schema/notifications";

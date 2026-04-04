@@ -10,9 +10,9 @@ import {
   ChevronRight,
   Loader2,
 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@findeg/ui";
+import { Badge } from "@findeg/ui";
+import { Button } from "@findeg/ui";
 import { AccessState } from "@/features/school/application/interfaces/ISchoolAccessService";
 
 interface ListAccessCardProps {

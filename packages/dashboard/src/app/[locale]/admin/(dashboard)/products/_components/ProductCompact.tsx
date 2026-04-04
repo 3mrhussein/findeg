@@ -4,7 +4,7 @@
  */
 
 import type { Product } from "@/features/catalog/domain/entities/Product";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@findeg/ui";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { AlertCircle } from "lucide-react";
 import Image from "next/image";
@@ -14,7 +14,7 @@ interface ProductCompactProps {
   product: Product;
 }
 
-import { TableCell } from "@/components/ui/table";
+import { TableCell } from "@findeg/ui";
 import { cn } from "@/lib/utils";
 import { VariantEntity } from "@/features/catalog/domain/entities/Variant";
 

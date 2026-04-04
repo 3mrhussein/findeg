@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@findeg/ui";
 import { Archive, Trash2, Eye, EyeOff } from "lucide-react";
 import { useTransition } from "react";
 import { useToast } from "@/hooks/use-toast";

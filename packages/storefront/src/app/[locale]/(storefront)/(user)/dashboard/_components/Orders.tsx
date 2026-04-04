@@ -1,7 +1,7 @@
 import { usePagination } from "@/hooks";
 import { OrderTable } from "./OrderTable";
-import { Pagination } from "@/components/shared/Pagination";
-import { Card, CardContent } from "@/components/ui/card";
+import { Pagination } from "@findeg/ui";
+import { Card, CardContent } from "@findeg/ui";
 import type { Order } from "@/features/order/domain/entities/Order";
 
 interface OrdersProps {

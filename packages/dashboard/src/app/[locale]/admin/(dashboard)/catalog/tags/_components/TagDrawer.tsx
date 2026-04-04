@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { Sheet, SheetContent } from "@findeg/ui";
 import { Tag } from "@/features/catalog/domain/entities/Tag";
 import { TagInput } from "@/features/administration/domain/types";
 import { TagFormPanel } from "./TagFormPanel";

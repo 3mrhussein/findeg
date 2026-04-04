@@ -3,9 +3,9 @@
 import { useCart } from "@/hooks/useCart";
 import type { Product } from "@/features/catalog/domain/entities/Product";
 import { useTranslations } from "next-intl";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Price } from "@/components/shared/Price";
+import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
+import { Button } from "@findeg/ui";
+import { Price } from "@findeg/ui";
 
 interface SchoolListResultsProps {
   products: Product[];

@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent } from "@findeg/ui";
+import { Button } from "@findeg/ui";
 import { useTranslations } from "next-intl";
 import { SessionState } from "@/features/school/application/interfaces/IParentListService";
 import { ShoppingBag } from "lucide-react";

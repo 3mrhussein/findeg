@@ -7,7 +7,7 @@ import { getServices } from "@/server/getServices";
 import { resolveLocale } from "@/features/core/domain/value-objects";
 import { ImageOff, ArrowRight, Sparkles } from "lucide-react";
 import { PageShell } from "../_components/PageShell";
-import { Button } from "@/components/ui/button";
+import { Button } from "@findeg/ui";
 
 /**
  *

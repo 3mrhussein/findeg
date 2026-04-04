@@ -1,7 +1,7 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Input } from "@findeg/ui";
+import { Label } from "@findeg/ui";
 
 /**
  *

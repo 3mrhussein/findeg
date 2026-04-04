@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent, CardHeader } from "@findeg/ui";
+import { Skeleton } from "@findeg/ui";
 
 export default function AdminDashboardLoading() {
   return (

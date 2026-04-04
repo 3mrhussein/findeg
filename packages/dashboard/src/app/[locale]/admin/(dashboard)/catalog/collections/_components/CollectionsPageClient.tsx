@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { Collection } from "@/features/catalog/domain/entities/Collection";
 import { CollectionGrid } from "./CollectionGrid";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@findeg/ui";
+import { Input } from "@findeg/ui";
 import { Plus, Search, Trash, AlertTriangle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
@@ -16,7 +16,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@findeg/ui";
 import { adminDeleteCollectionAction } from "@/features/administration/application/actions/admin-collection-actions";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";

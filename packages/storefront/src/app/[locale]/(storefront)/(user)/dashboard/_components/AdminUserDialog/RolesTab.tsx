@@ -1,7 +1,7 @@
 "use client";
 
-import { Checkbox } from "@/components/ui/checkbox";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Checkbox } from "@findeg/ui";
+import { ScrollArea } from "@findeg/ui";
 import type { Role } from "./AdminUserDialog.interface";
 
 interface RolesTabProps {

@@ -10,10 +10,10 @@ import {
   FormLabel,
   FormMessage,
   FormDescription,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+} from "@findeg/ui";
+import { Input } from "@findeg/ui";
+import { Textarea } from "@findeg/ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
 import { type ProductFormValues } from "@/features/administration/presentation/forms/product-form";
 import { Globe, Search } from "lucide-react";
 

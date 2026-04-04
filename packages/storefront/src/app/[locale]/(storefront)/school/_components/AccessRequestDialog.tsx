@@ -10,11 +10,11 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
+} from "@findeg/ui";
+import { Button } from "@findeg/ui";
+import { Input } from "@findeg/ui";
+import { Textarea } from "@findeg/ui";
+import { Label } from "@findeg/ui";
 import { useToast } from "@/hooks/use-toast";
 
 interface AccessRequestDialogProps {

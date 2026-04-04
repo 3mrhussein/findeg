@@ -3,9 +3,9 @@
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import { Copy, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@findeg/ui";
+import { Badge } from "@findeg/ui";
+import { Checkbox } from "@findeg/ui";
 import { useToast } from "@/hooks/use-toast";
 import type { MediaAsset } from "@/features/media/domain/entities/MediaAsset";
 

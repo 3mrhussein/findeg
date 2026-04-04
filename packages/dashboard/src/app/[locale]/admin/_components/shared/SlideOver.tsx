@@ -16,7 +16,7 @@ import {
   SheetDescription,
   SheetHeader,
   SheetTitle,
-} from "@/components/ui/sheet";
+} from "@findeg/ui";
 import { cn } from "@/lib/utils";
 
 export interface SlideOverProps {

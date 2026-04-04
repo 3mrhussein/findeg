@@ -1,27 +1,22 @@
 "use client";
 
 import { ThemeProvider } from "./ThemeProvider";
-import { CartProvider } from "@/providers/CartProvider";
-import { UserProvider } from "@/providers/UserProvider";
 import { AnimationProvider } from "./animation-provider";
-import { NuqsAdapter } from "nuqs/adapters/next/app";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { TooltipProvider } from "@findeg/ui";
 
 /**
- *
+ * Base Providers wrapper (backend package)
+ * Note: CartProvider, UserProvider, and NuqsAdapter should be added in app-specific provider files
+ * in dashboard/storefront packages, not here in the shared backend package.
  */
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <NuqsAdapter>
-      <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-        <TooltipProvider>
-          <AnimationProvider>
-            <UserProvider>
-              <CartProvider>{children}</CartProvider>
-            </UserProvider>
-          </AnimationProvider>
-        </TooltipProvider>
-      </ThemeProvider>
-    </NuqsAdapter>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+      <TooltipProvider>
+        <AnimationProvider>
+          {children}
+        </AnimationProvider>
+      </TooltipProvider>
+    </ThemeProvider>
   );
 }

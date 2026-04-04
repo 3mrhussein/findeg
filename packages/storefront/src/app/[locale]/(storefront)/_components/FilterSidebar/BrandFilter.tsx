@@ -1,6 +1,6 @@
 "use client";
 
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from "@findeg/ui";
 import { cn } from "@/lib/utils";
 import type { FilterOption } from "./FilterSidebar.interface";
 

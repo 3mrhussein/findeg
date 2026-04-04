@@ -1,9 +1,9 @@
 "use client";
 
 import { useFormContext } from "react-hook-form";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@findeg/ui";
+import { Input } from "@findeg/ui";
+import { Textarea } from "@findeg/ui";
 
 /**
  *

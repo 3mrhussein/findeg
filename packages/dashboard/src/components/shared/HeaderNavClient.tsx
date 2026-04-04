@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Link } from "@/i18n/navigation";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@findeg/ui";
 import ToggleLanguage from "./ToggleLanguage";
 import ToggleTheme from "./ToggleTheme";
 import { Menu, User, LayoutDashboard } from "lucide-react";

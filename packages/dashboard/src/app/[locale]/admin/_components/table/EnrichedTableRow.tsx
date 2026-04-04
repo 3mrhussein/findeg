@@ -10,8 +10,8 @@
 "use client";
 
 import * as React from "react";
-import { TableRow, TableCell } from "@/components/ui/table";
-import { Checkbox } from "@/components/ui/checkbox";
+import { TableRow, TableCell } from "@findeg/ui";
+import { Checkbox } from "@findeg/ui";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 

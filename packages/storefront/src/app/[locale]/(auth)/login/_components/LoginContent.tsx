@@ -2,13 +2,13 @@
 
 import React from "react";
 import { useTranslations } from "next-intl";
-import { Container } from "@/components/shared/Container";
-import { Button } from "@/components/ui/button";
-import { Icon } from "@/components/shared/Icon";
+import { Container } from "@findeg/ui";
+import { Button } from "@findeg/ui";
+import { Icon } from "@findeg/ui";
 import { LoginForm } from "./LoginForm";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@findeg/ui";
 import { Link } from "@/i18n/navigation";
-import { Logo } from "@/components/shared/Logo";
+import { Logo } from "@findeg/ui";
 
 /**
  * Login view content component.

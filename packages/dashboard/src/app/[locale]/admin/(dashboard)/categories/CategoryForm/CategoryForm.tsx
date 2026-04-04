@@ -2,8 +2,8 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
+import { Button } from "@findeg/ui";
+import { Form } from "@findeg/ui";
 import { CategoryInput } from "@/features/administration/domain/types";
 import {
   createCategoryAction,

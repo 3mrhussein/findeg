@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Progress } from "@/components/ui/progress";
+import { Progress } from "@findeg/ui";
 import { useTranslations } from "next-intl";
 
 interface ListProgressBarProps {

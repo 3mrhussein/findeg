@@ -3,7 +3,7 @@ import { FilterSidebar } from "./FilterSidebar";
 import { ShopSortSelect } from "./ShopSortSelect";
 import { ShopViewSwitcher } from "./ShopViewSwitcher";
 import { ProductGridList } from "./ProductGridList";
-import { Button } from "@/components/ui/button";
+import { Button } from "@findeg/ui";
 import {
   Sheet,
   SheetContent,
@@ -11,7 +11,7 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
+} from "@findeg/ui";
 import { Filter } from "lucide-react";
 import { EmptyState } from "./EmptyState";
 import { Product } from "@/features/catalog/domain/entities/Product";

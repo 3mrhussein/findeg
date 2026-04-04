@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { format } from "date-fns";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Badge } from "@findeg/ui";
+import { Button } from "@findeg/ui";
+import { Card, CardHeader, CardTitle, CardContent } from "@findeg/ui";
 import {
   Dialog,
   DialogContent,
@@ -13,10 +13,10 @@ import {
   DialogTitle,
   DialogFooter,
   DialogDescription,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
+} from "@findeg/ui";
+import { Input } from "@findeg/ui";
+import { Label } from "@findeg/ui";
+import { Switch } from "@findeg/ui";
 import { createAdminAction, updateAdminAction } from "../_actions/adminUsers";
 import type { AdminUser } from "@/features/identity/application/interfaces/IAdminUserService";
 import type { RoleWithPermissions } from "@/features/identity/application/interfaces/IAdminRoleService";

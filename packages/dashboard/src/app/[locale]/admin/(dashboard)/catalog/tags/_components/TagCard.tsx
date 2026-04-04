@@ -2,8 +2,8 @@
 
 import { useTranslations, useLocale } from "next-intl";
 import { Tag } from "@/features/catalog/domain/entities/Tag";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@findeg/ui";
+import { Button } from "@findeg/ui";
 import { Edit, Trash2, Eye, EyeOff } from "lucide-react";
 import { getTagDisplayName } from "@/features/catalog/presentation/config/tag-display";
 import { cn } from "@/lib/utils";

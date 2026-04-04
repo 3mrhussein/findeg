@@ -11,9 +11,9 @@
 
 import * as React from "react";
 import { Plus, X, GripVertical } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+import { Input } from "@findeg/ui";
+import { Button } from "@findeg/ui";
+import { Label } from "@findeg/ui";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 

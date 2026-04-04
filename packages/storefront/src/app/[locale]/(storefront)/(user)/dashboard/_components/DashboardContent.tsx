@@ -13,9 +13,9 @@
 
 import React, { useState } from "react";
 import { useTranslations } from "next-intl";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { Icon } from "@/components/shared/Icon";
+import { SidebarInset, SidebarProvider } from "@findeg/ui";
+import { TooltipProvider } from "@findeg/ui";
+import { Icon } from "@findeg/ui";
 import { Overview } from "./Overview";
 import { Products } from "./Products";
 import { Orders } from "./Orders";

@@ -1,5 +1,5 @@
 import { Link } from "@/i18n/navigation";
-import { Button } from "@/components/ui/button";
+import { Button } from "@findeg/ui";
 import Image from "next/image";
 
 /**

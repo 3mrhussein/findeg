@@ -3,11 +3,11 @@
 import { useTranslations } from "next-intl";
 import { formatDistanceToNow } from "date-fns";
 import { Copy, Pencil, ExternalLink, Clock } from "lucide-react";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Badge } from "@/components/ui/badge";
-import { TableCell, TableRow } from "@/components/ui/table";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Checkbox } from "@findeg/ui";
+import { Badge } from "@findeg/ui";
+import { TableCell, TableRow } from "@findeg/ui";
+import { Avatar, AvatarFallback, AvatarImage } from "@findeg/ui";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@findeg/ui";
 import { cn } from "@/lib/utils";
 import type { ProductListItem } from "@/features/administration/application/interfaces";
 import Link from "next/link";

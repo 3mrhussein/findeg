@@ -1,7 +1,7 @@
 "use client";
 
 import { ShoppingCart } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@findeg/ui";
 import { useCart } from "@/hooks/useCart";
 import { Product } from "@/features/catalog/domain/entities/Product";
 import { useTranslations } from "next-intl";

@@ -2,19 +2,19 @@
 
 import React, { useState } from "react";
 import { useTranslations } from "next-intl";
-import { Button } from "@/components/ui/button";
+import { Button } from "@findeg/ui";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Icon } from "@/components/shared/Icon";
+} from "@findeg/ui";
+import { Input } from "@findeg/ui";
+import { Label } from "@findeg/ui";
+import { Checkbox } from "@findeg/ui";
+import { ScrollArea } from "@findeg/ui";
+import { Icon } from "@findeg/ui";
 import type { Permission } from "@/features/identity/application/hooks/useAdminRoles";
 
 interface CreateRoleDialogProps {

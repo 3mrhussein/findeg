@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { SheetClose } from "@/components/ui/sheet";
+import { Button } from "@findeg/ui";
+import { SheetClose } from "@findeg/ui";
 
 /**
  * Empty cart view — shown when cartItems is empty.

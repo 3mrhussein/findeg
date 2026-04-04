@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@findeg/ui";
+import { Progress } from "@findeg/ui";
 import { ArrowRight, CheckCircle2, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import { CatalogHealthStats } from "@/features/administration/domain/types";

@@ -13,17 +13,17 @@
 
 import React, { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { Button } from "@/components/ui/button";
+import { Button } from "@findeg/ui";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Icon } from "@/components/shared/Icon";
+} from "@findeg/ui";
+import { Input } from "@findeg/ui";
+import { Label } from "@findeg/ui";
+import { Icon } from "@findeg/ui";
 import { PERMISSION_CODES } from "@/features/core/domain/auth";
 import { usePermissions } from "@/providers/PermissionsProvider";
 import { useAdminRoles } from "@/features/identity/application/hooks/useAdminRoles";

@@ -10,10 +10,10 @@
 
 import React from "react";
 import { useTranslations } from "next-intl";
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
-import { Icon } from "@/components/shared/Icon";
+import { SidebarTrigger } from "@findeg/ui";
+import { Separator } from "@findeg/ui";
+import { Button } from "@findeg/ui";
+import { Icon } from "@findeg/ui";
 import type { DashboardView } from "./DashboardSidebar";
 
 interface DashboardHeaderProps {

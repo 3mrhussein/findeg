@@ -19,11 +19,11 @@
 
 import * as React from "react";
 import { useForm, FormProvider, Controller } from "react-hook-form";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@findeg/ui";
+import { Label } from "@findeg/ui";
+import { Switch } from "@findeg/ui";
+import { Button } from "@findeg/ui";
+import { Textarea } from "@findeg/ui";
 import { CollapsibleCategoryPicker } from "@/app/[locale]/admin/_components/shared/CollapsibleCategoryPicker";
 import { Save, X, Check, AlertCircle, Loader2 } from "lucide-react";
 import type { Category } from "@/features/catalog/domain/entities/Category";
