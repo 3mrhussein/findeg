@@ -1,0 +1,36 @@
+import { isLocale as isDomainLocale } from "../value-objects/Locale";
+import { EmailSchema, IdSchema } from "../types/common";
+/**
+ * Type-safe check if a value is defined (not null or undefined).
+ */
+export function isDefined(val) {
+    return val !== null && val !== undefined;
+}
+/**
+ * Type-safe check if an object has a specific property.
+ */
+export function hasProperty(obj, key) {
+    return key in obj;
+}
+/**
+ * Validates if a value is a non-empty string.
+ */
+export function isNonEmptyString(val) {
+    return typeof val === "string" && val.trim().length > 0;
+}
+/**
+ * Domain-specific guard for IDs.
+ */
+export function isId(val) {
+    return IdSchema.safeParse(val).success;
+}
+/**
+ * Domain-specific guard for emails.
+ */
+export function isEmail(val) {
+    return EmailSchema.safeParse(val).success;
+}
+/**
+ * Re-export locale guard for consistency in utils.
+ */
+export const isLocale = isDomainLocale;

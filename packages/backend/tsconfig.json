@@ -1,0 +1,30 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "dist",
+    "noEmit": false,
+    "rootDir": "src",
+    "jsx": "react-jsx",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@/features/*": ["./src/features/*"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/__tests__/**/*",
+    "src/components/**/*.tsx",
+    "src/components/**/*.jsx",
+    "src/hooks/**/*",
+    "src/providers/**/*",
+    "src/**/presentation/hooks/**/*",
+    "src/**/presentation/hoc/**/*",
+    "src/lib/internal/**/*.tsx",
+    "src/proxy.ts"
+  ]
+}
