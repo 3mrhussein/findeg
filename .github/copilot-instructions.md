@@ -1,125 +1,206 @@
-# Copilot Instructions — FindEg Stationary (Next.js 16)
+# Copilot Instructions — FindEg Monorepo
 
-You are a coding agent in a **Next.js 16 App Router** repo with a **Clean Architecture / feature-first** structure.
+## Context
 
-Primary goals when making changes:
+Monorepo using:
 
-- Keep layer boundaries intact (domain/application/infrastructure/ui)
-- Keep UI predictable via strict component placement
-- Keep type-safety + i18n standards high
-- Keep changes minimal and consistent with existing patterns
+- Turborepo
+- Next.js v16 (App Router)
+- pnpm workspaces
 
-## Essential commands (run before PR)
+Packages:
 
-- Dev server: `npm run dev`
-- Type check: `npm run type-check`
-- ESLint: `npm run lint:eslint`
-- Full lint gate (required): `npm run lint` (runs type-check + eslint)
-- Build gate: `npm run build`
-- Auto-fix lint: `npm run lint:fix`
+- @findeg/ui → shared UI
+- @findeg/backend → business logic (Clean Architecture)
+- @findeg/dashboard → admin app
+- @findeg/storefront → customer app
 
-E2E (Cypress):
+---
 
-- `npm run e2e:run`
-- `npm run e2e:run:ci`
+## Core Rules
 
-Database (Docker + Postgres):
+- Respect package boundaries
+- Keep changes minimal and consistent
+- Do not introduce new patterns if existing ones exist
+- Prefer reuse over new implementations
 
-- Start: `npm run db:start`
-- One-shot local setup: `npm run db:setup`
-- Reset (destructive): `npm run db:reset`
-- Shell: `npm run db:shell`
+---
 
-See: `README.md` and `docs/database/SETUP.md`
+## Dependency Rules
 
-## Common gotchas
+- Apps can import: `@findeg/ui`, `@findeg/backend`
+- Packages MUST NOT depend on apps
+- No circular dependencies
 
-- This repo is ESM (`"type": "module"` in `package.json`). Prefer ESM import syntax in Node scripts and avoid CommonJS-only patterns.
-- Shell globbing: paths like `src/app/[locale]/...` contain brackets/parentheses; when using shell tools (zsh), quote paths to avoid glob expansion (e.g. `rg "src/app/\[locale\]/"` or `ls "src/app/[locale]"`).
+---
 
-## Repo structure (what goes where)
+## Backend (Clean Architecture)
 
-- Routes (App Router + locale): `src/app/[locale]/...`
-- Shared primitives (shadcn/Radix): `src/components/ui/`
-- Shared cross-cutting components: `src/components/shared/`
-- Feature modules: `src/features/<feature>/{domain,application,infrastructure,presentation}/`
-- Shared kernel: `src/features/core/...`
+Structure per feature:
 
-Reference docs:
-
-- Architecture source of truth: `docs/architecture/ARCHITECTURE_PLAYBOOK.md`
-- Clean-arch conventions: `docs/development/conventions.md`
-- Coding standards: `docs/guides/CODING_STANDARDS.md`
-- Development workflow: `docs/guides/DEVELOPMENT.md`
-
-## Clean Architecture boundaries (import rules)
-
-Follow the contracts in `docs/architecture/ARCHITECTURE_PLAYBOOK.md`:
-
-- `domain`: pure types/business rules; no framework deps
-- `application`: orchestrates use cases; defines interfaces (`I*Service`, `I*Repository`)
-- `infrastructure`: implements adapters (DB/SDK/etc); keep DB details here
-- UI/routes: render + interact; **no direct DB/ORM usage**
+- domain → pure logic, no framework
+- application → use cases + interfaces
+- infrastructure → implementations (DB, APIs)
+- presentation → hooks, mappers, schemas (NO JSX)
 
 Hard rules:
 
-- Do NOT import another feature’s `infrastructure` directly. Depend only on interfaces/contracts.
-- Do NOT do “role-string checks” in UI/routes. Use permission guard interfaces (e.g. `IPermissionService`).
+- domain imports nothing
+- application imports domain only
+- infrastructure imports domain + application
+- UI MUST NOT access DB directly
+- never import another feature’s infrastructure
 
-## Component placement (STRICT — enforced)
+---
 
-React components (JSX) are only allowed in these 3 UI locations:
+## Component Placement (STRICT)
 
-1. `src/components/ui/` — primitives only
-2. `src/components/shared/` — reusable across multiple route groups/features
-3. `src/app/**/_components/` — route-colocated UI
+Allowed:
 
-`src/features/**/presentation/` is allowed for **presentation logic only** (NO JSX):
+1. `packages/ui`
+   - primitives + shared components
+   - no business logic
 
-- hooks (`useXxx.ts`)
-- mappers/adapters (`*-mapper.ts`)
-- config
-- schemas/types used by UI (e.g. zod schemas)
+2. `packages/{dashboard|storefront}/src/components`
+   - app-specific components
 
-Source of truth: `docs/development/component-placement.md`
+3. `packages/{dashboard|storefront}/src/app/**/_components`
+   - route-level components
 
-ESLint enforces:
+Forbidden:
 
-- no JSX in `src/features/**/presentation/**`
-- no imports from `features/**/presentation/components/**` or `features/**/presentation/hoc/**`
+- JSX inside backend
+- cross-app component leakage
 
-See: `eslint.config.js`
+---
 
-## i18n rules (must follow)
+## Next.js v16 Rules (STRICT)
 
-- Routes are under `src/app/[locale]/...`.
-- Do not introduce hardcoded UI strings; add translations for both English + Arabic.
-- Translations live in: `src/features/core/infrastructure/cms/messages/{locale}.json`
-- Use scoped namespaces: `Pages.{PageName}` (see `docs/guides/CODING_STANDARDS.md`).
-- Ensure RTL support: prefer logical Tailwind classes (e.g. `ps-*` vs `pl-*`).
+### Rendering & Data Fetching
 
-## UI standards
+- Use Server Components by default
+- Fetch data using async/await in server components
+- Do not fetch on client if it can be done on server
 
-From `docs/guides/CODING_STANDARDS.md`:
+---
 
-- Prefer **Server Components by default**; use `'use client'` only for interactivity (forms/state).
-- Use semantic Tailwind tokens (defined in `src/app/globals.css`) rather than hardcoding colors in new code.
-- For listing pages, follow existing layout patterns (e.g. `PageShell`, listing layout components).
-- Keep mapping/transformation logic out of UI when a presentation mapper exists.
+### Caching (MANDATORY)
 
-## DB / schema change workflow (when applicable)
+- Use "use cache" for cacheable data
+- Use noStore() for dynamic data
+- Avoid implicit caching
 
-Follow `docs/guides/DEVELOPMENT.md` + `docs/architecture/ARCHITECTURE_PLAYBOOK.md`:
+Example:
 
-1. Update schema in `src/features/core/infrastructure/persistence/schema/`
-2. Add migration SQL in `scripts/migrations/`
-3. Validate locally (`npm run db:setup`, then CRUD path)
-4. Update planning docs as needed (`project-planning/*`)
+"use cache";
 
-## Definition of done (minimum)
+export async function getProducts() {
+return db.query.products.findMany();
+}
 
-- `npm run type-check` passes
-- `npm run lint` passes
-- New strings added to both locales
-- Architecture boundaries respected
-- Docs updated when behavior/architecture changes
+Rules:
+
+- Do not duplicate fetch logic
+- Do not call the same query in multiple places
+- Extract shared fetch logic into backend
+
+---
+
+### Server Actions
+
+- Prefer Server Actions over API routes
+- Keep actions close to usage
+- Avoid unnecessary client-server calls
+
+---
+
+### Forbidden (Anti-patterns)
+
+- pages router
+- getServerSideProps
+- getStaticProps
+- API routes for simple mutations
+- unnecessary useEffect for data fetching
+
+---
+
+### Client Components
+
+- Use "use client" only when required
+- Keep client components minimal
+- Never move server logic to client
+
+---
+
+## DRY (STRICT)
+
+- Never duplicate:
+  - database queries
+  - types
+  - schemas
+  - transformations
+
+- Always check before writing new code:
+  1. Does it exist in @findeg/backend?
+  2. Can it be shared?
+  3. Is it already implemented elsewhere?
+
+If yes → reuse
+
+---
+
+## Clean Code
+
+- Small, focused functions
+- Clear naming (no abbreviations)
+- Prefer early returns
+- Avoid deep nesting
+- Remove dead code
+
+---
+
+## Data & State
+
+- Prefer server state over client state
+- Keep client state minimal
+- Avoid global state unless necessary
+
+---
+
+## i18n
+
+- No hardcoded UI strings
+- Always add translations (en + ar)
+- Use scoped namespaces
+
+---
+
+## Commands
+
+- dev: `npm run dev`
+- build: `npm run build`
+- lint: `npm run lint`
+- type-check: `npm run type-check`
+
+Package-specific:
+
+- `pnpm --filter <package> <script>`
+
+---
+
+## Definition of Done
+
+- type-check passes
+- lint passes
+- build succeeds
+- no duplicated logic
+- architecture rules respected
+- translations updated
+
+---
+
+## When Unsure
+
+- follow existing patterns
+- prefer simpler solution
+- do not invent new architecture

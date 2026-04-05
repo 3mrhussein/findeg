@@ -7,8 +7,14 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies
 node_modules
-dist
+backend/node_modules
+dashboard/node_modules
+storefront/node_modules
+
+# Build outputs
+/dist
 dist-ssr
 *.local
 **/.next/*
@@ -28,5 +34,16 @@ cypress/reports
 *.njsproj
 *.sln
 *.sw?
+
+# Turborepo cache
+.turbo/
+**/.turbo
+
+# TypeScript
+**/*.tsbuildinfo
+
+
+# Deprecated / old structures
 fullstack-commerce
 /internal
+packages/
