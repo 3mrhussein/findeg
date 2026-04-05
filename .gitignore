@@ -11,13 +11,14 @@ node_modules
 dist
 dist-ssr
 *.local
-.next/*
+**/.next/*
 cypress/screenshots
 cypress/videos
 cypress/downloads
 cypress/reports
-
+.turbo
 # Editor directories and files
+**/tsconfig.tsbuildinfo
 .vscode/*
 !.vscode/extensions.json
 .idea
