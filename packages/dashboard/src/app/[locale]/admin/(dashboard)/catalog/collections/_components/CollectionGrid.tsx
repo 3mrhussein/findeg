@@ -18,7 +18,12 @@ import {
 } from "@dnd-kit/sortable";
 import { Collection } from "@/features/catalog/domain/entities/Collection";
 import { CollectionCard } from "./CollectionCard";
-import { adminReorderCollectionsAction } from "@/features/administration/application/actions/admin-collection-actions";
+import {
+  createCollectionAction as adminCreateCollectionAction,
+  updateCollectionAction as adminUpdateCollectionAction,
+  reorderCollectionsAction as adminReorderCollectionsAction,
+} from "@/actions/admin-actions";
+
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 

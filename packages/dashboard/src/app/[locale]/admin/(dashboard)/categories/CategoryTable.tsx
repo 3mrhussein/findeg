@@ -8,14 +8,7 @@ import {
   ColumnFiltersState,
   getFilteredRowModel,
 } from "@tanstack/react-table";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@findeg/ui";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@findeg/ui";
 import { Button } from "@findeg/ui";
 import { IconTooltip } from "@findeg/ui";
 import { Input } from "@findeg/ui";
@@ -24,7 +17,8 @@ import { Category } from "@/features/catalog/domain/entities/Category";
 import { Pencil, Trash2 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@findeg/ui";
 import Link from "next/link";
-import { deleteCategoryAction } from "@/features/catalog/application/actions/category";
+import { deleteCategoryAction } from "@/actions/admin-actions";
+
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 

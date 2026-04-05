@@ -6,7 +6,8 @@ import {
   updateBrandAction,
   deleteBrandAction,
   toggleBrandStatusAction,
-} from "@/features/catalog/application/actions/brand";
+} from "@/actions/admin-actions";
+
 import { BrandInput } from "@/features/administration/domain/types";
 
 /**

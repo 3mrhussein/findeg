@@ -29,9 +29,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@find
 import { Badge } from "@findeg/ui";
 import { ChevronLeft, Save, Loader2, Image as ImageIcon, Tag as TagIcon } from "lucide-react";
 import {
-  adminCreateCollectionAction,
-  adminUpdateCollectionAction,
-} from "@/features/administration/application/actions/admin-collection-actions";
+  createCollectionAction as adminCreateCollectionAction,
+  updateCollectionAction as adminUpdateCollectionAction,
+} from "@/actions/admin-actions";
+
 import { Checkbox } from "@findeg/ui";
 
 interface CollectionFormProps {

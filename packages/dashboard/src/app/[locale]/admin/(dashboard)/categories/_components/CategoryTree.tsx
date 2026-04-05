@@ -38,12 +38,11 @@ import { CategoryRow } from "./CategoryRow";
 import { CategoryFormPanel } from "./CategoryFormPanel";
 import { CategoryDrawer } from "./CategoryDrawer";
 import { EmptyState } from "@findeg/ui";
+import { checkCategorySlugAvailableAction as checkSlugAvailableAction } from "@/actions/admin-actions";
 import type { Category } from "@/features/catalog/domain/entities/Category";
 import { useTranslations } from "next-intl";
-import {
-  moveCategoryUpAction,
-  moveCategoryDownAction,
-} from "@/features/catalog/application/actions/category";
+import { moveCategoryUpAction, moveCategoryDownAction } from "@/actions/admin-actions";
+
 import { ConfirmDialog } from "@/app/[locale]/admin/_components/shared/ConfirmDialog";
 import {
   Dialog,

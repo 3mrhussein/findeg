@@ -252,7 +252,7 @@ export class DrizzleProductRepository implements IProductRepository {
         productId: v.productId,
         sku: v.sku,
         variantKey: v.variantKey,
-        localizedLabel: (v.localizedLabel as any) || { en: "", ar: "" },
+        localizedLabel: (v.localizedLabel as { en: string; ar: string }) || { en: "", ar: "" },
         displayOrder: v.displayOrder,
         isActive: v.isActive,
         basePrice: Number(v.basePrice),
@@ -279,7 +279,7 @@ export class DrizzleProductRepository implements IProductRepository {
           uomCode: u.uomCode as UomCode,
           factorToBase: Number(u.factorToBase),
           isEnabled: u.isEnabled,
-          localizedLabel: (u.localizedLabel as any) || undefined,
+          localizedLabel: (u.localizedLabel as { en: string; ar: string }) || undefined,
           barcode: u.barcode || undefined,
         })),
         priceLists: vPrices.map((p) => ({
@@ -341,7 +341,7 @@ export class DrizzleProductRepository implements IProductRepository {
         .limit(1);
 
       categoryName = categoryResult[0]?.localizedName
-        ? resolveLocalizedString(categoryResult[0].localizedName as any, language, DEFAULT_LOCALE)
+        ? resolveLocalizedString(categoryResult[0].localizedName as { en: string; ar: string }, language, DEFAULT_LOCALE)
         : undefined;
     }
 
@@ -467,7 +467,7 @@ export class DrizzleProductRepository implements IProductRepository {
       .limit(1);
 
     const categoryName = categoryResult[0]?.localizedName
-      ? resolveLocalizedString(categoryResult[0].localizedName as any, language, DEFAULT_LOCALE)
+      ? resolveLocalizedString(categoryResult[0].localizedName as { en: string; ar: string }, language, DEFAULT_LOCALE)
       : undefined;
 
     const productIds = results.map((r) => r.product.id);
@@ -858,7 +858,7 @@ export class DrizzleProductRepository implements IProductRepository {
                 variantId: newVariant.id,
                 productId: newProduct.id,
                 variantKey: v.variantKey,
-                uomCode: u.uomCode as any,
+                uomCode: u.uomCode as "pcs" | "pack" | "carton",
                 factorToBase: String(u.factorToBase),
                 isEnabled: u.isEnabled,
                 localizedLabel: u.localizedLabel || {},
@@ -873,8 +873,8 @@ export class DrizzleProductRepository implements IProductRepository {
                 variantId: newVariant.id,
                 productId: newProduct.id,
                 variantKey: v.variantKey,
-                customerGroup: p.customerGroup as any,
-                uomCode: p.uomCode as any,
+                customerGroup: p.customerGroup as unknown as "public_b2c" | "school_b2b" | "wholesale",
+                uomCode: p.uomCode as "pcs" | "pack" | "carton",
                 unitPrice: String(p.unitPrice),
                 currency: p.currency || DEFAULT_CURRENCY,
                 isSellable: p.isSellable,
@@ -1028,7 +1028,7 @@ export class DrizzleProductRepository implements IProductRepository {
                   variantId,
                   productId: id,
                   variantKey: v.variantKey,
-                  uomCode: u.uomCode as any,
+                  uomCode: u.uomCode as "pcs" | "pack" | "carton",
                   factorToBase: String(u.factorToBase),
                   isEnabled: u.isEnabled,
                   localizedLabel: u.localizedLabel || {},
@@ -1046,8 +1046,8 @@ export class DrizzleProductRepository implements IProductRepository {
                   variantId,
                   productId: id,
                   variantKey: v.variantKey,
-                  customerGroup: p.customerGroup as any,
-                  uomCode: p.uomCode as any,
+                  customerGroup: p.customerGroup as unknown as "public_b2c" | "school_b2b" | "wholesale",
+                  uomCode: p.uomCode as "pcs" | "pack" | "carton",
                   unitPrice: String(p.unitPrice),
                   currency: p.currency || DEFAULT_CURRENCY,
                   isSellable: p.isSellable,

@@ -8,6 +8,7 @@
 **Input**: Refactor @findeg/backend package to remove all Next.js framework dependencies and ensure pure TypeScript business logic. Currently, 21 Next.js imports exist across backend files, violating Constitution Principle VIII which mandates backend packages must be framework-agnostic.
 
 **Backend Package Completion Summary**:
+
 - ✅ All 21 Next.js framework dependencies eliminated from backend
 - ✅ 188/188 backend unit tests passing in pure Node.js (13.15 seconds)
 - ✅ Zero framework dependencies in backend package.json
@@ -178,10 +179,10 @@ Developers systematically migrate the 21 identified Next.js imports to the new a
 - **SC-005**: Backend services can be imported and tested in isolation with zero framework setup code (demonstrated by sample test requiring <5 lines of setup) — _Example provided in quickstart.md or below:_
   ```typescript
   // Pure Node.js test - zero Next.js dependencies
-  import { login } from '@findeg/backend/features/identity';
-  const result = await login({ email: 'test@example.com', password: 'pass123' });
+  import { login } from "@findeg/backend/features/identity";
+  const result = await login({ email: "test@example.com", password: "pass123" });
   expect(result.success).toBe(true);
-  expect(result.data?.user.email).toBe('test@example.com');
+  expect(result.data?.user.email).toBe("test@example.com");
   ```
 - **SC-006**: App-layer cache invalidation logic is DRY - no duplicated `revalidatePath` calls between dashboard and storefront for the same operations (verified by code review)
 
@@ -208,6 +209,7 @@ Developers systematically migrate the 21 identified Next.js imports to the new a
 The following flows MUST pass 100% E2E tests before the feature can be considered fully production-ready:
 
 #### 1. Authentication Flow (Identity Feature)
+
 - **Scenario**: User login → Dashboard access → User logout
 - **Entry Point**: `/login` page
 - **Success Criteria**: User authenticates with valid credentials, accesses protected dashboard route, session persists, logout clears session
@@ -215,6 +217,7 @@ The following flows MUST pass 100% E2E tests before the feature can be considere
 - **Backend Services**: `AuthService.login()`, `AuthService.logout()`, session management
 
 #### 2. Order Creation Flow (Order Feature)
+
 - **Scenario**: Add item to cart → Checkout → Payment → Order confirmation
 - **Entry Point**: Storefront product page
 - **Success Criteria**: Item added to cart, cart persists, checkout succeeds, order created in database, confirmation displayed
@@ -222,6 +225,7 @@ The following flows MUST pass 100% E2E tests before the feature can be considere
 - **Backend Services**: Cart management, order creation, payment integration
 
 #### 3. Product Management Flow (Administration Feature)
+
 - **Scenario**: Admin creates product → Updates product → Deletes product
 - **Entry Point**: `/admin/products` page
 - **Success Criteria**: Product created with all fields, update persists, deletion removes from database, cache invalidates correctly
@@ -229,6 +233,7 @@ The following flows MUST pass 100% E2E tests before the feature can be considere
 - **Backend Services**: Product CRUD actions, cache invalidation
 
 #### 4. Product Browse Flow (Catalog Feature)
+
 - **Scenario**: Shop page load → Category filter → Product detail view
 - **Entry Point**: `/shop` page
 - **Success Criteria**: Products load efficiently, filters apply correctly, detail page displays accurate data, cache hit rate optimal
@@ -236,6 +241,7 @@ The following flows MUST pass 100% E2E tests before the feature can be considere
 - **Backend Services**: Product queries, category queries, cache configuration
 
 #### 5. Profile Update Flow (Identity Feature)
+
 - **Scenario**: User updates profile information → Verifies changes persist
 - **Entry Point**: `/account` page
 - **Success Criteria**: Profile updates save to database, changes reflected immediately, cache invalidation works, session updates
@@ -243,6 +249,7 @@ The following flows MUST pass 100% E2E tests before the feature can be considere
 - **Backend Services**: Profile update actions, cache invalidation
 
 #### 6. Error Handling Flow (Core Feature)
+
 - **Scenario**: Invalid credentials → Domain error thrown → Redirect to login
 - **Entry Point**: Any authenticated route
 - **Success Criteria**: Domain errors propagate correctly, app-layer translates to redirects, user sees appropriate error messages

@@ -156,7 +156,7 @@ export class DrizzleReviewRepository implements IReviewRepository {
       })
       .from(reviews)
       .leftJoin(users, eq(users.id, reviews.userId))
-      .where(eq(reviews.productId, productId as any))
+      .where(eq(reviews.productId, productId as unknown as number))
       .orderBy(desc(reviews.createdAt));
 
     return results.map((row) => this.mapToDomain(row.review, row.user));
@@ -173,7 +173,7 @@ export class DrizzleReviewRepository implements IReviewRepository {
     const limit = Math.min(Math.max(filters.limit || 10, 1), 50);
     const offset = (page - 1) * limit;
 
-    const conditions = [eq(reviews.productId, productId as any)];
+    const conditions = [eq(reviews.productId, productId as unknown as number)];
     if (filters.verifiedOnly) {
       conditions.push(eq(reviews.isVerifiedPurchase, true));
     }
@@ -221,7 +221,7 @@ export class DrizzleReviewRepository implements IReviewRepository {
         isVerifiedPurchase: reviews.isVerifiedPurchase,
       })
       .from(reviews)
-      .where(eq(reviews.productId, productId as any));
+      .where(eq(reviews.productId, productId as unknown as number));
 
     const histogram: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
     let ratingTotal = 0;
@@ -262,7 +262,7 @@ export class DrizzleReviewRepository implements IReviewRepository {
       })
       .from(reviews)
       .leftJoin(users, eq(users.id, reviews.userId))
-      .where(eq(reviews.id, reviewId as any))
+      .where(eq(reviews.id, reviewId as unknown as number))
       .limit(1);
 
     if (rows.length === 0) return null;
@@ -284,7 +284,7 @@ export class DrizzleReviewRepository implements IReviewRepository {
       })
       .from(reviews)
       .leftJoin(users, eq(users.id, reviews.userId))
-      .where(eq(reviews.userId, userId as any))
+      .where(eq(reviews.userId, userId as unknown as number))
       .orderBy(desc(reviews.createdAt));
 
     return results.map((row) => this.mapToDomain(row.review, row.user));
@@ -297,7 +297,7 @@ export class DrizzleReviewRepository implements IReviewRepository {
     const rows = await db
       .select({ id: reviews.id })
       .from(reviews)
-      .where(and(eq(reviews.productId, productId as any), eq(reviews.userId, userId as any)))
+      .where(and(eq(reviews.productId, productId as unknown as number), eq(reviews.userId, userId as unknown as number)))
       .limit(1);
 
     return rows.length > 0;
@@ -317,7 +317,7 @@ export class DrizzleReviewRepository implements IReviewRepository {
       const inserted = await tx
         .insert(reviewHelpfulVotes)
         .values({
-          reviewId: reviewId as any,
+          reviewId: reviewId as unknown as number,
           voterKey,
         })
         .onConflictDoNothing()
@@ -327,7 +327,7 @@ export class DrizzleReviewRepository implements IReviewRepository {
         const [updated] = await tx
           .update(reviews)
           .set({ helpfulCount: sql`${reviews.helpfulCount} + 1` })
-          .where(eq(reviews.id, reviewId as any))
+          .where(eq(reviews.id, reviewId as unknown as number))
           .returning({ helpfulCount: reviews.helpfulCount });
 
         return updated?.helpfulCount || 0;
@@ -336,7 +336,7 @@ export class DrizzleReviewRepository implements IReviewRepository {
       const [existing] = await tx
         .select({ helpfulCount: reviews.helpfulCount })
         .from(reviews)
-        .where(eq(reviews.id, reviewId as any))
+        .where(eq(reviews.id, reviewId as unknown as number))
         .limit(1);
 
       return existing?.helpfulCount || 0;
@@ -355,7 +355,7 @@ export class DrizzleReviewRepository implements IReviewRepository {
         reviewsCount: sql<number>`cast(COUNT(*) as integer)`,
       })
       .from(reviews)
-      .where(eq(reviews.productId, productId as any));
+      .where(eq(reviews.productId, productId as unknown as number));
 
     const nextRating = Number((aggregate?.rating || 0).toFixed(2));
     const nextReviewsCount = aggregate?.reviewsCount || 0;
@@ -366,7 +366,7 @@ export class DrizzleReviewRepository implements IReviewRepository {
         rating: String(nextRating),
         reviewsCount: nextReviewsCount,
       })
-      .where(eq(products.id, productId as any));
+      .where(eq(products.id, productId as unknown as number));
 
     return {
       rating: nextRating,

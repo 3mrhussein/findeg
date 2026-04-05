@@ -6,7 +6,11 @@ import { Input } from "@findeg/ui";
 import { Label } from "@findeg/ui";
 import { cn } from "@/lib/utils";
 import { CheckCircle2, XCircle, Loader2 } from "lucide-react";
-import { checkSkuAction } from "@/features/administration/application/actions/admin-product-actions";
+import {
+  deleteProductAction,
+  setProductStatusAction,
+  checkSkuAvailableAction,
+} from "@/actions/admin-actions";
 
 interface SkuInputProps {
   name: string;
@@ -61,7 +65,7 @@ export function SkuInput({
 
     setStatus("checking");
     const timer = setTimeout(async () => {
-      const result = await checkSkuAction(value, excludeVariantId);
+      const result = await checkSkuAvailableAction(value, excludeVariantId);
       if (result.success) {
         setStatus(result.available ? "available" : "taken");
       } else {

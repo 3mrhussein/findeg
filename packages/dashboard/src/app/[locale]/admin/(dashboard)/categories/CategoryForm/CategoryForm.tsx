@@ -4,11 +4,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@findeg/ui";
 import { Form } from "@findeg/ui";
+import { deleteCategoryAction } from "@/actions/admin-actions";
+import { createCategoryAction, updateCategoryAction } from "@/actions/admin-actions";
 import { CategoryInput } from "@/features/administration/domain/types";
-import {
-  createCategoryAction,
-  updateCategoryAction,
-} from "@/features/catalog/application/actions/category";
+
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";

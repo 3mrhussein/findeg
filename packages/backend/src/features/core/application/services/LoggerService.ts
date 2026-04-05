@@ -82,7 +82,7 @@ export class LoggerService implements ILoggerService {
         duration: metadata.duration,
         level: "info",
         message: `HTTP ${metadata.method} ${metadata.path}`,
-        metadata: metadata as any,
+        metadata: metadata as Record<string, unknown>,
         userAgent: metadata.userAgent,
         ipAddress: metadata.ipAddress,
         sessionId: metadata.sessionId,

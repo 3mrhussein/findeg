@@ -17,6 +17,7 @@ import {
 } from "@/features/core/infrastructure/persistence/schema";
 import { IOrderRepository, OrderFilters } from "../../application/interfaces/IOrderRepository";
 import { Order, OrderItem } from "../../domain/entities/Order";
+import { ShippingAddress } from "../../domain/value-objects";
 import { OrderStatusUpdate } from "@/features/administration/domain/types";
 import { eq, count as sqlCount, sql, desc, and, gte, lte, ilike, or, inArray } from "drizzle-orm";
 
@@ -48,7 +49,7 @@ export class DrizzleOrderRepository implements IOrderRepository {
       totalAmount: Number(dbOrder.totalAmount) as Price,
       currency: dbOrder.currency,
       paymentMethod: dbOrder.paymentMethod || undefined,
-      shippingAddressSnapshot: (dbOrder.shippingAddressSnapshot as any) || undefined,
+      shippingAddressSnapshot: (dbOrder.shippingAddressSnapshot as ShippingAddress) || undefined,
       trackingNumber: dbOrder.trackingNumber || undefined,
       adminNotes: dbOrder.adminNotes || undefined,
       createdAt: dbOrder.createdAt,
@@ -59,16 +60,16 @@ export class DrizzleOrderRepository implements IOrderRepository {
         id: item.id,
         orderId: item.orderId,
         productId: item.productId!,
-        variantId: (item as any).variantId || undefined,
+        variantId: ((item as Record<string, unknown>).variantId as number) || undefined,
         quantity: item.quantity as Quantity,
-        uomCode: (item as any).uomCode || undefined,
+        uomCode: ((item as Record<string, unknown>).uomCode as string) || undefined,
         unitPriceSnapshot: item.unitPriceSnapshot
           ? (Number(item.unitPriceSnapshot) as Price)
           : undefined,
         totalPrice: item.totalPrice ? (Number(item.totalPrice) as Price) : undefined,
         productNameSnapshot: item.productNameSnapshot || undefined,
         productSkuSnapshot: item.productSkuSnapshot || undefined,
-        variantSnapshot: (item.variantSnapshot as any) || undefined,
+        variantSnapshot: (item.variantSnapshot as Record<string, unknown>) || undefined,
       })),
     };
   }
@@ -84,7 +85,7 @@ export class DrizzleOrderRepository implements IOrderRepository {
       })
       .from(orders)
       .leftJoin(users, eq(orders.userId, users.id))
-      .where(eq(orders.id, id as any))
+      .where(eq(orders.id, Number(id)))
       .limit(1);
 
     if (orderResult.length === 0) return null;
@@ -92,21 +93,21 @@ export class DrizzleOrderRepository implements IOrderRepository {
     const itemsResult = await db
       .select()
       .from(orderItems)
-      .where(eq(orderItems.orderId, id as any));
+      .where(eq(orderItems.orderId, Number(id)));
 
     // Fallback name if no user
-    const customerName = orderResult[0].user
+    const customerName = (orderResult[0].user
       ? [orderResult[0].user.firstName, orderResult[0].user.lastName]
-          .filter(Boolean)
-          .join(" ")
-          .trim()
-      : (orderResult[0].order.shippingAddressSnapshot as any)?.fullName || "Guest";
+        .filter(Boolean)
+        .join(" ")
+        .trim()
+      : (orderResult[0].order.shippingAddressSnapshot as ShippingAddress)?.fullName) as string || "Guest";
 
     return this.mapToDomain(
       orderResult[0].order,
       itemsResult,
-      customerName || "Unknown",
-      orderResult[0].user?.email,
+      customerName,
+      orderResult[0].user?.email || undefined,
     );
   }
 
@@ -148,8 +149,8 @@ export class DrizzleOrderRepository implements IOrderRepository {
       .innerJoin(orders, eq(orderItems.orderId, orders.id))
       .where(
         and(
-          eq(orders.userId, userId as any),
-          eq(orderItems.productId, productId as any),
+          eq(orders.userId, Number(userId)),
+          eq(orderItems.productId, Number(productId)),
           inArray(orders.status, purchasableStatuses),
         ),
       )
@@ -215,13 +216,13 @@ export class DrizzleOrderRepository implements IOrderRepository {
           const items = await db
             .select()
             .from(orderItems)
-            .where(eq(orderItems.orderId, row.order.id as any));
+            .where(eq(orderItems.orderId, Number(row.order.id)));
 
-          const name = row.user
+          const name = (row.user
             ? [row.user.firstName, row.user.lastName].filter(Boolean).join(" ").trim()
-            : (row.order.shippingAddressSnapshot as any)?.fullName || "Guest";
+            : (row.order.shippingAddressSnapshot as ShippingAddress)?.fullName) as string || "Guest";
 
-          return this.mapToDomain(row.order, items, name || "Guest", row.user?.email);
+          return this.mapToDomain(row.order, items, name, row.user?.email || undefined);
         }),
       ),
       total: totalResult[0]?.count || 0,
@@ -286,14 +287,14 @@ export class DrizzleOrderRepository implements IOrderRepository {
     await db
       .update(orders)
       .set({ status, updatedAt: new Date() })
-      .where(eq(orders.id, id as any));
+      .where(eq(orders.id, Number(id)));
   }
 
   /**
    *
    */
   async updateStatusWithTracking(id: ID | string, update: OrderStatusUpdate): Promise<void> {
-    const data: any = {
+    const data: Partial<typeof orders.$inferInsert> = {
       status: update.status,
       updatedAt: new Date(),
     };
@@ -304,7 +305,7 @@ export class DrizzleOrderRepository implements IOrderRepository {
     await db
       .update(orders)
       .set(data)
-      .where(eq(orders.id, id as any));
+      .where(eq(orders.id, Number(id)));
   }
 
   /**
@@ -317,7 +318,7 @@ export class DrizzleOrderRepository implements IOrderRepository {
     await db
       .update(orders)
       .set({ paymentStatus: status, updatedAt: new Date() })
-      .where(eq(orders.id, id as any));
+      .where(eq(orders.id, Number(id)));
   }
 
   /**

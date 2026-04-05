@@ -12,10 +12,15 @@
       "@/lib/*": ["./src/lib/*"],
       "@/providers/*": ["./src/providers/*"],
       "@/server/*": ["./src/server/*"],
-      "@/features/*": ["../backend/src/features/*"],
-      "@/app/*": ["./src/app/*"]
+      "@/features/*": ["./src/features/*", "../backend/src/features/*"],
+      "@/app/*": ["./src/app/*"],
+      "@findeg/backend": ["../backend/src"],
+      "@findeg/backend/*": ["../backend/src/*"],
+      "@findeg/ui": ["../ui/src"],
+      "@findeg/ui/*": ["../ui/src/*"]
     }
   },
+  "references": [{ "path": "../backend" }, { "path": "../ui" }],
   "include": [
     "next-env.d.ts",
     "src/**/*.ts",

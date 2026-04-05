@@ -213,8 +213,9 @@ export const tools: WebMCPTool[] = [
 let toolsRegistered = false;
 
 export function registerAllTools() {
-  const nav = navigator as any;
-  if (!nav.modelContext || !nav.modelContext.registerTool) {
+  const nav = navigator as unknown as { modelContext?: { registerTool?: Function } };
+  const ctx = nav.modelContext;
+  if (!ctx || !ctx.registerTool) {
     console.warn("WebMCP is not supported in this browser.");
     return false;
   }
@@ -226,7 +227,7 @@ export function registerAllTools() {
 
   try {
     tools.forEach((tool) => {
-      nav.modelContext.registerTool({
+      ctx.registerTool!({
         name: tool.name,
         description: tool.description,
         inputSchema: tool.inputSchema,

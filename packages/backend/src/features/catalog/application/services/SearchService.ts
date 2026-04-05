@@ -14,7 +14,7 @@ import { type Locale } from "@/features/core/domain/value-objects";
 import { type ID } from "@/features/core/domain/types/common";
 
 export class SearchService implements ISearchService {
-  constructor(private readonly productRepository: IProductRepository) {}
+  constructor(private readonly productRepository: IProductRepository) { }
 
   public parseQuery(query: string): ParsedQuery {
     const arabicRegex = /[\u0600-\u06FF]+/g;
@@ -159,7 +159,7 @@ export class SearchService implements ISearchService {
         { ...params, search: undefined, sort: sort === "relevance" ? undefined : sort }, // Clear generic search as we handle text matching here
         locale,
       );
-      this.logSearch(query, locale, result.total, undefined, undefined).catch(() => {});
+      this.logSearch(query, locale, result.total, undefined, undefined).catch(() => { });
       return {
         items: result.products,
         total: result.total,
@@ -206,7 +206,7 @@ export class SearchService implements ISearchService {
 
     if (allScoredResults.length === 0) {
       // Log no results
-      this.logSearch(query, locale, 0, undefined, undefined).catch(() => {});
+      this.logSearch(query, locale, 0, undefined, undefined).catch(() => { });
       return { items: [], total: 0 };
     }
 
@@ -248,7 +248,7 @@ export class SearchService implements ISearchService {
       // To implement sort options, I need to modify getFiltered, but for now we follow what's there and focus on relevance handling.
     }
 
-    this.logSearch(query, locale, total, undefined, undefined).catch(() => {});
+    this.logSearch(query, locale, total, undefined, undefined).catch(() => { });
 
     return {
       items: finalItems,
@@ -293,17 +293,17 @@ export class SearchService implements ISearchService {
       db.execute(catQuery),
     ]);
 
-    const products: Suggestion[] = (prodResults as unknown as any[]).map((r) => ({
-      id: r.id,
-      name: r.name,
+    const products: Suggestion[] = (prodResults as unknown as Record<string, unknown>[]).map((r) => ({
+      id: Number(r.id),
+      name: String(r.name),
       type: "product",
-      imageUrl: r.image_url || undefined,
+      imageUrl: r.image_url ? String(r.image_url) : undefined,
     }));
 
-    const categories: Suggestion[] = (catResults as unknown as any[]).map((r) => ({
-      id: r.id,
-      name: r.name,
-      slug: r.slug,
+    const categories: Suggestion[] = (catResults as unknown as Record<string, unknown>[]).map((r) => ({
+      id: Number(r.id),
+      name: String(r.name),
+      slug: String(r.slug),
       type: "category",
     }));
 

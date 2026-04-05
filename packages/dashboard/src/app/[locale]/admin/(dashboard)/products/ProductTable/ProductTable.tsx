@@ -7,17 +7,10 @@ import {
   getSortedRowModel,
   type SortingState,
 } from "@tanstack/react-table";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@findeg/ui";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@findeg/ui";
 import { useState, useTransition } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { deleteProductAction } from "@/features/catalog/application/actions/product";
+import { deleteProductAction, setProductStatusAction } from "@/actions/admin-actions";
 import { useToast } from "@/hooks/use-toast";
 import type { ProductTableProps, UpdateQueryParams } from "./ProductTable.interface";
 import { buildProductColumns } from "./ProductTableColumns";

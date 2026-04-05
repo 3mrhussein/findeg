@@ -44,7 +44,7 @@ export class DrizzleBrandRepository implements IBrandRepository {
       locale: undefined,
       localizedContent,
       logoUrl: dbBrand.logoUrl,
-      productCount: (dbBrand as any).productCount, // If fetched via JOIN
+      productCount: (dbBrand as Record<string, unknown>).productCount as number | undefined, // If fetched via JOIN
       isActive: dbBrand.isActive,
       createdAt: dbBrand.createdAt,
       updatedAt: dbBrand.updatedAt,
@@ -75,7 +75,7 @@ export class DrizzleBrandRepository implements IBrandRepository {
       .orderBy(desc(brands.createdAt));
 
     return dbBrands.map(({ brand, productCount }) =>
-      this.mapToDomain({ ...brand, productCount } as any),
+      this.mapToDomain({ ...brand, productCount } as unknown as DbBrand),
     );
   }
 

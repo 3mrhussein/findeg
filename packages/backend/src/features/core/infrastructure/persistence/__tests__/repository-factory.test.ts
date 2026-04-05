@@ -9,8 +9,8 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 // Mock the repository implementations before importing factory
 vi.mock("@/features/identity/infrastructure/persistence/DrizzleUserRepository", () => ({
   DrizzleUserRepository: vi.fn().mockImplementation(() => ({
-    findById: vi.fn(),
-    findByEmail: vi.fn(),
+    getById: vi.fn(),
+    getByEmail: vi.fn(),
     findMany: vi.fn(),
     create: vi.fn(),
     update: vi.fn(),
@@ -22,8 +22,8 @@ vi.mock("@/features/identity/infrastructure/persistence/DrizzleUserRepository", 
 
 vi.mock("@/features/catalog/infrastructure/persistence/DrizzleProductRepository", () => ({
   DrizzleProductRepository: vi.fn().mockImplementation(() => ({
-    findById: vi.fn(),
-    findBySlug: vi.fn(),
+    getById: vi.fn(),
+    getBySlug: vi.fn(),
     findMany: vi.fn(),
     create: vi.fn(),
     update: vi.fn(),
@@ -34,8 +34,8 @@ vi.mock("@/features/catalog/infrastructure/persistence/DrizzleProductRepository"
 
 vi.mock("@/features/catalog/infrastructure/persistence/DrizzleCategoryRepository", () => ({
   DrizzleCategoryRepository: vi.fn().mockImplementation(() => ({
-    findById: vi.fn(),
-    findBySlug: vi.fn(),
+    getById: vi.fn(),
+    getBySlug: vi.fn(),
     findMany: vi.fn(),
     getAll: vi.fn(),
     create: vi.fn(),
@@ -46,7 +46,7 @@ vi.mock("@/features/catalog/infrastructure/persistence/DrizzleCategoryRepository
 
 vi.mock("@/features/order/infrastructure/persistence/DrizzleOrderRepository", () => ({
   DrizzleOrderRepository: vi.fn().mockImplementation(() => ({
-    findById: vi.fn(),
+    getById: vi.fn(),
     findMany: vi.fn(),
     create: vi.fn(),
     update: vi.fn(),
@@ -73,8 +73,8 @@ describe("Repository Factory", () => {
     it("should return a UserRepository instance", () => {
       const repo = getUserRepository();
       expect(repo).toBeDefined();
-      expect(repo.findById).toBeDefined();
-      expect(repo.findByEmail).toBeDefined();
+      expect(repo.getById).toBeDefined();
+      expect(repo.getByEmail).toBeDefined();
     });
 
     it("should return the same instance on multiple calls (singleton)", () => {
@@ -95,8 +95,8 @@ describe("Repository Factory", () => {
     it("should return a ProductRepository instance", () => {
       const repo = getProductRepository();
       expect(repo).toBeDefined();
-      expect(repo.findById).toBeDefined();
-      expect(repo.findBySlug).toBeDefined();
+      expect(repo.getById).toBeDefined();
+      expect(repo.getBySlug).toBeDefined();
     });
 
     it("should return the same instance on multiple calls", () => {
@@ -110,7 +110,7 @@ describe("Repository Factory", () => {
     it("should return a CategoryRepository instance", () => {
       const repo = getCategoryRepository();
       expect(repo).toBeDefined();
-      expect(repo.findById).toBeDefined();
+      expect(repo.getById).toBeDefined();
       expect(repo.getAll).toBeDefined();
     });
 
@@ -125,7 +125,7 @@ describe("Repository Factory", () => {
     it("should return an OrderRepository instance", () => {
       const repo = getOrderRepository();
       expect(repo).toBeDefined();
-      expect(repo.findById).toBeDefined();
+      expect(repo.getById).toBeDefined();
       expect(repo.create).toBeDefined();
     });
 

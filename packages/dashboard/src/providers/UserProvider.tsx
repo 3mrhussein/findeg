@@ -68,11 +68,11 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
    *
    */
   const toggleWishlistItem = (productId: number) => {
-    setCurrentUser((prevUser) => {
+    setCurrentUser((prevUser: User | null) => {
       if (!prevUser) return null;
 
       const newWishlist = prevUser.wishlist.includes(productId)
-        ? prevUser.wishlist.filter((id) => id !== productId)
+        ? prevUser.wishlist.filter((id: number) => id !== productId)
         : [...prevUser.wishlist, productId];
 
       return { ...prevUser, wishlist: newWishlist };

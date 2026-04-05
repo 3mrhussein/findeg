@@ -120,7 +120,7 @@ export class ResendEmailService implements IEmailService {
     if (!order.customerEmail) return;
 
     const locale = this.resolveLocale(
-      "customerLocale" in order ? (order as any).customerLocale : "en",
+      "customerLocale" in order ? (order as { customerLocale?: string }).customerLocale : "en",
     );
     const subject =
       locale === "ar" ? `تحديث حالة طلبك #${order.id}` : `Update on your order #${order.id}`;

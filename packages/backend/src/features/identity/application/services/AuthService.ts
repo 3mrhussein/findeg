@@ -35,7 +35,7 @@ export class AuthService implements IAuthService {
    *
    * @param userRepository - User data access layer
    */
-  constructor(private userRepository: IUserRepository) {}
+  constructor(private userRepository: IUserRepository) { }
 
   /**
    * Authenticates a user with email and password
@@ -134,7 +134,7 @@ export class AuthService implements IAuthService {
         lastName: input.lastName,
         phone: input.phone,
         portalRole: "customer",
-      } as any);
+      } as unknown as Record<string, unknown>);
 
       // Save password
       await this.userRepository.upsertPasswordCredentials(user.id, {

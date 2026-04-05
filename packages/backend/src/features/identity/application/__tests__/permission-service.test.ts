@@ -18,14 +18,17 @@ describe("PermissionService", () => {
     // Create mock UserRepository
     mockUserRepository = {
       getAuthorizationContext: vi.fn(),
-      findById: vi.fn(),
-      findByEmail: vi.fn(),
+      getById: vi.fn(),
+      getByEmail: vi.fn(),
+      getByEmailWithPassword: vi.fn(),
+      findPasswordCredentials: vi.fn(),
+      upsertPasswordCredentials: vi.fn(),
       findMany: vi.fn(),
       create: vi.fn(),
       update: vi.fn(),
       delete: vi.fn(),
       count: vi.fn(),
-    } as any;
+    } as unknown as IUserRepository;
 
     permissionService = new PermissionService(mockUserRepository);
   });
@@ -39,7 +42,7 @@ describe("PermissionService", () => {
       });
 
       const result = await permissionService.hasPermission(
-        "user-123" as ID,
+        123 as ID,
         "products:create" as PermissionCode,
       );
 
@@ -54,7 +57,7 @@ describe("PermissionService", () => {
       });
 
       const result = await permissionService.hasPermission(
-        "user-123" as ID,
+        123 as ID,
         "products:delete" as PermissionCode,
       );
 
@@ -62,13 +65,13 @@ describe("PermissionService", () => {
     });
 
     it("should return false and log error on exception", async () => {
-      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => { });
       vi.spyOn(mockUserRepository, "getAuthorizationContext").mockRejectedValue(
         new Error("Database error"),
       );
 
       const result = await permissionService.hasPermission(
-        "user-123" as ID,
+        123 as ID,
         "products:create" as PermissionCode,
       );
 
@@ -86,7 +89,7 @@ describe("PermissionService", () => {
         organizationId: undefined,
       });
 
-      const result = await permissionService.hasRole("user-123" as ID, "admin" as RoleId);
+      const result = await permissionService.hasRole(123 as ID, "admin" as RoleId);
 
       expect(result).toBe(true);
     });
@@ -98,7 +101,7 @@ describe("PermissionService", () => {
         organizationId: undefined,
       });
 
-      const result = await permissionService.hasRole("user-123" as ID, "admin" as RoleId);
+      const result = await permissionService.hasRole(123 as ID, "admin" as RoleId);
 
       expect(result).toBe(false);
     });
@@ -118,18 +121,18 @@ describe("PermissionService", () => {
         organizationId: undefined,
       });
 
-      const result = await permissionService.getUserPermissions("user-123" as ID);
+      const result = await permissionService.getUserPermissions(123 as ID);
 
       expect(result).toEqual(expectedPermissions);
     });
 
     it("should return empty array on error", async () => {
-      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => { });
       vi.spyOn(mockUserRepository, "getAuthorizationContext").mockRejectedValue(
         new Error("Database error"),
       );
 
-      const result = await permissionService.getUserPermissions("user-123" as ID);
+      const result = await permissionService.getUserPermissions(123 as ID);
 
       expect(result).toEqual([]);
       consoleErrorSpy.mockRestore();
@@ -146,18 +149,18 @@ describe("PermissionService", () => {
         organizationId: undefined,
       });
 
-      const result = await permissionService.getUserRoles("user-123" as ID);
+      const result = await permissionService.getUserRoles(123 as ID);
 
       expect(result).toEqual(expectedRoles);
     });
 
     it("should return empty array on error", async () => {
-      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => { });
       vi.spyOn(mockUserRepository, "getAuthorizationContext").mockRejectedValue(
         new Error("Database error"),
       );
 
-      const result = await permissionService.getUserRoles("user-123" as ID);
+      const result = await permissionService.getUserRoles(123 as ID);
 
       expect(result).toEqual([]);
       consoleErrorSpy.mockRestore();
