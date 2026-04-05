@@ -4,12 +4,7 @@ import { Button } from "@findeg/ui";
 import { Archive, Trash2, Eye, EyeOff } from "lucide-react";
 import { useTransition } from "react";
 import { useToast } from "@/hooks/use-toast";
-import {
-  adminUpdateProductAction,
-  adminArchiveProductAction,
-  adminDeleteProductAction,
-  adminSetProductStatusAction,
-} from "@/features/administration/application/actions/admin-product-actions";
+import { setProductStatusAction, deleteProductAction } from "@/actions/admin-actions";
 import { useRouter } from "next/navigation";
 
 interface ProductBulkActionBarProps {
@@ -49,15 +44,13 @@ export function ProductBulkActionBar({ selectedIds, onClearSelection }: ProductB
         let result;
         try {
           if (action === "active") {
-            result = await adminSetProductStatusAction(id, true);
+            result = await setProductStatusAction(id, true);
           } else if (action === "draft") {
-            result = await adminSetProductStatusAction(id, false);
+            result = await setProductStatusAction(id, false);
           } else if (action === "archive") {
-            // Note: Since we don't have an archive method, we might just set isActive to false or use it if available.
-            // Assuming adminArchiveProductAction exists.
-            result = await adminArchiveProductAction(id);
+            result = await setProductStatusAction(id, false);
           } else if (action === "delete") {
-            result = await adminDeleteProductAction(id);
+            result = await deleteProductAction(id);
           }
 
           if (result?.success) {

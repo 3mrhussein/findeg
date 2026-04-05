@@ -16,14 +16,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Enable corepack and prepare pnpm
+        run: corepack enable && corepack prepare pnpm@8.8.0 --activate
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "22"
           cache: "pnpm"
-
-      - name: Enable corepack and prepare pnpm
-        run: corepack enable && corepack prepare pnpm@8.8.0 --activate
 
       - name: Cache pnpm store
         uses: actions/cache@v4

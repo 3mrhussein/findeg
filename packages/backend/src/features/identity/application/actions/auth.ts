@@ -1,62 +1,94 @@
-"use server";
+/**
+ * Pure TypeScript Authentication Actions
+ *
+ * These actions contain business logic only - no framework-specific calls.
+ * App-layer (dashboard) handles redirect(), revalidatePath() after successful login/logout.
+ *
+ * This enables:
+ * - Pure TypeScript execution in Vitest (no Next.js runtime needed)
+ * - Framework portability
+ * - Clear separation of concerns (backend = logic, app = framework integration)
+ */
 
 import { container } from "@/features/core/infrastructure/di/ServiceContainer";
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+import { NotAuthenticatedError, ValidationError } from "@/features/core/domain/errors";
+import type { ServiceResult } from "@/features/core/application/types";
 import { isAdminSession, createUserVO } from "@/features/core/domain/auth";
 import type { SessionPayload } from "@/features/core/domain/auth";
 
 /**
- * Authenticates a user using email and password credentials.
- * Sets a session cookie upon successful login and redirects based on user role.
+ * Pure login service - no framework calls.
  *
- * @param formData - Form data containing 'email' and 'password'.
- * @returns AuthResult object if login fails (redirects on success).
+ * Returns login result with data or throws validation error.
+ * App-layer handles redirect() based on isAdmin flag and error type.
  */
-export async function loginAction(formData: FormData) {
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
+export async function login(
+  email: string,
+  password: string,
+): Promise<
+  ServiceResult<{
+    userId: number;
+    email: string;
+    isAdmin: boolean;
+  }>
+> {
+  if (!email?.trim()) {
+    throw new ValidationError("email", "Email is required");
+  }
+
+  if (!password) {
+    throw new ValidationError("password", "Password is required");
+  }
 
   const authService = container.authService;
   const result = await authService.login(email, password);
 
-  if (result.success) {
-    revalidatePath("/");
-
-    if (result.user) {
-      const sessionLike: SessionPayload = {
-        userId: result.user.id,
-        user: createUserVO({
-          email: result.user.email,
-          firstName: result.user.firstName,
-          lastName: result.user.lastName,
-        }),
-        portalRole: result.user.portalRole,
-        activeRoleIds: result.user.activeRoleIds,
-        permissionCodes: result.user.permissionCodes,
-        actorType: result.user.actorType,
-        organizationId: result.user.organizationId,
-      };
-
-      if (isAdminSession(sessionLike)) {
-        redirect("/admin");
-      }
-    }
-
-    redirect("/");
+  if (!result.success) {
+    throw new ValidationError("credentials", result.error || "Invalid email or password");
   }
 
-  return result;
+  if (!result.user) {
+    throw new ValidationError("credentials", "Login failed");
+  }
+
+  const sessionLike: SessionPayload = {
+    userId: result.user.id,
+    user: createUserVO({
+      email: result.user.email,
+      firstName: result.user.firstName,
+      lastName: result.user.lastName,
+    }),
+    portalRole: result.user.portalRole,
+    activeRoleIds: result.user.activeRoleIds,
+    permissionCodes: result.user.permissionCodes,
+    actorType: result.user.actorType,
+    organizationId: result.user.organizationId,
+  };
+
+  const isAdmin = isAdminSession(sessionLike);
+
+  return {
+    success: true,
+    data: {
+      userId: result.user.id,
+      email: result.user.email,
+      isAdmin,
+    },
+    cachePaths: ["/"],
+  };
 }
 
 /**
- * Terminates the current user session and redirects to the home page.
+ * Pure logout service - no framework calls.
+ *
+ * Logout is purely an app-layer concern (removing cookies, clearing state).
+ * Backend just returns success; app-layer handles the actual session deletion.
+ *
+ * App-layer handles redirect() after logout.
  */
-export async function logoutAction(formData?: FormData) {
-  const authService = container.authService;
-  const redirectTo = formData?.get("redirectTo") as string | undefined;
-
-  await authService.logout();
-  revalidatePath("/");
-  redirect(redirectTo || "/");
+export async function logout(): Promise<ServiceResult<void>> {
+  return {
+    success: true,
+    cachePaths: ["/"],
+  };
 }

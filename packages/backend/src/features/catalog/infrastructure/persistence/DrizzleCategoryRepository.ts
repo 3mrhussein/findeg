@@ -138,7 +138,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
 
           // Calculate product count (direct products + all products in descendants)
           const childrenProductCount = children.reduce(
-            (sum, child) => sum + ((child as any).productCount || 0),
+            (sum, child) => sum + ((child as Record<string, unknown>).productCount as number || 0),
             0,
           );
           const directProductCount = directCounts.get(c.id as number) || 0;

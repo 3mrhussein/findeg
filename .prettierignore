@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+dist/
+build/
+.next/
+
+# Build outputs
+out/
+.turbo/
+
+# Testing
+coverage/
+cypress/
+
+# Lock files (managed by package managers)
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Environment
+.env*
+*.local
+
+# IDE
+.vscode/
+.idea/

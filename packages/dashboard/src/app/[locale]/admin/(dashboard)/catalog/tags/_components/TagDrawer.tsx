@@ -6,10 +6,10 @@ import { Tag } from "@/features/catalog/domain/entities/Tag";
 import { TagInput } from "@/features/administration/domain/types";
 import { TagFormPanel } from "./TagFormPanel";
 import {
-  adminCreateTagAction,
-  adminUpdateTagAction,
-  adminGetTagProductCountAction,
-} from "@/features/administration/application/actions/admin-tag-actions";
+  createTagAction,
+  updateTagAction,
+  getTagProductCountAction,
+} from "@/actions/admin-actions";
 import { useRouter } from "next/navigation";
 
 interface TagDrawerProps {
@@ -24,7 +24,7 @@ export function TagDrawer({ open, onOpenChange, tag }: TagDrawerProps) {
 
   useEffect(() => {
     if (tag?.id) {
-      adminGetTagProductCountAction(Number(tag.id)).then((res) => {
+      getTagProductCountAction(Number(tag.id)).then((res) => {
         if (res.success) setProductCount(res.count || 0);
       });
     } else if (productCount !== 0) {
@@ -34,8 +34,8 @@ export function TagDrawer({ open, onOpenChange, tag }: TagDrawerProps) {
 
   const handleSubmit = async (data: TagInput) => {
     const res = tag
-      ? await adminUpdateTagAction(Number(tag.id), data)
-      : await adminCreateTagAction(data);
+      ? await updateTagAction(Number(tag.id), data)
+      : await createTagAction(data);
 
     if (res.success) {
       onOpenChange(false);

@@ -84,7 +84,7 @@ export class DrizzleSchoolListRepository implements ISchoolListRepository {
     return {
       ...result,
       localizedLabel: result.localizedLabel as Record<string, string>,
-      matchRules: result.matchRules as any,
+      matchRules: result.matchRules as Record<string, unknown>,
     } as SchoolListItemResult;
   }
 
@@ -119,7 +119,7 @@ export class DrizzleSchoolListRepository implements ISchoolListRepository {
       return {
         ...item,
         localizedLabel: item.localizedLabel as Record<string, string>,
-        matchRules: item.matchRules as any,
+        matchRules: item.matchRules as Record<string, unknown>,
         alternatives: itemAlts.map((a) => ({
           ...a,
           variant: variantMap[a.variantId],
@@ -139,7 +139,7 @@ export class DrizzleSchoolListRepository implements ISchoolListRepository {
     return {
       ...result,
       localizedLabel: result.localizedLabel as Record<string, string>,
-      matchRules: result.matchRules as any,
+      matchRules: result.matchRules as Record<string, unknown>,
     } as SchoolListItemResult;
   }
 

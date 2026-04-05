@@ -25,6 +25,7 @@
   },
   "references": [
     { "path": "./packages/backend" },
+    { "path": "./packages/ui" },
     { "path": "./packages/dashboard" },
     { "path": "./packages/storefront" }
   ],
@@ -35,7 +36,6 @@
     "cypress",
     "cypress.config.ts",
     "src/features._migrated",
-    "packages/*/src/**",
     "packages/*/*/.next",
     "packages/*/dist"
   ]

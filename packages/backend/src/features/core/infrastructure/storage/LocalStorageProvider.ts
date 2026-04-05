@@ -1,4 +1,5 @@
 import fs from "fs";
+
 import path from "path";
 import { v4 as uuidv4 } from "uuid";
 import type { IStorageProvider } from "@/features/core/application/interfaces/IStorageProvider";
@@ -7,6 +8,8 @@ import type { IStorageProvider } from "@/features/core/application/interfaces/IS
  * Local Storage Provider
  * Saves files to the local filesystem (public/uploads directory).
  * Useful for development or simple deployments.
+ * 
+ * Note: Intended for server-side use only (requires filesystem access).
  */
 export class LocalStorageProvider implements IStorageProvider {
   private uploadDir: string;

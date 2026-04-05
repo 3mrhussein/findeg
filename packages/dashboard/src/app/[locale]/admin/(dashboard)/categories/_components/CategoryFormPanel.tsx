@@ -28,7 +28,8 @@ import { CollapsibleCategoryPicker } from "@/app/[locale]/admin/_components/shar
 import { Save, X, Check, AlertCircle, Loader2 } from "lucide-react";
 import type { Category } from "@/features/catalog/domain/entities/Category";
 import { useTranslations } from "next-intl";
-import { checkSlugAvailableAction } from "@/features/catalog/application/actions/category";
+import { checkCategorySlugAvailableAction as checkSlugAvailableAction } from "@/actions/admin-actions";
+
 import { cn } from "@/lib/utils";
 
 interface CategoryFormValues {

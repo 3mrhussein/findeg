@@ -1,0 +1,39 @@
+# Git
+.git/
+.gitignore
+
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+
+# Testing
+coverage/
+cypress/
+.turbo/
+
+# Environment files
+.env*
+*.local
+
+# IDE/Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Docs
+docs/
+specs/
+README.md
+CHANGELOG.md

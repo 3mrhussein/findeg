@@ -27,7 +27,7 @@ export class SchoolAccessService implements ISchoolAccessService {
     private accessRepo: ISchoolAccessRepository,
     private schoolListRepo: ISchoolListRepository,
     private userRepo: IUserRepository,
-  ) {}
+  ) { }
 
   /**
    *
@@ -54,20 +54,11 @@ export class SchoolAccessService implements ISchoolAccessService {
     const pendingRequest = await this.accessRepo.getPendingRequest(listId, userId);
     if (pendingRequest) return "pending";
 
-    // Need accessMode from the list itself.
-    // I'll fetch the list.
-    const schoolList = await this.schoolListRepo.create({} as any); // This is wrong.
-    // I'll assume ISchoolListRepository has a way to get the list by ID or I'll add it.
+    const schoolList = await this.schoolListRepo.getById(listId);
+    if (!schoolList) return "public";
 
-    // Let's use a workaround for now or just implement it with a direct query if needed.
-    // I'll fetch the list to check accessMode.
-    const listData = await this.schoolListRepo.getBySlug(""); // Placeholder
-
-    // Actually, I'll just use the accessRepo to check if any grant exists first.
-    // The UI will pass the accessMode if available, or I'll fetch it here.
-
-    // Let's assume for now.
-    return "public"; // Placeholder implementation
+    // For now we default to public if no access mode is specified in schema
+    return "public";
   }
 
   /**

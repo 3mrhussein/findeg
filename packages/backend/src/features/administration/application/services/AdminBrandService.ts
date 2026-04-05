@@ -21,7 +21,7 @@ export class AdminBrandService implements IAdminBrandService {
   constructor(
     private brandRepository: IBrandRepository,
     private auditLogService: IAuditLogService,
-  ) {}
+  ) { }
 
   /**
    * Retrieves all brands.
@@ -108,10 +108,10 @@ export class AdminBrandService implements IAdminBrandService {
       slug: brand.slug,
       nameEn: brand.localizedContent?.name?.en || brand.name,
       nameAr: brand.localizedContent?.name?.ar || brand.name,
-      descriptionEn: (brand.localizedContent as any)?.description?.en || "",
-      descriptionAr: (brand.localizedContent as any)?.description?.ar || "",
+      descriptionEn: (brand.localizedContent as Record<string, any>)?.description?.en || "",
+      descriptionAr: (brand.localizedContent as Record<string, any>)?.description?.ar || "",
       isActive: !brand.isActive,
-    } as any);
+    } as unknown as BrandInput);
   }
 
   /**

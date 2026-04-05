@@ -1,4 +1,2 @@
-export * from "./domain";
-export * from "./application/interfaces";
-export * from "./application/services";
-export * from "./application/queries/admin-orders-page";
+export * from "@findeg/backend/features/administration";
+export * from "./application/actions";

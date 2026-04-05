@@ -5,6 +5,9 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "node",
+    env: {
+      DATABASE_URL: "postgres://localhost/findeg_test",
+    },
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html"],

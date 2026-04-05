@@ -6,9 +6,8 @@ import { registerAllTools } from "./webmcp-tools";
 export function initWebMCP() {
   if (typeof window === "undefined") return { isAvailable: false };
 
-  const isAvailable = !!(
-    (navigator as any).modelContext && (navigator as any).modelContext.registerTool
-  );
+  const nav = navigator as unknown as { modelContext?: { registerTool?: Function } };
+  const isAvailable = !!(nav.modelContext && nav.modelContext.registerTool);
 
   if (isAvailable) {
     const success = registerAllTools();

@@ -1,80 +1,117 @@
-"use server";
+/**
+ * Pure TypeScript Brand Actions
+ *
+ * Contains business logic only - no framework-specific calls.
+ * App-layer (dashboard) handles cache revalidation after operations.
+ */
 
 import { container } from "@/features/core/infrastructure/di/ServiceContainer";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { ResourceNotFoundError, ValidationError } from "@/features/core/domain/errors";
 import { BrandInput } from "@/features/administration/domain/types";
-import { CACHE_TAGS } from "@/features/core/domain/constants/cache-tags";
-import { resolveErrorMessage } from "@/features/core/domain/errors";
+import type { ServiceResult } from "@/features/core/application/types";
+import { getBrandCachePaths, getBrandCacheTags } from "@/features/catalog/domain/cache";
 
 /**
- * Creates a new brand.
+ * Pure brand creation - no framework calls.
  *
- * @param input - The brand data payload.
- * @returns Success status or error message.
+ * Creates a new brand and returns cache paths to revalidate.
+ * Throws validation or business rule errors.
+ * App-layer handles cache revalidation and redirects.
  */
-export async function createBrandAction(input: BrandInput) {
-  try {
-    const service = container.adminBrandService;
-    await service.create(input);
-    revalidatePath("/admin/brands");
-    revalidateTag(CACHE_TAGS.CATALOG_BRANDS, "max");
-    revalidateTag(CACHE_TAGS.CATALOG_PRODUCTS, "max");
-    return { success: true };
-  } catch (error: any) {
-    return { success: false, error: resolveErrorMessage(error, "SYSTEM_UNEXPECTED_ERROR") };
+export async function createBrand(
+  input: BrandInput,
+): Promise<ServiceResult<{ success: true }>> {
+  if (!input) {
+    throw new ValidationError("input", "Brand input is required");
   }
+
+  const service = container.adminBrandService;
+  const brand = await service.create(input);
+
+  return {
+    success: true,
+    data: { success: true },
+    cachePaths: getBrandCachePaths(brand.id),
+    cacheTags: getBrandCacheTags(brand.id),
+  };
 }
 
 /**
- * Updates an existing brand.
+ * Pure brand update - no framework calls.
  *
- * @param id - The ID of the brand to update.
- * @param input - The updated brand fields.
- * @returns Success status or error message.
+ * Updates an existing brand and returns cache paths to revalidate.
+ * Throws validation, not found, or business rule errors.
+ * App-layer handles cache revalidation.
  */
-export async function updateBrandAction(id: number, input: BrandInput) {
-  try {
-    const service = container.adminBrandService;
-    await service.update(id, input);
-    revalidatePath("/admin/brands");
-    revalidateTag(CACHE_TAGS.CATALOG_BRANDS, "max");
-    revalidateTag(CACHE_TAGS.CATALOG_PRODUCTS, "max");
-    return { success: true };
-  } catch (error: any) {
-    return { success: false, error: resolveErrorMessage(error, "SYSTEM_UNEXPECTED_ERROR") };
+export async function updateBrand(
+  id: number,
+  input: BrandInput,
+): Promise<ServiceResult<{ success: true }>> {
+  if (!id || id <= 0) {
+    throw new ResourceNotFoundError("Brand", id);
   }
+
+  if (!input) {
+    throw new ValidationError("input", "Brand input is required");
+  }
+
+  const service = container.adminBrandService;
+  await service.update(id, input);
+
+  return {
+    success: true,
+    data: { success: true },
+    cachePaths: getBrandCachePaths(id),
+    cacheTags: getBrandCacheTags(id),
+  };
 }
 
 /**
- * Deletes a brand by its ID.
+ * Pure brand deletion - no framework calls.
  *
- * @param id - The brand ID.
- * @returns Success status or error message.
+ * Deletes a brand and returns cache paths to revalidate.
+ * Throws not found or business rule errors.
+ * App-layer handles cache revalidation.
  */
-export async function deleteBrandAction(id: number) {
-  try {
-    const service = container.adminBrandService;
-    await service.delete(id);
-    revalidatePath("/admin/brands");
-    revalidateTag(CACHE_TAGS.CATALOG_BRANDS, "max");
-    revalidateTag(CACHE_TAGS.CATALOG_PRODUCTS, "max");
-    return { success: true };
-  } catch (error: any) {
-    return { success: false, error: resolveErrorMessage(error, "SYSTEM_UNEXPECTED_ERROR") };
+export async function deleteBrand(
+  id: number,
+): Promise<ServiceResult<{ success: true }>> {
+  if (!id || id <= 0) {
+    throw new ResourceNotFoundError("Brand", id);
   }
+
+  const service = container.adminBrandService;
+  await service.delete(id);
+
+  return {
+    success: true,
+    data: { success: true },
+    cachePaths: getBrandCachePaths(id),
+    cacheTags: getBrandCacheTags(id),
+  };
 }
 
 /**
- * Toggles a brand's active status.
+ * Pure brand status toggle - no framework calls.
+ *
+ * Toggles a brand's active status and returns cache paths to revalidate.
+ * Throws not found or business rule errors.
+ * App-layer handles cache revalidation.
  */
-export async function toggleBrandStatusAction(id: number) {
-  try {
-    const service = container.adminBrandService;
-    await service.toggleBrandStatus(id);
-    revalidatePath("/admin/brands");
-    revalidateTag(CACHE_TAGS.CATALOG_BRANDS, "max");
-    return { success: true };
-  } catch (error: any) {
-    return { success: false, error: resolveErrorMessage(error, "SYSTEM_UNEXPECTED_ERROR") };
+export async function toggleBrandStatus(
+  id: number,
+): Promise<ServiceResult<{ success: true }>> {
+  if (!id || id <= 0) {
+    throw new ResourceNotFoundError("Brand", id);
   }
+
+  const service = container.adminBrandService;
+  await service.toggleBrandStatus(id);
+
+  return {
+    success: true,
+    data: { success: true },
+    cachePaths: getBrandCachePaths(id),
+    cacheTags: getBrandCacheTags(id),
+  };
 }

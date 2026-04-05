@@ -5,16 +5,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
 import { CreditCard, Package, Truck, CheckCircle2, AlertCircle } from "lucide-react";
 import { Badge } from "@findeg/ui";
 import { Button } from "@findeg/ui";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@findeg/ui";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@findeg/ui";
 import { Input } from "@findeg/ui";
 import { Label } from "@findeg/ui";
-import { adminUpdateOrderStatusAction } from "@/features/administration/application/actions/admin-order-actions";
+import {
+  updateOrderStatusAction as adminUpdateOrderStatusAction,
+  updateOrderPaymentStatusAction as adminUpdateOrderPaymentStatusAction,
+} from "@/actions/order-actions";
+
 import { useToast } from "@/hooks/use-toast";
 import { OrderStatus } from "@/features/core/domain/types/common";
 
@@ -44,7 +42,7 @@ export function OrderPaymentFulfillment({ order }: OrderPaymentFulfillmentProps)
    */
   const handleStatusChange = (newStatus: string) => {
     startTransition(async () => {
-      const result = await adminUpdateOrderStatusAction(order.id, {
+      const result = await adminUpdateOrderStatusAction(Number(order.id), {
         status: newStatus as OrderStatus,
         trackingNumber: trackingNumber || undefined,
       });
@@ -61,10 +59,11 @@ export function OrderPaymentFulfillment({ order }: OrderPaymentFulfillmentProps)
    */
   const handleUpdateTracking = () => {
     startTransition(async () => {
-      const result = await adminUpdateOrderStatusAction(order.id, {
+      const result = await adminUpdateOrderStatusAction(Number(order.id), {
         status: order.status,
         trackingNumber: trackingNumber || undefined,
       });
+
       if (result.success) {
         toast({ title: "Tracking information updated" });
       } else {

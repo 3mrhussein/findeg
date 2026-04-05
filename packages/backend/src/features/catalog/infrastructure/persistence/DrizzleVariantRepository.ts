@@ -41,7 +41,7 @@ export class DrizzleVariantRepository implements IVariantRepository {
       productId: v.productId,
       sku: v.sku,
       variantKey: v.variantKey,
-      localizedLabel: (v.localizedLabel as any) || { en: "", ar: "" },
+      localizedLabel: (v.localizedLabel as { en: string; ar: string }) || { en: "", ar: "" },
       displayOrder: v.displayOrder,
       isActive: v.isActive,
       basePrice: Number(v.basePrice),
@@ -68,7 +68,7 @@ export class DrizzleVariantRepository implements IVariantRepository {
         uomCode: u.uomCode as UomCode,
         factorToBase: Number(u.factorToBase),
         isEnabled: u.isEnabled,
-        localizedLabel: (u.localizedLabel as any) || undefined,
+        localizedLabel: (u.localizedLabel as { en: string; ar: string }) || undefined,
         barcode: u.barcode || undefined,
       })),
       priceLists: prices.map((p) => ({
@@ -221,7 +221,7 @@ export class DrizzleVariantRepository implements IVariantRepository {
         await tx.insert(variantSellableUoms).values(
           input.sellableUoms.map((u) => ({
             variantId: newVariant.id,
-            uomCode: u.uomCode as any, // Cast to match schema enum/text
+            uomCode: u.uomCode as "pcs" | "pack" | "carton", // Cast to match schema enum/text
             factorToBase: String(u.factorToBase),
             isEnabled: u.isEnabled,
             localizedLabel: u.localizedLabel || {},
@@ -234,10 +234,10 @@ export class DrizzleVariantRepository implements IVariantRepository {
         await tx.insert(variantPriceLists).values(
           input.priceLists.map((p) => ({
             variantId: newVariant.id,
-            customerGroup: p.customerGroup as any, // Cast to match schema enum/text
-            uomCode: p.uomCode as any, // Cast to match schema enum/text
+            customerGroup: p.customerGroup as unknown as "public_b2c" | "school_b2b" | "wholesale", // Cast to match schema enum/text
+            uomCode: p.uomCode as "pcs" | "pack" | "carton", // Cast to match schema enum/text
             unitPrice: String(p.unitPrice),
-            currency: (p.currency as any) || DEFAULT_CURRENCY,
+            currency: (p.currency as string) || DEFAULT_CURRENCY,
             isSellable: p.isSellable,
             minQty: p.minQty,
           })),
@@ -313,7 +313,7 @@ export class DrizzleVariantRepository implements IVariantRepository {
           await tx.insert(variantSellableUoms).values(
             input.sellableUoms.map((u) => ({
               variantId,
-              uomCode: u.uomCode as any,
+              uomCode: u.uomCode as "pcs" | "pack" | "carton",
               factorToBase: String(u.factorToBase),
               isEnabled: u.isEnabled,
               localizedLabel: u.localizedLabel || {},
@@ -329,10 +329,10 @@ export class DrizzleVariantRepository implements IVariantRepository {
           await tx.insert(variantPriceLists).values(
             input.priceLists.map((p) => ({
               variantId,
-              customerGroup: p.customerGroup as any,
-              uomCode: p.uomCode as any,
+              customerGroup: p.customerGroup as unknown as "public_b2c" | "school_b2b" | "wholesale",
+              uomCode: p.uomCode as "pcs" | "pack" | "carton",
               unitPrice: String(p.unitPrice),
-              currency: (p.currency as any) || DEFAULT_CURRENCY,
+              currency: (p.currency as string) || DEFAULT_CURRENCY,
               isSellable: p.isSellable,
               minQty: p.minQty,
             })),
@@ -451,7 +451,7 @@ export class DrizzleVariantRepository implements IVariantRepository {
           .insert(variantSellableUoms)
           .values({
             variantId,
-            uomCode: u.uomCode as any,
+            uomCode: u.uomCode as "pcs" | "pack" | "carton",
             factorToBase: String(u.factorToBase),
             isEnabled: u.isEnabled ?? true,
           })
@@ -489,10 +489,10 @@ export class DrizzleVariantRepository implements IVariantRepository {
           .insert(variantPriceLists)
           .values({
             variantId,
-            customerGroup: p.customerGroup as any,
-            uomCode: p.uomCode as any,
+            customerGroup: p.customerGroup as unknown as "public_b2c" | "school_b2b" | "wholesale",
+            uomCode: p.uomCode as "pcs" | "pack" | "carton",
             unitPrice: String(p.unitPrice),
-            currency: (p.currency as any) || DEFAULT_CURRENCY,
+            currency: (p.currency as string) || DEFAULT_CURRENCY,
             isSellable: p.isSellable ?? true,
           })
           .onConflictDoUpdate({
@@ -504,7 +504,7 @@ export class DrizzleVariantRepository implements IVariantRepository {
             ],
             set: {
               unitPrice: String(p.unitPrice),
-              currency: (p.currency as any) || DEFAULT_CURRENCY,
+              currency: (p.currency as string) || DEFAULT_CURRENCY,
               isSellable: p.isSellable ?? true,
             },
           });

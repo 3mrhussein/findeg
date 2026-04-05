@@ -25,7 +25,13 @@ import type { Category, Brand, Tag } from "@/features/catalog/domain/entities";
 import {
   createProductAction,
   updateProductAction,
-} from "@/features/administration/application/actions/admin-product-actions";
+  generateVariantsAction,
+  rebuildVariantKeysAction,
+  upsertVariantUoMsAction,
+  upsertVariantImagesAction,
+  checkSkuAvailableAction,
+  checkSlugAvailableAction,
+} from "@/actions/admin-actions";
 
 interface ProductFormProps {
   initialData?: ProductEditData;

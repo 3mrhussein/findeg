@@ -1,8 +1,12 @@
 /**
  * Repository Factory Functions
+
  *
- * Provides singleton instances of repository implementations for use in Server Actions.
+ * Provides singleton instances of repository implementations.
  * These factories ensure consistent repository usage across the application.
+ *
+ * Note: These functions are intended for server-side use only (Server Actions, API routes).
+ * The framework layer (dashboard/storefront apps) is responsible for ensuring server-only execution.
  */
 
 import { DrizzleUserRepository } from "@/features/identity/infrastructure/persistence/DrizzleUserRepository";

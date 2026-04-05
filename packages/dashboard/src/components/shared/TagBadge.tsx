@@ -9,6 +9,8 @@ import * as LucideIcons from "lucide-react";
 interface TagBadgeProps extends BadgeProps {
   tag: Tag;
   showGroup?: boolean;
+  className?: string;
+  style?: React.CSSProperties;
 }
 
 /**

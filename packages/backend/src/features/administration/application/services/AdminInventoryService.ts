@@ -23,7 +23,7 @@ export class AdminInventoryService implements IAdminInventoryService {
     private inventoryRepository: IInventoryRepository,
     private variantRepository: IVariantRepository,
     private auditLogService: IAuditLogService,
-  ) {}
+  ) { }
 
   /**
    * Retrieves a paginated list of products and their current inventory status.
@@ -75,7 +75,7 @@ export class AdminInventoryService implements IAdminInventoryService {
     const warehouseId = update.warehouseId || 1;
 
     if (diff !== 0) {
-      await this.inventoryRepository.adjustStock(update.variantId, warehouseId as any, {
+      await this.inventoryRepository.adjustStock(update.variantId, Number(warehouseId), {
         movementType: "adjustment",
         quantity: diff,
         notes: update.notes || "Admin manual update",

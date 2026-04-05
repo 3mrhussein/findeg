@@ -5,7 +5,8 @@ import { type Order } from "@/features/order/domain/entities/Order";
 import { Button } from "@findeg/ui";
 import { Badge } from "@findeg/ui";
 import { Printer, RefreshCcw } from "lucide-react";
-import { adminUpdateOrderStatusAction } from "@/features/administration/application/actions/admin-order-actions";
+import { updateOrderStatusAction as adminUpdateOrderStatusAction } from "@/actions/order-actions";
+
 import { useToast } from "@/hooks/use-toast";
 
 interface OrderHeaderProps {
@@ -25,10 +26,11 @@ export function OrderHeader({ order }: OrderHeaderProps) {
   const handleRefund = () => {
     // Basic wrapper to prompt refund or directly refund (could open RefundDialog)
     startTransition(async () => {
-      const result = await adminUpdateOrderStatusAction(order.id, {
+      const result = await adminUpdateOrderStatusAction(Number(order.id), {
         status: "refunded",
         adminNotes: "Refunded via admin",
       });
+
       if (result.success) {
         toast({ title: "Order refunded successfully" });
       } else {

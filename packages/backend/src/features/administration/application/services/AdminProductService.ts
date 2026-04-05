@@ -60,7 +60,7 @@ export class AdminProductService implements IAdminProductService {
     private brandRepository?: IBrandRepository,
     private auditLogService?: IAuditLogService,
     private mediaService?: MediaService,
-  ) {}
+  ) { }
 
   // ─── Read ──────────────────────────────────────────────────────────────────
 
@@ -325,11 +325,11 @@ export class AdminProductService implements IAdminProductService {
       const variants =
         input.pricingMode === "shared"
           ? input.variants.map((v) => ({
-              ...v,
-              basePrice: input.sharedBasePrice ?? v.basePrice,
-              strikePrice: input.sharedStrikePrice ?? v.strikePrice ?? null,
-              costPrice: input.sharedCostPrice ?? v.costPrice ?? null,
-            }))
+            ...v,
+            basePrice: input.sharedBasePrice ?? v.basePrice,
+            strikePrice: input.sharedStrikePrice ?? v.strikePrice ?? null,
+            costPrice: input.sharedCostPrice ?? v.costPrice ?? null,
+          }))
           : input.variants;
 
       for (let i = 0; i < variants.length; i++) {
@@ -489,14 +489,14 @@ export class AdminProductService implements IAdminProductService {
         .values({
           sku: `${product.sku}-copy-${Date.now()}`,
           localizedName: {
-            en: `${(product.localizedName as any).en} (Copy)`,
-            ar: `${(product.localizedName as any).ar} (نسخة)`,
+            en: `${(product.localizedName as Record<"en" | "ar", string>).en} (Copy)`,
+            ar: `${(product.localizedName as Record<"en" | "ar", string>).ar} (نسخة)`,
           },
           localizedDescription: product.localizedDescription,
           localizedLongDescription: product.localizedLongDescription,
           localizedSlug: {
-            en: `${(product.localizedSlug as any).en}-copy`,
-            ar: `${(product.localizedSlug as any).ar}-copy`,
+            en: `${(product.localizedSlug as Record<"en" | "ar", string>).en}-copy`,
+            ar: `${(product.localizedSlug as Record<"en" | "ar", string>).ar}-copy`,
           },
           categoryId: product.categoryId,
           brandId: product.brandId,
@@ -1060,7 +1060,7 @@ export class AdminProductService implements IAdminProductService {
         attributes: v.attributes,
       })),
       tags: data.tags.map((pt) => pt.tag),
-    } as any;
+    } as unknown as ProductEditData;
   }
 
   /**
@@ -1075,7 +1075,7 @@ export class AdminProductService implements IAdminProductService {
     const [existing] = await db
       .select({ id: products.id })
       .from(products)
-      .where(condition as any)
+      .where(condition as import("drizzle-orm").SQL<unknown>)
       .limit(1);
 
     return !existing;

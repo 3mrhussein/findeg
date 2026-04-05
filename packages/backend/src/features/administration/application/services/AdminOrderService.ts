@@ -38,7 +38,7 @@ export class AdminOrderService implements IAdminOrderService {
     private orderRepository: IOrderRepository,
     private auditLogService: IAuditLogService,
     private emailService: IEmailService,
-  ) {}
+  ) { }
 
   /**
    * Retrieves a paginated and filtered list of orders.
@@ -57,7 +57,7 @@ export class AdminOrderService implements IAdminOrderService {
    * @returns The order if found, null otherwise.
    */
   async getById(id: ID | string): Promise<Order | null> {
-    return this.orderRepository.getById(id as any);
+    return this.orderRepository.getById(id);
   }
 
   /**
@@ -69,7 +69,7 @@ export class AdminOrderService implements IAdminOrderService {
    * @throws Error if the order is not found.
    */
   async updateStatus(id: ID | string, update: OrderStatusUpdate): Promise<void> {
-    const order = await this.orderRepository.getById(id as any);
+    const order = await this.orderRepository.getById(id);
     if (!order) {
       throw new Error(`Order #${id} not found`);
     }
@@ -86,7 +86,7 @@ export class AdminOrderService implements IAdminOrderService {
       );
     }
 
-    await this.orderRepository.updateStatusWithTracking(id as any, update);
+    await this.orderRepository.updateStatusWithTracking(id, update);
 
     await this.auditLogService.logAction({
       entityType: "order",
@@ -115,7 +115,7 @@ export class AdminOrderService implements IAdminOrderService {
    * @throws Error if the order is not found.
    */
   async updatePaymentStatus(id: ID | string, status: PaymentStatus): Promise<void> {
-    const order = await this.orderRepository.getById(id as any);
+    const order = await this.orderRepository.getById(id);
     if (!order) {
       throw new Error(`Order #${id} not found`);
     }
@@ -132,7 +132,7 @@ export class AdminOrderService implements IAdminOrderService {
       );
     }
 
-    await this.orderRepository.updatePaymentStatus(id as any, status);
+    await this.orderRepository.updatePaymentStatus(id, status);
 
     await this.auditLogService.logAction({
       entityType: "order",

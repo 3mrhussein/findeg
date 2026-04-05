@@ -6,7 +6,7 @@ import type { Review } from "@/features/review/domain/entities/Review";
 import type { CustomerGroup } from "@/features/core/domain/types/common";
 import { VariantEntity } from "@/features/catalog/domain/entities/Variant";
 import { resolveLocale } from "@/features/core/domain/value-objects";
-import { getProductEnglishSlug } from "@/features/catalog/presentation/utils/product-url";
+import { getProductEnglishSlug } from "@/features/catalog/domain/utils/slug";
 import { getServices } from "@/server/getServices";
 
 export interface ProductBreadcrumbItem {
@@ -219,8 +219,8 @@ export async function getProductPdpViewModel(
 
   const relatedProducts = product.categoryId
     ? (await products.getByCategory(product.categoryId, resolvedLocale))
-        .filter((candidate) => candidate.id !== product.id)
-        .slice(0, 12)
+      .filter((candidate) => candidate.id !== product.id)
+      .slice(0, 12)
     : [];
 
   return {

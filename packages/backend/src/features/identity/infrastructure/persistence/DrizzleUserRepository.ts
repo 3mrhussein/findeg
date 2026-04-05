@@ -13,7 +13,7 @@ import {
 } from "@/features/core/infrastructure/persistence/schema";
 import { IUserRepository } from "../../application/interfaces/IUserRepository";
 import { User } from "../../domain/entities/User";
-import { PasswordCredentials } from "../../domain/entities/PasswordCredentials";
+import { PasswordCredentials, HashStrategy } from "../../domain/entities/PasswordCredentials";
 import { eq } from "drizzle-orm";
 import type { PermissionCode, RoleId } from "@/features/core/domain/value-objects";
 
@@ -230,7 +230,7 @@ export class DrizzleUserRepository implements IUserRepository {
     return {
       userId: pc.userId,
       passwordHash: pc.passwordHash,
-      hashStrategy: pc.hashStrategy as any,
+      hashStrategy: pc.hashStrategy as HashStrategy,
       createdAt: pc.createdAt,
       updatedAt: pc.updatedAt,
     };

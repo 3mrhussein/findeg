@@ -2,16 +2,16 @@
  * Auth Service Implementation
  *
  * Handles authentication logic. Depends on:
- * - IUserRepository: to look up users
- * - ISessionProvider: to create/verify/delete sessions
+ * - IUserRepository: to look up users and authorization
+ *
+ * Performs password verification but does NOT create sessions.
+ * Session creation is app-layer responsibility (done via CookieSessionProvider in app-layer).
  *
  * Uses bcryptjs for password verification.
- * When splitting apps, swap ISessionProvider implementation.
  */
 
 import { IAuthService } from "../interfaces/IAuthService";
 import { IUserRepository } from "../interfaces/IUserRepository";
-import { ISessionProvider } from "@/features/core/application/interfaces/ISessionProvider";
 import {
   AuthResult,
   RegisterInput,
@@ -25,20 +25,17 @@ import { getErrorDefinition, resolveErrorMessage } from "@/features/core/domain/
 /**
  * Authentication Service
  *
- * Handles user authentication, session management, and admin validation.
+ * Handles user authentication and authorization context retrieval.
  * Uses bcryptjs for secure password verification.
+ * Does NOT create sessions - that's the app-layer's responsibility.
  */
 export class AuthService implements IAuthService {
   /**
    * Creates an instance of AuthService
    *
    * @param userRepository - User data access layer
-   * @param sessionProvider - Session management provider (cookie-based or JWT)
    */
-  constructor(
-    private userRepository: IUserRepository,
-    private sessionProvider: ISessionProvider,
-  ) {}
+  constructor(private userRepository: IUserRepository) { }
 
   /**
    * Authenticates a user with email and password
@@ -92,8 +89,6 @@ export class AuthService implements IAuthService {
       tokenVersion: 1,
     };
 
-    await this.sessionProvider.createSession(payload);
-
     return {
       success: true,
       user: {
@@ -139,7 +134,7 @@ export class AuthService implements IAuthService {
         lastName: input.lastName,
         phone: input.phone,
         portalRole: "customer",
-      } as any);
+      } as unknown as Record<string, unknown>);
 
       // Save password
       await this.userRepository.upsertPasswordCredentials(user.id, {
@@ -158,37 +153,42 @@ export class AuthService implements IAuthService {
   }
 
   /**
-   * Logs out the current user
-   *
-   * Deletes the active session (cookie or token invalidation).
+   * NOT IMPLEMENTED IN BACKEND
+   * Logout is an app-layer concern. The app-layer handles session deletion.
+   * @throws Error - This function should not be called from backend
    */
   async logout(): Promise<void> {
-    await this.sessionProvider.deleteSession();
+    throw new Error("logout() should not be called in backend - handle in app-layer");
   }
 
   /**
-   * Retrieves the current session payload
-   *
-   * @returns Session payload with user ID, email, and role, or null if not authenticated
+   * NOT IMPLEMENTED IN BACKEND
+   * Session retrieval is an app-layer concern. The app-layer retrieves from cookies.
+   * @throws Error - This function should not be called from backend
    */
   async getSession(): Promise<SessionPayload | null> {
-    return this.sessionProvider.getSession();
+    throw new Error("getSession() should not be called in backend - handle in app-layer");
+  }
+
+  /**
+   * NOT IMPLEMENTED IN BACKEND
+   * Session validation is an app-layer concern.
+   * @throws Error - This function should not be called from backend
+   */
+  async validateAdmin(): Promise<SessionPayload> {
+    throw new Error("validateAdmin() should not be called in backend - handle in app-layer");
   }
 
   /**
    * Validates that the current user is an admin
    *
-   * @returns Session payload if user is authenticated and has admin role
-   * @throws Error if not authenticated or not an admin
+   * Note: Session validation happens in app-layer.
+   * This is a helper to check authorization after session is verified.
+   *
+   * @param session - The session payload to validate
+   * @returns True if the user is an admin
    */
-  async validateAdmin(): Promise<SessionPayload> {
-    const session = await this.sessionProvider.getSession();
-    if (!session) {
-      throw new Error(getErrorDefinition("AUTH_UNAUTHORIZED").message);
-    }
-    if (!isAdminSession(session)) {
-      throw new Error(getErrorDefinition("AUTH_ADMIN_REQUIRED").message);
-    }
-    return session;
+  isAdminSession(session: SessionPayload): boolean {
+    return isAdminSession(session);
   }
 }

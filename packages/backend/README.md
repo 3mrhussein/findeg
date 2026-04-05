@@ -24,6 +24,193 @@ src/
     └── domain.ts      # TypeScript types
 ```
 
+### Pure TypeScript Library (Zero Framework Dependencies)
+
+This backend package is a **pure TypeScript library** with **zero framework dependencies**. It contains ONLY business logic and can run in any Node.js environment without Next.js, React, or any UI framework.
+
+**Key Principles:**
+- ✅ **No framework imports**: Zero imports from `next/cache`, `next/navigation`, `next/headers`
+- ✅ **No side effects**: Services return data or throw errors; they never call `redirect()`, `revalidatePath()`, or `cookies()`
+- ✅ **Explicit parameters**: All required runtime data (session, cookies) passed as function parameters
+- ✅ **Framework-agnostic testing**: All tests run in pure Node.js (Vitest) without Next.js runtime
+
+**Backend Responsibilities:**
+- Business logic and domain rules
+- Data validation (Zod schemas)
+- Database queries and mutations
+- Domain errors and error catalog
+- Service interfaces and contracts
+
+**App-Layer Responsibilities (Dashboard/Storefront):**
+- Framework integration (Next.js Server Actions, Server Components)
+- Cache invalidation (`revalidatePath`, `revalidateTag`)
+- Redirects and navigation (`redirect`, `notFound`)
+- Session extraction from cookies
+- Error translation to HTTP responses
+
+### ServiceResult Pattern
+
+Backend services return a `ServiceResult<T>` object that includes cache metadata for app-layer orchestration:
+
+```typescript
+import type { ServiceResult } from '@findeg/backend/features/core';
+
+// Backend service (pure function)
+export async function createProduct(input: ProductInput): Promise<ServiceResult<{ productId: number }>> {
+  // Validate, create product in DB
+  const product = await db.product.create(input);
+  
+  // Return data + cache metadata (NO cache invalidation here)
+  return {
+    success: true,
+    data: { productId: product.id },
+    cachePaths: ['/admin/products', `/admin/products/${product.id}`],
+    cacheTags: ['products', 'shop']
+  };
+}
+```
+
+```typescript
+// App-layer Server Action (handles framework integration)
+'use server';
+import { createProduct } from '@findeg/backend/features/catalog';
+import { revalidatePath, revalidateTag } from 'next/cache';
+
+export async function createProductAction(input: ProductInput) {
+  try {
+    const result = await createProduct(input);
+    
+    // App-layer handles cache invalidation
+    result.cachePaths?.forEach(path => revalidatePath(path));
+    result.cacheTags?.forEach(tag => revalidateTag(tag));
+    
+    return { success: true };
+  } catch (error) {
+    // Error translation happens here
+    return { success: false, error: error.message };
+  }
+}
+```
+
+### Domain Errors
+
+Backend services throw typed domain errors instead of calling framework routing:
+
+```typescript
+import { 
+  NotAuthenticatedError, 
+  NotAuthorizedError, 
+  ResourceNotFoundError,
+  ValidationError,
+  ConflictError,
+  BusinessRuleViolationError
+} from '@findeg/backend/features/core';
+
+// Backend service throws domain error
+export async function getMyAccountData(userId: number | null) {
+  if (!userId) {
+    throw new NotAuthenticatedError('Session required');
+  }
+  
+  const user = await db.user.getById(userId);
+  if (!user) {
+    throw new ResourceNotFoundError('User account not found');
+  }
+  
+  return user;
+}
+```
+
+```typescript
+// App-layer catches and translates errors
+'use server';
+import { getMyAccountData } from '@findeg/backend/features/identity';
+import { redirect } from 'next/navigation';
+
+export async function getAccountPage(userId: number) {
+  try {
+    return await getMyAccountData(userId);
+  } catch (error) {
+    if (error instanceof NotAuthenticatedError) {
+      redirect('/login'); // Framework integration happens here
+    }
+    throw error;
+  }
+}
+```
+
+### Dependency Injection
+
+Backend services depend on interfaces, not framework APIs:
+
+```typescript
+// Backend interface (abstraction)
+export interface ICookieStore {
+  get(name: string): { value: string } | undefined;
+  set(name: string, value: string, options?: any): void;
+  delete(name: string): void;
+}
+
+// Backend service uses interface
+export class CookieSessionProvider {
+  constructor(private cookieStore: ICookieStore) {}
+  
+  async getSession(): Promise<SessionPayload | null> {
+    const cookie = this.cookieStore.get('session');
+    // ...
+  }
+}
+```
+
+```typescript
+// App-layer provides Next.js implementation
+import { cookies } from 'next/headers';
+import { CookieSessionProvider, ICookieStore } from '@findeg/backend/features/core';
+
+async function nextCookiesToStore(): Promise<ICookieStore> {
+  const cookieStore = await cookies();
+  return {
+    get: (name) => cookieStore.get(name),
+    set: (name, value, options) => cookieStore.set(name, value, options),
+    delete: (name) => cookieStore.delete(name)
+  };
+}
+
+// Inject Next.js implementation
+const store = await nextCookiesToStore();
+const provider = new CookieSessionProvider(store);
+```
+
+### Testing in Pure Node.js
+
+All backend tests run in Vitest without Next.js runtime:
+
+```bash
+# Backend tests (pure Node.js, ~13 seconds)
+pnpm --filter @findeg/backend test
+
+# 188/188 tests passing
+# Execution: 13.15 seconds
+# Environment: Pure Node.js (no Next.js)
+```
+
+```typescript
+// Example test (no framework setup required)
+import { describe, it, expect } from 'vitest';
+import { createProduct } from '../product';
+
+describe('Product Actions', () => {
+  it('returns ServiceResult with cache metadata', async () => {
+    const input = { name: 'Test Product', price: 99.99 };
+    const result = await createProduct(input);
+    
+    expect(result.success).toBe(true);
+    expect(result.data.productId).toBeDefined();
+    expect(result.cachePaths).toContain('/admin/products');
+  });
+});
+```
+
 ## Installation
 
 From monorepo root:
