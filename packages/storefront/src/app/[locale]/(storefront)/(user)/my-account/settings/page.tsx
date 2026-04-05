@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@find
 import { Button } from "@findeg/ui";
 import { Input } from "@findeg/ui";
 import { Label } from "@findeg/ui";
-import { getMyAccountDataOrRedirect } from "@/features/identity/application/queries/my-account";
+import { getMyAccountData } from "@/features/identity/application/queries/my-account";
 
 type Props = {
   params: Promise<{ locale: Locale }>;
@@ -17,7 +17,8 @@ export default async function SettingsPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "Pages.MyAccount" });
-  const { user } = await getMyAccountDataOrRedirect();
+  const userId = 1; // TODO: Get actual user ID from session
+  const { user } = await getMyAccountData(userId);
 
   return (
     <div className="space-y-6">

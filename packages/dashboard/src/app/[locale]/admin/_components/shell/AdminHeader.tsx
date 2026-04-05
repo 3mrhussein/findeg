@@ -12,7 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@findeg/ui";
-import ToggleTheme from "@findeg/ui";
+import { ToggleTheme } from "@findeg/ui";
 import ToggleLanguage from "@/components/shared/ToggleLanguage";
 import { WebMCPBadge } from "@/components/shared/WebMCPBadge";
 import { cn } from "@/lib/utils";

@@ -7,7 +7,7 @@ import {
   updateCategoryAction,
   deleteCategoryAction,
   reorderCategoriesAction,
-} from "@/features/catalog/application/actions/category";
+} from "@/actions/catalog-actions";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 

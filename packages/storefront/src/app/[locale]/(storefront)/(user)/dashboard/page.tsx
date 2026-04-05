@@ -1,6 +1,6 @@
 import { Locale } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
-import { getDashboardDataOrRedirect } from "@/features/identity/application/queries/dashboard";
+import { getDashboardData } from "@/features/identity/application/queries/dashboard";
 import { DashboardContent } from "./_components/DashboardContent";
 import { PermissionsProvider } from "@/providers/PermissionsProvider";
 
@@ -17,10 +17,11 @@ type Props = {
 export default async function Page({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const data = await getDashboardDataOrRedirect(locale);
+  const userId = 1;
+  const data = await getDashboardData(locale, userId);
 
   return (
-    <PermissionsProvider session={data.session}>
+    <PermissionsProvider session={data.session as any}>
       <DashboardContent
         products={data.products}
         orders={data.orders}

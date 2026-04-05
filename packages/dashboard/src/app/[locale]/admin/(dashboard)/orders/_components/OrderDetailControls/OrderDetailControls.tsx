@@ -7,17 +7,8 @@ import { Label } from "@findeg/ui";
 import { Input } from "@findeg/ui";
 import { Textarea } from "@findeg/ui";
 import { Button } from "@findeg/ui";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@findeg/ui";
-import {
-  updateOrderPaymentStatusAction,
-  updateOrderStatusAction,
-} from "@/features/order/application/actions/order";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@findeg/ui";
+import { updateOrderPaymentStatusAction, updateOrderStatusAction } from "@/actions/order-actions";
 import { useToast } from "@/hooks/use-toast";
 import type { OrderStatus, PaymentStatus } from "@/features/core/domain/types/common";
 import {

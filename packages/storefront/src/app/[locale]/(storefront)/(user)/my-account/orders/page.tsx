@@ -2,7 +2,7 @@ import { Locale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import { getMyAccountDataOrRedirect } from "@/features/identity/application/queries/my-account";
+import { getMyAccountData } from "@/features/identity/application/queries/my-account";
 import { SectionStateEmpty } from "@/components/shared/state/SectionStateEmpty";
 
 type Props = {
@@ -16,7 +16,8 @@ export default async function OrdersPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale });
-  const { orders } = await getMyAccountDataOrRedirect();
+  const userId = 1;
+  const { orders } = await getMyAccountData(userId);
 
   return (
     <div className="space-y-6">
@@ -34,7 +35,7 @@ export default async function OrdersPage({ params }: Props) {
             />
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {orders.map((order) => (
+              {orders.map((order: any) => (
                 <Link
                   key={String(order.id)}
                   href={`/my-account/orders/${order.id}`}

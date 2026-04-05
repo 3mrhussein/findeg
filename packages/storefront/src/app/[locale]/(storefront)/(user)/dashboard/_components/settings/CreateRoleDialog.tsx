@@ -3,19 +3,13 @@
 import React, { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@findeg/ui";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@findeg/ui";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@findeg/ui";
 import { Input } from "@findeg/ui";
 import { Label } from "@findeg/ui";
 import { Checkbox } from "@findeg/ui";
 import { ScrollArea } from "@findeg/ui";
 import { Icon } from "@findeg/ui";
-import type { Permission } from "@/features/identity/application/hooks/useAdminRoles";
+import type { Permission } from "../Settings";
 
 interface CreateRoleDialogProps {
   open: boolean;

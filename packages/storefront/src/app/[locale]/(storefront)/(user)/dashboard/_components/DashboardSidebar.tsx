@@ -31,7 +31,7 @@ import {
   SidebarSeparator,
   useSidebar,
 } from "@findeg/ui";
-import ToggleTheme from "@findeg/ui";
+import { ToggleTheme } from "@findeg/ui";
 import ToggleLanguage from "@/components/shared/ToggleLanguage";
 
 type DashboardView =

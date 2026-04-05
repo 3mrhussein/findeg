@@ -66,7 +66,7 @@ export function SearchOverlay() {
             placeholder="Search for stationery, backpacks, art supplies..."
             className="w-full bg-transparent border-0 ps-12 pe-12 text-xl sm:text-2xl font-semibold placeholder:text-slate-400 text-slate-900 dark:text-white h-14 focus-visible:ring-0 shadow-none"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
             autoFocus
           />
           <IconTooltip label="Close search" asChild>

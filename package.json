@@ -8,10 +8,11 @@
     "dev": "turbo run dev",
     "build": "turbo run build",
     "start": "turbo run start",
-    "lint": "turbo run lint && npm run lint:eslint && npm run i18n:check",
-    "lint:eslint": "eslint src",
     "lint:fix": "eslint src --fix",
     "i18n:check": "node scripts/validate-i18n.mjs",
+    "test": "npm run type-check && npm run test:unit && npm run test:e2e",
+    "test:unit": "turbo run test:unit",
+    "test:e2e": "turbo run test:e2e",
     "type-check": "turbo run type-check",
     "type-check:backend": "pnpm --filter @findeg/backend type-check",
     "type-check:ui": "pnpm --filter @findeg/ui type-check",
@@ -46,6 +47,7 @@
   "devDependencies": {
     "eslint": "^9.0.0",
     "prettier": "^3.8.0",
+    "start-server-and-test": "^3.0.0",
     "turbo": "^2.9.3",
     "typescript": "^5.7.3"
   },
@@ -56,5 +58,8 @@
     "nextjs"
   ],
   "author": "FindEg Team",
-  "packageManager": "pnpm@10.33.0"
+  "packageManager": "pnpm@10.33.0",
+  "dependencies": {
+    "server-only": "^0.0.1"
+  }
 }

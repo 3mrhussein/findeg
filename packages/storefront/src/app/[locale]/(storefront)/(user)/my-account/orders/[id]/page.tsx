@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
 import { Button } from "@findeg/ui";
 import { Separator } from "@findeg/ui";
-import { getMyOrderDetailOrNotFound } from "@/features/identity/application/queries/my-account";
+import { getMyOrderDetail } from "@/features/identity/application/queries/my-account";
 
 interface MyOrderDetailPageProps {
   params: Promise<{ locale: Locale; id: string }>;
@@ -22,7 +22,8 @@ export default async function MyOrderDetailPage({ params }: MyOrderDetailPagePro
   const orderId = Number(idParam);
   if (!Number.isFinite(orderId)) notFound();
 
-  const order = await getMyOrderDetailOrNotFound(orderId);
+  const userId = 1;
+  const order = await getMyOrderDetail(orderId, userId);
 
   return (
     <div className="space-y-4">
@@ -53,7 +54,7 @@ export default async function MyOrderDetailPage({ params }: MyOrderDetailPagePro
           <CardTitle>{t("Pages.MyAccount.Orders")}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          {order.items?.map((item, index) => (
+          {order.items?.map((item: any, index: number) => (
             <div key={`${item.productId}-${index}`} className="rounded-md border p-3">
               <div className="flex items-center justify-between">
                 <p className="font-medium">{item.productNameSnapshot || item.productName || "-"}</p>

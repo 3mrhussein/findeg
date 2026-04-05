@@ -72,7 +72,7 @@ export async function getSearchPageData(language: string, query: string): Promis
 export async function getProductDetailData(
   productId: number,
   language: string,
-): Promise<ProductDetailPageData> {
+): Promise<ProductDetailPageData | null> {
   cacheTag(`product-${productId}`);
   cacheLife("hours");
   return getProductDetailDataBackend(productId, language);

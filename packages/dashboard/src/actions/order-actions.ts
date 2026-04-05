@@ -35,12 +35,12 @@ export async function updateOrderStatusAction(orderId: number, input: OrderStatu
     // Domain errors are expected (validation, not found, etc.)
     if (isDomainError(error)) {
       const message = getErrorMessage(error);
-      return { error: message };
+      return { success: false, error: message };
     }
 
     // Unexpected errors
     console.error("[dashboard] Order status update error:", error);
-    return { error: "An unexpected error occurred" };
+    return { success: false, error: "An unexpected error occurred" };
   }
 }
 
@@ -65,11 +65,11 @@ export async function updateOrderPaymentStatusAction(
     // Domain errors are expected
     if (isDomainError(error)) {
       const message = getErrorMessage(error);
-      return { error: message };
+      return { success: false, error: message };
     }
 
     // Unexpected errors
     console.error("[dashboard] Order payment status update error:", error);
-    return { error: "An unexpected error occurred" };
+    return { success: false, error: "An unexpected error occurred" };
   }
 }

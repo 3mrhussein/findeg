@@ -1,18 +1,11 @@
 "use client";
 
 import React from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@findeg/ui";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@findeg/ui";
 import { Button } from "@findeg/ui";
 import { Link } from "@/i18n/navigation";
 import { ShieldAlert, LogIn, LayoutDashboard, Home } from "lucide-react";
-import { logoutAction } from "@/features/identity/application/actions/auth";
+import { logout } from "@/features/identity/application/actions/auth";
 import { useTranslations } from "next-intl";
 
 /**
@@ -66,7 +59,7 @@ export function AdminAccessForbidden() {
               </div>
             </div>
 
-            <form action={logoutAction} className="w-full">
+            <form action={logout} className="w-full">
               <input type="hidden" name="redirectTo" value="/login" />
               <Button
                 type="submit"

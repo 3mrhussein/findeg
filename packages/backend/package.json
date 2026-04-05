@@ -60,14 +60,12 @@
   "scripts": {
     "build": "tsc --build",
     "dev": "tsc --build --watch",
-    "test": "vitest --run",
+    "test": "npm run type-check && npm run test:unit",
+    "test:unit": "vitest --run",
     "test:watch": "vitest",
     "type-check": "tsc --noEmit",
     "lint": "eslint .",
-    "e2e": "cypress run",
-    "e2e:run": "cypress run",
-    "e2e:run:ci": "cypress run --browser chrome --headless",
-    "e2e:open": "cypress open"
+    "test:e2e": "echo 'No e2e tests for @findeg/backend'"
   },
   "dependencies": {
     "@react-email/components": "^0.0.34",

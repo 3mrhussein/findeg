@@ -44,7 +44,7 @@ export async function createProductAction(input: ProductInput) {
   try {
     const result = await createProduct(input);
     await invalidateCaches(result);
-    return { success: true, productId: result.data.productId };
+    return { success: true, productId: result.data!.productId };
   } catch (error) {
     if (isDomainError(error)) {
       return { success: false, error: getErrorMessage(error) };
@@ -64,7 +64,7 @@ export async function updateProductAction(id: number, input: ProductInput) {
   try {
     const result = await updateProduct(id, input);
     await invalidateCaches(result);
-    return { success: true, productId: result.data.productId };
+    return { success: true, productId: result.data!.productId };
   } catch (error) {
     if (isDomainError(error)) {
       return { success: false, error: getErrorMessage(error) };
@@ -294,7 +294,7 @@ export async function reorderCategoriesAction(items: { id: number; sortOrder: nu
 export async function checkCategorySlugAvailableAction(slug: string, excludeId?: number) {
   try {
     const result = await checkSlugAvailable(slug, excludeId);
-    return { success: true, available: result.data.available };
+    return { success: true, available: result.data!.available };
   } catch (error) {
     if (isDomainError(error)) {
       return { success: false, error: getErrorMessage(error) };

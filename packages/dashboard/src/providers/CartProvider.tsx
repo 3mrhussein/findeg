@@ -5,7 +5,7 @@ import type { CartItem } from "@/features/cart/domain/entities/Cart";
 import type { Product } from "@/features/catalog/domain/entities/Product";
 import type { CustomerGroup, UomCode } from "@/features/core/domain/types/common";
 
-interface CartContextType {
+export interface CartContextType {
   cartItems: CartItem[];
   isCartOpen: boolean;
   setIsCartOpen: (open: boolean) => void;

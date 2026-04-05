@@ -17,7 +17,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
 import { Badge } from "@findeg/ui";
 import { Button } from "@findeg/ui";
 import { Icon } from "@findeg/ui";
-import type { RoleWithPermissions } from "@/features/identity/application/hooks/useAdminRoles";
+import type { RoleWithPermissions } from "../Settings";
 
 const PROTECTED_CODES = new Set(["system_admin", "user"]);
 

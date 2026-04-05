@@ -15,37 +15,33 @@ import { getSession } from "@/lib/session";
 import { isDomainError, getErrorMessage } from "@/lib/errors";
 import { invalidateCaches } from "@/lib/cache";
 
-/**
- * Server Action: Update user profile
- *
- * @param formData - Form data with 'name' field
- */
-export async function updateMyProfileAction(formData: FormData) {
+export async function updateMyProfileAction(
+  formData: FormData,
+): Promise<{ success?: boolean; error?: string }> {
   const session = await getSession();
 
   if (!session?.userId) {
-    redirect("/login");
+    return { error: "Authentication required" };
   }
 
-  const name = formData.get("name") as string;
+  const firstName = (formData.get("firstName") as string) || "";
+  const lastName = (formData.get("lastName") as string) || "";
+  const fullName = `${firstName} ${lastName}`.trim();
 
   try {
-    const result = await updateMyProfile(session.userId, name);
+    const result = await updateMyProfile(Number(session.userId), fullName);
 
     // Invalidate caches
     await invalidateCaches(result);
 
-    // Redirect to success page
-    redirect("/my-account?profile=updated");
+    return { success: true };
   } catch (error) {
     // Handle domain errors
     if (isDomainError(error)) {
-      const message = getErrorMessage(error);
-      // Redirect with error query param for display
-      redirect(`/my-account?profile=error&message=${encodeURIComponent(message)}`);
+      return { error: getErrorMessage(error) };
     }
 
     console.error("[dashboard] Update profile action error:", error);
-    redirect("/my-account?profile=error");
+    return { error: "Failed to update profile" };
   }
 }

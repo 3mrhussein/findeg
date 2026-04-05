@@ -2,14 +2,17 @@
   "name": "@findeg/storefront",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev --port 3000",
     "build": "next build",
-    "start": "next start",
+    "start": "next start --port 3000",
     "type-check": "tsc --noEmit",
     "lint": "eslint .",
-    "test": "vitest",
-    "e2e": "cypress run",
+    "test": "npm run type-check && npm run test:unit && npm run test:e2e",
+    "test:unit": "vitest run",
+    "test:e2e": "start-server-and-test start http-get://localhost:3000 'cypress run --browser chrome --headless'",
+    "test:e2e:dev": "start-server-and-test 'next dev --port 3000' http-get://localhost:3000 'cypress run --browser chrome --headless'",
     "e2e:run": "cypress run",
     "e2e:run:ci": "cypress run --browser chrome --headless",
     "e2e:open": "cypress open"
@@ -17,9 +20,13 @@
   "dependencies": {
     "@findeg/backend": "workspace:*",
     "@findeg/ui": "workspace:*",
+    "@hookform/resolvers": "^5.2.2",
+    "@react-email/components": "^0.0.34",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
+    "drizzle-orm": "^0.45.2",
     "framer-motion": "^12.4.7",
+    "input-otp": "^1.4.2",
     "lucide-react": "^0.563.0",
     "next": "^16.0.0",
     "next-intl": "^4.7.0",
@@ -28,13 +35,19 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.71.1",
+    "resend": "^4.8.0",
+    "swr": "^2.4.1",
     "tailwind-merge": "^3.5.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.2.2",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/node": "^25.5.2",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.7.0",
     "autoprefixer": "^10.4.27",
     "cypress": "^15.10.0",
     "eslint": "^9.0.0",
@@ -42,10 +55,12 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jsdoc": "^62.5.4",
     "eslint-plugin-prettier": "^5.5.5",
+    "jsdom": "^29.0.1",
     "postcss": "^8.5.8",
     "prettier": "^3.8.0",
     "tailwindcss": "^4.2.2",
     "tailwindcss-animate": "^1.0.7",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "vitest": "^1.3.0"
   }
 }
