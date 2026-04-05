@@ -204,3 +204,10 @@ Package-specific:
 - follow existing patterns
 - prefer simpler solution
 - do not invent new architecture
+
+## Active Technologies
+- TypeScript 5.x (strict mode enabled) + Drizzle ORM, Zod, bcrypt, jsonwebtoken, sharp, nodemailer (002-backend-pure-typescript)
+- PostgreSQL via Drizzle ORM (002-backend-pure-typescript)
+
+## Recent Changes
+- 002-backend-pure-typescript: Added TypeScript 5.x (strict mode enabled) + Drizzle ORM, Zod, bcrypt, jsonwebtoken, sharp, nodemailer

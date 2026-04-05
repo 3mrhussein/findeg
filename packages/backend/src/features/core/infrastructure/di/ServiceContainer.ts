@@ -1,11 +1,15 @@
 /**
  * Service Container
+
  *
  * Simple Dependency Injection container to manage singleton instances
  * of repositories and services.
  *
  * All getters return interface types (not concrete classes)
  * to enforce proper abstraction boundaries.
+ *
+ * Note: This container is intended for server-side use only (Server Actions, API routes).
+ * The framework layer (dashboard/storefront apps) is responsible for ensuring server-only execution.
  */
 
 import { DrizzleProductRepository } from "@/features/catalog/infrastructure/persistence/DrizzleProductRepository";
@@ -21,7 +25,6 @@ import { DrizzleInventoryRepository } from "@/features/catalog/infrastructure/pe
 import { DrizzleVariantRepository } from "@/features/catalog/infrastructure/persistence/DrizzleVariantRepository";
 import { DrizzleSchoolListRepository } from "@/features/catalog/infrastructure/persistence/DrizzleSchoolListRepository";
 
-import { CookieSessionProvider } from "@/features/core/infrastructure/auth/CookieSessionProvider";
 import { LocalStorageProvider } from "../storage/LocalStorageProvider";
 
 import { AuthService } from "@/features/identity/application/services/AuthService";
@@ -97,7 +100,6 @@ import {
   IAuditLogService,
   IProductImportService,
 } from "@/features/administration/application/interfaces";
-import { ISessionProvider } from "@/features/core/application/interfaces/ISessionProvider";
 import { IStorageProvider } from "@/features/core/application/interfaces/IStorageProvider";
 import { ILoggerService } from "@/features/core/application/interfaces/ILoggerService";
 import { IParentListService } from "@/features/school/application/interfaces/IParentListService";
@@ -137,7 +139,6 @@ export class ServiceContainer {
   private _notificationRepository?: INotificationRepository;
 
   // ─── 2. Infrastructure Services ───────────────────────────────────────
-  private _sessionProvider?: ISessionProvider;
   private _storageProvider?: IStorageProvider;
   private _emailService?: IEmailService;
 
@@ -181,7 +182,7 @@ export class ServiceContainer {
   /**
    *
    */
-  private constructor() {}
+  private constructor() { }
 
   /**
    *
@@ -335,16 +336,6 @@ export class ServiceContainer {
   // ============================================================================
 
   /**
-   * Provider for session persistence (e.g., Cookies, JWT).
-   */
-  get sessionProvider(): ISessionProvider {
-    if (!this._sessionProvider) {
-      this._sessionProvider = new CookieSessionProvider();
-    }
-    return this._sessionProvider;
-  }
-
-  /**
    * Provider for file storage (e.g., Local filesystem, S3).
    */
   get storageProvider(): IStorageProvider {
@@ -384,7 +375,7 @@ export class ServiceContainer {
    */
   get authService(): IAuthService {
     if (!this._authService) {
-      this._authService = new AuthService(this.userRepository, this.sessionProvider);
+      this._authService = new AuthService(this.userRepository);
     }
     return this._authService;
   }

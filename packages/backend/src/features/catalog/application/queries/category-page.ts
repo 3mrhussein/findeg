@@ -1,5 +1,3 @@
-import { cacheTag, cacheLife } from "next/cache";
-import { CACHE_TAGS } from "@/features/core/domain/constants/cache-tags";
 import { getServices } from "@/server/getServices";
 import { resolveLocale } from "@/features/core/domain/value-objects";
 import { Product } from "@/features/catalog/domain/entities/Product";
@@ -32,10 +30,6 @@ export async function getCategoryPageViewModel(
   locale: string,
   query: { [key: string]: string | string[] | undefined },
 ): Promise<CategoryPageViewModel | null> {
-  // "use cache"; // TODO: Re-enable after proper cache configuration
-  // cacheTag(CACHE_TAGS.CATALOG_CATEGORIES, CACHE_TAGS.CATALOG_PRODUCTS);
-  // cacheLife("hours");
-
   const resolvedLocale = resolveLocale(locale);
   const { categories, products } = getServices();
 

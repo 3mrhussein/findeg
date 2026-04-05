@@ -2,18 +2,21 @@
  * Backend Library Utilities
  *
  * Re-export all utility functions for easy import.
- * Usage: import { formatCurrency, UnauthorizedError } from '@findeg/backend/lib'
+ * Usage: import { formatCurrency } from '@findeg/backend/lib'
+ *
+ * Note: ValidationError and ConflictError domain errors should be imported from core:
+ *       import { ValidationError, ConflictError } from '@findeg/backend'
  */
 
 export * from "./i18n";
 
-// Re-export error classes with explicit names to avoid conflicts
+// Re-export HTTP error classes only (AppError-based)
+// Domain errors (ValidationError, ConflictError) come from core
 export {
   AppError,
   ForbiddenError,
   NotFoundError,
-  ValidationError,
-  ConflictError,
+  UnauthorizedError,
   InternalServerError,
   ServiceUnavailableError,
   isOperationalError,

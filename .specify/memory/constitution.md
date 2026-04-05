@@ -8,9 +8,9 @@ A modern, multilingual e-commerce application specializing in school supplies, s
 
 Domain logic MUST be completely isolated from technical details (database, UI framework, external services). All features follow the 4-layer model: **domain** (pure business rules), **application** (use cases/orchestration), **infrastructure** (adapters/DB), and **presentation** (UI/routes). Cross-feature dependencies are PROHIBITED at infrastructure level—only through application interfaces. No feature's infrastructure code may be imported directly by another feature or UI. Authorization checks MUST use guard interfaces (`IPermissionService`), never role-string checks in routes/components.
 
-### II. Server-Components First & Type-Safe Rendering
+### II. Server-Components First & Type-Safe Rendering with Next.js 16 Caching
 
-Server Components are the default for all new UI. Client Components (`'use client'`) are permitted ONLY for interactive elements (forms, client state, event handlers). All data fetching must flow through Services or ViewModels in the application layer—no direct DB access in routes. TypeScript strict mode is MANDATORY. No `as any` casts are permitted; interfaces and adapters must be properly typed. Every API boundary must validate input with Zod schemas; every domain entity must be strongly typed.
+Server Components are the default for all new UI. Client Components (`'use client'`) are permitted ONLY for interactive elements (forms, client state, event handlers). All data fetching must flow through Services or ViewModels in the application layer—no direct DB access in routes. Caching logic MUST be handled in app-layer server components or actions using `'use cache'` directives where appropriate—backend packages do NOT manage revalidation or cache tags. TypeScript strict mode is MANDATORY. No `as any` casts are permitted; interfaces and adapters must be properly typed. Every API boundary must validate input with Zod schemas; every domain entity must be strongly typed.
 
 ### III. Bilingual & RTL-First (i18n Mandatory)
 
@@ -37,6 +37,18 @@ All code adheres to SOLID principles to maximize maintainability and testability
 - **L (Liskov Substitution)**: Derived types (subclasses, component variants) are substitutable without breaking expected behavior. Contracts are honored.
 - **I (Interface Segregation)**: Dependencies depend on minimal, specific interfaces—not fat monolithic contracts. Clients depend on what they actually use.
 - **D (Dependency Inversion)**: High-level modules depend on abstractions (interfaces), not concrete implementations. This is enforced via `application/` layer contracts in Clean Architecture.
+
+### VIII. Backend Packages (Pure TypeScript Libraries)
+
+Backend packages (`@findeg/backend`) MUST be pure TypeScript libraries containing ONLY domain logic, services, adapters, and pure functions. Next.js APIs, server actions, `'use cache'` directives, or any framework-specific runtime features are STRICTLY FORBIDDEN in backend packages. The backend package provides business logic contracts, interfaces, types, schemas, and service implementations—nothing more. All UI components, routes, server actions, and caching logic belong exclusively to app packages (`@findeg/dashboard`, `@findeg/storefront`). Backend packages are framework-agnostic and testable in isolation without Next.js runtime.
+
+### IX. Monorepo Architecture & Package Boundaries
+
+The monorepo structure enforces strict package boundaries via Turborepo and pnpm workspaces. Four packages exist: `@findeg/ui` (shared React components), `@findeg/backend` (business logic), `@findeg/dashboard` (admin app), and `@findeg/storefront` (customer app). Apps depend on `@findeg/ui` and `@findeg/backend`; backend and UI packages are independent with NO circular dependencies. Features within the backend package MUST be self-contained—cross-feature dependencies are ONLY permitted through application-layer interfaces defined in `core`. Backend packages CANNOT depend on app-layer code or UI components. All shared utilities, types, and cross-cutting concerns live in `@findeg/backend/features/core` or `@findeg/ui/lib`. Violating package boundaries (e.g., importing another feature's infrastructure directly, or importing app code into backend) is a critical architecture violation and must be refactored immediately.
+
+### X. Source vs Build Artifacts (STRICT)
+
+Source code directories MUST contain ONLY handwritten, human-maintained source files. All build outputs, generated artifacts, compiled files, and transpiled code MUST be emitted to dedicated output directories and NEVER placed alongside source code. Each package has a single, clearly defined output directory: `dist/` for backend features, `.next/` for Next.js apps, or framework-specific equivalents. Generated TypeScript (`.js`, `.d.ts`, `.map`), compiled CSS, bundled chunks, codegen outputs (API clients, schemas, SDKs), and any file produced by build tools, compilers, or AI code generation MUST go only to the designated output folder. Source directories (`src/`) MUST NEVER contain compiled or generated artifacts. Monorepo packages MUST NOT import from another package's source directory (`src/`) or build output (`dist/`) directly; dependencies MUST flow through declared exports in `package.json`. This strict separation ensures clean version control, predictable Turborepo caching, and clear distinction between human intent and machine-generated code.
 
 ## Development Standards & Quality Gates
 
@@ -101,6 +113,16 @@ All code MUST follow Clean Code practices for maximum readability and maintainab
 4. Update `docs/database/SCHEMA.md` if schema changes are public-facing
 5. Update project planning docs (`project-planning/`) with feature impact
 
+**Test Script Configuration**
+
+All test scripts MUST use non-interactive flags to ensure tests run once and exit cleanly. This prevents CI/CD hangs and ensures proper test completion in automated environments:
+
+- `vitest` scripts: use `vitest --run`
+- `jest` scripts: use `jest --watchAll=false`
+- `cypress` scripts: already exit by default with `cypress run`
+
+Test watch mode is only used locally during development with `npm run test:watch`. The default `npm run test` command MUST be non-interactive and exit automatically.
+
 ## Governance
 
 **Constitution Authority**
@@ -109,6 +131,7 @@ This constitution supersedes all other architectural guidance. It is the source 
 - Layer boundaries and import rules
 - Component placement restrictions
 - i18n and RTL compliance standards
+- Source vs build artifacts separation (output directories, version control cleanliness)
 - Definition of Done checklist
 - Database change workflow
 
@@ -130,34 +153,169 @@ This constitution supersedes all other architectural guidance. It is the source 
 
 <!-- SYNC IMPACT REPORT -->
 <!--
-Version: 1.1.0 (DRY & SOLID Principles Amendment)
-Previous Version: 1.0.0
-Ratified: 2025-04-03
-Last Amended: 2026-04-03
+=== CURRENT VERSION ===
 
-Version Bump Rationale: MINOR (1.0.0 → 1.1.0)
-- New Principle VI: DRY Principle (Don't Repeat Yourself)
-- New Principle VII: SOLID Design Principles (expands design discipline)
-- Enhanced "Development Standards" with CLEAN CODE section (code quality practices)
-- Updated Definition of Done to include code quality gates (DRY, SRP, SOLID, CLEAN CODE)
+Version: 1.3.0 (Source vs Build Artifacts Amendment)
+Previous Version: 1.2.1
+Ratified: 2026-04-05
+Last Amended: 2026-04-05
+
+Version Bump Rationale: MINOR (1.2.1 → 1.3.0)
+- New Principle X: Source vs Build Artifacts (STRICT) — Enforces strict separation of source code and build outputs
+- Prohibits generated/compiled files in src/ directories
+- Mandates single output directory per package (dist/, .next/, etc.)
+- Requires imports via declared exports, never direct file access
+- Ensures clean version control and Turborepo caching
+- Applies to all file types: TypeScript, CSS, bundles, codegen, AI-generated artifacts
 
 Principles Modified/Added:
-✅ Principle VI (NEW): DRY Principle — Single source of truth enforcement + refactoring discipline
-✅ Principle VII (NEW): SOLID Design Principles — SRP, O/C, LSP, ISP, DIP enforcement
-✅ Development Standards (ENHANCED): CLEAN CODE Principles section added (naming, functions, comments, anti-patterns)
-✅ Definition of Done (ENHANCED): Code Quality Gates added (DRY, SRP, SOLID, CLEAN CODE verification)
+✅ Principle X (NEW): Source vs Build Artifacts (STRICT)
+   - Source directories contain ONLY handwritten source files
+   - All build outputs go to dedicated output folders (dist/, .next/, etc.)
+   - Generated TypeScript (.js, .d.ts, .map), CSS, chunks, codegen must be in output folder only
+   - src/ directories MUST NEVER contain compiled/generated artifacts
+   - Cross-package imports via declared exports only, never direct src/dist/ access
+   - Applies to all: TypeScript compilation, CSS preprocessing, bundlers, codegen, AI artifacts
+
+Sections Aligned:
+✅ Core Principles now total 10 (was 9)
+✅ Constitution Authority section updated to include source/artifact separation
+✅ Governance section intact
+
+Templates Requiring Updates:
+⚠ .specify/templates/plan-template.md → Add Constitution Check gate for Principle X (Build Artifact Clean Architecture)
+⚠ .specify/templates/spec-template.md → Add compliance gate for X (source/output separation validation)
+⚠ .specify/templates/tasks-template.md → Add "Build Artifact Separation" and "Output Directory Validation" tasks in Constitution Compliance section
+
+Follow-Up Actions:
+- Add .gitignore validation to lint pipeline to ensure dist/, build/, .next/ are excluded from version control
+- Document package.json exports structure in ARCHITECTURE_PLAYBOOK.md
+- Consider ESLint rule to detect imports from src/ or dist/ directories directly
+- Add Turborepo cache validation to CI/CD (ensure only declared outputs are cached)
+
+No deferred placeholders. All tokens resolved.
+
+=== HISTORICAL AMENDMENTS ARCHIVE ===
+
+Version 1.2.1 (Test Script Configuration Amendment)
+Previous Version: 1.2.0
+Ratified: 2025-04-03
+Last Amended: 2026-04-05
+
+Version Bump Rationale: PATCH (1.2.0 → 1.2.1)
+- New Workflow: Test Script Configuration — Mandates --watchAll=false for all test runners (vitest, jest)
+- Ensures test scripts exit cleanly in CI/CD environments and prevent terminal hangs
+- Establishes test:watch as local-only development command
+
+Development Standards Section Updated:
+✅ New subsection: "Test Script Configuration"
+   - All test scripts MUST use non-interactive flags
+   - Scripts must exit automatically in CI/CD (no hanging processes)
+   - vitest scripts: use `vitest --run`
+   - jest scripts: use `jest --watchAll=false`
+   - cypress scripts: already exit by default
+   - test:watch ONLY for local development
+
+Rationale:
+- Prevents CI/CD pipeline hangs from watch mode
+- Ensures predictable test completion in automated environments
+- Maintains developer experience (watch mode still available locally)
+
+Sections Aligned:
+✅ Development Standards & Quality Gates → Test Script Configuration added
+✅ Definition of Done section references test script standards
+
+No deferred placeholders. All tokens resolved.
+
+---
+
+Version 1.2.0 (Backend Purity & Monorepo Architecture Amendment)
+Previous Version: 1.1.0
+Ratified: 2025-04-03
+Last Amended: 2026-04-05
+
+Version Bump Rationale: MINOR (1.1.0 → 1.2.0)
+- Principle II ENHANCED: Added Next.js 16 caching requirements ('use cache' directive enforcement, backend exclusion from cache logic)
+- New Principle VIII: Backend Packages (Pure TypeScript Libraries) — Enforces framework-agnostic backend, prohibits Next.js APIs in backend
+- New Principle IX: Monorepo Architecture & Package Boundaries — Defines 4-package structure, dependency flow rules, cross-feature interface requirements
+
+Principles Modified/Added:
+✅ Principle II (ENHANCED): Server-Components First & Type-Safe Rendering with Next.js 16 Caching
+   - Added: Caching logic via 'use cache' in app layer only
+   - Added: Backend packages forbidden from managing revalidation/tags
+   - Clarification: Backend provides business logic; apps handle cache invalidation
+
+✅ Principle VIII (NEW): Backend Packages (Pure TypeScript Libraries)
+   - Backend must be pure TypeScript: domain logic, services, adapters, pure functions only
+   - Forbidden: Next.js APIs, server actions, cache directives, framework runtime features
+   - Backend is framework-agnostic and testable in isolation
+   - Can be used in Node.js, Vercel Functions, or future runtimes without modification
+
+✅ Principle IX (NEW): Monorepo Architecture & Package Boundaries
+   - Defines 4-package structure: @findeg/ui, @findeg/backend, @findeg/dashboard, @findeg/storefront
+   - Enforces dependency flow: apps depend on ui + backend; backend/ui are independent
+   - Cross-feature dependencies only via core application interfaces
+   - Violating package boundaries is critical architecture violation
+
+Sections Aligned:
+✅ Core Principles now total 9 (was 7)
+✅ Governance section intact
+✅ Development Standards & Quality Gates reference updated architecture
+
+Templates Requiring Updates:
+⚠ .specify/templates/plan-template.md → Add Constitution Check gates for Principles VIII (Backend Purity) & IX (Package Boundaries)
+⚠ .specify/templates/spec-template.md → Add compliance gates for VIII & IX (monorepo architecture validation)
+⚠ .specify/templates/tasks-template.md → Add "Backend Package Purity" and "Package Boundary Validation" tasks in Constitution Compliance section
+
+Follow-Up Actions:
+- Update ARCHITECTURE_PLAYBOOK.md to reference Principles VIII & IX
+- Add monorepo boundary checks to lint pipeline (if not already present)
+- Document package dependency graph in architecture docs
+- Create eslint rules to enforce package boundary violations
+
+No deferred placeholders. All tokens resolved.
+
+---
+
+Version 1.1.0 (DRY & SOLID Design Principles Amendment)
+Previous Version: 1.0.0
+Ratified: 2025-03-20
+Last Amended: 2026-04-05
+
+Version Bump Rationale: MINOR (1.0.0 → 1.1.0)
+- Principle VI: DRY Principle (Don't Repeat Yourself) — Enforces single source of truth across codebase
+- Principle VII: SOLID Design Principles — Object-oriented and functional design best practices
+- Development Standards: CLEAN CODE section — Mandatory code quality guidelines (naming, functions, comments)
+
+Principles Added:
+✅ Principle VI (NEW): DRY Principle (Don't Repeat Yourself)
+   - Every piece of logic, type, component, utility has single source of truth
+   - Duplication eliminated through extraction and reuse
+   - Shared domain types, utilities, composable components, hooks are norm
+   - Copy-paste coding explicitly forbidden; flagged in code review
+
+✅ Principle VII (NEW): SOLID Design Principles
+   - S (Single Responsibility): One reason to change per function/class/module
+   - O (Open/Closed): Open for extension, closed for modification
+   - L (Liskov Substitution): Derived types are substitutable
+   - I (Interface Segregation): Dependencies on minimal, specific interfaces
+   - D (Dependency Inversion): Depend on abstractions, not concrete implementations
+
+Development Standards Enhanced:
+✅ New subsection: CLEAN CODE Principles (Mandatory Standard)
+   - Naming: Names reveal intent, pronounceable, non-misleading
+   - Functions & Methods: Small, single responsibility, minimal parameters, early returns
+   - Comments & Documentation: Explain WHY, not WHAT; keep current
+   - SOLID Anti-Patterns: Feature Envy, God Objects, Tight Coupling, Divergent Change
+   - Definition of Done extended: Code Quality Gates section added
 
 Sections Aligned:
 ✅ Core Principles now total 7 (was 5)
-✅ Development Standards → CLEAN CODE practices documented
-✅ Code Review Standards section references DRY + SOLID compliance
-
-Templates Requiring Follow-Up (from initial extraction):
-⚠ .specify/templates/plan-template.md → Add Constitution Check gates for Principles VI (DRY) & VII (SOLID)
-⚠ .specify/templates/spec-template.md → Add Constitution Compliance gates for VI & VII
-⚠ .specify/templates/tasks-template.md → Add DRY/SOLID compliance tasks in "Constitution Compliance Tasks" section
+✅ Development Standards expanded with CLEAN CODE section
+✅ Definition of Done extended with quality gate checklist
 
 No deferred placeholders. All tokens resolved.
+
 -->
 
-**Version**: 1.1.0 | **Ratified**: 2025-04-03 | **Last Amended**: 2026-04-03
+**Version**: 1.3.0 | **Ratified**: 2026-04-05 | **Last Amended**: 2026-04-05

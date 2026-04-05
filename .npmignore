@@ -1,0 +1,37 @@
+# Source files not needed in published packages
+src/
+
+# Build artifacts
+dist/
+*.tsbuildinfo
+
+# Testing
+coverage/
+cypress/
+vitest.config.ts
+*.test.ts
+
+# Development
+.vscode/
+.idea/
+*.local
+
+# Documentation
+docs/
+specs/
+README.md is usually needed for context
+
+# Version control
+.git/
+.gitignore
+
+# Environment
+.env*
+
+# Utilities
+tsconfig.json
+eslint.config.js
+turbo.json
+
+# Logs
+*.log

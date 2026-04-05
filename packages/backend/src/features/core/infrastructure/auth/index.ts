@@ -1,2 +1,2 @@
 export { JwtSessionManager } from "./JwtSessionManager";
-export { CookieSessionProvider } from "./CookieSessionProvider";
+export { CookieSessionProvider, type ICookieStore } from "./CookieSessionProvider";

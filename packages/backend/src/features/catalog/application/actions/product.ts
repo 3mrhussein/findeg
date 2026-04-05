@@ -1,71 +1,93 @@
-"use server";
+/**
+ * Pure TypeScript Product Actions
+ *
+ * Contains business logic only - no framework-specific calls.
+ * App-layer (dashboard) handles cache revalidation after operations.
+ */
 
 import { container } from "@/features/core/infrastructure/di/ServiceContainer";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { ResourceNotFoundError, ValidationError } from "@/features/core/domain/errors";
 import { ProductInput } from "@/features/administration/domain/types";
-import { resolveErrorMessage } from "@/features/core/domain/errors/error-catalog";
-import { CACHE_TAGS } from "@/features/core/domain/constants/cache-tags";
+import type { ServiceResult } from "@/features/core/application/types";
+import type { Product } from "@/features/catalog/domain/entities/Product";
+import { getProductCachePaths, getProductCacheTags } from "@/features/catalog/domain/cache";
 
 /**
- * Creates a new product.
+ * Pure product creation - no framework calls.
  *
- * @param input - The product creation data payload.
- * @returns Success status or error message.
+ * Creates a new product and returns cache paths to revalidate.
+ * Throws validation or business rule errors.
+ * App-layer handles cache revalidation and redirects.
  */
-export async function createProductAction(input: ProductInput) {
-  try {
-    const service = container.adminProductService;
-    const product = await service.create(input);
-    revalidatePath("/admin/products");
-    revalidateTag(CACHE_TAGS.CATALOG_PRODUCTS, "max");
-    return { success: true, productId: product.id };
-  } catch (error: any) {
-    return {
-      success: false,
-      error: resolveErrorMessage(error, "ACTION_PRODUCT_CREATE_FAILED"),
-    };
+export async function createProduct(
+  input: ProductInput,
+): Promise<ServiceResult<{ productId: number }>> {
+  if (!input) {
+    throw new ValidationError("input", "Product input is required");
   }
+
+  const service = container.adminProductService;
+  const product = await service.create(input);
+
+  return {
+    success: true,
+    data: { productId: product.id },
+    cachePaths: getProductCachePaths(product.id),
+    cacheTags: getProductCacheTags(product.id),
+  };
 }
 
 /**
- * Updates an existing product.
+ * Pure product update - no framework calls.
  *
- * @param id - The ID of the product to update.
- * @param input - The updated product fields.
- * @returns Success status or error message.
+ * Updates an existing product and returns cache paths to revalidate.
+ * Throws validation, not found, or business rule errors.
+ * App-layer handles cache revalidation.
  */
-export async function updateProductAction(id: number, input: ProductInput) {
-  try {
-    const service = container.adminProductService;
-    const product = await service.update(id, input);
-    revalidatePath("/admin/products");
-    revalidateTag(CACHE_TAGS.CATALOG_PRODUCTS, "max");
-    return { success: true, productId: product.id };
-  } catch (error: any) {
-    return {
-      success: false,
-      error: resolveErrorMessage(error, "ACTION_PRODUCT_UPDATE_FAILED"),
-    };
+export async function updateProduct(
+  id: number,
+  input: ProductInput,
+): Promise<ServiceResult<{ productId: number }>> {
+  if (!id || id <= 0) {
+    throw new ResourceNotFoundError("Product", id);
   }
+
+  if (!input) {
+    throw new ValidationError("input", "Product input is required");
+  }
+
+  const service = container.adminProductService;
+  const product = await service.update(id, input);
+
+  return {
+    success: true,
+    data: { productId: product.id },
+    cachePaths: getProductCachePaths(product.id),
+    cacheTags: getProductCacheTags(product.id),
+  };
 }
 
 /**
- * Deletes a product by its ID.
+ * Pure product deletion - no framework calls.
  *
- * @param id - The product ID.
- * @returns Success status or error message.
+ * Deletes a product and returns cache paths to revalidate.
+ * Throws not found or business rule errors.
+ * App-layer handles cache revalidation.
  */
-export async function deleteProductAction(id: number) {
-  try {
-    const service = container.adminProductService;
-    await service.delete(id);
-    revalidatePath("/admin/products");
-    revalidateTag(CACHE_TAGS.CATALOG_PRODUCTS, "max");
-    return { success: true };
-  } catch (error: any) {
-    return {
-      success: false,
-      error: resolveErrorMessage(error, "ACTION_PRODUCT_DELETE_FAILED"),
-    };
+export async function deleteProduct(
+  id: number,
+): Promise<ServiceResult<{ success: true }>> {
+  if (!id || id <= 0) {
+    throw new ResourceNotFoundError("Product", id);
   }
+
+  const service = container.adminProductService;
+  await service.delete(id);
+
+  return {
+    success: true,
+    data: { success: true },
+    cachePaths: getProductCachePaths(id),
+    cacheTags: getProductCacheTags(id),
+  };
 }

@@ -1,4 +1,3 @@
-import { cacheTag, cacheLife } from "next/cache";
 import { CACHE_TAGS } from "@/features/core/domain/constants/cache-tags";
 import { getServices } from "@/server/getServices";
 import { getShopPageData } from "./storefront";

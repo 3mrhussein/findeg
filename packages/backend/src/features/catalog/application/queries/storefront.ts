@@ -1,4 +1,3 @@
-import { cacheTag, cacheLife } from "next/cache";
 import { getServices } from "@/server/getServices";
 import { CACHE_TAGS } from "@/features/core/domain/constants/cache-tags";
 import type { Product } from "@/features/catalog/domain/entities/Product";
@@ -42,10 +41,6 @@ export interface ProductDetailPageData {
  *   so it becomes part of the cache key — one entry per locale.
  */
 export async function getHomePageData(language: string): Promise<HomePageData> {
-  // "use cache"; // TODO: Re-enable after proper cache configuration
-  // cacheTag(CACHE_TAGS.CATALOG_PRODUCTS, CACHE_TAGS.CATALOG_CATEGORIES);
-  // cacheLife("hours");
-
   const locale = resolveLocale(language);
   const { products, categories } = getServices();
   const [featuredProducts, allCategories] = await Promise.all([
@@ -69,10 +64,6 @@ export async function getHomePageData(language: string): Promise<HomePageData> {
  * @param language - Locale string. Part of the cache key.
  */
 export async function getShopPageData(language: string): Promise<ShopPageData> {
-  // "use cache"; // TODO: Re-enable after proper cache configuration
-  // cacheTag(CACHE_TAGS.CATALOG_PRODUCTS);
-  // cacheLife("hours");
-
   const locale = resolveLocale(language);
   const { products } = getServices();
   const allProducts = await products.getAll(locale);

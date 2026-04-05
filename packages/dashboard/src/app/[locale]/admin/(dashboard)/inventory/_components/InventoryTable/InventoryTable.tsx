@@ -14,7 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 import {
   bulkUpdateStockAction,
   updateStockAction,
-} from "@/features/administration/application/actions/inventory";
+} from "@/actions/admin-actions";
 import type { Product } from "@/features/catalog/domain/entities/Product";
 import type { InventoryTableProps, SortKey } from "./InventoryTable.interface";
 import { InventoryFilters } from "./InventoryFilters";

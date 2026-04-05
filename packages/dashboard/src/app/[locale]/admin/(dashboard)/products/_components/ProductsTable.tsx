@@ -1,14 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@findeg/ui";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@findeg/ui";
 import { Checkbox } from "@findeg/ui";
 import { ProductRow } from "./ProductRow";
 import type { ProductListItem } from "@/features/administration/application/interfaces";
@@ -55,7 +48,7 @@ export function ProductsTable({
       <Table>
         <TableHeader>
           <TableRow className="hover:bg-transparent bg-muted/30">
-            <TableHead className="w-[40px]">
+            <TableHead className="w-10">
               <Checkbox
                 checked={allSelected || (partialSelected ? "indeterminate" : false)}
                 onCheckedChange={handleSelectAll}
