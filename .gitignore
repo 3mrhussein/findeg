@@ -14,7 +14,7 @@ dashboard/node_modules
 storefront/node_modules
 
 # Build outputs
-/dist
+**/dist/*
 dist-ssr
 *.local
 **/.next/*
