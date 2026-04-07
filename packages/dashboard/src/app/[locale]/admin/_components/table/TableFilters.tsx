@@ -11,16 +11,10 @@
 
 import * as React from "react";
 import { Search, X } from "lucide-react";
-import { Input } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@findeg/ui";
-import { cn } from "@/lib/utils";
+import { Input } from "@ui";
+import { Button } from "@ui";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ui";
+import { cn } from "@lib/utils";
 
 export interface FilterOption {
   value: string;

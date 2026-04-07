@@ -2,10 +2,10 @@
 
 import * as React from "react";
 import { ChevronRight, X, Loader2, Folder } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Button } from "@findeg/ui";
-import { Popover, PopoverContent, PopoverTrigger } from "@findeg/ui";
-import { ScrollArea } from "@findeg/ui";
+import { cn } from "@lib/utils";
+import { Button } from "@ui";
+import { Popover, PopoverContent, PopoverTrigger } from "@ui";
+import { ScrollArea } from "@ui";
 
 export interface Category {
   id: number;

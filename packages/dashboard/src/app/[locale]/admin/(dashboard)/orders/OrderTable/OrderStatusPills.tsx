@@ -1,10 +1,21 @@
 "use client";
 
 import { useTransition } from "react";
-import { type OrderStatus } from "@/features/core/domain/types/common";
-import { Badge } from "@findeg/ui";
-import { ScrollArea, ScrollBar } from "@findeg/ui";
-import { Button } from "@findeg/ui";
+import { Badge } from "@ui";
+import { ScrollArea, ScrollBar } from "@ui";
+import { Button } from "@ui";
+
+/**
+ * OrderStatus type (local definition)
+ */
+type OrderStatus =
+  | "pending"
+  | "confirmed"
+  | "processing"
+  | "shipped"
+  | "delivered"
+  | "cancelled"
+  | "refunded";
 
 interface OrderStatusPillsProps {
   statusCounts: Record<string, number>;

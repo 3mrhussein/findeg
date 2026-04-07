@@ -10,7 +10,7 @@ Domain logic MUST be completely isolated from technical details (database, UI fr
 
 ### II. Server-Components First & Type-Safe Rendering with Next.js 16 Caching
 
-Server Components are the default for all new UI. Client Components (`'use client'`) are permitted ONLY for interactive elements (forms, client state, event handlers). All data fetching must flow through Services or ViewModels in the application layer—no direct DB access in routes. Caching logic MUST be handled in app-layer server components or actions using `'use cache'` directives where appropriate—backend packages do NOT manage revalidation or cache tags. TypeScript strict mode is MANDATORY. No `as any` casts are permitted; interfaces and adapters must be properly typed. Every API boundary must validate input with Zod schemas; every domain entity must be strongly typed.
+Server Components are the default for all new UI. Client Components (`'use client'`) are permitted ONLY for interactive elements (forms, client state, event handlers). All data fetching must flow through **App Data Layer** in `src/data/{feature}/{queries|actions}.ts` using Next.js 16 Cache Components (`'use cache'` directive). The app data layer is the **single source of truth for caching decisions**: it calls backend services and wraps results with `'use cache'` for queries or `'use server'` for mutations. Backend packages MUST NOT contain `'use cache'`, `'use server'`, or any `next/cache` imports—they remain pure TypeScript. Cache invalidation via `updateTag()` or `revalidateTag()` happens exclusively at the app layer, never in backend code. TypeScript strict mode is MANDATORY. No `as any` casts are permitted; interfaces and adapters must be properly typed. Every API boundary must validate input with Zod schemas; every domain entity must be strongly typed.
 
 ### III. Bilingual & RTL-First (i18n Mandatory)
 
@@ -40,7 +40,27 @@ All code adheres to SOLID principles to maximize maintainability and testability
 
 ### VIII. Backend Packages (Pure TypeScript Libraries)
 
-Backend packages (`@findeg/backend`) MUST be pure TypeScript libraries containing ONLY domain logic, services, adapters, and pure functions. Next.js APIs, server actions, `'use cache'` directives, or any framework-specific runtime features are STRICTLY FORBIDDEN in backend packages. The backend package provides business logic contracts, interfaces, types, schemas, and service implementations—nothing more. All UI components, routes, server actions, and caching logic belong exclusively to app packages (`@findeg/dashboard`, `@findeg/storefront`). Backend packages are framework-agnostic and testable in isolation without Next.js runtime.
+Backend packages (`@findeg/backend`) MUST be pure TypeScript libraries containing ONLY domain logic, services, adapters, and pure functions. **Next.js APIs (`'use cache'`, `'use server'`, `updateTag`, `cacheTag`), server actions, or any framework-specific runtime features are STRICTLY FORBIDDEN in backend packages.** The backend package provides business logic contracts, interfaces, types, schemas, service classes, and service factory functions—nothing more. All UI components, routes, server actions, caching directives, and cache invalidation logic belong exclusively to app packages (`@findeg/dashboard`, `@findeg/storefront`). Backend packages are framework-agnostic and testable in isolation without Next.js runtime.
+
+**Service Factory Pattern**: Backend features export factory functions (e.g., `createCatalogServices()`, `createOrderServices()`) that return service instances. Apps call these factories to get service instances, then wrap the service calls in `'use cache'` queries or `'use server'` actions at the app layer.
+
+**Example**:
+```typescript
+// Backend (pure TS, no Next.js)
+export function createCatalogServices() {
+  const db = DrizzleConnection.getInstance();
+  return { products: new ProductService(db) };
+}
+
+// App data layer (with Next.js caching)
+'use cache';
+import { createCatalogServices } from '@findeg/backend/features/catalog';
+export async function getProducts(locale) {
+  cacheTag('products');
+  const { products } = createCatalogServices();
+  return await products.getAll(locale);
+}
+```
 
 ### IX. Monorepo Architecture & Package Boundaries
 

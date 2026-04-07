@@ -8,18 +8,18 @@ import {
   ColumnFiltersState,
   getFilteredRowModel,
 } from "@tanstack/react-table";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { IconTooltip } from "@findeg/ui";
-import { Input } from "@findeg/ui";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@ui";
+import { Button } from "@ui";
+import { IconTooltip } from "@ui";
+import { Input } from "@ui";
 import { useState } from "react";
-import { Category } from "@/features/catalog/domain/entities/Category";
+import { Category } from "@backend/features/catalog";
 import { Pencil, Trash2 } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@findeg/ui";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@ui";
 import Link from "next/link";
-import { deleteCategoryAction } from "@/actions/admin-actions";
+import { deleteCategoryAction } from "@actions/admin-actions";
 
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@hooks/use-toast";
 import { useRouter } from "next/navigation";
 
 interface CategoryTableProps {
@@ -150,7 +150,6 @@ export function CategoryTable({ data }: CategoryTableProps) {
     },
   ];
 
-  // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
     data: treeData,
     columns,

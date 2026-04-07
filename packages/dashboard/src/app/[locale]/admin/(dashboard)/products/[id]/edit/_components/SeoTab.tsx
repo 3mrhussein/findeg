@@ -10,12 +10,12 @@
 
 import * as React from "react";
 import { useFormContext } from "react-hook-form";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import { BilingualInput } from "@/components/shared/BilingualInput";
-import { BilingualTextarea } from "@/components/shared/BilingualTextarea";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@ui";
+import { Label } from "@ui";
+import { BilingualInput } from "@components/shared/BilingualInput";
+import { BilingualTextarea } from "@components/shared/BilingualTextarea";
 import { Search } from "lucide-react";
-import type { ProductFormValues } from "@/features/administration/presentation/forms/product-form";
+import type { ProductFormValues } from "@features/administration/presentation/forms/product-form";
 
 /**
  * SeoTab — SEO metadata and search optimization

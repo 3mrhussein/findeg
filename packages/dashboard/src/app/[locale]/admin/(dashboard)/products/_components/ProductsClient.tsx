@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useQueryStates, parseAsInteger, parseAsString, parseAsArrayOf } from "nuqs";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@hooks/use-toast";
 import { useTranslations } from "next-intl";
 import { ProductsFilterBar } from "./ProductsFilterBar";
 import { ProductsTable } from "./ProductsTable";
@@ -14,10 +14,7 @@ import {
   bulkDeactivateAction,
   bulkDeleteAction,
 } from "../actions";
-import type {
-  ProductListResult,
-  ProductListFilters,
-} from "@/features/administration/application/interfaces";
+import type { ProductListResult, ProductListFilters } from "@backend/features/administration";
 
 interface ProductsClientProps {
   initialData: ProductListResult;

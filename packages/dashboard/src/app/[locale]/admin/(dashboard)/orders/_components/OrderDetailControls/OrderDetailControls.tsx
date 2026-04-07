@@ -2,27 +2,42 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Textarea } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@findeg/ui";
-import { updateOrderPaymentStatusAction, updateOrderStatusAction } from "@/actions/order-actions";
-import { useToast } from "@/hooks/use-toast";
-import type { OrderStatus, PaymentStatus } from "@/features/core/domain/types/common";
-import {
-  getAllowedOrderStatusTransitions,
-  getOrderStatusLabel,
-  normalizeOrderStatus,
-  ORDER_STATUS_OPTIONS,
-} from "@/features/order/application/utils/order-status-transitions";
-import {
-  getAllowedPaymentStatusTransitions,
-  getPaymentStatusLabel,
-  normalizePaymentStatus,
-  PAYMENT_STATUS_OPTIONS,
-} from "@/features/order/application/utils/order-payment-status-transitions";
+import { Card, CardContent, CardHeader, CardTitle } from "@ui";
+import { Label } from "@ui";
+import { Input } from "@ui";
+import { Textarea } from "@ui";
+import { Button } from "@ui";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ui";
+import { updateOrderPaymentStatusAction, updateOrderStatusAction } from "@actions/order-actions";
+import { useToast } from "@hooks/use-toast";
+
+/**
+ * Local type definitions
+ */
+type OrderStatus =
+  | "pending"
+  | "confirmed"
+  | "processing"
+  | "shipped"
+  | "delivered"
+  | "cancelled"
+  | "refunded";
+type PaymentStatus = "pending" | "paid" | "failed" | "refunded";
+
+/**
+ * Stub helper functions (to be reimplemented)
+ */
+const getAllowedOrderStatusTransitions = (status: OrderStatus): OrderStatus[] => [];
+const getOrderStatusLabel = (status: OrderStatus): string => status;
+const normalizeOrderStatus = (status: string | undefined): OrderStatus =>
+  (status as OrderStatus) || "pending";
+const ORDER_STATUS_OPTIONS: { value: OrderStatus; label: string }[] = [];
+const getAllowedPaymentStatusTransitions = (status: PaymentStatus): PaymentStatus[] => [];
+const getPaymentStatusLabel = (status: PaymentStatus): string => status;
+const normalizePaymentStatus = (status: string | undefined): PaymentStatus =>
+  (status as PaymentStatus) || "pending";
+const PAYMENT_STATUS_OPTIONS: { value: PaymentStatus; label: string }[] = [];
+
 import type { OrderDetailControlsProps } from "./OrderDetailControls.interface";
 
 /**
@@ -158,8 +173,12 @@ export function OrderDetailControls({
             </SelectTrigger>
             <SelectContent>
               {ORDER_STATUS_OPTIONS.map((option) => (
-                <SelectItem key={option} value={option} disabled={!selectableStatuses.has(option)}>
-                  {getOrderStatusLabel(option)}
+                <SelectItem
+                  key={option.value}
+                  value={option.value}
+                  disabled={!selectableStatuses.has(option.value)}
+                >
+                  {getOrderStatusLabel(option.value)}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -212,11 +231,11 @@ export function OrderDetailControls({
             <SelectContent>
               {PAYMENT_STATUS_OPTIONS.map((option) => (
                 <SelectItem
-                  key={option}
-                  value={option}
-                  disabled={!selectablePaymentStatuses.has(option)}
+                  key={option.value}
+                  value={option.value}
+                  disabled={!selectablePaymentStatuses.has(option.value)}
                 >
-                  {getPaymentStatusLabel(option)}
+                  {getPaymentStatusLabel(option.value)}
                 </SelectItem>
               ))}
             </SelectContent>

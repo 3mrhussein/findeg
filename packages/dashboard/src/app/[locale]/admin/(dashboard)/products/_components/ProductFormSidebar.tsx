@@ -3,23 +3,17 @@
 import React from "react";
 import { useFormContext, useFieldArray } from "react-hook-form";
 import { useTranslations } from "next-intl";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@findeg/ui";
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import { type ProductFormValues } from "@/features/administration/presentation/forms/product-form";
-import { type Category, type Brand, type Tag } from "@/features/catalog/domain/entities";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@findeg/ui";
-import { TagInput } from "@/app/[locale]/admin/_components/shared/TagInput";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@ui";
+import { type ProductFormValues } from "@features/administration/presentation/forms/product-form";
+import { type Category, type Brand, type Tag } from "@backend/features/catalog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ui";
+import { TagInput } from "@app/[locale]/admin/_components/shared/TagInput";
 import {
   CascadingCategoryPicker,
   type CategoryTreeNode,
-} from "@/app/[locale]/admin/_components/shared/CascadingCategoryPicker";
-import { cn } from "@/lib/utils";
+} from "@app/[locale]/admin/_components/shared/CascadingCategoryPicker";
+import { cn } from "@lib/utils";
 
 interface ProductFormSidebarProps {
   categories: Category[];

@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import type { Locale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageShell } from "../../_components/PageShell";
-import { getShopPlpViewModel } from "@/features/catalog/application/queries/shop-plp";
+import { getShopPlpViewModel } from "@features/catalog/application/queries/shop-plp";
 import { ShopPlpClient } from "../_components/ShopPlpClient";
 
 interface ShopCatchAllPageProps {

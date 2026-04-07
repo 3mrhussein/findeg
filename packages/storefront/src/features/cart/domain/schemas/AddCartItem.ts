@@ -1,18 +1,14 @@
-/**
- * Add item to cart request body schema.
- */
-
-import { z } from "zod";
+import { InventoryUpdateBodySchema } from "@backend/features/administration/domain/types";
 import {
   CustomerGroupSchema,
-  IdSchema,
   QuantitySchema,
   UomCodeSchema,
-} from "@/features/core/domain/types/common";
-import { VariantSnapshotSchema } from "@/features/order/domain/value-objects";
+} from "@backend/features/core/domain/types/common";
+import { VariantSnapshotSchema } from "@features/order/domain/value-objects";
+import z from "zod";
 
 export const AddCartItemSchema = z.object({
-  productId: IdSchema,
+  productId: InventoryUpdateBodySchema,
   quantity: QuantitySchema.min(1, "Quantity must be at least 1"),
   variantKey: z.string().min(1).optional(),
   variant: VariantSnapshotSchema.optional(),

@@ -2,18 +2,18 @@
 
 import React, { useState, useMemo } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { Tag } from "@/features/catalog/domain/entities/Tag";
+import { Tag } from "@backend/features/catalog";
 import { Plus, Search, Filter, AlertTriangle, Loader2 } from "lucide-react";
-import { Button } from "@findeg/ui";
-import { Input } from "@findeg/ui";
+import { Button } from "@ui";
+import { Input } from "@ui";
 import { TagCard } from "./TagCard";
 import { TagDrawer } from "./TagDrawer";
 import {
   deleteTagAction,
   toggleTagStatusAction,
   getTagProductCountAction,
-} from "@/actions/admin-actions";
-import { useToast } from "@/hooks/use-toast";
+} from "@actions/admin-actions";
+import { useToast } from "@hooks/use-toast";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,8 +23,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@findeg/ui";
-import { getTagDisplayName } from "@/features/catalog/presentation/config/tag-display";
+} from "@ui";
+import { getTagDisplayName } from "@features/catalog/presentation/config/tag-display";
 
 interface TagsClientProps {
   initialTags: Record<string, Tag[]>;

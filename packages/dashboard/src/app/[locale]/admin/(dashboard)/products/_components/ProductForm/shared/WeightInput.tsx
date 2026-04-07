@@ -2,10 +2,10 @@
 
 import * as React from "react";
 import { useFormContext } from "react-hook-form";
-import { Input } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { cn } from "@/lib/utils";
+import { Input } from "@ui";
+import { Label } from "@ui";
+import { Button } from "@ui";
+import { cn } from "@lib/utils";
 
 interface WeightInputProps {
   /** react-hook-form name for the weight in grams (integer) */

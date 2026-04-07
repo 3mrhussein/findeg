@@ -7,19 +7,19 @@
 
 ## Summary
 
-Resolve all TypeScript errors in `@findeg/storefront` to ensure a clean `npm run type-check`. This includes adding missing dependency declarations, explicitly typing implicit `any` handlers, fixing nullability mismatches from the backend wrapper, and verifying the `@findeg/ui` build emits the expected declarations.
+Resolve all TypeScript errors in `@storefront` to ensure a clean `npm run type-check`. This includes adding missing dependency declarations, explicitly typing implicit `any` handlers, fixing nullability mismatches from the backend wrapper, and verifying the `@ui` build emits the expected declarations.
 
 ## Technical Context
 
 **Language/Version**: TypeScript 5.7+
-**Primary Dependencies**: Next.js 16.0, React 19, @findeg/ui, drizzle-orm, resend, swr, @react-email/components
+**Primary Dependencies**: Next.js 16.0, React 19, @ui, drizzle-orm, resend, swr, @react-email/components
 **Storage**: N/A
 **Testing**: tsc, vitest
 **Target Platform**: Web (Next.js)
 **Project Type**: Web Application & UI Package
 **Performance Goals**: N/A
 **Constraints**: Zero `any` types permitted; clean `type-check` required (SC-001)
-**Scale/Scope**: Localized to `@findeg/storefront` and `@findeg/ui` packages
+**Scale/Scope**: Localized to `@storefront` and `@ui` packages
 
 ## Constitution Check
 

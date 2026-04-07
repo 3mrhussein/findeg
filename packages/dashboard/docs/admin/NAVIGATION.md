@@ -123,7 +123,7 @@ Examples:
 
 ### Permission Hook
 ```typescript
-import { useAdminPermissions } from "@/app/[locale]/admin/_components/shell/useAdminPermissions";
+import { useAdminPermissions } from "@app/[locale]/admin/_components/shell/useAdminPermissions";
 
 function MyComponent() {
   const { canView, canEdit, canDelete } = useAdminPermissions("products");

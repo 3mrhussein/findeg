@@ -1,6 +1,6 @@
-import { getServices } from "@/server/getServices";
-import { User, getUserFullName } from "@/features/identity/domain/entities/User";
-import type { Order } from "@/features/order/domain/entities/Order";
+import { getServices } from "@server/getServices";
+import { User, getUserFullName } from "@features/identity/domain/entities/User";
+import type { Order } from "@features/order/domain/entities/Order";
 
 export interface CheckoutPrefillData {
   fullName: string;

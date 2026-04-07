@@ -8,8 +8,8 @@ import {
   IdSchema,
   QuantitySchema,
   UomCodeSchema,
-} from "@/features/core/domain/types/common";
-import { VariantSnapshotSchema } from "@/features/order/domain/value-objects";
+} from "@features/core/domain/types/common";
+import { VariantSnapshotSchema } from "@features/order/domain/value-objects";
 
 export const AddCartItemSchema = z.object({
   productId: IdSchema,

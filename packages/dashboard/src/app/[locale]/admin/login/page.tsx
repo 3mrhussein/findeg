@@ -1,9 +1,9 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Button } from "@findeg/ui";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@ui";
+import { Label } from "@ui";
+import { Input } from "@ui";
+import { Button } from "@ui";
 import { getTranslations } from "next-intl/server";
-import { loginAction } from "@/actions/auth-actions";
+import { loginAction } from "@actions/auth-actions";
 import { Locale } from "next-intl";
 
 /**

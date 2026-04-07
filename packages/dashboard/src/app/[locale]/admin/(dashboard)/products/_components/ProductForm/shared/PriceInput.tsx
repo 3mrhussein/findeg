@@ -2,9 +2,9 @@
 
 import * as React from "react";
 import { useFormContext } from "react-hook-form";
-import { Input } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import { cn } from "@/lib/utils";
+import { Input } from "@ui";
+import { Label } from "@ui";
+import { cn } from "@lib/utils";
 
 interface PriceInputProps {
   name: string;

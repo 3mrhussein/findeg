@@ -107,7 +107,7 @@ This document defines the structural "data model" for the three-package monorepo
 ```typescript
 // packages/backend/package.json
 {
-  "name": "@findeg/backend",
+  "name": "@backend",
   "version": "1.0.0",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -249,9 +249,9 @@ export type CreateProductInput = z.infer<typeof CreateProductSchema>;
 // packages/dashboard/src/app/[locale]/admin/products/actions.ts
 "use server";
 
-import { IProductRepository } from "@findeg/backend/features/core";
-import { CreateProductSchema, type CreateProductInput } from "@findeg/backend/types/product";
-import { requireAuth } from "@findeg/backend/features/identity";
+import { IProductRepository } from "@backend/features/core";
+import { CreateProductSchema, type CreateProductInput } from "@backend/types/product";
+import { requireAuth } from "@backend/features/identity";
 
 export async function createProduct(data: CreateProductInput) {
   // Validate input
@@ -272,8 +272,8 @@ export async function createProduct(data: CreateProductInput) {
 
 ```typescript
 // packages/storefront/src/app/[locale]/(storefront)/products/[slug]/page.tsx
-import { IProductRepository } from '@findeg/backend/features/core';
-import { getMessages } from '@findeg/backend/lib/i18n';
+import { IProductRepository } from '@backend/features/core';
+import { getMessages } from '@backend/lib/i18n';
 
 type Props = {
   params: { locale: 'en' | 'ar'; slug: string };
@@ -362,7 +362,7 @@ packages/storefront/
 
 ```json
 {
-  "name": "@findeg/backend",
+  "name": "@backend",
   "version": "1.0.0",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -392,7 +392,7 @@ packages/storefront/
 
 ```json
 {
-  "name": "@findeg/dashboard",
+  "name": "@dashboard",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -403,7 +403,7 @@ packages/storefront/
     "test:e2e": "cypress run"
   },
   "dependencies": {
-    "@findeg/backend": "workspace:*",
+    "@backend": "workspace:*",
     "next": "16.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -422,7 +422,7 @@ packages/storefront/
 
 ```json
 {
-  "name": "@findeg/storefront",
+  "name": "@storefront",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -433,7 +433,7 @@ packages/storefront/
     "test:e2e": "cypress run"
   },
   "dependencies": {
-    "@findeg/backend": "workspace:*",
+    "@backend": "workspace:*",
     "next": "16.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -461,7 +461,7 @@ packages/storefront/
 **Export/Import Contract**:
 
 - Backend exports repository interfaces, services, types, validation schemas
-- Frontend packages import from `@findeg/backend` via pnpm workspace protocol
+- Frontend packages import from `@backend` via pnpm workspace protocol
 - No direct database access in frontend packages
 
 **Data Access**:

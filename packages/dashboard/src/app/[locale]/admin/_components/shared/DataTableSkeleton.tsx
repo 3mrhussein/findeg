@@ -10,16 +10,9 @@
 "use client";
 
 import * as React from "react";
-import { Skeleton } from "@findeg/ui";
-import {
-  TableHeader,
-  TableRow,
-  TableHead,
-  TableBody,
-  TableCell,
-  Table,
-} from "@findeg/ui";
-import { cn } from "@/lib/utils";
+import { Skeleton } from "@ui";
+import { TableHeader, TableRow, TableHead, TableBody, TableCell, Table } from "@ui";
+import { cn } from "@lib/utils";
 
 export interface DataTableSkeletonProps {
   /** Number of rows to show (default: 5) */

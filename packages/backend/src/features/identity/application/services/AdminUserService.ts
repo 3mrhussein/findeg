@@ -8,7 +8,7 @@
 import bcrypt from "bcryptjs";
 import { eq, inArray } from "drizzle-orm";
 
-import { db } from "@/features/core/infrastructure/persistence";
+import { db } from "../../../core/infrastructure/persistence";
 import {
   users,
   userRoles,
@@ -16,7 +16,7 @@ import {
   roles,
   permissions,
   passwordCredentials,
-} from "@/features/core/infrastructure/persistence/schema";
+} from "../../../core/infrastructure/persistence/schema";
 
 import type {
   AdminUser,

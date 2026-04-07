@@ -1,4 +1,4 @@
-import { container } from "@/features/core/infrastructure/di/ServiceContainer";
+import { getAllTagsGrouped } from "@data/resources/queries";
 import { TagsClient } from "./_components/TagsClient";
 import { Metadata } from "next";
 
@@ -8,8 +8,7 @@ export const metadata: Metadata = {
 };
 
 export default async function TagsPage() {
-  const adminTagService = container.adminTagService;
-  const groupedTags = await adminTagService.getAllTagsGrouped();
+  const groupedTags = await getAllTagsGrouped();
 
   return (
     <div className="flex-1">

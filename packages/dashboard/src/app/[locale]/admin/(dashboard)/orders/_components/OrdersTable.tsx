@@ -1,14 +1,14 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { EnrichedTable } from "@/app/[locale]/admin/_components/table/EnrichedTable";
-import { BulkActionsBar } from "@/app/[locale]/admin/_components/shared/BulkActionsBar";
-import type { BulkAction } from "@/app/[locale]/admin/_components/shared/BulkActionsBar";
+import { EnrichedTable } from "@app/[locale]/admin/_components/table/EnrichedTable";
+import { BulkActionsBar } from "@app/[locale]/admin/_components/shared/BulkActionsBar";
+import type { BulkAction } from "@app/[locale]/admin/_components/shared/BulkActionsBar";
 import { OrderStatusTabs } from "./OrderStatusTabs";
 import { OrderRow } from "./OrderRow";
 import { OrderDetailDrawer } from "./OrderDetailDrawer";
-import type { Order } from "@/features/order/domain/entities/Order";
-import { EmptyState } from "@findeg/ui";
+import type { Order } from "@backend/features/order";
+import { EmptyState } from "@ui";
 
 interface OrdersTableProps {
   orders: Order[];

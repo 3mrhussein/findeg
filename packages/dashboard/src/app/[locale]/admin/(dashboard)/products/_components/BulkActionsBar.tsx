@@ -2,9 +2,9 @@
 
 import { useTranslations } from "next-intl";
 import { X, Trash2, CheckCircle, Ban } from "lucide-react";
-import { Button } from "@findeg/ui";
-import { Separator } from "@findeg/ui";
-import { cn } from "@/lib/utils";
+import { Button } from "@ui";
+import { Separator } from "@ui";
+import { cn } from "@lib/utils";
 
 interface BulkActionsBarProps {
   selectedIds: number[];

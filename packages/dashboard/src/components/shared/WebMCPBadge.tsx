@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { useWebMCP } from "@/hooks/useWebMCP";
-import { cn } from "@/lib/utils";
+import { useWebMCP } from "@hooks/useWebMCP";
+import { cn } from "@lib/utils";
 import { Sparkles } from "lucide-react";
 
 export function WebMCPBadge() {

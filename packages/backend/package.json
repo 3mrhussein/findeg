@@ -1,5 +1,5 @@
 {
-  "name": "@findeg/backend",
+  "name": "@backend",
   "version": "0.1.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -65,7 +65,7 @@
     "test:watch": "vitest",
     "type-check": "tsc --noEmit",
     "lint": "eslint .",
-    "test:e2e": "echo 'No e2e tests for @findeg/backend'"
+    "test:e2e": "echo 'No e2e tests for @backend'"
   },
   "dependencies": {
     "@react-email/components": "^0.0.34",

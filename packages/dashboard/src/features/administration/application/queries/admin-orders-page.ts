@@ -1,11 +1,10 @@
-import { getServices } from "@/server/getServices";
 import {
   OrderStatusSchema,
+  PaymentStatus,
   PaymentStatusSchema,
-  type OrderStatus,
-  type PaymentStatus,
-} from "@/features/core/domain/types/common";
-import type { Order } from "@/features/order/domain/entities/Order";
+} from "@backend/features/core/domain/types/common";
+import { OrderStatus } from "@backend/features/core/infrastructure/persistence";
+import type { Order } from "@backend/features/order";
 
 export interface AdminOrdersPageQueryParams {
   search?: string;

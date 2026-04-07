@@ -12,7 +12,7 @@ Every admin page follows the same pattern:
 'use client';
 
 // 1. Import the action from the appropriate file
-import { createProductAction, updateProductAction, deleteProductAction } from '@/actions/catalog-actions';
+import { createProductAction, updateProductAction, deleteProductAction } from '@actions/catalog-actions';
 
 // 2. Use in form handlers
 const handleAction = async (data) => {
@@ -36,7 +36,7 @@ import {
   createProductAction, 
   updateProductAction, 
   deleteProductAction 
-} from '@/actions/catalog-actions';
+} from '@actions/catalog-actions';
 ```
 
 **Update Form Handler**:
@@ -73,7 +73,7 @@ import {
   updateBrandAction,
   deleteBrandAction,
   toggleBrandStatusAction 
-} from '@/actions/catalog-actions';
+} from '@actions/catalog-actions';
 ```
 
 **Update Handlers**:
@@ -106,7 +106,7 @@ import {
   moveCategoryDownAction,
   reorderCategoriesAction,
   checkCategorySlugAvailableAction
-} from '@/actions/catalog-actions';
+} from '@actions/catalog-actions';
 ```
 
 **Update Handlers**:
@@ -141,7 +141,7 @@ import {
   bulkDeleteTagsAction,
   getTagProductCountAction,
   getDistinctTagGroupsAction
-} from '@/actions/admin-actions';
+} from '@actions/admin-actions';
 ```
 
 **Update Handlers**:
@@ -173,7 +173,7 @@ import {
   updateCollectionAction,
   deleteCollectionAction,
   reorderCollectionsAction
-} from '@/actions/admin-actions';
+} from '@actions/admin-actions';
 ```
 
 **Update Handlers**:
@@ -197,7 +197,7 @@ await reorderCollectionsAction(reorderedArray);
 import { 
   updateStockAction,
   bulkUpdateStockAction
-} from '@/actions/admin-actions';
+} from '@actions/admin-actions';
 ```
 
 **Update Handlers**:
@@ -254,13 +254,13 @@ After updating a page:
 
 ```bash
 # Verify page imports
-pnpm --filter @findeg/dashboard type-check
+pnpm --filter @dashboard type-check
 
 # Verify no linting issues
-pnpm --filter @findeg/dashboard lint
+pnpm --filter @dashboard lint
 
 # Run E2E tests
-pnpm --filter @findeg/dashboard cypress:open
+pnpm --filter @dashboard cypress:open
 ```
 
 ## Implementation Order (Recommended)
@@ -287,7 +287,7 @@ import {
   createProductAction, 
   updateProductAction, 
   deleteProductAction 
-} from '@/actions/catalog-actions';
+} from '@actions/catalog-actions';
 
 export default function ProductsPage() {
   const t = useTranslations();
@@ -357,7 +357,7 @@ That's it! The pattern is consistent across all pages.
 
 After updating all 6 pages:
 
-- ✅ `pnpm --filter @findeg/dashboard type-check` passes
+- ✅ `pnpm --filter @dashboard type-check` passes
 - ✅ No TypeScript errors in pages
 - ✅ All CRUD operations work end-to-end
 - ✅ Shop/catalog pages immediately reflect admin changes

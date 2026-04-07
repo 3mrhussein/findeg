@@ -1,9 +1,9 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Locale } from "next-intl";
 import Image from "next/image";
-import { Link } from "@/i18n/navigation";
-import { getServices } from "@/server/getServices";
-import { resolveLocale } from "@/features/core/domain/value-objects";
+import { Link } from "@i18n/navigation";
+import { getServices } from "@server/getServices";
+import { resolveLocale } from "@features/core/domain/value-objects";
 import { PageShell } from "../_components/PageShell";
 
 /**

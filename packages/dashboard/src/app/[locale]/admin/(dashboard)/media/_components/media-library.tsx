@@ -3,11 +3,11 @@
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import { Copy, Trash2 } from "lucide-react";
-import { Button } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
-import { Checkbox } from "@findeg/ui";
-import { useToast } from "@/hooks/use-toast";
-import type { MediaAsset } from "@/features/media/domain/entities/MediaAsset";
+import { Button } from "@ui";
+import { Badge } from "@ui";
+import { Checkbox } from "@ui";
+import { useToast } from "@hooks/use-toast";
+import type { MediaAsset } from "@backend/features/media";
 
 interface MediaLibraryProps {
   initialAssets: MediaAsset[];

@@ -1,10 +1,10 @@
 import { z } from "zod";
-import { IdSchema, SlugSchema, type ID, type Slug } from "@/features/core/domain/types/common";
+import { IdSchema, SlugSchema, type ID, type Slug } from "@backend/types/@common";
 import {
   LocalizedStringSchema,
   type Locale,
   type LocalizedString,
-} from "@/features/core/domain/value-objects";
+} 
 
 export const BrandLocalizedContentSchema = z.object({
   name: LocalizedStringSchema,

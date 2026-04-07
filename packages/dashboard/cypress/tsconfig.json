@@ -3,7 +3,9 @@
   "compilerOptions": {
     "types": ["cypress", "node"],
     "noEmit": true,
-    "isolatedModules": false
+    "isolatedModules": false,
+    "baseUrl": "./",
+    "paths": {  }
   },
   "include": ["./**/*.ts", "./**/*.tsx"],
   "exclude": []

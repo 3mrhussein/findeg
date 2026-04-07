@@ -1,17 +1,17 @@
 "use client";
 
-import { Collection } from "@/features/catalog/domain/entities/Collection";
+import { Collection } from "@backend/features/catalog";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Button } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
+import { Button } from "@ui";
+import { Badge } from "@ui";
 import { GripVertical, Edit, Trash, Eye, EyeOff, Move, Pencil, Trash2 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@lib/utils";
 import Link from "next/link";
 import { useLocale } from "next-intl";
 import Image from "next/image";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@findeg/ui";
-import { StatusBadge } from "@/components/shared/StatusBadge";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@ui";
+import { StatusBadge } from "@components/shared/StatusBadge";
 
 interface CollectionCardProps {
   collection: Collection;

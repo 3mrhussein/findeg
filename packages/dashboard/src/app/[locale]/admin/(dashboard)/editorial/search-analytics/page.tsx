@@ -1,5 +1,4 @@
-import { getServices } from "@/server/getServices";
-import { requireAdmin } from "@/lib/auth-guard";
+import { requireAdmin } from "@lib/auth-guard";
 import { SearchAnalyticsView } from "./_components/SearchAnalyticsView";
 import type { Locale } from "next-intl";
 
@@ -31,16 +30,12 @@ export default async function SearchAnalyticsPage({
     );
   }
 
-  const services = getServices();
-
-  // Fetch data for the initial view
-  const [metrics, topSearches, zeroResults, lowCTR, languageBreakdown] = await Promise.all([
-    services.adminSearchAnalytics.getMetrics(days),
-    services.adminSearchAnalytics.getTopSearches(days, 50),
-    services.adminSearchAnalytics.getZeroResultSearches(days, 50),
-    services.adminSearchAnalytics.getLowCTRSearches(days, 50),
-    services.adminSearchAnalytics.getLanguageBreakdown(days),
-  ]);
+  // TODO: Replace with data layer queries from @data/search-analytics/queries
+  const metrics: any = {}; // Stubbed
+  const topSearches: any[] = []; // Stubbed
+  const zeroResults: any[] = []; // Stubbed
+  const lowCTR: any[] = []; // Stubbed
+  const languageBreakdown: any[] = []; // Stubbed
 
   return (
     <SearchAnalyticsView

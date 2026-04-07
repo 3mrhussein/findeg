@@ -6,12 +6,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Tabs, TabsContent } from "@findeg/ui";
-import { Form } from "@findeg/ui";
+import { Tabs, TabsContent } from "@ui";
+import { Form } from "@ui";
 import {
   ProductFormSchema,
   type ProductFormValues,
-} from "@/features/administration/presentation/forms/product-form";
+} from "@features/administration/presentation/forms/product-form";
 import { ProductFormHeader } from "./ProductFormHeader";
 import { ProductFormTabs } from "./ProductFormTabs";
 import { ProductFormSidebar } from "../ProductFormSidebar";
@@ -20,8 +20,7 @@ import { VariantsTab } from "./tabs/VariantsTab";
 import { MediaTab } from "./tabs/MediaTab";
 import { PricingTab } from "./tabs/PricingTab";
 import { SeoTab } from "./tabs/SeoTab";
-import type { ProductEditData } from "@/features/administration/application/interfaces/IAdminProductService";
-import type { Category, Brand, Tag } from "@/features/catalog/domain/entities";
+import type { Category, Brand, Tag } from "@backend/features/catalog";
 import {
   createProductAction,
   updateProductAction,
@@ -31,10 +30,10 @@ import {
   upsertVariantImagesAction,
   checkSkuAvailableAction,
   checkSlugAvailableAction,
-} from "@/actions/admin-actions";
+} from "@actions/admin-actions";
 
 interface ProductFormProps {
-  initialData?: ProductEditData;
+  initialData?: any; // TODO: Use ProductEditData type after repository-based refactoring
   categories: any[];
   brands: Brand[];
   tags: Tag[];
@@ -63,29 +62,29 @@ export function ProductForm({ initialData, categories, brands, tags, locale }: P
           localizedSlug: initialData.localizedContent?.slug || { en: "", ar: "" },
           categoryId: initialData.categoryId,
           brandId: initialData.brandId,
-          tagIds: initialData.tags?.map((t) => t.id) || [],
+          tagIds: initialData.tags?.map((t: any) => t.id) || [],
           isActive: initialData.isActive,
           skuPrefix: initialData.skuPrefix || undefined,
           pricingMode: (initialData as any).pricingMode || "per-variant",
           uomSharingMode: (initialData as any).uomSharingMode || "shared",
-          variants: initialData.variants.map((v) => ({
+          variants: initialData.variants.map((v: any) => ({
             id: v.id,
             sku: v.sku,
             basePrice: Number(v.basePrice),
             isActive: v.isActive,
             displayOrder: v.displayOrder,
             localizedLabel: v.localizedLabel || { en: "", ar: "" },
-            images: (v.images || []).map((img) => ({
+            images: (v.images || []).map((img: any) => ({
               url: img.url,
               alt: img.alt || "",
               displayOrder: img.displayOrder,
             })),
-            attributes: (v.attributes || []).map((attr) => ({
+            attributes: (v.attributes || []).map((attr: any) => ({
               attributeKey: attr.key,
               value: attr.valueText || "",
               isVariantDefining: true,
             })),
-            uoms: (v.sellableUoms || []).map((u) => ({
+            uoms: (v.sellableUoms || []).map((u: any) => ({
               uomCode: u.uomCode,
               factorToBase: Number(u.factorToBase),
               localizedLabel: u.localizedLabel || { en: "", ar: "" },

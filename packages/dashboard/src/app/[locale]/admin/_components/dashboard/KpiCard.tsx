@@ -24,8 +24,8 @@ import {
   Minus,
   AlertCircle,
 } from "lucide-react";
-import { Card, CardContent } from "@findeg/ui";
-import { cn } from "@/lib/utils";
+import { Card, CardContent } from "@ui";
+import { cn } from "@lib/utils";
 
 const ICON_MAP = {
   package: Package,

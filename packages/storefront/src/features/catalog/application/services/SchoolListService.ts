@@ -1,4 +1,3 @@
-import { ID } from "@/features/core/domain/types/common";
 import {
   type ISchoolListRepository,
   type SchoolListResult,
@@ -7,6 +6,7 @@ import {
   type SchoolListItemInput,
 } from "../interfaces/ISchoolListRepository";
 import { Variant } from "../../domain/entities/Variant";
+import { ID } from "@backend/features/core/domain/types/common";
 
 export interface ISchoolListService {
   /** Gets a school list by slug with hydrated items and alternatives */

@@ -5,12 +5,12 @@
  * App-layer (dashboard) handles cache revalidation after operations.
  */
 
-import { container } from "@/features/core/infrastructure/di/ServiceContainer";
-import { ResourceNotFoundError, ValidationError } from "@/features/core/domain/errors";
-import { ProductInput } from "@/features/administration/domain/types";
-import type { ServiceResult } from "@/features/core/application/types";
-import type { Product } from "@/features/catalog/domain/entities/Product";
-import { getProductCachePaths, getProductCacheTags } from "@/features/catalog/domain/cache";
+import { container } from "@features/core/infrastructure/di/ServiceContainer";
+import { ResourceNotFoundError, ValidationError } from "@features/core/domain/errors";
+import { ProductInput } from "@features/administration/domain/types";
+import type { ServiceResult } from "@features/core/application/types";
+import type { Product } from "@features/catalog/domain/entities/Product";
+import { getProductCachePaths, getProductCacheTags } from "@features/catalog/domain/cache";
 
 /**
  * Pure product creation - no framework calls.

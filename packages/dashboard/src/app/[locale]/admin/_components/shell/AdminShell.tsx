@@ -3,11 +3,7 @@ import { AdminSidebar } from "./AdminSidebar";
 import { AdminHeader } from "./AdminHeader";
 import { AdminBreadcrumb } from "./AdminBreadcrumb";
 import { SidebarProvider } from "./SidebarContext";
-import {
-  moveCategoryUpAction,
-  moveCategoryDownAction,
-  logoutAction,
-} from "@/actions/admin-actions";
+import { moveCategoryUpAction, moveCategoryDownAction, logoutAction } from "@actions/admin-actions";
 
 export interface AdminShellProps {
   children: React.ReactNode;

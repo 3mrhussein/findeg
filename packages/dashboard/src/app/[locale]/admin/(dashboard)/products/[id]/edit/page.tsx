@@ -1,7 +1,6 @@
-import { container } from "@/features/core/infrastructure/di/ServiceContainer";
 import { ProductForm } from "../../_components/ProductForm";
 import { notFound } from "next/navigation";
-import { resolveLocale } from "@/features/core/domain/value-objects";
+import { resolveLocale } from "@backend/features/core";
 
 /**
  * /admin/products/[id]/edit
@@ -18,12 +17,11 @@ export default async function EditProductPage({
 
   if (isNaN(productId)) notFound();
 
-  const [categories, brands, tags, product] = await Promise.all([
-    container.adminCategoryService.getAll(resolvedLocale),
-    container.adminBrandService.getAll(true),
-    container.adminTagService.getAll(),
-    container.adminProductService.getProductForEdit(productId),
-  ]);
+  // TODO: Restore data fetching after repository-based refactoring
+  const categories: any[] = [];
+  const brands: any[] = [];
+  const tags: any[] = [];
+  const product = null; // Will trigger notFound()
 
   if (!product) notFound();
 

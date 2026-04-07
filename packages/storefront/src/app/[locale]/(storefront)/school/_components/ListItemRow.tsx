@@ -2,10 +2,10 @@
 
 import React from "react";
 import { useTranslations } from "next-intl";
-import { Badge } from "@findeg/ui";
+import { Badge } from "@ui";
 import { Lock, ChevronDown, Check, Plus, RotateCcw } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Button } from "@findeg/ui";
+import { cn } from "@lib/utils";
+import { Button } from "@ui";
 
 interface ListItemRowProps {
   item: any;

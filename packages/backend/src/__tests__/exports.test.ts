@@ -2,7 +2,7 @@
  * Backend Package Exports Verification Test
  *
  * Verifies that all public exports can be imported correctly.
- * Run with: pnpm --filter @findeg/backend test exports
+ * Run with: pnpm --filter @backend test exports
  */
 
 import { describe, it, expect } from "vitest";
@@ -11,14 +11,14 @@ describe("Backend Package Exports", () => {
   it("should load repository contract interfaces module", async () => {
     // Interfaces are TypeScript-only and don't exist at runtime
     // Just verify the module loads without errors
-    const module = await import("@/features/core/infrastructure/persistence/contracts");
+    const module = await import("@features/core/infrastructure/persistence/contracts");
     expect(module).toBeDefined();
     expect(typeof module).toBe("object");
   });
 
   it("should export JWT service", async () => {
     const { JWTService, createJWTService } =
-      await import("@/features/identity/application/services/JWTService");
+      await import("@features/identity/application/services/JWTService");
 
     expect(JWTService).toBeDefined();
     expect(createJWTService).toBeDefined();
@@ -33,7 +33,7 @@ describe("Backend Package Exports", () => {
       ValidationError,
       ConflictError,
       InternalServerError,
-    } = await import("@/lib/errors");
+    } = await import("@lib/errors");
 
     expect(AppError).toBeDefined();
     expect(UnauthorizedError).toBeDefined();
@@ -46,7 +46,7 @@ describe("Backend Package Exports", () => {
 
   it("should export i18n utilities", async () => {
     const { formatCurrency, formatDate, formatDateTime, formatRelativeTime, formatNumber } =
-      await import("@/lib/i18n");
+      await import("@lib/i18n");
 
     expect(formatCurrency).toBeDefined();
     expect(formatDate).toBeDefined();
@@ -66,7 +66,7 @@ describe("Backend Package Exports", () => {
       CreateOrderSchema,
       UpdateOrderSchema,
       OrderStatusSchema,
-    } = await import("@/types/validation");
+    } = await import("@types/validation");
 
     expect(CreateUserSchema).toBeDefined();
     expect(UpdateUserSchema).toBeDefined();
@@ -80,14 +80,14 @@ describe("Backend Package Exports", () => {
   });
 
   it("should export domain types", async () => {
-    const module = await import("@/types/domain");
+    const module = await import("@types/domain");
 
     // Type exports don't exist at runtime, but the module should load
     expect(module).toBeDefined();
   });
 
   it("should create JWT service instance", async () => {
-    const { JWTService } = await import("@/features/identity/application/services/JWTService");
+    const { JWTService } = await import("@features/identity/application/services/JWTService");
 
     // Should throw without secrets in test environment
     expect(() => new JWTService()).toThrow("JWT secrets are required");
@@ -101,7 +101,7 @@ describe("Backend Package Exports", () => {
   });
 
   it("should create error instances", async () => {
-    const { UnauthorizedError, NotFoundError, ValidationError } = await import("@/lib/errors");
+    const { UnauthorizedError, NotFoundError, ValidationError } = await import("@lib/errors");
 
     const authError = new UnauthorizedError("Invalid token");
     expect(authError).toBeInstanceOf(UnauthorizedError);
@@ -119,7 +119,7 @@ describe("Backend Package Exports", () => {
   });
 
   it("should validate schemas with correct data", async () => {
-    const { CreateUserSchema, CreateProductSchema } = await import("@/types/validation");
+    const { CreateUserSchema, CreateProductSchema } = await import("@types/validation");
 
     const validUser = {
       email: "test@example.com",

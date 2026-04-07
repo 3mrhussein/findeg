@@ -1,4 +1,4 @@
-import type { SchemaTypes } from "@findeg/backend/features/core";
+import type { SchemaTypes } from "@backend/features/core";
 
 export type SessionState = "first_visit" | "has_session" | "completed_order";
 

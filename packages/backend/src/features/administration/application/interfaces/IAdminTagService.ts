@@ -1,5 +1,5 @@
-import { ID } from "@/features/core/domain/types/common";
-import { Tag } from "@/features/catalog/domain/entities/Tag";
+import { ID } from "@features/core/domain/types/common";
+import { Tag } from "@features/catalog/domain/entities/Tag";
 import { TagInput } from "../../domain/types/TagInput";
 
 export interface IAdminTagService {

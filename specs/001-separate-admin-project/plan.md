@@ -86,7 +86,7 @@ packages/
 │   │   │   └── shared/
 │   │   └── lib/
 │   ├── public/
-│   ├── package.json      # Depends on @findeg/backend
+│   ├── package.json      # Depends on @backend
 │   ├── next.config.ts
 │   └── tsconfig.json
 │
@@ -111,7 +111,7 @@ packages/
     │   │   └── shared/
     │   └── lib/
     ├── public/
-    ├── package.json       # Depends on @findeg/backend
+    ├── package.json       # Depends on @backend
     ├── next.config.ts
     └── tsconfig.json
 

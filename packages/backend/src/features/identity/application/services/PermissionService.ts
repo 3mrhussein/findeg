@@ -6,8 +6,8 @@
  * This ensures UI/routes never perform role-string checks (Clean Architecture principle).
  */
 
-import { ID } from "@/features/core/domain/types/common";
-import { PermissionCode, RoleId } from "@/features/core/domain/value-objects";
+import { ID } from "../../../core/domain/types/common";
+import { PermissionCode, RoleId } from "../../../core/domain/value-objects";
 import { IPermissionService } from "../interfaces/IPermissionService";
 import { IUserRepository } from "../interfaces/IUserRepository";
 

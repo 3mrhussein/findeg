@@ -33,10 +33,10 @@ const config = [
         "error",
         {
           patterns: [
-            "@/presentation/storefront/*",
+            "@presentation/storefront/*",
             "src/presentation/storefront/*",
-            "@/features/**/presentation/components/**",
-            "@/features/**/presentation/hoc/**",
+            "@features/**/presentation/components/**",
+            "@features/**/presentation/hoc/**",
             "src/features/**/presentation/components/**",
             "src/features/**/presentation/hoc/**",
           ],

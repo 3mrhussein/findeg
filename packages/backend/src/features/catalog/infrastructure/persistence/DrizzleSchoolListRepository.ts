@@ -1,4 +1,4 @@
-import { db } from "@/features/core/infrastructure/persistence";
+import { db } from "../../../core/infrastructure/persistence";
 import {
   schoolLists,
   schoolListItems,
@@ -7,7 +7,7 @@ import {
   variantAttributes,
   attributeDefinitions,
   productTags,
-} from "@/features/core/infrastructure/persistence/schema";
+} from "../../../core/infrastructure/persistence/schema";
 import {
   ISchoolListRepository,
   SchoolListResult,
@@ -17,7 +17,7 @@ import {
 } from "../../application/interfaces/ISchoolListRepository";
 import { DrizzleVariantRepository } from "./DrizzleVariantRepository";
 import { eq, and, sql, inArray, or } from "drizzle-orm";
-import { ID } from "@/features/core/domain/types/common";
+import { ID } from "@features/core/domain/types/common";
 import { Variant } from "../../domain/entities/Variant";
 
 /**

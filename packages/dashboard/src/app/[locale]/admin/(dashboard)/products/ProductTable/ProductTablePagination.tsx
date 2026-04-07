@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@findeg/ui";
+import { Button } from "@ui";
 
 interface ProductTablePaginationProps {
   page: number;

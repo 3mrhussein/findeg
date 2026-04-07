@@ -4,18 +4,21 @@
  * Defines a product specification/attribute that can be used for filtering.
  */
 
+import { IdSchema } from "@backend/features/core/domain/types/common";
+import { identitySchema } from "@backend/features/core/infrastructure/persistence/schema";
+import { LocalizedStringSchema } from "@backend/features/core";
 import { z } from "zod";
-import { IdSchema, LocalizedStringSchema } from "@/features/core/domain/types/common";
 
 export const AttributeDataTypeSchema = z.enum(["string", "number", "boolean", "enum"]);
 export type AttributeDataType = z.infer<typeof AttributeDataTypeSchema>;
 
 export const AttributeDefinitionSchema = z.object({
-  id: IdSchema,
+  id: identitySchema,
   key: z.string(),
   dataType: AttributeDataTypeSchema,
   unit: z.string().optional(),
   localizedLabel: LocalizedStringSchema,
+
   enumValues: z.array(z.string()).optional(),
   isFilterable: z.boolean(),
   sortOrder: z.number(),

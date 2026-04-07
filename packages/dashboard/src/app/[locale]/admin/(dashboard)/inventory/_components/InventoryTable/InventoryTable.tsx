@@ -1,21 +1,11 @@
 "use client";
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@findeg/ui";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@ui";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useToast } from "@/hooks/use-toast";
-import {
-  bulkUpdateStockAction,
-  updateStockAction,
-} from "@/actions/admin-actions";
-import type { Product } from "@/features/catalog/domain/entities/Product";
+import { useToast } from "@hooks/use-toast";
+import { bulkUpdateStockAction, updateStockAction } from "@actions/admin-actions";
+import type { Product } from "@backend/features/catalog";
 import type { InventoryTableProps, SortKey } from "./InventoryTable.interface";
 import { InventoryFilters } from "./InventoryFilters";
 import { InventoryBatchControls } from "./InventoryBatchControls";

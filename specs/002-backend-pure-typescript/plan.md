@@ -3,11 +3,11 @@
 **Branch**: `002-backend-pure-typescript` | **Date**: April 5, 2026 | **Spec**: [spec.md](./spec.md)
 **Input**: Feature specification from `/specs/002-backend-pure-typescript/spec.md`
 
-**Note**: This plan addresses refactoring @findeg/backend to eliminate all 21 Next.js framework dependencies and ensure Constitution Principle VIII compliance (Pure TypeScript Libraries).
+**Note**: This plan addresses refactoring @backend to eliminate all 21 Next.js framework dependencies and ensure Constitution Principle VIII compliance (Pure TypeScript Libraries).
 
 ## Summary
 
-Refactor the @findeg/backend package to become a pure TypeScript library by removing all 21 Next.js framework dependencies (from `next/cache`, `next/navigation`, `next/headers`). Backend services will expose pure business logic that accepts explicit parameters and returns data or throws domain errors. App-layer code in dashboard/storefront will handle framework integration (cache revalidation, redirects, cookie/session management) by orchestrating backend services with Next.js APIs. This decoupling enables independent backend testing in pure Node.js (Vitest), framework portability, and strict Clean Architecture compliance.
+Refactor the @backend package to become a pure TypeScript library by removing all 21 Next.js framework dependencies (from `next/cache`, `next/navigation`, `next/headers`). Backend services will expose pure business logic that accepts explicit parameters and returns data or throws domain errors. App-layer code in dashboard/storefront will handle framework integration (cache revalidation, redirects, cookie/session management) by orchestrating backend services with Next.js APIs. This decoupling enables independent backend testing in pure Node.js (Vitest), framework portability, and strict Clean Architecture compliance.
 
 ## Technical Context
 
@@ -70,11 +70,11 @@ _GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
    - **Interface Segregation**: Backend depends on minimal interfaces (`ISessionProvider`, `ICacheNotifier`)
    - **Dependency Inversion**: Backend depends on abstractions (interfaces), app-layer provides Next.js implementations
 
-8. **☑ Backend Packages - Pure TypeScript Libraries** - PRIMARY OBJECTIVE: Eliminates all 21 Next.js imports from @findeg/backend; enforces framework-agnostic architecture; backend becomes reusable across any Node.js runtime
+8. **☑ Backend Packages - Pure TypeScript Libraries** - PRIMARY OBJECTIVE: Eliminates all 21 Next.js imports from @backend; enforces framework-agnostic architecture; backend becomes reusable across any Node.js runtime
 
 9. **☑ Monorepo Architecture & Package Boundaries** - Refactoring CLARIFIES package boundaries:
-   - @findeg/backend exports: domain entities, service interfaces, business logic, error types
-   - @findeg/dashboard + @findeg/storefront: import backend services, wrap with Next.js Server Actions/queries, handle caching/redirects
+   - @backend exports: domain entities, service interfaces, business logic, error types
+   - @dashboard + @storefront: import backend services, wrap with Next.js Server Actions/queries, handle caching/redirects
    - No circular dependencies introduced (apps depend on backend, backend remains independent)
 
 **Violations found**: None - refactoring resolves Constitution Principle VIII violation
@@ -180,7 +180,7 @@ packages/storefront/
         └── session.ts                           # NEW: session extraction helpers
 ```
 
-**Structure Decision**: Monorepo with 3 packages (@findeg/backend, @findeg/dashboard, @findeg/storefront). Backend package contains only pure TypeScript business logic. App packages (dashboard/storefront) contain Next.js-specific integration code (Server Actions, queries with cache directives, session extraction). This enforces Constitution Principle VIII (Backend Packages - Pure TypeScript Libraries) and Principle IX (Monorepo Architecture & Package Boundaries).
+**Structure Decision**: Monorepo with 3 packages (@backend, @dashboard, @storefront). Backend package contains only pure TypeScript business logic. App packages (dashboard/storefront) contain Next.js-specific integration code (Server Actions, queries with cache directives, session extraction). This enforces Constitution Principle VIII (Backend Packages - Pure TypeScript Libraries) and Principle IX (Monorepo Architecture & Package Boundaries).
 
 ## Complexity Tracking
 
@@ -323,7 +323,7 @@ This refactoring uses a **direct replacement approach** with no fallback code:
 4. **Package dependency cleanup**:
    - Remove `next` from `peerDependencies` in `packages/backend/package.json`
    - Remove `react`, `react-dom` from `peerDependencies` (not needed in pure backend)
-   - Remove `@findeg/ui` from `peerDependencies` (backend should not depend on UI)
+   - Remove `@ui` from `peerDependencies` (backend should not depend on UI)
    - Keep only pure TypeScript dependencies (zod, drizzle-orm, postgres, etc.)
 
 **Rationale**: Maintaining dual code paths violates DRY principle and Constitution Principle VI. The new architecture is the correct implementation per Constitution Principle VIII; there is no valid reason to preserve framework-coupled code.
@@ -339,8 +339,8 @@ This refactoring uses a **direct replacement approach** with no fallback code:
 **Overall**:
 - ✅ All 21 Next.js import violations eliminated from `packages/backend/src`
 - ✅ Zero Next.js dependencies in `packages/backend/package.json` (removed from peerDependencies)
-- ✅ Zero React dependencies in backend package (removed react, react-dom, @findeg/ui)
-- ✅ `pnpm --filter @findeg/backend test` completes in <30 seconds (pure Node.js environment)
+- ✅ Zero React dependencies in backend package (removed react, react-dom, @ui)
+- ✅ `pnpm --filter @backend test` completes in <30 seconds (pure Node.js environment)
 - ✅ 100% of critical user flows pass Cypress E2E tests
 - ✅ Cache hit rates remain unchanged (no performance regression)
 - ✅ TypeScript strict mode passes with zero errors
@@ -442,7 +442,7 @@ export async function updateOrderStatus(
 // packages/dashboard/src/actions/order-actions.ts
 "use server";
 import { revalidatePath } from "next/cache";  // ✅ Framework usage in app-layer
-import { updateOrderStatus } from "@findeg/backend/features/order";
+import { updateOrderStatus } from "@backend/features/order";
 
 export async function updateOrderStatusAction(id: number, input: OrderStatusUpdate) {
   try {
@@ -494,8 +494,8 @@ export async function getDashboardData(
 ```typescript
 // packages/dashboard/src/app/dashboard/page.tsx
 import { redirect } from "next/navigation";  // ✅ Framework usage in app-layer
-import { getDashboardData, NotAuthenticatedError } from "@findeg/backend/features/identity";
-import { extractSession } from "@/lib/session";
+import { getDashboardData, NotAuthenticatedError } from "@backend/features/identity";
+import { extractSession } from "@lib/session";
 
 export default async function DashboardPage({ params }: { params: { locale: string } }) {
   try {
@@ -552,7 +552,7 @@ export const SHOP_PAGE_CACHE_CONFIG = {
 // packages/storefront/src/queries/shop-queries.ts
 "use cache";
 import { cacheTag, cacheLife } from "next/cache";  // ✅ Framework usage in app-layer
-import { getShopPageViewModel, SHOP_PAGE_CACHE_CONFIG } from "@findeg/backend/features/catalog";
+import { getShopPageViewModel, SHOP_PAGE_CACHE_CONFIG } from "@backend/features/catalog";
 
 export async function getCachedShopPageData(locale: string, query: object) {
   SHOP_PAGE_CACHE_CONFIG.tags.forEach(tag => cacheTag(tag));  // ✅ Applies caching
@@ -600,7 +600,7 @@ describe("OrderService", () => {
 import { describe, it, expect, vi } from "vitest";
 
 vi.mock("next/cache", () => ({ revalidatePath: vi.fn() }));
-vi.mock("@findeg/backend/features/order", () => ({ updateOrderStatus: vi.fn() }));
+vi.mock("@backend/features/order", () => ({ updateOrderStatus: vi.fn() }));
 
 import { updateOrderStatusAction } from "../order-actions";
 import { revalidatePath } from "next/cache";
@@ -644,8 +644,8 @@ describe("updateOrderStatusAction", () => {
 - ✅ **Type-check passes**: `pnpm run type-check` (all 3 packages)
 - ✅ **Lint passes**: `pnpm run lint` (includes ESLint + i18n validation)
 - ✅ **Build succeeds**: `pnpm run build` (all 3 packages)
-- ✅ **Backend tests pass**: `pnpm --filter @findeg/backend test` (<30 seconds execution)
-- ✅ **App-layer tests pass**: `pnpm --filter @findeg/dashboard test && pnpm --filter @findeg/storefront test`
+- ✅ **Backend tests pass**: `pnpm --filter @backend test` (<30 seconds execution)
+- ✅ **App-layer tests pass**: `pnpm --filter @dashboard test && pnpm --filter @storefront test`
 - ✅ **E2E tests pass**: `pnpm run e2e:run` (critical user journeys)
 
 ### Architecture Compliance

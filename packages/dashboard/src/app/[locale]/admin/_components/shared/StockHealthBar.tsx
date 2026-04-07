@@ -10,8 +10,8 @@
 "use client";
 
 import * as React from "react";
-import { cn } from "@/lib/utils";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@findeg/ui";
+import { cn } from "@lib/utils";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@ui";
 
 export interface StockHealthBarProps {
   /** Number of variants with healthy stock */

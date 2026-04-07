@@ -1,9 +1,9 @@
 import { getTranslations } from "next-intl/server";
 import type { Locale } from "next-intl";
-import { Link } from "@/i18n/navigation";
+import { Link } from "@i18n/navigation";
 import { HeaderNavClient } from "./HeaderNavClient";
 import ToggleLanguage from "./ToggleLanguage";
-import { ToggleTheme } from "@findeg/ui";
+import { ToggleTheme } from "@ui";
 import { SearchOverlay } from "./SearchOverlay";
 import { cacheLife } from "next/cache";
 

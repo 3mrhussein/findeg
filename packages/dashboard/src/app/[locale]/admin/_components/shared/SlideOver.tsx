@@ -10,14 +10,8 @@
 "use client";
 
 import * as React from "react";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@findeg/ui";
-import { cn } from "@/lib/utils";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@ui";
+import { cn } from "@lib/utils";
 
 export interface SlideOverProps {
   /** Panel open state */

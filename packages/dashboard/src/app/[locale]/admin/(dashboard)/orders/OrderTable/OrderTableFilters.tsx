@@ -1,13 +1,7 @@
-import { Input } from "@findeg/ui";
-import { Button } from "@findeg/ui";
+import { Input } from "@ui";
+import { Button } from "@ui";
 import { Search, X } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@findeg/ui";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ui";
 import type { OrderTableFiltersData } from "./OrderTable.interface";
 
 interface OrderTableFiltersProps {

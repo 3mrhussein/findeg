@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { initWebMCP } from "@/lib/webmcp/webmcp-init";
-import { tools } from "@/lib/webmcp/webmcp-tools";
+import { initWebMCP } from "@lib/webmcp/webmcp-init";
+import { tools } from "@lib/webmcp/webmcp-tools";
 
 /**
  * Hook to initialize and monitor WebMCP state.

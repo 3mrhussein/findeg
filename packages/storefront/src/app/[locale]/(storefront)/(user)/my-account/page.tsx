@@ -1,13 +1,13 @@
 import { Locale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { logout } from "@/features/identity/application/actions/auth";
-import { SectionStateEmpty } from "@/components/shared/state/SectionStateEmpty";
-import { Input } from "@findeg/ui";
-import { updateMyProfile } from "@/features/identity/application/actions/profile";
-import { getMyAccountData } from "@/features/identity/application/queries/my-account";
+import { Card, CardContent, CardHeader, CardTitle } from "@ui";
+import { Button } from "@ui";
+import { logout } from "@features/identity/application/actions/auth";
+import { SectionStateEmpty } from "@components/shared/state/SectionStateEmpty";
+import { Input } from "@ui";
+import { updateMyProfile } from "@features/identity/application/actions/profile";
+import { getMyAccountData } from "@features/identity/application/queries/my-account";
 
 type Props = {
   params: Promise<{ locale: Locale }>;

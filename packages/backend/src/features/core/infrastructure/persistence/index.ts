@@ -1,10 +1,10 @@
 /**
  * Persistence Layer Exports
  * 
- * Note: Database configuration and contracts are intended for server-side use only.
- * The framework layer (dashboard/storefront apps) is responsible for ensuring server-only execution.
+ * Note: Infrastructure code is not exposed via package.json exports.
+ * This keeps backend framework-agnostic (no React/Next.js dependencies).
+ * Apps access backend only through application and presentation layers.
  */
-import "server-only";
 
 export { db } from "./database.config";
 export * from "./contracts";

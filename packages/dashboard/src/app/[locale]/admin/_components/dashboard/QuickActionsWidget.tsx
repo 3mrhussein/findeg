@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@ui";
 import { Plus, Tag, FolderTree, PackagePlus } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";

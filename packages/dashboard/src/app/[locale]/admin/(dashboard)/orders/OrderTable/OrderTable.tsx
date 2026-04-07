@@ -6,14 +6,7 @@ import {
   useReactTable,
   type SortingState,
 } from "@tanstack/react-table";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@findeg/ui";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@ui";
 import { useState, useTransition } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import type { OrderTableProps, UpdateOrderQueryParams } from "./OrderTable.interface";

@@ -2,14 +2,14 @@
 
 import * as React from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
-import { Separator } from "@findeg/ui";
-import { Switch } from "@findeg/ui";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@findeg/ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@ui";
+import { Button } from "@ui";
+import { Label } from "@ui";
+import { Input } from "@ui";
+import { Badge } from "@ui";
+import { Separator } from "@ui";
+import { Switch } from "@ui";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@ui";
 import {
   Plus,
   ChevronDown,
@@ -22,10 +22,9 @@ import {
 import { PricingZone } from "./PricingZone";
 import { ProductStockSection } from "./ProductStockSection";
 import { UoMSection } from "../uom/UoMSection";
-import { BilingualInput } from "@/components/shared/BilingualInput";
-import type { ProductFormValues } from "@/features/administration/presentation/forms/product-form";
-import { generateVariantMatrix } from "@/features/catalog/domain/types/VariantDimension";
-import { Sku } from "@/features/catalog/domain/value-objects/Sku";
+import { BilingualInput } from "@components/shared/BilingualInput";
+import type { ProductFormValues } from "@features/administration/presentation/forms/product-form";
+import { generateVariantMatrix, Sku } from "@backend/features/catalog";
 
 /**
  * VariantsZone — Zone 2

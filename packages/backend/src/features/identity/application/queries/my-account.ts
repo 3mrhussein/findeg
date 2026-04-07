@@ -5,10 +5,10 @@
  * App-layer catches errors and handles redirect/notFound/error responses.
  */
 
-import { getServices } from "@/server/getServices";
-import { NotAuthenticatedError, ResourceNotFoundError } from "@/features/core/domain/errors";
-import type { User } from "@/features/identity/domain/entities/User";
-import type { Order } from "@/features/order/domain/entities/Order";
+import { getServices } from "@server/getServices";
+import { NotAuthenticatedError, ResourceNotFoundError } from "@features/core/domain/errors";
+import type { User } from "@features/identity/domain/entities/User";
+import type { Order } from "@features/order/domain/entities/Order";
 
 export interface MyAccountData {
   user: User;

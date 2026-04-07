@@ -1,9 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@findeg/ui";
-import { Progress } from "@findeg/ui";
-import { CategoryProductDistribution } from "@/features/administration/domain/types";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@ui";
+import { Progress } from "@ui";
+import { CategoryProductDistribution } from "@backend/features/administration";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";

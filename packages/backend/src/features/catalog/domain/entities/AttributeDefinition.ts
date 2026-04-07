@@ -5,7 +5,7 @@
  */
 
 import { z } from "zod";
-import { IdSchema, LocalizedStringSchema } from "@/features/core/domain/types/common";
+import { IdSchema, LocalizedStringSchema } from "../../../core/domain/types/common";
 
 export const AttributeDataTypeSchema = z.enum(["string", "number", "boolean", "enum"]);
 export type AttributeDataType = z.infer<typeof AttributeDataTypeSchema>;

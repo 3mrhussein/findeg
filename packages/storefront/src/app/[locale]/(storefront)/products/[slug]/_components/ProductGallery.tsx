@@ -8,9 +8,9 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "@findeg/ui";
-import { Card, CardContent } from "@findeg/ui";
-import { Button } from "@findeg/ui";
+} from "@ui";
+import { Card, CardContent } from "@ui";
+import { Button } from "@ui";
 
 interface ProductGalleryProps {
   images: string[];

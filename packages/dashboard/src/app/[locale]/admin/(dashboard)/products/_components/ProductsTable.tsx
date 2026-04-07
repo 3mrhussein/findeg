@@ -1,10 +1,10 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@findeg/ui";
-import { Checkbox } from "@findeg/ui";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@ui";
+import { Checkbox } from "@ui";
 import { ProductRow } from "./ProductRow";
-import type { ProductListItem } from "@/features/administration/application/interfaces";
+import type { ProductListItem } from "@backend/features/administration";
 
 interface ProductsTableProps {
   products: ProductListItem[];

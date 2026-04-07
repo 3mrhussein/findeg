@@ -2,14 +2,14 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Cairo } from "next/font/google";
 import "../globals.css";
 import { hasLocale, Locale, NextIntlClientProvider } from "next-intl";
-import { routing } from "@/i18n/routing";
+import { routing } from "@i18n/routing";
 import { notFound } from "next/navigation";
 import { getMessages, setRequestLocale } from "next-intl/server";
-import Providers from "@/providers/Providers";
+import Providers from "@providers/Providers";
 import { Suspense } from "react";
-import { BoundaryProvider } from "@/lib/internal/BoundaryProvider";
-import BoundaryToggle from "@/lib/internal/BoundaryToggle";
-import { WebMCPInitializer } from "@/components/shared/WebMCPInitializer";
+import { BoundaryProvider } from "@lib/internal/BoundaryProvider";
+import BoundaryToggle from "@lib/internal/BoundaryToggle";
+import { WebMCPInitializer } from "@components/shared/WebMCPInitializer";
 
 const inter = Inter({
   subsets: ["latin"],

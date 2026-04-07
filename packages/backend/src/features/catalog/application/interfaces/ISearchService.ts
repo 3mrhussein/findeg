@@ -1,5 +1,5 @@
-import { type ID } from "@/features/core/domain/types/common";
-import { type Locale } from "@/features/core/domain/value-objects";
+import { type ID } from "@features/core/domain/types/common";
+import { type Locale } from "@features/core/domain/value-objects";
 import { type Product } from "../../domain/entities/Product";
 
 export interface SearchParams {

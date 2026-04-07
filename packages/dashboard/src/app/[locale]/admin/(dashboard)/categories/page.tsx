@@ -1,13 +1,13 @@
-import { getServices } from "@/server/getServices";
 import { CategoryTree } from "./_components/CategoryTree";
-import { PageHeader } from "@/app/[locale]/admin/_components/shared/PageHeader";
-import { resolveLocale } from "@/features/core/domain/value-objects";
+import { PageHeader } from "@app/[locale]/admin/_components/shared/PageHeader";
+import { resolveLocale } from "@backend/features/core";
+import { getCategories } from "@data/categories/queries";
 import {
   createCategoryAction,
   updateCategoryAction,
   deleteCategoryAction,
   reorderCategoriesAction,
-} from "@/actions/catalog-actions";
+} from "@data/categories/actions";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -20,23 +20,16 @@ export default async function CategoriesPage({ params }: { params: Promise<{ loc
   const { locale } = await params;
   const t = await getTranslations("Administration.Catalog.Categories");
   const resolvedLocale = resolveLocale(locale);
-  const { adminCategory } = getServices();
-  const categories = await adminCategory.getTree(resolvedLocale);
+
+  // Fetch categories using data layer (with "use cache")
+  const categories = await getCategories(resolvedLocale);
 
   // Server action for creating/updating categories
   async function handleSaveCategory(data: any, categoryId?: number) {
     "use server";
 
     const input = {
-      localizedContent: {
-        name: data.localizedName,
-        description: data.localizedDescription,
-      },
-      parentId: data.parentId,
-      icon: data.icon,
-      sortOrder: data.sortOrder,
-      isActive: data.isActive,
-      // Use slug from form data (already auto-generated or manually entered)
+      name: data.localizedName || { en: "Untitled", ar: "" },
       slug:
         data.slug ||
         (data.localizedName?.en ?? "untitled")
@@ -44,7 +37,22 @@ export default async function CategoriesPage({ params }: { params: Promise<{ loc
           .toLowerCase()
           .replace(/[^a-z0-9]+/g, "-")
           .replace(/^-+|-+$/g, ""),
-      name: data.localizedName?.en || "Untitled",
+      description: data.localizedDescription,
+      parentId: data.parentId || null,
+      icon: data.icon,
+      isActive: data.isActive !== undefined ? data.isActive : true,
+      translations: [
+        {
+          language: "en",
+          name: data.localizedName?.en || "Untitled",
+          description: data.localizedDescription?.en || "",
+        },
+        {
+          language: "ar",
+          name: data.localizedName?.ar || "",
+          description: data.localizedDescription?.ar || "",
+        },
+      ],
     };
 
     if (categoryId) {

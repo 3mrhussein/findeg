@@ -1,5 +1,5 @@
 import { PageShell } from "../../_components/PageShell";
-import { Skeleton } from "@findeg/ui";
+import { Skeleton } from "@ui";
 
 /**
  * PLP loading fallback with 12 skeleton cards.

@@ -10,11 +10,11 @@
  * - Clear separation of concerns (backend = logic, app = framework integration)
  */
 
-import { container } from "@/features/core/infrastructure/di/ServiceContainer";
-import { OrderStatusUpdate } from "@/features/administration/domain/types";
-import { getOrderCachePaths } from "@/features/order/domain/cache";
-import type { ServiceResult } from "@/features/core/application/types";
-import { PaymentStatus } from "@/features/core/domain/types/common";
+import { container } from "@features/core/infrastructure/di/ServiceContainer";
+import { OrderStatusUpdate } from "@features/administration/domain/types";
+import { getOrderCachePaths } from "@features/order/domain/cache";
+import type { ServiceResult } from "@features/core/application/types";
+import { PaymentStatus } from "@features/core/domain/types/common";
 
 /**
  * Pure order status update - no framework calls.

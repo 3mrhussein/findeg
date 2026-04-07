@@ -43,7 +43,7 @@
 | M1  | Coverage Gap         | MEDIUM   | tasks.md Phase 0                                     | Task count mismatch: tasks.md claims "78 tasks across 6 phases" but actual count is 191 tasks        | Update task overview summary to reflect actual task count (T001-T191)     |
 | M2  | Terminology          | MEDIUM   | spec.md Key Entities, plan.md Project Structure      | Inconsistent package naming: spec uses "Admin Project", plan uses "dashboard", tasks use "dashboard" | Standardize to "dashboard" throughout spec.md Key Entities section        |
 | M3  | Duplication          | MEDIUM   | spec.md FR-012, data-model.md Feature Classification | Feature module ownership stated twice with minor wording differences                                 | Consolidate into spec.md reference                                        |
-| L1  | Ambiguity (minor)    | LOW      | spec.md FR-003                                       | Uses "backend (or `core`/`shared`)" suggesting naming not finalized                                  | Clarify that package MUST be named `@findeg/backend` per plan.md          |
+| L1  | Ambiguity (minor)    | LOW      | spec.md FR-003                                       | Uses "backend (or `core`/`shared`)" suggesting naming not finalized                                  | Clarify that package MUST be named `@backend` per plan.md          |
 | L2  | Coverage (edge case) | LOW      | tasks.md Phase 3                                     | FR-009 (migration documentation) has no explicit verification task                                   | Add task to validate quickstart.md completeness before Phase 6 completion |
 
 ---
@@ -208,7 +208,7 @@ administration → dashboard, cart/catalog/order/review → storefront, core/ide
 
 # plan.md, data-model.md, tasks.md consistently use:
 
-@findeg/backend
+@backend
 packages/backend/
 ```
 

@@ -2,15 +2,12 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  CollectionInput,
-  CollectionInputSchema,
-} from "@/features/administration/domain/types/CollectionInput";
-import { Collection } from "@/features/catalog/domain/entities/Collection";
-import { Tag } from "@/features/catalog/domain/entities/Tag";
+import { CollectionInput, CollectionInputSchema } from "@types/admin-inputs";
+import { Collection } from "@backend/features/catalog";
+import { Tag } from "@backend/features/catalog";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@hooks/use-toast";
 import { useState, useEffect } from "react";
 import {
   Form,
@@ -20,20 +17,20 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Switch } from "@findeg/ui";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@findeg/ui";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
+} from "@ui";
+import { Input } from "@ui";
+import { Button } from "@ui";
+import { Switch } from "@ui";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@ui";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@ui";
+import { Badge } from "@ui";
 import { ChevronLeft, Save, Loader2, Image as ImageIcon, Tag as TagIcon } from "lucide-react";
 import {
   createCollectionAction as adminCreateCollectionAction,
   updateCollectionAction as adminUpdateCollectionAction,
-} from "@/actions/admin-actions";
+} from "@actions/admin-actions";
 
-import { Checkbox } from "@findeg/ui";
+import { Checkbox } from "@ui";
 
 interface CollectionFormProps {
   collection?: Collection;

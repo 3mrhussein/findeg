@@ -1,196 +1,122 @@
 "use server";
 
-import { container } from "@/features/core/infrastructure/di/ServiceContainer";
-import { revalidatePath, revalidateTag } from "next/cache";
-import { TagInput } from "@/features/administration/domain/types";
-import { resolveErrorMessage } from "@/features/core/domain/errors/error-catalog";
-import { CACHE_TAGS } from "@/features/core/domain/constants/cache-tags";
-import { isSystemAdmin } from "@/features/core/domain/auth/authorization";
+import { TagInput } from "@backend/features/administration/domain/types";
+import { updateTag } from "next/cache";
+import { createAdministrationServices } from "@backend/features/administration";
 
 /**
- * Creates a new tag from the admin panel.
+ * Admin Tag Actions (Dashboard Data Layer)
+ *
+ * Uses "use server" directive and calls backend service factories.
+ * Implements cache invalidation via updateTag().
  */
+
 export async function adminCreateTagAction(input: TagInput) {
   try {
-    const session = await container.authService.validateAdmin();
-    const isAuthorized =
-      isSystemAdmin(session) || session.activeRoleIds?.includes("catalog_manager");
-    if (!isAuthorized) throw new Error("Forbidden: requires Catalog Manager or Super Admin role");
+    const { tags } = createAdministrationServices();
+    const result = await tags.create(input);
 
-    const service = container.adminTagService;
-    const tag = await service.create(input, Number(session.userId));
-
-    revalidatePath("/admin/tags");
-    revalidateTag(CACHE_TAGS.CATALOG_TAGS, "max");
-
-    return { success: true, tagId: tag.id };
+    updateTag("tags");
+    return { success: true, data: result };
   } catch (error: any) {
-    return {
-      success: false,
-      error: resolveErrorMessage(error, "ACTION_TAG_CREATE_FAILED" as any),
-    };
+    console.error("[adminCreateTagAction]", error);
+    return { success: false, error: error?.message || "Failed to create tag" };
   }
 }
 
-/**
- * Updates an existing tag from the admin panel.
- */
 export async function adminUpdateTagAction(id: number, input: TagInput) {
   try {
-    const session = await container.authService.validateAdmin();
-    const isAuthorized =
-      isSystemAdmin(session) || session.activeRoleIds?.includes("catalog_manager");
-    if (!isAuthorized) throw new Error("Forbidden: requires Catalog Manager or Super Admin role");
+    const { tags } = createAdministrationServices();
+    const result = await tags.update(id, input);
 
-    const service = container.adminTagService;
-    const tag = await service.update(id, input, Number(session.userId));
-
-    revalidatePath("/admin/tags");
-    revalidateTag(CACHE_TAGS.CATALOG_TAGS, "max");
-    revalidateTag(CACHE_TAGS.tagDetail(id), "max");
-
-    return { success: true, tagId: tag.id };
+    updateTag("tags");
+    return { success: true, data: result };
   } catch (error: any) {
-    return {
-      success: false,
-      error: resolveErrorMessage(error, "ACTION_TAG_UPDATE_FAILED" as any),
-    };
+    console.error("[adminUpdateTagAction]", error);
+    return { success: false, error: error?.message || "Failed to update tag" };
   }
 }
 
-/**
- * Deletes a tag by its ID.
- */
 export async function adminDeleteTagAction(id: number) {
   try {
-    const session = await container.authService.validateAdmin();
-    const isAuthorized =
-      isSystemAdmin(session) || session.activeRoleIds?.includes("catalog_manager");
-    if (!isAuthorized) throw new Error("Forbidden: requires Catalog Manager or Super Admin role");
+    const { tags } = createAdministrationServices();
+    await tags.delete(id);
 
-    const service = container.adminTagService;
-    await service.delete(id, Number(session.userId));
-
-    revalidatePath("/admin/tags");
-    revalidateTag(CACHE_TAGS.CATALOG_TAGS, "max");
-    revalidateTag(CACHE_TAGS.tagDetail(id), "max");
-
+    updateTag("tags");
     return { success: true };
   } catch (error: any) {
-    return {
-      success: false,
-      error: resolveErrorMessage(error, "ACTION_TAG_DELETE_FAILED" as any),
-    };
+    console.error("[adminDeleteTagAction]", error);
+    return { success: false, error: error?.message || "Failed to delete tag" };
   }
 }
 
-/**
- * Fetches distinct groups for tag management.
- */
-export async function adminGetDistinctTagGroupsAction() {
-  try {
-    const session = await container.authService.validateAdmin();
-    if (!session) throw new Error("Unauthorized");
-
-    const service = container.adminTagService;
-    const groups = await service.getDistinctGroups();
-    return { success: true, groups };
-  } catch (error: any) {
-    return { success: false, error: error.message };
-  }
-}
-
-/**
- * Bulk updates the status of multiple tags.
- */
 export async function adminBulkUpdateTagsStatusAction(ids: number[], isActive: boolean) {
   try {
-    const session = await container.authService.validateAdmin();
-    const isAuthorized =
-      isSystemAdmin(session) || session.activeRoleIds?.includes("catalog_manager");
-    if (!isAuthorized) throw new Error("Forbidden: requires Catalog Manager or Super Admin role");
+    const { tags } = createAdministrationServices();
+    await tags.bulkUpdateStatus(ids, isActive);
 
-    const service = container.adminTagService;
-    await service.bulkUpdateStatus(ids, isActive, Number(session.userId));
-
-    revalidatePath("/admin/tags");
-    revalidateTag(CACHE_TAGS.CATALOG_TAGS, "max");
-    ids.forEach((id) => revalidateTag(CACHE_TAGS.tagDetail(id), "max"));
-
+    updateTag("tags");
     return { success: true };
   } catch (error: any) {
-    return {
-      success: false,
-      error: resolveErrorMessage(error, "ACTION_TAG_BULK_UPDATE_FAILED" as any),
-    };
+    console.error("[adminBulkUpdateTagsStatusAction]", error);
+    return { success: false, error: error?.message || "Failed to bulk update tags status" };
   }
 }
 
-/**
- * Bulk deletes multiple tags.
- */
 export async function adminBulkDeleteTagsAction(ids: number[]) {
   try {
-    const session = await container.authService.validateAdmin();
-    const isAuthorized =
-      isSystemAdmin(session) || session.activeRoleIds?.includes("catalog_manager");
-    if (!isAuthorized) throw new Error("Forbidden: requires Catalog Manager or Super Admin role");
+    const { tags } = createAdministrationServices();
+    await tags.bulkDelete(ids);
 
-    const service = container.adminTagService;
-    await service.bulkDelete(ids, Number(session.userId));
-
-    revalidatePath("/admin/tags");
-    revalidateTag(CACHE_TAGS.CATALOG_TAGS, "max");
-    ids.forEach((id) => revalidateTag(CACHE_TAGS.tagDetail(id), "max"));
-
+    updateTag("tags");
     return { success: true };
   } catch (error: any) {
-    return {
-      success: false,
-      error: resolveErrorMessage(error, "ACTION_TAG_BULK_DELETE_FAILED" as any),
-    };
+    console.error("[adminBulkDeleteTagsAction]", error);
+    return { success: false, error: error?.message || "Failed to bulk delete tags" };
   }
 }
 
-/**
- * Toggles the active status of a tag.
- */
 export async function adminToggleTagStatusAction(id: number) {
   try {
-    const session = await container.authService.validateAdmin();
-    const isAuthorized =
-      isSystemAdmin(session) || session.activeRoleIds?.includes("catalog_manager");
-    if (!isAuthorized) throw new Error("Forbidden: requires Catalog Manager or Super Admin role");
+    const { tags } = createAdministrationServices();
+    const result = await tags.toggleTagStatus(id);
 
-    const service = container.adminTagService;
-    const tag = await service.toggleTagStatus(id, Number(session.userId));
-
-    revalidatePath("/admin/tags");
-    revalidateTag(CACHE_TAGS.CATALOG_TAGS, "max");
-    revalidateTag(CACHE_TAGS.tagDetail(id), "max");
-
-    return { success: true, isActive: tag.isActive };
+    updateTag("tags");
+    return {
+      success: true,
+      isActive: result.isActive,
+      data: result,
+    };
   } catch (error: any) {
+    console.error("[adminToggleTagStatusAction]", error);
     return {
       success: false,
-      error: resolveErrorMessage(error, "ACTION_TAG_UPDATE_FAILED" as any),
+      error: error?.message || "Failed to toggle tag status",
+      isActive: false,
     };
   }
 }
 
-/**
- * Gets the number of products assigned to a tag.
- */
-export async function adminGetTagProductCountAction(id: number) {
+export async function adminGetTagProductCountAction(tagId: number) {
   try {
-    const session = await container.authService.validateAdmin();
-    if (!session) throw new Error("Unauthorized");
-
-    const service = container.adminTagService;
-    const count = await service.getTagProductCount(id);
+    const { tags } = createAdministrationServices();
+    const count = await tags.getTagProductCount(tagId);
 
     return { success: true, count };
   } catch (error: any) {
-    return { success: false, error: error.message };
+    console.error("[adminGetTagProductCountAction]", error);
+    return { success: false, error: error?.message || "Failed to get tag product count", count: 0 };
+  }
+}
+
+export async function adminGetDistinctTagGroupsAction() {
+  try {
+    const { tags } = createAdministrationServices();
+    const groups = await tags.getDistinctGroups();
+
+    return { success: true, groups };
+  } catch (error: any) {
+    console.error("[adminGetDistinctTagGroupsAction]", error);
+    return { success: false, error: error?.message || "Failed to get tag groups", groups: [] };
   }
 }

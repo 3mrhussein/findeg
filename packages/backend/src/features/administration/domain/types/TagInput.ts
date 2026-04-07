@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { LocalizedStringSchema } from "@/features/core/domain/types/common";
-import { TagScopeSchema } from "@/features/catalog/domain/entities/Tag";
+import { LocalizedStringSchema } from "../../../core/domain/types/common";
+import { TagScopeSchema } from "../../../catalog/domain/entities/Tag";
 
 export const TagInputSchema = z.object({
   group: z.string().min(1, "Group is required"),

@@ -1,12 +1,12 @@
 import { eq, desc, and, gte, lte, sql } from "drizzle-orm";
-import { db } from "@/features/core/infrastructure/persistence";
-import { auditLog } from "@/features/core/infrastructure/persistence/schema/audit-log";
+import { auditLog } from "../../core/infrastructure/persistence/schema/audit-log";
 import type {
   IAuditLogRepository,
   AuditLogCreateInput,
   AuditLogFilters,
 } from "../application/interfaces/IAuditLogRepository";
 import type { AuditLogEntry } from "../domain/entities/AuditLogEntry";
+import { db } from "../../core/infrastructure/persistence";
 
 /**
  * Drizzle Audit Log Repository

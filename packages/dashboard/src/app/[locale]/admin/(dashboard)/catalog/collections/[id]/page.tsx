@@ -1,4 +1,3 @@
-import { getServices } from "@/server/getServices";
 import { CollectionForm } from "../_components/CollectionForm";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -22,12 +21,10 @@ export async function generateMetadata({ params }: CollectionEditPageProps): Pro
  */
 export default async function CollectionEditPage({ params }: CollectionEditPageProps) {
   const { id } = await params;
-  const { adminCollection, adminTag } = getServices();
 
-  const [collection, availableTags] = await Promise.all([
-    adminCollection.getById(Number(id)),
-    adminTag.getAll(),
-  ]);
+  // TODO: Replace with data layer queries from @data/collections/queries
+  const collection: any = null; // Stubbed - will trigger notFound()
+  const availableTags: any[] = []; // Stubbed
 
   if (!collection) {
     notFound();

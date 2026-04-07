@@ -1,8 +1,8 @@
-import { ID } from "@/features/core/domain/types/common";
+import { ID } from "@features/core/domain/types/common";
 import { type IProductRepository, type ProductFilters } from "../interfaces/IProductRepository";
 import { type IProductService } from "../interfaces/IProductService";
-import { type Product } from "@/features/catalog/domain/entities/Product";
-import { type Locale } from "@/features/core/domain/value-objects";
+import { type Product } from "@features/catalog/domain/entities/Product";
+import { type Locale } from "@features/core/domain/value-objects";
 
 export class ProductService implements IProductService {
   constructor(private productRepository: IProductRepository) {}

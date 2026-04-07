@@ -5,7 +5,7 @@
  * App-layer uses these configs in "use cache" directives.
  */
 
-import { CACHE_TAGS } from "@/features/core/domain/constants/cache-tags";
+import { CACHE_TAGS } from "../../../core/domain/constants/cache-tags";
 
 /**
  * Cache configuration for home page query

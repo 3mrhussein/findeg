@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@findeg/ui";
-import { SheetClose } from "@findeg/ui";
+import { Button } from "@ui";
+import { SheetClose } from "@ui";
 
 /**
  * Empty cart view — shown when cartItems is empty.

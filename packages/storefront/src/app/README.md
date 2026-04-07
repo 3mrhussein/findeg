@@ -70,22 +70,22 @@ app/
 
 | Source                                    | Why                                                    |
 | ----------------------------------------- | ------------------------------------------------------ |
-| `@/server/getServices`                    | Server Components fetch data via the service layer     |
-| `@/domain/entities/*`, `@/domain/types/*` or `@/features/*/domain/*` | For typing data passed to components                   |
-| `@/components/*` or `@/features/*/ui/*`   | Route files render components                          |
-| `@/hooks/*`, `@/providers/*`              | Layouts compose providers; client components use hooks |
-| `@/application/actions/*`                 | Client components call server actions                  |
-| `@/lib/*`                                 | Constants, utilities, UI types                         |
+| `@server/getServices`                    | Server Components fetch data via the service layer     |
+| `@domain/entities/*`, `@domain/types/*` or `@features/*/domain/*` | For typing data passed to components                   |
+| `@components/*` or `@features/*/ui/*`   | Route files render components                          |
+| `@hooks/*`, `@providers/*`              | Layouts compose providers; client components use hooks |
+| `@application/actions/*`                 | Client components call server actions                  |
+| `@lib/*`                                 | Constants, utilities, UI types                         |
 | `next/*`, `next-intl/*`                   | Framework APIs (navigation, headers, metadata)         |
-| `@/application/services/interfaces/*`     | For typing when needed                                 |
+| `@application/services/interfaces/*`     | For typing when needed                                 |
 
 ### ❌ Forbidden Imports
 
 | Source                                  | Why                                                      |
 | --------------------------------------- | -------------------------------------------------------- |
-| `@/infrastructure/*`                    | Route files must NEVER touch databases or repos directly |
-| `@/application/services/ProductService` | Don't import concrete classes — use `getServices()`      |
-| `@/infrastructure/di/ServiceContainer`  | Only `getServices.ts` should import the container        |
+| `@infrastructure/*`                    | Route files must NEVER touch databases or repos directly |
+| `@application/services/ProductService` | Don't import concrete classes — use `getServices()`      |
+| `@infrastructure/di/ServiceContainer`  | Only `getServices.ts` should import the container        |
 
 ---
 
@@ -105,7 +105,7 @@ export default function Page() {
 
 ```typescript
 // ✅ GOOD — Server Component fetches data via services
-import { getServices } from "@/server/getServices";
+import { getServices } from "@server/getServices";
 
 export default async function AdminDashboardPage() {
   const { adminDashboard } = getServices();

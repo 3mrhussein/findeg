@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { SlugSchema } from "@/features/core/domain/types/common";
+import { SlugSchema } from "../../../core/domain/types/common";
 
 export const BrandInputSchema = z.object({
   slug: SlugSchema,

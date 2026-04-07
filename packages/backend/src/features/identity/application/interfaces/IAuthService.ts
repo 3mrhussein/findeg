@@ -6,8 +6,8 @@
  * through injected dependencies (IUserRepository + ISessionProvider).
  */
 
-import { Email } from "@/features/core/domain/types/common";
-import { AuthResult, RegisterInput, SessionPayload } from "@/features/core/domain/auth";
+import { Email } from "@features/core/domain/types/common";
+import { AuthResult, RegisterInput, SessionPayload } from "@features/core/domain/auth";
 
 export interface IAuthService {
   /**

@@ -2,11 +2,11 @@
 
 import type React from "react";
 import { useTranslations } from "next-intl";
-import { Input } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { IconTooltip } from "@findeg/ui";
+import { Input } from "@ui";
+import { Button } from "@ui";
+import { IconTooltip } from "@ui";
 import { Search } from "lucide-react";
-import { useHeaderSearch } from "@/features/catalog/presentation/hooks/useHeaderSearch";
+import { useHeaderSearch } from "@features/catalog/presentation/hooks/useHeaderSearch";
 
 interface HeaderSearchFormProps {
   compact?: boolean;

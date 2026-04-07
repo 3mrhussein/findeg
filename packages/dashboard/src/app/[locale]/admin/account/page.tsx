@@ -1,7 +1,7 @@
-import { getMyAccountDataQuery } from "@/queries/dashboard-queries";
-import { updateMyProfileAction } from "@/actions/profile-actions";
-import { isDomainError, getErrorMessage } from "@/lib/errors";
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
+import { getMyAccountDataQuery } from "@queries/dashboard-queries";
+import { updateMyProfileAction } from "@actions/profile-actions";
+import { isDomainError, getErrorMessage } from "@lib/errors";
+import { Card, CardContent, CardHeader, CardTitle } from "@ui";
 import { ProfileForm } from "./_components/ProfileForm";
 
 interface MyAccountPageProps {

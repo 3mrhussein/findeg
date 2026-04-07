@@ -11,15 +11,9 @@
 
 import * as React from "react";
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
-import { Button } from "@findeg/ui";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@findeg/ui";
-import { cn } from "@/lib/utils";
+import { Button } from "@ui";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ui";
+import { cn } from "@lib/utils";
 
 export interface TablePaginationProps {
   /** Current page (1-indexed) */

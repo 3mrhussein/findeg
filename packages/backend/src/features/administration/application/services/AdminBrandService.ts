@@ -1,7 +1,7 @@
-import { ID, Slug } from "@/features/core/domain/types/common";
+import { ID, Slug } from "../../../core/domain/types/common";
 import { IAdminBrandService } from "../interfaces/IAdminBrandService";
-import { IBrandRepository } from "@/features/catalog/application/interfaces/IBrandRepository";
-import { Brand } from "@/features/catalog/domain/entities/Brand";
+import { IBrandRepository } from "../../../catalog/application/interfaces/IBrandRepository";
+import { Brand } from "../../../catalog/domain/entities/Brand";
 import { BrandInput } from "../../domain/types/BrandInput";
 import { IAuditLogService } from "../interfaces/IAuditLogService";
 

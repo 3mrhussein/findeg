@@ -1,20 +1,20 @@
-import { ID, Price } from "@/features/core/domain/types/common";
+import { ID, Price } from "../../../core/domain/types/common";
 import { IAdminDashboardService } from "../interfaces/IAdminDashboardService";
-import { IProductRepository } from "@/features/catalog/application/interfaces/IProductRepository";
-import { ICategoryRepository } from "@/features/catalog/application/interfaces/ICategoryRepository";
-import { IOrderRepository } from "@/features/order/application/interfaces/IOrderRepository";
-import { IBrandRepository } from "@/features/catalog/application/interfaces/IBrandRepository";
+import { IProductRepository } from "../../../catalog/application/interfaces/IProductRepository";
+import { ICategoryRepository } from "../../../catalog/application/interfaces/ICategoryRepository";
+import { IOrderRepository } from "../../../order/application/interfaces/IOrderRepository";
+import { IBrandRepository } from "../../../catalog/application/interfaces/IBrandRepository";
 import { DashboardStats } from "../../domain/types/DashboardStats";
 import { CatalogHealthStats, CategoryProductDistribution } from "../../domain/types";
-import { Order } from "@/features/order/domain/entities/Order";
+import { Order } from "../../../order/domain/entities/Order";
 import { startOfDay, endOfDay, subDays } from "date-fns";
-import { db } from "@/features/core/infrastructure/persistence/database.config";
-import { products } from "@/features/core/infrastructure/persistence/schema/products";
-import { categories } from "@/features/core/infrastructure/persistence/schema/categories";
+import { db } from "../../../core/infrastructure/persistence/database.config";
+import { products } from "../../../core/infrastructure/persistence/schema/products";
+import { categories } from "../../../core/infrastructure/persistence/schema/categories";
 import {
   productVariants,
   variantImages,
-} from "@/features/core/infrastructure/persistence/schema/product-variants";
+} from "../../../core/infrastructure/persistence/schema/product-variants";
 import { sql, count, desc, eq, isNotNull, and } from "drizzle-orm";
 
 /**

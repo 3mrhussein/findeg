@@ -50,20 +50,20 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build backend package
-        run: pnpm --filter @findeg/backend build
+        run: pnpm --filter @backend build
 
       - name: Run backend tests
-        run: pnpm --filter @findeg/backend test --run
+        run: pnpm --filter @backend test --run
 
       - name: Type check backend
-        run: pnpm --filter @findeg/backend type-check
+        run: pnpm --filter @backend type-check
 
       - name: Validate exports - Dashboard
-        run: pnpm --filter @findeg/dashboard type-check
+        run: pnpm --filter @dashboard type-check
         continue-on-error: false
 
       - name: Validate exports - Storefront
-        run: pnpm --filter @findeg/storefront type-check
+        run: pnpm --filter @storefront type-check
         continue-on-error: false
 
       - name: Check for breaking changes
@@ -93,7 +93,7 @@ jobs:
           fi
 
       - name: Run export verification tests
-        run: pnpm --filter @findeg/backend test --run src/__tests__/exports.test.ts
+        run: pnpm --filter @backend test --run src/__tests__/exports.test.ts
 
       - name: Summary
         if: success()

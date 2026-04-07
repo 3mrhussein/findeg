@@ -19,7 +19,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import { Icon } from "@findeg/ui";
+import { Icon } from "@ui";
 
 interface Toast {
   id: number;

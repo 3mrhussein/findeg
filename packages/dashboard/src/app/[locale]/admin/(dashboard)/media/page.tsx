@@ -1,5 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import { getServices } from "@/server/getServices";
+import { Card, CardContent, CardHeader, CardTitle } from "@ui";
 import { MediaUploadForm } from "./_components/media-upload-form";
 import { MediaLibrary } from "./_components/media-library";
 
@@ -7,8 +6,8 @@ import { MediaLibrary } from "./_components/media-library";
  *
  */
 export default async function MediaPage() {
-  const { media } = getServices();
-  const assets = await media.getLibraryAssets();
+  // TODO: Replace with data layer query from @data/media/queries
+  const assets: any[] = []; // Stubbed - empty media library
 
   return (
     <div className="space-y-6">

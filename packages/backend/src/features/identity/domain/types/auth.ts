@@ -1,6 +1,6 @@
 import { User } from "../entities/User";
-import { Email, PortalRole } from "@/features/core/domain/types/common";
-import type { SessionPayload as CoreSessionPayload } from "@/features/core/domain/auth";
+import { Email, PortalRole } from "@features/core/domain/types/common";
+import type { SessionPayload as CoreSessionPayload } from "@features/core/domain/auth";
 
 export type SessionPayload = CoreSessionPayload;
 

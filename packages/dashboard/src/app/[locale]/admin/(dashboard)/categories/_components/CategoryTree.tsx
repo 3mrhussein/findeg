@@ -31,19 +31,19 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { Button } from "@findeg/ui";
-import { Input } from "@findeg/ui";
+import { Button } from "@ui";
+import { Input } from "@ui";
 import { Plus, Search } from "lucide-react";
 import { CategoryRow } from "./CategoryRow";
 import { CategoryFormPanel } from "./CategoryFormPanel";
 import { CategoryDrawer } from "./CategoryDrawer";
-import { EmptyState } from "@findeg/ui";
-import { checkCategorySlugAvailableAction as checkSlugAvailableAction } from "@/actions/admin-actions";
-import type { Category } from "@/features/catalog/domain/entities/Category";
+import { EmptyState } from "@ui";
+import { checkCategorySlugAvailableAction as checkSlugAvailableAction } from "@actions/admin-actions";
+import type { Category } from "@backend/features/catalog";
 import { useTranslations } from "next-intl";
-import { moveCategoryUpAction, moveCategoryDownAction } from "@/actions/admin-actions";
+import { moveCategoryUpAction, moveCategoryDownAction } from "@actions/admin-actions";
 
-import { ConfirmDialog } from "@/app/[locale]/admin/_components/shared/ConfirmDialog";
+import { ConfirmDialog } from "@app/[locale]/admin/_components/shared/ConfirmDialog";
 import {
   Dialog,
   DialogContent,
@@ -51,8 +51,8 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@findeg/ui";
-import { cn } from "@/lib/utils";
+} from "@ui";
+import { cn } from "@lib/utils";
 
 interface CategoryTreeProps {
   categories: Category[];

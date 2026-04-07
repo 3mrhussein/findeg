@@ -1,10 +1,10 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Suspense } from "react";
 import type { Locale } from "next-intl";
-import { Input } from "@findeg/ui";
-import { Button } from "@findeg/ui";
+import { Input } from "@ui";
+import { Button } from "@ui";
 import { Search } from "lucide-react";
-import { getSearchPageViewModel } from "@/features/catalog/application/queries/search-page";
+import { getSearchPageViewModel } from "@features/catalog/application/queries/search-page";
 import { PageShell } from "../_components/PageShell";
 import { ProductListingLayout } from "../_components/ProductListingLayout";
 

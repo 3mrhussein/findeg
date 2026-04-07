@@ -14,10 +14,10 @@
     "test:unit": "turbo run test:unit",
     "test:e2e": "turbo run test:e2e",
     "type-check": "turbo run type-check",
-    "type-check:backend": "pnpm --filter @findeg/backend type-check",
-    "type-check:ui": "pnpm --filter @findeg/ui type-check",
-    "type-check:dashboard": "pnpm --filter @findeg/dashboard type-check",
-    "type-check:storefront": "pnpm --filter @findeg/storefront type-check",
+    "type-check:backend": "pnpm --filter @backend type-check",
+    "type-check:ui": "pnpm --filter @ui type-check",
+    "type-check:dashboard": "pnpm --filter @dashboard type-check",
+    "type-check:storefront": "pnpm --filter @storefront type-check",
     "db:start": "./packages/backend/scripts/db-start.sh",
     "db:stop": "./packages/backend/scripts/db-stop.sh",
     "db:reset": "./packages/backend/scripts/db-reset.sh",
@@ -40,9 +40,9 @@
     "e2e:run:ci": "npm run e2e:run -- --reporter junit --reporter-options mochaFile=cypress/reports/junit-[hash].xml,toConsole=false",
     "e2e:run:headed": "npm run e2e:run -- --headed",
     "e2e:verify": "cypress verify",
-    "dev:storefront": "pnpm --filter @findeg/storefront dev",
-    "dev:dashboard": "pnpm --filter @findeg/dashboard dev",
-    "dev:both": "pnpm --parallel --filter @findeg/storefront --filter @findeg/dashboard dev"
+    "dev:storefront": "pnpm --filter @storefront dev",
+    "dev:dashboard": "pnpm --filter @dashboard dev",
+    "dev:both": "pnpm --parallel --filter @storefront --filter @dashboard dev"
   },
   "devDependencies": {
     "eslint": "^9.0.0",
@@ -60,6 +60,5 @@
   "author": "FindEg Team",
   "packageManager": "pnpm@10.33.0",
   "dependencies": {
-    "server-only": "^0.0.1"
   }
 }

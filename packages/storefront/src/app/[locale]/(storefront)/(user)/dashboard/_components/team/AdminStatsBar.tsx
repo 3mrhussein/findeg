@@ -10,7 +10,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import type { User } from "@/features/identity/domain/entities/User";
+import type { User } from "@features/identity/domain/entities/User";
 type AdminUser = User & { roles: any[]; isActive?: boolean };
 
 interface AdminStatsBarProps {

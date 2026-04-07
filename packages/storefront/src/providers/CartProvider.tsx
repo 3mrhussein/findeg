@@ -3,7 +3,8 @@
 import React, { createContext, useEffect, useMemo, useState } from "react";
 import type { CartItem } from "@/features/cart/domain/entities/Cart";
 import type { Product } from "@/features/catalog/domain/entities/Product";
-import type { CustomerGroup, UomCode } from "@/features/core/domain/types/common";
+import { CustomerGroup } from "@backend/features/catalog/domain";
+import { UomCode } from "@backend/features/core/domain/types/common";
 
 export interface CartContextType {
   cartItems: CartItem[];

@@ -2,9 +2,9 @@
 
 import React from "react";
 import { useTranslations } from "next-intl";
-import { Button } from "@findeg/ui";
+import { Button } from "@ui";
 import { Check, X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@lib/utils";
 
 interface Alternative {
   id: string;

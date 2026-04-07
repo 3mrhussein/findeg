@@ -2,8 +2,8 @@
 
 import { useTransition } from "react";
 import { type Table } from "@tanstack/react-table";
-import { type Order } from "@/features/order/domain/entities/Order";
-import { Button } from "@findeg/ui";
+import { type Order } from "@backend/features/order";
+import { Button } from "@ui";
 import { Check, Settings, Printer, X } from "lucide-react";
 
 interface OrderBulkActionBarProps {

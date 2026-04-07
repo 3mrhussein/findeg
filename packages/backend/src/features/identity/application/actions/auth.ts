@@ -10,11 +10,11 @@
  * - Clear separation of concerns (backend = logic, app = framework integration)
  */
 
-import { container } from "@/features/core/infrastructure/di/ServiceContainer";
-import { NotAuthenticatedError, ValidationError } from "@/features/core/domain/errors";
-import type { ServiceResult } from "@/features/core/application/types";
-import { isAdminSession, createUserVO } from "@/features/core/domain/auth";
-import type { SessionPayload } from "@/features/core/domain/auth";
+import { container } from "@features/core/infrastructure/di/ServiceContainer";
+import { NotAuthenticatedError, ValidationError } from "@features/core/domain/errors";
+import type { ServiceResult } from "@features/core/application/types";
+import { isAdminSession, createUserVO } from "@features/core/domain/auth";
+import type { SessionPayload } from "@features/core/domain/auth";
 
 /**
  * Pure login service - no framework calls.

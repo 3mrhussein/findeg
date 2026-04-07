@@ -5,9 +5,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
-import { Button } from "@findeg/ui";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@findeg/ui";
-import { Input } from "@findeg/ui";
+import { Button } from "@ui";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@ui";
+import { Input } from "@ui";
 import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 const persistSessionToken = (token: string) => {

@@ -1,7 +1,7 @@
-import { Link } from "@/i18n/navigation";
+import { Link } from "@i18n/navigation";
 import Image from "next/image";
-import { resolveLocale } from "@/features/core/domain/value-objects";
-import { getHomePageData } from "@/features/catalog/application/queries/storefront";
+import { resolveLocale } from "@features/core/domain/value-objects";
+import { getHomePageData } from "@features/catalog/application/queries/storefront";
 
 interface CollectionsGridProps {
   locale: string;

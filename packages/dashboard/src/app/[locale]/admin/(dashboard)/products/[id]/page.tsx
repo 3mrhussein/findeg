@@ -1,34 +1,27 @@
-import { container } from "@/features/core/infrastructure/di/ServiceContainer";
-import { ProductForm } from "@/app/[locale]/admin/(dashboard)/products/_components/ProductForm";
+import { Suspense } from "react";
+import { resolveLocale } from "@backend/features/core";
+import { ProductDetailSkeleton } from "@components/skeletons";
+import { ProductDetailContent } from "./_components/ProductDetailContent";
 
 /**
+ * Product Edit Page
  *
+ * Displays product form with Suspense boundaries for progressive rendering.
+ * Uses PPR (Partial Prerendering) for instant page navigation.
  */
-export default async function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id: idParam } = await params;
-  const id = parseInt(idParam);
-  const product = await container.adminProductService.getById(id);
-  const categories = await container.adminCategoryService.getAll();
-  const brands = await container.adminBrandService.getAll();
-
-  if (!product) {
-    return <div>Product not found</div>;
-  }
+export default async function EditProductPage({
+  params,
+}: {
+  params: Promise<{ locale: string; id: string }>;
+}) {
+  const { locale, id: idParam } = await params;
+  const productId = parseInt(idParam);
 
   return (
     <div className="flex-1 space-y-4 p-8 pt-6">
-      <div className="flex items-center justify-between space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight">Edit Product</h2>
-      </div>
-      <div className="max-w-2xl">
-        <ProductForm
-          initialData={product as any}
-          categories={categories}
-          brands={brands}
-          tags={[]}
-          locale="en"
-        />
-      </div>
+      <Suspense fallback={<ProductDetailSkeleton />}>
+        <ProductDetailContent productId={productId} locale={locale} />
+      </Suspense>
     </div>
   );
 }

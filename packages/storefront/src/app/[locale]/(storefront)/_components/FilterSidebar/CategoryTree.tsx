@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Checkbox } from "@findeg/ui";
+import { Checkbox } from "@ui";
 import { ChevronRight } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@lib/utils";
 import type { CategoryFilterOption } from "./FilterSidebar.interface";
 import { getAllSlugs } from "./FilterSidebar.interface";
 

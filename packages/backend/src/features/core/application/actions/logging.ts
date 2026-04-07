@@ -1,6 +1,20 @@
-"use server";
+/**
+ * Pure TypeScript logging action (backend - framework-agnostic)
+ * 
+ * Apps should wrap this with "use server" in their own server actions.
+ * Backend exports pure business logic only.
+ * 
+ * Usage in dashboard:
+ * ```ts
+ * "use server";
+ * import { logRequestAction } from '@backend/features/core';
+ * export async function logRequest(data: any) {
+ *   return logRequestAction(data);
+ * }
+ * ```
+ */
 
-import { container } from "@/features/core/infrastructure/di/ServiceContainer";
+import { container } from "@features/core/infrastructure/di/ServiceContainer";
 
 /**
  * usage by client components to log specific events or errors to the server.

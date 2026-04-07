@@ -1,6 +1,6 @@
-import { resolveLocale } from "@/features/core/domain/value-objects";
-import { getHomePageData } from "@/features/catalog/application/queries/storefront";
-import { buildHomeFeaturedGroups } from "@/features/catalog/application/queries/home-page";
+import { resolveLocale } from "@features/core/domain/value-objects";
+import { getHomePageData } from "@features/catalog/application/queries/storefront";
+import { buildHomeFeaturedGroups } from "@features/catalog/application/queries/home-page";
 import { ProductCard } from "../ProductCard";
 
 interface NewArrivalsProps {

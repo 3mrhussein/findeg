@@ -1,32 +1,10 @@
 export * from "./interfaces";
 export * from "./services";
 
-// Pure action functions (no framework dependencies)
-export { createProduct, updateProduct, deleteProduct } from "./actions/product";
-export { createBrand, updateBrand, deleteBrand, toggleBrandStatus } from "./actions/brand";
-export {
-  createCategory,
-  updateCategory,
-  deleteCategory,
-  moveCategoryUp,
-  moveCategoryDown,
-  reorderCategories,
-  checkSlugAvailable,
-} from "./actions/category";
-
-// Cached queries for storefront
-export {
-  getHomePageData,
-  getShopPageData,
-  getSearchPageData,
-  getProductDetailPageData,
-} from "./queries/storefront";
-export type {
-  HomePageData,
-  ShopPageData,
-  SearchPageData,
-  ProductDetailPageData,
-} from "./queries/storefront";
+// NOTE: Action functions (createProduct, createBrand, etc.) are NOT exported because they:
+// 1. Use old ServiceContainer pattern with @ imports that break Turbopack bundling
+// 2. Should be reimplemented in the app data layer using service factories
+// Apps should create their own server actions using createCatalogServices()
 
 // Cache configuration
 export {

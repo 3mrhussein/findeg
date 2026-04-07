@@ -3,17 +3,11 @@
 import { FormEvent, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Upload } from "lucide-react";
-import { Button } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@findeg/ui";
-import { useToast } from "@/hooks/use-toast";
+import { Button } from "@ui";
+import { Input } from "@ui";
+import { Label } from "@ui";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ui";
+import { useToast } from "@hooks/use-toast";
 
 const FOLDER_OPTIONS = [
   { value: "general", label: "General" },

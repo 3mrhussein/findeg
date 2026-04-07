@@ -1,5 +1,17 @@
-import type { Order } from "@/features/order/domain/entities/Order";
-import type { OrderStatus, PaymentStatus } from "@/features/core/domain/types/common";
+import type { Order } from "@backend/features/order";
+
+/**
+ * Local type definitions
+ */
+export type OrderStatus =
+  | "pending"
+  | "confirmed"
+  | "processing"
+  | "shipped"
+  | "delivered"
+  | "cancelled"
+  | "refunded";
+export type PaymentStatus = "pending" | "paid" | "failed" | "refunded";
 
 export interface OrderTableFiltersData {
   search?: string;

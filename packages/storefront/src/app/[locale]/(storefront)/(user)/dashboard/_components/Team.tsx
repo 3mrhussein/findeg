@@ -19,16 +19,16 @@
 
 import React, { useState, useEffect, useMemo, useTransition } from "react";
 import { useTranslations } from "next-intl";
-import { Button } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@findeg/ui";
-import { Icon } from "@findeg/ui";
-import { PERMISSION_CODES } from "@/features/core/domain/auth";
-import { usePermissions } from "@/providers/PermissionsProvider";
+import { Button } from "@ui";
+import { Input } from "@ui";
+import { Badge } from "@ui";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@ui";
+import { Icon } from "@ui";
+import { PERMISSION_CODES } from "@backend/features/core";
+import { usePermissions } from "@providers/PermissionsProvider";
 // @ts-ignore
-import { useAdminUsers } from "@/hooks/useAdminUsers";
-import type { User } from "@/features/identity/domain/entities/User";
+import { useAdminUsers } from "@hooks/useAdminUsers";
+import type { User } from "@backend/features/identity";
 export type AdminUser = User & { roles: any[]; isActive?: boolean; permissionOverrides?: any };
 import { AdminStatsBar } from "./team/AdminStatsBar";
 import { AdminActionsMenu } from "./team/AdminActionsMenu";

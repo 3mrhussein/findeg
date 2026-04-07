@@ -1,6 +1,6 @@
-import { ID, Price, OrderStatus, PaymentStatus } from "@/features/core/domain/types/common";
+import { ID, Price, OrderStatus, PaymentStatus } from "@features/core/domain/types/common";
 import { Order } from "../../domain/entities/Order";
-import { OrderStatusUpdate } from "@/features/administration/domain/types";
+import { OrderStatusUpdate } from "@features/administration/domain/types";
 
 export interface OrderFilters {
   status?: OrderStatus;

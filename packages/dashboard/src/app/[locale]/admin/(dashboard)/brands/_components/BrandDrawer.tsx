@@ -1,10 +1,10 @@
 "use client";
 
 import React from "react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@findeg/ui";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@ui";
 import { BrandFormPanel } from "./BrandFormPanel";
-import { Brand } from "@/features/catalog/domain/entities/Brand";
-import { BrandInput } from "@/features/administration/domain/types";
+import { Brand } from "@backend/features/catalog";
+import { BrandInput } from "@backend/features/administration/domain/types";
 
 interface BrandDrawerProps {
   open: boolean;

@@ -1,29 +1,23 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { getServices } from "@/server/getServices";
 
 export async function duplicateProductAction(id: number, adminUserId?: number) {
-  const { adminProduct } = getServices();
-  const result = await adminProduct.duplicateProduct(id, adminUserId);
-  revalidatePath("/admin/products");
-  return result;
+  // TODO: Implement using service factory from @backend
+  throw new Error("Not implemented - needs repository-based refactoring");
 }
 
 export async function bulkActivateAction(ids: number[], adminUserId?: number) {
-  const { adminProduct } = getServices();
-  await adminProduct.bulkActivate(ids, adminUserId);
-  revalidatePath("/admin/products");
+  // TODO: Implement using service factory
+  throw new Error("Not implemented - needs repository-based refactoring");
 }
 
 export async function bulkDeactivateAction(ids: number[], adminUserId?: number) {
-  const { adminProduct } = getServices();
-  await adminProduct.bulkDeactivate(ids, adminUserId);
-  revalidatePath("/admin/products");
+  // TODO: Implement using service factory
+  throw new Error("Not implemented - needs repository-based refactoring");
 }
 
 export async function bulkDeleteAction(ids: number[], adminUserId?: number) {
-  const { adminProduct } = getServices();
-  await adminProduct.bulkDelete(ids, adminUserId);
-  revalidatePath("/admin/products");
+  // TODO: Implement using service factory
+  throw new Error("Not implemented - needs repository-based refactoring");
 }

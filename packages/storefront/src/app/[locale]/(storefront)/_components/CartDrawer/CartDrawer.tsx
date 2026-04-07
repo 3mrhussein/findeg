@@ -1,19 +1,13 @@
 "use client";
 
-import { useCart } from "@/hooks/useCart";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@findeg/ui";
-import { ScrollArea } from "@findeg/ui";
+import { useCart } from "@hooks/useCart";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@ui";
+import { ScrollArea } from "@ui";
 import { CartEmptyState } from "./CartEmptyState";
 import { CartItem } from "./CartItem";
 import { CartSummary } from "./CartSummary";
-import { Button } from "@findeg/ui";
-import { cn } from "@/lib/utils";
+import { Button } from "@ui";
+import { cn } from "@lib/utils";
 
 /**
  * CartDrawer — slide-over sheet showing cart items with qty controls and checkout.

@@ -23,6 +23,15 @@ cypress/videos
 cypress/downloads
 cypress/reports
 .turbo
+
+# Environment variables (CRITICAL - do not commit secrets!)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
+
 # Editor directories and files
 **/tsconfig.tsbuildinfo
 .vscode/*

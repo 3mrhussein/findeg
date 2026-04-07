@@ -1,10 +1,10 @@
 "use client";
 
-import { Button } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { TableCell, TableRow } from "@findeg/ui";
+import { Button } from "@ui";
+import { Input } from "@ui";
+import { TableCell, TableRow } from "@ui";
 import { AlertTriangle, Loader2, Save } from "lucide-react";
-import type { Product } from "@/features/catalog/domain/entities/Product";
+import type { Product } from "@backend/features/catalog";
 
 interface InventoryRowProps {
   product: Product;

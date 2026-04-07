@@ -5,9 +5,9 @@
  * App-layer (dashboard) handles revalidatePath() and redirect() after update.
  */
 
-import { container } from "@/features/core/infrastructure/di/ServiceContainer";
-import { NotAuthenticatedError, ValidationError } from "@/features/core/domain/errors";
-import type { ServiceResult } from "@/features/core/application/types";
+import { container } from "@features/core/infrastructure/di/ServiceContainer";
+import { NotAuthenticatedError, ValidationError } from "@features/core/domain/errors";
+import type { ServiceResult } from "@features/core/application/types";
 
 /**
  * Pure profile update service - no framework calls.

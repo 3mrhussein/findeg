@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { IdSchema, SlugSchema } from "@/features/core/domain/types/common";
-import { LocaleSchema } from "@/features/core/domain/value-objects";
+import { IdSchema, SlugSchema } from "../../../core/domain/types/common";
+import { LocaleSchema } from "../../../core/domain/value-objects";
 
 const CategoryTranslationSchema = z.object({
   language: LocaleSchema,

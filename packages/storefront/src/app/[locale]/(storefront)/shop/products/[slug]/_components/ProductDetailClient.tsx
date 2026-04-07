@@ -14,26 +14,26 @@ import {
   Truck,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
-import { Button } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
-import { IconTooltip } from "@findeg/ui";
-import { useCart } from "@/hooks/useCart";
-import { useUser } from "@/hooks/useUser";
-import type { Product } from "@/features/catalog/domain/entities/Product";
-import type { Variant } from "@/features/catalog/domain/entities/Variant";
-import { VariantEntity } from "@/features/catalog/domain/entities/Variant";
-import type { CustomerGroup, UomCode } from "@/features/core/domain/types/common";
-import { getProductStatusBadge } from "@/features/catalog/presentation/utils/product-badge";
-import { cn } from "@/lib/utils";
-import type { ProductPdpViewModel } from "@/features/catalog/application/queries/product-pdp";
+import { Link } from "@i18n/navigation";
+import { Button } from "@ui";
+import { Badge } from "@ui";
+import { IconTooltip } from "@ui";
+import { useCart } from "@hooks/useCart";
+import { useUser } from "@hooks/useUser";
+import type { Product } from "@features/catalog/domain/entities/Product";
+import type { Variant } from "@features/catalog/domain/entities/Variant";
+import { VariantEntity } from "@features/catalog/domain/entities/Variant";
+import { getProductStatusBadge } from "@features/catalog/presentation/utils/product-badge";
+import { cn } from "@lib/utils";
+import type { ProductPdpViewModel } from "@features/catalog/application/queries/product-pdp";
 import { ImageGallery } from "./ImageGallery";
 import { ProductTabsSection } from "./ProductTabsSection";
 import { RelatedProductsRail } from "./RelatedProductsRail";
 import { RecentlyViewedRail, type RecentlyViewedItem } from "./RecentlyViewedRail";
+import { CustomerGroup, UoMCode } from "@backend/features/catalog";
 
 interface UomOption {
-  code: UomCode;
+  code: UoMCode;
   label: string;
   factorToBase: number;
 }
@@ -71,7 +71,7 @@ function isCssColorCandidate(value: string): boolean {
 }
 
 function resolveUomLabel(uom: UomOption, locale: string): string {
-  const labels: Record<UomCode, { en: string; ar: string }> = {
+  const labels: Record<UoMCode, { en: string; ar: string }> = {
     pcs: { en: "pcs", ar: "قطعة" },
     pack: { en: "pack", ar: "عبوة" },
     carton: { en: "carton", ar: "كرتونة" },
@@ -185,7 +185,7 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
     }));
   }, [selectedVariant]);
 
-  const [selectedUomCode, setSelectedUomCode] = useState<UomCode | undefined>(uomOptions[0]?.code);
+  const [selectedUomCode, setSelectedUomCode] = useState<UoMCode | undefined>(uomOptions[0]?.code);
   useEffect(() => {
     setSelectedUomCode(uomOptions[0]?.code);
   }, [selectedVariantId, uomOptions]);
@@ -250,7 +250,7 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
   const bestValueCode = useMemo(() => {
     if (!selectedVariant || uomOptions.length <= 1) return null;
 
-    let best: { code: UomCode; value: number } | null = null;
+    let best: { code: UoMCode; value: number } | null = null;
 
     for (const uom of uomOptions) {
       const unitPrice = getFallbackUomPrice(selectedVariant, uom, vm.customerGroup);

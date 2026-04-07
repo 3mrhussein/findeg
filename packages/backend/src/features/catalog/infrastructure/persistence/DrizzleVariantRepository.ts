@@ -1,4 +1,4 @@
-import { db } from "@/features/core/infrastructure/persistence";
+import { db } from "../../../core/infrastructure/persistence";
 import {
   productVariants,
   variantImages,
@@ -6,22 +6,22 @@ import {
   variantSellableUoms,
   variantPriceLists,
   attributeDefinitions,
-} from "@/features/core/infrastructure/persistence/schema";
+} from "../../../core/infrastructure/persistence/schema";
 import {
   IVariantRepository,
   SellOption,
   PriceResult,
 } from "../../application/interfaces/IVariantRepository";
 import { Variant } from "../../domain/entities/Variant";
-import { VariantInput } from "@/features/administration/domain/types/ProductInput";
+import { VariantInput } from "../../../administration/domain/types/ProductInput";
 import { eq, and, inArray, sql } from "drizzle-orm";
-import { ID, Price, CustomerGroup, UomCode } from "@/features/core/domain/types/common";
+import { ID, Price, CustomerGroup, UomCode } from "../../../core/domain/types/common";
 import {
   DEFAULT_CURRENCY,
   DEFAULT_LOCALE,
   type CurrencyCode,
   type Locale,
-} from "@/features/core/domain/value-objects";
+} from "../../../core/domain/value-objects";
 
 /**
  * Drizzle Variant Repository

@@ -1,7 +1,7 @@
-import { ID, Slug } from "@/features/core/domain/types/common";
-import type { Locale } from "@/features/core/domain/value-objects";
-import type { Category } from "@/features/catalog/domain/entities/Category";
-import type { CategoryInput } from "@/features/administration/domain/types";
+import { ID, Slug } from "@features/core/domain/types/common";
+import type { Locale } from "@features/core/domain/value-objects";
+import type { Category } from "@features/catalog/domain/entities/Category";
+import type { CategoryInput } from "@features/administration/domain/types";
 
 /**
  * Category Repository Interface

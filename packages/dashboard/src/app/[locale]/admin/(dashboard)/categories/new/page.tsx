@@ -1,10 +1,10 @@
-import { getServices } from "@/server/getServices";
 import { CategoryForm } from "../CategoryForm";
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import { resolveLocale } from "@/features/core/domain/value-objects";
+import { Card, CardContent, CardHeader, CardTitle } from "@ui";
+import { resolveLocale } from "@backend/features/core";
+import { getCategories } from "@data/categories/queries";
 
 /**
- *
+ * Create Category Page — Create a new category with translations
  */
 export default async function CreateCategoryPage({
   params,
@@ -13,11 +13,12 @@ export default async function CreateCategoryPage({
 }) {
   const { locale } = await params;
   const resolvedLocale = resolveLocale(locale);
-  const { categories } = getServices();
-  const allCategories = await categories.getAll(resolvedLocale);
+
+  // Fetch all categories for parent selection dropdown
+  const allCategories = await getCategories(resolvedLocale);
 
   // Transform for select
-  const categoryOptions = allCategories.map((c) => ({
+  const categoryOptions = allCategories.map((c: any) => ({
     id: c.id,
     slug: c.slug,
     name: c.name,

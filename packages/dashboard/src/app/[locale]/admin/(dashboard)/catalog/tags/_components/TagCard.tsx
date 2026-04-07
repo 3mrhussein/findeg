@@ -1,12 +1,12 @@
 "use client";
 
 import { useTranslations, useLocale } from "next-intl";
-import { Tag } from "@/features/catalog/domain/entities/Tag";
-import { Card, CardContent } from "@findeg/ui";
-import { Button } from "@findeg/ui";
+import { Tag } from "@backend/features/catalog";
+import { Card, CardContent } from "@ui";
+import { Button } from "@ui";
 import { Edit, Trash2, Eye, EyeOff } from "lucide-react";
-import { getTagDisplayName } from "@/features/catalog/presentation/config/tag-display";
-import { cn } from "@/lib/utils";
+import { getTagDisplayName } from "@features/catalog/presentation/config/tag-display";
+import { cn } from "@lib/utils";
 import * as Icons from "lucide-react";
 
 interface TagCardProps {

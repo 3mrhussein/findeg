@@ -150,7 +150,7 @@ import { Container } from "@/components/shared/Container";
 **After:**
 
 ```typescript
-import { Button, Container } from "@findeg/ui";
+import { Button, Container } from "@ui";
 ```
 
 ## Benefits
@@ -171,8 +171,8 @@ import { Button, Container } from "@findeg/ui";
 ## Verification Checklist
 
 - [ ] UI package builds successfully
-- [ ] Dashboard imports from @findeg/ui
-- [ ] Storefront imports from @findeg/ui
+- [ ] Dashboard imports from @ui
+- [ ] Storefront imports from @ui
 - [ ] No duplicate components in apps
 - [ ] All builds pass
 - [ ] E2E tests pass

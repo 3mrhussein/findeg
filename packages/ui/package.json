@@ -1,5 +1,5 @@
 {
-  "name": "@findeg/ui",
+  "name": "ui",
   "version": "0.1.0",
   "private": true,
   "description": "Shared UI components for FindEg dashboard and storefront",
@@ -17,8 +17,8 @@
     "dev": "tsc --build --watch",
     "type-check": "tsc --noEmit",
     "test": "npm run type-check",
-    "test:unit": "echo 'No unit tests for @findeg/ui yet'",
-    "test:e2e": "echo 'No e2e tests for @findeg/ui'"
+    "test:unit": "echo 'No unit tests for @ui yet'",
+    "test:e2e": "echo 'No e2e tests for @ui'"
   },
   "peerDependencies": {
     "next": "^16.0.0",

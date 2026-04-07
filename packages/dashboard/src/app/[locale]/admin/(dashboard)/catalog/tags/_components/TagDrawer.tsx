@@ -1,15 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Sheet, SheetContent } from "@findeg/ui";
-import { Tag } from "@/features/catalog/domain/entities/Tag";
-import { TagInput } from "@/features/administration/domain/types";
+import { Sheet, SheetContent } from "@ui";
+import { Tag } from "@backend/features/catalog";
+import { TagInput } from "@types/admin-inputs";
 import { TagFormPanel } from "./TagFormPanel";
-import {
-  createTagAction,
-  updateTagAction,
-  getTagProductCountAction,
-} from "@/actions/admin-actions";
+import { createTagAction, updateTagAction, getTagProductCountAction } from "@actions/admin-actions";
 import { useRouter } from "next/navigation";
 
 interface TagDrawerProps {
@@ -33,9 +29,7 @@ export function TagDrawer({ open, onOpenChange, tag }: TagDrawerProps) {
   }, [tag, productCount]);
 
   const handleSubmit = async (data: TagInput) => {
-    const res = tag
-      ? await updateTagAction(Number(tag.id), data)
-      : await createTagAction(data);
+    const res = tag ? await updateTagAction(Number(tag.id), data) : await createTagAction(data);
 
     if (res.success) {
       onOpenChange(false);

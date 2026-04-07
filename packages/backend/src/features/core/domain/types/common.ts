@@ -22,7 +22,7 @@ import {
   type RoleId,
   type RoleScope,
   type LocalizedString,
-} from "@/features/core/domain/value-objects";
+} from "../value-objects";
 
 // ─── Primitives ─────────────────────────────────────────────────────────────
 
@@ -66,16 +66,16 @@ export type { LocalizedString };
 export const PortalRoleSchema = z.enum(["customer", "staff", "school_staff"]);
 export type PortalRole = z.infer<typeof PortalRoleSchema>;
 
-export const isStaffRole = (role?: PortalRole | null) => role === "staff";
-export const isSchoolRole = (role?: PortalRole | null) => role === "school_staff";
-export const isCustomerRole = (role?: PortalRole | null) => role === "customer" || !role;
+// NOTE: isStaffRole, isSchoolRole, isCustomerRole moved to domain/auth/authorization.ts
+// to avoid exposing this file (which has @ imports) from the core package.
+// Use: import { isStaffRole } from "@backend/features/core";
 
 export {
   ActorTypeSchema,
   PermissionCodeSchema,
   RoleIdSchema,
   RoleScopeSchema,
-} from "@/features/core/domain/value-objects";
+} from "../value-objects";
 
 // ─── Constants ──────────────────────────────────────────────────────────────
 

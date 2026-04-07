@@ -4,7 +4,7 @@ import * as React from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { ChevronRight, Home } from "lucide-react";
-import { ADMIN_NAV, NavItem } from "@/features/administration/presentation/config/nav-config";
+import { ADMIN_NAV, NavItem } from "@features/administration/presentation/config/nav-config";
 
 export interface AdminBreadcrumbProps {
   locale?: string;

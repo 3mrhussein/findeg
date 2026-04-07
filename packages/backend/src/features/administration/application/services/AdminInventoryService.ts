@@ -1,10 +1,10 @@
-import { ID, Quantity } from "@/features/core/domain/types/common";
+import { ID, Quantity } from "../../../core/domain/types/common";
 import { IAdminInventoryService } from "../interfaces/IAdminInventoryService";
-import { IProductRepository } from "@/features/catalog/application/interfaces/IProductRepository";
-import { IInventoryRepository } from "@/features/catalog/application/interfaces/IInventoryRepository";
-import { IVariantRepository } from "@/features/catalog/application/interfaces/IVariantRepository";
+import { IProductRepository } from "../../../catalog/application/interfaces/IProductRepository";
+import { IInventoryRepository } from "../../../catalog/application/interfaces/IInventoryRepository";
+import { IVariantRepository } from "../../../catalog/application/interfaces/IVariantRepository";
 import { IAuditLogService } from "../interfaces/IAuditLogService";
-import { Product } from "@/features/catalog/domain/entities/Product";
+import { Product } from "../../../catalog/domain/entities/Product";
 import { InventoryUpdate } from "../../domain/types/InventoryUpdate";
 
 /**

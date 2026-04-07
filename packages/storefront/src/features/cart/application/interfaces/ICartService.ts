@@ -2,7 +2,13 @@
  * Cart Service Interface
  */
 
-import { ID, Quantity, Price, CustomerGroup, UomCode } from "@/features/core/domain/types/common";
+import {
+  CustomerGroup,
+  ID,
+  Price,
+  Quantity,
+  UomCode,
+} from "@backend/features/core/domain/types/common";
 import { CartItem } from "../../domain/entities/Cart";
 
 export interface ICartService {

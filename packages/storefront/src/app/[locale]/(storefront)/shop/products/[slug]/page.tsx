@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import type { Locale } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { notFound, permanentRedirect } from "next/navigation";
-import { Link } from "@/i18n/navigation";
+import { Link } from "@i18n/navigation";
 import {
   getProductBySlugOrIdForMetadata,
   getProductPdpViewModel,
   getTopProductSlugsForStaticParams,
-} from "@/features/catalog/application/queries/product-pdp";
-import { getProductEnglishSlug } from "@/features/catalog/presentation/utils/product-url";
+} from "@features/catalog/application/queries/product-pdp";
+import { getProductEnglishSlug } from "@features/catalog/presentation/utils/product-url";
 import { PageShell } from "../../../_components/PageShell";
 import { ProductDetailClient } from "./_components/ProductDetailClient";
 

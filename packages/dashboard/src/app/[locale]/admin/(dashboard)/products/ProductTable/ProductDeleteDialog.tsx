@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@findeg/ui";
+import { Button } from "@ui";
 import {
   Dialog,
   DialogContent,
@@ -8,7 +8,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@findeg/ui";
+} from "@ui";
 
 interface ProductDeleteDialogProps {
   open: boolean;

@@ -1,7 +1,7 @@
-import { getServices } from "@/server/getServices";
-import { resolveLocale } from "@/features/core/domain/value-objects";
-import { Product } from "@/features/catalog/domain/entities/Product";
-import { Category } from "@/features/catalog/domain/entities/Category";
+import { getServices } from "@server/getServices";
+import { resolveLocale } from "@features/core/domain/value-objects";
+import { Product } from "@features/catalog/domain/entities/Product";
+import { Category } from "@features/catalog/domain/entities/Category";
 import {
   applyListingFilters,
   buildBrandOptions,

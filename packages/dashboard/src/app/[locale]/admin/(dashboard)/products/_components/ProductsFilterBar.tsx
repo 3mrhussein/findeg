@@ -2,8 +2,8 @@
 
 import { useTranslations } from "next-intl";
 import { Search, X, ChevronDown, Filter } from "lucide-react";
-import { Input } from "@findeg/ui";
-import { Button } from "@findeg/ui";
+import { Input } from "@ui";
+import { Button } from "@ui";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -11,10 +11,10 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@findeg/ui";
-import { Badge } from "@findeg/ui";
-import { Separator } from "@findeg/ui";
-import { cn } from "@/lib/utils";
+} from "@ui";
+import { Badge } from "@ui";
+import { Separator } from "@ui";
+import { cn } from "@lib/utils";
 import { Options } from "nuqs";
 
 interface ProductsFilterBarProps {

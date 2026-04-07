@@ -5,25 +5,25 @@
  * Includes variant-aware mutations, SKU validation, and UoM management.
  */
 
-import type { Product } from "@/features/catalog/domain/entities/Product";
-import type { ProductInput } from "@/features/administration/domain/types";
-import type { Locale } from "@/features/core/domain/value-objects";
+import type { Product } from "@features/catalog/domain/entities/Product";
+import type { ProductInput } from "@features/administration/domain/types";
+import type { Locale } from "@features/core/domain/value-objects";
 import type {
   CreateProductWithVariantsInput,
   UpdateProductWithVariantsInput,
   UoMInput,
   ImageInput,
   CreateVariantInput,
-} from "@/features/administration/domain/types/VariantInput";
-import type { VariantDimension } from "@/features/catalog/domain/types/VariantDimension";
+} from "@features/administration/domain/types/VariantInput";
+import type { VariantDimension } from "@features/catalog/domain/types/VariantDimension";
 import type {
   Variant,
   VariantImage,
   VariantAttributeValue,
   SellableUom,
   PriceListEntry,
-} from "@/features/catalog/domain/entities/Variant";
-import type { Tag } from "@/features/catalog/domain/entities/Tag";
+} from "@features/catalog/domain/entities/Variant";
+import type { Tag } from "@features/catalog/domain/entities/Tag";
 
 export interface ProductListFilters {
   search?: string;

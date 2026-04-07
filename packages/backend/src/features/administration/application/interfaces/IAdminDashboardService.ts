@@ -9,8 +9,8 @@ import {
   DashboardStats,
   CatalogHealthStats,
   CategoryProductDistribution,
-} from "@/features/administration/domain/types";
-import { Order } from "@/features/order/domain/entities/Order";
+} from "@features/administration/domain/types";
+import { Order } from "@features/order/domain/entities/Order";
 
 export interface IAdminDashboardService {
   /**

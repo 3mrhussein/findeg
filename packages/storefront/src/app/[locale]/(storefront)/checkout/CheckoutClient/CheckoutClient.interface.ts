@@ -2,7 +2,7 @@
  * CheckoutClient — shared types & interfaces
  */
 
-import type { CheckoutPrefillData } from "@/features/order/application/queries/checkout-prefill";
+import type { CheckoutPrefillData } from "@features/order/application/queries/checkout-prefill";
 
 export interface CheckoutTotals {
   subtotal: number;

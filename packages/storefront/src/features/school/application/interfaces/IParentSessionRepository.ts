@@ -1,4 +1,4 @@
-import type { SchemaTypes } from "@findeg/backend/features/core";
+import type { SchemaTypes } from "@backend/features/core";
 
 export interface IParentSessionRepository {
   /**

@@ -1,4 +1,3 @@
-import { getServices } from "@/server/getServices";
 import { CollectionsPageClient } from "./_components/CollectionsPageClient";
 import { Metadata } from "next";
 
@@ -11,10 +10,8 @@ export const metadata: Metadata = {
  *
  */
 export default async function CollectionsPage() {
-  const { adminCollection } = getServices();
-
-  // Sort by sortOrder ascending initially
-  const collections = await adminCollection.getAll();
+  // TODO: Replace with data layer query from @data/collections/queries
+  const collections: any[] = []; // Stubbed - empty collections list
   const sortedCollections = [...collections].sort((a, b) => a.sortOrder - b.sortOrder);
 
   return <CollectionsPageClient collections={sortedCollections} />;

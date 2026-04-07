@@ -19,18 +19,18 @@
 
 import * as React from "react";
 import { useForm, FormProvider, Controller } from "react-hook-form";
-import { Input } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import { Switch } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Textarea } from "@findeg/ui";
-import { CollapsibleCategoryPicker } from "@/app/[locale]/admin/_components/shared/CollapsibleCategoryPicker";
+import { Input } from "@ui";
+import { Label } from "@ui";
+import { Switch } from "@ui";
+import { Button } from "@ui";
+import { Textarea } from "@ui";
+import { CollapsibleCategoryPicker } from "@app/[locale]/admin/_components/shared/CollapsibleCategoryPicker";
 import { Save, X, Check, AlertCircle, Loader2 } from "lucide-react";
-import type { Category } from "@/features/catalog/domain/entities/Category";
+import type { Category } from "@backend/features/catalog";
 import { useTranslations } from "next-intl";
-import { checkCategorySlugAvailableAction as checkSlugAvailableAction } from "@/actions/admin-actions";
+import { checkCategorySlugAvailableAction as checkSlugAvailableAction } from "@actions/admin-actions";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@lib/utils";
 
 interface CategoryFormValues {
   localizedName: { en: string; ar: string };

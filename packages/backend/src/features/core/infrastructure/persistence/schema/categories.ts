@@ -9,7 +9,7 @@ import { serial, text, integer, boolean, timestamp, jsonb } from "drizzle-orm/pg
 import { relations } from "drizzle-orm";
 import { catalogSchema } from "./schemas";
 import { products } from "./products";
-import type { LocalizedStringDraft } from "@/features/core/domain/value-objects";
+import type { LocalizedStringDraft } from "@features/core/domain/value-objects";
 
 /**
  * Categories Table

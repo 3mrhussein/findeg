@@ -1,29 +1,43 @@
 "use client";
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { IconTooltip } from "@findeg/ui";
-import { Order } from "@/features/order/domain/entities/Order";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@findeg/ui";
-import { updateOrderPaymentStatusAction, updateOrderStatusAction } from "@/actions/order-actions";
-import { useToast } from "@/hooks/use-toast";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@ui";
+import { Button } from "@ui";
+import { IconTooltip } from "@ui";
+import { Order } from "@backend/features/order";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ui";
+import { updateOrderPaymentStatusAction, updateOrderStatusAction } from "@actions/order-actions";
+import { useToast } from "@hooks/use-toast";
 import { useState } from "react";
 import Link from "next/link";
 import { Eye } from "lucide-react";
-import { OrderStatus, PaymentStatus } from "@/features/core/domain/types/common";
 import { useRouter } from "next/navigation";
-import {
-  getAllowedOrderStatusTransitions,
-  getOrderStatusLabel,
-  normalizeOrderStatus,
-  ORDER_STATUS_OPTIONS,
-} from "@/features/order/application/utils/order-status-transitions";
-import {
-  getAllowedPaymentStatusTransitions,
-  getPaymentStatusLabel,
-  normalizePaymentStatus,
-  PAYMENT_STATUS_OPTIONS,
-} from "@/features/order/application/utils/order-payment-status-transitions";
+
+/**
+ * Local type definitions
+ */
+type OrderStatus =
+  | "pending"
+  | "confirmed"
+  | "processing"
+  | "shipped"
+  | "delivered"
+  | "cancelled"
+  | "refunded";
+type PaymentStatus = "pending" | "paid" | "failed" | "refunded";
+
+/**
+ * Stub helper functions (to be reimplemented)
+ */
+const getAllowedOrderStatusTransitions = (status: OrderStatus): OrderStatus[] => [];
+const getOrderStatusLabel = (status: OrderStatus): string => status;
+const normalizeOrderStatus = (status: string | undefined): OrderStatus =>
+  (status as OrderStatus) || "pending";
+const ORDER_STATUS_OPTIONS: { value: OrderStatus; label: string }[] = [];
+const getAllowedPaymentStatusTransitions = (status: PaymentStatus): PaymentStatus[] => [];
+const getPaymentStatusLabel = (status: PaymentStatus): string => status;
+const normalizePaymentStatus = (status: string | undefined): PaymentStatus =>
+  (status as PaymentStatus) || "pending";
+const PAYMENT_STATUS_OPTIONS: { value: PaymentStatus; label: string }[] = [];
 
 interface OrdersTableProps {
   orders: Order[];
@@ -140,11 +154,11 @@ export function OrdersTable({ orders }: OrdersTableProps) {
                       <SelectContent>
                         {ORDER_STATUS_OPTIONS.map((statusOption) => (
                           <SelectItem
-                            key={statusOption}
-                            value={statusOption}
-                            disabled={!selectableStatuses.has(statusOption)}
+                            key={statusOption.value}
+                            value={statusOption.value}
+                            disabled={!selectableStatuses.has(statusOption.value)}
                           >
-                            {getOrderStatusLabel(statusOption)}
+                            {getOrderStatusLabel(statusOption.value)}
                           </SelectItem>
                         ))}
                       </SelectContent>
@@ -164,11 +178,11 @@ export function OrdersTable({ orders }: OrdersTableProps) {
                       <SelectContent>
                         {PAYMENT_STATUS_OPTIONS.map((paymentStatus) => (
                           <SelectItem
-                            key={paymentStatus}
-                            value={paymentStatus}
-                            disabled={!selectablePaymentStatuses.has(paymentStatus)}
+                            key={paymentStatus.value}
+                            value={paymentStatus.value}
+                            disabled={!selectablePaymentStatuses.has(paymentStatus.value)}
                           >
-                            {getPaymentStatusLabel(paymentStatus)}
+                            {getPaymentStatusLabel(paymentStatus.value)}
                           </SelectItem>
                         ))}
                       </SelectContent>

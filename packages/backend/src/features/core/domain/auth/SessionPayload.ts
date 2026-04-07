@@ -5,8 +5,7 @@
  */
 
 import { z } from "zod";
-import { EmailSchema } from "../types/common";
-import { PortalRoleSchema } from "../types/common";
+import { EmailSchema, PortalRoleSchema } from "../types/primitives";
 import {
   ActorTypeSchema,
   OrganizationIdSchema,

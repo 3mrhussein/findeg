@@ -9,7 +9,7 @@
 
 ## Task Execution Overview
 
-This refinement phase extracts shared UI components into a dedicated `@findeg/ui` package, resolving the initial component duplication strategy and establishing a clean, maintainable UI architecture for the monorepo.
+This refinement phase extracts shared UI components into a dedicated `@ui` package, resolving the initial component duplication strategy and establishing a clean, maintainable UI architecture for the monorepo.
 
 **Total Tasks**: 68 tasks across 6 phases  
 **Status**: ✅ COMPLETED  
@@ -30,7 +30,7 @@ The original monorepo separation (Phase 0-1) initially duplicated UI components 
 This phase refactors the structure to:
 
 1. Extract all shared UI primitives and components into `packages/ui`
-2. Update all consumer packages to import from `@findeg/ui`
+2. Update all consumer packages to import from `@ui`
 3. Remove duplicate files and clean up backend package
 4. Fix dependency issues and ensure consistent builds
 
@@ -56,10 +56,10 @@ This phase refactors the structure to:
 ### Package Scaffolding
 
 - [x] T001 [P] Create `packages/ui/` directory structure
-- [x] T002 [P] Create `packages/ui/package.json` with name `@findeg/ui`, React 19, TypeScript, Radix UI dependencies
+- [x] T002 [P] Create `packages/ui/package.json` with name `@ui`, React 19, TypeScript, Radix UI dependencies
 - [x] T003 [P] Create `packages/ui/tsconfig.json` with `composite: true` for project references
 - [x] T004 [P] Create `packages/ui/README.md` documenting package purpose and usage
-- [x] T005 [P] Add `@findeg/ui` to `pnpm-workspace.yaml` packages array
+- [x] T005 [P] Add `@ui` to `pnpm-workspace.yaml` packages array
 - [x] T006 [P] Create `packages/ui/src/` directory structure: `components/`, `hooks/`, `lib/`
 
 ### Build Configuration
@@ -68,7 +68,7 @@ This phase refactors the structure to:
 - [x] T008 [P] Create `packages/ui/.gitignore` with `dist/`, `node_modules/`, `.turbo/`
 - [x] T009 [P] Add UI package to root `turbo.json` pipeline configuration
 - [x] T010 Install dependencies: `pnpm install` from root to link workspace packages
-- [x] T011 Verify workspace linking: `pnpm list --depth 0` shows `@findeg/ui` available
+- [x] T011 Verify workspace linking: `pnpm list --depth 0` shows `@ui` available
 
 **Phase 1 Exit Criteria**:
 
@@ -150,8 +150,8 @@ This phase refactors the structure to:
 - [x] T061 Create `packages/ui/src/hooks/index.ts` exporting all hooks
 - [x] T062 Create `packages/ui/src/lib/index.ts` exporting utilities
 - [x] T063 Update `packages/ui/package.json` with proper exports field for subpath exports
-- [x] T064 Build UI package: `pnpm --filter @findeg/ui build` produces dist/ output
-- [x] T065 Verify exports: Create test file importing from `@findeg/ui`, compile successfully
+- [x] T064 Build UI package: `pnpm --filter @ui build` produces dist/ output
+- [x] T065 Verify exports: Create test file importing from `@ui`, compile successfully
 
 **Phase 2 Exit Criteria**:
 
@@ -165,27 +165,27 @@ This phase refactors the structure to:
 
 ## Phase 3: Implementation - Update Consumer Imports (✅ COMPLETED)
 
-**Goal**: Update all imports in dashboard and storefront to use `@findeg/ui` instead of local components
+**Goal**: Update all imports in dashboard and storefront to use `@ui` instead of local components
 
 **Independent Test**: Dashboard and storefront build successfully with no missing import errors; all UI components render correctly
 
 ### Dashboard Package Updates (398 imports)
 
-- [x] T066 Add `@findeg/ui` as dependency to `packages/dashboard/package.json` workspace protocol
-- [x] T067 Run automated import replacement across `packages/dashboard/src/` changing `@/components/ui/*` to `@findeg/ui`
-- [x] T068 Run automated import replacement across `packages/dashboard/src/` changing `@/components/shared/*` to `@findeg/ui`
-- [x] T069 Run automated import replacement across `packages/dashboard/src/` changing `@/hooks/*` to `@findeg/ui/hooks`
-- [x] T070 Update `packages/dashboard/src/lib/` utilities to import cn from `@findeg/ui/lib`
+- [x] T066 Add `@ui` as dependency to `packages/dashboard/package.json` workspace protocol
+- [x] T067 Run automated import replacement across `packages/dashboard/src/` changing `@/components/ui/*` to `@ui`
+- [x] T068 Run automated import replacement across `packages/dashboard/src/` changing `@/components/shared/*` to `@ui`
+- [x] T069 Run automated import replacement across `packages/dashboard/src/` changing `@/hooks/*` to `@ui/hooks`
+- [x] T070 Update `packages/dashboard/src/lib/` utilities to import cn from `@ui/lib`
 - [x] T071 Type-check dashboard: `pnpm --filter dashboard type-check` passes
 - [x] T072 Build dashboard: `pnpm --filter dashboard build` completes successfully
 
 ### Storefront Package Updates (274 imports)
 
-- [x] T073 Add `@findeg/ui` as dependency to `packages/storefront/package.json` workspace protocol
-- [x] T074 Run automated import replacement across `packages/storefront/src/` changing `@/components/ui/*` to `@findeg/ui`
-- [x] T075 Run automated import replacement across `packages/storefront/src/` changing `@/components/shared/*` to `@findeg/ui`
-- [x] T076 Run automated import replacement across `packages/storefront/src/` changing `@/hooks/*` to `@findeg/ui/hooks`
-- [x] T077 Update `packages/storefront/src/lib/` utilities to import cn from `@findeg/ui/lib`
+- [x] T073 Add `@ui` as dependency to `packages/storefront/package.json` workspace protocol
+- [x] T074 Run automated import replacement across `packages/storefront/src/` changing `@/components/ui/*` to `@ui`
+- [x] T075 Run automated import replacement across `packages/storefront/src/` changing `@/components/shared/*` to `@ui`
+- [x] T076 Run automated import replacement across `packages/storefront/src/` changing `@/hooks/*` to `@ui/hooks`
+- [x] T077 Update `packages/storefront/src/lib/` utilities to import cn from `@ui/lib`
 - [x] T078 Type-check storefront: `pnpm --filter storefront type-check` passes
 - [x] T079 Build storefront: `pnpm --filter storefront build` completes successfully
 
@@ -199,7 +199,7 @@ This phase refactors the structure to:
 
 ## Phase 4: Cleanup - Remove Duplicate Components (✅ COMPLETED)
 
-**Goal**: Delete duplicate component files from dashboard and storefront packages now that they import from `@findeg/ui`
+**Goal**: Delete duplicate component files from dashboard and storefront packages now that they import from `@ui`
 
 **Independent Test**: After deletion, running builds still succeeds; no broken imports or missing components
 
@@ -288,7 +288,7 @@ This phase refactors the structure to:
 
 ### Type-Checking Verification
 
-- [x] T113 [P] Type-check UI package: `pnpm --filter @findeg/ui type-check` passes
+- [x] T113 [P] Type-check UI package: `pnpm --filter @ui type-check` passes
 - [x] T114 [P] Type-check backend package: `pnpm --filter backend type-check` passes
 - [x] T115 [P] Type-check dashboard package: `pnpm --filter dashboard type-check` passes
 - [x] T116 [P] Type-check storefront package: `pnpm --filter storefront type-check` passes
@@ -307,7 +307,7 @@ This phase refactors the structure to:
 - [x] T123 Test UI component rendering in dashboard: Navigate to pages using Button, Card, Dialog, etc.
 - [x] T124 Test UI component rendering in storefront: Navigate to product pages, cart, checkout
 - [x] T125 Verify no console errors related to missing components or imports
-- [x] T126 Test theme switching (light/dark) works via ThemeProvider from `@findeg/ui`
+- [x] T126 Test theme switching (light/dark) works via ThemeProvider from `@ui`
 - [x] T127 Test language switching (EN/AR) works with UI components
 
 ### Documentation Updates
@@ -316,11 +316,11 @@ This phase refactors the structure to:
 - [x] T129 Update root `README.md` documenting the four-package structure (backend, ui, dashboard, storefront)
 - [x] T130 Update `docs/guides/MONOREPO_MIGRATION.md` with UI package extraction details
 - [x] T131 Create `docs/guides/UI_COMPONENTS.md` documenting shadcn/ui usage and customization guidelines
-- [x] T132 Update [quickstart.md](./quickstart.md) with `@findeg/ui` import examples
+- [x] T132 Update [quickstart.md](./quickstart.md) with `@ui` import examples
 
 ### Final Commit
 
-- [x] T133 Commit all changes with message: "feat(ui): extract shared UI components into @findeg/ui package"
+- [x] T133 Commit all changes with message: "feat(ui): extract shared UI components into @ui package"
 - [x] T134 Create git tag: `git tag -a ui-extraction-v1.0 -m "UI package extraction complete"`
 - [x] T135 Update this tasks file with completion status and metrics
 
@@ -345,20 +345,20 @@ This phase refactors the structure to:
 | **packages/dashboard**  | Next.js App   | 0 UI\*     | ✅ Success   | ✅ Ready      |
 | **packages/storefront** | Next.js App   | 0 UI\*     | ✅ Success   | ✅ Ready      |
 
-\*UI components imported from `@findeg/ui`; only feature-specific components remain locally
+\*UI components imported from `@ui`; only feature-specific components remain locally
 
 ### Component Migration
 
-- **shadcn/ui primitives**: 35 components migrated to `@findeg/ui`
-- **Shared components**: 8 components migrated to `@findeg/ui`
-- **Hooks**: 3 hooks migrated to `@findeg/ui/hooks`
-- **Utilities**: 1 utility (cn function) migrated to `@findeg/ui/lib`
+- **shadcn/ui primitives**: 35 components migrated to `@ui`
+- **Shared components**: 8 components migrated to `@ui`
+- **Hooks**: 3 hooks migrated to `@ui/hooks`
+- **Utilities**: 1 utility (cn function) migrated to `@ui/lib`
 - **Total exports from UI package**: 46 components + 3 hooks + utilities
 
 ### Import Updates
 
-- **Dashboard**: 398 imports updated to use `@findeg/ui`
-- **Storefront**: 274 imports updated to use `@findeg/ui`
+- **Dashboard**: 398 imports updated to use `@ui`
+- **Storefront**: 274 imports updated to use `@ui`
 - **Total import statements updated**: 672
 
 ### File Cleanup
@@ -401,8 +401,8 @@ This phase refactors the structure to:
 
 ### Best Practices Established
 
-1. **Component package naming**: Use `@findeg/ui` for shared UI components following monorepo conventions
-2. **Import patterns**: Standardize on `@findeg/ui` for components, `@findeg/ui/hooks` for hooks, `@findeg/ui/lib` for utilities
+1. **Component package naming**: Use `@ui` for shared UI components following monorepo conventions
+2. **Import patterns**: Standardize on `@ui` for components, `@ui/hooks` for hooks, `@ui/lib` for utilities
 3. **Backend boundaries**: Backend package should be UI-agnostic; never include React components
 4. **Phase-based migration**: Breaking into 6 phases allowed for verification at each step
 
@@ -458,7 +458,7 @@ Phase 6 (Verification)
 
 The FindEg monorepo now has a clean, maintainable UI architecture:
 
-- **Single source of truth**: All shared UI components in `@findeg/ui`
+- **Single source of truth**: All shared UI components in `@ui`
 - **Zero duplication**: Dashboard and storefront import from shared package
 - **Backend integrity**: Backend package is UI-agnostic TypeScript library
 - **Build success**: All 4 packages build and type-check successfully

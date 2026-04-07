@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { IdSchema, SlugSchema, type ID, type Slug } from "@/features/core/domain/types/common";
-import { LocalizedStringSchema, type LocalizedString } from "@/features/core/domain/value-objects";
-import { type SupportedLocale } from "@/features/core/domain/types/locale";
+import { IdSchema, SlugSchema, type ID, type Slug } from "../../../core/domain/types/common";
+import { LocalizedStringSchema, type LocalizedString } from "../../../core/domain/value-objects";
+import { type SupportedLocale } from "../../../core/domain/types/locale";
 
 export const CategoryLocalizedContentSchema = z.object({
   name: LocalizedStringSchema,

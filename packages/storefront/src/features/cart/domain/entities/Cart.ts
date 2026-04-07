@@ -6,11 +6,11 @@
  */
 
 import {
-  type CustomerGroup,
-  type Price,
-  type Quantity,
-  type UomCode,
-} from "@/features/core/domain/types/common";
+  CustomerGroup,
+  Price,
+  Quantity,
+  UomCode,
+} from "@backend/features/core/domain/types/common";
 
 /**
  * A single item in the cart, referencing a specific variant (SKU).

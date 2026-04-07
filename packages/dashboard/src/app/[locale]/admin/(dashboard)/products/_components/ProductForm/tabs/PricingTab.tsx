@@ -3,28 +3,15 @@
 import React, { useEffect } from "react";
 import { useFormContext, useFieldArray } from "react-hook-form";
 import { useTranslations } from "next-intl";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import { Switch } from "@findeg/ui";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@findeg/ui";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@findeg/ui";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@ui";
+import { Input } from "@ui";
+import { Button } from "@ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@ui";
+import { Switch } from "@ui";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ui";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@ui";
 import { Plus, Trash2, DollarSign, Ruler } from "lucide-react";
-import { type ProductFormValues } from "@/features/administration/presentation/forms/product-form";
+import { type ProductFormValues } from "@features/administration/presentation/forms/product-form";
 
 /**
  * Pricing & Units of Measure Tab

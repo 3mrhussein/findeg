@@ -4,7 +4,7 @@ import type {
   NotAuthenticatedError,
   NotAuthorizedError,
   ResourceNotFoundError,
-} from "@findeg/backend/features/core";
+} from "@backend/features/core";
 
 /**
  * Dashboard Error Handler Utilities

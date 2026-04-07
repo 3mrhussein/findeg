@@ -1,21 +1,22 @@
 /**
  * Dashboard Authentication Server Actions
  *
- * Wraps pure backend auth services with Next.js framework integration:
- * - Extracts session from cookies
- * - Handles redirect() calls based on result
- * - Handles revalidatePath() for cache management
- * - Translates domain errors to appropriate responses
+ * TODO: Reimplement using createIdentityServices() from backend
  *
- * This layer ensures framework logic stays in the app, business logic stays in backend.
+ * The backend login/logout functions were removed from exports because they use
+ * ServiceContainer with @ imports that break Turbopack bundling.
+ *
+ * Implementation approach:
+ * 1. Import createIdentityServices from @backend/features/identity
+ * 2. Call authService.login(email, password)
+ * 3. Handle session creation with Next.js cookies
+ * 4. Handle redirects and cache invalidation
  */
 
 "use server";
 
 import { redirect } from "next/navigation";
-import { login, logout } from "@findeg/backend/features/identity";
-import { isDomainError, getErrorMessage } from "@/lib/errors";
-import { invalidateCaches } from "@/lib/cache";
+import { deleteSession } from "@lib/session";
 
 /**
  * Server Action: User login
@@ -23,29 +24,7 @@ import { invalidateCaches } from "@/lib/cache";
  * @param formData - Form data with 'email' and 'password' fields
  */
 export async function loginAction(formData: FormData) {
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
-
-  try {
-    const result = await login(email, password);
-
-    // Invalidate caches
-    await invalidateCaches(result);
-
-    // Redirect based on user role
-    const redirectTo = result.data?.isAdmin ? "/admin" : "/";
-    redirect(redirectTo);
-  } catch (error) {
-    // Domain errors are expected (validation, auth failures)
-    if (isDomainError(error)) {
-      const message = getErrorMessage(error);
-      return { error: message };
-    }
-
-    // Unexpected errors
-    console.error("[dashboard] Login action error:", error);
-    return { error: "An unexpected error occurred" };
-  }
+  throw new Error("Not implemented - needs refactoring after backend export changes");
 }
 
 /**
@@ -55,10 +34,8 @@ export async function loginAction(formData: FormData) {
  */
 export async function logoutAction(formData?: FormData) {
   try {
-    const result = await logout();
-
-    // Invalidate caches
-    await invalidateCaches(result);
+    // Delete session cookie
+    await deleteSession();
 
     // Redirect after logout
     const redirectTo = formData?.get("redirectTo") as string | undefined;

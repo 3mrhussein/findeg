@@ -1,6 +1,6 @@
-import { requireAdmin } from "@/lib/auth-guard";
-import { PermissionsProvider } from "@/providers/PermissionsProvider";
-import { SessionProvider } from "@/providers/SessionProvider";
+import { requireAdmin } from "@lib/auth-guard";
+import { PermissionsProvider } from "@providers/PermissionsProvider";
+import { SessionProvider } from "@providers/SessionProvider";
 import { AdminShell } from "./shell/AdminShell";
 import type { Locale } from "next-intl";
 

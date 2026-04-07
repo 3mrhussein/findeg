@@ -1,7 +1,6 @@
 "use client";
 
-import { logRequestAction } from "@/actions/admin-actions";
-
+import { logRequestAction } from "@actions/admin-actions";
 
 /**
  * Client Logger
@@ -40,6 +39,6 @@ export const clientLogger = {
       message: `Client Error in ${context}: ${message}`,
       error_stack: stack,
       path: typeof window !== "undefined" ? window.location.pathname : "unknown",
-    }).catch(() => { });
+    }).catch(() => {});
   },
 };

@@ -3,11 +3,11 @@
 import * as React from "react";
 import * as LucideIcons from "lucide-react";
 import { Check, ChevronsUpDown, Search } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Button } from "@findeg/ui";
-import { Popover, PopoverContent, PopoverTrigger } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { ScrollArea } from "@findeg/ui";
+import { cn } from "@lib/utils";
+import { Button } from "@ui";
+import { Popover, PopoverContent, PopoverTrigger } from "@ui";
+import { Input } from "@ui";
+import { ScrollArea } from "@ui";
 
 const COMMON_ICONS = [
   "Tag",

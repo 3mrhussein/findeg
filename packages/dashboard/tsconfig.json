@@ -4,23 +4,31 @@
     "composite": true,
     "noEmit": false,
     "outDir": "dist",
+    "rootDir": "src",
     "paths": {
-      "@/*": ["./src/*"],
-      "@/components/*": ["./src/components/*"],
-      "@/hooks/*": ["./src/hooks/*"],
-      "@/i18n/*": ["./src/i18n/*"],
-      "@/lib/*": ["./src/lib/*"],
-      "@/providers/*": ["./src/providers/*"],
-      "@/server/*": ["./src/server/*"],
-      "@/features/*": ["./src/features/*", "../backend/src/features/*"],
-      "@/app/*": ["./src/app/*"],
-      "@findeg/backend": ["../backend/src"],
-      "@findeg/backend/*": ["../backend/src/*"],
-      "@findeg/ui": ["../ui/src"],
-      "@findeg/ui/*": ["../ui/src/*"]
+      "@*": ["./src/*"],
+      "@components/*": ["./src/components/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@i18n/*": ["./src/i18n/*"],
+      "@lib/*": ["./src/lib/*"],
+      "@providers/*": ["./src/providers/*"],
+      "@server/*": ["./src/server/*"],
+      "@features/*": ["./src/features/*"],
+      "@app/*": ["./src/app/*"],
+      "@ui": ["../ui/src"],
+      "@ui/*": ["../ui/src/*"],
+      "@backend": ["../backend/src"],
+      "@backend/*": ["../backend/src/*"]
     }
   },
-  "references": [{ "path": "../backend" }, { "path": "../ui" }],
+  "references": [
+    {
+      "path": "../ui"
+    },
+    {
+      "path": "../backend"
+    }
+  ],
   "include": [
     "next-env.d.ts",
     "src/**/*.ts",

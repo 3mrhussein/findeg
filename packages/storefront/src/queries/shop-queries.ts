@@ -18,13 +18,13 @@ import {
   HOME_PAGE_CACHE_CONFIG,
   SHOP_PAGE_CACHE_CONFIG,
   CATEGORY_PAGE_CACHE_CONFIG,
-} from "@findeg/backend/features/catalog";
+} from "@backend/features/catalog";
 import type {
   HomePageData,
   ShopPageData,
   SearchPageData,
   ProductDetailPageData,
-} from "@findeg/backend/features/catalog";
+} from "@backend/features/catalog";
 
 /**
  * Cached storefront query: Home page data

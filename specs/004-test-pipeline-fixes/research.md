@@ -2,7 +2,7 @@
 
 ## Problem Analysis
 
-The monorepo lacks a coordinated, sequential test pipeline. Current `npm run test` commands are inconsistent (some run unit tests, some run type-checks, some are missing). Additionally, existing TypeScript compilation errors in `@findeg/dashboard` block CI/CD and developer testing.
+The monorepo lacks a coordinated, sequential test pipeline. Current `npm run test` commands are inconsistent (some run unit tests, some run type-checks, some are missing). Additionally, existing TypeScript compilation errors in `@dashboard` block CI/CD and developer testing.
 
 ## Audit Results
 

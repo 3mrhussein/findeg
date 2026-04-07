@@ -2,11 +2,11 @@
 
 import * as React from "react";
 import { useFormContext } from "react-hook-form";
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import { Label } from "@findeg/ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@ui";
+import { Label } from "@ui";
 import { InfoIcon } from "lucide-react";
 import { PriceInput } from "../shared/PriceInput";
-import type { ProductFormValues } from "@/features/administration/presentation/forms/product-form";
+import type { ProductFormValues } from "@features/administration/presentation/forms/product-form";
 
 interface PricingZoneProps {
   /** When true, shows a per-variant warning if switching pricing mode */

@@ -9,7 +9,7 @@
 
 ## Summary
 
-The backend package refactoring is **complete and production-ready** with 160/173 tasks finished (92.5%). The remaining 13 tasks are appropriately deferred because they require running dashboard/storefront applications, which are currently blocked by pre-existing `@findeg/ui` package build issues unrelated to this feature.
+The backend package refactoring is **complete and production-ready** with 160/173 tasks finished (92.5%). The remaining 13 tasks are appropriately deferred because they require running dashboard/storefront applications, which are currently blocked by pre-existing `@ui` package build issues unrelated to this feature.
 
 **Recommendation**: Merge backend changes to main. Schedule deferred validation work for after UI dependency issues are resolved.
 
@@ -19,11 +19,11 @@ The backend package refactoring is **complete and production-ready** with 160/17
 
 ### Category 1: E2E Validation (7 tasks)
 
-**Blocking Issue**: Dashboard and storefront apps cannot build/run due to `@findeg/ui` package dependency errors (unrelated to backend refactoring).
+**Blocking Issue**: Dashboard and storefront apps cannot build/run due to `@ui` package dependency errors (unrelated to backend refactoring).
 
 | Task ID  | Description                                                                                     | Deferral Reason                                        | Future Action                           |
 | -------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------ | --------------------------------------- |
-| **T012** | Add E2E validation: verify dashboard/storefront functionality unchanged after migration         | Requires fixing pre-existing `@findeg/ui` build issues | Execute after UI dependencies resolved  |
+| **T012** | Add E2E validation: verify dashboard/storefront functionality unchanged after migration         | Requires fixing pre-existing `@ui` build issues | Execute after UI dependencies resolved  |
 | **T102** | Cypress E2E test: verify admin can create/update product and it appears on shop page            | Requires running apps with UI dependencies fixed       | Part of comprehensive E2E suite         |
 | **T103** | Verify cache behavior: monitor cache hit rates before/after migration (should remain unchanged) | Requires running apps                                  | Validate with APM tools in production   |
 | **T104** | Performance benchmark: measure shop page load time before/after (should be within 10% variance) | Requires running apps                                  | Lighthouse CI after deployment          |
@@ -35,10 +35,10 @@ The backend package refactoring is **complete and production-ready** with 160/17
 
 **Next Steps**:
 
-1. Resolve `@findeg/ui` build issues (separate effort)
-2. Start dashboard development server: `pnpm --filter @findeg/dashboard dev`
-3. Start storefront development server: `pnpm --filter @findeg/storefront dev`
-4. Execute Cypress E2E test suite: `pnpm --filter @findeg/dashboard test:e2e && pnpm --filter @findeg/storefront test:e2e`
+1. Resolve `@ui` build issues (separate effort)
+2. Start dashboard development server: `pnpm --filter @dashboard dev`
+3. Start storefront development server: `pnpm --filter @storefront dev`
+4. Execute Cypress E2E test suite: `pnpm --filter @dashboard test:e2e && pnpm --filter @storefront test:e2e`
 5. Validate cache hit rates using browser DevTools or APM
 6. Run Lighthouse performance audits
 
@@ -77,7 +77,7 @@ The backend package refactoring is **complete and production-ready** with 160/17
 | -------- | --------------------------------------------------------------- | -------------------------------------------------------------------- | ------------------------------------------------------------ |
 | **T151** | Run full monorepo lint: `pnpm lint` passes with zero violations | eslint-plugin-prettier dependency issue + app-level config conflicts | Resolve ESLint config conflicts, standardize across packages |
 
-**Impact on Feature**: None - backend package linting passes: `pnpm --filter @findeg/backend lint` succeeds.
+**Impact on Feature**: None - backend package linting passes: `pnpm --filter @backend lint` succeeds.
 
 **Next Steps**:
 
@@ -164,7 +164,7 @@ All 10 Constitution principles are satisfied:
 
 **What Can Be Deployed Now**:
 
-- `@findeg/backend` package can be published and consumed by any Node.js application
+- `@backend` package can be published and consumed by any Node.js application
 - Backend services are production-ready for import by dashboard/storefront
 
 ### Not Ready for Production ⚠️
@@ -188,11 +188,11 @@ All 10 Constitution principles are satisfied:
 1. **Merge backend changes** to main branch
 2. **Tag release**: `v1.0.0-backend-pure-typescript`
 3. **Document known issue**: Create GitHub issue tracking 13 deferred tasks
-4. **Begin UI dependency resolution**: Separate effort to fix `@findeg/ui` build issues
+4. **Begin UI dependency resolution**: Separate effort to fix `@ui` build issues
 
 ### Short-term (Week 2-3)
 
-1. **Resolve UI dependencies**: Fix `@findeg/ui` package build errors
+1. **Resolve UI dependencies**: Fix `@ui` package build errors
 2. **Execute E2E validation**: Run deferred tasks T012, T102-T104, T116-T117, T153
 3. **Establish baselines**: Measure performance before full deployment
 4. **Fix ESLint config**: Resolve T151 linting conflicts
@@ -214,15 +214,15 @@ All 10 Constitution principles are satisfied:
 
 ```bash
 # Prerequisites
-- Fix @findeg/ui build issues
+- Fix @ui build issues
 - Ensure database is seeded with test data
 - Configure environment variables for testing
 
 # Running E2E Tests
-pnpm --filter @findeg/dashboard dev        # Start on port 3001
-pnpm --filter @findeg/storefront dev       # Start on port 3000
-pnpm --filter @findeg/dashboard test:e2e   # Run dashboard E2E
-pnpm --filter @findeg/storefront test:e2e  # Run storefront E2E
+pnpm --filter @dashboard dev        # Start on port 3001
+pnpm --filter @storefront dev       # Start on port 3000
+pnpm --filter @dashboard test:e2e   # Run dashboard E2E
+pnpm --filter @storefront test:e2e  # Run storefront E2E
 ```
 
 **Critical Flows to Validate** (per spec.md Appendix A):

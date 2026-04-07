@@ -9,8 +9,8 @@
     "rootDir": "src",
     "jsx": "react-jsx",
     "paths": {
-      "@/*": ["./src/*"],
-      "@/features/*": ["./src/features/*"]
+      "@*": ["./src/*"],
+      "@features/*": ["./src/features/*"]
     }
   },
   "include": ["src/**/*"],

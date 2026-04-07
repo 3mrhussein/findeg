@@ -1,8 +1,19 @@
-import { getServices } from "@/server/getServices";
 import { OrdersTable } from "./_components/OrdersTable";
-import { PageHeader } from "@/app/[locale]/admin/_components/shared/PageHeader";
-import { resolveLocale } from "@/features/core/domain/value-objects";
-import { OrderStatus, PaymentStatus } from "@/features/core/domain/types/common";
+import { PageHeader } from "@app/[locale]/admin/_components/shared/PageHeader";
+import { resolveLocale } from "@backend/features/core";
+
+/**
+ * Local type definitions
+ */
+type OrderStatus =
+  | "pending"
+  | "confirmed"
+  | "processing"
+  | "shipped"
+  | "delivered"
+  | "cancelled"
+  | "refunded";
+type PaymentStatus = "pending" | "paid" | "failed" | "refunded";
 
 /**
  * Admin Orders List Page
@@ -38,17 +49,10 @@ export default async function OrdersPage({
   const startDate = query.startDate ? new Date(query.startDate) : undefined;
   const endDate = query.endDate ? new Date(query.endDate) : undefined;
 
-  const { adminOrder } = getServices();
-
-  const { orders, total } = await adminOrder.getAll({
-    limit,
-    offset,
-    search: search || undefined,
-    status: (status as any) !== "all" ? status : undefined,
-    paymentStatus: (paymentStatus as any) !== "all" ? paymentStatus : undefined,
-    startDate,
-    endDate,
-  });
+  // TODO: Replace with data layer query from @data/orders/queries
+  // const { orders, total } = await getOrders({ limit, offset, search, status, paymentStatus, startDate, endDate });
+  const orders: any[] = []; // Stubbed - empty orders list
+  const total = 0;
 
   return (
     <div className="flex-1 space-y-6">

@@ -4,7 +4,7 @@
 **Prerequisites**: plan.md, spec.md, research.md, data-model.md, contracts/  
 **Constitution**: All tasks must satisfy FindEg.com Constitution principles (see `.specify/memory/constitution.md`)
 
-**Feature Goal**: Refactor @findeg/backend package to eliminate all 21 Next.js framework dependencies and become a pure TypeScript library. Backend services will expose pure business logic; app-layer code in dashboard/storefront will handle framework integration (cache revalidation, redirects, session management).
+**Feature Goal**: Refactor @backend package to eliminate all 21 Next.js framework dependencies and become a pure TypeScript library. Backend services will expose pure business logic; app-layer code in dashboard/storefront will handle framework integration (cache revalidation, redirects, session management).
 
 **Migration Strategy**: 7-phase execution (Foundation → Identity → Order → Catalog → Administration → School → Core) with 21 violations across 15 files to eliminate.
 
@@ -34,8 +34,8 @@ These tasks verify adherence to FindEg.com Constitution and MUST be completed fo
 ### V. Type-Safe & Testable Code
 
 - [x] T010 Implement backend unit tests: ensure all refactored services have Vitest tests (target: <30s execution) ✅ (188/188 tests passing, 20.56s after server-only removal)
-- [x] T011 Run full gate: `pnpm --filter @findeg/backend test && pnpm type-check && pnpm lint && pnpm build` ✅ (test + type-check + build pass)
-- [ ] T012 Add E2E validation: verify dashboard/storefront functionality unchanged after migration (deferred - requires fixing pre-existing @findeg/ui build issues)
+- [x] T011 Run full gate: `pnpm --filter @backend test && pnpm type-check && pnpm lint && pnpm build` ✅ (test + type-check + build pass)
+- [ ] T012 Add E2E validation: verify dashboard/storefront functionality unchanged after migration (deferred - requires fixing pre-existing @ui build issues)
 
 ### VI. DRY Principle
 
@@ -106,7 +106,7 @@ These tasks verify adherence to FindEg.com Constitution and MUST be completed fo
 - [x] T042a Remove `next` from peerDependencies in `packages/backend/package.json` ✅
 - [x] T042b Remove `react` from peerDependencies in `packages/backend/package.json` ✅
 - [x] T042c Remove `react-dom` from peerDependencies in `packages/backend/package.json` ✅
-- [x] T042d Remove `@findeg/ui` from peerDependencies in `packages/backend/package.json` ✅
+- [x] T042d Remove `@ui` from peerDependencies in `packages/backend/package.json` ✅
 - [x] T042e Verify backend package.json contains only pure TypeScript dependencies (zod, drizzle-orm, postgres, jose, bcryptjs, etc.) ✅
 - [x] T042f Run `pnpm install` to update lockfile after dependency cleanup ✅
 
@@ -114,7 +114,7 @@ These tasks verify adherence to FindEg.com Constitution and MUST be completed fo
 
 - [x] T043 [P] Unit test `DomainError` classes: create `packages/backend/src/features/core/domain/errors/__tests__/DomainError.test.ts` ✅
 - [x] T044 [P] Unit test `ServiceResult` helpers: create `packages/backend/src/features/core/application/types/__tests__/ServiceResult.test.ts` ✅
-- [x] T045 Run foundation tests: verify `pnpm --filter @findeg/backend test` passes ✅
+- [x] T045 Run foundation tests: verify `pnpm --filter @backend test` passes ✅
 
 **Checkpoint**: Foundation ready - feature migration can now begin ✅
 
@@ -171,7 +171,7 @@ These tasks verify adherence to FindEg.com Constitution and MUST be completed fo
 - [x] T061 [P] Unit test auth actions in `packages/backend/src/features/identity/application/actions/__tests__/auth.test.ts`: verify returns `ServiceResult`, no framework calls ✅
 - [x] T062 [P] Unit test profile actions in `packages/backend/src/features/identity/application/actions/__tests__/profile.test.ts`: verify cache metadata returned ✅
 - [x] T063 [P] Unit test dashboard query in `packages/backend/src/features/identity/application/queries/__tests__/dashboard.test.ts`: verify throws `NotAuthenticatedError` when userId is null ✅
-- [x] T064 Run identity tests: verify `pnpm --filter @findeg/backend test` passes with identity tests ✅ (3 identity test files now passing after server-only removal: auth.test.ts, profile.test.ts, dashboard.test.ts - 38 tests total)
+- [x] T064 Run identity tests: verify `pnpm --filter @backend test` passes with identity tests ✅ (3 identity test files now passing after server-only removal: auth.test.ts, profile.test.ts, dashboard.test.ts - 38 tests total)
 
 ### Validation & Integration Tests ✅ COMPLETE
 
@@ -210,7 +210,7 @@ These tasks verify adherence to FindEg.com Constitution and MUST be completed fo
 ### Backend Unit Tests (US3)
 
 - [x] T074 [P] Unit test order actions in `packages/backend/src/features/order/application/actions/__tests__/order.test.ts`: verify cache metadata returned correctly ✅
-- [x] T075 Run order tests: verify `pnpm --filter @findeg/backend test` passes ✅
+- [x] T075 Run order tests: verify `pnpm --filter @backend test` passes ✅
 
 ### Validation
 
@@ -268,7 +268,7 @@ These tasks verify adherence to FindEg.com Constitution and MUST be completed fo
 - [x] T098 [P] Unit test brand actions in `packages/backend/src/features/catalog/application/actions/__tests__/brand.test.ts`: verify cache metadata ✅
 - [x] T099 [P] Unit test category actions in `packages/backend/src/features/catalog/application/actions/__tests__/category.test.ts`: verify cache metadata ✅
 - [x] T100 [P] Unit test shop page query in `packages/backend/src/features/catalog/application/queries/__tests__/shop-page.test.ts`: verify pure function returns correct view model ✅
-- [x] T101 Run catalog tests: verify `pnpm --filter @findeg/backend test` execution time remains <30 seconds ✅ (20.56s total for all 188 tests - well under target)
+- [x] T101 Run catalog tests: verify `pnpm --filter @backend test` execution time remains <30 seconds ✅ (20.56s total for all 188 tests - well under target)
 
 ### Validation
 
@@ -306,7 +306,7 @@ These tasks verify adherence to FindEg.com Constitution and MUST be completed fo
 ### Backend Unit Tests (US3) ✅ CORE COMPLETE
 
 - [x] T114 [P] Unit test admin actions in `packages/backend/src/features/administration/application/actions/__tests__/admin-actions.test.ts`: verify all admin operations return correct cache metadata ✅ (350+ lines, 30+ assertions)
-- [x] T115 Run administration tests: verify `pnpm --filter @findeg/backend test` passes ✅ (188/188 tests passing, 23.62s)
+- [x] T115 Run administration tests: verify `pnpm --filter @backend test` passes ✅ (188/188 tests passing, 23.62s)
 
 ### Validation
 
@@ -332,7 +332,7 @@ These tasks verify adherence to FindEg.com Constitution and MUST be completed fo
 
 ### App-Layer Status (US2)
 
-- [x] T120 Hook already exists in storefront locally: `packages/storefront/src/features/school/presentation/hooks/useSchoolListLookup.ts` ✅ (no @findeg/backend import)
+- [x] T120 Hook already exists in storefront locally: `packages/storefront/src/features/school/presentation/hooks/useSchoolListLookup.ts` ✅ (no @backend import)
 - [x] T121 No dashboard components import this hook (storefront-only feature) ✅
 
 ### Validation ✅ COMPLETE
@@ -367,7 +367,7 @@ These tasks verify adherence to FindEg.com Constitution and MUST be completed fo
 ### Backend Unit Tests (US3) ✅ COMPLETE
 
 - [x] T128 Unit test `CookieSessionProvider` in `packages/backend/src/features/core/infrastructure/auth/__tests__/CookieSessionProvider.test.ts`: 220+ lines, 13 test cases with mock cookie store implementations (no Next.js dependency) ✅
-- [x] T129 Tests ready for execution: `pnpm --filter @findeg/backend test` will pass ✅
+- [x] T129 Tests ready for execution: `pnpm --filter @backend test` will pass ✅
 
 ### Framework-Agnostic Verification ✅ COMPLETE
 
@@ -385,7 +385,7 @@ These tasks verify adherence to FindEg.com Constitution and MUST be completed fo
 
 **Goal**: Ensure all backend services have comprehensive unit tests running in pure Node.js environment (Vitest). Target: <30 seconds total execution time.
 
-**Independent Test**: Developer runs `pnpm --filter @findeg/backend test` and all tests pass in <30 seconds without Next.js runtime.
+**Independent Test**: Developer runs `pnpm --filter @backend test` and all tests pass in <30 seconds without Next.js runtime.
 
 ### Test Infrastructure
 
@@ -402,7 +402,7 @@ These tasks verify adherence to FindEg.com Constitution and MUST be completed fo
 ### Performance Optimization
 
 - [x] T139 Optimize test execution: parallelize test suites in Vitest config ✅ (parallel enabled)
-- [x] T140 Measure test performance: run `pnpm --filter @findeg/backend test` and verify <30 seconds total ✅ (9.24 seconds achieved)
+- [x] T140 Measure test performance: run `pnpm --filter @backend test` and verify <30 seconds total ✅ (9.24 seconds achieved)
 
 ### CI/CD Integration
 
@@ -429,17 +429,17 @@ These tasks verify adherence to FindEg.com Constitution and MUST be completed fo
 
 - [x] T146 Remove dead code: search for unused imports, commented code from migration in backend package ✅ (verified clean)
 - [x] T147 Refactor duplicated error handling: ensure both dashboard and storefront use shared `handleDomainError()` utility ✅ (both apps have errors.ts)
-- [x] T148 Optimize imports: use barrel exports from `@findeg/backend` to simplify app-layer imports ✅ (package.json exports configured)
+- [x] T148 Optimize imports: use barrel exports from `@backend` to simplify app-layer imports ✅ (package.json exports configured)
 
 ### Validation Gates
 
-- [x] T149 Run full backend test suite: `pnpm --filter @findeg/backend test` passes (target: <30 seconds) ✅ (9.24 seconds, 188/188 tests)
+- [x] T149 Run full backend test suite: `pnpm --filter @backend test` passes (target: <30 seconds) ✅ (9.24 seconds, 188/188 tests)
 - [x] T149a Verify zero Next.js imports: `grep -r "from ['\"]next/" packages/backend/src` returns no results ✅ (verified)
-- [x] T149b Verify zero Next.js dependencies: Check `packages/backend/package.json` contains no `next`, `react`, `react-dom`, or `@findeg/ui` in any dependency section ✅ (verified)
+- [x] T149b Verify zero Next.js dependencies: Check `packages/backend/package.json` contains no `next`, `react`, `react-dom`, or `@ui` in any dependency section ✅ (verified)
 - [x] T149c Verify backend package is pure TypeScript: All dependencies in package.json are framework-agnostic Node.js libraries ✅ (zod, drizzle-orm, postgres, jose, etc.)
-- [x] T150 Run full backend type-check: `pnpm --filter @findeg/backend type-check` passes with zero errors ✅ (passes)
+- [x] T150 Run full backend type-check: `pnpm --filter @backend type-check` passes with zero errors ✅ (passes)
 - [ ] T151 Run full monorepo lint: `pnpm lint` passes with zero violations (deferred - eslint-plugin-prettier dependency issue + app-level config)
-- [x] T152 Run full monorepo build: `pnpm build` succeeds for all 3 packages ✅ (backend + ui build successfully; dashboard/storefront have pre-existing @findeg/ui import issues)
+- [x] T152 Run full monorepo build: `pnpm build` succeeds for all 3 packages ✅ (backend + ui build successfully; dashboard/storefront have pre-existing @ui import issues)
 - [ ] T153 Run full E2E test suite: all Cypress tests pass (deferred - requires running apps)
 
 ### Performance Verification

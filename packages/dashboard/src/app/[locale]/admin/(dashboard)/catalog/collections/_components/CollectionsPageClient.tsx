@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Collection } from "@/features/catalog/domain/entities/Collection";
+import { Collection } from "@backend/features/catalog";
 import { CollectionGrid } from "./CollectionGrid";
-import { Button } from "@findeg/ui";
-import { Input } from "@findeg/ui";
+import { Button } from "@ui";
+import { Input } from "@ui";
 import { Plus, Search, Trash, AlertTriangle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
@@ -16,9 +16,9 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@findeg/ui";
-import { deleteCollectionAction } from "@/actions/admin-actions";
-import { useToast } from "@/hooks/use-toast";
+} from "@ui";
+import { deleteCollectionAction } from "@actions/admin-actions";
+import { useToast } from "@hooks/use-toast";
 import { useRouter } from "next/navigation";
 
 interface CollectionsPageClientProps {

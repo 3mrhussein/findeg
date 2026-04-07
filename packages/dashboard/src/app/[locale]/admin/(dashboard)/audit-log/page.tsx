@@ -2,12 +2,12 @@
  * Admin Dashboard - Audit Log
  */
 
-import { container } from "@/features/core/infrastructure/di/ServiceContainer";
+import { getAuditLogs } from "@data/admin/queries";
 import { format } from "date-fns";
 import Link from "next/link";
-import { Input } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
+import { Input } from "@ui";
+import { Button } from "@ui";
+import { Badge } from "@ui";
 
 const LIMIT = 50;
 
@@ -58,7 +58,7 @@ export default async function AuditLogPage({
   const { page: pageParam, entityType = "", action = "", entityId = "" } = await searchParams;
   const page = Number(pageParam) || 1;
 
-  const { data: logs, total } = await container.auditLogService.getLogs({
+  const { data: logs, total } = await getAuditLogs({
     entityType: entityType || undefined,
     action: action || undefined,
     entityId: entityId || undefined,

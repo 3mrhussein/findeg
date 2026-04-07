@@ -11,7 +11,7 @@
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { CookieSessionProvider, type ICookieStore } from "../CookieSessionProvider";
-import type { SessionPayload } from "@/features/core/domain/auth";
+import type { SessionPayload } from "@features/core/domain/auth";
 
 /**
  * Mock cookie store implementation for testing

@@ -10,9 +10,9 @@
 "use client";
 
 import * as React from "react";
-import { Badge } from "@findeg/ui";
-import { Popover, PopoverContent, PopoverTrigger } from "@findeg/ui";
-import { cn } from "@/lib/utils";
+import { Badge } from "@ui";
+import { Popover, PopoverContent, PopoverTrigger } from "@ui";
+import { cn } from "@lib/utils";
 import { X } from "lucide-react";
 
 export interface Tag {

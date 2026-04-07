@@ -18,9 +18,9 @@
 
 import * as React from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@findeg/ui";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@ui";
 import { FileText, Layers, Image, DollarSign, Search } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@lib/utils";
 
 export type ProductTab = "info" | "variants" | "media" | "pricing" | "seo";
 

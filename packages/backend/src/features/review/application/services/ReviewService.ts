@@ -1,5 +1,5 @@
-import type { ID } from "@/features/core/domain/types/common";
-import type { IOrderRepository } from "@/features/order/application/interfaces/IOrderRepository";
+import type { ID } from "@features/core/domain/types/common";
+import type { IOrderRepository } from "@features/order/application/interfaces/IOrderRepository";
 import type { IReviewRepository, ProductReviewSummary } from "../interfaces/IReviewRepository";
 import type {
   CreateReviewInput,

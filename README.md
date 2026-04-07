@@ -66,8 +66,8 @@ This project is structured as a **Turborepo monorepo** with three main folders:
    pnpm dev
 
    # Or start individual packages:
-   pnpm --filter @findeg/dashboard dev  # Admin at http://localhost:3001
-   pnpm --filter @findeg/storefront dev # Shop at http://localhost:3000
+   pnpm --filter @dashboard dev  # Admin at http://localhost:3001
+   pnpm --filter @storefront dev # Shop at http://localhost:3000
    ```
 
 ### 📦 Monorepo Commands
@@ -84,16 +84,16 @@ This project is structured as a **Turborepo monorepo** with three main folders:
 
 ```bash
 # Work on dashboard only
-pnpm --filter @findeg/dashboard dev
-pnpm --filter @findeg/dashboard build
-pnpm --filter @findeg/dashboard test
+pnpm --filter @dashboard dev
+pnpm --filter @dashboard build
+pnpm --filter @dashboard test
 
 # Work on storefront only
-pnpm --filter @findeg/storefront dev
-pnpm --filter @findeg/storefront build
+pnpm --filter @storefront dev
+pnpm --filter @storefront build
 
 # Build backend package
-pnpm --filter @findeg/backend build
+pnpm --filter @backend build
 ```
 
 For detailed development workflows, see [specs/001-separate-admin-project/quickstart.md](specs/001-separate-admin-project/quickstart.md)
@@ -302,7 +302,7 @@ src/
 
 ```tsx
 import { useTranslations } from "next-intl";
-import { T } from "@/i18n/content";
+import { T } from "@i18n/content";
 
 const t = useTranslations();
 <h1>{t(T.PAGES.HOME.HERO.TITLE_PART1)}</h1>;

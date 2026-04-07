@@ -3,12 +3,12 @@
  * Shows tags, variants list, stock health, pricing summary, timestamps
  */
 
-import type { Product } from "@/features/catalog/domain/entities/Product";
+import type { Product } from "@backend/features/catalog";
 import Link from "next/link";
 import { ExternalLink, Edit, Eye } from "lucide-react";
-import { TagChips } from "@/components/shared/TagChips";
-import { StockHealthBar } from "@/app/[locale]/admin/_components/shared/StockHealthBar";
-import { Badge } from "@findeg/ui";
+import { TagChips } from "@components/shared/TagChips";
+import { StockHealthBar } from "@app/[locale]/admin/_components/shared/StockHealthBar";
+import { Badge } from "@ui";
 import { format } from "date-fns";
 
 // Helper to calculate available stock from inventory

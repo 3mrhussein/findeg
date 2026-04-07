@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { login, logout } from "../auth";
-import { ValidationError } from "@/features/core/domain/errors";
+import { ValidationError } from "@features/core/domain/errors";
 
 /**
  * Test Suite: Auth Actions (Pure TypeScript)

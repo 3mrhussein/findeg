@@ -1,24 +1,24 @@
-import { ID } from "@/features/core/domain/types/common";
+import { ID } from "../../../core/domain/types/common";
 import { IAdminOrderService } from "../interfaces/IAdminOrderService";
 import {
   IOrderRepository,
   OrderFilters,
-} from "@/features/order/application/interfaces/IOrderRepository";
+} from "../../../order/application/interfaces/IOrderRepository";
 import { IAuditLogService } from "../interfaces/IAuditLogService";
-import { IEmailService } from "@/features/notifications/application/services/IEmailService";
-import { Order } from "@/features/order/domain/entities/Order";
+import { IEmailService } from "../../../notifications/application/services/IEmailService";
+import { Order } from "../../../order/domain/entities/Order";
 import { OrderStatusUpdate } from "../../domain/types/OrderStatusUpdate";
-import { PaymentStatus } from "@/features/core/domain/types/common";
+import { PaymentStatus } from "../../../core/domain/types/common";
 import {
   canTransitionOrderStatus,
   getAllowedOrderStatusTransitions,
   normalizeOrderStatus,
-} from "@/features/order/application/utils/order-status-transitions";
+} from "../../../order/application/utils/order-status-transitions";
 import {
   canTransitionPaymentStatus,
   getAllowedPaymentStatusTransitions,
   normalizePaymentStatus,
-} from "@/features/order/application/utils/order-payment-status-transitions";
+} from "../../../order/application/utils/order-payment-status-transitions";
 
 /**
  * Admin Order Service

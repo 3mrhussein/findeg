@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Inbox } from "lucide-react";
-import { Button } from "@findeg/ui";
+import { Button } from "@ui";
 
 interface SectionStateEmptyProps {
   title: string;

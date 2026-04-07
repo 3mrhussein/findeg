@@ -1,6 +1,6 @@
 # Backend Package Exports Contract
 
-**Package**: `@findeg/backend`  
+**Package**: `@backend`  
 **Version**: 1.0.0  
 **Purpose**: Define all public exports from the backend package that dashboard and storefront packages can import
 
@@ -26,7 +26,7 @@
 
 ## Authentication & Authorization Contract
 
-**Import Path**: `@findeg/backend/features/identity`
+**Import Path**: `@backend/features/identity`
 
 ### Interfaces
 
@@ -127,7 +127,7 @@ export async function requireRole(userId: string, role: string): Promise<void>;
 
 ## Repository Contracts
 
-**Import Path**: `@findeg/backend/features/core`
+**Import Path**: `@backend/features/core`
 
 ### IUserRepository
 
@@ -339,7 +339,7 @@ export type CreateOrderInput = Omit<Order, "id" | "createdAt" | "updatedAt">;
 
 ## Validation Schemas Contract
 
-**Import Path**: `@findeg/backend/types`
+**Import Path**: `@backend/types`
 
 All repository inputs have corresponding Zod schemas for validation:
 
@@ -413,7 +413,7 @@ export const CreateOrderSchema = z.object({
 
 ## i18n & Localization Contract
 
-**Import Path**: `@findeg/backend/lib/i18n`
+**Import Path**: `@backend/lib/i18n`
 
 ```typescript
 export type SupportedLocale = "en" | "ar";
@@ -455,7 +455,7 @@ export type Messages = {
 
 ## Error Handling Contract
 
-**Import Path**: `@findeg/backend/lib/errors`
+**Import Path**: `@backend/lib/errors`
 
 ```typescript
 /**
@@ -536,7 +536,7 @@ import {
   type CreateProductInput,
   getAuthenticatedUser,
   requirePermission,
-} from "@findeg/backend";
+} from "@backend";
 import { cookies } from "next/headers";
 
 export async function createProduct(data: CreateProductInput) {
@@ -564,7 +564,7 @@ export async function createProduct(data: CreateProductInput) {
 
 ```typescript
 // packages/storefront/src/app/[locale]/(storefront)/products/[slug]/page.tsx
-import { getProductRepository, getMessages, formatCurrency } from '@findeg/backend';
+import { getProductRepository, getMessages, formatCurrency } from '@backend';
 import { notFound } from 'next/navigation';
 
 type Props = {

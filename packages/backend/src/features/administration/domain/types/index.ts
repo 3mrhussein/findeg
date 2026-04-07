@@ -7,3 +7,4 @@ export * from "./OrderStatusUpdate";
 export * from "./InventoryUpdate";
 export * from "./TagInput";
 export * from "./CollectionInput";
+export * from "./VariantInput";

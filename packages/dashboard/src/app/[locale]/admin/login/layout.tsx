@@ -1,4 +1,4 @@
-import { redirectIfAuthenticated } from "@/lib/auth-guard";
+import { redirectIfAuthenticated } from "@lib/auth-guard";
 import type { Locale } from "next-intl";
 import { Suspense } from "react";
 

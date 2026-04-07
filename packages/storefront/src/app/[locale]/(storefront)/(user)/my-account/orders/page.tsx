@@ -1,9 +1,9 @@
 import { Locale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import { getMyAccountData } from "@/features/identity/application/queries/my-account";
-import { SectionStateEmpty } from "@/components/shared/state/SectionStateEmpty";
+import { Link } from "@i18n/navigation";
+import { Card, CardContent, CardHeader, CardTitle } from "@ui";
+import { getMyAccountData } from "@features/identity/application/queries/my-account";
+import { SectionStateEmpty } from "@components/shared/state/SectionStateEmpty";
 
 type Props = {
   params: Promise<{ locale: Locale }>;

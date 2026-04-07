@@ -10,10 +10,10 @@ import {
   type CustomerGroup,
   type UomCode,
   type Price,
-} from "@/features/core/domain/types/common";
-import type { CurrencyCode, Locale } from "@/features/core/domain/value-objects";
+} from "@features/core/domain/types/common";
+import type { CurrencyCode, Locale } from "@features/core/domain/value-objects";
 import type { Variant } from "../../domain/entities/Variant";
-import type { VariantInput } from "@/features/administration/domain/types/ProductInput";
+import type { VariantInput } from "@features/administration/domain/types/ProductInput";
 
 // ─── Sell Option ─────────────────────────────────────────────────────────────
 

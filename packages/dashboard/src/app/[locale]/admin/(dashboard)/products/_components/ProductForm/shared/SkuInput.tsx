@@ -2,15 +2,15 @@
 
 import * as React from "react";
 import { useFormContext } from "react-hook-form";
-import { Input } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import { cn } from "@/lib/utils";
+import { Input } from "@ui";
+import { Label } from "@ui";
+import { cn } from "@lib/utils";
 import { CheckCircle2, XCircle, Loader2 } from "lucide-react";
 import {
   deleteProductAction,
   setProductStatusAction,
   checkSkuAvailableAction,
-} from "@/actions/admin-actions";
+} from "@actions/admin-actions";
 
 interface SkuInputProps {
   name: string;

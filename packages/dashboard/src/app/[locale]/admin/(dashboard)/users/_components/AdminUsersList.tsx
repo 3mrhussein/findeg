@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { format } from "date-fns";
-import { Badge } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Card, CardHeader, CardTitle, CardContent } from "@findeg/ui";
+import { Badge } from "@ui";
+import { Button } from "@ui";
+import { Card, CardHeader, CardTitle, CardContent } from "@ui";
 import {
   Dialog,
   DialogContent,
@@ -13,16 +13,16 @@ import {
   DialogTitle,
   DialogFooter,
   DialogDescription,
-} from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import { Switch } from "@findeg/ui";
+} from "@ui";
+import { Input } from "@ui";
+import { Label } from "@ui";
+import { Switch } from "@ui";
 import { createAdminAction, updateAdminAction } from "../_actions/adminUsers";
-import type { AdminUser } from "@/features/identity/application/interfaces/IAdminUserService";
-import type { RoleWithPermissions } from "@/features/identity/application/interfaces/IAdminRoleService";
-import { useToast } from "@/hooks/use-toast";
+import type { AdminUser } from "@backend/features/identity";
+import type { RoleWithPermissions } from "@backend/features/identity";
+import { useToast } from "@hooks/use-toast";
 import { Search, Loader2 } from "lucide-react";
-import { useRouter } from "@/i18n/navigation";
+import { useRouter } from "@i18n/navigation";
 
 /**
  *

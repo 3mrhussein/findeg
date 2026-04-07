@@ -1,5 +1,5 @@
-import { useCategories } from "@/hooks/useCategories";
-import { Link } from "@/i18n/navigation";
+import { useCategories } from "@hooks/useCategories";
+import { Link } from "@i18n/navigation";
 import { ChevronRight, Image as ImageIcon } from "lucide-react";
 import { useLocale } from "next-intl";
 import Image from "next/image";

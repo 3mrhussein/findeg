@@ -9,12 +9,12 @@
 
 import React, { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Checkbox } from "@findeg/ui";
-import { ScrollArea } from "@findeg/ui";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@findeg/ui";
-import { Icon } from "@findeg/ui";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@ui";
+import { Button } from "@ui";
+import { Checkbox } from "@ui";
+import { ScrollArea } from "@ui";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@ui";
+import { Icon } from "@ui";
 import type { RoleWithPermissions, Permission } from "../Settings";
 
 interface PermissionMatrixDialogProps {

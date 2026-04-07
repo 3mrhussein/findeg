@@ -2,23 +2,23 @@
 
 import * as React from "react";
 import { Search, Bell, Menu, Package, ShoppingCart } from "lucide-react";
-import { Input } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Avatar, AvatarFallback } from "@findeg/ui";
+import { Input } from "@ui";
+import { Button } from "@ui";
+import { Avatar, AvatarFallback } from "@ui";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@findeg/ui";
-import { ToggleTheme } from "@findeg/ui";
-import ToggleLanguage from "@/components/shared/ToggleLanguage";
-import { WebMCPBadge } from "@/components/shared/WebMCPBadge";
-import { cn } from "@/lib/utils";
+} from "@ui";
+import { ToggleTheme } from "@ui";
+import ToggleLanguage from "@components/shared/ToggleLanguage";
+import { WebMCPBadge } from "@components/shared/WebMCPBadge";
+import { cn } from "@lib/utils";
 import { useRouter } from "next/navigation";
 import { useSidebar } from "./SidebarContext";
-import { getAvatarColorClass, getInitials } from "@/lib/avatar-color";
+import { getAvatarColorClass, getInitials } from "@lib/avatar-color";
 import useSWR from "swr";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());

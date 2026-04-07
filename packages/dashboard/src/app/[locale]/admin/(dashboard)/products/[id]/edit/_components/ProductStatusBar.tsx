@@ -14,11 +14,11 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Badge } from "@findeg/ui";
-import { Button } from "@findeg/ui";
+import { Badge } from "@ui";
+import { Button } from "@ui";
 import { ExternalLink, Clock } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import { cn } from "@/lib/utils";
+import { cn } from "@lib/utils";
 
 interface ProductStatusBarProps {
   /** Product ID for storefront link */

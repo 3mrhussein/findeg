@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { IdSchema, QuantitySchema } from "@/features/core/domain/types/common";
+import { IdSchema, QuantitySchema } from "../../../core/domain/types/common";
 
 /**
  * Inventory Update schema — now operates at the variant (SKU) level.

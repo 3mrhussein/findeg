@@ -1,25 +1,25 @@
-import type { ID } from "@/features/core/domain/types/common";
+import type { ID } from "../../../core/domain/types/common";
 import type { IAdminProductService } from "../interfaces/IAdminProductService";
-import type { IProductRepository } from "@/features/catalog/application/interfaces/IProductRepository";
-import type { ICategoryRepository } from "@/features/catalog/application/interfaces/ICategoryRepository";
-import type { IBrandRepository } from "@/features/catalog/application/interfaces/IBrandRepository";
+import type { IProductRepository } from "../../../catalog/application/interfaces/IProductRepository";
+import type { ICategoryRepository } from "../../../catalog/application/interfaces/ICategoryRepository";
+import type { IBrandRepository } from "../../../catalog/application/interfaces/IBrandRepository";
 import type { IAuditLogService } from "../interfaces/IAuditLogService";
-import type { MediaService } from "@/features/media/application/services/MediaService";
-import type { Product } from "@/features/catalog/domain/entities/Product";
+import type { MediaService } from "../../../media/application/services/MediaService";
+import type { Product } from "../../../catalog/domain/entities/Product";
 import type { ProductInput } from "../../domain/types/ProductInput";
-import type { Locale } from "@/features/core/domain/value-objects";
+import type { Locale } from "../../../core/domain/value-objects";
 import type {
   CreateProductWithVariantsInput,
   UpdateProductWithVariantsInput,
   UoMInput,
   ImageInput,
   CreateVariantInput,
-} from "@/features/administration/domain/types/VariantInput";
-import type { VariantDimension } from "@/features/catalog/domain/types/VariantDimension";
-import { VariantKey } from "@/features/catalog/domain/value-objects/VariantKey";
-import { Sku } from "@/features/catalog/domain/value-objects/Sku";
-import { generateVariantMatrix } from "@/features/catalog/domain/types/VariantDimension";
-import { db } from "@/features/core/infrastructure/persistence";
+} from "../../domain/types/VariantInput";
+import type { VariantDimension } from "../../../catalog/domain/types/VariantDimension";
+import { VariantKey } from "../../../catalog/domain/value-objects/VariantKey";
+import { Sku } from "../../../catalog/domain/value-objects/Sku";
+import { generateVariantMatrix } from "../../../catalog/domain/types/VariantDimension";
+import { db } from "../../../core/infrastructure/persistence";
 import {
   products,
   productVariants,
@@ -31,7 +31,7 @@ import {
   attributeDefinitions,
   categories,
   brands,
-} from "@/features/core/infrastructure/persistence/schema";
+} from "../../../core/infrastructure/persistence/schema";
 import { eq, and, ne, inArray, sql, desc, asc, or, ilike, count } from "drizzle-orm";
 import {
   ProductListFilters,

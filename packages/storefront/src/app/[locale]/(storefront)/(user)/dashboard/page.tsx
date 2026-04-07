@@ -1,8 +1,8 @@
 import { Locale } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
-import { getDashboardData } from "@/features/identity/application/queries/dashboard";
+import { getDashboardData } from "@features/identity/application/queries/dashboard";
 import { DashboardContent } from "./_components/DashboardContent";
-import { PermissionsProvider } from "@/providers/PermissionsProvider";
+import { PermissionsProvider } from "@providers/PermissionsProvider";
 
 type Props = {
   params: Promise<{ locale: Locale }>;

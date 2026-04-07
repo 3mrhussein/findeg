@@ -1,5 +1,5 @@
-import { Skeleton } from "@findeg/ui";
-import { Card, CardHeader, CardContent } from "@findeg/ui";
+import { Skeleton } from "@ui";
+import { Card, CardHeader, CardContent } from "@ui";
 
 export default function TagsLoading() {
   return (

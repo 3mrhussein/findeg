@@ -1,12 +1,9 @@
-import { getServices } from "@/server/getServices";
-import { ProductsClient } from "./_components/ProductsClient";
-import { resolveLocale } from "@/features/core/domain/value-objects";
+import { Suspense } from "react";
+import { resolveLocale } from "@backend/features/core";
 import { getTranslations } from "next-intl/server";
-import { PageHeader } from "@/app/[locale]/admin/_components/shared/PageHeader";
-import { Button } from "@findeg/ui";
-import Link from "next/link";
-import { Plus } from "lucide-react";
-import type { ProductListFilters } from "@/features/administration/application/interfaces";
+import { ProductListSkeleton } from "@components/skeletons";
+import type { ProductListFilters } from "@backend/features/administration";
+import { ProductsContent } from "./_components/ProductsContent";
 
 export default async function ProductsPage({
   params,
@@ -16,11 +13,7 @@ export default async function ProductsPage({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const { locale } = await params;
-  const resolvedLocale = resolveLocale(locale);
   const query = await searchParams;
-  const t = await getTranslations("Administration.Catalog.Products");
-
-  const { adminCategory, adminBrand, adminProduct } = getServices();
 
   // Parse filters from URL
   const filters: ProductListFilters = {
@@ -37,33 +30,11 @@ export default async function ProductsPage({
     sortDir: query.sortDir === "asc" ? "asc" : "desc",
   };
 
-  const [initialData, categories, brands] = await Promise.all([
-    adminProduct.getProductsList(filters),
-    adminCategory.getAll(resolvedLocale),
-    adminBrand.getAll(true),
-  ]);
-
   return (
     <div className="flex-1 space-y-4 p-8 pt-6">
-      <PageHeader
-        title={t("Title")}
-        description={`${initialData.total} products in catalog`}
-        actions={
-          <Button asChild>
-            <Link href="/admin/products/new">
-              <Plus className="h-4 w-4 me-2" />
-              {t("AddProduct")}
-            </Link>
-          </Button>
-        }
-      />
-
-      <ProductsClient
-        initialData={initialData}
-        categories={categories}
-        brands={brands}
-        initialFilters={filters}
-      />
+      <Suspense fallback={<ProductListSkeleton />}>
+        <ProductsContent locale={locale} filters={filters} />
+      </Suspense>
     </div>
   );
 }

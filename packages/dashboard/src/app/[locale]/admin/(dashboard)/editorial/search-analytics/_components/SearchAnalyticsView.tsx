@@ -12,16 +12,16 @@ import {
   Download,
   Plus,
 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@findeg/ui";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@findeg/ui";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@ui";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@ui";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@findeg/ui";
-import { Button } from "@findeg/ui";
+} from "@ui";
+import { Button } from "@ui";
 import {
   Table,
   TableBody,
@@ -29,7 +29,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@findeg/ui";
+} from "@ui";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
 import Link from "next/link";
 import {
@@ -38,7 +38,7 @@ import {
   ZeroResultSearch,
   LowCTRSearch,
   LanguageBreakdown,
-} from "@/features/catalog/application/interfaces/IAdminSearchAnalyticsRepository";
+} from "@backend/features/catalog";
 
 interface Props {
   initialData: {

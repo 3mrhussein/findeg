@@ -6,7 +6,7 @@
 
 ## Executive Summary
 
-This research identifies concrete refactoring patterns to eliminate all 21 Next.js framework dependencies from @findeg/backend while maintaining 100% backward compatibility for dashboard/storefront functionality. Three primary patterns emerged: **Service Refactoring Pattern** (extract pure logic), **App-Layer Integration Pattern** (orchestrate with framework), and **Error Translation Pattern** (domain errors to HTTP responses).
+This research identifies concrete refactoring patterns to eliminate all 21 Next.js framework dependencies from @backend while maintaining 100% backward compatibility for dashboard/storefront functionality. Three primary patterns emerged: **Service Refactoring Pattern** (extract pure logic), **App-Layer Integration Pattern** (orchestrate with framework), and **Error Translation Pattern** (domain errors to HTTP responses).
 
 ---
 
@@ -83,8 +83,8 @@ export async function updateOrderStatus(
 // packages/dashboard/src/actions/admin-actions.ts
 "use server";
 import { revalidatePath } from "next/cache"; // ✅ Framework usage in app-layer
-import { updateOrderStatus } from "@findeg/backend/features/order";
-import { resolveErrorMessage } from "@findeg/backend/features/core";
+import { updateOrderStatus } from "@backend/features/order";
+import { resolveErrorMessage } from "@backend/features/core";
 
 export async function updateOrderStatusAction(id: number, input: OrderStatusUpdate) {
   try {
@@ -169,7 +169,7 @@ export const SHOP_PAGE_CACHE_CONFIG = {
 // packages/storefront/src/queries/shop-queries.ts
 "use cache";
 import { cacheTag, cacheLife } from "next/cache";
-import { getShopPageViewModel, SHOP_PAGE_CACHE_CONFIG } from "@findeg/backend/features/catalog";
+import { getShopPageViewModel, SHOP_PAGE_CACHE_CONFIG } from "@backend/features/catalog";
 
 export async function getCachedShopPageData(locale: string, query: object) {
   // ✅ App-layer applies caching
@@ -264,7 +264,7 @@ export async function getDashboardData(
 // packages/dashboard/src/app/dashboard/page.tsx
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { getDashboardData, NotAuthenticatedError } from "@findeg/backend/features/identity";
+import { getDashboardData, NotAuthenticatedError } from "@backend/features/identity";
 import { extractSession } from "@/lib/session";
 
 export default async function DashboardPage({ params }: { params: { locale: string } }) {
@@ -346,7 +346,7 @@ export async function getMyAccountData(userId: string): Promise<User> {
 ```typescript
 // packages/dashboard/src/app/my-account/page.tsx
 import { notFound } from "next/navigation";
-import { getMyAccountData, ResourceNotFoundError } from "@findeg/backend/features/identity";
+import { getMyAccountData, ResourceNotFoundError } from "@backend/features/identity";
 
 export default async function MyAccountPage() {
   try {
@@ -428,7 +428,7 @@ export class CookieSessionProvider implements ISessionProvider {
 ```typescript
 // packages/dashboard/src/lib/session.ts
 import { cookies } from "next/headers";
-import { CookieSessionProvider } from "@findeg/backend/features/core";
+import { CookieSessionProvider } from "@backend/features/core";
 
 export async function extractSession(): Promise<SessionPayload | null> {
   const cookieStore = await cookies(); // ✅ App-layer reads framework API
@@ -552,12 +552,12 @@ vi.mock("next/cache", () => ({
 }));
 
 // Mock backend service
-vi.mock("@findeg/backend/features/order", () => ({
+vi.mock("@backend/features/order", () => ({
   updateOrderStatus: vi.fn(),
 }));
 
 import { revalidatePath } from "next/cache";
-import { updateOrderStatus } from "@findeg/backend/features/order";
+import { updateOrderStatus } from "@backend/features/order";
 
 describe("updateOrderStatusAction", () => {
   it("calls backend service and revalidates cache on success", async () => {
@@ -654,7 +654,7 @@ import {
   NotAuthenticatedError,
   NotAuthorizedError,
   ResourceNotFoundError
-} from "@findeg/backend/features/core";
+} from "@backend/features/core";
 import { redirect, notFound } from "next/navigation";
 
 export function handleDomainError(error: unknown): never {
@@ -798,7 +798,7 @@ Each phase is **independently deployable**:
 **Options**:
 
 - **A**: Each app has own `lib/cache.ts` with duplicated `invalidateOrderCache(orderId)` helpers
-- **B**: Create `@findeg/shared` package with cache helpers
+- **B**: Create `@shared` package with cache helpers
 - **C**: Backend exports cache path builders as functions (not constants)
 
 **Recommendation**: **Option C** - Backend exports path builder functions. Reasoning:
@@ -810,7 +810,7 @@ export function getOrderCachePaths(orderId: number): string[] {
 }
 
 // App-layer usage
-import { getOrderCachePaths } from "@findeg/backend/features/order";
+import { getOrderCachePaths } from "@backend/features/order";
 const paths = getOrderCachePaths(orderId);
 paths.forEach((path) => revalidatePath(path));
 ```

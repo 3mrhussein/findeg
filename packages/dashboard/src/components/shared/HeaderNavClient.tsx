@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Link } from "@/i18n/navigation";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@findeg/ui";
+import { Link } from "@i18n/navigation";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@ui";
 import ToggleLanguage from "./ToggleLanguage";
-import { ToggleTheme } from "@findeg/ui";
+import { ToggleTheme } from "@ui";
 import { Menu, User, LayoutDashboard } from "lucide-react";
-import { useUser } from "@/hooks/useUser";
+import { useUser } from "@hooks/useUser";
 import { useTranslations } from "next-intl";
 
 /**

@@ -1,13 +1,13 @@
 "use client";
 
 import { useTransition } from "react";
-import { type Order } from "@/features/order/domain/entities/Order";
-import { Button } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
+import { type Order } from "@backend/features/order";
+import { Button } from "@ui";
+import { Badge } from "@ui";
 import { Printer, RefreshCcw } from "lucide-react";
-import { updateOrderStatusAction as adminUpdateOrderStatusAction } from "@/actions/order-actions";
+import { updateOrderStatusAction as adminUpdateOrderStatusAction } from "@actions/order-actions";
 
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@hooks/use-toast";
 
 interface OrderHeaderProps {
   order: Order;

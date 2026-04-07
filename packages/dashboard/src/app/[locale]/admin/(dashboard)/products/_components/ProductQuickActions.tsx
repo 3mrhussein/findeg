@@ -5,10 +5,10 @@
 
 "use client";
 
-import { Button } from "@findeg/ui";
+import { Button } from "@ui";
 import { Edit, Copy, Eye, FileStack } from "lucide-react";
 import Link from "next/link";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@hooks/use-toast";
 
 interface ProductQuickActionsProps {
   productId: number;

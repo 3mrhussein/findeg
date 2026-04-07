@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import {
   getProductDetailPageData,
   getProductIdsForStaticParams,
-} from "@/features/catalog/application/queries/storefront";
+} from "@features/catalog/application/queries/storefront";
 
 import { setRequestLocale } from "next-intl/server";
 import type { Locale } from "next-intl";
@@ -11,7 +11,7 @@ import { ProductGallery } from "./_components/ProductGallery";
 import { AddToCartSection } from "./_components/AddToCartSection";
 import { ProductTabs } from "./_components/ProductTabs";
 import { Star, Truck, ShieldCheck, ArrowLeft } from "lucide-react";
-import { Link } from "@/i18n/navigation";
+import { Link } from "@i18n/navigation";
 
 /**
  *

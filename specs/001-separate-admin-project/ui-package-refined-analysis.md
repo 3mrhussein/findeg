@@ -135,11 +135,11 @@ import { ErrorPage } from "@/components/shared/ErrorPage";
 
 ```typescript
 // Dashboard
-import { Button, Container } from "@findeg/ui";
+import { Button, Container } from "@ui";
 import { BilingualInput } from "@/components/shared/BilingualInput"; // stays
 
 // Storefront
-import { Button, Container } from "@findeg/ui";
+import { Button, Container } from "@ui";
 import { ErrorPage } from "@/components/shared/ErrorPage"; // stays
 ```
 

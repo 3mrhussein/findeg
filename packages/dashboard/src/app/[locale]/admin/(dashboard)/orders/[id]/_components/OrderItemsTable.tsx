@@ -1,16 +1,9 @@
 "use client";
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@findeg/ui";
-import { Badge } from "@findeg/ui";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@ui";
+import { Badge } from "@ui";
 import { AlertCircle } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@findeg/ui";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@ui";
 
 interface OrderItem {
   productId: number;

@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { Button } from "@findeg/ui";
-import { Container } from "@findeg/ui";
+import { Button } from "@ui";
+import { Container } from "@ui";
 
 interface ErrorPageProps {
   title?: string;

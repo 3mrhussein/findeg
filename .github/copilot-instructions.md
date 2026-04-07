@@ -10,10 +10,10 @@ Monorepo using:
 
 Packages:
 
-- @findeg/ui → shared UI
-- @findeg/backend → business logic (Clean Architecture)
-- @findeg/dashboard → admin app
-- @findeg/storefront → customer app
+- @ui → shared UI
+- @backend → business logic (Clean Architecture)
+- @dashboard → admin app
+- @storefront → customer app
 
 ---
 
@@ -28,7 +28,7 @@ Packages:
 
 ## Dependency Rules
 
-- Apps can import: `@findeg/ui`, `@findeg/backend`
+- Apps can import: `@ui`, `@backend`
 - Packages MUST NOT depend on apps
 - No circular dependencies
 
@@ -46,7 +46,6 @@ Structure per feature:
 Hard rules:
 
 - domain imports nothing
-- application imports domain only
 - infrastructure imports domain + application
 - UI MUST NOT access DB directly
 - never import another feature’s infrastructure
@@ -84,25 +83,61 @@ Forbidden:
 
 ---
 
-### Caching (MANDATORY)
+### Cache Components (Next.js 16 - MANDATORY)
 
-- Use "use cache" for cacheable data
-- Use noStore() for dynamic data
-- Avoid implicit caching
+**Rule**: Backend exports pure TS services. Apps create data layer with "use cache".
 
-Example:
-
-"use cache";
-
-export async function getProducts() {
-return db.query.products.findMany();
+**Backend** (Pure TypeScript, NO Next.js APIs):
+```typescript
+// @backend/features/catalog/application/services/ProductService.ts
+export class ProductService {
+  async getAll(locale: string): Promise<Product[]> {
+    const db = DrizzleConnection.getInstance();
+    return await db.query.products.findMany();
+  }
 }
+```
 
-Rules:
+**App Data Layer** ("use cache" wraps backend calls):
+```typescript
+// packages/dashboard/src/data/products/queries.ts
+"use cache";
+import { cacheLife, cacheTag } from 'next/cache';
+import { createCatalogServices } from '@backend/features/catalog';
 
-- Do not duplicate fetch logic
-- Do not call the same query in multiple places
-- Extract shared fetch logic into backend
+export async function getProducts(locale: string) {
+  cacheLife('hours');
+  cacheTag('products');
+  
+  const { products } = createCatalogServices();
+  return await products.getAll(locale);
+}
+```
+
+**App Server Action** (Cache invalidation at app layer):
+```typescript
+// packages/dashboard/src/data/products/actions.ts
+"use server";
+import { updateTag } from 'next/cache';
+import { createCatalogServices } from '@backend/features/catalog';
+
+export async function createProduct(input: CreateProductInput) {
+  const { products } = createCatalogServices();
+  const product = await products.create(input);
+  
+  updateTag('products'); // App layer owns cache invalidation
+  return product;
+}
+```
+
+**Rules**:
+
+- NEVER put "use cache" in backend (backend is pure TS)
+- ALWAYS create app `src/data/{feature}/` layer for "use cache" functions
+- Backend exports service factories only
+- Apps import services and wrap calls in "use cache"
+- Cache invalidation happens at app layer via `updateTag()`
+- Do not duplicate fetch logic across pages
 
 ---
 
@@ -141,7 +176,7 @@ Rules:
   - transformations
 
 - Always check before writing new code:
-  1. Does it exist in @findeg/backend?
+  1. Does it exist in @backend?
   2. Can it be shared?
   3. Is it already implemented elsewhere?
 
@@ -205,9 +240,32 @@ Package-specific:
 - prefer simpler solution
 - do not invent new architecture
 
+## Next.js 16 Cache Components (Spec 006)
+
+**Critical Pattern**:
+- Backend: Pure TypeScript services (createCatalogServices(), createOrderServices(), etc.)
+- Apps: Data layer at `src/data/{feature}/{queries|actions}.ts` with "use cache"/"use server"
+- Backend NEVER imports from 'next/cache' or contains "use cache" directives
+
+**App Data Layer Structure**:
+```
+packages/dashboard/src/data/
+├── products/
+│   ├── queries.ts    # "use cache" functions
+│   └── actions.ts    # "use server" functions with updateTag()
+├── orders/
+│   ├── queries.ts
+│   └── actions.ts
+└── dashboard/
+    └── queries.ts
+```
+
 ## Active Technologies
-- TypeScript 5.x (strict mode enabled) + Drizzle ORM, Zod, bcrypt, jsonwebtoken, sharp, nodemailer (002-backend-pure-typescript)
-- PostgreSQL via Drizzle ORM (002-backend-pure-typescript)
+- TypeScript 5.x (strict mode) + Drizzle ORM, Zod, bcrypt, jsonwebtoken, sharp, nodemailer
+- PostgreSQL via Drizzle ORM (in backend infrastructure layer only)
+- Next.js 16.x App Router + Turbopack (2-5x faster builds)
+- Next.js 16 Cache Components with PPR (Partial Prerendering)
+- Backend boundaries enforced via package.json exports + serverExternalPackages + TypeScript paths
 
 ## Recent Changes
-- 002-backend-pure-typescript: Added TypeScript 5.x (strict mode enabled) + Drizzle ORM, Zod, bcrypt, jsonwebtoken, sharp, nodemailer
+- 006-nextjs16-cache-components: App data layer with "use cache", backend stays pure TS

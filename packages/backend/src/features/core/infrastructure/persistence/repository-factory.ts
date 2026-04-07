@@ -9,15 +9,15 @@
  * The framework layer (dashboard/storefront apps) is responsible for ensuring server-only execution.
  */
 
-import { DrizzleUserRepository } from "@/features/identity/infrastructure/persistence/DrizzleUserRepository";
-import { DrizzleProductRepository } from "@/features/catalog/infrastructure/persistence/DrizzleProductRepository";
-import { DrizzleCategoryRepository } from "@/features/catalog/infrastructure/persistence/DrizzleCategoryRepository";
-import { DrizzleOrderRepository } from "@/features/order/infrastructure/persistence/DrizzleOrderRepository";
+import { DrizzleUserRepository } from "@features/identity/infrastructure/persistence/DrizzleUserRepository";
+import { DrizzleProductRepository } from "@features/catalog/infrastructure/persistence/DrizzleProductRepository";
+import { DrizzleCategoryRepository } from "@features/catalog/infrastructure/persistence/DrizzleCategoryRepository";
+import { DrizzleOrderRepository } from "@features/order/infrastructure/persistence/DrizzleOrderRepository";
 
-import type { IUserRepository } from "@/features/identity/application/interfaces/IUserRepository";
-import type { IProductRepository } from "@/features/catalog/application/interfaces/IProductRepository";
-import type { ICategoryRepository } from "@/features/catalog/application/interfaces/ICategoryRepository";
-import type { IOrderRepository } from "@/features/order/application/interfaces/IOrderRepository";
+import type { IUserRepository } from "@features/identity/application/interfaces/IUserRepository";
+import type { IProductRepository } from "@features/catalog/application/interfaces/IProductRepository";
+import type { ICategoryRepository } from "@features/catalog/application/interfaces/ICategoryRepository";
+import type { IOrderRepository } from "@features/order/application/interfaces/IOrderRepository";
 
 // Singleton instances (lazy initialization)
 let userRepositoryInstance: IUserRepository | null = null;

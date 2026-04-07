@@ -2,7 +2,7 @@
  * ProductTable — shared types & interfaces
  */
 
-import type { Product } from "@/features/catalog/domain/entities/Product";
+import type { Product } from "@backend/features/catalog";
 
 export interface ProductFilters {
   search: string;

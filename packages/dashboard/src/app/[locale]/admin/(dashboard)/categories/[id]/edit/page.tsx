@@ -1,11 +1,11 @@
-import { getServices } from "@/server/getServices";
 import { CategoryForm } from "../../CategoryForm";
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@ui";
 import { notFound } from "next/navigation";
-import { resolveLocale } from "@/features/core/domain/value-objects";
+import { resolveLocale } from "@backend/features/core";
+import { getCategoryById, getCategories } from "@data/categories/queries";
 
 /**
- *
+ * Edit Category Page — Edit an existing category with translations
  */
 export default async function EditCategoryPage({
   params,
@@ -14,51 +14,37 @@ export default async function EditCategoryPage({
 }) {
   const { locale, id } = await params;
   const resolvedLocale = resolveLocale(locale);
-  const { adminCategory, categories } = getServices();
   const categoryId = parseInt(id);
 
   if (isNaN(categoryId)) {
     notFound();
   }
 
-  // We need to fetch the category WITH translations to populate the form fully
-  // However, IAdminCategoryService interface is generic.
-  // For now we'll fetch basic category data + maybe manually fetch translations or rely on getById(locale)
-  // Actually, getById(id, locale) returns a Category entity which only has `name` and `description` for that ONE locale.
-  // To edit ALL locales, we ideally need a method that returns all translations.
-  // For MVP/Simplicity, we might just load ONLY the current locale data into the form,
-  // or modify the repository to return raw data with all translations.
-  // Given time constraints, let's just fetch for current locale and English (as fallback to populate form).
+  // Fetch category details using data layer
+  const category = await getCategoryById(categoryId, resolvedLocale);
 
-  // A better approach would be to have `getByIdWithTranslations` but we didn't add that to interface yet.
-
-  // Workaround: Load English and Arabic versions separately to populate the form
-  const [catEn, catAr, allCategories] = await Promise.all([
-    // We rely on getById returning the translation for requested language
-    categories.getById(categoryId, "en"),
-    categories.getById(categoryId, "ar"),
-    categories.getAll(resolvedLocale),
-  ]);
-
-  if (!catEn) {
+  if (!category) {
     notFound();
   }
 
+  // Fetch all categories for parent selection
+  const allCategories = await getCategories(resolvedLocale);
+
   // Construct initial data object that matches what CategoryForm expects
   const initialData = {
-    id: catEn.id,
-    slug: catEn.slug,
-    parentId: catEn.parentId,
-    icon: catEn.image, // mapping image to icon for now
-    translations: [
-      { language: "en", name: catEn.name, description: catEn.description },
-      { language: "ar", name: catAr?.name || "", description: catAr?.description || "" },
+    id: category.id,
+    slug: category.slug,
+    parentId: category.parentId,
+    icon: category.image, // mapping image to icon for now
+    translations: category.translations || [
+      { language: "en", name: category.name || "", description: category.description || "" },
+      { language: "ar", name: "", description: "" },
     ],
   };
 
   const categoryOptions = allCategories
-    .filter((c) => c.id !== categoryId) // Prevent selecting self as parent
-    .map((c) => ({
+    .filter((c: any) => c.id !== categoryId) // Prevent selecting self as parent
+    .map((c: any) => ({
       id: c.id,
       slug: c.slug,
       name: c.name,

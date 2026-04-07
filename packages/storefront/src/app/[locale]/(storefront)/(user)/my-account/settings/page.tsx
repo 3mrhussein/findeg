@@ -1,10 +1,10 @@
 import { Locale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import { getMyAccountData } from "@/features/identity/application/queries/my-account";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@ui";
+import { Button } from "@ui";
+import { Input } from "@ui";
+import { Label } from "@ui";
+import { getMyAccountData } from "@features/identity/application/queries/my-account";
 
 type Props = {
   params: Promise<{ locale: Locale }>;

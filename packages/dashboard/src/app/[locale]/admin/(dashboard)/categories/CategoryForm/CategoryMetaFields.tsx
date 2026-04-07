@@ -1,22 +1,9 @@
 "use client";
 
-import {
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Checkbox } from "@findeg/ui";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@findeg/ui";
+import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@ui";
+import { Input } from "@ui";
+import { Checkbox } from "@ui";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ui";
 import type { UseFormReturn } from "react-hook-form";
 import type { CategoryFormValues } from "./CategoryForm.interface";
 

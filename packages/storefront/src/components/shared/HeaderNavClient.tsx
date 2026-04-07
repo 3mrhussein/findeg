@@ -1,19 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Link } from "@/i18n/navigation";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-  ToggleTheme,
-} from "@findeg/ui";
+import { Link } from "@i18n/navigation";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, ToggleTheme } from "@ui";
 import ToggleLanguage from "./ToggleLanguage";
 import { Menu, User, LayoutDashboard } from "lucide-react";
-import { useUser } from "@/hooks/useUser";
-import { CartTrigger } from "@/app/[locale]/(storefront)/_components/CartTrigger";
+import { useUser } from "@hooks/useUser";
+import { CartTrigger } from "@app/[locale]/(storefront)/_components/CartTrigger";
 import { useTranslations } from "next-intl";
 
 /**

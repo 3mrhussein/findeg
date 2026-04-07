@@ -1,4 +1,4 @@
-import { Notification } from "@/features/core/infrastructure/persistence/schema/notifications";
+import { Notification } from "@features/core/infrastructure/persistence/schema/notifications";
 
 /**
  * Interface for the Notification Application Service

@@ -1,12 +1,12 @@
-import { container } from "@/features/core/infrastructure/di/ServiceContainer";
+import { getInventoryWithProducts, getLowStockAlerts } from "@data/inventory/queries";
 import { InventoryTable } from "./_components/InventoryTable";
 
 /**
  *
  */
 export default async function InventoryPage() {
-  const { products } = await container.adminInventoryService.getInventory(false, 100, 0);
-  const lowStock = await container.adminInventoryService.getLowStockAlerts();
+  const { products } = await getInventoryWithProducts(false, 100, 0);
+  const lowStock = await getLowStockAlerts();
 
   return (
     <div className="space-y-6">

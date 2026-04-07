@@ -14,10 +14,10 @@
 
 import * as React from "react";
 import { ChevronRight, ChevronDown, Plus, Minus, Check } from "lucide-react";
-import { cn } from "@/lib/utils";
-import type { Category } from "@/features/catalog/domain/entities/Category";
-import { Button } from "@findeg/ui";
-import { ScrollArea } from "@findeg/ui";
+import { cn } from "@lib/utils";
+import type { Category } from "@backend/features/catalog";
+import { Button } from "@ui";
+import { ScrollArea } from "@ui";
 
 interface CollapsibleCategoryPickerProps {
   categories: Category[];

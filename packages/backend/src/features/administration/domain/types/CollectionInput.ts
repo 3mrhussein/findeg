@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { IdSchema, LocalizedStringSchema, SlugSchema } from "@/features/core/domain/types/common";
+import { IdSchema, LocalizedStringSchema, SlugSchema } from "../../../core/domain/types/common";
 
 export const CollectionInputSchema = z.object({
   slug: SlugSchema,

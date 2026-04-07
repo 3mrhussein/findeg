@@ -13,11 +13,10 @@
 
 "use client";
 
-import { usePermissions } from "@/providers/PermissionsProvider";
-import { useSession } from "@/providers/SessionProvider";
+import { usePermissions } from "@providers/PermissionsProvider";
+import { useSession } from "@providers/SessionProvider";
 import { useMemo } from "react";
-import { isStaffRole } from "@/features/core/domain/types/common";
-import type { PortalRole, PermissionCode } from "@/features/core/domain/types/common";
+import { isStaffRole, type PortalRole, type PermissionCode } from "@backend/features/core";
 
 /**
  * Admin-specific permission helper interface

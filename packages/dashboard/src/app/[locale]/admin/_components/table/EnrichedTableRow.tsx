@@ -10,10 +10,10 @@
 "use client";
 
 import * as React from "react";
-import { TableRow, TableCell } from "@findeg/ui";
-import { Checkbox } from "@findeg/ui";
+import { TableRow, TableCell } from "@ui";
+import { Checkbox } from "@ui";
 import { ChevronDown, ChevronRight } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@lib/utils";
 
 export interface EnrichedTableRowProps {
   /** Row ID for selection */

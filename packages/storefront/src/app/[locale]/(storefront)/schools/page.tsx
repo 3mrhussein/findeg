@@ -1,16 +1,16 @@
-import { getServices } from "@/server/getServices";
-import { getOptionalSession } from "@/lib/auth-guard";
-import { SchoolAuthWall } from "@/app/[locale]/(storefront)/school/_components/SchoolAuthWall";
-import { SchoolCard } from "@/app/[locale]/(storefront)/school/_components/SchoolCard";
+import { getServices } from "@server/getServices";
+import { getOptionalSession } from "@lib/auth-guard";
+import { SchoolAuthWall } from "@app/[locale]/(storefront)/school/_components/SchoolAuthWall";
+import { SchoolCard } from "@app/[locale]/(storefront)/school/_components/SchoolCard";
 import {
   SchoolSearchParams,
   ISchoolDirectoryService,
-} from "@/features/school/application/interfaces/ISchoolDirectoryService";
-import { Badge } from "@findeg/ui";
-import { governorates, schoolTypes, academicSystems } from "@/features/school/domain/constants";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Button } from "@findeg/ui";
+} from "@features/school/application/interfaces/ISchoolDirectoryService";
+import { Badge } from "@ui";
+import { governorates, schoolTypes, academicSystems } from "@features/school/domain/constants";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@ui";
+import { Input } from "@ui";
+import { Button } from "@ui";
 import { Search, SlidersHorizontal, PlusCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Link from "next/link";

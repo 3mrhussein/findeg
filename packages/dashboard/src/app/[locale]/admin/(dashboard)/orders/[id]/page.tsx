@@ -1,6 +1,5 @@
-import { getServices } from "@/server/getServices";
 import { notFound } from "next/navigation";
-import { Button } from "@findeg/ui";
+import { Button } from "@ui";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { OrderHeader } from "./_components/OrderHeader";
@@ -20,12 +19,9 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
 
   if (isNaN(orderId)) notFound();
 
-  const { adminOrder, auditLog } = getServices();
-
-  const [order, logs] = await Promise.all([
-    adminOrder.getById(orderId),
-    auditLog.getEntityLogs("order", String(orderId)),
-  ]);
+  // TODO: Replace with data layer queries from @data/orders/queries
+  const order: any = null; // Stubbed - will trigger notFound()
+  const logs: any[] = []; // Stubbed
 
   if (!order) notFound();
 

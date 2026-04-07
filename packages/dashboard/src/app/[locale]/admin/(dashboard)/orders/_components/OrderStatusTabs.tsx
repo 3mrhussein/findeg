@@ -1,8 +1,19 @@
 "use client";
 
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { Tabs, TabsList, TabsTrigger } from "@findeg/ui";
-import type { OrderStatus } from "@/features/core/domain/types/common";
+import { Tabs, TabsList, TabsTrigger } from "@ui";
+
+/**
+ * OrderStatus type (local definition)
+ */
+type OrderStatus =
+  | "pending"
+  | "confirmed"
+  | "processing"
+  | "shipped"
+  | "delivered"
+  | "cancelled"
+  | "refunded";
 
 interface OrderStatusTabsProps {
   counts: {

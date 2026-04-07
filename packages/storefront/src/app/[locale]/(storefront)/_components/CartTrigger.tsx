@@ -1,9 +1,9 @@
 "use client";
 
 import { ShoppingCart } from "lucide-react";
-import { Button } from "@findeg/ui";
-import { IconTooltip } from "@findeg/ui";
-import { useCart } from "@/hooks/useCart";
+import { Button } from "@ui";
+import { IconTooltip } from "@ui";
+import { useCart } from "@hooks/useCart";
 import { useTranslations } from "next-intl";
 
 /**

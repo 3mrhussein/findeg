@@ -2,16 +2,16 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@findeg/ui";
-import { Form } from "@findeg/ui";
-import { deleteCategoryAction } from "@/actions/admin-actions";
-import { createCategoryAction, updateCategoryAction } from "@/actions/admin-actions";
-import { CategoryInput } from "@/features/administration/domain/types";
+import { Button } from "@ui";
+import { Form } from "@ui";
+import { deleteCategoryAction } from "@actions/admin-actions";
+import { createCategoryAction, updateCategoryAction } from "@actions/admin-actions";
+import { CategoryInput } from "@types/admin-inputs";
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@hooks/use-toast";
 import type { CategoryFormProps, CategoryFormValues } from "./CategoryForm.interface";
 import { categoryFormSchema } from "./CategoryForm.interface";
 import { CategoryBasicFields } from "./CategoryBasicFields";
@@ -63,8 +63,7 @@ export function CategoryForm({ initialData, categories }: CategoryFormProps) {
     setLoading(true);
     const input: CategoryInput = {
       slug: values.slug,
-      parentId:
-        values.parentId && values.parentId !== "none" ? parseInt(values.parentId) : undefined,
+      parentId: values.parentId && values.parentId !== "none" ? parseInt(values.parentId) : null,
       icon: values.icon,
       sortOrder: values.sortOrder,
       isActive: values.isActive,

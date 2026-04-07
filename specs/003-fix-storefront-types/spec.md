@@ -3,7 +3,7 @@
 **Feature Branch**: `003-fix-storefront-types`  
 **Created**: 2026-04-05  
 **Status**: Draft  
-**Input**: User description: "Fix TypeScript type-checking errors in the @findeg/storefront package. These errors include missing exports from @findeg/ui, missing dependencies (drizzle-orm, resend, etc.), and type mismatches in shop-queries.ts and SearchOverlay.tsx."
+**Input**: User description: "Fix TypeScript type-checking errors in the @storefront package. These errors include missing exports from @ui, missing dependencies (drizzle-orm, resend, etc.), and type mismatches in shop-queries.ts and SearchOverlay.tsx."
 
 ## Constitution Compliance _(mandatory before implementation)_
 
@@ -45,15 +45,15 @@ As a developer, I want to run `npm run type-check` and see zero errors, so that 
 
 ### User Story 2 - Correct UI Component Imports (Priority: P1)
 
-As a developer, I want to import components like `Button`, `Input`, and `Container` from `@findeg/ui` without TypeScript reporting them as missing, so that I can use shared UI primitives consistently.
+As a developer, I want to import components like `Button`, `Input`, and `Container` from `@ui` without TypeScript reporting them as missing, so that I can use shared UI primitives consistently.
 
 **Why this priority**: Essential for UI development and consistency.
 
-**Independent Test**: Open `SearchOverlay.tsx` or `PageStateError.tsx` in a TS-aware editor and see no red squiggles on `@findeg/ui` imports.
+**Independent Test**: Open `SearchOverlay.tsx` or `PageStateError.tsx` in a TS-aware editor and see no red squiggles on `@ui` imports.
 
 **Acceptance Scenarios**:
 
-1. **Given** a component in `storefront` importing `Button` from `@findeg/ui`, **When** the type-checker runs, **Then** it should resolve the export correctly.
+1. **Given** a component in `storefront` importing `Button` from `@ui`, **When** the type-checker runs, **Then** it should resolve the export correctly.
 
 ---
 
@@ -61,8 +61,8 @@ As a developer, I want to import components like `Button`, `Input`, and `Contain
 
 ### Functional Requirements
 
-- **FR-001**: `@findeg/ui` MUST correctly build and export all shadcn/ui primitives and shared components listed in its `src/index.ts`.
-- **FR-002**: `@findeg/storefront` MUST have all required peer/direct dependencies (e.g., `drizzle-orm`, `resend`, `swr`) declared in its `package.json`.
+- **FR-001**: `@ui` MUST correctly build and export all shadcn/ui primitives and shared components listed in its `src/index.ts`.
+- **FR-002**: `@storefront` MUST have all required peer/direct dependencies (e.g., `drizzle-orm`, `resend`, `swr`) declared in its `package.json`.
 - **FR-003**: All implicit `any` types in `storefront` (e.g., event handlers in `SearchOverlay.tsx`) MUST be explicitly typed.
 - **FR-004**: The storefront `getProductDetailData` cache wrapper MUST return `ProductDetailPageData | null`, propagating the backend's nullability. The calling page component MUST handle the `null` case (e.g., render a 404 page).
 
@@ -75,12 +75,12 @@ As a developer, I want to import components like `Button`, `Input`, and `Contain
 ### Measurable Outcomes
 
 - **SC-001**: `npm run type-check` exits with code 0 in the root directory.
-- **SC-002**: Zero `TS2305` (Missing exported member) errors related to `@findeg/ui` in the storefront.
+- **SC-002**: Zero `TS2305` (Missing exported member) errors related to `@ui` in the storefront.
 - **SC-003**: Zero `TS2307` (Cannot find module) errors for standard dependencies in the storefront.
 - **SC-004**: Zero `TS7006` (Implicit any) errors in modified files.
 
 ## Assumptions
 
-- The missing exports in `@findeg/ui` are due to build configuration or incomplete build artifacts, rather than missing source files.
+- The missing exports in `@ui` are due to build configuration or incomplete build artifacts, rather than missing source files.
 - Missing dependencies like `drizzle-orm` are intended to be direct dependencies of the storefront if it uses them for local data handling or server actions.
 - The `ProductDetailPageData` being `null` in `shop-queries.ts` is a valid runtime state and should be handled by the UI.

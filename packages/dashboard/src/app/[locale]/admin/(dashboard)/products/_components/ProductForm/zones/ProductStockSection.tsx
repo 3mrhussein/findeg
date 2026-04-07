@@ -2,13 +2,13 @@
 
 import * as React from "react";
 import { useFormContext } from "react-hook-form";
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Separator } from "@findeg/ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@ui";
+import { Label } from "@ui";
+import { Input } from "@ui";
+import { Separator } from "@ui";
 import { SkuInput } from "../shared/SkuInput";
 import { WeightInput } from "../shared/WeightInput";
-import type { ProductFormValues } from "@/features/administration/presentation/forms/product-form";
+import type { ProductFormValues } from "@features/administration/presentation/forms/product-form";
 
 interface ProductStockSectionProps {
   variantIndex?: number;

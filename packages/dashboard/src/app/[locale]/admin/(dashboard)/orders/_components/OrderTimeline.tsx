@@ -1,6 +1,17 @@
 import { Check, Circle, X } from "lucide-react";
-import { cn } from "@/lib/utils";
-import type { OrderStatus } from "@/features/core/domain/types/common";
+import { cn } from "@lib/utils";
+
+/**
+ * OrderStatus type (local definition)
+ */
+type OrderStatus =
+  | "pending"
+  | "confirmed"
+  | "processing"
+  | "shipped"
+  | "delivered"
+  | "cancelled"
+  | "refunded";
 
 interface OrderTimelineProps {
   currentStatus: OrderStatus;

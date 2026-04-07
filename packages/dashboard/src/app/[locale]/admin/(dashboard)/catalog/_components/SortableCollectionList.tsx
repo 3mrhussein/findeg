@@ -18,10 +18,10 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Collection } from "@/features/catalog/domain/entities/Collection";
+import { Collection } from "@backend/features/catalog";
 import { GripVertical, Eye, EyeOff } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Badge } from "@findeg/ui";
+import { cn } from "@lib/utils";
+import { Badge } from "@ui";
 
 interface SortableCollectionListProps {
   collections: Collection[];
@@ -161,4 +161,4 @@ function SortableItem({ collection, onEdit }: SortableItemProps) {
 }
 
 // Minimal Button component to avoid heavy imports if possible, but we use shadcn usually
-import { Button } from "@findeg/ui";
+import { Button } from "@ui";

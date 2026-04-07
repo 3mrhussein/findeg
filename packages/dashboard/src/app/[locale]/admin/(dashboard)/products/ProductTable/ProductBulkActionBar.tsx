@@ -1,10 +1,10 @@
 "use client";
 
-import { Button } from "@findeg/ui";
+import { Button } from "@ui";
 import { Archive, Trash2, Eye, EyeOff } from "lucide-react";
 import { useTransition } from "react";
-import { useToast } from "@/hooks/use-toast";
-import { setProductStatusAction, deleteProductAction } from "@/actions/admin-actions";
+import { useToast } from "@hooks/use-toast";
+import { setProductStatusAction, deleteProductAction } from "@actions/admin-actions";
 import { useRouter } from "next/navigation";
 
 interface ProductBulkActionBarProps {

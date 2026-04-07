@@ -2,8 +2,8 @@
 
 import { useTranslations } from "next-intl";
 import { Lock, UserCircle, LogIn, UserPlus } from "lucide-react";
-import { Button } from "@findeg/ui";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@findeg/ui";
+import { Button } from "@ui";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@ui";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 

@@ -3,7 +3,7 @@
  */
 
 import { z } from "zod";
-import { EmailSchema } from "../types/common";
+import { EmailSchema } from "../types/primitives";
 
 export const RegisterInputSchema = z
   .object({

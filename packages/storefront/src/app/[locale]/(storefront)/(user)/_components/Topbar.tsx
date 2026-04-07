@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@findeg/ui";
-import { IconTooltip } from "@findeg/ui";
+import { Button } from "@ui";
+import { IconTooltip } from "@ui";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,10 +9,10 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@findeg/ui";
+} from "@ui";
 import { CircleUser, Search } from "lucide-react";
-import { Input } from "@findeg/ui";
-import { logout } from "@/features/identity/application/actions/auth";
+import { Input } from "@ui";
+import { logout } from "@features/identity/application/actions/auth";
 
 /**
  * Topbar for the user dashboard.

@@ -1,11 +1,8 @@
 import Link from "next/link";
-import type { AuditLogEntry } from "@/features/administration/domain/entities/AuditLogEntry";
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
-import {
-  getOrderStatusLabel,
-  normalizeOrderStatus,
-} from "@/features/order/application/utils/order-status-transitions";
+import type { AuditLogEntry } from "@backend/features/administration";
+import { Card, CardContent, CardHeader, CardTitle } from "@ui";
+import { Badge } from "@ui";
+import { getOrderStatusLabel, normalizeOrderStatus } from "@backend/features/order";
 
 interface OrderAuditTimelineProps {
   orderId: number | string;

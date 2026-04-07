@@ -1,37 +1,12 @@
-import { Skeleton } from "@findeg/ui";
+/**
+ * Loading UI for Categories List Page
+ *
+ * Displays skeleton loading state while categories are streaming.
+ * Used with Next.js 16 PPR and Suspense boundaries.
+ */
 
-export default function Loading() {
-  return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div className="space-y-2">
-          <Skeleton className="h-8 w-48" />
-          <Skeleton className="h-4 w-64" />
-        </div>
-        <Skeleton className="h-10 w-32" />
-      </div>
+import { CategoryListSkeleton } from "@components/skeletons";
 
-      <div className="space-y-1 rounded-md border p-4">
-        <Skeleton className="h-10 w-full" />
-        <div className="mt-4 space-y-2">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <div
-              key={i}
-              className="flex items-center gap-4 py-2"
-              style={{ paddingLeft: `${(i % 3) * 24}px` }}
-            >
-              <Skeleton className="h-4 w-4" />
-              <Skeleton className="h-4 w-4" />
-              <Skeleton className="h-5 w-48" />
-              <div className="ml-auto flex items-center gap-4">
-                <Skeleton className="h-4 w-24" />
-                <Skeleton className="h-8 w-8" />
-                <Skeleton className="h-8 w-8" />
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
+export default function CategoriesLoading() {
+  return <CategoryListSkeleton />;
 }

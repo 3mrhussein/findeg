@@ -1,5 +1,5 @@
-import type { SessionPayload } from "@/features/core/domain/auth";
-import type { ISessionProvider } from "@/features/core/application/interfaces/ISessionProvider";
+import type { SessionPayload } from "@features/core/domain/auth";
+import type { ISessionProvider } from "@features/core/application/interfaces/ISessionProvider";
 import { JwtSessionManager } from "./JwtSessionManager";
 
 /**

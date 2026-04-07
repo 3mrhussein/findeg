@@ -1,7 +1,7 @@
 "use client";
 
-import { SlideOver } from "@/app/[locale]/admin/_components/shared/SlideOver";
-import { StatusBadge } from "@/components/shared/StatusBadge";
+import { SlideOver } from "@app/[locale]/admin/_components/shared/SlideOver";
+import { StatusBadge } from "@components/shared/StatusBadge";
 import { OrderTimeline } from "./OrderTimeline";
 import {
   Package,
@@ -14,7 +14,7 @@ import {
   DollarSign,
 } from "lucide-react";
 import { format } from "date-fns";
-import type { Order } from "@/features/order/domain/entities/Order";
+import type { Order } from "@backend/features/order";
 
 interface OrderDetailDrawerProps {
   order: Order | null;

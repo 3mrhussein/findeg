@@ -41,7 +41,7 @@ Phase 1 successfully established the shared backend package as the foundation fo
 **Usage Example**:
 
 ```typescript
-import { IUserRepository, CreateUserInput } from "@findeg/backend";
+import { IUserRepository, CreateUserInput } from "@backend";
 
 const userRepo: IUserRepository = getUserRepository();
 const newUser = await userRepo.create({
@@ -71,7 +71,7 @@ const newUser = await userRepo.create({
 **Usage Example**:
 
 ```typescript
-import { JWTService } from "@findeg/backend";
+import { JWTService } from "@backend";
 
 const jwtService = new JWTService(process.env.JWT_SECRET, process.env.JWT_REFRESH_SECRET);
 
@@ -97,7 +97,7 @@ const payload = jwtService.verifyToken(tokens.accessToken, "access");
 **Usage Example**:
 
 ```typescript
-import { CreateProductSchema } from "@findeg/backend/types";
+import { CreateProductSchema } from "@backend/types";
 
 const result = CreateProductSchema.safeParse(formData);
 if (!result.success) {
@@ -122,7 +122,7 @@ const product = await productRepo.create(result.data);
 **Usage Example**:
 
 ```typescript
-import { NotFoundError, UnauthorizedError } from "@findeg/backend/lib";
+import { NotFoundError, UnauthorizedError } from "@backend/lib";
 
 if (!user) {
   throw new NotFoundError("User not found");
@@ -151,7 +151,7 @@ if (!hasPermission) {
 **Usage Example**:
 
 ```typescript
-import { formatCurrency, formatDate } from "@findeg/backend/lib";
+import { formatCurrency, formatDate } from "@backend/lib";
 
 formatCurrency(99.99, "en", "EGP"); // "EGP 99.99"
 formatCurrency(99.99, "ar", "EGP"); // "٩٩٫٩٩ ج.م"
@@ -194,8 +194,8 @@ formatDate(new Date(), "ar"); // "٣ أبريل ٢٠٢٦"
 
 ## Build & Integration Status
 
-✅ **Backend Compiles**: `pnpm --filter @findeg/backend build` succeeds  
-✅ **Workspace Linking**: Dashboard imports `@findeg/backend@link:../backend`  
+✅ **Backend Compiles**: `pnpm --filter @backend build` succeeds  
+✅ **Workspace Linking**: Dashboard imports `@backend@link:../backend`  
 ✅ **Type Checking**: Dashboard type-checks with backend imports  
 ✅ **Package Exports**: All 12 export paths work correctly
 
@@ -209,7 +209,7 @@ All criteria successfully met:
 - ✅ **Authentication service functional with JWT** - Token generation, verification, and refresh implemented with tests
 - ✅ **All database migrations accessible via backend package** - Schema files in backend, Drizzle config updated
 - ✅ **Backend unit tests pass (>80% coverage)** - 96.2% pass rate exceeds requirement
-- ✅ **Frontend packages can successfully import from @findeg/backend** - Verified with imports tests
+- ✅ **Frontend packages can successfully import from @backend** - Verified with imports tests
 
 ---
 
@@ -231,7 +231,7 @@ All criteria successfully met:
 
 ## Public API Reference
 
-### Main Package (`@findeg/backend`)
+### Main Package (`@backend`)
 
 ```typescript
 import {
@@ -261,10 +261,10 @@ import {
   formatDateTime,
   formatRelativeTime,
   formatNumber,
-} from "@findeg/backend";
+} from "@backend";
 ```
 
-### Validation Schemas (`@findeg/backend/types`)
+### Validation Schemas (`@backend/types`)
 
 ```typescript
 import {
@@ -281,14 +281,14 @@ import {
   UpdateOrderSchema,
   OrderFilters,
   OrderStatusSchema,
-} from "@findeg/backend/types";
+} from "@backend/types";
 ```
 
 ### Feature-Specific Exports
 
 ```typescript
-import { MediaService } from "@findeg/backend/features/media";
-import { DrizzleCategoryRepository } from "@findeg/backend/features/catalog";
+import { MediaService } from "@backend/features/media";
+import { DrizzleCategoryRepository } from "@backend/features/catalog";
 ```
 
 ---
@@ -301,7 +301,7 @@ import { DrizzleCategoryRepository } from "@findeg/backend/features/catalog";
 
 - Move admin routes to `packages/dashboard`
 - Copy UI components (shadcn, shared, layout)
-- Update imports to use `@findeg/backend`
+- Update imports to use `@backend`
 - Configure Tailwind and globals.css
 - Migrate Cypress E2E tests
 
@@ -309,7 +309,7 @@ import { DrizzleCategoryRepository } from "@findeg/backend/features/catalog";
 
 - Move customer routes to `packages/storefront`
 - Copy UI components
-- Update imports to use `@findeg/backend`
+- Update imports to use `@backend`
 - Configure Tailwind and globals.css
 - Migrate Cypress E2E tests
 

@@ -1,14 +1,12 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { getServices } from "@/server/getServices";
 import { BrandsManager } from "./_components/BrandsManager";
 import {
   createBrandAction,
   updateBrandAction,
   deleteBrandAction,
   toggleBrandStatusAction,
-} from "@/actions/admin-actions";
-
-import { BrandInput } from "@/features/administration/domain/types";
+} from "@actions/admin-actions";
+import { BrandInput } from "@backend/features/administration/domain/types";
 
 /**
  *
@@ -29,10 +27,10 @@ export default async function BrandsPage({ params }: { params: Promise<{ locale:
   const { locale } = await params;
   setRequestLocale(locale as any);
   const t = await getTranslations("Administration.Catalog.Brands");
-  const { adminBrand } = getServices();
 
-  // Fetch all brands (optimized query with product counts included)
-  const brands = await adminBrand.getAll();
+  // TODO: Replace with proper data layer query from @data/brands/queries
+  // const brands = await getBrands(locale);
+  const brands: any[] = []; // Stubbed - empty brand list
 
   /**
    * Wrapper for Save (Create/Update)
@@ -50,10 +48,11 @@ export default async function BrandsPage({ params }: { params: Promise<{ locale:
    */
   const handleDelete = async (id: number) => {
     "use server";
-    const { adminBrand } = getServices();
+    // TODO: Check product count using data layer query
+    // const pro const productCount = await getBrandProductCount(id);
+    const productCount = 0; // Stubbed
 
     // Check if brand can be deleted (no products)
-    const productCount = await adminBrand.getBrandProductCount(id);
     if (productCount > 0) {
       return {
         success: false,

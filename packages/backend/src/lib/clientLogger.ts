@@ -1,6 +1,6 @@
 "use client";
 
-import { logRequestAction } from "@/features/core/application/actions/logging";
+import { logRequestAction } from "@features/core/application/actions/logging";
 
 /**
  * Client Logger

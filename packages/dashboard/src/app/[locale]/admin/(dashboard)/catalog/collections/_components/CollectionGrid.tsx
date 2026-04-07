@@ -16,15 +16,15 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { Collection } from "@/features/catalog/domain/entities/Collection";
+import { Collection } from "@backend/features/catalog";
 import { CollectionCard } from "./CollectionCard";
 import {
   createCollectionAction as adminCreateCollectionAction,
   updateCollectionAction as adminUpdateCollectionAction,
   reorderCollectionsAction as adminReorderCollectionsAction,
-} from "@/actions/admin-actions";
+} from "@actions/admin-actions";
 
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@hooks/use-toast";
 import { useRouter } from "next/navigation";
 
 interface CollectionGridProps {

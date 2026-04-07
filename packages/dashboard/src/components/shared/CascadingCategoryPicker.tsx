@@ -15,11 +15,11 @@
 
 import * as React from "react";
 import { ChevronRight, Check, Search, X } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Button } from "@findeg/ui";
-import { Popover, PopoverContent, PopoverTrigger } from "@findeg/ui";
-import { ScrollArea } from "@findeg/ui";
-import type { Category } from "@/features/catalog/domain/entities/Category";
+import { cn } from "@lib/utils";
+import { Button } from "@ui";
+import { Popover, PopoverContent, PopoverTrigger } from "@ui";
+import { ScrollArea } from "@ui";
+import type { Category } from "@backend/features/catalog";
 import { useTranslations } from "next-intl";
 
 interface CascadingCategoryPickerProps {

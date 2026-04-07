@@ -1,6 +1,6 @@
-import { container } from "@/features/core/infrastructure/di/ServiceContainer";
-import { ProductForm } from "@/app/[locale]/admin/(dashboard)/products/_components/ProductForm";
-import { resolveLocale } from "@/features/core/domain/value-objects";
+import { getAllCategories, getAllBrands, getAllTags } from "@data/resources/queries";
+import { ProductForm } from "@app/[locale]/admin/(dashboard)/products/_components/ProductForm";
+import { resolveLocale } from "@backend/features/core";
 
 /**
  * /admin/products/new
@@ -11,9 +11,9 @@ export default async function NewProductPage({ params }: { params: Promise<{ loc
   const resolvedLocale = resolveLocale(locale);
 
   const [categories, brands, tags] = await Promise.all([
-    container.adminCategoryService.getAll(resolvedLocale),
-    container.adminBrandService.getAll(true),
-    container.adminTagService.getAll(),
+    getAllCategories(resolvedLocale),
+    getAllBrands(true),
+    getAllTags(),
   ]);
 
   return <ProductForm categories={categories} brands={brands} tags={tags} locale={locale} />;
