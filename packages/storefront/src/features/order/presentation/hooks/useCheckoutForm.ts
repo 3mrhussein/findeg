@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { CheckoutPrefillData } from "@/features/order/application/queries/checkout-prefill";
+import type { CheckoutPrefillData } from "@features/order/application/queries/checkout-prefill";
 
 export type PaymentMethod = "cod" | "card";
 export type CheckoutField = "fullName" | "guestEmail" | "phone" | "city" | "area" | "street";

@@ -1,7 +1,7 @@
 import { Resend } from "resend";
 import { render } from "@react-email/components";
 import React from "react";
-import { Order } from "@/features/order/domain/entities/Order";
+import { Order } from "@features/order/domain/entities/Order";
 import {
   AccessRequest,
   EmailSchoolList,

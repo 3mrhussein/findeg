@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
-import { ProductEntity, type Product } from "@/features/catalog/domain/entities/Product";
-import type { SortOption } from "@/lib/types";
+import { ProductEntity, type Product } from "@features/catalog/domain/entities/Product";
+import type { SortOption } from "@lib/types";
 
 /**
  * Custom hook for managing product filtering and sorting.

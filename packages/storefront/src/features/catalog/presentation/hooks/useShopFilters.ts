@@ -5,7 +5,7 @@ import { parseAsArrayOf, parseAsInteger, parseAsString, useQueryState } from "nu
 import {
   normalizeListingSort,
   sanitizePriceRange,
-} from "@/features/catalog/application/queries/listing";
+} from "@features/catalog/application/queries/listing";
 
 interface UseShopFiltersParams {
   minPrice?: number;

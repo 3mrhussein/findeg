@@ -1,6 +1,6 @@
-import { db } from "@/features/core/infrastructure/persistence/database.config";
+import { db } from "@features/core/infrastructure/persistence/database.config";
 import { sql } from "drizzle-orm";
-import { searchLogs } from "@/features/core/infrastructure/persistence/schema/search-logs";
+import { searchLogs } from "@features/core/infrastructure/persistence/schema/search-logs";
 import { type IProductRepository } from "../interfaces/IProductRepository";
 import {
   type ISearchService,
@@ -10,8 +10,8 @@ import {
   type ParsedQuery,
   type Suggestion,
 } from "../interfaces/ISearchService";
-import { type Locale } from "@/features/core/domain/value-objects";
-import { type ID } from "@/features/core/domain/types/common";
+import { type Locale } from "@features/core/domain/value-objects";
+import { type ID } from "@features/core/domain/types/common";
 
 export class SearchService implements ISearchService {
   constructor(private readonly productRepository: IProductRepository) {}

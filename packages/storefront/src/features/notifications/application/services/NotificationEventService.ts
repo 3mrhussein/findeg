@@ -1,6 +1,6 @@
 import { INotificationService } from "../interfaces/INotificationService";
-import { IEmailService } from "@/features/notifications/application/services/IEmailService";
-import { Order } from "@/features/order/domain/entities/Order";
+import { IEmailService } from "@features/notifications/application/services/IEmailService";
+import { Order } from "@features/order/domain/entities/Order";
 
 /**
  * Notification Event Service

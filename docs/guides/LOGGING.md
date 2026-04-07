@@ -23,7 +23,7 @@ FindEg uses dual logging:
 ## Usage
 
 ```ts
-import { getServices } from "@/server/getServices";
+import { getServices } from "@server/getServices";
 
 const { logger } = getServices();
 logger.info("Processing order", { orderId: 123 });

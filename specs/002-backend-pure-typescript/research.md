@@ -265,7 +265,7 @@ export async function getDashboardData(
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { getDashboardData, NotAuthenticatedError } from "@backend/features/identity";
-import { extractSession } from "@/lib/session";
+import { extractSession } from "@lib/session";
 
 export default async function DashboardPage({ params }: { params: { locale: string } }) {
   try {
@@ -498,7 +498,7 @@ export default async function DashboardPage({ params }: { params: { locale: stri
 // packages/backend/src/features/order/__tests__/OrderService.test.ts
 import { describe, it, expect, vi } from "vitest";
 import { OrderService } from "../application/services/OrderService";
-import { ResourceNotFoundError } from "@/features/core/domain/errors";
+import { ResourceNotFoundError } from "@features/core/domain/errors";
 
 describe("OrderService", () => {
   it("throws ResourceNotFoundError when order not found", async () => {

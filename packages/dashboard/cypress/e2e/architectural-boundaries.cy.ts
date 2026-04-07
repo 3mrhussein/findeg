@@ -9,7 +9,7 @@
  *
  * Coverage: CHK036-CHK047 from test-strategy checklist
  *
- * Run with: pnpm --filter @findeg/dashboard test:e2e
+ * Run with: pnpm --filter @dashboard test:e2e
  */
 
 describe("Architectural Boundary Enforcement - Build Validation", () => {

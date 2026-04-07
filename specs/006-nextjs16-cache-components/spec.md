@@ -535,7 +535,7 @@ sequenceDiagram
 **Before (Service Container)**:
 ```typescript
 // app/products/page.tsx
-import { getServices } from '@/server/getServices';
+import { getServices } from '@server/getServices';
 
 export default async function ProductsPage() {
   const { products } = getServices();
@@ -548,7 +548,7 @@ export default async function ProductsPage() {
 **After (App Data Layer)**:
 ```typescript
 // app/products/page.tsx
-import { getProducts } from '@/data/products/queries';
+import { getProducts } from '@data/products/queries';
 
 export default async function ProductsPage() {
   const products = await getProducts('en');
@@ -577,7 +577,7 @@ export default async function ProductsPage() {
 // app/products/page.tsx
 import { Suspense } from 'react';
 import { ProductListSkeleton } from './_components/ProductListSkeleton';
-import { getProducts } from '@/data/products/queries';
+import { getProducts } from '@data/products/queries';
 
 // Static shell (no "use cache" at page level)
 export default function ProductsPage() {
@@ -603,7 +603,7 @@ async function ProductList() {
 **Before**:
 ```typescript
 // app/actions.ts
-import { getServices } from '@/server/getServices';
+import { getServices } from '@server/getServices';
 
 export async function createProduct(input: CreateProductInput) {
   const { adminProduct } = getServices();
@@ -616,7 +616,7 @@ export async function createProduct(input: CreateProductInput) {
 **After (App Data Layer Action)**:
 ```typescript
 // Import from app data layer, not directly from pages
-import { createProduct } from '@/data/products/actions';
+import { createProduct } from '@data/products/actions';
 
 // In form component
 export async function handleSubmit(formData: FormData) {
@@ -1231,8 +1231,8 @@ const nextConfig: NextConfig = {
 
 3. **Replace Service Container Calls**:
 ```diff
-- import { getServices } from '@/server/getServices';
-+ import { getProducts } from '@/data/products/queries';
+- import { getServices } from '@server/getServices';
++ import { getProducts } from '@data/products/queries';
 
 export default async function Page() {
 -  const { products } = getServices();

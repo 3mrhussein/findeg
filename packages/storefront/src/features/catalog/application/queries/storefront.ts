@@ -1,11 +1,11 @@
 import { cacheTag, cacheLife } from "next/cache";
-import { getServices } from "@/server/getServices";
-import { CACHE_TAGS } from "@/features/core/domain/constants/cache-tags";
-import type { Product } from "@/features/catalog/domain/entities/Product";
-import type { Category } from "@/features/catalog/domain/entities/Category";
-import type { Review } from "@/features/review/domain/entities/Review";
-import { fuzzySearchProducts } from "@/features/catalog/application/utils/fuzzy-search";
-import { resolveLocale, type Locale } from "@/features/core/domain/value-objects";
+import { getServices } from "@server/getServices";
+import { CACHE_TAGS } from "@features/core/domain/constants/cache-tags";
+import type { Product } from "@features/catalog/domain/entities/Product";
+import type { Category } from "@features/catalog/domain/entities/Category";
+import type { Review } from "@features/review/domain/entities/Review";
+import { fuzzySearchProducts } from "@features/catalog/application/utils/fuzzy-search";
+import { resolveLocale, type Locale } from "@features/core/domain/value-objects";
 
 export interface HomePageData {
   featuredProducts: Product[];

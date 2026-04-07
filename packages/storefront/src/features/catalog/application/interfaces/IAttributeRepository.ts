@@ -2,7 +2,7 @@
  * Attribute Repository Interface
  */
 
-import { ID } from "@/features/core/domain/types/common";
+import { ID } from "@features/core/domain/types/common";
 import {
   AttributeDefinition,
   CreateAttributeDefinition,

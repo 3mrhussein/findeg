@@ -2,23 +2,23 @@
 
 import * as React from "react";
 import { useState } from "react";
-import { Link } from "@/i18n/navigation";
+import { Link } from "@i18n/navigation";
 import { useTranslations } from "next-intl";
 import { MapPin, User, Heart, ShoppingCart, Menu, Flame, Sparkles } from "lucide-react";
-import { useUser } from "@/hooks/useUser";
+import { useUser } from "@hooks/useUser";
 
-import ToggleLanguage from "@/components/shared/ToggleLanguage";
+import ToggleLanguage from "@components/shared/ToggleLanguage";
 import { ToggleTheme } from "@ui";
 import { IconTooltip } from "@ui";
 // Assuming CartTrigger exists in _components, we'll wrap it or use directly.
 // For now we'll put a placeholder cart icon until CartSheet context is clear.
-import { CartTrigger } from "@/app/[locale]/(storefront)/_components/CartTrigger";
-import { NotificationBell } from "@/components/shared/NotificationBell";
+import { CartTrigger } from "@app/[locale]/(storefront)/_components/CartTrigger";
+import { NotificationBell } from "@components/shared/NotificationBell";
 
 import { SearchBar } from "./SearchBar";
 import { MobileNavSheet } from "./MobileNavSheet";
 import { MegaMenuOverlay } from "./MegaMenuOverlay";
-import { useCategories } from "@/hooks/useCategories";
+import { useCategories } from "@hooks/useCategories";
 import { useLocale } from "next-intl";
 
 /**

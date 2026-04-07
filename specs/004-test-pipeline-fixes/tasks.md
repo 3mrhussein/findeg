@@ -33,7 +33,7 @@ We will first standardize the infrastructure (scripts and turbo config) to enabl
 
 ### Phase 5: User Story 3 - Global Type Fixes
 
-- [x] T008 [P] [US3] Fix missing utility `@/features/catalog/presentation/utils/product-url` in `packages/dashboard/src/app/[locale]/admin/(dashboard)/products/ProductTable/ProductTableColumns.tsx`
+- [x] T008 [P] [US3] Fix missing utility `@features/catalog/presentation/utils/product-url` in `packages/dashboard/src/app/[locale]/admin/(dashboard)/products/ProductTable/ProductTableColumns.tsx`
 - [x] T009 [P] [US3] Fix `ToggleTheme` component/type mismatch in `packages/dashboard/src/app/[locale]/admin/_components/shell/AdminHeader.tsx`
 - [x] T010 [P] [US3] Fix `updateMyProfileAction` return type mismatch in `packages/dashboard/src/app/[locale]/admin/account/page.tsx`
 - [x] T011 [P] [US3] Add explicit types for table callbacks in `packages/dashboard/src/app/[locale]/admin/(dashboard)/orders/OrderTable/OrderTableColumns.tsx`

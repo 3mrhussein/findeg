@@ -1,4 +1,4 @@
-import type { Product } from "@/features/catalog/domain/entities/Product";
+import type { Product } from "@features/catalog/domain/entities/Product";
 
 export function getProductEnglishSlug(product: Product): string | null {
   const candidate =

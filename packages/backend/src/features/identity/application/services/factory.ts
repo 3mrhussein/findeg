@@ -21,7 +21,7 @@ import { AdminRoleService } from "./AdminRoleService";
  * ```ts
  * // In app data layer (dashboard/src/data/users/queries.ts):
  * "use cache";
- * import { createIdentityServices } from '@findeg/backend/features/identity';
+ * import { createIdentityServices } from '@backend/features/identity';
  * 
  * export async function getAdmins() {
  *   cacheTag('admins');

@@ -1,5 +1,5 @@
 {
-  "name": "@findeg/storefront",
+  "name": "@storefront",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -18,8 +18,8 @@
     "e2e:open": "cypress open"
   },
   "dependencies": {
-    "@findeg/backend": "workspace:*",
-    "@findeg/ui": "workspace:*",
+    "@backend": "workspace:*",
+    "@ui": "workspace:*",
     "@hookform/resolvers": "^5.2.2",
     "@react-email/components": "^0.0.34",
     "clsx": "^2.1.1",

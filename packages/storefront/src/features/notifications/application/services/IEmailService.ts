@@ -1,4 +1,4 @@
-import { Order } from "@/features/order/domain/entities/Order";
+import { Order } from "@features/order/domain/entities/Order";
 
 /**
  * Minimal DTOs for emails related to types not yet fully modeled in the domain.

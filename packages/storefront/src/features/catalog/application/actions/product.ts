@@ -1,10 +1,10 @@
 "use server";
 
-import { container } from "@/features/core/infrastructure/di/ServiceContainer";
+import { container } from "@features/core/infrastructure/di/ServiceContainer";
 import { revalidatePath, revalidateTag } from "next/cache";
-import { ProductInput } from "@/features/administration/domain/types";
-import { resolveErrorMessage } from "@/features/core/domain/errors/error-catalog";
-import { CACHE_TAGS } from "@/features/core/domain/constants/cache-tags";
+import { ProductInput } from "@features/administration/domain/types";
+import { resolveErrorMessage } from "@features/core/domain/errors/error-catalog";
+import { CACHE_TAGS } from "@features/core/domain/constants/cache-tags";
 
 /**
  * Creates a new product.

@@ -121,14 +121,14 @@ Components that exist in `shared/` but are NOT imported anywhere:
 
 ```typescript
 // Dashboard
-import { Button } from "@/components/ui/button";
-import { Container } from "@/components/shared/Container";
-import { BilingualInput } from "@/components/shared/BilingualInput";
+import { Button } from "@components/ui/button";
+import { Container } from "@components/shared/Container";
+import { BilingualInput } from "@components/shared/BilingualInput";
 
 // Storefront
-import { Button } from "@/components/ui/button";
-import { Container } from "@/components/shared/Container";
-import { ErrorPage } from "@/components/shared/ErrorPage";
+import { Button } from "@components/ui/button";
+import { Container } from "@components/shared/Container";
+import { ErrorPage } from "@components/shared/ErrorPage";
 ```
 
 ### After:
@@ -136,11 +136,11 @@ import { ErrorPage } from "@/components/shared/ErrorPage";
 ```typescript
 // Dashboard
 import { Button, Container } from "@ui";
-import { BilingualInput } from "@/components/shared/BilingualInput"; // stays
+import { BilingualInput } from "@components/shared/BilingualInput"; // stays
 
 // Storefront
 import { Button, Container } from "@ui";
-import { ErrorPage } from "@/components/shared/ErrorPage"; // stays
+import { ErrorPage } from "@components/shared/ErrorPage"; // stays
 ```
 
 ## Verification Checklist

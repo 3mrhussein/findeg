@@ -6,7 +6,7 @@
  */
 
 import { z } from "zod";
-import { IdSchema, LocalizedStringSchema, SlugSchema } from "@/features/core/domain/types/common";
+import { IdSchema, LocalizedStringSchema, SlugSchema } from "@features/core/domain/types/common";
 import { TagSchema } from "./Tag";
 
 export const CollectionSchema = z.object({

@@ -1,4 +1,4 @@
-import { ProductEntity, type Product } from "@/features/catalog/domain/entities/Product";
+import { ProductEntity, type Product } from "@features/catalog/domain/entities/Product";
 
 export interface HomeFeaturedGroups {
   all: Product[];

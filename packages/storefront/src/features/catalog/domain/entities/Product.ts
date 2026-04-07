@@ -15,7 +15,7 @@ import {
   LocalizedStringSchema,
   type ID,
   type Rating,
-} from "@/features/core/domain/types/common";
+} from "@features/core/domain/types/common";
 import { TagSchema } from "./Tag";
 import { ProductAttributeValueSchema } from "./AttributeDefinition";
 import { VariantSchema, type Variant, VariantEntity } from "./Variant";
@@ -24,8 +24,8 @@ import {
   ResponsiveMediaSetSchema,
   type LocalizedString,
   type ResponsiveMediaSet,
-} from "@/features/core/domain/value-objects";
-import { type SupportedLocale } from "@/features/core/domain/types/locale";
+} from "@features/core/domain/value-objects";
+import { type SupportedLocale } from "@features/core/domain/types/locale";
 
 export const ProductLocalizedContentSchema = z.object({
   slug: LocalizedStringSchema.optional(),

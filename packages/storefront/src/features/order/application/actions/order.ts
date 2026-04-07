@@ -1,10 +1,10 @@
 "use server";
 
-import { container } from "@/features/core/infrastructure/di/ServiceContainer";
+import { container } from "@features/core/infrastructure/di/ServiceContainer";
 import { revalidatePath } from "next/cache";
-import { OrderStatusUpdate } from "@/features/administration/domain/types";
-import { resolveErrorMessage } from "@/features/core/domain/errors/error-catalog";
-import { PaymentStatus } from "@/features/core/domain/types/common";
+import { OrderStatusUpdate } from "@features/administration/domain/types";
+import { resolveErrorMessage } from "@features/core/domain/errors/error-catalog";
+import { PaymentStatus } from "@features/core/domain/types/common";
 
 /**
  * Updates the status of a specific order and triggers necessary side effects (e.g., emails).

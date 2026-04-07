@@ -53,7 +53,7 @@ This backend package is a **pure TypeScript library** with **zero framework depe
 Backend services return a `ServiceResult<T>` object that includes cache metadata for app-layer orchestration:
 
 ```typescript
-import type { ServiceResult } from '@findeg/backend/features/core';
+import type { ServiceResult } from '@backend/features/core';
 
 // Backend service (pure function)
 export async function createProduct(input: ProductInput): Promise<ServiceResult<{ productId: number }>> {
@@ -73,7 +73,7 @@ export async function createProduct(input: ProductInput): Promise<ServiceResult<
 ```typescript
 // App-layer Server Action (handles framework integration)
 'use server';
-import { createProduct } from '@findeg/backend/features/catalog';
+import { createProduct } from '@backend/features/catalog';
 import { revalidatePath, revalidateTag } from 'next/cache';
 
 export async function createProductAction(input: ProductInput) {
@@ -104,7 +104,7 @@ import {
   ValidationError,
   ConflictError,
   BusinessRuleViolationError
-} from '@findeg/backend/features/core';
+} from '@backend/features/core';
 
 // Backend service throws domain error
 export async function getMyAccountData(userId: number | null) {
@@ -124,7 +124,7 @@ export async function getMyAccountData(userId: number | null) {
 ```typescript
 // App-layer catches and translates errors
 'use server';
-import { getMyAccountData } from '@findeg/backend/features/identity';
+import { getMyAccountData } from '@backend/features/identity';
 import { redirect } from 'next/navigation';
 
 export async function getAccountPage(userId: number) {
@@ -165,7 +165,7 @@ export class CookieSessionProvider {
 ```typescript
 // App-layer provides Next.js implementation
 import { cookies } from 'next/headers';
-import { CookieSessionProvider, ICookieStore } from '@findeg/backend/features/core';
+import { CookieSessionProvider, ICookieStore } from '@backend/features/core';
 
 async function nextCookiesToStore(): Promise<ICookieStore> {
   const cookieStore = await cookies();
@@ -187,7 +187,7 @@ All backend tests run in Vitest without Next.js runtime:
 
 ```bash
 # Backend tests (pure Node.js, ~13 seconds)
-pnpm --filter @findeg/backend test
+pnpm --filter @backend test
 
 # 188/188 tests passing
 # Execution: 13.15 seconds
@@ -216,20 +216,20 @@ describe('Product Actions', () => {
 From monorepo root:
 
 ```bash
-pnpm --filter @findeg/backend install
+pnpm --filter @backend install
 ```
 
 ## Development
 
 ```bash
 # Build TypeScript
-pnpm --filter @findeg/backend build
+pnpm --filter @backend build
 
 # Watch mode
-pnpm --filter @findeg/backend dev
+pnpm --filter @backend dev
 
 # Run tests
-pnpm --filter @findeg/backend test
+pnpm --filter @backend test
 
 # Type check
 tsc --noEmit -p packages/backend
@@ -261,8 +261,8 @@ openssl rand -base64 32
 
 ```typescript
 // Server Actions
-import { JWTService, IUserRepository } from "@findeg/backend";
-import { CreateUserSchema } from "@findeg/backend/types";
+import { JWTService, IUserRepository } from "@backend";
+import { CreateUserSchema } from "@backend/types";
 
 export async function createUser(formData: FormData) {
   "use server";
@@ -279,8 +279,8 @@ export async function createUser(formData: FormData) {
 
 ```typescript
 // Server Component
-import { formatCurrency, formatDate } from '@findeg/backend/lib';
-import { IProductRepository } from '@findeg/backend';
+import { formatCurrency, formatDate } from '@backend/lib';
+import { IProductRepository } from '@backend';
 
 export default async function ProductPage({ params }: Props) {
   const productRepo = getProductRepository();
@@ -306,13 +306,13 @@ import {
   IProductRepository,
   ICategoryRepository,
   IOrderRepository,
-} from "@findeg/backend/features/core";
+} from "@backend/features/core";
 ```
 
 ### Authentication
 
 ```typescript
-import { JWTService, TokenPair, JWTPayload } from "@findeg/backend/features/identity";
+import { JWTService, TokenPair, JWTPayload } from "@backend/features/identity";
 
 const jwtService = new JWTService(accessSecret, refreshSecret);
 const tokens = jwtService.generateTokens(userId, email, roles);
@@ -322,7 +322,7 @@ const payload = jwtService.verifyToken(tokens.accessToken, "access");
 ### Validation
 
 ```typescript
-import { CreateUserSchema, CreateProductSchema, CreateOrderSchema } from "@findeg/backend/types";
+import { CreateUserSchema, CreateProductSchema, CreateOrderSchema } from "@backend/types";
 
 const result = CreateUserSchema.safeParse(data);
 if (!result.success) {
@@ -333,7 +333,7 @@ if (!result.success) {
 ### Error Handling
 
 ```typescript
-import { AppError, UnauthorizedError, NotFoundError, ValidationError } from "@findeg/backend/lib";
+import { AppError, UnauthorizedError, NotFoundError, ValidationError } from "@backend/lib";
 
 if (!user) {
   throw new NotFoundError("User not found");
@@ -347,7 +347,7 @@ if (!hasPermission) {
 ### i18n Utilities
 
 ```typescript
-import { formatCurrency, formatDate, formatRelativeTime } from "@findeg/backend/lib";
+import { formatCurrency, formatDate, formatRelativeTime } from "@backend/lib";
 
 formatCurrency(99.99, "en", "EGP"); // "EGP 99.99"
 formatCurrency(99.99, "ar", "EGP"); // "٩٩٫٩٩ ج.م"
@@ -374,13 +374,13 @@ formatRelativeTime(pastDate, "en"); // "2 days ago"
 
 ```bash
 # Run all tests
-pnpm --filter @findeg/backend test
+pnpm --filter @backend test
 
 # Run with coverage
-pnpm --filter @findeg/backend test --coverage
+pnpm --filter @backend test --coverage
 
 # Watch mode
-pnpm --filter @findeg/backend test --watch
+pnpm --filter @backend test --watch
 ```
 
 Test coverage goals:
@@ -394,8 +394,8 @@ Test coverage goals:
 All exports are fully typed with TypeScript. Import types:
 
 ```typescript
-import type { User, Product, Order } from "@findeg/backend";
-import type { CreateUserInput, UpdateProductInput } from "@findeg/backend/types";
+import type { User, Product, Order } from "@backend";
+import type { CreateUserInput, UpdateProductInput } from "@backend/types";
 ```
 
 ## Contributing

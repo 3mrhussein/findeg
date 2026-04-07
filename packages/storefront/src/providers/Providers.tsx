@@ -1,8 +1,8 @@
 "use client";
 
 import { ThemeProvider } from "./ThemeProvider";
-import { CartProvider } from "@/providers/CartProvider";
-import { UserProvider } from "@/providers/UserProvider";
+import { CartProvider } from "@providers/CartProvider";
+import { UserProvider } from "@providers/UserProvider";
 import { AnimationProvider } from "./animation-provider";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { TooltipProvider } from "@ui";

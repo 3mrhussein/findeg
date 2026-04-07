@@ -1,5 +1,5 @@
-import { db } from "@/features/core/infrastructure/persistence/database.config";
-import { schoolLists } from "@/features/core/infrastructure/persistence/schema/school-lists";
+import { db } from "@features/core/infrastructure/persistence/database.config";
+import { schoolLists } from "@features/core/infrastructure/persistence/schema/school-lists";
 import { eq, and, ilike, sql, desc, count, asc } from "drizzle-orm";
 import {
   ISchoolDirectoryService,

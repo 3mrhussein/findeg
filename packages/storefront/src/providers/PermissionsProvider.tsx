@@ -14,9 +14,9 @@ import {
   isSystemAdmin as checkSystemAdmin,
   hasAnyPermission,
   hasAllPermissions,
-} from "@/features/core/domain/auth/authorization";
-import type { SessionPayload } from "@/features/core/domain/auth/SessionPayload";
-import type { PermissionCode } from "@/features/core/domain/value-objects";
+} from "@features/core/domain/auth/authorization";
+import type { SessionPayload } from "@features/core/domain/auth/SessionPayload";
+import type { PermissionCode } from "@features/core/domain/value-objects";
 
 /**
  * The set of helpers available to any component nested within a PermissionsProvider.

@@ -20,10 +20,10 @@ import {
   type Price,
   type CustomerGroup,
   type UomCode,
-} from "@/features/core/domain/types/common";
-import type { CurrencyCode, Money } from "@/features/core/domain/value-objects";
-import { DEFAULT_CURRENCY, toMoney, MoneySchema } from "@/features/core/domain/value-objects";
-import { type SupportedLocale } from "@/features/core/domain/types/locale";
+} from "@features/core/domain/types/common";
+import type { CurrencyCode, Money } from "@features/core/domain/value-objects";
+import { DEFAULT_CURRENCY, toMoney, MoneySchema } from "@features/core/domain/value-objects";
+import { type SupportedLocale } from "@features/core/domain/types/locale";
 
 // ─── Variant Image ───────────────────────────────────────────────────────────
 

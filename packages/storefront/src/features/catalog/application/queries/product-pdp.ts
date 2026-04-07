@@ -1,13 +1,13 @@
-import type { Locale } from "@/features/core/domain/value-objects";
-import type { Product } from "@/features/catalog/domain/entities/Product";
-import type { Variant } from "@/features/catalog/domain/entities/Variant";
-import type { ProductReviewSummary } from "@/features/review/application/interfaces/IReviewRepository";
-import type { Review } from "@/features/review/domain/entities/Review";
-import type { CustomerGroup } from "@/features/core/domain/types/common";
-import { VariantEntity } from "@/features/catalog/domain/entities/Variant";
-import { resolveLocale } from "@/features/core/domain/value-objects";
-import { getProductEnglishSlug } from "@/features/catalog/presentation/utils/product-url";
-import { getServices } from "@/server/getServices";
+import type { Locale } from "@features/core/domain/value-objects";
+import type { Product } from "@features/catalog/domain/entities/Product";
+import type { Variant } from "@features/catalog/domain/entities/Variant";
+import type { ProductReviewSummary } from "@features/review/application/interfaces/IReviewRepository";
+import type { Review } from "@features/review/domain/entities/Review";
+import type { CustomerGroup } from "@features/core/domain/types/common";
+import { VariantEntity } from "@features/catalog/domain/entities/Variant";
+import { resolveLocale } from "@features/core/domain/value-objects";
+import { getProductEnglishSlug } from "@features/catalog/presentation/utils/product-url";
+import { getServices } from "@server/getServices";
 
 export interface ProductBreadcrumbItem {
   label: string;

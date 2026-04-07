@@ -1,10 +1,10 @@
 "use server";
 
-import { container } from "@/features/core/infrastructure/di/ServiceContainer";
+import { container } from "@features/core/infrastructure/di/ServiceContainer";
 import { revalidatePath, revalidateTag } from "next/cache";
-import { BrandInput } from "@/features/administration/domain/types";
-import { CACHE_TAGS } from "@/features/core/domain/constants/cache-tags";
-import { resolveErrorMessage } from "@/features/core/domain/errors";
+import { BrandInput } from "@features/administration/domain/types";
+import { CACHE_TAGS } from "@features/core/domain/constants/cache-tags";
+import { resolveErrorMessage } from "@features/core/domain/errors";
 
 /**
  * Creates a new brand.

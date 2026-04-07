@@ -118,7 +118,7 @@ docs/
 **Structure Decision**: This is a monorepo with strict package boundaries enforced via Turborepo and pnpm workspaces. The backend package is a pure TypeScript library containing all domain/application/infrastructure/presentation logic for features, while dashboard and storefront are Next.js 16 apps that consume backend functionality exclusively through the backend's package.json exports field. The critical enforcement points are:
 
 1. **Backend exports** (`packages/backend/package.json`): Only exposes application and presentation layers per feature
-2. **App tsconfig paths** (`packages/{dashboard,storefront}/tsconfig.json`): Currently allow `@/features/*` to resolve to both app and backend, which must be restricted
+2. **App tsconfig paths** (`packages/{dashboard,storefront}/tsconfig.json`): Currently allow `@features/*` to resolve to both app and backend, which must be restricted
 3. **serverExternalPackages** in Next.js configs: Already configured to prevent postgres/drizzle-orm from client bundling
 4. **Infrastructure layer code**: Must be marked with `server-only` package to fail at build time if client code tries to import
 
@@ -145,7 +145,7 @@ No violations or exemptions needed. This feature enforces constitutional princip
 
 **Key Decisions**:
 - Use multi-layered defense: server-only + exports + path aliases + ESLint
-- Remove backend from `@/features/*` path resolution in apps
+- Remove backend from `@features/*` path resolution in apps
 - Add `import 'server-only'` to all infrastructure files
 - Remove duplicated infrastructure from storefront
 
@@ -183,8 +183,8 @@ No violations or exemptions needed. This feature enforces constitutional princip
 
 2. **App Path Resolution Cleanup**
    - Update tsconfig.json in dashboard and storefront
-   - Fix imports from `@/features/[backend-feature]` to `@backend/features/[feature]`
-   - Remove backend path from `@/features/*` resolution
+   - Fix imports from `@features/[backend-feature]` to `@backend/features/[feature]`
+   - Remove backend path from `@features/*` resolution
 
 3. **Remove Duplicated Infrastructure**
    - Delete `packages/storefront/src/features/notifications/infrastructure/`

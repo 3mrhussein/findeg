@@ -143,8 +143,8 @@ packages/ui/
 **Before:**
 
 ```typescript
-import { Button } from "@/components/ui/button";
-import { Container } from "@/components/shared/Container";
+import { Button } from "@components/ui/button";
+import { Container } from "@components/shared/Container";
 ```
 
 **After:**

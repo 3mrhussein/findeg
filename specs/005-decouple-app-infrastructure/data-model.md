@@ -143,7 +143,7 @@ The backend package.json exports field acts as the primary enforcement mechanism
 // packages/backend/src/features/catalog/infrastructure/DrizzleProductRepository.ts
 
 // ✅ NO framework dependencies - backend remains pure TypeScript
-import { db } from '@/features/core/infrastructure/persistence/db';
+import { db } from '@features/core/infrastructure/persistence/db';
 import type { IProductRepository } from '../application/contracts/IProductRepository';
 import type { Product } from '../domain/entities/Product';
 
@@ -216,7 +216,7 @@ import { DrizzleProductRepository } from '@backend/features/catalog/infrastructu
 // Error: Package subpath './features/catalog/infrastructure/DrizzleProductRepository' is not defined by "exports"
 
 // ❌ FORBIDDEN: Bypass package exports via path alias (will be removed)
-import { DrizzleProductRepository } from '@/features/catalog/infrastructure/DrizzleProductRepository';
+import { DrizzleProductRepository } from '@features/catalog/infrastructure/DrizzleProductRepository';
 // Error: Module not found (after path alias cleanup)
 
 // ❌ FORBIDDEN: Import database client directly
@@ -235,7 +235,7 @@ import { db } from '@backend/features/core/infrastructure/persistence/db';
 {
   "compilerOptions": {
     "paths": {
-      "@/features/*": [
+      "@features/*": [
         "./src/features/*",        // Dashboard features
         "../backend/src/features/*" // ⚠️ PROBLEM: Bypasses package.json exports
       ]
@@ -253,7 +253,7 @@ import { db } from '@backend/features/core/infrastructure/persistence/db';
 {
   "compilerOptions": {
     "paths": {
-      "@/features/*": ["./src/features/*"], // Only dashboard features
+      "@features/*": ["./src/features/*"], // Only dashboard features
       "@backend": ["../backend/src"],
       "@backend/*": ["../backend/src/*"]
     }
@@ -416,7 +416,7 @@ packages/storefront/src/features/
 **Migration steps per feature**:
 1. Identify what the app needs from the feature (hooks? actions? types?)
 2. Verify backend exports those items in `features/[feature]/index.ts`
-3. Update app imports from `@/features/[feature]` to `@backend/features/[feature]`
+3. Update app imports from `@features/[feature]` to `@backend/features/[feature]`
 4. Delete `src/features/[feature]/infrastructure/` and `src/features/[feature]/domain/`
 5. Keep ONLY app-specific presentation code (if any) in `src/features/[feature]/`
 6. Run `npm run type-check && npm run build` to verify

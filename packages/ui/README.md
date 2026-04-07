@@ -1,4 +1,4 @@
-# @findeg/ui
+# @ui
 
 Shared UI components library for FindEg dashboard and storefront applications.
 
@@ -28,7 +28,7 @@ Cross-app components - stored in `src/shared/`:
 
 ```typescript
 // Import any component
-import { Button, Dialog, Container, Price } from "@findeg/ui";
+import { Button, Dialog, Container, Price } from "@ui";
 
 function MyComponent() {
   return (
@@ -67,13 +67,13 @@ function MyComponent() {
 
 ```bash
 # Build
-pnpm --filter @findeg/ui build
+pnpm --filter @ui build
 
 # Watch mode
-pnpm --filter @findeg/ui dev
+pnpm --filter @ui dev
 
 # Type check
-pnpm --filter @findeg/ui type-check
+pnpm --filter @ui type-check
 ```
 
 ## Adding Components
@@ -83,7 +83,7 @@ pnpm --filter @findeg/ui type-check
 1. Verify actual usage in both dashboard AND storefront
 2. Add component to `src/ui/` (shadcn) or `src/shared/` (business)
 3. Export from `src/index.ts`
-4. Rebuild: `pnpm --filter @findeg/ui build`
+4. Rebuild: `pnpm --filter @ui build`
 5. Update imports in both apps
 
 ## Analysis Methodology

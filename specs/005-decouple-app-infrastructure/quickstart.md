@@ -151,7 +151,7 @@ export function ProductCard({ product }: ProductCardProps) {
 // ❌ WRONG - Backend must be framework-agnostic
 import 'server-only'; // Violates Constitution Principle VIII
 
-import { db } from '@/features/core/infrastructure/persistence/db';
+import { db } from '@features/core/infrastructure/persistence/db';
 import type { IProductRepository } from '../application/contracts/IProductRepository';
 
 export class DrizzleProductRepository implements IProductRepository {
@@ -197,7 +197,7 @@ export type { Product } from './domain/entities/Product';
 // packages/backend/src/features/catalog/presentation/hooks/useProductById.ts
 // NOTE: No 'server-only' - backend must be framework-agnostic
 
-import { container } from '@/features/core/infrastructure/di/ServiceContainer';
+import { container } from '@features/core/infrastructure/di/ServiceContainer';
 import type { IProductRepository } from '../../application/contracts/IProductRepository';
 
 export async function useProductById(id: string) {
@@ -235,7 +235,7 @@ export default async function ProductDetailPage({ params }) {
 // packages/backend/src/features/catalog/presentation/actions/productActions.ts
 'use server';
 
-import { container } from '@/features/core/infrastructure/di/ServiceContainer';
+import { container } from '@features/core/infrastructure/di/ServiceContainer';
 import type { IProductRepository } from '../../application/contracts/IProductRepository';
 import { UpdateProductUseCase } from '../../application/use-cases/UpdateProductUseCase';
 
@@ -270,17 +270,17 @@ export async function updateProductAction(id: string, formData: FormData) {
 
 ## Common Mistakes & Fixes
 
-### Mistake 1: Importing from @/features in Apps
+### Mistake 1: Importing from @features in Apps
 
 ```typescript
 // ❌ WRONG (uses old path alias)
-import { useProducts } from '@/features/catalog';
+import { useProducts } from '@features/catalog';
 
 // ✅ CORRECT (uses package name)
 import { useProducts } from '@backend/features/catalog';
 ```
 
-**Why**: `@/features/*` path alias in apps now only resolves to app-specific features, not backend.
+**Why**: `@features/*` path alias in apps now only resolves to app-specific features, not backend.
 
 ---
 

@@ -1,4 +1,4 @@
-import type { PaymentStatus } from "@/features/core/domain/types/common";
+import type { PaymentStatus } from "@features/core/domain/types/common";
 
 export const PAYMENT_STATUS_OPTIONS: PaymentStatus[] = ["unpaid", "paid", "refunded"];
 

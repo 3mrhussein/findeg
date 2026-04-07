@@ -989,7 +989,7 @@ export async function getProductById(id: string, locale: string) {
 **Current** (`app/(dashboard)/page.tsx`):
 ```typescript
 import { ServiceContainer } from '@backend/features/core';
-import { requireAdmin } from '@/lib/session';
+import { requireAdmin } from '@lib/session';
 
 export default async function AdminDashboardPage({ params }: AdminDashboardPageProps) {
   const { locale } = await params;
@@ -1016,7 +1016,7 @@ export default async function AdminDashboardPage({ params }: AdminDashboardPageP
 
 **New** (PPR + Use Cache):
 ```typescript
-import { requireAdmin } from '@/lib/session';
+import { requireAdmin } from '@lib/session';
 import { Suspense } from 'react';
 
 // Static shell

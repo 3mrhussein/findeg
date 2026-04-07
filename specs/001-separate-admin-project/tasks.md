@@ -429,7 +429,7 @@ _Note: These tasks were completed as part of Phase 1 (T028-T065). This phase doc
 - [x] T156 Verify all code migrated: No src/ directory found - all code migrated to packages/ ✓
 - [x] T157 Remove old src/ directory: Already removed during migration ✓
 - [x] T158 Remove old package.json scripts: Root package.json already uses Turborepo commands ✓
-- [x] T159 Remove old tsconfig.json configurations: Root tsconfig cleaned up, old @/\* paths removed ✓
+- [x] T159 Remove old tsconfig.json configurations: Root tsconfig cleaned up, old @\* paths removed ✓
 - [x] T160 Remove old next.config.ts at root: File removed ✓
 - [x] T161 Update .gitignore: Added packages/**/.next and packages/**/dist patterns ✓
 - [x] T162 Clean up old Cypress configuration: Root cypress.config.ts removed ✓

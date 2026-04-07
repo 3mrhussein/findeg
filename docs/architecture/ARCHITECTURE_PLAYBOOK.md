@@ -84,9 +84,9 @@ Interpretation:
 
 ## 2.1. Package Boundary Enforcement
 
-**Context**: FindEg is a monorepo with separate packages (@findeg/backend, @findeg/dashboard, @findeg/storefront, @findeg/ui). Apps MUST NOT import backend infrastructure implementations directly - they consume backend functionality through well-defined package exports.
+**Context**: FindEg is a monorepo with separate packages (@backend, @dashboard, @storefront, @ui). Apps MUST NOT import backend infrastructure implementations directly - they consume backend functionality through well-defined package exports.
 
-### Backend Package (@findeg/backend)
+### Backend Package (@backend)
 
 **Type**: Pure TypeScript library (framework-agnostic, no React/Next.js dependencies)  
 **Exports**: Application layer interfaces and presentation layer utilities ONLY  
@@ -96,22 +96,22 @@ Interpretation:
 
 ✅ **Application Layer** (use cases, services, interfaces):
 ```typescript
-import { IProductRepository } from "@findeg/backend/features/catalog";
-import { ProductService } from "@findeg/backend/features/catalog";
-import { CreateProductUseCase } from "@findeg/backend/features/catalog";
+import { IProductRepository } from "@backend/features/catalog";
+import { ProductService } from "@backend/features/catalog";
+import { CreateProductUseCase } from "@backend/features/catalog";
 ```
 
 ✅ **Presentation Layer** (hooks, actions, view models):
 ```typescript
-import { useProducts } from "@findeg/backend/features/catalog";
-import { createProduct } from "@findeg/backend/features/catalog";  
-import type { ProductViewModel } from "@findeg/backend/features/catalog";
+import { useProducts } from "@backend/features/catalog";
+import { createProduct } from "@backend/features/catalog";  
+import type { ProductViewModel } from "@backend/features/catalog";
 ```
 
 ✅ **Domain Layer** (entities, value objects, types):
 ```typescript
-import type { Product, Money } from "@findeg/backend/features/catalog";
-import { ProductStatus } from "@findeg/backend/features/catalog";
+import type { Product, Money } from "@backend/features/catalog";
+import { ProductStatus } from "@backend/features/catalog";
 ```
 
 #### Forbidden Imports from Apps
@@ -119,15 +119,15 @@ import { ProductStatus } from "@findeg/backend/features/catalog";
 ❌ **Infrastructure Layer** (repository implementations, database clients):
 ```typescript
 // BLOCKED by package.json exports - TypeScript will error
-import { DrizzleProductRepository } from "@findeg/backend/features/catalog/infrastructure";
-import { db } from "@findeg/backend/features/core/infrastructure/persistence/database";
-import { SchemaTypes } from "@findeg/backend/features/core"; // Schema types are infrastructure
+import { DrizzleProductRepository } from "@backend/features/catalog/infrastructure";
+import { db } from "@backend/features/core/infrastructure/persistence/database";
+import { SchemaTypes } from "@backend/features/core"; // Schema types are infrastructure
 ```
 
 ❌ **Direct Source Access** (bypassing package exports):
 ```typescript
 // BLOCKED by TypeScript path configuration
-import { something } from "@/features/catalog"; // @/features/* no longer resolves to backend
+import { something } from "@features/catalog"; // @features/* no longer resolves to backend
 ```
 
 ### Enforcement Mechanisms
@@ -138,9 +138,9 @@ import { something } from "@/features/catalog"; // @/features/* no longer resolv
    - TypeScript resolves imports through package exports (not source files)
 
 2. **TypeScript Path Configuration** 
-   - Apps' tsconfig.json does NOT map `@findeg/backend/*` to source (`../backend/src/*`)
+   - Apps' tsconfig.json does NOT map `@backend/*` to source (`../backend/src/*`)
    - Apps rely on pnpm workspace + package references for resolution
-   - `@/features/*` in apps resolves ONLY to app-local features, not backend
+   - `@features/*` in apps resolves ONLY to app-local features, not backend
 
 3. **serverExternalPackages** (Build Optimization)
    - Next.js config lists Node.js-only packages: postgres, drizzle-orm, fs, etc.
@@ -151,10 +151,10 @@ import { something } from "@/features/catalog"; // @/features/* no longer resolv
 
 | Import Pattern | Status | Reason |
 |---------------|--------|--------|
-| `@findeg/backend/features/[feature]` | ✅ Allowed | Package export (application + presentation) |
-| `@findeg/backend/features/[feature]/application` | ✅ Allowed | Explicit layer export |
-| `@findeg/backend/features/[feature]/infrastructure` | ❌ Blocked | Not in package exports |
-| `@/features/[backend-feature]` | ❌ Blocked | Path no longer resolves to backend |
+| `@backend/features/[feature]` | ✅ Allowed | Package export (application + presentation) |
+| `@backend/features/[feature]/application` | ✅ Allowed | Explicit layer export |
+| `@backend/features/[feature]/infrastructure` | ❌ Blocked | Not in package exports |
+| `@features/[backend-feature]` | ❌ Blocked | Path no longer resolves to backend |
 | Direct repository imports | ❌ Blocked | Infrastructure layer is internal-only |
 
 ### Verification Commands

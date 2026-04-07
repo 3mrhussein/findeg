@@ -1,7 +1,7 @@
 import { eq, desc, or, sql } from "drizzle-orm";
-import { ID, Slug } from "@/features/core/domain/types/common";
-import { db } from "@/features/core/infrastructure/persistence";
-import { brands, products } from "@/features/core/infrastructure/persistence/schema";
+import { ID, Slug } from "@features/core/domain/types/common";
+import { db } from "@features/core/infrastructure/persistence";
+import { brands, products } from "@features/core/infrastructure/persistence/schema";
 import {
   IBrandRepository,
   BrandCreateInput,
@@ -12,7 +12,7 @@ import {
   DEFAULT_LOCALE,
   toLocalizedString,
   type Locale,
-} from "@/features/core/domain/value-objects";
+} from "@features/core/domain/value-objects";
 
 type DbBrand = typeof brands.$inferSelect;
 

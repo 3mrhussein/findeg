@@ -172,9 +172,9 @@ This phase refactors the structure to:
 ### Dashboard Package Updates (398 imports)
 
 - [x] T066 Add `@ui` as dependency to `packages/dashboard/package.json` workspace protocol
-- [x] T067 Run automated import replacement across `packages/dashboard/src/` changing `@/components/ui/*` to `@ui`
-- [x] T068 Run automated import replacement across `packages/dashboard/src/` changing `@/components/shared/*` to `@ui`
-- [x] T069 Run automated import replacement across `packages/dashboard/src/` changing `@/hooks/*` to `@ui/hooks`
+- [x] T067 Run automated import replacement across `packages/dashboard/src/` changing `@components/ui/*` to `@ui`
+- [x] T068 Run automated import replacement across `packages/dashboard/src/` changing `@components/shared/*` to `@ui`
+- [x] T069 Run automated import replacement across `packages/dashboard/src/` changing `@hooks/*` to `@ui/hooks`
 - [x] T070 Update `packages/dashboard/src/lib/` utilities to import cn from `@ui/lib`
 - [x] T071 Type-check dashboard: `pnpm --filter dashboard type-check` passes
 - [x] T072 Build dashboard: `pnpm --filter dashboard build` completes successfully
@@ -182,9 +182,9 @@ This phase refactors the structure to:
 ### Storefront Package Updates (274 imports)
 
 - [x] T073 Add `@ui` as dependency to `packages/storefront/package.json` workspace protocol
-- [x] T074 Run automated import replacement across `packages/storefront/src/` changing `@/components/ui/*` to `@ui`
-- [x] T075 Run automated import replacement across `packages/storefront/src/` changing `@/components/shared/*` to `@ui`
-- [x] T076 Run automated import replacement across `packages/storefront/src/` changing `@/hooks/*` to `@ui/hooks`
+- [x] T074 Run automated import replacement across `packages/storefront/src/` changing `@components/ui/*` to `@ui`
+- [x] T075 Run automated import replacement across `packages/storefront/src/` changing `@components/shared/*` to `@ui`
+- [x] T076 Run automated import replacement across `packages/storefront/src/` changing `@hooks/*` to `@ui/hooks`
 - [x] T077 Update `packages/storefront/src/lib/` utilities to import cn from `@ui/lib`
 - [x] T078 Type-check storefront: `pnpm --filter storefront type-check` passes
 - [x] T079 Build storefront: `pnpm --filter storefront build` completes successfully

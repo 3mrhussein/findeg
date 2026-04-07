@@ -35,19 +35,19 @@ Successfully restored category data layer as first proof-of-concept after stubbi
 **Before**:
 ```typescript
 // Stubbed imports
-import { ... } from "@/actions/catalog-actions";
+import { ... } from "@actions/catalog-actions";
 const categories: any[] = []; // Empty stub
 ```
 
 **After**:
 ```typescript
-import { getCategories } from "@/data/categories/queries";
+import { getCategories } from "@data/categories/queries";
 import {
   createCategoryAction,
   updateCategoryAction,
   deleteCategoryAction,
   reorderCategoriesAction,
-} from "@/data/categories/actions";
+} from "@data/categories/actions";
 
 const categories = await getCategories(resolvedLocale); // Real data
 ```
@@ -116,7 +116,7 @@ export function createAdministrationServices() {
 
 **App Data Layer** (Query):
 ```typescript
-// @/data/categories/queries.ts
+// @data/categories/queries.ts
 "use cache";
 import { cacheLife, cacheTag } from 'next/cache';
 import { createCatalogServices } from '@backend/features/catalog';
@@ -132,7 +132,7 @@ export async function getCategories(locale: string) {
 
 **App Data Layer** (Action):
 ```typescript
-// @/data/categories/actions.ts
+// @data/categories/actions.ts
 "use server";
 import { updateTag, revalidatePath } from 'next/cache';
 import { createAdministrationServices } from '@backend/features/administration';

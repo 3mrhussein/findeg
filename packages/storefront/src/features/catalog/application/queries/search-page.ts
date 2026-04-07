@@ -1,6 +1,6 @@
-import { getServices } from "@/server/getServices";
+import { getServices } from "@server/getServices";
 import { getSearchPageData } from "./storefront";
-import type { Product } from "@/features/catalog/domain/entities/Product";
+import type { Product } from "@features/catalog/domain/entities/Product";
 import type { FilterOption, CategoryFilterOption } from "./listing";
 import {
   applyListingFilters,
@@ -9,7 +9,7 @@ import {
   getPriceBounds,
   parseListingFilters,
 } from "./listing";
-import { resolveLocale } from "@/features/core/domain/value-objects";
+import { resolveLocale } from "@features/core/domain/value-objects";
 
 export interface SearchPageViewModel {
   query: string;

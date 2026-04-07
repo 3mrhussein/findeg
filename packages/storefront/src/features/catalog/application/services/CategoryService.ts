@@ -1,8 +1,8 @@
-import { ID, Slug } from "@/features/core/domain/types/common";
+import { ID, Slug } from "@features/core/domain/types/common";
 import type { ICategoryRepository } from "../interfaces/ICategoryRepository";
-import type { ICategoryService } from "@/features/catalog/application/interfaces/ICategoryService";
-import type { Category } from "@/features/catalog/domain/entities/Category";
-import type { Locale } from "@/features/core/domain/value-objects";
+import type { ICategoryService } from "@features/catalog/application/interfaces/ICategoryService";
+import type { Category } from "@features/catalog/domain/entities/Category";
+import type { Locale } from "@features/core/domain/value-objects";
 
 export class CategoryService implements ICategoryService {
   constructor(private categoryRepository: ICategoryRepository) {}

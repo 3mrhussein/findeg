@@ -9,7 +9,7 @@
  */
 
 import React from "react";
-import type { Locale } from "@/features/core/domain/value-objects";
+import type { Locale } from "@features/core/domain/value-objects";
 
 // Navigation Types
 export interface NavigationSubLink {

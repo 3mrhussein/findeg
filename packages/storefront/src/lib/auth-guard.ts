@@ -1,7 +1,7 @@
-import { container } from "@/features/core/infrastructure/di/ServiceContainer";
-import { redirect } from "@/i18n/navigation";
-import { isAdminSession } from "@/features/core/domain/auth/authorization";
-import type { SessionPayload } from "@/features/core/domain/auth";
+import { container } from "@features/core/infrastructure/di/ServiceContainer";
+import { redirect } from "@i18n/navigation";
+import { isAdminSession } from "@features/core/domain/auth/authorization";
+import type { SessionPayload } from "@features/core/domain/auth";
 import type { Locale } from "next-intl";
 
 /**

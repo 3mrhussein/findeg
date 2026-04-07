@@ -89,14 +89,14 @@ const nextConfig: NextConfig = {
 
 #### 1.3 TypeScript Path Aliases (Module Resolution Control)
 
-**What it does**: Controls how `@/features/*` resolves in app code.
+**What it does**: Controls how `@features/*` resolves in app code.
 
 **Current problem**:
 ```json
 // packages/dashboard/tsconfig.json
 {
   "paths": {
-    "@/features/*": [
+    "@features/*": [
       "./src/features/*",        // ← Dashboard features
       "../backend/src/features/*" // ← Backend features (ALL layers including infrastructure)
     ]
@@ -107,17 +107,17 @@ const nextConfig: NextConfig = {
 This allows:
 ```typescript
 // Apps can currently bypass package.json exports:
-import { DrizzleProductRepository } from '@/features/catalog/infrastructure/DrizzleProductRepository';
+import { DrizzleProductRepository } from '@features/catalog/infrastructure/DrizzleProductRepository';
 ```
 
-**Solution: Remove backend path resolution from @/features/***
+**Solution: Remove backend path resolution from @features/***
 
 Apps should ONLY import from backend via the package name (which respects exports field):
 ```json
 // packages/dashboard/tsconfig.json
 {
   "paths": {
-    "@/features/*": ["./src/features/*"], // Only dashboard features
+    "@features/*": ["./src/features/*"], // Only dashboard features
     "@backend/*": ["../backend/src/*"]
   }
 }
@@ -125,7 +125,7 @@ Apps should ONLY import from backend via the package name (which respects export
 
 Then rely on package.json exports to enforce boundaries.
 
-**Recommendation**: **Remove backend from `@/features/*` path** because:
+**Recommendation**: **Remove backend from `@features/*` path** because:
 - Clearer separation (backend is a separate package, should be imported as such)
 - Aligns with package.json exports enforcement
 - Easier to audit (all backend imports go through `@backend`)
@@ -177,7 +177,7 @@ import 'server-only'; // ← VIOLATES PRINCIPLE VIII: Backend must be framework-
     'no-restricted-imports': [
       'error',
       {
-        patterns: ['**/infrastructure/*', '@/features/*/infrastructure/*']
+        patterns: ['**/infrastructure/*', '@features/*/infrastructure/*']
       }
     ]
   }
@@ -266,8 +266,8 @@ packages/storefront/src/features/notifications/infrastructure/DrizzleNotificatio
    - Run `npm run build` to verify apps can still build
 
 2. **Phase 1b: App Path Resolution**
-   - Update `packages/dashboard/tsconfig.json` and `packages/storefront/tsconfig.json` to remove backend from `@/features/*` path
-   - Update all app imports from `@/features/[backend-feature]` to `@backend/features/[feature]`
+   - Update `packages/dashboard/tsconfig.json` and `packages/storefront/tsconfig.json` to remove backend from `@features/*` path
+   - Update all app imports from `@features/[backend-feature]` to `@backend/features/[feature]`
    - Run `npm run type-check` to verify all imports resolve
 
 3. **Phase 1c: Remove Duplicated Infrastructure**
@@ -346,7 +346,7 @@ npm run test:e2e
       {
         patterns: [
           {
-            group: ['**/infrastructure/*', '@/features/*/infrastructure/*'],
+            group: ['**/infrastructure/*', '@features/*/infrastructure/*'],
             message: 'Direct infrastructure imports are prohibited. Import from @backend/features/[feature] instead.'
           }
         ]
@@ -374,7 +374,7 @@ npm run test:e2e
 | `server-only` package | Build-time | Build error if client imports | ✅ Yes |
 | `serverExternalPackages` | Runtime optimization | Bundle bloat if missing | ✅ Yes (already configured) |
 | package.json `exports` | TypeScript resolution | Import error if path not exported | ✅ Yes (verify feature indexes) |
-| TypeScript path aliases | Developer experience | Can bypass exports if misconfigured | ✅ Yes (remove backend from `@/features/*`) |
+| TypeScript path aliases | Developer experience | Can bypass exports if misconfigured | ✅ Yes (remove backend from `@features/*`) |
 | ESLint rule | Lint-time warning | Can be disabled | ⚠️  Optional (secondary enforcement) |
 
 **Final decision**: Implement all build-time mechanisms (server-only, exports, path aliases) + optional ESLint rule for defense-in-depth.

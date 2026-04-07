@@ -1,6 +1,6 @@
-import { getServices } from "@/server/getServices";
-import type { Product } from "@/features/catalog/domain/entities/Product";
-import { resolveLocale } from "@/features/core/domain/value-objects";
+import { getServices } from "@server/getServices";
+import type { Product } from "@features/catalog/domain/entities/Product";
+import { resolveLocale } from "@features/core/domain/value-objects";
 
 export interface SchoolListViewModel {
   rawCode: string;

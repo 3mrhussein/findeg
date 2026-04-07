@@ -1,6 +1,6 @@
-import { ProductEntity, type Product } from "@/features/catalog/domain/entities/Product";
-import type { Variant } from "@/features/catalog/domain/entities/Variant";
-import { VariantEntity } from "@/features/catalog/domain/entities/Variant";
+import { ProductEntity, type Product } from "@features/catalog/domain/entities/Product";
+import type { Variant } from "@features/catalog/domain/entities/Variant";
+import { VariantEntity } from "@features/catalog/domain/entities/Variant";
 
 export type ProductStatusBadgeKind = "sale" | "low-stock" | "new";
 

@@ -12,7 +12,7 @@
 describe("Storefront - Architectural Boundary Enforcement", () => {
   describe("Infrastructure Duplication Prevention (CHK056, FR-004, SC-006)", () => {
     it("should not have duplicated notification infrastructure", () => {
-      // Storefront should import notifications from @findeg/backend
+      // Storefront should import notifications from @backend
       // Not have its own infrastructure implementation
 
       cy.visit("/");

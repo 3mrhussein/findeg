@@ -49,21 +49,21 @@ findeg.stationary/
 │   │   │   ├── features/     # Core, identity, media features
 │   │   │   ├── lib/          # Utilities, helpers
 │   │   │   └── types/        # Shared TypeScript types
-│   │   └── package.json      # @findeg/backend
+│   │   └── package.json      # @backend
 │   │
 │   ├── dashboard/        # Admin Next.js app (deploys to admin.findeg.com)
 │   │   ├── src/
 │   │   │   ├── app/[locale]/admin/  # Admin routes only
 │   │   │   ├── features/administration/
 │   │   │   └── components/   # Duplicated UI components
-│   │   └── package.json      # Depends on @findeg/backend
+│   │   └── package.json      # Depends on @backend
 │   │
 │   └── storefront/       # Customer Next.js app (deploys to findeg.com)
 │       ├── src/
 │       │   ├── app/[locale]/(storefront)/  # Customer routes
 │       │   ├── features/     # Cart, catalog, order, review, school
 │       │   └── components/   # Duplicated UI components
-│       └── package.json      # Depends on @findeg/backend
+│       └── package.json      # Depends on @backend
 ├── turbo.json            # Turborepo task orchestration
 └── pnpm-workspace.yaml   # Workspace package linking
 ```
@@ -96,7 +96,7 @@ findeg.stationary/
 **Implementation**:
 - Drizzle schema: `packages/backend/src/features/core/infrastructure/persistence/schema/`
 - Migrations: `packages/backend/scripts/migrations/` (or root `scripts/migrations/`)
-- Frontend access: `import { IProductRepository } from '@findeg/backend/features/catalog'`
+- Frontend access: `import { IProductRepository } from '@backend/features/catalog'`
 
 #### 3. Authentication Strategy: Shared JWT Service
 
@@ -173,7 +173,7 @@ findeg.stationary/
 - ✅ Backend package exports all repository interfaces
 - ✅ Authentication service functional (JWT token generation/verification)
 - ✅ Backend unit tests pass (>80% coverage)
-- ✅ Frontend packages can successfully import from `@findeg/backend`
+- ✅ Frontend packages can successfully import from `@backend`
 
 **Blocker**: This phase must complete before Phases 3 & 4 (frontend migrations).
 
@@ -199,7 +199,7 @@ findeg.stationary/
 **Key Tasks**:
 1. Move `src/app/[locale]/admin/` to `packages/dashboard/src/app/[locale]/admin/`
 2. Move `src/features/administration/` to `packages/dashboard/`
-3. Update all imports to use `@findeg/backend` instead of relative paths
+3. Update all imports to use `@backend` instead of relative paths
 4. Duplicate `src/components/ui/` and `src/components/shared/` to dashboard
 5. Copy Tailwind config, globals.css, admin-specific assets
 6. Migrate admin E2E tests to `packages/dashboard/cypress/`
@@ -220,7 +220,7 @@ findeg.stationary/
 **Key Tasks**:
 1. Move `src/app/[locale]/(storefront)/`, `(auth)/`, `(school-list)/` to `packages/storefront/`
 2. Move `src/features/cart/`, `catalog/`, `order/`, `review/`, `school/`, `notifications/` to storefront
-3. Update imports to use `@findeg/backend`
+3. Update imports to use `@backend`
 4. Duplicate UI components to storefront
 5. Copy Tailwind config, globals.css, storefront assets
 6. Migrate storefront E2E tests to `packages/storefront/cypress/`

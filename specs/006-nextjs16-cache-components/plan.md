@@ -406,7 +406,7 @@ export function getBackendServices() {
 ```typescript
 "use cache"
 import { cacheLife, cacheTag } from 'next/cache';
-import { getBackendServices } from '@/lib/backend';
+import { getBackendServices } from '@lib/backend';
 import type { Product, ProductFilters } from '@backend/features/catalog';
 
 /**
@@ -467,7 +467,7 @@ export async function searchProducts(
 ```typescript
 "use server"
 import { updateTag } from 'next/cache';
-import { getBackendServices } from '@/lib/backend';
+import { getBackendServices } from '@lib/backend';
 import type { CreateProductInput, UpdateProductInput } from '@backend/features/catalog';
 
 /**
@@ -480,7 +480,7 @@ import type { CreateProductInput, UpdateProductInput } from '@backend/features/c
 **Goal**: Update pages to use dashboard data layer (queries/actions from `src/data/*`)
 
 ### 3t { updateTag } from 'next/cache';
-import { getBackendServices } from '@/lib/backend';
+import { getBackendServices } from '@lib/backend';
 import type { OrderStatus } from '@backend/features/order';
 
 export async function updateOrderStatus(id: string, status: OrderStatus) {
@@ -504,14 +504,14 @@ export async function updateOrderStatus(id: string, status: OrderStatus) {
  *   const data = await products.getAll('en');
  * 
  * After:
- *   import { getProducts } from '@/data/products/queries';
+ *   import { getProducts } from '@data/products/queries';
  *   const data = await getProducts('en');
  * 
  * Cache & mutations handled automatically via "use cache" and "use server"
  */
 export function getServices(): never {
   throw new Error(
-    'getServices() is deprecated. Use queries/actions from @/data/*'
+    'getServices() is deprecated. Use queries/actions from @data/*'
   );
 }
 ```
@@ -563,7 +563,7 @@ export function getServices(): never {
 **Before**:
 ```typescript
 import { ServiceContainer } from '@backend/features/core';
-import { requireAdmin } from '@/lib/session';
+import { requireAdmin } from '@lib/session';
 
 export default async function AdminDashboardPage({ params }: AdminDashboardPageProps) {
   const { locale } = await params;
@@ -590,7 +590,7 @@ export default async function AdminDashboardPage({ params }: AdminDashboardPageP
 
 **After**:
 ```typescript
-import { requireAdmin } from '@/lib/session';
+import { requireAdmin } from '@lib/session';
 import { Suspense } from 'react';
 import {
   DashboardStats,
@@ -605,7 +605,7 @@ import {
   RecentOrdersSkeleton,
   RecentSchoolListsSkeleton,
   AuditLogSkeleton,
-} from '@/components/skeletons';
+} from '@components/skeletons';
 
 export default async function AdminDashboardPage({ params }) {
   const { locale } = await params;
@@ -654,8 +654,8 @@ export default async function AdminDashboardPage({ params }) {
 
 ```typescript
 import { getDashboardStats } from '@backend/features/administration';
-import { requireAdmin } from '@/lib/session';
-import { StatsCard } from '@/components/stats/StatsCard';
+import { requireAdmin } from '@lib/session';
+import { StatsCard } from '@components/stats/StatsCard';
 
 export async function DashboardStats({ locale }: { locale: string }) {
   const session = await requireAdmin(locale);
@@ -695,7 +695,7 @@ export async function DashboardStats({ locale }: { locale: string }) {
 
 ```typescript
 import { getProducts } from '@backend/features/catalog';
-import { ProductRow } from '@/components/products/ProductRow';
+import { ProductRow } from '@components/products/ProductRow';
 
 export async function RecentProducts({ locale }: { locale: string }) {
   // Fetch only 5 most recent products
@@ -718,7 +718,7 @@ export async function RecentProducts({ locale }: { locale: string }) {
 
 ```typescript
 import { getRecentOrders } from '@backend/features/order';
-import { OrderRow } from '@/components/orders/OrderRow';
+import { OrderRow } from '@components/orders/OrderRow';
 
 export async function RecentOrders() {
   const orders = await getRecentOrders(5);
@@ -761,8 +761,8 @@ export function DashboardStatsSkeleton() {
           <div className="h-4 bg-gray-200 rounded w-24 mb-2" />
           <div className="h-8 bg-gray-200 rounded w-16" />
         </div>/data/dashboard/queries';
-import { requireAdmin } from '@/lib/session';
-import { StatsCard } from '@/components/stats/StatsCard';
+import { requireAdmin } from '@lib/session';
+import { StatsCard } from '@components/stats/StatsCard';
 
 export async function DashboardStats({ locale }: { locale: string }) {
   const session = await requireAdmin(locale);
@@ -801,8 +801,8 @@ export async function DashboardStats({ locale }: { locale: string }) {
 **File**: `packages/dashboard/src/app/[locale]/admin/(dashboard)/_components/RecentProducts.tsx`
 
 ```typescript
-import { getProducts } from '@/data/products/queries';
-import { ProductRow } from '@/components/products/ProductRow';
+import { getProducts } from '@data/products/queries';
+import { ProductRow } from '@components/products/ProductRow';
 
 export async function RecentProducts({ locale }: { locale: string }) {
   // Uses cached query from dashboard data layer
@@ -824,8 +824,8 @@ export async function RecentProducts({ locale }: { locale: string }) {
 **File**: `packages/dashboard/src/app/[locale]/admin/(dashboard)/_components/RecentOrders.tsx`
 
 ```typescript
-import { getOrders } from '@/data/orders/queries';
-import { OrderRow } from '@/components/orders/OrderRow';
+import { getOrders } from '@data/orders/queries';
+import { OrderRow } from '@components/orders/OrderRow';
 
 export async function RecentOrders() {
   // Uses cached query from dashboard data layer
@@ -842,7 +842,7 @@ export async function RecentOrders() {
 ```typescript
 import { Suspense } from 'react';
 import { ProductFilters, ProductResults } from './_components';
-import { ProductListSkeleton } from '@/components/skeletons';
+import { ProductListSkeleton } from '@components/skeletons';
 
 export default function ProductsPage() {
   // Static shell (cached)
@@ -887,7 +887,7 @@ export async function ProductFilters() {
 
 ```typescript
 import { getProducts } from '@backend/features/catalog';
-import { ProductGrid } from '@/components/products/ProductGrid';
+import { ProductGrid } from '@components/products/ProductGrid';
 
 type SearchParams = {
   category?: string;
@@ -920,7 +920,7 @@ export async function ProductResults({ searchParams }: { searchParams: SearchPar
 ```typescript
 import { Suspense } from 'react';
 import { ProductFilters, ProductResults } from './_components';
-import { ProductListSkeleton } from '@/components/skeletons';
+import { ProductListSkeleton } from '@components/skeletons';
 
 export default function ProductsPage() {
   // Static shell (cached)
@@ -947,7 +947,7 @@ export default function ProductsPage() {
 **File**: `packages/dashboard/src/app/[locale]/admin/(dashboard)/products/_components/ProductFilters.tsx`
 
 ```typescript
-import { getCategories, getBrands } from '@/data/categories/queries';
+import { getCategories, getBrands } from '@data/categories/queries';
 import { FilterUI } from './FilterUI';
 
 export async function ProductFilters() {
@@ -964,8 +964,8 @@ export async function ProductFilters() {
 **File**: `packages/dashboard/src/app/[locale]/admin/(dashboard)/products/_components/ProductResults.tsx`
 
 ```typescript
-import { getProducts } from '@/data/products/queries';
-import { ProductGrid } from '@/components/products/ProductGrid';
+import { getProducts } from '@data/products/queries';
+import { ProductGrid } from '@components/products/ProductGrid';
 
 type SearchParams = {
   category?: string;
@@ -993,7 +993,7 @@ export async function ProductResults({ searchParams }: { searchParams: SearchPar
 
 **After**:
 ```typescript
-import { getProductById } from '@/data/products/queries';
+import { getProductById } from '@data/products/queries';
 import { ProductForm } from '../../_components/ProductForm';
 import { notFound } from 'next/navigation';
 
@@ -1026,7 +1026,7 @@ import {
   createProduct,
   updateProduct,
   deleteProduct,
-} from '@/data/products/actions';
+} from '@data/products/actions';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import type { CreateProductInput, UpdateProductInput } from '@backend/features/catalog';
@@ -1055,20 +1055,20 @@ export async function updateProductAction(id: string, input: UpdateProductInput)
 
 Similar pattern to products:
 - Static shell with Suspense
-- Import from `@/data/categories/queries` and `@/data/categories/actions`
+- Import from `@data/categories/queries` and `@data/categories/actions`
 - Server Actions for create/update/delete
 
 ### 4.2 Brands Page
 
-Same pattern as categories, using `@/data/brands/*`
+Same pattern as categories, using `@data/brands/*`
 
 ### 4.3 School Lists Page
 
-Lower priority, same pattern using `@/data/school-lists/*`
+Lower priority, same pattern using `@data/school-lists/*`
 
 ### 4t { Suspense } from 'react';
 import { OrderList } from './_components/OrderList';
-import { OrderListSkeleton } from '@/components/skeletons';
+import { OrderListSkeleton } from '@components/skeletons';
 
 export default function OrdersPage() {
   return (
@@ -1088,8 +1088,8 @@ export default function OrdersPage() {
 **File**: `packages/dashboard/src/app/[locale]/admin/(dashboard)/orders/_components/OrderList.tsx`
 
 ```typescript
-import { getOrders } from '@/data/orders/queries';
-import { OrderRow } from '@/components/orders/OrderRow';
+import { getOrders } from '@data/orders/queries';
+import { OrderRow } from '@components/orders/OrderRow';
 
 export async function OrderList() {
   // Uses cached query from dashboard data layer
