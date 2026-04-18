@@ -28,13 +28,13 @@ export function BulkActionsBar({
 
   return (
     <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 animate-in fade-in slide-in-from-bottom-4 duration-300">
-      <div className="flex items-center gap-2 px-4 py-2 bg-foreground text-background rounded-full shadow-2xl border border-border/10 ring-1 ring-background/10">
+      <div className="flex items-center gap-2 px-4 py-2 bg-slate-900 text-white dark:bg-slate-800 dark:text-slate-200 rounded-full shadow-2xl border border-slate-800 dark:border-slate-700 ring-1 ring-white/10 dark:ring-black/20">
         <div className="flex items-center gap-3 pr-2">
           <Button
             variant="ghost"
             size="icon"
             onClick={onClear}
-            className="h-6 w-6 hover:bg-background/20 hover:text-background text-background"
+            className="h-6 w-6 hover:bg-white/20 dark:hover:bg-slate-700 text-white dark:text-slate-200"
           >
             <X className="h-4 w-4" />
           </Button>
@@ -43,14 +43,14 @@ export function BulkActionsBar({
           </span>
         </div>
 
-        <Separator orientation="vertical" className="h-6 bg-background/20" />
+        <Separator orientation="vertical" className="h-6 bg-white/20 dark:bg-slate-700" />
 
         <div className="flex items-center gap-1">
           <Button
             variant="ghost"
             size="sm"
             onClick={() => onActivate(selectedIds)}
-            className="h-8 hover:bg-background/20 hover:text-background text-background"
+            className="h-8 hover:bg-white/20 dark:hover:bg-slate-700 text-white dark:text-slate-200"
           >
             <CheckCircle className="mr-2 h-4 w-4" />
             {t("Bulk.Activate")}
@@ -59,7 +59,7 @@ export function BulkActionsBar({
             variant="ghost"
             size="sm"
             onClick={() => onDeactivate(selectedIds)}
-            className="h-8 hover:bg-background/20 hover:text-background text-background"
+            className="h-8 hover:bg-white/20 dark:hover:bg-slate-700 text-white dark:text-slate-200"
           >
             <Ban className="mr-2 h-4 w-4" />
             {t("Bulk.Deactivate")}

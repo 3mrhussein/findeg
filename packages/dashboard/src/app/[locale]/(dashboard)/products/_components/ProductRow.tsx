@@ -64,10 +64,10 @@ export function ProductRow({
   return (
     <TableRow
       className={cn(
-        "border-b border-gray-100 hover:bg-gray-50 transition-colors",
+        "border-b border-gray-100 dark:border-slate-800 hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors",
         "border-l-4",
         getCompletenessBorder(product.completeness),
-        isSelected && "bg-indigo-50/60",
+        isSelected && "bg-indigo-50/60 dark:bg-indigo-950/40",
       )}
     >
       <TableCell className="w-[40px]">
@@ -153,7 +153,7 @@ export function ProductRow({
               <Link
                 href={`/products/${product.id}/edit`}
                 className="w-7 h-7 rounded flex items-center justify-center
-                           text-gray-400 hover:text-indigo-600 hover:bg-indigo-50
+                           text-slate-400 dark:text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/50
                            transition-colors"
               >
                 <Pencil size={14} />
@@ -166,7 +166,7 @@ export function ProductRow({
               <button
                 onClick={() => onDuplicate(product.id)}
                 className="w-7 h-7 rounded flex items-center justify-center
-                           text-gray-400 hover:text-violet-600 hover:bg-violet-50
+                           text-slate-400 dark:text-slate-500 hover:text-violet-600 dark:hover:text-violet-400 hover:bg-violet-50 dark:hover:bg-violet-950/50
                            transition-colors"
               >
                 <Copy size={14} />
@@ -179,7 +179,7 @@ export function ProductRow({
               <button
                 onClick={() => window.open(`/products/${product.id}`, "_blank")}
                 className="w-7 h-7 rounded flex items-center justify-center
-                           text-gray-400 hover:text-sky-600 hover:bg-sky-50
+                           text-slate-400 dark:text-slate-500 hover:text-sky-600 dark:hover:text-sky-400 hover:bg-sky-50 dark:hover:bg-sky-950/50
                            transition-colors"
               >
                 <ExternalLink size={14} />

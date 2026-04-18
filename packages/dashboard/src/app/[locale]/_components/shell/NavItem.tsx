@@ -70,7 +70,7 @@ export function NavItem({ item, collapsed = false, locale = "en", depth = 0 }: N
       }}
       className={cn(
         "flex items-center rounded-md transition-all duration-200",
-        hasChildren && !item.persistent ? "cursor-pointer" : "cursor-default",
+        "cursor-pointer",
         depth === 0 ? "h-[40px] px-[12px] py-[8px]" : "h-[36px] py-[8px] pe-[12px]",
         // Dynamic horizontal padding based on depth for children
         depth > 0 && `ps-[${12 + depth * 20}px]`,

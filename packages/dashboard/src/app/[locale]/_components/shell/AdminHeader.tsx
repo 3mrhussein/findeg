@@ -144,16 +144,10 @@ export function AdminHeader({
       */}
 
       {/* Left Section */}
-      <div className="flex items-center gap-3">
-        <button
-          onClick={toggleSidebar}
-          className="flex h-[36px] w-[36px] items-center justify-center rounded-md hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
-        >
-          <Menu className="h-[20px] w-[20px] text-gray-500 dark:text-gray-400" />
-        </button>
-        <div className="flex items-center">
-          <span className="text-[14px] text-gray-400 font-medium">FindEg</span>
-        </div>
+      <div className="flex flex-col ms-2 justify-center">
+        <span className="text-[13px] text-gray-400 font-medium tracking-wide uppercase">
+          Dashboard
+        </span>
       </div>
 
       {/* Center Section — Search */}

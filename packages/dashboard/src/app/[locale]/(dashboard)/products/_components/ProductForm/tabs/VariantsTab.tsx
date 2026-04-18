@@ -131,8 +131,8 @@ export function VariantsTab() {
                         variant="outline"
                         className={cn(
                           variant.isActive
-                            ? "bg-green-50 text-green-700 border-green-200"
-                            : "bg-gray-100 text-gray-600",
+                            ? "bg-green-50 dark:bg-green-950/20 text-green-700 dark:text-green-400 border-green-200 dark:border-green-900/30"
+                            : "bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-300",
                         )}
                       >
                         {variant.isActive ? "Active" : "Draft"}

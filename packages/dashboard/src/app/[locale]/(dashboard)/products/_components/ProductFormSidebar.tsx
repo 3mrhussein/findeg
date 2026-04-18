@@ -89,8 +89,8 @@ export function ProductFormSidebar({
                     className={cn(
                       "flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors",
                       field.value
-                        ? "border-green-200 bg-green-50"
-                        : "border-gray-200 bg-white hover:bg-gray-50",
+                        ? "border-green-200 bg-green-50 dark:border-green-900/30 dark:bg-green-950/20"
+                        : "border-gray-200 bg-white hover:bg-gray-50 dark:border-slate-800 dark:bg-slate-900 dark:hover:bg-slate-800/50",
                     )}
                   >
                     <input
@@ -102,9 +102,13 @@ export function ProductFormSidebar({
                     <div>
                       <div className="flex items-center gap-1.5">
                         <span className="text-green-500 text-xs">●</span>
-                        <span className="text-sm font-medium text-gray-900">Active</span>
+                        <span className="text-sm font-medium text-gray-900 dark:text-slate-200">
+                          Active
+                        </span>
                       </div>
-                      <p className="text-xs text-gray-500 mt-0.5">Visible in the storefront</p>
+                      <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5">
+                        Visible in the storefront
+                      </p>
                     </div>
                   </label>
 
@@ -112,8 +116,8 @@ export function ProductFormSidebar({
                     className={cn(
                       "flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors",
                       !field.value
-                        ? "border-gray-300 bg-gray-50"
-                        : "border-gray-200 bg-white hover:bg-gray-50",
+                        ? "border-gray-300 bg-gray-50 dark:border-slate-700 dark:bg-slate-800/50"
+                        : "border-gray-200 bg-white hover:bg-gray-50 dark:border-slate-800 dark:bg-slate-900 dark:hover:bg-slate-800/50",
                     )}
                   >
                     <input
@@ -124,10 +128,14 @@ export function ProductFormSidebar({
                     />
                     <div>
                       <div className="flex items-center gap-1.5">
-                        <span className="text-gray-400 text-xs">●</span>
-                        <span className="text-sm font-medium text-gray-900">Draft</span>
+                        <span className="text-gray-400 dark:text-slate-600 text-xs">●</span>
+                        <span className="text-sm font-medium text-gray-900 dark:text-slate-200">
+                          Draft
+                        </span>
                       </div>
-                      <p className="text-xs text-gray-500 mt-0.5">Hidden from storefront</p>
+                      <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5">
+                        Hidden from storefront
+                      </p>
                     </div>
                   </label>
                 </div>

@@ -19,9 +19,9 @@ export default async function InventoryPage() {
       </div>
 
       {lowStock.length > 0 && (
-        <div className="bg-red-50 border border-red-200 rounded-md p-4 mb-4">
-          <h3 className="text-lg font-medium text-red-800">Low Stock Alerts</h3>
-          <p className="text-sm text-red-600 mt-1">
+        <div className="bg-red-50 border border-red-200 dark:bg-red-950/20 dark:border-red-900/30 rounded-md p-4 mb-4">
+          <h3 className="text-lg font-medium text-red-800 dark:text-red-400">Low Stock Alerts</h3>
+          <p className="text-sm text-red-600 dark:text-red-400/80 mt-1">
             The following items are below their stock threshold.
           </p>
         </div>

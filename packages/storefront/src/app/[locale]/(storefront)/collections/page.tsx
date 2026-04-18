@@ -103,7 +103,7 @@ async function CollectionsPageContent({ params }: { params: Promise<{ locale: st
       <section className="mb-16 lg:mb-20">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl lg:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-            {t("TrendingCategoriesTitle") || "Trending Categories"}
+            {tNav("TrendingCategories") || "Trending Categories"}
           </h2>
         </div>
         <div className="grid gap-6 grid-cols-2 md:grid-cols-4 lg:grid-cols-6">

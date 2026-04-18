@@ -1,6 +1,7 @@
 import { routing } from "@i18n/routing";
 import { Inter, Cairo } from "next/font/google";
 import { cn } from "@lib/utils";
+import { ThemeProvider } from "@/providers/ThemeProvider";
 import "./globals.css";
 
 const inter = Inter({
@@ -32,7 +33,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         suppressHydrationWarning
         className={cn("font-sans antialiased", locale === "ar" ? "font-arabic" : "font-inter")}
       >
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

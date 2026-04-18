@@ -1,6 +1,7 @@
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import Providers from "@/providers/Providers";
+import { ThemeProvider } from "@/providers/ThemeProvider";
 import { Toaster } from "@ui";
 import { routing } from "@i18n/routing";
 import { notFound } from "next/navigation";
@@ -41,13 +42,20 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} dir={locale === "ar" ? "rtl" : "ltr"} suppressHydrationWarning>
-      <body className="antialiased">
-        <NextIntlClientProvider locale={locale} messages={messages}>
-          <Providers>
-            {children}
-            <Toaster />
-          </Providers>
-        </NextIntlClientProvider>
+      <body className="antialiased" suppressHydrationWarning>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <NextIntlClientProvider locale={locale} messages={messages}>
+            <Providers>
+              {children}
+              <Toaster />
+            </Providers>
+          </NextIntlClientProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

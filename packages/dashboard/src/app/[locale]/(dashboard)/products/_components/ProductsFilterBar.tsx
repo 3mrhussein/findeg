@@ -204,7 +204,7 @@ export function ProductsFilterBar({
         </DropdownMenu>
 
         {/* Status — Segmented Control */}
-        <div className="flex rounded-lg border border-gray-200 overflow-hidden text-sm">
+        <div className="flex rounded-lg border border-gray-200 dark:border-slate-800 overflow-hidden text-sm">
           {(["all", "active", "inactive"] as const).map((s) => (
             <button
               key={s}
@@ -213,7 +213,7 @@ export function ProductsFilterBar({
                 "px-3 py-1.5 capitalize transition-colors",
                 (s === "all" && !filters.status) || filters.status === s
                   ? "bg-indigo-600 text-white"
-                  : "bg-white text-gray-600 hover:bg-gray-50",
+                  : "bg-white dark:bg-slate-900 text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800/50",
               )}
             >
               {s === "all" ? "All" : s.charAt(0).toUpperCase() + s.slice(1)}

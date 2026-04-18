@@ -90,71 +90,77 @@ export default async function AuditLogPage({
         </div>
       </form>
 
-      <div className="bg-white shadow rounded-lg overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+      <div className="bg-white dark:bg-slate-900 shadow rounded-lg overflow-hidden border border-transparent dark:border-slate-800">
+        <table className="min-w-full divide-y divide-gray-200 dark:divide-slate-800">
+          <thead className="bg-gray-50 dark:bg-slate-800/50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">
                 Timestamp
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">
                 Admin
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">
                 Action
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">
                 Entity
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">
                 Details
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wider">
                 Link
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-white dark:bg-slate-900 divide-y divide-gray-200 dark:divide-slate-800">
             {logs.map((log) => (
-              <tr key={log.id}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <tr key={log.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/30">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-slate-400">
                   {format(new Date(log.createdAt), "yyyy-MM-dd HH:mm:ss")}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-slate-200">
                   {log.adminUserId}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
-                  <Badge variant="outline">{log.action}</Badge>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-slate-200 font-medium">
+                  <Badge variant="outline" className="dark:text-slate-300 dark:border-slate-700">
+                    {log.action}
+                  </Badge>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-slate-400">
                   {log.entityType} #{log.entityId}
                 </td>
-                <td className="px-6 py-4 text-sm text-gray-500">
+                <td className="px-6 py-4 text-sm text-gray-500 dark:text-slate-400">
                   <details>
-                    <summary className="cursor-pointer underline decoration-dotted">
+                    <summary className="cursor-pointer underline decoration-dotted text-gray-900 dark:text-slate-300">
                       View Changes
                     </summary>
                     <div className="mt-2 space-y-2">
                       <div>
-                        <div className="text-xs uppercase text-gray-400">Old</div>
-                        <pre className="max-w-[480px] overflow-x-auto rounded bg-gray-50 p-2 text-xs">
+                        <div className="text-xs uppercase text-gray-400 dark:text-slate-500">
+                          Old
+                        </div>
+                        <pre className="max-w-[480px] overflow-x-auto rounded bg-gray-50 dark:bg-slate-800 p-2 text-xs text-slate-800 dark:text-slate-300">
                           {safeJson(log.oldValues)}
                         </pre>
                       </div>
                       <div>
-                        <div className="text-xs uppercase text-gray-400">New</div>
-                        <pre className="max-w-[480px] overflow-x-auto rounded bg-gray-50 p-2 text-xs">
+                        <div className="text-xs uppercase text-gray-400 dark:text-slate-500">
+                          New
+                        </div>
+                        <pre className="max-w-[480px] overflow-x-auto rounded bg-gray-50 dark:bg-slate-800 p-2 text-xs text-slate-800 dark:text-slate-300">
                           {safeJson(log.newValues)}
                         </pre>
                       </div>
                     </div>
                   </details>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-slate-400">
                   {buildEntityHref(log.entityType, log.entityId) ? (
                     <Link
                       href={buildEntityHref(log.entityType, log.entityId)!}
-                      className="text-blue-600 hover:underline"
+                      className="text-blue-600 dark:text-blue-400 hover:underline"
                     >
                       Open
                     </Link>
@@ -166,7 +172,10 @@ export default async function AuditLogPage({
             ))}
             {logs.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-6 py-10 text-center text-sm text-gray-500">
+                <td
+                  colSpan={6}
+                  className="px-6 py-10 text-center text-sm text-gray-500 dark:text-slate-500"
+                >
                   No audit entries found for current filters.
                 </td>
               </tr>
@@ -176,7 +185,7 @@ export default async function AuditLogPage({
       </div>
 
       <div className="mt-4 flex items-center justify-between">
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-gray-500 dark:text-slate-400">
           Showing {(page - 1) * LIMIT + 1}-{Math.min(page * LIMIT, total)} of {total}
         </p>
         <div className="flex gap-2">

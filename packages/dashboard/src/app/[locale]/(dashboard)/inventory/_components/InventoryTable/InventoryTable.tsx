@@ -180,7 +180,7 @@ export function InventoryTable({ products }: InventoryTableProps) {
         />
       </div>
 
-      <div className="rounded-md border bg-white">
+      <div className="rounded-md border bg-white dark:bg-slate-900 dark:border-slate-800">
         <Table>
           <TableHeader>
             <TableRow>
