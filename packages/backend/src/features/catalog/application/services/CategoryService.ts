@@ -18,4 +18,8 @@ export class CategoryService implements ICategoryService {
   async getBySlug(slug: Slug, language?: Locale): Promise<Category | null> {
     return this.categoryRepository.getBySlug(slug, language);
   }
+
+  async getTree(language?: Locale): Promise<Category[]> {
+    return this.categoryRepository.getTree(language);
+  }
 }

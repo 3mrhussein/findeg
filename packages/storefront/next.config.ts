@@ -44,7 +44,7 @@ const nextConfig: NextConfig = {
   typescript: {
     // Temporarily disabled while backend @features/* imports are being cleaned up (spec 005)
     // TODO: Re-enable after comprehensive backend import cleanup
-    ignoreBuildErrors: true,
+    // ignoreBuildErrors: true,
   },
   experimental: {
     //   turbopackFileSystemCacheForDev: true,

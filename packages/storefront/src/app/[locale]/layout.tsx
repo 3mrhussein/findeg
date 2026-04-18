@@ -10,6 +10,7 @@ import { Suspense } from "react";
 import { BoundaryProvider } from "@lib/internal/BoundaryProvider";
 import BoundaryToggle from "@lib/internal/BoundaryToggle";
 import { WebMCPInitializer } from "@components/shared/WebMCPInitializer";
+import { cn } from "@lib/utils";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -102,32 +103,17 @@ export default async function RootLayout({
   // Enable static rendering
   setRequestLocale(typedLocale);
   const messages = await getMessages({ locale: typedLocale });
+  const direction = typedLocale === "ar" ? "rtl" : "ltr";
+
   return (
-    <html lang={locale} dir={locale === "ar" ? "rtl" : "ltr"} suppressHydrationWarning>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=block"
-          rel="stylesheet"
-        />
-      </head>
-      <body
-        className={`${inter.variable} ${cairo.variable} font-sans bg-background text-foreground`}
-        suppressHydrationWarning
-      >
-        <NextIntlClientProvider locale={typedLocale} messages={messages}>
-          <BoundaryProvider>
-            <Providers>
-              <div className="min-h-screen bg-background text-foreground flex flex-col">
-                {children}
-              </div>
-              <BoundaryToggle />
-              <WebMCPInitializer />
-            </Providers>
-          </BoundaryProvider>
-        </NextIntlClientProvider>
-      </body>
-    </html>
+    <NextIntlClientProvider locale={typedLocale} messages={messages}>
+      <BoundaryProvider>
+        <Providers>
+          <div className="min-h-screen bg-background text-foreground flex flex-col">{children}</div>
+          <BoundaryToggle />
+          <WebMCPInitializer />
+        </Providers>
+      </BoundaryProvider>
+    </NextIntlClientProvider>
   );
 }

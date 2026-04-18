@@ -1,4 +1,4 @@
-import { getServices } from "@server/getServices";
+import { createCatalogServices } from "../services/factory";
 import { resolveLocale, type Locale } from "@features/core/domain/value-objects";
 import type { Product } from "@features/catalog/domain/entities/Product";
 import type { Category } from "@features/catalog/domain/entities/Category";
@@ -454,7 +454,7 @@ export async function getShopPlpViewModel(
 ): Promise<ShopPlpViewModel | null> {
   const resolvedLocale = resolveLocale(locale);
   const parsed = parseShopQuery(query);
-  const { categories, search } = getServices();
+  const { categories, search } = createCatalogServices();
 
   const allCategories = await categories.getAll(resolvedLocale);
   const categoryResolution = resolveCategoryFromSlugPath(allCategories, slugPath);

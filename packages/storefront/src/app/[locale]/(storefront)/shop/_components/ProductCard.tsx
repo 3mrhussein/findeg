@@ -9,7 +9,7 @@ import type { Product } from "@features/catalog/domain/entities/Product";
 import { ProductEntity } from "@features/catalog/domain/entities/Product";
 import { VariantEntity } from "@features/catalog/domain/entities/Variant";
 import type { UomCode } from "@features/core/domain/types/common";
-import { getCanonicalProductHref } from "@features/catalog/presentation/utils/product-url";
+import { getCanonicalProductHref } from "@backend/features/catalog/domain/utils/slug";
 import { useCart } from "@hooks/useCart";
 import { useToast } from "@hooks/use-toast";
 import { useUser } from "@hooks/useUser";

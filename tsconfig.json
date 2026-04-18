@@ -21,13 +21,16 @@
     ],
     "paths": {
       "@backend": ["./packages/backend/src"],
+      "@backend/*": ["./packages/backend/src/*"],
+      "@ui": ["./packages/ui/src"],
+      "@ui/*": ["./packages/ui/src/*"],
+      "@storefront/*": ["./packages/storefront/src/*"],
+      "@dashboard/*": ["./packages/dashboard/src/*"]
     }
   },
   "references": [
     { "path": "./packages/backend" },
-    { "path": "./packages/ui" },
-    { "path": "./packages/dashboard" },
-    { "path": "./packages/storefront" }
+    { "path": "./packages/ui" }
   ],
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.mts", ".next/types/**/*.ts"],
   "exclude": [

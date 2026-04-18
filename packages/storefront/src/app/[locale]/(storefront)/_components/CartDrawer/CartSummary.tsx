@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@i18n/navigation";
 import { Button } from "@ui";
 import { Separator } from "@ui";
 import { SheetClose, SheetFooter } from "@ui";

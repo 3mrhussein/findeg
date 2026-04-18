@@ -25,6 +25,7 @@ import { CollectionService } from "./CollectionService";
 import { SearchService } from "./SearchService";
 import { InventoryService } from "./InventoryService";
 import { SchoolListService } from "./SchoolListService";
+import { BrandService } from "./BrandService";
 import { AdminSearchAnalyticsService } from "./AdminSearchAnalyticsService";
 
 /**
@@ -69,6 +70,7 @@ export function createCatalogServices() {
     search: new SearchService(productRepository),
     inventory: new InventoryService(inventoryRepository),
     schoolLists: new SchoolListService(schoolListRepository),
+    brands: new BrandService(brandRepository),
     adminSearchAnalytics: new AdminSearchAnalyticsService(adminSearchAnalyticsRepository),
   };
 }

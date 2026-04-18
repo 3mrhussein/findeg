@@ -1,0 +1,45 @@
+
+> @dashboard@0.1.0 type-check /Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/packages/dashboard
+> tsc --noEmit
+
+src/actions/auth-actions.ts(75,12): error TS2345: Argument of type 'string' is not assignable to parameter of type '{ href: string | { pathname: string; query?: QueryParams | undefined; }; locale: string; forcePrefix?: boolean | undefined; }'.
+src/actions/auth-actions.ts(90,14): error TS2345: Argument of type 'string' is not assignable to parameter of type '{ href: string | { pathname: string; query?: QueryParams | undefined; }; locale: string; forcePrefix?: boolean | undefined; }'.
+src/actions/auth-actions.ts(97,14): error TS2345: Argument of type 'string' is not assignable to parameter of type '{ href: string | { pathname: string; query?: QueryParams | undefined; }; locale: string; forcePrefix?: boolean | undefined; }'.
+src/app/[locale]/(dashboard)/account/page.tsx(68,24): error TS2741: Property 'userId' is missing in type 'AdminUser' but required in type '{ userId: string | number; firstName?: string | null | undefined; lastName?: string | null | undefined; email?: string | null | undefined; }'.
+src/app/[locale]/(dashboard)/account/page.tsx(77,40): error TS2339: Property 'orders' does not exist on type 'AdminUser'.
+src/app/[locale]/(dashboard)/catalog/collections/_components/CollectionForm.tsx(5,56): error TS6137: Cannot import type declaration files. Consider importing 'admin-inputs' instead of '@types/admin-inputs'.
+src/app/[locale]/(dashboard)/catalog/collections/_components/CollectionForm.tsx(82,70): error TS2345: Argument of type '{ slug: string; localizedTitle: { en: string; ar: string; }; sortOrder: number; isActive: boolean; tagIds: number[]; localizedSubtitle?: { en?: string | undefined; ar?: string | undefined; } | undefined; heroImageUrl?: string | undefined; }' is not assignable to parameter of type '{ slug: string; localizedTitle: { en: string; ar: string; }; sortOrder: number; isActive: boolean; tagIds: number[]; localizedSubtitle?: { en: string; ar: string; } | undefined; heroImageUrl?: string | undefined; }'.
+  Types of property 'localizedSubtitle' are incompatible.
+    Type '{ en?: string | undefined; ar?: string | undefined; } | undefined' is not assignable to type '{ en: string; ar: string; } | undefined'.
+      Type '{ en?: string | undefined; ar?: string | undefined; }' is not assignable to type '{ en: string; ar: string; }'.
+        Types of property 'en' are incompatible.
+          Type 'string | undefined' is not assignable to type 'string'.
+            Type 'undefined' is not assignable to type 'string'.
+src/app/[locale]/(dashboard)/catalog/collections/_components/CollectionForm.tsx(83,45): error TS2345: Argument of type '{ slug: string; localizedTitle: { en: string; ar: string; }; sortOrder: number; isActive: boolean; tagIds: number[]; localizedSubtitle?: { en?: string | undefined; ar?: string | undefined; } | undefined; heroImageUrl?: string | undefined; }' is not assignable to parameter of type '{ slug: string; localizedTitle: { en: string; ar: string; }; sortOrder: number; isActive: boolean; tagIds: number[]; localizedSubtitle?: { en: string; ar: string; } | undefined; heroImageUrl?: string | undefined; }'.
+  Types of property 'localizedSubtitle' are incompatible.
+    Type '{ en?: string | undefined; ar?: string | undefined; } | undefined' is not assignable to type '{ en: string; ar: string; } | undefined'.
+      Type '{ en?: string | undefined; ar?: string | undefined; }' is not assignable to type '{ en: string; ar: string; }'.
+        Types of property 'en' are incompatible.
+          Type 'string | undefined' is not assignable to type 'string'.
+            Type 'undefined' is not assignable to type 'string'.
+src/app/[locale]/(dashboard)/catalog/tags/_components/TagDrawer.tsx(6,26): error TS6137: Cannot import type declaration files. Consider importing 'admin-inputs' instead of '@types/admin-inputs'.
+src/app/[locale]/(dashboard)/catalog/tags/_components/TagDrawer.tsx(32,61): error TS2345: Argument of type '{ group: string; key: string; slug: string; icon: string; color: string; isActive: boolean; scope: "catalog" | "system" | "school" | "campaign" | "search" | "editorial"; }' is not assignable to parameter of type '{ group: string; key: string; slug: string; icon: string; color: string; isActive: boolean; scope: "catalog" | "system" | "school" | "campaign"; }'.
+  Types of property 'scope' are incompatible.
+    Type '"catalog" | "system" | "school" | "campaign" | "search" | "editorial"' is not assignable to type '"catalog" | "system" | "school" | "campaign"'.
+      Type '"search"' is not assignable to type '"catalog" | "system" | "school" | "campaign"'.
+src/app/[locale]/(dashboard)/catalog/tags/_components/TagDrawer.tsx(32,91): error TS2345: Argument of type '{ group: string; key: string; slug: string; icon: string; color: string; isActive: boolean; scope: "catalog" | "system" | "school" | "campaign" | "search" | "editorial"; }' is not assignable to parameter of type '{ group: string; key: string; slug: string; icon: string; color: string; isActive: boolean; scope: "catalog" | "system" | "school" | "campaign"; }'.
+  Types of property 'scope' are incompatible.
+    Type '"catalog" | "system" | "school" | "campaign" | "search" | "editorial"' is not assignable to type '"catalog" | "system" | "school" | "campaign"'.
+      Type '"search"' is not assignable to type '"catalog" | "system" | "school" | "campaign"'.
+src/app/[locale]/(dashboard)/catalog/tags/_components/TagFormPanel.tsx(24,42): error TS6137: Cannot import type declaration files. Consider importing 'admin-inputs' instead of '@types/admin-inputs'.
+src/app/[locale]/(dashboard)/categories/[id]/edit/page.tsx(39,28): error TS2339: Property 'translations' does not exist on type 'Category'.
+src/app/[locale]/(dashboard)/categories/CategoryForm/CategoryForm.tsx(9,31): error TS6137: Cannot import type declaration files. Consider importing 'admin-inputs' instead of '@types/admin-inputs'.
+src/app/[locale]/(dashboard)/products/_components/ProductsClient.tsx(62,11): error TS1345: An expression of type 'void' cannot be tested for truthiness.
+src/app/[locale]/(dashboard)/products/_components/ProductsContent.tsx(40,37): error TS2339: Property 'total' does not exist on type '{ id: number; name: string; description: string; longDescription: string; rating: number; reviewsCount: number; skuPrefix?: string | undefined; locale?: string | undefined; localizedContent?: { ...; } | undefined; ... 10 more ...; updatedAt?: Date | undefined; }[]'.
+src/app/[locale]/(dashboard)/products/_components/ProductsContent.tsx(52,9): error TS2739: Type '{ id: number; name: string; description: string; longDescription: string; rating: number; reviewsCount: number; skuPrefix?: string | undefined; locale?: string | undefined; localizedContent?: { ...; } | undefined; ... 10 more ...; updatedAt?: Date | undefined; }[]' is missing the following properties from type 'ProductListResult': products, total, page, pageSize
+src/app/[locale]/(dashboard)/users/_actions/adminUsers.ts(33,49): error TS2345: Argument of type '{ email: string; password: string; nameEn: string; nameAr: string; roleIds: any; }' is not assignable to parameter of type 'CreateAdminInput'.
+  Type '{ email: string; password: string; nameEn: string; nameAr: string; roleIds: any; }' is missing the following properties from type 'CreateAdminInput': firstName, lastName
+src/app/[locale]/(dashboard)/users/page.tsx(24,14): error TS2345: Argument of type 'string' is not assignable to parameter of type '{ href: string | { pathname: string; query?: QueryParams | undefined; }; locale: string; forcePrefix?: boolean | undefined; }'.
+/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/packages/dashboard:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @dashboard@0.1.0 type-check: `tsc --noEmit`
+Exit status 2

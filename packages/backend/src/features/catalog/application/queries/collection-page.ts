@@ -1,4 +1,4 @@
-import { getServices } from "@server/getServices";
+import { createCatalogServices } from "../services/factory";
 import { resolveLocale } from "@features/core/domain/value-objects";
 import { Product } from "@features/catalog/domain/entities/Product";
 import { Collection } from "@features/catalog/domain/entities/Collection";
@@ -31,7 +31,7 @@ export async function getCollectionPageViewModel(
   query: { [key: string]: string | string[] | undefined },
 ): Promise<CollectionPageViewModel | null> {
   const resolvedLocale = resolveLocale(locale);
-  const { collections, products, categories } = getServices();
+  const { collections, products, categories } = createCatalogServices();
 
   const collection = await collections.getCollectionBySlug(slug);
   if (!collection) return null;

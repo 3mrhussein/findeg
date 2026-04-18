@@ -1,6 +1,7 @@
 "use client";
 
 import useSWR from "swr";
+import { getCategoryTreeAction } from "@/app/[locale]/(storefront)/_actions/catalog";
 
 export interface Category {
   id: number;
@@ -14,11 +15,6 @@ export interface Category {
 }
 
 /**
- *
- */
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
-
-/**
  * Fetches the hierarchical category tree.
  * Caches for 5 minutes (300,000 ms).
  *
@@ -27,8 +23,8 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
  */
 export function useCategories(locale: string = "en", type: string = "tree") {
   const { data, error, isLoading } = useSWR<Category[]>(
-    `/api/v1/categories?lang=${locale}&type=${type}`,
-    fetcher,
+    ["categories", locale, type],
+    () => getCategoryTreeAction(locale),
     {
       dedupingInterval: 300000, // 5 minutes
       revalidateOnFocus: false,

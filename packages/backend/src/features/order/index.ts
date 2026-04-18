@@ -5,9 +5,8 @@ export type { IOrderRepository } from "./application/interfaces/IOrderRepository
 // and cannot be exported. Apps should implement their own actions.
 // export * from "./application/actions/order"; // REMOVED
 
-// NOTE: createOrderServices factory NOT exported because it returns service classes
-// that have @ dependencies. Apps should implement own service wrappers.
-// export { createOrderServices, type OrderServices } from "./application/services"; // REMOVED
+// Service factory for apps to create service instances
+export { createOrderServices, type OrderServices } from "./application/services/factory";
 
 // Utility exports (pure TypeScript, no @ imports)
 export * from "./application/utils/order-status-transitions";

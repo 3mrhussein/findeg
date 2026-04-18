@@ -28,9 +28,11 @@ export interface AdminUser {
   firstName: string | null;
   lastName: string | null;
   isActive: boolean;
+  portalRole?: string;
   roles: AdminUserRole[];
   permissionOverrides: PermissionOverride[];
   createdAt: string;
+  updatedAt?: string;
 }
 
 export interface CreateAdminInput {

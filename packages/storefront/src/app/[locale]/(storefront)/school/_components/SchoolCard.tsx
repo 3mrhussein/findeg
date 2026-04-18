@@ -5,7 +5,7 @@ import { MapPin, School, GraduationCap, ChevronRight, CheckCircle2, History } fr
 import { Card, CardContent, CardFooter } from "@ui";
 import { Badge } from "@ui";
 import { Button } from "@ui";
-import Link from "next/link";
+import { Link } from "@i18n/navigation";
 import { SchoolSearchResult } from "@features/school/application/interfaces/ISchoolDirectoryService";
 
 interface SchoolCardProps {

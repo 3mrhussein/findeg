@@ -1,7 +1,9 @@
-import { getServices } from "@server/getServices";
+import { getSchoolListPageData } from "@/data/school/queries";
+import { createSchoolServices } from "@backend/features/school/application/services/factory";
 import { getOptionalSession } from "@lib/auth-guard";
 import { SchoolAuthWall } from "@app/[locale]/(storefront)/school/_components/SchoolAuthWall";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
+import { redirect } from "@i18n/navigation";
 import { ListPageClient } from "./ListPageClient";
 
 interface PageProps {
@@ -23,33 +25,26 @@ export default async function DirectListPage({ params, searchParams }: PageProps
     return <SchoolAuthWall listTitle={slug.replace(/-/g, " ")} />;
   }
 
-  const { schoolLists, schoolAccess, parentList } = getServices();
+  const pageData = await getSchoolListPageData(slug, session?.userId || null);
+  if (!pageData) return notFound();
 
-  // 1. Fetch the list
-  const list = await schoolLists.getListBySlug(slug);
-  if (!list) return notFound();
+  const { list, accessState, sessionState, fullList } = pageData;
 
-  // 2. Token Check (if present)
+  // 2. Token Check (if present) — This handles access granting (side-effect)
   if (token) {
+    const { schoolAccess } = createSchoolServices();
     const tokenRecord = await schoolAccess.validateToken(token);
     if (tokenRecord && tokenRecord.listId === list.id) {
-      await schoolAccess.grantAccessViaToken(list.id, session.userId, tokenRecord.id);
-      redirect(`/lists/${slug}`);
+      await schoolAccess.grantAccessViaToken(list.id, session!.userId, tokenRecord.id);
+      redirect({ href: `/lists/${slug}`, locale });
     }
   }
 
   // 3. Final Access Verification
-  const accessState = await schoolAccess.getAccessState(list.id, session.userId);
   if (accessState !== "granted" && accessState !== "public") {
     const schoolSlug = list.schoolName.toLowerCase().replace(/\s+/g, "-");
-    redirect(`/schools/${schoolSlug}?restricted=${list.id}`);
+    redirect({ href: `/schools/${schoolSlug}?restricted=${list.id}`, locale });
   }
-
-  // 4. Fetch Parent Session State
-  const sessionState = await parentList.getSessionState(list.id, session.userId);
-
-  // 5. Build full list data for client
-  const fullList = await parentList.getListWithDetails(slug);
 
   return (
     <ListPageClient list={fullList} initialSessionState={sessionState} sessionUser={session} />

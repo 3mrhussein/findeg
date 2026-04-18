@@ -85,7 +85,7 @@ export interface CreateProductWithVariantsInput {
 export interface UpdateProductWithVariantsInput extends Partial<
   Omit<CreateProductWithVariantsInput, "variants">
 > {
-  variants?: UpdateVariantInput[];
+  variants?: (UpdateVariantInput | CreateVariantInput)[];
   variantsToDelete?: number[];
   variantsToDeactivate?: number[];
 }

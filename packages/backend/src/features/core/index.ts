@@ -6,6 +6,7 @@
 export * from "./domain/auth";
 export * from "./domain/value-objects";
 export * from "./domain/types/primitives"; // Simple schemas without @ deps
+export * from "./domain/types/Notification";
 export * from "./domain/errors";
 export * from "./domain/constants/messages";
 export * from "./domain/constants/auth";
@@ -28,12 +29,15 @@ export * from "./application/types";
  * CookieSessionProvider NOT exported because it (via JwtSessionManager) has @ imports
  * that break Turbopack bundling. Apps should implement their own session provider
  * or use a lightweight adapter pattern.
- * 
+ *
  * @deprecated CookieSessionProvider is infrastructure and should not be used by apps.
  * This export was temporary to unblock dashboard session management during migration.
  * Target: Remove by 2026-05-01
  */
-// export { CookieSessionProvider, type ICookieStore } from "./infrastructure/auth/CookieSessionProvider"; // REMOVED
+export {
+  CookieSessionProvider,
+  type ICookieStore,
+} from "./infrastructure/auth/CookieSessionProvider";
 
 // ========================================
 // INFRASTRUCTURE EXPORTS REMOVED
@@ -54,4 +58,3 @@ export * from "./application/types";
 // Use:
 //   import { someQuery, someAction } from '@backend/features/[feature]';
 //   const result = await someQuery(...);
-

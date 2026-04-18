@@ -60,7 +60,7 @@ export class AdminProductService implements IAdminProductService {
     private brandRepository?: IBrandRepository,
     private auditLogService?: IAuditLogService,
     private mediaService?: MediaService,
-  ) { }
+  ) {}
 
   // ─── Read ──────────────────────────────────────────────────────────────────
 
@@ -325,11 +325,11 @@ export class AdminProductService implements IAdminProductService {
       const variants =
         input.pricingMode === "shared"
           ? input.variants.map((v) => ({
-            ...v,
-            basePrice: input.sharedBasePrice ?? v.basePrice,
-            strikePrice: input.sharedStrikePrice ?? v.strikePrice ?? null,
-            costPrice: input.sharedCostPrice ?? v.costPrice ?? null,
-          }))
+              ...v,
+              basePrice: input.sharedBasePrice ?? v.basePrice,
+              strikePrice: input.sharedStrikePrice ?? v.strikePrice ?? null,
+              costPrice: input.sharedCostPrice ?? v.costPrice ?? null,
+            }))
           : input.variants;
 
       for (let i = 0; i < variants.length; i++) {
@@ -413,7 +413,7 @@ export class AdminProductService implements IAdminProductService {
 
       // Upsert variants provided
       for (const v of input.variants ?? []) {
-        if (v.id) {
+        if ("id" in v && v.id) {
           // Update existing variant
           await tx
             .update(productVariants)
@@ -436,7 +436,7 @@ export class AdminProductService implements IAdminProductService {
             if (v.images.length) {
               await tx.insert(variantImages).values(
                 v.images.map((img) => ({
-                  variantId: v.id!,
+                  variantId: v.id,
                   url: img.url,
                   alt: img.alt ?? null,
                   displayOrder: img.displayOrder,

@@ -3,7 +3,7 @@ import { FadeIn } from "@providers/animation-provider";
 import { getTranslations } from "next-intl/server";
 import type { Locale } from "next-intl";
 import { SchoolListLookupForm } from "./_components/SchoolListLookupForm";
-import { getSchoolListViewModel } from "@features/school/application/queries/school-list";
+import { getSchoolListData } from "@/data/school/queries";
 import { Card, CardContent, CardHeader, CardTitle } from "@ui";
 import { SchoolListResults } from "./_components/SchoolListResults";
 import { SectionStateEmpty } from "@components/shared/state/SectionStateEmpty";
@@ -20,7 +20,7 @@ export default async function SchoolPage({ params, searchParams }: SchoolPagePro
   const { locale } = await params;
   const { code = "" } = await searchParams;
   const t = await getTranslations({ locale: locale as Locale });
-  const viewModel = await getSchoolListViewModel(locale, code);
+  const viewModel = await getSchoolListData(locale, code);
 
   return (
     <div className="bg-background py-12 md:py-20">

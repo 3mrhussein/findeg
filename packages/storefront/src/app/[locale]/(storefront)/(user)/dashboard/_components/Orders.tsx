@@ -1,4 +1,4 @@
-import { usePagination } from "@hooks";
+import { usePagination } from "@hooks/usePagination";
 import { OrderTable } from "./OrderTable";
 import { Pagination } from "@ui";
 import { Card, CardContent } from "@ui";

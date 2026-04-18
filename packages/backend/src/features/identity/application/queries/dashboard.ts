@@ -5,7 +5,8 @@
  * App-layer catches errors and handles redirect/error responses.
  */
 
-import { getServices } from "@server/getServices";
+import { createCatalogServices } from "@features/catalog";
+import { createOrderServices } from "@features/order";
 import { NotAuthenticatedError } from "@features/core/domain/errors";
 import { resolveLocale } from "@features/core/domain/value-objects";
 import type { Product } from "@features/catalog/domain/entities/Product";
@@ -41,11 +42,12 @@ export async function getDashboardData(
   }
 
   const resolvedLocale = resolveLocale(locale);
-  const { products, schoolLists, repositories } = getServices();
+  const { products, schoolLists } = createCatalogServices();
+  const { orders } = createOrderServices();
 
   const [allProducts, userOrders, allSchoolLists] = await Promise.all([
     products.getAll(resolvedLocale),
-    repositories.orders.getByUserId(userId),
+    orders.getByUserId(userId),
     schoolLists.getAllLists(),
   ]);
 
@@ -56,4 +58,3 @@ export async function getDashboardData(
     // Session is provided by app-layer
   };
 }
-

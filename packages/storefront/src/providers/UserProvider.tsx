@@ -14,11 +14,14 @@ export interface UserContextType {
 
 export const UserContext = createContext<UserContextType | undefined>(undefined);
 
+import { getCurrentUserAction } from "@/app/[locale]/(storefront)/_actions/user";
+
+// ... (types)
+
 /**
  * Global User State Provider
  *
  * Manages the current user session on the client.
- * Fetches the session from /api/v1/auth/me on mount.
  */
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -30,10 +33,9 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
      */
     const fetchSession = async () => {
       try {
-        const response = await fetch("/api/v1/auth/me");
-        if (response.ok) {
-          const { data } = await response.json();
-          const session = data.user;
+        const data = await getCurrentUserAction();
+        if (data) {
+          const session = data;
           setCurrentUser({
             name: session.user.firstName || session.user.email,
             email: session.user.email,
@@ -68,11 +70,11 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
    *
    */
   const toggleWishlistItem = (productId: number) => {
-    setCurrentUser((prevUser) => {
+    setCurrentUser((prevUser: User | null) => {
       if (!prevUser) return null;
 
       const newWishlist = prevUser.wishlist.includes(productId)
-        ? prevUser.wishlist.filter((id) => id !== productId)
+        ? prevUser.wishlist.filter((id: number) => id !== productId)
         : [...prevUser.wishlist, productId];
 
       return { ...prevUser, wishlist: newWishlist };

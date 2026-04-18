@@ -1,6 +1,6 @@
 /**
  * Identity Services Factory (Pure TypeScript - Framework Agnostic)
- * 
+ *
  * Exports factory function that returns identity service instances.
  * Apps call this factory to get services, then wrap service calls in "use cache" directives.
  */
@@ -14,19 +14,19 @@ import { AdminRoleService } from "./AdminRoleService";
 
 /**
  * Create identity services with all dependencies wired
- * 
+ *
  * @returns Object containing all identity service instances
- * 
+ *
  * @example
  * ```ts
  * // In app data layer (dashboard/src/data/users/queries.ts):
  * "use cache";
  * import { createIdentityServices } from '@backend/features/identity';
- * 
+ *
  * export async function getAdmins() {
  *   cacheTag('admins');
  *   cacheLife('minutes');
- *   
+ *
  *   const { adminUsers } = createIdentityServices();
  *   return await adminUsers.listAdmins();
  * }
@@ -35,10 +35,11 @@ import { AdminRoleService } from "./AdminRoleService";
 export function createIdentityServices() {
   // Create repositories (no arguments - they use singleton db connection)
   const userRepository = new DrizzleUserRepository();
-  
+
   // Create services (inject dependencies)
   return {
     auth: new AuthService(userRepository),
+    users: userRepository,
     permissions: new PermissionService(userRepository),
     jwt: new JWTService(), // Uses env vars for secrets
     adminUsers: new AdminUserService(),

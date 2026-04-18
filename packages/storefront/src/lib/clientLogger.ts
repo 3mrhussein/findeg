@@ -21,7 +21,7 @@ export const clientLogger = {
     };
 
     // Use fire-and-forget to avoid blocking UI
-    logRequestAction(logData).catch((err) => {
+    logRequestAction(logData).catch((err: any) => {
       // Last resort fallback
       console.error("Client logging failed:", err);
     });

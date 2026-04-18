@@ -32,6 +32,17 @@ const config = [
       "no-restricted-imports": [
         "error",
         {
+          paths: [
+            {
+              name: "next/navigation",
+              importNames: ["useRouter", "usePathname", "redirect", "Link"],
+              message: "Please use @i18n/navigation instead to ensure localized routing."
+            },
+            {
+              name: "next/link",
+              message: "Please use @i18n/navigation instead to ensure localized routing."
+            }
+          ],
           patterns: [
             "@presentation/storefront/*",
             "src/presentation/storefront/*",

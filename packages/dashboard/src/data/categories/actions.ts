@@ -8,6 +8,8 @@
 
 import { revalidatePath, updateTag } from "next/cache";
 import { createAdministrationServices } from "@backend/features/administration";
+import type { CategoryInput } from "@backend/features/administration/domain/types";
+import { getErrorMessage } from "@lib/type-guards";
 
 /**
  * Create a new category
@@ -15,19 +17,19 @@ import { createAdministrationServices } from "@backend/features/administration";
  * @param input - Category data (name, slug, parentId, etc.)
  * @returns Success/error result
  */
-export async function createCategoryAction(input: any) {
+export async function createCategoryAction(input: CategoryInput) {
   try {
     const { categories } = createAdministrationServices();
     const result = await categories.create(input);
 
     // Invalidate all category caches
     updateTag("categories");
-    revalidatePath("/admin/categories");
+    revalidatePath("/categories");
 
     return { success: true, data: result };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[createCategoryAction] Error:", error);
-    return { success: false, error: error?.message || "Failed to create category" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
@@ -38,7 +40,7 @@ export async function createCategoryAction(input: any) {
  * @param input - Updated category data
  * @returns Success/error result
  */
-export async function updateCategoryAction(id: number, input: any) {
+export async function updateCategoryAction(id: number, input: CategoryInput) {
   try {
     const { categories } = createAdministrationServices();
     const result = await categories.update(id, input);
@@ -46,13 +48,13 @@ export async function updateCategoryAction(id: number, input: any) {
     // Invalidate category detail and lists
     updateTag("categories");
     updateTag(`category-${id}`);
-    revalidatePath("/admin/categories");
-    revalidatePath(`/admin/categories/${id}`);
+    revalidatePath("/categories");
+    revalidatePath(`/categories/${id}`);
 
     return { success: true, data: result };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[updateCategoryAction] Error:", error);
-    return { success: false, error: error?.message || "Failed to update category" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
@@ -70,12 +72,12 @@ export async function deleteCategoryAction(id: number) {
     // Invalidate all category caches
     updateTag("categories");
     updateTag(`category-${id}`);
-    revalidatePath("/admin/categories");
+    revalidatePath("/categories");
 
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[deleteCategoryAction] Error:", error);
-    return { success: false, error: error?.message || "Failed to delete category" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
@@ -92,11 +94,11 @@ export async function reorderCategoriesAction(items: { id: number; sortOrder: nu
 
     // Invalidate all category caches
     updateTag("categories");
-    revalidatePath("/admin/categories");
+    revalidatePath("/categories");
 
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[reorderCategoriesAction] Error:", error);
-    return { success: false, error: error?.message || "Failed to reorder categories" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }

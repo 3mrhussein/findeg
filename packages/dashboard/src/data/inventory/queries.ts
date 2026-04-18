@@ -23,13 +23,13 @@ export async function getInventoryWithProducts(options?: {
   cacheTag("inventory");
 
   const { inventory } = createAdministrationServices();
-  const result = await inventory.getInventory({
-    includeZeroStock: options?.includeZeroStock ?? false,
-    limit: options?.limit,
-    offset: options?.offset,
-  });
+  const result = await inventory.getInventory(
+    options?.includeZeroStock ?? false,
+    options?.limit,
+    options?.offset,
+  );
 
-  return result || [];
+  return result || { products: [], total: 0 };
 }
 
 /**

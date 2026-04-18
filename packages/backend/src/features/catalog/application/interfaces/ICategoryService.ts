@@ -35,4 +35,12 @@ export interface ICategoryService {
    * @returns The category if found, null otherwise.
    */
   getBySlug(slug: string, language?: Locale): Promise<Category | null>;
+
+  /**
+   * Retrieves the complete category hierarchy as a tree.
+   *
+   * @param language - Optional language for localized content.
+   * @returns A list of root categories with nested children.
+   */
+  getTree(language?: Locale): Promise<Category[]>;
 }

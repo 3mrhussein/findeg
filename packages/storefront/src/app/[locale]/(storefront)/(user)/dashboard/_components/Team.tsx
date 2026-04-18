@@ -27,9 +27,7 @@ import { Icon } from "@ui";
 import { PERMISSION_CODES } from "@backend/features/core";
 import { usePermissions } from "@providers/PermissionsProvider";
 // @ts-ignore
-import { useAdminUsers } from "@hooks/useAdminUsers";
-import type { User } from "@backend/features/identity";
-export type AdminUser = User & { roles: any[]; isActive?: boolean; permissionOverrides?: any };
+import { useAdminUsers, type AdminUser } from "@hooks/useAdminUsers";
 import { AdminStatsBar } from "./team/AdminStatsBar";
 import { AdminActionsMenu } from "./team/AdminActionsMenu";
 import { AdminUserRow, AdminUserRowSkeleton } from "./team/AdminUserRow";

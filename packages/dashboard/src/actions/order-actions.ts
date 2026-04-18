@@ -9,6 +9,7 @@
 
 import { updateTag } from "next/cache";
 import { createAdministrationServices } from "@backend/features/administration";
+import { getErrorMessage } from "@lib/type-guards";
 
 /**
  * Server Action: Update order status
@@ -23,9 +24,9 @@ export async function updateOrderStatusAction(orderId: number, input: any) {
 
     updateTag("orders");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[updateOrderStatusAction]", error);
-    return { success: false, error: error?.message || "Failed to update order status" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
@@ -42,8 +43,8 @@ export async function updateOrderPaymentStatusAction(orderId: number, paymentSta
 
     updateTag("orders");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[updateOrderPaymentStatusAction]", error);
-    return { success: false, error: error?.message || "Failed to update payment status" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }

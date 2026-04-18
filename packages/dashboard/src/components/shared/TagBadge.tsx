@@ -5,6 +5,7 @@ import { Badge, BadgeProps } from "@ui";
 import { Tag } from "@backend/features/catalog";
 import { cn } from "@lib/utils";
 import * as LucideIcons from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 interface TagBadgeProps extends BadgeProps {
   tag: Tag;
@@ -75,7 +76,9 @@ export function TagBadge({ tag, showGroup = false, className, ...props }: TagBad
         </span>
       )}
       {(() => {
-        const Icon = tag.icon ? (LucideIcons as any)[tag.icon] : null;
+        const Icon = tag.icon
+          ? ((LucideIcons as unknown as Record<string, LucideIcon>)[tag.icon] as LucideIcon)
+          : null;
         return Icon ? <Icon className="mr-1.5 h-3.5 w-3.5" /> : null;
       })()}
       {tag.key}

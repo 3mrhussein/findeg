@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@i18n/navigation";
 import { Product } from "@features/catalog/domain/entities/Product";
 import { Button } from "@ui";
 import { Price } from "@ui";

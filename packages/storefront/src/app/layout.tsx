@@ -1,17 +1,37 @@
-// Root layout for Next.js 16 App Router (required: must include <html> and <body> tags)
-import type { Metadata } from "next";
-import type { ReactNode } from "react";
+import { getLocale, getMessages } from "next-intl/server";
+import { Inter, Cairo } from "next/font/google";
+import { cn } from "@lib/utils";
 import "./globals.css";
 
-export const metadata: Metadata = {
-  title: "FindEg Storefront",
-  description: "FindEg E-commerce Platform - Customer Shop",
-};
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "900"],
+  variable: "--font-inter",
+});
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+const cairo = Cairo({
+  subsets: ["arabic"],
+  weight: ["300", "400", "500", "600", "700", "900"],
+  variable: "--font-cairo",
+});
+
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const locale = await getLocale();
+  const direction = locale === "ar" ? "rtl" : "ltr";
+
   return (
-    <html lang="en">
-      <body suppressHydrationWarning>{children}</body>
+    <html
+      lang={locale}
+      dir={direction}
+      suppressHydrationWarning
+      className={cn(inter.variable, cairo.variable)}
+    >
+      <body
+        suppressHydrationWarning
+        className={cn("font-sans antialiased", locale === "ar" ? "font-arabic" : "font-inter")}
+      >
+        {children}
+      </body>
     </html>
   );
 }

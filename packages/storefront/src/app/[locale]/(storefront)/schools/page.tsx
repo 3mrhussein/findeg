@@ -1,19 +1,13 @@
-import { getServices } from "@server/getServices";
-import { getOptionalSession } from "@lib/auth-guard";
-import { SchoolAuthWall } from "@app/[locale]/(storefront)/school/_components/SchoolAuthWall";
 import { SchoolCard } from "@app/[locale]/(storefront)/school/_components/SchoolCard";
-import {
-  SchoolSearchParams,
-  ISchoolDirectoryService,
-} from "@features/school/application/interfaces/ISchoolDirectoryService";
+import { searchSchools, getSchoolFilterOptions } from "@/data/school/queries";
+import type { SchoolSearchParams } from "@backend/features/school";
 import { Badge } from "@ui";
-import { governorates, schoolTypes, academicSystems } from "@features/school/domain/constants";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@ui";
 import { Input } from "@ui";
 import { Button } from "@ui";
 import { Search, SlidersHorizontal, PlusCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
-import Link from "next/link";
+import { Link } from "@i18n/navigation";
 
 interface PageProps {
   params: { locale: string };
@@ -34,14 +28,6 @@ interface PageProps {
  * Features search, filters, and a grid of schools.
  */
 export default async function SchoolsPage({ params, searchParams }: PageProps) {
-  const session = await getOptionalSession();
-
-  if (!session) {
-    return <SchoolAuthWall />;
-  }
-
-  const { schoolDirectory } = getServices();
-
   const searchParams_Parsed: SchoolSearchParams = {
     query: searchParams.q,
     governorate: searchParams.gov,
@@ -52,8 +38,8 @@ export default async function SchoolsPage({ params, searchParams }: PageProps) {
     pageSize: 12,
   };
 
-  const { items, totalCount } = await schoolDirectory.searchSchools(searchParams_Parsed);
-  const filterOptions = await schoolDirectory.getFilterOptions();
+  const { items, totalCount } = await searchSchools(searchParams_Parsed);
+  const filterOptions = await getSchoolFilterOptions();
 
   return (
     <div className="container mx-auto py-12 px-4 space-y-12">

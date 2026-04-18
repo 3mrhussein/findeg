@@ -1,7 +1,7 @@
 import { Locale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
-import Link from "next/link";
+import { Link } from "@i18n/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@ui";
 import { Button } from "@ui";
 import { Separator } from "@ui";

@@ -1,4 +1,4 @@
-import { getServices } from "@server/getServices";
+import { getSchoolProfile } from "@/data/school/queries";
 import { getOptionalSession } from "@lib/auth-guard";
 import { SchoolAuthWall } from "@app/[locale]/(storefront)/school/_components/SchoolAuthWall";
 import { SchoolProfileClient } from "./SchoolProfileClient";
@@ -24,23 +24,7 @@ export default async function SchoolProfilePage({ params }: PageProps) {
     return <SchoolAuthWall schoolName={params.slug.replace(/-/g, " ")} />;
   }
 
-  const { schoolDirectory, schoolAccess } = getServices();
-  const school = await schoolDirectory.getBySlug(params.slug);
-
-  if (!school) {
-    return notFound();
-  }
-
-  // Hydrate lists with access states for the current user
-  const listsWithAccess = await Promise.all(
-    school.lists.map(async (list: any) => {
-      const accessState = await schoolAccess.getAccessState(list.id, session.userId);
-      return {
-        ...list,
-        accessState,
-      };
-    }),
-  );
+  const school = await getSchoolProfile(params.slug, session.userId);
 
   return (
     <div className="container mx-auto py-12 px-4 space-y-12">
@@ -104,7 +88,7 @@ export default async function SchoolProfilePage({ params }: PageProps) {
             </h2>
           </div>
 
-          <SchoolProfileClient schoolName={school.name} initialLists={listsWithAccess} />
+          <SchoolProfileClient schoolName={school.name} initialLists={school.lists} />
         </div>
 
         {/* Sidebar: Info / Help */}

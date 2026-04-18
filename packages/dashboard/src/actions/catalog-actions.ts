@@ -10,20 +10,27 @@
 
 import { updateTag } from "next/cache";
 import { createAdministrationServices } from "@backend/features/administration";
+import type {
+  CreateProductWithVariantsInput,
+  UpdateProductWithVariantsInput,
+  BrandInput,
+  CategoryInput,
+} from "@backend/features/administration/domain/types";
+import { getErrorMessage } from "@lib/type-guards";
 
 /**
  * Server Action: Create new product
  */
-export async function createProductAction(input: any) {
+export async function createProductAction(input: CreateProductWithVariantsInput) {
   try {
     const { products } = createAdministrationServices();
     const result = await products.createProduct(input);
 
     updateTag("products");
     return { success: true, data: result };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[createProductAction]", error);
-    return { success: false, error: error?.message || "Failed to create product" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
@@ -37,41 +44,41 @@ export async function deleteProductAction(id: number) {
 
     updateTag("products");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[deleteProductAction]", error);
-    return { success: false, error: error?.message || "Failed to delete product" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
 /**
  * Server Action: Create new brand
  */
-export async function createBrandAction(input: any) {
+export async function createBrandAction(input: BrandInput) {
   try {
     const { brands } = createAdministrationServices();
     const result = await brands.create(input);
 
     updateTag("brands-admin");
     return { success: true, data: result };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[createBrandAction]", error);
-    return { success: false, error: error?.message || "Failed to create brand" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
 /**
  * Server Action: Update existing brand
  */
-export async function updateBrandAction(id: number, input: any) {
+export async function updateBrandAction(id: number, input: BrandInput) {
   try {
     const { brands } = createAdministrationServices();
     const result = await brands.update(id, input);
 
     updateTag("brands-admin");
     return { success: true, data: result };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[updateBrandAction]", error);
-    return { success: false, error: error?.message || "Failed to update brand" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
@@ -85,9 +92,9 @@ export async function deleteBrandAction(id: number) {
 
     updateTag("brands-admin");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[deleteBrandAction]", error);
-    return { success: false, error: error?.message || "Failed to delete brand" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
@@ -101,41 +108,41 @@ export async function toggleBrandStatusAction(id: number) {
 
     updateTag("brands-admin");
     return { success: true, data: result };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[toggleBrandStatusAction]", error);
-    return { success: false, error: error?.message || "Failed to toggle brand status" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
 /**
  * Server Action: Create new category
  */
-export async function createCategoryAction(input: any) {
+export async function createCategoryAction(input: CategoryInput) {
   try {
     const { categories } = createAdministrationServices();
     const result = await categories.create(input);
 
     updateTag("categories-admin");
     return { success: true, data: result };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[createCategoryAction]", error);
-    return { success: false, error: error?.message || "Failed to create category" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
 /**
  * Server Action: Update existing category
  */
-export async function updateCategoryAction(id: number, input: any) {
+export async function updateCategoryAction(id: number, input: CategoryInput) {
   try {
     const { categories } = createAdministrationServices();
     const result = await categories.update(id, input);
 
     updateTag("categories-admin");
     return { success: true, data: result };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[updateCategoryAction]", error);
-    return { success: false, error: error?.message || "Failed to update category" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
@@ -149,9 +156,9 @@ export async function deleteCategoryAction(id: number) {
 
     updateTag("categories-admin");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[deleteCategoryAction]", error);
-    return { success: false, error: error?.message || "Failed to delete category" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
@@ -165,9 +172,9 @@ export async function moveCategoryUpAction(id: number) {
 
     updateTag("categories-admin");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[moveCategoryUpAction]", error);
-    return { success: false, error: error?.message || "Failed to move category up" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
@@ -181,9 +188,9 @@ export async function moveCategoryDownAction(id: number) {
 
     updateTag("categories-admin");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[moveCategoryDownAction]", error);
-    return { success: false, error: error?.message || "Failed to move category down" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
@@ -197,9 +204,9 @@ export async function reorderCategoriesAction(items: { id: number; sortOrder: nu
 
     updateTag("categories-admin");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[reorderCategoriesAction]", error);
-    return { success: false, error: error?.message || "Failed to reorder categories" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
@@ -212,8 +219,8 @@ export async function checkCategorySlugAvailableAction(slug: string, excludeId?:
     const available = await categories.checkSlugAvailable(slug, excludeId);
 
     return { success: true, available };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[checkCategorySlugAvailableAction]", error);
-    return { success: false, error: error?.message || "Failed to check slug availability" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }

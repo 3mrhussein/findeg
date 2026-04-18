@@ -12,7 +12,7 @@
 import * as React from "react";
 import { Badge } from "@ui";
 import { cn } from "@lib/utils";
-import type { OrderStatus } from "@backend/features/core";
+import { OrderStatus } from "@backend/features/core/domain/types/common";
 
 type ProductStatus = "active" | "draft" | "inactive";
 type StockStatus = "healthy" | "low" | "out";

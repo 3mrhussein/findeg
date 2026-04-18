@@ -341,7 +341,11 @@ export class DrizzleProductRepository implements IProductRepository {
         .limit(1);
 
       categoryName = categoryResult[0]?.localizedName
-        ? resolveLocalizedString(categoryResult[0].localizedName as { en: string; ar: string }, language, DEFAULT_LOCALE)
+        ? resolveLocalizedString(
+            categoryResult[0].localizedName as { en: string; ar: string },
+            language,
+            DEFAULT_LOCALE,
+          )
         : undefined;
     }
 
@@ -381,6 +385,7 @@ export class DrizzleProductRepository implements IProductRepository {
         and(
           eq(products.isActive, true),
           or(
+            ilike(products.skuPrefix, normalizedSlug),
             sql`LOWER(COALESCE(${products.localizedSlug} ->> 'en', '')) = ${normalizedSlug}`,
             sql`LOWER(COALESCE(${products.localizedSlug} ->> ${language}, '')) = ${normalizedSlug}`,
             sql`EXISTS (
@@ -467,7 +472,11 @@ export class DrizzleProductRepository implements IProductRepository {
       .limit(1);
 
     const categoryName = categoryResult[0]?.localizedName
-      ? resolveLocalizedString(categoryResult[0].localizedName as { en: string; ar: string }, language, DEFAULT_LOCALE)
+      ? resolveLocalizedString(
+          categoryResult[0].localizedName as { en: string; ar: string },
+          language,
+          DEFAULT_LOCALE,
+        )
       : undefined;
 
     const productIds = results.map((r) => r.product.id);
@@ -873,7 +882,10 @@ export class DrizzleProductRepository implements IProductRepository {
                 variantId: newVariant.id,
                 productId: newProduct.id,
                 variantKey: v.variantKey,
-                customerGroup: p.customerGroup as unknown as "public_b2c" | "school_b2b" | "wholesale",
+                customerGroup: p.customerGroup as unknown as
+                  | "public_b2c"
+                  | "school_b2b"
+                  | "wholesale",
                 uomCode: p.uomCode as "pcs" | "pack" | "carton",
                 unitPrice: String(p.unitPrice),
                 currency: p.currency || DEFAULT_CURRENCY,
@@ -1046,7 +1058,10 @@ export class DrizzleProductRepository implements IProductRepository {
                   variantId,
                   productId: id,
                   variantKey: v.variantKey,
-                  customerGroup: p.customerGroup as unknown as "public_b2c" | "school_b2b" | "wholesale",
+                  customerGroup: p.customerGroup as unknown as
+                    | "public_b2c"
+                    | "school_b2b"
+                    | "wholesale",
                   uomCode: p.uomCode as "pcs" | "pack" | "carton",
                   unitPrice: String(p.unitPrice),
                   currency: p.currency || DEFAULT_CURRENCY,

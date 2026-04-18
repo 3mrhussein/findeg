@@ -8,7 +8,6 @@
 "use cache";
 
 import { cacheLife, cacheTag } from "next/cache";
-import { getSession } from "@lib/session";
 import { createIdentityServices } from "@backend/features/identity";
 
 /**
@@ -23,18 +22,13 @@ export async function getDashboardDataQuery(locale: string) {
 /**
  * Get account data for authenticated user
  */
-export async function getMyAccountDataQuery() {
+export async function getMyAccountDataQuery(userId: number) {
   cacheLife("minutes");
   cacheTag("my-account");
 
-  const session = await getSession();
-  if (!session?.userId) {
-    throw new Error("Not authenticated");
-  }
-
   // Use identity service to get user data
   const { adminUsers } = createIdentityServices();
-  const user = await adminUsers.getAdminById(session.userId);
+  const user = await adminUsers.getAdmin(userId);
 
   return user;
 }

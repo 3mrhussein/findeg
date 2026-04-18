@@ -1,4 +1,6 @@
-import { getServices } from "@server/getServices";
+import { createIdentityServices } from "@features/identity";
+import { createOrderServices } from "../services/factory";
+import type { SessionPayload } from "@features/core/domain/auth";
 import { User, getUserFullName } from "@features/identity/domain/entities/User";
 import type { Order } from "@features/order/domain/entities/Order";
 
@@ -36,20 +38,22 @@ function getLatestOrder(orders: Order[]): Order | undefined {
 /**
  * Resolves checkout prefill from authenticated user profile + last shipping address.
  */
-export async function getCheckoutPrefill(): Promise<CheckoutPrefillData | null> {
-  const { auth, repositories } = getServices();
-  const session = await auth.getSession();
+export async function getCheckoutPrefill(
+  session: SessionPayload | null,
+): Promise<CheckoutPrefillData | null> {
+  const { orders } = createOrderServices();
+  const { users } = createIdentityServices();
 
   if (!session?.userId) return null;
 
-  const [user, orders] = await Promise.all([
-    repositories.users.getById(session.userId),
-    repositories.orders.getByUserId(session.userId),
+  const [user, orderList] = await Promise.all([
+    users.getById(session.userId),
+    orders.getByUserId(session.userId),
   ]);
 
   if (!user) return null;
 
-  const latestOrder = getLatestOrder(orders);
+  const latestOrder = getLatestOrder(orderList);
   const address = latestOrder?.shippingAddressSnapshot;
 
   return {

@@ -5,6 +5,7 @@ import {
 } from "@backend/features/core/domain/types/common";
 import { OrderStatus } from "@backend/features/core/infrastructure/persistence";
 import type { Order } from "@backend/features/order";
+import { createAdministrationServices } from "@backend/features/administration";
 
 export interface AdminOrdersPageQueryParams {
   search?: string;
@@ -57,7 +58,7 @@ export async function getAdminOrdersPageData(
       ? (rawPaymentStatus as PaymentStatus)
       : undefined;
 
-  const { adminOrder } = getServices();
+  const { orders: adminOrder } = createAdministrationServices();
   const { orders, total } = await adminOrder.getAll({
     search: search || undefined,
     status,

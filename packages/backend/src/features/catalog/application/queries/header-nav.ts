@@ -1,4 +1,4 @@
-import { getServices } from "@server/getServices";
+import { createCatalogServices } from "../services/factory";
 import type { Category } from "@features/catalog/domain/entities/Category";
 import { resolveLocale } from "@features/core/domain/value-objects";
 
@@ -28,8 +28,8 @@ function toHeaderNode(category: Category): HeaderCategoryNode {
  */
 export async function getHeaderCategoryTree(locale: string): Promise<HeaderCategoryNode[]> {
   const resolvedLocale = resolveLocale(locale);
-  const { repositories } = getServices();
-  const tree = await repositories.categories.getTree(resolvedLocale);
+  const { categories } = createCatalogServices();
+  const tree = await categories.getTree(resolvedLocale);
 
   return tree.filter((category) => category.isActive !== false).map(toHeaderNode);
 }

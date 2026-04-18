@@ -15,7 +15,7 @@ import type { ServiceResult } from "@backend/features/core";
  * await invalidateCaches(result);
  *
  * @example Manual cache invalidation
- * await invalidatePaths(["/admin/products", "/admin/dashboard"]);
+ * await invalidatePaths(["/products", "/dashboard"]);
  */
 
 /**

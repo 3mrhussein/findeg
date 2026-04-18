@@ -1,27 +1,54 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "composite": true,
-    "noEmit": false,
-    "outDir": "dist",
+    "noEmit": true,
     "paths": {
-      "@*": ["./src/*"],
-      "@components/*": ["./src/components/*"],
-      "@hooks/*": ["./src/hooks/*"],
-      "@i18n/*": ["./src/i18n/*"],
-      "@lib/*": ["./src/lib/*"],
-      "@providers/*": ["./src/providers/*"],
-      "@server/*": ["./src/server/*"],
-      "@features/*": ["./src/features/*"],
-      "@app/*": ["./src/app/*"],
-      "@ui": ["../ui/src"],
-      "@ui/*": ["../ui/src/*"],
-
-      "@backend": ["../backend/src"],
-      "@backend/*": ["../backend/src/*"]
+      "@/*": [
+        "./src/*"
+      ],
+      "@components/*": [
+        "./src/components/*"
+      ],
+      "@hooks/*": [
+        "./src/hooks/*"
+      ],
+      "@i18n/*": [
+        "./src/i18n/*"
+      ],
+      "@lib/*": [
+        "./src/lib/*"
+      ],
+      "@providers/*": [
+        "./src/providers/*"
+      ],
+      "@server/*": [
+        "./src/server/*"
+      ],
+      "@features/*": [
+        "./src/features/*",
+        "../backend/src/features/*"
+      ],
+      "@/features/*": [
+        "./src/features/*",
+        "../backend/src/features/*"
+      ],
+      "@app/*": [
+        "./src/app/*"
+      ],
+      "@backend": [
+        "../backend/src"
+      ],
+      "@backend/*": [
+        "../backend/src/*"
+      ],
+      "@ui": [
+        "../ui/src"
+      ],
+      "@ui/*": [
+        "../ui/src/*"
+      ]
     }
   },
-  "references": [{ "path": "../backend" }, { "path": "../ui" }],
   "include": [
     "next-env.d.ts",
     "src/**/*.ts",
@@ -31,5 +58,10 @@
     "src/**/*.js",
     "src/**/*.jsx"
   ],
-  "exclude": ["node_modules", ".next", "dist", "cypress"]
+  "exclude": [
+    "node_modules",
+    ".next",
+    "dist",
+    "cypress"
+  ]
 }

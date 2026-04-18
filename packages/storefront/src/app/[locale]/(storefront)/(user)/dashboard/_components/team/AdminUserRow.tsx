@@ -16,8 +16,7 @@ import { Badge } from "@ui";
 import { TableCell, TableRow } from "@ui";
 import { Skeleton } from "@ui";
 import { Icon } from "@ui";
-import type { User } from "@features/identity/domain/entities/User";
-type AdminUser = User & { roles: any[] };
+import { type AdminUser } from "@hooks/useAdminUsers";
 import { AdminActionsMenu } from "./AdminActionsMenu";
 
 /** Pastel badge colors mapped to role codes */

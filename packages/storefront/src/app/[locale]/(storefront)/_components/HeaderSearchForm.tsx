@@ -6,7 +6,8 @@ import { Input } from "@ui";
 import { Button } from "@ui";
 import { IconTooltip } from "@ui";
 import { Search } from "lucide-react";
-import { useHeaderSearch } from "@features/catalog/presentation/hooks/useHeaderSearch";
+import { useRouter } from "@i18n/navigation";
+import { useState } from "react";
 
 interface HeaderSearchFormProps {
   compact?: boolean;
@@ -17,14 +18,14 @@ interface HeaderSearchFormProps {
  */
 export function HeaderSearchForm({ compact = false }: HeaderSearchFormProps) {
   const t = useTranslations();
-  const { query, setQuery, submit } = useHeaderSearch();
+  const router = useRouter();
+  const [query, setQuery] = useState("");
 
-  /**
-   *
-   */
   function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    submit();
+    if (query.trim()) {
+      router.push(`/shop?q=${encodeURIComponent(query.trim())}`);
+    }
   }
 
   if (compact) {

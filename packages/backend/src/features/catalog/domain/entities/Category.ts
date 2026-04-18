@@ -9,7 +9,7 @@ export const CategoryLocalizedContentSchema = z.object({
 });
 export type CategoryLocalizedContent = z.infer<typeof CategoryLocalizedContentSchema>;
 
-export const CategorySchema: z.ZodType<any> = z.lazy(() =>
+export const CategorySchema: z.ZodType<Category> = z.lazy(() =>
   z.object({
     id: IdSchema,
     slug: SlugSchema,

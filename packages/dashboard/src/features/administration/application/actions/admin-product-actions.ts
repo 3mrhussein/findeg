@@ -2,6 +2,14 @@
 
 import { updateTag } from "next/cache";
 import { createAdministrationServices } from "@backend/features/administration";
+import type {
+  CreateProductWithVariantsInput,
+  UpdateProductWithVariantsInput,
+  CreateVariantInput,
+  UoMInput,
+  ImageInput,
+} from "@backend/features/administration/domain/types";
+import { getErrorMessage } from "@lib/type-guards";
 
 /**
  * Admin Product Actions (Dashboard Data Layer)
@@ -10,7 +18,7 @@ import { createAdministrationServices } from "@backend/features/administration";
  * Implements cache invalidation via updateTag() for immediate consistency.
  */
 
-export async function createProductAction(input: any) {
+export async function createProductAction(input: CreateProductWithVariantsInput) {
   try {
     const { products } = createAdministrationServices();
     const result = await products.createProduct(input);
@@ -19,13 +27,13 @@ export async function createProductAction(input: any) {
     updateTag("products");
 
     return { success: true, data: result };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[createProductAction]", error);
-    return { success: false, error: error?.message || "Failed to create product" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
-export async function updateProductAction(id: number, input: any) {
+export async function updateProductAction(id: number, input: UpdateProductWithVariantsInput) {
   try {
     const { products } = createAdministrationServices();
     const result = await products.updateProduct(id, input);
@@ -34,9 +42,9 @@ export async function updateProductAction(id: number, input: any) {
     updateTag("products");
 
     return { success: true, data: result };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[updateProductAction]", error);
-    return { success: false, error: error?.message || "Failed to update product" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
@@ -49,9 +57,9 @@ export async function deleteProductAction(id: number) {
     updateTag("products");
 
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[deleteProductAction]", error);
-    return { success: false, error: error?.message || "Failed to delete product" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
@@ -64,15 +72,18 @@ export async function setProductStatusAction(id: number, isActive: boolean) {
       return { success: false, error: "Product not found" };
     }
 
-    await products.updateProduct(id, { ...existingProduct, isActive } as any);
+    await products.updateProduct(id, {
+      ...existingProduct,
+      isActive,
+    } as UpdateProductWithVariantsInput);
 
     // Invalidate product caches
     updateTag("products");
 
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[setProductStatusAction]", error);
-    return { success: false, error: error?.message || "Failed to update product status" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
@@ -85,24 +96,28 @@ export async function deactivateVariantAction(variantId: number) {
     updateTag("products");
 
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[deactivateVariantAction]", error);
-    return { success: false, error: error?.message || "Failed to deactivate variant" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
-export async function generateVariantsAction(productId: number) {
+export async function generateVariantsAction(
+  productId: number,
+  dimensions: any[] = [],
+  defaults: Partial<CreateVariantInput> = {},
+) {
   try {
     const { products } = createAdministrationServices();
-    await products.generateVariants(productId);
+    await products.generateVariants(productId, dimensions, defaults);
 
     // Invalidate product caches
     updateTag("products");
 
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[generateVariantsAction]", error);
-    return { success: false, error: error?.message || "Failed to generate variants" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
@@ -115,13 +130,13 @@ export async function rebuildVariantKeysAction(productId: number) {
     updateTag("products");
 
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[rebuildVariantKeysAction]", error);
-    return { success: false, error: error?.message || "Failed to rebuild variant keys" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
-export async function upsertVariantUoMsAction(variantId: number, uoms: any[]) {
+export async function upsertVariantUoMsAction(variantId: number, uoms: UoMInput[]) {
   try {
     const { products } = createAdministrationServices();
     await products.upsertVariantUoMs(variantId, uoms);
@@ -130,13 +145,13 @@ export async function upsertVariantUoMsAction(variantId: number, uoms: any[]) {
     updateTag("products");
 
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[upsertVariantUoMsAction]", error);
-    return { success: false, error: error?.message || "Failed to update variant UoMs" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
-export async function upsertVariantImagesAction(variantId: number, images: any[]) {
+export async function upsertVariantImagesAction(variantId: number, images: ImageInput[]) {
   try {
     const { products } = createAdministrationServices();
     await products.upsertVariantImages(variantId, images);
@@ -145,9 +160,9 @@ export async function upsertVariantImagesAction(variantId: number, images: any[]
     updateTag("products");
 
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[upsertVariantImagesAction]", error);
-    return { success: false, error: error?.message || "Failed to update variant images" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
@@ -167,9 +182,9 @@ export async function checkSkuAction(sku: string, excludeVariantId?: number) {
     const available = await products.checkSkuAvailable(sku, excludeVariantId);
 
     return { success: true, available };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[checkSkuAction]", error);
-    return { success: false, error: error?.message || "Failed to check SKU availability" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
@@ -179,9 +194,9 @@ export async function checkSlugAction(slug: string, excludeProductId?: number) {
     const available = await products.checkSlugAvailable(slug, excludeProductId);
 
     return { success: true, available };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[checkSlugAction]", error);
-    return { success: false, error: error?.message || "Failed to check slug availability" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
@@ -191,8 +206,8 @@ export async function checkSkuPrefixAction(prefix: string, excludeProductId?: nu
     const available = await products.checkSkuPrefixAvailable(prefix, excludeProductId);
 
     return { success: true, available };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[checkSkuPrefixAction]", error);
-    return { success: false, error: error?.message || "Failed to check SKU prefix availability" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }

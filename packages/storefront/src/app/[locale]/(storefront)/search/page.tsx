@@ -4,7 +4,7 @@ import type { Locale } from "next-intl";
 import { Input } from "@ui";
 import { Button } from "@ui";
 import { Search } from "lucide-react";
-import { getSearchPageViewModel } from "@features/catalog/application/queries/search-page";
+import { getSearchPageViewModel } from "@/data/catalog/queries";
 import { PageShell } from "../_components/PageShell";
 import { ProductListingLayout } from "../_components/ProductListingLayout";
 

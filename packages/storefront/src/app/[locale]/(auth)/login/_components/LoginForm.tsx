@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@i18n/navigation";
 import { Button } from "@ui";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@ui";
 import { Input } from "@ui";

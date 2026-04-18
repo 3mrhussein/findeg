@@ -3,6 +3,7 @@
 import { TagInput } from "@backend/features/administration/domain/types";
 import { updateTag } from "next/cache";
 import { createAdministrationServices } from "@backend/features/administration";
+import { getErrorMessage } from "@lib/type-guards";
 
 /**
  * Admin Tag Actions (Dashboard Data Layer)
@@ -18,9 +19,9 @@ export async function adminCreateTagAction(input: TagInput) {
 
     updateTag("tags");
     return { success: true, data: result };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[adminCreateTagAction]", error);
-    return { success: false, error: error?.message || "Failed to create tag" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
@@ -31,9 +32,9 @@ export async function adminUpdateTagAction(id: number, input: TagInput) {
 
     updateTag("tags");
     return { success: true, data: result };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[adminUpdateTagAction]", error);
-    return { success: false, error: error?.message || "Failed to update tag" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
@@ -44,9 +45,9 @@ export async function adminDeleteTagAction(id: number) {
 
     updateTag("tags");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[adminDeleteTagAction]", error);
-    return { success: false, error: error?.message || "Failed to delete tag" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
@@ -57,9 +58,9 @@ export async function adminBulkUpdateTagsStatusAction(ids: number[], isActive: b
 
     updateTag("tags");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[adminBulkUpdateTagsStatusAction]", error);
-    return { success: false, error: error?.message || "Failed to bulk update tags status" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
@@ -70,9 +71,9 @@ export async function adminBulkDeleteTagsAction(ids: number[]) {
 
     updateTag("tags");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[adminBulkDeleteTagsAction]", error);
-    return { success: false, error: error?.message || "Failed to bulk delete tags" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
@@ -87,11 +88,11 @@ export async function adminToggleTagStatusAction(id: number) {
       isActive: result.isActive,
       data: result,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[adminToggleTagStatusAction]", error);
     return {
       success: false,
-      error: error?.message || "Failed to toggle tag status",
+      error: getErrorMessage(error),
       isActive: false,
     };
   }
@@ -103,9 +104,9 @@ export async function adminGetTagProductCountAction(tagId: number) {
     const count = await tags.getTagProductCount(tagId);
 
     return { success: true, count };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[adminGetTagProductCountAction]", error);
-    return { success: false, error: error?.message || "Failed to get tag product count", count: 0 };
+    return { success: false, error: getErrorMessage(error), count: 0 };
   }
 }
 
@@ -115,8 +116,8 @@ export async function adminGetDistinctTagGroupsAction() {
     const groups = await tags.getDistinctGroups();
 
     return { success: true, groups };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[adminGetDistinctTagGroupsAction]", error);
-    return { success: false, error: error?.message || "Failed to get tag groups", groups: [] };
+    return { success: false, error: getErrorMessage(error), groups: [] };
   }
 }

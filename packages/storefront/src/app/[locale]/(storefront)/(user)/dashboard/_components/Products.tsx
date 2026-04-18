@@ -1,5 +1,5 @@
 import { useTranslations } from "next-intl";
-import { usePagination } from "@hooks";
+import { usePagination } from "@hooks/usePagination";
 import { Pagination } from "@ui";
 import { Button } from "@ui";
 import { Plus } from "lucide-react";

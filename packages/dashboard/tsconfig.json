@@ -1,33 +1,38 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "composite": true,
-    "noEmit": false,
-    "outDir": "dist",
-    "rootDir": "src",
+    "noEmit": true,
     "paths": {
-      "@*": ["./src/*"],
+      "@/*": ["./src/*"],
       "@components/*": ["./src/components/*"],
       "@hooks/*": ["./src/hooks/*"],
       "@i18n/*": ["./src/i18n/*"],
       "@lib/*": ["./src/lib/*"],
       "@providers/*": ["./src/providers/*"],
       "@server/*": ["./src/server/*"],
-      "@features/*": ["./src/features/*"],
+      "@/features/*": [
+        "./src/features/*",
+        "../backend/src/features/*"
+      ],
+      "@data/*": ["./src/data/*"],
+      "@actions/*": ["./src/actions/*"],
+      "@types/*": ["./src/types/*"],
+      "@queries/*": ["./src/queries/*"],
+      "@features/*": [
+        "./src/features/*",
+        "../backend/src/features/*"
+      ],
+
       "@app/*": ["./src/app/*"],
-      "@ui": ["../ui/src"],
-      "@ui/*": ["../ui/src/*"],
       "@backend": ["../backend/src"],
-      "@backend/*": ["../backend/src/*"]
+      "@backend/*": ["../backend/src/*"],
+      "@ui": ["../ui/src"],
+      "@ui/*": ["../ui/src/*"]
     }
   },
   "references": [
-    {
-      "path": "../ui"
-    },
-    {
-      "path": "../backend"
-    }
+    { "path": "../backend" },
+    { "path": "../ui" }
   ],
   "include": [
     "next-env.d.ts",

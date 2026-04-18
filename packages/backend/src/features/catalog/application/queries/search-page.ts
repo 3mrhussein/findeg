@@ -1,4 +1,4 @@
-import { getServices } from "@server/getServices";
+import { createCatalogServices } from "../services/factory";
 import { getSearchPageData } from "./storefront";
 import type { Product } from "@features/catalog/domain/entities/Product";
 import type { FilterOption, CategoryFilterOption } from "./listing";
@@ -32,7 +32,7 @@ export async function getSearchPageViewModel(
   query: { [key: string]: string | string[] | undefined },
 ): Promise<SearchPageViewModel> {
   const resolvedLocale = resolveLocale(locale);
-  const { categories } = getServices();
+  const { categories } = createCatalogServices();
   const [searchData, allCategories] = await Promise.all([
     getSearchPageData(resolvedLocale, rawQuery),
     categories.getAll(resolvedLocale),

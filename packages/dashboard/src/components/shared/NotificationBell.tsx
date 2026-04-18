@@ -84,11 +84,11 @@ export function NotificationBell() {
     const key = type
       .split(/[._]/)
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join("") as any;
+      .join("") as string;
 
     // Check if key exists in Types, fallback to raw type
     try {
-      return t(`Types.${key}` as any);
+      return t(`Types.${key}` as Parameters<typeof t>[0]);
     } catch {
       return type;
     }

@@ -8,7 +8,7 @@ import { SectionStateEmpty } from "@components/shared/state/SectionStateEmpty";
 import {
   useCheckoutForm,
   type CheckoutValidationError,
-} from "@features/order/presentation/hooks/useCheckoutForm";
+} from "./useCheckoutForm";
 import { ShippingForm } from "../_components/ShippingForm";
 import { PaymentForm } from "../_components/PaymentForm";
 import { OrderSummary } from "../_components/OrderSummary";
@@ -38,7 +38,7 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
     touchField,
     revealAllErrors,
     getFieldError,
-  } = useCheckoutForm({ cartItemsCount: cartItems.length, initialValues: initialPrefill });
+  } = useCheckoutForm({ cartItemsCount: cartItems.length, initialValues: initialPrefill || undefined });
 
   const optimisticShipping = paymentMethod === "cod" ? 50 : 30;
   const optimisticTotal = cartTotal + optimisticShipping;

@@ -23,7 +23,7 @@ export async function requireAuth(locale: Locale): Promise<SessionPayload> {
 export async function requireAdmin(locale: Locale): Promise<SessionPayload> {
   const session = await getSession();
   if (!session || !isAdminSession(session)) {
-    redirect({ href: "/admin/login", locale });
+    redirect({ href: "/login", locale });
   }
   return session!;
 }
@@ -36,9 +36,9 @@ export async function redirectIfAuthenticated(locale: Locale): Promise<void> {
   const session = await getSession();
   if (session) {
     if (isAdminSession(session)) {
-      redirect({ href: "/admin", locale });
+      redirect({ href: "/", locale });
     } else {
-      redirect({ href: "/dashboard", locale });
+      redirect({ href: "/", locale });
     }
   }
 }
@@ -48,5 +48,5 @@ export async function redirectIfAuthenticated(locale: Locale): Promise<void> {
  * Returns null for guests. Use in public pages with auth-aware components.
  */
 export async function getOptionalSession(): Promise<SessionPayload | null> {
-  return container.authService.getSession();
+  return await getSession();
 }

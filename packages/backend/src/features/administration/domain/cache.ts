@@ -13,11 +13,11 @@
  */
 export function getTagCachePaths(tagId?: number): string[] {
   const paths = [
-    "/admin/tags", // Tags list
+    "/catalog/tags", // Tags list
   ];
 
   if (tagId) {
-    paths.push(`/admin/tags/${tagId}`); // Tag detail
+    paths.push(`/catalog/tags/${tagId}`); // Tag detail
   }
 
   return paths;
@@ -50,11 +50,11 @@ export function getTagCacheTags(tagId?: number): string[] {
  */
 export function getCollectionCachePaths(collectionId?: number): string[] {
   const paths = [
-    "/admin/collections", // Collections list
+    "/catalog/collections", // Collections list
   ];
 
   if (collectionId) {
-    paths.push(`/admin/collections/${collectionId}`); // Collection detail
+    paths.push(`/catalog/collections/${collectionId}`); // Collection detail
   }
 
   return paths;
@@ -89,11 +89,11 @@ export function getCollectionCacheTags(collectionId?: number): string[] {
  */
 export function getAdminProductCachePaths(productId?: number): string[] {
   const paths = [
-    "/admin/products", // Products list
+    "/products", // Products list
   ];
 
   if (productId) {
-    paths.push(`/admin/products/${productId}`); // Product detail
+    paths.push(`/products/${productId}`); // Product detail
   }
 
   return paths;
@@ -126,11 +126,11 @@ export function getAdminProductCacheTags(productId?: number): string[] {
  */
 export function getInventoryCachePaths(inventoryId?: number): string[] {
   const paths = [
-    "/admin/inventory", // Inventory list
+    "/inventory", // Inventory list
   ];
 
   if (inventoryId) {
-    paths.push(`/admin/inventory/${inventoryId}`); // Inventory detail
+    paths.push(`/inventory/${inventoryId}`); // Inventory detail
   }
 
   return paths;
@@ -153,5 +153,41 @@ export function getInventoryCacheTags(inventoryId?: number): string[] {
     tags.push(`inventory-${inventoryId}`); // Specific inventory
   }
 
+  return tags;
+}
+
+/**
+ * Get all cache paths affected by category changes
+ */
+export function getCategoryCachePaths(categoryId?: number): string[] {
+  const paths = ["/categories"];
+  if (categoryId) paths.push(`/categories/${categoryId}`);
+  return paths;
+}
+
+/**
+ * Get all cache tags affected by category changes
+ */
+export function getCategoryCacheTags(categoryId?: number): string[] {
+  const tags = ["categories", "admin:categories", "products"];
+  if (categoryId) tags.push(`category-${categoryId}`);
+  return tags;
+}
+
+/**
+ * Get all cache paths affected by order changes
+ */
+export function getOrderCachePaths(orderId?: string): string[] {
+  const paths = ["/orders"];
+  if (orderId) paths.push(`/orders/${orderId}`);
+  return paths;
+}
+
+/**
+ * Get all cache tags affected by order changes
+ */
+export function getOrderCacheTags(orderId?: string): string[] {
+  const tags = ["orders", "admin:orders", "dashboard"];
+  if (orderId) tags.push(`order-${orderId}`);
   return tags;
 }

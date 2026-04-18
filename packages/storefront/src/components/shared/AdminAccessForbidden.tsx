@@ -5,8 +5,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@ui";
 import { Link } from "@i18n/navigation";
 import { ShieldAlert, LogIn, LayoutDashboard, Home } from "lucide-react";
-import { logout } from "@backend/features/identity";
 import { useTranslations } from "next-intl";
+import { logoutAction } from "@/app/[locale]/(storefront)/_actions/auth";
 
 /**
  *
@@ -59,7 +59,7 @@ export function AdminAccessForbidden() {
               </div>
             </div>
 
-            <form action={logout} className="w-full">
+            <form action={logoutAction} className="w-full">
               <input type="hidden" name="redirectTo" value="/login" />
               <Button
                 type="submit"

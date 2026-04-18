@@ -23,14 +23,25 @@ import { useUser } from "@hooks/useUser";
 import type { Product } from "@features/catalog/domain/entities/Product";
 import type { Variant } from "@features/catalog/domain/entities/Variant";
 import { VariantEntity } from "@features/catalog/domain/entities/Variant";
-import { getProductStatusBadge } from "@features/catalog/presentation/utils/product-badge";
 import { cn } from "@lib/utils";
 import type { ProductPdpViewModel } from "@features/catalog/application/queries/product-pdp";
 import { ImageGallery } from "./ImageGallery";
 import { ProductTabsSection } from "./ProductTabsSection";
 import { RelatedProductsRail } from "./RelatedProductsRail";
 import { RecentlyViewedRail, type RecentlyViewedItem } from "./RecentlyViewedRail";
-import { CustomerGroup, UoMCode } from "@backend/features/catalog";
+import type { CustomerGroup, UomCode as UoMCode } from "@backend/features/core/domain/types/common";
+import { getProductPricingAction } from "@/app/[locale]/(storefront)/_actions/catalog";
+
+function getProductStatusBadge({ product, variant, lowStock }: any) {
+  if (lowStock) return { kind: "low-stock" as const };
+  if (variant.strikePrice && variant.strikePrice > variant.basePrice) {
+    const percent = Math.round(
+      ((variant.strikePrice - variant.basePrice) / variant.strikePrice) * 100,
+    );
+    return { kind: "sale" as const, percent };
+  }
+  return null;
+}
 
 interface UomOption {
   code: UoMCode;
@@ -204,17 +215,19 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
     let active = true;
     setPriceState((prev) => ({ ...prev, loading: true }));
 
-    fetch(
-      `/api/v1/products/${vm.product.id}/pricing/quote?variantId=${selectedVariant.id}&uom=${selectedUom.code}&customerGroup=${vm.customerGroup}&quantity=1`,
-      {
-        cache: "no-store",
-      },
-    )
-      .then((response) => response.json())
+    const payload = {
+      productId: vm.product.id,
+      variantId: selectedVariant.id,
+      uom: selectedUom.code,
+      customerGroup: vm.customerGroup,
+      quantity: 1,
+    };
+
+    getProductPricingAction(payload)
       .then((json) => {
         if (!active) return;
 
-        if (json?.success) {
+        if (json?.success && json.data) {
           setPriceState({
             unitPrice: Number(json.data.unitPrice || selectedVariant.basePrice),
             currency: json.data.currency || "EGP",
@@ -279,7 +292,7 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
 
     addToCart(vm.product.id, quantity, {
       variantId: selectedVariant.id,
-      uomCode: selectedUom.code,
+      uomCode: selectedUom.code as any,
     });
 
     setIsAdded(true);

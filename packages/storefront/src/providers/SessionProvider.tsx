@@ -8,7 +8,7 @@
 "use client";
 
 import * as React from "react";
-import type { SessionPayload } from "@features/core/domain/auth/SessionPayload";
+import type { SessionPayload } from "@backend/features/core";
 
 interface SessionContextValue {
   session: SessionPayload;

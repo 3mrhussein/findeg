@@ -8,13 +8,18 @@
 
 import { updateTag } from "next/cache";
 import { createAdministrationServices } from "@backend/features/administration";
+import type {
+  CreateProductWithVariantsInput,
+  UpdateProductWithVariantsInput,
+} from "@backend/features/administration/domain/types";
+import { getErrorMessage } from "@lib/type-guards";
 
 /**
  * Create a new product
  *
  * Invalidates: All product lists and search results
  */
-export async function createProduct(input: any) {
+export async function createProduct(input: CreateProductWithVariantsInput) {
   try {
     const { products } = createAdministrationServices();
     const result = await products.createProduct(input);
@@ -23,9 +28,9 @@ export async function createProduct(input: any) {
     updateTag("products");
 
     return { success: true, data: result };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[createProduct]", error);
-    return { success: false, error: error?.message || "Failed to create product" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
@@ -34,7 +39,7 @@ export async function createProduct(input: any) {
  *
  * Invalidates: Product detail, product lists, search results
  */
-export async function updateProduct(id: number, input: any) {
+export async function updateProduct(id: number, input: UpdateProductWithVariantsInput) {
   try {
     const { products } = createAdministrationServices();
     const result = await products.updateProduct(id, input);
@@ -43,9 +48,9 @@ export async function updateProduct(id: number, input: any) {
     updateTag("products");
 
     return { success: true, data: result };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[updateProduct]", error);
-    return { success: false, error: error?.message || "Failed to update product" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
@@ -63,9 +68,9 @@ export async function deleteProduct(id: number) {
     updateTag("products");
 
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[deleteProduct]", error);
-    return { success: false, error: error?.message || "Failed to delete product" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
@@ -83,8 +88,8 @@ export async function importProducts(csvFile: any) {
     updateTag("products");
 
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[importProducts]", error);
-    return { success: false, error: error?.message || "Failed to import products" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }

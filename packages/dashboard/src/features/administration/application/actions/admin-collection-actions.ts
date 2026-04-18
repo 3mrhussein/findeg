@@ -3,6 +3,7 @@
 import { CollectionInput } from "@backend/features/administration/domain/types";
 import { updateTag } from "next/cache";
 import { createAdministrationServices } from "@backend/features/administration";
+import { getErrorMessage } from "@lib/type-guards";
 
 /**
  * Admin Collection Actions (Dashboard Data Layer)
@@ -18,9 +19,9 @@ export async function adminCreateCollectionAction(input: CollectionInput) {
 
     updateTag("collections");
     return { success: true, data: result };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[adminCreateCollectionAction]", error);
-    return { success: false, error: error?.message || "Failed to create collection" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
@@ -31,9 +32,9 @@ export async function adminUpdateCollectionAction(id: number, input: CollectionI
 
     updateTag("collections");
     return { success: true, data: result };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[adminUpdateCollectionAction]", error);
-    return { success: false, error: error?.message || "Failed to update collection" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
@@ -44,9 +45,9 @@ export async function adminDeleteCollectionAction(id: number) {
 
     updateTag("collections");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[adminDeleteCollectionAction]", error);
-    return { success: false, error: error?.message || "Failed to delete collection" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
@@ -59,8 +60,8 @@ export async function adminReorderCollectionsAction(
 
     updateTag("collections");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[adminReorderCollectionsAction]", error);
-    return { success: false, error: error?.message || "Failed to reorder collections" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }

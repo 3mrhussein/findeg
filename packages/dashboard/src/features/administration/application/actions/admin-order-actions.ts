@@ -2,6 +2,7 @@
 
 import { updateTag } from "next/cache";
 import { createAdministrationServices } from "@backend/features/administration";
+import { getErrorMessage } from "@lib/type-guards";
 
 /**
  * Admin Order Actions (Dashboard Data Layer)
@@ -26,9 +27,9 @@ export async function adminUpdateOrderStatusAction(
 
     updateTag("orders");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[adminUpdateOrderStatusAction]", error);
-    return { success: false, error: error?.message || "Failed to update order status" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
@@ -39,9 +40,9 @@ export async function adminUpdatePaymentStatusAction(orderId: number, status: st
 
     updateTag("orders");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[adminUpdatePaymentStatusAction]", error);
-    return { success: false, error: error?.message || "Failed to update payment status" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
@@ -55,9 +56,9 @@ export async function adminCancelOrderAction(orderId: number, reason: string) {
 
     updateTag("orders");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[adminCancelOrderAction]", error);
-    return { success: false, error: error?.message || "Failed to cancel order" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
@@ -68,8 +69,8 @@ export async function adminUpdateOrderPaymentStatusAction(orderId: number, statu
 
     updateTag("orders");
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[adminUpdateOrderPaymentStatusAction]", error);
-    return { success: false, error: error?.message || "Failed to update payment status" };
+    return { success: false, error: getErrorMessage(error) };
   }
 }

@@ -2,6 +2,7 @@
 // that break Turbopack bundling (e.g., TagInput imports from @features/catalog/domain/entities/Tag)
 // Apps should define their own input types or use minimal interfaces
 export * from "./domain";
+export * from "./domain/types";
 export * from "./application/interfaces";
 
 // ✅ NEW: Service factory for administration feature

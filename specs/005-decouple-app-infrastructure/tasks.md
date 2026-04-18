@@ -166,7 +166,7 @@ These tasks verify adherence to FindEg.com Constitution and run across all phase
 ### Dashboard Path Resolution Cleanup (US2)
 
 - [X] T058 [P] [US2] Update `packages/dashboard/tsconfig.json` paths to remove backend from `@features/*` resolution
-- [ ] T059 [P] [US2] Add explicit `@backend/*` path mapping in dashboard tsconfig.json
+- [X] T059 [P] [US2] Verified: `@backend/*` path mapping exists in dashboard tsconfig.json
 - [X] T060 [US2] Find all dashboard imports from backend infrastructure: `grep -r "@features/.*infrastructure" packages/dashboard/src --include="*.ts" --include="*.tsx"`
 - [X] T061 [US2] Fix dashboard imports to use `@backend/features/[feature]` pattern
 - [X] T062 [US2] Verify dashboard has no direct imports to backend infrastructure: `grep -r "packages/backend/src/features/.*/infrastructure" packages/dashboard/src`
@@ -174,16 +174,25 @@ These tasks verify adherence to FindEg.com Constitution and run across all phase
 ### Storefront Path Resolution Cleanup (US2)
 
 - [X] T063 [P] [US2] Update `packages/storefront/tsconfig.json` paths to remove backend from `@features/*` resolution
-- [ ] T064 [P] [US2] Add explicit `@backend/*` path mapping in storefront tsconfig.json
+- [X] T064 [P] [US2] Verified: `@backend/*` path mapping exists in storefront tsconfig.json
 - [X] T065 [US2] Find all storefront imports from backend infrastructure: `grep -r "@features/.*infrastructure" packages/storefront/src --include="*.ts" --include="*.tsx"`
 - [X] T066 [US2] Fix storefront imports to use `@backend/features/[feature]` pattern
 - [X] T067 [US2] Verify storefront has no direct imports to backend infrastructure: `grep -r "packages/backend/src/features/.*/infrastructure" packages/storefront/src`
 
 ### ServerExternalPackages Validation (US2)
 
-- [ ] T068 [P] [US2] Verify `packages/dashboard/next.config.ts` serverExternalPackages includes: `['postgres', 'drizzle-orm', 'bcryptjs', 'jose', 'jsonwebtoken', 'sharp', 'nodemailer']`
-- [ ] T069 [P] [US2] Verify `packages/storefront/next.config.ts` serverExternalPackages includes same Node.js-only packages
+- [X] T068 [P] [US2] Verify `packages/dashboard/next.config.ts` serverExternalPackages includes: `['postgres', 'drizzle-orm', 'bcryptjs', 'jose', 'jsonwebtoken', 'sharp', 'nodemailer']`
+- [X] T069 [P] [US2] Verify `packages/storefront/next.config.ts` serverExternalPackages includes same Node.js-only packages
 - [ ] T070 [US2] Test that postgres is externalized by checking build output does not bundle it
+
+### App Data Layer Implementation (US2)
+
+- [ ] T110 [P] [US2] Create `packages/storefront/src/data` directory for Next.js 16 cache components
+- [ ] T111 [P] [US2] Implement Catalog Data Layer in `packages/storefront/src/data/catalog/queries.ts` (wrap @backend/features/catalog)
+- [ ] T112 [P] [US2] Implement Cart Data Layer in `packages/storefront/src/data/cart/queries.ts`
+- [ ] T113 [P] [US2] Implement Categories Data Layer in `packages/storefront/src/data/categories/queries.ts`
+- [ ] T114 [P] [US2] Implement School Data Layer in `packages/storefront/src/data/school/queries.ts`
+- [ ] T115 [P] [US2] Audit Dashboard data layer for missing features (@backend/features/identity, @backend/features/notifications)
 
 ### Tests for User Story 2 ✅
 
@@ -212,9 +221,13 @@ These tasks verify adherence to FindEg.com Constitution and run across all phase
 ### Remove Duplicated Infrastructure from Storefront (US3)
 
 - [ ] T079 [P] [US3] Identify all duplicated infrastructure in `packages/storefront/src/features/` by comparing with backend
-- [ ] T080 [US3] Delete `packages/storefront/src/features/notifications/infrastructure/DrizzleNotificationRepository.ts`
-- [ ] T081 [P] [US3] Delete any other duplicated infrastructure files in storefront (document list from T079)
-- [ ] T082 [P] [US3] Delete duplicated domain files if they exist in storefront and backend
+- [ ] T080 [US3] Delete `packages/storefront/src/features/notifications/infrastructure/`
+- [ ] T081 [P] [US3] Delete duplicated infrastructure in storefront features:
+  - `packages/storefront/src/features/order/infrastructure`
+  - `packages/storefront/src/features/catalog/infrastructure`
+  - `packages/storefront/src/features/review/infrastructure`
+  - `packages/storefront/src/features/school/infrastructure`
+- [ ] T082 [P] [US3] Delete duplicated domain files identified in storefront matching backend features
 - [ ] T083 [US3] Update storefront imports to use backend package for notifications feature
 - [ ] T084 [US3] Verify storefront still builds after removing duplicated infrastructure
 

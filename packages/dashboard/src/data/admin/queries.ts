@@ -8,6 +8,7 @@
 
 import { cacheLife, cacheTag } from "next/cache";
 import { createAdministrationServices } from "@backend/features/administration";
+import type { AuditLogEntry } from "@backend/features/administration/domain/entities/AuditLogEntry";
 import type { Locale } from "@backend/features/core";
 
 /**
@@ -46,8 +47,11 @@ export async function getRecentActivity(options?: { limit?: number; entityTypes?
   cacheTag("audit-logs");
 
   const { auditLog } = createAdministrationServices();
-  // AuditLogService has getRecentLogs method
-  const logs = await auditLog.getRecentLogs(options?.limit || 10);
+  // Call getRecentActivity on the service
+  const logs = await auditLog.getRecentActivity({
+    limit: options?.limit || 10,
+    entityTypes: options?.entityTypes,
+  });
   return logs || [];
 }
 
@@ -88,23 +92,27 @@ export async function getAuditLogs(options?: {
   entityId?: string;
   limit?: number;
   offset?: number;
-}): Promise<{ data: any[]; total: number }> {
+}): Promise<{ data: AuditLogEntry[]; total: number }> {
   cacheLife("minutes");
   cacheTag("audit-logs");
 
   const { auditLog } = createAdministrationServices();
-  const logs = await auditLog.getRecentLogs(options?.limit || 50);
-  
+  const logs = await auditLog.getRecentActivity({ limit: options?.limit || 50 });
+
   // Filter by options if provided
   let filteredLogs = logs || [];
   if (options?.entityType) {
-    filteredLogs = filteredLogs.filter((log: any) => log.entityType === options.entityType);
+    filteredLogs = filteredLogs.filter(
+      (log: AuditLogEntry) => log.entityType === options.entityType,
+    );
   }
   if (options?.action) {
-    filteredLogs = filteredLogs.filter((log: any) => log.action === options.action);
+    filteredLogs = filteredLogs.filter((log: AuditLogEntry) => log.action === options.action);
   }
   if (options?.entityId) {
-    filteredLogs = filteredLogs.filter((log: any) => String(log.entityId) === options.entityId);
+    filteredLogs = filteredLogs.filter(
+      (log: AuditLogEntry) => String(log.entityId) === options.entityId,
+    );
   }
 
   // Apply pagination
