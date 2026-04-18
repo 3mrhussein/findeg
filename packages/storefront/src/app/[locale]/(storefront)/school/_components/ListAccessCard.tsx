@@ -10,10 +10,10 @@ import {
   ChevronRight,
   Loader2,
 } from "lucide-react";
-import { Card, CardContent } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { AccessState } from "@/features/school/application/interfaces/ISchoolAccessService";
+import { Card, CardContent } from "@ui";
+import { Badge } from "@ui";
+import { Button } from "@ui";
+import { AccessState } from "@backend/features/school/application/interfaces/ISchoolAccessService";
 
 interface ListAccessCardProps {
   list: any; // Type from schoolLists table

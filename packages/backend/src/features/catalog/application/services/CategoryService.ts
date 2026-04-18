@@ -1,8 +1,8 @@
-import { ID, Slug } from "@/features/core/domain/types/common";
+import { ID, Slug } from "@backend/features/core/domain/types/common";
 import type { ICategoryRepository } from "../interfaces/ICategoryRepository";
-import type { ICategoryService } from "@/features/catalog/application/interfaces/ICategoryService";
-import type { Category } from "@/features/catalog/domain/entities/Category";
-import type { Locale } from "@/features/core/domain/value-objects";
+import type { ICategoryService } from "@backend/features/catalog/application/interfaces/ICategoryService";
+import type { Category } from "@backend/features/catalog/domain/entities/Category";
+import type { Locale } from "@backend/features/core/domain/value-objects";
 
 export class CategoryService implements ICategoryService {
   constructor(private categoryRepository: ICategoryRepository) {}
@@ -17,5 +17,9 @@ export class CategoryService implements ICategoryService {
 
   async getBySlug(slug: Slug, language?: Locale): Promise<Category | null> {
     return this.categoryRepository.getBySlug(slug, language);
+  }
+
+  async getTree(language?: Locale): Promise<Category[]> {
+    return this.categoryRepository.getTree(language);
   }
 }

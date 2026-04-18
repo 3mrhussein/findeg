@@ -1,45 +1,27 @@
-# Review Feature
+# Storefront Review Feature
 
-Owns product feedback lifecycle: submission, moderation state, and rating aggregation inputs.
+The **Storefront Review Feature** orchestrates User-Generated Content natively via Next.js components preventing hydration layout shifts and preserving PDP integrity.
 
-## Use Cases
+## 🎯 Technical Responsibilities
 
-```mermaid
-flowchart LR
-    Customer --> UC1[Submit review]
-    Admin --> UC2[Approve/reject review]
-    Catalog --> UC3[Display rating summary]
-```
+- **RSC Aggregation**: Fetching pre-calculated star review breakdowns safely on the server alongside the Product detail load.
+- **Progressive Enhancement**: Ensuring the `<form>` wrapping the review submission operates purely on standard web APIs before React hydrates.
 
-## UML (Class View)
+---
 
-```mermaid
-classDiagram
-    class Review
-    class IReviewRepository
-    class DrizzleReviewRepository
+## 🏗️ UI Architecture
 
-    DrizzleReviewRepository ..|> IReviewRepository
-    IReviewRepository --> Review
-```
+### Presentation Strictness
 
-## Sequence (Create Review)
+- **`ReviewList`**: Highly cacheable RSC block utilizing `Suspense` thresholds so massive review sets don't block main product rendering.
+- **`SubmitReviewForm`**: Uses `useActionState` connecting directly to `@findeg/backend/features/review` to append UGC data.
 
-```mermaid
-sequenceDiagram
-    participant API as Product Review Endpoint
-    participant Repo as IReviewRepository
-    API->>Repo: create(review payload)
-    Repo-->>API: persisted review
-    API-->>Client: success response
-```
+---
 
-## Layer Notes
-- `domain`: `Review` entity and validation boundaries.
-- `application`: review repository contract.
-- `infrastructure`: Drizzle repository implementation.
+## 🔐 Boundaries & Constraints
 
-## Clean Architecture Boundaries
-- Depends on `catalog` and `identity` IDs, not their infrastructure adapters.
-- Rating aggregation consumed by catalog views.
+- **Anti-Spam Revalidation**: Upon successful review submission via the Server Action, Next.js MUST `revalidatePath` for the specific product slug to instantly flush the cached review score on Edge nodes.
 
+---
+
+&copy; 2026 FindEg.com

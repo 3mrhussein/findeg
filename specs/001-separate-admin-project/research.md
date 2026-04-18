@@ -62,7 +62,7 @@ Document technical research, alternatives considered, and rationale for key arch
 **Implementation Notes**:
 
 - Backend package exports repository interfaces, services, types, and utilities
-- Dashboard and storefront import from `@findeg/backend` via pnpm workspace protocol
+- Dashboard and storefront import from `@backend` via pnpm workspace protocol
 - Backend package has its own `tsconfig.json` with `composite: true` for project references
 - Frontend packages use backend functions in API routes and Server Components
 
@@ -91,9 +91,9 @@ Document technical research, alternatives considered, and rationale for key arch
 
 - All Drizzle schema files reside in `packages/backend/src/features/core/infrastructure/persistence/schema/`
 - Migration scripts in `packages/backend/migrations/` (or root `/scripts/migrations/`)
-- Frontend packages import repository interfaces: `import { IProductRepository } from '@findeg/backend/features/catalog'`
+- Frontend packages import repository interfaces: `import { IProductRepository } from '@backend/features/catalog'`
 - Database connection pooling managed in backend package
-- Migrations run via backend package scripts: `pnpm --filter @findeg/backend db:migrate`
+- Migrations run via backend package scripts: `pnpm --filter @backend db:migrate`
 
 ---
 
@@ -269,7 +269,7 @@ jobs:
    - Move `src/app/[locale]/admin/` routes to `packages/dashboard/`
    - Move `src/features/administration/` to dashboard package
    - Duplicate `src/components/ui/` and `src/components/shared/` to dashboard
-   - Update imports to reference `@findeg/backend`
+   - Update imports to reference `@backend`
    - Migrate admin Cypress tests to dashboard package
    - Verify dashboard builds and E2E tests pass
 
@@ -277,7 +277,7 @@ jobs:
    - Move `src/app/[locale]/(storefront)/`, `(auth)/`, `(school-list)/` to `packages/storefront/`
    - Move `src/features/cart/`, `catalog/`, `order/`, `review/`, `school/`, `notifications/` to storefront
    - Duplicate UI components to storefront
-   - Update imports to reference `@findeg/backend`
+   - Update imports to reference `@backend`
    - Migrate storefront Cypress tests to storefront package
    - Verify storefront builds and E2E tests pass
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { initWebMCP } from "@/lib/webmcp/webmcp-init";
+import { initWebMCP } from "@lib/webmcp/webmcp-init";
 
 /**
  * Global initializer for WebMCP tools.

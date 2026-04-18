@@ -1,9 +1,9 @@
 import React from "react";
 import { Sidebar } from "./_components/Sidebar";
 import { Topbar } from "./_components/Topbar";
-import { requireAuth } from "@/lib/auth-guard";
-import { isAdminSession } from "@/features/core/domain/auth/authorization";
-import { AdminAccessForbidden } from "@/components/shared/AdminAccessForbidden";
+import { requireAuth } from "@lib/auth-guard";
+import { isAdminSession } from "@backend/features/core/domain/auth/authorization";
+import { AdminAccessForbidden } from "@components/shared/AdminAccessForbidden";
 import type { Locale } from "next-intl";
 
 /**

@@ -36,7 +36,7 @@ Backend package successfully refactored to achieve pure TypeScript compliance. *
 
 This achieved Constitution Principle VIII compliance (Pure TypeScript Libraries) and resolved all test failures. Backend now runs 100% successfully in pure Node.js environment.
 
-**Scope Clarification**: This summary covers the **backend package refactoring** only. Full-stack integration testing (SC-004 critical user flows) deferred due to pre-existing UI dependency issues in `@findeg/ui` package unrelated to this feature.
+**Scope Clarification**: This summary covers the **backend package refactoring** only. Full-stack integration testing (SC-004 critical user flows) deferred due to pre-existing UI dependency issues in `@ui` package unrelated to this feature.
 
 ---
 
@@ -106,9 +106,9 @@ This achieved Constitution Principle VIII compliance (Pure TypeScript Libraries)
 | SC-005 | Testable in isolation             | <5 lines       | Achieved                | ✅ MET (See spec.md SC-005 example)  |
 | SC-006 | DRY cache logic                   | No duplication | Verified                | ✅ MET                               |
 
-**Remediation Success**: server-only dependency fully removed from package.json and 5 import statements removed from backend source files. **Verification**: `pnpm --filter @findeg/backend test` executed successfully with 188/188 tests passing in 20.56 seconds.
+**Remediation Success**: server-only dependency fully removed from package.json and 5 import statements removed from backend source files. **Verification**: `pnpm --filter @backend test` executed successfully with 188/188 tests passing in 20.56 seconds.
 
-**SC-004 Deferral Rationale**: Backend package is fully refactored and isolated from framework dependencies. End-to-end validation of critical user flows (see spec.md Appendix A) requires resolving pre-existing `@findeg/ui` build issues unrelated to this feature. Backend-scoped validation (unit tests, integration tests) complete at 100%.
+**SC-004 Deferral Rationale**: Backend package is fully refactored and isolated from framework dependencies. End-to-end validation of critical user flows (see spec.md Appendix A) requires resolving pre-existing `@ui` build issues unrelated to this feature. Backend-scoped validation (unit tests, integration tests) complete at 100%.
 
 ---
 
@@ -136,7 +136,7 @@ All 10 Constitution principles satisfied:
 
 ### Category Breakdown
 
-**Note**: Remaining tasks require fixing pre-existing app-level UI dependencies (@findeg/ui import issues) that existed before the backend migration. The **backend package itself is fully production-ready**.
+**Note**: Remaining tasks require fixing pre-existing app-level UI dependencies (@ui import issues) that existed before the backend migration. The **backend package itself is fully production-ready**.
 
 **E2E Tests** (7 tasks - Optional):
 
@@ -160,7 +160,7 @@ All 10 Constitution principles satisfied:
 
 **Full Monorepo Validation** (1 task - Partially Complete):
 
-- [x] T152: Full monorepo build ✅ **PARTIAL** - Backend + UI build successfully; dashboard/storefront require @findeg/ui dependency fixes
+- [x] T152: Full monorepo build ✅ **PARTIAL** - Backend + UI build successfully; dashboard/storefront require @ui dependency fixes
 - [ ] T151: Full monorepo lint - Requires eslint-plugin-prettier + app-level config fixes
 - **Status**: Backend package builds and lints independently. Apps have pre-existing dependency issues.
 
@@ -188,15 +188,15 @@ $ grep -r "from ['\"]next/" packages/backend/src
 # Result: 0 matches ✅
 
 # All tests passing
-$ pnpm --filter @findeg/backend test
+$ pnpm --filter @backend test
 # Result: 188/188 tests, 13.15s ✅
 
 # Type-check passes
-$ pnpm --filter @findeg/backend type-check
+$ pnpm --filter @backend type-check
 # Result: Success ✅
 
 # Build succeeds
-$ pnpm --filter @findeg/backend build
+$ pnpm --filter @backend build
 # Result: Success ✅
 ```
 
@@ -218,7 +218,7 @@ $ pnpm --filter @findeg/backend build
 
 ### Ready for Deployment
 
-The `@findeg/backend` package is **production-ready** and can be deployed immediately:
+The `@backend` package is **production-ready** and can be deployed immediately:
 
 - ✅ Zero blocking issues
 - ✅ All critical requirements satisfied

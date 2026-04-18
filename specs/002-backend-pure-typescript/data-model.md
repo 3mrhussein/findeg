@@ -204,7 +204,7 @@ Backend services depend on these abstractions instead of concrete framework impl
 ```typescript
 // packages/backend/src/features/core/application/interfaces/ISessionProvider.ts
 
-import type { SessionPayload } from "@/features/core/domain/auth";
+import type { SessionPayload } from "@features/core/domain/auth";
 
 /**
  * Abstraction for session management.

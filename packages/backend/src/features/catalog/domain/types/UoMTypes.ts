@@ -49,9 +49,11 @@ export const PREDEFINED_UOMS: UoMDefinition[] = [
   },
 ];
 
-export type CustomerGroup = "public_b2c" | "school_b2b";
+import type { CustomerGroup } from "../../../core/domain/types/common";
+export type { CustomerGroup };
 
 export const CUSTOMER_GROUPS: { code: CustomerGroup; label: { en: string; ar: string } }[] = [
   { code: "public_b2c", label: { en: "Public (B2C)", ar: "عام" } },
   { code: "school_b2b", label: { en: "Schools (B2B)", ar: "مدارس" } },
+  { code: "wholesale", label: { en: "Wholesale", ar: "جملة" } },
 ];

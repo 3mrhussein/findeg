@@ -83,7 +83,7 @@ NEXT_PUBLIC_API_URL="http://localhost:3000"
 npm run db:start
 
 # Run migrations from backend package
-pnpm --filter @findeg/backend db:migrate
+pnpm --filter @backend db:migrate
 
 # (Optional) Seed database with sample data
 npm run seed-db
@@ -189,7 +189,7 @@ pnpm --filter backend db:migrate
 1. Create interface in `packages/backend/src/features/core/infrastructure/persistence/contracts/`
 2. Implement repository in `packages/backend/src/features/core/infrastructure/persistence/repositories/`
 3. Export from `packages/backend/src/features/core/index.ts`
-4. Frontend apps can now import: `import { INewRepository } from '@findeg/backend/features/core'`
+4. Frontend apps can now import: `import { INewRepository } from '@backend/features/core'`
 
 **Adding a New Domain Type**:
 
@@ -220,7 +220,7 @@ pnpm --filter dashboard test:e2e:open
 **Adding a New Admin Page**:
 
 1. Create route in `packages/dashboard/src/app/[locale]/admin/[feature]/`
-2. Import backend repositories: `import { getProductRepository } from '@findeg/backend'`
+2. Import backend repositories: `import { getProductRepository } from '@backend'`
 3. Use Server Actions for mutations
 4. Add translations to `packages/backend/src/features/core/infrastructure/cms/messages/{locale}.json`
 
@@ -230,8 +230,8 @@ pnpm --filter dashboard test:e2e:open
 // packages/dashboard/src/app/[locale]/admin/products/actions.ts
 'use server';
 
-import { getProductRepository, CreateProductSchema } from '@findeg/backend';
-import { requirePermission } from '@findeg/backend/features/identity';
+import { getProductRepository, CreateProductSchema } from '@backend';
+import { requirePermission } from '@backend/features/identity';
 import { revalidatePath } from 'next/cache';
 
 export async function createProduct(data: unknown) {
@@ -272,7 +272,7 @@ pnpm --filter storefront test:e2e
 
 ```typescript
 // packages/storefront/src/app/[locale]/(storefront)/products/page.tsx
-import { getProductRepository } from '@findeg/backend';
+import { getProductRepository } from '@backend';
 
 export default async function ProductsPage() {
   const repo = await getProductRepository();
@@ -377,7 +377,7 @@ turbo run build
    ```
 
 **How Dependencies Work**:
-- Dashboard and storefront depend on `@findeg/backend` via pnpm workspace linking
+- Dashboard and storefront depend on `@backend` via pnpm workspace linking
 - When backend builds, it generates `dist/` output
 - Frontend packages import from backend's `dist/` (via `package.json` exports)
 - TypeScript type checking validates imports at compile time
@@ -399,7 +399,7 @@ Turborepo caches build outputs. If frontend isn't updating:
 
 **Common Issues**:
 - **Stale TypeScript cache**: Delete `packages/*/tsconfig.tsbuildinfo` and rebuild
-- **Import path errors**: Ensure imports use correct paths (`@findeg/backend` not relative `../backend`)
+- **Import path errors**: Ensure imports use correct paths (`@backend` not relative `../backend`)
 - **Missing exports**: Check `packages/backend/package.json` exports field defines your new module
 
 
@@ -451,7 +451,7 @@ Components are duplicated by design. If synchronization needed later, extract to
 
 ## Troubleshooting
 
-### Issue: `Cannot find module '@findeg/backend'`
+### Issue: `Cannot find module '@backend'`
 
 **Cause**: Backend package not built or pnpm workspace linking broken
 

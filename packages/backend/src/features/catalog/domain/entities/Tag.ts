@@ -5,7 +5,7 @@
  */
 
 import { z } from "zod";
-import { IdSchema, LocalizedStringSchema } from "@/features/core/domain/types/common";
+import { IdSchema, LocalizedStringSchema } from "../../../core/domain/types/common";
 
 /**
  * Valid tag groups.
@@ -19,7 +19,14 @@ export type TagGroup = z.infer<typeof TagGroupSchema>;
  * Tag Visibility/Scope.
  * Defines where the tag is applicable.
  */
-export const TagScopeSchema = z.enum(["catalog", "school", "campaign", "system"]);
+export const TagScopeSchema = z.enum([
+  "catalog",
+  "school",
+  "campaign",
+  "system",
+  "search",
+  "editorial",
+]);
 export type TagScope = z.infer<typeof TagScopeSchema>;
 
 export const TagSchema = z.object({

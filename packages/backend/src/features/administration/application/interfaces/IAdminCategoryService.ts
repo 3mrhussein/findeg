@@ -4,9 +4,9 @@
  * Defines CRUD operations for category management in the admin dashboard.
  */
 
-import { Category } from "@/features/catalog/domain/entities/Category";
-import { CategoryInput } from "@/features/administration/domain/types";
-import type { Locale } from "@/features/core/domain/value-objects";
+import { Category } from "@backend/features/catalog/domain/entities/Category";
+import { CategoryInput } from "@backend/features/administration/domain/types";
+import type { Locale } from "@backend/features/core/domain/value-objects";
 
 export interface IAdminCategoryService {
   /**

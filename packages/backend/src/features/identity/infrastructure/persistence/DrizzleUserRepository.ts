@@ -1,6 +1,6 @@
-import { ID, Email, PortalRole } from "@/features/core/domain/types/common";
-import { UserWithPassword } from "@/features/core/domain/auth";
-import { db } from "@/features/core/infrastructure/persistence";
+import { ID, Email, PortalRole } from "../../../core/domain/types/common";
+import { UserWithPassword } from "../../../core/domain/auth";
+import { db } from "../../../core/infrastructure/persistence";
 import {
   users,
   userRoles,
@@ -10,12 +10,12 @@ import {
   passwordCredentials,
   roles,
   type User as DbUser,
-} from "@/features/core/infrastructure/persistence/schema";
+} from "../../../core/infrastructure/persistence/schema";
 import { IUserRepository } from "../../application/interfaces/IUserRepository";
 import { User } from "../../domain/entities/User";
 import { PasswordCredentials, HashStrategy } from "../../domain/entities/PasswordCredentials";
 import { eq } from "drizzle-orm";
-import type { PermissionCode, RoleId } from "@/features/core/domain/value-objects";
+import type { PermissionCode, RoleId } from "../../../core/domain/value-objects";
 
 /**
  * Drizzle User Repository

@@ -11,12 +11,12 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@i18n/navigation";
 import { useTranslations, useLocale } from "next-intl";
-import { Logo } from "@findeg/ui";
-import { Icon } from "@findeg/ui";
-import { PERMISSION_CODES } from "@/features/core/domain/auth";
-import { usePermissions } from "@/providers/PermissionsProvider";
+import { Logo } from "@ui";
+import { Icon } from "@ui";
+import { PERMISSION_CODES } from "@backend/features/core/domain/auth";
+import { usePermissions } from "@providers/PermissionsProvider";
 import {
   Sidebar,
   SidebarContent,
@@ -30,9 +30,9 @@ import {
   SidebarRail,
   SidebarSeparator,
   useSidebar,
-} from "@findeg/ui";
-import ToggleTheme from "@findeg/ui";
-import ToggleLanguage from "@/components/shared/ToggleLanguage";
+} from "@ui";
+import { ToggleTheme } from "@ui";
+import ToggleLanguage from "@components/shared/ToggleLanguage";
 
 type DashboardView =
   | "overview"

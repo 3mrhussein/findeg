@@ -1,4 +1,4 @@
-import { PortalRole } from "../types/common";
+import { PortalRole } from "../types/primitives";
 import type { SessionPayload } from "./SessionPayload";
 
 /**

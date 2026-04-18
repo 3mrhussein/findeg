@@ -174,7 +174,7 @@ export function isDomainError(error: unknown): error is DomainError {
  *   NotAuthenticatedError,
  *   NotAuthorizedError,
  *   ResourceNotFoundError
- * } from "@findeg/backend/features/core";
+ * } from "@backend/features/core";
  * 
  * export function handleDomainError(error: unknown): never {
  *   if (error instanceof NotAuthenticatedError) {

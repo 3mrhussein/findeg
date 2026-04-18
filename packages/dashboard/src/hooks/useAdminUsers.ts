@@ -11,6 +11,13 @@
 
 import { useState, useCallback } from "react";
 
+import type {
+  AdminUser,
+  CreateAdminInput,
+  UpdateAdminInput,
+  PermissionOverrideInput,
+} from "@backend/features/identity";
+
 export interface AdminUserRole {
   id: number;
   code: string;
@@ -19,37 +26,6 @@ export interface AdminUserRole {
 
 export interface PermissionOverride {
   permissionCode: string;
-  action: "grant" | "revoke";
-}
-
-export interface AdminUser {
-  id: number;
-  email: string;
-  firstName: string | null;
-  lastName: string | null;
-  isActive: boolean;
-  roles: AdminUserRole[];
-  permissionOverrides: PermissionOverride[];
-  createdAt: string;
-}
-
-export interface CreateAdminInput {
-  email: string;
-  firstName: string;
-  lastName: string;
-  password: string;
-  roleIds: number[];
-}
-
-export interface UpdateAdminInput {
-  firstName?: string;
-  lastName?: string;
-  roleIds?: number[];
-  isActive?: boolean;
-}
-
-export interface PermissionOverrideInput {
-  permissionId: number;
   action: "grant" | "revoke";
 }
 

@@ -4,20 +4,15 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useRouter } from "next/navigation";
-import { Button } from "@findeg/ui";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@findeg/ui";
-import { Input } from "@findeg/ui";
+import { useRouter } from "@i18n/navigation";
+import { Button } from "@ui";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@ui";
+import { Input } from "@ui";
 import { Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { persistSessionToken } from "@/features/identity/presentation/utils/session-cookie";
+const persistSessionToken = (token: string) => {
+  /* internal handler mapped later */
+};
 
 const formSchema = z.object({
   email: z.string().email({

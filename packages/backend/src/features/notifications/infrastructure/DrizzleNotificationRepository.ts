@@ -1,9 +1,9 @@
-import { db } from "@/features/core/infrastructure/persistence";
+import { db } from "@backend/features/core/infrastructure/persistence";
 import {
   notifications,
   Notification,
   NewNotification,
-} from "@/features/core/infrastructure/persistence/schema/notifications";
+} from "@backend/features/core/infrastructure/persistence/schema/notifications";
 import { INotificationRepository } from "../application/interfaces/INotificationRepository";
 import { eq, and, desc, count } from "drizzle-orm";
 

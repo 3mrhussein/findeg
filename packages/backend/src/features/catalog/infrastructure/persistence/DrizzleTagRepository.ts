@@ -1,11 +1,11 @@
-import { db } from "@/features/core/infrastructure/persistence";
-import { tags, productTags, products } from "@/features/core/infrastructure/persistence/schema";
+import { db } from "../../../core/infrastructure/persistence";
+import { tags, productTags, products } from "../../../core/infrastructure/persistence/schema";
 import { ITagRepository } from "../../application/interfaces/ITagRepository";
 import { Tag, TagGroup, CreateTag } from "../../domain/entities/Tag";
 import { Product } from "../../domain/entities/Product";
 import { eq, and, inArray } from "drizzle-orm";
-import { ID, Locale } from "@/features/core/domain/types/common";
-import { DEFAULT_LOCALE } from "@/features/core/domain/value-objects";
+import { ID, Locale } from "../../../core/domain/types/common";
+import { DEFAULT_LOCALE } from "../../../core/domain/value-objects";
 
 export class DrizzleTagRepository implements ITagRepository {
   async getAll(): Promise<Tag[]> {

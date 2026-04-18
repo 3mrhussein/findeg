@@ -1,6 +1,6 @@
 "use client";
 
-import { PageStateError } from "@/components/shared/state/PageStateError";
+import { PageStateError } from "@components/shared/state/PageStateError";
 import { useTranslations } from "next-intl";
 
 interface ProductErrorProps {

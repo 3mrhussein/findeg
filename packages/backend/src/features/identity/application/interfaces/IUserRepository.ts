@@ -1,8 +1,8 @@
-import { ID, Email } from "@/features/core/domain/types/common";
-import { UserWithPassword } from "@/features/core/domain/auth";
+import { ID, Email } from "@backend/features/core/domain/types/common";
+import { UserWithPassword } from "@backend/features/core/domain/auth";
 import { User } from "../../domain/entities/User";
 import { PasswordCredentials } from "../../domain/entities/PasswordCredentials";
-import type { PermissionCode, RoleId } from "@/features/core/domain/value-objects";
+import type { PermissionCode, RoleId } from "@backend/features/core/domain/value-objects";
 
 /**
  * User Repository Interface

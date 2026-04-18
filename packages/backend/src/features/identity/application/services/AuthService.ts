@@ -17,10 +17,10 @@ import {
   RegisterInput,
   SessionPayload,
   createUserVO,
-} from "@/features/core/domain/auth";
-import { isAdminSession, PERMISSION_CODES } from "@/features/core/domain/auth/authorization";
+} from "../../../core/domain/auth";
+import { isAdminSession, PERMISSION_CODES } from "../../../core/domain/auth/authorization";
 import bcrypt from "bcryptjs";
-import { getErrorDefinition, resolveErrorMessage } from "@/features/core/domain/errors";
+import { getErrorDefinition, resolveErrorMessage } from "../../../core/domain/errors";
 
 /**
  * Authentication Service

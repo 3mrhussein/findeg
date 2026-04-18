@@ -1,45 +1,41 @@
 "use server";
 
-import { container } from "@/features/core/infrastructure/di/ServiceContainer";
-import { revalidatePath, revalidateTag } from "next/cache";
-import { InventoryUpdate } from "@/features/administration/domain/types";
-import { CACHE_TAGS } from "@/features/core/domain/constants/cache-tags";
-import { resolveErrorMessage } from "@/features/core/domain/errors";
+import { updateTag } from "next/cache";
+import { createAdministrationServices } from "@backend/features/administration";
+import type { InventoryUpdate } from "@backend/features/administration/domain/types";
+import { getErrorMessage } from "@lib/type-guards";
 
 /**
- * Updates the stock level for a specific product.
+ * Admin Inventory Actions (Dashboard Data Layer)
  *
- * @param input - The inventory update payload containing product ID and new quantity.
- * @returns Object indicating success or failure with error message.
+ * Uses "use server" directive and calls backend service factories.
+ * Implements cache invalidation via updateTag().
  */
+
 export async function updateStockAction(input: InventoryUpdate) {
   try {
-    const service = container.adminInventoryService;
-    await service.updateStock(input);
-    revalidatePath("/admin/inventory");
-    revalidatePath("/admin/products");
-    revalidateTag(CACHE_TAGS.CATALOG_PRODUCTS, "max");
+    const { inventory } = createAdministrationServices();
+    await inventory.updateStock(input);
+
+    updateTag("inventory");
+    updateTag("products"); // Product stock affects product data
     return { success: true };
-  } catch (error: any) {
-    return { success: false, error: resolveErrorMessage(error, "SYSTEM_UNEXPECTED_ERROR") };
+  } catch (error: unknown) {
+    console.error("[updateStockAction]", error);
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
-/**
- * Applies stock updates for multiple products in one operation.
- *
- * @param updates - Array of inventory updates.
- * @returns Object indicating success or failure with error message.
- */
 export async function bulkUpdateStockAction(updates: InventoryUpdate[]) {
   try {
-    const service = container.adminInventoryService;
-    await service.bulkUpdateStock(updates);
-    revalidatePath("/admin/inventory");
-    revalidatePath("/admin/products");
-    revalidateTag(CACHE_TAGS.CATALOG_PRODUCTS, "max");
+    const { inventory } = createAdministrationServices();
+    await inventory.bulkUpdateStock(updates);
+
+    updateTag("inventory");
+    updateTag("products"); // Product stock affects product data
     return { success: true };
-  } catch (error: any) {
-    return { success: false, error: resolveErrorMessage(error, "SYSTEM_UNEXPECTED_ERROR") };
+  } catch (error: unknown) {
+    console.error("[bulkUpdateStockAction]", error);
+    return { success: false, error: getErrorMessage(error) };
   }
 }

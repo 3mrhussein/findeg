@@ -34,7 +34,7 @@ import {
   formatDateTime,
   formatRelativeTime,
   formatNumber,
-} from "@findeg/backend";
+} from "@backend";
 
 // Validation schemas
 import {
@@ -47,11 +47,11 @@ import {
   CreateOrderSchema,
   UpdateOrderSchema,
   OrderStatusSchema,
-} from "@findeg/backend/types";
+} from "@backend/types";
 
 // Feature-specific exports
-import { MediaService } from "@findeg/backend/features/media";
-import { DrizzleCategoryRepository } from "@findeg/backend/features/catalog";
+import { MediaService } from "@backend/features/media";
+import { DrizzleCategoryRepository } from "@backend/features/catalog";
 ```
 
 ## Verification Status

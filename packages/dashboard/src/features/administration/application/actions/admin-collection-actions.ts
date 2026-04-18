@@ -1,110 +1,67 @@
 "use server";
 
-import { container } from "@/features/core/infrastructure/di/ServiceContainer";
-import { revalidatePath, revalidateTag } from "next/cache";
-import { CollectionInput } from "@/features/administration/domain/types";
-import { resolveErrorMessage } from "@/features/core/domain/errors/error-catalog";
-import { CACHE_TAGS } from "@/features/core/domain/constants/cache-tags";
-import { isSystemAdmin } from "@/features/core/domain/auth/authorization";
+import { CollectionInput } from "@backend/features/administration/domain/types";
+import { updateTag } from "next/cache";
+import { createAdministrationServices } from "@backend/features/administration";
+import { getErrorMessage } from "@lib/type-guards";
 
 /**
- * Creates a new collection from the admin panel.
+ * Admin Collection Actions (Dashboard Data Layer)
+ *
+ * Uses "use server" directive and calls backend service factories.
+ * Implements cache invalidation via updateTag().
  */
+
 export async function adminCreateCollectionAction(input: CollectionInput) {
   try {
-    const session = await container.authService.validateAdmin();
-    const isAuthorized =
-      isSystemAdmin(session) || session.activeRoleIds?.includes("catalog_manager");
-    if (!isAuthorized) throw new Error("Forbidden: requires Catalog Manager or Super Admin role");
+    const { collections } = createAdministrationServices();
+    const result = await collections.create(input);
 
-    const service = container.adminCollectionService;
-    const collection = await service.create(input, Number(session.userId));
-
-    revalidatePath("/admin/collections");
-    revalidateTag(CACHE_TAGS.CATALOG_COLLECTIONS, "max");
-
-    return { success: true, collectionId: collection.id };
-  } catch (error: any) {
-    return {
-      success: false,
-      error: resolveErrorMessage(error, "ACTION_COLLECTION_CREATE_FAILED" as any),
-    };
+    updateTag("collections");
+    return { success: true, data: result };
+  } catch (error: unknown) {
+    console.error("[adminCreateCollectionAction]", error);
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
-/**
- * Updates an existing collection from the admin panel.
- */
 export async function adminUpdateCollectionAction(id: number, input: CollectionInput) {
   try {
-    const session = await container.authService.validateAdmin();
-    const isAuthorized =
-      isSystemAdmin(session) || session.activeRoleIds?.includes("catalog_manager");
-    if (!isAuthorized) throw new Error("Forbidden: requires Catalog Manager or Super Admin role");
+    const { collections } = createAdministrationServices();
+    const result = await collections.update(id, input);
 
-    const service = container.adminCollectionService;
-    const collection = await service.update(id, input, Number(session.userId));
-
-    revalidatePath("/admin/collections");
-    revalidateTag(CACHE_TAGS.CATALOG_COLLECTIONS, "max");
-    revalidateTag(CACHE_TAGS.collectionDetail(id), "max");
-
-    return { success: true, collectionId: collection.id };
-  } catch (error: any) {
-    return {
-      success: false,
-      error: resolveErrorMessage(error, "ACTION_COLLECTION_UPDATE_FAILED" as any),
-    };
+    updateTag("collections");
+    return { success: true, data: result };
+  } catch (error: unknown) {
+    console.error("[adminUpdateCollectionAction]", error);
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
-/**
- * Deletes a collection by its ID.
- */
 export async function adminDeleteCollectionAction(id: number) {
   try {
-    const session = await container.authService.validateAdmin();
-    const isAuthorized =
-      isSystemAdmin(session) || session.activeRoleIds?.includes("catalog_manager");
-    if (!isAuthorized) throw new Error("Forbidden: requires Catalog Manager or Super Admin role");
+    const { collections } = createAdministrationServices();
+    await collections.delete(id);
 
-    const service = container.adminCollectionService;
-    await service.delete(id, Number(session.userId));
-
-    revalidatePath("/admin/collections");
-    revalidateTag(CACHE_TAGS.CATALOG_COLLECTIONS, "max");
-    revalidateTag(CACHE_TAGS.collectionDetail(id), "max");
-
+    updateTag("collections");
     return { success: true };
-  } catch (error: any) {
-    return {
-      success: false,
-      error: resolveErrorMessage(error, "ACTION_COLLECTION_DELETE_FAILED" as any),
-    };
+  } catch (error: unknown) {
+    console.error("[adminDeleteCollectionAction]", error);
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
-/**
- * Reorders collections in the catalog.
- */
-export async function adminReorderCollectionsAction(items: { id: number; sortOrder: number }[]) {
+export async function adminReorderCollectionsAction(
+  updates: Array<{ id: number; sortOrder: number }>,
+) {
   try {
-    const session = await container.authService.validateAdmin();
-    const isAuthorized =
-      isSystemAdmin(session) || session.activeRoleIds?.includes("catalog_manager");
-    if (!isAuthorized) throw new Error("Forbidden: requires Catalog Manager or Super Admin role");
+    const { collections } = createAdministrationServices();
+    await collections.reorder(updates);
 
-    const service = container.adminCollectionService;
-    await service.reorder(items, Number(session.userId));
-
-    revalidatePath("/admin/collections");
-    revalidateTag(CACHE_TAGS.CATALOG_COLLECTIONS, "max");
-
+    updateTag("collections");
     return { success: true };
-  } catch (error: any) {
-    return {
-      success: false,
-      error: resolveErrorMessage(error, "ACTION_COLLECTION_REORDER_FAILED" as any),
-    };
+  } catch (error: unknown) {
+    console.error("[adminReorderCollectionsAction]", error);
+    return { success: false, error: getErrorMessage(error) };
   }
 }

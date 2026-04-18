@@ -1,6 +1,6 @@
-import { db } from "@/features/core/infrastructure/persistence";
-import { searchLogs } from "@/features/core/infrastructure/persistence/schema/search-logs";
-import { products } from "@/features/core/infrastructure/persistence/schema/products";
+import { db } from "../../../core/infrastructure/persistence";
+import { searchLogs } from "../../../core/infrastructure/persistence/schema/search-logs";
+import { products } from "../../../core/infrastructure/persistence/schema/products";
 import {
   IAdminSearchAnalyticsRepository,
   SearchAnalyticsMetrics,

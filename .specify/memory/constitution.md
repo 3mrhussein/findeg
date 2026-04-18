@@ -10,7 +10,7 @@ Domain logic MUST be completely isolated from technical details (database, UI fr
 
 ### II. Server-Components First & Type-Safe Rendering with Next.js 16 Caching
 
-Server Components are the default for all new UI. Client Components (`'use client'`) are permitted ONLY for interactive elements (forms, client state, event handlers). All data fetching must flow through Services or ViewModels in the application layer—no direct DB access in routes. Caching logic MUST be handled in app-layer server components or actions using `'use cache'` directives where appropriate—backend packages do NOT manage revalidation or cache tags. TypeScript strict mode is MANDATORY. No `as any` casts are permitted; interfaces and adapters must be properly typed. Every API boundary must validate input with Zod schemas; every domain entity must be strongly typed.
+Server Components are the default for all new UI. Client Components (`'use client'`) are permitted ONLY for interactive elements (forms, client state, event handlers). All data fetching must flow through **App Data Layer** in `src/data/{feature}/{queries|actions}.ts` using Next.js 16 Cache Components (`'use cache'` directive). The app data layer is the **single source of truth for caching decisions**: it calls backend services and wraps results with `'use cache'` for queries or `'use server'` for mutations. Backend packages MUST NOT contain `'use cache'`, `'use server'`, or any `next/cache` imports—they remain pure TypeScript. Cache invalidation via `updateTag()` or `revalidateTag()` happens exclusively at the app layer, never in backend code. TypeScript strict mode is MANDATORY. No `as any` casts are permitted; interfaces and adapters must be properly typed. Every API boundary must validate input with Zod schemas; every domain entity must be strongly typed.
 
 ### III. Bilingual & RTL-First (i18n Mandatory)
 
@@ -40,11 +40,31 @@ All code adheres to SOLID principles to maximize maintainability and testability
 
 ### VIII. Backend Packages (Pure TypeScript Libraries)
 
-Backend packages (`@findeg/backend`) MUST be pure TypeScript libraries containing ONLY domain logic, services, adapters, and pure functions. Next.js APIs, server actions, `'use cache'` directives, or any framework-specific runtime features are STRICTLY FORBIDDEN in backend packages. The backend package provides business logic contracts, interfaces, types, schemas, and service implementations—nothing more. All UI components, routes, server actions, and caching logic belong exclusively to app packages (`@findeg/dashboard`, `@findeg/storefront`). Backend packages are framework-agnostic and testable in isolation without Next.js runtime.
+Backend packages (`@backend`) MUST be pure TypeScript libraries containing ONLY domain logic, services, adapters, and pure functions. **Next.js APIs (`'use cache'`, `'use server'`, `updateTag`, `cacheTag`), server actions, or any framework-specific runtime features are STRICTLY FORBIDDEN in backend packages.** The backend package provides business logic contracts, interfaces, types, schemas, service classes, and service factory functions—nothing more. All UI components, routes, server actions, caching directives, and cache invalidation logic belong exclusively to app packages (`@dashboard`, `@storefront`). Backend packages are framework-agnostic and testable in isolation without Next.js runtime.
+
+**Service Factory Pattern**: Backend features export factory functions (e.g., `createCatalogServices()`, `createOrderServices()`) that return service instances. Apps call these factories to get service instances, then wrap the service calls in `'use cache'` queries or `'use server'` actions at the app layer.
+
+**Example**:
+```typescript
+// Backend (pure TS, no Next.js)
+export function createCatalogServices() {
+  const db = DrizzleConnection.getInstance();
+  return { products: new ProductService(db) };
+}
+
+// App data layer (with Next.js caching)
+'use cache';
+import { createCatalogServices } from '@backend/features/catalog';
+export async function getProducts(locale) {
+  cacheTag('products');
+  const { products } = createCatalogServices();
+  return await products.getAll(locale);
+}
+```
 
 ### IX. Monorepo Architecture & Package Boundaries
 
-The monorepo structure enforces strict package boundaries via Turborepo and pnpm workspaces. Four packages exist: `@findeg/ui` (shared React components), `@findeg/backend` (business logic), `@findeg/dashboard` (admin app), and `@findeg/storefront` (customer app). Apps depend on `@findeg/ui` and `@findeg/backend`; backend and UI packages are independent with NO circular dependencies. Features within the backend package MUST be self-contained—cross-feature dependencies are ONLY permitted through application-layer interfaces defined in `core`. Backend packages CANNOT depend on app-layer code or UI components. All shared utilities, types, and cross-cutting concerns live in `@findeg/backend/features/core` or `@findeg/ui/lib`. Violating package boundaries (e.g., importing another feature's infrastructure directly, or importing app code into backend) is a critical architecture violation and must be refactored immediately.
+The monorepo structure enforces strict package boundaries via Turborepo and pnpm workspaces. Four packages exist: `@ui` (shared React components), `@backend` (business logic), `@dashboard` (admin app), and `@storefront` (customer app). Apps depend on `@ui` and `@backend`; backend and UI packages are independent with NO circular dependencies. Features within the backend package MUST be self-contained—cross-feature dependencies are ONLY permitted through application-layer interfaces defined in `core`. Backend packages CANNOT depend on app-layer code or UI components. All shared utilities, types, and cross-cutting concerns live in `@backend/features/core` or `@ui/lib`. Violating package boundaries (e.g., importing another feature's infrastructure directly, or importing app code into backend) is a critical architecture violation and must be refactored immediately.
 
 ### X. Source vs Build Artifacts (STRICT)
 
@@ -252,7 +272,7 @@ Principles Modified/Added:
    - Can be used in Node.js, Vercel Functions, or future runtimes without modification
 
 ✅ Principle IX (NEW): Monorepo Architecture & Package Boundaries
-   - Defines 4-package structure: @findeg/ui, @findeg/backend, @findeg/dashboard, @findeg/storefront
+   - Defines 4-package structure: @ui, @backend, @dashboard, @storefront
    - Enforces dependency flow: apps depend on ui + backend; backend/ui are independent
    - Cross-feature dependencies only via core application interfaces
    - Violating package boundaries is critical architecture violation

@@ -12,7 +12,7 @@ import { z } from "zod";
 // ============================================================================
 
 export const CreateUserSchema = z.object({
-  email: z.string().email("Invalid email address"),
+  email: z.email("Invalid email address"),
   name: z.string().min(1, "Name is required").max(255, "Name is too long"),
   password: z
     .string()
@@ -178,7 +178,7 @@ export const CategoryFiltersSchema = z.object({
 export type CategoryFilters = z.infer<typeof CategoryFiltersSchema>;
 
 export const OrderFiltersSchema = PaginationSchema.extend({
-  userId: z.string().uuid().optional(),
+  userId: z.uuid().optional(),
   status: z.union([OrderStatusSchema, z.array(OrderStatusSchema)]).optional(),
   dateFrom: z.date().optional(),
   dateTo: z.date().optional(),

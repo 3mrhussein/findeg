@@ -10,9 +10,9 @@
 "use client";
 
 import * as React from "react";
-import { Badge } from "@findeg/ui";
-import { cn } from "@/lib/utils";
-import type { OrderStatus } from "@/features/core/domain/types/common";
+import { Badge } from "@ui";
+import { cn } from "@lib/utils";
+import { OrderStatus } from "@backend/features/core/domain/types/common";
 
 type ProductStatus = "active" | "draft" | "inactive";
 type StockStatus = "healthy" | "low" | "out";

@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@findeg/ui";
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@ui";
 import { Search, X, Clock, TrendingUp } from "lucide-react";
-import { useRouter } from "@/i18n/navigation";
-import { Button } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { IconTooltip } from "@findeg/ui";
+import { useRouter } from "@i18n/navigation";
+import { Button } from "@ui";
+import { Input } from "@ui";
+import { IconTooltip } from "@ui";
 
 /**
  *
@@ -66,7 +66,7 @@ export function SearchOverlay() {
             placeholder="Search for stationery, backpacks, art supplies..."
             className="w-full bg-transparent border-0 ps-12 pe-12 text-xl sm:text-2xl font-semibold placeholder:text-slate-400 text-slate-900 dark:text-white h-14 focus-visible:ring-0 shadow-none"
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
             autoFocus
           />
           <IconTooltip label="Close search" asChild>

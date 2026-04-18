@@ -1,45 +1,28 @@
 # Media Feature
 
-Owns file upload/storage workflows and URL generation for assets used across features.
+The **Media Feature** strictly isolates file physical storage physics from the rest of the generic FindEg marketplace domain logic.
 
-## Use Cases
+## 🎯 Core Responsibilities
 
-```mermaid
-flowchart LR
-    Admin --> UC1[Upload product/brand assets]
-    Service --> UC2[Resolve public URL]
-    Admin --> UC3[Delete obsolete assets]
-```
+- **Storage Polymorphism**: Providing transparent interfaces (e.g. `IMediaStorageProvider`) to swap seamlessly between Local disk storage (Development) and CDN Edge networks (Production).
+- **MIME & Integrity Check**: Strictly enforcing boundary checks ensuring massive payloads or malicious executed files never breach the catalog systems.
 
-## UML (Class View)
+---
 
-```mermaid
-classDiagram
-    class MediaService
-    class IStorageProvider
-    class LocalStorageProvider
+## 🏗️ Domain Entities Map
 
-    MediaService --> IStorageProvider
-    LocalStorageProvider ..|> IStorageProvider
-```
+| Entity                  | System Role                                                                                         |
+| ----------------------- | --------------------------------------------------------------------------------------------------- |
+| `MediaAsset.ts`         | A pointer containing the canonical UUID, the CDN string path, and multi-language semantic Alt tags. |
+| `ResponsiveMediaSet.ts` | Virtual maps pointing to pre-computed edge transformations (Mobile, Tablet, Desktop Retina).        |
 
-## Sequence (Upload)
+---
 
-```mermaid
-sequenceDiagram
-    participant API as /api/v1/media
-    participant Media as MediaService
-    participant Storage as IStorageProvider
-    API->>Media: upload(file)
-    Media->>Storage: save(path, bytes)
-    Storage-->>Media: public URL
-    Media-->>API: upload result
-```
+## 🔐 Configuration Boundaries
 
-## Layer Notes
-- `application`: `MediaService` orchestration.
-- `infrastructure`: storage provider adapters.
+- **Never Base64**: The backend Database (Postgres via Drizzle) MUST NEVER store raw binary media. It only stores the `String key` metadata.
+- **Provider Injection**: The presentation layer never touches S3 logic directly; the backend exposes a pre-signed URL generation service via `ServiceResult` mapping.
 
-## Clean Architecture Boundaries
-- Depends on `core` storage ports only.
-- Catalog/admin features consume media URLs; they should not manage storage internals directly.
+---
+
+&copy; 2026 FindEg.com

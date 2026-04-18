@@ -7,8 +7,8 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { PermissionService } from "../services/PermissionService";
 import { IUserRepository } from "../interfaces/IUserRepository";
-import { ID } from "@/features/core/domain/types/common";
-import { PermissionCode, RoleId } from "@/features/core/domain/value-objects";
+import { ID } from "@backend/features/core/domain/types/common";
+import { PermissionCode, RoleId } from "@backend/features/core/domain/value-objects";
 
 describe("PermissionService", () => {
   let permissionService: PermissionService;

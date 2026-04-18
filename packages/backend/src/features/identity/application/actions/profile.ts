@@ -1,3 +1,5 @@
+"use server";
+
 /**
  * Pure TypeScript Profile Update Action
  *
@@ -5,18 +7,19 @@
  * App-layer (dashboard) handles revalidatePath() and redirect() after update.
  */
 
-import { container } from "@/features/core/infrastructure/di/ServiceContainer";
-import { NotAuthenticatedError, ValidationError } from "@/features/core/domain/errors";
-import type { ServiceResult } from "@/features/core/application/types";
+import { NotAuthenticatedError, ValidationError } from "@backend/features/core/domain/errors";
+import type { ServiceResult } from "@backend/features/core/application/types";
+import type { IUserRepository } from "../interfaces/IUserRepository";
 
 /**
  * Pure profile update service - no framework calls.
  *
- * Updates user profile and returns cache paths to revalidate.
- * Throws validation or authentication errors.
- * App-layer handles revalidatePath() and redirect().
+ * @param userRepository - Injected user repository
+ * @param userId - ID of the user to update
+ * @param name - New display name
  */
 export async function updateMyProfile(
+  userRepository: IUserRepository,
   userId: number,
   name: string,
 ): Promise<
@@ -37,7 +40,7 @@ export async function updateMyProfile(
   const [firstName, ...lastNameParts] = trimmedName.split(" ");
   const lastName = lastNameParts.join(" ") || undefined;
 
-  await container.userRepository.update(userId, { firstName, lastName });
+  await userRepository.update(userId, { firstName, lastName });
 
   return {
     success: true,

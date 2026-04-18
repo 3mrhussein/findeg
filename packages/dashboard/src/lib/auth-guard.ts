@@ -1,15 +1,15 @@
-import { container } from "@/features/core/infrastructure/di/ServiceContainer";
-import { redirect } from "@/i18n/navigation";
-import { isAdminSession } from "@/features/core/domain/auth/authorization";
-import type { SessionPayload } from "@/features/core/domain/auth";
+import { redirect } from "@i18n/navigation";
+import { isAdminSession } from "@backend/features/core";
+import type { SessionPayload } from "@backend/features/core";
 import type { Locale } from "next-intl";
+import { getSession } from "@lib/session";
 
 /**
  * Require any authenticated user — redirects to /login if not.
  * Use in layouts/pages that require a logged-in user.
  */
 export async function requireAuth(locale: Locale): Promise<SessionPayload> {
-  const session = await container.authService.getSession();
+  const session = await getSession();
   if (!session) {
     redirect({ href: "/login", locale });
   }
@@ -21,9 +21,9 @@ export async function requireAuth(locale: Locale): Promise<SessionPayload> {
  * Use in the (admin) protected layout.
  */
 export async function requireAdmin(locale: Locale): Promise<SessionPayload> {
-  const session = await container.authService.getSession();
+  const session = await getSession();
   if (!session || !isAdminSession(session)) {
-    redirect({ href: "/admin/login", locale });
+    redirect({ href: "/login", locale });
   }
   return session!;
 }
@@ -33,12 +33,12 @@ export async function requireAdmin(locale: Locale): Promise<SessionPayload> {
  * Admins go to /admin, regular users go to /dashboard.
  */
 export async function redirectIfAuthenticated(locale: Locale): Promise<void> {
-  const session = await container.authService.getSession();
+  const session = await getSession();
   if (session) {
     if (isAdminSession(session)) {
-      redirect({ href: "/admin", locale });
+      redirect({ href: "/", locale });
     } else {
-      redirect({ href: "/dashboard", locale });
+      redirect({ href: "/", locale });
     }
   }
 }
@@ -48,5 +48,5 @@ export async function redirectIfAuthenticated(locale: Locale): Promise<void> {
  * Returns null for guests. Use in public pages with auth-aware components.
  */
 export async function getOptionalSession(): Promise<SessionPayload | null> {
-  return container.authService.getSession();
+  return await getSession();
 }

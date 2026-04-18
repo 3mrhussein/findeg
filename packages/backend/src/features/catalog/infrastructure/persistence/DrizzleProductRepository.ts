@@ -1,4 +1,4 @@
-import { db } from "@/features/core/infrastructure/persistence";
+import { db } from "../../../core/infrastructure/persistence";
 import {
   products,
   productVariants,
@@ -17,7 +17,7 @@ import {
   warehouses,
   type Product as DbProduct,
   type VariantImage as DbVariantImage,
-} from "@/features/core/infrastructure/persistence/schema";
+} from "../../../core/infrastructure/persistence/schema";
 import {
   IProductRepository,
   ProductFilters,
@@ -25,7 +25,7 @@ import {
 import { Product } from "../../domain/entities/Product";
 import { Variant } from "../../domain/entities/Variant";
 import { Tag } from "../../domain/entities/Tag";
-import { ProductInput } from "@/features/administration/domain/types";
+import { ProductInput } from "../../../administration/domain/types";
 import {
   eq,
   and,
@@ -47,7 +47,7 @@ import {
   Rating,
   CustomerGroup,
   UomCode,
-} from "@/features/core/domain/types/common";
+} from "../../../core/domain/types/common";
 import {
   DEFAULT_CURRENCY,
   DEFAULT_LOCALE,
@@ -56,7 +56,7 @@ import {
   type CurrencyCode,
   type Locale,
   type ResponsiveMediaSet,
-} from "@/features/core/domain/value-objects";
+} from "../../../core/domain/value-objects";
 
 /**
  * Drizzle Product Repository
@@ -341,7 +341,11 @@ export class DrizzleProductRepository implements IProductRepository {
         .limit(1);
 
       categoryName = categoryResult[0]?.localizedName
-        ? resolveLocalizedString(categoryResult[0].localizedName as { en: string; ar: string }, language, DEFAULT_LOCALE)
+        ? resolveLocalizedString(
+            categoryResult[0].localizedName as { en: string; ar: string },
+            language,
+            DEFAULT_LOCALE,
+          )
         : undefined;
     }
 
@@ -381,6 +385,7 @@ export class DrizzleProductRepository implements IProductRepository {
         and(
           eq(products.isActive, true),
           or(
+            ilike(products.skuPrefix, normalizedSlug),
             sql`LOWER(COALESCE(${products.localizedSlug} ->> 'en', '')) = ${normalizedSlug}`,
             sql`LOWER(COALESCE(${products.localizedSlug} ->> ${language}, '')) = ${normalizedSlug}`,
             sql`EXISTS (
@@ -467,7 +472,11 @@ export class DrizzleProductRepository implements IProductRepository {
       .limit(1);
 
     const categoryName = categoryResult[0]?.localizedName
-      ? resolveLocalizedString(categoryResult[0].localizedName as { en: string; ar: string }, language, DEFAULT_LOCALE)
+      ? resolveLocalizedString(
+          categoryResult[0].localizedName as { en: string; ar: string },
+          language,
+          DEFAULT_LOCALE,
+        )
       : undefined;
 
     const productIds = results.map((r) => r.product.id);
@@ -734,7 +743,7 @@ export class DrizzleProductRepository implements IProductRepository {
    */
   async getLowStock(threshold?: Quantity, language: Locale = DEFAULT_LOCALE): Promise<Product[]> {
     const { inventoryBalances } =
-      await import("@/features/core/infrastructure/persistence/schema/inventory");
+      await import("../../../core/infrastructure/persistence/schema/inventory");
 
     // Search across variants for low stock by joining with inventory balances
     const variantSubquery = db
@@ -873,7 +882,10 @@ export class DrizzleProductRepository implements IProductRepository {
                 variantId: newVariant.id,
                 productId: newProduct.id,
                 variantKey: v.variantKey,
-                customerGroup: p.customerGroup as unknown as "public_b2c" | "school_b2b" | "wholesale",
+                customerGroup: p.customerGroup as unknown as
+                  | "public_b2c"
+                  | "school_b2b"
+                  | "wholesale",
                 uomCode: p.uomCode as "pcs" | "pack" | "carton",
                 unitPrice: String(p.unitPrice),
                 currency: p.currency || DEFAULT_CURRENCY,
@@ -1046,7 +1058,10 @@ export class DrizzleProductRepository implements IProductRepository {
                   variantId,
                   productId: id,
                   variantKey: v.variantKey,
-                  customerGroup: p.customerGroup as unknown as "public_b2c" | "school_b2b" | "wholesale",
+                  customerGroup: p.customerGroup as unknown as
+                    | "public_b2c"
+                    | "school_b2b"
+                    | "wholesale",
                   uomCode: p.uomCode as "pcs" | "pack" | "carton",
                   unitPrice: String(p.unitPrice),
                   currency: p.currency || DEFAULT_CURRENCY,

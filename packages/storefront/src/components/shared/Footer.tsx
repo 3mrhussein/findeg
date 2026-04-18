@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import type { Locale } from "next-intl";
-import { Link } from "@/i18n/navigation";
+import { Link } from "@i18n/navigation";
 import { cacheLife } from "next/cache";
 
 const CURRENT_YEAR = 2025;

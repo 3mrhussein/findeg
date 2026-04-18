@@ -1,7 +1,7 @@
 /**
  * Backend ESLint Configuration
  *
- * Enforces that @findeg/backend remains a pure TypeScript library
+ * Enforces that @backend remains a pure TypeScript library
  * with no dependencies on Next.js framework APIs.
  */
 import jsdoc from "eslint-plugin-jsdoc";
@@ -41,16 +41,16 @@ const config = [
             {
               group: ["next", "next/*"],
               message:
-                "❌ Next.js imports are not allowed in @findeg/backend. " +
+                "❌ Next.js imports are not allowed in @backend. " +
                 "Backend must be pure TypeScript/Node.js. " +
-                "Move framework integration to @findeg/dashboard or @findeg/storefront.",
+                "Move framework integration to @dashboard or @storefront.",
             },
             {
               group: ["react", "react/*"],
               message:
-                "❌ React imports are not allowed in @findeg/backend. " +
+                "❌ React imports are not allowed in @backend. " +
                 "Backend must have no UI dependencies. " +
-                "Use @findeg/ui in app packages instead.",
+                "Use @ui in app packages instead.",
             },
           ],
         },

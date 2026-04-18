@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@findeg/ui";
-import { IconTooltip } from "@findeg/ui";
+import { Button } from "@ui";
+import { IconTooltip } from "@ui";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,10 +9,10 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@findeg/ui";
+} from "@ui";
 import { CircleUser, Search } from "lucide-react";
-import { Input } from "@findeg/ui";
-import { logoutAction } from "@/features/identity/application/actions/auth";
+import { Input } from "@ui";
+import { logoutAction } from "../../_actions/auth";
 
 /**
  * Topbar for the user dashboard.
@@ -23,7 +23,7 @@ export function Topbar() {
       <div className="w-full flex-1">
         <form>
           <div className="relative">
-            <Search className="absolute start-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Search className="absolute inset-s-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"
               placeholder="Search..."
@@ -52,7 +52,7 @@ export function Topbar() {
           <DropdownMenuItem>Settings</DropdownMenuItem>
           <DropdownMenuItem>Support</DropdownMenuItem>
           <DropdownMenuSeparator />
-          <form action={logoutAction}>
+          <form action={logoutAction as any}>
             <button type="submit" className="w-full text-left">
               <DropdownMenuItem asChild>
                 <span>Logout</span>

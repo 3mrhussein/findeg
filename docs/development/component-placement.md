@@ -76,6 +76,6 @@ Forbidden:
 ESLint enforces:
 
 - no JSX under `src/features/**/presentation/**`
-- no imports from `@/features/**/presentation/components/**`
+- no imports from `@features/**/presentation/components/**`
 
 If you need UI in a feature, move it to route `_components` or shared components instead of adding exceptions.

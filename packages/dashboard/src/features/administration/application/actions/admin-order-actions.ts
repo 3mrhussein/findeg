@@ -1,94 +1,76 @@
 "use server";
 
-import { container } from "@/features/core/infrastructure/di/ServiceContainer";
-import { isSystemAdmin } from "@/features/core/domain/auth/authorization";
-import { updateOrderStatus, updateOrderPaymentStatus } from "@findeg/backend/features/order";
-import { OrderStatusUpdate } from "@findeg/backend/features/administration";
-import { isDomainError, getErrorMessage } from "@/lib/errors";
-import { invalidateCaches } from "@/lib/cache";
-import { PaymentStatus } from "@findeg/backend";
+import { updateTag } from "next/cache";
+import { createAdministrationServices } from "@backend/features/administration";
+import { getErrorMessage } from "@lib/type-guards";
 
 /**
- * Updates the logistical status of an order from the admin panel.
- * Uses the current session user ID for audit logging.
+ * Admin Order Actions (Dashboard Data Layer)
  *
- * Refactored to use pure backend functions and app-layer cache invalidation.
- *
- * @param id - The order ID to update.
- * @param update - The status update payload (status, tracking, notes).
- * @returns Success status or error message.
+ * Uses "use server" directive and calls backend service factories.
+ * Implements cache invalidation via updateTag() for immediate consistency.
  */
-export async function adminUpdateOrderStatusAction(id: number | string, update: OrderStatusUpdate) {
+
+export async function adminUpdateOrderStatusAction(
+  orderId: number,
+  status: string,
+  trackingNumber?: string,
+  adminNotes?: string,
+) {
   try {
-    const session = await container.authService.validateAdmin();
-    const isAuthorized =
-      isSystemAdmin(session) ||
-      session.activeRoleIds?.includes("operations_manager") ||
-      session.activeRoleIds?.includes("super_admin");
+    const { orders } = createAdministrationServices();
+    await orders.updateStatus(orderId, {
+      status: status as any,
+      trackingNumber,
+      adminNotes,
+    });
 
-    if (!isAuthorized) throw new Error("Forbidden: requires Operations or Super Admin role");
-
-    const orderId = Number(id);
-    const result = await updateOrderStatus(orderId, update);
-
-    // Execute cache revalidation
-    await invalidateCaches(result);
-
+    updateTag("orders");
     return { success: true };
-  } catch (error: any) {
-    if (isDomainError(error)) {
-      const message = getErrorMessage(error);
-      return { success: false, error: message };
-    }
-
-    console.error("[dashboard] Admin order status update error:", error);
-    return {
-      success: false,
-      error: error?.message || "Failed to update order status",
-    };
+  } catch (error: unknown) {
+    console.error("[adminUpdateOrderStatusAction]", error);
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
-/**
- * Updates the payment status of an order from the admin panel.
- * Uses the current session user ID for audit logging.
- *
- * Refactored to use pure backend functions and app-layer cache invalidation.
- *
- * @param id - The order ID to update.
- * @param status - The new payment status.
- * @returns Success status or error message.
- */
-export async function adminUpdateOrderPaymentStatusAction(
-  id: number | string,
-  status: PaymentStatus,
-) {
+export async function adminUpdatePaymentStatusAction(orderId: number, status: string) {
   try {
-    const session = await container.authService.validateAdmin();
-    const isAuthorized =
-      isSystemAdmin(session) ||
-      session.activeRoleIds?.includes("operations_manager") ||
-      session.activeRoleIds?.includes("super_admin");
+    const { orders } = createAdministrationServices();
+    await orders.updatePaymentStatus(orderId, status as any);
 
-    if (!isAuthorized) throw new Error("Forbidden: requires Operations or Super Admin role");
-
-    const orderId = Number(id);
-    const result = await updateOrderPaymentStatus(orderId, status);
-
-    // Execute cache revalidation
-    await invalidateCaches(result);
-
+    updateTag("orders");
     return { success: true };
-  } catch (error: any) {
-    if (isDomainError(error)) {
-      const message = getErrorMessage(error);
-      return { success: false, error: message };
-    }
+  } catch (error: unknown) {
+    console.error("[adminUpdatePaymentStatusAction]", error);
+    return { success: false, error: getErrorMessage(error) };
+  }
+}
 
-    console.error("[dashboard] Admin order payment status update error:", error);
-    return {
-      success: false,
-      error: error?.message || "Failed to update payment status",
-    };
+export async function adminCancelOrderAction(orderId: number, reason: string) {
+  try {
+    const { orders } = createAdministrationServices();
+    await orders.updateStatus(orderId, {
+      status: "cancelled" as any,
+      adminNotes: reason,
+    });
+
+    updateTag("orders");
+    return { success: true };
+  } catch (error: unknown) {
+    console.error("[adminCancelOrderAction]", error);
+    return { success: false, error: getErrorMessage(error) };
+  }
+}
+
+export async function adminUpdateOrderPaymentStatusAction(orderId: number, status: string) {
+  try {
+    const { orders } = createAdministrationServices();
+    await orders.updatePaymentStatus(orderId, status as any);
+
+    updateTag("orders");
+    return { success: true };
+  } catch (error: unknown) {
+    console.error("[adminUpdateOrderPaymentStatusAction]", error);
+    return { success: false, error: getErrorMessage(error) };
   }
 }

@@ -2,7 +2,7 @@
  * Tag Service Interface
  */
 
-import { ID, Locale } from "@/features/core/domain/types/common";
+import { ID, Locale } from "@backend/features/core/domain/types/common";
 import { Tag, TagGroup } from "../../domain/entities/Tag";
 
 export interface ITagService {

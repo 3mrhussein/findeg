@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { ListAccessCard } from "@/app/[locale]/(storefront)/school/_components/ListAccessCard";
-import { CodeEntryDialog } from "@/app/[locale]/(storefront)/school/_components/CodeEntryDialog";
-import { AccessRequestDialog } from "@/app/[locale]/(storefront)/school/_components/AccessRequestDialog";
-import { useRouter } from "next/navigation";
-import { AccessState } from "@/features/school/application/interfaces/ISchoolAccessService";
+import { ListAccessCard } from "@app/[locale]/(storefront)/school/_components/ListAccessCard";
+import { CodeEntryDialog } from "@app/[locale]/(storefront)/school/_components/CodeEntryDialog";
+import { AccessRequestDialog } from "@app/[locale]/(storefront)/school/_components/AccessRequestDialog";
+import { useRouter } from "@i18n/navigation";
+import { AccessState } from "@backend/features/school/application/interfaces/ISchoolAccessService";
 
 interface SchoolProfileClientProps {
   schoolName: string;

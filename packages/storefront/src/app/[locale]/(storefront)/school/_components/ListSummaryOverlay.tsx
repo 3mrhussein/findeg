@@ -8,11 +8,11 @@ import {
   SheetTitle,
   SheetDescription,
   SheetFooter,
-} from "@findeg/ui";
-import { Button } from "@findeg/ui";
+} from "@ui";
+import { Button } from "@ui";
 import { useTranslations } from "next-intl";
 import { ShoppingCart, CheckCircle, Package, ArrowRight } from "lucide-react";
-import { ScrollArea } from "@findeg/ui";
+import { ScrollArea } from "@ui";
 
 interface ListSummaryOverlayProps {
   isOpen: boolean;

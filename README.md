@@ -1,5 +1,6 @@
-# FindEg.com - Modern E-commerce Platform (Turborepo Monorepo)
+# FindEg.com — Stationery & School Supplies Marketplace
 
+<<<<<<< HEAD
 FindEg.com is a modern, trendy e-commerce web application specializing in stationary, kids' toys, and school supplies. Built with Next.js 16, Turborepo monorepo architecture, and clean architecture principles with a focus on great UI/UX.
 
 ## 🏗️ Monorepo Architecture
@@ -66,8 +67,8 @@ This project is structured as a **Turborepo monorepo** with three main folders:
    pnpm dev
 
    # Or start individual packages:
-   pnpm --filter @findeg/dashboard dev  # Admin at http://localhost:3001
-   pnpm --filter @findeg/storefront dev # Shop at http://localhost:3000
+   pnpm --filter @dashboard dev  # Admin at http://localhost:3001
+   pnpm --filter @storefront dev # Shop at http://localhost:3000
    ```
 
 ### 📦 Monorepo Commands
@@ -80,20 +81,33 @@ This project is structured as a **Turborepo monorepo** with three main folders:
 | `pnpm lint`                     | Run ESLint and i18n checks                  |
 | `pnpm --filter <package> <cmd>` | Run command in specific package             |
 
+### 🛡️ Architectural Boundary Validation
+
+We enforce Clean Architecture by completely decoupling apps from the backend infrastructure. To validate that no boundaries are breached:
+
+```bash
+# Validate backend exports (Infrastructure should never act as a module entry point)
+pnpm --filter @backend test src/__tests__/architectural-boundaries.test.ts
+
+# Ensure apps successfully build without bundling Node.js modules
+pnpm --filter @dashboard build
+pnpm --filter @storefront build
+```
+
 **Examples:**
 
 ```bash
 # Work on dashboard only
-pnpm --filter @findeg/dashboard dev
-pnpm --filter @findeg/dashboard build
-pnpm --filter @findeg/dashboard test
+pnpm --filter @dashboard dev
+pnpm --filter @dashboard build
+pnpm --filter @dashboard test
 
 # Work on storefront only
-pnpm --filter @findeg/storefront dev
-pnpm --filter @findeg/storefront build
+pnpm --filter @storefront dev
+pnpm --filter @storefront build
 
 # Build backend package
-pnpm --filter @findeg/backend build
+pnpm --filter @backend build
 ```
 
 For detailed development workflows, see [specs/001-separate-admin-project/quickstart.md](specs/001-separate-admin-project/quickstart.md)
@@ -112,363 +126,237 @@ The database comes pre-seeded with Several test accounts representing different 
 | **Customer Support**   | `support@findeg.com`    | Can view orders, users, and assist with customer issues.           |
 | **School Liaison**     | `liaison@findeg.com`    | Manages school supply lists and can browse products.               |
 | **B2C Customer**       | `user@findeg.com`       | Standard storefront user with no admin access.                     |
+=======
+Welcome to the FindEg.com monorepo. This project is a modern, hierarchical marketplace platform designed to provide a premium experience for both B2C (Public Shop) and B2B (School Lists) customers.
+>>>>>>> 006-docs-restructure
 
 ---
 
-## 🐳 Docker Database Setup
+## 👔 Executive Summary
 
-This project uses **Docker** to run a PostgreSQL database for development, making it easy to get started without installing PostgreSQL locally.
+### Purpose
 
-### Database Scripts
+FindEg.com is structured as a **distributed monorepo** to enable rapid, independent development of its core business pillars: the storefront and the administration dashboard. By separating concerns while sharing a robust core, we maximize developer focus, reduce build times, and ensure cross-platform consistency.
 
-| Script                 | Command               | Description                                                  |
-| ---------------------- | --------------------- | ------------------------------------------------------------ |
-| **Start Database**     | `npm run db:start`    | Starts the PostgreSQL container and waits for it to be ready |
-| **Stop Database**      | `npm run db:stop`     | Stops the PostgreSQL container                               |
-| **Reset Database**     | `npm run db:reset`    | ⚠️ **Deletes all data** and creates a fresh database         |
-| **View Logs**          | `npm run db:logs`     | Shows database container logs (useful for debugging)         |
-| **Push Schema**        | `npm run db:push`     | Pushes your Drizzle schema to the database                   |
-| **Generate Migration** | `npm run db:generate` | Generates migration files from schema changes                |
-| **Run Migrations**     | `npm run db:migrate`  | Runs pending database migrations                             |
-| **Open Studio**        | `npm run db:studio`   | Opens Drizzle Studio to browse/edit database                 |
-| **Seed Database**      | `npm run db:seed`     | Populates database with sample data                          |
+### Key Goals & Current Matrix
 
-### Why Use These Scripts?
+- **Performance**: Optimized Next.js 16 build pipelines with Turborepo caching.
+- **Scalability**: Clean Architecture ensures we can grow features without technical debt sprawl.
+- **Accessibility**: A bilingual (EN/AR), RTL-first platform designed for the Egyptian market.
 
-- **`db:start`** - Your first step! Starts PostgreSQL in Docker so your app can connect to a database
-- **`db:push`** - After starting the database, this creates all your tables based on your schema
-- **`db:seed`** - Adds sample products, categories, and users so you can test the app immediately
-- **`db:stop`** - Stops the database when you're done (saves system resources)
-- **`db:reset`** - Use when you want to start fresh or if your database gets into a bad state
-- **`db:logs`** - Check if database is having issues or to see query logs
-- **`db:studio`** - Visual interface to see and edit your data (like phpMyAdmin for PostgreSQL)
+**MVP Status**:
 
-### Database Connection Details
+- Backend: ~80% Complete (Clean Arch, ServiceResults)
+- Dashboard: ~60% Complete (Products/Catalog Admin)
+- Storefront: ~50% Complete (Browse/Cart UI)
 
-- **Host:** `localhost`
-- **Port:** `5432`
-- **Database:** `findeg_dev`
-- **User:** `findeg_user`
-- **Password:** `findeg_dev_password`
-- **Connection String:** `postgresql://findeg_user:findeg_dev_password@localhost:5432/findeg_dev`
+### Stakeholder Overview
 
-> **Note:** These credentials are already configured in `.env.local`. The database URL is automatically set when you run `npm run db:start`.
-
-### Troubleshooting Database Issues
-
-**Port 5432 already in use?**
-
-```bash
-# Option 1: Stop your local PostgreSQL
-brew services stop postgresql
-
-# Option 2: Change port in docker-compose.yml
-# Change "5432:5432" to "5433:5432" and update .env.local
-```
-
-**Database won't start?**
-
-```bash
-# Check if Docker is running
-docker info
-
-# View container status
-docker-compose ps
-
-# Check logs for errors
-npm run db:logs
-```
-
-**Need to access database directly?**
-
-```bash
-docker-compose exec postgres psql -U findeg_user -d findeg_dev
-```
-
-For more details, see [backend/docs/database/SETUP.md](backend/docs/database/SETUP.md)
+- **Product Owners**: High-level visibility into feature modules and business-critical flows.
+- **Developers**: Hierarchical documentation for fast onboarding.
+- **DevOps**: Independent deployment strategies for every package.
 
 ---
 
-## 🏗️ Architecture
+## 🏢 Business Overview
 
-FindEg follows **Clean Architecture** principles, ensuring that business logic is isolated from technical details like the database or UI framework.
+FindEg.com serves two primary audiences in the Egyptian market:
+
+1. **Public Shop (B2C)**: A high-performance e-commerce experience for stationery, office supplies, and art materials. Incorporates advanced search, category browsing, multi-variant products, and a streamlined checkout.
+2. **School Lists (B2B)**: A private, authorized lookup system where parents can access grade-specific supply lists via school-issued secure links or QR codes safely, with targeted one-click cart kits.
+
+---
+
+## 🛠️ Technology Stack & Architecture Overview
+
+- **Framework**: [Next.js 16](https://nextjs.org/) (App Router, Server Actions, PPR).
+- **Core Library**: React 19 / DOM.
+- **ORMs**: [Drizzle ORM](https://orm.drizzle.team/) with PostgreSQL 16.
+- **Styling**: Vanilla CSS + [Tailwind CSS 4](https://tailwindcss.com/) (Logical properties for RTL).
+- **Validation**: [Zod](https://zod.dev/) for cross-boundary type safety.
+- **i18n**: [next-intl](https://next-intl-docs.vercel.app/) for bilingual implementation.
+- **Tooling**: [Turborepo](https://turbo.build/) + `pnpm 10` workspaces for monorepo orchestration.
+- **Testing**: `vitest` for localized logic testing, `cypress` for overarching E2E testing.
 
 ```mermaid
 graph TD
-    subgraph "Framework Layer (app/)"
-        NextJS["Next.js Routes"]
-        Layouts["Global Layouts"]
-    end
+    UI[Presenters / Routes] --> Services[Application Services]
+    Services --> Domain[Domain Entities]
+    Services --> Infra[Infrastructure Repositories]
+    Infra -.-> DB[(PostgreSQL)]
 
-    subgraph "Presentation Layer"
-        Templates["Templates (Server)"]
-        Features["Features (Mixed)"]
-        SharedUI["Shared UI Components"]
-    end
-
-    subgraph "Application Layer"
-        Services["Business Services"]
-        RepoInt["Repository Interfaces"]
-    end
-
-    subgraph "Domain Layer (Core)"
-        Entities["Business Entities"]
-        DomainLogic["Domain Types"]
-    end
-
-    subgraph "Infrastructure Layer"
-        Drizzle["Drizzle ORM"]
-        DB["PostgreSQL"]
-        RepoImpl["Repository Implementations"]
-    end
-
-    Framework --> Presentation
-    Presentation --> Application
-    Application --> Domain
-    Infrastructure -.-> RepoInt
-    Application --> RepoInt
-```
-
-### Layer Responsibilities
-
-- **Domain**: Pure business logic and entities. Zero dependencies.
-- **Application**: Use cases and service orchestration.
-- **Infrastructure**: Database implementation and external services.
-- **Presentation**: UI components (Server/Client) and user interaction.
-
----
-
-## Project Structure
-
-### Current Structure (Feature-Based with Core)
-
-```
-src/features/
-├── core/              # Shared: auth, persistence, storage, layout
-├── catalog/           # Products, categories, brands
-├── cart/              # Shopping cart
-├── order/             # Checkout, orders
-├── identity/          # Users, auth service
-├── administration/    # Admin CRUD, audit, dashboard
-├── review/            # Product reviews
-└── media/             # File upload, storage
-```
-
-```
-src/
-├── app/[locale]/      # Next.js App Router routes
-├── components/        # Shared UI primitives + reusable view components
-├── hooks/             # Cross-feature React hooks
-├── providers/         # App-level providers
-├── lib/               # Utilities
-└── server/            # Service composition / entry utilities
-```
-
-**Organization Principles:**
-
-- **Features:** Each feature has `domain/`, `application/`, `infrastructure/`, and `presentation/` (legacy modules may still use `ui/`).
-- **Core:** Shared cross-cutting concerns (auth, DB, layout). shadcn primitives stay at `src/components/ui/`.
-- **Reusability:** Shared code in core; features depend on core.
-- **Readability:** All catalog-related code lives in `features/catalog/`.
-
----
-
-## 🎨 Styling & Theming
-
-- **Tailwind CSS:** Utility-first CSS framework
-- **CSS Variables:** Theme colors defined in `app/globals.css`
-- **Dark Mode:** Automatic theme switching support
-- **`cn` Utility:** Helper function in `lib/utils.ts` for conditional classes
-
-**Example:**
-
-```tsx
-<div className={cn(
-  "bg-primary text-white",
-  isActive && "font-bold"
-)}>
+    classDef layer text-align:center, fill:#f5f5f5,stroke:#999,stroke-width:1px;
+    class UI,Services,Domain,Infra layer;
 ```
 
 ---
 
-## 🌍 Internationalization (i18n)
+## 📦 Monorepo Package Map & Integration
 
-- **Supported Languages:** English (`en`), Arabic (`ar`)
-- **RTL Support:** Automatic right-to-left layout for Arabic via `html[lang="ar"]`
-- **Single Source of Truth:** All translations live in `src/i18n/content.ts`
-- **Type-Safety:** Automatically generated UPPERCASE constants for Intellisense support
+FindEg uses Turborepo to map specific packages into consuming applications without massive overhead. The backend is installed via `"@findeg/backend": "workspace:*"` inside the dependencies mapping.
 
-**Usage:**
+```mermaid
+graph TD
+    subgraph "Consumer Apps (Next.js 16)"
+        SF[packages/storefront<br/>(Port 3000)]
+        DB[packages/dashboard<br/>(Port 3001)]
+    end
 
+    subgraph "Shared Libraries"
+        BE[packages/backend<br/>(Core Logic/DB/Validation)]
+        UI[packages/ui<br/>(shadcn components)]
+    end
+
+    SF --> BE
+    SF --> UI
+    DB --> BE
+    DB --> UI
+```
+
+| Package                                         | Purpose                                                                      | Port | Scripts                                |
+| ----------------------------------------------- | ---------------------------------------------------------------------------- | ---- | -------------------------------------- |
+| [**storefront**](packages/storefront/README.md) | Customer-facing Next.js application.                                         | 3000 | `pnpm --filter @findeg/storefront dev` |
+| [**dashboard**](packages/dashboard/README.md)   | Admin & Vendor management application.                                       | 3001 | `pnpm --filter @findeg/dashboard dev`  |
+| [**backend**](packages/backend/README.md)       | Pure TypeScript shared kernel. Contains core Drizzle DB, services, entities. | N/A  | `tsc --build --watch`                  |
+| [**ui**](packages/ui/README.md)                 | Shared design system & shadcn primitives.                                    | N/A  | N/A                                    |
+
+---
+
+## 🚀 Build, Docker & Deployment Strategy
+
+### Build Lifecycle
+
+The monorepo uses **Turborepo** (`turbo.json`) and `pnpm workspaces`.
+
+- `pnpm build`: Rebuilds cacheable outputs (`dist/**`, `.next/**`) concurrently across all 4 packages using topological sort.
+- `pnpm dev:both`: Parallelizes the Next.js servers to support unified development.
+- `pnpm type-check`: Validates pure TypeScript bindings via strict configuration paths map in `packages/backend/package.json`'s exports field.
+
+### Docker Configuration
+
+Local persistence uses `docker-compose.yml` to orchestrate a PostgreSQL 16 Alpine container:
+
+- **Image**: `postgres:16-alpine`
+- **Volume**: Native volume storage to `/var/lib/postgresql/data` ensuring state lives across reboots.
+- **Port Mapping**: `:5432:5432`
+
+### Deployment & CI Validation
+
+The CI Pipeline acts as a strict gateway:
+
+1. `backend-validation.yml`: Builds backend, tests exports against dashboard and storefront to prevent API leakage, checks strictly for package version bumping using Node script introspection on `package.json`.
+2. Vercel automatically deploys based on application boundaries.
+
+---
+
+## 🔧 Quick Start & Environment Setup
+
+Ensure you have `Node.js 18+`, `pnpm 10`, and `Docker` installed.
+
+1. **Setup Environment**:
+   ```bash
+   cp .env.example .env.local
+   # Ensure POSTGRES_URL matches docker auth bindings
+   ```
+2. **Install Dependencies**:
+   ```bash
+   pnpm install
+   ```
+3. **Database Spinup (Docker)**:
+   ```bash
+   pnpm db:start
+   pnpm db:setup
+   # Runs init-db.sql, drizzle-kit push, and seed-db.js
+   ```
+4. **Development Mode**:
+   ```bash
+   pnpm dev
+   ```
+
+### Default Test Accounts
+
+- **Admin**: `admin@findeg.com` / `password123`
+- **Customer**: `customer@findeg.com` / `password123`
+
+---
+
+## 📐 Engineering Standards
+
+### Coding Rules
+
+- **No Direct Imports**: Frontend code MUST import from `@findeg/backend` and NEVER `../../packages/backend/src`.
+- **RTL-First CSS**: Use Tailwind's logical properties (`ps-4`, `me-2`) instead of physical ones (`pl-4`, `mr-2`) so the system elegantly maps English/Arabic alignments.
+- **ServiceResult Protocol**: All backend services do NOT throw standard JS errors; they return an `Err` or `Ok` standard `ServiceResult<T, FindEgError>`.
+
+<<<<<<< HEAD
 ```tsx
 import { useTranslations } from "next-intl";
-import { T } from "@/i18n/content";
+import { T } from "@i18n/content";
+=======
+### Testing Pipeline
+>>>>>>> 006-docs-restructure
 
-const t = useTranslations();
-<h1>{t(T.PAGES.HOME.HERO.TITLE_PART1)}</h1>;
-```
-
----
-
-## 🛠️ Development Scripts
-
-| Script          | Command             | Description                                     |
-| --------------- | ------------------- | ----------------------------------------------- |
-| **Development** | `npm run dev`       | Start dev server (auto-kills port 3000 if busy) |
-| **Build**       | `npm run build`     | Create production build                         |
-| **Start**       | `npm run start`     | Run production server                           |
-| **Lint**        | `npm run lint`      | Run ESLint                                      |
-| **Changelog**   | `npm run changelog` | Generate `CHANGELOG.md` from git commits        |
+- **Unit (Vitest)**: Every exported catalog service, checkout compute engine, and validation module is independently tested. Mocks are isolated.
+- **E2E (Cypress)**: The monorepo uses `cypress` and `cypress run --browser chrome --headless` mapped recursively as `npm run e2e:run:ci`. Do not commit brittle selector targeting; use proper `data-cy` attributes.
 
 ---
 
-## 📚 Documentation Map
+## 🗺️ Master System Specs & Guide Book
+
+FindEg uses a strict **3-tier documentation hierarchy** to capture deep technical constraints. This document serves as the root index. Navigate the system using the structured references below:
+
+### 1. The Core Data & API Layer (Backend)
+
+**[Tier 2: Backend Architecture & Standards](./packages/backend/README.md)**
+
+- **System Schema**: [Drizzle Constraints, Migrations, & JSONB ER Diagram](./packages/backend/docs/database/SCHEMA.md)
+- **Tier 3 Feature Domains (Node/Services)**:
+  - [Catalog](./packages/backend/src/features/catalog/README.md) — Products, Arrays, Search execution.
+  - [Identity](./packages/backend/src/features/identity/README.md) — JWTs, RBAC gating, Hashing constraints.
+  - [Order](./packages/backend/src/features/order/README.md) — Transaction immutability, Snapshots.
+  - [Cart](./packages/backend/src/features/cart/README.md) — Transient user selection and unit verification.
+  - [School](./packages/backend/src/features/school/README.md) — B2B token access layers.
+  - [Administration](./packages/backend/src/features/administration/README.md) — Auditing streams, Config state.
+  - [Notifications](./packages/backend/src/features/notifications/README.md) — SES/SMTP interface boundaries.
+  - [Media](./packages/backend/src/features/media/README.md) — Storage interfaces, upload protections.
+  - [Review](./packages/backend/src/features/review/README.md) — UGC limits, Moderation bounds.
+  - [Core](./packages/backend/src/features/core/README.md) — Zero-dependency Value Objects, `ServiceResult`.
+
+### 2. The Customer Interaction Layer (Storefront)
+
+**[Tier 2: Storefront RSC Cache Architecture](./packages/storefront/README.md)**
+
+- **Tier 3 Feature Domains (Next.js)**:
+  - [Catalog UI](./packages/storefront/src/features/catalog/README.md) — RSC Grids, Search Params syncing.
+  - [Cart UI](./packages/storefront/src/features/cart/README.md) — `useOptimistic` Action bridges.
+  - [Order UI](./packages/storefront/src/features/order/README.md) — Address Checkouts, Payment iframes.
+  - [School UI](./packages/storefront/src/features/school/README.md) — Private token interception bounds.
+  - [Review UI](./packages/storefront/src/features/review/README.md) — Revalidation limits via Server Actions.
+  - [Notifications UI](./packages/storefront/src/features/notifications/README.md) — Ephemeral Toasts, Browser limits.
+
+### 3. The Command Control Layer (Dashboard)
+
+**[Tier 2: Dashboard UI State Architecture](./packages/dashboard/README.md)**
+
+- **Tier 3 Feature Domains (Next.js)**:
+  - [Catalog Admin](./packages/dashboard/src/features/catalog/README.md) — Massive hook-form Variant generation bounds.
+  - [Administration Dashboard](./packages/dashboard/src/features/administration/README.md) — Shared Sidebar routing logic.
+
+### 4. The Shared Visual Language (UI)
+
+**[Tier 2: UI Shadcn Monorepo Base](./packages/ui/README.md)**
+Contains Global RTL logical CSS mapping, unified utility functions, and foundational primitive rules applied to BOTH frontends.
 
 ---
 
-## 📈 Current Project Status (MVP Phase 1)
+## 📅 Roadmap & Status
 
-FindEg is currently in **Phase 1: Public E-Shop MVP**. We are focused on a dual-track strategy:
-
-1. **Short-term B2C growth**: Reliable multilingual storefront for school supplies.
-2. **Mid-term B2B2C readiness**: Clean architecture to support future school integrations.
-
-### Key Milestones Completed
-
-- **Core REST API**: JWT auth, catalog, cart, and order management.
-- **Admin Suite**: Dashboard, inventory management, and audit logging.
-- **Multi-tenant UI**: RTL support (AR/EN) and feature-oriented directory structure.
-- **Refactored Listing Pages**: Standardized `ProductListingLayout` and ViewModel pattern across Shop, Search, and Categories.
-
-For the full technical specification and roadmap, see [SYSTEM_SPECIFICATION.md](project-planning/SYSTEM_SPECIFICATION.md).
+- [x] Monorepo Infrastructure Migration & Typescript Typings
+- [x] Application Base Models (Products, Brands, Taxonomy)
+- [x] Admin Dashboard MVP (Product/Order management forms)
+- [x] Documentation Restructuring (Deep System Guidebook complete)
+- [ ] School List Private Access (Feature definition complete, integration pending)
 
 ---
 
-## 📚 Documentation Map
-
-### 📋 System Specification
-
-- **[System Specification](project-planning/SYSTEM_SPECIFICATION.md)** — Complete business & technical spec with diagrams: vision, actors, user flows, architecture, database schema, API, features, roadmap, and NFRs.
-- **Dual-Track Goal (B2C + B2B2C)** — Defined in the System Specification section `Current Business Goal (Dual Track)`.
-
-### Architecture
-
-- **[Architecture Playbook](docs/architecture/ARCHITECTURE_PLAYBOOK.md)** — Consolidated source of truth for context map, feature structure, dependency boundaries, layer contracts, and implementation workflow.
-- **[Bounded Contexts](docs/architecture/BOUNDED_CONTEXTS.md)** — Pointer to merged context map in the Architecture Playbook.
-- **[Feature Structure](docs/architecture/FEATURE_STRUCTURE.md)** — Pointer to merged structure conventions in the Architecture Playbook.
-
-### 🧩 Feature Docs
-
-- **[Core](src/features/core/README.md)** — Shared auth/session, persistence, and cross-cutting platform concerns.
-- **[Catalog](src/features/catalog/README.md)** — Categories, brands, products, variants, and pricing foundations.
-- **[Cart](src/features/cart/README.md)** — Cart behavior, pricing snapshots, and cart APIs.
-- **[Order](src/features/order/README.md)** — Checkout, order creation, and order snapshots.
-- **[Identity](src/features/identity/README.md)** — User and auth domain/application flows.
-- **[Administration](src/features/administration/README.md)** — Admin operations, inventory, and audit logging.
-- **[Review](src/features/review/README.md)** — Product review workflows.
-- **[Media](src/features/media/README.md)** — Asset upload and media storage concerns.
-- **[Presentation Layer](src/components/README.md)** — Components, hooks, providers, and co-location strategy.
-- **[App Layer (Routing)](src/app/README.md)** — Next.js App Router, layouts, and data fetching patterns.
-
-### 📖 Guides
-
-- **[Development Guide](docs/guides/DEVELOPMENT.md)** - Step-by-step feature implementation & setup.
-- **[Implementation Standards](docs/guides/IMPLEMENTATION_STANDARDS.md)** - Clean architecture implementation checklist and layer-specific coding standards.
-- **[Changelog Automation](docs/guides/CHANGELOG_AUTOMATION.md)** - How to generate, preview, and validate `CHANGELOG.md`.
-- **[Scaling Standards](docs/guides/SCALING.md)** - How to grow the codebase maintainably.
-- **[Static Content Guide](docs/guides/STATIC_CONTENT.md)** - Managing page-scoped UI text and i18n.
-- **[Logging Guide](docs/guides/LOGGING.md)** - Understanding the multi-tiered logging architecture.
-- **[Onboarding](docs/onboarding/README.md)** - Getting started for new developers.
-- **[Auth Architecture](backend/docs/AUTH_ARCHITECTURE.md)** - Decentralized session management & Phase 2 roadmap.
-
-### 📊 Database & Translations
-
-- **[Database Setup](backend/docs/database/SETUP.md)** - Local and production DB management.
-- **[Database Schema](backend/docs/database/SCHEMA.md)** - Auto-generated ER diagram and table definitions.
-- **[Translation Strategy](backend/docs/translations/README.md)** - Static vs Dynamic translation patterns.
-
----
-
-## 🔑 Key Features
-
-### E-commerce Functionality
-
-- Product browsing with categories
-- Advanced filtering and search
-- Shopping cart with variants
-- Product reviews and ratings
-- Wishlist management
-- Checkout process
-
-### Technical Features
-
-- **Server-Side Rendering (SSR)** - Fast initial page loads
-- **Static Site Generation (SSG)** - Pre-rendered pages
-- **Image Optimization** - Automatic image optimization
-- **Code Splitting** - Optimized bundle sizes
-- **TypeScript** - Full type safety
-- **Clean Architecture** - Maintainable and testable code
-- **Advanced Logging** - Multi-tiered (File/DB) logging with async middleware integration
-
----
-
-## 🧪 Testing
-
-```bash
-# Type checks
-npm run type-check
-npm run type-check:e2e
-
-# Local E2E (human-readable output)
-npm run e2e:run
-
-# CI E2E (JUnit XML output)
-npm run e2e:run:ci
-```
-
-`e2e:run` and `e2e:run:ci` execute through `scripts/run-e2e-and-post-seed.js`, which re-seeds the database after the run to keep local state clean for the next execution.
-
----
-
-## 📝 Contributing
-
-1. **Respect DDD/Clean Architecture boundaries** - Keep domain/application/infrastructure/presentation responsibilities separated.
-2. **Server Components First** - Use Client Components only when interaction/state requires it.
-3. **Type Everything** - Keep contracts explicit across services, repositories, and route boundaries.
-4. **JSDoc Philosophy** - We prioritize code-as-documentation. Use JSDoc only to explain "why" things are done a certain way, not "what" the code does. Types and names should express the "what".
-5. **Constants-First in Cypress** - Reuse `cypress/support/constants/*` instead of duplicating route/messages/test strings.
-6. **Keep docs in sync** - Update planning/test docs and run `npm run changelog` when delivery history changes.
-
----
-
-## ❓ FAQ
-
-**Q: Why `npm run dev` instead of `next dev`?**  
-A: Our custom script (`scripts/dev.js`) automatically kills any process using port 3000 before starting the server.
-
-**Q: Where is the actual page code?**
-A: Page logic is now co-located in `src/app/[locale]/.../page.tsx` and its sibling component files.
-
-**Q: How do I add a new page?**
-A: Create a folder in `src/app/[locale]/` with a `page.tsx`. You can build components right there in the same folder.
-
-**Q: Database not connecting?**  
-A: Make sure you've run `npm run db:start` and that Docker is running. Check `.env.local` has the correct `DATABASE_URL`.
-
-**Q: How do I change colors?**  
-A: Edit CSS variables in `app/globals.css` or update `tailwind.config.js`.
-
-**Q: What's the difference between Server and Client components?**  
-A: Server Components render on the server (no `'use client'`), Client Components run in the browser (have `'use client'` directive).
-
----
-
-## 📄 License
-
-This project is private and proprietary.
-
----
-
-## 👥 Team
-
-**FindEg Team** - Building the future of e-commerce in Egypt 🇪🇬
+&copy; 2026 FindEg.com. All rights reserved.

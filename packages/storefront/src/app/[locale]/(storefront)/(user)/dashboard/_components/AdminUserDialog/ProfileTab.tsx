@@ -1,11 +1,11 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { Input } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import { Switch } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Icon } from "@findeg/ui";
+import { Input } from "@ui";
+import { Label } from "@ui";
+import { Switch } from "@ui";
+import { Button } from "@ui";
+import { Icon } from "@ui";
 import { useState } from "react";
 
 interface ProfileTabProps {

@@ -4,7 +4,7 @@
 
 import { z } from "zod";
 import { ShippingAddressSchema } from "../value-objects";
-import { PaymentMethodSchema } from "@/features/core/domain/types/common";
+import { PaymentMethodSchema } from "@backend/features/core/domain/types/common";
 
 export const CheckoutValidateSchema = z.object({
   address: ShippingAddressSchema,

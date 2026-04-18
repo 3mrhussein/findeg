@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { ProductCard } from "./ProductCard";
-import { Product } from "@/features/catalog/domain/entities/Product";
+import { Product } from "@backend/features/catalog/domain/entities/Product";
 
 interface ProductGridListProps {
   products: Product[];

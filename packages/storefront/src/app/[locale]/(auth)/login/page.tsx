@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { Locale } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { LoginContent } from "./_components/LoginContent";
@@ -13,5 +14,9 @@ export default async function Page({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  return <LoginContent />;
+  return (
+    <Suspense fallback={null}>
+      <LoginContent />
+    </Suspense>
+  );
 }

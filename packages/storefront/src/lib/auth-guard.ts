@@ -1,17 +1,16 @@
-import { container } from "@/features/core/infrastructure/di/ServiceContainer";
-import { redirect } from "@/i18n/navigation";
-import { isAdminSession } from "@/features/core/domain/auth/authorization";
-import type { SessionPayload } from "@/features/core/domain/auth";
-import type { Locale } from "next-intl";
+import { getSession } from "./session";
+import { redirect } from "@i18n/navigation";
+import { isAdminSession } from "@backend/features/core";
+import type { SessionPayload, Locale } from "@backend/features/core";
 
 /**
  * Require any authenticated user — redirects to /login if not.
  * Use in layouts/pages that require a logged-in user.
  */
-export async function requireAuth(locale: Locale): Promise<SessionPayload> {
-  const session = await container.authService.getSession();
+export async function requireAuth(locale: string): Promise<SessionPayload> {
+  const session = await getSession();
   if (!session) {
-    redirect({ href: "/login", locale });
+    redirect({ href: "/login", locale: locale as any });
   }
   return session!;
 }
@@ -20,10 +19,10 @@ export async function requireAuth(locale: Locale): Promise<SessionPayload> {
  * Require admin session — redirects to /admin/login if not.
  * Use in the (admin) protected layout.
  */
-export async function requireAdmin(locale: Locale): Promise<SessionPayload> {
-  const session = await container.authService.getSession();
+export async function requireAdmin(locale: string): Promise<SessionPayload> {
+  const session = await getSession();
   if (!session || !isAdminSession(session)) {
-    redirect({ href: "/admin/login", locale });
+    redirect({ href: "/admin/login", locale: locale as any });
   }
   return session!;
 }
@@ -32,13 +31,13 @@ export async function requireAdmin(locale: Locale): Promise<SessionPayload> {
  * Redirect already-authenticated users away from auth pages.
  * Admins go to /admin, regular users go to /dashboard.
  */
-export async function redirectIfAuthenticated(locale: Locale): Promise<void> {
-  const session = await container.authService.getSession();
+export async function redirectIfAuthenticated(locale: string): Promise<void> {
+  const session = await getSession();
   if (session) {
     if (isAdminSession(session)) {
-      redirect({ href: "/admin", locale });
+      redirect({ href: "/admin", locale: locale as any });
     } else {
-      redirect({ href: "/dashboard", locale });
+      redirect({ href: "/dashboard", locale: locale as any });
     }
   }
 }
@@ -48,5 +47,5 @@ export async function redirectIfAuthenticated(locale: Locale): Promise<void> {
  * Returns null for guests. Use in public pages with auth-aware components.
  */
 export async function getOptionalSession(): Promise<SessionPayload | null> {
-  return container.authService.getSession();
+  return getSession();
 }

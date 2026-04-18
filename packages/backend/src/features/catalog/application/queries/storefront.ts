@@ -1,9 +1,11 @@
-import { getServices } from "@/server/getServices";
-import type { Product } from "@/features/catalog/domain/entities/Product";
-import type { Category } from "@/features/catalog/domain/entities/Category";
-import type { Review } from "@/features/review/domain/entities/Review";
-import { fuzzySearchProducts } from "@/features/catalog/application/utils/fuzzy-search";
-import { resolveLocale, type Locale } from "@/features/core/domain/value-objects";
+import { createCatalogServices } from "../services/factory";
+import { createReviewServices } from "@backend/features/review";
+import type { Product } from "@backend/features/catalog/domain/entities/Product";
+import type { Category } from "@backend/features/catalog/domain/entities/Category";
+import type { Collection } from "@backend/features/catalog/domain/entities/Collection";
+import type { Review } from "@backend/features/review/domain/entities/Review";
+import { fuzzySearchProducts } from "@backend/features/catalog/application/utils/fuzzy-search";
+import { resolveLocale, type Locale } from "@backend/features/core/domain/value-objects";
 
 export interface HomePageData {
   featuredProducts: Product[];
@@ -21,6 +23,11 @@ export interface SearchPageData {
   exactCount: number;
 }
 
+export interface CollectionsPageData {
+  collections: Collection[];
+  trendingCategories: Category[];
+}
+
 export interface ProductDetailPageData {
   product: Product;
   reviews: Review[];
@@ -34,7 +41,7 @@ export interface ProductDetailPageData {
  */
 export async function getHomePageData(language: string): Promise<HomePageData> {
   const locale = resolveLocale(language);
-  const { products, categories } = getServices();
+  const { products, categories } = createCatalogServices();
   const [featuredProducts, allCategories] = await Promise.all([
     products.getFeaturedProducts(8, locale),
     categories.getAll(locale),
@@ -53,7 +60,7 @@ export async function getHomePageData(language: string): Promise<HomePageData> {
  */
 export async function getShopPageData(language: string): Promise<ShopPageData> {
   const locale = resolveLocale(language);
-  const { products } = getServices();
+  const { products } = createCatalogServices();
   const allProducts = await products.getAll(locale);
 
   return {
@@ -82,7 +89,7 @@ export async function getSearchPageData(language: string, query: string): Promis
     };
   }
 
-  const { products } = getServices();
+  const { products } = createCatalogServices();
   const strictResults = await products.searchProducts(normalizedQuery, locale);
   if (strictResults.length > 0) {
     return {
@@ -108,7 +115,7 @@ export async function getSearchPageData(language: string, query: string): Promis
  * List of all product IDs used by `generateStaticParams`.
  */
 export async function getProductIdsForStaticParams(): Promise<number[]> {
-  const { products } = getServices();
+  const { products } = createCatalogServices();
   const allProducts = await products.getAll("en");
   return allProducts.map((product) => product.id);
 }
@@ -124,25 +131,27 @@ export async function getProductDetailPageData(
   language: string,
 ): Promise<ProductDetailPageData | null> {
   const locale: Locale = resolveLocale(language);
-  const { products, repositories } = getServices();
+  const { products } = createCatalogServices();
+  const { reviews: reviewService } = createReviewServices();
   const product = await products.getById(productId, locale);
 
   if (!product) return null;
 
-  const [allProducts, reviews] = await Promise.all([
+  const [allProducts, reviewResult] = await Promise.all([
     products.getAll(locale),
-    repositories.reviews.getByProductId(productId),
+    reviewService.getProductReviews(productId),
   ]);
 
   const recommendedProducts = allProducts
     .filter(
-      (candidate) => candidate.id !== product.id && candidate.categoryId === product.categoryId,
+      (candidate: Product) =>
+        candidate.id !== product.id && candidate.categoryId === product.categoryId,
     )
     .slice(0, 4);
 
   return {
     product,
-    reviews,
+    reviews: reviewResult.reviews,
     recommendedProducts,
   };
 }
@@ -152,8 +161,37 @@ export async function getProductDetailPageData(
  *
  * @param language - Locale string.
  */
-export async function getCategoriesPageData(language: string): Promise<Category[]> {
+export async function getCategoriesPageData(language: string): Promise<any[]> {
   const locale = resolveLocale(language);
-  const { categories } = getServices();
-  return categories.getAll(locale);
+  const { categories, products } = createCatalogServices();
+  const [allCategories, allProducts] = await Promise.all([
+    categories.getAll(locale),
+    products.getAll(locale),
+  ]);
+
+  return allCategories
+    .filter((c) => c.isActive !== false)
+    .map((c) => {
+      const productsCount = allProducts.filter((p) => p.categoryId === c.id).length;
+      return { ...c, productsCount };
+    });
+}
+
+/**
+ * Storefront read model for the collections listing page.
+ *
+ * @param language - Locale string.
+ */
+export async function getCollectionsPageData(language: string): Promise<CollectionsPageData> {
+  const locale = resolveLocale(language);
+  const { collections: collectionService, categories: categoriesService } = createCatalogServices();
+  const [collections, categories] = await Promise.all([
+    collectionService.getAllCollections(),
+    categoriesService.getAll(locale),
+  ]);
+
+  return {
+    collections,
+    trendingCategories: categories.filter((c) => c.isActive !== false).slice(0, 4),
+  };
 }

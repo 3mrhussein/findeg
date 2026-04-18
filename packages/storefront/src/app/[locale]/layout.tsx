@@ -2,14 +2,15 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Cairo } from "next/font/google";
 import "../globals.css";
 import { hasLocale, Locale, NextIntlClientProvider } from "next-intl";
-import { routing } from "@/i18n/routing";
+import { routing } from "@i18n/routing";
 import { notFound } from "next/navigation";
 import { getMessages, setRequestLocale } from "next-intl/server";
-import Providers from "@/providers/Providers";
+import Providers from "@providers/Providers";
 import { Suspense } from "react";
-import { BoundaryProvider } from "@/lib/internal/BoundaryProvider";
-import BoundaryToggle from "@/lib/internal/BoundaryToggle";
-import { WebMCPInitializer } from "@/components/shared/WebMCPInitializer";
+import { BoundaryProvider } from "@lib/internal/BoundaryProvider";
+import BoundaryToggle from "@lib/internal/BoundaryToggle";
+import { WebMCPInitializer } from "@components/shared/WebMCPInitializer";
+import { cn } from "@lib/utils";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -77,15 +78,13 @@ export const viewport: Viewport = {
  * @param {React.ReactNode} children - The content to render within the layout.
  */
 
-/**
- *
- */
+/** Returns pre-defined locale params for static generation. */
 export async function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
 /**
- *
+ * Root layout providing HTML structure, i18n, fonts, and global providers.
  */
 export default async function RootLayout({
   children,
@@ -102,32 +101,19 @@ export default async function RootLayout({
   // Enable static rendering
   setRequestLocale(typedLocale);
   const messages = await getMessages({ locale: typedLocale });
+  const direction = typedLocale === "ar" ? "rtl" : "ltr";
+
   return (
-    <html lang={locale} dir={locale === "ar" ? "rtl" : "ltr"} suppressHydrationWarning>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=block"
-          rel="stylesheet"
-        />
-      </head>
-      <body
-        className={`${inter.variable} ${cairo.variable} font-sans bg-background text-foreground`}
-        suppressHydrationWarning
-      >
-        <NextIntlClientProvider locale={typedLocale} messages={messages}>
-          <BoundaryProvider>
-            <Providers>
-              <div className="min-h-screen bg-background text-foreground flex flex-col">
-                {children}
-              </div>
-              <BoundaryToggle />
-              <WebMCPInitializer />
-            </Providers>
-          </BoundaryProvider>
-        </NextIntlClientProvider>
-      </body>
-    </html>
+    <NextIntlClientProvider locale={typedLocale} messages={messages}>
+      <BoundaryProvider>
+        <Providers>
+          <div className="min-h-screen bg-background text-foreground flex flex-col">
+            <Suspense fallback={null}>{children}</Suspense>
+          </div>
+          <BoundaryToggle />
+          <WebMCPInitializer />
+        </Providers>
+      </BoundaryProvider>
+    </NextIntlClientProvider>
   );
 }

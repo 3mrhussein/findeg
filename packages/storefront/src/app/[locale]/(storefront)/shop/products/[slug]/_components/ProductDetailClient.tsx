@@ -14,26 +14,37 @@ import {
   Truck,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
-import { Button } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
-import { IconTooltip } from "@findeg/ui";
-import { useCart } from "@/hooks/useCart";
-import { useUser } from "@/hooks/useUser";
-import type { Product } from "@/features/catalog/domain/entities/Product";
-import type { Variant } from "@/features/catalog/domain/entities/Variant";
-import { VariantEntity } from "@/features/catalog/domain/entities/Variant";
-import type { CustomerGroup, UomCode } from "@/features/core/domain/types/common";
-import { getProductStatusBadge } from "@/features/catalog/presentation/utils/product-badge";
-import { cn } from "@/lib/utils";
-import type { ProductPdpViewModel } from "@/features/catalog/application/queries/product-pdp";
+import { Link } from "@i18n/navigation";
+import { Button } from "@ui";
+import { Badge } from "@ui";
+import { IconTooltip } from "@ui";
+import { useCart } from "@hooks/useCart";
+import { useUser } from "@hooks/useUser";
+import type { Product } from "@backend/features/catalog/domain/entities/Product";
+import type { Variant } from "@backend/features/catalog/domain/entities/Variant";
+import { VariantEntity } from "@backend/features/catalog/domain/entities/Variant";
+import { cn } from "@lib/utils";
+import type { ProductPdpViewModel } from "@backend/features/catalog/application/queries/product-pdp";
 import { ImageGallery } from "./ImageGallery";
 import { ProductTabsSection } from "./ProductTabsSection";
 import { RelatedProductsRail } from "./RelatedProductsRail";
 import { RecentlyViewedRail, type RecentlyViewedItem } from "./RecentlyViewedRail";
+import type { CustomerGroup, UomCode as UoMCode } from "@backend/features/core/domain/types/common";
+import { getProductPricingAction } from "@/app/[locale]/(storefront)/_actions/catalog";
+
+function getProductStatusBadge({ product, variant, lowStock }: any) {
+  if (lowStock) return { kind: "low-stock" as const };
+  if (variant.strikePrice && variant.strikePrice > variant.basePrice) {
+    const percent = Math.round(
+      ((variant.strikePrice - variant.basePrice) / variant.strikePrice) * 100,
+    );
+    return { kind: "sale" as const, percent };
+  }
+  return null;
+}
 
 interface UomOption {
-  code: UomCode;
+  code: UoMCode;
   label: string;
   factorToBase: number;
 }
@@ -71,7 +82,7 @@ function isCssColorCandidate(value: string): boolean {
 }
 
 function resolveUomLabel(uom: UomOption, locale: string): string {
-  const labels: Record<UomCode, { en: string; ar: string }> = {
+  const labels: Record<UoMCode, { en: string; ar: string }> = {
     pcs: { en: "pcs", ar: "قطعة" },
     pack: { en: "pack", ar: "عبوة" },
     carton: { en: "carton", ar: "كرتونة" },
@@ -147,13 +158,13 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
     vm.selectedVariant?.id,
   );
   const variants = useMemo(
-    () => (vm.product.variants || []).filter((variant) => variant.isActive !== false),
+    () => (vm.product.variants || []).filter((variant: any) => variant.isActive !== false),
     [vm.product.variants],
   );
 
   const selectedVariant =
-    variants.find((variant) => variant.id === selectedVariantId) ||
-    variants.find((variant) => variant.variantKey === "default") ||
+    variants.find((variant: any) => variant.id === selectedVariantId) ||
+    variants.find((variant: any) => variant.variantKey === "default") ||
     variants[0];
 
   const [selectedAttributes, setSelectedAttributes] = useState<Record<string, string>>(
@@ -167,7 +178,7 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
   const uomOptions = useMemo<UomOption[]>(() => {
     if (!selectedVariant) return [];
 
-    const enabled = (selectedVariant.sellableUoms || []).filter((uom) => uom.isEnabled);
+    const enabled = (selectedVariant.sellableUoms || []).filter((uom: any) => uom.isEnabled);
     if (enabled.length === 0) {
       return [
         {
@@ -178,14 +189,14 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
       ];
     }
 
-    return enabled.map((uom) => ({
+    return enabled.map((uom: any) => ({
       code: uom.uomCode,
       label: uom.uomCode,
       factorToBase: uom.factorToBase,
     }));
   }, [selectedVariant]);
 
-  const [selectedUomCode, setSelectedUomCode] = useState<UomCode | undefined>(uomOptions[0]?.code);
+  const [selectedUomCode, setSelectedUomCode] = useState<UoMCode | undefined>(uomOptions[0]?.code);
   useEffect(() => {
     setSelectedUomCode(uomOptions[0]?.code);
   }, [selectedVariantId, uomOptions]);
@@ -204,17 +215,19 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
     let active = true;
     setPriceState((prev) => ({ ...prev, loading: true }));
 
-    fetch(
-      `/api/v1/products/${vm.product.id}/pricing/quote?variantId=${selectedVariant.id}&uom=${selectedUom.code}&customerGroup=${vm.customerGroup}&quantity=1`,
-      {
-        cache: "no-store",
-      },
-    )
-      .then((response) => response.json())
+    const payload = {
+      productId: vm.product.id,
+      variantId: selectedVariant.id,
+      uom: selectedUom.code,
+      customerGroup: vm.customerGroup,
+      quantity: 1,
+    };
+
+    getProductPricingAction(payload)
       .then((json) => {
         if (!active) return;
 
-        if (json?.success) {
+        if (json?.success && json.data) {
           setPriceState({
             unitPrice: Number(json.data.unitPrice || selectedVariant.basePrice),
             currency: json.data.currency || "EGP",
@@ -225,7 +238,7 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
 
         setPriceState({
           unitPrice: getFallbackUomPrice(
-            vm.product.variants?.find((v) => v.id === selectedVariant.id) || selectedVariant,
+            vm.product.variants?.find((v: any) => v.id === selectedVariant.id) || selectedVariant,
             selectedUom,
             vm.customerGroup,
           ),
@@ -250,7 +263,7 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
   const bestValueCode = useMemo(() => {
     if (!selectedVariant || uomOptions.length <= 1) return null;
 
-    let best: { code: UomCode; value: number } | null = null;
+    let best: { code: UoMCode; value: number } | null = null;
 
     for (const uom of uomOptions) {
       const unitPrice = getFallbackUomPrice(selectedVariant, uom, vm.customerGroup);
@@ -279,7 +292,7 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
 
     addToCart(vm.product.id, quantity, {
       variantId: selectedVariant.id,
-      uomCode: selectedUom.code,
+      uomCode: selectedUom.code as any,
     });
 
     setIsAdded(true);
@@ -305,7 +318,7 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
 
   const galleryImages = useMemo(
     () =>
-      (selectedVariant?.images || []).map((image) => ({
+      (selectedVariant?.images || []).map((image: any) => ({
         url: image.url,
         alt: image.alt,
       })),
@@ -396,7 +409,7 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
   const handleSelectAttribute = (key: string, value: string) => {
     const nextAttributes = { ...selectedAttributes, [key]: value };
 
-    const matched = variants.find((variant) => {
+    const matched = variants.find((variant: any) => {
       const variantMap = getAttributeMap(variant);
       return Object.entries(nextAttributes).every(
         ([attributeKey, selectedValue]) =>
@@ -533,7 +546,7 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
                     <div className="flex flex-wrap gap-2">
                       {values.map((value) => {
                         const isSelected = selectedAttributes[key] === value;
-                        const isAvailable = variants.some((variant) => {
+                        const isAvailable = variants.some((variant: any) => {
                           const variantMap = getAttributeMap(variant);
                           if (variantMap[key] !== value) return false;
 

@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { Star } from "lucide-react";
-import { Button } from "@findeg/ui";
-import { Card, CardContent } from "@findeg/ui";
+import { Button } from "@ui";
+import { Card, CardContent } from "@ui";
 
 interface Review {
   id: number | string;

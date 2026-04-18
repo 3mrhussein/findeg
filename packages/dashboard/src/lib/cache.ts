@@ -1,5 +1,5 @@
 import { revalidatePath, revalidateTag } from "next/cache";
-import type { ServiceResult } from "@findeg/backend/features/core";
+import type { ServiceResult } from "@backend/features/core";
 
 /**
  * Dashboard Cache Invalidation Helpers
@@ -15,7 +15,7 @@ import type { ServiceResult } from "@findeg/backend/features/core";
  * await invalidateCaches(result);
  *
  * @example Manual cache invalidation
- * await invalidatePaths(["/admin/products", "/admin/dashboard"]);
+ * await invalidatePaths(["/products", "/dashboard"]);
  */
 
 /**

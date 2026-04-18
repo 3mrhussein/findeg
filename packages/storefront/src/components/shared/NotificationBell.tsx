@@ -1,15 +1,16 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { Bell, Check, ExternalLink, Loader2 } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
-import { Popover, PopoverContent, PopoverTrigger } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
-import { ScrollArea } from "@findeg/ui";
-import { Link } from "@/i18n/navigation";
-import { cn } from "@/lib/utils";
-import type { Notification } from "@/features/core/infrastructure/persistence/schema/notifications";
+import { Popover, PopoverContent, PopoverTrigger } from "@ui";
+import { Button } from "@ui";
+import { Badge } from "@ui";
+import { ScrollArea } from "@ui";
+import { Link } from "@i18n/navigation";
+import { cn } from "@lib/utils";
+import { type Notification } from "@backend/features/core";
+import { getUnreadNotificationCountAction } from "@/app/[locale]/(storefront)/_actions/notifications";
 
 /**
  * Notification Bell component with unread count polling and popover.
@@ -21,19 +22,20 @@ export function NotificationBell() {
   const t = useTranslations("Notifications");
   const locale = useLocale();
 
-  /**
-   * Fetch latest unread count
-   */
-  const fetchCount = useCallback(async () => {
-    try {
-      const res = await fetch("/api/v1/notifications/unread-count");
-      if (res.ok) {
-        const data = await res.json();
-        setUnreadCount(data.data.count);
+  useEffect(() => {
+    /**
+     *
+     */
+    const fetchUnreadCount = async () => {
+      try {
+        const count = await getUnreadNotificationCountAction();
+        setUnreadCount(count);
+      } catch (error) {
+        console.error("Failed to fetch unread count:", error);
       }
-    } catch (error) {
-      console.error("[NotificationBell] Failed to fetch count:", error);
-    }
+    };
+
+    fetchUnreadCount();
   }, []);
 
   /**
@@ -69,12 +71,8 @@ export function NotificationBell() {
     }
   };
 
-  // Poll for count every 60s
-  useEffect(() => {
-    fetchCount();
-    const interval = setInterval(fetchCount, 60000);
-    return () => clearInterval(interval);
-  }, [fetchCount]);
+  // No polling for now to avoid console errors from missing functions
+  // The initial count is fetched in the useEffect above
 
   /**
    * Format the type to a localized label

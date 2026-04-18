@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { History } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
+import { Link } from "@i18n/navigation";
 
 export interface RecentlyViewedItem {
   id: number;

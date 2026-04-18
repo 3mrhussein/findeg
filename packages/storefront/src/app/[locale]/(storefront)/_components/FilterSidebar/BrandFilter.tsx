@@ -1,7 +1,7 @@
 "use client";
 
-import { Checkbox } from "@findeg/ui";
-import { cn } from "@/lib/utils";
+import { Checkbox } from "@ui";
+import { cn } from "@lib/utils";
 import type { FilterOption } from "./FilterSidebar.interface";
 
 interface BrandFilterProps {

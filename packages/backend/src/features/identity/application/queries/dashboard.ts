@@ -5,13 +5,14 @@
  * App-layer catches errors and handles redirect/error responses.
  */
 
-import { getServices } from "@/server/getServices";
-import { NotAuthenticatedError } from "@/features/core/domain/errors";
-import { resolveLocale } from "@/features/core/domain/value-objects";
-import type { Product } from "@/features/catalog/domain/entities/Product";
-import type { Order } from "@/features/order/domain/entities/Order";
-import type { SessionPayload } from "@/features/core/domain/auth";
-import type { SchoolListResult } from "@/features/catalog/application/interfaces/ISchoolListRepository";
+import { createCatalogServices } from "@backend/features/catalog";
+import { createOrderServices } from "@backend/features/order";
+import { NotAuthenticatedError } from "@backend/features/core/domain/errors";
+import { resolveLocale } from "@backend/features/core/domain/value-objects";
+import type { Product } from "@backend/features/catalog/domain/entities/Product";
+import type { Order } from "@backend/features/order/domain/entities/Order";
+import type { SessionPayload } from "@backend/features/core/domain/auth";
+import type { SchoolListResult } from "@backend/features/catalog/application/interfaces/ISchoolListRepository";
 
 export interface DashboardData {
   products: Product[];
@@ -41,11 +42,12 @@ export async function getDashboardData(
   }
 
   const resolvedLocale = resolveLocale(locale);
-  const { products, schoolLists, repositories } = getServices();
+  const { products, schoolLists } = createCatalogServices();
+  const { orders } = createOrderServices();
 
   const [allProducts, userOrders, allSchoolLists] = await Promise.all([
     products.getAll(resolvedLocale),
-    repositories.orders.getByUserId(userId),
+    orders.getByUserId(userId),
     schoolLists.getAllLists(),
   ]);
 
@@ -56,4 +58,3 @@ export async function getDashboardData(
     // Session is provided by app-layer
   };
 }
-

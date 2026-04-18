@@ -5,3 +5,7 @@ export { SchoolListService } from "./SchoolListService";
 export { CategoryService } from "./CategoryService";
 export { TagService } from "./TagService";
 export { CollectionService } from "./CollectionService";
+
+// Service factory for apps to create service instances
+export { createCatalogServices } from "./factory";
+export type { CatalogServices } from "./factory";

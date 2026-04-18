@@ -2,10 +2,10 @@
 
 import Image from "next/image";
 import { Plus, Minus } from "lucide-react";
-import { Button } from "@findeg/ui";
-import { IconTooltip } from "@findeg/ui";
+import { Button } from "@ui";
+import { IconTooltip } from "@ui";
 import { useTranslations } from "next-intl";
-import { cn } from "@/lib/utils";
+import { cn } from "@lib/utils";
 
 interface CartItemProps {
   variantId: number;

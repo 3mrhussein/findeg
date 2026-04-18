@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@findeg/ui";
-import { useToggleLanguage } from "@/hooks/useToggleLanguage";
+import { Button } from "@ui";
+import { useToggleLanguage } from "@hooks/useToggleLanguage";
 
 /**
  * A component that allows toggling between available languages with a single button.

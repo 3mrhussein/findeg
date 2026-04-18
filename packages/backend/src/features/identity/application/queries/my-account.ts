@@ -5,10 +5,11 @@
  * App-layer catches errors and handles redirect/notFound/error responses.
  */
 
-import { getServices } from "@/server/getServices";
-import { NotAuthenticatedError, ResourceNotFoundError } from "@/features/core/domain/errors";
-import type { User } from "@/features/identity/domain/entities/User";
-import type { Order } from "@/features/order/domain/entities/Order";
+import { createIdentityServices } from "@backend/features/identity";
+import { createOrderServices } from "@backend/features/order";
+import { NotAuthenticatedError, ResourceNotFoundError } from "@backend/features/core/domain/errors";
+import type { User } from "@backend/features/identity/domain/entities/User";
+import type { Order } from "@backend/features/order/domain/entities/Order";
 
 export interface MyAccountData {
   user: User;
@@ -34,12 +35,10 @@ export async function getMyAccountData(userId: number | null | undefined): Promi
     throw new NotAuthenticatedError("Session required to access my account");
   }
 
-  const { repositories } = getServices();
+  const { users } = createIdentityServices();
+  const { orders } = createOrderServices();
 
-  const [user, orders] = await Promise.all([
-    repositories.users.getById(userId),
-    repositories.orders.getByUserId(userId),
-  ]);
+  const [user, userOrders] = await Promise.all([users.getById(userId), orders.getByUserId(userId)]);
 
   if (!user) {
     throw new ResourceNotFoundError("User", userId);
@@ -47,7 +46,7 @@ export async function getMyAccountData(userId: number | null | undefined): Promi
 
   return {
     user,
-    orders,
+    orders: userOrders,
     userId,
   };
 }
@@ -74,8 +73,8 @@ export async function getMyOrderDetail(
     throw new NotAuthenticatedError("Session required to view order");
   }
 
-  const { repositories } = getServices();
-  const order = await repositories.orders.getById(orderId);
+  const { orders } = createOrderServices();
+  const order = await orders.getById(orderId);
 
   if (!order || order.userId !== userId) {
     throw new ResourceNotFoundError("Order", orderId);

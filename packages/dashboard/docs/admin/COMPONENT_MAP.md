@@ -302,7 +302,7 @@ Each section has corresponding server actions:
 
 **Usage Pattern:**
 ```typescript
-import { updateProductAction } from "@/features/catalog/application/actions/product";
+import { updateProductAction } from "@features/catalog/application/actions/product";
 
 async function handleSave(data: ProductInput) {
   const result = await updateProductAction(productId, data);

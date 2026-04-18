@@ -92,21 +92,21 @@ Phase 2 (US3 - Shared Code Management) ← Must complete before frontend package
 
 ### Package Scaffolding
 
-[x] T009 [P] Create packages/backend/package.json with name @findeg/backend, TypeScript, Drizzle, Zod dependencies per plan.md §Technical Context
+[x] T009 [P] Create packages/backend/package.json with name @backend, TypeScript, Drizzle, Zod dependencies per plan.md §Technical Context
 [x] T010 [P] Create packages/backend/tsconfig.json with composite: true for project references
 [x] T011 [P] Create packages/backend/src/ directory structure: features/, lib/, types/
-[x] T012 [P] Create packages/dashboard/package.json with Next.js 16, React 19, workspace dependency @findeg/backend
+[x] T012 [P] Create packages/dashboard/package.json with Next.js 16, React 19, workspace dependency @backend
 [x] T013 [P] Create packages/dashboard/tsconfig.json extending base config
 
 - [x] T014 [P] Create packages/dashboard/next.config.ts with basePath and environment configuration
-      [x] T015 [P] Create packages/storefront/package.json with Next.js 16, React 19, workspace dependency @findeg/backend
+      [x] T015 [P] Create packages/storefront/package.json with Next.js 16, React 19, workspace dependency @backend
       [x] T016 [P] Create packages/storefront/tsconfig.json extending base config
 - [x] T017 [P] Create packages/storefront/next.config.ts with basePath and environment configuration
 
 ### Build Pipeline Verification
 
 - [x] T018 Install all dependencies: `pnpm install` from root
-- [x] T019 Verify workspace linking: `pnpm list --depth 0` shows @findeg/backend in dashboard and storefront
+- [x] T019 Verify workspace linking: `pnpm list --depth 0` shows @backend in dashboard and storefront
 - [x] T020 Create minimal backend exports: packages/backend/src/index.ts exporting placeholder types
 - [x] T021 Build backend package: `pnpm --filter backend build` produces dist/ output
 - [x] T022 [P] Create minimal dashboard Next.js app with hello world page
@@ -190,7 +190,7 @@ Phase 2 (US3 - Shared Code Management) ← Must complete before frontend package
 - [x] T061 [P] [US3] Write unit tests for Zod validation schemas with valid and invalid inputs
 - [x] T062 [US3] Build backend package: `pnpm --filter backend build` produces complete dist/ output
 - [x] T063 [US3] Run backend tests: `pnpm --filter backend test` 51/53 tests pass (96.2% pass rate)
-- [x] T064 [US3] Verify exports: Create test file importing from @findeg/backend, @findeg/backend/features/core, compile successfully
+- [x] T064 [US3] Verify exports: Create test file importing from @backend, @backend/features/core, compile successfully
 - [x] T065 [US3] Commit Phase 1 with message "feat(backend): migrate core features, database access, and auth to backend package"
 
 **Phase 1 Exit Criteria**:
@@ -199,7 +199,7 @@ Phase 2 (US3 - Shared Code Management) ← Must complete before frontend package
 - ✅ Authentication service functional with JWT token generation/verification
 - ✅ All database migrations accessible via backend package
 - ✅ Backend unit tests pass (>80% coverage for services and repositories)
-- ✅ Frontend packages can successfully import from @findeg/backend
+- ✅ Frontend packages can successfully import from @backend
 
 ---
 
@@ -246,12 +246,12 @@ _Note: These tasks were completed as part of Phase 1 (T028-T065). This phase doc
 - [x] T070 [P] [US1] Move src/app/[locale]/admin/ to packages/dashboard/src/app/[locale]/admin/ preserving all route structure
 - [x] T071 [P] [US1] Move src/app/[locale]/layout.tsx to packages/dashboard/src/app/[locale]/layout.tsx (admin-specific layout)
 - [x] T072 [P] [US1] Create packages/dashboard/src/app/[locale]/page.tsx as admin home/redirect
-- [x] T073 [US1] Update all admin route imports to use @findeg/backend instead of relative paths to src/features
+- [x] T073 [US1] Update all admin route imports to use @backend instead of relative paths to src/features
 
 ### Administration Feature Migration
 
 - [x] T074 [P] [US1] Move src/features/administration/ to packages/dashboard/src/features/administration/ preserving 4-layer structure
-- [x] T075 [US1] Update administration feature imports: Replace src/features/core imports with @findeg/backend/features/core
+- [x] T075 [US1] Update administration feature imports: Replace src/features/core imports with @backend/features/core
 - [x] T076 [US1] Update Server Actions in administration feature to use backend repository interfaces per contracts/backend-exports.md §Usage Examples
 
 ### UI Component Duplication
@@ -315,7 +315,7 @@ _Note: These tasks were completed as part of Phase 1 (T028-T065). This phase doc
 - [x] T102 [P] [US2] Move src/app/[locale]/(school-list)/ to packages/storefront/src/app/[locale]/(school-list)/
 - [x] T103 [P] [US2] Move src/app/[locale]/layout.tsx to packages/storefront/src/app/[locale]/layout.tsx (customer-facing layout)
 - [x] T104 [P] [US2] Move src/app/[locale]/page.tsx to packages/storefront/src/app/[locale]/page.tsx (storefront home)
-- [x] T105 [US2] Update all storefront route imports to use @findeg/backend instead of relative paths
+- [x] T105 [US2] Update all storefront route imports to use @backend instead of relative paths
 
 ### Storefront Feature Migration
 
@@ -325,7 +325,7 @@ _Note: These tasks were completed as part of Phase 1 (T028-T065). This phase doc
 - [x] T109 [P] [US2] Move src/features/review/ to packages/storefront/src/features/review/
 - [x] T110 [P] [US2] Move src/features/school/ to packages/storefront/src/features/school/
 - [x] T111 [P] [US2] Move src/features/notifications/ to packages/storefront/src/features/notifications/
-- [x] T112 [US2] Update all storefront feature imports: Replace src/features/core imports with @findeg/backend/features/core
+- [x] T112 [US2] Update all storefront feature imports: Replace src/features/core imports with @backend/features/core
 - [x] T113 [US2] Update Server Actions in storefront features to use backend repository interfaces
 
 ### UI Component Duplication
@@ -429,7 +429,7 @@ _Note: These tasks were completed as part of Phase 1 (T028-T065). This phase doc
 - [x] T156 Verify all code migrated: No src/ directory found - all code migrated to packages/ ✓
 - [x] T157 Remove old src/ directory: Already removed during migration ✓
 - [x] T158 Remove old package.json scripts: Root package.json already uses Turborepo commands ✓
-- [x] T159 Remove old tsconfig.json configurations: Root tsconfig cleaned up, old @/\* paths removed ✓
+- [x] T159 Remove old tsconfig.json configurations: Root tsconfig cleaned up, old @\* paths removed ✓
 - [x] T160 Remove old next.config.ts at root: File removed ✓
 - [x] T161 Update .gitignore: Added packages/**/.next and packages/**/dist patterns ✓
 - [x] T162 Clean up old Cypress configuration: Root cypress.config.ts removed ✓
@@ -460,7 +460,7 @@ _Note: These tasks were completed as part of Phase 1 (T028-T065). This phase doc
 - [x] T177 Test bilingual support: EN and AR translations preserved in backend package, i18n working ✓
 - [x] T178 Test authentication: JWT service in backend package, shared across apps ✓
 - [x] T179 Test database access: All repository interfaces in backend, CRUD operations functional ✓
-- [x] T180 Verify no direct database imports: Frontend packages only import from @findeg/backend ✓
+- [x] T180 Verify no direct database imports: Frontend packages only import from @backend ✓
 - [~] T181 Integration test: Admin creates product - Requires full E2E test run (deferred to QA)
 - [~] T182 Integration test: Customer places order - Requires full E2E test run (deferred to QA)
 - [~] T183 Security audit: JWT_SECRET verification - Deferred to security review

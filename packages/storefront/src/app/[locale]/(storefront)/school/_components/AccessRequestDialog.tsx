@@ -10,12 +10,12 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Textarea } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import { useToast } from "@/hooks/use-toast";
+} from "@ui";
+import { Button } from "@ui";
+import { Input } from "@ui";
+import { Textarea } from "@ui";
+import { Label } from "@ui";
+import { useToast } from "@hooks/use-toast";
 
 interface AccessRequestDialogProps {
   isOpen: boolean;

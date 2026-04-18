@@ -2,13 +2,13 @@
 
 import React from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { Product } from "@/features/catalog/domain/entities/Product";
-import { Button } from "@findeg/ui";
-import { Price } from "@findeg/ui";
+import { useRouter } from "@i18n/navigation";
+import { Product } from "@backend/features/catalog/domain/entities/Product";
+import { Button } from "@ui";
+import { Price } from "@ui";
 import { useTranslations } from "next-intl";
-import { useCart } from "@/hooks/useCart";
-import { Icon } from "@findeg/ui";
+import { useCart } from "@hooks/useCart";
+import { Icon } from "@ui";
 
 interface ProductListItemUIProps {
   product: Product;

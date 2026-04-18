@@ -1,4 +1,4 @@
-import { ID } from "@/features/core/domain/types/common";
+import { ID } from "@backend/features/core/domain/types/common";
 
 export interface SchoolFilterOptions {
   governorates: string[];

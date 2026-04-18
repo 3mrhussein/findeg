@@ -18,7 +18,7 @@ import { relations } from "drizzle-orm";
 import { schoolEngineSchema } from "./schemas";
 import { categories } from "./categories";
 import { productVariants } from "./product-variants";
-import type { LocalizedStringDraft } from "@/features/core/domain/value-objects";
+import type { LocalizedStringDraft } from "@backend/features/core/domain/value-objects";
 
 export type MatchRulesDraft = {
   attributes?: Record<string, string | number | boolean>;

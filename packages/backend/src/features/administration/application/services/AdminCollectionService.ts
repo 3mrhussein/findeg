@@ -1,8 +1,8 @@
-import { ID } from "@/features/core/domain/types/common";
+import { ID } from "../../../core/domain/types/common";
 import { IAdminCollectionService } from "../interfaces/IAdminCollectionService";
-import { ICollectionRepository } from "@/features/catalog/application/interfaces/ICollectionRepository";
-import { Collection } from "@/features/catalog/domain/entities/Collection";
-import { Tag } from "@/features/catalog/domain/entities/Tag";
+import { ICollectionRepository } from "../../../catalog/application/interfaces/ICollectionRepository";
+import { Collection } from "../../../catalog/domain/entities/Collection";
+import { Tag } from "../../../catalog/domain/entities/Tag";
 import { CollectionInput } from "../../domain/types/CollectionInput";
 import { IAuditLogService } from "../interfaces/IAuditLogService";
 

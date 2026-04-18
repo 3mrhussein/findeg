@@ -1,7 +1,7 @@
-import { CACHE_TAGS } from "@/features/core/domain/constants/cache-tags";
-import { getServices } from "@/server/getServices";
+import { CACHE_TAGS } from "@backend/features/core/domain/constants/cache-tags";
+import { createCatalogServices } from "../services/factory";
 import { getShopPageData } from "./storefront";
-import type { Product } from "@/features/catalog/domain/entities/Product";
+import type { Product } from "@backend/features/catalog/domain/entities/Product";
 import type { FilterOption } from "./listing";
 import {
   applyListingFilters,
@@ -11,7 +11,7 @@ import {
   parseListingFilters,
   type CategoryFilterOption,
 } from "./listing";
-import { resolveLocale } from "@/features/core/domain/value-objects";
+import { resolveLocale } from "@backend/features/core/domain/value-objects";
 
 export interface ShopPageViewModel {
   products: Product[];
@@ -30,7 +30,7 @@ export async function getShopPageViewModel(
   query: { [key: string]: string | string[] | undefined },
 ): Promise<ShopPageViewModel> {
   const resolvedLocale = resolveLocale(locale);
-  const { categories } = getServices();
+  const { categories } = createCatalogServices();
   const [shopData, allCategories] = await Promise.all([
     getShopPageData(resolvedLocale),
     categories.getAll(resolvedLocale),

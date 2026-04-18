@@ -9,10 +9,20 @@
     "rootDir": "src",
     "jsx": "react-jsx",
     "paths": {
-      "@/*": ["./src/*"],
-      "@/features/*": ["./src/features/*"]
+      "@backend/*": [
+        "./src/*"
+      ],
+      "@backend/features/*": [
+        "./src/features/*"
+      ]
     }
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "src/__tests__"]
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "src/__tests__"
+  ]
 }

@@ -32,11 +32,22 @@ const config = [
       "no-restricted-imports": [
         "error",
         {
+          paths: [
+            {
+              name: "next/navigation",
+              importNames: ["useRouter", "usePathname", "redirect", "Link"],
+              message: "Please use @i18n/navigation instead to ensure localized routing."
+            },
+            {
+              name: "next/link",
+              message: "Please use @i18n/navigation instead to ensure localized routing."
+            }
+          ],
           patterns: [
-            "@/presentation/storefront/*",
+            "@presentation/storefront/*",
             "src/presentation/storefront/*",
-            "@/features/**/presentation/components/**",
-            "@/features/**/presentation/hoc/**",
+            "@features/**/presentation/components/**",
+            "@features/**/presentation/hoc/**",
             "src/features/**/presentation/components/**",
             "src/features/**/presentation/hoc/**",
           ],

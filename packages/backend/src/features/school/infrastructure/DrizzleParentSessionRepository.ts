@@ -1,12 +1,12 @@
-import { db } from "@/features/core/infrastructure/persistence";
+import { db } from "@backend/features/core/infrastructure/persistence";
 import { eq, and, or, sql } from "drizzle-orm";
 import { IParentSessionRepository } from "../application/interfaces/IParentSessionRepository";
 import {
   schoolListParentSessions,
   SchoolListParentSession,
   NewSchoolListParentSession,
-} from "@/features/core/infrastructure/persistence/schema/school-list-sessions";
-import { orders } from "@/features/core/infrastructure/persistence/schema/orders";
+} from "@backend/features/core/infrastructure/persistence/schema/school-list-sessions";
+import { orders } from "@backend/features/core/infrastructure/persistence/schema/orders";
 
 /**
  *

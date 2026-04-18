@@ -1,8 +1,8 @@
 import { getTranslations } from "next-intl/server";
 import type { Locale } from "next-intl";
-import { Link } from "@/i18n/navigation";
-import { Button } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
+import { Link } from "@i18n/navigation";
+import { Button } from "@ui";
+import { Badge } from "@ui";
 import { BookOpen, GraduationCap } from "lucide-react";
 
 /**

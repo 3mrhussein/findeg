@@ -9,9 +9,9 @@ Range: HEAD
 
 ### Architecture Changes
 
-- **BREAKING**: Refactored `@findeg/backend` to be a pure TypeScript library with zero framework dependencies
+- **BREAKING**: Refactored `@backend` to be a pure TypeScript library with zero framework dependencies
 - Eliminated all 21 Next.js imports from backend package (`next/cache`, `next/navigation`, `next/headers`)
-- Removed `next`, `react`, `react-dom`, and `@findeg/ui` from backend package.json dependencies
+- Removed `next`, `react`, `react-dom`, and `@ui` from backend package.json dependencies
 - Backend services now run in pure Node.js environment (Vitest, 188 tests, 13.15 seconds execution)
 
 ### New Patterns

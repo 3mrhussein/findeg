@@ -18,7 +18,7 @@ This guide provides practical before/after examples for migrating backend code f
 // ❌ packages/backend/src/features/order/application/actions/order.ts
 "use server";
 import { revalidatePath } from "next/cache";  // Framework dependency
-import { container } from "@/features/core/infrastructure/di/ServiceContainer";
+import { container } from "@features/core/infrastructure/di/ServiceContainer";
 
 export async function updateOrderStatusAction(id: number, input: OrderStatusUpdate) {
   try {
@@ -56,7 +56,7 @@ export function getOrderCachePaths(orderId?: number): string[] {
 ```typescript
 // ✅ packages/backend/src/features/order/application/services/OrderService.ts
 import { getOrderCachePaths } from "../../domain/cache";
-import type { ServiceResult } from "@/features/core/application/types/ServiceResult";
+import type { ServiceResult } from "@features/core/application/types/ServiceResult";
 
 export async function updateOrderStatus(
   id: number, 
@@ -81,8 +81,8 @@ export async function updateOrderStatus(
 // ✅ packages/dashboard/src/actions/order-actions.ts
 "use server";
 import { revalidatePath } from "next/cache";  // Framework usage in app-layer
-import { updateOrderStatus } from "@findeg/backend/features/order";
-import { resolveErrorMessage } from "@findeg/backend/features/core";
+import { updateOrderStatus } from "@backend/features/order";
+import { resolveErrorMessage } from "@backend/features/core";
 
 export async function updateOrderStatusAction(id: number, input: OrderStatusUpdate) {
   try {
@@ -102,7 +102,7 @@ export async function updateOrderStatusAction(id: number, input: OrderStatusUpda
 
 ```typescript
 // ✅ packages/dashboard/src/app/admin/orders/[id]/page.tsx
-import { updateOrderStatusAction } from "@/actions/order-actions";  // App-layer action
+import { updateOrderStatusAction } from "@actions/order-actions";  // App-layer action
 
 // Component uses app-layer action (unchanged from user perspective)
 <form action={updateOrderStatusAction}>
@@ -119,7 +119,7 @@ import { updateOrderStatusAction } from "@/actions/order-actions";  // App-layer
 ```typescript
 // ❌ packages/backend/src/features/identity/application/queries/dashboard.ts
 import { redirect } from "next/navigation";  // Framework dependency
-import { getServices } from "@/server/getServices";
+import { getServices } from "@server/getServices";
 
 export async function getDashboardDataOrRedirect(locale: string): Promise<DashboardData> {
   const { auth, products, repositories } = getServices();
@@ -159,8 +159,8 @@ export class NotAuthenticatedError extends DomainError {
 
 ```typescript
 // ✅ packages/backend/src/features/identity/application/queries/dashboard.ts
-import { NotAuthenticatedError } from "@/features/core/domain/errors";
-import { getServices } from "@/server/getServices";
+import { NotAuthenticatedError } from "@features/core/domain/errors";
+import { getServices } from "@server/getServices";
 
 export async function getDashboardData(
   locale: string,
@@ -185,7 +185,7 @@ export async function getDashboardData(
 ```typescript
 // ✅ packages/dashboard/src/lib/session.ts
 import { cookies } from "next/headers";
-import { container } from "@findeg/backend";
+import { container } from "@backend";
 
 export async function extractSession() {
   const cookieStore = await cookies();
@@ -199,8 +199,8 @@ export async function extractSession() {
 ```typescript
 // ✅ packages/dashboard/src/app/dashboard/page.tsx
 import { redirect } from "next/navigation";  // Framework usage in app-layer
-import { getDashboardData, NotAuthenticatedError } from "@findeg/backend/features/identity";
-import { extractSession } from "@/lib/session";
+import { getDashboardData, NotAuthenticatedError } from "@backend/features/identity";
+import { extractSession } from "@lib/session";
 
 export default async function DashboardPage({ params }: { params: { locale: string } }) {
   try {
@@ -227,7 +227,7 @@ export default async function DashboardPage({ params }: { params: { locale: stri
 ```typescript
 // ❌ packages/backend/src/features/catalog/application/queries/shop-page.ts
 import { cacheTag, cacheLife } from "next/cache";  // Framework dependency
-import { CACHE_TAGS } from "@/features/core/domain/constants/cache-tags";
+import { CACHE_TAGS } from "@features/core/domain/constants/cache-tags";
 
 export async function getShopPageViewModel(locale: string, query: object) {
   "use cache";  // ❌ Next.js directive
@@ -266,7 +266,7 @@ export async function getShopPageViewModel(
 
 ```typescript
 // ✅ packages/backend/src/features/catalog/application/queries/cache-config.ts
-import { CACHE_TAGS } from "@/features/core/domain/constants/cache-tags";
+import { CACHE_TAGS } from "@features/core/domain/constants/cache-tags";
 
 export const SHOP_PAGE_CACHE_CONFIG = {
   tags: [CACHE_TAGS.SHOP_PAGE, CACHE_TAGS.PRODUCTS, CACHE_TAGS.CATEGORIES],
@@ -283,7 +283,7 @@ import { cacheTag, cacheLife } from "next/cache";  // Framework usage in app-lay
 import { 
   getShopPageViewModel, 
   SHOP_PAGE_CACHE_CONFIG 
-} from "@findeg/backend/features/catalog";
+} from "@backend/features/catalog";
 
 export async function getCachedShopPageData(locale: string, query: object) {
   // ✅ App-layer applies caching
@@ -298,7 +298,7 @@ export async function getCachedShopPageData(locale: string, query: object) {
 
 ```typescript
 // ✅ packages/storefront/src/app/shop/page.tsx
-import { getCachedShopPageData } from "@/queries/shop-queries";  // App-layer query
+import { getCachedShopPageData } from "@queries/shop-queries";  // App-layer query
 
 export default async function ShopPage({ 
   params, 
@@ -363,7 +363,7 @@ export class CookieSessionProvider implements ISessionProvider {
 ```typescript
 // ✅ packages/dashboard/src/lib/session.ts
 import { cookies } from "next/headers";
-import { CookieSessionProvider } from "@findeg/backend/features/core";
+import { CookieSessionProvider } from "@backend/features/core";
 
 export async function getSessionProvider(): Promise<CookieSessionProvider> {
   const cookieStore = await cookies();  // ✅ App-layer reads framework API
@@ -394,8 +394,8 @@ export async function getDashboardData(
 
 ```typescript
 // ✅ packages/dashboard/src/app/dashboard/page.tsx
-import { extractSession } from "@/lib/session";
-import { getDashboardData } from "@findeg/backend/features/identity";
+import { extractSession } from "@lib/session";
+import { getDashboardData } from "@backend/features/identity";
 
 export default async function DashboardPage({ params }: { params: { locale: string } }) {
   const session = await extractSession();  // ✅ App-layer extracts
@@ -443,7 +443,7 @@ mv packages/backend/src/features/school/presentation/hooks/useSchoolListLookup.t
 
 ```typescript
 // ✅ packages/dashboard/src/components/school/SchoolListModal.tsx
-import { useSchoolListLookup } from "@/hooks/useSchoolListLookup";  // App-layer hook
+import { useSchoolListLookup } from "@hooks/useSchoolListLookup";  // App-layer hook
 
 export function SchoolListModal() {
   const { isOpen, openModal, closeModal } = useSchoolListLookup();
@@ -472,7 +472,7 @@ export * from "./domain/entities/SchoolList";
 // ✅ packages/backend/src/features/order/__tests__/OrderService.test.ts
 import { describe, it, expect, vi } from "vitest";
 import { OrderService } from "../application/services/OrderService";
-import { ResourceNotFoundError } from "@/features/core/domain/errors";
+import { ResourceNotFoundError } from "@features/core/domain/errors";
 
 describe("OrderService - updateStatus", () => {
   it("throws ResourceNotFoundError when order not found", async () => {
@@ -519,12 +519,12 @@ vi.mock("next/cache", () => ({
 }));
 
 // ✅ Mock backend service
-vi.mock("@findeg/backend/features/order", () => ({
+vi.mock("@backend/features/order", () => ({
   updateOrderStatus: vi.fn(),
 }));
 
 import { revalidatePath } from "next/cache";
-import { updateOrderStatus } from "@findeg/backend/features/order";
+import { updateOrderStatus } from "@backend/features/order";
 
 describe("updateOrderStatusAction", () => {
   it("calls backend and revalidates cache on success", async () => {

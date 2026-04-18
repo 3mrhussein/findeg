@@ -1,60 +1,19 @@
-import { container } from "@/features/core/infrastructure/di/ServiceContainer";
-
 /**
- * Server-side Service Access
+ * @deprecated getServices() is no longer supported in Next.js 16.
  *
- * Provides a clean way for Server Components and Server Actions
- * to access the application services.
+ * ServiceContainer cannot be exported because it's backend infrastructure.
+ * Use data layer functions from @data/* which wrap backend calls with "use cache".
  *
- * IMPORTANT: This returns SERVICES (not raw repositories).
- * Services encapsulate business logic and validation.
- * Only use repository access directly when you need
- * operations not covered by the service interface.
+ * Migration examples:
+ *
+ * OLD:
+ *   const { products } = getServices();
+ *   const data = await products.getAll();
+ *
+ * NEW:
+ *   import { getProducts } from '@data/products/queries';
+ *   const data = await getProducts(locale);
  */
-export function getServices() {
-  return {
-    // Shop-facing services
-    products: container.productService,
-    categories: container.categoryService,
-    cart: container.cartService,
-    collections: container.collectionService,
-    search: container.searchService,
-    media: container.mediaService,
-    email: container.emailService,
-
-    // Admin services
-    auth: container.authService,
-    adminProduct: container.adminProductService,
-    adminCategory: container.adminCategoryService,
-    adminTag: container.adminTagService,
-    adminCollection: container.adminCollectionService,
-    adminDashboard: container.adminDashboardService,
-    adminBrand: container.adminBrandService,
-    adminOrder: container.adminOrderService,
-    adminInventory: container.adminInventoryService,
-    schoolLists: container.schoolListService,
-    schoolAccess: container.schoolAccessService,
-    schoolDirectory: container.schoolDirectoryService,
-    parentList: container.parentListService,
-    logger: container.loggerService,
-    adminUser: container.adminUserService,
-    adminRole: container.adminRoleService,
-    auditLog: container.auditLogService,
-    reviews: container.reviewService,
-    notifications: container.notificationService,
-    adminSearchAnalytics: container.adminSearchAnalyticsService,
-
-    // Direct repository access (for cases not covered by services)
-    repositories: {
-      products: container.productRepository,
-      variants: container.variantRepository,
-      categories: container.categoryRepository,
-      brands: container.brandRepository,
-      tags: container.tagRepository,
-      collections: container.collectionRepository,
-      users: container.userRepository,
-      orders: container.orderRepository,
-      reviews: container.reviewRepository,
-    },
-  };
+export function getServices(): never {
+  throw new Error("getServices() is deprecated. Use queries/actions from @data/* instead.");
 }

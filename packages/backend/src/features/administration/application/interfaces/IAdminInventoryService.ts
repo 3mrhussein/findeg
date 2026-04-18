@@ -1,5 +1,5 @@
-import { Product } from "@/features/catalog/domain/entities/Product";
-import { InventoryUpdate } from "@/features/administration/domain/types";
+import { Product } from "@backend/features/catalog/domain/entities/Product";
+import { InventoryUpdate } from "@backend/features/administration/domain/types";
 
 export interface IAdminInventoryService {
   /**

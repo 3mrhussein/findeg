@@ -1,5 +1,5 @@
-import { Container } from "@findeg/ui";
-import { Skeleton } from "@findeg/ui";
+import { Container } from "@ui";
+import { Skeleton } from "@ui";
 
 interface PageStateLoadingProps {
   withGrid?: boolean;

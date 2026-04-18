@@ -2,12 +2,11 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Suspense } from "react";
 import type { Locale } from "next-intl";
 import Image from "next/image";
-import { Link } from "@/i18n/navigation";
-import { getServices } from "@/server/getServices";
-import { resolveLocale } from "@/features/core/domain/value-objects";
+import { getCollectionsPage } from "@/data/catalog/queries";
+import { Link } from "@i18n/navigation";
 import { ImageOff, ArrowRight, Sparkles } from "lucide-react";
 import { PageShell } from "../_components/PageShell";
-import { Button } from "@findeg/ui";
+import { Button } from "@ui";
 
 /**
  *
@@ -31,18 +30,11 @@ export default async function CollectionsPage({ params }: { params: Promise<{ lo
  */
 async function CollectionsPageContent({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const resolvedLocale = resolveLocale(locale);
-  setRequestLocale(resolvedLocale);
+  setRequestLocale(locale as Locale);
   const t = await getTranslations({ locale: locale as Locale, namespace: "Pages.Shop" });
   const tNav = await getTranslations({ locale: locale as Locale, namespace: "Nav" });
 
-  const { collections: collectionService, categories: categoriesService } = getServices();
-  const [collections, categories] = await Promise.all([
-    collectionService.getAllCollections(),
-    categoriesService.getAll(resolvedLocale),
-  ]);
-
-  const activeCategories = categories.filter((c) => c.isActive !== false).slice(0, 4);
+  const { collections, trendingCategories } = await getCollectionsPage(locale);
 
   return (
     <PageShell bg="surface">
@@ -60,10 +52,9 @@ async function CollectionsPageContent({ params }: { params: Promise<{ locale: st
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 mb-16 lg:mb-20">
         {collections.map((collection) => {
           const title =
-            (collection.localizedTitle as Record<string, string>)?.[resolvedLocale] ||
-            collection.slug;
+            (collection.localizedTitle as Record<string, string>)?.[locale] || collection.slug;
           const subtitle =
-            (collection.localizedSubtitle as Record<string, string>)?.[resolvedLocale] ||
+            (collection.localizedSubtitle as Record<string, string>)?.[locale] ||
             t("CollectionsExplore");
 
           return (
@@ -108,51 +99,41 @@ async function CollectionsPageContent({ params }: { params: Promise<{ locale: st
           );
         })}
       </div>
-
       {/* Trending Categories Section */}
-      {activeCategories.length > 0 && (
-        <section className="mb-16 lg:mb-20">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl lg:text-3xl font-bold text-slate-900 dark:text-white">
-              {tNav("TrendingCategories")}
-            </h2>
+      <section className="mb-16 lg:mb-20">
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-2xl lg:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+            {tNav("TrendingCategories") || "Trending Categories"}
+          </h2>
+        </div>
+        <div className="grid gap-6 grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
+          {trendingCategories.map((category) => (
             <Link
-              href="/categories"
-              className="text-sm font-semibold text-primary hover:text-primary/80 flex items-center gap-1.5 transition-colors"
+              key={category.id}
+              href={`/categories/${category.slug || category.id}`}
+              className="group relative overflow-hidden rounded-2xl bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1"
             >
-              {tNav("ViewAll")}
-              <ArrowRight className="size-4" />
+              <div className="relative aspect-4/3 overflow-hidden">
+                <Image
+                  alt={category.name}
+                  src={category.imageUrl || `https://picsum.photos/seed/${category.id}/400/300`}
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                />
+              </div>
+              <div className="p-4">
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-1">
+                  {category.name}
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-1">
+                  {category.description || t("CollectionsExplore")}
+                </p>
+              </div>
             </Link>
-          </div>
-          <div className="grid gap-5 grid-cols-2 lg:grid-cols-4">
-            {activeCategories.map((category) => (
-              <Link
-                key={category.id}
-                href={`/categories/${category.slug || category.id}`}
-                className="group relative overflow-hidden rounded-2xl bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1"
-              >
-                <div className="relative aspect-4/3 overflow-hidden">
-                  <Image
-                    alt={category.name}
-                    src={category.imageUrl || `https://picsum.photos/seed/${category.id}/400/300`}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    sizes="(max-width: 768px) 50vw, 25vw"
-                  />
-                </div>
-                <div className="p-4">
-                  <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-1">
-                    {category.name}
-                  </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-1">
-                    {category.description || t("CollectionsExplore")}
-                  </p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
-      )}
+          ))}
+        </div>
+      </section>
 
       {/* Smart School List CTA */}
       <section className="relative overflow-hidden rounded-3xl bg-slate-900 dark:bg-slate-800/80 dark:border dark:border-slate-700/50 p-8 lg:p-14">

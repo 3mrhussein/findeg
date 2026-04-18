@@ -1,5 +1,5 @@
-import { Link } from "@/i18n/navigation";
-import { Button } from "@findeg/ui";
+import { Link } from "@i18n/navigation";
+import { Button } from "@ui";
 import Image from "next/image";
 
 /**

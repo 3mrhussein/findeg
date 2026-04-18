@@ -1,9 +1,9 @@
-import { ID } from "@/features/core/domain/types/common";
+import { ID } from "@backend/features/core/domain/types/common";
 import {
   SchoolListAccessGrant,
   SchoolListAccessRequest,
   SchoolListAccessToken,
-} from "@/features/core/infrastructure/persistence/schema/school-access";
+} from "@backend/features/core/infrastructure/persistence/schema/school-access";
 
 export type AccessState = "public" | "code_required" | "private" | "granted" | "pending";
 

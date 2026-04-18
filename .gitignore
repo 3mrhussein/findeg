@@ -8,10 +8,7 @@ pnpm-debug.log*
 lerna-debug.log*
 
 # Dependencies
-node_modules
-backend/node_modules
-dashboard/node_modules
-storefront/node_modules
+**/node_modules
 
 # Build outputs
 **/dist/*
@@ -23,6 +20,15 @@ cypress/videos
 cypress/downloads
 cypress/reports
 .turbo
+
+# Environment variables (CRITICAL - do not commit secrets!)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
+
 # Editor directories and files
 **/tsconfig.tsbuildinfo
 .vscode/*

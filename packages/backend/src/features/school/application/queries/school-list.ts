@@ -1,6 +1,7 @@
-import { getServices } from "@/server/getServices";
-import type { Product } from "@/features/catalog/domain/entities/Product";
-import { resolveLocale } from "@/features/core/domain/value-objects";
+import { resolveLocale } from "@backend/features/core/domain/value-objects";
+import { createSchoolServices } from "../services/factory";
+import { createCatalogServices } from "@backend/features/catalog/application/services/factory";
+import type { Product } from "@backend/features/catalog/domain/entities/Product";
 
 export interface SchoolListViewModel {
   rawCode: string;
@@ -49,6 +50,7 @@ function parseProductIds(code: string): number[] {
 export async function getSchoolListViewModel(
   locale: string,
   rawCode: string,
+  catalogServices = createCatalogServices(),
 ): Promise<SchoolListViewModel> {
   const resolvedLocale = resolveLocale(locale);
   const normalizedCode = extractCode(rawCode);
@@ -64,12 +66,16 @@ export async function getSchoolListViewModel(
     };
   }
 
-  const { products } = getServices();
+  const { products } = catalogServices;
   const resolved = await Promise.all(
     productIds.map(async (id) => products.getById(id, resolvedLocale)),
   );
 
-  const productMap = new Map(resolved.filter(Boolean).map((product) => [product!.id, product!]));
+  const productMap = new Map(
+    resolved
+      .filter((p: Product | null): p is Product => Boolean(p))
+      .map((product: Product) => [product.id, product] as const),
+  );
   const orderedProducts = productIds
     .map((id) => productMap.get(id))
     .filter((product): product is Product => Boolean(product));
@@ -83,5 +89,28 @@ export async function getSchoolListViewModel(
       (sum, product) => sum + (product.variants?.[0]?.basePrice ?? 0),
       0,
     ),
+  };
+}
+
+/**
+ * Get school list page data.
+ */
+export async function getSchoolListPageData(slug: string, userId: number | null) {
+  const { schoolLists, schoolAccess, parentList } = createSchoolServices();
+
+  const list = await schoolLists.getListBySlug(slug);
+  if (!list) return null;
+
+  const [accessState, sessionState, fullList] = await Promise.all([
+    schoolAccess.getAccessState(list.id, userId as any),
+    parentList.getSessionState(list.id, userId as any),
+    parentList.getListWithDetails(slug),
+  ]);
+
+  return {
+    list,
+    accessState,
+    sessionState,
+    fullList,
   };
 }

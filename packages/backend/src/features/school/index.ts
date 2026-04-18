@@ -5,3 +5,5 @@ export * from "./application/services/ParentListService";
 export * from "./application/interfaces/ISchoolAccessService";
 export * from "./application/interfaces/ISchoolDirectoryService";
 export * from "./application/interfaces/IParentListService";
+export * from "./application/queries/school-list";
+export * from "./application/queries/school-directory";

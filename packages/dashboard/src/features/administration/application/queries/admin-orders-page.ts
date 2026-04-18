@@ -1,11 +1,11 @@
-import { getServices } from "@/server/getServices";
 import {
   OrderStatusSchema,
+  PaymentStatus,
   PaymentStatusSchema,
-  type OrderStatus,
-  type PaymentStatus,
-} from "@/features/core/domain/types/common";
-import type { Order } from "@/features/order/domain/entities/Order";
+  OrderStatus,
+} from "@backend/features/core/domain/types/common";
+import type { Order } from "@backend/features/order";
+import { createAdministrationServices } from "@backend/features/administration";
 
 export interface AdminOrdersPageQueryParams {
   search?: string;
@@ -29,9 +29,7 @@ export interface AdminOrdersPageData {
 const DEFAULT_LIMIT = 20;
 const MAX_LIMIT = 100;
 
-/**
- *
- */
+/** Parses a string to a positive integer, returning `fallback` on failure. */
 function parsePositiveInt(value: string | undefined, fallback: number): number {
   const parsed = Number(value);
   if (!Number.isFinite(parsed) || parsed <= 0) return fallback;
@@ -58,7 +56,7 @@ export async function getAdminOrdersPageData(
       ? (rawPaymentStatus as PaymentStatus)
       : undefined;
 
-  const { adminOrder } = getServices();
+  const { orders: adminOrder } = createAdministrationServices();
   const { orders, total } = await adminOrder.getAll({
     search: search || undefined,
     status,

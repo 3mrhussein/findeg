@@ -84,6 +84,36 @@ export function isSystemAdmin(session: SessionPayload): boolean {
 }
 
 /**
+ * Check if a portal role is a staff role.
+ *
+ * @param portalRole - The portal role to check ("staff", "customer", "school_staff", etc.)
+ * @returns True if the role is "staff"
+ */
+export function isStaffRole(portalRole?: string | null): boolean {
+  return portalRole === "staff";
+}
+
+/**
+ * Check if a portal role is a school staff role.
+ *
+ * @param portalRole - The portal role to check
+ * @returns True if the role is "school_staff"
+ */
+export function isSchoolRole(portalRole?: string | null): boolean {
+  return portalRole === "school_staff";
+}
+
+/**
+ * Check if a portal role is a customer role.
+ *
+ * @param portalRole - The portal role to check
+ * @returns True if the role is "customer"
+ */
+export function isCustomerRole(portalRole?: string | null): boolean {
+  return portalRole === "customer";
+}
+
+/**
  * Validates if a session belongs to an administrator.
  *
  * This is a "Wide Gate" check. It returns true if the user satisfies

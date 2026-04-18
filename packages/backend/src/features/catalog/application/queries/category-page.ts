@@ -1,7 +1,7 @@
-import { getServices } from "@/server/getServices";
-import { resolveLocale } from "@/features/core/domain/value-objects";
-import { Product } from "@/features/catalog/domain/entities/Product";
-import { Category } from "@/features/catalog/domain/entities/Category";
+import { createCatalogServices } from "../services/factory";
+import { resolveLocale } from "@backend/features/core/domain/value-objects";
+import { Product } from "@backend/features/catalog/domain/entities/Product";
+import { Category } from "@backend/features/catalog/domain/entities/Category";
 import {
   applyListingFilters,
   buildBrandOptions,
@@ -31,7 +31,7 @@ export async function getCategoryPageViewModel(
   query: { [key: string]: string | string[] | undefined },
 ): Promise<CategoryPageViewModel | null> {
   const resolvedLocale = resolveLocale(locale);
-  const { categories, products } = getServices();
+  const { categories, products } = createCatalogServices();
 
   const category = await categories.getBySlug(slug, resolvedLocale);
   if (!category) return null;

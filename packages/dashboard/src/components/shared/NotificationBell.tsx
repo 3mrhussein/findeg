@@ -3,13 +3,13 @@
 import { useState, useEffect, useCallback } from "react";
 import { Bell, Check, ExternalLink, Loader2 } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
-import { Popover, PopoverContent, PopoverTrigger } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
-import { ScrollArea } from "@findeg/ui";
-import { Link } from "@/i18n/navigation";
-import { cn } from "@/lib/utils";
-import type { Notification } from "@/features/core/infrastructure/persistence/schema/notifications";
+import { Popover, PopoverContent, PopoverTrigger } from "@ui";
+import { Button } from "@ui";
+import { Badge } from "@ui";
+import { ScrollArea } from "@ui";
+import { Link } from "@i18n/navigation";
+import { cn } from "@lib/utils";
+import type { Notification } from "@backend/features/core";
 
 /**
  * Notification Bell component with unread count polling and popover.
@@ -84,11 +84,11 @@ export function NotificationBell() {
     const key = type
       .split(/[._]/)
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join("") as any;
+      .join("") as string;
 
     // Check if key exists in Types, fallback to raw type
     try {
-      return t(`Types.${key}` as any);
+      return t(`Types.${key}` as Parameters<typeof t>[0]);
     } catch {
       return type;
     }

@@ -1,51 +1,50 @@
 # Cart Feature
 
-Owns cart lifecycle for guest and authenticated sessions, including pricing snapshots used at checkout.
+The **Cart Feature** manages the transient, ephemeral state of user selections before finalizing into an order. It heavily supports real-time multi-unit math and session-based guest transitions.
 
-## Use Cases
+## 🎯 Core Responsibilities
 
-```mermaid
-flowchart LR
-    Shopper --> UC1[Add item to cart]
-    Shopper --> UC2[Update quantity]
-    Shopper --> UC3[Remove item]
-    Checkout --> UC4[Read cart snapshot]
-```
+- **Ephemeral Sessions**: Storing carts against a User ID OR an anonymous Session ID via cookies.
+- **Cart Syncing**: Safely merging anonymous carts into logged-in profiles upon authentication without losing items.
+- **Variant Math**: Validating `unitOfMeasure` constraints (e.g. enforcing increments of 12 for dozen-packs).
 
-## UML (Class View)
+---
 
-```mermaid
-classDiagram
-    class CartEntity
-    class CartItem
-    class CartService
-    class ICartService
+## 🏗️ Domain Entities Map
 
-    CartService ..|> ICartService
-    CartService --> CartEntity
-    CartEntity --> CartItem
-```
+| Entity        | System Role                                                                                |
+| ------------- | ------------------------------------------------------------------------------------------ |
+| `Cart.ts`     | The aggregate root tying the items to a session or user.                                   |
+| `CartItem.ts` | An individual item representing a _reference_ to a catalog variant and a dynamic quantity. |
 
-## Sequence (Add Item with Pricing Context)
+---
+
+## 🔄 Merging Guest Carts (Auth Handshake)
 
 ```mermaid
 sequenceDiagram
-    participant API as POST /api/v1/cart/items
-    participant PS as ProductService
+    participant NextAction
     participant CS as CartService
-    API->>PS: quoteVariantUnitPrice(...)
-    PS-->>API: unitPriceSnapshot
-    API->>CS: addItem(cartId, {uomCode, customerGroup, unitPriceSnapshot})
-    CS-->>API: updated cart
+    participant Auth as IdentityService
+    participant DB as CartRepository
+
+    NextAction->>Auth: login(email, pwd)
+    Auth-->>NextAction: Ok(User)
+    NextAction->>CS: syncGuestCart(guestSessionId, userId)
+    CS->>DB: findBySessionId(guestSessionId)
+    CS->>DB: findByUserId(userId)
+    CS->>CS: merge items (summing quantities of identical variants)
+    CS->>DB: delete(guestSessionId) & update(userId)
+    CS-->>NextAction: Ok(CartMerged)
 ```
 
-## Layer Notes
-- `domain`: `CartEntity` and cart totals logic.
-- `application`: cart service contract and managed cart operations.
-- `infrastructure`: currently in-memory cart persistence path.
+---
 
-## Clean Architecture Boundaries
-- Depends on `catalog` for product/price context.
-- Feeds `order` as source of checkout snapshots.
-- Cart logic must remain decoupled from direct DB order writes.
+## 🔐 Boundaries & Validation Rules
 
+- **Price Volatility**: The Cart NEVER stores total monetary values natively in the DB. `CartItem.appliedPrice` is calculated dynamically against the Catalog to ensure user sees the _live_ price when clicking Checkout.
+- **Dependency Map**: Depends deeply on `catalog` for live pricing execution.
+
+---
+
+&copy; 2026 FindEg.com

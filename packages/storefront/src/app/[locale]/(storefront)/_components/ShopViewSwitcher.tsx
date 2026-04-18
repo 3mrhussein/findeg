@@ -2,8 +2,8 @@
 
 import { useTranslations } from "next-intl";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { Button } from "@findeg/ui";
-import { IconTooltip } from "@findeg/ui";
+import { Button } from "@ui";
+import { IconTooltip } from "@ui";
 import { LayoutGrid, List } from "lucide-react";
 
 /**

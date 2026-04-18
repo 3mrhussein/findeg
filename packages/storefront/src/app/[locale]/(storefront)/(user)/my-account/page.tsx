@@ -1,13 +1,13 @@
 import { Locale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { logoutAction } from "@/features/identity/application/actions/auth";
-import { SectionStateEmpty } from "@/components/shared/state/SectionStateEmpty";
-import { Input } from "@findeg/ui";
-import { updateMyProfileAction } from "@/features/identity/application/actions/profile";
-import { getMyAccountDataOrRedirect } from "@/features/identity/application/queries/my-account";
+import { Link } from "@i18n/navigation";
+import { Card, CardContent, CardHeader, CardTitle } from "@ui";
+import { Button } from "@ui";
+import { logoutAction } from "../../_actions/auth";
+import { updateProfileAction } from "../../_actions/user";
+import { getMyAccountData } from "@backend/features/identity/application/queries/my-account";
+import { SectionStateEmpty } from "@components/shared/state/SectionStateEmpty";
+import { Input } from "@ui";
 
 type Props = {
   params: Promise<{ locale: Locale }>;
@@ -22,7 +22,8 @@ export default async function Page({ params, searchParams }: Props) {
   const { profile } = await searchParams;
   setRequestLocale(locale);
   const t = await getTranslations({ locale });
-  const { user, orders } = await getMyAccountDataOrRedirect();
+  const userId = 1; // TODO: handle real session
+  const { user, orders } = await getMyAccountData(userId);
 
   const displayName =
     [user.firstName, user.lastName].filter(Boolean).join(" ").trim() || user.email;
@@ -53,7 +54,7 @@ export default async function Page({ params, searchParams }: Props) {
             <CardTitle>{t("Pages.MyAccount.Profile")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <form action={updateMyProfileAction} className="space-y-2">
+            <form action={updateProfileAction as any} className="space-y-2">
               <label className="text-sm font-medium" htmlFor="name">
                 {t("Pages.MyAccount.NameLabel")}
               </label>
@@ -64,7 +65,7 @@ export default async function Page({ params, searchParams }: Props) {
               <span className="font-medium">{t("Pages.MyAccount.EmailLabel")}: </span>
               {user.email}
             </div>
-            <form action={logoutAction}>
+            <form action={logoutAction as any}>
               <Button variant="destructive" type="submit">
                 {t("Pages.MyAccount.Logout")}
               </Button>
@@ -84,7 +85,7 @@ export default async function Page({ params, searchParams }: Props) {
               />
             ) : (
               <div className="space-y-3">
-                {orders.slice(0, 8).map((order) => (
+                {orders.slice(0, 8).map((order: any) => (
                   <Link
                     key={String(order.id)}
                     href={`/my-account/orders/${order.id}`}

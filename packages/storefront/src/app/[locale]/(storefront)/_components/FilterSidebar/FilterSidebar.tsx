@@ -2,14 +2,10 @@
 
 import { useState, useCallback } from "react";
 import { useTranslations } from "next-intl";
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@findeg/ui";
-import { Button } from "@findeg/ui";
+import { useRouter, usePathname } from "@i18n/navigation";
+import { useSearchParams } from "next/navigation";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@ui";
+import { Button } from "@ui";
 import type { FilterSidebarProps } from "./FilterSidebar.interface";
 import { applyCategories } from "./FilterSidebar.interface";
 import { CategoryTree } from "./CategoryTree";

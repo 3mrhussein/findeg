@@ -12,38 +12,38 @@
  * The framework layer (dashboard/storefront apps) is responsible for ensuring server-only execution.
  */
 
-import { DrizzleProductRepository } from "@/features/catalog/infrastructure/persistence/DrizzleProductRepository";
-import { DrizzleCategoryRepository } from "@/features/catalog/infrastructure/persistence/DrizzleCategoryRepository";
-import { DrizzleUserRepository } from "@/features/identity/infrastructure/persistence/DrizzleUserRepository";
-import { DrizzleOrderRepository } from "@/features/order/infrastructure/persistence/DrizzleOrderRepository";
-import { DrizzleReviewRepository } from "@/features/review/infrastructure/persistence/DrizzleReviewRepository";
-import { DrizzleBrandRepository } from "@/features/catalog/infrastructure/persistence/DrizzleBrandRepository";
-import { DrizzleCollectionRepository } from "@/features/catalog/infrastructure/persistence/DrizzleCollectionRepository";
-import { DrizzleAuditLogRepository } from "@/features/administration/infrastructure/DrizzleAuditLogRepository";
-import { DrizzleTagRepository } from "@/features/catalog/infrastructure/persistence/DrizzleTagRepository";
-import { DrizzleInventoryRepository } from "@/features/catalog/infrastructure/persistence/DrizzleInventoryRepository";
-import { DrizzleVariantRepository } from "@/features/catalog/infrastructure/persistence/DrizzleVariantRepository";
-import { DrizzleSchoolListRepository } from "@/features/catalog/infrastructure/persistence/DrizzleSchoolListRepository";
+import { DrizzleProductRepository } from "@backend/features/catalog/infrastructure/persistence/DrizzleProductRepository";
+import { DrizzleCategoryRepository } from "@backend/features/catalog/infrastructure/persistence/DrizzleCategoryRepository";
+import { DrizzleUserRepository } from "@backend/features/identity/infrastructure/persistence/DrizzleUserRepository";
+import { DrizzleOrderRepository } from "@backend/features/order/infrastructure/persistence/DrizzleOrderRepository";
+import { DrizzleReviewRepository } from "@backend/features/review/infrastructure/persistence/DrizzleReviewRepository";
+import { DrizzleBrandRepository } from "@backend/features/catalog/infrastructure/persistence/DrizzleBrandRepository";
+import { DrizzleCollectionRepository } from "@backend/features/catalog/infrastructure/persistence/DrizzleCollectionRepository";
+import { DrizzleAuditLogRepository } from "@backend/features/administration/infrastructure/DrizzleAuditLogRepository";
+import { DrizzleTagRepository } from "@backend/features/catalog/infrastructure/persistence/DrizzleTagRepository";
+import { DrizzleInventoryRepository } from "@backend/features/catalog/infrastructure/persistence/DrizzleInventoryRepository";
+import { DrizzleVariantRepository } from "@backend/features/catalog/infrastructure/persistence/DrizzleVariantRepository";
+import { DrizzleSchoolListRepository } from "@backend/features/catalog/infrastructure/persistence/DrizzleSchoolListRepository";
 
 import { LocalStorageProvider } from "../storage/LocalStorageProvider";
 
-import { AuthService } from "@/features/identity/application/services/AuthService";
-import { ProductService } from "@/features/catalog/application/services/ProductService";
-import { CategoryService } from "@/features/catalog/application/services/CategoryService";
-import { CollectionService } from "@/features/catalog/application/services/CollectionService";
-import { CartService } from "@/features/cart/application/services/CartService";
-import { MediaService } from "@/features/media/application/services/MediaService";
+import { AuthService } from "@backend/features/identity/application/services/AuthService";
+import { ProductService } from "@backend/features/catalog/application/services/ProductService";
+import { CategoryService } from "@backend/features/catalog/application/services/CategoryService";
+import { CollectionService } from "@backend/features/catalog/application/services/CollectionService";
+import { CartService } from "@backend/features/cart/application/services/CartService";
+import { MediaService } from "@backend/features/media/application/services/MediaService";
 import {
   SchoolListService,
   type ISchoolListService,
-} from "@/features/catalog/application/services/SchoolListService";
-import { SearchService } from "@/features/catalog/application/services/SearchService";
-import { type ISearchService } from "@/features/catalog/application/interfaces/ISearchService";
-import { ReviewService } from "@/features/review/application/services/ReviewService";
-import { type IReviewService } from "@/features/review/application/interfaces/IReviewService";
+} from "@backend/features/catalog/application/services/SchoolListService";
+import { SearchService } from "@backend/features/catalog/application/services/SearchService";
+import { type ISearchService } from "@backend/features/catalog/application/interfaces/ISearchService";
+import { ReviewService } from "@backend/features/review/application/services/ReviewService";
+import { type IReviewService } from "@backend/features/review/application/interfaces/IReviewService";
 
-import { AdminUserService } from "@/features/identity/application/services/AdminUserService";
-import { AdminRoleService } from "@/features/identity/application/services/AdminRoleService";
+import { AdminUserService } from "@backend/features/identity/application/services/AdminUserService";
+import { AdminRoleService } from "@backend/features/identity/application/services/AdminRoleService";
 import {
   AdminProductService,
   AdminCategoryService,
@@ -55,39 +55,39 @@ import {
   AdminCollectionService,
   AuditLogService,
   ProductImportService,
-} from "@/features/administration/application/services";
-import { LoggerService } from "@/features/core/application/services/LoggerService";
-import { ResendEmailService } from "@/features/notifications/infrastructure/ResendEmailService";
-import { IEmailService } from "@/features/notifications/application/services/IEmailService";
+} from "@backend/features/administration/application/services";
+import { LoggerService } from "@backend/features/core/application/services/LoggerService";
+import { ResendEmailService } from "@backend/features/notifications/infrastructure/ResendEmailService";
+import { IEmailService } from "@backend/features/notifications/application/services/IEmailService";
 
-import { IAdminUserService } from "@/features/identity/application/interfaces/IAdminUserService";
-import { IAdminRoleService } from "@/features/identity/application/interfaces/IAdminRoleService";
-import { IProductRepository } from "@/features/catalog/application/interfaces/IProductRepository";
-import { ICategoryRepository } from "@/features/catalog/application/interfaces/ICategoryRepository";
-import { IUserRepository } from "@/features/identity/application/interfaces/IUserRepository";
-import { IOrderRepository } from "@/features/order/application/interfaces/IOrderRepository";
-import { IReviewRepository } from "@/features/review/application/interfaces/IReviewRepository";
-import { IBrandRepository } from "@/features/catalog/application/interfaces/IBrandRepository";
-import { ICollectionRepository } from "@/features/catalog/application/interfaces/ICollectionRepository";
-import { IAuditLogRepository } from "@/features/administration/application/interfaces/IAuditLogRepository";
-import { ISchoolListRepository } from "@/features/catalog/application/interfaces/ISchoolListRepository";
-import { IInventoryRepository } from "@/features/catalog/application/interfaces/IInventoryRepository";
-import { ITagRepository } from "@/features/catalog/application/interfaces/ITagRepository";
-import type { IVariantRepository } from "@/features/catalog/application/interfaces/IVariantRepository";
-import type { ISchoolAccessRepository } from "@/features/school/application/interfaces/ISchoolAccessRepository";
-import { DrizzleSchoolAccessRepository } from "@/features/school/infrastructure/DrizzleSchoolAccessRepository";
-import { DrizzleParentSessionRepository } from "@/features/school/infrastructure/DrizzleParentSessionRepository";
-import { ParentListService } from "@/features/school/application/services/ParentListService";
-import { ISchoolAccessService } from "@/features/school/application/interfaces/ISchoolAccessService";
-import { SchoolAccessService } from "@/features/school/application/services/SchoolAccessService";
-import { ISchoolDirectoryService } from "@/features/school/application/interfaces/ISchoolDirectoryService";
-import { SchoolDirectoryService } from "@/features/school/application/services/SchoolDirectoryService";
+import { IAdminUserService } from "@backend/features/identity/application/interfaces/IAdminUserService";
+import { IAdminRoleService } from "@backend/features/identity/application/interfaces/IAdminRoleService";
+import { IProductRepository } from "@backend/features/catalog/application/interfaces/IProductRepository";
+import { ICategoryRepository } from "@backend/features/catalog/application/interfaces/ICategoryRepository";
+import { IUserRepository } from "@backend/features/identity/application/interfaces/IUserRepository";
+import { IOrderRepository } from "@backend/features/order/application/interfaces/IOrderRepository";
+import { IReviewRepository } from "@backend/features/review/application/interfaces/IReviewRepository";
+import { IBrandRepository } from "@backend/features/catalog/application/interfaces/IBrandRepository";
+import { ICollectionRepository } from "@backend/features/catalog/application/interfaces/ICollectionRepository";
+import { IAuditLogRepository } from "@backend/features/administration/application/interfaces/IAuditLogRepository";
+import { ISchoolListRepository } from "@backend/features/catalog/application/interfaces/ISchoolListRepository";
+import { IInventoryRepository } from "@backend/features/catalog/application/interfaces/IInventoryRepository";
+import { ITagRepository } from "@backend/features/catalog/application/interfaces/ITagRepository";
+import type { IVariantRepository } from "@backend/features/catalog/application/interfaces/IVariantRepository";
+import type { ISchoolAccessRepository } from "@backend/features/school/application/interfaces/ISchoolAccessRepository";
+import { DrizzleSchoolAccessRepository } from "@backend/features/school/infrastructure/DrizzleSchoolAccessRepository";
+import { DrizzleParentSessionRepository } from "@backend/features/school/infrastructure/DrizzleParentSessionRepository";
+import { ParentListService } from "@backend/features/school/application/services/ParentListService";
+import { ISchoolAccessService } from "@backend/features/school/application/interfaces/ISchoolAccessService";
+import { SchoolAccessService } from "@backend/features/school/application/services/SchoolAccessService";
+import { ISchoolDirectoryService } from "@backend/features/school/application/interfaces/ISchoolDirectoryService";
+import { SchoolDirectoryService } from "@backend/features/school/application/services/SchoolDirectoryService";
 
-import { IAuthService } from "@/features/identity/application/interfaces/IAuthService";
-import { IProductService } from "@/features/catalog/application/interfaces/IProductService";
-import { ICategoryService } from "@/features/catalog/application/interfaces/ICategoryService";
-import { ICollectionService } from "@/features/catalog/application/interfaces/ICollectionService";
-import { ICartService } from "@/features/cart/application/interfaces/ICartService";
+import { IAuthService } from "@backend/features/identity/application/interfaces/IAuthService";
+import { IProductService } from "@backend/features/catalog/application/interfaces/IProductService";
+import { ICategoryService } from "@backend/features/catalog/application/interfaces/ICategoryService";
+import { ICollectionService } from "@backend/features/catalog/application/interfaces/ICollectionService";
+import { ICartService } from "@backend/features/cart/application/interfaces/ICartService";
 import {
   IAdminProductService,
   IAdminCategoryService,
@@ -99,21 +99,21 @@ import {
   IAdminCollectionService,
   IAuditLogService,
   IProductImportService,
-} from "@/features/administration/application/interfaces";
-import { IStorageProvider } from "@/features/core/application/interfaces/IStorageProvider";
-import { ILoggerService } from "@/features/core/application/interfaces/ILoggerService";
-import { IParentListService } from "@/features/school/application/interfaces/IParentListService";
-import { IParentSessionRepository } from "@/features/school/application/interfaces/IParentSessionRepository";
-import { INotificationRepository } from "@/features/notifications/application/interfaces/INotificationRepository";
-import { INotificationService } from "@/features/notifications/application/interfaces/INotificationService";
-import { DrizzleNotificationRepository } from "@/features/notifications/infrastructure/DrizzleNotificationRepository";
-import { NotificationService } from "@/features/notifications/application/services/NotificationService";
-import { NotificationEventService } from "@/features/notifications/application/services/NotificationEventService";
+} from "@backend/features/administration/application/interfaces";
+import { IStorageProvider } from "@backend/features/core/application/interfaces/IStorageProvider";
+import { ILoggerService } from "@backend/features/core/application/interfaces/ILoggerService";
+import { IParentListService } from "@backend/features/school/application/interfaces/IParentListService";
+import { IParentSessionRepository } from "@backend/features/school/application/interfaces/IParentSessionRepository";
+import { INotificationRepository } from "@backend/features/notifications/application/interfaces/INotificationRepository";
+import { INotificationService } from "@backend/features/notifications/application/interfaces/INotificationService";
+import { DrizzleNotificationRepository } from "@backend/features/notifications/infrastructure/DrizzleNotificationRepository";
+import { NotificationService } from "@backend/features/notifications/application/services/NotificationService";
+import { NotificationEventService } from "@backend/features/notifications/application/services/NotificationEventService";
 
-import { IAdminSearchAnalyticsRepository } from "@/features/catalog/application/interfaces/IAdminSearchAnalyticsRepository";
-import { DrizzleAdminSearchAnalyticsRepository } from "@/features/catalog/infrastructure/persistence/DrizzleAdminSearchAnalyticsRepository";
-import { IAdminSearchAnalyticsService } from "@/features/catalog/application/interfaces/IAdminSearchAnalyticsService";
-import { AdminSearchAnalyticsService } from "@/features/catalog/application/services/AdminSearchAnalyticsService";
+import { IAdminSearchAnalyticsRepository } from "@backend/features/catalog/application/interfaces/IAdminSearchAnalyticsRepository";
+import { DrizzleAdminSearchAnalyticsRepository } from "@backend/features/catalog/infrastructure/persistence/DrizzleAdminSearchAnalyticsRepository";
+import { IAdminSearchAnalyticsService } from "@backend/features/catalog/application/interfaces/IAdminSearchAnalyticsService";
+import { AdminSearchAnalyticsService } from "@backend/features/catalog/application/services/AdminSearchAnalyticsService";
 
 /**
  * Validates dependency injection wiring

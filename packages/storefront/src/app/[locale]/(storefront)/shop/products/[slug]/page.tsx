@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import type { Locale } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { notFound, permanentRedirect } from "next/navigation";
-import { Link } from "@/i18n/navigation";
+import { Link } from "@i18n/navigation";
 import {
+  getProductPdp,
   getProductBySlugOrIdForMetadata,
-  getProductPdpViewModel,
   getTopProductSlugsForStaticParams,
-} from "@/features/catalog/application/queries/product-pdp";
-import { getProductEnglishSlug } from "@/features/catalog/presentation/utils/product-url";
+  getProductEnglishSlug,
+} from "@data/catalog/queries";
 import { PageShell } from "../../../_components/PageShell";
 import { ProductDetailClient } from "./_components/ProductDetailClient";
 
@@ -21,7 +21,7 @@ interface ProductDetailPageProps {
  */
 export async function generateStaticParams() {
   const slugs = await getTopProductSlugsForStaticParams(120);
-  return slugs.map((slug) => ({ slug }));
+  return slugs.map((slug: string) => ({ slug }));
 }
 
 /**
@@ -54,6 +54,10 @@ export async function generateMetadata({ params }: ProductDetailPageProps): Prom
   };
 }
 
+import { getSession } from "@lib/session";
+
+// ... (imports)
+
 /**
  * Canonical PDP route: /shop/products/[slug].
  */
@@ -61,7 +65,8 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
   const { locale, slug } = await params;
   setRequestLocale(locale as Locale);
 
-  const vm = await getProductPdpViewModel(locale, slug);
+  const session = await getSession();
+  const vm = await getProductPdp(locale, slug, session);
   if (!vm) {
     notFound();
   }
@@ -71,8 +76,8 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
   }
 
   const imageUrls = (vm.selectedVariant?.images || [])
-    .map((image) => image.url)
-    .filter((url): url is string => Boolean(url));
+    .map((image: any) => image.url)
+    .filter((url: any): url is string => Boolean(url));
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://findeg.com";
 
   const productSchema = {
@@ -104,7 +109,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
   return (
     <PageShell>
       <nav className="mb-4 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-        {vm.breadcrumbs.map((item, index) => {
+        {vm.breadcrumbs.map((item: any, index: number) => {
           const isLast = index === vm.breadcrumbs.length - 1;
           return (
             <div key={`${item.label}-${index}`} className="inline-flex items-center gap-2">

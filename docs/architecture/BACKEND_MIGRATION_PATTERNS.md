@@ -6,7 +6,7 @@
 
 ## Overview
 
-This guide documents the migration patterns used to transform `@findeg/backend` from a Next.js-dependent package to a pure TypeScript library with zero framework dependencies.
+This guide documents the migration patterns used to transform `@backend` from a Next.js-dependent package to a pure TypeScript library with zero framework dependencies.
 
 **Before Migration**: 21 Next.js imports across 15 files in 6 feature areas  
 **After Migration**: Zero framework dependencies, all tests run in pure Node.js
@@ -40,7 +40,7 @@ export async function createProduct(input: ProductInput) {
 
 ```typescript
 // ✅ Backend service returns data + cache metadata
-import type { ServiceResult } from '@/features/core/application/types';
+import type { ServiceResult } from '@features/core/application/types';
 
 export async function createProduct(input: ProductInput): Promise<ServiceResult<{ productId: number }>> {
   const product = await db.product.create(input);
@@ -58,8 +58,8 @@ export async function createProduct(input: ProductInput): Promise<ServiceResult<
 ```typescript
 // ✅ App-layer Server Action handles framework integration
 'use server';
-import { createProduct } from '@findeg/backend/features/catalog';
-import { invalidateCaches } from '@/lib/cache';
+import { createProduct } from '@backend/features/catalog';
+import { invalidateCaches } from '@lib/cache';
 
 export async function createProductAction(input: ProductInput) {
   try {
@@ -111,7 +111,7 @@ export async function getDashboardData(locale: string) {
 
 ```typescript
 // ✅ Backend query throws domain errors
-import { NotAuthenticatedError, ResourceNotFoundError } from '@/features/core/domain/errors';
+import { NotAuthenticatedError, ResourceNotFoundError } from '@features/core/domain/errors';
 
 export async function getDashboardData(
   locale: string,
@@ -132,9 +132,9 @@ export async function getDashboardData(
 
 ```typescript
 // ✅ App-layer translates errors to framework responses
-import { getDashboardData } from '@findeg/backend/features/identity';
+import { getDashboardData } from '@backend/features/identity';
 import { redirect, notFound } from 'next/navigation';
-import { getSession } from '@/lib/session';
+import { getSession } from '@lib/session';
 
 export default async function DashboardPage() {
   const session = await getSession();
@@ -214,7 +214,7 @@ export class CookieSessionProvider {
 ```typescript
 // ✅ App-layer provides Next.js implementation
 import { cookies } from 'next/headers';
-import { CookieSessionProvider, ICookieStore } from '@findeg/backend/features/core';
+import { CookieSessionProvider, ICookieStore } from '@backend/features/core';
 
 async function nextCookiesToStore(): Promise<ICookieStore> {
   const cookieStore = await cookies();
@@ -277,7 +277,7 @@ export async function getShopPageData(locale: string) {
 
 ```typescript
 // ✅ App-layer applies cache config
-import { getShopPageData, SHOP_PAGE_CACHE_CONFIG } from '@findeg/backend/features/catalog';
+import { getShopPageData, SHOP_PAGE_CACHE_CONFIG } from '@backend/features/catalog';
 import { cacheTag, cacheLife } from 'next/cache';
 
 export async function getShopPageCached(locale: string) {
@@ -350,13 +350,13 @@ import {
   ValidationErrors,         // 400 - multiple field validation
   ConflictError,           // 409 - duplicate/conflict
   BusinessRuleViolationError // 422 - business logic failure
-} from '@findeg/backend/features/core/domain/errors';
+} from '@backend/features/core/domain/errors';
 ```
 
 **Error Translation in App-Layer**:
 
 ```typescript
-import { isDomainError, getErrorMessage } from '@/lib/errors';
+import { isDomainError, getErrorMessage } from '@lib/errors';
 
 export async function someAction() {
   try {
@@ -459,13 +459,13 @@ When migrating a backend file:
 grep -r "from ['\"]next/" packages/backend/src
 
 # Run backend tests (pure Node.js)
-pnpm --filter @findeg/backend test
+pnpm --filter @backend test
 
 # Type-check backend independently
-pnpm --filter @findeg/backend type-check
+pnpm --filter @backend type-check
 
 # Build backend independently
-pnpm --filter @findeg/backend build
+pnpm --filter @backend build
 ```
 
 ---

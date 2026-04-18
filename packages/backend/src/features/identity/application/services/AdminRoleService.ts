@@ -7,13 +7,13 @@
 
 import { eq, inArray, count } from "drizzle-orm";
 
-import { db } from "@/features/core/infrastructure/persistence";
+import { db } from "../../../core/infrastructure/persistence";
 import {
   roles,
   permissions,
   rolePermissions,
   userRoles,
-} from "@/features/core/infrastructure/persistence/schema";
+} from "../../../core/infrastructure/persistence/schema";
 
 import type {
   RoleWithPermissions,

@@ -1,11 +1,11 @@
-import { ID } from "@/features/core/domain/types/common";
+import { ID } from "../../../core/domain/types/common";
 import { IAdminTagService } from "../interfaces/IAdminTagService";
-import { ITagRepository } from "@/features/catalog/application/interfaces/ITagRepository";
-import { Tag } from "@/features/catalog/domain/entities/Tag";
+import { ITagRepository } from "../../../catalog/application/interfaces/ITagRepository";
+import { Tag } from "../../../catalog/domain/entities/Tag";
 import { TagInput } from "../../domain/types/TagInput";
 import { IAuditLogService } from "../interfaces/IAuditLogService";
-import { db } from "@/features/core/infrastructure/persistence";
-import { tags, productTags } from "@/features/core/infrastructure/persistence/schema/tags";
+import { db } from "../../../core/infrastructure/persistence";
+import { tags, productTags } from "../../../core/infrastructure/persistence/schema/tags";
 import { eq, and, ne, count } from "drizzle-orm";
 
 /**

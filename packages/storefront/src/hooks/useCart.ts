@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { CartContext } from "@/providers/CartProvider";
+import { CartContext } from "@providers/CartProvider";
 
 /**
  * Custom hook to access the CartContext.

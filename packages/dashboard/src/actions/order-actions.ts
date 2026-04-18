@@ -1,21 +1,15 @@
 /**
  * Dashboard Order Server Actions
  *
- * Wraps pure backend order actions with Next.js framework integration:
- * - Handles revalidatePath() calls based on result
- * - Translates domain errors to appropriate responses
- *
- * This layer ensures framework logic stays in the app, business logic stays in backend.
+ * Uses service factories to call backend order services.
+ * Implements cache invalidation via updateTag().
  */
 
 "use server";
 
-import { revalidatePath, revalidateTag } from "next/cache";
-import { updateOrderStatus, updateOrderPaymentStatus } from "@findeg/backend/features/order";
-import { OrderStatusUpdate } from "@findeg/backend/features/administration";
-import { isDomainError, getErrorMessage } from "@/lib/errors";
-import { invalidateCaches } from "@/lib/cache";
-import { PaymentStatus } from "@findeg/backend";
+import { updateTag } from "next/cache";
+import { createAdministrationServices } from "@backend/features/administration";
+import { getErrorMessage } from "@lib/type-guards";
 
 /**
  * Server Action: Update order status
@@ -23,24 +17,16 @@ import { PaymentStatus } from "@findeg/backend";
  * @param orderId - The order ID to update
  * @param input - The new order status and tracking info
  */
-export async function updateOrderStatusAction(orderId: number, input: OrderStatusUpdate) {
+export async function updateOrderStatusAction(orderId: number, input: any) {
   try {
-    const result = await updateOrderStatus(orderId, input);
+    const { orders } = createAdministrationServices();
+    await orders.updateStatus(orderId, input);
 
-    // Execute cache revalidation
-    await invalidateCaches(result);
-
+    updateTag("orders");
     return { success: true };
-  } catch (error) {
-    // Domain errors are expected (validation, not found, etc.)
-    if (isDomainError(error)) {
-      const message = getErrorMessage(error);
-      return { error: message };
-    }
-
-    // Unexpected errors
-    console.error("[dashboard] Order status update error:", error);
-    return { error: "An unexpected error occurred" };
+  } catch (error: unknown) {
+    console.error("[updateOrderStatusAction]", error);
+    return { success: false, error: getErrorMessage(error) };
   }
 }
 
@@ -50,26 +36,15 @@ export async function updateOrderStatusAction(orderId: number, input: OrderStatu
  * @param orderId - The order ID to update
  * @param paymentStatus - The new payment status
  */
-export async function updateOrderPaymentStatusAction(
-  orderId: number,
-  paymentStatus: PaymentStatus,
-) {
+export async function updateOrderPaymentStatusAction(orderId: number, paymentStatus: any) {
   try {
-    const result = await updateOrderPaymentStatus(orderId, paymentStatus);
+    const { orders } = createAdministrationServices();
+    await orders.updatePaymentStatus(orderId, paymentStatus);
 
-    // Execute cache revalidation
-    await invalidateCaches(result);
-
+    updateTag("orders");
     return { success: true };
-  } catch (error) {
-    // Domain errors are expected
-    if (isDomainError(error)) {
-      const message = getErrorMessage(error);
-      return { error: message };
-    }
-
-    // Unexpected errors
-    console.error("[dashboard] Order payment status update error:", error);
-    return { error: "An unexpected error occurred" };
+  } catch (error: unknown) {
+    console.error("[updateOrderPaymentStatusAction]", error);
+    return { success: false, error: getErrorMessage(error) };
   }
 }

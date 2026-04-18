@@ -5,8 +5,8 @@
  * Separate from IAdminCategoryService which includes CRUD operations.
  */
 
-import { Category } from "@/features/catalog/domain/entities/Category";
-import type { Locale } from "@/features/core/domain/value-objects";
+import { Category } from "@backend/features/catalog/domain/entities/Category";
+import type { Locale } from "@backend/features/core/domain/value-objects";
 
 export interface ICategoryService {
   /**
@@ -35,4 +35,12 @@ export interface ICategoryService {
    * @returns The category if found, null otherwise.
    */
   getBySlug(slug: string, language?: Locale): Promise<Category | null>;
+
+  /**
+   * Retrieves the complete category hierarchy as a tree.
+   *
+   * @param language - Optional language for localized content.
+   * @returns A list of root categories with nested children.
+   */
+  getTree(language?: Locale): Promise<Category[]>;
 }

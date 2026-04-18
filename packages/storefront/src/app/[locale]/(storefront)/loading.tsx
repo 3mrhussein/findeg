@@ -1,4 +1,4 @@
-import { PageStateLoading } from "@/components/shared/state/PageStateLoading";
+import { PageStateLoading } from "@components/shared/state/PageStateLoading";
 
 /**
  *

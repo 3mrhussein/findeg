@@ -19,9 +19,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Icon } from "@findeg/ui";
+} from "@ui";
+import { Button } from "@ui";
+import { Icon } from "@ui";
 
 interface DeactivateConfirmDialogProps {
   open: boolean;

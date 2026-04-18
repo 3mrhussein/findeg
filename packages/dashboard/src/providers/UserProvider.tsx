@@ -1,9 +1,9 @@
 "use client";
 
 import React, { createContext, useState, useMemo, useEffect } from "react";
-import type { ClientUser as User } from "@/lib/types";
+import type { ClientUser as User } from "@lib/types";
 
-interface UserContextType {
+export interface UserContextType {
   currentUser: User | null;
   isLoggedIn: boolean;
   isLoading: boolean;

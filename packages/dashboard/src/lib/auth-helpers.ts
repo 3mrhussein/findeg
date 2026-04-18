@@ -9,10 +9,10 @@ import {
   type ID,
   NotAuthenticatedError as UnauthorizedError,
   NotAuthorizedError as ForbiddenError
-} from "@findeg/backend/features/core";
-import { PermissionCode, RoleId } from "@findeg/backend/features/core";
-import type { User } from "@findeg/backend/features/identity";
-import type { IUserRepository, IPermissionService } from "@findeg/backend/features/identity";
+} from "@backend/features/core";
+import { PermissionCode, RoleId } from "@backend/features/core";
+import type { User } from "@backend/features/identity";
+import type { IUserRepository, IPermissionService } from "@backend/features/identity";
 import { cookies } from "next/headers";
 
 

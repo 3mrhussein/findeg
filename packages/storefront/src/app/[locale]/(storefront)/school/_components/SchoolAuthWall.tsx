@@ -2,9 +2,9 @@
 
 import { useTranslations } from "next-intl";
 import { Lock, UserCircle, LogIn, UserPlus } from "lucide-react";
-import { Button } from "@findeg/ui";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@findeg/ui";
-import Link from "next/link";
+import { Button } from "@ui";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@ui";
+import { Link } from "@i18n/navigation";
 import { usePathname, useSearchParams } from "next/navigation";
 
 interface SchoolAuthWallProps {

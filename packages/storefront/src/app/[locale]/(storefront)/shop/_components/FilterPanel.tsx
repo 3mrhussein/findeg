@@ -16,20 +16,20 @@ import {
   RotateCcw,
   SlidersHorizontal,
 } from "lucide-react";
-import { Button } from "@findeg/ui";
-import { Checkbox } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Slider } from "@findeg/ui";
-import { Switch } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
-import { IconTooltip } from "@findeg/ui";
-import { useDebounce } from "@/hooks/use-debounce";
-import { cn } from "@/lib/utils";
+import { Button } from "@ui";
+import { Checkbox } from "@ui";
+import { Input } from "@ui";
+import { Slider } from "@ui";
+import { Switch } from "@ui";
+import { Badge } from "@ui";
+import { IconTooltip } from "@ui";
+import { useDebounce } from "@hooks/use-debounce";
+import { cn } from "@lib/utils";
 import type {
   ShopPlpDiscount,
   ShopPlpFacetCounts,
   ShopPlpFilters,
-} from "@/features/catalog/application/queries/shop-plp";
+} from "@backend/features/catalog/application/queries/shop-plp";
 
 interface ApiCategoryNode {
   id: number;

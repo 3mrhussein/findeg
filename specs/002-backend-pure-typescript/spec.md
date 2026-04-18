@@ -5,7 +5,7 @@
 **Status**: ✅ Backend Package Complete | ⚠️ App-Layer Validation Pending  
 **Backend Completion**: April 5, 2026  
 **App Validation**: Deferred to separate testing phase  
-**Input**: Refactor @findeg/backend package to remove all Next.js framework dependencies and ensure pure TypeScript business logic. Currently, 21 Next.js imports exist across backend files, violating Constitution Principle VIII which mandates backend packages must be framework-agnostic.
+**Input**: Refactor @backend package to remove all Next.js framework dependencies and ensure pure TypeScript business logic. Currently, 21 Next.js imports exist across backend files, violating Constitution Principle VIII which mandates backend packages must be framework-agnostic.
 
 **Backend Package Completion Summary**:
 
@@ -33,7 +33,7 @@ This feature MUST comply with the FindEg.com Constitution (`.specify/memory/cons
 - **V. Type-Safe & Testable**: All backend services become testable without Next.js runtime; interface-based dependency injection enables mocking
 - **VI. DRY Principle**: Cache invalidation logic unified in app-layer; no duplication between dashboard and storefront
 - **VII. SOLID Design**: Single Responsibility verified (backend = business logic, app-layer = framework integration); Dependency Inversion applied (backend depends on abstractions, not Next.js concretions)
-- **VIII. Backend Packages - Pure TypeScript Libraries**: PRIMARY FOCUS - eliminates all 21 Next.js imports from @findeg/backend
+- **VIII. Backend Packages - Pure TypeScript Libraries**: PRIMARY FOCUS - eliminates all 21 Next.js imports from @backend
 
 ---
 
@@ -77,7 +77,7 @@ Developers run comprehensive unit tests for backend services using Vitest withou
 
 **Why this priority**: Enables fast feedback loops and reliable automated testing. Not P1 because feature works without, but critical for maintainability and developer productivity.
 
-**Independent Test**: Developer runs `pnpm --filter @findeg/backend test` command, and all tests execute in pure Node.js environment in under 30 seconds, with no Next.js runtime errors.
+**Independent Test**: Developer runs `pnpm --filter @backend test` command, and all tests execute in pure Node.js environment in under 30 seconds, with no Next.js runtime errors.
 
 **Acceptance Scenarios**:
 
@@ -179,7 +179,7 @@ Developers systematically migrate the 21 identified Next.js imports to the new a
 - **SC-005**: Backend services can be imported and tested in isolation with zero framework setup code (demonstrated by sample test requiring <5 lines of setup) — _Example provided in quickstart.md or below:_
   ```typescript
   // Pure Node.js test - zero Next.js dependencies
-  import { login } from "@findeg/backend/features/identity";
+  import { login } from "@backend/features/identity";
   const result = await login({ email: "test@example.com", password: "pass123" });
   expect(result.success).toBe(true);
   expect(result.data?.user.email).toBe("test@example.com");
@@ -264,6 +264,6 @@ The following flows MUST pass 100% E2E tests before the feature can be considere
 **App-Layer Scope**: Server Actions created, pages updated (T054-T096 complete)  
 **E2E Validation**: Deferred to separate testing phase (T012, T065-T067, T076-T077, T102-T104)
 
-**Rationale for Deferral**: Backend package refactoring is production-ready and isolated from framework dependencies. Full-stack E2E testing requires resolving pre-existing UI dependency issues in `@findeg/ui` package (unrelated to this feature). E2E validation will be executed once app-layer build issues are resolved.
+**Rationale for Deferral**: Backend package refactoring is production-ready and isolated from framework dependencies. Full-stack E2E testing requires resolving pre-existing UI dependency issues in `@ui` package (unrelated to this feature). E2E validation will be executed once app-layer build issues are resolved.
 
 **Completion Criteria**: All 6 critical flows listed above must pass their respective Cypress E2E tests with 100% success rate before updating SC-004 status to "MET".

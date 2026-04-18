@@ -8,9 +8,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
   const locale = hasLocale(routing.locales, requested) ? requested : routing.defaultLocale;
 
   // Load storefront-specific messages from backend package
-  const messages = await import(
-    `../../../backend/src/features/core/infrastructure/cms/messages/storefront.${locale}.json`
-  ).then((m) => m.default);
+  const messages = await import(`../../messages/${locale}.json`).then((m) => m.default);
 
   return {
     locale,

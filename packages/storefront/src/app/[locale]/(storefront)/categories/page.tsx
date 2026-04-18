@@ -1,9 +1,8 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Locale } from "next-intl";
 import Image from "next/image";
-import { Link } from "@/i18n/navigation";
-import { getServices } from "@/server/getServices";
-import { resolveLocale } from "@/features/core/domain/value-objects";
+import { Link } from "@i18n/navigation";
+import { getCategoriesPageData } from "@/data/categories/queries";
 import { PageShell } from "../_components/PageShell";
 
 /**
@@ -29,19 +28,7 @@ async function CategoriesPageContent({ locale }: { locale: string }) {
   const t = await getTranslations({ locale: locale as Locale, namespace: "Pages.Categories" });
   const tNav = await getTranslations({ locale: locale as Locale, namespace: "Nav" });
 
-  const resolvedLocale = resolveLocale(locale);
-  const { categories: categoriesService, products: productsService } = getServices();
-  const [categories, allProducts] = await Promise.all([
-    categoriesService.getAll(resolvedLocale),
-    productsService.getAll(resolvedLocale),
-  ]);
-
-  const activeCategories = categories
-    .filter((c) => c.isActive !== false)
-    .map((c) => {
-      const productsCount = allProducts.filter((p) => p.categoryId === c.id).length;
-      return { ...c, productsCount };
-    });
+  const activeCategories = await getCategoriesPageData(locale);
 
   return (
     <PageShell bg="surface">

@@ -1,11 +1,11 @@
-import { type ID } from "@/features/core/domain/types/common";
+import { type ID } from "../../../core/domain/types/common";
 import {
   type IProductImportService,
   type ImportResult,
   type ImportRowPreview,
 } from "../interfaces/IProductImportService";
 import { type IAdminProductService } from "../interfaces/IAdminProductService";
-import { type IProductRepository } from "@/features/catalog/application/interfaces/IProductRepository";
+import { type IProductRepository } from "../../../catalog/application/interfaces/IProductRepository";
 
 /**
  *

@@ -18,6 +18,8 @@ export const API_ROUTES = {
   adminCategoryById: (id: number) => `${API_BASE}/admin/categories/${id}`,
   adminBrands: `${API_BASE}/admin/brands`,
   adminBrandById: (id: number) => `${API_BASE}/admin/brands/${id}`,
+  adminOrders: `${API_BASE}/admin/orders`,
+  adminOrderById: (id: number) => `${API_BASE}/admin/orders/${id}`,
   adminInventoryByProductId: (productId: number) => `${API_BASE}/admin/inventory/${productId}`,
   cart: `${API_BASE}/cart`,
   cartItems: `${API_BASE}/cart/items`,
@@ -45,6 +47,8 @@ export const UI_ROUTES = {
   adminCategoriesNew: "/admin/categories/new",
   adminCategoryEditById: (id: number) => `/admin/categories/${id}/edit`,
   adminBrands: "/admin/brands",
+  adminOrders: "/admin/orders",
+  adminOrderDetail: (id: number) => `/admin/orders/${id}`,
   adminInventory: "/admin/inventory",
   productById: (id: number) => `/products/${id}`,
 } as const;

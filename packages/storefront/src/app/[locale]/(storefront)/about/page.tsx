@@ -1,4 +1,4 @@
-import { Container } from "@findeg/ui";
+import { Container } from "@ui";
 import { getTranslations } from "next-intl/server";
 import type { Locale } from "next-intl";
 

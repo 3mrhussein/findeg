@@ -1,39 +1,34 @@
 "use server";
 
 /**
- * Dashboard App-Layer Admin Actions
+ * Dashboard Admin Actions Proxy
  *
- * Wraps @/features/administration actions with a consistent API for legacy components.
- * This file serves as a central proxy to the framework-integrated feature actions.
+ * Centralized export for all admin server actions.
+ * Prioritizes new data layer actions (clean, no @ imports) and falls back
+ * to backend actions for actions not yet migrated.
  */
 
+// Data layer actions (preferred - pure Next.js, proper cache invalidation)
 import {
-  adminCreateTagAction,
-  adminUpdateTagAction,
-  adminDeleteTagAction,
-  adminBulkUpdateTagsStatusAction,
-  adminBulkDeleteTagsAction,
-  adminToggleTagStatusAction,
-  adminGetTagProductCountAction,
-  adminGetDistinctTagGroupsAction,
-} from "@/features/administration/application/actions/admin-tag-actions";
+  createProduct,
+  updateProduct,
+  deleteProduct,
+  importProducts,
+} from "@data/products/actions";
 
 import {
-  adminCreateCollectionAction,
-  adminUpdateCollectionAction,
-  adminDeleteCollectionAction,
-  adminReorderCollectionsAction,
-} from "@/features/administration/application/actions/admin-collection-actions";
+  createCategoryAction as createCategoryData,
+  updateCategoryAction as updateCategoryData,
+  deleteCategoryAction as deleteCategoryData,
+} from "@data/categories/actions";
 
 import {
-  adminUpdateOrderStatusAction,
-  adminUpdateOrderPaymentStatusAction,
-} from "@/features/administration/application/actions/admin-order-actions";
+  updateOrderStatusAction as updateOrderStatusData,
+  updateOrderPaymentStatusAction as updateOrderPaymentStatusData,
+} from "@data/orders/actions";
 
+// Backend actions (fallback for actions not yet migrated)
 import {
-  createProductAction,
-  updateProductAction,
-  deleteProductAction,
   setProductStatusAction,
   deactivateVariantAction,
   generateVariantsAction,
@@ -45,63 +40,54 @@ import {
   checkSkuAction,
   checkSlugAction,
   checkSkuPrefixAction,
-} from "@/features/administration/application/actions/admin-product-actions";
+} from "@dashboard/features/administration/application/actions/admin-product-actions";
+
+import {
+  adminCreateTagAction,
+  adminUpdateTagAction,
+  adminDeleteTagAction,
+  adminBulkUpdateTagsStatusAction,
+  adminBulkDeleteTagsAction,
+  adminToggleTagStatusAction,
+  adminGetTagProductCountAction,
+  adminGetDistinctTagGroupsAction,
+} from "@dashboard/features/administration/application/actions/admin-tag-actions";
+
+import {
+  adminCreateCollectionAction,
+  adminUpdateCollectionAction,
+  adminDeleteCollectionAction,
+  adminReorderCollectionsAction,
+} from "@dashboard/features/administration/application/actions/admin-collection-actions";
 
 import {
   updateStockAction as adminUpdateStockAction,
   bulkUpdateStockAction as adminBulkUpdateStockAction,
-} from "@/features/administration/application/actions/inventory";
-
-import { logRequestAction as adminLogRequestAction } from "@/features/core/application/actions/logging";
+} from "@dashboard/features/administration/application/actions/inventory";
 
 import {
-  createCategoryAction as adminCreateCategoryAction,
-  updateCategoryAction as adminUpdateCategoryAction,
-  deleteCategoryAction as adminDeleteCategoryAction,
-  moveCategoryUpAction as adminMoveCategoryUpAction,
-  moveCategoryDownAction as adminMoveCategoryDownAction,
-  reorderCategoriesAction as adminReorderCategoriesAction,
-  checkCategorySlugAvailableAction as adminCheckCategorySlugAvailableAction,
-} from "./catalog-actions";
-
-import {
-  createBrandAction as adminCreateBrandAction,
-  updateBrandAction as adminUpdateBrandAction,
-  deleteBrandAction as adminDeleteBrandAction,
-  toggleBrandStatusAction as adminToggleBrandStatusAction,
+  moveCategoryUpAction,
+  moveCategoryDownAction,
+  reorderCategoriesAction,
+  checkCategorySlugAvailableAction,
+  createBrandAction,
+  updateBrandAction,
+  deleteBrandAction,
+  toggleBrandStatusAction,
 } from "./catalog-actions";
 
 import { logoutAction as adminLogoutAction } from "./auth-actions";
 
-// ─── Tag Management Server Actions ────────────────────────────────────────────
+// ─── Product Management ────────────────────────────────────────────────────────
 
-export const createTagAction = adminCreateTagAction;
-export const updateTagAction = adminUpdateTagAction;
-export const deleteTagAction = adminDeleteTagAction;
-export const bulkUpdateTagsStatusAction = adminBulkUpdateTagsStatusAction;
-export const bulkDeleteTagsAction = adminBulkDeleteTagsAction;
-export const toggleTagStatusAction = adminToggleTagStatusAction;
-export const getTagProductCountAction = adminGetTagProductCountAction;
-export const getDistinctTagGroupsAction = adminGetDistinctTagGroupsAction;
+// Data layer exports
+export const createProductAction = createProduct;
+export const updateProductAction = updateProduct;
+export const deleteProductAction = deleteProduct;
+export const importProductsAction = importProducts;
 
-// ─── Collection Management Server Actions ─────────────────────────────────────
-
-export const createCollectionAction = adminCreateCollectionAction;
-export const updateCollectionAction = adminUpdateCollectionAction;
-export const deleteCollectionAction = adminDeleteCollectionAction;
-export const reorderCollectionsAction = adminReorderCollectionsAction;
-
-// ─── Order Management Server Actions ──────────────────────────────────────────
-
-export const updateOrderStatusAction = adminUpdateOrderStatusAction;
-export const updateOrderPaymentStatusAction = adminUpdateOrderPaymentStatusAction;
-
-// ─── Product Management Server Actions ────────────────────────────────────────
-
+// Backend exports
 export {
-  createProductAction,
-  updateProductAction,
-  deleteProductAction,
   setProductStatusAction,
   deactivateVariantAction,
   generateVariantsAction,
@@ -116,32 +102,65 @@ export const checkSkuAvailableAction = checkSkuAction;
 export const checkSlugAvailableAction = checkSlugAction;
 export const checkSkuPrefixAvailableAction = checkSkuPrefixAction;
 
-// ─── Category Management Server Actions ────────────────────────────────────────
+// ─── Category Management ────────────────────────────────────────────────────────
 
-export const createCategoryAction = adminCreateCategoryAction;
-export const updateCategoryAction = adminUpdateCategoryAction;
-export const deleteCategoryAction = adminDeleteCategoryAction;
-export const moveCategoryUpAction = adminMoveCategoryUpAction;
-export const moveCategoryDownAction = adminMoveCategoryDownAction;
-export const reorderCategoriesAction = adminReorderCategoriesAction;
-export const checkCategorySlugAvailableAction = adminCheckCategorySlugAvailableAction;
+// Data layer exports
+export const createCategoryAction = createCategoryData;
+export const updateCategoryAction = updateCategoryData;
+export const deleteCategoryAction = deleteCategoryData;
 
-// ─── Brand Management Server Actions ───────────────────────────────────────────
+// Backend exports
+export {
+  moveCategoryUpAction,
+  moveCategoryDownAction,
+  reorderCategoriesAction,
+  checkCategorySlugAvailableAction,
+};
 
-export const createBrandAction = adminCreateBrandAction;
-export const updateBrandAction = adminUpdateBrandAction;
-export const deleteBrandAction = adminDeleteBrandAction;
-export const toggleBrandStatusAction = adminToggleBrandStatusAction;
+// ─── Brand Management ───────────────────────────────────────────────────────────
 
-// ─── Inventory Management Server Actions ──────────────────────────────────────
+export { createBrandAction, updateBrandAction, deleteBrandAction, toggleBrandStatusAction };
+
+// ─── Order Management ───────────────────────────────────────────────────────────
+
+// Data layer exports
+export const updateOrderStatusAction = updateOrderStatusData;
+export const updateOrderPaymentStatusAction = updateOrderPaymentStatusData;
+
+// ─── Tag Management ────────────────────────────────────────────────────────────
+
+export const createTagAction = adminCreateTagAction;
+export const updateTagAction = adminUpdateTagAction;
+export const deleteTagAction = adminDeleteTagAction;
+export const bulkUpdateTagsStatusAction = adminBulkUpdateTagsStatusAction;
+export const bulkDeleteTagsAction = adminBulkDeleteTagsAction;
+export const toggleTagStatusAction = adminToggleTagStatusAction;
+export const getTagProductCountAction = adminGetTagProductCountAction;
+export const getDistinctTagGroupsAction = adminGetDistinctTagGroupsAction;
+
+// ─── Collection Management ────────────────────────────────────────────────────────
+
+export const createCollectionAction = adminCreateCollectionAction;
+export const updateCollectionAction = adminUpdateCollectionAction;
+export const deleteCollectionAction = adminDeleteCollectionAction;
+export const reorderCollectionsAction = adminReorderCollectionsAction;
+
+// ─── Inventory Management ───────────────────────────────────────────────────────
 
 export const updateStockAction = adminUpdateStockAction;
 export const bulkUpdateStockAction = adminBulkUpdateStockAction;
 
-// ─── Logging Server Actions ───────────────────────────────────────────────────
-
-export const logRequestAction = adminLogRequestAction;
-
-// ─── Authentication Server Actions ───────────────────────────────────────────
+// ─── Authentication ────────────────────────────────────────────────────────────
 
 export const logoutAction = adminLogoutAction;
+
+// ─── Logging (Stubbed) ───────────────────────────────────────────────────────
+
+/**
+ * Log request action - stubbed implementation
+ * Backend version uses ServiceContainer which can't be exported from build
+ * TODO: Implement using repository pattern or service factory
+ */
+export async function logRequestAction(data: any) {
+  console.log("[dashboard] logRequestAction (stubbed):", data);
+}

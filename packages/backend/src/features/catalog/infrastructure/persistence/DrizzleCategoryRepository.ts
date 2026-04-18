@@ -1,16 +1,16 @@
-import { ID, Slug } from "@/features/core/domain/types/common";
-import { db } from "@/features/core/infrastructure/persistence";
-import { categories } from "@/features/core/infrastructure/persistence/schema";
+import { ID, Slug } from "../../../core/domain/types/common";
+import { db } from "../../../core/infrastructure/persistence";
+import { categories } from "../../../core/infrastructure/persistence/schema";
 import { ICategoryRepository } from "../../application/interfaces/ICategoryRepository";
 import { Category } from "../../domain/entities/Category";
-import { CategoryInput } from "@/features/administration/domain/types";
+import { CategoryInput } from "../../../administration/domain/types";
 import { eq, and, sql, desc, asc, like, isNull, or, count } from "drizzle-orm";
 import {
   DEFAULT_LOCALE,
   resolveLocalizedString,
   toLocalizedString,
   type Locale,
-} from "@/features/core/domain/value-objects";
+} from "../../../core/domain/value-objects";
 
 type DbCategory = typeof categories.$inferSelect;
 
@@ -108,7 +108,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
 
   async getTree(language: Locale = DEFAULT_LOCALE): Promise<Category[]> {
     const allCategories = await this.getAll(language);
-    const { products } = await import("@/features/core/infrastructure/persistence/schema/products");
+    const { products } = await import("../../../core/infrastructure/persistence/schema/products");
 
     // Get direct product counts for all categories in one query
     const productCountsResult = await db
@@ -357,7 +357,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
   }
 
   async getProductCount(categoryId: number): Promise<number> {
-    const { products } = await import("@/features/core/infrastructure/persistence/schema/products");
+    const { products } = await import("../../../core/infrastructure/persistence/schema/products");
     const result = await db
       .select({ value: count() })
       .from(products)

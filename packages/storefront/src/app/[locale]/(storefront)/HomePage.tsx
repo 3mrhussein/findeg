@@ -7,7 +7,7 @@ import { CollectionsGrid } from "./_components/home/CollectionsGrid";
 import { NewArrivals } from "./_components/home/NewArrivals";
 import { SchoolBanner } from "./_components/home/SchoolBanner";
 import { NewsletterSection } from "./_components/home/NewsletterSection";
-import Boundary from "@/lib/internal/Boundary";
+import Boundary from "@lib/internal/Boundary";
 
 interface HomePageProps {
   language?: string;

@@ -1,5 +1,5 @@
-import { db } from "@/features/core/infrastructure/persistence/database.config";
-import { schoolLists } from "@/features/core/infrastructure/persistence/schema/school-lists";
+import { db } from "@backend/features/core/infrastructure/persistence/database.config";
+import { schoolLists } from "@backend/features/core/infrastructure/persistence/schema/school-lists";
 import { eq, and, ilike, sql, desc, count, asc } from "drizzle-orm";
 import {
   ISchoolDirectoryService,
@@ -128,9 +128,9 @@ export class SchoolDirectoryService implements ISchoolDirectoryService {
       .orderBy(asc(schoolLists.academicSystem));
 
     return {
-      governorates: governorates.map((g) => g.value).filter(Boolean) as string[],
-      schoolTypes: schoolTypes.map((t) => t.value).filter(Boolean) as string[],
-      academicSystems: academicSystems.map((s) => s.value).filter(Boolean) as string[],
+      governorates: governorates.map((g: any) => g.value).filter(Boolean) as string[],
+      schoolTypes: schoolTypes.map((t: any) => t.value).filter(Boolean) as string[],
+      academicSystems: academicSystems.map((s: any) => s.value).filter(Boolean) as string[],
     };
   }
 }

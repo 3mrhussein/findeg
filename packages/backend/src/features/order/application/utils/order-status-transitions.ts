@@ -1,4 +1,4 @@
-import type { OrderStatus } from "@/features/core/domain/types/common";
+import type { OrderStatus } from "@backend/features/core/domain/types/common";
 
 export const ORDER_STATUS_OPTIONS: OrderStatus[] = [
   "pending",

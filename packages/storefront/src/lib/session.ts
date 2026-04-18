@@ -1,5 +1,5 @@
-import type { SessionPayload } from "@findeg/backend/features/core";
-import { CookieSessionProvider, type ICookieStore } from "@findeg/backend/features/core";
+import type { SessionPayload } from "@backend/features/core";
+import { CookieSessionProvider, type ICookieStore } from "@backend/features/core";
 import { cookies } from "next/headers";
 
 /**
@@ -28,7 +28,7 @@ async function nextCookiesToStore(): Promise<ICookieStore> {
       const cookie = cookieStore.get(name);
       return cookie ? { value: cookie.value } : undefined;
     },
-    set(name: string, value: string, options) {
+    set(name: string, value: string, options: any) {
       cookieStore.set(name, value, options as any);
     },
     delete(name: string) {

@@ -6,7 +6,7 @@
  */
 
 import { z } from "zod";
-import { IdSchema, LocalizedStringSchema, type ID } from "@/features/core/domain/types/common";
+import { IdSchema, LocalizedStringSchema, type ID } from "../../../core/domain/types/common";
 import { VariantSchema, type Variant } from "./Variant";
 
 // ─── School List Item Alternative ───────────────────────────────────────────

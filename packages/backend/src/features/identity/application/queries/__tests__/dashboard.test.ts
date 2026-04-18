@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { getDashboardData } from "../dashboard";
 import { getMyAccountData, getMyOrderDetail } from "../my-account";
-import { NotAuthenticatedError, ResourceNotFoundError } from "@/features/core/domain/errors";
+import { NotAuthenticatedError, ResourceNotFoundError } from "@backend/features/core/domain/errors";
 
 /**
  * Test Suite: Dashboard Queries (Pure TypeScript)

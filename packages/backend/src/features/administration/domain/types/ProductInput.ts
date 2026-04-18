@@ -4,8 +4,8 @@ import {
   PriceSchema,
   QuantitySchema,
   LocalizedStringSchema,
-} from "@/features/core/domain/types/common";
-import { LocaleSchema } from "@/features/core/domain/value-objects";
+} from "../../../core/domain/types/common";
+import { LocaleSchema } from "../../../core/domain/value-objects";
 
 // ─── Product Translation (unchanged) ────────────────────────────────────────
 

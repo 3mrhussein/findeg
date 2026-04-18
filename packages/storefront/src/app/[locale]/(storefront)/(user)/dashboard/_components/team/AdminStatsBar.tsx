@@ -9,9 +9,8 @@
 
 "use client";
 
-import React from "react";
 import { useTranslations } from "next-intl";
-import type { AdminUser } from "@/features/identity/application/hooks/useAdminUsers";
+import { type AdminUser } from "@hooks/useAdminUsers";
 
 interface AdminStatsBarProps {
   admins: AdminUser[];

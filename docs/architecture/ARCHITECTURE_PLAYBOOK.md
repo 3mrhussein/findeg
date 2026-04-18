@@ -82,6 +82,96 @@ Interpretation:
 
 ---
 
+## 2.1. Package Boundary Enforcement
+
+**Context**: FindEg is a monorepo with separate packages (@backend, @dashboard, @storefront, @ui). Apps MUST NOT import backend infrastructure implementations directly - they consume backend functionality through well-defined package exports.
+
+### Backend Package (@backend)
+
+**Type**: Pure TypeScript library (framework-agnostic, no React/Next.js dependencies)  
+**Exports**: Application layer interfaces and presentation layer utilities ONLY  
+**Enforcement**: package.json `exports` field restricts what apps can import
+
+#### Allowed Imports from Apps
+
+✅ **Application Layer** (use cases, services, interfaces):
+```typescript
+import { IProductRepository } from "@backend/features/catalog";
+import { ProductService } from "@backend/features/catalog";
+import { CreateProductUseCase } from "@backend/features/catalog";
+```
+
+✅ **Presentation Layer** (hooks, actions, view models):
+```typescript
+import { useProducts } from "@backend/features/catalog";
+import { createProduct } from "@backend/features/catalog";  
+import type { ProductViewModel } from "@backend/features/catalog";
+```
+
+✅ **Domain Layer** (entities, value objects, types):
+```typescript
+import type { Product, Money } from "@backend/features/catalog";
+import { ProductStatus } from "@backend/features/catalog";
+```
+
+#### Forbidden Imports from Apps
+
+❌ **Infrastructure Layer** (repository implementations, database clients):
+```typescript
+// BLOCKED by package.json exports - TypeScript will error
+import { DrizzleProductRepository } from "@backend/features/catalog/infrastructure";
+import { db } from "@backend/features/core/infrastructure/persistence/database";
+import { SchemaTypes } from "@backend/features/core"; // Schema types are infrastructure
+```
+
+❌ **Direct Source Access** (bypassing package exports):
+```typescript
+// BLOCKED by TypeScript path configuration
+import { something } from "@features/catalog"; // @features/* no longer resolves to backend
+```
+
+### Enforcement Mechanisms
+
+1. **Package.json Exports** (Primary)
+   - Backend package.json only exports application/presentation/domain per feature
+   - Infrastructure paths are NOT in exports field
+   - TypeScript resolves imports through package exports (not source files)
+
+2. **TypeScript Path Configuration** 
+   - Apps' tsconfig.json does NOT map `@backend/*` to source (`../backend/src/*`)
+   - Apps rely on pnpm workspace + package references for resolution
+   - `@features/*` in apps resolves ONLY to app-local features, not backend
+
+3. **serverExternalPackages** (Build Optimization)
+   - Next.js config lists Node.js-only packages: postgres, drizzle-orm, fs, etc.
+   - Prevents bundling server-only code in client bundles
+   - Configured in `packages/{dashboard,storefront}/next.config.ts`
+
+### Import Rules Summary
+
+| Import Pattern | Status | Reason |
+|---------------|--------|--------|
+| `@backend/features/[feature]` | ✅ Allowed | Package export (application + presentation) |
+| `@backend/features/[feature]/application` | ✅ Allowed | Explicit layer export |
+| `@backend/features/[feature]/infrastructure` | ❌ Blocked | Not in package exports |
+| `@features/[backend-feature]` | ❌ Blocked | Path no longer resolves to backend |
+| Direct repository imports | ❌ Blocked | Infrastructure layer is internal-only |
+
+### Verification Commands
+
+```bash
+# Verify no infrastructure imports in apps
+grep -r "infrastructure" packages/{dashboard,storefront}/src --include="*.ts" --include="*.tsx"
+
+# Verify type-check passes (enforces boundaries)
+npm run type-check
+
+# Verify builds succeed without bundling errors
+npm run build
+```
+
+---
+
 ## 3. Context Map
 
 ```mermaid

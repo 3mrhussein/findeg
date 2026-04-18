@@ -1,10 +1,10 @@
-import { ID } from "@/features/core/domain/types/common";
+import { ID } from "../../../core/domain/types/common";
 import { IAdminCategoryService } from "../interfaces/IAdminCategoryService";
-import { ICategoryRepository } from "@/features/catalog/application/interfaces/ICategoryRepository";
+import { ICategoryRepository } from "../../../catalog/application/interfaces/ICategoryRepository";
 import { IAuditLogService } from "../interfaces/IAuditLogService";
-import { Category } from "@/features/catalog/domain/entities/Category";
+import { Category } from "../../../catalog/domain/entities/Category";
 import { CategoryInput } from "../../domain/types/CategoryInput";
-import type { Locale } from "@/features/core/domain/value-objects";
+import type { Locale } from "../../../core/domain/value-objects";
 
 /**
  * Admin Category Service
@@ -14,7 +14,7 @@ import type { Locale } from "@/features/core/domain/value-objects";
  * Logs all mutations to the audit trail.
  */
 export class AdminCategoryService implements IAdminCategoryService {
-  /**
+  /** b
    * Creates an instance of AdminCategoryService.
    *
    * @param categoryRepository - Repository for category data management.

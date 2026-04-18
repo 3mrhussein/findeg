@@ -1,19 +1,12 @@
 "use client";
 
 import React from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Link } from "@/i18n/navigation";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@ui";
+import { Button } from "@ui";
+import { Link } from "@i18n/navigation";
 import { ShieldAlert, LogIn, LayoutDashboard, Home } from "lucide-react";
-import { logoutAction } from "@/features/identity/application/actions/auth";
 import { useTranslations } from "next-intl";
+import { logoutAction } from "@/app/[locale]/(storefront)/_actions/auth";
 
 /**
  *

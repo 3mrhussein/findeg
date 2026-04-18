@@ -1,0 +1,260 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "@i18n/navigation";
+import { Card, CardContent, CardHeader, CardTitle } from "@ui";
+import { Label } from "@ui";
+import { Input } from "@ui";
+import { Textarea } from "@ui";
+import { Button } from "@ui";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ui";
+import { updateOrderPaymentStatusAction, updateOrderStatusAction } from "@actions/order-actions";
+import { useToast } from "@hooks/use-toast";
+
+/**
+ * Local type definitions
+ */
+type OrderStatus =
+  | "pending"
+  | "confirmed"
+  | "processing"
+  | "shipped"
+  | "delivered"
+  | "cancelled"
+  | "refunded";
+type PaymentStatus = "pending" | "paid" | "failed" | "refunded";
+
+/**
+ * Stub helper functions (to be reimplemented)
+ */
+const getAllowedOrderStatusTransitions = (status: OrderStatus): OrderStatus[] => [];
+const getOrderStatusLabel = (status: OrderStatus): string => status;
+const normalizeOrderStatus = (status: string | undefined): OrderStatus =>
+  (status as OrderStatus) || "pending";
+const ORDER_STATUS_OPTIONS: { value: OrderStatus; label: string }[] = [];
+const getAllowedPaymentStatusTransitions = (status: PaymentStatus): PaymentStatus[] => [];
+const getPaymentStatusLabel = (status: PaymentStatus): string => status;
+const normalizePaymentStatus = (status: string | undefined): PaymentStatus =>
+  (status as PaymentStatus) || "pending";
+const PAYMENT_STATUS_OPTIONS: { value: PaymentStatus; label: string }[] = [];
+
+import type { OrderDetailControlsProps } from "./OrderDetailControls.interface";
+
+/**
+ * Operational controls for admin order detail — status, tracking, notes, and payment status.
+ */
+export function OrderDetailControls({
+  orderId,
+  initialStatus,
+  initialPaymentStatus,
+  initialTrackingNumber,
+  initialAdminNotes,
+}: OrderDetailControlsProps) {
+  const { toast } = useToast();
+  const router = useRouter();
+
+  const normalizedInitialStatus = normalizeOrderStatus(initialStatus);
+  const allowedStatusTargets = getAllowedOrderStatusTransitions(normalizedInitialStatus);
+  const selectableStatuses = new Set<OrderStatus>([
+    normalizedInitialStatus,
+    ...allowedStatusTargets,
+  ]);
+
+  const normalizedInitialPaymentStatus = normalizePaymentStatus(initialPaymentStatus);
+  const allowedPaymentTargets = getAllowedPaymentStatusTransitions(normalizedInitialPaymentStatus);
+  const selectablePaymentStatuses = new Set<PaymentStatus>([
+    normalizedInitialPaymentStatus,
+    ...allowedPaymentTargets,
+  ]);
+
+  const [status, setStatus] = useState<OrderStatus>(normalizedInitialStatus);
+  const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>(normalizedInitialPaymentStatus);
+  const [trackingNumber, setTrackingNumber] = useState(initialTrackingNumber || "");
+  const [adminNotes, setAdminNotes] = useState(initialAdminNotes || "");
+  const [savingStatus, setSavingStatus] = useState(false);
+  const [savingPayment, setSavingPayment] = useState(false);
+
+  /**
+   *
+   */
+  const resolveOrderId = (): number | null => {
+    const numericOrderId = Number(orderId);
+    if (Number.isFinite(numericOrderId)) return numericOrderId;
+    toast({ variant: "destructive", title: "Error", description: "Invalid order id." });
+    return null;
+  };
+
+  /**
+   *
+   */
+  const saveStatusChanges = async () => {
+    const numericOrderId = resolveOrderId();
+    if (!numericOrderId) return;
+    setSavingStatus(true);
+    try {
+      const result = await updateOrderStatusAction(numericOrderId, {
+        status,
+        trackingNumber: trackingNumber.trim() || undefined,
+        adminNotes: adminNotes.trim() || undefined,
+      });
+      if (result.success) {
+        toast({
+          title: "Order updated",
+          description: `Order #${numericOrderId} status set to ${getOrderStatusLabel(status)}.`,
+        });
+        router.refresh();
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Update failed",
+          description: result.error || "Could not update order.",
+        });
+      }
+    } catch {
+      toast({
+        variant: "destructive",
+        title: "Update failed",
+        description: "Unexpected error while updating order.",
+      });
+    } finally {
+      setSavingStatus(false);
+    }
+  };
+
+  /**
+   *
+   */
+  const savePaymentChanges = async () => {
+    const numericOrderId = resolveOrderId();
+    if (!numericOrderId) return;
+    setSavingPayment(true);
+    try {
+      const result = await updateOrderPaymentStatusAction(numericOrderId, paymentStatus);
+      if (result.success) {
+        toast({
+          title: "Payment updated",
+          description: `Order #${numericOrderId} payment set to ${getPaymentStatusLabel(paymentStatus)}.`,
+        });
+        router.refresh();
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Update failed",
+          description: result.error || "Could not update payment status.",
+        });
+      }
+    } catch {
+      toast({
+        variant: "destructive",
+        title: "Update failed",
+        description: "Unexpected error while updating payment status.",
+      });
+    } finally {
+      setSavingPayment(false);
+    }
+  };
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Order Operations</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {/* Order Status */}
+        <div className="space-y-2">
+          <Label htmlFor="order-status">Status</Label>
+          <Select
+            value={status}
+            onValueChange={(v) => setStatus(v as OrderStatus)}
+            disabled={savingStatus || savingPayment}
+          >
+            <SelectTrigger id="order-status">
+              <SelectValue placeholder="Select status" />
+            </SelectTrigger>
+            <SelectContent>
+              {ORDER_STATUS_OPTIONS.map((option) => (
+                <SelectItem
+                  key={option.value}
+                  value={option.value}
+                  disabled={!selectableStatuses.has(option.value)}
+                >
+                  {getOrderStatusLabel(option.value)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <p className="text-xs text-muted-foreground">
+            Allowed next statuses:{" "}
+            {allowedStatusTargets.length > 0
+              ? allowedStatusTargets.map((t) => getOrderStatusLabel(t)).join(", ")
+              : "No further transitions"}
+          </p>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="order-tracking">Tracking Number</Label>
+          <Input
+            id="order-tracking"
+            value={trackingNumber}
+            onChange={(e) => setTrackingNumber(e.target.value)}
+            placeholder="Optional courier tracking number"
+            disabled={savingStatus || savingPayment}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="order-admin-notes">Internal Notes</Label>
+          <Textarea
+            id="order-admin-notes"
+            value={adminNotes}
+            onChange={(e) => setAdminNotes(e.target.value)}
+            placeholder="Optional operational notes"
+            disabled={savingStatus || savingPayment}
+          />
+        </div>
+
+        <Button type="button" onClick={saveStatusChanges} disabled={savingStatus || savingPayment}>
+          {savingStatus ? "Saving..." : "Save Status + Notes"}
+        </Button>
+
+        {/* Payment Status */}
+        <div className="space-y-2 border-t pt-4">
+          <Label htmlFor="order-payment-status">Payment Status</Label>
+          <Select
+            value={paymentStatus}
+            onValueChange={(v) => setPaymentStatus(v as PaymentStatus)}
+            disabled={savingStatus || savingPayment}
+          >
+            <SelectTrigger id="order-payment-status">
+              <SelectValue placeholder="Select payment status" />
+            </SelectTrigger>
+            <SelectContent>
+              {PAYMENT_STATUS_OPTIONS.map((option) => (
+                <SelectItem
+                  key={option.value}
+                  value={option.value}
+                  disabled={!selectablePaymentStatuses.has(option.value)}
+                >
+                  {getPaymentStatusLabel(option.value)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <p className="text-xs text-muted-foreground">
+            Allowed next payment statuses:{" "}
+            {allowedPaymentTargets.length > 0
+              ? allowedPaymentTargets.map((t) => getPaymentStatusLabel(t)).join(", ")
+              : "No further transitions"}
+          </p>
+          <Button
+            type="button"
+            onClick={savePaymentChanges}
+            disabled={savingStatus || savingPayment}
+          >
+            {savingPayment ? "Saving..." : "Save Payment Status"}
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}

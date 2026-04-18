@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 
@@ -11,8 +12,19 @@ import { IconTooltip } from "../ui/IconTooltip";
  */
 export const ToggleTheme = () => {
   const { setTheme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
+
+  // useEffect runs only on the client, so we can safely show theme-dependent UI after mount
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const nextTheme = resolvedTheme === "dark" ? "light" : "dark";
-  const label = nextTheme === "dark" ? "Switch to dark theme" : "Switch to light theme";
+  const label = !mounted
+    ? "Toggle theme"
+    : nextTheme === "dark"
+      ? "Switch to dark theme"
+      : "Switch to light theme";
 
   return (
     <IconTooltip label={label} asChild>

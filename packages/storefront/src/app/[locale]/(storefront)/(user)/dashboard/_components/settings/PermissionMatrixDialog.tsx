@@ -9,29 +9,13 @@
 
 import React, { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Checkbox } from "@findeg/ui";
-import { ScrollArea } from "@findeg/ui";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@findeg/ui";
-import { Icon } from "@findeg/ui";
-import type {
-  RoleWithPermissions,
-  Permission,
-} from "@/features/identity/application/hooks/useAdminRoles";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@ui";
+import { Button } from "@ui";
+import { Checkbox } from "@ui";
+import { ScrollArea } from "@ui";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@ui";
+import { Icon } from "@ui";
+import type { RoleWithPermissions, Permission } from "../Settings";
 
 interface PermissionMatrixDialogProps {
   role: RoleWithPermissions | null;
@@ -67,7 +51,7 @@ export function PermissionMatrixDialog({
 
   useEffect(() => {
     if (role) {
-      setSelected(new Set(role.permissions.map((p) => p.id)));
+      setSelected(new Set(role.permissions.map((p: any) => p.id)));
     } else {
       setSelected(new Set());
     }

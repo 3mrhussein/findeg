@@ -14,17 +14,17 @@ import { users } from "./users";
 import { products } from "./products";
 import { productVariants } from "./product-variants";
 import { cartKits } from "./cart-kits";
-import type { ShippingAddress } from "@/features/order/domain/value-objects/ShippingAddress";
-import type { VariantSnapshot } from "@/features/order/domain/value-objects/VariantSnapshot";
+import type { ShippingAddress } from "@backend/features/order/domain/value-objects/ShippingAddress";
+import type { VariantSnapshot } from "@backend/features/order/domain/value-objects/VariantSnapshot";
 import type {
   CurrencyCode,
   OrderStatus,
   PaymentMethod,
   PaymentStatus,
-} from "@/features/core/domain/types/common";
+} from "@backend/features/core/domain/types/common";
 
 /** Re-export for consumers */
-export type { ShippingAddress as ShippingAddressSnapshot } from "@/features/order/domain/value-objects/ShippingAddress";
+export type { ShippingAddress as ShippingAddressSnapshot } from "@backend/features/order/domain/value-objects/ShippingAddress";
 
 /**
  * Orders Table

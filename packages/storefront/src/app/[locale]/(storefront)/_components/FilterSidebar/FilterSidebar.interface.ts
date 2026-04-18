@@ -5,7 +5,7 @@
 import type {
   CategoryFilterOption,
   FilterOption,
-} from "@/features/catalog/application/queries/listing";
+} from "@backend/features/catalog/application/queries/listing";
 
 export interface FilterSidebarProps {
   categories: CategoryFilterOption[];

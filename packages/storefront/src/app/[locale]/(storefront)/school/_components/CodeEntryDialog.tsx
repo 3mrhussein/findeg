@@ -10,15 +10,10 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from "@findeg/ui";
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSlot,
-  InputOTPSeparator,
-} from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { useToast } from "@/hooks/use-toast";
+} from "@ui";
+import { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator } from "@ui";
+import { Button } from "@ui";
+import { useToast } from "@hooks/use-toast";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 
 interface CodeEntryDialogProps {

@@ -1,113 +1,113 @@
-import type { SessionPayload } from "@findeg/backend/features/core";
-import { CookieSessionProvider, type ICookieStore } from "@findeg/backend/features/core";
+/**
+ * Dashboard Session Management (Next.js Integration)
+ *
+ * Lightweight session helpers using Next.js cookies() and jose library.
+ * Mirrors backend's JwtSessionManager pattern but adapted for Next.js App Router.
+ */
+
 import { cookies } from "next/headers";
+import { SignJWT, jwtVerify } from "jose";
+import type { SessionPayload } from "@backend/features/core";
+
+const SESSION_COOKIE_NAME = "admin_session";
+const SESSION_DURATION = 60 * 60 * 24; // 24 hours in seconds
+const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET || "findeg-dev-secret-key");
 
 /**
- * Dashboard Session Helpers
+ * Get current session from cookies
  *
- * Extracts session from Next.js cookies and provides typed access to session data.
- * Used by Server Components and Server Actions to get current user context.
- *
- * CookieSessionProvider is instantiated with Next.js cookie store injected.
- * This allows backend to remain framework-agnostic while apps handle framework integration.
- *
- * @example
- * const session = await getSession();
- * if (!session?.userId) {
- *   redirect("/login");
- * }
- *
- * @example
- * // In Server Action
- * "use server";
- * export async function updateProfile(data: FormData) {
- *   const session = await getSession();
- *   if (!session?.userId) throw new Error("Not authenticated");
- *   return backend.updateProfile(session.userId, data);
- * }
- */
-
-/**
- * Adapter from Next.js ReadonlyRequestCookies to ICookieStore interface
- */
-async function nextCookiesToStore(): Promise<ICookieStore> {
-  const cookieStore = await cookies();
-  return {
-    get(name: string) {
-      const cookie = cookieStore.get(name);
-      return cookie ? { value: cookie.value } : undefined;
-    },
-    set(name: string, value: string, options) {
-      cookieStore.set(name, value, options as any);
-    },
-    delete(name: string) {
-      cookieStore.delete(name);
-    },
-  };
-}
-
-/**
- * Extracts the current session from cookies.
- * Returns null if no valid session cookie exists.
- *
- * Uses injected CookieSessionProvider with Next.js cookies.
- *
- * @returns Session payload with user ID and other auth data, or null if not authenticated
+ * Extracts and verifies JWT from admin_session cookie.
+ * Returns session payload if valid, null otherwise.
  */
 export async function getSession(): Promise<SessionPayload | null> {
   try {
-    const cookieStore = await nextCookiesToStore();
-    const provider = new CookieSessionProvider(cookieStore);
-    return await provider.getSession();
-  } catch {
+    const cookieStore = await cookies();
+    const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
+
+    if (!token) {
+      return null;
+    }
+
+    const { payload } = await jwtVerify(token, JWT_SECRET);
+
+    if (!payload.userId || !payload.portalRole || !payload.user) {
+      return null;
+    }
+
+    return {
+      userId: payload.userId as number,
+      portalRole: payload.portalRole as SessionPayload["portalRole"],
+      user: payload.user as SessionPayload["user"],
+      subjectId: payload.subjectId as string | undefined,
+      actorType: payload.actorType as SessionPayload["actorType"],
+      activeRoleIds: payload.activeRoleIds as string[] | undefined,
+      permissionCodes: payload.permissionCodes as string[] | undefined,
+      organizationId: payload.organizationId as string | undefined,
+      tokenVersion: payload.tokenVersion as number | undefined,
+    };
+  } catch (error) {
+    // Invalid or expired token
     return null;
   }
 }
 
 /**
- * Alias for getSession to maintain compatibility with legacy callers.
+ * Alias for getSession
  */
 export const extractSession = getSession;
 
 /**
- * Creates a new session with the given payload
+ * Create and store session in cookies
  *
- * @param payload - Session data to store
+ * Creates signed JWT with session payload and sets secure cookie.
  */
 export async function createSession(payload: SessionPayload): Promise<void> {
-  const cookieStore = await nextCookiesToStore();
-  const provider = new CookieSessionProvider(cookieStore);
-  await provider.createSession(payload);
+  const token = await new SignJWT({ ...payload })
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime(`${SESSION_DURATION}s`)
+    .sign(JWT_SECRET);
+
+  const cookieStore = await cookies();
+  cookieStore.set(SESSION_COOKIE_NAME, token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: SESSION_DURATION,
+    path: "/",
+  });
 }
 
 /**
- * Deletes the current session
+ * Clear session cookies
+ *
+ * Removes admin_session cookie.
  */
 export async function deleteSession(): Promise<void> {
-  const cookieStore = await nextCookiesToStore();
-  const provider = new CookieSessionProvider(cookieStore);
-  await provider.deleteSession();
+  const cookieStore = await cookies();
+  cookieStore.delete(SESSION_COOKIE_NAME);
 }
 
 /**
- * Asserts that a session exists and returns it.
- * Throws an error if no session is found.
+ * Require valid session or throw error
  *
- * @returns Valid session payload
- * @throws Error if session is invalid or missing
+ * Throws error if no valid session exists.
+ * Use this in protected routes/actions.
  */
 export async function requireSession(): Promise<SessionPayload> {
   const session = await getSession();
+
   if (!session?.userId) {
     throw new Error("Not authenticated");
   }
+
   return session;
 }
 
 /**
- * Extracts user ID from the current session.
+ * Get user ID from session
  *
- * @returns User ID if authenticated, null otherwise
+ * Convenience method for extracting userId.
  */
 export async function getUserId(): Promise<string | null> {
   const session = await getSession();

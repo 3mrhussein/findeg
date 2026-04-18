@@ -10,7 +10,7 @@ import {
   type Price,
   type Quantity,
   type UomCode,
-} from "@/features/core/domain/types/common";
+} from "@backend/features/core/domain/types/common";
 
 /**
  * A single item in the cart, referencing a specific variant (SKU).

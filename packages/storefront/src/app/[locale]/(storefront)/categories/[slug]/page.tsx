@@ -3,9 +3,8 @@ import { Suspense } from "react";
 import type { Locale } from "next-intl";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { resolveLocale } from "@/features/core/domain/value-objects";
-import { getCategoriesPageData } from "@/features/catalog/application/queries/storefront";
-import { getCategoryPageViewModel } from "@/features/catalog/application/queries/category-page";
+import { resolveLocale } from "@backend/features/core/domain/value-objects";
+import { getCategoryPageViewModel } from "@/data/categories/queries";
 import { PageShell } from "../../_components/PageShell";
 import { ProductListingLayout } from "../../_components/ProductListingLayout";
 

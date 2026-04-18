@@ -7,7 +7,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 
 // Mock the repository implementations before importing factory
-vi.mock("@/features/identity/infrastructure/persistence/DrizzleUserRepository", () => ({
+vi.mock("@backend/features/identity/infrastructure/persistence/DrizzleUserRepository", () => ({
   DrizzleUserRepository: vi.fn().mockImplementation(() => ({
     getById: vi.fn(),
     getByEmail: vi.fn(),
@@ -20,7 +20,7 @@ vi.mock("@/features/identity/infrastructure/persistence/DrizzleUserRepository", 
   })),
 }));
 
-vi.mock("@/features/catalog/infrastructure/persistence/DrizzleProductRepository", () => ({
+vi.mock("@backend/features/catalog/infrastructure/persistence/DrizzleProductRepository", () => ({
   DrizzleProductRepository: vi.fn().mockImplementation(() => ({
     getById: vi.fn(),
     getBySlug: vi.fn(),
@@ -32,7 +32,7 @@ vi.mock("@/features/catalog/infrastructure/persistence/DrizzleProductRepository"
   })),
 }));
 
-vi.mock("@/features/catalog/infrastructure/persistence/DrizzleCategoryRepository", () => ({
+vi.mock("@backend/features/catalog/infrastructure/persistence/DrizzleCategoryRepository", () => ({
   DrizzleCategoryRepository: vi.fn().mockImplementation(() => ({
     getById: vi.fn(),
     getBySlug: vi.fn(),
@@ -44,7 +44,7 @@ vi.mock("@/features/catalog/infrastructure/persistence/DrizzleCategoryRepository
   })),
 }));
 
-vi.mock("@/features/order/infrastructure/persistence/DrizzleOrderRepository", () => ({
+vi.mock("@backend/features/order/infrastructure/persistence/DrizzleOrderRepository", () => ({
   DrizzleOrderRepository: vi.fn().mockImplementation(() => ({
     getById: vi.fn(),
     findMany: vi.fn(),

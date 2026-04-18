@@ -5,11 +5,11 @@
  * App-layer (dashboard) handles cache revalidation after operations.
  */
 
-import { container } from "@/features/core/infrastructure/di/ServiceContainer";
-import { ResourceNotFoundError, ValidationError } from "@/features/core/domain/errors";
-import { BrandInput } from "@/features/administration/domain/types";
-import type { ServiceResult } from "@/features/core/application/types";
-import { getBrandCachePaths, getBrandCacheTags } from "@/features/catalog/domain/cache";
+import { container } from "@backend/features/core/infrastructure/di/ServiceContainer";
+import { ResourceNotFoundError, ValidationError } from "@backend/features/core/domain/errors";
+import { BrandInput } from "@backend/features/administration/domain/types";
+import type { ServiceResult } from "@backend/features/core/application/types";
+import { getBrandCachePaths, getBrandCacheTags } from "@backend/features/catalog/domain/cache";
 
 /**
  * Pure brand creation - no framework calls.

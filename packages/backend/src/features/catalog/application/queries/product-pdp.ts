@@ -1,13 +1,17 @@
-import type { Locale } from "@/features/core/domain/value-objects";
-import type { Product } from "@/features/catalog/domain/entities/Product";
-import type { Variant } from "@/features/catalog/domain/entities/Variant";
-import type { ProductReviewSummary } from "@/features/review/application/interfaces/IReviewRepository";
-import type { Review } from "@/features/review/domain/entities/Review";
-import type { CustomerGroup } from "@/features/core/domain/types/common";
-import { VariantEntity } from "@/features/catalog/domain/entities/Variant";
-import { resolveLocale } from "@/features/core/domain/value-objects";
-import { getProductEnglishSlug } from "@/features/catalog/domain/utils/slug";
-import { getServices } from "@/server/getServices";
+import type { Locale } from "@backend/features/core/domain/value-objects";
+import type { Product } from "@backend/features/catalog/domain/entities/Product";
+import type { Category } from "@backend/features/catalog/domain/entities/Category";
+import type { Variant } from "@backend/features/catalog/domain/entities/Variant";
+import type { ProductReviewSummary } from "@backend/features/review/application/interfaces/IReviewRepository";
+import type { Review } from "@backend/features/review/domain/entities/Review";
+import type { CustomerGroup } from "@backend/features/core/domain/types/common";
+import { VariantEntity } from "@backend/features/catalog/domain/entities/Variant";
+import { resolveLocale } from "@backend/features/core/domain/value-objects";
+import { getProductEnglishSlug } from "@backend/features/catalog/domain/utils/slug";
+import { createCatalogServices } from "../services/factory";
+import { createReviewServices } from "@backend/features/review";
+import { createIdentityServices } from "@backend/features/identity";
+import type { SessionPayload } from "@backend/features/core/domain/auth";
 
 export interface ProductBreadcrumbItem {
   label: string;
@@ -88,7 +92,7 @@ function parseCategoryPath(path?: string): number[] {
  *
  */
 function hasExplicitInventory(product: Product): boolean {
-  return (product.variants || []).some((variant) => (variant.inventory?.length ?? 0) > 0);
+  return (product.variants || []).some((variant: Variant) => (variant.inventory?.length ?? 0) > 0);
 }
 
 /**
@@ -96,7 +100,7 @@ function hasExplicitInventory(product: Product): boolean {
  */
 function getPrimaryVariant(product: Product): Variant | undefined {
   const variants = product.variants || [];
-  return variants.find((variant) => variant.variantKey === "default") || variants[0];
+  return variants.find((variant: Variant) => variant.variantKey === "default") || variants[0];
 }
 
 /**
@@ -138,7 +142,7 @@ async function resolveProductLookup(
   const normalizedSlug = slug.trim().toLowerCase();
   if (!normalizedSlug) return null;
 
-  const { products } = getServices();
+  const { products } = createCatalogServices();
   const product = /^\d+$/.test(normalizedSlug)
     ? await products.getById(Number(normalizedSlug), locale)
     : await products.getBySlug(normalizedSlug, locale);
@@ -162,6 +166,7 @@ async function resolveProductLookup(
 export async function getProductPdpViewModel(
   locale: string,
   slug: string,
+  session: SessionPayload | null = null,
 ): Promise<ProductPdpViewModel | null> {
   const resolvedLocale = resolveLocale(locale);
   const lookup = await resolveProductLookup(resolvedLocale as Locale, slug);
@@ -172,10 +177,12 @@ export async function getProductPdpViewModel(
   const { product, canonicalSlug, shouldRedirect } = lookup;
   const canonicalPath = `/shop/products/${canonicalSlug}`;
 
-  const { categories, products, auth, reviews, repositories } = getServices();
-  const [allCategories, session, reviewResult] = await Promise.all([
+  const { products, categories } = createCatalogServices();
+  const { auth } = createIdentityServices();
+  const { reviews } = createReviewServices();
+
+  const [allCategories, reviewResult] = await Promise.all([
     categories.getAll(resolvedLocale),
-    auth.getSession(),
     reviews.getProductReviews(product.id, { page: 1, limit: 10 }),
   ]);
 
@@ -183,7 +190,8 @@ export async function getProductPdpViewModel(
 
   let brand: ProductBrandInfo | undefined;
   if (product.brandId) {
-    const resolvedBrand = await repositories.brands.getById(product.brandId, resolvedLocale);
+    const { brands } = createCatalogServices();
+    const resolvedBrand = await brands.getById(product.brandId, resolvedLocale);
     if (resolvedBrand) {
       brand = {
         id: resolvedBrand.id,
@@ -194,7 +202,9 @@ export async function getProductPdpViewModel(
     }
   }
 
-  const categoriesById = new Map(allCategories.map((category) => [category.id, category]));
+  const categoriesById = new Map<number, Category>(
+    allCategories.map((category: Category) => [category.id, category]),
+  );
   const categoryNode = product.categoryId ? categoriesById.get(product.categoryId) : undefined;
   const categoryIds = parseCategoryPath(categoryNode?.path);
 
@@ -202,7 +212,7 @@ export async function getProductPdpViewModel(
   const slugSegments: string[] = [];
 
   for (const categoryId of categoryIds) {
-    const category = categoriesById.get(categoryId);
+    const category = categoriesById.get(categoryId) as Category | undefined;
     if (!category) continue;
 
     slugSegments.push(category.slug);
@@ -219,8 +229,8 @@ export async function getProductPdpViewModel(
 
   const relatedProducts = product.categoryId
     ? (await products.getByCategory(product.categoryId, resolvedLocale))
-      .filter((candidate) => candidate.id !== product.id)
-      .slice(0, 12)
+        .filter((candidate) => candidate.id !== product.id)
+        .slice(0, 12)
     : [];
 
   return {
@@ -244,13 +254,16 @@ export async function getProductPdpViewModel(
 /**
  * Generates top EN product slugs for static params.
  */
-export async function getTopProductSlugsForStaticParams(limit: number = 120): Promise<string[]> {
-  const { products } = getServices();
+export async function getTopProductSlugsForStaticParams(
+  limit: number = 120,
+  catalogServices = createCatalogServices(),
+): Promise<string[]> {
+  const { products } = catalogServices;
   const allProducts = await products.getAll("en");
 
   return allProducts
     .filter((product) => product.isActive !== false)
-    .sort((a, b) => {
+    .sort((a: Product, b: Product) => {
       const reviewsDelta = (b.reviewsCount || 0) - (a.reviewsCount || 0);
       if (reviewsDelta !== 0) return reviewsDelta;
 

@@ -25,7 +25,7 @@ import { productVariants } from "./product-variants";
 import type {
   LocalizedStringDraft,
   ResponsiveMediaSet,
-} from "@/features/core/domain/value-objects";
+} from "@backend/features/core/domain/value-objects";
 
 /**
  * Products Table (SPU)

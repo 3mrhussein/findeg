@@ -11,12 +11,12 @@
 
 import React from "react";
 import { useTranslations } from "next-intl";
-import { Avatar, AvatarFallback } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
-import { TableCell, TableRow } from "@findeg/ui";
-import { Skeleton } from "@findeg/ui";
-import { Icon } from "@findeg/ui";
-import type { AdminUser } from "@/features/identity/application/hooks/useAdminUsers";
+import { Avatar, AvatarFallback } from "@ui";
+import { Badge } from "@ui";
+import { TableCell, TableRow } from "@ui";
+import { Skeleton } from "@ui";
+import { Icon } from "@ui";
+import { type AdminUser } from "@hooks/useAdminUsers";
 import { AdminActionsMenu } from "./AdminActionsMenu";
 
 /** Pastel badge colors mapped to role codes */
@@ -122,7 +122,7 @@ export function AdminUserRow({
           {user.roles.length === 0 ? (
             <span className="text-xs text-muted-foreground italic">{t("NoRoles")}</span>
           ) : (
-            user.roles.map((role) => (
+            user.roles.map((role: any) => (
               <Badge
                 key={role.id}
                 variant="outline"
@@ -163,7 +163,7 @@ export function AdminUserRow({
           <AdminActionsMenu
             userId={user.id}
             userName={getFullName(user)}
-            isActive={user.isActive}
+            isActive={!!(user as any).isActive}
             isPending={isPending}
             canWrite={canWrite}
             onEdit={() => onEdit(user)}

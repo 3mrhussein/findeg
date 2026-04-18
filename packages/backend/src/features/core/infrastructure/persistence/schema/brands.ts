@@ -6,7 +6,7 @@ import { pgTable, serial, text, timestamp, boolean, jsonb } from "drizzle-orm/pg
 import { relations } from "drizzle-orm";
 import { catalogSchema } from "./schemas";
 import { products } from "./products";
-import type { LocalizedStringDraft } from "@/features/core/domain/value-objects";
+import type { LocalizedStringDraft } from "@backend/features/core/domain/value-objects";
 
 /**
  * Brands Table

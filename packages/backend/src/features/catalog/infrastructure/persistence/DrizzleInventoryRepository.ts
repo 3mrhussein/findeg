@@ -1,10 +1,10 @@
-import { db } from "@/features/core/infrastructure/persistence";
+import { db } from "../../../core/infrastructure/persistence";
 import {
   inventoryBalances,
   stockMovements,
   warehouses,
   productVariants,
-} from "@/features/core/infrastructure/persistence/schema";
+} from "../../../core/infrastructure/persistence/schema";
 import {
   IInventoryRepository,
   InventoryBalanceResult,
@@ -13,7 +13,7 @@ import {
 } from "../../application/interfaces/IInventoryRepository";
 import { DrizzleVariantRepository } from "./DrizzleVariantRepository";
 import { eq, and, sql, desc } from "drizzle-orm";
-import { ID } from "@/features/core/domain/types/common";
+import { ID } from "@backend/features/core/domain/types/common";
 
 /**
  * Drizzle Inventory Repository

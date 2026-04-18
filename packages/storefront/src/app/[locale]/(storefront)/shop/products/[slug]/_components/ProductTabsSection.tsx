@@ -2,12 +2,12 @@
 
 import { FileText, Package, Ruler, Star } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@findeg/ui";
-import type { Product } from "@/features/catalog/domain/entities/Product";
-import type { Variant } from "@/features/catalog/domain/entities/Variant";
-import type { ProductReviewSummary } from "@/features/review/application/interfaces/IReviewRepository";
-import type { Review } from "@/features/review/domain/entities/Review";
-import { sanitizeHtml } from "@/lib/sanitize-html";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@ui";
+import type { Product } from "@backend/features/catalog/domain/entities/Product";
+import type { Variant } from "@backend/features/catalog/domain/entities/Variant";
+import type { ProductReviewSummary } from "@backend/features/review/application/interfaces/IReviewRepository";
+import type { Review } from "@backend/features/review/domain/entities/Review";
+import { sanitizeHtml } from "@lib/sanitize-html";
 import { ReviewsSection } from "./ReviewsSection";
 
 interface ProductTabsSectionProps {

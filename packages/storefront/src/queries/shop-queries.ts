@@ -18,13 +18,13 @@ import {
   HOME_PAGE_CACHE_CONFIG,
   SHOP_PAGE_CACHE_CONFIG,
   CATEGORY_PAGE_CACHE_CONFIG,
-} from "@findeg/backend/features/catalog";
+} from "@backend/features/catalog";
 import type {
   HomePageData,
   ShopPageData,
   SearchPageData,
   ProductDetailPageData,
-} from "@findeg/backend/features/catalog";
+} from "@backend/features/catalog";
 
 /**
  * Cached storefront query: Home page data
@@ -72,7 +72,7 @@ export async function getSearchPageData(language: string, query: string): Promis
 export async function getProductDetailData(
   productId: number,
   language: string,
-): Promise<ProductDetailPageData> {
+): Promise<ProductDetailPageData | null> {
   cacheTag(`product-${productId}`);
   cacheLife("hours");
   return getProductDetailDataBackend(productId, language);

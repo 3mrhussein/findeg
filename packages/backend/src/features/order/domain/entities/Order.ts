@@ -7,8 +7,8 @@ import {
   OrderStatus,
   PaymentMethod,
   PaymentStatus,
-} from "@/features/core/domain/types/common";
-import type { CurrencyCode } from "@/features/core/domain/value-objects";
+} from "@backend/features/core/domain/types/common";
+import type { CurrencyCode } from "@backend/features/core/domain/value-objects";
 import type { ShippingAddress, VariantSnapshot } from "../value-objects";
 
 /**

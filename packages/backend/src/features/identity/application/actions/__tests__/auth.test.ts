@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { login, logout } from "../auth";
-import { ValidationError } from "@/features/core/domain/errors";
+import { ValidationError } from "@backend/features/core/domain/errors";
 
 /**
  * Test Suite: Auth Actions (Pure TypeScript)
@@ -14,8 +14,9 @@ import { ValidationError } from "@/features/core/domain/errors";
 describe("Auth Actions", () => {
   describe("login()", () => {
     it("throws ValidationError when email is missing", async () => {
+      const mockAuthService = {} as any;
       try {
-        await login("", "password123");
+        await login(mockAuthService, "", "password123");
         expect.fail("Should have thrown ValidationError");
       } catch (error) {
         expect(error instanceof ValidationError).toBe(true);
@@ -24,8 +25,9 @@ describe("Auth Actions", () => {
     });
 
     it("throws ValidationError when password is missing", async () => {
+      const mockAuthService = {} as any;
       try {
-        await login("user@example.com", "");
+        await login(mockAuthService, "user@example.com", "");
         expect.fail("Should have thrown ValidationError");
       } catch (error) {
         expect(error instanceof ValidationError).toBe(true);
@@ -37,8 +39,11 @@ describe("Auth Actions", () => {
       // Note: This test would require full database setup with test data.
       // For now, we verify that some error is thrown (not silent failure).
       // In practice, integration tests would verify the specific ValidationError with real DB
+      const mockAuthService = {
+        login: vi.fn().mockResolvedValue({ success: false, error: "Invalid credentials" }),
+      } as any;
       try {
-        await login("nonexistent@example.com", "wrongpassword");
+        await login(mockAuthService, "nonexistent@example.com", "wrongpassword");
         // If we reach here, the test should fail because login should not succeed
         // with fake credentials
         expect.fail("Should have thrown error for invalid credentials");
@@ -46,7 +51,9 @@ describe("Auth Actions", () => {
         // Any error is acceptable here - could be ValidationError, database error, etc
         // The important thing is that invalid credentials don't silently "succeed"
         expect(error).toBeTruthy();
-        expect((error as Record<string, unknown>).message || (error as Record<string, unknown>).code).toBeTruthy();
+        expect(
+          (error as Record<string, unknown>).message || (error as Record<string, unknown>).code,
+        ).toBeTruthy();
       }
     });
 
@@ -60,8 +67,9 @@ describe("Auth Actions", () => {
       // This is the KEY test: verify no framework calls
       // If the action tried to call redirect(), the test would fail
       // because redirect() is not available in Node.js environment
+      const mockAuthService = {} as any;
       try {
-        await login("", "");
+        await login(mockAuthService, "", "");
         expect.fail("Should throw validation error");
       } catch (error) {
         // Should throw, not redirect

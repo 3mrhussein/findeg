@@ -4,20 +4,20 @@
  * PostgreSQL implementation of collection management using Drizzle ORM.
  */
 
-import { db } from "@/features/core/infrastructure/persistence";
+import { db } from "../../../core/infrastructure/persistence";
 import {
   collections,
   collectionTags,
   productTags,
   tags,
-} from "@/features/core/infrastructure/persistence/schema";
+} from "../../../core/infrastructure/persistence/schema";
 import { ICollectionRepository } from "../../application/interfaces/ICollectionRepository";
 import { Collection, CreateCollection } from "../../domain/entities/Collection";
 import { Product } from "../../domain/entities/Product";
 import { Tag } from "../../domain/entities/Tag";
 import { eq, asc, inArray } from "drizzle-orm";
-import { ID, Locale } from "@/features/core/domain/types/common";
-import { DEFAULT_LOCALE } from "@/features/core/domain/value-objects";
+import { ID, Locale } from "../../../core/domain/types/common";
+import { DEFAULT_LOCALE } from "../../../core/domain/value-objects";
 
 export class DrizzleCollectionRepository implements ICollectionRepository {
   async getAll(options?: { includeInactive?: boolean }): Promise<Collection[]> {

@@ -1,6 +1,6 @@
-import type { Product } from "@/features/catalog/domain/entities/Product";
-import type { ProductFormValues } from "@/features/administration/presentation/forms/product-form";
-import { ProductEntity } from "@/features/catalog/domain/entities/Product";
+import type { Product } from "@backend/features/catalog";
+import type { ProductFormValues } from "@dashboard/features/administration/presentation/forms/product-form";
+import { ProductEntity } from "@backend/features/catalog";
 
 /**
  * Transforms a Product domain object into the shape expected
