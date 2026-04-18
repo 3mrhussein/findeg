@@ -5,14 +5,14 @@
  * App-layer catches errors and handles redirect/error responses.
  */
 
-import { createCatalogServices } from "@features/catalog";
-import { createOrderServices } from "@features/order";
-import { NotAuthenticatedError } from "@features/core/domain/errors";
-import { resolveLocale } from "@features/core/domain/value-objects";
-import type { Product } from "@features/catalog/domain/entities/Product";
-import type { Order } from "@features/order/domain/entities/Order";
-import type { SessionPayload } from "@features/core/domain/auth";
-import type { SchoolListResult } from "@features/catalog/application/interfaces/ISchoolListRepository";
+import { createCatalogServices } from "@backend/features/catalog";
+import { createOrderServices } from "@backend/features/order";
+import { NotAuthenticatedError } from "@backend/features/core/domain/errors";
+import { resolveLocale } from "@backend/features/core/domain/value-objects";
+import type { Product } from "@backend/features/catalog/domain/entities/Product";
+import type { Order } from "@backend/features/order/domain/entities/Order";
+import type { SessionPayload } from "@backend/features/core/domain/auth";
+import type { SchoolListResult } from "@backend/features/catalog/application/interfaces/ISchoolListRepository";
 
 export interface DashboardData {
   products: Product[];

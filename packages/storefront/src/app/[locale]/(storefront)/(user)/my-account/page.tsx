@@ -3,11 +3,11 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@i18n/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@ui";
 import { Button } from "@ui";
-import { logout } from "@features/identity/application/actions/auth";
+import { logoutAction } from "../../_actions/auth";
+import { updateProfileAction } from "../../_actions/user";
+import { getMyAccountData } from "@backend/features/identity/application/queries/my-account";
 import { SectionStateEmpty } from "@components/shared/state/SectionStateEmpty";
 import { Input } from "@ui";
-import { updateMyProfile } from "@features/identity/application/actions/profile";
-import { getMyAccountData } from "@features/identity/application/queries/my-account";
 
 type Props = {
   params: Promise<{ locale: Locale }>;
@@ -54,7 +54,7 @@ export default async function Page({ params, searchParams }: Props) {
             <CardTitle>{t("Pages.MyAccount.Profile")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <form action={updateMyProfile as any} className="space-y-2">
+            <form action={updateProfileAction as any} className="space-y-2">
               <label className="text-sm font-medium" htmlFor="name">
                 {t("Pages.MyAccount.NameLabel")}
               </label>
@@ -65,7 +65,7 @@ export default async function Page({ params, searchParams }: Props) {
               <span className="font-medium">{t("Pages.MyAccount.EmailLabel")}: </span>
               {user.email}
             </div>
-            <form action={logout as any}>
+            <form action={logoutAction as any}>
               <Button variant="destructive" type="submit">
                 {t("Pages.MyAccount.Logout")}
               </Button>

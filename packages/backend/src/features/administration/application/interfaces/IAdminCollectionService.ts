@@ -1,6 +1,6 @@
-import { ID } from "@features/core/domain/types/common";
-import { Collection } from "@features/catalog/domain/entities/Collection";
-import { Tag } from "@features/catalog/domain/entities/Tag";
+import { ID } from "@backend/features/core/domain/types/common";
+import { Collection } from "@backend/features/catalog/domain/entities/Collection";
+import { Tag } from "@backend/features/catalog/domain/entities/Tag";
 import { CollectionInput } from "../../domain/types/CollectionInput";
 
 export interface IAdminCollectionService {

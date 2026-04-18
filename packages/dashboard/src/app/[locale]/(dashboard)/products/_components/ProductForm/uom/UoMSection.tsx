@@ -14,7 +14,7 @@ import { Plus, Trash2, ChevronDown, ChevronRight, Package2 } from "lucide-react"
 import { PREDEFINED_UOMS, CUSTOMER_GROUPS } from "@backend/features/catalog";
 import { BilingualInput } from "@components/shared/BilingualInput";
 import { cn } from "@lib/utils";
-import { ProductFormValues } from "@features/administration/presentation/forms/product-form";
+import { ProductFormValues } from "@dashboard/features/administration/presentation/forms/product-form";
 
 interface UoMSectionProps {
   /** Path prefix in form — e.g. "sharedUoMs" or "variants.0.uoms" */

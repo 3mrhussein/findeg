@@ -11,7 +11,6 @@ import {
   createCatalogServices,
   getShopPlpViewModel as getBackendPlpViewModel,
   getSearchPageViewModel as getBackendSearchViewModel,
-  getCategoryPageViewModel as getBackendCategoryViewModel,
   getCollectionPageViewModel as getBackendCollectionViewModel,
   getProductPdpViewModel as getBackendPdpViewModel,
   getTopProductSlugsForStaticParams as getBackendTopSlugs,
@@ -19,10 +18,8 @@ import {
   getHomePageData as getBackendHomePageData,
   getShopPageData as getBackendShopPageData,
   getProductDetailPageData as getBackendProductDetailData,
-  getCategoriesPageData as getBackendCategoriesPageData,
   type ShopPlpViewModel,
   type SearchPageViewModel,
-  type CategoryPageViewModel,
   type CollectionPageViewModel,
   type ProductPdpViewModel,
   type HomePageData,
@@ -64,21 +61,6 @@ export async function getSearchPageViewModel(
   return await getBackendSearchViewModel(locale, rawQuery, query);
 }
 
-/**
- * Category Page Data
- */
-export async function getCategoryPageViewModel(
-  slug: string,
-  locale: string,
-  query: any,
-): Promise<CategoryPageViewModel | null> {
-  const resolvedLocale = resolveLocale(locale);
-  cacheTag("products", "categories", `category-${resolvedLocale}-${slug}`);
-  cacheLife("hours");
-
-  return await getBackendCategoryViewModel(slug, locale, query);
-}
-
 // Export the slug helper for convenience
 export { getProductEnglishSlug };
 
@@ -106,21 +88,17 @@ export async function getTopProductSlugsForStaticParams(limit: number = 100) {
   return allProducts.slice(0, limit).map((p: any) => getProductEnglishSlug(p) || String(p.id));
 }
 
-/**
- * Full PDP View Model query
- */
-/**
- * PDP Data
- */
-export async function getProductPdpData(
-  productId: number,
+/** Full PDP View Model query — session-sensitive caching. */
+export async function getProductPdp(
   locale: string,
+  slug: string,
+  session: any | null = null,
 ): Promise<ProductPdpViewModel | null> {
   const resolvedLocale = resolveLocale(locale);
-  cacheTag("products", `product-${productId}`);
-  cacheLife("hours");
+  // We don't cache globally if there is a session-dependent customer group
+  // OR we cache with the customer group as part of the key.
 
-  return await getBackendPdpViewModel(resolvedLocale, String(productId));
+  return await getBackendPdpViewModel(resolvedLocale as Locale, slug, session);
 }
 
 /**
@@ -178,17 +156,6 @@ export async function getCollectionsPage(language: string): Promise<CollectionsP
   cacheLife("days");
 
   return await getCollectionsPageData(language);
-}
-
-/**
- * Categories listing page data
- */
-export async function getCategoriesPageData(language: string): Promise<any[]> {
-  const locale = resolveLocale(language);
-  cacheTag("categories", `categories-${locale}`);
-  cacheLife("days");
-
-  return await getBackendCategoriesPageData(language);
 }
 
 /**

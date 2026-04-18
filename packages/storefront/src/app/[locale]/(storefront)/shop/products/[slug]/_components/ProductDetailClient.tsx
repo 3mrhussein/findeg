@@ -20,11 +20,11 @@ import { Badge } from "@ui";
 import { IconTooltip } from "@ui";
 import { useCart } from "@hooks/useCart";
 import { useUser } from "@hooks/useUser";
-import type { Product } from "@features/catalog/domain/entities/Product";
-import type { Variant } from "@features/catalog/domain/entities/Variant";
-import { VariantEntity } from "@features/catalog/domain/entities/Variant";
+import type { Product } from "@backend/features/catalog/domain/entities/Product";
+import type { Variant } from "@backend/features/catalog/domain/entities/Variant";
+import { VariantEntity } from "@backend/features/catalog/domain/entities/Variant";
 import { cn } from "@lib/utils";
-import type { ProductPdpViewModel } from "@features/catalog/application/queries/product-pdp";
+import type { ProductPdpViewModel } from "@backend/features/catalog/application/queries/product-pdp";
 import { ImageGallery } from "./ImageGallery";
 import { ProductTabsSection } from "./ProductTabsSection";
 import { RelatedProductsRail } from "./RelatedProductsRail";
@@ -158,13 +158,13 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
     vm.selectedVariant?.id,
   );
   const variants = useMemo(
-    () => (vm.product.variants || []).filter((variant) => variant.isActive !== false),
+    () => (vm.product.variants || []).filter((variant: any) => variant.isActive !== false),
     [vm.product.variants],
   );
 
   const selectedVariant =
-    variants.find((variant) => variant.id === selectedVariantId) ||
-    variants.find((variant) => variant.variantKey === "default") ||
+    variants.find((variant: any) => variant.id === selectedVariantId) ||
+    variants.find((variant: any) => variant.variantKey === "default") ||
     variants[0];
 
   const [selectedAttributes, setSelectedAttributes] = useState<Record<string, string>>(
@@ -178,7 +178,7 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
   const uomOptions = useMemo<UomOption[]>(() => {
     if (!selectedVariant) return [];
 
-    const enabled = (selectedVariant.sellableUoms || []).filter((uom) => uom.isEnabled);
+    const enabled = (selectedVariant.sellableUoms || []).filter((uom: any) => uom.isEnabled);
     if (enabled.length === 0) {
       return [
         {
@@ -189,7 +189,7 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
       ];
     }
 
-    return enabled.map((uom) => ({
+    return enabled.map((uom: any) => ({
       code: uom.uomCode,
       label: uom.uomCode,
       factorToBase: uom.factorToBase,
@@ -238,7 +238,7 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
 
         setPriceState({
           unitPrice: getFallbackUomPrice(
-            vm.product.variants?.find((v) => v.id === selectedVariant.id) || selectedVariant,
+            vm.product.variants?.find((v: any) => v.id === selectedVariant.id) || selectedVariant,
             selectedUom,
             vm.customerGroup,
           ),
@@ -318,7 +318,7 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
 
   const galleryImages = useMemo(
     () =>
-      (selectedVariant?.images || []).map((image) => ({
+      (selectedVariant?.images || []).map((image: any) => ({
         url: image.url,
         alt: image.alt,
       })),
@@ -409,7 +409,7 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
   const handleSelectAttribute = (key: string, value: string) => {
     const nextAttributes = { ...selectedAttributes, [key]: value };
 
-    const matched = variants.find((variant) => {
+    const matched = variants.find((variant: any) => {
       const variantMap = getAttributeMap(variant);
       return Object.entries(nextAttributes).every(
         ([attributeKey, selectedValue]) =>
@@ -546,7 +546,7 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
                     <div className="flex flex-wrap gap-2">
                       {values.map((value) => {
                         const isSelected = selectedAttributes[key] === value;
-                        const isAvailable = variants.some((variant) => {
+                        const isAvailable = variants.some((variant: any) => {
                           const variantMap = getAttributeMap(variant);
                           if (variantMap[key] !== value) return false;
 

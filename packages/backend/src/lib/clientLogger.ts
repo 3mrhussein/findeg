@@ -1,6 +1,6 @@
 "use client";
 
-import { logRequestAction } from "@features/core/application/actions/logging";
+import { logRequestAction } from "@backend/features/core/application/actions/logging";
 
 /**
  * Client Logger
@@ -20,11 +20,8 @@ export const clientLogger = {
       userAgent: typeof navigator !== "undefined" ? navigator.userAgent : "unknown",
     };
 
-    // Use fire-and-forget to avoid blocking UI
-    logRequestAction(logData).catch((err) => {
-      // Last resort fallback
-      console.error("Client logging failed:", err);
-    });
+    // Use console for client logging
+    console.info(`[ClientLogger] ${action}`, logData);
   },
 
   /**
@@ -34,11 +31,6 @@ export const clientLogger = {
     const message = error instanceof Error ? error.message : error;
     const stack = error instanceof Error ? error.stack : undefined;
 
-    logRequestAction({
-      level: "error",
-      message: `Client Error in ${context}: ${message}`,
-      error_stack: stack,
-      path: typeof window !== "undefined" ? window.location.pathname : "unknown",
-    }).catch(() => {});
+    console.error(`[ClientLogger] Error in ${context}: ${message}`, { error_stack: stack });
   },
 };

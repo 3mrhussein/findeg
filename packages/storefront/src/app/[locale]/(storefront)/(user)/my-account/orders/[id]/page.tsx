@@ -5,7 +5,7 @@ import { Link } from "@i18n/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@ui";
 import { Button } from "@ui";
 import { Separator } from "@ui";
-import { getMyOrderDetail } from "@features/identity/application/queries/my-account";
+import { getMyOrderDetail } from "@backend/features/identity/application/queries/my-account";
 
 interface MyOrderDetailPageProps {
   params: Promise<{ locale: Locale; id: string }>;

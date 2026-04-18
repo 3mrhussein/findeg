@@ -11,7 +11,7 @@ import { Form } from "@ui";
 import {
   ProductFormSchema,
   type ProductFormValues,
-} from "@features/administration/presentation/forms/product-form";
+} from "@dashboard/features/administration/presentation/forms/product-form";
 import { ProductFormHeader } from "./ProductFormHeader";
 import { ProductFormTabs } from "./ProductFormTabs";
 import { ProductFormSidebar } from "../ProductFormSidebar";

@@ -74,3 +74,31 @@ The `users.name` column is deleted and forbidden. Full names are resolved at the
 
 - Use `user.firstName` and `user.lastName`.
 - Resolve via `user.getUserFullName()` in domain logic.
+
+## Monorepo Boundary Enforcement
+
+To ensure Clean Architecture is preserved across our monorepo packages, we employ three levels of boundary enforcement:
+
+### 1. Primary Enforcement: `package.json` Exports
+
+The `@backend` package actively suppresses `infrastructure` leakage by explicitly defining subpath exports. Apps can only access what is explicitly authorized.
+
+- **Allowed**: `"./features/catalog": "./dist/features/catalog/index.js"`
+- **Blocked**: Infrastructure paths and direct file routes are denied by Node.js module resolution.
+
+### 2. Secondary Enforcement: TypeScript Path Resolution
+
+Both `@dashboard` and `@storefront` explicitly configure their `tsconfig.json` `paths` compiler option. We no longer rely on dynamic `@features/*` aliases that bleed into the backend.
+Instead, apps import directly via the package name to enforce context boundaries:
+
+```typescript
+// ✅ Allowed (resolves through package.json exports)
+import { createStorefrontServices } from "@backend/features/catalog";
+
+// ❌ Forbidden (TypeScript and Node will throw configuration errors)
+import { DrizzleProductRepository } from "@backend/features/catalog/infrastructure/...";
+```
+
+### 3. Bundling Optimization: `serverExternalPackages`
+
+To completely insulate the client bundle from Node.js dependencies inherent to our infrastructure (like `postgres`, `drizzle-orm`, `jsonwebtoken`, `bcryptjs`), we define them as `serverExternalPackages` in our Next.js configuration. This serves as a fail-safe ensuring server-side modules never accidentally hydrate to the client.

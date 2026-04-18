@@ -1,4 +1,4 @@
-import type { ID, Rating } from "@features/core/domain/types/common";
+import type { ID, Rating } from "@backend/features/core/domain/types/common";
 import type { Review } from "../../domain/entities/Review";
 import type { ProductReviewSummary } from "./IReviewRepository";
 

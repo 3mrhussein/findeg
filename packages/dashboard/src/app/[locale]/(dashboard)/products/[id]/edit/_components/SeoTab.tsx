@@ -15,7 +15,7 @@ import { Label } from "@ui";
 import { BilingualInput } from "@components/shared/BilingualInput";
 import { BilingualTextarea } from "@components/shared/BilingualTextarea";
 import { Search } from "lucide-react";
-import type { ProductFormValues } from "@features/administration/presentation/forms/product-form";
+import type { ProductFormValues } from "@dashboard/features/administration/presentation/forms/product-form";
 
 /**
  * SeoTab — SEO metadata and search optimization

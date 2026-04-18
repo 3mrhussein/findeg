@@ -7,8 +7,8 @@ import { Button } from "@ui";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@ui";
 import { Filter } from "lucide-react";
 import { EmptyState } from "./EmptyState";
-import { Product } from "@features/catalog/domain/entities/Product";
-import { FilterOption, CategoryFilterOption } from "@features/catalog/application/queries/listing";
+import { Product } from "@backend/features/catalog/domain/entities/Product";
+import { FilterOption, CategoryFilterOption } from "@backend/features/catalog/application/queries/listing";
 
 interface ProductListingLayoutProps {
   products: Product[];

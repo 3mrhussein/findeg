@@ -9,7 +9,7 @@ import { Badge } from "@ui";
 import { ScrollArea } from "@ui";
 import { Link } from "@i18n/navigation";
 import { cn } from "@lib/utils";
-import type { Notification } from "@features/core/infrastructure/persistence/schema/notifications";
+import { type Notification } from "@backend/features/core";
 import { getUnreadNotificationCountAction } from "@/app/[locale]/(storefront)/_actions/notifications";
 
 /**

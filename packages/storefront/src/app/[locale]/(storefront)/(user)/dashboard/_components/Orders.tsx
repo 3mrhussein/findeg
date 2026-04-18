@@ -2,7 +2,7 @@ import { usePagination } from "@hooks/usePagination";
 import { OrderTable } from "./OrderTable";
 import { Pagination } from "@ui";
 import { Card, CardContent } from "@ui";
-import type { Order } from "@features/order/domain/entities/Order";
+import type { Order } from "@backend/features/order/domain/entities/Order";
 
 interface OrdersProps {
   orders: Order[];

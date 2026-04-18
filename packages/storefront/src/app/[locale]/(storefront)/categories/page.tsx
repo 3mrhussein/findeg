@@ -2,7 +2,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { Locale } from "next-intl";
 import Image from "next/image";
 import { Link } from "@i18n/navigation";
-import { getCategoriesPageData } from "@/data/catalog/queries";
+import { getCategoriesPageData } from "@/data/categories/queries";
 import { PageShell } from "../_components/PageShell";
 
 /**

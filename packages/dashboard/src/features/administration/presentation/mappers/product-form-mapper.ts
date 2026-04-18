@@ -1,5 +1,5 @@
 import type { Product } from "@backend/features/catalog";
-import type { ProductFormValues } from "@features/administration/presentation/forms/product-form";
+import type { ProductFormValues } from "@dashboard/features/administration/presentation/forms/product-form";
 import { ProductEntity } from "@backend/features/catalog";
 
 /**

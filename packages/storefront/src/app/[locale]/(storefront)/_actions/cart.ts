@@ -23,13 +23,16 @@ export async function addToCartAction(
     variantId: number;
     uomCode: UomCode;
     quantity: number;
+    locale?: string;
   },
 ) {
   const { cart } = createCartServices();
   const { products } = createCatalogServices();
 
+  const locale = payload.locale === "ar" ? "ar" : "en";
+
   // Resolve product details for the CartItem
-  const product = await products.getById(payload.productId);
+  const product = await products.getById(payload.productId, locale);
   if (!product) throw new Error("Product not found");
 
   const variant = product.variants?.find((v: any) => v.id === payload.variantId);
@@ -44,16 +47,18 @@ export async function addToCartAction(
     variantId: payload.variantId,
     sku: variant.sku,
     productName: product.name,
-    variantLabel: variant.localizedLabel?.en || variant.variantKey,
+    variantLabel:
+      variant.localizedLabel?.[locale] || variant.localizedLabel?.en || variant.variantKey,
+    imageUrl: variant.images?.[0]?.url,
     quantity: payload.quantity,
     uomCode: payload.uomCode,
     uomFactor: 1, // Defaulting for now
-    unitPrice: priceEntry.unitPrice,
+    unitPrice: priceEntry.unitPrice as number,
     currency: "EGP",
   };
 
   const result = await cart.addItem(guestId, cartItem as any);
-  revalidateTag(`cart-${guestId}`, "default" as any);
+  revalidateTag(`cart-${guestId}`, "max"); // Next.js 16 revalidate works on the tag across profiles
   return result;
 }
 
@@ -63,7 +68,7 @@ export async function addToCartAction(
 export async function removeFromCartAction(guestId: string, variantId: number, uomCode: UomCode) {
   const { cart } = createCartServices();
   const result = await cart.removeItem(guestId, variantId, { uomCode });
-  revalidateTag(`cart-${guestId}`, "default" as any);
+  revalidateTag(`cart-${guestId}`, "max");
   return result;
 }
 
@@ -82,6 +87,6 @@ export async function updateQuantityAction(
   const result = await cart.updateItemQuantity(guestId, payload.variantId, payload.quantity, {
     uomCode: payload.uomCode,
   });
-  revalidateTag(`cart-${guestId}`, "default" as any);
+  revalidateTag(`cart-${guestId}`, "max");
   return result;
 }

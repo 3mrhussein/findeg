@@ -8,7 +8,7 @@ import { Input } from "@ui";
 import { Button } from "@ui";
 import { Card, CardContent, CardHeader, CardTitle } from "@ui";
 import { Plus, Trash2, Layers, GripVertical, ChevronDown, ChevronRight } from "lucide-react";
-import { type ProductFormValues } from "@features/administration/presentation/forms/product-form";
+import { type ProductFormValues } from "@dashboard/features/administration/presentation/forms/product-form";
 import { Badge } from "@ui";
 import { Switch } from "@ui";
 import { cn } from "@lib/utils";

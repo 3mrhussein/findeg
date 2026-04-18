@@ -1,5 +1,5 @@
 // NOTE: Domain types are NOT exported (removed from domain/index.ts) because many have @ imports
-// that break Turbopack bundling (e.g., TagInput imports from @features/catalog/domain/entities/Tag)
+// that break Turbopack bundling (e.g., TagInput imports from @backend/features/catalog/domain/entities/Tag)
 // Apps should define their own input types or use minimal interfaces
 export * from "./domain";
 export * from "./domain/types";

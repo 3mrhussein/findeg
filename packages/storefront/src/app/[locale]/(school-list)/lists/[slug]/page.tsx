@@ -4,7 +4,10 @@ import { getOptionalSession } from "@lib/auth-guard";
 import { SchoolAuthWall } from "@app/[locale]/(storefront)/school/_components/SchoolAuthWall";
 import { notFound } from "next/navigation";
 import { redirect } from "@i18n/navigation";
+import { setRequestLocale } from "next-intl/server";
+import type { Locale } from "next-intl";
 import { ListPageClient } from "./ListPageClient";
+import { Suspense } from "react";
 
 interface PageProps {
   params: Promise<{ locale: string; slug: string }>;
@@ -16,9 +19,27 @@ interface PageProps {
  *
  * Direct List URL (Customized Parent Experience).
  */
-export default async function DirectListPage({ params, searchParams }: PageProps) {
+export default function DirectListPage({ params, searchParams }: PageProps) {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen py-16 flex justify-center">
+          <div className="size-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+        </div>
+      }
+    >
+      <DirectListContent params={params} searchParams={searchParams} />
+    </Suspense>
+  );
+}
+
+/**
+ *
+ */
+async function DirectListContent({ params, searchParams }: PageProps) {
   const { locale, slug } = await params;
   const { token } = await searchParams;
+  setRequestLocale(locale as Locale);
   const session = await getOptionalSession();
 
   if (!session) {

@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@ui";
 import { Button } from "@ui";
 import { Input } from "@ui";
 import { Label } from "@ui";
-import { getMyAccountData } from "@features/identity/application/queries/my-account";
+import { getMyAccountData } from "@backend/features/identity/application/queries/my-account";
 
 type Props = {
   params: Promise<{ locale: Locale }>;

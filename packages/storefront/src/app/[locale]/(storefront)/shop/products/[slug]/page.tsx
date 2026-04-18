@@ -4,11 +4,11 @@ import { setRequestLocale } from "next-intl/server";
 import { notFound, permanentRedirect } from "next/navigation";
 import { Link } from "@i18n/navigation";
 import {
-  getProductPdpViewModel,
+  getProductPdp,
   getProductBySlugOrIdForMetadata,
   getTopProductSlugsForStaticParams,
-} from "@backend/features/catalog";
-import { getProductEnglishSlug } from "@backend/features/catalog/domain/utils/slug";
+  getProductEnglishSlug,
+} from "@data/catalog/queries";
 import { PageShell } from "../../../_components/PageShell";
 import { ProductDetailClient } from "./_components/ProductDetailClient";
 
@@ -21,7 +21,7 @@ interface ProductDetailPageProps {
  */
 export async function generateStaticParams() {
   const slugs = await getTopProductSlugsForStaticParams(120);
-  return slugs.map((slug) => ({ slug }));
+  return slugs.map((slug: string) => ({ slug }));
 }
 
 /**
@@ -66,7 +66,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
   setRequestLocale(locale as Locale);
 
   const session = await getSession();
-  const vm = await getProductPdpViewModel(locale, slug, session);
+  const vm = await getProductPdp(locale, slug, session);
   if (!vm) {
     notFound();
   }

@@ -144,8 +144,8 @@ describe("Module Resolution - Infrastructure Blocking (CHK019-CHK021)", () => {
   describe("Positive Cases - Allowed Imports", () => {
     it("should allow importing from feature barrel exports", async () => {
       // These should succeed - importing from allowed paths
-      await expect(import("@features/core")).resolves.toBeDefined();
-      await expect(import("@features/identity")).resolves.toBeDefined();
+      await expect(import("@backend/features/core")).resolves.toBeDefined();
+      await expect(import("@backend/features/identity")).resolves.toBeDefined();
     }, 10000); // 10 second timeout for dynamic imports
 
     it("should allow importing domain types", async () => {
@@ -164,9 +164,9 @@ describe("Module Resolution - Infrastructure Blocking (CHK019-CHK021)", () => {
       // by apps. This test documents the expected behavior.
       
       const infrastructurePaths = [
-        "@features/catalog/infrastructure/DrizzleProductRepository",
-        "@features/core/infrastructure/persistence/database.config",
-        "@features/identity/infrastructure/DrizzleuserRepository",
+        "@backend/features/catalog/infrastructure/DrizzleProductRepository",
+        "@backend/features/core/infrastructure/persistence/database.config",
+        "@backend/features/identity/infrastructure/DrizzleuserRepository",
       ];
 
       // In production (apps importing @backend), these would fail at package boundary

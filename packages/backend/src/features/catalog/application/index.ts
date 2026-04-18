@@ -1,4 +1,3 @@
-import "server-only";
 export * from "./interfaces";
 export * from "./services";
 

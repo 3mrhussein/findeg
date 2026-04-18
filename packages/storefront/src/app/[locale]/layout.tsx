@@ -78,15 +78,13 @@ export const viewport: Viewport = {
  * @param {React.ReactNode} children - The content to render within the layout.
  */
 
-/**
- *
- */
+/** Returns pre-defined locale params for static generation. */
 export async function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
 /**
- *
+ * Root layout providing HTML structure, i18n, fonts, and global providers.
  */
 export default async function RootLayout({
   children,
@@ -109,7 +107,9 @@ export default async function RootLayout({
     <NextIntlClientProvider locale={typedLocale} messages={messages}>
       <BoundaryProvider>
         <Providers>
-          <div className="min-h-screen bg-background text-foreground flex flex-col">{children}</div>
+          <div className="min-h-screen bg-background text-foreground flex flex-col">
+            <Suspense fallback={null}>{children}</Suspense>
+          </div>
           <BoundaryToggle />
           <WebMCPInitializer />
         </Providers>

@@ -11,7 +11,7 @@ import { Switch } from "@ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ui";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@ui";
 import { Plus, Trash2, DollarSign, Ruler } from "lucide-react";
-import { type ProductFormValues } from "@features/administration/presentation/forms/product-form";
+import { type ProductFormValues } from "@dashboard/features/administration/presentation/forms/product-form";
 
 /**
  * Pricing & Units of Measure Tab

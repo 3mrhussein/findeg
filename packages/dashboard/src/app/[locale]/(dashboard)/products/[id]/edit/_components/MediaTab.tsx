@@ -12,7 +12,7 @@ import { useFormContext } from "react-hook-form";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@ui";
 import { MediaUpload } from "@/app/[locale]/_components/shared/MediaUpload";
 import { Image as ImageIcon } from "lucide-react";
-import type { ProductFormValues } from "@features/administration/presentation/forms/product-form";
+import type { ProductFormValues } from "@dashboard/features/administration/presentation/forms/product-form";
 
 /**
  * MediaTab — Product images and gallery

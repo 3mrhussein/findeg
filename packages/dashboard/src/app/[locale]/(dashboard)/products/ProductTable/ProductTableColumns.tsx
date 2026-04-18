@@ -19,7 +19,7 @@ import Image from "next/image";
 import { Checkbox } from "@ui";
 import { Copy, Archive } from "lucide-react";
 import { VariantEntity } from "@backend/features/catalog";
-import { getCanonicalProductHref } from "@features/catalog/presentation/utils/product-url";
+import { getCanonicalProductHref } from "@dashboard/features/catalog/presentation/utils/product-url";
 
 /**
  * Column definitions for the ProductTable.

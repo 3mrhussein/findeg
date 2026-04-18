@@ -15,7 +15,7 @@ import { useRouter } from "@i18n/navigation";
 import { useTranslations, useLocale } from "next-intl";
 import { Logo } from "@ui";
 import { Icon } from "@ui";
-import { PERMISSION_CODES } from "@features/core/domain/auth";
+import { PERMISSION_CODES } from "@backend/features/core/domain/auth";
 import { usePermissions } from "@providers/PermissionsProvider";
 import {
   Sidebar,

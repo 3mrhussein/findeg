@@ -8,7 +8,7 @@ import { Input } from "@ui";
 import { Button } from "@ui";
 import { Card, CardContent, CardHeader, CardTitle } from "@ui";
 import { Link as LinkIcon, Star, Trash2, ImageIcon } from "lucide-react";
-import { type ProductFormValues } from "@features/administration/presentation/forms/product-form";
+import { type ProductFormValues } from "@dashboard/features/administration/presentation/forms/product-form";
 
 /**
  * Media Management Tab — URL-based only (file upload deferred to Phase 2)

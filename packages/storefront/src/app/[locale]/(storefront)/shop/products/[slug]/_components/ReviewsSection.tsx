@@ -8,8 +8,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@ui";
 import { Textarea } from "@ui";
 import { Badge } from "@ui";
 import { IconTooltip } from "@ui";
-import type { ProductReviewSummary } from "@features/review/application/interfaces/IReviewRepository";
-import type { Review } from "@features/review/domain/entities/Review";
+import type { ProductReviewSummary } from "@backend/features/review/application/interfaces/IReviewRepository";
+import type { Review } from "@backend/features/review/domain/entities/Review";
 import { cn } from "@lib/utils";
 
 type ReviewFilter = "all" | "5" | "4" | "verified";

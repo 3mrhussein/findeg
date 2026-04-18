@@ -1,9 +1,6 @@
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
-import {
-  getProductDetailPageData,
-  getProductIdsForStaticParams,
-} from "@/data/catalog/queries";
+import { getProductDetailPageData, getProductIdsForStaticParams } from "@/data/catalog/queries";
 
 import { setRequestLocale } from "next-intl/server";
 import type { Locale } from "next-intl";
@@ -91,7 +88,9 @@ async function ProductPageContent({ locale, productId }: ProductContentProps) {
           {/* Gallery Column */}
           <div className="sticky top-24">
             <div className="rounded-3xl bg-white dark:bg-surface-dark border border-slate-100 dark:border-slate-800 p-4 lg:p-8 shadow-sm">
-              <ProductGallery images={product.variants?.[0]?.images?.map((img) => img.url) ?? []} />
+              <ProductGallery
+                images={product.variants?.[0]?.images?.map((img: any) => img.url) ?? []}
+              />
             </div>
           </div>
 

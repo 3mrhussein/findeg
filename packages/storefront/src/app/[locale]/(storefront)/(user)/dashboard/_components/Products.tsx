@@ -4,7 +4,7 @@ import { Pagination } from "@ui";
 import { Button } from "@ui";
 import { Plus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@ui";
-import type { Product } from "@features/catalog/domain/entities/Product";
+import type { Product } from "@backend/features/catalog/domain/entities/Product";
 // TODO: Replace with storefront-specific product display component
 // import { ProductTable } from "@app/[locale]/admin/(dashboard)/_components/ProductTable";
 

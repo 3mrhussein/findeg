@@ -1,4 +1,4 @@
-import { getLocale, getMessages } from "next-intl/server";
+import { routing } from "@i18n/routing";
 import { Inter, Cairo } from "next/font/google";
 import { cn } from "@lib/utils";
 import "./globals.css";
@@ -15,8 +15,10 @@ const cairo = Cairo({
   variable: "--font-cairo",
 });
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const locale = await getLocale();
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  // We use the default locale as a fallback for the HTML shell.
+  // The actual localized layout applies correct text direction and font classes internally.
+  const locale = routing.defaultLocale;
   const direction = locale === "ar" ? "rtl" : "ltr";
 
   return (

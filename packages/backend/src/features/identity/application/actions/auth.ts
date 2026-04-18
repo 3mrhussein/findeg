@@ -1,28 +1,27 @@
+"use server";
+
 /**
  * Pure TypeScript Authentication Actions
  *
  * These actions contain business logic only - no framework-specific calls.
- * App-layer (dashboard) handles redirect(), revalidatePath() after successful login/logout.
- *
- * This enables:
- * - Pure TypeScript execution in Vitest (no Next.js runtime needed)
- * - Framework portability
- * - Clear separation of concerns (backend = logic, app = framework integration)
+ * They accept the necessary services as arguments to avoid infrastructure leakage.
  */
 
-import { container } from "@features/core/infrastructure/di/ServiceContainer";
-import { NotAuthenticatedError, ValidationError } from "@features/core/domain/errors";
-import type { ServiceResult } from "@features/core/application/types";
-import { isAdminSession, createUserVO } from "@features/core/domain/auth";
-import type { SessionPayload } from "@features/core/domain/auth";
+import { NotAuthenticatedError, ValidationError } from "@backend/features/core/domain/errors";
+import type { ServiceResult } from "@backend/features/core/application/types";
+import { isAdminSession, createUserVO } from "@backend/features/core/domain/auth";
+import type { SessionPayload } from "@backend/features/core/domain/auth";
+import type { IAuthService } from "../interfaces/IAuthService";
 
 /**
  * Pure login service - no framework calls.
  *
- * Returns login result with data or throws validation error.
- * App-layer handles redirect() based on isAdmin flag and error type.
+ * @param authService - Injected authentication service
+ * @param email - User email
+ * @param password - User password
  */
 export async function login(
+  authService: IAuthService,
   email: string,
   password: string,
 ): Promise<
@@ -40,7 +39,6 @@ export async function login(
     throw new ValidationError("password", "Password is required");
   }
 
-  const authService = container.authService;
   const result = await authService.login(email, password);
 
   if (!result.success) {
@@ -80,11 +78,6 @@ export async function login(
 
 /**
  * Pure logout service - no framework calls.
- *
- * Logout is purely an app-layer concern (removing cookies, clearing state).
- * Backend just returns success; app-layer handles the actual session deletion.
- *
- * App-layer handles redirect() after logout.
  */
 export async function logout(): Promise<ServiceResult<void>> {
   return {

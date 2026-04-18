@@ -217,9 +217,14 @@ export function CollectionForm({ collection, availableTags }: CollectionFormProp
                       <FormControl>
                         <div className="flex gap-2">
                           <Input {...field} value={field.value || ""} placeholder="https://..." />
-                          <div className="h-10 w-10 shrink-0 border rounded overflow-hidden bg-muted flex items-center justify-center">
+                          <div className="relative h-10 w-10 shrink-0 border rounded overflow-hidden bg-muted flex items-center justify-center">
                             {field.value ? (
-                              <Image src={field.value} className="object-cover h-full w-full" />
+                              <Image
+                                src={field.value}
+                                alt={form.getValues("localizedTitle.en") || "Collection image"}
+                                className="object-cover"
+                                fill
+                              />
                             ) : (
                               <ImageIcon className="h-4 w-4 text-muted-foreground" />
                             )}

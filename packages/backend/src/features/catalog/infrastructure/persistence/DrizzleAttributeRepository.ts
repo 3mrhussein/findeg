@@ -1,8 +1,8 @@
-import { db } from "@features/core/infrastructure/persistence";
+import { db } from "@backend/features/core/infrastructure/persistence";
 import {
   attributeDefinitions,
   productAttributes,
-} from "@features/core/infrastructure/persistence/schema";
+} from "@backend/features/core/infrastructure/persistence/schema";
 import {
   IAttributeRepository,
   AttributeFilter,
@@ -13,7 +13,7 @@ import {
   ProductAttributeValue,
 } from "../../domain/entities/AttributeDefinition";
 import { eq, and, sql, inArray, lt, lte, gt, gte } from "drizzle-orm";
-import { ID } from "@features/core/domain/types/common";
+import { ID } from "@backend/features/core/domain/types/common";
 
 export class DrizzleAttributeRepository implements IAttributeRepository {
   async getAllDefinitions(): Promise<AttributeDefinition[]> {

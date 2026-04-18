@@ -2,8 +2,8 @@ import {
   OrderStatusSchema,
   PaymentStatus,
   PaymentStatusSchema,
+  OrderStatus,
 } from "@backend/features/core/domain/types/common";
-import { OrderStatus } from "@backend/features/core/infrastructure/persistence";
 import type { Order } from "@backend/features/order";
 import { createAdministrationServices } from "@backend/features/administration";
 
@@ -29,9 +29,7 @@ export interface AdminOrdersPageData {
 const DEFAULT_LIMIT = 20;
 const MAX_LIMIT = 100;
 
-/**
- *
- */
+/** Parses a string to a positive integer, returning `fallback` on failure. */
 function parsePositiveInt(value: string | undefined, fallback: number): number {
   const parsed = Number(value);
   if (!Number.isFinite(parsed) || parsed <= 0) return fallback;

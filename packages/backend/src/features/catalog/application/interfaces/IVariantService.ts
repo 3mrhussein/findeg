@@ -4,8 +4,8 @@
  * Read operations for variant-level pricing and sell options.
  */
 
-import type { CustomerGroup, UomCode } from "@features/core/domain/types/common";
-import type { CurrencyCode } from "@features/core/domain/value-objects";
+import type { CustomerGroup, UomCode } from "@backend/features/core/domain/types/common";
+import type { CurrencyCode } from "@backend/features/core/domain/value-objects";
 import type { SellOption } from "./IVariantRepository";
 
 export interface IVariantService {

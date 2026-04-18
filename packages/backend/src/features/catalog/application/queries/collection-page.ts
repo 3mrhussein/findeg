@@ -1,7 +1,7 @@
 import { createCatalogServices } from "../services/factory";
-import { resolveLocale } from "@features/core/domain/value-objects";
-import { Product } from "@features/catalog/domain/entities/Product";
-import { Collection } from "@features/catalog/domain/entities/Collection";
+import { resolveLocale } from "@backend/features/core/domain/value-objects";
+import { Product } from "@backend/features/catalog/domain/entities/Product";
+import { Collection } from "@backend/features/catalog/domain/entities/Collection";
 import {
   applyListingFilters,
   buildBrandOptions,

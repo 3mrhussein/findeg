@@ -7,8 +7,8 @@ import { DeviceUsageChart } from "./DeviceUsageChart";
 import { Icon } from "@ui";
 import { OrderTable } from "./OrderTable";
 import { Card, CardContent, CardHeader, CardTitle } from "@ui";
-import type { Product } from "@features/catalog/domain/entities/Product";
-import type { Order } from "@features/order/domain/entities/Order";
+import type { Product } from "@backend/features/catalog/domain/entities/Product";
+import type { Order } from "@backend/features/order/domain/entities/Order";
 
 interface OverviewProps {
   products: Product[];

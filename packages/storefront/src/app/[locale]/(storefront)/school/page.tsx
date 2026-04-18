@@ -1,6 +1,7 @@
 import { Container } from "@ui";
 import { FadeIn } from "@providers/animation-provider";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Suspense } from "react";
 import type { Locale } from "next-intl";
 import { SchoolListLookupForm } from "./_components/SchoolListLookupForm";
 import { getSchoolListData } from "@/data/school/queries";
@@ -13,14 +14,28 @@ interface SchoolPageProps {
   searchParams: Promise<{ code?: string }>;
 }
 
-/**
- *
- */
-export default async function SchoolPage({ params, searchParams }: SchoolPageProps) {
+/** Wraps the async inner page in a Suspense boundary for PPR compliance. */
+export default function SchoolPage(props: SchoolPageProps) {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen py-16 flex justify-center">
+          <div className="size-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+        </div>
+      }
+    >
+      <SchoolPageInner {...props} />
+    </Suspense>
+  );
+}
+
+/** Async inner page that reads params/searchParams. */
+async function SchoolPageInner({ params, searchParams }: SchoolPageProps) {
   const { locale } = await params;
   const { code = "" } = await searchParams;
-  const t = await getTranslations({ locale: locale as Locale });
-  const viewModel = await getSchoolListData(locale, code);
+  const resLocale = locale as Locale;
+  setRequestLocale(resLocale);
+  const t = await getTranslations({ locale: resLocale });
 
   return (
     <div className="bg-background py-12 md:py-20">
@@ -42,28 +57,42 @@ export default async function SchoolPage({ params, searchParams }: SchoolPagePro
             </CardContent>
           </Card>
 
-          {code && viewModel.productIds.length === 0 ? (
-            <SectionStateEmpty
-              title={t("Pages.SchoolLists.InvalidCodeTitle")}
-              description={t("Pages.SchoolLists.InvalidCodeDescription")}
-            />
-          ) : null}
-
-          {code && viewModel.productIds.length > 0 && viewModel.products.length === 0 ? (
-            <SectionStateEmpty
-              title={t("Pages.SchoolLists.NoResultsTitle")}
-              description={t("Pages.SchoolLists.NoResultsDescription")}
-            />
-          ) : null}
-
-          {viewModel.products.length > 0 ? (
-            <SchoolListResults
-              products={viewModel.products}
-              totalEstimatedCost={viewModel.totalEstimatedCost}
-            />
-          ) : null}
+          <SchoolListContent locale={locale} code={code} />
         </div>
       </Container>
     </div>
+  );
+}
+
+/**
+ * Data-fetching component that handles the cached data access.
+ */
+async function SchoolListContent({ locale, code }: { locale: string; code: string }) {
+  const t = await getTranslations({ locale: locale as Locale });
+  const viewModel = await getSchoolListData(locale, code);
+
+  return (
+    <>
+      {code && viewModel.productIds.length === 0 ? (
+        <SectionStateEmpty
+          title={t("Pages.SchoolLists.InvalidCodeTitle")}
+          description={t("Pages.SchoolLists.InvalidCodeDescription")}
+        />
+      ) : null}
+
+      {code && viewModel.productIds.length > 0 && viewModel.products.length === 0 ? (
+        <SectionStateEmpty
+          title={t("Pages.SchoolLists.NoResultsTitle")}
+          description={t("Pages.SchoolLists.NoResultsDescription")}
+        />
+      ) : null}
+
+      {viewModel.products.length > 0 ? (
+        <SchoolListResults
+          products={viewModel.products}
+          totalEstimatedCost={viewModel.totalEstimatedCost}
+        />
+      ) : null}
+    </>
   );
 }

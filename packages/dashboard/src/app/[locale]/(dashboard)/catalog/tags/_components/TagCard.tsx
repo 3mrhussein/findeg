@@ -5,7 +5,7 @@ import { Tag } from "@backend/features/catalog";
 import { Card, CardContent } from "@ui";
 import { Button } from "@ui";
 import { Edit, Trash2, Eye, EyeOff } from "lucide-react";
-import { getTagDisplayName } from "@features/catalog/presentation/config/tag-display";
+import { getTagDisplayName } from "@dashboard/features/catalog/presentation/config/tag-display";
 import { cn } from "@lib/utils";
 import * as Icons from "lucide-react";
 import type { LucideIcon } from "lucide-react";

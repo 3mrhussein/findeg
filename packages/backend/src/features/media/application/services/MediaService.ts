@@ -1,5 +1,5 @@
-import type { IStorageProvider } from "@features/core/application/interfaces/IStorageProvider";
-import type { MediaAsset } from "@features/media/domain/entities/MediaAsset";
+import type { IStorageProvider } from "@backend/features/core/application/interfaces/IStorageProvider";
+import type { MediaAsset } from "@backend/features/media/domain/entities/MediaAsset";
 
 export const MANAGED_MEDIA_FOLDERS = ["", "products", "brands"] as const;
 

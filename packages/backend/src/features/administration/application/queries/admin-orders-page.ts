@@ -1,11 +1,11 @@
-import { getServices } from "@server/getServices";
+import { createAdministrationServices } from "../services/factory";
 import {
   OrderStatusSchema,
   PaymentStatusSchema,
   type OrderStatus,
   type PaymentStatus,
-} from "@features/core/domain/types/common";
-import type { Order } from "@features/order/domain/entities/Order";
+} from "@backend/features/core/domain/types/common";
+import type { Order } from "@backend/features/order/domain/entities/Order";
 
 export interface AdminOrdersPageQueryParams {
   search?: string;
@@ -58,7 +58,7 @@ export async function getAdminOrdersPageData(
       ? (rawPaymentStatus as PaymentStatus)
       : undefined;
 
-  const { adminOrder } = getServices();
+  const { orders: adminOrder } = createAdministrationServices();
   const { orders, total } = await adminOrder.getAll({
     search: search || undefined,
     status,

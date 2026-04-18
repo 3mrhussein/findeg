@@ -12,7 +12,7 @@ import {
 } from "@ui";
 import { CircleUser, Search } from "lucide-react";
 import { Input } from "@ui";
-import { logout } from "@features/identity/application/actions/auth";
+import { logoutAction } from "../../_actions/auth";
 
 /**
  * Topbar for the user dashboard.
@@ -52,7 +52,7 @@ export function Topbar() {
           <DropdownMenuItem>Settings</DropdownMenuItem>
           <DropdownMenuItem>Support</DropdownMenuItem>
           <DropdownMenuSeparator />
-          <form action={logout as any}>
+          <form action={logoutAction as any}>
             <button type="submit" className="w-full text-left">
               <DropdownMenuItem asChild>
                 <span>Logout</span>

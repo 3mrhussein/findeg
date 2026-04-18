@@ -1,4 +1,4 @@
-import { ID } from "@features/core/domain/types/common";
+import { ID } from "@backend/features/core/domain/types/common";
 import {
   SchoolListAccessGrant,
   NewSchoolListAccessGrant,
@@ -6,7 +6,7 @@ import {
   NewSchoolListAccessRequest,
   SchoolListAccessToken,
   SchoolListCodeAttempt,
-} from "@features/core/infrastructure/persistence/schema/school-access";
+} from "@backend/features/core/infrastructure/persistence/schema/school-access";
 
 export interface ISchoolAccessRepository {
   // Grants

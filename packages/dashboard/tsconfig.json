@@ -3,36 +3,69 @@
   "compilerOptions": {
     "noEmit": true,
     "paths": {
-      "@/*": ["./src/*"],
-      "@components/*": ["./src/components/*"],
-      "@hooks/*": ["./src/hooks/*"],
-      "@i18n/*": ["./src/i18n/*"],
-      "@lib/*": ["./src/lib/*"],
-      "@providers/*": ["./src/providers/*"],
-      "@server/*": ["./src/server/*"],
+      "@/*": [
+        "./src/*"
+      ],
+      "@components/*": [
+        "./src/components/*"
+      ],
+      "@hooks/*": [
+        "./src/hooks/*"
+      ],
+      "@i18n/*": [
+        "./src/i18n/*"
+      ],
+      "@lib/*": [
+        "./src/lib/*"
+      ],
+      "@providers/*": [
+        "./src/providers/*"
+      ],
+      "@server/*": [
+        "./src/server/*"
+      ],
       "@/features/*": [
-        "./src/features/*",
-        "../backend/src/features/*"
+        "./src/features/*"
       ],
-      "@data/*": ["./src/data/*"],
-      "@actions/*": ["./src/actions/*"],
-      "@types/*": ["./src/types/*"],
-      "@queries/*": ["./src/queries/*"],
-      "@features/*": [
-        "./src/features/*",
-        "../backend/src/features/*"
+      "@data/*": [
+        "./src/data/*"
       ],
-
-      "@app/*": ["./src/app/*"],
-      "@backend": ["../backend/src"],
-      "@backend/*": ["../backend/src/*"],
-      "@ui": ["../ui/src"],
-      "@ui/*": ["../ui/src/*"]
+      "@actions/*": [
+        "./src/actions/*"
+      ],
+      "@types/*": [
+        "./src/types/*"
+      ],
+      "@queries/*": [
+        "./src/queries/*"
+      ],
+      "@dashboard/features/*": [
+        "./src/features/*"
+      ],
+      "@app/*": [
+        "./src/app/*"
+      ],
+      "@backend": [
+        "../backend/src"
+      ],
+      "@backend/*": [
+        "../backend/src/*"
+      ],
+      "@ui": [
+        "../ui/src"
+      ],
+      "@ui/*": [
+        "../ui/src/*"
+      ]
     }
   },
   "references": [
-    { "path": "../backend" },
-    { "path": "../ui" }
+    {
+      "path": "../backend"
+    },
+    {
+      "path": "../ui"
+    }
   ],
   "include": [
     "next-env.d.ts",
@@ -43,5 +76,10 @@
     "src/**/*.js",
     "src/**/*.jsx"
   ],
-  "exclude": ["node_modules", ".next", "dist", "cypress"]
+  "exclude": [
+    "node_modules",
+    ".next",
+    "dist",
+    "cypress"
+  ]
 }

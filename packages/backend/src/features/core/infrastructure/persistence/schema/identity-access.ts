@@ -17,7 +17,7 @@ import type {
   PaymentProvider,
   PermissionCode,
   RoleScope,
-} from "@features/core/domain/value-objects";
+} from "@backend/features/core/domain/value-objects";
 
 /**
  * Linked authentication identities per user.

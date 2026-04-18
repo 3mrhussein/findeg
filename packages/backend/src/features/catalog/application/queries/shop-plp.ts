@@ -1,10 +1,10 @@
 import { createCatalogServices } from "../services/factory";
-import { resolveLocale, type Locale } from "@features/core/domain/value-objects";
-import type { Product } from "@features/catalog/domain/entities/Product";
-import type { Category } from "@features/catalog/domain/entities/Category";
-import { ProductEntity } from "@features/catalog/domain/entities/Product";
-import { VariantEntity, type Variant } from "@features/catalog/domain/entities/Variant";
-import type { SearchParams } from "@features/catalog/application/interfaces/ISearchService";
+import { resolveLocale, type Locale } from "@backend/features/core/domain/value-objects";
+import type { Product } from "@backend/features/catalog/domain/entities/Product";
+import type { Category } from "@backend/features/catalog/domain/entities/Category";
+import { ProductEntity } from "@backend/features/catalog/domain/entities/Product";
+import { VariantEntity, type Variant } from "@backend/features/catalog/domain/entities/Variant";
+import type { SearchParams } from "@backend/features/catalog/application/interfaces/ISearchService";
 
 const PER_PAGE_VALUES = [24, 48, 96] as const;
 const SORT_VALUES = ["popular", "newest", "price-low-high", "price-high-low", "rating"] as const;

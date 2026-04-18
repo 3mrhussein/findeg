@@ -3,7 +3,7 @@
 import { ShoppingCart } from "lucide-react";
 import { Button } from "@ui";
 import { useCart } from "@hooks/useCart";
-import { Product } from "@features/catalog/domain/entities/Product";
+import { Product } from "@backend/features/catalog/domain/entities/Product";
 import { useTranslations } from "next-intl";
 
 interface AddToCartButtonProps {

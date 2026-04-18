@@ -1,17 +1,17 @@
-import type { Locale } from "@features/core/domain/value-objects";
-import type { Product } from "@features/catalog/domain/entities/Product";
-import type { Category } from "@features/catalog/domain/entities/Category";
-import type { Variant } from "@features/catalog/domain/entities/Variant";
-import type { ProductReviewSummary } from "@features/review/application/interfaces/IReviewRepository";
-import type { Review } from "@features/review/domain/entities/Review";
-import type { CustomerGroup } from "@features/core/domain/types/common";
-import { VariantEntity } from "@features/catalog/domain/entities/Variant";
-import { resolveLocale } from "@features/core/domain/value-objects";
-import { getProductEnglishSlug } from "@features/catalog/domain/utils/slug";
+import type { Locale } from "@backend/features/core/domain/value-objects";
+import type { Product } from "@backend/features/catalog/domain/entities/Product";
+import type { Category } from "@backend/features/catalog/domain/entities/Category";
+import type { Variant } from "@backend/features/catalog/domain/entities/Variant";
+import type { ProductReviewSummary } from "@backend/features/review/application/interfaces/IReviewRepository";
+import type { Review } from "@backend/features/review/domain/entities/Review";
+import type { CustomerGroup } from "@backend/features/core/domain/types/common";
+import { VariantEntity } from "@backend/features/catalog/domain/entities/Variant";
+import { resolveLocale } from "@backend/features/core/domain/value-objects";
+import { getProductEnglishSlug } from "@backend/features/catalog/domain/utils/slug";
 import { createCatalogServices } from "../services/factory";
-import { createReviewServices } from "@features/review";
-import { createIdentityServices } from "@features/identity";
-import type { SessionPayload } from "@features/core/domain/auth";
+import { createReviewServices } from "@backend/features/review";
+import { createIdentityServices } from "@backend/features/identity";
+import type { SessionPayload } from "@backend/features/core/domain/auth";
 
 export interface ProductBreadcrumbItem {
   label: string;

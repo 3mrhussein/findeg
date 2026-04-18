@@ -26,7 +26,7 @@ export {
   type IJWTService,
 } from "./application/services/JWTService";
 export * from "./application/services/PermissionService";
-// Service factory - exporting for apps to use (may require fixing @features/* imports in dependencies)
+// Service factory - exporting for apps to use (may require fixing @backend/features/* imports in dependencies)
 export { createIdentityServices } from "./application/services/factory";
 // NOTE: auth-helpers.ts contains next/headers import and is app-layer concern, not exported from backend
 

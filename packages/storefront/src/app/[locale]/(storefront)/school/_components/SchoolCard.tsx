@@ -6,7 +6,7 @@ import { Card, CardContent, CardFooter } from "@ui";
 import { Badge } from "@ui";
 import { Button } from "@ui";
 import { Link } from "@i18n/navigation";
-import { SchoolSearchResult } from "@features/school/application/interfaces/ISchoolDirectoryService";
+import { SchoolSearchResult } from "@backend/features/school/application/interfaces/ISchoolDirectoryService";
 
 interface SchoolCardProps {
   school: SchoolSearchResult;

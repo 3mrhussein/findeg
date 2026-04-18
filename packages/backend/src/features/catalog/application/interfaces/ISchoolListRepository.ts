@@ -5,9 +5,9 @@
  * including the attribute-based variant matching engine.
  */
 
-import { type ID } from "@features/core/domain/types/common";
+import { type ID } from "@backend/features/core/domain/types/common";
 import type { Variant } from "../../domain/entities/Variant";
-import type { MatchRulesDraft } from "@features/core/infrastructure/persistence/schema/school-lists";
+import type { MatchRulesDraft } from "@backend/features/core/infrastructure/persistence/schema/school-lists";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 

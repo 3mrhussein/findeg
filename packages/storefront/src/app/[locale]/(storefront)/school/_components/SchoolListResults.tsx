@@ -1,7 +1,7 @@
 "use client";
 
 import { useCart } from "@hooks/useCart";
-import type { Product } from "@features/catalog/domain/entities/Product";
+import type { Product } from "@backend/features/catalog/domain/entities/Product";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@ui";
 import { Button } from "@ui";

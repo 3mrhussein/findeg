@@ -25,7 +25,7 @@ import type {
   ShopPlpFilters,
   ShopPlpSort,
   ShopPlpViewModel,
-} from "@features/catalog/application/queries/shop-plp";
+} from "@backend/features/catalog/application/queries/shop-plp";
 import { cn } from "@lib/utils";
 
 interface ShopPlpClientProps {

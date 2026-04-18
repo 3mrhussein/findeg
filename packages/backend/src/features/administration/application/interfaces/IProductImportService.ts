@@ -1,5 +1,5 @@
-import { type ID } from "@features/core/domain/types/common";
-import { type ProductInput } from "@features/administration/domain/types/ProductInput";
+import { type ID } from "@backend/features/core/domain/types/common";
+import { type ProductInput } from "@backend/features/administration/domain/types/ProductInput";
 
 export interface ImportResult {
   validCount: number;

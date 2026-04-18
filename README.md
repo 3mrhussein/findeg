@@ -80,6 +80,19 @@ This project is structured as a **Turborepo monorepo** with three main folders:
 | `pnpm lint`                     | Run ESLint and i18n checks                  |
 | `pnpm --filter <package> <cmd>` | Run command in specific package             |
 
+### 🛡️ Architectural Boundary Validation
+
+We enforce Clean Architecture by completely decoupling apps from the backend infrastructure. To validate that no boundaries are breached:
+
+```bash
+# Validate backend exports (Infrastructure should never act as a module entry point)
+pnpm --filter @backend test src/__tests__/architectural-boundaries.test.ts
+
+# Ensure apps successfully build without bundling Node.js modules
+pnpm --filter @dashboard build
+pnpm --filter @storefront build
+```
+
 **Examples:**
 
 ```bash

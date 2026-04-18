@@ -24,7 +24,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@ui";
-import { getTagDisplayName } from "@features/catalog/presentation/config/tag-display";
+import { getTagDisplayName } from "@dashboard/features/catalog/presentation/config/tag-display";
 
 interface TagsClientProps {
   initialTags: Record<string, Tag[]>;

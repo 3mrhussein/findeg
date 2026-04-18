@@ -1,8 +1,8 @@
-import { createIdentityServices } from "@features/identity";
+import { createIdentityServices } from "@backend/features/identity";
 import { createOrderServices } from "../services/factory";
-import type { SessionPayload } from "@features/core/domain/auth";
-import { User, getUserFullName } from "@features/identity/domain/entities/User";
-import type { Order } from "@features/order/domain/entities/Order";
+import type { SessionPayload } from "@backend/features/core/domain/auth";
+import { User, getUserFullName } from "@backend/features/identity/domain/entities/User";
+import type { Order } from "@backend/features/order/domain/entities/Order";
 
 export interface CheckoutPrefillData {
   fullName: string;

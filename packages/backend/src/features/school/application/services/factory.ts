@@ -1,7 +1,7 @@
 /**
  * School Services Factory
  */
-import { container } from "@features/core/infrastructure/di/ServiceContainer";
+import { container } from "@backend/features/core/infrastructure/di/ServiceContainer";
 import type { ISchoolDirectoryService } from "../interfaces/ISchoolDirectoryService";
 import type { ISchoolAccessService } from "../interfaces/ISchoolAccessService";
 import type { IParentListService } from "../interfaces/IParentListService";

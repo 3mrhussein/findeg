@@ -40,7 +40,7 @@ import {
   checkSkuAction,
   checkSlugAction,
   checkSkuPrefixAction,
-} from "@features/administration/application/actions/admin-product-actions";
+} from "@dashboard/features/administration/application/actions/admin-product-actions";
 
 import {
   adminCreateTagAction,
@@ -51,19 +51,19 @@ import {
   adminToggleTagStatusAction,
   adminGetTagProductCountAction,
   adminGetDistinctTagGroupsAction,
-} from "@features/administration/application/actions/admin-tag-actions";
+} from "@dashboard/features/administration/application/actions/admin-tag-actions";
 
 import {
   adminCreateCollectionAction,
   adminUpdateCollectionAction,
   adminDeleteCollectionAction,
   adminReorderCollectionsAction,
-} from "@features/administration/application/actions/admin-collection-actions";
+} from "@dashboard/features/administration/application/actions/admin-collection-actions";
 
 import {
   updateStockAction as adminUpdateStockAction,
   bulkUpdateStockAction as adminBulkUpdateStockAction,
-} from "@features/administration/application/actions/inventory";
+} from "@dashboard/features/administration/application/actions/inventory";
 
 import {
   moveCategoryUpAction,

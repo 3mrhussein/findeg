@@ -1,6 +1,6 @@
-import { ID, Slug } from "@features/core/domain/types/common";
-import type { Brand } from "@features/catalog/domain/entities/Brand";
-import type { Locale } from "@features/core/domain/value-objects";
+import { ID, Slug } from "@backend/features/core/domain/types/common";
+import type { Brand } from "@backend/features/catalog/domain/entities/Brand";
+import type { Locale } from "@backend/features/core/domain/value-objects";
 
 /** Input for creating a brand */
 export interface BrandCreateInput {

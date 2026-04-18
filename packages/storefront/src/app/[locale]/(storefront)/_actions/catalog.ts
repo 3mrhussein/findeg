@@ -1,6 +1,10 @@
 "use server";
 
-import { createCatalogServices } from "@backend/features/catalog";
+import {
+  createCatalogServices,
+  type Variant,
+  type PriceListEntry,
+} from "@backend/features/catalog";
 import { resolveLocale } from "@backend/features/core";
 import { Category } from "@hooks/useCategories";
 
@@ -46,19 +50,20 @@ export async function getProductPricingAction(payload: {
   const product = await products.getById(payload.productId);
   if (!product) return { success: false, error: "Product not found" };
 
-  const variant = product.variants?.find((v: any) => v.id === payload.variantId);
+  const variant = product.variants?.find((v: Variant) => v.id === payload.variantId);
   if (!variant) return { success: false, error: "Variant not found" };
 
   // Finding the price based on customer group and UoM
+  const priceLists = variant.priceLists || [];
   const priceEntry =
-    variant.priceLists?.find(
-      (p: any) => p.customerGroup === payload.customerGroup && p.uomCode === payload.uom,
+    priceLists.find(
+      (p: PriceListEntry) => p.customerGroup === payload.customerGroup && p.uomCode === payload.uom,
     ) ||
-    variant.priceLists?.find(
-      (p: any) => p.customerGroup === "public_b2c" && p.uomCode === payload.uom,
+    priceLists.find(
+      (p: PriceListEntry) => p.customerGroup === "public_b2c" && p.uomCode === payload.uom,
     );
 
-  const unitPrice = priceEntry ? priceEntry.unitPrice : variant.basePrice;
+  const unitPrice = priceEntry ? (priceEntry.unitPrice as number) : (variant.basePrice as number);
 
   return {
     success: true,

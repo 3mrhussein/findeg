@@ -28,7 +28,7 @@ import { Tag } from "@backend/features/catalog";
 import { cn } from "@lib/utils";
 import { useDebounce } from "@hooks/use-debounce";
 import { useToast } from "@hooks/use-toast";
-import { getTagDisplayName } from "@features/catalog/presentation/config/tag-display";
+import { getTagDisplayName } from "@dashboard/features/catalog/presentation/config/tag-display";
 import * as Icons from "lucide-react";
 
 interface TagFormPanelProps {

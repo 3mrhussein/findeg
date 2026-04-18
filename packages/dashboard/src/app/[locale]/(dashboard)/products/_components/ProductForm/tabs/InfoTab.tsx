@@ -7,7 +7,7 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescripti
 import { Input } from "@ui";
 import { Textarea } from "@ui";
 import { Card, CardContent, CardHeader, CardTitle } from "@ui";
-import { type ProductFormValues } from "@features/administration/presentation/forms/product-form";
+import { type ProductFormValues } from "@dashboard/features/administration/presentation/forms/product-form";
 
 /**
  * Basic Information Tab — Stacked EN/AR fields (full-width)

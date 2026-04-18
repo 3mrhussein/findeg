@@ -26,11 +26,11 @@ import { SettingsView } from "./Settings";
 import { DashboardToast } from "./DashboardToast";
 import { DashboardSidebar, type DashboardView } from "./DashboardSidebar";
 import { DashboardHeader } from "./DashboardHeader";
-import type { Product } from "@features/catalog/domain/entities/Product";
-import type { Order } from "@features/order/domain/entities/Order";
-import type { SchoolListResult } from "@features/catalog/application/interfaces/ISchoolListRepository";
+import type { Product } from "@backend/features/catalog/domain/entities/Product";
+import type { Order } from "@backend/features/order/domain/entities/Order";
+import type { SchoolListResult } from "@backend/features/catalog/application/interfaces/ISchoolListRepository";
 import { usePermissions } from "@providers/PermissionsProvider";
-import { PERMISSION_CODES } from "@features/core/domain/auth";
+import { PERMISSION_CODES } from "@backend/features/core/domain/auth";
 
 interface DashboardContentProps {
   products: Product[];

@@ -4,7 +4,7 @@ import React from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@ui";
 import { Icon } from "@ui";
-import type { SchoolListResult } from "@features/catalog/application/interfaces/ISchoolListRepository";
+import type { SchoolListResult } from "@backend/features/catalog/application/interfaces/ISchoolListRepository";
 
 interface SchoolListsProps {
   schoolLists: SchoolListResult[];

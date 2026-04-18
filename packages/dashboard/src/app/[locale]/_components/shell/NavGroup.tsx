@@ -2,8 +2,8 @@
 
 import * as React from "react";
 import { NavItem } from "./NavItem";
-import { useAdminPermissions } from "@features/administration/presentation/hooks/useAdminPermissions";
-import type { NavGroup as NavGroupType } from "@features/administration/presentation/config/nav-config";
+import { useAdminPermissions } from "@dashboard/features/administration/presentation/hooks/useAdminPermissions";
+import type { NavGroup as NavGroupType } from "@dashboard/features/administration/presentation/config/nav-config";
 
 export interface NavGroupProps {
   group: NavGroupType;

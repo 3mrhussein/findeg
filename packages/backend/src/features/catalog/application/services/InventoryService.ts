@@ -1,4 +1,4 @@
-import { type ID } from "@features/core/domain/types/common";
+import { type ID } from "@backend/features/core/domain/types/common";
 import {
   type IInventoryRepository,
   type InventoryBalanceResult,

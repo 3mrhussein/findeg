@@ -25,12 +25,10 @@
         "./src/server/*"
       ],
       "@features/*": [
-        "./src/features/*",
-        "../backend/src/features/*"
+        "./src/features/*"
       ],
       "@/features/*": [
-        "./src/features/*",
-        "../backend/src/features/*"
+        "./src/features/*"
       ],
       "@app/*": [
         "./src/app/*"
@@ -40,6 +38,9 @@
       ],
       "@backend/*": [
         "../backend/src/*"
+      ],
+      "@data/*": [
+        "./src/data/*"
       ],
       "@ui": [
         "../ui/src"

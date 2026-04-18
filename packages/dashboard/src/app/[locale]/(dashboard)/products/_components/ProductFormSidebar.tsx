@@ -5,7 +5,7 @@ import { useFormContext, useFieldArray } from "react-hook-form";
 import { useTranslations } from "next-intl";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@ui";
 import { Card, CardContent, CardHeader, CardTitle } from "@ui";
-import { type ProductFormValues } from "@features/administration/presentation/forms/product-form";
+import { type ProductFormValues } from "@dashboard/features/administration/presentation/forms/product-form";
 import { type Category, type Brand, type Tag } from "@backend/features/catalog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ui";
 import { TagInput } from "@/app/[locale]/_components/shared/TagInput";

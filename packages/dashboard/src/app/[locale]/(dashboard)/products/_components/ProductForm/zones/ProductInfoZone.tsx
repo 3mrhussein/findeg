@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@ui";
 import { BilingualInput } from "@components/shared/BilingualInput";
 import { BilingualTextarea } from "@components/shared/BilingualTextarea";
-import type { ProductFormValues } from "@features/administration/presentation/forms/product-form";
+import type { ProductFormValues } from "@dashboard/features/administration/presentation/forms/product-form";
 
 interface ProductInfoZoneProps {
   categories: { id: number; name: string }[];

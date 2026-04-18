@@ -29,7 +29,7 @@ import type {
   ShopPlpDiscount,
   ShopPlpFacetCounts,
   ShopPlpFilters,
-} from "@features/catalog/application/queries/shop-plp";
+} from "@backend/features/catalog/application/queries/shop-plp";
 
 interface ApiCategoryNode {
   id: number;

@@ -12,42 +12,36 @@ import { JWTService } from "./JWTService";
 import { AdminUserService } from "./AdminUserService";
 import { AdminRoleService } from "./AdminRoleService";
 
+import { IUserRepository } from "../interfaces/IUserRepository";
+import { IAuthService } from "../interfaces/IAuthService";
+import { IPermissionService } from "../interfaces/IPermissionService";
+import { IJWTService } from "./JWTService";
+import { IAdminUserService } from "../interfaces/IAdminUserService";
+import { IAdminRoleService } from "../interfaces/IAdminRoleService";
+
+export interface IdentityServices {
+  auth: IAuthService;
+  users: IUserRepository;
+  permissions: IPermissionService;
+  jwt: IJWTService;
+  adminUsers: IAdminUserService;
+  adminRoles: IAdminRoleService;
+}
+
 /**
  * Create identity services with all dependencies wired
- *
- * @returns Object containing all identity service instances
- *
- * @example
- * ```ts
- * // In app data layer (dashboard/src/data/users/queries.ts):
- * "use cache";
- * import { createIdentityServices } from '@backend/features/identity';
- *
- * export async function getAdmins() {
- *   cacheTag('admins');
- *   cacheLife('minutes');
- *
- *   const { adminUsers } = createIdentityServices();
- *   return await adminUsers.listAdmins();
- * }
- * ```
  */
-export function createIdentityServices() {
-  // Create repositories (no arguments - they use singleton db connection)
+export function createIdentityServices(): IdentityServices {
+  // Create repositories
   const userRepository = new DrizzleUserRepository();
 
-  // Create services (inject dependencies)
+  // Create services
   return {
     auth: new AuthService(userRepository),
     users: userRepository,
     permissions: new PermissionService(userRepository),
-    jwt: new JWTService(), // Uses env vars for secrets
+    jwt: new JWTService(),
     adminUsers: new AdminUserService(),
     adminRoles: new AdminRoleService(),
   };
 }
-
-/**
- * Type helper for identity services
- */
-export type IdentityServices = ReturnType<typeof createIdentityServices>;

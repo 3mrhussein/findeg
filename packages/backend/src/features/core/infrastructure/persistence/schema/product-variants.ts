@@ -30,8 +30,8 @@ import { products } from "./products";
 import { catalogSchema } from "./schemas";
 import { attributeDefinitions } from "./product-attributes";
 import { variantSellableUoms, variantPriceLists } from "./variant-pricing";
-import type { LocalizedStringDraft } from "@features/core/domain/value-objects";
-import type { ResponsiveMediaSet } from "@features/core/domain/value-objects";
+import type { LocalizedStringDraft } from "@backend/features/core/domain/value-objects";
+import type { ResponsiveMediaSet } from "@backend/features/core/domain/value-objects";
 
 // ─── Product Variants (SKU rows) ────────────────────────────────────────────
 

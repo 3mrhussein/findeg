@@ -4,7 +4,7 @@
 
 import { CartEntity, CartItem } from "../../domain/entities/Cart";
 import { ICartService } from "../interfaces/ICartService";
-import { CustomerGroup, UomCode } from "@features/core/domain/types/common";
+import { CustomerGroup, UomCode } from "@backend/features/core/domain/types/common";
 
 type GlobalWithManagedCartStore = typeof globalThis & {
   __findegManagedCartStore?: Map<string, CartItem[]>;
