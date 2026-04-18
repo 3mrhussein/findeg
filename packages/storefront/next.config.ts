@@ -40,18 +40,6 @@ const nextConfig: NextConfig = {
     // Set root to monorepo root to resolve cross-package dependencies
     root: path.join(__dirname, "../.."),
   },
-
-  typescript: {
-    // Temporarily disabled while backend @features/* imports are being cleaned up (spec 005)
-    // TODO: Re-enable after comprehensive backend import cleanup
-    // ignoreBuildErrors: true,
-  },
-  experimental: {
-    //   turbopackFileSystemCacheForDev: true,
-    // Enable Partial Prerendering (Next.js 16 feature)
-    // Note: Requires compatible data fetching patterns
-    ppr: false, // Set to true when data patterns are PPR-compatible
-  },
 };
 
 export default withNextIntl(nextConfig);

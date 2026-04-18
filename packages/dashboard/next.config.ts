@@ -64,13 +64,6 @@ const nextConfig: NextConfig = {
     // This allows Turbopack to properly resolve @backend package imports
     root: path.join(__dirname, "../.."),
   },
-
-  experimental: {
-    //   turbopackFileSystemCacheForDev: true,
-    // Enable Partial Prerendering (Next.js 16 feature)
-    // Note: Requires compatible data fetching patterns
-    ppr: false, // Set to true when data patterns are PPR-compatible
-  },
 };
 
 export default withNextIntl(nextConfig);
