@@ -1,51 +1,52 @@
 # Order Feature
 
-Owns checkout orchestration and order lifecycle, including immutable line-item snapshots.
+The **Order Feature** handles the critical path of transforming shopping carts into transactional, immutable historical records. It orchestrates checkout validation, fulfillment tracking, and pricing snapshots.
 
-## Use Cases
+## 🎯 Core Responsibilities
 
-```mermaid
-flowchart LR
-    Shopper --> UC1[Validate checkout]
-    Shopper --> UC2[Create order]
-    Shopper --> UC3[View order history]
-    Admin --> UC4[Update order status]
-```
+- **Immutable Snapshots**: Freezing prices and metadata at checkout so downstream catalog edits do not corrupt historical financial ledgers.
+- **State Machine Engine**: Enforcing linear transition flows (`Pending` -> `Paid` -> `Processing` -> `Shipped`).
+- **Inventory Locking**: Triggering inventory hooks upon order commitment.
+- **Transaction Ledger**: Preparing aggregates for payment processing layers.
 
-## UML (Class View)
+---
 
-```mermaid
-classDiagram
-    class Order
-    class OrderItem
-    class IOrderRepository
-    class DrizzleOrderRepository
+## 🏗️ Domain Entities Map
 
-    Order --> OrderItem
-    DrizzleOrderRepository ..|> IOrderRepository
-```
+| Entity         | System Role                                                                                       |
+| -------------- | ------------------------------------------------------------------------------------------------- |
+| `Order.ts`     | The aggregate root. Holds current state, total compute cache, and relational mapping to the user. |
+| `OrderItem.ts` | A strict JSONB-backed array containing the exact payload consumed by the user during purchase.    |
 
-## Sequence (Checkout to Order)
+---
+
+## 🔄 Complete Checkout Orchestration Pipeline
 
 ```mermaid
 sequenceDiagram
-    participant CheckoutAPI as /api/v1/checkout/order
-    participant Cart as CartService
-    participant Product as ProductService
-    participant Repo as IOrderRepository
-    CheckoutAPI->>Cart: getCart(cartId)
-    CheckoutAPI->>Product: getById(...) for snapshots
-    CheckoutAPI->>Repo: create(order + orderItems snapshots)
-    Repo-->>CheckoutAPI: persisted order
+    participant SF as Storefront UI
+    participant OS as OrderService (App Layer)
+    participant Cat as CatalogService
+    participant DB as Postgres Transaction
+
+    SF->>OS: submitOrder(cartId, address)
+    OS->>Cat: fetchCurrentMatrix(variantIds)
+    Cat-->>OS: ServiceResult[Latest Prices]
+    OS->>OS: Validate cart requested price vs true price
+    OS->>DB: _repository.create(OrderData)
+    DB-->>OS: Ok<OrderRecord>
+    OS->>Cat: dispatch(SubtractInventory)
+    OS-->>SF: Ok<OrderSuccessDTO>
 ```
 
-## Layer Notes
-- `domain`: `Order`, `OrderItem`, `ShippingAddress`, `VariantSnapshot`.
-- `application`: repository contracts and checkout-facing actions.
-- `infrastructure`: Drizzle persistence and analytics queries.
+---
 
-## Clean Architecture Boundaries
-- Depends on `cart` and `catalog` contracts for data capture.
-- Must preserve historical snapshot integrity despite catalog changes.
-- Administration reads/updates order lifecycle via service contracts.
+## 🔐 Boundaries & Validation Rules
 
+- **Snapshot Anti-Corruption**: NEVER reference `CatalogService.getProduct()` when rendering a historical order receipt in the Dashboard. The DB row for `OrderItem` contains the physical JSON values stored precisely when the transaction fired.
+- **Database Transactions**: Order creation utilizes Drizzle nested transactions. If inventory allocation fails, the entire order ledger is rolled back to prevent hanging fulfillment errors.
+- **Cross-Domain Limits**: Depends on `catalog` for inventory validation, and `identity` for user attribution.
+
+---
+
+&copy; 2026 FindEg.com

@@ -1,45 +1,28 @@
 # Review Feature
 
-Owns product feedback lifecycle: submission, moderation state, and rating aggregation inputs.
+The **Review Feature** enables customers to generate Trust signals via verified feedback and ratings. It encapsulates moderation workflows, shielding the public storefront from spam.
 
-## Use Cases
+## 🎯 Core Responsibilities
 
-```mermaid
-flowchart LR
-    Customer --> UC1[Submit review]
-    Admin --> UC2[Approve/reject review]
-    Catalog --> UC3[Display rating summary]
-```
+- **UGC Persistence**: Capturing user-generated comments and ratings (1-5 scales).
+- **Moderation Workflow**: Emitting events to the Dashboard so staff can approve/reject items.
+- **Product Re-calculation**: Firing bounded Context hooks to the `catalog` when a new verified review alters the aggregated star rating.
 
-## UML (Class View)
+---
 
-```mermaid
-classDiagram
-    class Review
-    class IReviewRepository
-    class DrizzleReviewRepository
+## 🏗️ Domain Entities Map
 
-    DrizzleReviewRepository ..|> IReviewRepository
-    IReviewRepository --> Review
-```
+| Entity      | System Role                                                                                                        |
+| ----------- | ------------------------------------------------------------------------------------------------------------------ |
+| `Review.ts` | The core document linking a `User` to a `Variant`, holding strict validation states (Pending, Approved, Rejected). |
 
-## Sequence (Create Review)
+---
 
-```mermaid
-sequenceDiagram
-    participant API as Product Review Endpoint
-    participant Repo as IReviewRepository
-    API->>Repo: create(review payload)
-    Repo-->>API: persisted review
-    API-->>Client: success response
-```
+## 🔐 Boundaries & Mutation Logging
 
-## Layer Notes
-- `domain`: `Review` entity and validation boundaries.
-- `application`: review repository contract.
-- `infrastructure`: Drizzle repository implementation.
+- **Dependency Control**: Review has a hard dependency on `identity` to ensure the author is verified, and relies on `catalog` purely by reference (VariantId lookup).
+- **Anti-Pattern Guard**: A `Review` object MUST NEVER perform complex Drizzle joins natively linking `User.passwordHash` or `Variant.pricing`. It must fetch only standard scalar references to guarantee payload safety for Next.js boundary serialization.
 
-## Clean Architecture Boundaries
-- Depends on `catalog` and `identity` IDs, not their infrastructure adapters.
-- Rating aggregation consumed by catalog views.
+---
 
+&copy; 2026 FindEg.com

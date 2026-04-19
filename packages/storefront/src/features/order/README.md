@@ -1,51 +1,46 @@
-# Order Feature
+# Storefront Order Feature
 
-Owns checkout orchestration and order lifecycle, including immutable line-item snapshots.
+The **Storefront Order Feature** surfaces the high-stakes checkout funnel. It protects user intent, validates physical addresses, and delegates secure payment handoffs.
 
-## Use Cases
+## 🎯 Technical Responsibilities
 
-```mermaid
-flowchart LR
-    Shopper --> UC1[Validate checkout]
-    Shopper --> UC2[Create order]
-    Shopper --> UC3[View order history]
-    Admin --> UC4[Update order status]
-```
+- **Funnel Checkpoints**: Step-based Wizard rendering (`Address` -> `Review` -> `Pay`) isolating Zod validation triggers at each distinct boundary.
+- **Client/Server Form Bindings**: Leveraging React Hook Form connected to Server Actions via `useActionState` to surface Drizzle errors directly in the UI.
 
-## UML (Class View)
+---
 
-```mermaid
-classDiagram
-    class Order
-    class OrderItem
-    class IOrderRepository
-    class DrizzleOrderRepository
+## 🏗️ UI Architecture
 
-    Order --> OrderItem
-    DrizzleOrderRepository ..|> IOrderRepository
-```
+### Checkout Primitives
 
-## Sequence (Checkout to Order)
+- **`CheckoutStepper`**: Purely visual timeline sync hook utilizing Next.js `searchParams` for step isolation (`?step=shipping`).
+- **`AddressBookSelector`**: Client heavy component retrieving backend pre-saved addresses and injecting them into the form context.
+- **`PaymentPortal`**: Locked UI that acts as the final irreversible trigger to `@findeg/backend/features/order`.
+
+---
+
+## 🔄 Synchronous Checkout Flow
 
 ```mermaid
 sequenceDiagram
-    participant CheckoutAPI as /api/v1/checkout/order
-    participant Cart as CartService
-    participant Product as ProductService
-    participant Repo as IOrderRepository
-    CheckoutAPI->>Cart: getCart(cartId)
-    CheckoutAPI->>Product: getById(...) for snapshots
-    CheckoutAPI->>Repo: create(order + orderItems snapshots)
-    Repo-->>CheckoutAPI: persisted order
+    participant ClientForm as CheckoutForm
+    participant Action as commitOrderAction
+    participant OS as OrderService
+    participant Redirect as Next.js Navigation
+
+    ClientForm->>Action: onSubmit(addressPayload)
+    Action->>OS: processCartIntoOrder(address)
+    OS-->>Action: ServiceResult<OrderID>
+    Action->>Redirect: redirect(`/checkout/success?id=${OrderID}`)
 ```
 
-## Layer Notes
-- `domain`: `Order`, `OrderItem`, `ShippingAddress`, `VariantSnapshot`.
-- `application`: repository contracts and checkout-facing actions.
-- `infrastructure`: Drizzle persistence and analytics queries.
+---
 
-## Clean Architecture Boundaries
-- Depends on `cart` and `catalog` contracts for data capture.
-- Must preserve historical snapshot integrity despite catalog changes.
-- Administration reads/updates order lifecycle via service contracts.
+## 🔐 Boundaries & Constraints
 
+- **Revalidation Strictness**: Once an order successfully submits, the Action MUST call Next.js `revalidateTag` for the user's cart cache and order history cache before executing the physical URL `redirect()`.
+- **Payment Sandboxing**: 3rd-party Payment integrations (Paymob, Stripe) UI elements are strictly cordoned inside isolated `CheckoutPaymentIframe` or similar Client modules to prevent breaking Next.js hydration.
+
+---
+
+&copy; 2026 FindEg.com
