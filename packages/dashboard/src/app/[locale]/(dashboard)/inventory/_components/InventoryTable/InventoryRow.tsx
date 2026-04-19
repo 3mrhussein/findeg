@@ -1,11 +1,10 @@
 "use client";
 
+import { Product } from "@backend/features/catalog";
 import { Button } from "@ui";
 import { Input } from "@ui";
 import { TableCell, TableRow } from "@ui";
 import { AlertTriangle, Loader2, Save } from "lucide-react";
-import type { Product } from "@backend/features/catalog";
-
 interface InventoryRowProps {
   product: Product;
   isSelected: boolean;

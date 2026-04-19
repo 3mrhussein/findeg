@@ -19,8 +19,7 @@ export type {
   SortOption,
   ViewMode,
   ClientUser as User,
-  ClientUser
+  ClientUser,
 } from "@ui";
 
 export type Language = Locale;
-

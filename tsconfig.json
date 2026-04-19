@@ -2,7 +2,11 @@
   "schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
     "target": "ES2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -20,19 +24,41 @@
       }
     ],
     "paths": {
-      "@backend": ["./packages/backend/src"],
-      "@backend/*": ["./packages/backend/src/*"],
-      "@ui": ["./packages/ui/src"],
-      "@ui/*": ["./packages/ui/src/*"],
-      "@storefront/*": ["./packages/storefront/src/*"],
-      "@dashboard/*": ["./packages/dashboard/src/*"]
+      "@backend": [
+        "./backend/src"
+      ],
+      "@backend/*": [
+        "./backend/src/*"
+      ],
+      "@ui": [
+        "./packages/ui/src"
+      ],
+      "@ui/*": [
+        "./packages/ui/src/*"
+      ],
+      "@storefront/*": [
+        "./packages/storefront/src/*"
+      ],
+      "@dashboard/*": [
+        "./packages/dashboard/src/*"
+      ]
     }
   },
   "references": [
-    { "path": "./packages/backend" },
-    { "path": "./packages/ui" }
+    {
+      "path": "./backend"
+    },
+    {
+      "path": "./packages/ui"
+    }
   ],
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.mts", ".next/types/**/*.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.mts",
+    ".next/types/**/*.ts"
+  ],
   "exclude": [
     "node_modules",
     "fullstack-ecommerce",
@@ -40,6 +66,7 @@
     "cypress.config.ts",
     "src/features._migrated",
     "packages/*/*/.next",
-    "packages/*/dist"
+    "packages/*/dist",
+    "backend/dist"
   ]
 }

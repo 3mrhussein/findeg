@@ -46,10 +46,10 @@
         "./src/app/*"
       ],
       "@backend": [
-        "../backend/src"
+        "../../backend/src"
       ],
       "@backend/*": [
-        "../backend/src/*"
+        "../../backend/src/*"
       ],
       "@ui": [
         "../ui/src"
@@ -61,7 +61,7 @@
   },
   "references": [
     {
-      "path": "../backend"
+      "path": "../../backend"
     },
     {
       "path": "../ui"

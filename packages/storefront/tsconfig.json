@@ -34,10 +34,10 @@
         "./src/app/*"
       ],
       "@backend": [
-        "../backend/src"
+        "../../backend/src"
       ],
       "@backend/*": [
-        "../backend/src/*"
+        "../../backend/src/*"
       ],
       "@data/*": [
         "./src/data/*"
