@@ -1,76 +1,73 @@
 # Catalog Feature
 
-Owns product discovery and commercial catalog data: products, categories, brands, and variant sell options.
+The **Catalog Feature** is the core operational heart of the FindEg backend. It manages the strict lifecycles of products, categories, hierarchical collections, tags, and **School Lists**.
 
-## Use Cases
+## 🎯 Responsibilities & True Capabilities
 
-```mermaid
-flowchart LR
-    Shopper --> UC1[Browse categories]
-    Shopper --> UC2[Search products]
-    Shopper --> UC3[View product details]
-    Admin --> UC4[Maintain product catalog]
-    Admin --> UC5[Configure variant UoM/pricing]
-```
+- **Product Information Management (PIM)**: Handling variants, brand assignment, and tagging.
+- **Nested Taxonomy**: Constructing deep category trees and dynamic collections.
+- **B2B School List Infrastructure**: The logic mapping physical `Product` elements into `SchoolList` aggregates.
+- **Search & Caching Computations**: Dedicated `SearchService` orchestrating filtering logic and emitting cache invalidation rules.
 
-## UML (Class View)
+---
 
-```mermaid
-classDiagram
-    class ProductService
-    class IProductRepository
-    class DrizzleProductRepository
-    class Product
-    class ProductEntity
+## 🏗️ Domain Model Map
 
-    ProductService --> IProductRepository
-    DrizzleProductRepository ..|> IProductRepository
-    ProductEntity --> Product
-```
+Based on explicit extraction from `src/features/catalog/domain/entities`:
 
-## Sequence (Price Quote)
+| Entity                   | Core Responsibility                                                              |
+| ------------------------ | -------------------------------------------------------------------------------- |
+| `Product.ts`             | The root item. Handles name, localization, and relations.                        |
+| `Variant.ts`             | The specific Sku. Handles variant matrix (e.g. Color: Red) and weight factors.   |
+| `SchoolList.ts`          | The B2B bundle entity assigning products exclusively to specific grades/schools. |
+| `Brand.ts`               | Top-level manufacturer data.                                                     |
+| `Category.ts`            | Organizational tree nodes.                                                       |
+| `Collection.ts`          | Marketing-driven groupings (e.g. "Back to School Sale").                         |
+| `Tag.ts`                 | Granular taxonomy (`#notebooks`, `#ruler`).                                      |
+| `AttributeDefinition.ts` | Dynamic descriptors controlling JSONB matrices.                                  |
+
+---
+
+## 🚀 Application Services Layer
+
+The layer strictly orchestrated via `ServiceResult<T, CatalogError>`. Exported to Next.js routes.
+
+- `ProductService`: Operations surrounding single-items and mutations.
+- `SearchService` (12KB): Complex orchestrator managing the primary B2C listing view `findMany()` operations with fuzzy-matching limits.
+- `SchoolListService`: Aggregation tools linking products dynamically to B2B tokens.
+- `InventoryService`: Safe compute logic for reserving products BEFORE committing checkout.
+- `CategoryService`, `TagService`, `VariantService`, `CollectionService`.
+
+---
+
+## 🔄 Core Execution Pipeline
+
+All interactions follow this extremely strict boundary flow:
 
 ```mermaid
 sequenceDiagram
-    participant API as /api/v1/products/{id}/pricing/quote
-    participant S as ProductService
-    participant R as IProductRepository
-    API->>S: quoteVariantUnitPrice(productId, variantKey, uomCode, customerGroup)
-    S->>R: resolveVariantUnitPrice(...)
-    R-->>S: {unitPrice, currency, isSellable}
-    S-->>API: quote payload
+    participant SF as Storefront / Dashboard
+    participant API as Catalog Service Layer
+    participant ZOD as Zod Validation Map
+    participant DB as Drizzle Repository
+
+    SF->>API: getProductBySlug(slug)
+    API->>ZOD: Validates inputs safely
+    ZOD-->>API: Passes struct
+    API->>DB: _repository.findByParams()
+    DB-->>API: Returns postgres rows
+    API->>API: Maps to Domain Entities
+    API-->>SF: Ok<Product> or Err<ProductNotFoundError>
 ```
 
-## Layer Notes
+---
 
-- `domain`: `Product`, `Category`, `Brand`, `ProductEntity`.
-- `application`: service contracts and catalog use cases.
-- `infrastructure`: Drizzle repositories and query composition.
+## 🔐 Boundaries & Constraints
 
-## Clean Architecture Boundaries
+- **Absolute Isolation**: Catalog depends only on `@findeg/backend/features/core`. It must NEVER import `cart`, `order`, or `payment` modules to avoid strict circular dependency failures in Turborepo.
+- **Immutable Updates**: Drizzle mutations map JSONB fields via immutable object spread updates inside repository adapters.
+- **Export Control**: Storefronts NEVER import `domain/entities` or `infrastructure/persistence`. Everything goes through `index.ts`.
 
-- Depends on `core`.
-- Used by `cart`, `order`, and `administration` through interfaces/services.
-- No UI should import repository implementations directly.
+---
 
-## Component Placement
-
-React components live in route `_components` folders (`src/app/**/_components/`) or in `src/components/shared/`.
-Feature `presentation/` code is hooks/mappers/config only (no JSX).
-See: `docs/development/component-placement.md`
-
-## Localization Strategy
-
-The catalog feature utilizes JSONB inline fields for localized content (e.g., `localizedName`, `localizedSlug`).
-We do not use a separate translation table.
-
-### The Repository Rule
-
-Repositories in this feature are locale-unaware.
-They return raw Product, Category, and Brand domain objects
-with all JSONB fields intact.
-
-Never add a `locale` parameter to a repository method for the
-purpose of resolving display strings. If you feel the urge to
-do this — the logic belongs in a domain entity method or a
-presentation mapper instead.
+&copy; 2026 FindEg.com

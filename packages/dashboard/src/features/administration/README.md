@@ -1,99 +1,48 @@
-# Administration Feature
+# Dashboard Administration Feature
 
-Owns back-office operations: catalog CRUD, inventory control, order operations, and auditability.
+The **Dashboard Administration Feature** surfaces the operational UI primitives required for platform-level management (staff, config, audit).
 
-## Use Cases
+## 🎯 Technical Responsibilities
 
-```mermaid
-flowchart LR
-    Admin --> UC1[Create/Update products]
-    Admin --> UC2[Manage categories/brands]
-    Admin --> UC3[Update inventory]
-    Admin --> UC4[Update order status]
-    Admin --> UC5[View dashboard and audit log]
-```
+- **Staff Hydration Rendering**: Listing the complex RBAC associations for staff via the UI.
+- **Server Action Passthrough**: Exporting localized form actions (`createStaff`, `updateSettings`) bridging directly to `@findeg/backend/features/administration`.
+- **Zod UI Mapping**: Constructing React Hook Form schemas inheriting natively from the backend's zod definitions.
 
-## UML (Class View)
+---
 
-```mermaid
-classDiagram
-    class AdminProductService
-    class AdminInventoryService
-    class AdminOrderService
-    class AuditLogService
-    class IProductRepository
-    class IOrderRepository
-    class IAuditLogRepository
+## 🏗️ UI Architecture
 
-    AdminProductService --> IProductRepository
-    AdminInventoryService --> IProductRepository
-    AdminOrderService --> IOrderRepository
-    AuditLogService --> IAuditLogRepository
-```
+### Presentation Structure
 
-## Sequence (Inventory Update)
+- **Groups**: Located in `src/app/[locale]/admin/(dashboard)/...`.
+- **Layouts**: Heavy reliance on Next.js 16 nested layouts to render the `NavigationProvider` Sidebar fetched from the backend.
+- **Data Tables**: Headless UI table configurations filtering Audit logs directly via Next.js Search Parameters (`?page=1&query=X`).
+
+---
+
+## 🔄 Interaction Flow
 
 ```mermaid
 sequenceDiagram
-    participant API as PATCH /api/v1/admin/inventory/{productId}
-    participant Service as AdminInventoryService
-    participant Repo as IProductRepository
-    participant Audit as AuditLogService
-    API->>Service: updateStock(productId, quantity, threshold)
-    Service->>Repo: updateStockConfiguration(...)
-    Service->>Audit: logAction(inventory update)
-    Service-->>API: success
+    participant NextPage as Server Component Layout
+    participant Form as Client Component (RHF)
+    participant Action as Server Action
+    participant AS as AdministrationService (Backend)
+
+    NextPage->>Form: Pass intial config values
+    Form->>Action: onSubmit(zodMappedPayload)
+    Action->>AS: updateGlobalSettings(payload)
+    AS-->>Action: ServiceResult<void>
+    Action->>Action: revalidatePath('/admin/settings')
+    Action-->>Form: FormState (Success)
 ```
 
-## Layer Notes
+---
 
-- `domain`: admin DTOs + `AuditLogEntry`.
-- `application`: admin services with policy and validation.
-- `infrastructure`: audit and persistence adapters.
+## 🔐 Boundaries & Constraints
 
-## Clean Architecture Boundaries
+- **Never Native Fetch**: Dashboard components MUST NOT initialize raw API calls or connect to Postgres. All queries are strictly executed via synchronous importing of `packages/backend` services within Next.js Server Components.
 
-- Depends on `catalog`, `order`, `identity` contracts, and `core`.
-- All admin mutations should be auditable.
-- Admin UI/actions should call services/contracts, not raw repositories.
+---
 
-## Component Placement
-
-Admin UI components must be route-colocated under `src/app/**/_components/` (or cross-cutting in `src/components/shared/`).
-Feature `presentation/` code is for hooks/mappers/config only (no JSX).
-See: `docs/development/component-placement.md`
-
-## Presentation Mappers
-
-The `presentation/mappers/` directory contains transformation
-functions that convert domain objects into UI-ready shapes.
-
-### Why Mappers Exist
-
-Domain objects are designed for business logic — they carry
-raw JSONB, domain methods, and business rules. UI components
-need flat, typed, locale-resolved values.
-
-Mappers are the bridge between these two worlds. They are the
-ONLY place where:
-
-- JSONB is unpacked into locale-specific strings
-- Domain objects are transformed into form values or card props
-- `product.getName(locale)` is called to resolve display text
-
-### Current Mappers
-
-| File                     | Transforms                      | Used By                 |
-| ------------------------ | ------------------------------- | ----------------------- |
-| `product-form-mapper.ts` | `Product` → `ProductFormValues` | Admin create/edit pages |
-
-### Adding A New Mapper
-
-When building a new admin feature that needs to pre-populate a
-form or transform a domain object for display:
-
-1. Create `presentation/mappers/your-entity-mapper.ts`
-2. Import the domain entity type
-3. Export a named `toYourEntityFormValues(entity)` function
-4. Call domain entity locale methods — never unpack JSONB directly
-5. Use `toEmptyYourEntityFormValues()` for create mode defaults
+&copy; 2026 FindEg.com

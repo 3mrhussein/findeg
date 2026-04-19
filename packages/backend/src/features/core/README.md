@@ -1,55 +1,52 @@
-# Core Feature
+# Core Feature (Shared Kernel)
 
-Provides shared kernel capabilities used across all features: ports, infrastructure adapters, DI composition, and shared primitives.
+The **Core Feature** is the untouchable shared boundary of the FindEg monorepo. Every other functional domain (Catalog, Order, Identity) structurally loops dependencies back into `core`.
 
-## Use Cases
+## 🎯 Core Utility Domains
 
-```mermaid
-flowchart LR
-    Feature --> UC1[Resolve service from DI]
-    Feature --> UC2[Persist data via shared DB config]
-    Feature --> UC3[Create/validate session]
-    Feature --> UC4[Log operational events]
-```
+- **Value Objects**: Pure TS logic defining the physics of the system (e.g. `Money` multiplication, `LocalizedString` fallback lookups).
+- **Control Flow Patterns**: Providing the strict `ServiceResult<T, E>` pattern ensuring no controller ever uses `try/catch` natively for expected errors.
+- **Drizzle Hub**: Initiating the master Drizzle ORM registry shared memory connection securely.
 
-## UML (Component/Class View)
+---
 
-```mermaid
-classDiagram
-    class ServiceContainer
-    class ISessionProvider
-    class CookieSessionProvider
-    class ISessionManager
-    class JwtSessionManager
-    class ILoggerService
-    class LoggerService
+## 🏗️ Foundation Map
 
-    CookieSessionProvider ..|> ISessionProvider
-    JwtSessionManager ..|> ISessionManager
-    LoggerService ..|> ILoggerService
-    ServiceContainer --> ISessionProvider
-    ServiceContainer --> ILoggerService
-```
+| Entity/Object        | System Role                                                                               |
+| -------------------- | ----------------------------------------------------------------------------------------- |
+| `Money.ts`           | Protects fractional arithmetic failures globally. Enforces strictly EGP.                  |
+| `LocalizedString.ts` | Resolves deeply nested JSON JSONB text pairs checking `en` vs `ar` fallback availability. |
+| `ServiceResult.ts`   | Railway Oriented Programming tuple generator returning `[Error, null]` or `[null, Data]`. |
+| `DrizzleSession.ts`  | Pure `postgres://` connection string pool configuration.                                  |
 
-## Sequence (Route Auth Middleware)
+---
+
+## 🔄 Infrastructure Transaction Orchestration
+
+When an application layer edits multiple tables (like committing an order AND lowering product stock), it utilizes the `runInTransaction` core helper.
 
 ```mermaid
 sequenceDiagram
-    participant Route as API Route
-    participant MW as withAuth/withAdmin
-    participant JWT as JwtSessionManager
-    Route->>MW: wrapped request
-    MW->>JWT: validateSession(request)
-    JWT-->>MW: SessionPayload|null
-    MW-->>Route: auth context or 401/403
+    participant Catalog
+    participant TM as TransactionManager (Core)
+    participant DB as Postgres Connection Pooling
+
+    Catalog->>TM: tx.run(async (tx) => { ... })
+    TM->>DB: BEGIN
+    Catalog->>DB: execute Statement 1
+    Catalog->>DB: execute Statement 2
+    TM->>DB: COMMIT (or ROLLBACK on Failure)
+    TM-->>Catalog: Unified Success
 ```
 
-## Layer Notes
-- `domain`: shared auth and primitive types.
-- `application`: cross-cutting ports/services.
-- `infrastructure`: auth, persistence, storage, DI, logging.
+---
 
-## Clean Architecture Boundaries
-- Core is dependency base; it does not depend on feature modules.
-- New adapters must implement existing ports before DI registration.
+## 🔐 Boundaries & Purity Rules
 
+- **Universal Dependency**: All modules can rely heavily on `core`.
+- **Absolute Purity**: `core` MUST NOT depend on ANY other sibling package. Doing so will violently trigger a physical Circular Dependency break in the Turborepo graph logic.
+- **Node Environment**: Code must compile and execute in highly restrictive Vercel Edge networks OR standard Node 18, so filesystem commands (`fs`) are STRICTLY prohibited inside `domain` or `application`.
+
+---
+
+&copy; 2026 FindEg.com

@@ -1,98 +1,65 @@
 # @findeg/ui
 
-Shared UI components library for FindEg dashboard and storefront applications.
+The **FindEg UI Library** acts as the foundational design system and component primitive registry across `@findeg/storefront` and `@findeg/dashboard`.
 
-## What's Included
+Built on top of [shadcn/ui](https://ui.shadcn.com/), [Radix UI](https://www.radix-ui.com/), and [Tailwind CSS 4](https://tailwindcss.com/).
 
-### UI Primitives (35 components)
+## 🎨 Theming & Tailwind Map
 
-shadcn/ui components built on Radix UI - stored in `src/ui/`:
+The global design tokens are driven exclusively by strictly mapping HSL color spaces within `src/styles/globals.css`.
 
-- **Form Controls**: Button, Input, Checkbox, Radio, Select, Switch, Slider, Textarea, Label
-- **Data Display**: Badge, Avatar, Card, Table, Progress, Skeleton
-- **Overlays**: Dialog, Sheet, Popover, Tooltip, Dropdown Menu, Accordion
-- **Navigation**: Tabs, Sidebar
-- **Feedback**: Toast, Alert Dialog
-- **Utilities**: Form, Scroll Area, Separator, Collapsible, Carousel
+- **Colors**:
+  - `--primary`: The base FindEg brand color.
+  - `--background`, `--card`, `--popover`: The background shades adjusting per dark mode.
+  - `--accent`: The alternate highlight state for hover calls.
+- **Typography Strategy**:
+  - `English`: Inter/System sans-serif.
+  - `Arabic`: Auto-injected **Cairo** font to gracefully handle script legibility.
 
-### Shared Business Components (12 components)
+---
 
-Cross-app components - stored in `src/shared/`:
+## 🏗️ Shadcn Component Adoption Inventory
 
-- **Layout**: Container, Grid, Header, Footer
-- **UI Elements**: Icon, Logo, Price, Pagination
-- **State**: EmptyState
-- **Settings**: ToggleLanguage, ToggleTheme, NotificationBell
+| Category           | Components Available via `@findeg/ui`                      |
+| ------------------ | ---------------------------------------------------------- |
+| Layout & Structure | `Card`, `Separator`, `AspectRatio`, `ScrollArea`           |
+| Navigation Flow    | `Tabs`, `Accordion`, `Breadcrumbs`, `DropdownMenu`         |
+| Active Forms       | `Button`, `Input`, `Checkbox`, `Select`, `Label`, `Switch` |
+| Data & Diagnostics | `Table`, `Badge`, `Progress`                               |
+| Feedback overlays  | `Skeleton`, `Toast`, `Dialog`, `Sheet`                     |
 
-## Usage
+---
+
+## 🌍 RTL Compliance Policy
+
+RTL relies purely on the browser's direction interpretation of **Tailwind Logical Properties**.
+
+### DO's and DON'Ts
+
+- ❌ **DON'T**: `pl-4` (padding left)
+- ✅ **DO**: `ps-4` (padding inline start)
+- ❌ **DON'T**: `mr-2` (margin right)
+- ✅ **DO**: `me-2` (margin inline end)
+- ❌ **DON'T**: `border-l-2` (border left)
+- ✅ **DO**: `border-s-2` (border start)
+
+By adhering to logic bindings, the components effortlessly swap orientations when `dir="rtl"` is provided via `next-intl`.
+
+---
+
+## 🚀 Consumption Guidelines
+
+Directly import these primitives in consumer apps (storefront/dashboard). The build system transpiles the utility merging automatically via `tailwind-merge` and `clsx`.
 
 ```typescript
-// Import any component
-import { Button, Dialog, Container, Price } from "@findeg/ui";
-
-function MyComponent() {
-  return (
-    <Container>
-      <Dialog>
-        <Button>Click me</Button>
-        <Price amount={99.99} currency="EGP" />
-      </Dialog>
-    </Container>
-  );
-}
+// Good - Imports cleanly from the workspace
+import { Button, Card, CardHeader, CardTitle } from "@findeg/ui";
 ```
 
-## What's NOT Included
+### Extending UI
 
-**App-Specific Components** stay in their respective packages:
+Any new component added to `ui` must be tested for strict typescript types and RTL behavior before being consumed by `dashboard` or `storefront`.
 
-### Dashboard-Only (`packages/dashboard/src/components/shared/`)
+---
 
-- BilingualInput, BilingualTextarea (admin forms)
-- CascadingCategoryPicker, StatusBadge, TagBadge, TagChips (admin tools)
-- WebMCPBadge, HeaderNavClient (admin-specific)
-
-### Storefront-Only (`packages/storefront/src/components/shared/`)
-
-- ErrorPage, AdminAccessForbidden (customer pages)
-- QuantitySelector (shopping cart)
-- WebMCPInitializer, HeaderNavClient (storefront-specific)
-- state/ directory (PageStateError, PageStateLoading, etc.)
-
-### Layouts (Both Apps)
-
-- Navbar, MegaMenuOverlay, MobileNavSheet, SearchBar remain app-specific
-
-## Development
-
-```bash
-# Build
-pnpm --filter @findeg/ui build
-
-# Watch mode
-pnpm --filter @findeg/ui dev
-
-# Type check
-pnpm --filter @findeg/ui type-check
-```
-
-## Adding Components
-
-**Only add components used by BOTH apps:**
-
-1. Verify actual usage in both dashboard AND storefront
-2. Add component to `src/ui/` (shadcn) or `src/shared/` (business)
-3. Export from `src/index.ts`
-4. Rebuild: `pnpm --filter @findeg/ui build`
-5. Update imports in both apps
-
-## Analysis Methodology
-
-Components were selected based on **actual import and usage analysis**, not file structure:
-
-- Searched all imports in both apps
-- Verified actual usage patterns
-- Only shared truly common components
-- Kept app-specific logic separate
-
-See `specs/001-separate-admin-project/ui-package-refined-analysis.md` for details.
+&copy; 2026 FindEg.com. All rights reserved.
