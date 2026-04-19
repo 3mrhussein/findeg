@@ -31,16 +31,16 @@
         "./backend/src/*"
       ],
       "@ui": [
-        "./packages/ui/src"
+        "./frontend/ui/src"
       ],
       "@ui/*": [
-        "./packages/ui/src/*"
+        "./frontend/ui/src/*"
       ],
       "@storefront/*": [
-        "./packages/storefront/src/*"
+        "./frontend/storefront/src/*"
       ],
       "@dashboard/*": [
-        "./packages/dashboard/src/*"
+        "./frontend/dashboard/src/*"
       ]
     }
   },
@@ -49,7 +49,7 @@
       "path": "./backend"
     },
     {
-      "path": "./packages/ui"
+      "path": "./frontend/ui"
     }
   ],
   "include": [
