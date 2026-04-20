@@ -5,8 +5,8 @@
  * Separate from IAdminCategoryService which includes CRUD operations.
  */
 
-import { Category } from "@backend/features/catalog/domain/entities/Category";
-import type { Locale } from "@backend/features/core/domain/value-objects";
+import { Category } from "@findeg/backend/features/catalog/domain/entities/Category";
+import type { Locale } from "@findeg/backend/features/core/domain/value-objects";
 
 export interface ICategoryService {
   /**

@@ -6,7 +6,7 @@ import { getCollectionsPage } from "@/data/catalog/queries";
 import { Link } from "@i18n/navigation";
 import { ImageOff, ArrowRight, Sparkles } from "lucide-react";
 import { PageShell } from "../_components/PageShell";
-import { Button } from "@ui";
+import { Button } from "@findeg/ui";
 
 /**
  *

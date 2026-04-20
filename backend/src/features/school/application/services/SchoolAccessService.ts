@@ -1,4 +1,4 @@
-import { ID } from "@backend/features/core/domain/types/common";
+import { ID } from "@findeg/backend/features/core/domain/types/common";
 import { ISchoolAccessRepository } from "../interfaces/ISchoolAccessRepository";
 import {
   ISchoolAccessService,
@@ -9,9 +9,9 @@ import {
   SchoolListAccessGrant,
   SchoolListAccessRequest,
   SchoolListAccessToken,
-} from "@backend/features/core/infrastructure/persistence/schema/school-access";
-import { ISchoolListRepository } from "@backend/features/catalog/application/interfaces/ISchoolListRepository";
-import { IUserRepository } from "@backend/features/identity/application/interfaces/IUserRepository";
+} from "@findeg/backend/features/core/infrastructure/persistence/schema/school-access";
+import { ISchoolListRepository } from "@findeg/backend/features/catalog/application/interfaces/ISchoolListRepository";
+import { IUserRepository } from "@findeg/backend/features/identity/application/interfaces/IUserRepository";
 
 /**
  *

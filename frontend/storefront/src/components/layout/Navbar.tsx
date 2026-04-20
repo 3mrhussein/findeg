@@ -8,8 +8,8 @@ import { MapPin, User, Heart, ShoppingCart, Menu, Flame, Sparkles } from "lucide
 import { useUser } from "@hooks/useUser";
 
 import ToggleLanguage from "@components/shared/ToggleLanguage";
-import { ToggleTheme } from "@ui";
-import { IconTooltip } from "@ui";
+import { ToggleTheme } from "@findeg/ui";
+import { IconTooltip } from "@findeg/ui";
 // Assuming CartTrigger exists in _components, we'll wrap it or use directly.
 // For now we'll put a placeholder cart icon until CartSheet context is clear.
 import { CartTrigger } from "@app/[locale]/(storefront)/_components/CartTrigger";

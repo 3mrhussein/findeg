@@ -106,7 +106,7 @@ export class RecordingCacheInvalidator implements ICacheInvalidator {
  * 
  * ```typescript
  * import { revalidatePath, revalidateTag } from "next/cache";
- * import { ICacheInvalidator } from "@backend/features/core";
+ * import { ICacheInvalidator } from "@findeg/backend/features/core";
  * 
  * export class NextJsCacheInvalidator implements ICacheInvalidator {
  *   async invalidatePaths(paths: string[]): Promise<void> {
@@ -127,7 +127,7 @@ export class RecordingCacheInvalidator implements ICacheInvalidator {
  * 
  * ```typescript
  * import { describe, it, expect } from "vitest";
- * import { RecordingCacheInvalidator } from "@backend/features/core";
+ * import { RecordingCacheInvalidator } from "@findeg/backend/features/core";
  * 
  * describe("OrderService", () => {
  *   it("invalidates order cache after status update", async () => {

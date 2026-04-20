@@ -16,15 +16,15 @@ import {
   Zap,
   LucideIcon,
 } from "lucide-react";
-import { Button } from "@ui";
-import { Input } from "@ui";
-import { Label } from "@ui";
-import { RadioGroup, RadioGroupItem } from "@ui";
-import { Badge } from "@ui";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ui";
-import { TagInput, TagInputSchema } from "@backend/features/administration/domain/types";
+import { Button } from "@findeg/ui";
+import { Input } from "@findeg/ui";
+import { Label } from "@findeg/ui";
+import { RadioGroup, RadioGroupItem } from "@findeg/ui";
+import { Badge } from "@findeg/ui";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@findeg/ui";
+import { TagInput, TagInputSchema } from "@findeg/backend/features/administration/domain/types";
 import { slugify } from "@lib/slugify";
-import { Tag } from "@backend/features/catalog";
+import { Tag } from "@findeg/backend/features/catalog";
 import { cn } from "@lib/utils";
 import { useDebounce } from "@hooks/use-debounce";
 import { useToast } from "@hooks/use-toast";

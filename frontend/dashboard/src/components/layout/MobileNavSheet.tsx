@@ -6,12 +6,12 @@ import { useTranslations } from "next-intl";
 import { useUser } from "@hooks/useUser";
 import { useCategories, type Category } from "@hooks/useCategories";
 
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from "@ui";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@ui";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from "@findeg/ui";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@findeg/ui";
 import { Menu, User, Settings, Heart, Image as ImageIcon, Search } from "lucide-react";
 
 import ToggleLanguage from "@components/shared/ToggleLanguage";
-import { ToggleTheme } from "@ui";
+import { ToggleTheme } from "@findeg/ui";
 
 /**
  * Mobile Navigation Sheet

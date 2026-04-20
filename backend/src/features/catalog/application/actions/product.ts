@@ -5,12 +5,12 @@
  * App-layer (dashboard) handles cache revalidation after operations.
  */
 
-import { container } from "@backend/features/core/infrastructure/di/ServiceContainer";
-import { ResourceNotFoundError, ValidationError } from "@backend/features/core/domain/errors";
-import { ProductInput } from "@backend/features/administration/domain/types";
-import type { ServiceResult } from "@backend/features/core/application/types";
-import type { Product } from "@backend/features/catalog/domain/entities/Product";
-import { getProductCachePaths, getProductCacheTags } from "@backend/features/catalog/domain/cache";
+import { container } from "@findeg/backend/features/core/infrastructure/di/ServiceContainer";
+import { ResourceNotFoundError, ValidationError } from "@findeg/backend/features/core/domain/errors";
+import { ProductInput } from "@findeg/backend/features/administration/domain/types";
+import type { ServiceResult } from "@findeg/backend/features/core/application/types";
+import type { Product } from "@findeg/backend/features/catalog/domain/entities/Product";
+import { getProductCachePaths, getProductCacheTags } from "@findeg/backend/features/catalog/domain/cache";
 
 /**
  * Pure product creation - no framework calls.

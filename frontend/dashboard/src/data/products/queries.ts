@@ -7,11 +7,11 @@
 "use cache";
 
 import { cacheLife, cacheTag } from "next/cache";
-import { createAdministrationServices } from "@backend/features/administration";
-import { createCatalogServices } from "@backend/features/catalog";
-import { type Locale } from "@backend/features/core";
+import { createAdministrationServices } from "@findeg/backend/features/administration";
+import { createCatalogServices } from "@findeg/backend/features/catalog";
+import { type Locale } from "@findeg/backend/features/core";
 
-import type { ProductListResult, ProductListFilters } from "@backend/features/administration";
+import type { ProductListResult, ProductListFilters } from "@findeg/backend/features/administration";
 
 /**
  * Get all products with optional filters

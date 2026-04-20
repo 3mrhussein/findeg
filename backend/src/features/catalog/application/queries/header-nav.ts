@@ -1,6 +1,6 @@
 import { createCatalogServices } from "../services/factory";
-import type { Category } from "@backend/features/catalog/domain/entities/Category";
-import { resolveLocale } from "@backend/features/core/domain/value-objects";
+import type { Category } from "@findeg/backend/features/catalog/domain/entities/Category";
+import { resolveLocale } from "@findeg/backend/features/core/domain/value-objects";
 
 export interface HeaderCategoryNode {
   id: number;

@@ -1,17 +1,17 @@
-import type { Locale } from "@backend/features/core/domain/value-objects";
-import type { Product } from "@backend/features/catalog/domain/entities/Product";
-import type { Category } from "@backend/features/catalog/domain/entities/Category";
-import type { Variant } from "@backend/features/catalog/domain/entities/Variant";
-import type { ProductReviewSummary } from "@backend/features/review/application/interfaces/IReviewRepository";
-import type { Review } from "@backend/features/review/domain/entities/Review";
-import type { CustomerGroup } from "@backend/features/core/domain/types/common";
-import { VariantEntity } from "@backend/features/catalog/domain/entities/Variant";
-import { resolveLocale } from "@backend/features/core/domain/value-objects";
-import { getProductEnglishSlug } from "@backend/features/catalog/domain/utils/slug";
+import type { Locale } from "@findeg/backend/features/core/domain/value-objects";
+import type { Product } from "@findeg/backend/features/catalog/domain/entities/Product";
+import type { Category } from "@findeg/backend/features/catalog/domain/entities/Category";
+import type { Variant } from "@findeg/backend/features/catalog/domain/entities/Variant";
+import type { ProductReviewSummary } from "@findeg/backend/features/review/application/interfaces/IReviewRepository";
+import type { Review } from "@findeg/backend/features/review/domain/entities/Review";
+import type { CustomerGroup } from "@findeg/backend/features/core/domain/types/common";
+import { VariantEntity } from "@findeg/backend/features/catalog/domain/entities/Variant";
+import { resolveLocale } from "@findeg/backend/features/core/domain/value-objects";
+import { getProductEnglishSlug } from "@findeg/backend/features/catalog/domain/utils/slug";
 import { createCatalogServices } from "../services/factory";
-import { createReviewServices } from "@backend/features/review";
-import { createIdentityServices } from "@backend/features/identity";
-import type { SessionPayload } from "@backend/features/core/domain/auth";
+import { createReviewServices } from "@findeg/backend/features/review";
+import { createIdentityServices } from "@findeg/backend/features/identity";
+import type { SessionPayload } from "@findeg/backend/features/core/domain/auth";
 
 export interface ProductBreadcrumbItem {
   label: string;

@@ -5,7 +5,7 @@
  * Backend depends on this interface; app-layer provides concrete implementation.
  */
 
-import { SessionPayload } from "@backend";
+import { SessionPayload } from "@findeg/backend";
 
 
 export interface ISessionProvider {
@@ -73,7 +73,7 @@ export interface ISessionProvider {
  * 
  * ```typescript
  * import { cookies } from "next/headers";
- * import { ISessionProvider } from "@backend/features/core";
+ * import { ISessionProvider } from "@findeg/backend/features/core";
  * 
  * export class NextJsSessionProvider implements ISessionProvider {
  *   async createSession(payload: SessionPayload): Promise<void> {

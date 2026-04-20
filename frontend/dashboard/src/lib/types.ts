@@ -9,7 +9,7 @@
  */
 
 import React from "react";
-import type { Locale } from "@backend/features/core";
+import type { Locale } from "@findeg/backend/features/core";
 export type {
   NavigationSubLink,
   NavigationLink,
@@ -20,6 +20,6 @@ export type {
   ViewMode,
   ClientUser as User,
   ClientUser,
-} from "@ui";
+} from "@findeg/ui";
 
 export type Language = Locale;

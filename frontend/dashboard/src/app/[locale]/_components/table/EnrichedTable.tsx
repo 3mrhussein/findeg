@@ -10,7 +10,7 @@
 "use client";
 
 import * as React from "react";
-import { Table, TableBody, TableHead, TableHeader, TableRow } from "@ui";
+import { Table, TableBody, TableHead, TableHeader, TableRow } from "@findeg/ui";
 import { cn } from "@lib/utils";
 
 export interface Column {

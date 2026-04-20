@@ -20,7 +20,7 @@ import { OrderService } from "./OrderService";
  * ```ts
  * // In app data layer (dashboard/src/data/orders/queries.ts):
  * "use cache";
- * import { createOrderServices } from '@backend/features/order';
+ * import { createOrderServices } from '@findeg/backend/features/order';
  * 
  * export async function getOrders(locale: string) {
  *   cacheTag('orders', `orders-${locale}`);

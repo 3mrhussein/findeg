@@ -52,9 +52,9 @@ export {
 // 3. Apps should use exported application layer functions directly (queries, actions)
 //
 // Instead of:
-//   import { container } from '@backend/features/core';
+//   import { container } from '@findeg/backend/features/core';
 //   const service = container.someService;
 //
 // Use:
-//   import { someQuery, someAction } from '@backend/features/[feature]';
+//   import { someQuery, someAction } from '@findeg/backend/features/[feature]';
 //   const result = await someQuery(...);

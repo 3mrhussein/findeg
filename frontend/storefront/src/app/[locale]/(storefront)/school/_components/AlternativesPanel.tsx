@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useTranslations } from "next-intl";
-import { Button } from "@ui";
+import { Button } from "@findeg/ui";
 import { Check, X } from "lucide-react";
 import { cn } from "@lib/utils";
 

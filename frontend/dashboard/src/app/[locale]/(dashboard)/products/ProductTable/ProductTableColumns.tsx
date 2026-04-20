@@ -1,9 +1,9 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import { Badge } from "@ui";
-import { Button } from "@ui";
-import { IconTooltip } from "@ui";
+import { Badge } from "@findeg/ui";
+import { Button } from "@findeg/ui";
+import { IconTooltip } from "@findeg/ui";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,14 +11,14 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@ui";
+} from "@findeg/ui";
 import { Edit, Trash2, MoreHorizontal } from "lucide-react";
 import { Link } from "@i18n/navigation";
-import type { Product } from "@backend/features/catalog";
+import type { Product } from "@findeg/backend/features/catalog";
 import Image from "next/image";
-import { Checkbox } from "@ui";
+import { Checkbox } from "@findeg/ui";
 import { Copy, Archive } from "lucide-react";
-import { VariantEntity } from "@backend/features/catalog";
+import { VariantEntity } from "@findeg/backend/features/catalog";
 import { getCanonicalProductHref } from "../../../../../features/catalog/presentation/utils/product-url";
 
 /**

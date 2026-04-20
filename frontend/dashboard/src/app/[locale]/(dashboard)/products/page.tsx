@@ -1,8 +1,8 @@
 import { Suspense } from "react";
-import { resolveLocale } from "@backend/features/core";
+import { resolveLocale } from "@findeg/backend/features/core";
 import { getTranslations } from "next-intl/server";
 import { ProductListSkeleton } from "@components/skeletons";
-import type { ProductListFilters } from "@backend/features/administration";
+import type { ProductListFilters } from "@findeg/backend/features/administration";
 import { ProductsContent } from "./_components/ProductsContent";
 
 export default async function ProductsPage({

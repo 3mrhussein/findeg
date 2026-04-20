@@ -5,7 +5,7 @@
 
 "use client";
 
-import { Button } from "@ui";
+import { Button } from "@findeg/ui";
 import { Edit, Copy, Eye, FileStack } from "lucide-react";
 import { Link } from "@i18n/navigation";
 import { useToast } from "@hooks/use-toast";

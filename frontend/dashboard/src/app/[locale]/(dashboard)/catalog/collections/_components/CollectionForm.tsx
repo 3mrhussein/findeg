@@ -5,9 +5,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   CollectionInput,
   CollectionInputSchema,
-} from "@backend/features/administration/domain/types";
-import { Collection } from "@backend/features/catalog";
-import { Tag } from "@backend/features/catalog";
+} from "@findeg/backend/features/administration/domain/types";
+import { Collection } from "@findeg/backend/features/catalog";
+import { Tag } from "@findeg/backend/features/catalog";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@i18n/navigation";
 import { useToast } from "@hooks/use-toast";
@@ -20,20 +20,20 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@ui";
-import { Input } from "@ui";
-import { Button } from "@ui";
-import { Switch } from "@ui";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@ui";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@ui";
-import { Badge } from "@ui";
+} from "@findeg/ui";
+import { Input } from "@findeg/ui";
+import { Button } from "@findeg/ui";
+import { Switch } from "@findeg/ui";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@findeg/ui";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@findeg/ui";
+import { Badge } from "@findeg/ui";
 import { ChevronLeft, Save, Loader2, Image as ImageIcon, Tag as TagIcon } from "lucide-react";
 import {
   createCollectionAction as adminCreateCollectionAction,
   updateCollectionAction as adminUpdateCollectionAction,
 } from "@actions/admin-actions";
 
-import { Checkbox } from "@ui";
+import { Checkbox } from "@findeg/ui";
 import Image from "next/image";
 
 interface CollectionFormProps {

@@ -7,9 +7,9 @@
 "use cache";
 
 import { cacheLife, cacheTag } from "next/cache";
-import { createAdministrationServices } from "@backend/features/administration";
-import type { AuditLogEntry } from "@backend/features/administration/domain/entities/AuditLogEntry";
-import type { Locale } from "@backend/features/core";
+import { createAdministrationServices } from "@findeg/backend/features/administration";
+import type { AuditLogEntry } from "@findeg/backend/features/administration/domain/entities/AuditLogEntry";
+import type { Locale } from "@findeg/backend/features/core";
 
 /**
  * Get catalog health statistics for admin dashboard

@@ -4,7 +4,7 @@ import * as React from "react";
 import { Link } from "@i18n/navigation";
 import * as LucideIcons from "lucide-react";
 import { ChevronRight } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@ui";
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@findeg/ui";
 import { cn } from "@lib/utils";
 import { useAdminPermissions } from "../../../../features/administration/presentation/hooks/useAdminPermissions";
 import type { NavItem as NavItemType } from "../../../../features/administration/presentation/config/nav-config";

@@ -1,6 +1,6 @@
 import { Link } from "@i18n/navigation";
-import { Button } from "@ui";
-import { Container } from "@ui";
+import { Button } from "@findeg/ui";
+import { Container } from "@findeg/ui";
 
 interface ErrorPageProps {
   title?: string;

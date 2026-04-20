@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Collection } from "@backend/features/catalog";
+import { Collection } from "@findeg/backend/features/catalog";
 import { CollectionGrid } from "./CollectionGrid";
-import { Button } from "@ui";
-import { Input } from "@ui";
+import { Button } from "@findeg/ui";
+import { Input } from "@findeg/ui";
 import { Plus, Search, Trash, AlertTriangle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link } from "@i18n/navigation";
@@ -16,7 +16,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@ui";
+} from "@findeg/ui";
 import { deleteCollectionAction } from "@actions/admin-actions";
 import { useToast } from "@hooks/use-toast";
 import { useRouter } from "@i18n/navigation";

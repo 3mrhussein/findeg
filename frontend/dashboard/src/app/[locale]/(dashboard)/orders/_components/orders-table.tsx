@@ -1,10 +1,10 @@
 "use client";
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@ui";
-import { Button } from "@ui";
-import { IconTooltip } from "@ui";
-import { Order } from "@backend/features/order";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ui";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@findeg/ui";
+import { Button } from "@findeg/ui";
+import { IconTooltip } from "@findeg/ui";
+import { Order } from "@findeg/backend/features/order";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@findeg/ui";
 import { updateOrderPaymentStatusAction, updateOrderStatusAction } from "@actions/order-actions";
 import { useToast } from "@hooks/use-toast";
 import { useState } from "react";

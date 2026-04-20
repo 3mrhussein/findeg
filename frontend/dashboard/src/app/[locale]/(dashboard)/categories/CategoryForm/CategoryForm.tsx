@@ -2,11 +2,11 @@
 
 import { useForm, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@ui";
-import { Form } from "@ui";
+import { Button } from "@findeg/ui";
+import { Form } from "@findeg/ui";
 import { deleteCategoryAction } from "@actions/admin-actions";
 import { createCategoryAction, updateCategoryAction } from "@actions/admin-actions";
-import { CategoryInput } from "@backend/features/administration/domain/types";
+import { CategoryInput } from "@findeg/backend/features/administration/domain/types";
 
 import { useRouter } from "@i18n/navigation";
 import { useState } from "react";

@@ -20,9 +20,9 @@ export async function getUnreadNotificationCountAction() {
  */
 export async function logAction(payload: any): Promise<void> {
   const { logRequestAction: backendLogAction } =
-    await import("@backend/features/core/application/actions/logging");
+    await import("@findeg/backend/features/core/application/actions/logging");
   const { ServiceContainer } =
-    await import("@backend/features/core/infrastructure/di/ServiceContainer");
+    await import("@findeg/backend/features/core/infrastructure/di/ServiceContainer");
 
   try {
     const container = ServiceContainer.getInstance();

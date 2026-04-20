@@ -37,7 +37,7 @@ import { AdminSearchAnalyticsService } from "./AdminSearchAnalyticsService";
  * ```ts
  * // In app data layer (dashboard/src/data/products/queries.ts):
  * "use cache";
- * import { createCatalogServices } from '@backend/features/catalog';
+ * import { createCatalogServices } from '@findeg/backend/features/catalog';
  * 
  * export async function getProducts(locale: string) {
  *   cacheTag('products', `products-${locale}`);

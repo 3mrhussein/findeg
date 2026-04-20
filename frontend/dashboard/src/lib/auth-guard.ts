@@ -1,6 +1,6 @@
 import { redirect } from "@i18n/navigation";
-import { isAdminSession } from "@backend/features/core";
-import type { SessionPayload } from "@backend/features/core";
+import { isAdminSession } from "@findeg/backend/features/core";
+import type { SessionPayload } from "@findeg/backend/features/core";
 import type { Locale } from "next-intl";
 import { getSession } from "@lib/session";
 

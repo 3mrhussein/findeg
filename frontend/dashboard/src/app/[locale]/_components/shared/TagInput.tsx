@@ -2,13 +2,13 @@
 
 import * as React from "react";
 import { X, Plus, Search, Check } from "lucide-react";
-import { Badge } from "@ui";
-import { Button } from "@ui";
-import { Input } from "@ui";
-import { Popover, PopoverContent, PopoverTrigger } from "@ui";
-import { ScrollArea } from "@ui";
+import { Badge } from "@findeg/ui";
+import { Button } from "@findeg/ui";
+import { Input } from "@findeg/ui";
+import { Popover, PopoverContent, PopoverTrigger } from "@findeg/ui";
+import { ScrollArea } from "@findeg/ui";
 import { cn } from "@lib/utils";
-import { type Tag } from "@backend/features/catalog";
+import { type Tag } from "@findeg/backend/features/catalog";
 
 interface TagInputProps {
   tags: Tag[];

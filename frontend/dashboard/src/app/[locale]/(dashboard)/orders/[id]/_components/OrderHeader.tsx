@@ -1,9 +1,9 @@
 "use client";
 
 import { useTransition } from "react";
-import { type Order } from "@backend/features/order";
-import { Button } from "@ui";
-import { Badge } from "@ui";
+import { type Order } from "@findeg/backend/features/order";
+import { Button } from "@findeg/ui";
+import { Badge } from "@findeg/ui";
 import { Printer, RefreshCcw } from "lucide-react";
 import { updateOrderStatusAction as adminUpdateOrderStatusAction } from "@actions/order-actions";
 

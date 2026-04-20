@@ -16,10 +16,10 @@
 
 import { redirect } from "@i18n/navigation";
 import { getSession, createSession } from "@lib/session";
-import { createIdentityServices } from "@backend/features/identity";
+import { createIdentityServices } from "@findeg/backend/features/identity";
 import { revalidatePath } from "next/cache";
 import { getErrorMessage } from "@lib/type-guards";
-import type { SessionPayload } from "@backend/features/core";
+import type { SessionPayload } from "@findeg/backend/features/core";
 
 /**
  * Server Action: Update current user's profile

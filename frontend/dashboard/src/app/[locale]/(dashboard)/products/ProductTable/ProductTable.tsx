@@ -7,7 +7,7 @@ import {
   getSortedRowModel,
   type SortingState,
 } from "@tanstack/react-table";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@ui";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@findeg/ui";
 import { useState, useTransition } from "react";
 import { usePathname, useRouter } from "@i18n/navigation";
 import { deleteProductAction, setProductStatusAction } from "@actions/admin-actions";

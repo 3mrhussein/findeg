@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { Badge, BadgeProps } from "@ui";
-import { Tag } from "@backend/features/catalog";
+import { Badge, BadgeProps } from "@findeg/ui";
+import { Tag } from "@findeg/backend/features/catalog";
 import { cn } from "@lib/utils";
 import * as LucideIcons from "lucide-react";
 import type { LucideIcon } from "lucide-react";

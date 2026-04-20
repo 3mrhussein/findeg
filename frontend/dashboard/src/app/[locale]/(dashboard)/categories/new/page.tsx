@@ -1,6 +1,6 @@
 import { CategoryForm } from "../CategoryForm";
-import { Card, CardContent, CardHeader, CardTitle } from "@ui";
-import { resolveLocale } from "@backend/features/core";
+import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
+import { resolveLocale } from "@findeg/backend/features/core";
 import { getCategories } from "@data/categories/queries";
 
 /**

@@ -3,11 +3,11 @@
 import React from "react";
 import { useFormContext, useFieldArray } from "react-hook-form";
 import { useTranslations } from "next-intl";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@ui";
-import { Card, CardContent, CardHeader, CardTitle } from "@ui";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@findeg/ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
 import { type ProductFormValues } from "../../../../../features/administration/presentation/forms/product-form";
-import { type Category, type Brand, type Tag } from "@backend/features/catalog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ui";
+import { type Category, type Brand, type Tag } from "@findeg/backend/features/catalog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@findeg/ui";
 import { TagInput } from "@/app/[locale]/_components/shared/TagInput";
 import {
   CascadingCategoryPicker,

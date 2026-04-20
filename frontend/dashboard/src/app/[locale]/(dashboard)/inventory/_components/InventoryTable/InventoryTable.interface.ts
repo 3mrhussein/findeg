@@ -2,7 +2,7 @@
  * InventoryTable — shared types & interfaces
  */
 
-import type { Product } from "@backend/features/catalog";
+import type { Product } from "@findeg/backend/features/catalog";
 
 export interface InventoryTableProps {
   products: Product[];

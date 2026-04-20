@@ -16,7 +16,7 @@ import {
   hasAllPermissions,
   PermissionCode,
   SessionPayload,
-} from "@backend/features/core";
+} from "@findeg/backend/features/core";
 
 /**
  * The set of helpers available to any component nested within a PermissionsProvider.

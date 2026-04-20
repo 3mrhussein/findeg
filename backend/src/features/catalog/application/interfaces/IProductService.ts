@@ -5,8 +5,8 @@
  * Variant-specific pricing (sell options, price quotes) has been moved to IVariantService.
  */
 
-import { type Product } from "@backend/features/catalog/domain/entities/Product";
-import type { Locale } from "@backend/features/core/domain/value-objects";
+import { type Product } from "@findeg/backend/features/catalog/domain/entities/Product";
+import type { Locale } from "@findeg/backend/features/core/domain/value-objects";
 import { type ProductFilters } from "./IProductRepository";
 
 export interface IProductService {

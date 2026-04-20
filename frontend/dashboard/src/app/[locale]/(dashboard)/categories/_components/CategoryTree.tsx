@@ -31,15 +31,15 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { Button } from "@ui";
-import { Input } from "@ui";
+import { Button } from "@findeg/ui";
+import { Input } from "@findeg/ui";
 import { Plus, Search } from "lucide-react";
 import { CategoryRow } from "./CategoryRow";
 import { CategoryFormPanel } from "./CategoryFormPanel";
 import { CategoryDrawer } from "./CategoryDrawer";
-import { EmptyState } from "@ui";
+import { EmptyState } from "@findeg/ui";
 import { checkCategorySlugAvailableAction as checkSlugAvailableAction } from "@actions/admin-actions";
-import type { Category } from "@backend/features/catalog";
+import type { Category } from "@findeg/backend/features/catalog";
 import { useTranslations } from "next-intl";
 import { moveCategoryUpAction, moveCategoryDownAction } from "@actions/admin-actions";
 
@@ -51,7 +51,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@ui";
+} from "@findeg/ui";
 import { cn } from "@lib/utils";
 
 interface CategoryTreeProps {

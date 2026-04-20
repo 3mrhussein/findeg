@@ -1,62 +1,8 @@
 {
-  "name": "backend",
+  "name": "@findeg/backend",
   "version": "0.1.0",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
-    },
-    "./features/core": {
-      "types": "./dist/features/core/index.d.ts",
-      "default": "./dist/features/core/index.js"
-    },
-    "./features/identity": {
-      "types": "./dist/features/identity/index.d.ts",
-      "default": "./dist/features/identity/index.js"
-    },
-    "./features/media": {
-      "types": "./dist/features/media/index.d.ts",
-      "default": "./dist/features/media/index.js"
-    },
-    "./features/catalog": {
-      "types": "./dist/features/catalog/index.d.ts",
-      "default": "./dist/features/catalog/index.js"
-    },
-    "./features/cart": {
-      "types": "./dist/features/cart/index.d.ts",
-      "default": "./dist/features/cart/index.js"
-    },
-    "./features/order": {
-      "types": "./dist/features/order/index.d.ts",
-      "default": "./dist/features/order/index.js"
-    },
-    "./features/review": {
-      "types": "./dist/features/review/index.d.ts",
-      "default": "./dist/features/review/index.js"
-    },
-    "./features/school": {
-      "types": "./dist/features/school/index.d.ts",
-      "default": "./dist/features/school/index.js"
-    },
-    "./features/notifications": {
-      "types": "./dist/features/notifications/index.d.ts",
-      "default": "./dist/features/notifications/index.js"
-    },
-    "./features/administration": {
-      "types": "./dist/features/administration/index.d.ts",
-      "default": "./dist/features/administration/index.js"
-    },
-    "./lib": {
-      "types": "./dist/lib/index.d.ts",
-      "default": "./dist/lib/index.js"
-    },
-    "./types": {
-      "types": "./dist/types/index.d.ts",
-      "default": "./dist/types/index.js"
-    }
-  },
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
   "scripts": {
     "build": "tsc --build",
     "dev": "tsc --build --watch",

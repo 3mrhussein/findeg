@@ -14,7 +14,7 @@
 
 import React from "react";
 import { AlertCircle, RotateCcw } from "lucide-react";
-import { Button } from "@ui";
+import { Button } from "@findeg/ui";
 
 interface DashboardErrorBoundaryProps {
   children: React.ReactNode;

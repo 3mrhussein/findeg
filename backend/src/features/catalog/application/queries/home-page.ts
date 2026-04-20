@@ -1,4 +1,4 @@
-import { ProductEntity, type Product } from "@backend/features/catalog/domain/entities/Product";
+import { ProductEntity, type Product } from "@findeg/backend/features/catalog/domain/entities/Product";
 
 export interface HomeFeaturedGroups {
   all: Product[];

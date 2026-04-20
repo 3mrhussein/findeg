@@ -1,6 +1,6 @@
 "use server";
 
-import { createIdentityServices } from "@backend/features/identity";
+import { createIdentityServices } from "@findeg/backend/features/identity";
 import { getSession } from "@lib/session";
 import { revalidatePath } from "next/cache";
 

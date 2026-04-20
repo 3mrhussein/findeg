@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { AddToCartButton } from "../../../_components/AddToCartButton";
 import { QuantitySelector } from "@components/shared/QuantitySelector";
-import { Product } from "@backend/features/catalog/domain/entities/Product";
+import { Product } from "@findeg/backend/features/catalog/domain/entities/Product";
 
 interface AddToCartSectionProps {
   product: Product;

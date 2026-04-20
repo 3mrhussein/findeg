@@ -1,6 +1,6 @@
 "use client";
 
-import { Separator } from "@ui";
+import { Separator } from "@findeg/ui";
 
 interface OrderTotalsProps {
   order: any;

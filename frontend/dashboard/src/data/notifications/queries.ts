@@ -7,7 +7,7 @@
 "use cache";
 
 import { cacheLife, cacheTag } from "next/cache";
-import { createNotificationServices } from "@backend/features/notifications";
+import { createNotificationServices } from "@findeg/backend/features/notifications";
 
 /**
  * Get unread notifications for a user

@@ -1,7 +1,7 @@
 "use client";
 
-import { Input } from "@ui";
-import { Label } from "@ui";
+import { Input } from "@findeg/ui";
+import { Label } from "@findeg/ui";
 
 /**
  *

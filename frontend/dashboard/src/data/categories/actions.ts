@@ -7,8 +7,8 @@
 "use server";
 
 import { revalidatePath, updateTag } from "next/cache";
-import { createAdministrationServices } from "@backend/features/administration";
-import type { CategoryInput } from "@backend/features/administration/domain/types";
+import { createAdministrationServices } from "@findeg/backend/features/administration";
+import type { CategoryInput } from "@findeg/backend/features/administration/domain/types";
 import { getErrorMessage } from "@lib/type-guards";
 
 /**

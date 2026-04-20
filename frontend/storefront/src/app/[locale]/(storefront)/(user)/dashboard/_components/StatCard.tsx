@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
 
 interface StatCardProps {
   title: string;

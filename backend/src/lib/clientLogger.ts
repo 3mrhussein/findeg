@@ -1,6 +1,6 @@
 "use client";
 
-import { logRequestAction } from "@backend/features/core/application/actions/logging";
+import { logRequestAction } from "@findeg/backend/features/core/application/actions/logging";
 
 /**
  * Client Logger

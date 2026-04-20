@@ -1,12 +1,12 @@
 "use client";
 
-import { Button } from "@ui";
-import { Label } from "@ui";
-import { Input } from "@ui";
-import { Checkbox } from "@ui";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ui";
+import { Button } from "@findeg/ui";
+import { Label } from "@findeg/ui";
+import { Input } from "@findeg/ui";
+import { Checkbox } from "@findeg/ui";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@findeg/ui";
 import { Loader2, Plus, Trash2 } from "lucide-react";
-import type { CustomerGroup, UomCode } from "@backend/features/core/domain/types/common";
+import type { CustomerGroup, UomCode } from "@findeg/backend/features/core/domain/types/common";
 
 const UOM_VALUES = ["pcs", "pack", "carton"] as const;
 const CUSTOMER_GROUP_VALUES = ["public_b2c", "school_b2b", "wholesale"] as const;

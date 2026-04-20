@@ -7,10 +7,10 @@
  * They accept the necessary services as arguments to avoid infrastructure leakage.
  */
 
-import { NotAuthenticatedError, ValidationError } from "@backend/features/core/domain/errors";
-import type { ServiceResult } from "@backend/features/core/application/types";
-import { isAdminSession, createUserVO } from "@backend/features/core/domain/auth";
-import type { SessionPayload } from "@backend/features/core/domain/auth";
+import { NotAuthenticatedError, ValidationError } from "@findeg/backend/features/core/domain/errors";
+import type { ServiceResult } from "@findeg/backend/features/core/application/types";
+import { isAdminSession, createUserVO } from "@findeg/backend/features/core/domain/auth";
+import type { SessionPayload } from "@findeg/backend/features/core/domain/auth";
 import type { IAuthService } from "../interfaces/IAuthService";
 
 /**

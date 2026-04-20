@@ -1,7 +1,7 @@
 import { type IVariantService } from "../interfaces/IVariantService";
 import { type IVariantRepository, type SellOption } from "../interfaces/IVariantRepository";
-import { type CustomerGroup, type UomCode } from "@backend/features/core/domain/types/common";
-import { type CurrencyCode } from "@backend/features/core/domain/value-objects";
+import { type CustomerGroup, type UomCode } from "@findeg/backend/features/core/domain/types/common";
+import { type CurrencyCode } from "@findeg/backend/features/core/domain/value-objects";
 
 export class VariantService implements IVariantService {
   constructor(private variantRepository: IVariantRepository) {}

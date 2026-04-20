@@ -3,9 +3,9 @@ import {
   PaymentStatus,
   PaymentStatusSchema,
   OrderStatus,
-} from "@backend/features/core/domain/types/common";
-import type { Order } from "@backend/features/order";
-import { createAdministrationServices } from "@backend/features/administration";
+} from "@findeg/backend/features/core/domain/types/common";
+import type { Order } from "@findeg/backend/features/order";
+import { createAdministrationServices } from "@findeg/backend/features/administration";
 
 export interface AdminOrdersPageQueryParams {
   search?: string;

@@ -2,17 +2,17 @@
 
 import * as React from "react";
 import { Search, Bell, Menu, Package, ShoppingCart } from "lucide-react";
-import { Input } from "@ui";
-import { Button } from "@ui";
-import { Avatar, AvatarFallback } from "@ui";
+import { Input } from "@findeg/ui";
+import { Button } from "@findeg/ui";
+import { Avatar, AvatarFallback } from "@findeg/ui";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@ui";
-import { ToggleTheme } from "@ui";
+} from "@findeg/ui";
+import { ToggleTheme } from "@findeg/ui";
 import ToggleLanguage from "@components/shared/ToggleLanguage";
 import { WebMCPBadge } from "@components/shared/WebMCPBadge";
 import { cn } from "@lib/utils";

@@ -1,5 +1,5 @@
 import { requireAdmin } from "@lib/auth-guard";
-import { PERMISSION_CODES } from "@backend/features/core";
+import { PERMISSION_CODES } from "@findeg/backend/features/core";
 import { AdminUsersList } from "./_components/AdminUsersList";
 import type { Locale } from "next-intl";
 import { redirect } from "@i18n/navigation";

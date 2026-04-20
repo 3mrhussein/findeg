@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "@i18n/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@ui";
-import { Label } from "@ui";
-import { Input } from "@ui";
-import { Textarea } from "@ui";
-import { Button } from "@ui";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
+import { Label } from "@findeg/ui";
+import { Input } from "@findeg/ui";
+import { Textarea } from "@findeg/ui";
+import { Button } from "@findeg/ui";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@findeg/ui";
 import { updateOrderPaymentStatusAction, updateOrderStatusAction } from "@actions/order-actions";
 import { useToast } from "@hooks/use-toast";
 

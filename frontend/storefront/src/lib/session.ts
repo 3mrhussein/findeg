@@ -1,5 +1,5 @@
-import type { SessionPayload } from "@backend/features/core";
-import { CookieSessionProvider, type ICookieStore } from "@backend/features/core";
+import type { SessionPayload } from "@findeg/backend/features/core";
+import { CookieSessionProvider, type ICookieStore } from "@findeg/backend/features/core";
 import { cookies } from "next/headers";
 
 /**

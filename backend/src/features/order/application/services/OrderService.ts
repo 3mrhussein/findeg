@@ -1,4 +1,4 @@
-import { type ID } from "@backend/features/core/domain/types/common";
+import { type ID } from "@findeg/backend/features/core/domain/types/common";
 import { type IOrderRepository, type OrderFilters } from "../interfaces/IOrderRepository";
 import { type Order } from "../../domain/entities/Order";
 

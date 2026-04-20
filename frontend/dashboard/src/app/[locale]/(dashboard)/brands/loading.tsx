@@ -1,4 +1,4 @@
-import { Skeleton } from "@ui";
+import { Skeleton } from "@findeg/ui";
 
 export default function BrandsLoading() {
   return (

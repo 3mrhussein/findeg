@@ -3,12 +3,12 @@
 import React from "react";
 import { useTranslations } from "next-intl";
 import { Globe, Box, Pencil, Trash2, Eye, EyeOff } from "lucide-react";
-import { Button } from "@ui";
-import { Badge } from "@ui";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@ui";
+import { Button } from "@findeg/ui";
+import { Badge } from "@findeg/ui";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@findeg/ui";
 import { StatusBadge } from "@components/shared/StatusBadge";
 import { cn } from "@lib/utils";
-import { Brand } from "@backend/features/catalog";
+import { Brand } from "@findeg/backend/features/catalog";
 import Image from "next/image";
 
 interface BrandCardProps {

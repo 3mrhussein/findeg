@@ -1,8 +1,8 @@
 "use client";
 
 import { AlertTriangle } from "lucide-react";
-import { Button } from "@ui";
-import { Container } from "@ui";
+import { Button } from "@findeg/ui";
+import { Container } from "@findeg/ui";
 
 interface PageStateErrorProps {
   title: string;

@@ -2,7 +2,7 @@
 
 import { requireAdmin } from "@lib/auth-guard";
 import { updateTag } from "next/cache";
-import { createIdentityServices } from "@backend/features/identity";
+import { createIdentityServices } from "@findeg/backend/features/identity";
 import type { Locale } from "next-intl";
 import { getErrorMessage } from "@lib/type-guards";
 

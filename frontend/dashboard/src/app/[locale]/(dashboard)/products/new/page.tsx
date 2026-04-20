@@ -1,6 +1,6 @@
 import { getAllCategories, getAllBrands, getAllTags } from "@data/resources/queries";
 import { ProductForm } from "@/app/[locale]/(dashboard)/products/_components/ProductForm";
-import { resolveLocale } from "@backend/features/core";
+import { resolveLocale } from "@findeg/backend/features/core";
 
 /**
  * /admin/products/new

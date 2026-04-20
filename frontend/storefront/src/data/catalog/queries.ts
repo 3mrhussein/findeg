@@ -27,10 +27,10 @@ import {
   type ProductDetailPageData,
   getCollectionsPageData,
   type CollectionsPageData,
-} from "@backend/features/catalog";
-import { createReviewServices } from "@backend/features/review";
-import { resolveLocale, type Locale } from "@backend/features/core";
-import { getProductEnglishSlug } from "@backend/features/catalog/domain/utils/slug";
+} from "@findeg/backend/features/catalog";
+import { createReviewServices } from "@findeg/backend/features/review";
+import { resolveLocale, type Locale } from "@findeg/backend/features/core";
+import { getProductEnglishSlug } from "@findeg/backend/features/catalog/domain/utils/slug";
 
 /**
  * Shop PLP Data

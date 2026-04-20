@@ -3,12 +3,12 @@
 import React from "react";
 import Image from "next/image";
 import { useRouter } from "@i18n/navigation";
-import { Product } from "@backend/features/catalog/domain/entities/Product";
-import { Button } from "@ui";
-import { Price } from "@ui";
+import { Product } from "@findeg/backend/features/catalog/domain/entities/Product";
+import { Button } from "@findeg/ui";
+import { Price } from "@findeg/ui";
 import { useTranslations } from "next-intl";
 import { useCart } from "@hooks/useCart";
-import { Icon } from "@ui";
+import { Icon } from "@findeg/ui";
 
 interface ProductListItemUIProps {
   product: Product;

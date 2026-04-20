@@ -1,2 +1,2 @@
-export * from "@backend/features/administration";
+export * from "@findeg/backend/features/administration";
 export * from "./application/actions";

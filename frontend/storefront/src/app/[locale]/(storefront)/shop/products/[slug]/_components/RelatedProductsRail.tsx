@@ -2,7 +2,7 @@
 
 import { Link2 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import type { Product } from "@backend/features/catalog/domain/entities/Product";
+import type { Product } from "@findeg/backend/features/catalog/domain/entities/Product";
 import { ProductCard } from "../../../_components/ProductCard";
 
 interface RelatedProductsRailProps {

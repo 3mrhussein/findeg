@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useTranslations } from "next-intl";
-import { SessionState } from "@backend/features/school/application/interfaces/IParentListService";
+import { SessionState } from "@findeg/backend/features/school/application/interfaces/IParentListService";
 import { ListReturnDialog } from "@app/[locale]/(storefront)/school/_components/ListReturnDialog";
 import { ListProgressBar } from "@app/[locale]/(storefront)/school/_components/ListProgressBar";
 import { StickyActionBar } from "@app/[locale]/(storefront)/school/_components/StickyActionBar";

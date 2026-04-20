@@ -68,7 +68,7 @@ export type PortalRole = z.infer<typeof PortalRoleSchema>;
 
 // NOTE: isStaffRole, isSchoolRole, isCustomerRole moved to domain/auth/authorization.ts
 // to avoid exposing this file (which has @ imports) from the core package.
-// Use: import { isStaffRole } from "@backend/features/core";
+// Use: import { isStaffRole } from "@findeg/backend/features/core";
 
 export {
   ActorTypeSchema,

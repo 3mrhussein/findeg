@@ -1,10 +1,10 @@
 import { SchoolCard } from "@app/[locale]/(storefront)/school/_components/SchoolCard";
 import { searchSchools, getSchoolFilterOptions } from "@/data/school/queries";
-import type { SchoolSearchParams } from "@backend/features/school";
-import { Badge } from "@ui";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@ui";
-import { Input } from "@ui";
-import { Button } from "@ui";
+import type { SchoolSearchParams } from "@findeg/backend/features/school";
+import { Badge } from "@findeg/ui";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@findeg/ui";
+import { Input } from "@findeg/ui";
+import { Button } from "@findeg/ui";
 import { Search, SlidersHorizontal, PlusCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link } from "@i18n/navigation";

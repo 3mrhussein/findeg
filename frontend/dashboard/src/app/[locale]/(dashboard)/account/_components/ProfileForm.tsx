@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Input, Button } from "@ui";
+import { Input, Button } from "@findeg/ui";
 
 interface ProfileFormProps {
   userData: {

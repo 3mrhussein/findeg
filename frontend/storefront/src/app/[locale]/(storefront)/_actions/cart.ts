@@ -1,8 +1,8 @@
 "use server";
 
-import { createCartServices } from "@backend/features/cart";
-import { createCatalogServices } from "@backend/features/catalog";
-import { UomCode } from "@backend/features/core/domain/types/common";
+import { createCartServices } from "@findeg/backend/features/cart";
+import { createCatalogServices } from "@findeg/backend/features/catalog";
+import { UomCode } from "@findeg/backend/features/core/domain/types/common";
 import { revalidateTag } from "next/cache";
 
 /**

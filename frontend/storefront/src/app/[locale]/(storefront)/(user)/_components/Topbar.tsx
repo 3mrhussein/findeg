@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@ui";
-import { IconTooltip } from "@ui";
+import { Button } from "@findeg/ui";
+import { IconTooltip } from "@findeg/ui";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,9 +9,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@ui";
+} from "@findeg/ui";
 import { CircleUser, Search } from "lucide-react";
-import { Input } from "@ui";
+import { Input } from "@findeg/ui";
 import { logoutAction } from "../../_actions/auth";
 
 /**

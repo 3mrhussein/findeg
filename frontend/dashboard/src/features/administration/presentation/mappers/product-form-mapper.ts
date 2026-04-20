@@ -1,6 +1,6 @@
-import type { Product } from "@backend/features/catalog";
+import type { Product } from "@findeg/backend/features/catalog";
 import type { ProductFormValues } from "../forms/product-form";
-import { ProductEntity } from "@backend/features/catalog";
+import { ProductEntity } from "@findeg/backend/features/catalog";
 
 /**
  * Transforms a Product domain object into the shape expected

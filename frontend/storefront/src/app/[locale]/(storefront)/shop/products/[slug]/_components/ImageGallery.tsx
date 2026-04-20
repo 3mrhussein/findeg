@@ -3,10 +3,10 @@
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Button } from "@ui";
-import { Badge } from "@ui";
-import { Dialog, DialogContent } from "@ui";
-import { IconTooltip } from "@ui";
+import { Button } from "@findeg/ui";
+import { Badge } from "@findeg/ui";
+import { Dialog, DialogContent } from "@findeg/ui";
+import { IconTooltip } from "@findeg/ui";
 import { cn } from "@lib/utils";
 
 export interface GalleryImage {

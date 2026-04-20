@@ -19,12 +19,12 @@
 
 import React, { useState, useEffect, useMemo, useTransition } from "react";
 import { useTranslations } from "next-intl";
-import { Button } from "@ui";
-import { Input } from "@ui";
-import { Badge } from "@ui";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@ui";
-import { Icon } from "@ui";
-import { PERMISSION_CODES } from "@backend/features/core";
+import { Button } from "@findeg/ui";
+import { Input } from "@findeg/ui";
+import { Badge } from "@findeg/ui";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@findeg/ui";
+import { Icon } from "@findeg/ui";
+import { PERMISSION_CODES } from "@findeg/backend/features/core";
 import { usePermissions } from "@providers/PermissionsProvider";
 // @ts-ignore
 import { useAdminUsers, type AdminUser } from "@hooks/useAdminUsers";

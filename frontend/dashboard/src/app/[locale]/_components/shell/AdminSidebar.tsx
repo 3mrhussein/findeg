@@ -3,9 +3,9 @@
 import * as React from "react";
 import { Link } from "@i18n/navigation";
 import { PanelLeftClose, PanelLeftOpen, LogOut } from "lucide-react";
-import { Avatar, AvatarFallback } from "@ui";
-import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@ui";
-import { ScrollArea } from "@ui";
+import { Avatar, AvatarFallback } from "@findeg/ui";
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@findeg/ui";
+import { ScrollArea } from "@findeg/ui";
 import { cn } from "@lib/utils";
 import { NavGroup } from "./NavGroup";
 import { ADMIN_NAV } from "../../../../features/administration/presentation/config/nav-config";

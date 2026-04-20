@@ -6,7 +6,7 @@ import {
   deleteBrandAction,
   toggleBrandStatusAction,
 } from "@actions/admin-actions";
-import { BrandInput } from "@backend/features/administration/domain/types";
+import { BrandInput } from "@findeg/backend/features/administration/domain/types";
 
 /**
  *

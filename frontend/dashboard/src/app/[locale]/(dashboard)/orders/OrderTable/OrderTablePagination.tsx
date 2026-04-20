@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@ui";
+import { Button } from "@findeg/ui";
 import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
 
 interface OrderTablePaginationProps {

@@ -1,12 +1,12 @@
 "use client";
 
 import * as React from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@ui";
-import { Progress } from "@ui";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@findeg/ui";
+import { Progress } from "@findeg/ui";
 import { ArrowRight, CheckCircle2, AlertCircle } from "lucide-react";
 import { Link } from "@i18n/navigation";
 import { useTranslations } from "next-intl";
-import { CatalogHealthStats } from "@backend/features/administration/domain/types";
+import { CatalogHealthStats } from "@findeg/backend/features/administration/domain/types";
 
 interface CatalogCompletionBoardProps {
   stats: CatalogHealthStats;

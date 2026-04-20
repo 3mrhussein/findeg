@@ -5,7 +5,7 @@
  * All operations are at the variant + warehouse granularity.
  */
 
-import { type ID, type Quantity } from "@backend/features/core/domain/types/common";
+import { type ID, type Quantity } from "@findeg/backend/features/core/domain/types/common";
 import type { Variant } from "../../domain/entities/Variant";
 
 // ─── Types ───────────────────────────────────────────────────────────────────

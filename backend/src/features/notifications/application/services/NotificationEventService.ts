@@ -1,6 +1,6 @@
 import { INotificationService } from "../interfaces/INotificationService";
-import { IEmailService } from "@backend/features/notifications/application/services/IEmailService";
-import { Order } from "@backend/features/order/domain/entities/Order";
+import { IEmailService } from "@findeg/backend/features/notifications/application/services/IEmailService";
+import { Order } from "@findeg/backend/features/order/domain/entities/Order";
 
 /**
  * Notification Event Service

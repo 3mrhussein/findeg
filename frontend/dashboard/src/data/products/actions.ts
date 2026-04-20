@@ -7,11 +7,11 @@
 "use server";
 
 import { updateTag } from "next/cache";
-import { createAdministrationServices } from "@backend/features/administration";
+import { createAdministrationServices } from "@findeg/backend/features/administration";
 import type {
   CreateProductWithVariantsInput,
   UpdateProductWithVariantsInput,
-} from "@backend/features/administration/domain/types";
+} from "@findeg/backend/features/administration/domain/types";
 import { getErrorMessage } from "@lib/type-guards";
 
 /**

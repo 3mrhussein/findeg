@@ -5,11 +5,11 @@
  * App-layer (dashboard) handles cache revalidation after operations.
  */
 
-import { container } from "@backend/features/core/infrastructure/di/ServiceContainer";
-import { ResourceNotFoundError, ValidationError } from "@backend/features/core/domain/errors";
-import { CategoryInput } from "@backend/features/administration/domain/types";
-import type { ServiceResult } from "@backend/features/core/application/types";
-import { getCategoryCachePaths, getCategoryCacheTags } from "@backend/features/catalog/domain/cache";
+import { container } from "@findeg/backend/features/core/infrastructure/di/ServiceContainer";
+import { ResourceNotFoundError, ValidationError } from "@findeg/backend/features/core/domain/errors";
+import { CategoryInput } from "@findeg/backend/features/administration/domain/types";
+import type { ServiceResult } from "@findeg/backend/features/core/application/types";
+import { getCategoryCachePaths, getCategoryCacheTags } from "@findeg/backend/features/catalog/domain/cache";
 
 /**
  * Pure category creation - no framework calls.

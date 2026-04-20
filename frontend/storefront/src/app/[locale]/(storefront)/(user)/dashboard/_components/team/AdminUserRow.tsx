@@ -11,11 +11,11 @@
 
 import React from "react";
 import { useTranslations } from "next-intl";
-import { Avatar, AvatarFallback } from "@ui";
-import { Badge } from "@ui";
-import { TableCell, TableRow } from "@ui";
-import { Skeleton } from "@ui";
-import { Icon } from "@ui";
+import { Avatar, AvatarFallback } from "@findeg/ui";
+import { Badge } from "@findeg/ui";
+import { TableCell, TableRow } from "@findeg/ui";
+import { Skeleton } from "@findeg/ui";
+import { Icon } from "@findeg/ui";
 import { type AdminUser } from "@hooks/useAdminUsers";
 import { AdminActionsMenu } from "./AdminActionsMenu";
 

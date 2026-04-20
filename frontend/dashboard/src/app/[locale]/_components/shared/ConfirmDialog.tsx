@@ -16,8 +16,8 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@ui";
-import { Button } from "@ui";
+} from "@findeg/ui";
+import { Button } from "@findeg/ui";
 
 export interface ConfirmDialogProps {
   /** Dialog open state */

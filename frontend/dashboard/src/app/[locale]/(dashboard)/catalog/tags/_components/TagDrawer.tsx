@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Sheet, SheetContent } from "@ui";
-import { Tag } from "@backend/features/catalog";
-import { TagInput } from "@backend/features/administration/domain/types";
+import { Sheet, SheetContent } from "@findeg/ui";
+import { Tag } from "@findeg/backend/features/catalog";
+import { TagInput } from "@findeg/backend/features/administration/domain/types";
 import { TagFormPanel } from "./TagFormPanel";
 import { createTagAction, updateTagAction, getTagProductCountAction } from "@actions/admin-actions";
 import { useRouter } from "@i18n/navigation";

@@ -3,8 +3,8 @@
  * Shows thumbnail + name + SKU/category/brand + stock + status + timestamp
  */
 
-import type { Product } from "@backend/features/catalog";
-import { Badge } from "@ui";
+import type { Product } from "@findeg/backend/features/catalog";
+import { Badge } from "@findeg/ui";
 import { StatusBadge } from "@components/shared/StatusBadge";
 import { AlertCircle } from "lucide-react";
 import Image from "next/image";
@@ -14,9 +14,9 @@ interface ProductCompactProps {
   product: Product;
 }
 
-import { TableCell } from "@ui";
+import { TableCell } from "@findeg/ui";
 import { cn } from "@lib/utils";
-import { VariantEntity } from "@backend/features/catalog";
+import { VariantEntity } from "@findeg/backend/features/catalog";
 
 export function ProductCompact({ product }: ProductCompactProps) {
   // Calculate total stock from all variants

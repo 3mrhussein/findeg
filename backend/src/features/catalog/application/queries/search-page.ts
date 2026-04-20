@@ -1,6 +1,6 @@
 import { createCatalogServices } from "../services/factory";
 import { getSearchPageData } from "./storefront";
-import type { Product } from "@backend/features/catalog/domain/entities/Product";
+import type { Product } from "@findeg/backend/features/catalog/domain/entities/Product";
 import type { FilterOption, CategoryFilterOption } from "./listing";
 import {
   applyListingFilters,
@@ -9,7 +9,7 @@ import {
   getPriceBounds,
   parseListingFilters,
 } from "./listing";
-import { resolveLocale } from "@backend/features/core/domain/value-objects";
+import { resolveLocale } from "@findeg/backend/features/core/domain/value-objects";
 
 export interface SearchPageViewModel {
   query: string;

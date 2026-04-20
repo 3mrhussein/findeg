@@ -1,4 +1,4 @@
-import type { DomainError } from "@backend/features/core";
+import type { DomainError } from "@findeg/backend/features/core";
 
 /**
  * Storefront Error Handler Utilities

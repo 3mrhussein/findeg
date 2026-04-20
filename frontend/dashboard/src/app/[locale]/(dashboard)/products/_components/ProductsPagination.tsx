@@ -2,8 +2,8 @@
 
 import { useTranslations } from "next-intl";
 import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
-import { Button } from "@ui";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ui";
+import { Button } from "@findeg/ui";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@findeg/ui";
 import { cn } from "@lib/utils";
 import { Options } from "nuqs";
 

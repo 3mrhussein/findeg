@@ -4,7 +4,7 @@ import { CartProvider } from "./CartProvider";
 import { UserProvider } from "./UserProvider";
 import { AnimationProvider } from "./animation-provider";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
-import { TooltipProvider } from "@ui";
+import { TooltipProvider } from "@findeg/ui";
 
 /**
  *

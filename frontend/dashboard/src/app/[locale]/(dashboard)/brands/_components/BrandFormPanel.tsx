@@ -5,19 +5,19 @@ import { useTranslations } from "next-intl";
 import { useForm, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { X, Check, Loader2, Globe, ImageIcon, AlertCircle, Box } from "lucide-react";
-import { Button } from "@ui";
-import { Input } from "@ui";
-import { Textarea } from "@ui";
-import { Label } from "@ui";
-import { RadioGroup, RadioGroupItem } from "@ui";
-import { Badge } from "@ui";
+import { Button } from "@findeg/ui";
+import { Input } from "@findeg/ui";
+import { Textarea } from "@findeg/ui";
+import { Label } from "@findeg/ui";
+import { RadioGroup, RadioGroupItem } from "@findeg/ui";
+import { Badge } from "@findeg/ui";
 import { slugify } from "@lib/slugify";
-import { Brand } from "@backend/features/catalog";
+import { Brand } from "@findeg/backend/features/catalog";
 import { cn } from "@lib/utils";
 import Image from "next/image";
 import { useDebounce } from "@hooks/use-debounce";
 import { useToast } from "@hooks/use-toast";
-import { BrandInput, BrandInputSchema } from "@backend/features/administration/domain/types";
+import { BrandInput, BrandInputSchema } from "@findeg/backend/features/administration/domain/types";
 
 interface BrandFormPanelProps {
   brand: Brand | null;

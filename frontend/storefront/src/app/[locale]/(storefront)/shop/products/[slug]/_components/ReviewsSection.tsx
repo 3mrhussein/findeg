@@ -3,13 +3,13 @@
 import { useMemo, useState } from "react";
 import { MessageSquare, Star, ThumbsUp } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { Button } from "@ui";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@ui";
-import { Textarea } from "@ui";
-import { Badge } from "@ui";
-import { IconTooltip } from "@ui";
-import type { ProductReviewSummary } from "@backend/features/review/application/interfaces/IReviewRepository";
-import type { Review } from "@backend/features/review/domain/entities/Review";
+import { Button } from "@findeg/ui";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@findeg/ui";
+import { Textarea } from "@findeg/ui";
+import { Badge } from "@findeg/ui";
+import { IconTooltip } from "@findeg/ui";
+import type { ProductReviewSummary } from "@findeg/backend/features/review/application/interfaces/IReviewRepository";
+import type { Review } from "@findeg/backend/features/review/domain/entities/Review";
 import { cn } from "@lib/utils";
 
 type ReviewFilter = "all" | "5" | "4" | "verified";

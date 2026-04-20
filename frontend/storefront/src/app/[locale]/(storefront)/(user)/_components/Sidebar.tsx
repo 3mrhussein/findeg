@@ -2,10 +2,10 @@
 
 import { Link, usePathname } from "@i18n/navigation";
 import { cn } from "@lib/utils";
-import { Button } from "@ui";
-import { IconTooltip } from "@ui";
+import { Button } from "@findeg/ui";
+import { IconTooltip } from "@findeg/ui";
 import { LayoutDashboard, Package, ShoppingCart, Users, Settings, Menu } from "lucide-react";
-import { Sheet, SheetContent, SheetTrigger } from "@ui";
+import { Sheet, SheetContent, SheetTrigger } from "@findeg/ui";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 

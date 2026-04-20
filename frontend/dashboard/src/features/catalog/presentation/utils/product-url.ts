@@ -1,1 +1,1 @@
-export * from "@backend/features/catalog/domain/utils/slug";
+export * from "@findeg/backend/features/catalog/domain/utils/slug";

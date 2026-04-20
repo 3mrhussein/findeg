@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useCart } from "@hooks/useCart";
-import { Button } from "@ui";
+import { Button } from "@findeg/ui";
 import { useTranslations } from "next-intl";
 import { SectionStateEmpty } from "@components/shared/state/SectionStateEmpty";
 import {

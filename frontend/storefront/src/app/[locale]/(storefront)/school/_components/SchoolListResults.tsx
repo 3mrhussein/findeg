@@ -1,11 +1,11 @@
 "use client";
 
 import { useCart } from "@hooks/useCart";
-import type { Product } from "@backend/features/catalog/domain/entities/Product";
+import type { Product } from "@findeg/backend/features/catalog/domain/entities/Product";
 import { useTranslations } from "next-intl";
-import { Card, CardContent, CardHeader, CardTitle } from "@ui";
-import { Button } from "@ui";
-import { Price } from "@ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
+import { Button } from "@findeg/ui";
+import { Price } from "@findeg/ui";
 
 interface SchoolListResultsProps {
   products: Product[];

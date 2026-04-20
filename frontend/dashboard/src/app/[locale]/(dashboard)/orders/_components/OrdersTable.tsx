@@ -7,8 +7,8 @@ import type { BulkAction } from "@/app/[locale]/_components/shared/BulkActionsBa
 import { OrderStatusTabs } from "./OrderStatusTabs";
 import { OrderRow } from "./OrderRow";
 import { OrderDetailDrawer } from "./OrderDetailDrawer";
-import type { Order } from "@backend/features/order";
-import { EmptyState } from "@ui";
+import type { Order } from "@findeg/backend/features/order";
+import { EmptyState } from "@findeg/ui";
 
 interface OrdersTableProps {
   orders: Order[];

@@ -7,7 +7,7 @@ import { Package, User, CreditCard, MapPin, FileText } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { cn } from "@lib/utils";
 import { OrderTimeline } from "./OrderTimeline";
-import type { Order } from "@backend/features/order";
+import type { Order } from "@findeg/backend/features/order";
 
 interface OrderRowProps {
   order: Order;

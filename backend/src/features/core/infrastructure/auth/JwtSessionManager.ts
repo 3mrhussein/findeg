@@ -1,9 +1,9 @@
 import { SignJWT, jwtVerify } from "jose";
-import type { SessionPayload } from "@backend/features/core/domain/auth";
-import { isAdminSession } from "@backend/features/core/domain/auth/authorization";
-import type { ISessionManager } from "@backend/features/core/application/interfaces/ISessionManager";
-import type { PortalRole } from "@backend/features/core/domain/types/common";
-import { AUTH_CONSTANTS } from "@backend/features/core/domain/constants/auth";
+import type { SessionPayload } from "@findeg/backend/features/core/domain/auth";
+import { isAdminSession } from "@findeg/backend/features/core/domain/auth/authorization";
+import type { ISessionManager } from "@findeg/backend/features/core/application/interfaces/ISessionManager";
+import type { PortalRole } from "@findeg/backend/features/core/domain/types/common";
+import { AUTH_CONSTANTS } from "@findeg/backend/features/core/domain/constants/auth";
 
 /**
  * JWT implementation of SessionManager

@@ -43,7 +43,7 @@ import { ProductImportService } from "./ProductImportService";
  * ```ts
  * // In app data layer (dashboard/src/data/products/actions.ts):
  * "use server";
- * import { createAdministrationServices } from '@backend/features/administration';
+ * import { createAdministrationServices } from '@findeg/backend/features/administration';
  * 
  * export async function createProduct(input: ProductInput) {
  *   const { products } = createAdministrationServices();

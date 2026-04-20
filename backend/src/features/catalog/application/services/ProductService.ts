@@ -1,8 +1,8 @@
-import { ID } from "@backend/features/core/domain/types/common";
+import { ID } from "@findeg/backend/features/core/domain/types/common";
 import { type IProductRepository, type ProductFilters } from "../interfaces/IProductRepository";
 import { type IProductService } from "../interfaces/IProductService";
-import { type Product } from "@backend/features/catalog/domain/entities/Product";
-import { type Locale } from "@backend/features/core/domain/value-objects";
+import { type Product } from "@findeg/backend/features/catalog/domain/entities/Product";
+import { type Locale } from "@findeg/backend/features/core/domain/value-objects";
 
 export class ProductService implements IProductService {
   constructor(private productRepository: IProductRepository) {}

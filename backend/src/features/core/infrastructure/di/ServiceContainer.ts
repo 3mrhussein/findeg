@@ -12,38 +12,38 @@
  * The framework layer (dashboard/storefront apps) is responsible for ensuring server-only execution.
  */
 
-import { DrizzleProductRepository } from "@backend/features/catalog/infrastructure/persistence/DrizzleProductRepository";
-import { DrizzleCategoryRepository } from "@backend/features/catalog/infrastructure/persistence/DrizzleCategoryRepository";
-import { DrizzleUserRepository } from "@backend/features/identity/infrastructure/persistence/DrizzleUserRepository";
-import { DrizzleOrderRepository } from "@backend/features/order/infrastructure/persistence/DrizzleOrderRepository";
-import { DrizzleReviewRepository } from "@backend/features/review/infrastructure/persistence/DrizzleReviewRepository";
-import { DrizzleBrandRepository } from "@backend/features/catalog/infrastructure/persistence/DrizzleBrandRepository";
-import { DrizzleCollectionRepository } from "@backend/features/catalog/infrastructure/persistence/DrizzleCollectionRepository";
-import { DrizzleAuditLogRepository } from "@backend/features/administration/infrastructure/DrizzleAuditLogRepository";
-import { DrizzleTagRepository } from "@backend/features/catalog/infrastructure/persistence/DrizzleTagRepository";
-import { DrizzleInventoryRepository } from "@backend/features/catalog/infrastructure/persistence/DrizzleInventoryRepository";
-import { DrizzleVariantRepository } from "@backend/features/catalog/infrastructure/persistence/DrizzleVariantRepository";
-import { DrizzleSchoolListRepository } from "@backend/features/catalog/infrastructure/persistence/DrizzleSchoolListRepository";
+import { DrizzleProductRepository } from "@findeg/backend/features/catalog/infrastructure/persistence/DrizzleProductRepository";
+import { DrizzleCategoryRepository } from "@findeg/backend/features/catalog/infrastructure/persistence/DrizzleCategoryRepository";
+import { DrizzleUserRepository } from "@findeg/backend/features/identity/infrastructure/persistence/DrizzleUserRepository";
+import { DrizzleOrderRepository } from "@findeg/backend/features/order/infrastructure/persistence/DrizzleOrderRepository";
+import { DrizzleReviewRepository } from "@findeg/backend/features/review/infrastructure/persistence/DrizzleReviewRepository";
+import { DrizzleBrandRepository } from "@findeg/backend/features/catalog/infrastructure/persistence/DrizzleBrandRepository";
+import { DrizzleCollectionRepository } from "@findeg/backend/features/catalog/infrastructure/persistence/DrizzleCollectionRepository";
+import { DrizzleAuditLogRepository } from "@findeg/backend/features/administration/infrastructure/DrizzleAuditLogRepository";
+import { DrizzleTagRepository } from "@findeg/backend/features/catalog/infrastructure/persistence/DrizzleTagRepository";
+import { DrizzleInventoryRepository } from "@findeg/backend/features/catalog/infrastructure/persistence/DrizzleInventoryRepository";
+import { DrizzleVariantRepository } from "@findeg/backend/features/catalog/infrastructure/persistence/DrizzleVariantRepository";
+import { DrizzleSchoolListRepository } from "@findeg/backend/features/catalog/infrastructure/persistence/DrizzleSchoolListRepository";
 
 import { LocalStorageProvider } from "../storage/LocalStorageProvider";
 
-import { AuthService } from "@backend/features/identity/application/services/AuthService";
-import { ProductService } from "@backend/features/catalog/application/services/ProductService";
-import { CategoryService } from "@backend/features/catalog/application/services/CategoryService";
-import { CollectionService } from "@backend/features/catalog/application/services/CollectionService";
-import { CartService } from "@backend/features/cart/application/services/CartService";
-import { MediaService } from "@backend/features/media/application/services/MediaService";
+import { AuthService } from "@findeg/backend/features/identity/application/services/AuthService";
+import { ProductService } from "@findeg/backend/features/catalog/application/services/ProductService";
+import { CategoryService } from "@findeg/backend/features/catalog/application/services/CategoryService";
+import { CollectionService } from "@findeg/backend/features/catalog/application/services/CollectionService";
+import { CartService } from "@findeg/backend/features/cart/application/services/CartService";
+import { MediaService } from "@findeg/backend/features/media/application/services/MediaService";
 import {
   SchoolListService,
   type ISchoolListService,
-} from "@backend/features/catalog/application/services/SchoolListService";
-import { SearchService } from "@backend/features/catalog/application/services/SearchService";
-import { type ISearchService } from "@backend/features/catalog/application/interfaces/ISearchService";
-import { ReviewService } from "@backend/features/review/application/services/ReviewService";
-import { type IReviewService } from "@backend/features/review/application/interfaces/IReviewService";
+} from "@findeg/backend/features/catalog/application/services/SchoolListService";
+import { SearchService } from "@findeg/backend/features/catalog/application/services/SearchService";
+import { type ISearchService } from "@findeg/backend/features/catalog/application/interfaces/ISearchService";
+import { ReviewService } from "@findeg/backend/features/review/application/services/ReviewService";
+import { type IReviewService } from "@findeg/backend/features/review/application/interfaces/IReviewService";
 
-import { AdminUserService } from "@backend/features/identity/application/services/AdminUserService";
-import { AdminRoleService } from "@backend/features/identity/application/services/AdminRoleService";
+import { AdminUserService } from "@findeg/backend/features/identity/application/services/AdminUserService";
+import { AdminRoleService } from "@findeg/backend/features/identity/application/services/AdminRoleService";
 import {
   AdminProductService,
   AdminCategoryService,
@@ -55,39 +55,39 @@ import {
   AdminCollectionService,
   AuditLogService,
   ProductImportService,
-} from "@backend/features/administration/application/services";
-import { LoggerService } from "@backend/features/core/application/services/LoggerService";
-import { ResendEmailService } from "@backend/features/notifications/infrastructure/ResendEmailService";
-import { IEmailService } from "@backend/features/notifications/application/services/IEmailService";
+} from "@findeg/backend/features/administration/application/services";
+import { LoggerService } from "@findeg/backend/features/core/application/services/LoggerService";
+import { ResendEmailService } from "@findeg/backend/features/notifications/infrastructure/ResendEmailService";
+import { IEmailService } from "@findeg/backend/features/notifications/application/services/IEmailService";
 
-import { IAdminUserService } from "@backend/features/identity/application/interfaces/IAdminUserService";
-import { IAdminRoleService } from "@backend/features/identity/application/interfaces/IAdminRoleService";
-import { IProductRepository } from "@backend/features/catalog/application/interfaces/IProductRepository";
-import { ICategoryRepository } from "@backend/features/catalog/application/interfaces/ICategoryRepository";
-import { IUserRepository } from "@backend/features/identity/application/interfaces/IUserRepository";
-import { IOrderRepository } from "@backend/features/order/application/interfaces/IOrderRepository";
-import { IReviewRepository } from "@backend/features/review/application/interfaces/IReviewRepository";
-import { IBrandRepository } from "@backend/features/catalog/application/interfaces/IBrandRepository";
-import { ICollectionRepository } from "@backend/features/catalog/application/interfaces/ICollectionRepository";
-import { IAuditLogRepository } from "@backend/features/administration/application/interfaces/IAuditLogRepository";
-import { ISchoolListRepository } from "@backend/features/catalog/application/interfaces/ISchoolListRepository";
-import { IInventoryRepository } from "@backend/features/catalog/application/interfaces/IInventoryRepository";
-import { ITagRepository } from "@backend/features/catalog/application/interfaces/ITagRepository";
-import type { IVariantRepository } from "@backend/features/catalog/application/interfaces/IVariantRepository";
-import type { ISchoolAccessRepository } from "@backend/features/school/application/interfaces/ISchoolAccessRepository";
-import { DrizzleSchoolAccessRepository } from "@backend/features/school/infrastructure/DrizzleSchoolAccessRepository";
-import { DrizzleParentSessionRepository } from "@backend/features/school/infrastructure/DrizzleParentSessionRepository";
-import { ParentListService } from "@backend/features/school/application/services/ParentListService";
-import { ISchoolAccessService } from "@backend/features/school/application/interfaces/ISchoolAccessService";
-import { SchoolAccessService } from "@backend/features/school/application/services/SchoolAccessService";
-import { ISchoolDirectoryService } from "@backend/features/school/application/interfaces/ISchoolDirectoryService";
-import { SchoolDirectoryService } from "@backend/features/school/application/services/SchoolDirectoryService";
+import { IAdminUserService } from "@findeg/backend/features/identity/application/interfaces/IAdminUserService";
+import { IAdminRoleService } from "@findeg/backend/features/identity/application/interfaces/IAdminRoleService";
+import { IProductRepository } from "@findeg/backend/features/catalog/application/interfaces/IProductRepository";
+import { ICategoryRepository } from "@findeg/backend/features/catalog/application/interfaces/ICategoryRepository";
+import { IUserRepository } from "@findeg/backend/features/identity/application/interfaces/IUserRepository";
+import { IOrderRepository } from "@findeg/backend/features/order/application/interfaces/IOrderRepository";
+import { IReviewRepository } from "@findeg/backend/features/review/application/interfaces/IReviewRepository";
+import { IBrandRepository } from "@findeg/backend/features/catalog/application/interfaces/IBrandRepository";
+import { ICollectionRepository } from "@findeg/backend/features/catalog/application/interfaces/ICollectionRepository";
+import { IAuditLogRepository } from "@findeg/backend/features/administration/application/interfaces/IAuditLogRepository";
+import { ISchoolListRepository } from "@findeg/backend/features/catalog/application/interfaces/ISchoolListRepository";
+import { IInventoryRepository } from "@findeg/backend/features/catalog/application/interfaces/IInventoryRepository";
+import { ITagRepository } from "@findeg/backend/features/catalog/application/interfaces/ITagRepository";
+import type { IVariantRepository } from "@findeg/backend/features/catalog/application/interfaces/IVariantRepository";
+import type { ISchoolAccessRepository } from "@findeg/backend/features/school/application/interfaces/ISchoolAccessRepository";
+import { DrizzleSchoolAccessRepository } from "@findeg/backend/features/school/infrastructure/DrizzleSchoolAccessRepository";
+import { DrizzleParentSessionRepository } from "@findeg/backend/features/school/infrastructure/DrizzleParentSessionRepository";
+import { ParentListService } from "@findeg/backend/features/school/application/services/ParentListService";
+import { ISchoolAccessService } from "@findeg/backend/features/school/application/interfaces/ISchoolAccessService";
+import { SchoolAccessService } from "@findeg/backend/features/school/application/services/SchoolAccessService";
+import { ISchoolDirectoryService } from "@findeg/backend/features/school/application/interfaces/ISchoolDirectoryService";
+import { SchoolDirectoryService } from "@findeg/backend/features/school/application/services/SchoolDirectoryService";
 
-import { IAuthService } from "@backend/features/identity/application/interfaces/IAuthService";
-import { IProductService } from "@backend/features/catalog/application/interfaces/IProductService";
-import { ICategoryService } from "@backend/features/catalog/application/interfaces/ICategoryService";
-import { ICollectionService } from "@backend/features/catalog/application/interfaces/ICollectionService";
-import { ICartService } from "@backend/features/cart/application/interfaces/ICartService";
+import { IAuthService } from "@findeg/backend/features/identity/application/interfaces/IAuthService";
+import { IProductService } from "@findeg/backend/features/catalog/application/interfaces/IProductService";
+import { ICategoryService } from "@findeg/backend/features/catalog/application/interfaces/ICategoryService";
+import { ICollectionService } from "@findeg/backend/features/catalog/application/interfaces/ICollectionService";
+import { ICartService } from "@findeg/backend/features/cart/application/interfaces/ICartService";
 import {
   IAdminProductService,
   IAdminCategoryService,
@@ -99,21 +99,21 @@ import {
   IAdminCollectionService,
   IAuditLogService,
   IProductImportService,
-} from "@backend/features/administration/application/interfaces";
-import { IStorageProvider } from "@backend/features/core/application/interfaces/IStorageProvider";
-import { ILoggerService } from "@backend/features/core/application/interfaces/ILoggerService";
-import { IParentListService } from "@backend/features/school/application/interfaces/IParentListService";
-import { IParentSessionRepository } from "@backend/features/school/application/interfaces/IParentSessionRepository";
-import { INotificationRepository } from "@backend/features/notifications/application/interfaces/INotificationRepository";
-import { INotificationService } from "@backend/features/notifications/application/interfaces/INotificationService";
-import { DrizzleNotificationRepository } from "@backend/features/notifications/infrastructure/DrizzleNotificationRepository";
-import { NotificationService } from "@backend/features/notifications/application/services/NotificationService";
-import { NotificationEventService } from "@backend/features/notifications/application/services/NotificationEventService";
+} from "@findeg/backend/features/administration/application/interfaces";
+import { IStorageProvider } from "@findeg/backend/features/core/application/interfaces/IStorageProvider";
+import { ILoggerService } from "@findeg/backend/features/core/application/interfaces/ILoggerService";
+import { IParentListService } from "@findeg/backend/features/school/application/interfaces/IParentListService";
+import { IParentSessionRepository } from "@findeg/backend/features/school/application/interfaces/IParentSessionRepository";
+import { INotificationRepository } from "@findeg/backend/features/notifications/application/interfaces/INotificationRepository";
+import { INotificationService } from "@findeg/backend/features/notifications/application/interfaces/INotificationService";
+import { DrizzleNotificationRepository } from "@findeg/backend/features/notifications/infrastructure/DrizzleNotificationRepository";
+import { NotificationService } from "@findeg/backend/features/notifications/application/services/NotificationService";
+import { NotificationEventService } from "@findeg/backend/features/notifications/application/services/NotificationEventService";
 
-import { IAdminSearchAnalyticsRepository } from "@backend/features/catalog/application/interfaces/IAdminSearchAnalyticsRepository";
-import { DrizzleAdminSearchAnalyticsRepository } from "@backend/features/catalog/infrastructure/persistence/DrizzleAdminSearchAnalyticsRepository";
-import { IAdminSearchAnalyticsService } from "@backend/features/catalog/application/interfaces/IAdminSearchAnalyticsService";
-import { AdminSearchAnalyticsService } from "@backend/features/catalog/application/services/AdminSearchAnalyticsService";
+import { IAdminSearchAnalyticsRepository } from "@findeg/backend/features/catalog/application/interfaces/IAdminSearchAnalyticsRepository";
+import { DrizzleAdminSearchAnalyticsRepository } from "@findeg/backend/features/catalog/infrastructure/persistence/DrizzleAdminSearchAnalyticsRepository";
+import { IAdminSearchAnalyticsService } from "@findeg/backend/features/catalog/application/interfaces/IAdminSearchAnalyticsService";
+import { AdminSearchAnalyticsService } from "@findeg/backend/features/catalog/application/services/AdminSearchAnalyticsService";
 
 /**
  * Validates dependency injection wiring

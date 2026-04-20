@@ -1,11 +1,11 @@
 import { createCatalogServices } from "../services/factory";
-import { createReviewServices } from "@backend/features/review";
-import type { Product } from "@backend/features/catalog/domain/entities/Product";
-import type { Category } from "@backend/features/catalog/domain/entities/Category";
-import type { Collection } from "@backend/features/catalog/domain/entities/Collection";
-import type { Review } from "@backend/features/review/domain/entities/Review";
-import { fuzzySearchProducts } from "@backend/features/catalog/application/utils/fuzzy-search";
-import { resolveLocale, type Locale } from "@backend/features/core/domain/value-objects";
+import { createReviewServices } from "@findeg/backend/features/review";
+import type { Product } from "@findeg/backend/features/catalog/domain/entities/Product";
+import type { Category } from "@findeg/backend/features/catalog/domain/entities/Category";
+import type { Collection } from "@findeg/backend/features/catalog/domain/entities/Collection";
+import type { Review } from "@findeg/backend/features/review/domain/entities/Review";
+import { fuzzySearchProducts } from "@findeg/backend/features/catalog/application/utils/fuzzy-search";
+import { resolveLocale, type Locale } from "@findeg/backend/features/core/domain/value-objects";
 
 export interface HomePageData {
   featuredProducts: Product[];

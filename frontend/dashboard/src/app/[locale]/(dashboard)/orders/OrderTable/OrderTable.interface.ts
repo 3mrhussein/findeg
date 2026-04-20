@@ -1,9 +1,9 @@
-import type { Order } from "@backend/features/order";
+import type { Order } from "@findeg/backend/features/order";
 
 /**
  * Local type definitions
  */
-import type { OrderStatus, PaymentStatus } from "@backend/features/core/domain/types/common";
+import type { OrderStatus, PaymentStatus } from "@findeg/backend/features/core/domain/types/common";
 
 export interface OrderTableFiltersData {
   search?: string;

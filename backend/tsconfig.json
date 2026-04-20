@@ -9,11 +9,8 @@
     "rootDir": "src",
     "jsx": "react-jsx",
     "paths": {
-      "@backend/*": [
+      "@findeg/backend/*": [
         "./src/*"
-      ],
-      "@backend/features/*": [
-        "./src/features/*"
       ]
     }
   },

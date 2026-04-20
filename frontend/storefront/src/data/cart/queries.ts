@@ -4,7 +4,7 @@
 "use cache";
 
 import { cacheTag, cacheLife } from "next/cache";
-import { createCartServices } from "@backend/features/cart";
+import { createCartServices } from "@findeg/backend/features/cart";
 
 /**
  * Retrieves the current cart for a session

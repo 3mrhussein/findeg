@@ -1,10 +1,10 @@
 "use client";
 
 import React from "react";
-import { Dialog, DialogContent } from "@ui";
-import { Button } from "@ui";
+import { Dialog, DialogContent } from "@findeg/ui";
+import { Button } from "@findeg/ui";
 import { useTranslations } from "next-intl";
-import { SessionState } from "@backend/features/school/application/interfaces/IParentListService";
+import { SessionState } from "@findeg/backend/features/school/application/interfaces/IParentListService";
 import { ShoppingBag } from "lucide-react";
 
 interface ListReturnDialogProps {

@@ -1,6 +1,6 @@
 import { ProductForm } from "../../_components/ProductForm";
 import { notFound } from "next/navigation";
-import { resolveLocale } from "@backend/features/core";
+import { resolveLocale } from "@findeg/backend/features/core";
 
 /**
  * /admin/products/[id]/edit

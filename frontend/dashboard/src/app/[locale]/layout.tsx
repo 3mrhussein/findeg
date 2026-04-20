@@ -2,10 +2,10 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import Providers from "@/providers/Providers";
 import { ThemeProvider } from "@/providers/ThemeProvider";
-import { Toaster } from "@ui";
+import { Toaster } from "@findeg/ui";
 import { routing } from "@i18n/routing";
 import { notFound } from "next/navigation";
-import { type Locale } from "@backend/features/core";
+import { type Locale } from "@findeg/backend/features/core";
 import "../globals.css";
 
 /**

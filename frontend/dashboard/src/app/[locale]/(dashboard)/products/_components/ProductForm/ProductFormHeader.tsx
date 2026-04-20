@@ -3,9 +3,9 @@
 import React from "react";
 import { useRouter } from "@i18n/navigation";
 import { useTranslations } from "next-intl";
-import { Button } from "@ui";
+import { Button } from "@findeg/ui";
 import { ChevronLeft, Save, Globe } from "lucide-react";
-import { Separator } from "@ui";
+import { Separator } from "@findeg/ui";
 
 interface ProductFormHeaderProps {
   isEdit: boolean;

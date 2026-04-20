@@ -5,7 +5,7 @@
  * Used within Suspense boundaries in product detail page for progressive rendering.
  */
 
-import { resolveLocale } from "@backend/features/core";
+import { resolveLocale } from "@findeg/backend/features/core";
 import { notFound } from "next/navigation";
 import { ProductForm } from "../../_components/ProductForm";
 import { getProductById } from "@data/products/queries";

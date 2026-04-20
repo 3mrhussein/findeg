@@ -1,7 +1,7 @@
-import { CACHE_TAGS } from "@backend/features/core/domain/constants/cache-tags";
+import { CACHE_TAGS } from "@findeg/backend/features/core/domain/constants/cache-tags";
 import { createCatalogServices } from "../services/factory";
 import { getShopPageData } from "./storefront";
-import type { Product } from "@backend/features/catalog/domain/entities/Product";
+import type { Product } from "@findeg/backend/features/catalog/domain/entities/Product";
 import type { FilterOption } from "./listing";
 import {
   applyListingFilters,
@@ -11,7 +11,7 @@ import {
   parseListingFilters,
   type CategoryFilterOption,
 } from "./listing";
-import { resolveLocale } from "@backend/features/core/domain/value-objects";
+import { resolveLocale } from "@findeg/backend/features/core/domain/value-objects";
 
 export interface ShopPageViewModel {
   products: Product[];

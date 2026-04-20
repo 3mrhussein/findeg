@@ -1,5 +1,5 @@
-import { type ID } from "@backend/features/core/domain/types/common";
-import { type Locale } from "@backend/features/core/domain/value-objects";
+import { type ID } from "@findeg/backend/features/core/domain/types/common";
+import { type Locale } from "@findeg/backend/features/core/domain/value-objects";
 import { type Product } from "../../domain/entities/Product";
 
 export interface SearchParams {

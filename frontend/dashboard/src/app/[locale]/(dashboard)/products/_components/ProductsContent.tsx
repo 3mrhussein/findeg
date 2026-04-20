@@ -5,13 +5,13 @@
  * Used within Suspense boundaries in products page for progressive rendering.
  */
 
-import { resolveLocale } from "@backend/features/core";
+import { resolveLocale } from "@findeg/backend/features/core";
 import { getTranslations } from "next-intl/server";
 import { PageHeader } from "@/app/[locale]/_components/shared/PageHeader";
-import { Button } from "@ui";
+import { Button } from "@findeg/ui";
 import { Link } from "@i18n/navigation";
 import { Plus } from "lucide-react";
-import type { ProductListFilters } from "@backend/features/administration";
+import type { ProductListFilters } from "@findeg/backend/features/administration";
 import { ProductsClient } from "./ProductsClient";
 import { getProducts } from "@data/products/queries";
 import { getAllCategories } from "@data/resources/queries";

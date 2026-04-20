@@ -11,7 +11,7 @@ import {
   getSchoolProfile as getBackendSchoolProfile,
   getSchoolListPageData as getBackendSchoolListPageData,
   type SchoolSearchParams,
-} from "@backend/features/school";
+} from "@findeg/backend/features/school";
 
 /**
  * Retrieves a school list by code.

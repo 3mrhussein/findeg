@@ -20,8 +20,8 @@ describe("Application Layer Import Integration (CHK025)", () => {
   it("should verify apps can import from backend application layer", () => {
     // Test that the backend application layer exports are consumable
     const testCode = `
-      import type { ServiceResult } from '@backend/features/core';
-      import type { User } from '@backend/features/identity';
+      import type { ServiceResult } from '@findeg/backend/features/core';
+      import type { User } from '@findeg/backend/features/identity';
       
       const result: ServiceResult<User> = { success: true, data: {} as User };
       console.log('Import successful');
@@ -85,7 +85,7 @@ describe("Infrastructure Import Blocking (CHK027, FR-001, FR-006)", () => {
     // Intentional violation test - should fail at compile time
     const testCode = `
       // This should fail - trying to import infrastructure
-      import { db } from '@backend/features/core/infrastructure/persistence/database.config';
+      import { db } from '@findeg/backend/features/core/infrastructure/persistence/database.config';
       
       console.log(db);
     `;
@@ -122,7 +122,7 @@ describe("Infrastructure Import Blocking (CHK027, FR-001, FR-006)", () => {
   it("should fail when app tries to import repository implementation", () => {
     const testCode = `
       // This should fail - trying to import infrastructure implementation
-      import { DrizzleProductRepository } from '@backend/features/catalog/infrastructure/DrizzleProductRepository';
+      import { DrizzleProductRepository } from '@findeg/backend/features/catalog/infrastructure/DrizzleProductRepository';
       
       const repo = new DrizzleProductRepository();
     `;
@@ -229,6 +229,6 @@ describe("Framework Integration - pnpm Workspaces (CHK035)", () => {
     const dashboardPackagePath = resolve(DASHBOARD_ROOT, "package.json");
     const dashboardPackage = require(dashboardPackagePath);
 
-    expect(dashboardPackage.dependencies?.["@backend"]).toBe("workspace:*");
+    expect(dashboardPackage.dependencies?.["@findeg/backend"]).toBe("workspace:*");
   });
 });

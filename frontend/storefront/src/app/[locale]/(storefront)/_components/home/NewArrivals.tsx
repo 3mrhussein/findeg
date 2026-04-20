@@ -1,5 +1,5 @@
 import { getHomePageData } from "@/data/catalog/queries";
-import { buildHomeFeaturedGroups } from "@backend/features/catalog";
+import { buildHomeFeaturedGroups } from "@findeg/backend/features/catalog";
 import { ProductCard } from "../ProductCard";
 
 interface NewArrivalsProps {

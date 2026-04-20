@@ -4,7 +4,7 @@
  * Used as Suspense fallbacks for progressive rendering of different sections.
  */
 
-import { Skeleton } from "@ui";
+import { Skeleton } from "@findeg/ui";
 
 /**
  * Skeleton for Medium Section (Catalog Board)

@@ -1,4 +1,4 @@
-import { ID, Rating } from "@backend/features/core/domain/types/common";
+import { ID, Rating } from "@findeg/backend/features/core/domain/types/common";
 
 /**
  * Domain Entity: Review

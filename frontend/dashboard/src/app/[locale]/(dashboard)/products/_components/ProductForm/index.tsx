@@ -6,8 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { useRouter } from "@i18n/navigation";
 import { toast } from "sonner";
-import { Tabs, TabsContent } from "@ui";
-import { Form } from "@ui";
+import { Tabs, TabsContent } from "@findeg/ui";
+import { Form } from "@findeg/ui";
 import {
   ProductFormSchema,
   type ProductFormValues,
@@ -20,7 +20,7 @@ import { VariantsTab } from "./tabs/VariantsTab";
 import { MediaTab } from "./tabs/MediaTab";
 import { PricingTab } from "./tabs/PricingTab";
 import { SeoTab } from "./tabs/SeoTab";
-import type { Category, Brand, Tag } from "@backend/features/catalog";
+import type { Category, Brand, Tag } from "@findeg/backend/features/catalog";
 import {
   createProductAction,
   updateProductAction,

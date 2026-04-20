@@ -5,9 +5,9 @@
 import { getAuditLogs } from "@data/admin/queries";
 import { format } from "date-fns";
 import { Link } from "@i18n/navigation";
-import { Input } from "@ui";
-import { Button } from "@ui";
-import { Badge } from "@ui";
+import { Input } from "@findeg/ui";
+import { Button } from "@findeg/ui";
+import { Badge } from "@findeg/ui";
 
 const LIMIT = 50;
 

@@ -3,10 +3,10 @@
 import React from "react";
 import { useFormContext } from "react-hook-form";
 import { useTranslations } from "next-intl";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@ui";
-import { Input } from "@ui";
-import { Textarea } from "@ui";
-import { Card, CardContent, CardHeader, CardTitle } from "@ui";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@findeg/ui";
+import { Input } from "@findeg/ui";
+import { Textarea } from "@findeg/ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
 import { type ProductFormValues } from "../../../../../../../features/administration/presentation/forms/product-form";
 
 /**

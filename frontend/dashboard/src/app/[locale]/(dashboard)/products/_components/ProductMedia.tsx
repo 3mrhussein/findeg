@@ -20,8 +20,8 @@ import {
   horizontalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@ui";
-import { Button } from "@ui";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@findeg/ui";
+import { Button } from "@findeg/ui";
 import { Image as ImageIcon, X, GripVertical, UploadCloud } from "lucide-react";
 
 /**

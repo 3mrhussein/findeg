@@ -2,13 +2,13 @@
 
 import Image from "next/image";
 import { Link } from "@i18n/navigation";
-import type { Product } from "@backend/features/catalog/domain/entities/Product";
-import { ProductEntity } from "@backend/features/catalog/domain/entities/Product";
-import { getCanonicalProductHref } from "@backend/features/catalog/domain/utils/slug";
+import type { Product } from "@findeg/backend/features/catalog/domain/entities/Product";
+import { ProductEntity } from "@findeg/backend/features/catalog/domain/entities/Product";
+import { getCanonicalProductHref } from "@findeg/backend/features/catalog/domain/utils/slug";
 import { useCart } from "@hooks/useCart";
 import { useTranslations, useLocale } from "next-intl";
-import { Button } from "@ui";
-import { Badge } from "@ui";
+import { Button } from "@findeg/ui";
+import { Badge } from "@findeg/ui";
 
 interface ProductCardProps {
   product: Product;

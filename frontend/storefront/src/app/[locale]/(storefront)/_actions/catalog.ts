@@ -4,8 +4,8 @@ import {
   createCatalogServices,
   type Variant,
   type PriceListEntry,
-} from "@backend/features/catalog";
-import { resolveLocale } from "@backend/features/core";
+} from "@findeg/backend/features/catalog";
+import { resolveLocale } from "@findeg/backend/features/core";
 import { Category } from "@hooks/useCategories";
 
 /**

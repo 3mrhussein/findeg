@@ -16,7 +16,7 @@ import type {
   CreateAdminInput,
   UpdateAdminInput,
   PermissionOverrideInput,
-} from "@backend/features/identity";
+} from "@findeg/backend/features/identity";
 
 export interface AdminUserRole {
   id: number;

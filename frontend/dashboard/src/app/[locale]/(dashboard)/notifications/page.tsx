@@ -3,11 +3,11 @@
 import { useState, useCallback, useEffect } from "react";
 import { Bell, Check, ExternalLink, Loader2, Filter, MoreVertical, Trash } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@ui";
-import { Button } from "@ui";
-import { Badge } from "@ui";
-import { ScrollArea } from "@ui";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@ui";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@findeg/ui";
+import { Button } from "@findeg/ui";
+import { Badge } from "@findeg/ui";
+import { ScrollArea } from "@findeg/ui";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@findeg/ui";
 import { Link } from "@i18n/navigation";
 import { cn } from "@lib/utils";
 

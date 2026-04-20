@@ -3,13 +3,13 @@
 import { useState, useEffect, useCallback } from "react";
 import { Bell, Check, ExternalLink, Loader2 } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
-import { Popover, PopoverContent, PopoverTrigger } from "@ui";
-import { Button } from "@ui";
-import { Badge } from "@ui";
-import { ScrollArea } from "@ui";
+import { Popover, PopoverContent, PopoverTrigger } from "@findeg/ui";
+import { Button } from "@findeg/ui";
+import { Badge } from "@findeg/ui";
+import { ScrollArea } from "@findeg/ui";
 import { Link } from "@i18n/navigation";
 import { cn } from "@lib/utils";
-import type { Notification } from "@backend/features/core";
+import type { Notification } from "@findeg/backend/features/core";
 
 /**
  * Notification Bell component with unread count polling and popover.

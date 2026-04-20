@@ -2,8 +2,8 @@
 
 import * as React from "react";
 import { useFormContext } from "react-hook-form";
-import { Card, CardContent, CardHeader, CardTitle } from "@ui";
-import { Label } from "@ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
+import { Label } from "@findeg/ui";
 import { InfoIcon } from "lucide-react";
 import { PriceInput } from "../shared/PriceInput";
 import type { ProductFormValues } from "../../../../../../../features/administration/presentation/forms/product-form";

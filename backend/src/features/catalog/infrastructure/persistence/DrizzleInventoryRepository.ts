@@ -13,7 +13,7 @@ import {
 } from "../../application/interfaces/IInventoryRepository";
 import { DrizzleVariantRepository } from "./DrizzleVariantRepository";
 import { eq, and, sql, desc } from "drizzle-orm";
-import { ID } from "@backend/features/core/domain/types/common";
+import { ID } from "@findeg/backend/features/core/domain/types/common";
 
 /**
  * Drizzle Inventory Repository

@@ -1,5 +1,5 @@
-import type { Category } from "@backend/features/catalog/domain/entities/Category";
-import { ProductEntity, type Product } from "@backend/features/catalog/domain/entities/Product";
+import type { Category } from "@findeg/backend/features/catalog/domain/entities/Category";
+import { ProductEntity, type Product } from "@findeg/backend/features/catalog/domain/entities/Product";
 
 export const LISTING_SORT_VALUES = ["featured", "price-asc", "price-desc", "rating-desc"] as const;
 

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { updateMyProfile } from "../profile";
-import { NotAuthenticatedError, ValidationError } from "@backend/features/core/domain/errors";
+import { NotAuthenticatedError, ValidationError } from "@findeg/backend/features/core/domain/errors";
 
 /**
  * Test Suite: Profile Actions (Pure TypeScript)

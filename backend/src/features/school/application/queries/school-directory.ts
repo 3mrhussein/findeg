@@ -4,7 +4,7 @@ import type {
   SchoolSearchResult,
   SchoolFilterOptions,
 } from "../interfaces/ISchoolDirectoryService";
-import { ID } from "@backend/features/core/domain/types/common";
+import { ID } from "@findeg/backend/features/core/domain/types/common";
 
 /**
  * Search schools for the directory page.

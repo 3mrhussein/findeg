@@ -14,18 +14,18 @@ import {
   X,
 } from "lucide-react";
 import { Link } from "@i18n/navigation";
-import { Badge } from "@ui";
-import { Button } from "@ui";
-import { IconTooltip } from "@ui";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ui";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@ui";
+import { Badge } from "@findeg/ui";
+import { Button } from "@findeg/ui";
+import { IconTooltip } from "@findeg/ui";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@findeg/ui";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@findeg/ui";
 import { FilterPanel, type FilterPanelBrand } from "./FilterPanel";
 import { ProductCard, type ProductCardBrand } from "./ProductCard";
 import type {
   ShopPlpFilters,
   ShopPlpSort,
   ShopPlpViewModel,
-} from "@backend/features/catalog/application/queries/shop-plp";
+} from "@findeg/backend/features/catalog/application/queries/shop-plp";
 import { cn } from "@lib/utils";
 
 interface ShopPlpClientProps {

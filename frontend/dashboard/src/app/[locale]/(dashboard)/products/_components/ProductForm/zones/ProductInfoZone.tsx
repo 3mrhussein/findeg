@@ -2,11 +2,11 @@
 
 import * as React from "react";
 import { useFormContext } from "react-hook-form";
-import { Card, CardContent, CardHeader, CardTitle } from "@ui";
-import { Label } from "@ui";
-import { Switch } from "@ui";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ui";
-import { Separator } from "@ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
+import { Label } from "@findeg/ui";
+import { Switch } from "@findeg/ui";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@findeg/ui";
+import { Separator } from "@findeg/ui";
 import { BilingualInput } from "@components/shared/BilingualInput";
 import { BilingualTextarea } from "@components/shared/BilingualTextarea";
 import type { ProductFormValues } from "../../../../../../../features/administration/presentation/forms/product-form";

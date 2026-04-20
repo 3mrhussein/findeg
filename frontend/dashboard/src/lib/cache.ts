@@ -1,5 +1,5 @@
 import { revalidatePath, revalidateTag } from "next/cache";
-import type { ServiceResult } from "@backend/features/core";
+import type { ServiceResult } from "@findeg/backend/features/core";
 
 /**
  * Dashboard Cache Invalidation Helpers

@@ -1,5 +1,5 @@
-import type { Brand } from "@backend/features/catalog/domain/entities/Brand";
-import type { BrandInput } from "@backend/features/administration/domain/types";
+import type { Brand } from "@findeg/backend/features/catalog/domain/entities/Brand";
+import type { BrandInput } from "@findeg/backend/features/administration/domain/types";
 
 export interface IAdminBrandService {
   /**

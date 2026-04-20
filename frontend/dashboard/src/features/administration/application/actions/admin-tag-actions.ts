@@ -1,8 +1,8 @@
 "use server";
 
-import { TagInput } from "@backend/features/administration/domain/types";
+import { TagInput } from "@findeg/backend/features/administration/domain/types";
 import { updateTag } from "next/cache";
-import { createAdministrationServices } from "@backend/features/administration";
+import { createAdministrationServices } from "@findeg/backend/features/administration";
 import { getErrorMessage } from "@lib/type-guards";
 
 /**

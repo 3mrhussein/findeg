@@ -1,10 +1,10 @@
 "use client";
 
 import React, { createContext, useEffect, useMemo, useState } from "react";
-import type { CartItem } from "@backend/features/cart/domain/entities/Cart";
-import type { Product } from "@backend/features/catalog/domain/entities/Product";
-import { CustomerGroup } from "@backend/features/catalog/domain";
-import { UomCode } from "@backend/features/core/domain/types/common";
+import type { CartItem } from "@findeg/backend/features/cart/domain/entities/Cart";
+import type { Product } from "@findeg/backend/features/catalog/domain/entities/Product";
+import { CustomerGroup } from "@findeg/backend/features/catalog/domain";
+import { UomCode } from "@findeg/backend/features/core/domain/types/common";
 
 export interface CartContextType {
   cartItems: CartItem[];

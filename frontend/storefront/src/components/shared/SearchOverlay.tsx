@@ -1,12 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@ui";
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@findeg/ui";
 import { Search, X, Clock, TrendingUp } from "lucide-react";
 import { useRouter } from "@i18n/navigation";
-import { Button } from "@ui";
-import { Input } from "@ui";
-import { IconTooltip } from "@ui";
+import { Button } from "@findeg/ui";
+import { Input } from "@findeg/ui";
+import { IconTooltip } from "@findeg/ui";
 
 /**
  *

@@ -1,8 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@ui";
-import { AuditLogEntry } from "@backend/features/administration";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@findeg/ui";
+import { AuditLogEntry } from "@findeg/backend/features/administration";
 import { Activity, Edit, Plus, Trash, History } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { formatDistanceToNow } from "date-fns";

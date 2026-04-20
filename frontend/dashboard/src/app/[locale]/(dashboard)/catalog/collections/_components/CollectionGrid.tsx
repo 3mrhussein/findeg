@@ -16,7 +16,7 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { Collection } from "@backend/features/catalog";
+import { Collection } from "@findeg/backend/features/catalog";
 import { CollectionCard } from "./CollectionCard";
 import {
   createCollectionAction as adminCreateCollectionAction,

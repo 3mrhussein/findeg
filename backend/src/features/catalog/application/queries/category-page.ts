@@ -1,7 +1,7 @@
 import { createCatalogServices } from "../services/factory";
-import { resolveLocale } from "@backend/features/core/domain/value-objects";
-import { Product } from "@backend/features/catalog/domain/entities/Product";
-import { Category } from "@backend/features/catalog/domain/entities/Category";
+import { resolveLocale } from "@findeg/backend/features/core/domain/value-objects";
+import { Product } from "@findeg/backend/features/catalog/domain/entities/Product";
+import { Category } from "@findeg/backend/features/catalog/domain/entities/Category";
 import {
   applyListingFilters,
   buildBrandOptions,

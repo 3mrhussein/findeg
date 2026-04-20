@@ -17,7 +17,7 @@ import {
 } from "../../application/interfaces/ISchoolListRepository";
 import { DrizzleVariantRepository } from "./DrizzleVariantRepository";
 import { eq, and, sql, inArray, or } from "drizzle-orm";
-import { ID } from "@backend/features/core/domain/types/common";
+import { ID } from "@findeg/backend/features/core/domain/types/common";
 import { Variant } from "../../domain/entities/Variant";
 
 /**

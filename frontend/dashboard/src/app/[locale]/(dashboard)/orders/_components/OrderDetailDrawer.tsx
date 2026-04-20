@@ -14,7 +14,7 @@ import {
   DollarSign,
 } from "lucide-react";
 import { format } from "date-fns";
-import type { Order } from "@backend/features/order";
+import type { Order } from "@findeg/backend/features/order";
 
 interface OrderDetailDrawerProps {
   order: Order | null;

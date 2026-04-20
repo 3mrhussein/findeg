@@ -1,4 +1,4 @@
-import { Notification } from "@backend/features/core/infrastructure/persistence/schema/notifications";
+import { Notification } from "@findeg/backend/features/core/infrastructure/persistence/schema/notifications";
 
 /**
  * Interface for the Notification Application Service

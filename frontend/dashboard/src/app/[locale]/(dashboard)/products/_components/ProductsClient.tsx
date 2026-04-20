@@ -14,7 +14,7 @@ import {
   bulkDeactivateAction,
   bulkDeleteAction,
 } from "../actions";
-import type { ProductListResult, ProductListFilters } from "@backend/features/administration";
+import type { ProductListResult, ProductListFilters } from "@findeg/backend/features/administration";
 
 interface ProductsClientProps {
   initialData: ProductListResult;

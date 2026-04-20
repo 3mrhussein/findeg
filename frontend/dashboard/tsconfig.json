@@ -24,9 +24,6 @@
       "@server/*": [
         "./src/server/*"
       ],
-      "@/features/*": [
-        "./src/features/*"
-      ],
       "@data/*": [
         "./src/data/*"
       ],
@@ -39,22 +36,19 @@
       "@queries/*": [
         "./src/queries/*"
       ],
-      "@dashboard/features/*": [
-        "./src/features/*"
-      ],
       "@app/*": [
         "./src/app/*"
       ],
-      "@backend": [
+      "@findeg/backend": [
         "../../backend/src"
       ],
-      "@backend/*": [
+      "@findeg/backend/*": [
         "../../backend/src/*"
       ],
-      "@ui": [
+      "@findeg/ui": [
         "../ui/src"
       ],
-      "@ui/*": [
+      "@findeg/ui/*": [
         "../ui/src/*"
       ]
     }

@@ -12,8 +12,8 @@ import {
   getCategoryPageViewModel as getBackendCategoryViewModel,
   getCategoriesPageData as getBackendCategoriesPageData,
   type CategoryPageViewModel,
-} from "@backend/features/catalog";
-import { resolveLocale } from "@backend/features/core";
+} from "@findeg/backend/features/catalog";
+import { resolveLocale } from "@findeg/backend/features/core";
 
 /**
  * Category Page Data

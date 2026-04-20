@@ -1,7 +1,7 @@
-import { resolveLocale } from "@backend/features/core/domain/value-objects";
+import { resolveLocale } from "@findeg/backend/features/core/domain/value-objects";
 import { createSchoolServices } from "../services/factory";
-import { createCatalogServices } from "@backend/features/catalog/application/services/factory";
-import type { Product } from "@backend/features/catalog/domain/entities/Product";
+import { createCatalogServices } from "@findeg/backend/features/catalog/application/services/factory";
+import type { Product } from "@findeg/backend/features/catalog/domain/entities/Product";
 
 export interface SchoolListViewModel {
   rawCode: string;

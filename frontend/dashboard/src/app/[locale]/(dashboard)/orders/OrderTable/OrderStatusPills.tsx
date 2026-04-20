@@ -1,9 +1,9 @@
 "use client";
 
 import { useTransition } from "react";
-import { Badge } from "@ui";
-import { ScrollArea, ScrollBar } from "@ui";
-import { Button } from "@ui";
+import { Badge } from "@findeg/ui";
+import { ScrollArea, ScrollBar } from "@findeg/ui";
+import { Button } from "@findeg/ui";
 
 /**
  * OrderStatus type (local definition)

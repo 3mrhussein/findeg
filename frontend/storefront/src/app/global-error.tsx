@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { Button } from "@ui";
+import { Button } from "@findeg/ui";
 
 /**
  * Global Error Boundary

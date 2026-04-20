@@ -7,7 +7,7 @@
 
 import { cookies } from "next/headers";
 import { SignJWT, jwtVerify } from "jose";
-import type { SessionPayload } from "@backend/features/core";
+import type { SessionPayload } from "@findeg/backend/features/core";
 
 const SESSION_COOKIE_NAME = "admin_session";
 const SESSION_DURATION = 60 * 60 * 24; // 24 hours in seconds

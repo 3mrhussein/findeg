@@ -4,11 +4,11 @@ import { StatCard } from "./StatCard";
 import { SalesChart } from "./SalesChart";
 import { UserActivityChart } from "./UserActivityChart";
 import { DeviceUsageChart } from "./DeviceUsageChart";
-import { Icon } from "@ui";
+import { Icon } from "@findeg/ui";
 import { OrderTable } from "./OrderTable";
-import { Card, CardContent, CardHeader, CardTitle } from "@ui";
-import type { Product } from "@backend/features/catalog/domain/entities/Product";
-import type { Order } from "@backend/features/order/domain/entities/Order";
+import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
+import type { Product } from "@findeg/backend/features/catalog/domain/entities/Product";
+import type { Order } from "@findeg/backend/features/order/domain/entities/Order";
 
 interface OverviewProps {
   products: Product[];

@@ -1,8 +1,8 @@
-import { ID, Slug } from "@backend/features/core/domain/types/common";
+import { ID, Slug } from "@findeg/backend/features/core/domain/types/common";
 import type { ICategoryRepository } from "../interfaces/ICategoryRepository";
-import type { ICategoryService } from "@backend/features/catalog/application/interfaces/ICategoryService";
-import type { Category } from "@backend/features/catalog/domain/entities/Category";
-import type { Locale } from "@backend/features/core/domain/value-objects";
+import type { ICategoryService } from "@findeg/backend/features/catalog/application/interfaces/ICategoryService";
+import type { Category } from "@findeg/backend/features/catalog/domain/entities/Category";
+import type { Locale } from "@findeg/backend/features/core/domain/value-objects";
 
 export class CategoryService implements ICategoryService {
   constructor(private categoryRepository: ICategoryRepository) {}

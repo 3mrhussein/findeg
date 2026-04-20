@@ -2,13 +2,13 @@
 
 import React, { useState } from "react";
 import { useTranslations } from "next-intl";
-import { Container } from "@ui";
-import { Button } from "@ui";
-import { Icon } from "@ui";
+import { Container } from "@findeg/ui";
+import { Button } from "@findeg/ui";
+import { Icon } from "@findeg/ui";
 import { RegistrationForm } from "./RegistrationForm";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@ui";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@findeg/ui";
 import { Link } from "@i18n/navigation";
-import { Logo } from "@ui";
+import { Logo } from "@findeg/ui";
 
 /**
  * Registration view content component.

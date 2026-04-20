@@ -2,16 +2,16 @@
 
 import React, { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
-import { Button } from "@ui";
+import { Button } from "@findeg/ui";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@ui";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@ui";
-import { Icon } from "@ui";
+} from "@findeg/ui";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@findeg/ui";
+import { Icon } from "@findeg/ui";
 import type {
   AdminUser,
   AdminUserDialogProps,

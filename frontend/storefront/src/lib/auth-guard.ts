@@ -1,7 +1,7 @@
 import { getSession } from "./session";
 import { redirect } from "@i18n/navigation";
-import { isAdminSession } from "@backend/features/core";
-import type { SessionPayload, Locale } from "@backend/features/core";
+import { isAdminSession } from "@findeg/backend/features/core";
+import type { SessionPayload, Locale } from "@findeg/backend/features/core";
 
 /**
  * Require any authenticated user — redirects to /login if not.

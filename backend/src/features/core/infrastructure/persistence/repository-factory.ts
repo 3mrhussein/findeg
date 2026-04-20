@@ -9,15 +9,15 @@
  * The framework layer (dashboard/storefront apps) is responsible for ensuring server-only execution.
  */
 
-import { DrizzleUserRepository } from "@backend/features/identity/infrastructure/persistence/DrizzleUserRepository";
-import { DrizzleProductRepository } from "@backend/features/catalog/infrastructure/persistence/DrizzleProductRepository";
-import { DrizzleCategoryRepository } from "@backend/features/catalog/infrastructure/persistence/DrizzleCategoryRepository";
-import { DrizzleOrderRepository } from "@backend/features/order/infrastructure/persistence/DrizzleOrderRepository";
+import { DrizzleUserRepository } from "@findeg/backend/features/identity/infrastructure/persistence/DrizzleUserRepository";
+import { DrizzleProductRepository } from "@findeg/backend/features/catalog/infrastructure/persistence/DrizzleProductRepository";
+import { DrizzleCategoryRepository } from "@findeg/backend/features/catalog/infrastructure/persistence/DrizzleCategoryRepository";
+import { DrizzleOrderRepository } from "@findeg/backend/features/order/infrastructure/persistence/DrizzleOrderRepository";
 
-import type { IUserRepository } from "@backend/features/identity/application/interfaces/IUserRepository";
-import type { IProductRepository } from "@backend/features/catalog/application/interfaces/IProductRepository";
-import type { ICategoryRepository } from "@backend/features/catalog/application/interfaces/ICategoryRepository";
-import type { IOrderRepository } from "@backend/features/order/application/interfaces/IOrderRepository";
+import type { IUserRepository } from "@findeg/backend/features/identity/application/interfaces/IUserRepository";
+import type { IProductRepository } from "@findeg/backend/features/catalog/application/interfaces/IProductRepository";
+import type { ICategoryRepository } from "@findeg/backend/features/catalog/application/interfaces/ICategoryRepository";
+import type { IOrderRepository } from "@findeg/backend/features/order/application/interfaces/IOrderRepository";
 
 // Singleton instances (lazy initialization)
 let userRepositoryInstance: IUserRepository | null = null;

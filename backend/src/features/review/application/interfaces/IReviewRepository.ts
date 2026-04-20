@@ -1,4 +1,4 @@
-import { ID } from "@backend/features/core/domain/types/common";
+import { ID } from "@findeg/backend/features/core/domain/types/common";
 import { Review } from "../../domain/entities/Review";
 
 export interface ProductReviewFilters {

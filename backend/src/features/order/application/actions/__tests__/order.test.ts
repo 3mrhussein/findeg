@@ -10,12 +10,12 @@
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import * as orderActions from "../order";
-import { container } from "@backend/features/core/infrastructure/di/ServiceContainer";
-import type { OrderStatusUpdate } from "@backend/features/administration/domain/types";
-import { PaymentStatus } from "@backend/features/core/domain/types/common";
+import { container } from "@findeg/backend/features/core/infrastructure/di/ServiceContainer";
+import type { OrderStatusUpdate } from "@findeg/backend/features/administration/domain/types";
+import { PaymentStatus } from "@findeg/backend/features/core/domain/types/common";
 
 // Mock the service container
-vi.mock("@backend/features/core/infrastructure/di/ServiceContainer", () => ({
+vi.mock("@findeg/backend/features/core/infrastructure/di/ServiceContainer", () => ({
   container: {
     adminOrderService: {
       updateStatus: vi.fn(),

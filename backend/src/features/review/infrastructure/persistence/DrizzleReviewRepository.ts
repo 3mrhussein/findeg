@@ -1,12 +1,12 @@
-import { ID, Rating } from "@backend/features/core/domain/types/common";
-import { db } from "@backend/features/core/infrastructure/persistence";
+import { ID, Rating } from "@findeg/backend/features/core/domain/types/common";
+import { db } from "@findeg/backend/features/core/infrastructure/persistence";
 import {
   reviews,
   users,
   reviewHelpfulVotes,
   products,
   type Review as DbReview,
-} from "@backend/features/core/infrastructure/persistence/schema";
+} from "@findeg/backend/features/core/infrastructure/persistence/schema";
 import {
   IReviewRepository,
   ProductReviewFilters,

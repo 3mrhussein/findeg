@@ -1,12 +1,12 @@
 "use client";
 
 import { useCart } from "@hooks/useCart";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@ui";
-import { ScrollArea } from "@ui";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@findeg/ui";
+import { ScrollArea } from "@findeg/ui";
 import { CartEmptyState } from "./CartEmptyState";
 import { CartItem } from "./CartItem";
 import { CartSummary } from "./CartSummary";
-import { Button } from "@ui";
+import { Button } from "@findeg/ui";
 import { cn } from "@lib/utils";
 
 /**

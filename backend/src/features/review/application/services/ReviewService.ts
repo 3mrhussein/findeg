@@ -1,5 +1,5 @@
-import type { ID } from "@backend/features/core/domain/types/common";
-import type { IOrderRepository } from "@backend/features/order/application/interfaces/IOrderRepository";
+import type { ID } from "@findeg/backend/features/core/domain/types/common";
+import type { IOrderRepository } from "@findeg/backend/features/order/application/interfaces/IOrderRepository";
 import type { IReviewRepository, ProductReviewSummary } from "../interfaces/IReviewRepository";
 import type {
   CreateReviewInput,

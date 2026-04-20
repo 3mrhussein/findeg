@@ -17,8 +17,8 @@
 
 // eslint-disable-next-line no-restricted-imports
 import { redirect } from "@i18n/navigation";
-import { createIdentityServices } from "@backend/features/identity";
-import { isAdminSession, createUserVO, type SessionPayload } from "@backend/features/core";
+import { createIdentityServices } from "@findeg/backend/features/identity";
+import { isAdminSession, createUserVO, type SessionPayload } from "@findeg/backend/features/core";
 import { createSession, deleteSession } from "@lib/session";
 
 /**

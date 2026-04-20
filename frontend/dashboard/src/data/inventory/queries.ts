@@ -7,7 +7,7 @@
 "use cache";
 
 import { cacheLife, cacheTag } from "next/cache";
-import { createAdministrationServices } from "@backend/features/administration";
+import { createAdministrationServices } from "@findeg/backend/features/administration";
 
 /**
  * Get all products with inventory info

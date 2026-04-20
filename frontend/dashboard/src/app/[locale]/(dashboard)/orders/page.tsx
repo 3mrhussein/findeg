@@ -1,6 +1,6 @@
 import { OrdersTable } from "./_components/OrdersTable";
 import { PageHeader } from "@/app/[locale]/_components/shared/PageHeader";
-import { resolveLocale } from "@backend/features/core";
+import { resolveLocale } from "@findeg/backend/features/core";
 
 /**
  * Local type definitions

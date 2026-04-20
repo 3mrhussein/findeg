@@ -15,21 +15,21 @@ import {
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@i18n/navigation";
-import { Button } from "@ui";
-import { Badge } from "@ui";
-import { IconTooltip } from "@ui";
+import { Button } from "@findeg/ui";
+import { Badge } from "@findeg/ui";
+import { IconTooltip } from "@findeg/ui";
 import { useCart } from "@hooks/useCart";
 import { useUser } from "@hooks/useUser";
-import type { Product } from "@backend/features/catalog/domain/entities/Product";
-import type { Variant } from "@backend/features/catalog/domain/entities/Variant";
-import { VariantEntity } from "@backend/features/catalog/domain/entities/Variant";
+import type { Product } from "@findeg/backend/features/catalog/domain/entities/Product";
+import type { Variant } from "@findeg/backend/features/catalog/domain/entities/Variant";
+import { VariantEntity } from "@findeg/backend/features/catalog/domain/entities/Variant";
 import { cn } from "@lib/utils";
-import type { ProductPdpViewModel } from "@backend/features/catalog/application/queries/product-pdp";
+import type { ProductPdpViewModel } from "@findeg/backend/features/catalog/application/queries/product-pdp";
 import { ImageGallery } from "./ImageGallery";
 import { ProductTabsSection } from "./ProductTabsSection";
 import { RelatedProductsRail } from "./RelatedProductsRail";
 import { RecentlyViewedRail, type RecentlyViewedItem } from "./RecentlyViewedRail";
-import type { CustomerGroup, UomCode as UoMCode } from "@backend/features/core/domain/types/common";
+import type { CustomerGroup, UomCode as UoMCode } from "@findeg/backend/features/core/domain/types/common";
 import { getProductPricingAction } from "@/app/[locale]/(storefront)/_actions/catalog";
 
 function getProductStatusBadge({ product, variant, lowStock }: any) {

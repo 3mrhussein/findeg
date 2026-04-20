@@ -2,9 +2,9 @@
 
 import React from "react";
 import { useTranslations } from "next-intl";
-import { Button } from "@ui";
-import { Icon } from "@ui";
-import type { SchoolListResult } from "@backend/features/catalog/application/interfaces/ISchoolListRepository";
+import { Button } from "@findeg/ui";
+import { Icon } from "@findeg/ui";
+import type { SchoolListResult } from "@findeg/backend/features/catalog/application/interfaces/ISchoolListRepository";
 
 interface SchoolListsProps {
   schoolLists: SchoolListResult[];

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@ui";
+import { Button } from "@findeg/ui";
 import { useToggleLanguage } from "@hooks/useToggleLanguage";
 
 /**

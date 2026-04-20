@@ -7,8 +7,8 @@
 "use server";
 
 import { updateTag } from "next/cache";
-import { createAdministrationServices } from "@backend/features/administration";
-import type { OrderStatusUpdate } from "@backend/features/administration/domain/types";
+import { createAdministrationServices } from "@findeg/backend/features/administration";
+import type { OrderStatusUpdate } from "@findeg/backend/features/administration/domain/types";
 import { getErrorMessage } from "@lib/type-guards";
 
 /**

@@ -2,7 +2,7 @@ import fs from "fs";
 
 import path from "path";
 import { v4 as uuidv4 } from "uuid";
-import type { IStorageProvider } from "@backend/features/core/application/interfaces/IStorageProvider";
+import type { IStorageProvider } from "@findeg/backend/features/core/application/interfaces/IStorageProvider";
 
 /**
  * Local Storage Provider

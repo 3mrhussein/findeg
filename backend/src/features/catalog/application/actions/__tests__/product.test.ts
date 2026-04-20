@@ -7,11 +7,11 @@
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { createProduct, updateProduct, deleteProduct } from "../product";
-import { ResourceNotFoundError, ValidationError } from "@backend/features/core/domain/errors";
-import type { ProductInput } from "@backend/features/administration/domain/types";
+import { ResourceNotFoundError, ValidationError } from "@findeg/backend/features/core/domain/errors";
+import type { ProductInput } from "@findeg/backend/features/administration/domain/types";
 
 // Mock the container
-vi.mock("@backend/features/core/infrastructure/di/ServiceContainer", () => ({
+vi.mock("@findeg/backend/features/core/infrastructure/di/ServiceContainer", () => ({
   container: {
     adminProductService: {
       create: vi.fn(),
@@ -21,7 +21,7 @@ vi.mock("@backend/features/core/infrastructure/di/ServiceContainer", () => ({
   },
 }));
 
-import { container } from "@backend/features/core/infrastructure/di/ServiceContainer";
+import { container } from "@findeg/backend/features/core/infrastructure/di/ServiceContainer";
 
 describe("Product Actions", () => {
   beforeEach(() => {

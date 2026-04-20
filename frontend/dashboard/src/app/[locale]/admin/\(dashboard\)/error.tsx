@@ -19,7 +19,7 @@
 
 import { useEffect } from "react";
 import { AlertCircle, Home, RefreshCw } from "lucide-react";
-import { Button } from "@ui";
+import { Button } from "@findeg/ui";
 import Link from "next/link";
 
 interface ErrorProps {

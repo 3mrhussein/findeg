@@ -1,7 +1,7 @@
-import { db } from "@backend/features/core/infrastructure/persistence/database.config";
+import { db } from "@findeg/backend/features/core/infrastructure/persistence/database.config";
 import { eq, and, desc, sql } from "drizzle-orm";
-import { ID } from "@backend/features/core/domain/types/common";
-import { ISchoolAccessRepository } from "@backend/features/school/application/interfaces/ISchoolAccessRepository";
+import { ID } from "@findeg/backend/features/core/domain/types/common";
+import { ISchoolAccessRepository } from "@findeg/backend/features/school/application/interfaces/ISchoolAccessRepository";
 import {
   schoolListAccessGrants,
   schoolListAccessRequests,
@@ -13,7 +13,7 @@ import {
   type NewSchoolListAccessRequest,
   type SchoolListAccessToken,
   type SchoolListCodeAttempt,
-} from "@backend/features/core/infrastructure/persistence/schema/school-access";
+} from "@findeg/backend/features/core/infrastructure/persistence/schema/school-access";
 
 /**
  *

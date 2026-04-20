@@ -5,14 +5,14 @@
  * for proper display and address form pre-filling.
  */
 
-import { ID, Email, PortalRole } from "@backend/features/core/domain/types/common";
+import { ID, Email, PortalRole } from "@findeg/backend/features/core/domain/types/common";
 import type {
   AuthProvider,
   PaymentProvider,
   PermissionCode,
   RoleId,
   RoleScope,
-} from "@backend/features/core/domain/value-objects";
+} from "@findeg/backend/features/core/domain/value-objects";
 
 export interface LinkedAuthAccount {
   id: string;

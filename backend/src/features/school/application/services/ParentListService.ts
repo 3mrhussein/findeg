@@ -2,14 +2,14 @@ import {
   IParentListService,
   SessionState,
   SessionSummary,
-} from "@backend/features/school/application/interfaces/IParentListService";
-import { IParentSessionRepository } from "@backend/features/school/application/interfaces/IParentSessionRepository";
-import { ISchoolDirectoryService } from "@backend/features/school/application/interfaces/ISchoolDirectoryService";
+} from "@findeg/backend/features/school/application/interfaces/IParentListService";
+import { IParentSessionRepository } from "@findeg/backend/features/school/application/interfaces/IParentSessionRepository";
+import { ISchoolDirectoryService } from "@findeg/backend/features/school/application/interfaces/ISchoolDirectoryService";
 import {
   schoolLists,
   schoolListItems,
-} from "@backend/features/core/infrastructure/persistence/schema/school-lists";
-import { schoolListParentSessions } from "@backend/features/core/infrastructure/persistence/schema/school-list-sessions";
+} from "@findeg/backend/features/core/infrastructure/persistence/schema/school-lists";
+import { schoolListParentSessions } from "@findeg/backend/features/core/infrastructure/persistence/schema/school-list-sessions";
 
 /**
  *

@@ -7,8 +7,8 @@
  * App-layer (dashboard) handles revalidatePath() and redirect() after update.
  */
 
-import { NotAuthenticatedError, ValidationError } from "@backend/features/core/domain/errors";
-import type { ServiceResult } from "@backend/features/core/application/types";
+import { NotAuthenticatedError, ValidationError } from "@findeg/backend/features/core/domain/errors";
+import type { ServiceResult } from "@findeg/backend/features/core/application/types";
 import type { IUserRepository } from "../interfaces/IUserRepository";
 
 /**

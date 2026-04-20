@@ -4,7 +4,7 @@ import { usePathname, useRouter } from "@i18n/navigation";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { cn } from "@lib/utils";
-import { Button } from "@ui";
+import { Button } from "@findeg/ui";
 
 interface CategoryPillsProps {
   categories: { id: string; label: string; count?: number }[];

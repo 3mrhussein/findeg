@@ -2,16 +2,16 @@
 
 import * as React from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { Card, CardContent, CardHeader, CardTitle } from "@ui";
-import { Button } from "@ui";
-import { Label } from "@ui";
-import { Input } from "@ui";
-import { Switch } from "@ui";
-import { Separator } from "@ui";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ui";
-import { Badge } from "@ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
+import { Button } from "@findeg/ui";
+import { Label } from "@findeg/ui";
+import { Input } from "@findeg/ui";
+import { Switch } from "@findeg/ui";
+import { Separator } from "@findeg/ui";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@findeg/ui";
+import { Badge } from "@findeg/ui";
 import { Plus, Trash2, ChevronDown, ChevronRight, Package2 } from "lucide-react";
-import { PREDEFINED_UOMS, CUSTOMER_GROUPS } from "@backend/features/catalog";
+import { PREDEFINED_UOMS, CUSTOMER_GROUPS } from "@findeg/backend/features/catalog";
 import { BilingualInput } from "@components/shared/BilingualInput";
 import { cn } from "@lib/utils";
 import { ProductFormValues } from "../../../../../../../features/administration/presentation/forms/product-form";

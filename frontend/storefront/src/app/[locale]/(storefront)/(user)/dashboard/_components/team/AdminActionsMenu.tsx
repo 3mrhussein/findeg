@@ -12,15 +12,15 @@
 
 import React from "react";
 import { useTranslations } from "next-intl";
-import { Button } from "@ui";
+import { Button } from "@findeg/ui";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@ui";
-import { Icon } from "@ui";
+} from "@findeg/ui";
+import { Icon } from "@findeg/ui";
 
 interface AdminActionsMenuProps {
   userId: number;

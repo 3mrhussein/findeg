@@ -9,7 +9,7 @@
  */
 
 import React from "react";
-import type { Locale } from "@backend/features/core";
+import type { Locale } from "@findeg/backend/features/core";
 
 // Navigation Types
 export interface NavigationSubLink {

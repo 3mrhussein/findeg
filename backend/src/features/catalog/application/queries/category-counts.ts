@@ -1,5 +1,5 @@
-import type { Category } from "@backend/features/catalog/domain/entities/Category";
-import type { Product } from "@backend/features/catalog/domain/entities/Product";
+import type { Category } from "@findeg/backend/features/catalog/domain/entities/Category";
+import type { Product } from "@findeg/backend/features/catalog/domain/entities/Product";
 
 /**
  * Computes product counts for each category including descendant categories.

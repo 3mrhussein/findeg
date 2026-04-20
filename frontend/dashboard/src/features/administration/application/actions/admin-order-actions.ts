@@ -1,7 +1,7 @@
 "use server";
 
 import { updateTag } from "next/cache";
-import { createAdministrationServices } from "@backend/features/administration";
+import { createAdministrationServices } from "@findeg/backend/features/administration";
 import { getErrorMessage } from "@lib/type-guards";
 
 /**

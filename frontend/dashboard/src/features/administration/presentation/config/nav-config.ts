@@ -11,7 +11,7 @@
  * @see docs/admin/navigation.md for usage guide
  */
 
-import type { PortalRole } from "@backend/features/core";
+import type { PortalRole } from "@findeg/backend/features/core";
 
 export interface NavItem {
   label: string;

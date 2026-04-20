@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
 import { User, Phone, Mail, MapPin } from "lucide-react";
 
 interface OrderCustomerInfoProps {

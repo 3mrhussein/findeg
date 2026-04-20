@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import { Plus, Minus } from "lucide-react";
-import { Button } from "@ui";
-import { IconTooltip } from "@ui";
+import { Button } from "@findeg/ui";
+import { IconTooltip } from "@findeg/ui";
 import { useTranslations } from "next-intl";
 import { cn } from "@lib/utils";
 

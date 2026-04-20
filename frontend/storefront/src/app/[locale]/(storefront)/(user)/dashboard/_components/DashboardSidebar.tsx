@@ -13,9 +13,9 @@
 import React from "react";
 import { useRouter } from "@i18n/navigation";
 import { useTranslations, useLocale } from "next-intl";
-import { Logo } from "@ui";
-import { Icon } from "@ui";
-import { PERMISSION_CODES } from "@backend/features/core/domain/auth";
+import { Logo } from "@findeg/ui";
+import { Icon } from "@findeg/ui";
+import { PERMISSION_CODES } from "@findeg/backend/features/core/domain/auth";
 import { usePermissions } from "@providers/PermissionsProvider";
 import {
   Sidebar,
@@ -30,8 +30,8 @@ import {
   SidebarRail,
   SidebarSeparator,
   useSidebar,
-} from "@ui";
-import { ToggleTheme } from "@ui";
+} from "@findeg/ui";
+import { ToggleTheme } from "@findeg/ui";
 import ToggleLanguage from "@components/shared/ToggleLanguage";
 
 type DashboardView =

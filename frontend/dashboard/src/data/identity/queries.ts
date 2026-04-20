@@ -7,7 +7,7 @@
 "use cache";
 
 import { cacheLife, cacheTag } from "next/cache";
-import { createIdentityServices } from "@backend/features/identity";
+import { createIdentityServices } from "@findeg/backend/features/identity";
 
 /**
  * Get all admin users

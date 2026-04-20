@@ -1,6 +1,6 @@
 "use client";
 
-import { Slider } from "@ui";
+import { Slider } from "@findeg/ui";
 
 interface PriceRangeFilterProps {
   priceRange: [number, number];

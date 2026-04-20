@@ -1,4 +1,4 @@
-import { ID } from "@backend/features/core/domain/types/common";
+import { ID } from "@findeg/backend/features/core/domain/types/common";
 import { ITagRepository } from "../interfaces/ITagRepository";
 import { ITagService } from "../interfaces/ITagService";
 import { Tag, TagGroup } from "../../domain/entities/Tag";

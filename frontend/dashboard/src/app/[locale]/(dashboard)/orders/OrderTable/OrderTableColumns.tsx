@@ -1,10 +1,10 @@
 "use client";
 
 import { type ColumnDef } from "@tanstack/react-table";
-import { type Order } from "@backend/features/order";
-import { Checkbox } from "@ui";
-import { Button } from "@ui";
-import { Badge } from "@ui";
+import { type Order } from "@findeg/backend/features/order";
+import { Checkbox } from "@findeg/ui";
+import { Button } from "@findeg/ui";
+import { Badge } from "@findeg/ui";
 import { MoreHorizontal, Phone, Eye, Check } from "lucide-react";
 import {
   DropdownMenu,
@@ -12,7 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@ui";
+} from "@findeg/ui";
 import { Link } from "@i18n/navigation";
 import { formatDistanceToNow } from "date-fns";
 

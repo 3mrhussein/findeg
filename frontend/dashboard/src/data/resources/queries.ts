@@ -7,9 +7,9 @@
 "use cache";
 
 import { cacheLife, cacheTag } from "next/cache";
-import { createCatalogServices } from "@backend/features/catalog";
-import { createAdministrationServices } from "@backend/features/administration";
-import type { Locale } from "@backend/features/core";
+import { createCatalogServices } from "@findeg/backend/features/catalog";
+import { createAdministrationServices } from "@findeg/backend/features/administration";
+import type { Locale } from "@findeg/backend/features/core";
 
 /**
  * Get all categories with hierarchy

@@ -7,7 +7,7 @@
 
 import { cacheLife, cacheTag } from "next/cache";
 // Use AdminOrderService from administration feature
-import { createAdministrationServices } from "@backend/features/administration";
+import { createAdministrationServices } from "@findeg/backend/features/administration";
 
 /**
  * Get all orders with optional filters

@@ -1,4 +1,4 @@
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@ui";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@findeg/ui";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -6,14 +6,14 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@ui";
-import { Button } from "@ui";
-import { IconTooltip } from "@ui";
+} from "@findeg/ui";
+import { Button } from "@findeg/ui";
+import { IconTooltip } from "@findeg/ui";
 import { MoreHorizontal, Pencil, Trash2, Eye } from "lucide-react";
-import type { Product } from "@backend/features/catalog";
-import { ProductEntity } from "@backend/features/catalog";
+import type { Product } from "@findeg/backend/features/catalog";
+import { ProductEntity } from "@findeg/backend/features/catalog";
 import Image from "next/image";
-import { Badge } from "@ui";
+import { Badge } from "@findeg/ui";
 
 interface ProductTableProps {
   products: Product[];

@@ -1,10 +1,10 @@
 import { useTranslations } from "next-intl";
 import { usePagination } from "@hooks/usePagination";
-import { Pagination } from "@ui";
-import { Button } from "@ui";
+import { Pagination } from "@findeg/ui";
+import { Button } from "@findeg/ui";
 import { Plus } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@ui";
-import type { Product } from "@backend/features/catalog/domain/entities/Product";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@findeg/ui";
+import type { Product } from "@findeg/backend/features/catalog/domain/entities/Product";
 // TODO: Replace with storefront-specific product display component
 // import { ProductTable } from "@app/[locale]/admin/(dashboard)/_components/ProductTable";
 

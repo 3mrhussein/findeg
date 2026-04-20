@@ -1,6 +1,6 @@
-import { ID, Slug } from "@backend/features/core/domain/types/common";
-import { Brand } from "@backend/features/catalog/domain/entities/Brand";
-import { Locale } from "@backend/features/core/domain/value-objects";
+import { ID, Slug } from "@findeg/backend/features/core/domain/types/common";
+import { Brand } from "@findeg/backend/features/catalog/domain/entities/Brand";
+import { Locale } from "@findeg/backend/features/core/domain/value-objects";
 import { IBrandRepository } from "../interfaces/IBrandRepository";
 import { IBrandService } from "../interfaces/IBrandService";
 

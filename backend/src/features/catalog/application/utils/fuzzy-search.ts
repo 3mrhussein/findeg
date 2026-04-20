@@ -1,4 +1,4 @@
-import type { Product } from "@backend/features/catalog/domain/entities/Product";
+import type { Product } from "@findeg/backend/features/catalog/domain/entities/Product";
 
 interface ScoredProduct {
   product: Product;

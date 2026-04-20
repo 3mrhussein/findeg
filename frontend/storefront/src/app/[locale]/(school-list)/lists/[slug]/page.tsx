@@ -1,5 +1,5 @@
 import { getSchoolListPageData } from "@/data/school/queries";
-import { createSchoolServices } from "@backend/features/school/application/services/factory";
+import { createSchoolServices } from "@findeg/backend/features/school/application/services/factory";
 import { getOptionalSession } from "@lib/auth-guard";
 import { SchoolAuthWall } from "@app/[locale]/(storefront)/school/_components/SchoolAuthWall";
 import { notFound } from "next/navigation";

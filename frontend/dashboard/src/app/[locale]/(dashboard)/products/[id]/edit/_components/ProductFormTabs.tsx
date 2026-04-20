@@ -19,7 +19,7 @@
 import * as React from "react";
 import { useRouter, usePathname } from "@i18n/navigation";
 import { useSearchParams } from "next/navigation";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@ui";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@findeg/ui";
 import { FileText, Layers, Image, DollarSign, Search } from "lucide-react";
 import { cn } from "@lib/utils";
 

@@ -1,5 +1,5 @@
-import type { SessionPayload } from "@backend/features/core/domain/auth";
-import type { ISessionProvider } from "@backend/features/core/application/interfaces/ISessionProvider";
+import type { SessionPayload } from "@findeg/backend/features/core/domain/auth";
+import type { ISessionProvider } from "@findeg/backend/features/core/application/interfaces/ISessionProvider";
 import { JwtSessionManager } from "./JwtSessionManager";
 
 /**

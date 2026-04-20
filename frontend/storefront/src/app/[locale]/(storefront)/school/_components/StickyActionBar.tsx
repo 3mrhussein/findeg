@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useTranslations } from "next-intl";
-import { Button } from "@ui";
+import { Button } from "@findeg/ui";
 import { ShoppingCart, ShoppingBag } from "lucide-react";
 
 interface StickyActionBarProps {

@@ -1,12 +1,12 @@
 "use client";
 
 import * as React from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@ui";
-import { Progress } from "@ui";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@findeg/ui";
+import { Progress } from "@findeg/ui";
 import { useTranslations } from "next-intl";
 import { Link } from "@i18n/navigation";
 import { ArrowRight } from "lucide-react";
-import { CategoryProductDistribution } from "@backend/features/administration/domain/types";
+import { CategoryProductDistribution } from "@findeg/backend/features/administration/domain/types";
 
 interface CategoryCoverageWidgetProps {
   distributions: CategoryProductDistribution[];

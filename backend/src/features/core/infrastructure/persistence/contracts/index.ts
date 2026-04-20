@@ -2,7 +2,7 @@
  * Repository Interface Contracts
  *
  * Re-export all repository interfaces for easy import.
- * Usage: import { IUserRepository, IProductRepository } from '@backend/features/core/contracts'
+ * Usage: import { IUserRepository, IProductRepository } from '@findeg/backend/features/core/contracts'
  */
 
 export * from "./IUserRepository";

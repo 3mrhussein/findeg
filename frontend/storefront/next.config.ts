@@ -6,10 +6,10 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
 const nextConfig: NextConfig = {
   // Transpile workspace packages (UI only - backend should remain external)
-  transpilePackages: ["@ui"],
+  transpilePackages: ["@findeg/ui"],
   // Prevent server-only packages from being bundled on the client
   serverExternalPackages: [
-    "@backend", // Keep backend external to avoid bundling infrastructure
+    "@findeg/backend", // Keep backend external to avoid bundling infrastructure
     "postgres",
     "drizzle-orm",
     "bcryptjs",

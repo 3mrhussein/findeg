@@ -1,13 +1,13 @@
 "use client";
 
 import { useTransition, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@ui";
+import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
 import { CreditCard, Package, Truck, CheckCircle2, AlertCircle } from "lucide-react";
-import { Badge } from "@ui";
-import { Button } from "@ui";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ui";
-import { Input } from "@ui";
-import { Label } from "@ui";
+import { Badge } from "@findeg/ui";
+import { Button } from "@findeg/ui";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@findeg/ui";
+import { Input } from "@findeg/ui";
+import { Label } from "@findeg/ui";
 import {
   updateOrderStatusAction as adminUpdateOrderStatusAction,
   updateOrderPaymentStatusAction as adminUpdateOrderPaymentStatusAction,

@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { Button } from "@ui";
+import { Button } from "@findeg/ui";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "@i18n/navigation";
 import { OrderHeader } from "./_components/OrderHeader";

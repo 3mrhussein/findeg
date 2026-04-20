@@ -8,7 +8,7 @@ import { pgTable, serial, text, integer, boolean, timestamp, jsonb } from "drizz
 import { relations } from "drizzle-orm";
 import { tags } from "./tags";
 import { catalogSchema } from "./schemas";
-import type { LocalizedStringDraft } from "@backend/features/core/domain/value-objects";
+import type { LocalizedStringDraft } from "@findeg/backend/features/core/domain/value-objects";
 
 /**
  * Collections Table

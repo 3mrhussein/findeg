@@ -1,6 +1,6 @@
 "use client";
 
-import { Input } from "@ui";
+import { Input } from "@findeg/ui";
 import type { SortKey } from "./InventoryTable.interface";
 
 interface InventoryFiltersProps {

@@ -1,7 +1,7 @@
-import { Order } from "@backend/features/order/domain/entities/Order";
-import { OrderStatusUpdate } from "@backend/features/administration/domain/types";
-import { OrderFilters } from "@backend/features/order/application/interfaces/IOrderRepository";
-import { PaymentStatus } from "@backend/features/core/domain/types/common";
+import { Order } from "@findeg/backend/features/order/domain/entities/Order";
+import { OrderStatusUpdate } from "@findeg/backend/features/administration/domain/types";
+import { OrderFilters } from "@findeg/backend/features/order/application/interfaces/IOrderRepository";
+import { PaymentStatus } from "@findeg/backend/features/core/domain/types/common";
 
 export interface IAdminOrderService {
   /**

@@ -27,25 +27,22 @@
       "@features/*": [
         "./src/features/*"
       ],
-      "@/features/*": [
-        "./src/features/*"
+      "@data/*": [
+        "./src/data/*"
       ],
       "@app/*": [
         "./src/app/*"
       ],
-      "@backend": [
+      "@findeg/backend": [
         "../../backend/src"
       ],
-      "@backend/*": [
+      "@findeg/backend/*": [
         "../../backend/src/*"
       ],
-      "@data/*": [
-        "./src/data/*"
-      ],
-      "@ui": [
+      "@findeg/ui": [
         "../ui/src"
       ],
-      "@ui/*": [
+      "@findeg/ui/*": [
         "../ui/src/*"
       ]
     }
