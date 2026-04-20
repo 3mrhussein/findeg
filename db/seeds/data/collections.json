@@ -1,0 +1,36 @@
+[
+  {
+    "id": 1,
+    "slug": "back-to-school",
+    "localizedTitle": {
+      "en": "Back to School",
+      "ar": "العودة للمدرسة"
+    },
+    "localizedSubtitle": {
+      "en": "Everything you need for a fresh year",
+      "ar": "كل ما تحتاجه لسنة جديدة"
+    },
+    "heroImageUrl": "/images/collections/back-to-school.jpg",
+    "sortOrder": 1,
+    "isActive": true,
+    "createdAt": "2026-03-01 00:00:00",
+    "updatedAt": "2026-03-01 00:00:00"
+  },
+  {
+    "id": 2,
+    "slug": "study-work-desk",
+    "localizedTitle": {
+      "en": "Study & Work Desk",
+      "ar": "مكتب الدراسة والعمل"
+    },
+    "localizedSubtitle": {
+      "en": "Optimize your workspace",
+      "ar": "حسن مساحة عملك"
+    },
+    "heroImageUrl": "/images/collections/study-desk.jpg",
+    "sortOrder": 2,
+    "isActive": true,
+    "createdAt": "2026-03-01 00:00:00",
+    "updatedAt": "2026-03-01 00:00:00"
+  }
+]

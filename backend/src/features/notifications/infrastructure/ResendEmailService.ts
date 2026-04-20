@@ -26,6 +26,8 @@ const formatCurrency = (amount: number, currency: string | undefined, locale: st
   }).format(amount);
 };
 
+import env from "@findeg/env";
+
 /**
  *
  */
@@ -37,11 +39,8 @@ export class ResendEmailService implements IEmailService {
    *
    */
   constructor() {
-    this.resend = new Resend(process.env.RESEND_API_KEY || "re_fallback_key");
-    this.defaultFrom =
-      process.env.EMAIL_FROM_NAME && process.env.EMAIL_FROM
-        ? `${process.env.EMAIL_FROM_NAME} <${process.env.EMAIL_FROM}>`
-        : "FindEg <noreply@findeg.com>";
+    this.resend = new Resend(env.RESEND_API_KEY || "re_fallback_key");
+    this.defaultFrom = `${env.EMAIL_FROM_NAME} <${env.EMAIL_FROM}>`;
   }
 
   /**
@@ -53,7 +52,7 @@ export class ResendEmailService implements IEmailService {
     template: React.ReactElement,
   ): Promise<void> {
     try {
-      if (!process.env.RESEND_API_KEY) {
+      if (!env.RESEND_API_KEY) {
         console.warn("Emails not sent: RESEND_API_KEY is not configured.");
         return;
       }
@@ -145,7 +144,7 @@ export class ResendEmailService implements IEmailService {
   ): Promise<void> {
     const locale = this.resolveLocale(user.locale);
     const subject = locale === "ar" ? "إعادة تعيين كلمة المرور" : "Reset your password";
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://findeg.com";
+    const baseUrl = env.NEXT_PUBLIC_APP_URL;
     const resetLink = `${baseUrl}/${locale}/reset-password?token=${resetToken}`;
 
     const template = React.createElement(PasswordResetEmail, {
@@ -210,7 +209,7 @@ export class ResendEmailService implements IEmailService {
   ): Promise<void> {
     const locale = this.resolveLocale(admin.locale);
     const subject = locale === "ar" ? "دعوة لإدارة فايند إي جي" : "Invitation to manage FindEg";
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://findeg.com";
+    const baseUrl = env.NEXT_PUBLIC_APP_URL;
     const inviteLink = `${baseUrl}/admin/accept-invite?token=${inviteToken}`;
 
     const template = React.createElement(AdminInvitationEmail, {

@@ -16,7 +16,9 @@ interface SchoolListAccessApprovedEmailProps {
   locale?: string;
 }
 
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://findeg.com";
+import env from "@findeg/env";
+
+const BASE_URL = env.NEXT_PUBLIC_APP_URL;
 
 /**
  *
@@ -62,7 +64,7 @@ export const SchoolListAccessApprovedEmail = ({
       </Section>
 
       <Section style={btnContainer}>
-        <Button style={button} href={`${baseUrl}/${locale}/lists/${listId}`}>
+        <Button style={button} href={`${BASE_URL}/${locale}/lists/${listId}`}>
           {content.btnStr}
         </Button>
       </Section>

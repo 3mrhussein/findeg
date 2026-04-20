@@ -1,0 +1,58 @@
+[
+  {
+    "id": 1,
+    "code": "system_admin",
+    "name": "System Administrator",
+    "createdAt": "2026-02-19 10:00:00",
+    "updatedAt": "2026-02-19 10:00:00"
+  },
+  {
+    "id": 2,
+    "code": "user",
+    "name": "User",
+    "createdAt": "2026-02-19 10:00:00",
+    "updatedAt": "2026-02-19 10:00:00"
+  },
+  {
+    "id": 3,
+    "code": "inventory_manager",
+    "name": "Inventory Manager",
+    "createdAt": "2026-02-19 10:00:00",
+    "updatedAt": "2026-02-19 10:00:00"
+  },
+  {
+    "id": 4,
+    "code": "editorial",
+    "name": "Editorial",
+    "createdAt": "2026-02-19 10:00:00",
+    "updatedAt": "2026-02-19 10:00:00"
+  },
+  {
+    "id": 5,
+    "code": "operations_manager",
+    "name": "Operations Manager",
+    "createdAt": "2026-02-19 10:00:00",
+    "updatedAt": "2026-02-19 10:00:00"
+  },
+  {
+    "id": 6,
+    "code": "customer_support",
+    "name": "Customer Support",
+    "createdAt": "2026-02-19 10:00:00",
+    "updatedAt": "2026-02-19 10:00:00"
+  },
+  {
+    "id": 7,
+    "code": "business_analyst",
+    "name": "Business Analyst",
+    "createdAt": "2026-02-19 10:00:00",
+    "updatedAt": "2026-02-19 10:00:00"
+  },
+  {
+    "id": 8,
+    "code": "school_liaison",
+    "name": "School Liaison",
+    "createdAt": "2026-02-19 10:00:00",
+    "updatedAt": "2026-02-19 10:00:00"
+  }
+]

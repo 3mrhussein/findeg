@@ -1,6 +1,6 @@
 import { ID, Slug } from "../../../core/domain/types/common";
-import { db } from "../../../core/infrastructure/persistence";
-import { categories } from "../../../core/infrastructure/persistence/schema";
+import { db } from "@findeg/db";
+import { categories } from "@findeg/db/schema";
 import { ICategoryRepository } from "../../application/interfaces/ICategoryRepository";
 import { Category } from "../../domain/entities/Category";
 import { CategoryInput } from "../../../administration/domain/types";
@@ -108,7 +108,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
 
   async getTree(language: Locale = DEFAULT_LOCALE): Promise<Category[]> {
     const allCategories = await this.getAll(language);
-    const { products } = await import("../../../core/infrastructure/persistence/schema/products");
+    const { products } = await import("@findeg/db/schema");
 
     // Get direct product counts for all categories in one query
     const productCountsResult = await db
@@ -357,7 +357,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
   }
 
   async getProductCount(categoryId: number): Promise<number> {
-    const { products } = await import("../../../core/infrastructure/persistence/schema/products");
+    const { products } = await import("@findeg/db/schema");
     const result = await db
       .select({ value: count() })
       .from(products)

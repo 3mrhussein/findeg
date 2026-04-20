@@ -2,7 +2,7 @@ import { ID } from "@findeg/backend/features/core/domain/types/common";
 import {
   Notification,
   NewNotification,
-} from "@findeg/backend/features/core/infrastructure/persistence/schema/notifications";
+} from "@findeg/db/schema";
 
 /**
  * Data Access Interface for Notifications

@@ -3,6 +3,7 @@ import type { Locale } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { notFound, permanentRedirect } from "next/navigation";
 import { Link } from "@i18n/navigation";
+import env from "@findeg/env";
 import {
   getProductPdp,
   getProductBySlugOrIdForMetadata,
@@ -78,7 +79,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
   const imageUrls = (vm.selectedVariant?.images || [])
     .map((image: any) => image.url)
     .filter((url: any): url is string => Boolean(url));
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://findeg.com";
+  const siteUrl = env.NEXT_PUBLIC_SITE_URL;
 
   const productSchema = {
     "@context": "https://schema.org",

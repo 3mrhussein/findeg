@@ -16,27 +16,34 @@
     "dev:storefront": "pnpm --filter @findeg/storefront dev",
     "dev:dashboard": "pnpm --filter @findeg/dashboard dev",
     "dev:both": "pnpm --parallel --filter @findeg/storefront --filter @findeg/dashboard dev",
-    "db:start": "./backend/scripts/db-start.sh",
-    "db:stop": "./backend/scripts/db-stop.sh",
-    "db:reset": "./backend/scripts/db-reset.sh",
-    "db:logs": "./backend/scripts/db-logs.sh",
+    "db:start": "docker-compose up -d postgres",
+    "db:stop": "docker-compose stop postgres",
+    "db:reset": "docker-compose down -v postgres && docker-compose up -d postgres",
+    "db:logs": "docker-compose logs -f postgres",
     "db:shell": "docker-compose exec postgres psql -U findeg_user -d findeg_dev",
     "db:status": "docker-compose ps && docker-compose exec postgres pg_isready -U findeg_user",
     "db:setup": "pnpm db:start && pnpm db:push && pnpm db:seed",
-    "db:generate": "drizzle-kit generate --config backend/drizzle.config.ts",
-    "db:migrate": "drizzle-kit migrate --config backend/drizzle.config.ts",
-    "db:push": "drizzle-kit push --config backend/drizzle.config.ts --force",
-    "db:seed": "node backend/scripts/seed-db.js",
-    "db:seed-brands": "npx tsx --tsconfig backend/tsconfig.json backend/scripts/seed-brands.ts",
-    "db:studio": "drizzle-kit studio --config backend/drizzle.config.ts",
-    "db:doc": "node backend/scripts/generate-schema-doc.js"
+    "db:generate": "pnpm --filter @findeg/db db:generate",
+    "db:migrate": "pnpm --filter @findeg/db db:migrate",
+    "db:push": "pnpm --filter @findeg/db db:push",
+    "db:seed": "pnpm --filter @findeg/db db:seed",
+    "db:studio": "pnpm --filter @findeg/db db:studio"
+  },
+  "dependencies": {
+    "dotenv": "17.4.2",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.58.2",
+    "@typescript-eslint/parser": "^8.58.2",
     "eslint": "^9.0.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
     "prettier": "^3.8.0",
     "start-server-and-test": "^3.0.0",
     "turbo": "^2.9.3",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.58.2"
   },
   "keywords": [
     "react",

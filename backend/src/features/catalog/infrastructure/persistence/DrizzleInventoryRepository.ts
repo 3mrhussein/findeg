@@ -1,10 +1,10 @@
-import { db } from "../../../core/infrastructure/persistence";
+import { db } from "@findeg/db";
 import {
   inventoryBalances,
   stockMovements,
   warehouses,
   productVariants,
-} from "../../../core/infrastructure/persistence/schema";
+} from "@findeg/db/schema";
 import {
   IInventoryRepository,
   InventoryBalanceResult,

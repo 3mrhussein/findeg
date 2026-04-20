@@ -1,0 +1,98 @@
+[
+  {
+    "id": 1,
+    "group": "campaign",
+    "key": "back-to-school",
+    "slug": "back-to-school",
+    "icon": "GraduationCap",
+    "color": "#4f46e5",
+    "isActive": true,
+    "scope": "campaign",
+    "createdAt": "2026-03-01 00:00:00",
+    "updatedAt": "2026-03-01 00:00:00"
+  },
+  {
+    "id": 2,
+    "group": "campaign",
+    "key": "new-arrival",
+    "slug": "new-arrival",
+    "icon": "Sparkles",
+    "color": "#dc2626",
+    "isActive": true,
+    "scope": "campaign",
+    "createdAt": "2026-03-01 00:00:00",
+    "updatedAt": "2026-03-01 00:00:00"
+  },
+  {
+    "id": 3,
+    "group": "campaign",
+    "key": "ramadan-special",
+    "slug": "ramadan-special",
+    "icon": "Star",
+    "color": "#d97706",
+    "isActive": true,
+    "scope": "campaign",
+    "createdAt": "2026-03-01 00:00:00",
+    "updatedAt": "2026-03-01 00:00:00"
+  },
+  {
+    "id": 4,
+    "group": "audience",
+    "key": "primary-school",
+    "slug": "primary-school",
+    "icon": "BookOpen",
+    "color": "#16a34a",
+    "isActive": true,
+    "scope": "catalog",
+    "createdAt": "2026-03-01 00:00:00",
+    "updatedAt": "2026-03-01 00:00:00"
+  },
+  {
+    "id": 5,
+    "group": "audience",
+    "key": "middle-school",
+    "slug": "middle-school",
+    "icon": "BookOpen",
+    "color": "#0891b2",
+    "isActive": true,
+    "scope": "catalog",
+    "createdAt": "2026-03-01 00:00:00",
+    "updatedAt": "2026-03-01 00:00:00"
+  },
+  {
+    "id": 6,
+    "group": "quality",
+    "key": "best-seller",
+    "slug": "best-seller",
+    "icon": "Star",
+    "color": "#d97706",
+    "isActive": true,
+    "scope": "catalog",
+    "createdAt": "2026-03-01 00:00:00",
+    "updatedAt": "2026-03-01 00:00:00"
+  },
+  {
+    "id": 7,
+    "group": "quality",
+    "key": "imported",
+    "slug": "imported",
+    "icon": "Globe",
+    "color": "#6b7280",
+    "isActive": true,
+    "scope": "catalog",
+    "createdAt": "2026-03-01 00:00:00",
+    "updatedAt": "2026-03-01 00:00:00"
+  },
+  {
+    "id": 8,
+    "group": "quality",
+    "key": "eco-friendly",
+    "slug": "eco-friendly",
+    "icon": "Leaf",
+    "color": "#15803d",
+    "isActive": false,
+    "scope": "catalog",
+    "createdAt": "2026-03-01 00:00:00",
+    "updatedAt": "2026-03-01 00:00:00"
+  }
+]

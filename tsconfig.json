@@ -23,7 +23,14 @@
         "name": "next"
       }
     ],
-    "paths": {}
+    "paths": {
+      "@findeg/db/*": [
+        "./db/*"
+      ],
+      "@findeg/env": [
+        "./env.ts"
+      ]
+    }
   },
   "references": [
     {
@@ -34,6 +41,7 @@
     }
   ],
   "include": [
+    "./.env.ts",
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
@@ -48,6 +56,7 @@
     "src/features._migrated",
     "packages/*/*/.next",
     "packages/*/dist",
-    "backend/dist"
+    "backend/dist",
+    ".tmp/**"
   ]
 }

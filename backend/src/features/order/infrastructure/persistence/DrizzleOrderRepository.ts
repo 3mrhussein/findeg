@@ -7,14 +7,14 @@ import {
   OrderStatus,
   PaymentStatus,
 } from "../../../core/domain/types/common";
-import { db } from "../../../core/infrastructure/persistence";
+import { db } from "@findeg/db";
 import {
   orders,
   orderItems,
   users,
   type Order as DbOrder,
   type OrderItem as DbOrderItem,
-} from "../../../core/infrastructure/persistence/schema";
+} from "@findeg/db/schema";
 import { IOrderRepository, OrderFilters } from "../../application/interfaces/IOrderRepository";
 import { Order, OrderItem } from "../../domain/entities/Order";
 import { ShippingAddress } from "../../domain/value-objects";

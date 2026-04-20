@@ -1,5 +1,5 @@
-import { SchoolListParentSession } from "../../../core/infrastructure/persistence/schema/school-list-sessions";
-import { SchoolList } from "../../../core/infrastructure/persistence/schema/school-lists";
+import { SchoolListParentSession } from "@findeg/db/schema";
+import { SchoolList } from "@findeg/db/schema";
 
 export type SessionState = "first_visit" | "has_session" | "completed_order";
 

@@ -1,0 +1,20 @@
+{
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "resolveJsonModule": true,
+        "baseUrl": ".",
+        "paths": {
+            "@/*": [
+                "../backend/src/*"
+            ]
+        }
+    },
+    "include": [
+        "**/*.ts",
+        "**/*.json"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist"
+    ]
+}

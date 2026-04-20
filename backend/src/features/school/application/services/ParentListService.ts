@@ -8,8 +8,8 @@ import { ISchoolDirectoryService } from "@findeg/backend/features/school/applica
 import {
   schoolLists,
   schoolListItems,
-} from "@findeg/backend/features/core/infrastructure/persistence/schema/school-lists";
-import { schoolListParentSessions } from "@findeg/backend/features/core/infrastructure/persistence/schema/school-list-sessions";
+} from "@findeg/db/schema";
+import { schoolListParentSessions } from "@findeg/db/schema";
 
 /**
  *

@@ -2,7 +2,7 @@
  * School Feature Constants
  */
 
-export const governorates = [
+export const GOVERNORATES = [
   "Cairo",
   "Giza",
   "Alexandria",
@@ -21,9 +21,9 @@ export const governorates = [
   "Aswan",
 ];
 
-export const schoolTypes = ["National", "International", "Language", "Private", "Experimental"];
+export const SCHOOL_TYPES = ["National", "International", "Language", "Private", "Experimental"];
 
-export const academicSystems = [
+export const ACADEMIC_SYSTEMS = [
   "National",
   "American",
   "British",

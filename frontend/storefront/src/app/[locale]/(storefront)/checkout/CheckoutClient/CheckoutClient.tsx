@@ -5,10 +5,7 @@ import { useCart } from "@hooks/useCart";
 import { Button } from "@findeg/ui";
 import { useTranslations } from "next-intl";
 import { SectionStateEmpty } from "@components/shared/state/SectionStateEmpty";
-import {
-  useCheckoutForm,
-  type CheckoutValidationError,
-} from "./useCheckoutForm";
+import { useCheckoutForm, type CheckoutValidationError } from "./useCheckoutForm";
 import { ShippingForm } from "../_components/ShippingForm";
 import { PaymentForm } from "../_components/PaymentForm";
 import { OrderSummary } from "../_components/OrderSummary";
@@ -38,7 +35,10 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
     touchField,
     revealAllErrors,
     getFieldError,
-  } = useCheckoutForm({ cartItemsCount: cartItems.length, initialValues: initialPrefill || undefined });
+  } = useCheckoutForm({
+    cartItemsCount: cartItems.length,
+    initialValues: initialPrefill || undefined,
+  });
 
   const optimisticShipping = paymentMethod === "cod" ? 50 : 30;
   const optimisticTotal = cartTotal + optimisticShipping;

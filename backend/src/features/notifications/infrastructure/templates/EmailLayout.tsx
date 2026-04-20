@@ -19,9 +19,9 @@ interface EmailLayoutProps {
   locale?: string;
 }
 
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL
-  ? process.env.NEXT_PUBLIC_APP_URL
-  : "https://findeg.com";
+import env from "@findeg/env";
+
+const BASE_URL = env.NEXT_PUBLIC_APP_URL;
 
 const FIND_EG_COLORS = {
   primary: "#4338CA", // Deep Indigo
@@ -71,7 +71,7 @@ export const EmailLayout = ({ children, previewText, locale = "en" }: EmailLayou
           {/* Header */}
           <Section style={header}>
             <Img
-              src={`${baseUrl}/logo-horizontal.png`} // Assuming a logo exists here
+              src={`${BASE_URL}/logo-horizontal.png`} // Assuming a logo exists here
               width="150"
               alt="FindEg Logo"
               style={logo}
@@ -92,7 +92,7 @@ export const EmailLayout = ({ children, previewText, locale = "en" }: EmailLayou
             <Text style={footerAddress}>
               {isRtl ? "القاهرة، مصر • support@findeg.com" : "Cairo, Egypt • support@findeg.com"}
             </Text>
-            <Link href={`${baseUrl}/unsubscribe`} style={unsubscribeLink}>
+            <Link href={`${BASE_URL}/unsubscribe`} style={unsubscribeLink}>
               {isRtl ? "إلغاء الاشتراك" : "Unsubscribe"}
             </Link>
           </Section>

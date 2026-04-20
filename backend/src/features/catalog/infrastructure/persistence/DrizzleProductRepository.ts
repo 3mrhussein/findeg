@@ -1,4 +1,3 @@
-import { db } from "../../../core/infrastructure/persistence";
 import {
   products,
   productVariants,
@@ -15,14 +14,13 @@ import {
   collectionTags,
   inventoryBalances,
   warehouses,
-  type Product as DbProduct,
-  type VariantImage as DbVariantImage,
-} from "../../../core/infrastructure/persistence/schema";
+} from "@findeg/db/schema";
 import {
   IProductRepository,
   ProductFilters,
 } from "../../application/interfaces/IProductRepository";
 import { Product } from "../../domain/entities/Product";
+import { BaseDrizzleRepository } from "@findeg/backend/features/core/infrastructure/persistence/BaseDrizzleRepository";
 import { Variant } from "../../domain/entities/Variant";
 import { Tag } from "../../domain/entities/Tag";
 import { ProductInput } from "../../../administration/domain/types";
@@ -65,7 +63,13 @@ import {
  * Handles product CRUD, search, filtering, inventory tracking, and multi-language support.
  * Implements complex queries for featured products, category/brand filtering, and low stock alerts.
  */
-export class DrizzleProductRepository implements IProductRepository {
+export class DrizzleProductRepository
+  extends BaseDrizzleRepository<typeof products, Product, number>
+  implements IProductRepository
+{
+  constructor() {
+    super(products);
+  }
   /**
    * Converts arbitrary text to URL-safe slug.
    */
@@ -81,7 +85,7 @@ export class DrizzleProductRepository implements IProductRepository {
    * Resolves the materialized path for a category ID.
    */
   private async getCategoryPath(categoryId: ID): Promise<string | null> {
-    const result = await db
+    const result = await this.db
       .select({ path: categories.path })
       .from(categories)
       .where(eq(categories.id, categoryId))
@@ -94,7 +98,7 @@ export class DrizzleProductRepository implements IProductRepository {
    * Map database result to domain Product entity (SPU)
    */
   private mapToDomain(
-    dbProduct: DbProduct,
+    dbProduct: typeof products.$inferSelect,
     variants: Variant[] = [],
     categoryName?: string,
     brandName?: string,
@@ -225,7 +229,10 @@ export class DrizzleProductRepository implements IProductRepository {
         .select()
         .from(variantSellableUoms)
         .where(inArray(variantSellableUoms.variantId, variantIds)),
-      db.select().from(variantPriceLists).where(inArray(variantPriceLists.variantId, variantIds)),
+      this.db
+        .select()
+        .from(variantPriceLists)
+        .where(inArray(variantPriceLists.variantId, variantIds)),
       db
         .select({
           variantId: inventoryBalances.variantId,
@@ -742,8 +749,7 @@ export class DrizzleProductRepository implements IProductRepository {
    * Retrieves products with variants having low stock.
    */
   async getLowStock(threshold?: Quantity, language: Locale = DEFAULT_LOCALE): Promise<Product[]> {
-    const { inventoryBalances } =
-      await import("../../../core/infrastructure/persistence/schema/inventory");
+    const { inventoryBalances } = await import("@findeg/db/schema");
 
     // Search across variants for low stock by joining with inventory balances
     const variantSubquery = db
@@ -784,7 +790,7 @@ export class DrizzleProductRepository implements IProductRepository {
    * Creates a new product and its associated translations and variants in a transaction.
    */
   async create(input: ProductInput): Promise<Product> {
-    return await db.transaction(async (tx) => {
+    return await this.db.transaction(async (tx) => {
       // 1. Resolve localized metadata
       const localizedSlug = Object.fromEntries(
         (input.translations || []).map((t) => [t.language, this.toRouteSlug(t.name)]),
@@ -908,7 +914,7 @@ export class DrizzleProductRepository implements IProductRepository {
    * Updates an existing product and its translations.
    */
   async update(id: ID, input: ProductInput): Promise<Product> {
-    return await db.transaction(async (tx) => {
+    return await this.db.transaction(async (tx) => {
       // 1. Resolve localized metadata
       const localizedSlug = Object.fromEntries(
         (input.translations || []).map((t) => [t.language, this.toRouteSlug(t.name)]),
@@ -1085,7 +1091,7 @@ export class DrizzleProductRepository implements IProductRepository {
    * Removes a product and its variants.
    */
   async delete(id: ID): Promise<void> {
-    await db.delete(products).where(eq(products.id, id));
+    await this.db.delete(products).where(eq(products.id, id));
   }
 
   /**
@@ -1101,7 +1107,7 @@ export class DrizzleProductRepository implements IProductRepository {
 
     const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
-    const result = await db
+    const result = await this.db
       .select({ value: sqlCount(products.id) })
       .from(products)
       .where(whereClause);

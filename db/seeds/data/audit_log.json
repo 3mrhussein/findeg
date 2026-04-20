@@ -1,0 +1,16 @@
+[
+    {
+        "id": 1,
+        "adminUserId": 1,
+        "entityType": "Product",
+        "entityId": "13",
+        "action": "create",
+        "oldValues": null,
+        "newValues": {
+            "sku": "KEYCHAIN-001"
+        },
+        "ipAddress": "127.0.0.1",
+        "userAgent": "seed-script",
+        "createdAt": "2026-02-17 16:04:52.480606"
+    }
+]

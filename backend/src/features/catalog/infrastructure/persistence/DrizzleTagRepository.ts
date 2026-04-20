@@ -1,5 +1,5 @@
-import { db } from "../../../core/infrastructure/persistence";
-import { tags, productTags, products } from "../../../core/infrastructure/persistence/schema";
+import { db } from "@findeg/db";
+import { tags, productTags, products } from "@findeg/db/schema";
 import { ITagRepository } from "../../application/interfaces/ITagRepository";
 import { Tag, TagGroup, CreateTag } from "../../domain/entities/Tag";
 import { Product } from "../../domain/entities/Product";

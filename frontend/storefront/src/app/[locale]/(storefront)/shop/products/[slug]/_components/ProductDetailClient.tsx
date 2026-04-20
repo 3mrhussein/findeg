@@ -29,7 +29,10 @@ import { ImageGallery } from "./ImageGallery";
 import { ProductTabsSection } from "./ProductTabsSection";
 import { RelatedProductsRail } from "./RelatedProductsRail";
 import { RecentlyViewedRail, type RecentlyViewedItem } from "./RecentlyViewedRail";
-import type { CustomerGroup, UomCode as UoMCode } from "@findeg/backend/features/core/domain/types/common";
+import type {
+  CustomerGroup,
+  UomCode as UoMCode,
+} from "@findeg/backend/features/core/domain/types/common";
 import { getProductPricingAction } from "@/app/[locale]/(storefront)/_actions/catalog";
 
 function getProductStatusBadge({ product, variant, lowStock }: any) {

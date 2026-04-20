@@ -1,0 +1,18 @@
+[
+    {
+        "id": 1,
+        "userId": 1,
+        "label": "Office",
+        "fullName": "Admin User",
+        "phone": "0123456789",
+        "city": "Cairo",
+        "area": "Maadi",
+        "street": "Road 9",
+        "building": "10",
+        "floor": "2",
+        "apartment": "201",
+        "isDefault": true,
+        "createdAt": "2023-01-01T00:00:00Z",
+        "updatedAt": "2023-01-01T00:00:00Z"
+    }
+]

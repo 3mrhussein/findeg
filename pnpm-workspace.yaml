@@ -3,6 +3,7 @@ packages:
   - "./frontend/dashboard"
   - "./frontend/storefront"
   - "./frontend/ui"
+  - "./db"
 allowBuilds:
   "@parcel/watcher": false
   "@swc/core": false

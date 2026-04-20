@@ -13,6 +13,8 @@ import type {
   RoleId,
   RoleScope,
 } from "@findeg/backend/features/core/domain/value-objects";
+import { type InferSelectModel } from "drizzle-orm";
+import { users } from "@findeg/db/schema";
 
 export interface LinkedAuthAccount {
   id: string;
@@ -42,19 +44,13 @@ export interface SavedPaymentMethod {
   isDefault: boolean;
 }
 
-export interface User {
-  /** Unique identifier for the user */
-  id: ID;
-  /** Primary contact and login email */
-  email: Email;
-  /** User's given name */
-  firstName?: string | null;
-  /** User's family name */
-  lastName?: string | null;
-  /** Egyptian mobile number (formatted for SMS/WhatsApp) */
-  phone?: string | null;
-  /** Portal routing gate: 'customer', 'staff', 'school_staff' */
-  portalRole: PortalRole;
+/**
+ * Domain Entity: User
+ *
+ * Extends the baseline database model with domain-specific associations
+ * and authorization context.
+ */
+export interface User extends InferSelectModel<typeof users> {
   /** Additive role IDs for permission-based model migration */
   roleIds?: RoleId[];
   /** Additive permission codes for resolved/flattened authorization checks */
@@ -65,12 +61,6 @@ export interface User {
   memberships?: OrganizationMembership[];
   /** Tokenized saved payment methods */
   paymentMethods?: SavedPaymentMethod[];
-  /** URL to profile picture */
-  image?: string;
-  /** Whether the account is active or suspended */
-  isActive?: boolean;
-  createdAt: Date;
-  updatedAt: Date;
 }
 
 /**

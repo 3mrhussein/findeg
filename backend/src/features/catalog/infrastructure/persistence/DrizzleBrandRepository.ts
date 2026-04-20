@@ -1,7 +1,7 @@
 import { eq, desc, or, sql } from "drizzle-orm";
 import { ID, Slug } from "../../../core/domain/types/common";
-import { db } from "../../../core/infrastructure/persistence";
-import { brands, products } from "../../../core/infrastructure/persistence/schema";
+import { db } from "@findeg/db";
+import { brands, products } from "@findeg/db/schema";
 import {
   IBrandRepository,
   BrandCreateInput,

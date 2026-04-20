@@ -13,13 +13,7 @@
 
 import React from "react";
 import { useTranslations } from "next-intl";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@findeg/ui";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@findeg/ui";
 import { Button } from "@findeg/ui";
 import { Icon } from "@findeg/ui";
 

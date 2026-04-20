@@ -6,16 +6,20 @@
     "declarationMap": true,
     "outDir": "dist",
     "noEmit": false,
-    "rootDir": "src",
+    "rootDir": "..",
     "jsx": "react-jsx",
     "paths": {
       "@findeg/backend/*": [
         "./src/*"
+      ],
+      "@findeg/env": [
+        "../env.ts"
       ]
     }
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "../env.ts"
   ],
   "exclude": [
     "node_modules",

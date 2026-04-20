@@ -1,6 +1,6 @@
-import { db } from "../../../core/infrastructure/persistence/database.config";
+import { db } from "@findeg/db";
 import { sql } from "drizzle-orm";
-import { searchLogs } from "../../../core/infrastructure/persistence/schema/search-logs";
+import { searchLogs } from "@findeg/db/schema";
 import { type IProductRepository } from "../interfaces/IProductRepository";
 import {
   type ISearchService,

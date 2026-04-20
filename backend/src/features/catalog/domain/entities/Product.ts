@@ -9,6 +9,8 @@
  */
 
 import { z } from "zod";
+import { products } from "@findeg/db/schema";
+import { type InferSelectModel } from "drizzle-orm";
 import {
   IdSchema,
   RatingSchema,
@@ -16,7 +18,7 @@ import {
   type ID,
   type Rating,
 } from "../../../core/domain/types/common";
-import { TagSchema } from "./Tag";
+import { TagSchema, type Tag } from "./Tag";
 import { ProductAttributeValueSchema } from "./AttributeDefinition";
 import { VariantSchema, type Variant, VariantEntity } from "./Variant";
 import {
@@ -37,60 +39,58 @@ export type ProductLocalizedContent = z.infer<typeof ProductLocalizedContentSche
 
 /**
  * Product Domain Schema (SPU)
- *
- * Contains only SPU-level data. All pricing, inventory, and images
- * are on the `variants` array.
  */
 export const ProductSchema = z.object({
   id: IdSchema,
-
-  /** Optional family-level SKU prefix */
+  sku: z.string().optional(),
   skuPrefix: z.string().optional(),
 
-  // ─── Resolved Localized Content (for current locale) ──────────────
+  // Localized Fields (Database JSONB)
+  localizedSlug: LocalizedStringSchema.optional(),
+  localizedName: LocalizedStringSchema.optional(),
+  localizedDescription: LocalizedStringSchema.optional(),
+  localizedLongDescription: LocalizedStringSchema.optional(),
 
+  // Resolved Content (for specific locale)
   name: z.string(),
   description: z.string(),
   longDescription: z.string(),
   locale: z.string().optional(),
 
+  // Legacy/Compatibility mapping
   localizedContent: ProductLocalizedContentSchema.optional(),
 
-  // ─── Relationships ────────────────────────────────────────────────
-
+  // Relationships
   categoryId: IdSchema.optional(),
   categoryName: z.string().optional(),
   brandId: IdSchema.optional(),
   brandName: z.string().optional(),
 
-  // ─── Media ────────────────────────────────────────────────────────
-
-  /** SPU-level hero/lifestyle imagery */
+  // Media
   mediaSet: ResponsiveMediaSetSchema.optional(),
+  isActive: z.boolean().default(true),
 
-  isActive: z.boolean().optional(),
-
-  // ─── Aggregate Ratings ────────────────────────────────────────────
-
+  // Aggregate Ratings
   rating: RatingSchema,
   reviewsCount: z.number(),
 
-  // ─── Variants (SKUs) ──────────────────────────────────────────────
-
+  // Hydrated children
   variants: z.array(VariantSchema).optional(),
-
-  // ─── Tags & Attributes ────────────────────────────────────────────
-
   tags: z.array(TagSchema).optional(),
   attributes: z.array(ProductAttributeValueSchema).optional(),
 
-  // ─── Timestamps ───────────────────────────────────────────────────
-
+  // Timestamps
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
 });
 
-export type Product = z.infer<typeof ProductSchema>;
+export type Product = z.infer<typeof ProductSchema> &
+  Partial<
+    Omit<
+      InferSelectModel<typeof products>,
+      "localizedSlug" | "localizedName" | "localizedDescription" | "localizedLongDescription"
+    >
+  >;
 
 export const CreateProductSchema = ProductSchema.omit({ id: true });
 export type CreateProduct = z.infer<typeof CreateProductSchema>;

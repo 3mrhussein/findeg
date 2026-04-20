@@ -23,7 +23,9 @@ interface OrderConfirmationEmailProps {
   locale?: string;
 }
 
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://findeg.com";
+import env from "@findeg/env";
+
+const BASE_URL = env.NEXT_PUBLIC_APP_URL;
 
 /**
  *
@@ -108,7 +110,7 @@ export const OrderConfirmationEmail = ({
       </Section>
 
       <Section style={btnContainer}>
-        <Button style={button} href={`${baseUrl}/${locale}/my-account/orders/${orderId}`}>
+        <Button style={button} href={`${BASE_URL}/${locale}/my-account/orders/${orderId}`}>
           {content.trackOrderStr}
         </Button>
       </Section>

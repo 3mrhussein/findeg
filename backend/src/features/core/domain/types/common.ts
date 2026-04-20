@@ -1,11 +1,12 @@
-/**
- * Shared Domain Types
- *
- * Centralized type definitions and Zod schemas for domain-specific primitives.
- * Use schemas for runtime validation at boundaries (API, forms); use types for domain logic.
- */
-
 import { z } from "zod";
+import {
+  portalRoleEnum,
+  orderStatusEnum,
+  paymentStatusEnum,
+  paymentMethodEnum,
+  uomCodeEnum,
+  customerGroupEnum,
+} from "@findeg/db";
 import {
   ActorTypeSchema as CoreActorTypeSchema,
   PermissionCodeSchema as CorePermissionCodeSchema,
@@ -63,7 +64,7 @@ export type Rating = z.infer<typeof RatingSchema>;
 export { LocalizedStringSchema };
 export type { LocalizedString };
 
-export const PortalRoleSchema = z.enum(["customer", "staff", "school_staff"]);
+export const PortalRoleSchema = z.enum(portalRoleEnum.enumValues);
 export type PortalRole = z.infer<typeof PortalRoleSchema>;
 
 // NOTE: isStaffRole, isSchoolRole, isCustomerRole moved to domain/auth/authorization.ts
@@ -79,28 +80,20 @@ export {
 
 // ─── Constants ──────────────────────────────────────────────────────────────
 
-export const OrderStatusSchema = z.enum([
-  "pending",
-  "confirmed",
-  "processing",
-  "shipped",
-  "delivered",
-  "cancelled",
-  "refunded",
-]);
+export const OrderStatusSchema = z.enum(orderStatusEnum.enumValues);
 export type OrderStatus = z.infer<typeof OrderStatusSchema>;
 
-export const PaymentStatusSchema = z.enum(["unpaid", "paid", "refunded"]);
+export const PaymentStatusSchema = z.enum(paymentStatusEnum.enumValues);
 export type PaymentStatus = z.infer<typeof PaymentStatusSchema>;
 
-export const PaymentMethodSchema = z.enum(["cod", "card"]);
+export const PaymentMethodSchema = z.enum(paymentMethodEnum.enumValues);
 export type PaymentMethod = z.infer<typeof PaymentMethodSchema>;
 
-export const UomCodeSchema = z.enum(["pcs", "pack", "carton"]);
+export const UomCodeSchema = z.enum(uomCodeEnum.enumValues);
 export type UomCode = z.infer<typeof UomCodeSchema>;
 
 /** Customer groups for pricing policy */
-export const CustomerGroupSchema = z.enum(["public_b2c", "school_b2b", "wholesale"]);
+export const CustomerGroupSchema = z.enum(customerGroupEnum.enumValues);
 export type CustomerGroup = z.infer<typeof CustomerGroupSchema>;
 
 // ─── Re-exported Value Objects ──────────────────────────────────────────────

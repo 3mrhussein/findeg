@@ -1,4 +1,4 @@
-import { db } from "../../../core/infrastructure/persistence";
+import { db } from "@findeg/db";
 import {
   productVariants,
   variantImages,
@@ -6,7 +6,7 @@ import {
   variantSellableUoms,
   variantPriceLists,
   attributeDefinitions,
-} from "../../../core/infrastructure/persistence/schema";
+} from "@findeg/db/schema";
 import {
   IVariantRepository,
   SellOption,

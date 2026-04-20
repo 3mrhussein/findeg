@@ -1,3 +1,0 @@
-id,slug,localized_title,localized_subtitle,hero_image_url,sort_order,is_active,created_at,updated_at
-1,back-to-school,"{""en"": ""Back to School"", ""ar"": ""العودة للمدرسة""}","{""en"": ""Everything you need for a fresh year"", ""ar"": ""كل ما تحتاجه لسنة جديدة""}",/images/collections/back-to-school.jpg,1,true,2026-03-01 00:00:00,2026-03-01 00:00:00
-2,study-work-desk,"{""en"": ""Study & Work Desk"", ""ar"": ""مكتب الدراسة والعمل""}","{""en"": ""Optimize your workspace"", ""ar"": ""حسن مساحة عملك""}",/images/collections/study-desk.jpg,2,true,2026-03-01 00:00:00,2026-03-01 00:00:00

@@ -1,0 +1,1834 @@
+[
+  {
+    "id": 13,
+    "variantId": 13,
+    "warehouseId": 1,
+    "onHand": 45,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 14,
+    "variantId": 14,
+    "warehouseId": 1,
+    "onHand": 46,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 15,
+    "variantId": 15,
+    "warehouseId": 1,
+    "onHand": 47,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 16,
+    "variantId": 16,
+    "warehouseId": 1,
+    "onHand": 48,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 17,
+    "variantId": 17,
+    "warehouseId": 1,
+    "onHand": 49,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 18,
+    "variantId": 18,
+    "warehouseId": 1,
+    "onHand": 50,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 19,
+    "variantId": 19,
+    "warehouseId": 1,
+    "onHand": 51,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 20,
+    "variantId": 20,
+    "warehouseId": 1,
+    "onHand": 52,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 21,
+    "variantId": 21,
+    "warehouseId": 1,
+    "onHand": 59,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 22,
+    "variantId": 22,
+    "warehouseId": 1,
+    "onHand": 58,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 23,
+    "variantId": 23,
+    "warehouseId": 1,
+    "onHand": 57,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 24,
+    "variantId": 24,
+    "warehouseId": 1,
+    "onHand": 56,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 25,
+    "variantId": 25,
+    "warehouseId": 1,
+    "onHand": 55,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 26,
+    "variantId": 26,
+    "warehouseId": 1,
+    "onHand": 54,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 27,
+    "variantId": 27,
+    "warehouseId": 1,
+    "onHand": 128,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 28,
+    "variantId": 28,
+    "warehouseId": 1,
+    "onHand": 127,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 29,
+    "variantId": 29,
+    "warehouseId": 1,
+    "onHand": 126,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 30,
+    "variantId": 30,
+    "warehouseId": 1,
+    "onHand": 125,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 31,
+    "variantId": 31,
+    "warehouseId": 1,
+    "onHand": 124,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 32,
+    "variantId": 32,
+    "warehouseId": 1,
+    "onHand": 123,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 33,
+    "variantId": 33,
+    "warehouseId": 1,
+    "onHand": 138,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 34,
+    "variantId": 34,
+    "warehouseId": 1,
+    "onHand": 137,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 35,
+    "variantId": 35,
+    "warehouseId": 1,
+    "onHand": 136,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 36,
+    "variantId": 36,
+    "warehouseId": 1,
+    "onHand": 76,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 37,
+    "variantId": 37,
+    "warehouseId": 1,
+    "onHand": 75,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 38,
+    "variantId": 38,
+    "warehouseId": 1,
+    "onHand": 74,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 39,
+    "variantId": 39,
+    "warehouseId": 1,
+    "onHand": 73,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 40,
+    "variantId": 40,
+    "warehouseId": 1,
+    "onHand": 72,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 41,
+    "variantId": 41,
+    "warehouseId": 1,
+    "onHand": 71,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 42,
+    "variantId": 42,
+    "warehouseId": 1,
+    "onHand": 70,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 43,
+    "variantId": 43,
+    "warehouseId": 1,
+    "onHand": 69,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 44,
+    "variantId": 44,
+    "warehouseId": 1,
+    "onHand": 130,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 45,
+    "variantId": 45,
+    "warehouseId": 1,
+    "onHand": 131,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 46,
+    "variantId": 46,
+    "warehouseId": 1,
+    "onHand": 132,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 47,
+    "variantId": 47,
+    "warehouseId": 1,
+    "onHand": 133,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 48,
+    "variantId": 48,
+    "warehouseId": 1,
+    "onHand": 134,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 49,
+    "variantId": 49,
+    "warehouseId": 1,
+    "onHand": 135,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 50,
+    "variantId": 50,
+    "warehouseId": 1,
+    "onHand": 48,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 51,
+    "variantId": 51,
+    "warehouseId": 1,
+    "onHand": 49,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 52,
+    "variantId": 52,
+    "warehouseId": 1,
+    "onHand": 50,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 53,
+    "variantId": 53,
+    "warehouseId": 1,
+    "onHand": 51,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 54,
+    "variantId": 54,
+    "warehouseId": 1,
+    "onHand": 52,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 55,
+    "variantId": 55,
+    "warehouseId": 1,
+    "onHand": 53,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 56,
+    "variantId": 56,
+    "warehouseId": 1,
+    "onHand": 54,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 57,
+    "variantId": 57,
+    "warehouseId": 1,
+    "onHand": 55,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 58,
+    "variantId": 58,
+    "warehouseId": 1,
+    "onHand": 52,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 59,
+    "variantId": 59,
+    "warehouseId": 1,
+    "onHand": 51,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 60,
+    "variantId": 60,
+    "warehouseId": 1,
+    "onHand": 50,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 61,
+    "variantId": 61,
+    "warehouseId": 1,
+    "onHand": 49,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 62,
+    "variantId": 62,
+    "warehouseId": 1,
+    "onHand": 161,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 63,
+    "variantId": 63,
+    "warehouseId": 1,
+    "onHand": 160,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 64,
+    "variantId": 64,
+    "warehouseId": 1,
+    "onHand": 159,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 65,
+    "variantId": 65,
+    "warehouseId": 1,
+    "onHand": 158,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 66,
+    "variantId": 66,
+    "warehouseId": 1,
+    "onHand": 157,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 67,
+    "variantId": 67,
+    "warehouseId": 1,
+    "onHand": 156,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 68,
+    "variantId": 68,
+    "warehouseId": 1,
+    "onHand": 155,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 69,
+    "variantId": 69,
+    "warehouseId": 1,
+    "onHand": 154,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 70,
+    "variantId": 70,
+    "warehouseId": 1,
+    "onHand": 153,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 71,
+    "variantId": 71,
+    "warehouseId": 1,
+    "onHand": 152,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 72,
+    "variantId": 72,
+    "warehouseId": 1,
+    "onHand": 33,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 73,
+    "variantId": 73,
+    "warehouseId": 1,
+    "onHand": 32,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 74,
+    "variantId": 74,
+    "warehouseId": 1,
+    "onHand": 31,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 75,
+    "variantId": 75,
+    "warehouseId": 1,
+    "onHand": 30,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 76,
+    "variantId": 76,
+    "warehouseId": 1,
+    "onHand": 29,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 77,
+    "variantId": 77,
+    "warehouseId": 1,
+    "onHand": 28,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 78,
+    "variantId": 78,
+    "warehouseId": 1,
+    "onHand": 27,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 79,
+    "variantId": 79,
+    "warehouseId": 1,
+    "onHand": 26,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 80,
+    "variantId": 80,
+    "warehouseId": 1,
+    "onHand": 161,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 81,
+    "variantId": 81,
+    "warehouseId": 1,
+    "onHand": 162,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 82,
+    "variantId": 82,
+    "warehouseId": 1,
+    "onHand": 163,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 83,
+    "variantId": 83,
+    "warehouseId": 1,
+    "onHand": 164,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 84,
+    "variantId": 84,
+    "warehouseId": 1,
+    "onHand": 165,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 85,
+    "variantId": 85,
+    "warehouseId": 1,
+    "onHand": 166,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 86,
+    "variantId": 86,
+    "warehouseId": 1,
+    "onHand": 34,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 87,
+    "variantId": 87,
+    "warehouseId": 1,
+    "onHand": 33,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 88,
+    "variantId": 88,
+    "warehouseId": 1,
+    "onHand": 32,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 89,
+    "variantId": 89,
+    "warehouseId": 1,
+    "onHand": 31,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 90,
+    "variantId": 90,
+    "warehouseId": 1,
+    "onHand": 103,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 91,
+    "variantId": 91,
+    "warehouseId": 1,
+    "onHand": 104,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 92,
+    "variantId": 92,
+    "warehouseId": 1,
+    "onHand": 105,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 93,
+    "variantId": 93,
+    "warehouseId": 1,
+    "onHand": 28,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 94,
+    "variantId": 94,
+    "warehouseId": 1,
+    "onHand": 29,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 95,
+    "variantId": 95,
+    "warehouseId": 1,
+    "onHand": 30,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 96,
+    "variantId": 96,
+    "warehouseId": 1,
+    "onHand": 165,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 97,
+    "variantId": 97,
+    "warehouseId": 1,
+    "onHand": 166,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 98,
+    "variantId": 98,
+    "warehouseId": 1,
+    "onHand": 167,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 99,
+    "variantId": 99,
+    "warehouseId": 1,
+    "onHand": 67,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 100,
+    "variantId": 100,
+    "warehouseId": 1,
+    "onHand": 68,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 101,
+    "variantId": 101,
+    "warehouseId": 1,
+    "onHand": 69,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 102,
+    "variantId": 102,
+    "warehouseId": 1,
+    "onHand": 70,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 103,
+    "variantId": 103,
+    "warehouseId": 1,
+    "onHand": 71,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 104,
+    "variantId": 104,
+    "warehouseId": 1,
+    "onHand": 72,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 105,
+    "variantId": 105,
+    "warehouseId": 1,
+    "onHand": 73,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 106,
+    "variantId": 106,
+    "warehouseId": 1,
+    "onHand": 74,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 107,
+    "variantId": 107,
+    "warehouseId": 1,
+    "onHand": 55,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 108,
+    "variantId": 108,
+    "warehouseId": 1,
+    "onHand": 56,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 109,
+    "variantId": 109,
+    "warehouseId": 1,
+    "onHand": 57,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 110,
+    "variantId": 110,
+    "warehouseId": 1,
+    "onHand": 58,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 111,
+    "variantId": 111,
+    "warehouseId": 1,
+    "onHand": 59,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 112,
+    "variantId": 112,
+    "warehouseId": 1,
+    "onHand": 60,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 113,
+    "variantId": 113,
+    "warehouseId": 1,
+    "onHand": 61,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 114,
+    "variantId": 114,
+    "warehouseId": 1,
+    "onHand": 62,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 115,
+    "variantId": 115,
+    "warehouseId": 1,
+    "onHand": 45,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 116,
+    "variantId": 116,
+    "warehouseId": 1,
+    "onHand": 46,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 117,
+    "variantId": 117,
+    "warehouseId": 1,
+    "onHand": 47,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 118,
+    "variantId": 118,
+    "warehouseId": 1,
+    "onHand": 48,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 119,
+    "variantId": 119,
+    "warehouseId": 1,
+    "onHand": 49,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 120,
+    "variantId": 120,
+    "warehouseId": 1,
+    "onHand": 50,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 121,
+    "variantId": 121,
+    "warehouseId": 1,
+    "onHand": 30,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 122,
+    "variantId": 122,
+    "warehouseId": 1,
+    "onHand": 29,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 123,
+    "variantId": 123,
+    "warehouseId": 1,
+    "onHand": 28,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 124,
+    "variantId": 124,
+    "warehouseId": 1,
+    "onHand": 150,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 125,
+    "variantId": 125,
+    "warehouseId": 1,
+    "onHand": 151,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 126,
+    "variantId": 126,
+    "warehouseId": 1,
+    "onHand": 152,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 127,
+    "variantId": 127,
+    "warehouseId": 1,
+    "onHand": 55,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 128,
+    "variantId": 128,
+    "warehouseId": 1,
+    "onHand": 54,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 129,
+    "variantId": 129,
+    "warehouseId": 1,
+    "onHand": 53,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 130,
+    "variantId": 130,
+    "warehouseId": 1,
+    "onHand": 122,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 131,
+    "variantId": 131,
+    "warehouseId": 1,
+    "onHand": 121,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 132,
+    "variantId": 132,
+    "warehouseId": 1,
+    "onHand": 120,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 133,
+    "variantId": 133,
+    "warehouseId": 1,
+    "onHand": 47,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 134,
+    "variantId": 134,
+    "warehouseId": 1,
+    "onHand": 48,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 135,
+    "variantId": 135,
+    "warehouseId": 1,
+    "onHand": 49,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 136,
+    "variantId": 136,
+    "warehouseId": 1,
+    "onHand": 81,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 137,
+    "variantId": 137,
+    "warehouseId": 1,
+    "onHand": 82,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 138,
+    "variantId": 138,
+    "warehouseId": 1,
+    "onHand": 83,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 139,
+    "variantId": 139,
+    "warehouseId": 1,
+    "onHand": 105,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 140,
+    "variantId": 140,
+    "warehouseId": 1,
+    "onHand": 104,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 141,
+    "variantId": 141,
+    "warehouseId": 1,
+    "onHand": 103,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 142,
+    "variantId": 142,
+    "warehouseId": 1,
+    "onHand": 102,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 143,
+    "variantId": 143,
+    "warehouseId": 1,
+    "onHand": 101,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 144,
+    "variantId": 144,
+    "warehouseId": 1,
+    "onHand": 100,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 145,
+    "variantId": 145,
+    "warehouseId": 1,
+    "onHand": 99,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 146,
+    "variantId": 146,
+    "warehouseId": 1,
+    "onHand": 98,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 147,
+    "variantId": 147,
+    "warehouseId": 1,
+    "onHand": 48,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 148,
+    "variantId": 148,
+    "warehouseId": 1,
+    "onHand": 47,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 149,
+    "variantId": 149,
+    "warehouseId": 1,
+    "onHand": 46,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 150,
+    "variantId": 150,
+    "warehouseId": 1,
+    "onHand": 45,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 151,
+    "variantId": 151,
+    "warehouseId": 1,
+    "onHand": 44,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 152,
+    "variantId": 152,
+    "warehouseId": 1,
+    "onHand": 43,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 153,
+    "variantId": 153,
+    "warehouseId": 1,
+    "onHand": 42,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 154,
+    "variantId": 154,
+    "warehouseId": 1,
+    "onHand": 41,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 155,
+    "variantId": 155,
+    "warehouseId": 1,
+    "onHand": 104,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 156,
+    "variantId": 156,
+    "warehouseId": 1,
+    "onHand": 105,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 157,
+    "variantId": 157,
+    "warehouseId": 1,
+    "onHand": 106,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 158,
+    "variantId": 158,
+    "warehouseId": 1,
+    "onHand": 107,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 159,
+    "variantId": 159,
+    "warehouseId": 1,
+    "onHand": 108,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 160,
+    "variantId": 160,
+    "warehouseId": 1,
+    "onHand": 109,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 161,
+    "variantId": 161,
+    "warehouseId": 1,
+    "onHand": 103,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 162,
+    "variantId": 162,
+    "warehouseId": 1,
+    "onHand": 102,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 163,
+    "variantId": 163,
+    "warehouseId": 1,
+    "onHand": 101,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 164,
+    "variantId": 164,
+    "warehouseId": 1,
+    "onHand": 90,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 165,
+    "variantId": 165,
+    "warehouseId": 1,
+    "onHand": 89,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 166,
+    "variantId": 166,
+    "warehouseId": 1,
+    "onHand": 88,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 167,
+    "variantId": 167,
+    "warehouseId": 1,
+    "onHand": 155,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 168,
+    "variantId": 168,
+    "warehouseId": 1,
+    "onHand": 156,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 169,
+    "variantId": 169,
+    "warehouseId": 1,
+    "onHand": 157,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 170,
+    "variantId": 170,
+    "warehouseId": 1,
+    "onHand": 158,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 171,
+    "variantId": 171,
+    "warehouseId": 1,
+    "onHand": 112,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 172,
+    "variantId": 172,
+    "warehouseId": 1,
+    "onHand": 113,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 173,
+    "variantId": 173,
+    "warehouseId": 1,
+    "onHand": 114,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 174,
+    "variantId": 174,
+    "warehouseId": 1,
+    "onHand": 169,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 175,
+    "variantId": 175,
+    "warehouseId": 1,
+    "onHand": 10,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 176,
+    "variantId": 176,
+    "warehouseId": 1,
+    "onHand": 11,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 177,
+    "variantId": 177,
+    "warehouseId": 1,
+    "onHand": 12,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 178,
+    "variantId": 178,
+    "warehouseId": 1,
+    "onHand": 25,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 179,
+    "variantId": 179,
+    "warehouseId": 1,
+    "onHand": 24,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 180,
+    "variantId": 180,
+    "warehouseId": 1,
+    "onHand": 23,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 181,
+    "variantId": 181,
+    "warehouseId": 1,
+    "onHand": 110,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 182,
+    "variantId": 182,
+    "warehouseId": 1,
+    "onHand": 111,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 183,
+    "variantId": 183,
+    "warehouseId": 1,
+    "onHand": 112,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 184,
+    "variantId": 184,
+    "warehouseId": 1,
+    "onHand": 113,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 185,
+    "variantId": 185,
+    "warehouseId": 1,
+    "onHand": 114,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 186,
+    "variantId": 186,
+    "warehouseId": 1,
+    "onHand": 115,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 187,
+    "variantId": 187,
+    "warehouseId": 1,
+    "onHand": 116,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 188,
+    "variantId": 188,
+    "warehouseId": 1,
+    "onHand": 117,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 189,
+    "variantId": 189,
+    "warehouseId": 1,
+    "onHand": 129,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 190,
+    "variantId": 190,
+    "warehouseId": 1,
+    "onHand": 130,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 191,
+    "variantId": 191,
+    "warehouseId": 1,
+    "onHand": 131,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 192,
+    "variantId": 192,
+    "warehouseId": 1,
+    "onHand": 132,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 193,
+    "variantId": 193,
+    "warehouseId": 1,
+    "onHand": 95,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 194,
+    "variantId": 194,
+    "warehouseId": 1,
+    "onHand": 96,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 195,
+    "variantId": 195,
+    "warehouseId": 1,
+    "onHand": 97,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 196,
+    "variantId": 196,
+    "warehouseId": 1,
+    "onHand": 98,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 197,
+    "variantId": 197,
+    "warehouseId": 1,
+    "onHand": 159,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 198,
+    "variantId": 198,
+    "warehouseId": 1,
+    "onHand": 160,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 199,
+    "variantId": 199,
+    "warehouseId": 1,
+    "onHand": 161,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 200,
+    "variantId": 200,
+    "warehouseId": 1,
+    "onHand": 162,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 201,
+    "variantId": 201,
+    "warehouseId": 1,
+    "onHand": 76,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 202,
+    "variantId": 202,
+    "warehouseId": 1,
+    "onHand": 75,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 203,
+    "variantId": 203,
+    "warehouseId": 1,
+    "onHand": 74,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 204,
+    "variantId": 204,
+    "warehouseId": 1,
+    "onHand": 129,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 205,
+    "variantId": 205,
+    "warehouseId": 1,
+    "onHand": 130,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 206,
+    "variantId": 206,
+    "warehouseId": 1,
+    "onHand": 131,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 207,
+    "variantId": 207,
+    "warehouseId": 1,
+    "onHand": 132,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 208,
+    "variantId": 208,
+    "warehouseId": 1,
+    "onHand": 133,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 209,
+    "variantId": 209,
+    "warehouseId": 1,
+    "onHand": 134,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 210,
+    "variantId": 210,
+    "warehouseId": 1,
+    "onHand": 135,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 211,
+    "variantId": 211,
+    "warehouseId": 1,
+    "onHand": 136,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 212,
+    "variantId": 212,
+    "warehouseId": 1,
+    "onHand": 31,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 213,
+    "variantId": 213,
+    "warehouseId": 1,
+    "onHand": 32,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 214,
+    "variantId": 214,
+    "warehouseId": 1,
+    "onHand": 33,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 215,
+    "variantId": 215,
+    "warehouseId": 1,
+    "onHand": 34,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 216,
+    "variantId": 216,
+    "warehouseId": 1,
+    "onHand": 84,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 217,
+    "variantId": 217,
+    "warehouseId": 1,
+    "onHand": 85,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 218,
+    "variantId": 218,
+    "warehouseId": 1,
+    "onHand": 86,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 219,
+    "variantId": 219,
+    "warehouseId": 1,
+    "onHand": 87,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 220,
+    "variantId": 220,
+    "warehouseId": 1,
+    "onHand": 69,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 221,
+    "variantId": 221,
+    "warehouseId": 1,
+    "onHand": 70,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 222,
+    "variantId": 222,
+    "warehouseId": 1,
+    "onHand": 71,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 223,
+    "variantId": 223,
+    "warehouseId": 1,
+    "onHand": 83,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 224,
+    "variantId": 224,
+    "warehouseId": 1,
+    "onHand": 84,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 225,
+    "variantId": 225,
+    "warehouseId": 1,
+    "onHand": 85,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 226,
+    "variantId": 226,
+    "warehouseId": 1,
+    "onHand": 57,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 227,
+    "variantId": 227,
+    "warehouseId": 1,
+    "onHand": 58,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 228,
+    "variantId": 228,
+    "warehouseId": 1,
+    "onHand": 59,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 229,
+    "variantId": 229,
+    "warehouseId": 1,
+    "onHand": 60,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 230,
+    "variantId": 230,
+    "warehouseId": 1,
+    "onHand": 88,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 231,
+    "variantId": 231,
+    "warehouseId": 1,
+    "onHand": 89,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 232,
+    "variantId": 232,
+    "warehouseId": 1,
+    "onHand": 90,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 233,
+    "variantId": 233,
+    "warehouseId": 1,
+    "onHand": 91,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 234,
+    "variantId": 234,
+    "warehouseId": 1,
+    "onHand": 115,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 235,
+    "variantId": 235,
+    "warehouseId": 1,
+    "onHand": 114,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 236,
+    "variantId": 236,
+    "warehouseId": 1,
+    "onHand": 113,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 237,
+    "variantId": 237,
+    "warehouseId": 1,
+    "onHand": 112,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 238,
+    "variantId": 238,
+    "warehouseId": 1,
+    "onHand": 81,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 239,
+    "variantId": 239,
+    "warehouseId": 1,
+    "onHand": 80,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 240,
+    "variantId": 240,
+    "warehouseId": 1,
+    "onHand": 79,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 241,
+    "variantId": 241,
+    "warehouseId": 1,
+    "onHand": 78,
+    "reserved": 0,
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  }
+]

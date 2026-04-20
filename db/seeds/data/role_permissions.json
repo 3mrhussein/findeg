@@ -1,0 +1,337 @@
+[
+  {
+    "roleId": 1,
+    "permissionId": 1,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 1,
+    "permissionId": 2,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 1,
+    "permissionId": 3,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 1,
+    "permissionId": 4,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 1,
+    "permissionId": 5,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 1,
+    "permissionId": 6,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 1,
+    "permissionId": 7,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 1,
+    "permissionId": 8,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 1,
+    "permissionId": 9,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 1,
+    "permissionId": 10,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 1,
+    "permissionId": 11,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 1,
+    "permissionId": 12,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 1,
+    "permissionId": 13,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 1,
+    "permissionId": 14,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 1,
+    "permissionId": 15,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 1,
+    "permissionId": 16,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 1,
+    "permissionId": 17,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 1,
+    "permissionId": 18,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 1,
+    "permissionId": 19,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 1,
+    "permissionId": 20,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 1,
+    "permissionId": 21,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 1,
+    "permissionId": 22,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 1,
+    "permissionId": 23,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 3,
+    "permissionId": 1,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 3,
+    "permissionId": 2,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 3,
+    "permissionId": 8,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 3,
+    "permissionId": 9,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 3,
+    "permissionId": 12,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 3,
+    "permissionId": 13,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 3,
+    "permissionId": 6,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 4,
+    "permissionId": 1,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 4,
+    "permissionId": 2,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 4,
+    "permissionId": 8,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 4,
+    "permissionId": 9,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 4,
+    "permissionId": 4,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 4,
+    "permissionId": 5,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 4,
+    "permissionId": 6,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 4,
+    "permissionId": 7,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 4,
+    "permissionId": 14,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 4,
+    "permissionId": 15,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 4,
+    "permissionId": 20,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 4,
+    "permissionId": 21,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 5,
+    "permissionId": 1,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 5,
+    "permissionId": 2,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 5,
+    "permissionId": 10,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 5,
+    "permissionId": 11,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 5,
+    "permissionId": 12,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 5,
+    "permissionId": 16,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 6,
+    "permissionId": 1,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 6,
+    "permissionId": 2,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 6,
+    "permissionId": 10,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 6,
+    "permissionId": 8,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 6,
+    "permissionId": 16,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 7,
+    "permissionId": 1,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 7,
+    "permissionId": 2,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 7,
+    "permissionId": 3,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 7,
+    "permissionId": 8,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 7,
+    "permissionId": 10,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 7,
+    "permissionId": 12,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 7,
+    "permissionId": 16,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 7,
+    "permissionId": 22,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 8,
+    "permissionId": 1,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 8,
+    "permissionId": 2,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 8,
+    "permissionId": 20,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 8,
+    "permissionId": 21,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 8,
+    "permissionId": 8,
+    "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 8,
+    "permissionId": 4,
+    "createdAt": "2026-02-19 10:00:00"
+  }
+]

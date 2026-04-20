@@ -1,7 +1,7 @@
 import {
   SchoolListParentSession,
   NewSchoolListParentSession,
-} from "../../../core/infrastructure/persistence/schema/school-list-sessions";
+} from "@findeg/db/schema";
 
 export interface IParentSessionRepository {
   /**

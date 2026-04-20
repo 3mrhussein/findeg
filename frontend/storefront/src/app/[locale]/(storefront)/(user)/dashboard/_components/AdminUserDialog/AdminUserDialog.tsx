@@ -3,13 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@findeg/ui";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@findeg/ui";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@findeg/ui";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@findeg/ui";
 import { Icon } from "@findeg/ui";
 import type {

@@ -1,0 +1,1266 @@
+[
+  {
+    "id": 1,
+    "slug": "party-gift-and-seasonal",
+    "localizedName": {
+      "en": "Party Gift And Seasonal",
+      "ar": "هدايا الحفلات والموسمية"
+    },
+    "parentId": null,
+    "icon": null,
+    "path": "/1/",
+    "depth": 0,
+    "sortOrder": 0,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 2,
+    "slug": "accessories",
+    "localizedName": {
+      "en": "Accessories",
+      "ar": "إكسسوارات"
+    },
+    "parentId": 1,
+    "icon": null,
+    "path": "/1/2/",
+    "depth": 1,
+    "sortOrder": 0,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 3,
+    "slug": "keychains",
+    "localizedName": {
+      "en": "Keychains",
+      "ar": "علاقات مفاتيح"
+    },
+    "parentId": 2,
+    "icon": null,
+    "path": "/1/2/3/",
+    "depth": 2,
+    "sortOrder": 0,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 4,
+    "slug": "watches",
+    "localizedName": {
+      "en": "Watches",
+      "ar": "ساعات"
+    },
+    "parentId": 2,
+    "icon": null,
+    "path": "/1/2/4/",
+    "depth": 2,
+    "sortOrder": 1,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 5,
+    "slug": "badges",
+    "localizedName": {
+      "en": "Badges",
+      "ar": "شارات"
+    },
+    "parentId": 2,
+    "icon": null,
+    "path": "/1/2/5/",
+    "depth": 2,
+    "sortOrder": 2,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 6,
+    "slug": "frames",
+    "localizedName": {
+      "en": "Frames",
+      "ar": "إطارات"
+    },
+    "parentId": 2,
+    "icon": null,
+    "path": "/1/2/6/",
+    "depth": 2,
+    "sortOrder": 3,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 7,
+    "slug": "party-supplies",
+    "localizedName": {
+      "en": "Party Supplies",
+      "ar": "مستلزمات الحفلات"
+    },
+    "parentId": 1,
+    "icon": null,
+    "path": "/1/7/",
+    "depth": 1,
+    "sortOrder": 1,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 8,
+    "slug": "balloons",
+    "localizedName": {
+      "en": "Balloons",
+      "ar": "بالونات"
+    },
+    "parentId": 7,
+    "icon": null,
+    "path": "/1/7/8/",
+    "depth": 2,
+    "sortOrder": 0,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 9,
+    "slug": "posters",
+    "localizedName": {
+      "en": "Posters",
+      "ar": "ملصقات"
+    },
+    "parentId": 7,
+    "icon": null,
+    "path": "/1/7/9/",
+    "depth": 2,
+    "sortOrder": 1,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 10,
+    "slug": "seasonal-collections",
+    "localizedName": {
+      "en": "Seasonal Collections",
+      "ar": "مجموعات موسمية"
+    },
+    "parentId": 1,
+    "icon": null,
+    "path": "/1/10/",
+    "depth": 1,
+    "sortOrder": 2,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 11,
+    "slug": "ramadan-lanterns",
+    "localizedName": {
+      "en": "Ramadan Lanterns",
+      "ar": "فوانيس رمضان"
+    },
+    "parentId": 10,
+    "icon": null,
+    "path": "/1/10/11/",
+    "depth": 2,
+    "sortOrder": 0,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 12,
+    "slug": "stationery-gifts",
+    "localizedName": {
+      "en": "Stationery Gifts",
+      "ar": "هدايا قرطاسية"
+    },
+    "parentId": 1,
+    "icon": null,
+    "path": "/1/12/",
+    "depth": 1,
+    "sortOrder": 3,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 13,
+    "slug": "certificates",
+    "localizedName": {
+      "en": "Certificates",
+      "ar": "شهادات"
+    },
+    "parentId": 12,
+    "icon": null,
+    "path": "/1/12/13/",
+    "depth": 2,
+    "sortOrder": 0,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 14,
+    "slug": "school-essentials",
+    "localizedName": {
+      "en": "School Essentials",
+      "ar": "أساسيات المدرسة"
+    },
+    "parentId": null,
+    "icon": null,
+    "path": "/14/",
+    "depth": 0,
+    "sortOrder": 1,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 15,
+    "slug": "lunchboxes-and-water-bottles",
+    "localizedName": {
+      "en": "Lunchboxes And Water Bottles",
+      "ar": "صناديق الغداء ومطارات الماء"
+    },
+    "parentId": 14,
+    "icon": null,
+    "path": "/14/15/",
+    "depth": 1,
+    "sortOrder": 0,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 16,
+    "slug": "water-bottles",
+    "localizedName": {
+      "en": "Water Bottles",
+      "ar": "مطارات ماء"
+    },
+    "parentId": 15,
+    "icon": null,
+    "path": "/14/15/16/",
+    "depth": 2,
+    "sortOrder": 0,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 17,
+    "slug": "lunchboxes",
+    "localizedName": {
+      "en": "Lunchboxes",
+      "ar": "صناديق غداء"
+    },
+    "parentId": 15,
+    "icon": null,
+    "path": "/14/15/17/",
+    "depth": 2,
+    "sortOrder": 1,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 18,
+    "slug": "geometry-tools",
+    "localizedName": {
+      "en": "Geometry Tools",
+      "ar": "أدوات هندسية"
+    },
+    "parentId": 14,
+    "icon": null,
+    "path": "/14/18/",
+    "depth": 1,
+    "sortOrder": 1,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 19,
+    "slug": "rulers",
+    "localizedName": {
+      "en": "Rulers",
+      "ar": "مساطر"
+    },
+    "parentId": 18,
+    "icon": null,
+    "path": "/14/18/19/",
+    "depth": 2,
+    "sortOrder": 0,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 20,
+    "slug": "math-sets",
+    "localizedName": {
+      "en": "Math Sets",
+      "ar": "أطقم رياضيات"
+    },
+    "parentId": 18,
+    "icon": null,
+    "path": "/14/18/20/",
+    "depth": 2,
+    "sortOrder": 1,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 21,
+    "slug": "set-squares",
+    "localizedName": {
+      "en": "Set Squares",
+      "ar": "مثلتات هندسية"
+    },
+    "parentId": 18,
+    "icon": null,
+    "path": "/14/18/21/",
+    "depth": 2,
+    "sortOrder": 2,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 22,
+    "slug": "compasses",
+    "localizedName": {
+      "en": "Compasses",
+      "ar": "فرجارات"
+    },
+    "parentId": 18,
+    "icon": null,
+    "path": "/14/18/22/",
+    "depth": 2,
+    "sortOrder": 3,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 23,
+    "slug": "protractors",
+    "localizedName": {
+      "en": "Protractors",
+      "ar": "منقلات"
+    },
+    "parentId": 18,
+    "icon": null,
+    "path": "/14/18/23/",
+    "depth": 2,
+    "sortOrder": 4,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 24,
+    "slug": "writing-instruments",
+    "localizedName": {
+      "en": "Writing Instruments",
+      "ar": "أدوات كتابة"
+    },
+    "parentId": null,
+    "icon": null,
+    "path": "/24/",
+    "depth": 0,
+    "sortOrder": 2,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 25,
+    "slug": "writing-accessories",
+    "localizedName": {
+      "en": "Writing Accessories",
+      "ar": "إكسسوارات كتابة"
+    },
+    "parentId": 24,
+    "icon": null,
+    "path": "/24/25/",
+    "depth": 1,
+    "sortOrder": 0,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 26,
+    "slug": "erasers",
+    "localizedName": {
+      "en": "Erasers",
+      "ar": "ممحاة"
+    },
+    "parentId": 25,
+    "icon": null,
+    "path": "/24/25/26/",
+    "depth": 2,
+    "sortOrder": 0,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 27,
+    "slug": "sharpeners",
+    "localizedName": {
+      "en": "Sharpeners",
+      "ar": "مبراة"
+    },
+    "parentId": 25,
+    "icon": null,
+    "path": "/24/25/27/",
+    "depth": 2,
+    "sortOrder": 1,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 28,
+    "slug": "highlighters-and-markers",
+    "localizedName": {
+      "en": "Highlighters And Markers",
+      "ar": "أقلام تحديد وتظليل"
+    },
+    "parentId": 24,
+    "icon": null,
+    "path": "/24/28/",
+    "depth": 1,
+    "sortOrder": 1,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 29,
+    "slug": "whiteboard-markers",
+    "localizedName": {
+      "en": "Whiteboard Markers",
+      "ar": "أقلام سبورة"
+    },
+    "parentId": 28,
+    "icon": null,
+    "path": "/24/28/29/",
+    "depth": 2,
+    "sortOrder": 0,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 30,
+    "slug": "permanent-markers",
+    "localizedName": {
+      "en": "Permanent Markers",
+      "ar": "أقلام دائمة"
+    },
+    "parentId": 28,
+    "icon": null,
+    "path": "/24/28/30/",
+    "depth": 2,
+    "sortOrder": 1,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 31,
+    "slug": "highlighters",
+    "localizedName": {
+      "en": "Highlighters",
+      "ar": "أقلام تظليل"
+    },
+    "parentId": 28,
+    "icon": null,
+    "path": "/24/28/31/",
+    "depth": 2,
+    "sortOrder": 2,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 32,
+    "slug": "pens",
+    "localizedName": {
+      "en": "Pens",
+      "ar": "أقلام"
+    },
+    "parentId": 24,
+    "icon": null,
+    "path": "/24/32/",
+    "depth": 1,
+    "sortOrder": 2,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 33,
+    "slug": "gel-pens",
+    "localizedName": {
+      "en": "Gel Pens",
+      "ar": "أقلام جل"
+    },
+    "parentId": 32,
+    "icon": null,
+    "path": "/24/32/33/",
+    "depth": 2,
+    "sortOrder": 0,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 34,
+    "slug": "ballpoint-pens",
+    "localizedName": {
+      "en": "Ballpoint Pens",
+      "ar": "أقلام حبر جاف"
+    },
+    "parentId": 32,
+    "icon": null,
+    "path": "/24/32/34/",
+    "depth": 2,
+    "sortOrder": 1,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 35,
+    "slug": "fountain-pens",
+    "localizedName": {
+      "en": "Fountain Pens",
+      "ar": "أقلام ريشة"
+    },
+    "parentId": 32,
+    "icon": null,
+    "path": "/24/32/35/",
+    "depth": 2,
+    "sortOrder": 2,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 36,
+    "slug": "refills",
+    "localizedName": {
+      "en": "Refills",
+      "ar": "عبوات تعبئة"
+    },
+    "parentId": 24,
+    "icon": null,
+    "path": "/24/36/",
+    "depth": 1,
+    "sortOrder": 3,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 37,
+    "slug": "mechanical-pencil-leads",
+    "localizedName": {
+      "en": "Mechanical Pencil Leads",
+      "ar": "رصاص لأقلام ميكانيكية"
+    },
+    "parentId": 36,
+    "icon": null,
+    "path": "/24/36/37/",
+    "depth": 2,
+    "sortOrder": 0,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 38,
+    "slug": "toys-games-and-learning-tools",
+    "localizedName": {
+      "en": "Toys Games And Learning Tools",
+      "ar": "ألعاب وأدوات تعلم"
+    },
+    "parentId": null,
+    "icon": null,
+    "path": "/38/",
+    "depth": 0,
+    "sortOrder": 3,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 39,
+    "slug": "toys-and-games",
+    "localizedName": {
+      "en": "Toys And Games",
+      "ar": "ألعاب"
+    },
+    "parentId": 38,
+    "icon": null,
+    "path": "/38/39/",
+    "depth": 1,
+    "sortOrder": 0,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 40,
+    "slug": "vehicles",
+    "localizedName": {
+      "en": "Vehicles",
+      "ar": "مركبات"
+    },
+    "parentId": 39,
+    "icon": null,
+    "path": "/38/39/40/",
+    "depth": 2,
+    "sortOrder": 0,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 41,
+    "slug": "dolls",
+    "localizedName": {
+      "en": "Dolls",
+      "ar": "دمى"
+    },
+    "parentId": 39,
+    "icon": null,
+    "path": "/38/39/41/",
+    "depth": 2,
+    "sortOrder": 1,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 42,
+    "slug": "art-and-craft-supplies",
+    "localizedName": {
+      "en": "Art And Craft Supplies",
+      "ar": "مستلزمات الفنون والحرف"
+    },
+    "parentId": null,
+    "icon": null,
+    "path": "/42/",
+    "depth": 0,
+    "sortOrder": 4,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 43,
+    "slug": "craft-materials",
+    "localizedName": {
+      "en": "Craft Materials",
+      "ar": "مواد حرفية"
+    },
+    "parentId": 42,
+    "icon": null,
+    "path": "/42/43/",
+    "depth": 1,
+    "sortOrder": 0,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 44,
+    "slug": "foam-sheets",
+    "localizedName": {
+      "en": "Foam Sheets",
+      "ar": "شرائح فوم"
+    },
+    "parentId": 43,
+    "icon": null,
+    "path": "/42/43/44/",
+    "depth": 2,
+    "sortOrder": 0,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 45,
+    "slug": "glitter",
+    "localizedName": {
+      "en": "Glitter",
+      "ar": "جليتر"
+    },
+    "parentId": 43,
+    "icon": null,
+    "path": "/42/43/45/",
+    "depth": 2,
+    "sortOrder": 1,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 46,
+    "slug": "stickers",
+    "localizedName": {
+      "en": "Stickers",
+      "ar": "ملصقات"
+    },
+    "parentId": 43,
+    "icon": null,
+    "path": "/42/43/46/",
+    "depth": 2,
+    "sortOrder": 2,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 47,
+    "slug": "cutting-tools",
+    "localizedName": {
+      "en": "Cutting Tools",
+      "ar": "أدوات قص"
+    },
+    "parentId": 42,
+    "icon": null,
+    "path": "/42/47/",
+    "depth": 1,
+    "sortOrder": 1,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 48,
+    "slug": "scissors",
+    "localizedName": {
+      "en": "Scissors",
+      "ar": "مقصات"
+    },
+    "parentId": 47,
+    "icon": null,
+    "path": "/42/47/48/",
+    "depth": 2,
+    "sortOrder": 0,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 49,
+    "slug": "cutters",
+    "localizedName": {
+      "en": "Cutters",
+      "ar": "كترات"
+    },
+    "parentId": 47,
+    "icon": null,
+    "path": "/42/47/49/",
+    "depth": 2,
+    "sortOrder": 1,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 50,
+    "slug": "coloring-tools",
+    "localizedName": {
+      "en": "Coloring Tools",
+      "ar": "أدوات تلوين"
+    },
+    "parentId": 42,
+    "icon": null,
+    "path": "/42/50/",
+    "depth": 1,
+    "sortOrder": 2,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 51,
+    "slug": "crayons",
+    "localizedName": {
+      "en": "Crayons",
+      "ar": "ألوان شمعية"
+    },
+    "parentId": 50,
+    "icon": null,
+    "path": "/42/50/51/",
+    "depth": 2,
+    "sortOrder": 0,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 52,
+    "slug": "oil-pastels",
+    "localizedName": {
+      "en": "Oil Pastels",
+      "ar": "ألوان زيتية"
+    },
+    "parentId": 50,
+    "icon": null,
+    "path": "/42/50/52/",
+    "depth": 2,
+    "sortOrder": 1,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 53,
+    "slug": "office-supplies",
+    "localizedName": {
+      "en": "Office Supplies",
+      "ar": "مستلزمات مكتبية"
+    },
+    "parentId": null,
+    "icon": null,
+    "path": "/53/",
+    "depth": 0,
+    "sortOrder": 5,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 54,
+    "slug": "desk-accessories",
+    "localizedName": {
+      "en": "Desk Accessories",
+      "ar": "إكسسوارات مكتب"
+    },
+    "parentId": 53,
+    "icon": null,
+    "path": "/53/54/",
+    "depth": 1,
+    "sortOrder": 0,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 55,
+    "slug": "staplers",
+    "localizedName": {
+      "en": "Staplers",
+      "ar": "دباسات"
+    },
+    "parentId": 54,
+    "icon": null,
+    "path": "/53/54/55/",
+    "depth": 2,
+    "sortOrder": 0,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 56,
+    "slug": "hole-punchers",
+    "localizedName": {
+      "en": "Hole Punchers",
+      "ar": "خرامات"
+    },
+    "parentId": 54,
+    "icon": null,
+    "path": "/53/54/56/",
+    "depth": 2,
+    "sortOrder": 1,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 57,
+    "slug": "clips",
+    "localizedName": {
+      "en": "Clips",
+      "ar": "مشابك"
+    },
+    "parentId": 54,
+    "icon": null,
+    "path": "/53/54/57/",
+    "depth": 2,
+    "sortOrder": 2,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 58,
+    "slug": "business-forms",
+    "localizedName": {
+      "en": "Business Forms",
+      "ar": "نماذج أعمال"
+    },
+    "parentId": 53,
+    "icon": null,
+    "path": "/53/58/",
+    "depth": 1,
+    "sortOrder": 1,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 59,
+    "slug": "envelopes",
+    "localizedName": {
+      "en": "Envelopes",
+      "ar": "أظرفة"
+    },
+    "parentId": 58,
+    "icon": null,
+    "path": "/53/58/59/",
+    "depth": 2,
+    "sortOrder": 0,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 60,
+    "slug": "labels",
+    "localizedName": {
+      "en": "Labels",
+      "ar": "ملصقات تعريفية"
+    },
+    "parentId": 53,
+    "icon": null,
+    "path": "/53/60/",
+    "depth": 1,
+    "sortOrder": 2,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 61,
+    "slug": "labels-2",
+    "localizedName": {
+      "en": "Labels 2",
+      "ar": "ملصقات تعريفية 2"
+    },
+    "parentId": 60,
+    "icon": null,
+    "path": "/53/60/61/",
+    "depth": 2,
+    "sortOrder": 0,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 62,
+    "slug": "bags-cases-and-storage",
+    "localizedName": {
+      "en": "Bags Cases And Storage",
+      "ar": "حقائب وحافظات وتخزين"
+    },
+    "parentId": null,
+    "icon": null,
+    "path": "/62/",
+    "depth": 0,
+    "sortOrder": 6,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 63,
+    "slug": "display",
+    "localizedName": {
+      "en": "Display",
+      "ar": "عرض"
+    },
+    "parentId": 62,
+    "icon": null,
+    "path": "/62/63/",
+    "depth": 1,
+    "sortOrder": 0,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 64,
+    "slug": "stands",
+    "localizedName": {
+      "en": "Stands",
+      "ar": "حوامل"
+    },
+    "parentId": 63,
+    "icon": null,
+    "path": "/62/63/64/",
+    "depth": 2,
+    "sortOrder": 0,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 65,
+    "slug": "storage",
+    "localizedName": {
+      "en": "Storage",
+      "ar": "تخزين"
+    },
+    "parentId": 62,
+    "icon": null,
+    "path": "/62/65/",
+    "depth": 1,
+    "sortOrder": 1,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 66,
+    "slug": "cabinets",
+    "localizedName": {
+      "en": "Cabinets",
+      "ar": "خزائن"
+    },
+    "parentId": 65,
+    "icon": null,
+    "path": "/62/65/66/",
+    "depth": 2,
+    "sortOrder": 0,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 67,
+    "slug": "household-and-lifestyle",
+    "localizedName": {
+      "en": "Household And Lifestyle",
+      "ar": "الأدوات المنزلية وأسلوب الحياة"
+    },
+    "parentId": null,
+    "icon": null,
+    "path": "/67/",
+    "depth": 0,
+    "sortOrder": 7,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 68,
+    "slug": "home",
+    "localizedName": {
+      "en": "Home",
+      "ar": "المنزل"
+    },
+    "parentId": 67,
+    "icon": null,
+    "path": "/67/68/",
+    "depth": 1,
+    "sortOrder": 0,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 69,
+    "slug": "blankets",
+    "localizedName": {
+      "en": "Blankets",
+      "ar": "بطانيات"
+    },
+    "parentId": 68,
+    "icon": null,
+    "path": "/67/68/69/",
+    "depth": 2,
+    "sortOrder": 0,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 70,
+    "slug": "buckets",
+    "localizedName": {
+      "en": "Buckets",
+      "ar": "أوعية"
+    },
+    "parentId": 68,
+    "icon": null,
+    "path": "/67/68/70/",
+    "depth": 2,
+    "sortOrder": 1,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 71,
+    "slug": "rugs",
+    "localizedName": {
+      "en": "Rugs",
+      "ar": "سجاد"
+    },
+    "parentId": 68,
+    "icon": null,
+    "path": "/67/68/71/",
+    "depth": 2,
+    "sortOrder": 2,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 72,
+    "slug": "drinkware",
+    "localizedName": {
+      "en": "Drinkware",
+      "ar": "أدوات شرب"
+    },
+    "parentId": 67,
+    "icon": null,
+    "path": "/67/72/",
+    "depth": 1,
+    "sortOrder": 1,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 73,
+    "slug": "cups",
+    "localizedName": {
+      "en": "Cups",
+      "ar": "أكواب"
+    },
+    "parentId": 72,
+    "icon": null,
+    "path": "/67/72/73/",
+    "depth": 2,
+    "sortOrder": 0,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 74,
+    "slug": "mugs",
+    "localizedName": {
+      "en": "Mugs",
+      "ar": "مجات"
+    },
+    "parentId": 72,
+    "icon": null,
+    "path": "/67/72/74/",
+    "depth": 2,
+    "sortOrder": 1,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 75,
+    "slug": "kitchenware",
+    "localizedName": {
+      "en": "Kitchenware",
+      "ar": "أدوات مطبخ"
+    },
+    "parentId": 67,
+    "icon": null,
+    "path": "/67/75/",
+    "depth": 1,
+    "sortOrder": 2,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 76,
+    "slug": "plates",
+    "localizedName": {
+      "en": "Plates",
+      "ar": "أطباق"
+    },
+    "parentId": 75,
+    "icon": null,
+    "path": "/67/75/76/",
+    "depth": 2,
+    "sortOrder": 0,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 77,
+    "slug": "organization-and-filing",
+    "localizedName": {
+      "en": "Organization And Filing",
+      "ar": "التنظيم والأرشفة"
+    },
+    "parentId": null,
+    "icon": null,
+    "path": "/77/",
+    "depth": 0,
+    "sortOrder": 8,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 78,
+    "slug": "desk-organizers",
+    "localizedName": {
+      "en": "Desk Organizers",
+      "ar": "منظمات مكتب"
+    },
+    "parentId": 77,
+    "icon": null,
+    "path": "/77/78/",
+    "depth": 1,
+    "sortOrder": 0,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 79,
+    "slug": "holders",
+    "localizedName": {
+      "en": "Holders",
+      "ar": "حوامل"
+    },
+    "parentId": 78,
+    "icon": null,
+    "path": "/77/78/79/",
+    "depth": 2,
+    "sortOrder": 0,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  }
+]

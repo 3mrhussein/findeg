@@ -19,7 +19,7 @@ import type { VariantDimension } from "../../../catalog/domain/types/VariantDime
 import { VariantKey } from "../../../catalog/domain/value-objects/VariantKey";
 import { Sku } from "../../../catalog/domain/value-objects/Sku";
 import { generateVariantMatrix } from "../../../catalog/domain/types/VariantDimension";
-import { db } from "../../../core/infrastructure/persistence";
+import { db } from "@findeg/db";
 import {
   products,
   productVariants,
@@ -31,7 +31,7 @@ import {
   attributeDefinitions,
   categories,
   brands,
-} from "../../../core/infrastructure/persistence/schema";
+} from "@findeg/db/schema";
 import { eq, and, ne, inArray, sql, desc, asc, or, ilike, count } from "drizzle-orm";
 import {
   ProductListFilters,

@@ -21,7 +21,13 @@ export interface CheckoutFormValues {
   guestEmail: string;
 }
 
-export function useCheckoutForm({ cartItemsCount, initialValues }: { cartItemsCount?: number; initialValues?: Partial<CheckoutFormValues> }) {
+export function useCheckoutForm({
+  cartItemsCount,
+  initialValues,
+}: {
+  cartItemsCount?: number;
+  initialValues?: Partial<CheckoutFormValues>;
+}) {
   const [formValues, setFormValues] = useState<CheckoutFormValues>({
     fullName: initialValues?.fullName || "",
     phone: initialValues?.phone || "",
@@ -34,9 +40,11 @@ export function useCheckoutForm({ cartItemsCount, initialValues }: { cartItemsCo
     notes: initialValues?.notes || "",
     guestEmail: initialValues?.guestEmail || "",
   });
-  
+
   const [paymentMethod, setPaymentMethod] = useState<"cod" | "card">("cod");
-  const [touchedFields, setTouchedFields] = useState<Partial<Record<keyof CheckoutFormValues, boolean>>>({});
+  const [touchedFields, setTouchedFields] = useState<
+    Partial<Record<keyof CheckoutFormValues, boolean>>
+  >({});
   const [showAllErrors, setShowAllErrors] = useState(false);
 
   const errors: Partial<Record<keyof CheckoutFormValues, CheckoutValidationError>> = {};
