@@ -152,7 +152,7 @@ export default async function SchoolsPage({ params, searchParams }: PageProps) {
             <div className="space-y-1">
               <h3 className="text-2xl font-bold">No schools found</h3>
               <p className="text-muted-foreground max-w-md mx-auto">
-                We couldn't find any schools matching your search criteria. Try adjusting your
+                We couldn&apos;t find any schools matching your search criteria. Try adjusting your
                 filters or search for another name.
               </p>
             </div>

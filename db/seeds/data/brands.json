@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "slug": "faber-castell",
+    "name": "Faber-Castell",
+    "logoUrl": null,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 2,
+    "slug": "staedtler",
+    "name": "Staedtler",
+    "logoUrl": null,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 3,
+    "slug": "maped",
+    "name": "Maped",
+    "logoUrl": null,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 4,
+    "slug": "stabilo",
+    "name": "Stabilo",
+    "logoUrl": null,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 5,
+    "slug": "deli",
+    "name": "Deli",
+    "logoUrl": null,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 6,
+    "slug": "casio",
+    "name": "Casio",
+    "logoUrl": null,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 7,
+    "slug": "m-g",
+    "name": "M&G",
+    "logoUrl": null,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 8,
+    "slug": "pilot",
+    "name": "Pilot",
+    "logoUrl": null,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 9,
+    "slug": "bic",
+    "name": "Bic",
+    "logoUrl": null,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  },
+  {
+    "id": 10,
+    "slug": "dong-a",
+    "name": "Dong-A",
+    "logoUrl": null,
+    "isActive": true,
+    "createdAt": "2026-02-17 16:04:52.480606",
+    "updatedAt": "2026-02-17 16:04:52.480606"
+  }
+]

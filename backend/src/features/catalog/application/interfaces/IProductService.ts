@@ -22,8 +22,16 @@ export interface IProductService {
 
   getByCategory(categoryId: number, language?: Locale): Promise<Product[]>;
 
+  getRelatedProducts(product: Product, limit?: number, language?: Locale): Promise<Product[]>;
+
+  getTopSellingProducts(limit?: number, language?: Locale): Promise<Product[]>;
+
   getFilteredProducts(
     filters: ProductFilters,
     language?: Locale,
   ): Promise<{ products: Product[]; total: number }>;
+
+  create(input: any): Promise<Product>;
+  update(id: number, input: any): Promise<Product>;
+  delete(id: number): Promise<void>;
 }

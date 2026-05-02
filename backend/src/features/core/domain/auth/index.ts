@@ -7,11 +7,11 @@ export { AuthCredentialsSchema, type AuthCredentials } from "./AuthCredentials";
 export type { AuthResult } from "./AuthResult";
 export {
   PERMISSION_CODES,
-  isSystemAdmin,
-  isStaffRole,
-  isSchoolRole,
-  isCustomerRole,
-  isAdminSession,
+  systemAdmin,
+  staffRole,
+  schoolRole,
+  customerRole,
+  adminSession,
   hasPermission,
   hasAnyPermission,
   hasAllPermissions,

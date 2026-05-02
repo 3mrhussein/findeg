@@ -7,7 +7,7 @@
 
 import { type ID } from "@findeg/backend/features/core/domain/types/common";
 import type { Variant } from "../../domain/entities/Variant";
-import type { MatchRulesDraft } from "@findeg/backend/features/core/infrastructure/persistence/schema/school-lists";
+import type { MatchRulesDraft } from "@findeg/db/schema";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -17,6 +17,10 @@ export interface SchoolListResult {
   schoolName: string;
   grade: string;
   academicYear: string;
+  governorate?: string;
+  area?: string;
+  schoolType?: string;
+  academicSystem?: string;
   localizedTitle: Record<string, string>;
   localizedDescription?: Record<string, string>;
   heroImageUrl?: string;

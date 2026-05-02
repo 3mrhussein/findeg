@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { useFormContext, useFieldArray } from "react-hook-form";
 import { useTranslations } from "next-intl";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@findeg/ui";
@@ -8,7 +9,7 @@ import { Input } from "@findeg/ui";
 import { Button } from "@findeg/ui";
 import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
 import { Link as LinkIcon, Star, Trash2, ImageIcon } from "lucide-react";
-import { type ProductFormValues } from "../../../../../../../features/administration/presentation/forms/product-form";
+import { type ProductFormValues } from "@/interfaces";
 
 /**
  * Media Management Tab — URL-based only (file upload deferred to Phase 2)
@@ -66,10 +67,11 @@ export function MediaTab() {
                   key={img.id}
                   className="relative aspect-square rounded-lg border bg-muted overflow-hidden group"
                 >
-                  <img
+                  <Image
                     src={img.url}
                     alt={img.alt || "Product image"}
-                    className="object-cover w-full h-full"
+                    fill
+                    className="object-cover"
                   />
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                     <Button

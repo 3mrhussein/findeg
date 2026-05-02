@@ -9,9 +9,9 @@ export function resolveCypressEnv(key: string, fallback = ""): string {
 }
 
 /**
- * Resolves locale used for route helpers.
+ * Parses or resolves the locale used for route helpers.
  */
-export function resolveLocale(explicitLocale?: string): string {
+export function parse(explicitLocale?: string): string {
   if (explicitLocale && explicitLocale.length > 0) return explicitLocale;
   return resolveCypressEnv("LOCALE", "en");
 }

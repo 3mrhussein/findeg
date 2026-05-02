@@ -1,0 +1,12 @@
+[
+    {
+        "id": 1,
+        "userId": 1,
+        "provider": "manual",
+        "tokenReference": "none",
+        "displayLabel": "Cash on Delivery",
+        "isDefault": true,
+        "createdAt": "2023-01-01T00:00:00Z",
+        "updatedAt": "2023-01-01T00:00:00Z"
+    }
+]

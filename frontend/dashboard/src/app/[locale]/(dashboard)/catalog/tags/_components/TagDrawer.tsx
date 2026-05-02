@@ -5,7 +5,7 @@ import { Sheet, SheetContent } from "@findeg/ui";
 import { Tag } from "@findeg/backend/features/catalog";
 import { TagInput } from "@findeg/backend/features/administration/domain/types";
 import { TagFormPanel } from "./TagFormPanel";
-import { createTagAction, updateTagAction, getTagProductCountAction } from "@actions/admin-actions";
+import { createTagAction, updateTagAction, getTagProductCountAction } from "@data/tags/actions";
 import { useRouter } from "@i18n/navigation";
 
 interface TagDrawerProps {
@@ -24,7 +24,7 @@ export function TagDrawer({ open, onOpenChange, tag }: TagDrawerProps) {
         if (res.success) setProductCount(res.count || 0);
       });
     } else if (productCount !== 0) {
-      setProductCount(0);
+      Promise.resolve().then(() => setProductCount(0));
     }
   }, [tag, productCount]);
 

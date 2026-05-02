@@ -1,5 +1,6 @@
-import { Locale, isLocale as isDomainLocale } from "../value-objects/Locale";
 import { EmailSchema, IdSchema } from "../types/common";
+import { valid } from "../value-objects/Locale";
+import type { Locale } from "../value-objects/Locale";
 
 /**
  * Type-safe check if a value is defined (not null or undefined).
@@ -40,6 +41,13 @@ export function isEmail(val: unknown): val is string {
 }
 
 /**
- * Re-export locale guard for consistency in utils.
+ * Checks if a given string is a supported domain locale.
+ *
+ * @param value - The string to validate.
+ * @returns True if the value matches one of the supported locales.
+ *
+ * @example
+ * if (isLocale("en")) { ... }
  */
-export const isLocale = isDomainLocale;
+export const isLocale = valid;
+export type { Locale };

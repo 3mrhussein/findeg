@@ -19,7 +19,6 @@ import Image from "next/image";
 import { Checkbox } from "@findeg/ui";
 import { Copy, Archive } from "lucide-react";
 import { VariantEntity } from "@findeg/backend/features/catalog";
-import { getCanonicalProductHref } from "../../../../../features/catalog/presentation/utils/product-url";
 
 /**
  * Column definitions for the ProductTable.
@@ -135,7 +134,7 @@ export function buildProductColumns(onDelete: (id: number) => void): ColumnDef<P
 
         if (!defaultVariant) return "—";
 
-        const amount = defaultVariant.basePrice ?? 0;
+        const amount = Number(defaultVariant.basePrice ?? 0);
         const formatted = new Intl.NumberFormat("en-US", {
           style: "currency",
           currency: "EGP",
@@ -251,7 +250,10 @@ export function buildProductColumns(onDelete: (id: number) => void): ColumnDef<P
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href={getCanonicalProductHref(product)} target="_blank">
+                <Link
+                  href={`/${product.locale || "en"}/products/${product.slug || product.id}`}
+                  target="_blank"
+                >
                   <Copy className="mr-2 h-4 w-4" /> View on site
                 </Link>
               </DropdownMenuItem>

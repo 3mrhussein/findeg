@@ -30,7 +30,7 @@ import { Separator } from "@findeg/ui";
 import { Save, Trash2, Check, AlertCircle, Loader2 } from "lucide-react";
 import type { Category } from "@findeg/backend/features/catalog";
 import { useTranslations } from "next-intl";
-import { checkCategorySlugAvailableAction as checkSlugAvailableAction } from "@actions/admin-actions";
+import { checkCategorySlugAvailableAction as checkSlugAvailableAction } from "@data/categories/actions";
 
 import { cn } from "@lib/utils";
 

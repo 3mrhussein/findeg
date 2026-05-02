@@ -1,6 +1,6 @@
 import { getAllCategories, getAllBrands, getAllTags } from "@data/resources/queries";
 import { ProductForm } from "@/app/[locale]/(dashboard)/products/_components/ProductForm";
-import { resolveLocale } from "@findeg/backend/features/core";
+import { parse } from "@findeg/backend/features/core";
 
 /**
  * /admin/products/new
@@ -8,7 +8,7 @@ import { resolveLocale } from "@findeg/backend/features/core";
  */
 export default async function NewProductPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const resolvedLocale = resolveLocale(locale);
+  const resolvedLocale = parse(locale);
 
   const [categories, brands, tags] = await Promise.all([
     getAllCategories(resolvedLocale),

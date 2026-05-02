@@ -38,7 +38,7 @@ export class AdminOrderService implements IAdminOrderService {
     private orderRepository: IOrderRepository,
     private auditLogService: IAuditLogService,
     private emailService: IEmailService,
-  ) { }
+  ) {}
 
   /**
    * Retrieves a paginated and filtered list of orders.

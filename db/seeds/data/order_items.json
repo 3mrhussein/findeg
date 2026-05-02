@@ -1,0 +1,15 @@
+[
+    {
+        "id": 1,
+        "orderId": 1,
+        "productId": 13,
+        "variantId": 13,
+        "quantity": 2,
+        "productNameSnapshot": "Classic Notebook",
+        "productSkuSnapshot": "NB-001",
+        "variantSkuSnapshot": "NB-001-BL",
+        "unitPrice": 50.00,
+        "totalPrice": 100.00,
+        "totalAmount": 100.00
+    }
+]

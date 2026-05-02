@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1,
+        "variantId": 13,
+        "warehouseId": 1,
+        "movementType": "initial",
+        "quantity": 100,
+        "referenceType": "manual",
+        "referenceId": "initial-seed",
+        "notes": "Initial stock seed",
+        "createdBy": 1,
+        "createdAt": "2026-02-17 16:04:52.480606"
+    }
+]

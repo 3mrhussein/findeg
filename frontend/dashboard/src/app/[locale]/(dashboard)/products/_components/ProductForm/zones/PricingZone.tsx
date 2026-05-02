@@ -6,7 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
 import { Label } from "@findeg/ui";
 import { InfoIcon } from "lucide-react";
 import { PriceInput } from "../shared/PriceInput";
-import type { ProductFormValues } from "../../../../../../../features/administration/presentation/forms/product-form";
 
 interface PricingZoneProps {
   /** When true, shows a per-variant warning if switching pricing mode */
@@ -22,7 +21,7 @@ interface PricingZoneProps {
  * - Base price, strike price, cost price inputs
  */
 export function PricingZone({ hasVariants, variantIndex }: PricingZoneProps) {
-  const { watch, setValue } = useFormContext<ProductFormValues>();
+  const { watch, setValue } = useFormContext();
 
   const pricingMode = watch("pricingMode");
   const isShared = pricingMode === "shared";

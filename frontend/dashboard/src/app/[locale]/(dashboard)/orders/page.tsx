@@ -1,6 +1,6 @@
 import { OrdersTable } from "./_components/OrdersTable";
 import { PageHeader } from "@/app/[locale]/_components/shared/PageHeader";
-import { resolveLocale } from "@findeg/backend/features/core";
+import { parse } from "@findeg/backend/features/core";
 
 /**
  * Local type definitions
@@ -37,7 +37,7 @@ export default async function OrdersPage({
   }>;
 }) {
   const { locale } = await params;
-  const resolvedLocale = resolveLocale(locale);
+  const resolvedLocale = parse(locale);
   const query = await searchParams;
 
   const page = Number(query.page) > 0 ? Number(query.page) : 1;

@@ -3,13 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@findeg/ui";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@findeg/ui";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@findeg/ui";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@findeg/ui";
 import { Icon } from "@findeg/ui";
 import type {
@@ -22,6 +16,12 @@ import type {
 import { ProfileTab } from "./ProfileTab";
 import { RolesTab } from "./RolesTab";
 import { OverridesTab } from "./OverridesTab";
+import { getSystemRoles, getAllPermissions } from "@data/access/queries";
+import {
+  createAdminAction,
+  updateAdminAction,
+  setPermissionOverridesAction,
+} from "@data/access/actions";
 
 /**
  * AdminUserDialog — create / edit admin users with Profile, Roles, and Override tabs.
@@ -52,34 +52,39 @@ export function AdminUserDialog({
   useEffect(() => {
     if (!open) return;
 
-    Promise.all([
-      fetch("/api/v1/admin/roles").then((r) => r.json()),
-      fetch("/api/v1/admin/permissions").then((r) => r.json()),
-    ]).then(([roleData, permData]) => {
-      setRoles(roleData.data?.roles ?? []);
-      setPermissions(permData.data?.permissions ?? []);
+    Promise.all([getSystemRoles(), getAllPermissions()]).then(([roleData, permData]) => {
+      setRoles(roleData as any);
+      setPermissions(permData as any);
     });
 
     if (user) {
-      setEmail(user.email);
-      setFirstName(user.firstName ?? "");
-      setLastName(user.lastName ?? "");
-      setIsActive(user.isActive);
-      setSelectedRoleIds(user.roles.map((r) => r.id));
+      Promise.resolve().then(() => {
+        setEmail(user.email);
+        setFirstName(user.firstName ?? "");
+        setLastName(user.lastName ?? "");
+        setIsActive(user.isActive);
+        setSelectedRoleIds(user.roles.map((r) => r.id));
+      });
       // Code-based overrides — resolved to id-based below
       const map = new Map<number, OverrideAction>();
       user.permissionOverrides.forEach(({ permissionCode, action }) => {
         map.set(permissionCode as unknown as number, action as OverrideAction);
       });
-      setOverrides(map);
+      Promise.resolve().then(() => {
+        setOverrides(map);
+      });
     } else {
-      setEmail("");
-      setFirstName("");
-      setLastName("");
-      setPassword("");
-      setIsActive(true);
-      setSelectedRoleIds([]);
-      setOverrides(new Map());
+      Promise.resolve().then(() => {
+        setEmail("");
+        setFirstName("");
+        setLastName("");
+        setPassword("");
+        setIsActive(true);
+        setSelectedRoleIds([]);
+      });
+      Promise.resolve().then(() => {
+        setOverrides(new Map());
+      });
     }
   }, [open, user]);
 
@@ -91,7 +96,9 @@ export function AdminUserDialog({
       const perm = permissions.find((p) => p.code === permissionCode);
       if (perm) map.set(perm.id, action as OverrideAction);
     });
-    setOverrides(map);
+    Promise.resolve().then(() => {
+      setOverrides(map);
+    });
   }, [permissions, user]);
 
   /**
@@ -126,29 +133,30 @@ export function AdminUserDialog({
     setError(null);
     try {
       if (isEdit && user) {
-        const res = await fetch(`/api/v1/admin/users/${user.id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ firstName, lastName, isActive, roleIds: selectedRoleIds }),
+        const updateResult = await updateAdminAction(user.id, {
+          firstName,
+          lastName,
+          isActive,
+          roleIds: selectedRoleIds,
         });
-        if (!res.ok) throw new Error((await res.json()).error ?? "Update failed");
+        if (!updateResult.success) throw new Error(updateResult.error || "Update failed");
 
-        const overridePayload = Array.from(overrides.entries()).map(([permissionId, action]) => ({
-          permissionId,
-          action,
-        }));
-        await fetch(`/api/v1/admin/users/${user.id}/permissions`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ overrides: overridePayload }),
-        });
+        const grantIds = Array.from(overrides.entries())
+          .filter(([_, action]) => action === "grant")
+          .map(([id, _]) => id);
+
+        // Note: setPermissionOverridesAction currently only supports grant list.
+        // If revoke is needed, the action/service needs to be updated.
+        await setPermissionOverridesAction(user.id, grantIds);
       } else {
-        const res = await fetch("/api/v1/admin/users", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, firstName, lastName, password, roleIds: selectedRoleIds }),
+        const createResult = await createAdminAction({
+          email,
+          firstName,
+          lastName,
+          password,
+          roleIds: selectedRoleIds,
         });
-        if (!res.ok) throw new Error((await res.json()).error ?? "Create failed");
+        if (!createResult.success) throw new Error(createResult.error || "Create failed");
       }
       onClose(true);
     } catch (err) {

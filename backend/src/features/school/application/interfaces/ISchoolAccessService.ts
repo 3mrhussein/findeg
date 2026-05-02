@@ -3,7 +3,7 @@ import {
   SchoolListAccessGrant,
   SchoolListAccessRequest,
   SchoolListAccessToken,
-} from "@findeg/backend/features/core/infrastructure/persistence/schema/school-access";
+} from "@findeg/db/schema";
 
 export type AccessState = "public" | "code_required" | "private" | "granted" | "pending";
 

@@ -1,8 +1,5 @@
-import { db } from "@findeg/backend/features/core/infrastructure/persistence";
-import {
-  attributeDefinitions,
-  productAttributes,
-} from "@findeg/backend/features/core/infrastructure/persistence/schema";
+import { db } from "@findeg/db/connection";
+import { attributeDefinitions, productAttributes } from "@findeg/db/schema";
 import {
   IAttributeRepository,
   AttributeFilter,

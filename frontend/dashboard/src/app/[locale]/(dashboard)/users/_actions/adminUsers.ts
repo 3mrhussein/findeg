@@ -1,7 +1,7 @@
 "use server";
 
 import { requireAdmin } from "@lib/auth-guard";
-import { updateTag } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { createIdentityServices } from "@findeg/backend/features/identity";
 import type { Locale } from "next-intl";
 import { getErrorMessage } from "@lib/type-guards";
@@ -33,7 +33,7 @@ export async function createAdminAction(formData: FormData) {
     const { adminUsers } = createIdentityServices();
     const result = await adminUsers.createAdmin(input);
 
-    updateTag("admin-users");
+    revalidateTag("admin-users", "max");
     return { success: true, data: result };
   } catch (error: unknown) {
     console.error("[createAdminAction]", error);
@@ -60,7 +60,7 @@ export async function updateAdminAction(userId: number, formData: FormData) {
     const { adminUsers } = createIdentityServices();
     const result = await adminUsers.updateAdmin(userId, input);
 
-    updateTag("admin-users");
+    revalidateTag("admin-users", "max");
     return { success: true, data: result };
   } catch (error: unknown) {
     console.error("[updateAdminAction]", error);

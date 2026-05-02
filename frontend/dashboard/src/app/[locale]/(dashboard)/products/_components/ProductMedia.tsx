@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import React, { useState } from "react";
+import Image from "next/image";
 import { useFormContext } from "react-hook-form";
 import { useDropzone } from "react-dropzone";
 import {
@@ -49,7 +50,7 @@ function SortableImageItem({
       style={style}
       className="relative group w-32 h-32 rounded-lg border bg-muted overflow-hidden flex-shrink-0"
     >
-      <img src={url} alt="Product" className="w-full h-full object-cover" />
+      <Image src={url} alt="Product" fill className="object-cover" />
       <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
         <div
           {...attributes}
@@ -74,6 +75,102 @@ function SortableImageItem({
 }
 
 /**
+ * Media Uploader Component to handle dropzone and sortable list
+ */
+function MediaUploader({ field, sensors }: { field: any; sensors: any }) {
+  const images = field.value
+    ? (field.value as string)
+        .split(",")
+        .map((s: string) => s.trim())
+        .filter(Boolean)
+    : [];
+
+  const onDrop = (acceptedFiles: File[]) => {
+    const newImages = acceptedFiles.map(
+      () =>
+        `https://placehold.co/400x400/png?text=New+Img+${Math.random().toString(36).substring(7)}`,
+    );
+    field.onChange([...images, ...newImages].join(", "));
+  };
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: { "image/jpeg": [], "image/png": [], "image/webp": [] },
+  });
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      const oldIndex = images.indexOf(active.id as string);
+      const newIndex = images.indexOf(over.id as string);
+      const newOrder = arrayMove(images, oldIndex, newIndex);
+      field.onChange(newOrder.join(", "));
+    }
+  };
+
+  const handleRemove = (urlToRemove: string) => {
+    field.onChange(images.filter((url) => url !== urlToRemove).join(", "));
+  };
+
+  return (
+    <FormItem className="space-y-4">
+      <div>
+        <FormLabel>Media</FormLabel>
+        <p className="text-[0.8rem] text-muted-foreground">
+          Drag and drop images to reorder them. The first image will be used as the thumbnail.
+        </p>
+      </div>
+
+      <div className="space-y-4">
+        {/* Image Grid */}
+        {images.length > 0 && (
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext items={images} strategy={horizontalListSortingStrategy}>
+              <div className="flex flex-wrap gap-4">
+                {images.map((url) => (
+                  <SortableImageItem
+                    key={url}
+                    id={url}
+                    url={url}
+                    onRemove={() => handleRemove(url)}
+                  />
+                ))}
+              </div>
+            </SortableContext>
+          </DndContext>
+        )}
+
+        {/* Dropzone */}
+        <FormControl>
+          <div
+            {...getRootProps()}
+            className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
+              isDragActive ? "border-primary bg-primary/5" : "border-border hover:border-primary/50"
+            }`}
+          >
+            <input {...getInputProps()} />
+            <div className="flex flex-col items-center justify-center gap-2 text-muted-foreground">
+              <UploadCloud className="w-8 h-8" />
+              <p className="text-sm font-medium">
+                {isDragActive
+                  ? "Drop the files here..."
+                  : "Drag & drop images here, or click to select files"}
+              </p>
+              <p className="text-xs">Supports JPG, PNG and WEBP (max 2MB)</p>
+            </div>
+          </div>
+        </FormControl>
+      </div>
+      <FormMessage />
+    </FormItem>
+  );
+}
+
+/**
  * Product Media Component
  */
 export function ProductMedia() {
@@ -90,114 +187,7 @@ export function ProductMedia() {
     <FormField
       control={form.control}
       name="images"
-      render={({ field }) => {
-        // field.value is a comma-separated string
-        const images: string[] = field.value
-          ? field.value
-              .split(",")
-              .map((s: string) => s.trim())
-              .filter(Boolean)
-          : [];
-
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        const onDrop = useCallback(
-          (acceptedFiles: File[]) => {
-            // Simulate upload by adding a placeholder image for each dropped file.
-            // In a real app, you would upload these files and use the returned URLs.
-            const newImages = acceptedFiles.map(
-              () =>
-                `https://placehold.co/400x400/png?text=New+Img+${Math.random().toString(36).substring(7)}`,
-            );
-            field.onChange([...images, ...newImages].join(", "));
-          },
-          [images, field],
-        );
-
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        const { getRootProps, getInputProps, isDragActive } = useDropzone({
-          onDrop,
-          accept: { "image/jpeg": [], "image/png": [], "image/webp": [] },
-        });
-
-        /**
-         *
-         */
-        const handleDragEnd = (event: DragEndEvent) => {
-          const { active, over } = event;
-          if (over && active.id !== over.id) {
-            const oldIndex = images.indexOf(active.id as string);
-            const newIndex = images.indexOf(over.id as string);
-            const newOrder = arrayMove(images, oldIndex, newIndex);
-            field.onChange(newOrder.join(", "));
-          }
-        };
-
-        /**
-         *
-         */
-        const handleRemove = (urlToRemove: string) => {
-          field.onChange(images.filter((url) => url !== urlToRemove).join(", "));
-        };
-
-        return (
-          <FormItem className="space-y-4">
-            <div>
-              <FormLabel>Media</FormLabel>
-              <p className="text-[0.8rem] text-muted-foreground">
-                Drag and drop images to reorder them. The first image will be used as the thumbnail.
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              {/* Image Grid */}
-              {images.length > 0 && (
-                <DndContext
-                  sensors={sensors}
-                  collisionDetection={closestCenter}
-                  onDragEnd={handleDragEnd}
-                >
-                  <SortableContext items={images} strategy={horizontalListSortingStrategy}>
-                    <div className="flex flex-wrap gap-4">
-                      {images.map((url) => (
-                        <SortableImageItem
-                          key={url}
-                          id={url}
-                          url={url}
-                          onRemove={() => handleRemove(url)}
-                        />
-                      ))}
-                    </div>
-                  </SortableContext>
-                </DndContext>
-              )}
-
-              {/* Dropzone */}
-              <FormControl>
-                <div
-                  {...getRootProps()}
-                  className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
-                    isDragActive
-                      ? "border-primary bg-primary/5"
-                      : "border-border hover:border-primary/50"
-                  }`}
-                >
-                  <input {...getInputProps()} />
-                  <div className="flex flex-col items-center justify-center gap-2 text-muted-foreground">
-                    <UploadCloud className="w-8 h-8" />
-                    <p className="text-sm font-medium">
-                      {isDragActive
-                        ? "Drop the files here..."
-                        : "Drag & drop images here, or click to select files"}
-                    </p>
-                    <p className="text-xs">Supports JPG, PNG and WEBP (max 2MB)</p>
-                  </div>
-                </div>
-              </FormControl>
-            </div>
-            <FormMessage />
-          </FormItem>
-        );
-      }}
+      render={({ field }) => <MediaUploader field={field} sensors={sensors} />}
     />
   );
 }

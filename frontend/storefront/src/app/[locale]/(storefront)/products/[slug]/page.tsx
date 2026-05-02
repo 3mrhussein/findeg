@@ -65,7 +65,7 @@ async function ProductPageContent({ locale, productId }: ProductContentProps) {
   const data = await getProductDetailPageData(productId, locale);
   if (!data) notFound();
 
-  const { product, reviews } = data;
+  const { product, initialReviews } = data;
 
   return (
     <div className="bg-slate-50 dark:bg-slate-900/30 min-h-screen py-8 lg:py-16">
@@ -119,7 +119,7 @@ async function ProductPageContent({ locale, productId }: ProductContentProps) {
                 {new Intl.NumberFormat("en-EG", {
                   style: "currency",
                   currency: "EGP",
-                }).format(product.variants?.[0]?.basePrice ?? 0)}
+                }).format(Number(product.variants?.[0]?.basePrice ?? 0))}
               </div>
 
               <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
@@ -150,7 +150,7 @@ async function ProductPageContent({ locale, productId }: ProductContentProps) {
           </div>
         </main>
 
-        <ProductTabs product={product} reviews={reviews} />
+        <ProductTabs product={product} reviews={initialReviews} />
       </div>
     </div>
   );

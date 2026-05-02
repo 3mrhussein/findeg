@@ -15,10 +15,9 @@
 
 "use server";
 
-// eslint-disable-next-line no-restricted-imports
 import { redirect } from "@i18n/navigation";
 import { createIdentityServices } from "@findeg/backend/features/identity";
-import { isAdminSession, createUserVO, type SessionPayload } from "@findeg/backend/features/core";
+import { adminSession, createUserVO, type SessionPayload } from "@findeg/backend/features/core";
 import { createSession, deleteSession } from "@lib/session";
 
 /**
@@ -59,7 +58,7 @@ export async function loginAction(formData: FormData) {
       tokenVersion: 1,
     };
 
-    if (!isAdminSession(sessionPayload as SessionPayload)) {
+    if (!adminSession(sessionPayload as SessionPayload)) {
       throw new Error("Forbidden: This portal is for administrators only");
     }
 

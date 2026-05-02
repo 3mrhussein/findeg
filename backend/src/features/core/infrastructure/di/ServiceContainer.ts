@@ -1,6 +1,6 @@
 /**
  * Service Container
-
+ 
  *
  * Simple Dependency Injection container to manage singleton instances
  * of repositories and services.
@@ -182,7 +182,7 @@ export class ServiceContainer {
   /**
    *
    */
-  private constructor() { }
+  private constructor() {}
 
   /**
    *
@@ -655,6 +655,7 @@ export class ServiceContainer {
       this._parentListService = new ParentListService(
         this.parentSessionRepository,
         this.schoolDirectoryService,
+        this.schoolAccessService,
       );
     }
     return this._parentListService;

@@ -62,14 +62,14 @@ export function CascadingCategoryPicker({
     return findPath(value, categories);
   }, [value, categories]);
 
-  // Initial active path based on selection
-  React.useEffect(() => {
-    if (open && selectedBreadcrumbs) {
+  const onOpenChange = (isOpen: boolean) => {
+    setOpen(isOpen);
+    if (isOpen && selectedBreadcrumbs) {
       setActivePath(selectedBreadcrumbs.map((b) => b.id));
-    } else if (!open) {
+    } else if (!isOpen) {
       setActivePath([]);
     }
-  }, [open, selectedBreadcrumbs]);
+  };
 
   const handleMouseEnter = (node: CategoryTreeNode, columnIndex: number) => {
     if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
@@ -135,7 +135,7 @@ export function CascadingCategoryPicker({
   });
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={onOpenChange}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"

@@ -5,7 +5,7 @@ export const PAYMENT_STATUS_OPTIONS: PaymentStatus[] = ["unpaid", "paid", "refun
 /**
  *
  */
-export function isPaymentStatus(value: string | undefined): value is PaymentStatus {
+export function paymentStatus(value: string | undefined): value is PaymentStatus {
   if (!value) return false;
   return PAYMENT_STATUS_OPTIONS.includes(value as PaymentStatus);
 }
@@ -27,7 +27,7 @@ const PAYMENT_STATUS_TRANSITIONS: Record<PaymentStatus, PaymentStatus[]> = {
  */
 export function normalizePaymentStatus(status: string | undefined): PaymentStatus {
   if (!status) return "unpaid";
-  return isPaymentStatus(status) ? status : "unpaid";
+  return paymentStatus(status) ? status : "unpaid";
 }
 
 /**

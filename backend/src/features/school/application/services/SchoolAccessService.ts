@@ -9,7 +9,7 @@ import {
   SchoolListAccessGrant,
   SchoolListAccessRequest,
   SchoolListAccessToken,
-} from "@findeg/backend/features/core/infrastructure/persistence/schema/school-access";
+} from "@findeg/db/schema";
 import { ISchoolListRepository } from "@findeg/backend/features/catalog/application/interfaces/ISchoolListRepository";
 import { IUserRepository } from "@findeg/backend/features/identity/application/interfaces/IUserRepository";
 
@@ -27,7 +27,7 @@ export class SchoolAccessService implements ISchoolAccessService {
     private accessRepo: ISchoolAccessRepository,
     private schoolListRepo: ISchoolListRepository,
     private userRepo: IUserRepository,
-  ) { }
+  ) {}
 
   /**
    *

@@ -26,6 +26,10 @@ export default async function SchoolProfilePage({ params }: PageProps) {
 
   const school = await getSchoolProfile(params.slug, session.userId);
 
+  if (!school) {
+    notFound();
+  }
+
   return (
     <div className="container mx-auto py-12 px-4 space-y-12">
       {/* Hero / Header Section */}

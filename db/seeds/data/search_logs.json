@@ -1,0 +1,12 @@
+[
+    {
+        "id": "e4f8d6a0-1234-4567-890a-bcdef0123456",
+        "query": "pencil",
+        "locale": "en",
+        "resultsCount": 5,
+        "userId": 1,
+        "sessionId": "test-session",
+        "clickedProductId": 13,
+        "createdAt": "2026-02-17 16:04:52.480606"
+    }
+]

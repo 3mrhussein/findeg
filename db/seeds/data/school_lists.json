@@ -1,0 +1,16 @@
+[
+    {
+        "id": 1,
+        "slug": "primary-grade-1-list",
+        "schoolName": "Green Valley Academy",
+        "grade": "Grade 1",
+        "academicYear": "2023/2024",
+        "localizedTitle": {
+            "en": "Grade 1 Stationery List",
+            "ar": "قائمة أدوات الصف الأول"
+        },
+        "isActive": true,
+        "createdAt": "2023-06-01T00:00:00Z",
+        "updatedAt": "2023-06-01T00:00:00Z"
+    }
+]

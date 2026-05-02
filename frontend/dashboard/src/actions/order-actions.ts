@@ -7,7 +7,7 @@
 
 "use server";
 
-import { updateTag } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { createAdministrationServices } from "@findeg/backend/features/administration";
 import { getErrorMessage } from "@lib/type-guards";
 
@@ -22,7 +22,7 @@ export async function updateOrderStatusAction(orderId: number, input: any) {
     const { orders } = createAdministrationServices();
     await orders.updateStatus(orderId, input);
 
-    updateTag("orders");
+    revalidateTag("orders", "max");
     return { success: true };
   } catch (error: unknown) {
     console.error("[updateOrderStatusAction]", error);
@@ -41,7 +41,7 @@ export async function updateOrderPaymentStatusAction(orderId: number, paymentSta
     const { orders } = createAdministrationServices();
     await orders.updatePaymentStatus(orderId, paymentStatus);
 
-    updateTag("orders");
+    revalidateTag("orders", "max");
     return { success: true };
   } catch (error: unknown) {
     console.error("[updateOrderPaymentStatusAction]", error);

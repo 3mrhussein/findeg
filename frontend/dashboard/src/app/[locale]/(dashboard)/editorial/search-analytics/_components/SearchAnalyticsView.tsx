@@ -14,22 +14,9 @@ import {
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@findeg/ui";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@findeg/ui";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@findeg/ui";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@findeg/ui";
 import { Button } from "@findeg/ui";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@findeg/ui";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@findeg/ui";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
 import { Link } from "@i18n/navigation";
 import {

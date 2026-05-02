@@ -19,5 +19,5 @@ export {
   UnauthorizedError,
   InternalServerError,
   ServiceUnavailableError,
-  isOperationalError,
+  operationalError,
 } from "./errors";

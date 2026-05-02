@@ -98,7 +98,8 @@ export function visitEditProductForm(productId: number): void {
   cy.visit(localePath(UI_ROUTES.adminProductEditById(productId)));
   cy.location("pathname", { timeout: 15000 }).should((pathname) => {
     const localizedEdit = localePath(UI_ROUTES.adminProductEditById(productId));
-    const isEditPath = pathname === localizedEdit || pathname.endsWith(`/admin/products/${productId}/edit`);
+    const isEditPath =
+      pathname === localizedEdit || pathname.endsWith(`/admin/products/${productId}/edit`);
     expect(isEditPath, `expected admin product edit path, got ${pathname}`).to.eq(true);
   });
   cy.get(adminSelectors.productNameEnInput, { timeout: 20000 }).should("be.visible");
@@ -196,12 +197,11 @@ export function createProductViaApi(
 ): Cypress.Chainable<any> {
   return fetchAdminToken().then((token) => {
     // We need to find the category ID by name/label
-    cy
-      .request({
-        method: "GET",
-        url: API_ROUTES.categories,
-        headers: { Authorization: `Bearer ${token}` },
-      })
+    cy.request({
+      method: "GET",
+      url: API_ROUTES.categories,
+      headers: { Authorization: `Bearer ${token}` },
+    })
       .then((response) => {
         const categories = response.body as Array<{ id: number; name: string; slug: string }>;
         // Try to match by slug (which we have in messages) or name

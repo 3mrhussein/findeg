@@ -5,7 +5,7 @@
  */
 
 import { z } from "zod";
-import { IdSchema, LocalizedStringSchema } from "../../../core/domain/types/common";
+import { IdSchema, TranslationMapSchema } from "../../../core/domain/types/common";
 
 export const AttributeDataTypeSchema = z.enum(["string", "number", "boolean", "enum"]);
 export type AttributeDataType = z.infer<typeof AttributeDataTypeSchema>;
@@ -15,7 +15,7 @@ export const AttributeDefinitionSchema = z.object({
   key: z.string(),
   dataType: AttributeDataTypeSchema,
   unit: z.string().optional(),
-  localizedLabel: LocalizedStringSchema,
+  localizedLabel: TranslationMapSchema,
   enumValues: z.array(z.string()).optional(),
   isFilterable: z.boolean(),
   sortOrder: z.number(),

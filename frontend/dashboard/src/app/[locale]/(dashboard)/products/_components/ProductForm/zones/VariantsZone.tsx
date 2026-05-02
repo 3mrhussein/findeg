@@ -23,8 +23,8 @@ import { PricingZone } from "./PricingZone";
 import { ProductStockSection } from "./ProductStockSection";
 import { UoMSection } from "../uom/UoMSection";
 import { BilingualInput } from "@components/shared/BilingualInput";
-import type { ProductFormValues } from "../../../../../../../features/administration/presentation/forms/product-form";
 import { generateVariantMatrix, Sku } from "@findeg/backend/features/catalog";
+import { ProductFormValues } from "@/interfaces";
 
 /**
  * VariantsZone — Zone 2

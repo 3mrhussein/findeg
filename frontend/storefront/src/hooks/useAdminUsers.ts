@@ -10,6 +10,12 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import {
+  createAdminAction,
+  updateAdminAction,
+  setPermissionOverridesAction,
+} from "@data/access/actions";
+import { getAdminUsers } from "@data/access/queries";
 
 export interface AdminUserRole {
   id: number;
@@ -86,10 +92,8 @@ export function useAdminUsers(): UseAdminUsersReturn {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/v1/admin/users");
-      if (!res.ok) throw new Error("Failed to fetch admin users");
-      const json = await res.json();
-      setAdmins(json.data?.admins ?? []);
+      const result = await getAdminUsers();
+      setAdmins(result as any);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Unexpected error");
     } finally {
@@ -114,14 +118,9 @@ export function useAdminUsers(): UseAdminUsersReturn {
 
   const createAdmin = useCallback(
     async (input: CreateAdminInput) => {
-      const res = await fetch("/api/v1/admin/users", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(input),
-      });
-      if (!res.ok) {
-        const json = await res.json();
-        throw new Error(json.error?.message ?? "Failed to create admin");
+      const result = await createAdminAction(input);
+      if (!result.success) {
+        throw new Error(result.error || "Failed to create admin");
       }
       await fetchAdmins();
     },
@@ -132,14 +131,9 @@ export function useAdminUsers(): UseAdminUsersReturn {
     async (userId: number, input: UpdateAdminInput) => {
       markPending(userId);
       try {
-        const res = await fetch(`/api/v1/admin/users/${userId}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(input),
-        });
-        if (!res.ok) {
-          const json = await res.json();
-          throw new Error(json.error?.message ?? "Failed to update admin");
+        const result = await updateAdminAction(userId, input);
+        if (!result.success) {
+          throw new Error(result.error || "Failed to update admin");
         }
         await fetchAdmins();
       } finally {
@@ -155,10 +149,9 @@ export function useAdminUsers(): UseAdminUsersReturn {
     setAdmins((prev) => prev.map((a) => (a.id === userId ? { ...a, isActive: false } : a)));
     markPending(userId);
     try {
-      const res = await fetch(`/api/v1/admin/users/${userId}`, { method: "DELETE" });
-      if (!res.ok) {
-        const json = await res.json();
-        throw new Error(json.error?.message ?? "Failed to deactivate admin");
+      const result = await updateAdminAction(userId, { isActive: false });
+      if (!result.success) {
+        throw new Error(result.error || "Failed to deactivate admin");
       }
     } catch (err) {
       // Revert optimistic update
@@ -174,14 +167,9 @@ export function useAdminUsers(): UseAdminUsersReturn {
     setAdmins((prev) => prev.map((a) => (a.id === userId ? { ...a, isActive: true } : a)));
     markPending(userId);
     try {
-      const res = await fetch(`/api/v1/admin/users/${userId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ isActive: true }),
-      });
-      if (!res.ok) {
-        const json = await res.json();
-        throw new Error(json.error?.message ?? "Failed to reactivate admin");
+      const result = await updateAdminAction(userId, { isActive: true });
+      if (!result.success) {
+        throw new Error(result.error || "Failed to reactivate admin");
       }
     } catch (err) {
       setAdmins((prev) => prev.map((a) => (a.id === userId ? { ...a, isActive: false } : a)));
@@ -193,14 +181,12 @@ export function useAdminUsers(): UseAdminUsersReturn {
 
   const setPermissionOverrides = useCallback(
     async (userId: number, overrides: PermissionOverrideInput[]) => {
-      const res = await fetch(`/api/v1/admin/users/${userId}/permissions`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ overrides }),
-      });
-      if (!res.ok) {
-        const json = await res.json();
-        throw new Error(json.error?.message ?? "Failed to save overrides");
+      // Extract IDs for the action which currently only takes IDs (needs refactoring if action/service changes)
+      const permIds = overrides.filter((o) => o.action === "grant").map((o) => o.permissionId);
+
+      const result = await setPermissionOverridesAction(userId, permIds);
+      if (!result.success) {
+        throw new Error(result.error || "Failed to save overrides");
       }
     },
     [],

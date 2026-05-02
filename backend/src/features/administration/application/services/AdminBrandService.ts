@@ -21,7 +21,7 @@ export class AdminBrandService implements IAdminBrandService {
   constructor(
     private brandRepository: IBrandRepository,
     private auditLogService: IAuditLogService,
-  ) { }
+  ) {}
 
   /**
    * Retrieves all brands.

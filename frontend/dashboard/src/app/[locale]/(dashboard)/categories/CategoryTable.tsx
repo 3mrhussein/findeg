@@ -17,7 +17,7 @@ import { Category } from "@findeg/backend/features/catalog";
 import { Pencil, Trash2 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@findeg/ui";
 import { Link } from "@i18n/navigation";
-import { deleteCategoryAction } from "@actions/admin-actions";
+import { deleteCategoryAction } from "@data/categories/actions";
 
 import { useToast } from "@hooks/use-toast";
 import { useRouter } from "@i18n/navigation";

@@ -1,9 +1,10 @@
 import { SignJWT, jwtVerify } from "jose";
 import type { SessionPayload } from "@findeg/backend/features/core/domain/auth";
-import { isAdminSession } from "@findeg/backend/features/core/domain/auth/authorization";
+import { adminSession } from "@findeg/backend/features/core/domain/auth/authorization";
 import type { ISessionManager } from "@findeg/backend/features/core/application/interfaces/ISessionManager";
 import type { PortalRole } from "@findeg/backend/features/core/domain/types/common";
 import { AUTH_CONSTANTS } from "@findeg/backend/features/core/domain/constants/auth";
+import env from "@findeg/env";
 
 /**
  * JWT implementation of SessionManager
@@ -20,9 +21,7 @@ export class JwtSessionManager implements ISessionManager {
    *
    */
   constructor() {
-    this.JWT_SECRET = new TextEncoder().encode(
-      process.env.JWT_SECRET || AUTH_CONSTANTS.JWT_SECRET_FALLBACK,
-    );
+    this.JWT_SECRET = new TextEncoder().encode(env.JWT_SECRET);
   }
 
   /**
@@ -59,7 +58,7 @@ export class JwtSessionManager implements ISessionManager {
    * Checks if user has admin role
    */
   authorizeAdmin(session: SessionPayload): boolean {
-    return isAdminSession(session);
+    return adminSession(session);
   }
 
   /**
@@ -81,7 +80,7 @@ export class JwtSessionManager implements ISessionManager {
       name: this.SESSION_COOKIE_NAME,
       options: {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: env.NODE_ENV === "production",
         sameSite: "lax" as const,
         maxAge: this.SESSION_DURATION,
         path: "/",

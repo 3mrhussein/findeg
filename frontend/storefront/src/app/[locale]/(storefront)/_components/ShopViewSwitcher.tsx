@@ -1,10 +1,11 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useRouter, usePathname } from "@i18n/navigation";
 import { Button } from "@findeg/ui";
 import { IconTooltip } from "@findeg/ui";
 import { LayoutGrid, List } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 
 /**
  *

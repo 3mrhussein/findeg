@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { getSession } from "@lib/session";
 import { getMyAccountDataQuery } from "@queries/dashboard-queries";
 import { updateMyProfileAction } from "@actions/profile-actions";
-import { isDomainError, getErrorMessage } from "@lib/errors";
+import { domainError, getErrorMessage } from "@lib/errors";
 import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
 import { ProfileForm } from "./_components/ProfileForm";
 
@@ -26,7 +26,7 @@ export default async function MyAccountPage({ params }: MyAccountPageProps) {
       userData = await getMyAccountDataQuery(session.userId);
     }
   } catch (err) {
-    if (isDomainError(err)) {
+    if (domainError(err)) {
       error = getErrorMessage(err);
     } else {
       error = t("FailedToLoadAccount");

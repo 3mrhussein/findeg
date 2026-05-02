@@ -29,9 +29,7 @@ export function expectCartContainsProductId(productId: number): void {
  *
  */
 export function expectCartContainsProductName(name: string): void {
-  cy.get('[data-testid^="cart-item-"]', { timeout: 30000 })
-    .contains(name)
-    .should("exist");
+  cy.get('[data-testid^="cart-item-"]', { timeout: 30000 }).contains(name).should("exist");
 }
 
 /**

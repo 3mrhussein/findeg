@@ -3,7 +3,6 @@
 import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
 import { cn } from "@lib/utils";
-import { type ProductFormValues } from "../../../../../../features/administration/presentation/forms/product-form";
 import {
   Info,
   Layers,
@@ -14,6 +13,7 @@ import {
   AlertCircle,
   XCircle,
 } from "lucide-react";
+import { ProductFormValues } from "@/interfaces";
 
 interface TabItem {
   id: string;

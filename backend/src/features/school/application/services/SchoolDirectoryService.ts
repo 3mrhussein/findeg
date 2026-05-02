@@ -1,5 +1,5 @@
-import { db } from "@findeg/backend/features/core/infrastructure/persistence/database.config";
-import { schoolLists } from "@findeg/backend/features/core/infrastructure/persistence/schema/school-lists";
+import { db } from "@findeg/db/connection";
+import { schoolLists } from "@findeg/db/schema";
 import { eq, and, ilike, sql, desc, count, asc } from "drizzle-orm";
 import {
   ISchoolDirectoryService,

@@ -9,92 +9,88 @@
  */
 
 import { z } from "zod";
+import { products } from "@findeg/db/schema";
+import { type InferSelectModel } from "drizzle-orm";
 import {
   IdSchema,
   RatingSchema,
-  LocalizedStringSchema,
+  TranslationMapSchema,
   type ID,
   type Rating,
+  type Locale,
 } from "../../../core/domain/types/common";
 import { TagSchema } from "./Tag";
 import { ProductAttributeValueSchema } from "./AttributeDefinition";
 import { VariantSchema, type Variant, VariantEntity } from "./Variant";
-import {
-  resolveLocalizedString,
-  ResponsiveMediaSetSchema,
-  type LocalizedString,
-  type ResponsiveMediaSet,
-} from "../../../core/domain/value-objects";
-import { type SupportedLocale } from "../../../core/domain/types/locale";
+import { ResponsiveMediaSetSchema, pick } from "../../../core/domain/value-objects";
 
 export const ProductLocalizedContentSchema = z.object({
-  slug: LocalizedStringSchema.optional(),
-  name: LocalizedStringSchema,
-  description: LocalizedStringSchema,
-  longDescription: LocalizedStringSchema,
+  name: TranslationMapSchema,
+  description: TranslationMapSchema,
+  longDescription: TranslationMapSchema,
 });
 export type ProductLocalizedContent = z.infer<typeof ProductLocalizedContentSchema>;
 
 /**
  * Product Domain Schema (SPU)
- *
- * Contains only SPU-level data. All pricing, inventory, and images
- * are on the `variants` array.
  */
 export const ProductSchema = z.object({
   id: IdSchema,
-
-  /** Optional family-level SKU prefix */
+  sku: z.string().optional(),
   skuPrefix: z.string().optional(),
 
-  // ─── Resolved Localized Content (for current locale) ──────────────
+  slug: z.string(),
+  localizedName: TranslationMapSchema.optional(),
+  localizedDescription: TranslationMapSchema.optional(),
+  localizedLongDescription: TranslationMapSchema.optional(),
 
+  // Resolved Content (for specific locale)
   name: z.string(),
   description: z.string(),
   longDescription: z.string(),
   locale: z.string().optional(),
 
+  // Legacy/Compatibility mapping
   localizedContent: ProductLocalizedContentSchema.optional(),
 
-  // ─── Relationships ────────────────────────────────────────────────
-
+  // Relationships
   categoryId: IdSchema.optional(),
   categoryName: z.string().optional(),
   brandId: IdSchema.optional(),
   brandName: z.string().optional(),
 
-  // ─── Media ────────────────────────────────────────────────────────
-
-  /** SPU-level hero/lifestyle imagery */
+  // Media
   mediaSet: ResponsiveMediaSetSchema.optional(),
+  isActive: z.boolean().default(true),
 
-  isActive: z.boolean().optional(),
-
-  // ─── Aggregate Ratings ────────────────────────────────────────────
-
+  // Aggregate Ratings
   rating: RatingSchema,
   reviewsCount: z.number(),
 
-  // ─── Variants (SKUs) ──────────────────────────────────────────────
-
+  // Hydrated children
   variants: z.array(VariantSchema).optional(),
-
-  // ─── Tags & Attributes ────────────────────────────────────────────
-
   tags: z.array(TagSchema).optional(),
   attributes: z.array(ProductAttributeValueSchema).optional(),
 
-  // ─── Timestamps ───────────────────────────────────────────────────
-
+  // Timestamps
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
 });
+export type Product = z.infer<typeof ProductSchema> &
+  Partial<
+    Omit<
+      InferSelectModel<typeof products>,
+      | "localizedName"
+      | "localizedDescription"
+      | "localizedLongDescription"
+      | "rating"
+      | "reviewsCount"
+    >
+  >;
 
-export type Product = z.infer<typeof ProductSchema>;
-
-export const CreateProductSchema = ProductSchema.omit({ id: true });
 export type CreateProduct = z.infer<typeof CreateProductSchema>;
 
+export const CreateProductSchema = ProductSchema.omit({ id: true });
 /** Input type for updating an existing product */
 export const UpdateProductSchema = CreateProductSchema.partial().extend({
   id: IdSchema,
@@ -113,42 +109,28 @@ export class ProductEntity {
 
   // ─── Content ────────────
 
-  getName(locale: SupportedLocale): string {
+  getName(locale: Locale): string {
+    return pick(this.product.localizedContent?.name, locale) || this.product.name;
+  }
+
+  getSlug(): string {
+    return this.product.slug;
+  }
+
+  getDescription(locale: Locale): string {
+    return pick(this.product.localizedContent?.description, locale) || this.product.description;
+  }
+
+  getLongDescription(locale: Locale): string {
     return (
-      this.product.localizedContent?.name?.[locale] ??
-      this.product.localizedContent?.name?.en ??
-      this.product.name
+      pick(this.product.localizedContent?.longDescription, locale) || this.product.longDescription
     );
   }
 
-  getSlug(locale: SupportedLocale): string {
-    return (
-      this.product.localizedContent?.slug?.[locale] ?? this.product.localizedContent?.slug?.en ?? ""
-    );
-  }
-
-  getDescription(locale: SupportedLocale): string {
-    return (
-      this.product.localizedContent?.description?.[locale] ??
-      this.product.localizedContent?.description?.en ??
-      this.product.description
-    );
-  }
-
-  getLongDescription(locale: SupportedLocale): string {
-    return (
-      this.product.localizedContent?.longDescription?.[locale] ??
-      this.product.localizedContent?.longDescription?.en ??
-      this.product.longDescription
-    );
-  }
-
-  getAvailableLocales(): SupportedLocale[] {
-    const locales = new Set<SupportedLocale>();
+  getAvailableLocales(): Locale[] {
+    const locales = new Set<Locale>();
     if (this.product.localizedContent?.name) {
-      Object.keys(this.product.localizedContent.name).forEach((k) =>
-        locales.add(k as SupportedLocale),
-      );
+      Object.keys(this.product.localizedContent.name).forEach((k) => locales.add(k as Locale));
     }
     return Array.from(locales);
   }
@@ -181,11 +163,12 @@ export class ProductEntity {
    */
   getDisplayPrice(): number {
     const variant = this.getDefaultVariant();
-    return variant?.basePrice ?? 0;
+    return Number(variant?.basePrice ?? 0);
   }
 
   getStrikePrice(): number | undefined {
-    return this.getDefaultVariant()?.strikePrice ?? undefined;
+    const strike = this.getDefaultVariant()?.strikePrice;
+    return strike !== undefined ? Number(strike) : undefined;
   }
 
   hasDiscount(): boolean {

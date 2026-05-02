@@ -3,11 +3,11 @@ import type { Locale } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { notFound, permanentRedirect } from "next/navigation";
 import { Link } from "@i18n/navigation";
+import env from "@findeg/env";
 import {
   getProductPdp,
   getProductBySlugOrIdForMetadata,
   getTopProductSlugsForStaticParams,
-  getProductEnglishSlug,
 } from "@data/catalog/queries";
 import { PageShell } from "../../../_components/PageShell";
 import { ProductDetailClient } from "./_components/ProductDetailClient";
@@ -43,7 +43,7 @@ export async function generateMetadata({ params }: ProductDetailPageProps): Prom
     .replace(/\s+/g, " ")
     .trim()
     .slice(0, 160);
-  const canonicalSlug = getProductEnglishSlug(product) || String(product.id);
+  const canonicalSlug = product.slug || String(product.id);
 
   return {
     title: product.name,
@@ -78,7 +78,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
   const imageUrls = (vm.selectedVariant?.images || [])
     .map((image: any) => image.url)
     .filter((url: any): url is string => Boolean(url));
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://findeg.com";
+  const siteUrl = env.NEXT_PUBLIC_SITE_URL;
 
   const productSchema = {
     "@context": "https://schema.org",

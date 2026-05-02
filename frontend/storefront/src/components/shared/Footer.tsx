@@ -1,7 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import type { Locale } from "next-intl";
 import { Link } from "@i18n/navigation";
-import { cacheLife } from "next/cache";
 
 const CURRENT_YEAR = 2025;
 
@@ -19,7 +18,7 @@ interface FooterProps {
  */
 export async function Footer({ locale }: FooterProps) {
   // ✅ locale + namespace together — next-intl skips headers() call
-  const t = await getTranslations({ locale, namespace: "Layout" });
+  const t = await getTranslations({ locale, namespace: "Layout.Footer" });
   const year = 2025;
 
   return (
@@ -36,7 +35,7 @@ export async function Footer({ locale }: FooterProps) {
               </span>
             </Link>
             <p className="mb-6 max-w-sm text-sm leading-relaxed">
-              {t("Footer.Tagline") ||
+              {t("Tagline") ||
                 "Streamlining back-to-school shopping with guaranteed exact matches for your school's official supply lists."}
             </p>
             <div className="flex gap-4">
@@ -56,73 +55,79 @@ export async function Footer({ locale }: FooterProps) {
           </div>
 
           <div>
-            <h4 className="mb-6 text-sm font-bold uppercase tracking-wider text-white">Shop</h4>
+            <h4 className="mb-6 text-sm font-bold uppercase tracking-wider text-white">
+              {t("ShopTitle")}
+            </h4>
             <ul className="space-y-4 text-sm">
               <li>
                 <Link href="/shop" className="hover:text-primary transition-colors">
-                  All Products
+                  {t("AllProducts")}
                 </Link>
               </li>
               <li>
                 <Link href="/categories" className="hover:text-primary transition-colors">
-                  Categories
+                  {t("Categories")}
                 </Link>
               </li>
               <li>
                 <Link href="/search" className="hover:text-primary transition-colors">
-                  Search
+                  {t("Search")}
                 </Link>
               </li>
               <li>
                 <Link href="/checkout" className="hover:text-primary transition-colors">
-                  Cart
+                  {t("Cart")}
                 </Link>
               </li>
             </ul>
           </div>
 
           <div>
-            <h4 className="mb-6 text-sm font-bold uppercase tracking-wider text-white">Schools</h4>
+            <h4 className="mb-6 text-sm font-bold uppercase tracking-wider text-white">
+              {t("SchoolsTitle")}
+            </h4>
             <ul className="space-y-4 text-sm">
               <li>
                 <Link href="/school-lists" className="hover:text-primary transition-colors">
-                  Find Your List
+                  {t("FindYourList")}
                 </Link>
               </li>
               <li>
                 <Link href="/school-lists" className="hover:text-primary transition-colors">
-                  Partner Program
+                  {t("PartnerProgram")}
                 </Link>
               </li>
               <li>
                 <Link href="/school-lists" className="hover:text-primary transition-colors">
-                  Fundraising
+                  {t("Fundraising")}
                 </Link>
               </li>
             </ul>
           </div>
 
           <div>
-            <h4 className="mb-6 text-sm font-bold uppercase tracking-wider text-white">Help</h4>
+            <h4 className="mb-6 text-sm font-bold uppercase tracking-wider text-white">
+              {t("HelpTitle")}
+            </h4>
             <ul className="space-y-4 text-sm">
               <li>
                 <Link href="/about" className="hover:text-primary transition-colors">
-                  About Us
+                  {t("AboutUs")}
                 </Link>
               </li>
               <li>
                 <Link href="/about#contact" className="hover:text-primary transition-colors">
-                  Contact Support
+                  {t("ContactSupport")}
                 </Link>
               </li>
               <li>
                 <a href="#" className="hover:text-primary transition-colors">
-                  Return Policy
+                  {t("ReturnPolicy")}
                 </a>
               </li>
               <li>
                 <a href="#" className="hover:text-primary transition-colors">
-                  Terms of Service
+                  {t("TermsOfService")}
                 </a>
               </li>
             </ul>
@@ -130,7 +135,9 @@ export async function Footer({ locale }: FooterProps) {
         </div>
 
         <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 sm:flex-row text-sm">
-          <p>&copy; {year} FindEg.com (Listo). All rights reserved.</p>
+          <p>
+            &copy; {year} FindEg.com (Listo). {t("Copyright")}
+          </p>
           <div className="flex gap-4">
             <span className="material-symbols-outlined text-[24px]">payments</span>
             <span className="material-symbols-outlined text-[24px]">credit_card</span>

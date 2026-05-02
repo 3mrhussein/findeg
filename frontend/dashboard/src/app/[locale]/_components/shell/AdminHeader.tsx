@@ -115,7 +115,9 @@ export function AdminHeader({
       const isMac =
         nav.platform.toLowerCase().includes("mac") ||
         nav.userAgentData?.platform?.toLowerCase().includes("mac");
-      setPlatformLabel(isMac ? "⌘K" : "Ctrl+K");
+      Promise.resolve().then(() => {
+        setPlatformLabel(isMac ? "⌘K" : "Ctrl+K");
+      });
     }
   }, []);
 

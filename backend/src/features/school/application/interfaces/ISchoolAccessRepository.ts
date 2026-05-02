@@ -6,7 +6,7 @@ import {
   NewSchoolListAccessRequest,
   SchoolListAccessToken,
   SchoolListCodeAttempt,
-} from "@findeg/backend/features/core/infrastructure/persistence/schema/school-access";
+} from "@findeg/db/schema";
 
 export interface ISchoolAccessRepository {
   // Grants

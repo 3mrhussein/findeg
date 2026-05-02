@@ -1,5 +1,5 @@
-import { SchoolListParentSession } from "../../../core/infrastructure/persistence/schema/school-list-sessions";
-import { SchoolList } from "../../../core/infrastructure/persistence/schema/school-lists";
+import { SchoolListParentSession } from "@findeg/db/schema";
+import { SchoolList } from "@findeg/db/schema";
 
 export type SessionState = "first_visit" | "has_session" | "completed_order";
 
@@ -45,4 +45,9 @@ export interface IParentListService {
    * Add the list (kit) to the cart.
    */
   addListToCart(sessionId: number, cartId: number): Promise<void>;
+
+  /**
+   * Orchestrates the retrieval of all data required for the school list page.
+   */
+  getSchoolListPageData(slug: string, userId?: number): Promise<any>;
 }

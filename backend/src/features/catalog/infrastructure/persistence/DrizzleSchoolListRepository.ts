@@ -1,4 +1,4 @@
-import { db } from "../../../core/infrastructure/persistence";
+import { db } from "@findeg/db/connection";
 import {
   schoolLists,
   schoolListItems,
@@ -7,7 +7,7 @@ import {
   variantAttributes,
   attributeDefinitions,
   productTags,
-} from "../../../core/infrastructure/persistence/schema";
+} from "@findeg/db/schema";
 import {
   ISchoolListRepository,
   SchoolListResult,

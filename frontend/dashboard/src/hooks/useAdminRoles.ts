@@ -10,6 +10,12 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import {
+  createRoleAction,
+  updateRolePermissionsAction,
+  deleteRoleAction,
+} from "@data/access/actions";
+import { getSystemRoles, getPermissionCodes } from "@data/access/queries";
 
 export interface Permission {
   id: number;
@@ -64,17 +70,13 @@ export function useAdminRoles(): UseAdminRolesReturn {
     });
 
   const fetchRoles = useCallback(async () => {
-    const res = await fetch("/api/v1/admin/roles");
-    if (!res.ok) throw new Error("Failed to fetch roles");
-    const json = await res.json();
-    setRoles(json.data?.roles ?? []);
+    const roles = await getSystemRoles();
+    setRoles(roles as any);
   }, []);
 
   const fetchPermissions = useCallback(async () => {
-    const res = await fetch("/api/v1/admin/permissions");
-    if (!res.ok) throw new Error("Failed to fetch permissions");
-    const json = await res.json();
-    setPermissions(json.data?.permissions ?? []);
+    const permissions = await getPermissionCodes();
+    setPermissions(permissions as any);
   }, []);
 
   const fetchAll = useCallback(async () => {
@@ -91,14 +93,9 @@ export function useAdminRoles(): UseAdminRolesReturn {
 
   const createRole = useCallback(
     async (code: string, name: string, permissionIds: number[]) => {
-      const res = await fetch("/api/v1/admin/roles", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code, name, permissionIds }),
-      });
-      if (!res.ok) {
-        const json = await res.json();
-        throw new Error(json.error?.message ?? "Failed to create role");
+      const result = await createRoleAction(code, name, permissionIds);
+      if (!result.success) {
+        throw new Error(result.error || "Failed to create role");
       }
       await fetchRoles();
     },
@@ -121,14 +118,9 @@ export function useAdminRoles(): UseAdminRolesReturn {
           ),
         );
 
-        const res = await fetch(`/api/v1/admin/roles/${roleId}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ permissionIds }),
-        });
-        if (!res.ok) {
-          const json = await res.json();
-          throw new Error(json.error?.message ?? "Failed to update role");
+        const result = await updateRolePermissionsAction(roleId, permissionIds);
+        if (!result.success) {
+          throw new Error(result.error || "Failed to update role");
         }
         // Refresh to get accurate server state
         await fetchRoles();
@@ -150,10 +142,9 @@ export function useAdminRoles(): UseAdminRolesReturn {
       setRoles((prev) => prev.filter((r) => r.id !== roleId));
       markPending(roleId);
       try {
-        const res = await fetch(`/api/v1/admin/roles/${roleId}`, { method: "DELETE" });
-        if (!res.ok) {
-          const json = await res.json();
-          throw new Error(json.error?.message ?? "Failed to delete role");
+        const result = await deleteRoleAction(roleId);
+        if (!result.success) {
+          throw new Error(result.error || "Failed to delete role");
         }
       } catch (err) {
         setRoles(snapshot);

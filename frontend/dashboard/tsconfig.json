@@ -50,6 +50,9 @@
       ],
       "@findeg/ui/*": [
         "../ui/src/*"
+      ],
+      "@findeg/env": [
+        "../../env.ts"
       ]
     }
   },

@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import { resolveLocale } from "@findeg/backend/features/core";
 import { ProductDetailSkeleton } from "@components/skeletons";
 import { ProductDetailContent } from "./_components/ProductDetailContent";
 

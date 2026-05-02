@@ -7,14 +7,14 @@ import {
   OrderStatus,
   PaymentStatus,
 } from "../../../core/domain/types/common";
-import { db } from "../../../core/infrastructure/persistence";
+import { db } from "@findeg/db/connection";
 import {
   orders,
   orderItems,
   users,
   type Order as DbOrder,
   type OrderItem as DbOrderItem,
-} from "../../../core/infrastructure/persistence/schema";
+} from "@findeg/db/schema";
 import { IOrderRepository, OrderFilters } from "../../application/interfaces/IOrderRepository";
 import { Order, OrderItem } from "../../domain/entities/Order";
 import { ShippingAddress } from "../../domain/value-objects";
@@ -96,12 +96,14 @@ export class DrizzleOrderRepository implements IOrderRepository {
       .where(eq(orderItems.orderId, Number(id)));
 
     // Fallback name if no user
-    const customerName = (orderResult[0].user
-      ? [orderResult[0].user.firstName, orderResult[0].user.lastName]
-        .filter(Boolean)
-        .join(" ")
-        .trim()
-      : (orderResult[0].order.shippingAddressSnapshot as ShippingAddress)?.fullName) as string || "Guest";
+    const customerName =
+      ((orderResult[0].user
+        ? [orderResult[0].user.firstName, orderResult[0].user.lastName]
+            .filter(Boolean)
+            .join(" ")
+            .trim()
+        : (orderResult[0].order.shippingAddressSnapshot as ShippingAddress)?.fullName) as string) ||
+      "Guest";
 
     return this.mapToDomain(
       orderResult[0].order,
@@ -218,9 +220,11 @@ export class DrizzleOrderRepository implements IOrderRepository {
             .from(orderItems)
             .where(eq(orderItems.orderId, Number(row.order.id)));
 
-          const name = (row.user
-            ? [row.user.firstName, row.user.lastName].filter(Boolean).join(" ").trim()
-            : (row.order.shippingAddressSnapshot as ShippingAddress)?.fullName) as string || "Guest";
+          const name =
+            ((row.user
+              ? [row.user.firstName, row.user.lastName].filter(Boolean).join(" ").trim()
+              : (row.order.shippingAddressSnapshot as ShippingAddress)?.fullName) as string) ||
+            "Guest";
 
           return this.mapToDomain(row.order, items, name, row.user?.email || undefined);
         }),

@@ -2,7 +2,7 @@
  * File Logger
  *
  * Handles writing logs to the filesystem with size-based rotation.
- * 
+ *
  * Note: Intended for server-side use only (requires filesystem access).
  */
 

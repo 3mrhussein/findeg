@@ -4,12 +4,13 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useMemo, useState } from "react";
 import { useRouter } from "@i18n/navigation";
 import { useToast } from "@hooks/use-toast";
-import { bulkUpdateStockAction, updateStockAction } from "@actions/admin-actions";
+
 import type { Product } from "@findeg/backend/features/catalog";
 import type { InventoryTableProps, SortKey } from "./InventoryTable.interface";
 import { InventoryFilters } from "./InventoryFilters";
 import { InventoryBatchControls } from "./InventoryBatchControls";
 import { InventoryRow } from "./InventoryRow";
+import { bulkUpdateStock, updateStock } from "@data/inventory/actions";
 
 /**
  * InventoryTable — orchestrates search/sort/filter, batch adjustment, and inline row editing.
@@ -78,7 +79,7 @@ export function InventoryTable({ products }: InventoryTableProps) {
     setSaving(true);
     try {
       const product = products.find((p) => p.id === productId);
-      const result = await updateStockAction({
+      const result = await updateStock({
         variantId: product?.variants?.[0]?.id ?? 0,
         quantity: editStock,
       });
@@ -136,7 +137,7 @@ export function InventoryTable({ products }: InventoryTableProps) {
     if (updates.length === 0) return;
     setBatchSaving(true);
     try {
-      const result = await bulkUpdateStockAction(updates);
+      const result = await bulkUpdateStock(updates);
       if (result.success) {
         toast({
           title: "Batch update complete",

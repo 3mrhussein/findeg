@@ -1,0 +1,54 @@
+[
+  {
+    "id": 1,
+    "key": "color",
+    "localizedLabel": {
+      "en": "Color",
+      "ar": "اللون"
+    },
+    "dataType": "string",
+    "isFilterable": true,
+    "sortOrder": 1,
+    "createdAt": "2026-03-01 00:00:00",
+    "updatedAt": "2026-03-01 00:00:00"
+  },
+  {
+    "id": 2,
+    "key": "paper-weight",
+    "localizedLabel": {
+      "en": "Paper Weight (GSM)",
+      "ar": "وزن الورق"
+    },
+    "dataType": "number",
+    "isFilterable": true,
+    "sortOrder": 2,
+    "createdAt": "2026-03-01 00:00:00",
+    "updatedAt": "2026-03-01 00:00:00"
+  },
+  {
+    "id": 3,
+    "key": "material",
+    "localizedLabel": {
+      "en": "Material",
+      "ar": "الخامة"
+    },
+    "dataType": "string",
+    "isFilterable": true,
+    "sortOrder": 3,
+    "createdAt": "2026-03-01 00:00:00",
+    "updatedAt": "2026-03-01 00:00:00"
+  },
+  {
+    "id": 4,
+    "key": "brand-collection",
+    "localizedLabel": {
+      "en": "Brand Collection",
+      "ar": "مجموعة العلامة التجارية"
+    },
+    "dataType": "string",
+    "isFilterable": true,
+    "sortOrder": 4,
+    "createdAt": "2026-03-01 00:00:00",
+    "updatedAt": "2026-03-01 00:00:00"
+  }
+]

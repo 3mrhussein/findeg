@@ -1,6 +1,6 @@
 import { INotificationService } from "../interfaces/INotificationService";
 import { INotificationRepository } from "../interfaces/INotificationRepository";
-import { Notification } from "@findeg/backend/features/core/infrastructure/persistence/schema/notifications";
+import { Notification } from "@findeg/db/schema";
 
 /**
  * Notification Application Service

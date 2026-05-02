@@ -10,7 +10,7 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@findeg/ui";
 import { useState, useTransition } from "react";
 import { usePathname, useRouter } from "@i18n/navigation";
-import { deleteProductAction, setProductStatusAction } from "@actions/admin-actions";
+import { deleteProduct, setProductStatus } from "@data/products/actions";
 import { useToast } from "@hooks/use-toast";
 import type { ProductTableProps, UpdateQueryParams } from "./ProductTable.interface";
 import { buildProductColumns } from "./ProductTableColumns";
@@ -75,7 +75,7 @@ export function ProductTable({
     if (!deleteId) return;
     setIsDeleting(true);
     try {
-      const result = await deleteProductAction(deleteId);
+      const result = await deleteProduct(deleteId);
       if (result.success) {
         toast({ title: "Product deleted", description: "The product was deleted successfully." });
         setDeleteId(null);

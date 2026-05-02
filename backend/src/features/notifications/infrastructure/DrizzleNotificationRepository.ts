@@ -1,9 +1,5 @@
-import { db } from "@findeg/backend/features/core/infrastructure/persistence";
-import {
-  notifications,
-  Notification,
-  NewNotification,
-} from "@findeg/backend/features/core/infrastructure/persistence/schema/notifications";
+import { db } from "@findeg/db/connection";
+import { notifications, Notification, NewNotification } from "@findeg/db/schema";
 import { INotificationRepository } from "../application/interfaces/INotificationRepository";
 import { eq, and, desc, count } from "drizzle-orm";
 

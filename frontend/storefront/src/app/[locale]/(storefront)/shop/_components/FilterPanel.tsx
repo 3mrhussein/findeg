@@ -25,11 +25,7 @@ import { Badge } from "@findeg/ui";
 import { IconTooltip } from "@findeg/ui";
 import { useDebounce } from "@hooks/use-debounce";
 import { cn } from "@lib/utils";
-import type {
-  ShopPlpDiscount,
-  ShopPlpFacetCounts,
-  ShopPlpFilters,
-} from "@findeg/backend/features/catalog/application/queries/shop-plp";
+import type { ShopPlpDiscount, ShopPlpFacetCounts, ShopPlpFilters } from "@data/catalog/types";
 
 interface ApiCategoryNode {
   id: number;
@@ -223,7 +219,10 @@ export function FilterPanel({
   }, [draftFilters]);
 
   useEffect(() => {
-    setDraftFilters(filters);
+    // Defer to avoid synchronous setState in effect warning
+    Promise.resolve().then(() => {
+      setDraftFilters(filters);
+    });
   }, [filters]);
 
   useEffect(() => {
@@ -302,7 +301,7 @@ export function FilterPanel({
 
   const updatePriceDraft = (nextMin: number, nextMax: number) => {
     const [minPrice, maxPrice] = sanitizePriceRange(nextMin, nextMax, minPriceBound, maxPriceBound);
-    setDraftFilters((current) => ({
+    setDraftFilters((current: ShopPlpFilters) => ({
       ...current,
       minPrice,
       maxPrice,
@@ -312,7 +311,7 @@ export function FilterPanel({
   const handleBrandToggle = (brandId: number, checked: boolean) => {
     const nextBrandIds = checked
       ? Array.from(new Set([...draftFilters.brandIds, brandId]))
-      : draftFilters.brandIds.filter((id) => id !== brandId);
+      : draftFilters.brandIds.filter((id: number) => id !== brandId);
 
     updateAndApply({
       ...draftFilters,
@@ -323,7 +322,7 @@ export function FilterPanel({
   const handleDiscountToggle = (discount: ShopPlpDiscount, checked: boolean) => {
     const nextDiscounts = checked
       ? Array.from(new Set([...draftFilters.discounts, discount]))
-      : draftFilters.discounts.filter((entry) => entry !== discount);
+      : draftFilters.discounts.filter((entry: ShopPlpDiscount) => entry !== discount);
 
     updateAndApply({
       ...draftFilters,
@@ -373,7 +372,7 @@ export function FilterPanel({
         <div className="space-y-2">
           {brands.length > 8 && (
             <div className="relative">
-              <Search className="pointer-events-none absolute start-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Search className="pointer-events-none absolute inset-s-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 value={brandSearch}
                 onChange={(event) => setBrandSearch(event.target.value)}

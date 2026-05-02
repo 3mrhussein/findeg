@@ -8,10 +8,11 @@
 import { cookies } from "next/headers";
 import { SignJWT, jwtVerify } from "jose";
 import type { SessionPayload } from "@findeg/backend/features/core";
+import env from "@findeg/env";
 
 const SESSION_COOKIE_NAME = "admin_session";
 const SESSION_DURATION = 60 * 60 * 24; // 24 hours in seconds
-const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET || "findeg-dev-secret-key");
+const JWT_SECRET = new TextEncoder().encode(env.JWT_SECRET);
 
 /**
  * Get current session from cookies
@@ -71,7 +72,7 @@ export async function createSession(payload: SessionPayload): Promise<void> {
   const cookieStore = await cookies();
   cookieStore.set(SESSION_COOKIE_NAME, token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: env.NODE_ENV === "production",
     sameSite: "lax",
     maxAge: SESSION_DURATION,
     path: "/",

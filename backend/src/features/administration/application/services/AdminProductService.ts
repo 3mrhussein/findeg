@@ -19,7 +19,7 @@ import type { VariantDimension } from "../../../catalog/domain/types/VariantDime
 import { VariantKey } from "../../../catalog/domain/value-objects/VariantKey";
 import { Sku } from "../../../catalog/domain/value-objects/Sku";
 import { generateVariantMatrix } from "../../../catalog/domain/types/VariantDimension";
-import { db } from "../../../core/infrastructure/persistence";
+import { db } from "@findeg/db/connection";
 import {
   products,
   productVariants,
@@ -31,7 +31,7 @@ import {
   attributeDefinitions,
   categories,
   brands,
-} from "../../../core/infrastructure/persistence/schema";
+} from "@findeg/db/schema";
 import { eq, and, ne, inArray, sql, desc, asc, or, ilike, count } from "drizzle-orm";
 import {
   ProductListFilters,
@@ -304,7 +304,7 @@ export class AdminProductService implements IAdminProductService {
           localizedName: input.localizedName,
           localizedDescription: input.localizedDescription ?? {},
           localizedLongDescription: input.localizedLongDescription ?? {},
-          localizedSlug: input.localizedSlug ?? {},
+          slug: input.slug ?? null,
           categoryId: input.categoryId ?? null,
           brandId: input.brandId ?? null,
           isActive: input.isActive,
@@ -376,7 +376,7 @@ export class AdminProductService implements IAdminProductService {
         spuUpdate.localizedDescription = input.localizedDescription;
       if (input.localizedLongDescription !== undefined)
         spuUpdate.localizedLongDescription = input.localizedLongDescription;
-      if (input.localizedSlug !== undefined) spuUpdate.localizedSlug = input.localizedSlug;
+      if (input.slug !== undefined) spuUpdate.slug = input.slug;
       if (input.categoryId !== undefined) spuUpdate.categoryId = input.categoryId;
       if (input.brandId !== undefined) spuUpdate.brandId = input.brandId;
       if (input.isActive !== undefined) spuUpdate.isActive = input.isActive;
@@ -494,10 +494,7 @@ export class AdminProductService implements IAdminProductService {
           },
           localizedDescription: product.localizedDescription,
           localizedLongDescription: product.localizedLongDescription,
-          localizedSlug: {
-            en: `${(product.localizedSlug as Record<"en" | "ar", string>).en}-copy`,
-            ar: `${(product.localizedSlug as Record<"en" | "ar", string>).ar}-copy`,
-          },
+          slug: `${product.slug}-copy`,
           categoryId: product.categoryId,
           brandId: product.brandId,
           isActive: false, // Default to inactive for safety
@@ -1069,13 +1066,13 @@ export class AdminProductService implements IAdminProductService {
    */
   async checkSlugAvailable(slug: string, excludeProductId?: number): Promise<boolean> {
     const condition = excludeProductId
-      ? and(sql`${products.localizedSlug}->>'en' = ${slug}`, ne(products.id, excludeProductId))
-      : sql`${products.localizedSlug}->>'en' = ${slug}`;
+      ? and(eq(products.slug, slug), ne(products.id, excludeProductId))
+      : eq(products.slug, slug);
 
     const [existing] = await db
       .select({ id: products.id })
       .from(products)
-      .where(condition as import("drizzle-orm").SQL<unknown>)
+      .where(condition)
       .limit(1);
 
     return !existing;

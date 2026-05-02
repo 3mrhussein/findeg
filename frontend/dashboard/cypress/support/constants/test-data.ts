@@ -9,4 +9,3 @@ export const GUEST_CHECKOUT_DATA = {
   area: "Nasr City",
   street: "Street 10",
 } as const;
-

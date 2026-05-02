@@ -7,42 +7,51 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 
 // Mock the repository implementations before importing factory
-vi.mock("@findeg/backend/features/identity/infrastructure/persistence/DrizzleUserRepository", () => ({
-  DrizzleUserRepository: vi.fn().mockImplementation(() => ({
-    getById: vi.fn(),
-    getByEmail: vi.fn(),
-    findMany: vi.fn(),
-    create: vi.fn(),
-    update: vi.fn(),
-    delete: vi.fn(),
-    count: vi.fn(),
-    getAuthorizationContext: vi.fn(),
-  })),
-}));
+vi.mock(
+  "@findeg/backend/features/identity/infrastructure/persistence/DrizzleUserRepository",
+  () => ({
+    DrizzleUserRepository: vi.fn().mockImplementation(() => ({
+      getById: vi.fn(),
+      getByEmail: vi.fn(),
+      findMany: vi.fn(),
+      create: vi.fn(),
+      update: vi.fn(),
+      delete: vi.fn(),
+      count: vi.fn(),
+      getAuthorizationContext: vi.fn(),
+    })),
+  }),
+);
 
-vi.mock("@findeg/backend/features/catalog/infrastructure/persistence/DrizzleProductRepository", () => ({
-  DrizzleProductRepository: vi.fn().mockImplementation(() => ({
-    getById: vi.fn(),
-    getBySlug: vi.fn(),
-    findMany: vi.fn(),
-    create: vi.fn(),
-    update: vi.fn(),
-    delete: vi.fn(),
-    count: vi.fn(),
-  })),
-}));
+vi.mock(
+  "@findeg/backend/features/catalog/infrastructure/persistence/DrizzleProductRepository",
+  () => ({
+    DrizzleProductRepository: vi.fn().mockImplementation(() => ({
+      getById: vi.fn(),
+      getBySlug: vi.fn(),
+      findMany: vi.fn(),
+      create: vi.fn(),
+      update: vi.fn(),
+      delete: vi.fn(),
+      count: vi.fn(),
+    })),
+  }),
+);
 
-vi.mock("@findeg/backend/features/catalog/infrastructure/persistence/DrizzleCategoryRepository", () => ({
-  DrizzleCategoryRepository: vi.fn().mockImplementation(() => ({
-    getById: vi.fn(),
-    getBySlug: vi.fn(),
-    findMany: vi.fn(),
-    getAll: vi.fn(),
-    create: vi.fn(),
-    update: vi.fn(),
-    delete: vi.fn(),
-  })),
-}));
+vi.mock(
+  "@findeg/backend/features/catalog/infrastructure/persistence/DrizzleCategoryRepository",
+  () => ({
+    DrizzleCategoryRepository: vi.fn().mockImplementation(() => ({
+      getById: vi.fn(),
+      getBySlug: vi.fn(),
+      findMany: vi.fn(),
+      getAll: vi.fn(),
+      create: vi.fn(),
+      update: vi.fn(),
+      delete: vi.fn(),
+    })),
+  }),
+);
 
 vi.mock("@findeg/backend/features/order/infrastructure/persistence/DrizzleOrderRepository", () => ({
   DrizzleOrderRepository: vi.fn().mockImplementation(() => ({

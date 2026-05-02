@@ -65,7 +65,7 @@ describe("PermissionService", () => {
     });
 
     it("should return false and log error on exception", async () => {
-      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => { });
+      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
       vi.spyOn(mockUserRepository, "getAuthorizationContext").mockRejectedValue(
         new Error("Database error"),
       );
@@ -127,7 +127,7 @@ describe("PermissionService", () => {
     });
 
     it("should return empty array on error", async () => {
-      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => { });
+      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
       vi.spyOn(mockUserRepository, "getAuthorizationContext").mockRejectedValue(
         new Error("Database error"),
       );
@@ -155,7 +155,7 @@ describe("PermissionService", () => {
     });
 
     it("should return empty array on error", async () => {
-      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => { });
+      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
       vi.spyOn(mockUserRepository, "getAuthorizationContext").mockRejectedValue(
         new Error("Database error"),
       );

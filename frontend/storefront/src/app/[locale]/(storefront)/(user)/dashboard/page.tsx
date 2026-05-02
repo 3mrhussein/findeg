@@ -1,6 +1,7 @@
 import { Locale } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
-import { getDashboardData } from "@findeg/backend/features/identity/application/queries/dashboard";
+import { getDashboardData } from "@findeg/backend";
+import { requireAuth } from "@lib/auth-guard";
 import { DashboardContent } from "./_components/DashboardContent";
 import { PermissionsProvider } from "@providers/PermissionsProvider";
 
@@ -17,8 +18,8 @@ type Props = {
 export default async function Page({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const userId = 1;
-  const data = await getDashboardData(locale, userId);
+  const session = await requireAuth(locale);
+  const data = await getDashboardData(locale, session.userId);
 
   return (
     <PermissionsProvider session={data.session as any}>

@@ -124,6 +124,6 @@ export function getStatusCode(error: unknown): number {
  * @param error - Error to check
  * @returns true if error is a DomainError subclass
  */
-export function isDomainError(error: unknown): error is DomainError {
+export function domainError(error: unknown): error is DomainError {
   return error instanceof Error && "code" in error && "metadata" in error;
 }

@@ -1,12 +1,12 @@
 import { ID, Rating } from "@findeg/backend/features/core/domain/types/common";
-import { db } from "@findeg/backend/features/core/infrastructure/persistence";
+import { db } from "@findeg/db/connection";
 import {
   reviews,
   users,
   reviewHelpfulVotes,
   products,
   type Review as DbReview,
-} from "@findeg/backend/features/core/infrastructure/persistence/schema";
+} from "@findeg/db/schema";
 import {
   IReviewRepository,
   ProductReviewFilters,
@@ -297,7 +297,12 @@ export class DrizzleReviewRepository implements IReviewRepository {
     const rows = await db
       .select({ id: reviews.id })
       .from(reviews)
-      .where(and(eq(reviews.productId, productId as unknown as number), eq(reviews.userId, userId as unknown as number)))
+      .where(
+        and(
+          eq(reviews.productId, productId as unknown as number),
+          eq(reviews.userId, userId as unknown as number),
+        ),
+      )
       .limit(1);
 
     return rows.length > 0;

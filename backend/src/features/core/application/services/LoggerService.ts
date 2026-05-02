@@ -7,7 +7,8 @@
 import { ILoggerService, LogLevel, LogMetadata } from "../interfaces/ILoggerService";
 import { FileLogger } from "../../infrastructure/logging/FileLogger";
 import { db } from "../../infrastructure/persistence";
-import { serverLogs } from "../../infrastructure/persistence/schema";
+import { serverLogs } from "@findeg/db/schema";
+import env from "@findeg/env";
 
 /**
  *
@@ -58,7 +59,7 @@ export class LoggerService implements ILoggerService {
     this.fileLogger.log(level, message, metadata);
 
     // 2. Log to console in development
-    if (process.env.NODE_ENV !== "production") {
+    if (env.NODE_ENV !== "production") {
       console.log(`[${level.toUpperCase()}] ${message}`, metadata || "");
     }
   }

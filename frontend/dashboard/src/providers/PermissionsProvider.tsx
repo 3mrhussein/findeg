@@ -11,7 +11,7 @@
 import React, { createContext, useContext, useMemo } from "react";
 import {
   hasPermission,
-  isSystemAdmin as checkSystemAdmin,
+  systemAdmin as checkSystemAdmin,
   hasAnyPermission,
   hasAllPermissions,
   PermissionCode,
@@ -42,7 +42,7 @@ interface PermissionsContextValue {
    * Flag indicating if the user is a 'system_admin'.
    * If true, all permission checks will implicitly return true.
    */
-  isSystemAdmin: boolean;
+  systemAdmin: boolean;
 
   /**
    * The list of effective permission codes derived from the user's roles and overrides.
@@ -89,7 +89,7 @@ export function PermissionsProvider({
       /**
        * Boolean flag for system administrators.
        */
-      isSystemAdmin: checkSystemAdmin(session),
+      systemAdmin: checkSystemAdmin(session),
 
       /**
        * The raw array of effective permission codes.

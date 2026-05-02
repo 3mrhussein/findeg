@@ -19,13 +19,23 @@
 import nextConfig from "eslint-config-next/core-web-vitals";
 import jsdoc from "eslint-plugin-jsdoc";
 import prettierRecommended from "eslint-plugin-prettier/recommended";
+import tseslint from "typescript-eslint";
+import tsPlugin from "@typescript-eslint/eslint-plugin";
 
-const config = [
+const config = tseslint.config(
   ...nextConfig,
   prettierRecommended,
   {
+    languageOptions: {
+      parser: tseslint.parser,
+      parserOptions: {
+        project: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
     plugins: {
       jsdoc,
+      "@typescript-eslint": tsPlugin,
     },
     ignores: [".next/**", "node_modules/**"],
     rules: {
@@ -49,6 +59,28 @@ const config = [
       "jsdoc/check-types": "warn",
       "jsdoc/check-values": "warn",
       "jsdoc/no-multi-asterisks": "warn",
+      "@typescript-eslint/naming-convention": [
+        "error",
+        {
+          selector: "enum",
+          format: ["PascalCase"],
+        },
+        {
+          selector: "variable",
+          modifiers: ["global", "const"],
+          types: ["string", "number", "boolean", "array"],
+          format: ["UPPER_CASE"],
+        },
+        {
+          selector: "variable",
+          modifiers: ["global", "const"],
+          format: ["PascalCase"],
+          filter: {
+            regex: "Schema$",
+            match: true,
+          },
+        },
+      ],
     },
   },
   {
@@ -68,7 +100,7 @@ const config = [
         },
       ],
     },
-  },
-];
+  }
+);
 
 export default config;

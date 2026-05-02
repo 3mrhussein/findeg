@@ -4,7 +4,7 @@ import { Button } from "@findeg/ui";
 import { Archive, Trash2, Eye, EyeOff } from "lucide-react";
 import { useTransition } from "react";
 import { useToast } from "@hooks/use-toast";
-import { setProductStatusAction, deleteProductAction } from "@actions/admin-actions";
+import { setProductStatus, deleteProduct } from "@data/products/actions";
 import { useRouter } from "@i18n/navigation";
 
 interface ProductBulkActionBarProps {
@@ -44,13 +44,13 @@ export function ProductBulkActionBar({ selectedIds, onClearSelection }: ProductB
         let result;
         try {
           if (action === "active") {
-            result = await setProductStatusAction(id, true);
+            result = await setProductStatus(id, true);
           } else if (action === "draft") {
-            result = await setProductStatusAction(id, false);
+            result = await setProductStatus(id, false);
           } else if (action === "archive") {
-            result = await setProductStatusAction(id, false);
+            result = await setProductStatus(id, false);
           } else if (action === "delete") {
-            result = await deleteProductAction(id);
+            result = await deleteProduct(id);
           }
 
           if (result?.success) {

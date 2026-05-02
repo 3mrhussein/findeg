@@ -5,7 +5,7 @@
  * Used within Suspense boundaries in products page for progressive rendering.
  */
 
-import { resolveLocale } from "@findeg/backend/features/core";
+import { parse } from "@findeg/backend/features/core";
 import { getTranslations } from "next-intl/server";
 import { PageHeader } from "@/app/[locale]/_components/shared/PageHeader";
 import { Button } from "@findeg/ui";
@@ -23,7 +23,7 @@ interface ProductsContentProps {
 }
 
 export async function ProductsContent({ locale, filters }: ProductsContentProps) {
-  const resolvedLocale = resolveLocale(locale);
+  const resolvedLocale = parse(locale);
   const t = await getTranslations("Administration.Catalog.Products");
 
   // Fetch data from data layer

@@ -11,7 +11,7 @@ import { Switch } from "@findeg/ui";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@findeg/ui";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@findeg/ui";
 import { Plus, Trash2, DollarSign, Ruler } from "lucide-react";
-import { type ProductFormValues } from "../../../../../../../features/administration/presentation/forms/product-form";
+import { type ProductFormValues } from "@/interfaces";
 
 /**
  * Pricing & Units of Measure Tab

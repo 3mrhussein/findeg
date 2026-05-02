@@ -1,12 +1,12 @@
 /**
  * Order Actions (Dashboard Data Layer)
  *
- * Uses "use server" directive and updateTag() for cache invalidation.
+ * Uses "use server" directive and revalidateTag() for cache invalidation.
  * Apps own cache invalidation - backend stays pure TypeScript.
  */
 "use server";
 
-import { updateTag } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { createAdministrationServices } from "@findeg/backend/features/administration";
 import type { OrderStatusUpdate } from "@findeg/backend/features/administration/domain/types";
 import { getErrorMessage } from "@lib/type-guards";
@@ -21,7 +21,7 @@ export async function updateOrderStatusAction(id: number, input: OrderStatusUpda
     const { orders } = createAdministrationServices();
     const result = await orders.updateStatus(id, input);
 
-    updateTag("orders");
+    revalidateTag("orders", "max");
 
     return { success: true, data: result };
   } catch (error: unknown) {
@@ -43,7 +43,7 @@ export async function updateOrderPaymentStatusAction(
     const { orders } = createAdministrationServices();
     const result = await orders.updatePaymentStatus(id, paymentStatus);
 
-    updateTag("orders");
+    revalidateTag("orders", "max");
 
     return { success: true, data: result };
   } catch (error: unknown) {

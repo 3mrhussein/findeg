@@ -30,8 +30,5 @@ export interface ICacheInvalidator {
    *
    * @param options - Paths and/or tags to invalidate
    */
-  invalidate(options: {
-    paths?: string[];
-    tags?: string[];
-  }): Promise<void>;
+  invalidate(options: { paths?: string[]; tags?: string[] }): Promise<void>;
 }

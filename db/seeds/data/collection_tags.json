@@ -1,0 +1,18 @@
+[
+  {
+    "collectionId": 1,
+    "tagId": 1
+  },
+  {
+    "collectionId": 1,
+    "tagId": 5
+  },
+  {
+    "collectionId": 2,
+    "tagId": 3
+  },
+  {
+    "collectionId": 2,
+    "tagId": 4
+  }
+]

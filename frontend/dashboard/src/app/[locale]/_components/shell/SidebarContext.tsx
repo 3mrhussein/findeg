@@ -10,15 +10,11 @@ interface SidebarContextType {
 const SidebarContext = React.createContext<SidebarContextType | undefined>(undefined);
 
 export function SidebarProvider({ children }: { children: React.ReactNode }) {
-  const [isCollapsed, setIsCollapsed] = React.useState(false);
-
-  // Load from localStorage on mount
-  React.useEffect(() => {
+  const [isCollapsed, setIsCollapsed] = React.useState(() => {
+    if (typeof window === "undefined") return false;
     const stored = localStorage.getItem("findeg-admin-sidebar");
-    if (stored !== null) {
-      setIsCollapsed(stored === "true");
-    }
-  }, []);
+    return stored === "true";
+  });
 
   const toggleSidebar = React.useCallback(() => {
     setIsCollapsed((prev) => {

@@ -22,9 +22,7 @@ function waitForCheckoutFormReady(): void {
 /**
  * Fills required checkout fields with valid guest input.
  */
-export function fillCheckoutRequiredFields(
-  data: CheckoutFormInput = GUEST_CHECKOUT_DATA,
-): void {
+export function fillCheckoutRequiredFields(data: CheckoutFormInput = GUEST_CHECKOUT_DATA): void {
   waitForCheckoutFormReady();
   cy.get(shopSelectors.checkoutFullName).clear().type(data.fullName);
   cy.get(shopSelectors.checkoutEmail).clear().type(data.email);
@@ -51,7 +49,9 @@ export function triggerCheckoutValidationBlurWithInvalidInputs(): void {
  * Submits the checkout form.
  */
 export function submitCheckoutForm(): void {
-  cy.get(shopSelectors.checkoutSubmitButton).contains(SHOP_MESSAGES.placeOrderButton).click({ force: true });
+  cy.get(shopSelectors.checkoutSubmitButton)
+    .contains(SHOP_MESSAGES.placeOrderButton)
+    .click({ force: true });
 }
 
 /**

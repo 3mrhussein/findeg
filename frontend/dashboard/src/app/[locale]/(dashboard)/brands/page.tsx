@@ -5,7 +5,7 @@ import {
   updateBrandAction,
   deleteBrandAction,
   toggleBrandStatusAction,
-} from "@actions/admin-actions";
+} from "@data/brands/actions";
 import { BrandInput } from "@findeg/backend/features/administration/domain/types";
 
 /**

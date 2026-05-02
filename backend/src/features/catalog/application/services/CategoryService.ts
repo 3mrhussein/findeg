@@ -22,4 +22,16 @@ export class CategoryService implements ICategoryService {
   async getTree(language?: Locale): Promise<Category[]> {
     return this.categoryRepository.getTree(language);
   }
+
+  async create(input: any): Promise<Category> {
+    return this.categoryRepository.create(input);
+  }
+
+  async update(id: ID, input: any): Promise<Category> {
+    return this.categoryRepository.update(id, input);
+  }
+
+  async delete(id: ID): Promise<void> {
+    return this.categoryRepository.delete(id);
+  }
 }

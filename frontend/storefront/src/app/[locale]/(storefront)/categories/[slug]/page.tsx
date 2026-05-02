@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import type { Locale } from "next-intl";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { resolveLocale } from "@findeg/backend/features/core/domain/value-objects";
+import { parse } from "@findeg/backend/features/core/domain/value-objects";
 import { getCategoryPageViewModel } from "@/data/categories/queries";
 import { PageShell } from "../../_components/PageShell";
 import { ProductListingLayout } from "../../_components/ProductListingLayout";
@@ -38,7 +38,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
  */
 async function CategoryPageContent({ params, searchParams }: CategoryPageProps) {
   const { slug, locale } = await params;
-  const resolvedLocale = resolveLocale(locale);
+  const resolvedLocale = parse(locale);
   setRequestLocale(resolvedLocale);
   const query = await searchParams;
   const t = await getTranslations({ locale: locale as Locale, namespace: "Pages.Shop" });
@@ -47,6 +47,7 @@ async function CategoryPageContent({ params, searchParams }: CategoryPageProps) 
   if (!vm) notFound();
 
   const { category } = vm;
+  if (!category) notFound();
 
   return (
     <PageShell>
@@ -81,7 +82,7 @@ async function CategoryPageContent({ params, searchParams }: CategoryPageProps) 
       <ProductListingLayout
         {...vm}
         resultsCountLabel={t("ShowingResults", {
-          count: vm.filteredProducts.length,
+          count: (vm.filteredProducts || vm.products).length,
           total: vm.products.length,
         })}
         filtersTitle={t("FiltersTitle")}

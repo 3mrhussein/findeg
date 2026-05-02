@@ -5,7 +5,7 @@
  * Used within Suspense boundaries in product detail page for progressive rendering.
  */
 
-import { resolveLocale } from "@findeg/backend/features/core";
+import { parse } from "@findeg/backend/features/core";
 import { notFound } from "next/navigation";
 import { ProductForm } from "../../_components/ProductForm";
 import { getProductById } from "@data/products/queries";
@@ -17,7 +17,7 @@ interface ProductDetailContentProps {
 }
 
 export async function ProductDetailContent({ productId, locale }: ProductDetailContentProps) {
-  const resolvedLocale = resolveLocale(locale);
+  const resolvedLocale = parse(locale);
 
   // Fetch product data from data layer
   const product = await getProductById(productId, resolvedLocale);

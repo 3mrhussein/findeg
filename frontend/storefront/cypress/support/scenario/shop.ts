@@ -351,7 +351,9 @@ export const shouldSupportEnArRouteParityForKeyPages = () => {
 
         cy.visit(localePath(UI_ROUTES.categories, locale), { timeout: 120000 });
         cy.location("pathname").should("eq", localePath(UI_ROUTES.categories, locale));
-        cy.get(shopSelectors.categoryCardBySlug(categorySlug), { timeout: 15000 }).should("be.visible");
+        cy.get(shopSelectors.categoryCardBySlug(categorySlug), { timeout: 15000 }).should(
+          "be.visible",
+        );
 
         cy.visit(localePath(`${UI_ROUTES.search}?q=${encodeURIComponent(query)}`, locale), {
           timeout: 120000,

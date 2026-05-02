@@ -4,7 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@find
 import { Button } from "@findeg/ui";
 import { Input } from "@findeg/ui";
 import { Label } from "@findeg/ui";
-import { getMyAccountData } from "@findeg/backend/features/identity/application/queries/my-account";
+import { getMyAccountData } from "@findeg/backend";
+import { requireAuth } from "@lib/auth-guard";
 
 type Props = {
   params: Promise<{ locale: Locale }>;
@@ -17,8 +18,8 @@ export default async function SettingsPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "Pages.MyAccount" });
-  const userId = 1; // TODO: Get actual user ID from session
-  const { user } = await getMyAccountData(userId);
+  const session = await requireAuth(locale);
+  const { user } = await getMyAccountData(session.userId);
 
   return (
     <div className="space-y-6">

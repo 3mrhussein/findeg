@@ -21,4 +21,3 @@ export function buildApiUrl(basePath: string, query: Record<string, QueryValue>)
   const qs = params.toString();
   return qs ? `${basePath}?${qs}` : basePath;
 }
-

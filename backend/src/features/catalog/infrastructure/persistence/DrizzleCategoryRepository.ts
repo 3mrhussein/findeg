@@ -1,15 +1,15 @@
 import { ID, Slug } from "../../../core/domain/types/common";
-import { db } from "../../../core/infrastructure/persistence";
-import { categories } from "../../../core/infrastructure/persistence/schema";
+import { db } from "@findeg/db/connection";
+import { categories } from "@findeg/db/schema";
 import { ICategoryRepository } from "../../application/interfaces/ICategoryRepository";
 import { Category } from "../../domain/entities/Category";
 import { CategoryInput } from "../../../administration/domain/types";
 import { eq, and, sql, desc, asc, like, isNull, or, count } from "drizzle-orm";
 import {
   DEFAULT_LOCALE,
-  resolveLocalizedString,
-  toLocalizedString,
+  asTranslationMap,
   type Locale,
+  type TranslationMap,
 } from "../../../core/domain/value-objects";
 
 type DbCategory = typeof categories.$inferSelect;
@@ -30,6 +30,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
 
   private mapToDomain(
     dbCategory: DbCategory,
+    language: Locale = DEFAULT_LOCALE,
     children?: Category[],
     productCount?: number,
   ): Category {
@@ -60,19 +61,21 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
     }
 
     const localizedContent = {
-      name: toLocalizedString(localizedNameDraft, ""),
+      name: asTranslationMap(localizedNameDraft, ""),
+      slug: dbCategory.slug as Slug,
       description:
-        Object.keys(localizedDescriptionDraft).length > 0
-          ? toLocalizedString(localizedDescriptionDraft, "")
+        localizedDescriptionDraft && Object.keys(localizedDescriptionDraft).length > 0
+          ? asTranslationMap(localizedDescriptionDraft, "")
           : undefined,
     };
 
     return {
       id: dbCategory.id,
       slug: dbCategory.slug,
-      name: localizedContent.name?.en || dbCategory.slug,
-      description: localizedContent.description?.en ?? undefined,
-      locale: undefined,
+      name: localizedContent.name[language] || localizedContent.name.en || dbCategory.slug,
+      description:
+        localizedContent.description?.[language] || localizedContent.description?.en || undefined,
+      locale: language,
       localizedContent,
       icon: dbCategory.icon || undefined,
       parentId: dbCategory.parentId || undefined,
@@ -88,27 +91,27 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
   async getById(id: ID, language: Locale = DEFAULT_LOCALE): Promise<Category | null> {
     const result = await db.select().from(categories).where(eq(categories.id, id)).limit(1);
     if (result.length === 0) return null;
-    return this.mapToDomain(result[0]);
+    return this.mapToDomain(result[0], language);
   }
 
   async getAll(language: Locale = DEFAULT_LOCALE): Promise<Category[]> {
     const results = await db.select().from(categories).orderBy(asc(categories.sortOrder));
 
-    return results.map((category) => this.mapToDomain(category));
+    return results.map((category) => this.mapToDomain(category, language));
   }
 
   async getBySlug(slug: string, language: Locale = DEFAULT_LOCALE): Promise<Category | null> {
     const result = await db.select().from(categories).where(eq(categories.slug, slug)).limit(1);
 
     if (result.length === 0) return null;
-    return this.mapToDomain(result[0]);
+    return this.mapToDomain(result[0], language);
   }
 
   // Tree Operations
 
   async getTree(language: Locale = DEFAULT_LOCALE): Promise<Category[]> {
     const allCategories = await this.getAll(language);
-    const { products } = await import("../../../core/infrastructure/persistence/schema/products");
+    const { products } = await import("@findeg/db/schema");
 
     // Get direct product counts for all categories in one query
     const productCountsResult = await db
@@ -138,7 +141,8 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
 
           // Calculate product count (direct products + all products in descendants)
           const childrenProductCount = children.reduce(
-            (sum, child) => sum + ((child as Record<string, unknown>).productCount as number || 0),
+            (sum, child) =>
+              sum + (((child as Record<string, unknown>).productCount as number) || 0),
             0,
           );
           const directProductCount = directCounts.get(c.id as number) || 0;
@@ -163,7 +167,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
       .where(or(isNull(categories.parentId), eq(categories.depth, 0)))
       .orderBy(asc(categories.sortOrder));
 
-    return results.map((category) => this.mapToDomain(category));
+    return results.map((category) => this.mapToDomain(category, language));
   }
 
   async getChildren(parentId: ID, language: Locale = DEFAULT_LOCALE): Promise<Category[]> {
@@ -173,7 +177,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
       .where(eq(categories.parentId, parentId))
       .orderBy(asc(categories.sortOrder));
 
-    return results.map((category) => this.mapToDomain(category));
+    return results.map((category) => this.mapToDomain(category, language));
   }
 
   /**
@@ -181,7 +185,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
    */
   async getDescendants(categoryId: ID, language: Locale = DEFAULT_LOCALE): Promise<Category[]> {
     // Get the category first to find its path
-    const parent = await this.getById(categoryId);
+    const parent = await this.getById(categoryId, language);
     if (!parent || !parent.path) return [];
 
     const results = await db
@@ -192,14 +196,14 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
 
     return results
       .filter((c) => c.id !== categoryId) // Exclude self
-      .map((category) => this.mapToDomain(category));
+      .map((category) => this.mapToDomain(category, language));
   }
 
   async getByPath(path: string, language: Locale = DEFAULT_LOCALE): Promise<Category | null> {
     const result = await db.select().from(categories).where(eq(categories.path, path)).limit(1);
 
     if (result.length === 0) return null;
-    return this.mapToDomain(result[0]);
+    return this.mapToDomain(result[0], language);
   }
 
   // Admin Operations
@@ -357,7 +361,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
   }
 
   async getProductCount(categoryId: number): Promise<number> {
-    const { products } = await import("../../../core/infrastructure/persistence/schema/products");
+    const { products } = await import("@findeg/db/schema");
     const result = await db
       .select({ value: count() })
       .from(products)

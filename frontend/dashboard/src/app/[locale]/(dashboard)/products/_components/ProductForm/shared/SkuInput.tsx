@@ -6,11 +6,7 @@ import { Input } from "@findeg/ui";
 import { Label } from "@findeg/ui";
 import { cn } from "@lib/utils";
 import { CheckCircle2, XCircle, Loader2 } from "lucide-react";
-import {
-  deleteProductAction,
-  setProductStatusAction,
-  checkSkuAvailableAction,
-} from "@actions/admin-actions";
+import { checkSkuAvailable } from "@data/products/actions";
 
 interface SkuInputProps {
   name: string;
@@ -59,17 +55,25 @@ export function SkuInput({
   // Debounced uniqueness check
   React.useEffect(() => {
     if (!value || value.length < 2) {
-      setStatus("idle");
+      Promise.resolve().then(() => {
+        setStatus("idle");
+      });
       return;
     }
 
-    setStatus("checking");
+    Promise.resolve().then(() => {
+      setStatus("checking");
+    });
     const timer = setTimeout(async () => {
-      const result = await checkSkuAvailableAction(value, excludeVariantId);
+      const result = await checkSkuAvailable(value, excludeVariantId);
       if (result.success) {
-        setStatus(result.available ? "available" : "taken");
+        Promise.resolve().then(() => {
+          setStatus(result.available ? "available" : "taken");
+        });
       } else {
-        setStatus("idle");
+        Promise.resolve().then(() => {
+          setStatus("idle");
+        });
       }
     }, 600);
 

@@ -2,7 +2,7 @@ import React from "react";
 import { Sidebar } from "./_components/Sidebar";
 import { Topbar } from "./_components/Topbar";
 import { requireAuth } from "@lib/auth-guard";
-import { isAdminSession } from "@findeg/backend/features/core/domain/auth/authorization";
+import { adminSession } from "@findeg/backend/features/core/domain/auth/authorization";
 import { AdminAccessForbidden } from "@components/shared/AdminAccessForbidden";
 import type { Locale } from "next-intl";
 
@@ -24,7 +24,7 @@ export default async function DashboardLayout({
   const session = await requireAuth(locale as Locale);
 
   // If the user is an admin, show the "Forbidden" UI instead of the user tools
-  if (isAdminSession(session)) {
+  if (adminSession(session)) {
     return <AdminAccessForbidden />;
   }
 

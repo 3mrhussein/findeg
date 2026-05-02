@@ -1,8 +1,3 @@
-/**
- * ProductExpanded — Full detail view for expanded product row
- * Shows tags, variants list, stock health, pricing summary, timestamps
- */
-
 import type { Product } from "@findeg/backend/features/catalog";
 import { Link } from "@i18n/navigation";
 import { ExternalLink, Edit, Eye } from "lucide-react";
@@ -32,7 +27,9 @@ export function ProductExpanded({ product }: ProductExpandedProps) {
   const totalStock = variants.reduce((sum, v) => sum + getVariantStock(v), 0);
 
   // Calculate price range from variants
-  const prices = variants.map((v) => v.basePrice || 0).filter((p) => p > 0);
+  const prices = variants
+    .map((v) => v.basePrice || 0)
+    .filter((p) => parseInt(p.toString()) > 0) as number[];
   const minPrice = prices.length > 0 ? Math.min(...prices) : 0;
   const maxPrice = prices.length > 0 ? Math.max(...prices) : 0;
   const priceRange =
@@ -127,7 +124,7 @@ export function ProductExpanded({ product }: ProductExpandedProps) {
           Edit Product
         </Link>
         <Link
-          href={`/${product.locale || "en"}/products/${product.localizedContent?.slug?.en || product.id}`}
+          href={`/${product.locale || "en"}/products/${product.slug || product.id}`}
           target="_blank"
           className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:underline"
         >

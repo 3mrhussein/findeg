@@ -356,7 +356,7 @@ import {
 **Error Translation in App-Layer**:
 
 ```typescript
-import { isDomainError, getErrorMessage } from '@lib/errors';
+import { domainError, getErrorMessage } from '@lib/errors';
 
 export async function someAction() {
   try {
@@ -364,7 +364,7 @@ export async function someAction() {
     await invalidateCaches(result);
     return { success: true };
   } catch (error) {
-    if (isDomainError(error)) {
+    if (domainError(error)) {
       return { success: false, error: getErrorMessage(error) };
     }
     console.error('Unexpected error:', error);

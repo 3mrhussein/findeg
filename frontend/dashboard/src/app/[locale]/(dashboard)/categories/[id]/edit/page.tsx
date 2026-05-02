@@ -1,7 +1,7 @@
 import { CategoryForm } from "../../CategoryForm";
 import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
 import { notFound } from "next/navigation";
-import { resolveLocale } from "@findeg/backend/features/core";
+import { parse } from "@findeg/backend/features/core";
 import { getCategoryById, getCategories } from "@data/categories/queries";
 
 /**
@@ -13,7 +13,7 @@ export default async function EditCategoryPage({
   params: Promise<{ locale: string; id: string }>;
 }) {
   const { locale, id } = await params;
-  const resolvedLocale = resolveLocale(locale);
+  const resolvedLocale = parse(locale);
   const categoryId = parseInt(id);
 
   if (isNaN(categoryId)) {

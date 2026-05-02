@@ -5,7 +5,8 @@ import { Lock, UserCircle, LogIn, UserPlus } from "lucide-react";
 import { Button } from "@findeg/ui";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@findeg/ui";
 import { Link } from "@i18n/navigation";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "@i18n/navigation";
+import { useSearchParams } from "next/navigation";
 
 interface SchoolAuthWallProps {
   schoolName?: string;

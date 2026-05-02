@@ -140,7 +140,7 @@ export class BusinessRuleViolationError extends DomainError {
 /**
  * Type guard to check if error is a domain error
  */
-export function isDomainError(error: unknown): error is DomainError {
+export function domainError(error: unknown): error is DomainError {
   return error instanceof DomainError;
 }
 

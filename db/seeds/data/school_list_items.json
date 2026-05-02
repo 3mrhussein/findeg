@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1,
+        "schoolListId": 1,
+        "variantId": 13,
+        "quantity": 1,
+        "quantityRequired": 1,
+        "isOptional": false,
+        "localizedLabel": {
+            "en": "Main Notebook",
+            "ar": "دفتر أساسي"
+        }
+    }
+]

@@ -1,6 +1,6 @@
 import { CategoryTree } from "./_components/CategoryTree";
 import { PageHeader } from "@/app/[locale]/_components/shared/PageHeader";
-import { resolveLocale } from "@findeg/backend/features/core";
+import { parse } from "@findeg/backend/features/core";
 import { getCategories } from "@data/categories/queries";
 import {
   createCategoryAction,
@@ -19,7 +19,7 @@ import { getTranslations } from "next-intl/server";
 export default async function CategoriesPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations("Administration.Catalog.Categories");
-  const resolvedLocale = resolveLocale(locale);
+  const resolvedLocale = parse(locale);
 
   // Fetch categories using data layer (with "use cache")
   const categories = await getCategories(resolvedLocale);

@@ -1,10 +1,5 @@
-import { db } from "../../../core/infrastructure/persistence";
-import {
-  inventoryBalances,
-  stockMovements,
-  warehouses,
-  productVariants,
-} from "../../../core/infrastructure/persistence/schema";
+import { db } from "@findeg/db/connection";
+import { inventoryBalances, stockMovements, warehouses, productVariants } from "@findeg/db/schema";
 import {
   IInventoryRepository,
   InventoryBalanceResult,

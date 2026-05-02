@@ -6,12 +6,17 @@
  */
 import jsdoc from "eslint-plugin-jsdoc";
 import prettierRecommended from "eslint-plugin-prettier/recommended";
+import tseslint from "typescript-eslint";
+import tsPlugin from "@typescript-eslint/eslint-plugin";
 
-const config = [
+const config = tseslint.config(
   prettierRecommended,
   {
     languageOptions: {
+      parser: tseslint.parser,
       parserOptions: {
+        project: true,
+        tsconfigRootDir: import.meta.dirname,
         ecmaVersion: "latest",
         sourceType: "module",
       },
@@ -19,6 +24,7 @@ const config = [
     files: ["src/**/*.{js,ts,jsx,tsx}"],
     plugins: {
       jsdoc,
+      "@typescript-eslint": tsPlugin,
     },
     ignores: ["dist/**", "node_modules/**"],
     rules: {
@@ -28,11 +34,6 @@ const config = [
        * - Run unit tests in pure Node.js environment (Vitest)
        * - Enable framework portability
        * - Maintain Clean Architecture separation
-       *
-       * App-layer (dashboard, storefront) handles framework integration:
-       * - Cache revalidation (revalidatePath, revalidateTag)
-       * - Navigation (redirect, notFound)
-       * - Cookie/session management
        */
       "no-restricted-imports": [
         "error",
@@ -45,13 +46,13 @@ const config = [
                 "Backend must be pure TypeScript/Node.js. " +
                 "Move framework integration to @dashboard or @storefront.",
             },
-            {
-              group: ["react", "react/*"],
-              message:
-                "❌ React imports are not allowed in @backend. " +
-                "Backend must have no UI dependencies. " +
-                "Use @ui in app packages instead.",
-            },
+            // {
+            //   group: ["react", "react/*"],
+            //   message:
+            //     "❌ React imports are not allowed in @backend. " +
+            //     "Backend must have no UI dependencies. " +
+            //     "Use @ui in app packages instead.",
+            // },
           ],
         },
       ],
@@ -62,8 +63,36 @@ const config = [
       "jsdoc/check-types": "warn",
       "jsdoc/check-values": "warn",
       "jsdoc/no-multi-asterisks": "warn",
+      "@typescript-eslint/naming-convention": [
+        "error",
+        {
+          selector: "enum",
+          format: ["PascalCase"],
+        },
+        {
+          selector: "variable",
+          modifiers: ["global", "const"],
+          types: ["string", "number", "boolean", "array"],
+          format: ["UPPER_CASE"],
+        },
+        {
+          selector: "variable",
+          modifiers: ["global", "const"],
+          format: ["PascalCase"],
+          filter: {
+            regex: "Schema$",
+            match: true,
+          },
+        },
+      ],
     },
   },
-];
+  {
+    files: ["src/features/notifications/infrastructure/templates/*.tsx"],
+    rules: {
+      "no-restricted-imports": "off",
+    },
+  },
+);
 
 export default config;

@@ -8,13 +8,10 @@ import { DashboardStats } from "../../domain/types/DashboardStats";
 import { CatalogHealthStats, CategoryProductDistribution } from "../../domain/types";
 import { Order } from "../../../order/domain/entities/Order";
 import { startOfDay, endOfDay, subDays } from "date-fns";
-import { db } from "../../../core/infrastructure/persistence/database.config";
-import { products } from "../../../core/infrastructure/persistence/schema/products";
-import { categories } from "../../../core/infrastructure/persistence/schema/categories";
-import {
-  productVariants,
-  variantImages,
-} from "../../../core/infrastructure/persistence/schema/product-variants";
+import { db } from "@findeg/db/connection";
+import { products } from "@findeg/db/schema";
+import { categories } from "@findeg/db/schema";
+import { productVariants, variantImages } from "@findeg/db/schema";
 import { sql, count, desc, eq, isNotNull, and } from "drizzle-orm";
 
 /**

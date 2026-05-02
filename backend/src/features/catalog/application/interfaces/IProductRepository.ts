@@ -6,7 +6,11 @@
  * Inventory operations have been extracted to IInventoryRepository.
  */
 
-import { type ID, type Quantity, type Slug } from "@findeg/backend/features/core/domain/types/common";
+import {
+  type ID,
+  type Quantity,
+  type Slug,
+} from "@findeg/backend/features/core/domain/types/common";
 import type { Locale } from "@findeg/backend/features/core/domain/value-objects";
 import type { Product } from "../../domain/entities/Product";
 import type { ProductInput } from "@findeg/backend/features/administration/domain/types";

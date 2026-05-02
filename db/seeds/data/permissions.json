@@ -1,0 +1,163 @@
+[
+  {
+    "id": 1,
+    "code": "admin.portal",
+    "name": "Admin Portal Access",
+    "createdAt": "2026-02-19 10:00:00",
+    "updatedAt": "2026-02-19 10:00:00"
+  },
+  {
+    "id": 2,
+    "code": "admin.dashboard.read",
+    "name": "Read Dashboard",
+    "createdAt": "2026-02-19 10:00:00",
+    "updatedAt": "2026-02-19 10:00:00"
+  },
+  {
+    "id": 3,
+    "code": "admin.auditlog.read",
+    "name": "Read Audit Log",
+    "createdAt": "2026-02-19 10:00:00",
+    "updatedAt": "2026-02-19 10:00:00"
+  },
+  {
+    "id": 4,
+    "code": "admin.categories.read",
+    "name": "Read Categories",
+    "createdAt": "2026-02-19 10:00:00",
+    "updatedAt": "2026-02-19 10:00:00"
+  },
+  {
+    "id": 5,
+    "code": "admin.categories.write",
+    "name": "Write Categories",
+    "createdAt": "2026-02-19 10:00:00",
+    "updatedAt": "2026-02-19 10:00:00"
+  },
+  {
+    "id": 6,
+    "code": "admin.brands.read",
+    "name": "Read Brands",
+    "createdAt": "2026-02-19 10:00:00",
+    "updatedAt": "2026-02-19 10:00:00"
+  },
+  {
+    "id": 7,
+    "code": "admin.brands.write",
+    "name": "Write Brands",
+    "createdAt": "2026-02-19 10:00:00",
+    "updatedAt": "2026-02-19 10:00:00"
+  },
+  {
+    "id": 8,
+    "code": "admin.products.read",
+    "name": "Read Products",
+    "createdAt": "2026-02-19 10:00:00",
+    "updatedAt": "2026-02-19 10:00:00"
+  },
+  {
+    "id": 9,
+    "code": "admin.products.write",
+    "name": "Write Products",
+    "createdAt": "2026-02-19 10:00:00",
+    "updatedAt": "2026-02-19 10:00:00"
+  },
+  {
+    "id": 10,
+    "code": "admin.orders.read",
+    "name": "Read Orders",
+    "createdAt": "2026-02-19 10:00:00",
+    "updatedAt": "2026-02-19 10:00:00"
+  },
+  {
+    "id": 11,
+    "code": "admin.orders.write",
+    "name": "Write Orders",
+    "createdAt": "2026-02-19 10:00:00",
+    "updatedAt": "2026-02-19 10:00:00"
+  },
+  {
+    "id": 12,
+    "code": "admin.inventory.read",
+    "name": "Read Inventory",
+    "createdAt": "2026-02-19 10:00:00",
+    "updatedAt": "2026-02-19 10:00:00"
+  },
+  {
+    "id": 13,
+    "code": "admin.inventory.write",
+    "name": "Write Inventory",
+    "createdAt": "2026-02-19 10:00:00",
+    "updatedAt": "2026-02-19 10:00:00"
+  },
+  {
+    "id": 14,
+    "code": "admin.media.read",
+    "name": "Read Media",
+    "createdAt": "2026-02-19 10:00:00",
+    "updatedAt": "2026-02-19 10:00:00"
+  },
+  {
+    "id": 15,
+    "code": "admin.media.write",
+    "name": "Write Media",
+    "createdAt": "2026-02-19 10:00:00",
+    "updatedAt": "2026-02-19 10:00:00"
+  },
+  {
+    "id": 16,
+    "code": "admin.users.read",
+    "name": "Read Admin Users",
+    "createdAt": "2026-02-19 10:00:00",
+    "updatedAt": "2026-02-19 10:00:00"
+  },
+  {
+    "id": 17,
+    "code": "admin.users.write",
+    "name": "Write Admin Users",
+    "createdAt": "2026-02-19 10:00:00",
+    "updatedAt": "2026-02-19 10:00:00"
+  },
+  {
+    "id": 18,
+    "code": "admin.roles.read",
+    "name": "Read Roles",
+    "createdAt": "2026-02-19 10:00:00",
+    "updatedAt": "2026-02-19 10:00:00"
+  },
+  {
+    "id": 19,
+    "code": "admin.roles.write",
+    "name": "Write Roles",
+    "createdAt": "2026-02-19 10:00:00",
+    "updatedAt": "2026-02-19 10:00:00"
+  },
+  {
+    "id": 20,
+    "code": "admin.schoollists.read",
+    "name": "Read School Lists",
+    "createdAt": "2026-02-19 10:00:00",
+    "updatedAt": "2026-02-19 10:00:00"
+  },
+  {
+    "id": 21,
+    "code": "admin.schoollists.write",
+    "name": "Write School Lists",
+    "createdAt": "2026-02-19 10:00:00",
+    "updatedAt": "2026-02-19 10:00:00"
+  },
+  {
+    "id": 22,
+    "code": "admin.discountrules.read",
+    "name": "Read Discount Rules",
+    "createdAt": "2026-02-19 10:00:00",
+    "updatedAt": "2026-02-19 10:00:00"
+  },
+  {
+    "id": 23,
+    "code": "admin.discountrules.write",
+    "name": "Write Discount Rules",
+    "createdAt": "2026-02-19 10:00:00",
+    "updatedAt": "2026-02-19 10:00:00"
+  }
+]

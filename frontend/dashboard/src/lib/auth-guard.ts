@@ -1,5 +1,5 @@
 import { redirect } from "@i18n/navigation";
-import { isAdminSession } from "@findeg/backend/features/core";
+import { adminSession } from "@findeg/backend/features/core";
 import type { SessionPayload } from "@findeg/backend/features/core";
 import type { Locale } from "next-intl";
 import { getSession } from "@lib/session";
@@ -22,7 +22,7 @@ export async function requireAuth(locale: Locale): Promise<SessionPayload> {
  */
 export async function requireAdmin(locale: Locale): Promise<SessionPayload> {
   const session = await getSession();
-  if (!session || !isAdminSession(session)) {
+  if (!session || !adminSession(session)) {
     redirect({ href: "/login", locale });
   }
   return session!;
@@ -35,7 +35,7 @@ export async function requireAdmin(locale: Locale): Promise<SessionPayload> {
 export async function redirectIfAuthenticated(locale: Locale): Promise<void> {
   const session = await getSession();
   if (session) {
-    if (isAdminSession(session)) {
+    if (adminSession(session)) {
       redirect({ href: "/", locale });
     } else {
       redirect({ href: "/", locale });
@@ -49,4 +49,37 @@ export async function redirectIfAuthenticated(locale: Locale): Promise<void> {
  */
 export async function getOptionalSession(): Promise<SessionPayload | null> {
   return await getSession();
+}
+/**
+ * Require specific permission — redirects to / if unauthorized.
+ */
+export async function requirePermission(
+  locale: Locale,
+  options: {
+    permission?: string;
+    any?: string[];
+    all?: string[];
+  },
+): Promise<SessionPayload> {
+  const session = await requireAdmin(locale);
+
+  // System admins bypass checks
+  if (session.activeRoleIds?.includes("system_admin")) {
+    return session;
+  }
+
+  let allowed = false;
+  if (options.permission) {
+    allowed = session.permissionCodes?.includes(options.permission) ?? false;
+  } else if (options.any) {
+    allowed = options.any.some((c) => session.permissionCodes?.includes(c));
+  } else if (options.all) {
+    allowed = options.all.every((c) => session.permissionCodes?.includes(c));
+  }
+
+  if (!allowed) {
+    redirect({ href: "/", locale });
+  }
+
+  return session;
 }

@@ -1,14 +1,9 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@findeg/ui";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@findeg/ui";
+import { useRouter, usePathname } from "@i18n/navigation";
+import { useSearchParams } from "next/navigation";
 
 /**
  *

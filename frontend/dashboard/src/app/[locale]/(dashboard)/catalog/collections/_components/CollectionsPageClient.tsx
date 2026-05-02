@@ -17,7 +17,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@findeg/ui";
-import { deleteCollectionAction } from "@actions/admin-actions";
+import { deleteCollectionAction as deleteCollection } from "@data/collections/actions";
 import { useToast } from "@hooks/use-toast";
 import { useRouter } from "@i18n/navigation";
 
@@ -51,7 +51,7 @@ export function CollectionsPageClient({ collections }: CollectionsPageClientProp
    */
   const handleDelete = async () => {
     if (!deleteConfirmId) return;
-    const result = await deleteCollectionAction(deleteConfirmId);
+    const result = await deleteCollection(deleteConfirmId);
     if (result.success) {
       toast({ title: "Collection deleted" });
       router.refresh();

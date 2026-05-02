@@ -4,13 +4,8 @@
  * PostgreSQL implementation of collection management using Drizzle ORM.
  */
 
-import { db } from "../../../core/infrastructure/persistence";
-import {
-  collections,
-  collectionTags,
-  productTags,
-  tags,
-} from "../../../core/infrastructure/persistence/schema";
+import { db } from "@findeg/db/connection";
+import { collections, collectionTags, productTags, tags } from "@findeg/db/schema";
 import { ICollectionRepository } from "../../application/interfaces/ICollectionRepository";
 import { Collection, CreateCollection } from "../../domain/entities/Collection";
 import { Product } from "../../domain/entities/Product";

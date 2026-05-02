@@ -1,14 +1,14 @@
 import { z } from "zod";
 import { IdSchema, SlugSchema, type ID, type Slug } from "../../../core/domain/types/common";
 import {
-  LocalizedStringSchema,
+  TranslationMapSchema,
   type Locale,
-  type LocalizedString,
+  type TranslationMap,
 } from "../../../core/domain/value-objects";
 
 export const BrandLocalizedContentSchema = z.object({
-  name: LocalizedStringSchema,
-  description: LocalizedStringSchema.optional(),
+  name: TranslationMapSchema,
+  description: TranslationMapSchema.optional(),
 });
 export type BrandLocalizedContent = z.infer<typeof BrandLocalizedContentSchema>;
 

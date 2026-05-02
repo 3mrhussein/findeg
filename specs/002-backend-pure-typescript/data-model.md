@@ -188,7 +188,7 @@ export { BusinessRuleViolationError } from "./BusinessRuleViolationError";
 /**
  * Type guard to check if error is a domain error
  */
-export function isDomainError(error: unknown): error is DomainError {
+export function domainError(error: unknown): error is DomainError {
   return error instanceof DomainError;
 }
 ```
@@ -573,7 +573,7 @@ export interface SessionPayload {
 /**
  * Type guard to check if session is admin
  */
-export function isAdminSession(session: SessionPayload | null): boolean {
+export function adminSession(session: SessionPayload | null): boolean {
   return session?.portalRole === "admin";
 }
 ```

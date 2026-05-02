@@ -50,11 +50,13 @@ export function PermissionMatrixDialog({
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    if (role) {
-      setSelected(new Set(role.permissions.map((p: any) => p.id)));
-    } else {
-      setSelected(new Set());
-    }
+    Promise.resolve().then(() => {
+      if (role) {
+        setSelected(new Set(role.permissions.map((p: any) => p.id)));
+      } else {
+        setSelected(new Set());
+      }
+    });
   }, [role]);
 
   /**

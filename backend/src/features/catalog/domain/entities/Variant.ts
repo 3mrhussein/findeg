@@ -8,6 +8,8 @@
  */
 
 import { z } from "zod";
+import { productVariants } from "@findeg/db/schema";
+import { type InferSelectModel } from "drizzle-orm";
 import {
   IdSchema,
   PriceSchema,
@@ -15,15 +17,15 @@ import {
   QuantitySchema,
   CustomerGroupSchema,
   UomCodeSchema,
-  LocalizedStringSchema,
+  TranslationMapSchema,
   type ID,
   type Price,
   type CustomerGroup,
   type UomCode,
+  type Locale,
 } from "../../../core/domain/types/common";
 import type { CurrencyCode, Money } from "../../../core/domain/value-objects";
-import { DEFAULT_CURRENCY, toMoney, MoneySchema } from "../../../core/domain/value-objects";
-import { type SupportedLocale } from "../../../core/domain/types/locale";
+import { DEFAULT_CURRENCY, toMoney, MoneySchema, pick } from "../../../core/domain/value-objects";
 
 // ─── Variant Image ───────────────────────────────────────────────────────────
 
@@ -42,7 +44,7 @@ export const SellableUomSchema = z.object({
   uomCode: UomCodeSchema,
   factorToBase: z.number().positive(),
   isEnabled: z.boolean().default(true),
-  localizedLabel: LocalizedStringSchema.optional(),
+  localizedLabel: TranslationMapSchema.optional(),
   barcode: z.string().optional(),
 });
 export type SellableUom = z.infer<typeof SellableUomSchema>;
@@ -89,14 +91,14 @@ export const VariantSchema = z.object({
   productId: IdSchema,
   sku: z.string(),
   variantKey: z.string(),
-  localizedLabel: LocalizedStringSchema.optional(),
+  localizedLabel: TranslationMapSchema.optional(),
   displayOrder: z.number().default(0),
   isActive: z.boolean().default(true),
 
   // Pricing
-  basePrice: PriceSchema,
-  strikePrice: PriceSchema.optional(),
-  costPrice: PriceSchema.optional(),
+  basePrice: z.union([z.number(), z.string()]), // Decimal can be string in some contexts
+  strikePrice: z.union([z.number(), z.string()]).optional(),
+  costPrice: z.union([z.number(), z.string()]).optional(),
 
   // Physical
   weightGrams: z.number().optional(),
@@ -109,9 +111,16 @@ export const VariantSchema = z.object({
   sellableUoms: z.array(SellableUomSchema).optional(),
   priceLists: z.array(PriceListEntrySchema).optional(),
   inventory: z.array(InventoryBalanceSchema).optional(),
+
+  // Timestamps
+  createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
 });
 
-export type Variant = z.infer<typeof VariantSchema>;
+export type Variant = z.infer<typeof VariantSchema> &
+  Partial<
+    Omit<InferSelectModel<typeof productVariants>, "basePrice" | "strikePrice" | "costPrice">
+  >;
 
 // ─── Input Schemas ───────────────────────────────────────────────────────────
 
@@ -128,24 +137,24 @@ export type UpdateVariant = z.infer<typeof UpdateVariantSchema>;
 export class VariantEntity {
   constructor(private variant: Variant) {}
 
-  getLabel(locale: SupportedLocale): string {
-    return this.variant.localizedLabel?.[locale] ?? this.variant.localizedLabel?.en ?? "";
+  getLabel(locale: Locale): string {
+    return pick(this.variant.localizedLabel, locale);
   }
 
   getDisplayPrice(currency: string = DEFAULT_CURRENCY): Money {
-    return toMoney(this.variant.basePrice, currency as CurrencyCode);
+    return toMoney(Number(this.variant.basePrice), currency as CurrencyCode);
   }
 
   getStrikePrice(currency: string = DEFAULT_CURRENCY): Money | undefined {
     if (this.variant.strikePrice === undefined) return undefined;
-    return toMoney(this.variant.strikePrice, currency as CurrencyCode);
+    return toMoney(Number(this.variant.strikePrice), currency as CurrencyCode);
   }
 
   getDiscountPercentage(): number {
-    if (!this.variant.strikePrice || this.variant.strikePrice <= this.variant.basePrice) return 0;
-    return Math.round(
-      ((this.variant.strikePrice - this.variant.basePrice) / this.variant.strikePrice) * 100,
-    );
+    const strikePrice = Number(this.variant.strikePrice || 0);
+    const basePrice = Number(this.variant.basePrice);
+    if (!strikePrice || strikePrice <= basePrice) return 0;
+    return Math.round(((strikePrice - basePrice) / strikePrice) * 100);
   }
 
   /**
@@ -172,7 +181,7 @@ export class VariantEntity {
     const uom = this.variant.sellableUoms?.find((u) => u.uomCode === uomCode);
     if (uom) {
       return {
-        unitPrice: this.variant.basePrice * uom.factorToBase,
+        unitPrice: Number(this.variant.basePrice) * uom.factorToBase,
         currency: DEFAULT_CURRENCY,
         isSellable: uom.isEnabled,
       };

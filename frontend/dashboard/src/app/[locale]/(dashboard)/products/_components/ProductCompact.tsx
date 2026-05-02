@@ -41,7 +41,7 @@ export function ProductCompact({ product }: ProductCompactProps) {
     : "—";
 
   // Get price from first variant if available
-  const price = product.variants?.[0]?.basePrice || 0;
+  const price = parseInt(product?.variants?.[0]?.basePrice?.toString() || "0") || 0;
   const formattedPrice = new Intl.NumberFormat("en-EG", {
     style: "currency",
     currency: "EGP",
