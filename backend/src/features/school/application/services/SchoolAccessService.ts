@@ -27,7 +27,7 @@ export class SchoolAccessService implements ISchoolAccessService {
     private accessRepo: ISchoolAccessRepository,
     private schoolListRepo: ISchoolListRepository,
     private userRepo: IUserRepository,
-  ) { }
+  ) {}
 
   /**
    *

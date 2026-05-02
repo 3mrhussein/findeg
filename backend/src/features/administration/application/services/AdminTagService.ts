@@ -4,7 +4,7 @@ import { ITagRepository } from "../../../catalog/application/interfaces/ITagRepo
 import { Tag } from "../../../catalog/domain/entities/Tag";
 import { TagInput } from "../../domain/types/TagInput";
 import { IAuditLogService } from "../interfaces/IAuditLogService";
-import { db } from "@findeg/db";
+import { db } from "@findeg/db/connection";
 import { tags, productTags } from "@findeg/db/schema";
 import { eq, and, ne, count } from "drizzle-orm";
 

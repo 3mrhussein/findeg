@@ -1,11 +1,15 @@
 import { z } from "zod";
 import { IdSchema, SlugSchema, type ID, type Slug } from "../../../core/domain/types/common";
-import { LocalizedStringSchema, type LocalizedString } from "../../../core/domain/value-objects";
-import { type SupportedLocale } from "../../../core/domain/types/locale";
+import {
+  TranslationMapSchema,
+  type TranslationMap,
+  type Locale,
+  pick,
+} from "../../../core/domain/value-objects";
 
 export const CategoryLocalizedContentSchema = z.object({
-  name: LocalizedStringSchema,
-  description: LocalizedStringSchema.optional(),
+  name: TranslationMapSchema,
+  description: TranslationMapSchema.optional(),
 });
 export type CategoryLocalizedContent = z.infer<typeof CategoryLocalizedContentSchema>;
 
@@ -68,24 +72,17 @@ export type UpdateCategory = z.infer<typeof UpdateCategorySchema>;
 export class CategoryEntity {
   constructor(private category: Category) {}
 
-  getName(locale: SupportedLocale): string {
-    return (
-      this.category.localizedContent?.name?.[locale] ??
-      this.category.localizedContent?.name?.en ??
-      this.category.name
-    );
+  getName(locale: Locale): string {
+    return pick(this.category.localizedContent?.name, locale) || this.category.name;
   }
 
-  getSlug(locale: SupportedLocale): string {
+  getSlug(): string {
     return this.category.slug;
   }
 
-  getDescription(locale: SupportedLocale): string {
+  getDescription(locale: Locale): string {
     return (
-      this.category.localizedContent?.description?.[locale] ??
-      this.category.localizedContent?.description?.en ??
-      this.category.description ??
-      ""
+      pick(this.category.localizedContent?.description, locale) || this.category.description || ""
     );
   }
 }

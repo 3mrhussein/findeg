@@ -11,6 +11,7 @@ import { PermissionService } from "./PermissionService";
 import { JWTService } from "./JWTService";
 import { AdminUserService } from "./AdminUserService";
 import { AdminRoleService } from "./AdminRoleService";
+import { UserService } from "./UserService";
 
 import { IUserRepository } from "../interfaces/IUserRepository";
 import { IAuthService } from "../interfaces/IAuthService";
@@ -26,6 +27,7 @@ export interface IdentityServices {
   jwt: IJWTService;
   adminUsers: IAdminUserService;
   adminRoles: IAdminRoleService;
+  userService: UserService;
 }
 
 /**
@@ -43,5 +45,6 @@ export function createIdentityServices(): IdentityServices {
     jwt: new JWTService(),
     adminUsers: new AdminUserService(),
     adminRoles: new AdminRoleService(),
+    userService: new UserService(userRepository),
   };
 }

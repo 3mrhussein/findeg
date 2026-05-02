@@ -1,4 +1,4 @@
-import { db } from "@findeg/db";
+import { db } from "@findeg/db/connection";
 import { eq, InferSelectModel, InferInsertModel } from "drizzle-orm";
 import { PgTable, TableConfig } from "drizzle-orm/pg-core";
 

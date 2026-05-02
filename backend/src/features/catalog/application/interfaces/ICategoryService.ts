@@ -43,4 +43,8 @@ export interface ICategoryService {
    * @returns A list of root categories with nested children.
    */
   getTree(language?: Locale): Promise<Category[]>;
+
+  create(input: any): Promise<Category>;
+  update(id: number, input: any): Promise<Category>;
+  delete(id: number): Promise<void>;
 }

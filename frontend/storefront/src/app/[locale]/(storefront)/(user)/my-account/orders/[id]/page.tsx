@@ -5,7 +5,8 @@ import { Link } from "@i18n/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
 import { Button } from "@findeg/ui";
 import { Separator } from "@findeg/ui";
-import { getMyOrderDetail } from "@findeg/backend/features/identity/application/queries/my-account";
+import { getMyOrderDetail } from "@findeg/backend";
+import { requireAuth } from "@lib/auth-guard";
 
 interface MyOrderDetailPageProps {
   params: Promise<{ locale: Locale; id: string }>;
@@ -22,8 +23,9 @@ export default async function MyOrderDetailPage({ params }: MyOrderDetailPagePro
   const orderId = Number(idParam);
   if (!Number.isFinite(orderId)) notFound();
 
-  const userId = 1;
-  const order = await getMyOrderDetail(orderId, userId);
+  const session = await requireAuth(locale);
+  const order = await getMyOrderDetail(orderId);
+  if (!order) notFound();
 
   return (
     <div className="space-y-4">

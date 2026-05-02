@@ -1,10 +1,5 @@
-import { db } from "@findeg/db";
-import {
-  inventoryBalances,
-  stockMovements,
-  warehouses,
-  productVariants,
-} from "@findeg/db/schema";
+import { db } from "@findeg/db/connection";
+import { inventoryBalances, stockMovements, warehouses, productVariants } from "@findeg/db/schema";
 import {
   IInventoryRepository,
   InventoryBalanceResult,

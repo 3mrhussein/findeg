@@ -1,13 +1,18 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Bell, Check, ExternalLink, Loader2, Filter, MoreVertical, Trash } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@findeg/ui";
 import { Button } from "@findeg/ui";
 import { Badge } from "@findeg/ui";
 import { ScrollArea } from "@findeg/ui";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@findeg/ui";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@findeg/ui";
 import { Link } from "@i18n/navigation";
 import { cn } from "@lib/utils";
 
@@ -40,8 +45,7 @@ export default function AdminNotificationsPage() {
   /**
    * Fetch notifications
    */
-  const fetchNotifications = useCallback(async (p: number = 1) => {
-    setIsLoading(true);
+  const fetchNotifications = async (p: number = 1) => {
     try {
       const res = await fetch(`/api/v1/notifications?page=${p}`);
       if (res.ok) {
@@ -58,11 +62,14 @@ export default function AdminNotificationsPage() {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  };
 
   useEffect(() => {
-    fetchNotifications(1);
-  }, [fetchNotifications]);
+    const init = async () => {
+      await fetchNotifications(1);
+    };
+    init();
+  }, []);
 
   /**
    * Mark all as read
@@ -226,6 +233,7 @@ export default function AdminNotificationsPage() {
                 onClick={() => {
                   const next = page + 1;
                   setPage(next);
+                  setIsLoading(true);
                   fetchNotifications(next);
                 }}
                 disabled={isLoading}

@@ -14,19 +14,15 @@ import {
 } from "@findeg/ui";
 import { Filter } from "lucide-react";
 import { EmptyState } from "./EmptyState";
-import { Product } from "@findeg/backend/features/catalog/domain/entities/Product";
-import {
-  FilterOption,
-  CategoryFilterOption,
-} from "@findeg/backend/features/catalog/application/queries/listing";
+import { FilterOption, CategoryFilterOption, Product } from "@/data/catalog/types";
 
 interface ProductListingLayoutProps {
   products: Product[];
-  filteredProducts: Product[];
+  filteredProducts?: Product[];
   categoryOptions: CategoryFilterOption[];
   brandOptions: FilterOption[];
-  minPrice: number;
-  maxPrice: number;
+  minPriceBound: number;
+  maxPriceBound: number;
   resultsCountLabel: string;
   filtersTitle?: string;
   noProductsTitle?: string;
@@ -42,14 +38,15 @@ export function ProductListingLayout({
   filteredProducts,
   categoryOptions,
   brandOptions,
-  minPrice,
-  maxPrice,
+  minPriceBound,
+  maxPriceBound,
   resultsCountLabel,
   filtersTitle = "Filters",
   noProductsTitle = "No products found",
   noProductsDescription = "Try adjusting your filters to see more options.",
   loadMoreLabel = "Load More",
 }: ProductListingLayoutProps) {
+  const displayProducts = filteredProducts || products;
   return (
     <div className="flex flex-col lg:flex-row gap-10">
       {/* Mobile Filter Trigger */}
@@ -72,8 +69,8 @@ export function ProductListingLayout({
             <FilterSidebar
               categories={categoryOptions}
               brands={brandOptions}
-              minPrice={minPrice}
-              maxPrice={maxPrice}
+              minPrice={minPriceBound}
+              maxPrice={maxPriceBound}
             />
           </SheetContent>
         </Sheet>
@@ -89,8 +86,8 @@ export function ProductListingLayout({
             <FilterSidebar
               categories={categoryOptions}
               brands={brandOptions}
-              minPrice={minPrice}
-              maxPrice={maxPrice}
+              minPrice={minPriceBound}
+              maxPrice={maxPriceBound}
             />
           </div>
         </div>
@@ -111,14 +108,14 @@ export function ProductListingLayout({
         </div>
 
         {/* Empty State or Results Grid */}
-        {filteredProducts.length === 0 ? (
+        {displayProducts.length === 0 ? (
           <EmptyState title={noProductsTitle} description={noProductsDescription} />
         ) : (
-          <ProductGridList products={filteredProducts} />
+          <ProductGridList products={displayProducts} />
         )}
 
         {/* Load More */}
-        {filteredProducts.length > 0 && (
+        {displayProducts.length > 0 && (
           <div className="mt-12 flex justify-center">
             <Button
               variant="outline"

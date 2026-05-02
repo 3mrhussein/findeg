@@ -23,7 +23,7 @@ export class AdminInventoryService implements IAdminInventoryService {
     private inventoryRepository: IInventoryRepository,
     private variantRepository: IVariantRepository,
     private auditLogService: IAuditLogService,
-  ) { }
+  ) {}
 
   /**
    * Retrieves a paginated list of products and their current inventory status.

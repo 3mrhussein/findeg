@@ -1,6 +1,5 @@
 import { z } from "zod";
-import { LocalizedStringDraftSchema } from "./Translation";
-
+import { PartialTranslationMapSchema } from "./Locale";
 /**
  * Common media variant keys for responsive/product rendering.
  */
@@ -15,7 +14,7 @@ export const MediaAssetSchema = z.object({
   width: z.number().int().positive().optional(),
   height: z.number().int().positive().optional(),
   mimeType: z.string().optional(),
-  alt: LocalizedStringDraftSchema.optional(),
+  alt: PartialTranslationMapSchema.optional(),
 });
 export type MediaAsset = z.infer<typeof MediaAssetSchema>;
 

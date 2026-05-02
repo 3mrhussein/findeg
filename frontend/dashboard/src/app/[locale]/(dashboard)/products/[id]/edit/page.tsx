@@ -1,6 +1,6 @@
 import { ProductForm } from "../../_components/ProductForm";
 import { notFound } from "next/navigation";
-import { resolveLocale } from "@findeg/backend/features/core";
+import { parse } from "@findeg/backend/features/core";
 
 /**
  * /admin/products/[id]/edit
@@ -12,7 +12,7 @@ export default async function EditProductPage({
   params: Promise<{ locale: string; id: string }>;
 }) {
   const { locale, id } = await params;
-  const resolvedLocale = resolveLocale(locale);
+  const resolvedLocale = parse(locale);
   const productId = parseInt(id);
 
   if (isNaN(productId)) notFound();

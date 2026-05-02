@@ -5,10 +5,8 @@ import {
 } from "@findeg/backend/features/school/application/interfaces/IParentListService";
 import { IParentSessionRepository } from "@findeg/backend/features/school/application/interfaces/IParentSessionRepository";
 import { ISchoolDirectoryService } from "@findeg/backend/features/school/application/interfaces/ISchoolDirectoryService";
-import {
-  schoolLists,
-  schoolListItems,
-} from "@findeg/db/schema";
+import { ISchoolAccessService } from "@findeg/backend/features/school/application/interfaces/ISchoolAccessService";
+import { schoolLists, schoolListItems } from "@findeg/db/schema";
 import { schoolListParentSessions } from "@findeg/db/schema";
 
 /**
@@ -21,6 +19,7 @@ export class ParentListService implements IParentListService {
   constructor(
     private sessionRepo: IParentSessionRepository,
     private schoolListService: ISchoolDirectoryService,
+    private accessService: ISchoolAccessService,
     // private cartService: ICartService
   ) {}
 
@@ -99,5 +98,26 @@ export class ParentListService implements IParentListService {
     // 1. Fetch list items + session overrides
     // 2. Create cart_kit record
     // 3. Add items to cart with cart_kit_id
+  }
+
+  /**
+   * Orchestrates the retrieval of all data required for the school list page.
+   */
+  async getSchoolListPageData(slug: string, userId?: number): Promise<any> {
+    const list = await this.schoolListService.getBySlug(slug);
+    if (!list) return null;
+
+    const [accessState, sessionState, fullList] = await Promise.all([
+      this.accessService.getAccessState(list.id, userId || null),
+      this.getSessionState(list.id, userId),
+      this.getListWithDetails(slug),
+    ]);
+
+    return {
+      list,
+      accessState,
+      sessionState,
+      fullList,
+    };
   }
 }

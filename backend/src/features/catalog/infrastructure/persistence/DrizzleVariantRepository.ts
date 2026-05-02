@@ -1,4 +1,4 @@
-import { db } from "@findeg/db";
+import { db } from "@findeg/db/connection";
 import {
   productVariants,
   variantImages,
@@ -329,7 +329,10 @@ export class DrizzleVariantRepository implements IVariantRepository {
           await tx.insert(variantPriceLists).values(
             input.priceLists.map((p) => ({
               variantId,
-              customerGroup: p.customerGroup as unknown as "public_b2c" | "school_b2b" | "wholesale",
+              customerGroup: p.customerGroup as unknown as
+                | "public_b2c"
+                | "school_b2b"
+                | "wholesale",
               uomCode: p.uomCode as "pcs" | "pack" | "carton",
               unitPrice: String(p.unitPrice),
               currency: (p.currency as string) || DEFAULT_CURRENCY,

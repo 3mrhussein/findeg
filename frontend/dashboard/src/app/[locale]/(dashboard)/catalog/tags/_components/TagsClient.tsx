@@ -9,10 +9,10 @@ import { Input } from "@findeg/ui";
 import { TagCard } from "./TagCard";
 import { TagDrawer } from "./TagDrawer";
 import {
-  deleteTagAction,
-  toggleTagStatusAction,
-  getTagProductCountAction,
-} from "@actions/admin-actions";
+  deleteTagAction as deleteTag,
+  toggleTagStatusAction as toggleTagStatus,
+  getTagProductCountAction as getTagProductCount,
+} from "@data/tags/actions";
 import { useToast } from "@hooks/use-toast";
 import {
   AlertDialog,
@@ -24,7 +24,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@findeg/ui";
-import { getTagDisplayName } from "../../../../../../features/catalog/presentation/config/tag-display";
+import { getTagDisplayName } from "@lib/tag-utils";
 
 interface TagsClientProps {
   initialTags: Record<string, Tag[]>;
@@ -94,7 +94,7 @@ export function TagsClient({ initialTags }: TagsClientProps) {
   };
 
   const handleToggle = async (tag: Tag) => {
-    const res = await toggleTagStatusAction(Number(tag.id));
+    const res = await toggleTagStatus(Number(tag.id));
     if (res.success) {
       toast({
         title: res.isActive ? t("ToastActivated") : t("ToastDeactivated"),
@@ -109,7 +109,7 @@ export function TagsClient({ initialTags }: TagsClientProps) {
 
   const handleDeleteClick = async (tag: Tag) => {
     setTagToDelete(tag);
-    const res = await getTagProductCountAction(Number(tag.id));
+    const res = await getTagProductCount(Number(tag.id));
     if (res.success) {
       setTagProductCount(res.count || 0);
     }
@@ -121,7 +121,7 @@ export function TagsClient({ initialTags }: TagsClientProps) {
 
     setIsDeleting(true);
     try {
-      const res = await deleteTagAction(Number(tagToDelete.id));
+      const res = await deleteTag(Number(tagToDelete.id));
       if (res.success) {
         toast({
           title: t("ToastDeleted"),

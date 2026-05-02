@@ -2,7 +2,8 @@ import { Locale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@i18n/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import { getMyAccountData } from "@findeg/backend/features/identity/application/queries/my-account";
+import { getMyAccountData } from "@findeg/backend";
+import { requireAuth } from "@lib/auth-guard";
 import { SectionStateEmpty } from "@components/shared/state/SectionStateEmpty";
 
 type Props = {
@@ -16,8 +17,8 @@ export default async function OrdersPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale });
-  const userId = 1;
-  const { orders } = await getMyAccountData(userId);
+  const session = await requireAuth(locale);
+  const { orders } = await getMyAccountData(session.userId);
 
   return (
     <div className="space-y-6">

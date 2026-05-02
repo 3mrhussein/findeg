@@ -30,8 +30,7 @@ import { products } from "./products";
 import { catalogSchema } from "../schemas";
 import { attributeDefinitions } from "./product-attributes";
 import { variantSellableUoms, variantPriceLists } from "./variant-pricing";
-import type { LocalizedStringDraft } from "../../../backend/src/features/core/domain/value-objects";
-import type { ResponsiveMediaSet } from "../../../backend/src/features/core/domain/value-objects";
+import { PartialTranslationMap, ResponsiveMediaSet } from "./types";
 
 // ─── Product Variants (SKU rows) ────────────────────────────────────────────
 
@@ -57,7 +56,7 @@ export const productVariants = catalogSchema.table(
     variantKey: text("variant_key").notNull(),
 
     /** Localized display label (e.g., { en: "Blue 0.7mm", ar: "أزرق ٠.٧مم" }) */
-    localizedLabel: jsonb("localized_label").$type<LocalizedStringDraft>().default({}).notNull(),
+    localizedLabel: jsonb("localized_label").$type<PartialTranslationMap>().default({}).notNull(),
 
     /** Sort order within the parent product */
     displayOrder: integer("display_order").default(0).notNull(),

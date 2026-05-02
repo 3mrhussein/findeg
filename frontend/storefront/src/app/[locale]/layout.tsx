@@ -104,16 +104,37 @@ export default async function RootLayout({
   const direction = typedLocale === "ar" ? "rtl" : "ltr";
 
   return (
-    <NextIntlClientProvider locale={typedLocale} messages={messages}>
-      <BoundaryProvider>
-        <Providers>
-          <div className="min-h-screen bg-background text-foreground flex flex-col">
-            <Suspense fallback={null}>{children}</Suspense>
-          </div>
-          <BoundaryToggle />
-          <WebMCPInitializer />
-        </Providers>
-      </BoundaryProvider>
-    </NextIntlClientProvider>
+    <html
+      lang={typedLocale}
+      dir={direction}
+      suppressHydrationWarning
+      className={cn(inter.variable, cairo.variable)}
+    >
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        />
+      </head>
+      <body
+        suppressHydrationWarning
+        className={cn(
+          "min-h-screen bg-background font-sans antialiased",
+          typedLocale === "ar" ? "font-arabic" : "font-inter",
+        )}
+      >
+        <NextIntlClientProvider locale={typedLocale} messages={messages}>
+          <BoundaryProvider>
+            <Providers>
+              <div className="flex min-h-screen flex-col">
+                <Suspense fallback={null}>{children}</Suspense>
+              </div>
+              <BoundaryToggle />
+              <WebMCPInitializer />
+            </Providers>
+          </BoundaryProvider>
+        </NextIntlClientProvider>
+      </body>
+    </html>
   );
 }

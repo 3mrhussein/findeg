@@ -1,12 +1,11 @@
 /**
  * Product Actions (Dashboard Data Layer)
  *
- * Uses "use server" directive and updateTag() for cache invalidation.
  * Apps own cache invalidation - backend stays pure TypeScript.
  */
 "use server";
 
-import { updateTag } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { createAdministrationServices } from "@findeg/backend/features/administration";
 import type {
   CreateProductWithVariantsInput,
@@ -25,7 +24,7 @@ export async function createProduct(input: CreateProductWithVariantsInput) {
     const result = await products.createProduct(input);
 
     // Invalidate product caches
-    updateTag("products");
+    revalidateTag("products", "max");
 
     return { success: true, data: result };
   } catch (error: unknown) {
@@ -44,8 +43,7 @@ export async function updateProduct(id: number, input: UpdateProductWithVariants
     const { products } = createAdministrationServices();
     const result = await products.updateProduct(id, input);
 
-    // Invalidate product caches
-    updateTag("products");
+    revalidateTag("products", "max");
 
     return { success: true, data: result };
   } catch (error: unknown) {
@@ -64,8 +62,7 @@ export async function deleteProduct(id: number) {
     const { products } = createAdministrationServices();
     await products.deleteProduct(id);
 
-    // Invalidate all product caches
-    updateTag("products");
+    revalidateTag("products", "max");
 
     return { success: true };
   } catch (error: unknown) {
@@ -84,12 +81,71 @@ export async function importProducts(csvFile: any) {
     const { products } = createAdministrationServices();
     // await products.importFromCSV(csvFile);
 
-    // Invalidate all product caches
-    updateTag("products");
+    revalidateTag("products", "max");
 
     return { success: true };
   } catch (error: unknown) {
     console.error("[importProducts]", error);
+    return { success: false, error: getErrorMessage(error) };
+  }
+}
+
+/**
+ * Toggle product active status
+ */
+export async function setProductStatus(id: number, isActive: boolean) {
+  try {
+    const { products } = createAdministrationServices();
+    const existingProduct = await products.getById(id);
+    if (!existingProduct) return { success: false, error: "Product not found" };
+
+    await products.updateProduct(id, { ...existingProduct, isActive } as any);
+    revalidateTag("products", "max");
+    return { success: true };
+  } catch (error: unknown) {
+    console.error("[setProductStatus]", error);
+    return { success: false, error: getErrorMessage(error) };
+  }
+}
+
+/**
+ * Generate variants for a product
+ */
+export async function generateVariants(
+  productId: number,
+  dimensions: any[] = [],
+  defaults: any = {},
+) {
+  try {
+    const { products } = createAdministrationServices();
+    await products.generateVariants(productId, dimensions, defaults);
+    revalidateTag("products", "max");
+    return { success: true };
+  } catch (error: unknown) {
+    console.error("[generateVariants]", error);
+    return { success: false, error: getErrorMessage(error) };
+  }
+}
+
+/**
+ * Utility checks for availability
+ */
+export async function checkSkuAvailable(sku: string, excludeVariantId?: number) {
+  try {
+    const { products } = createAdministrationServices();
+    const available = await products.checkSkuAvailable(sku, excludeVariantId);
+    return { success: true, available };
+  } catch (error: unknown) {
+    return { success: false, error: getErrorMessage(error) };
+  }
+}
+
+export async function checkSlugAvailable(slug: string, excludeProductId?: number) {
+  try {
+    const { products } = createAdministrationServices();
+    const available = await products.checkSlugAvailable(slug, excludeProductId);
+    return { success: true, available };
+  } catch (error: unknown) {
     return { success: false, error: getErrorMessage(error) };
   }
 }

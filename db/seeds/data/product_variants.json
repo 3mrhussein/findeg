@@ -4,7 +4,10 @@
     "productId": 13,
     "sku": "KEYCHAIN-001",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Keychains 13",
+      "ar": "علاقات مفاتيح 13"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 66.9,
@@ -21,7 +24,10 @@
     "productId": 14,
     "sku": "KEYCHAIN-003",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Keychains 14",
+      "ar": "علاقات مفاتيح 14"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 67,
@@ -38,7 +44,10 @@
     "productId": 15,
     "sku": "KEYCHAIN-005",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Keychains 15",
+      "ar": "علاقات مفاتيح 15"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 67.1,
@@ -55,7 +64,10 @@
     "productId": 16,
     "sku": "KEYCHAIN-007",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Keychains 16",
+      "ar": "علاقات مفاتيح 16"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 67.2,
@@ -72,7 +84,10 @@
     "productId": 17,
     "sku": "KEYCHAIN-009",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Keychains 17",
+      "ar": "علاقات مفاتيح 17"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 67.3,
@@ -89,7 +104,10 @@
     "productId": 18,
     "sku": "KEYCHAIN-011",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Keychains 18",
+      "ar": "علاقات مفاتيح 18"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 67.4,
@@ -106,7 +124,10 @@
     "productId": 19,
     "sku": "KEYCHAIN-013",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Keychains 19",
+      "ar": "علاقات مفاتيح 19"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 67.5,
@@ -123,7 +144,10 @@
     "productId": 20,
     "sku": "KEYCHAIN-015",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Keychains 20",
+      "ar": "علاقات مفاتيح 20"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 67.6,
@@ -140,7 +164,10 @@
     "productId": 21,
     "sku": "WATCHES-009",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Watches 21",
+      "ar": "ساعات 21"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 51.5,
@@ -157,7 +184,10 @@
     "productId": 22,
     "sku": "WATCHES-011",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Watches 22",
+      "ar": "ساعات 22"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 51.4,
@@ -174,7 +204,10 @@
     "productId": 23,
     "sku": "WATCHES-013",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Watches 23",
+      "ar": "ساعات 23"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 51.3,
@@ -191,7 +224,10 @@
     "productId": 24,
     "sku": "WATCHES-015",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Watches 24",
+      "ar": "ساعات 24"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 51.2,
@@ -208,7 +244,10 @@
     "productId": 25,
     "sku": "WATCHES-017",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Watches 25",
+      "ar": "ساعات 25"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 51.1,
@@ -225,7 +264,10 @@
     "productId": 26,
     "sku": "WATCHES-019",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Watches 26",
+      "ar": "ساعات 26"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 51,
@@ -242,7 +284,10 @@
     "productId": 27,
     "sku": "BADGES-015",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Badges 27",
+      "ar": "شارات 27"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 49.2,
@@ -259,7 +304,10 @@
     "productId": 28,
     "sku": "BADGES-017",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Badges 28",
+      "ar": "شارات 28"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 49.3,
@@ -276,7 +324,10 @@
     "productId": 29,
     "sku": "BADGES-019",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Badges 29",
+      "ar": "شارات 29"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 49.4,
@@ -293,7 +344,10 @@
     "productId": 30,
     "sku": "BADGES-021",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Badges 30",
+      "ar": "شارات 30"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 49.5,
@@ -310,7 +364,10 @@
     "productId": 31,
     "sku": "BADGES-023",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Badges 31",
+      "ar": "شارات 31"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 49.6,
@@ -327,7 +384,10 @@
     "productId": 32,
     "sku": "BADGES-025",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Badges 32",
+      "ar": "شارات 32"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 49.7,
@@ -344,7 +404,10 @@
     "productId": 33,
     "sku": "FRAMES-021",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Frames 33",
+      "ar": "إطارات 33"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 119.4,
@@ -361,7 +424,10 @@
     "productId": 34,
     "sku": "FRAMES-023",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Frames 34",
+      "ar": "إطارات 34"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 119.3,
@@ -378,7 +444,10 @@
     "productId": 35,
     "sku": "FRAMES-025",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Frames 35",
+      "ar": "إطارات 35"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 119.2,
@@ -395,7 +464,10 @@
     "productId": 36,
     "sku": "BALLOONS-024",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Balloons 36",
+      "ar": "بالونات 36"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 17.2,
@@ -412,7 +484,10 @@
     "productId": 37,
     "sku": "BALLOONS-026",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Balloons 37",
+      "ar": "بالونات 37"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 17.1,
@@ -429,7 +504,10 @@
     "productId": 38,
     "sku": "BALLOONS-028",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Balloons 38",
+      "ar": "بالونات 38"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 17,
@@ -446,7 +524,10 @@
     "productId": 39,
     "sku": "BALLOONS-030",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Balloons 39",
+      "ar": "بالونات 39"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 16.9,
@@ -463,7 +544,10 @@
     "productId": 40,
     "sku": "BALLOONS-032",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Balloons 40",
+      "ar": "بالونات 40"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 16.8,
@@ -480,7 +564,10 @@
     "productId": 41,
     "sku": "BALLOONS-034",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Balloons 41",
+      "ar": "بالونات 41"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 16.7,
@@ -497,7 +584,10 @@
     "productId": 42,
     "sku": "BALLOONS-036",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Balloons 42",
+      "ar": "بالونات 42"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 16.6,
@@ -514,7 +604,10 @@
     "productId": 43,
     "sku": "BALLOONS-038",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Balloons 43",
+      "ar": "بالونات 43"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 16.5,
@@ -531,7 +624,10 @@
     "productId": 44,
     "sku": "POSTERS-032",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Posters 44",
+      "ar": "ملصقات 44"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 35.4,
@@ -548,7 +644,10 @@
     "productId": 45,
     "sku": "POSTERS-034",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Posters 45",
+      "ar": "ملصقات 45"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 35.5,
@@ -565,7 +664,10 @@
     "productId": 46,
     "sku": "POSTERS-036",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Posters 46",
+      "ar": "ملصقات 46"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 35.6,
@@ -582,7 +684,10 @@
     "productId": 47,
     "sku": "POSTERS-038",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Posters 47",
+      "ar": "ملصقات 47"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 35.7,
@@ -599,7 +704,10 @@
     "productId": 48,
     "sku": "POSTERS-040",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Posters 48",
+      "ar": "ملصقات 48"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 35.8,
@@ -616,7 +724,10 @@
     "productId": 49,
     "sku": "POSTERS-042",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Posters 49",
+      "ar": "ملصقات 49"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 35.9,
@@ -633,7 +744,10 @@
     "productId": 50,
     "sku": "RAMADANL-038",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Ramadan Lanterns 50",
+      "ar": "فوانيس رمضان 50"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 107.6,
@@ -650,7 +764,10 @@
     "productId": 51,
     "sku": "RAMADANL-040",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Ramadan Lanterns 51",
+      "ar": "فوانيس رمضان 51"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 107.5,
@@ -667,7 +784,10 @@
     "productId": 52,
     "sku": "RAMADANL-042",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Ramadan Lanterns 52",
+      "ar": "فوانيس رمضان 52"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 107.4,
@@ -684,7 +804,10 @@
     "productId": 53,
     "sku": "RAMADANL-044",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Ramadan Lanterns 53",
+      "ar": "فوانيس رمضان 53"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 107.3,
@@ -701,7 +824,10 @@
     "productId": 54,
     "sku": "RAMADANL-046",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Ramadan Lanterns 54",
+      "ar": "فوانيس رمضان 54"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 107.2,
@@ -718,7 +844,10 @@
     "productId": 55,
     "sku": "RAMADANL-048",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Ramadan Lanterns 55",
+      "ar": "فوانيس رمضان 55"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 107.1,
@@ -735,7 +864,10 @@
     "productId": 56,
     "sku": "RAMADANL-050",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Ramadan Lanterns 56",
+      "ar": "فوانيس رمضان 56"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 107,
@@ -752,7 +884,10 @@
     "productId": 57,
     "sku": "RAMADANL-052",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Ramadan Lanterns 57",
+      "ar": "فوانيس رمضان 57"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 106.9,
@@ -769,7 +904,10 @@
     "productId": 58,
     "sku": "CERTIFIC-046",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Certificates 58",
+      "ar": "شهادات 58"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 117.6,
@@ -786,7 +924,10 @@
     "productId": 59,
     "sku": "CERTIFIC-048",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Certificates 59",
+      "ar": "شهادات 59"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 117.7,
@@ -803,7 +944,10 @@
     "productId": 60,
     "sku": "CERTIFIC-050",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Certificates 60",
+      "ar": "شهادات 60"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 117.8,
@@ -820,7 +964,10 @@
     "productId": 61,
     "sku": "CERTIFIC-052",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Certificates 61",
+      "ar": "شهادات 61"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 117.9,
@@ -837,7 +984,10 @@
     "productId": 62,
     "sku": "WATERBOT-050",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Water Bottles 62",
+      "ar": "مطارات ماء 62"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 21.1,
@@ -854,7 +1004,10 @@
     "productId": 63,
     "sku": "WATERBOT-052",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Water Bottles 63",
+      "ar": "مطارات ماء 63"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 21.2,
@@ -871,7 +1024,10 @@
     "productId": 64,
     "sku": "WATERBOT-054",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Water Bottles 64",
+      "ar": "مطارات ماء 64"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 21.3,
@@ -888,7 +1044,10 @@
     "productId": 65,
     "sku": "WATERBOT-056",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Water Bottles 65",
+      "ar": "مطارات ماء 65"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 21.4,
@@ -905,7 +1064,10 @@
     "productId": 66,
     "sku": "WATERBOT-058",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Water Bottles 66",
+      "ar": "مطارات ماء 66"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 21.5,
@@ -922,7 +1084,10 @@
     "productId": 67,
     "sku": "WATERBOT-060",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Water Bottles 67",
+      "ar": "مطارات ماء 67"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 21.6,
@@ -939,7 +1104,10 @@
     "productId": 68,
     "sku": "WATERBOT-062",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Water Bottles 68",
+      "ar": "مطارات ماء 68"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 21.7,
@@ -956,7 +1124,10 @@
     "productId": 69,
     "sku": "WATERBOT-064",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Water Bottles 69",
+      "ar": "مطارات ماء 69"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 21.8,
@@ -973,7 +1144,10 @@
     "productId": 70,
     "sku": "WATERBOT-066",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Water Bottles 70",
+      "ar": "مطارات ماء 70"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 21.9,
@@ -990,7 +1164,10 @@
     "productId": 71,
     "sku": "WATERBOT-068",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Water Bottles 71",
+      "ar": "مطارات ماء 71"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 22,
@@ -1007,7 +1184,10 @@
     "productId": 72,
     "sku": "LUNCHBOX-060",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Lunchboxes 72",
+      "ar": "صناديق غداء 72"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 99.3,
@@ -1024,7 +1204,10 @@
     "productId": 73,
     "sku": "LUNCHBOX-062",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Lunchboxes 73",
+      "ar": "صناديق غداء 73"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 99.2,
@@ -1041,7 +1224,10 @@
     "productId": 74,
     "sku": "LUNCHBOX-064",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Lunchboxes 74",
+      "ar": "صناديق غداء 74"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 99.1,
@@ -1058,7 +1244,10 @@
     "productId": 75,
     "sku": "LUNCHBOX-066",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Lunchboxes 75",
+      "ar": "صناديق غداء 75"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 99,
@@ -1075,7 +1264,10 @@
     "productId": 76,
     "sku": "LUNCHBOX-068",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Lunchboxes 76",
+      "ar": "صناديق غداء 76"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 98.9,
@@ -1092,7 +1284,10 @@
     "productId": 77,
     "sku": "LUNCHBOX-070",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Lunchboxes 77",
+      "ar": "صناديق غداء 77"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 98.8,
@@ -1109,7 +1304,10 @@
     "productId": 78,
     "sku": "LUNCHBOX-072",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Lunchboxes 78",
+      "ar": "صناديق غداء 78"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 98.7,
@@ -1126,7 +1324,10 @@
     "productId": 79,
     "sku": "LUNCHBOX-074",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Lunchboxes 79",
+      "ar": "صناديق غداء 79"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 98.6,
@@ -1143,7 +1344,10 @@
     "productId": 80,
     "sku": "RULERS-068",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Rulers 80",
+      "ar": "مساطر 80"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 66.5,
@@ -1160,7 +1364,10 @@
     "productId": 81,
     "sku": "RULERS-070",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Rulers 81",
+      "ar": "مساطر 81"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 66.6,
@@ -1177,7 +1384,10 @@
     "productId": 82,
     "sku": "RULERS-072",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Rulers 82",
+      "ar": "مساطر 82"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 66.7,
@@ -1194,7 +1404,10 @@
     "productId": 83,
     "sku": "RULERS-074",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Rulers 83",
+      "ar": "مساطر 83"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 66.8,
@@ -1211,7 +1424,10 @@
     "productId": 84,
     "sku": "RULERS-076",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Rulers 84",
+      "ar": "مساطر 84"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 66.9,
@@ -1228,7 +1444,10 @@
     "productId": 85,
     "sku": "RULERS-078",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Rulers 85",
+      "ar": "مساطر 85"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 67,
@@ -1245,7 +1464,10 @@
     "productId": 86,
     "sku": "MATHSETS-074",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Math Sets 86",
+      "ar": "أطقم رياضيات 86"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 62.6,
@@ -1262,7 +1484,10 @@
     "productId": 87,
     "sku": "MATHSETS-076",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Math Sets 87",
+      "ar": "أطقم رياضيات 87"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 62.7,
@@ -1279,7 +1504,10 @@
     "productId": 88,
     "sku": "MATHSETS-078",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Math Sets 88",
+      "ar": "أطقم رياضيات 88"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 62.8,
@@ -1296,7 +1524,10 @@
     "productId": 89,
     "sku": "MATHSETS-080",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Math Sets 89",
+      "ar": "أطقم رياضيات 89"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 62.9,
@@ -1313,7 +1544,10 @@
     "productId": 90,
     "sku": "SETSQUAR-078",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Set Squares 90",
+      "ar": "مثلتات هندسية 90"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 115.7,
@@ -1330,7 +1564,10 @@
     "productId": 91,
     "sku": "SETSQUAR-080",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Set Squares 91",
+      "ar": "مثلتات هندسية 91"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 115.6,
@@ -1347,7 +1584,10 @@
     "productId": 92,
     "sku": "SETSQUAR-082",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Set Squares 92",
+      "ar": "مثلتات هندسية 92"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 115.5,
@@ -1364,7 +1604,10 @@
     "productId": 93,
     "sku": "COMPASSE-081",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Compasses 93",
+      "ar": "فرجارات 93"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 60.8,
@@ -1381,7 +1624,10 @@
     "productId": 94,
     "sku": "COMPASSE-083",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Compasses 94",
+      "ar": "فرجارات 94"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 60.7,
@@ -1398,7 +1644,10 @@
     "productId": 95,
     "sku": "COMPASSE-085",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Compasses 95",
+      "ar": "فرجارات 95"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 60.6,
@@ -1415,7 +1664,10 @@
     "productId": 96,
     "sku": "PROTRACT-084",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Protractors 96",
+      "ar": "منقلات 96"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 45.5,
@@ -1432,7 +1684,10 @@
     "productId": 97,
     "sku": "PROTRACT-086",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Protractors 97",
+      "ar": "منقلات 97"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 45.4,
@@ -1449,7 +1704,10 @@
     "productId": 98,
     "sku": "PROTRACT-088",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Protractors 98",
+      "ar": "منقلات 98"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 45.3,
@@ -1466,7 +1724,10 @@
     "productId": 99,
     "sku": "ERASERS-087",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Erasers 99",
+      "ar": "ممحاة 99"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 74.5,
@@ -1483,7 +1744,10 @@
     "productId": 100,
     "sku": "ERASERS-089",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Erasers 100",
+      "ar": "ممحاة 100"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 74.4,
@@ -1500,7 +1764,10 @@
     "productId": 101,
     "sku": "ERASERS-091",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Erasers 101",
+      "ar": "ممحاة 101"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 74.3,
@@ -1517,7 +1784,10 @@
     "productId": 102,
     "sku": "ERASERS-093",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Erasers 102",
+      "ar": "ممحاة 102"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 74.2,
@@ -1534,7 +1804,10 @@
     "productId": 103,
     "sku": "ERASERS-095",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Erasers 103",
+      "ar": "ممحاة 103"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 74.1,
@@ -1551,7 +1824,10 @@
     "productId": 104,
     "sku": "ERASERS-097",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Erasers 104",
+      "ar": "ممحاة 104"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 74,
@@ -1568,7 +1844,10 @@
     "productId": 105,
     "sku": "ERASERS-099",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Erasers 105",
+      "ar": "ممحاة 105"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 73.9,
@@ -1585,7 +1864,10 @@
     "productId": 106,
     "sku": "ERASERS-101",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Erasers 106",
+      "ar": "ممحاة 106"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 73.8,
@@ -1602,7 +1884,10 @@
     "productId": 107,
     "sku": "SHARPENE-095",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Sharpeners 107",
+      "ar": "مبراة 107"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 110.1,
@@ -1619,7 +1904,10 @@
     "productId": 108,
     "sku": "SHARPENE-097",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Sharpeners 108",
+      "ar": "مبراة 108"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 110,
@@ -1636,7 +1924,10 @@
     "productId": 109,
     "sku": "SHARPENE-099",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Sharpeners 109",
+      "ar": "مبراة 109"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 109.9,
@@ -1653,7 +1944,10 @@
     "productId": 110,
     "sku": "SHARPENE-101",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Sharpeners 110",
+      "ar": "مبراة 110"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 109.8,
@@ -1670,7 +1964,10 @@
     "productId": 111,
     "sku": "SHARPENE-103",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Sharpeners 111",
+      "ar": "مبراة 111"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 109.7,
@@ -1687,7 +1984,10 @@
     "productId": 112,
     "sku": "SHARPENE-105",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Sharpeners 112",
+      "ar": "مبراة 112"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 109.6,
@@ -1704,7 +2004,10 @@
     "productId": 113,
     "sku": "SHARPENE-107",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Sharpeners 113",
+      "ar": "مبراة 113"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 109.5,
@@ -1721,7 +2024,10 @@
     "productId": 114,
     "sku": "SHARPENE-109",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Sharpeners 114",
+      "ar": "مبراة 114"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 109.4,
@@ -1738,7 +2044,10 @@
     "productId": 115,
     "sku": "WHITEBOA-103",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Whiteboard Markers 115",
+      "ar": "أقلام سبورة 115"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 128.5,
@@ -1755,7 +2064,10 @@
     "productId": 116,
     "sku": "WHITEBOA-105",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Whiteboard Markers 116",
+      "ar": "أقلام سبورة 116"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 128.6,
@@ -1772,7 +2084,10 @@
     "productId": 117,
     "sku": "WHITEBOA-107",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Whiteboard Markers 117",
+      "ar": "أقلام سبورة 117"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 128.7,
@@ -1789,7 +2104,10 @@
     "productId": 118,
     "sku": "WHITEBOA-109",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Whiteboard Markers 118",
+      "ar": "أقلام سبورة 118"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 128.8,
@@ -1806,7 +2124,10 @@
     "productId": 119,
     "sku": "WHITEBOA-111",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Whiteboard Markers 119",
+      "ar": "أقلام سبورة 119"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 128.9,
@@ -1823,7 +2144,10 @@
     "productId": 120,
     "sku": "WHITEBOA-113",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Whiteboard Markers 120",
+      "ar": "أقلام سبورة 120"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 129,
@@ -1840,7 +2164,10 @@
     "productId": 121,
     "sku": "PERMANEN-109",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Permanent Markers 121",
+      "ar": "أقلام دائمة 121"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 127,
@@ -1857,7 +2184,10 @@
     "productId": 122,
     "sku": "PERMANEN-111",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Permanent Markers 122",
+      "ar": "أقلام دائمة 122"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 127.1,
@@ -1874,7 +2204,10 @@
     "productId": 123,
     "sku": "PERMANEN-113",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Permanent Markers 123",
+      "ar": "أقلام دائمة 123"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 127.2,
@@ -1891,7 +2224,10 @@
     "productId": 124,
     "sku": "HIGHLIGH-112",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Highlighters 124",
+      "ar": "أقلام تظليل 124"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 70.2,
@@ -1908,7 +2244,10 @@
     "productId": 125,
     "sku": "HIGHLIGH-114",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Highlighters 125",
+      "ar": "أقلام تظليل 125"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 70.3,
@@ -1925,7 +2264,10 @@
     "productId": 126,
     "sku": "HIGHLIGH-116",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Highlighters 126",
+      "ar": "أقلام تظليل 126"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 70.4,
@@ -1942,7 +2284,10 @@
     "productId": 127,
     "sku": "GELPENS-115",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Gel Pens 127",
+      "ar": "أقلام جل 127"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 127.1,
@@ -1959,7 +2304,10 @@
     "productId": 128,
     "sku": "GELPENS-117",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Gel Pens 128",
+      "ar": "أقلام جل 128"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 127,
@@ -1976,7 +2324,10 @@
     "productId": 129,
     "sku": "GELPENS-119",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Gel Pens 129",
+      "ar": "أقلام جل 129"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 126.9,
@@ -1993,7 +2344,10 @@
     "productId": 130,
     "sku": "BALLPOIN-118",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Ballpoint Pens 130",
+      "ar": "أقلام حبر جاف 130"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 51.4,
@@ -2010,7 +2364,10 @@
     "productId": 131,
     "sku": "BALLPOIN-120",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Ballpoint Pens 131",
+      "ar": "أقلام حبر جاف 131"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 51.5,
@@ -2027,7 +2384,10 @@
     "productId": 132,
     "sku": "BALLPOIN-122",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Ballpoint Pens 132",
+      "ar": "أقلام حبر جاف 132"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 51.6,
@@ -2044,7 +2404,10 @@
     "productId": 133,
     "sku": "FOUNTAIN-121",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Fountain Pens 133",
+      "ar": "أقلام ريشة 133"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 87.7,
@@ -2061,7 +2424,10 @@
     "productId": 134,
     "sku": "FOUNTAIN-123",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Fountain Pens 134",
+      "ar": "أقلام ريشة 134"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 87.6,
@@ -2078,7 +2444,10 @@
     "productId": 135,
     "sku": "FOUNTAIN-125",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Fountain Pens 135",
+      "ar": "أقلام ريشة 135"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 87.5,
@@ -2095,7 +2464,10 @@
     "productId": 136,
     "sku": "MECHANIC-124",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Mechanical Pencil Leads 136",
+      "ar": "رصاص لأقلام ميكانيكية 136"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 123.3,
@@ -2112,7 +2484,10 @@
     "productId": 137,
     "sku": "MECHANIC-126",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Mechanical Pencil Leads 137",
+      "ar": "رصاص لأقلام ميكانيكية 137"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 123.4,
@@ -2129,7 +2504,10 @@
     "productId": 138,
     "sku": "MECHANIC-128",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Mechanical Pencil Leads 138",
+      "ar": "رصاص لأقلام ميكانيكية 138"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 123.5,
@@ -2146,7 +2524,10 @@
     "productId": 139,
     "sku": "VEHICLES-127",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Vehicles 139",
+      "ar": "مركبات 139"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 132.1,
@@ -2163,7 +2544,10 @@
     "productId": 140,
     "sku": "VEHICLES-129",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Vehicles 140",
+      "ar": "مركبات 140"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 132,
@@ -2180,7 +2564,10 @@
     "productId": 141,
     "sku": "VEHICLES-131",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Vehicles 141",
+      "ar": "مركبات 141"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 131.9,
@@ -2197,7 +2584,10 @@
     "productId": 142,
     "sku": "VEHICLES-133",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Vehicles 142",
+      "ar": "مركبات 142"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 131.8,
@@ -2214,7 +2604,10 @@
     "productId": 143,
     "sku": "VEHICLES-135",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Vehicles 143",
+      "ar": "مركبات 143"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 131.7,
@@ -2231,7 +2624,10 @@
     "productId": 144,
     "sku": "VEHICLES-137",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Vehicles 144",
+      "ar": "مركبات 144"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 131.6,
@@ -2248,7 +2644,10 @@
     "productId": 145,
     "sku": "VEHICLES-139",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Vehicles 145",
+      "ar": "مركبات 145"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 131.5,
@@ -2265,7 +2664,10 @@
     "productId": 146,
     "sku": "VEHICLES-141",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Vehicles 146",
+      "ar": "مركبات 146"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 131.4,
@@ -2282,7 +2684,10 @@
     "productId": 147,
     "sku": "DOLLS-135",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Dolls 147",
+      "ar": "دمى 147"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 85.2,
@@ -2299,7 +2704,10 @@
     "productId": 148,
     "sku": "DOLLS-137",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Dolls 148",
+      "ar": "دمى 148"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 85.3,
@@ -2316,7 +2724,10 @@
     "productId": 149,
     "sku": "DOLLS-139",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Dolls 149",
+      "ar": "دمى 149"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 85.4,
@@ -2333,7 +2744,10 @@
     "productId": 150,
     "sku": "DOLLS-141",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Dolls 150",
+      "ar": "دمى 150"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 85.5,
@@ -2350,7 +2764,10 @@
     "productId": 151,
     "sku": "DOLLS-143",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Dolls 151",
+      "ar": "دمى 151"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 85.6,
@@ -2367,7 +2784,10 @@
     "productId": 152,
     "sku": "DOLLS-145",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Dolls 152",
+      "ar": "دمى 152"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 85.7,
@@ -2384,7 +2804,10 @@
     "productId": 153,
     "sku": "DOLLS-147",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Dolls 153",
+      "ar": "دمى 153"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 85.8,
@@ -2401,7 +2824,10 @@
     "productId": 154,
     "sku": "DOLLS-149",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Dolls 154",
+      "ar": "دمى 154"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 85.9,
@@ -2418,7 +2844,10 @@
     "productId": 155,
     "sku": "FOAMSHEE-143",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Foam Sheets 155",
+      "ar": "شرائح فوم 155"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 131.6,
@@ -2435,7 +2864,10 @@
     "productId": 156,
     "sku": "FOAMSHEE-145",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Foam Sheets 156",
+      "ar": "شرائح فوم 156"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 131.5,
@@ -2452,7 +2884,10 @@
     "productId": 157,
     "sku": "FOAMSHEE-147",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Foam Sheets 157",
+      "ar": "شرائح فوم 157"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 131.4,
@@ -2469,7 +2904,10 @@
     "productId": 158,
     "sku": "FOAMSHEE-149",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Foam Sheets 158",
+      "ar": "شرائح فوم 158"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 131.3,
@@ -2486,7 +2924,10 @@
     "productId": 159,
     "sku": "FOAMSHEE-151",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Foam Sheets 159",
+      "ar": "شرائح فوم 159"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 131.2,
@@ -2503,7 +2944,10 @@
     "productId": 160,
     "sku": "FOAMSHEE-153",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Foam Sheets 160",
+      "ar": "شرائح فوم 160"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 131.1,
@@ -2520,7 +2964,10 @@
     "productId": 161,
     "sku": "GLITTER-149",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Glitter 161",
+      "ar": "جليتر 161"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 31.9,
@@ -2537,7 +2984,10 @@
     "productId": 162,
     "sku": "GLITTER-151",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Glitter 162",
+      "ar": "جليتر 162"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 31.8,
@@ -2554,7 +3004,10 @@
     "productId": 163,
     "sku": "GLITTER-153",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Glitter 163",
+      "ar": "جليتر 163"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 31.7,
@@ -2571,7 +3024,10 @@
     "productId": 164,
     "sku": "STICKERS-152",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Stickers 164",
+      "ar": "ملصقات 164"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 18.6,
@@ -2588,7 +3044,10 @@
     "productId": 165,
     "sku": "STICKERS-154",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Stickers 165",
+      "ar": "ملصقات 165"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 18.5,
@@ -2605,7 +3064,10 @@
     "productId": 166,
     "sku": "STICKERS-156",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Stickers 166",
+      "ar": "ملصقات 166"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 18.4,
@@ -2622,7 +3084,10 @@
     "productId": 167,
     "sku": "SCISSORS-155",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Scissors 167",
+      "ar": "مقصات 167"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 33.9,
@@ -2639,7 +3104,10 @@
     "productId": 168,
     "sku": "SCISSORS-157",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Scissors 168",
+      "ar": "مقصات 168"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 34,
@@ -2656,7 +3124,10 @@
     "productId": 169,
     "sku": "SCISSORS-159",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Scissors 169",
+      "ar": "مقصات 169"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 34.1,
@@ -2673,7 +3144,10 @@
     "productId": 170,
     "sku": "SCISSORS-161",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Scissors 170",
+      "ar": "مقصات 170"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 34.2,
@@ -2690,7 +3164,10 @@
     "productId": 171,
     "sku": "CUTTERS-159",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Cutters 171",
+      "ar": "كترات 171"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 110,
@@ -2707,7 +3184,10 @@
     "productId": 172,
     "sku": "CUTTERS-161",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Cutters 172",
+      "ar": "كترات 172"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 109.9,
@@ -2724,7 +3204,10 @@
     "productId": 173,
     "sku": "CUTTERS-163",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Cutters 173",
+      "ar": "كترات 173"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 109.8,
@@ -2741,7 +3224,10 @@
     "productId": 174,
     "sku": "CRAYONS-162",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Crayons 174",
+      "ar": "ألوان شمعية 174"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 23.3,
@@ -2758,7 +3244,10 @@
     "productId": 175,
     "sku": "CRAYONS-164",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Crayons 175",
+      "ar": "ألوان شمعية 175"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 23.4,
@@ -2775,7 +3264,10 @@
     "productId": 176,
     "sku": "CRAYONS-166",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Crayons 176",
+      "ar": "ألوان شمعية 176"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 23.5,
@@ -2792,7 +3284,10 @@
     "productId": 177,
     "sku": "CRAYONS-168",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Crayons 177",
+      "ar": "ألوان شمعية 177"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 23.6,
@@ -2809,7 +3304,10 @@
     "productId": 178,
     "sku": "OILPASTE-166",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Oil Pastels 178",
+      "ar": "ألوان زيتية 178"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 81.1,
@@ -2826,7 +3324,10 @@
     "productId": 179,
     "sku": "OILPASTE-168",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Oil Pastels 179",
+      "ar": "ألوان زيتية 179"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 81.2,
@@ -2843,7 +3344,10 @@
     "productId": 180,
     "sku": "OILPASTE-170",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Oil Pastels 180",
+      "ar": "ألوان زيتية 180"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 81.3,
@@ -2860,7 +3364,10 @@
     "productId": 181,
     "sku": "STAPLERS-169",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Staplers 181",
+      "ar": "دباسات 181"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 93.4,
@@ -2877,7 +3384,10 @@
     "productId": 182,
     "sku": "STAPLERS-171",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Staplers 182",
+      "ar": "دباسات 182"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 93.5,
@@ -2894,7 +3404,10 @@
     "productId": 183,
     "sku": "STAPLERS-173",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Staplers 183",
+      "ar": "دباسات 183"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 93.6,
@@ -2911,7 +3424,10 @@
     "productId": 184,
     "sku": "STAPLERS-175",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Staplers 184",
+      "ar": "دباسات 184"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 93.7,
@@ -2928,7 +3444,10 @@
     "productId": 185,
     "sku": "STAPLERS-177",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Staplers 185",
+      "ar": "دباسات 185"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 93.8,
@@ -2945,7 +3464,10 @@
     "productId": 186,
     "sku": "STAPLERS-179",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Staplers 186",
+      "ar": "دباسات 186"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 93.9,
@@ -2962,7 +3484,10 @@
     "productId": 187,
     "sku": "STAPLERS-181",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Staplers 187",
+      "ar": "دباسات 187"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 94,
@@ -2979,7 +3504,10 @@
     "productId": 188,
     "sku": "STAPLERS-183",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Staplers 188",
+      "ar": "دباسات 188"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 94.1,
@@ -2996,7 +3524,10 @@
     "productId": 189,
     "sku": "HOLEPUNC-177",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Hole Punchers 189",
+      "ar": "خرامات 189"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 63.5,
@@ -3013,7 +3544,10 @@
     "productId": 190,
     "sku": "HOLEPUNC-179",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Hole Punchers 190",
+      "ar": "خرامات 190"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 63.4,
@@ -3030,7 +3564,10 @@
     "productId": 191,
     "sku": "HOLEPUNC-181",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Hole Punchers 191",
+      "ar": "خرامات 191"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 63.3,
@@ -3047,7 +3584,10 @@
     "productId": 192,
     "sku": "HOLEPUNC-183",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Hole Punchers 192",
+      "ar": "خرامات 192"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 63.2,
@@ -3064,7 +3604,10 @@
     "productId": 193,
     "sku": "CLIPS-181",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Clips 193",
+      "ar": "مشابك 193"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 111.9,
@@ -3081,7 +3624,10 @@
     "productId": 194,
     "sku": "CLIPS-183",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Clips 194",
+      "ar": "مشابك 194"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 112,
@@ -3098,7 +3644,10 @@
     "productId": 195,
     "sku": "CLIPS-185",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Clips 195",
+      "ar": "مشابك 195"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 112.1,
@@ -3115,7 +3664,10 @@
     "productId": 196,
     "sku": "CLIPS-187",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Clips 196",
+      "ar": "مشابك 196"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 112.2,
@@ -3132,7 +3684,10 @@
     "productId": 197,
     "sku": "ENVELOPE-185",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Envelopes 197",
+      "ar": "أظرفة 197"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 22.3,
@@ -3149,7 +3704,10 @@
     "productId": 198,
     "sku": "ENVELOPE-187",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Envelopes 198",
+      "ar": "أظرفة 198"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 22.4,
@@ -3166,7 +3724,10 @@
     "productId": 199,
     "sku": "ENVELOPE-189",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Envelopes 199",
+      "ar": "أظرفة 199"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 22.5,
@@ -3183,7 +3744,10 @@
     "productId": 200,
     "sku": "ENVELOPE-191",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Envelopes 200",
+      "ar": "أظرفة 200"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 22.6,
@@ -3200,7 +3764,10 @@
     "productId": 201,
     "sku": "LABELS2-189",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Labels 2 201",
+      "ar": "ملصقات تعريفية 2 201"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 81.2,
@@ -3217,7 +3784,10 @@
     "productId": 202,
     "sku": "LABELS2-191",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Labels 2 202",
+      "ar": "ملصقات تعريفية 2 202"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 81.1,
@@ -3234,7 +3804,10 @@
     "productId": 203,
     "sku": "LABELS2-193",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Labels 2 203",
+      "ar": "ملصقات تعريفية 2 203"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 81,
@@ -3251,7 +3824,10 @@
     "productId": 204,
     "sku": "STANDS-192",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Stands 204",
+      "ar": "حوامل 204"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 127.3,
@@ -3268,7 +3844,10 @@
     "productId": 205,
     "sku": "STANDS-194",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Stands 205",
+      "ar": "حوامل 205"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 127.4,
@@ -3285,7 +3864,10 @@
     "productId": 206,
     "sku": "STANDS-196",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Stands 206",
+      "ar": "حوامل 206"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 127.5,
@@ -3302,7 +3884,10 @@
     "productId": 207,
     "sku": "STANDS-198",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Stands 207",
+      "ar": "حوامل 207"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 127.6,
@@ -3319,7 +3904,10 @@
     "productId": 208,
     "sku": "STANDS-200",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Stands 208",
+      "ar": "حوامل 208"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 127.7,
@@ -3336,7 +3924,10 @@
     "productId": 209,
     "sku": "STANDS-202",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Stands 209",
+      "ar": "حوامل 209"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 127.8,
@@ -3353,7 +3944,10 @@
     "productId": 210,
     "sku": "STANDS-204",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Stands 210",
+      "ar": "حوامل 210"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 127.9,
@@ -3370,7 +3964,10 @@
     "productId": 211,
     "sku": "STANDS-206",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Stands 211",
+      "ar": "حوامل 211"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 128,
@@ -3387,7 +3984,10 @@
     "productId": 212,
     "sku": "CABINETS-200",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Cabinets 212",
+      "ar": "خزائن 212"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 80.5,
@@ -3404,7 +4004,10 @@
     "productId": 213,
     "sku": "CABINETS-202",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Cabinets 213",
+      "ar": "خزائن 213"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 80.4,
@@ -3421,7 +4024,10 @@
     "productId": 214,
     "sku": "CABINETS-204",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Cabinets 214",
+      "ar": "خزائن 214"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 80.3,
@@ -3438,7 +4044,10 @@
     "productId": 215,
     "sku": "CABINETS-206",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Cabinets 215",
+      "ar": "خزائن 215"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 80.2,
@@ -3455,7 +4064,10 @@
     "productId": 216,
     "sku": "BLANKETS-204",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Blankets 216",
+      "ar": "بطانيات 216"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 19.2,
@@ -3472,7 +4084,10 @@
     "productId": 217,
     "sku": "BLANKETS-206",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Blankets 217",
+      "ar": "بطانيات 217"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 19.1,
@@ -3489,7 +4104,10 @@
     "productId": 218,
     "sku": "BLANKETS-208",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Blankets 218",
+      "ar": "بطانيات 218"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 19,
@@ -3506,7 +4124,10 @@
     "productId": 219,
     "sku": "BLANKETS-210",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Blankets 219",
+      "ar": "بطانيات 219"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 18.9,
@@ -3523,7 +4144,10 @@
     "productId": 220,
     "sku": "BUCKETS-208",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Buckets 220",
+      "ar": "أوعية 220"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 29.3,
@@ -3540,7 +4164,10 @@
     "productId": 221,
     "sku": "BUCKETS-210",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Buckets 221",
+      "ar": "أوعية 221"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 29.4,
@@ -3557,7 +4184,10 @@
     "productId": 222,
     "sku": "BUCKETS-212",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Buckets 222",
+      "ar": "أوعية 222"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 29.5,
@@ -3574,7 +4204,10 @@
     "productId": 223,
     "sku": "RUGS-211",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Rugs 223",
+      "ar": "سجاد 223"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 24.1,
@@ -3591,7 +4224,10 @@
     "productId": 224,
     "sku": "RUGS-213",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Rugs 224",
+      "ar": "سجاد 224"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 24,
@@ -3608,7 +4244,10 @@
     "productId": 225,
     "sku": "RUGS-215",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Rugs 225",
+      "ar": "سجاد 225"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 23.9,
@@ -3625,7 +4264,10 @@
     "productId": 226,
     "sku": "CUPS-214",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Cups 226",
+      "ar": "أكواب 226"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 18.7,
@@ -3642,7 +4284,10 @@
     "productId": 227,
     "sku": "CUPS-216",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Cups 227",
+      "ar": "أكواب 227"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 18.6,
@@ -3659,7 +4304,10 @@
     "productId": 228,
     "sku": "CUPS-218",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Cups 228",
+      "ar": "أكواب 228"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 18.5,
@@ -3676,7 +4324,10 @@
     "productId": 229,
     "sku": "CUPS-220",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Cups 229",
+      "ar": "أكواب 229"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 18.4,
@@ -3693,7 +4344,10 @@
     "productId": 230,
     "sku": "MUGS-218",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Mugs 230",
+      "ar": "مجات 230"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 39.6,
@@ -3710,7 +4364,10 @@
     "productId": 231,
     "sku": "MUGS-220",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Mugs 231",
+      "ar": "مجات 231"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 39.5,
@@ -3727,7 +4384,10 @@
     "productId": 232,
     "sku": "MUGS-222",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Mugs 232",
+      "ar": "مجات 232"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 39.4,
@@ -3744,7 +4404,10 @@
     "productId": 233,
     "sku": "MUGS-224",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Mugs 233",
+      "ar": "مجات 233"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 39.3,
@@ -3761,7 +4424,10 @@
     "productId": 234,
     "sku": "PLATES-222",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Plates 234",
+      "ar": "أطباق 234"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 82.5,
@@ -3778,7 +4444,10 @@
     "productId": 235,
     "sku": "PLATES-224",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Plates 235",
+      "ar": "أطباق 235"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 82.6,
@@ -3795,7 +4464,10 @@
     "productId": 236,
     "sku": "PLATES-226",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Plates 236",
+      "ar": "أطباق 236"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 82.7,
@@ -3812,7 +4484,10 @@
     "productId": 237,
     "sku": "PLATES-228",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Plates 237",
+      "ar": "أطباق 237"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 82.8,
@@ -3829,7 +4504,10 @@
     "productId": 238,
     "sku": "HOLDERS-226",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Holders 238",
+      "ar": "حوامل 238"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 128.3,
@@ -3846,7 +4524,10 @@
     "productId": 239,
     "sku": "HOLDERS-228",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Holders 239",
+      "ar": "حوامل 239"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 128.4,
@@ -3863,7 +4544,10 @@
     "productId": 240,
     "sku": "HOLDERS-230",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Holders 240",
+      "ar": "حوامل 240"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 128.5,
@@ -3880,7 +4564,10 @@
     "productId": 241,
     "sku": "HOLDERS-232",
     "variantKey": "default",
-    "localizedLabel": {},
+    "localizedLabel": {
+      "en": "Holders 241",
+      "ar": "حوامل 241"
+    },
     "displayOrder": 0,
     "isActive": true,
     "basePrice": 128.6,

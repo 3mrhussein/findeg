@@ -4,8 +4,10 @@ import { useForm, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@findeg/ui";
 import { Form } from "@findeg/ui";
-import { deleteCategoryAction } from "@actions/admin-actions";
-import { createCategoryAction, updateCategoryAction } from "@actions/admin-actions";
+import {
+  createCategoryAction as createCategory,
+  updateCategoryAction as updateCategory,
+} from "@data/categories/actions";
 import { CategoryInput } from "@findeg/backend/features/administration/domain/types";
 
 import { useRouter } from "@i18n/navigation";
@@ -75,8 +77,8 @@ export function CategoryForm({ initialData, categories }: CategoryFormProps) {
     };
     try {
       const result = initialData
-        ? await updateCategoryAction(initialData.id, input)
-        : await createCategoryAction(input);
+        ? await updateCategory(initialData.id, input)
+        : await createCategory(input);
       if (result.success) {
         toast({
           title: initialData ? "Category updated" : "Category created",

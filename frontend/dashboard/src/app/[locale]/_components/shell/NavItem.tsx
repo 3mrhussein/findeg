@@ -6,12 +6,12 @@ import * as LucideIcons from "lucide-react";
 import { ChevronRight } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@findeg/ui";
 import { cn } from "@lib/utils";
-import { useAdminPermissions } from "../../../../features/administration/presentation/hooks/useAdminPermissions";
-import type { NavItem as NavItemType } from "../../../../features/administration/presentation/config/nav-config";
 import { usePathname } from "@/i18n/navigation";
+import type { NavItem } from "@/interfaces";
+import { useAdminPermissions } from "@/hooks/useAdminPermissions";
 
 export interface NavItemProps {
-  item: NavItemType;
+  item: NavItem;
   collapsed?: boolean;
   locale?: string;
   depth?: number;
@@ -19,11 +19,14 @@ export interface NavItemProps {
 
 export function NavItem({ item, collapsed = false, locale = "en", depth = 0 }: NavItemProps) {
   const pathname = usePathname();
-  const { can, portalRole, isSystemAdmin } = useAdminPermissions();
-  const [isOpen, setIsOpen] = React.useState(false);
-
+  const { can, portalRole, systemAdmin } = useAdminPermissions();
   // Normalize pathname and href for comparison (remove locale prefix)
   const normalizedPathname = pathname.replace(new RegExp(`^/${locale}`), "");
+
+  const [isOpen, setIsOpen] = React.useState(() => {
+    if (item.persistent) return true;
+    return item.children?.some((child) => normalizedPathname.startsWith(child.href)) ?? false;
+  });
 
   // An item is active if the current path matches its href exactly,
   // or if it's the root of the current path (dashboard)
@@ -34,24 +37,13 @@ export function NavItem({ item, collapsed = false, locale = "en", depth = 0 }: N
 
   const label = locale === "ar" ? item.labelAr : item.label;
 
-  // Auto-expand if a child is active OR if it's a persistent item
-  React.useEffect(() => {
-    if (item.persistent) {
-      setIsOpen(true);
-      return;
-    }
-    if (item.children && item.children.some((child) => normalizedPathname.startsWith(child.href))) {
-      setIsOpen(true);
-    }
-  }, [normalizedPathname, item.children, item.persistent]);
-
   // Permission check
-  if (item.permission && !isSystemAdmin && !can(item.permission)) {
+  if (item.permission && !systemAdmin && !can(item.permission)) {
     return null;
   }
 
   // Portal role check
-  if (item.portalRoles && !isSystemAdmin) {
+  if (item.portalRoles && !systemAdmin) {
     if (!portalRole || !item.portalRoles.includes(portalRole)) {
       return null;
     }

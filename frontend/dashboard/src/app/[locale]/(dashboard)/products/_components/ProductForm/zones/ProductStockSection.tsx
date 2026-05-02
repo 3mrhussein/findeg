@@ -8,7 +8,7 @@ import { Input } from "@findeg/ui";
 import { Separator } from "@findeg/ui";
 import { SkuInput } from "../shared/SkuInput";
 import { WeightInput } from "../shared/WeightInput";
-import type { ProductFormValues } from "../../../../../../../features/administration/presentation/forms/product-form";
+import { ProductFormValues } from "@/interfaces";
 
 interface ProductStockSectionProps {
   variantIndex?: number;

@@ -70,7 +70,7 @@ export function Navbar() {
       <div className="hidden h-9 w-full items-center justify-between border-b border-slate-100 bg-slate-50 px-4 text-xs dark:border-slate-800 dark:bg-slate-900/50 sm:flex lg:px-8">
         <div className="flex items-center gap-2 text-slate-500 hover:text-slate-900 dark:hover:text-white cursor-pointer transition-colors">
           <MapPin className="size-3.5" />
-          <span>Deliver to: Cairo</span>
+          <span>{t("DeliverTo", { city: "Cairo" })}</span>
         </div>
         <div className="flex items-center gap-4">
           <ToggleLanguage />
@@ -103,7 +103,11 @@ export function Navbar() {
         <div className="flex items-center gap-2 sm:gap-4">
           <Link href={isLoggedIn ? "/dashboard" : "/login"}>
             <div className="flex size-10 items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors">
-              <IconTooltip icon={User} label={isLoggedIn ? "My Account" : "Sign In"} size={20} />
+              <IconTooltip
+                icon={User}
+                label={isLoggedIn ? t("MyAccount") : t("SignIn")}
+                size={20}
+              />
             </div>
           </Link>
 
@@ -111,7 +115,7 @@ export function Navbar() {
 
           <Link href={isLoggedIn ? "/dashboard/wishlist" : "/login?returnUrl=/dashboard/wishlist"}>
             <div className="flex size-10 items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors">
-              <IconTooltip icon={Heart} label="Saved Items" size={20} />
+              <IconTooltip icon={Heart} label={t("SavedItems")} size={20} />
             </div>
           </Link>
 
@@ -130,7 +134,7 @@ export function Navbar() {
           onMouseLeave={handleMouseLeaveMenu}
         >
           <Menu className="size-5" />
-          <span>All Categories</span>
+          <span>{t("AllCategories")}</span>
         </div>
 
         {/* Dynamic Category Shortcuts */}
@@ -162,9 +166,9 @@ export function Navbar() {
             className="flex items-center gap-1.5 hover:text-amber-200 transition-colors"
           >
             <Flame className="size-4 text-amber-400" />
-            <span>Deals</span>
+            <span>{t("Deals")}</span>
             <span className="bg-amber-500 text-white text-[10px] px-1.5 py-0.5 rounded-sm ml-1">
-              HOT
+              {t("Hot")}
             </span>
           </Link>
           <Link
@@ -172,7 +176,7 @@ export function Navbar() {
             className="flex items-center gap-1.5 hover:text-blue-200 transition-colors"
           >
             <Sparkles className="size-4" />
-            <span>New Arrivals</span>
+            <span>{t("NewArrivals")}</span>
           </Link>
         </div>
 

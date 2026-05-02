@@ -1,5 +1,4 @@
 import { Resend } from "resend";
-import { render } from "@react-email/components";
 import React from "react";
 import { Order } from "@findeg/backend/features/order/domain/entities/Order";
 import {
@@ -27,6 +26,7 @@ const formatCurrency = (amount: number, currency: string | undefined, locale: st
 };
 
 import env from "@findeg/env";
+import { parse } from "../../core/domain/value-objects";
 
 /**
  *
@@ -72,18 +72,11 @@ export class ResendEmailService implements IEmailService {
   /**
    *
    */
-  private resolveLocale(customerLocale?: string | null): string {
-    return customerLocale === "ar" ? "ar" : "en";
-  }
-
-  /**
-   *
-   */
   async sendOrderConfirmation(
     order: Order,
     customer: { email: string; firstName?: string; lastName?: string; locale?: string | null },
   ): Promise<void> {
-    const locale = this.resolveLocale(customer.locale);
+    const locale = parse(customer.locale);
     const subject = locale === "ar" ? `تأكيد طلبك #${order.id}` : `Order Confirmation #${order.id}`;
 
     const items = (order.items || []).map((item) => ({
@@ -118,7 +111,7 @@ export class ResendEmailService implements IEmailService {
   async sendOrderStatusUpdate(order: Order, newStatus: string): Promise<void> {
     if (!order.customerEmail) return;
 
-    const locale = this.resolveLocale(
+    const locale = parse(
       "customerLocale" in order ? (order as { customerLocale?: string }).customerLocale : "en",
     );
     const subject =
@@ -142,7 +135,7 @@ export class ResendEmailService implements IEmailService {
     user: { email: string; firstName?: string; lastName?: string; locale?: string | null },
     resetToken: string,
   ): Promise<void> {
-    const locale = this.resolveLocale(user.locale);
+    const locale = parse(user.locale);
     const subject = locale === "ar" ? "إعادة تعيين كلمة المرور" : "Reset your password";
     const baseUrl = env.NEXT_PUBLIC_APP_URL;
     const resetLink = `${baseUrl}/${locale}/reset-password?token=${resetToken}`;
@@ -163,7 +156,7 @@ export class ResendEmailService implements IEmailService {
     user: { email: string; firstName?: string; lastName?: string; locale?: string | null },
     list: EmailSchoolList,
   ): Promise<void> {
-    const locale = this.resolveLocale(user.locale);
+    const locale = parse(user.locale);
     const subject = locale === "ar" ? "تمت الموافقة على وصولك" : "Access Approved";
 
     const template = React.createElement(SchoolListAccessApprovedEmail, {
@@ -184,7 +177,7 @@ export class ResendEmailService implements IEmailService {
     schoolAdmin: { email: string; firstName?: string; lastName?: string; locale?: string | null },
     request: AccessRequest,
   ): Promise<void> {
-    const locale = this.resolveLocale(schoolAdmin.locale);
+    const locale = parse(schoolAdmin.locale);
     const subject = locale === "ar" ? "طلب وصول جديد إلى القائمة" : "New List Access Request";
 
     const template = React.createElement(SchoolListAccessRequestEmail, {
@@ -207,7 +200,7 @@ export class ResendEmailService implements IEmailService {
     admin: { email: string; firstName?: string; lastName?: string; locale?: string | null },
     inviteToken: string,
   ): Promise<void> {
-    const locale = this.resolveLocale(admin.locale);
+    const locale = parse(admin.locale);
     const subject = locale === "ar" ? "دعوة لإدارة فايند إي جي" : "Invitation to manage FindEg";
     const baseUrl = env.NEXT_PUBLIC_APP_URL;
     const inviteLink = `${baseUrl}/admin/accept-invite?token=${inviteToken}`;

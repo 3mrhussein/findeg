@@ -19,7 +19,7 @@ const callToolApi = async (tool: string, params: any) => {
   return response.json();
 };
 
-export const tools: WebMCPTool[] = [
+export const TOOLS: WebMCPTool[] = [
   // --- Navigation ---
   {
     name: "findeg_navigate_to_page",
@@ -226,7 +226,7 @@ export function registerAllTools() {
   }
 
   try {
-    tools.forEach((tool) => {
+    TOOLS.forEach((tool) => {
       ctx.registerTool!({
         name: tool.name,
         description: tool.description,
@@ -235,7 +235,7 @@ export function registerAllTools() {
       });
     });
     toolsRegistered = true;
-    console.log(`[WebMCP]: Successfully registered ${tools.length} tools.`);
+    console.log(`[WebMCP]: Successfully registered ${TOOLS.length} tools.`);
     return true;
   } catch (error) {
     console.error("[WebMCP Registration Error]:", error);

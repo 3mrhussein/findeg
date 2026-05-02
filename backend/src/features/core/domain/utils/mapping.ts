@@ -13,15 +13,3 @@ import { ID, IdSchema } from "../types/common";
 export const toDomainID = (val: string | number | null | undefined): ID => {
   return IdSchema.parse(val);
 };
-
-/**
- * Returns the localized value based on the requested locale,
- * falling back to the primary language.
- */
-export const resolveLocalized = (
-  val: Record<string, string> | null | undefined,
-  locale: string = "en",
-): string => {
-  if (!val) return "";
-  return val[locale] || val["en"] || Object.values(val)[0] || "";
-};

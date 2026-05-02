@@ -49,7 +49,7 @@ export class DrizzleUserRepository
           .from(userRoles)
           .innerJoin(roles, eq(roles.id, userRoles.roleId))
           .where(eq(userRoles.userId, userId)),
-        db
+        this.db
           .select({
             permissionCode: permissions.code,
           })

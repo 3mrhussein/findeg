@@ -11,7 +11,10 @@ import { createAdministrationServices } from "@findeg/backend/features/administr
 import { createCatalogServices } from "@findeg/backend/features/catalog";
 import { type Locale } from "@findeg/backend/features/core";
 
-import type { ProductListResult, ProductListFilters } from "@findeg/backend/features/administration";
+import type {
+  ProductListResult,
+  ProductListFilters,
+} from "@findeg/backend/features/administration";
 
 /**
  * Get all products with optional filters

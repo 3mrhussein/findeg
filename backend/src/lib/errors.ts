@@ -87,7 +87,7 @@ export class ServiceUnavailableError extends AppError {
 /**
  * Helper to check if error is an operational error
  */
-export function isOperationalError(error: Error): boolean {
+export function operationalError(error: Error): boolean {
   if (error instanceof AppError) {
     return error.isOperational;
   }

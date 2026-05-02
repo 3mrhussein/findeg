@@ -9,7 +9,7 @@ import { serial, text, integer, boolean, timestamp, jsonb } from "drizzle-orm/pg
 import { relations } from "drizzle-orm";
 import { catalogSchema } from "../schemas";
 import { products } from "./products";
-import type { LocalizedStringDraft } from "../../../backend/src/features/core/domain/value-objects";
+import { PartialTranslationMap } from "./types";
 
 /**
  * Categories Table
@@ -18,10 +18,10 @@ export const categories = catalogSchema.table("categories", {
   id: serial("id").primaryKey(),
   slug: text("slug").notNull().unique(),
   /** Locale-keyed name map */
-  localizedName: jsonb("localized_name").$type<LocalizedStringDraft>().default({}).notNull(),
+  localizedName: jsonb("localized_name").$type<PartialTranslationMap>().default({}).notNull(),
   /** Locale-keyed description map */
   localizedDescription: jsonb("localized_description")
-    .$type<LocalizedStringDraft>()
+    .$type<PartialTranslationMap>()
     .default({})
     .notNull(),
   parentId: integer("parent_id"),

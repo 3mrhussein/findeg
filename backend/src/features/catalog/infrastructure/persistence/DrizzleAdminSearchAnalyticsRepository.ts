@@ -1,4 +1,4 @@
-import { db } from "@findeg/db";
+import { db } from "@findeg/db/connection";
 import { searchLogs } from "@findeg/db/schema";
 import { products } from "@findeg/db/schema";
 import {

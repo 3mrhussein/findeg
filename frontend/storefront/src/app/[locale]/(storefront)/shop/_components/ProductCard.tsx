@@ -5,11 +5,7 @@ import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { Heart, Eye, Star, ShoppingCart } from "lucide-react";
 import { Link } from "@i18n/navigation";
-import type { Product } from "@findeg/backend/features/catalog/domain/entities/Product";
-import { ProductEntity } from "@findeg/backend/features/catalog/domain/entities/Product";
-import { VariantEntity } from "@findeg/backend/features/catalog/domain/entities/Variant";
-import type { UomCode } from "@findeg/backend/features/core/domain/types/common";
-import { getCanonicalProductHref } from "@findeg/backend/features/catalog/domain/utils/slug";
+import type { Product, UomCode } from "@data/catalog/types";
 import { useCart } from "@hooks/useCart";
 import { useToast } from "@hooks/use-toast";
 import { useUser } from "@hooks/useUser";
@@ -91,23 +87,31 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
       };
     }
 
-    const entity = new VariantEntity(primaryVariant);
+    const variant = primaryVariant;
+    const inventory = variant.inventory || [];
+    const availableUnits = inventory.reduce((acc, inv) => acc + (inv.onHand || 0), 0);
+    const inStock = availableUnits > 0;
+    const lowStock = inStock && availableUnits < 5;
+
     return {
-      inStock: entity.isInStock(),
-      lowStock: entity.isLowStock(),
-      availableUnits: entity.getAvailableStock(),
+      inStock,
+      lowStock,
+      availableUnits,
     };
   }, [primaryVariant, product.variants]);
 
   const discountPercentage = useMemo(() => {
-    if (!primaryVariant) return 0;
-    return new VariantEntity(primaryVariant).getDiscountPercentage();
+    if (!primaryVariant || !primaryVariant.basePrice || !primaryVariant.strikePrice) return 0;
+    const strike = Number(primaryVariant.strikePrice);
+    const base = Number(primaryVariant.basePrice);
+    const diff = strike - base;
+    if (diff <= 0) return 0;
+    return Math.round((diff / strike) * 100);
   }, [primaryVariant]);
 
   const uomOptions = useMemo<UomOption[]>(() => {
     if (!primaryVariant) return [];
 
-    const variantEntity = new VariantEntity(primaryVariant);
     const sellableUoms = (primaryVariant.sellableUoms || []).filter((uom) => uom.isEnabled);
 
     if (sellableUoms.length === 0) {
@@ -115,17 +119,16 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
         {
           code: "pcs",
           label: "pcs",
-          price: primaryVariant.basePrice,
-          strikePrice: primaryVariant.strikePrice,
+          price: Number(primaryVariant.basePrice),
+          strikePrice: primaryVariant.strikePrice ? Number(primaryVariant.strikePrice) : undefined,
         },
       ];
     }
 
     return sellableUoms.map((uom) => {
-      const quote = variantEntity.getPriceForUom(uom.uomCode);
-      const price = quote?.unitPrice ?? primaryVariant.basePrice * uom.factorToBase;
+      const price = Number(primaryVariant.basePrice) * uom.factorToBase;
       const strikePrice = primaryVariant.strikePrice
-        ? primaryVariant.strikePrice * uom.factorToBase
+        ? Number(primaryVariant.strikePrice) * uom.factorToBase
         : undefined;
 
       return {
@@ -175,7 +178,10 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
         className: "bg-orange-500 text-white",
       };
     }
-    if (new ProductEntity(product).isNew()) {
+    const isNew = product.createdAt
+      ? new Date().getTime() - new Date(product.createdAt).getTime() < 30 * 24 * 60 * 60 * 1000
+      : false;
+    if (isNew) {
       return {
         text: t("NewBadge"),
         className: "bg-emerald-600 text-white",
@@ -232,7 +238,7 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
       />
 
       {badge && (
-        <Badge className={cn("absolute start-3 top-3 z-20 rounded-full", badge.className)}>
+        <Badge className={cn("absolute inset-s-3 top-3 z-20 rounded-full", badge.className)}>
           {badge.text}
         </Badge>
       )}
@@ -265,7 +271,7 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
       <Tooltip>
         <TooltipTrigger asChild>
           <Link
-            href={getCanonicalProductHref(product)}
+            href={`/shop/products/${(product as any).slug}`}
             className="line-clamp-2 text-sm font-semibold leading-5 text-foreground hover:text-primary"
           >
             {product.name}
@@ -295,11 +301,11 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
 
       <div className="mt-3 flex items-end gap-2">
         <span className="text-base font-bold text-foreground">
-          {egpFormatter.format(currentPrice)}
+          {egpFormatter.format(Number(currentPrice))}
         </span>
-        {originalPrice && originalPrice > currentPrice ? (
+        {originalPrice && Number(originalPrice) > Number(currentPrice) ? (
           <span className="text-xs text-muted-foreground line-through">
-            {egpFormatter.format(originalPrice)}
+            {egpFormatter.format(Number(originalPrice))}
           </span>
         ) : null}
       </div>

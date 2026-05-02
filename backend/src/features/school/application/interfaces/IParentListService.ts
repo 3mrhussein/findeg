@@ -45,4 +45,9 @@ export interface IParentListService {
    * Add the list (kit) to the cart.
    */
   addListToCart(sessionId: number, cartId: number): Promise<void>;
+
+  /**
+   * Orchestrates the retrieval of all data required for the school list page.
+   */
+  getSchoolListPageData(slug: string, userId?: number): Promise<any>;
 }

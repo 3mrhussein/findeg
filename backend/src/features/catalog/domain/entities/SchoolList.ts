@@ -6,7 +6,7 @@
  */
 
 import { z } from "zod";
-import { IdSchema, LocalizedStringSchema, type ID } from "../../../core/domain/types/common";
+import { IdSchema, TranslationMapSchema, type ID } from "../../../core/domain/types/common";
 import { VariantSchema, type Variant } from "./Variant";
 
 // ─── School List Item Alternative ───────────────────────────────────────────
@@ -26,7 +26,7 @@ export type SchoolListAlternative = z.infer<typeof SchoolListAlternativeSchema>;
 export const SchoolListItemSchema = z.object({
   id: IdSchema,
   displayOrder: z.number().default(0),
-  localizedLabel: LocalizedStringSchema,
+  localizedLabel: TranslationMapSchema,
   categoryId: IdSchema.optional(),
   quantityRequired: z.number().int().positive().default(1),
   isLocked: z.boolean().default(false),
@@ -45,8 +45,8 @@ export const SchoolListSchema = z.object({
   schoolName: z.string().min(1),
   grade: z.string().min(1),
   academicYear: z.string().min(1),
-  localizedTitle: LocalizedStringSchema,
-  localizedDescription: LocalizedStringSchema.optional(),
+  localizedTitle: TranslationMapSchema,
+  localizedDescription: TranslationMapSchema.optional(),
   heroImageUrl: z.string().optional(),
   isActive: z.boolean().default(true),
   publishedAt: z.date().optional(),

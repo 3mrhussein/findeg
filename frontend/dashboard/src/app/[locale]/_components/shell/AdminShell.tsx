@@ -3,7 +3,7 @@ import { AdminSidebar } from "./AdminSidebar";
 import { AdminHeader } from "./AdminHeader";
 import { AdminBreadcrumb } from "./AdminBreadcrumb";
 import { SidebarProvider } from "./SidebarContext";
-import { moveCategoryUpAction, moveCategoryDownAction, logoutAction } from "@actions/admin-actions";
+import { logoutAction as logout } from "@actions/auth-actions";
 
 export interface AdminShellProps {
   children: React.ReactNode;
@@ -22,7 +22,7 @@ export function AdminShell({
 }: AdminShellProps) {
   const handleLogout = async () => {
     "use server";
-    await logoutAction();
+    await logout();
   };
 
   return (

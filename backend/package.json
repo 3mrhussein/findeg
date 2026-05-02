@@ -11,7 +11,7 @@
     "test:unit": "vitest --run",
     "test:watch": "vitest",
     "type-check": "tsc --noEmit",
-    "lint": "eslint .",
+    "lint": "eslint . --fix",
     "test:e2e": "echo 'No e2e tests for @backend'"
   },
   "dependencies": {

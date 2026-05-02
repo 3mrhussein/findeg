@@ -3,7 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import { useRouter } from "@i18n/navigation";
-import { Product } from "@findeg/backend/features/catalog/domain/entities/Product";
+import { Product } from "@/data/catalog/types";
 import { Button } from "@findeg/ui";
 import { Price } from "@findeg/ui";
 import { useTranslations } from "next-intl";
@@ -52,8 +52,12 @@ export const ProductListItemUI: React.FC<ProductListItemUIProps> = ({
         <div className="grow"></div>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mt-4">
           <Price
-            price={product.variants?.[0]?.basePrice || 0}
-            strikePrice={product.variants?.[0]?.strikePrice}
+            price={Number(product.variants?.[0]?.basePrice || 0)}
+            strikePrice={
+              product.variants?.[0]?.strikePrice
+                ? Number(product.variants?.[0]?.strikePrice)
+                : undefined
+            }
             className="mb-3 sm:mb-0"
           />
           <Button onClick={onAddToCart}>

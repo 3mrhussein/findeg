@@ -7,7 +7,7 @@
 
 import bcrypt from "bcryptjs";
 import { eq, inArray } from "drizzle-orm";
-import { db } from "@findeg/db";
+import { db } from "@findeg/db/connection";
 import {
   users,
   userRoles,
@@ -18,7 +18,7 @@ import {
 } from "@findeg/db/schema";
 
 import { NotAuthenticatedError, ResourceNotFoundError } from "../../../core/domain/errors";
-import { resolveLocale } from "../../../core/domain/value-objects";
+import { parse } from "../../../core/domain/value-objects";
 import { createCatalogServices } from "../../../catalog";
 import { createOrderServices } from "../../../order";
 import { IUserRepository } from "../interfaces/IUserRepository";
@@ -174,20 +174,21 @@ export class UserService implements IUserService {
    * Aggregates data for the user dashboard.
    */
   async getDashboardData(locale: string, userId: number): Promise<DashboardData> {
-    const resolvedLocale = resolveLocale(locale);
+    const resolvedLocale = parse(locale);
     const { products, schoolLists } = createCatalogServices();
     const { orders } = createOrderServices();
-
-    const [allProducts, userOrders, allSchoolLists] = await Promise.all([
+    const [allProducts, userOrders, allSchoolLists, user] = await Promise.all([
       products.getAll(resolvedLocale),
       orders.getByUserId(userId),
       schoolLists.getAllLists(),
+      this.getAdmin(userId),
     ]);
 
     return {
       products: allProducts,
       orders: userOrders,
       schoolLists: allSchoolLists,
+      session: user,
     };
   }
 

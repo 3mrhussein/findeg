@@ -1,6 +1,6 @@
 import { eq, desc, or, sql } from "drizzle-orm";
 import { ID, Slug } from "../../../core/domain/types/common";
-import { db } from "@findeg/db";
+import { db } from "@findeg/db/connection";
 import { brands, products } from "@findeg/db/schema";
 import {
   IBrandRepository,
@@ -8,11 +8,7 @@ import {
   BrandUpdateInput,
 } from "../../application/interfaces/IBrandRepository";
 import { Brand } from "../../domain/entities/Brand";
-import {
-  DEFAULT_LOCALE,
-  toLocalizedString,
-  type Locale,
-} from "../../../core/domain/value-objects";
+import { DEFAULT_LOCALE, asTranslationMap, type Locale } from "../../../core/domain/value-objects";
 
 type DbBrand = typeof brands.$inferSelect;
 
@@ -28,13 +24,13 @@ export class DrizzleBrandRepository implements IBrandRepository {
     const localizedDescDraft = (dbBrand.localizedDescription || {}) as Record<string, string>;
 
     const localizedContent = {
-      name: toLocalizedString(
+      name: asTranslationMap(
         Object.keys(localizedNameDraft).length > 0
           ? localizedNameDraft
           : { en: dbBrand.name, ar: dbBrand.name },
         dbBrand.name,
       ),
-      description: toLocalizedString(localizedDescDraft, ""),
+      description: asTranslationMap(localizedDescDraft, ""),
     };
 
     return {

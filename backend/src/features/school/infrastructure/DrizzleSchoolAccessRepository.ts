@@ -1,4 +1,4 @@
-import { db } from "@findeg/db";
+import { db } from "@findeg/db/connection";
 import { eq, and, desc, sql } from "drizzle-orm";
 import { ID } from "@findeg/backend/features/core/domain/types/common";
 import { ISchoolAccessRepository } from "@findeg/backend/features/school/application/interfaces/ISchoolAccessRepository";

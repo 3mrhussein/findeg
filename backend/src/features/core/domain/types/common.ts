@@ -13,7 +13,7 @@ import {
   RoleIdSchema as CoreRoleIdSchema,
   RoleScopeSchema as CoreRoleScopeSchema,
   MoneyAmountSchema,
-  LocalizedStringSchema,
+  TranslationMapSchema,
   type ActorType,
   type CurrencyCode,
   type Locale,
@@ -22,7 +22,7 @@ import {
   type PermissionCode,
   type RoleId,
   type RoleScope,
-  type LocalizedString,
+  type TranslationMap,
 } from "../value-objects";
 
 // ─── Primitives ─────────────────────────────────────────────────────────────
@@ -61,15 +61,15 @@ export type Quantity = z.infer<typeof QuantitySchema>;
 export const RatingSchema = z.number().min(0).max(5);
 export type Rating = z.infer<typeof RatingSchema>;
 
-export { LocalizedStringSchema };
-export type { LocalizedString };
+export { TranslationMapSchema };
+export type { TranslationMap };
 
 export const PortalRoleSchema = z.enum(portalRoleEnum.enumValues);
 export type PortalRole = z.infer<typeof PortalRoleSchema>;
 
-// NOTE: isStaffRole, isSchoolRole, isCustomerRole moved to domain/auth/authorization.ts
+// NOTE: staffRole, schoolRole, customerRole moved to domain/auth/authorization.ts
 // to avoid exposing this file (which has @ imports) from the core package.
-// Use: import { isStaffRole } from "@findeg/backend/features/core";
+// Use: import { staffRole } from "@findeg/backend/features/core";
 
 export {
   ActorTypeSchema,

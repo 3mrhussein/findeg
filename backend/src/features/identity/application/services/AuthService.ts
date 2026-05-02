@@ -12,13 +12,8 @@
 
 import { IAuthService } from "../interfaces/IAuthService";
 import { IUserRepository } from "../interfaces/IUserRepository";
-import {
-  AuthResult,
-  RegisterInput,
-  SessionPayload,
-  createUserVO,
-} from "../../../core/domain/auth";
-import { isAdminSession, PERMISSION_CODES } from "../../../core/domain/auth/authorization";
+import { AuthResult, RegisterInput, SessionPayload, createUserVO } from "../../../core/domain/auth";
+import { adminSession, PERMISSION_CODES } from "../../../core/domain/auth/authorization";
 import bcrypt from "bcryptjs";
 import { getErrorDefinition, resolveErrorMessage } from "../../../core/domain/errors";
 
@@ -35,7 +30,7 @@ export class AuthService implements IAuthService {
    *
    * @param userRepository - User data access layer
    */
-  constructor(private userRepository: IUserRepository) { }
+  constructor(private userRepository: IUserRepository) {}
 
   /**
    * Authenticates a user with email and password
@@ -188,7 +183,7 @@ export class AuthService implements IAuthService {
    * @param session - The session payload to validate
    * @returns True if the user is an admin
    */
-  isAdminSession(session: SessionPayload): boolean {
-    return isAdminSession(session);
+  adminSession(session: SessionPayload): boolean {
+    return adminSession(session);
   }
 }

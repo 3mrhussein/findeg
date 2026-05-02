@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "@i18n/navigation";
 import { useTranslations } from "next-intl";
 import {
   ArrowLeft,
@@ -21,11 +22,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@findeg/ui";
 import { FilterPanel, type FilterPanelBrand } from "./FilterPanel";
 import { ProductCard, type ProductCardBrand } from "./ProductCard";
-import type {
-  ShopPlpFilters,
-  ShopPlpSort,
-  ShopPlpViewModel,
-} from "@findeg/backend/features/catalog/application/queries/shop-plp";
+import type { ShopPlpFilters, ShopPlpSort, ShopPlpViewModel } from "@data/catalog/types";
 import { cn } from "@lib/utils";
 
 interface ShopPlpClientProps {
@@ -209,14 +206,14 @@ export function ShopPlpClient({ vm }: ShopPlpClientProps) {
   }
 
   for (const brandId of vm.filters.brandIds) {
-    const brandName = brandById.get(brandId)?.name || t("BrandFallback", { id: brandId });
+    const brandName = brandById.get(brandId)?.name || t("BrandFallback", { id: String(brandId) });
     activeChips.push({
       id: `brand-${brandId}`,
       label: brandName,
       onRemove: () =>
         handleApplyFilters({
           ...vm.filters,
-          brandIds: vm.filters.brandIds.filter((id) => id !== brandId),
+          brandIds: vm.filters.brandIds.filter((id: number) => id !== brandId),
         }),
     });
   }
@@ -257,7 +254,7 @@ export function ShopPlpClient({ vm }: ShopPlpClientProps) {
       onRemove: () =>
         handleApplyFilters({
           ...vm.filters,
-          discounts: vm.filters.discounts.filter((entry) => entry !== discount),
+          discounts: vm.filters.discounts.filter((entry: string) => entry !== discount),
         }),
     });
   }

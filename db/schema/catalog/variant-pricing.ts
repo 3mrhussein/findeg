@@ -14,7 +14,7 @@ import { productVariants } from "./product-variants";
 import { catalogSchema } from "../schemas";
 import { customerGroupEnum, uomCodeEnum } from "../enums";
 import type { CurrencyCode } from "../../../backend/src/features/core/domain/types/common";
-import type { LocalizedStringDraft } from "../../../backend/src/features/core/domain/value-objects";
+import type { PartialTranslationMap } from "../../../backend/src/features/core/domain/value-objects";
 
 /**
  * Variant Sellable Units of Measure (UOM)
@@ -36,7 +36,7 @@ export const variantSellableUoms = catalogSchema.table(
     factorToBase: decimal("factor_to_base", { precision: 12, scale: 4 }).notNull(),
 
     /** Localized display label */
-    localizedLabel: jsonb("localized_label").$type<LocalizedStringDraft>().default({}),
+    localizedLabel: jsonb("localized_label").$type<PartialTranslationMap>().default({}),
 
     /** UOM-specific barcode */
     barcode: text("barcode"),

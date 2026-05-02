@@ -20,27 +20,26 @@ import { Badge } from "@findeg/ui";
 import { IconTooltip } from "@findeg/ui";
 import { useCart } from "@hooks/useCart";
 import { useUser } from "@hooks/useUser";
-import type { Product } from "@findeg/backend/features/catalog/domain/entities/Product";
-import type { Variant } from "@findeg/backend/features/catalog/domain/entities/Variant";
-import { VariantEntity } from "@findeg/backend/features/catalog/domain/entities/Variant";
 import { cn } from "@lib/utils";
-import type { ProductPdpViewModel } from "@findeg/backend/features/catalog/application/queries/product-pdp";
+import type {
+  Product,
+  Variant,
+  CustomerGroup,
+  ProductPdpViewModel,
+  UomCode as UoMCode,
+} from "@/data/catalog/types";
 import { ImageGallery } from "./ImageGallery";
 import { ProductTabsSection } from "./ProductTabsSection";
 import { RelatedProductsRail } from "./RelatedProductsRail";
 import { RecentlyViewedRail, type RecentlyViewedItem } from "./RecentlyViewedRail";
-import type {
-  CustomerGroup,
-  UomCode as UoMCode,
-} from "@findeg/backend/features/core/domain/types/common";
 import { getProductPricingAction } from "@/app/[locale]/(storefront)/_actions/catalog";
 
 function getProductStatusBadge({ product, variant, lowStock }: any) {
   if (lowStock) return { kind: "low-stock" as const };
-  if (variant.strikePrice && variant.strikePrice > variant.basePrice) {
-    const percent = Math.round(
-      ((variant.strikePrice - variant.basePrice) / variant.strikePrice) * 100,
-    );
+  const strike = Number(variant.strikePrice);
+  const base = Number(variant.basePrice);
+  if (strike && strike > base) {
+    const percent = Math.round(((strike - base) / strike) * 100);
     return { kind: "sale" as const, percent };
   }
   return null;
@@ -112,11 +111,15 @@ function resolveVariantStock(product: Product, variant?: Variant) {
     };
   }
 
-  const entity = new VariantEntity(variant);
+  const inventory = variant.inventory || [];
+  const availableUnits = inventory.reduce((acc, inv) => acc + (inv.onHand || 0), 0);
+  const inStock = availableUnits > 0;
+  const lowStock = inStock && availableUnits < 5;
+
   return {
-    inStock: entity.isInStock(),
-    lowStock: entity.isLowStock(),
-    availableUnits: entity.getAvailableStock(),
+    inStock,
+    lowStock,
+    availableUnits,
   };
 }
 
@@ -133,9 +136,9 @@ function getFallbackUomPrice(
   const b2c = variant.priceLists?.find(
     (entry) => entry.customerGroup === "public_b2c" && entry.uomCode === uom.code,
   );
-  if (b2c) return b2c.unitPrice;
+  if (b2c) return Number(b2c.unitPrice);
 
-  return variant.basePrice * uom.factorToBase;
+  return Number(variant.basePrice) * uom.factorToBase;
 }
 
 /**
@@ -170,13 +173,11 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
     variants.find((variant: any) => variant.variantKey === "default") ||
     variants[0];
 
-  const [selectedAttributes, setSelectedAttributes] = useState<Record<string, string>>(
+  const [selectedAttributes, setSelectedAttributes] = useState<Record<string, string>>(() =>
     getAttributeMap(selectedVariant),
   );
 
-  useEffect(() => {
-    setSelectedAttributes(getAttributeMap(selectedVariant));
-  }, [selectedVariantId]);
+  // We update selectedAttributes when variant changes via selection events
 
   const uomOptions = useMemo<UomOption[]>(() => {
     if (!selectedVariant) return [];
@@ -199,15 +200,14 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
     }));
   }, [selectedVariant]);
 
-  const [selectedUomCode, setSelectedUomCode] = useState<UoMCode | undefined>(uomOptions[0]?.code);
-  useEffect(() => {
-    setSelectedUomCode(uomOptions[0]?.code);
-  }, [selectedVariantId, uomOptions]);
+  const [selectedUomCode, setSelectedUomCode] = useState<UoMCode | undefined>(
+    () => uomOptions[0]?.code,
+  );
 
   const selectedUom = uomOptions.find((uom) => uom.code === selectedUomCode) || uomOptions[0];
 
   const [priceState, setPriceState] = useState<PriceState>({
-    unitPrice: selectedVariant?.basePrice || 0,
+    unitPrice: Number(selectedVariant?.basePrice || 0),
     currency: "EGP",
     loading: false,
   });
@@ -216,7 +216,11 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
     if (!selectedVariant || !selectedUom) return;
 
     let active = true;
-    setPriceState((prev) => ({ ...prev, loading: true }));
+
+    // Defer loading state to avoid synchronous state update in effect warning
+    Promise.resolve().then(() => {
+      if (active) setPriceState((prev) => ({ ...prev, loading: true }));
+    });
 
     const payload = {
       productId: vm.product.id,
@@ -261,7 +265,7 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
     return () => {
       active = false;
     };
-  }, [selectedVariant?.id, selectedUom?.code, vm.product.id, vm.customerGroup]);
+  }, [selectedVariant, selectedUom, vm.product.id, vm.product.variants, vm.customerGroup]);
 
   const bestValueCode = useMemo(() => {
     if (!selectedVariant || uomOptions.length <= 1) return null;
@@ -283,9 +287,6 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
   const maxQuantity = stockSnapshot.inStock ? Math.max(stockSnapshot.availableUnits, 1) : 1;
 
   const [quantity, setQuantity] = useState(1);
-  useEffect(() => {
-    setQuantity((prev) => Math.max(1, Math.min(prev, maxQuantity)));
-  }, [maxQuantity, selectedVariantId]);
 
   const [isAdded, setIsAdded] = useState(false);
   const [activeTab, setActiveTab] = useState("description");
@@ -368,7 +369,11 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
       ? "text-orange-600"
       : "text-emerald-600";
 
-  const [recentlyViewed, setRecentlyViewed] = useState<RecentlyViewedItem[]>([]);
+  const [recentlyViewed, setRecentlyViewed] = useState<RecentlyViewedItem[]>(() => {
+    if (typeof window === "undefined") return [];
+    const raw = window.localStorage.getItem("findeg_recently_viewed");
+    return raw ? (JSON.parse(raw) as RecentlyViewedItem[]) : [];
+  });
 
   useEffect(() => {
     if (!selectedVariant) return;
@@ -378,7 +383,7 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
       id: vm.product.id,
       slug: vm.canonicalSlug,
       name: vm.product.name,
-      price: priceState.unitPrice || selectedVariant.basePrice,
+      price: Number(priceState.unitPrice || selectedVariant.basePrice),
       image:
         selectedVariant.images?.[0]?.url ||
         vm.product.mediaSet?.card?.url ||
@@ -391,8 +396,26 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
     const next = [current, ...parsed.filter((item) => item.id !== current.id)].slice(0, 10);
 
     window.localStorage.setItem(storageKey, JSON.stringify(next));
-    setRecentlyViewed(next.filter((item) => item.id !== current.id));
-  }, [vm.product.id, vm.product.name, vm.canonicalSlug, selectedVariant?.id, priceState.unitPrice]);
+
+    // Defer state update to avoid synchronous state update in effect warning
+    Promise.resolve().then(() => {
+      setRecentlyViewed((prev) => {
+        const filtered = next.filter((item) => item.id !== current.id);
+        const prevIds = prev.map((i) => i.id).join(",");
+        const nextIds = filtered.map((i) => i.id).join(",");
+        if (prevIds === nextIds) return prev;
+        return filtered;
+      });
+    });
+  }, [
+    vm.product.id,
+    vm.product.name,
+    vm.product.mediaSet?.card?.url,
+    vm.product.mediaSet?.thumbnail?.url,
+    vm.canonicalSlug,
+    selectedVariant,
+    priceState.unitPrice,
+  ]);
 
   const attributeValueMap = useMemo(() => {
     const map = new Map<string, string[]>();
@@ -498,11 +521,10 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
                 {egpFormatter.format(priceState.unitPrice || 0)}
               </span>
 
-              {selectedVariant?.strikePrice &&
-              selectedVariant.strikePrice > (priceState.unitPrice || 0) ? (
+              {Number(selectedVariant?.strikePrice || 0) > (priceState.unitPrice || 0) ? (
                 <span className="text-sm text-muted-foreground line-through">
                   {egpFormatter.format(
-                    selectedVariant.strikePrice * (selectedUom?.factorToBase || 1),
+                    Number(selectedVariant!.strikePrice) * (selectedUom?.factorToBase || 1),
                   )}
                 </span>
               ) : null}

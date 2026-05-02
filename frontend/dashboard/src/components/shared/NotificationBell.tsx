@@ -71,9 +71,16 @@ export function NotificationBell() {
 
   // Poll for count every 60s
   useEffect(() => {
-    fetchCount();
+    // Deferred to avoid synchronous cascading render warning
+    const timeout = setTimeout(() => {
+      fetchCount();
+    }, 0);
+
     const interval = setInterval(fetchCount, 60000);
-    return () => clearInterval(interval);
+    return () => {
+      clearTimeout(timeout);
+      clearInterval(interval);
+    };
   }, [fetchCount]);
 
   /**

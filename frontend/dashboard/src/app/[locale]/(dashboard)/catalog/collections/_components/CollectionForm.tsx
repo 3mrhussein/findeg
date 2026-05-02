@@ -28,13 +28,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@findeg/ui";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@findeg/ui";
 import { Badge } from "@findeg/ui";
 import { ChevronLeft, Save, Loader2, Image as ImageIcon, Tag as TagIcon } from "lucide-react";
-import {
-  createCollectionAction as adminCreateCollectionAction,
-  updateCollectionAction as adminUpdateCollectionAction,
-} from "@actions/admin-actions";
 
 import { Checkbox } from "@findeg/ui";
 import Image from "next/image";
+import { createCollectionAction, updateCollectionAction } from "@/data/collections/actions";
 
 interface CollectionFormProps {
   collection?: Collection;
@@ -83,8 +80,8 @@ export function CollectionForm({ collection, availableTags }: CollectionFormProp
     setIsSubmitting(true);
     try {
       const result = collection
-        ? await adminUpdateCollectionAction(collection.id as number, data)
-        : await adminCreateCollectionAction(data);
+        ? await updateCollectionAction(collection.id as number, data)
+        : await createCollectionAction(data);
 
       if (result.success) {
         toast({ title: collection ? "Collection updated" : "Collection created" });

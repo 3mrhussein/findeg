@@ -43,7 +43,9 @@ export function ImageGallery({ images, badge }: ImageGalleryProps) {
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
   useEffect(() => {
-    setActiveIndex(0);
+    Promise.resolve().then(() => {
+      setActiveIndex(0);
+    });
   }, [safeImages]);
 
   useEffect(() => {

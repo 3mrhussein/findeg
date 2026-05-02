@@ -1,6 +1,6 @@
 import { CategoryForm } from "../CategoryForm";
 import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import { resolveLocale } from "@findeg/backend/features/core";
+import { parse } from "@findeg/backend/features/core";
 import { getCategories } from "@data/categories/queries";
 
 /**
@@ -12,7 +12,7 @@ export default async function CreateCategoryPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const resolvedLocale = resolveLocale(locale);
+  const resolvedLocale = parse(locale);
 
   // Fetch all categories for parent selection dropdown
   const allCategories = await getCategories(resolvedLocale);

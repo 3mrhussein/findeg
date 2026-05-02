@@ -15,7 +15,7 @@ import { Label } from "@findeg/ui";
 import { BilingualInput } from "@components/shared/BilingualInput";
 import { BilingualTextarea } from "@components/shared/BilingualTextarea";
 import { Search } from "lucide-react";
-import type { ProductFormValues } from "../../../../../../../features/administration/presentation/forms/product-form";
+import { ProductFormValues } from "@/interfaces";
 
 /**
  * SeoTab — SEO metadata and search optimization

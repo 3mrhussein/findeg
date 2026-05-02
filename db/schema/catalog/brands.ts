@@ -2,11 +2,11 @@
  * Brands Database Schema
  */
 
-import { pgTable, serial, text, timestamp, boolean, jsonb } from "drizzle-orm/pg-core";
+import { serial, text, timestamp, boolean, jsonb } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { catalogSchema } from "../schemas";
 import { products } from "./products";
-import type { LocalizedStringDraft } from "../../../backend/src/features/core/domain/value-objects";
+import { PartialTranslationMap } from "./types";
 
 /**
  * Brands Table
@@ -15,8 +15,8 @@ export const brands = catalogSchema.table("brands", {
   id: serial("id").primaryKey(),
   slug: text("slug").notNull().unique(),
   name: text("name").notNull(),
-  localizedName: jsonb("localized_name").$type<LocalizedStringDraft>().default({}).notNull(),
-  localizedDescription: jsonb("localized_description").$type<LocalizedStringDraft>(),
+  localizedName: jsonb("localized_name").$type<PartialTranslationMap>().default({}).notNull(),
+  localizedDescription: jsonb("localized_description").$type<PartialTranslationMap>(),
   logoUrl: text("logo_url"),
   isActive: boolean("is_active").default(true).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),

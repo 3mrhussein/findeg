@@ -28,7 +28,7 @@ import { CollapsibleCategoryPicker } from "@/app/[locale]/_components/shared/Col
 import { Save, X, Check, AlertCircle, Loader2 } from "lucide-react";
 import type { Category } from "@findeg/backend/features/catalog";
 import { useTranslations } from "next-intl";
-import { checkCategorySlugAvailableAction as checkSlugAvailableAction } from "@actions/admin-actions";
+import { checkCategorySlugAvailableAction as checkSlugAvailableAction } from "@data/categories/actions";
 
 import { cn } from "@lib/utils";
 

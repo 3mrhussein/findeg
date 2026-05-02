@@ -1,6 +1,6 @@
 /**
  * Repository Factory Functions
-
+ 
  *
  * Provides singleton instances of repository implementations.
  * These factories ensure consistent repository usage across the application.
@@ -33,7 +33,7 @@ export function getUserRepository(): IUserRepository {
   if (!userRepositoryInstance) {
     userRepositoryInstance = new DrizzleUserRepository();
   }
-  return userRepositoryInstance;
+  return userRepositoryInstance!;
 }
 
 /**
@@ -44,7 +44,7 @@ export function getProductRepository(): IProductRepository {
   if (!productRepositoryInstance) {
     productRepositoryInstance = new DrizzleProductRepository();
   }
-  return productRepositoryInstance;
+  return productRepositoryInstance!;
 }
 
 /**
@@ -55,7 +55,7 @@ export function getCategoryRepository(): ICategoryRepository {
   if (!categoryRepositoryInstance) {
     categoryRepositoryInstance = new DrizzleCategoryRepository();
   }
-  return categoryRepositoryInstance;
+  return categoryRepositoryInstance!;
 }
 
 /**
@@ -66,7 +66,7 @@ export function getOrderRepository(): IOrderRepository {
   if (!orderRepositoryInstance) {
     orderRepositoryInstance = new DrizzleOrderRepository();
   }
-  return orderRepositoryInstance;
+  return orderRepositoryInstance!;
 }
 
 /**

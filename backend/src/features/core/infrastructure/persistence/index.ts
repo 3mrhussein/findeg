@@ -1,2 +1,2 @@
-export { db } from "@findeg/db";
+export { db } from "@findeg/db/connection";
 export * from "./repository-factory";

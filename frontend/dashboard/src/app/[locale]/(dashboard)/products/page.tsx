@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import { resolveLocale } from "@findeg/backend/features/core";
 import { getTranslations } from "next-intl/server";
 import { ProductListSkeleton } from "@components/skeletons";
 import type { ProductListFilters } from "@findeg/backend/features/administration";

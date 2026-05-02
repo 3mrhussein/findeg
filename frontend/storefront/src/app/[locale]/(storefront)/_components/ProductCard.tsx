@@ -2,9 +2,7 @@
 
 import Image from "next/image";
 import { Link } from "@i18n/navigation";
-import type { Product } from "@findeg/backend/features/catalog/domain/entities/Product";
-import { ProductEntity } from "@findeg/backend/features/catalog/domain/entities/Product";
-import { getCanonicalProductHref } from "@findeg/backend/features/catalog/domain/utils/slug";
+import type { Product } from "@/data/catalog/types";
 import { useCart } from "@hooks/useCart";
 import { useTranslations, useLocale } from "next-intl";
 import { Button } from "@findeg/ui";
@@ -25,12 +23,15 @@ export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
 
   const variants = product.variants || [];
   const defaultVariant = variants.find((v) => v.variantKey === "default") || variants[0];
-  const displayPrice = defaultVariant?.basePrice ?? 0;
+  const displayPrice = Number(defaultVariant?.basePrice ?? 0);
   const imageUrl =
     defaultVariant?.images?.[0]?.url ||
     product.mediaSet?.card?.url ||
     product.mediaSet?.thumbnail?.url ||
     `https://picsum.photos/seed/${product.id}/600/600`;
+
+  const isNew = !!product.isNew;
+  const href = `/shop/products/${product.slug}`;
 
   if (layout === "list") {
     return (
@@ -39,7 +40,7 @@ export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
         data-testid={`product-card-${product.id}`}
       >
         <div className="relative shrink-0 w-full sm:w-[200px] aspect-square rounded-xl overflow-hidden bg-slate-50 dark:bg-slate-900">
-          {new ProductEntity(product).isNew() && (
+          {isNew && (
             <Badge className="absolute top-2 left-2 z-10 uppercase tracking-wide">
               {t("NewBadge")}
             </Badge>
@@ -59,10 +60,7 @@ export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
               {product.categoryName || t("DefaultCategory")}
             </div>
             <h3 className="text-lg font-bold text-slate-900 dark:text-white line-clamp-2 mb-2">
-              <Link
-                href={getCanonicalProductHref(product)}
-                data-testid={`product-card-title-${product.id}`}
-              >
+              <Link href={href} data-testid={`product-card-title-${product.id}`}>
                 <span aria-hidden="true" className="absolute inset-0 z-0"></span>
                 {product.name}
               </Link>
@@ -106,7 +104,7 @@ export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
   return (
     <div className="group relative" data-testid={`product-card-${product.id}`}>
       <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-800">
-        {new ProductEntity(product).isNew() && (
+        {isNew && (
           <Badge className="absolute top-3 left-3 z-10 uppercase tracking-wide">
             {t("NewBadge")}
           </Badge>
@@ -143,10 +141,7 @@ export function ProductCard({ product, layout = "grid" }: ProductCardProps) {
             {product.categoryName || t("DefaultCategory")}
           </div>
           <h3 className="text-sm font-medium text-slate-900 dark:text-white line-clamp-2">
-            <Link
-              href={getCanonicalProductHref(product)}
-              data-testid={`product-card-title-${product.id}`}
-            >
+            <Link href={href} data-testid={`product-card-title-${product.id}`}>
               <span aria-hidden="true" className="absolute inset-0 z-0"></span>
               {product.name}
             </Link>

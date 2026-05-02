@@ -45,6 +45,7 @@ export interface DashboardData {
   products: Product[];
   orders: Order[];
   schoolLists: SchoolListResult[];
+  session: AdminUser | null;
 }
 
 export interface IUserService {

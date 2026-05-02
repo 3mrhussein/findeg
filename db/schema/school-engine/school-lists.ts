@@ -18,7 +18,7 @@ import { relations } from "drizzle-orm";
 import { schoolEngineSchema } from "../schemas";
 import { categories } from "../catalog/categories";
 import { productVariants } from "../catalog/product-variants";
-import type { LocalizedStringDraft } from "../../../backend/src/features/core/domain/value-objects";
+import type { PartialTranslationMap } from "../../../backend/src/features/core/domain/value-objects";
 
 export type MatchRulesDraft = {
   attributes?: Record<string, string | number | boolean>;
@@ -46,8 +46,8 @@ export const schoolLists = schoolEngineSchema.table(
     academicSystem: text("academic_system"),
 
     /** Localized content */
-    localizedTitle: jsonb("localized_title").$type<LocalizedStringDraft>().notNull(),
-    localizedDescription: jsonb("localized_description").$type<LocalizedStringDraft>(),
+    localizedTitle: jsonb("localized_title").$type<PartialTranslationMap>().notNull(),
+    localizedDescription: jsonb("localized_description").$type<PartialTranslationMap>(),
 
     /** Optional metadata */
     heroImageUrl: text("hero_image_url"),
@@ -92,7 +92,7 @@ export const schoolListItems = schoolEngineSchema.table("school_list_items", {
 
   /** Localized display labels and notes */
   localizedLabel: jsonb("localized_label").$type<Record<string, string>>().notNull(),
-  localizedNote: jsonb("localized_note").$type<LocalizedStringDraft>(),
+  localizedNote: jsonb("localized_note").$type<PartialTranslationMap>(),
 
   /** Match rules for dynamic variants */
   matchRules: jsonb("match_rules").$type<MatchRulesDraft>(),

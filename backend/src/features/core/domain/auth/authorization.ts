@@ -79,7 +79,7 @@ const ADMIN_ROLE_IDS = new Set([
  * @param session - The active user session payload.
  * @returns True if the user has the 'system_admin' role active.
  */
-export function isSystemAdmin(session: SessionPayload): boolean {
+export function systemAdmin(session: SessionPayload): boolean {
   return session.activeRoleIds?.includes("system_admin") === true;
 }
 
@@ -89,7 +89,7 @@ export function isSystemAdmin(session: SessionPayload): boolean {
  * @param portalRole - The portal role to check ("staff", "customer", "school_staff", etc.)
  * @returns True if the role is "staff"
  */
-export function isStaffRole(portalRole?: string | null): boolean {
+export function staffRole(portalRole?: string | null): boolean {
   return portalRole === "staff";
 }
 
@@ -99,7 +99,7 @@ export function isStaffRole(portalRole?: string | null): boolean {
  * @param portalRole - The portal role to check
  * @returns True if the role is "school_staff"
  */
-export function isSchoolRole(portalRole?: string | null): boolean {
+export function schoolRole(portalRole?: string | null): boolean {
   return portalRole === "school_staff";
 }
 
@@ -109,7 +109,7 @@ export function isSchoolRole(portalRole?: string | null): boolean {
  * @param portalRole - The portal role to check
  * @returns True if the role is "customer"
  */
-export function isCustomerRole(portalRole?: string | null): boolean {
+export function customerRole(portalRole?: string | null): boolean {
   return portalRole === "customer";
 }
 
@@ -126,7 +126,7 @@ export function isCustomerRole(portalRole?: string | null): boolean {
  *
  * @param session - The active user session payload.
  */
-export function isAdminSession(session: SessionPayload): boolean {
+export function adminSession(session: SessionPayload): boolean {
   if (session.portalRole === "staff" || session.portalRole === "school_staff") return true;
 
   if (session.activeRoleIds?.some((roleId) => ADMIN_ROLE_IDS.has(roleId))) {
@@ -156,7 +156,7 @@ export function hasPermission(
   session: SessionPayload,
   requiredPermission: PermissionCode,
 ): boolean {
-  if (isSystemAdmin(session)) return true;
+  if (systemAdmin(session)) return true;
 
   if (!session.permissionCodes || session.permissionCodes.length === 0) {
     return false;

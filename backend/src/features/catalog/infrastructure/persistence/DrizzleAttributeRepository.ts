@@ -1,8 +1,5 @@
-import { db } from "@findeg/db";
-import {
-  attributeDefinitions,
-  productAttributes,
-} from "@findeg/db/schema";
+import { db } from "@findeg/db/connection";
+import { attributeDefinitions, productAttributes } from "@findeg/db/schema";
 import {
   IAttributeRepository,
   AttributeFilter,

@@ -18,4 +18,22 @@ export class BrandService implements IBrandService {
   async getBySlug(slug: Slug, language?: Locale): Promise<Brand | null> {
     return this.brandRepository.getBySlug(slug, language);
   }
+
+  async create(input: any): Promise<Brand> {
+    return this.brandRepository.create(input);
+  }
+
+  async update(id: ID, input: any): Promise<Brand> {
+    return this.brandRepository.update(id, input);
+  }
+
+  async delete(id: ID): Promise<void> {
+    return this.brandRepository.delete(id);
+  }
+
+  async toggleBrandStatus(id: number): Promise<any> {
+    const brand = await this.brandRepository.getById(id);
+    if (!brand) throw new Error("Brand not found");
+    return this.brandRepository.update(id, { isActive: !brand.isActive });
+  }
 }

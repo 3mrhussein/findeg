@@ -2,7 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { ProductCard } from "./ProductCard";
-import { Product } from "@findeg/backend/features/catalog/domain/entities/Product";
+import type { Product } from "@/data/catalog/types";
 
 interface ProductGridListProps {
   products: Product[];

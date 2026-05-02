@@ -8,7 +8,7 @@ import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@finde
 import { ScrollArea } from "@findeg/ui";
 import { cn } from "@lib/utils";
 import { NavGroup } from "./NavGroup";
-import { ADMIN_NAV } from "../../../../features/administration/presentation/config/nav-config";
+import { ADMIN_NAV } from "@/constants";
 import { getAvatarColorClass, getInitials } from "@lib/avatar-color";
 import { useSidebar } from "./SidebarContext";
 

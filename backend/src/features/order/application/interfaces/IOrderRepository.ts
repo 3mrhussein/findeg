@@ -1,4 +1,9 @@
-import { ID, Price, OrderStatus, PaymentStatus } from "@findeg/backend/features/core/domain/types/common";
+import {
+  ID,
+  Price,
+  OrderStatus,
+  PaymentStatus,
+} from "@findeg/backend/features/core/domain/types/common";
 import { Order } from "../../domain/entities/Order";
 import { OrderStatusUpdate } from "@findeg/backend/features/administration/domain/types";
 

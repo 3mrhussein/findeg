@@ -1,4 +1,4 @@
-import { db } from "@findeg/db";
+import { db } from "@findeg/db/connection";
 import { schoolLists } from "@findeg/db/schema";
 import { eq, and, ilike, sql, desc, count, asc } from "drizzle-orm";
 import {

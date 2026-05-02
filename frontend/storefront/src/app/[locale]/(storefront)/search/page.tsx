@@ -116,7 +116,7 @@ async function SearchPageContent({ params, searchParams }: SearchPageProps) {
       <ProductListingLayout
         {...vm}
         resultsCountLabel={t("ShowingResults", {
-          count: vm.filteredProducts.length,
+          count: vm.products.length,
           total: vm.products.length,
         })}
         filtersTitle={t("FiltersTitle")}

@@ -8,7 +8,7 @@ import type { IStorageProvider } from "@findeg/backend/features/core/application
  * Local Storage Provider
  * Saves files to the local filesystem (public/uploads directory).
  * Useful for development or simple deployments.
- * 
+ *
  * Note: Intended for server-side use only (requires filesystem access).
  */
 export class LocalStorageProvider implements IStorageProvider {

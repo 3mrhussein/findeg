@@ -38,10 +38,13 @@ import { CategoryRow } from "./CategoryRow";
 import { CategoryFormPanel } from "./CategoryFormPanel";
 import { CategoryDrawer } from "./CategoryDrawer";
 import { EmptyState } from "@findeg/ui";
-import { checkCategorySlugAvailableAction as checkSlugAvailableAction } from "@actions/admin-actions";
+import {
+  checkCategorySlugAvailableAction as checkSlugAvailableAction,
+  moveCategoryUpAction as moveCategoryUp,
+  moveCategoryDownAction as moveCategoryDown,
+} from "@data/categories/actions";
 import type { Category } from "@findeg/backend/features/catalog";
 import { useTranslations } from "next-intl";
-import { moveCategoryUpAction, moveCategoryDownAction } from "@actions/admin-actions";
 
 import { ConfirmDialog } from "@/app/[locale]/_components/shared/ConfirmDialog";
 import {
@@ -66,7 +69,9 @@ function useIsLargeScreen() {
   const [isLarge, setIsLarge] = React.useState(false);
   React.useEffect(() => {
     const mq = window.matchMedia("(min-width: 1024px)");
-    setIsLarge(mq.matches);
+    Promise.resolve().then(() => {
+      setIsLarge(mq.matches);
+    });
     const handler = (e: MediaQueryListEvent) => setIsLarge(e.matches);
     mq.addEventListener("change", handler);
     return () => mq.removeEventListener("change", handler);
@@ -100,7 +105,9 @@ export function CategoryTree({ categories, onReorder, onSave, onDelete }: Catego
   );
 
   React.useEffect(() => {
-    setItems(categories);
+    Promise.resolve().then(() => {
+      setItems(categories);
+    });
   }, [categories]);
 
   // Search filter — matches localizedName.en or slug, keeps ancestors visible
@@ -151,11 +158,11 @@ export function CategoryTree({ categories, onReorder, onSave, onDelete }: Catego
 
   // ── Move Up/Down ──────────────────────────────────────────────────────────
   const handleMoveUp = async (id: number) => {
-    const res = await moveCategoryUpAction(id);
+    const res = await moveCategoryUp(id);
     if (!res.success) console.error(res.error);
   };
   const handleMoveDown = async (id: number) => {
-    const res = await moveCategoryDownAction(id);
+    const res = await moveCategoryDown(id);
     if (!res.success) console.error(res.error);
   };
 

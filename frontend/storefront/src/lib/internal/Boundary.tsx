@@ -41,30 +41,6 @@ export default function Boundary({
   cached = false,
 }: Props) {
   const { mode } = useBoundaryMode();
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [isSmall, setIsSmall] = useState(false);
-
-  useEffect(() => {
-    /**
-     *
-     */
-    const checkSize = () => {
-      if (containerRef.current) {
-        const { width, height } = containerRef.current.getBoundingClientRect();
-        setIsSmall(width < 60 || height < 60);
-      }
-    };
-
-    checkSize();
-    const resizeObserver = new ResizeObserver(checkSize);
-    if (containerRef.current) {
-      resizeObserver.observe(containerRef.current);
-    }
-
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, []);
 
   if (mode === "off") {
     return <>{children}</>;
@@ -105,46 +81,44 @@ export default function Boundary({
     }
   }
 
-  if (isSmall) {
-    let circleColorClasses = "";
-
-    if (showRendering) {
-      circleColorClasses =
-        rendering === "dynamic"
-          ? "border-blue-500"
-          : rendering === "hybrid"
-            ? "border-purple-500"
-            : "border-red-500";
-    } else if (showComponent) {
-      circleColorClasses =
-        hydration === "client"
-          ? "border-blue-500"
-          : hydration === "hybrid"
-            ? "border-purple-500"
-            : "border-red-500";
-    }
-
-    return (
-      <div className="relative">
-        <div ref={containerRef}>{children}</div>
-        <div
-          className={cn(
-            "absolute -top-1 -right-1 h-3 w-3 rounded-full border-2 border-dashed",
-            circleColorClasses,
-          )}
-          title={labelText || "Boundary indicator"}
-        />
-      </div>
-    );
+  // Determine circle color for small mode
+  let circleColorClasses = "";
+  if (showRendering) {
+    circleColorClasses =
+      rendering === "dynamic"
+        ? "border-blue-500"
+        : rendering === "hybrid"
+          ? "border-purple-500"
+          : "border-red-500";
+  } else if (showComponent) {
+    circleColorClasses =
+      hydration === "client"
+        ? "border-blue-500"
+        : hydration === "hybrid"
+          ? "border-purple-500"
+          : "border-red-500";
   }
 
   return (
     <div
-      ref={containerRef}
-      className={cn("relative rounded-md border-2 border-dashed", colorClasses)}
+      className={cn(
+        "relative rounded-md border-2 border-dashed @container", // Tailwind 4 Container Queries
+        colorClasses,
+      )}
     >
+      {/* Small mode indicator (circle) - only visible if container is very small */}
+      <div
+        className={cn(
+          "absolute -top-1 -right-1 h-3 w-3 rounded-full border-2 border-dashed z-50",
+          "hidden @max-w-[60px]:block @max-h-[60px]:block",
+          circleColorClasses,
+        )}
+        title={labelText || "Boundary indicator"}
+      />
+
+      {/* Large mode label - only visible if container has enough space */}
       {showLabel && labelText && (
-        <div className="absolute -top-2 left-2 z-10 flex gap-2">
+        <div className="absolute -top-2 left-2 z-10 flex gap-2 @max-w-[60px]:hidden @max-h-[60px]:hidden">
           <div
             className={cn(
               "rounded border bg-white px-2 py-0.5 font-mono text-xs font-normal lowercase shadow-sm dark:bg-black",

@@ -17,7 +17,7 @@ import {
 import { relations } from "drizzle-orm";
 import { tags } from "./tags";
 import { catalogSchema } from "../schemas";
-import type { LocalizedStringDraft } from "../../../backend/src/features/core/domain/value-objects";
+import { PartialTranslationMap } from "./types";
 
 /**
  * Collections Table
@@ -31,8 +31,8 @@ export const collections = catalogSchema.table("collections", {
   slug: text("slug").notNull().unique(),
 
   /** Metadata for display */
-  localizedTitle: jsonb("localized_title").$type<LocalizedStringDraft>().default({}).notNull(),
-  localizedSubtitle: jsonb("localized_subtitle").$type<LocalizedStringDraft>(),
+  localizedTitle: jsonb("localized_title").$type<PartialTranslationMap>().default({}).notNull(),
+  localizedSubtitle: jsonb("localized_subtitle").$type<PartialTranslationMap>(),
 
   /** Optional hero image for the collection page */
   heroImageUrl: text("hero_image_url"),

@@ -2,10 +2,7 @@
  * FilterSidebar — shared types & interfaces
  */
 
-import type {
-  CategoryFilterOption,
-  FilterOption,
-} from "@findeg/backend/features/catalog/application/queries/listing";
+import type { CategoryFilterOption, FilterOption } from "@/data/catalog/types";
 
 export interface FilterSidebarProps {
   categories: CategoryFilterOption[];

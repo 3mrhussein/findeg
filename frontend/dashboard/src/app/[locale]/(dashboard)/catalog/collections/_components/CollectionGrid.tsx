@@ -19,10 +19,10 @@ import {
 import { Collection } from "@findeg/backend/features/catalog";
 import { CollectionCard } from "./CollectionCard";
 import {
-  createCollectionAction as adminCreateCollectionAction,
-  updateCollectionAction as adminUpdateCollectionAction,
-  reorderCollectionsAction as adminReorderCollectionsAction,
-} from "@actions/admin-actions";
+  createCollectionAction as createCollection,
+  updateCollectionAction as updateCollection,
+  reorderCollectionsAction as reorderCollections,
+} from "@data/collections/actions";
 
 import { useToast } from "@hooks/use-toast";
 import { useRouter } from "@i18n/navigation";
@@ -41,7 +41,9 @@ export function CollectionGrid({ collections, onDelete }: CollectionGridProps) {
   const router = useRouter();
 
   useEffect(() => {
-    setItems(collections);
+    Promise.resolve().then(() => {
+      setItems(collections);
+    });
   }, [collections]);
 
   const sensors = useSensors(
@@ -77,7 +79,7 @@ export function CollectionGrid({ collections, onDelete }: CollectionGridProps) {
       }));
 
       // Call server action
-      const result = await adminReorderCollectionsAction(reorderData);
+      const result = await reorderCollections(reorderData);
       if (result.success) {
         toast({ title: "Order saved" });
         router.refresh();

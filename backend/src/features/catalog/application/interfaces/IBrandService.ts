@@ -6,4 +6,9 @@ export interface IBrandService {
   getAll(activeOnly?: boolean, language?: Locale): Promise<Brand[]>;
   getById(id: ID, language?: Locale): Promise<Brand | null>;
   getBySlug(slug: Slug, language?: Locale): Promise<Brand | null>;
+
+  create(input: any): Promise<Brand>;
+  update(id: number, input: any): Promise<Brand>;
+  delete(id: number): Promise<void>;
+  toggleBrandStatus(id: number): Promise<any>;
 }

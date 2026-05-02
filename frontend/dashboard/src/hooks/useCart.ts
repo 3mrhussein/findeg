@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { CartContext } from "@providers/CartProvider";
+import { CartContext, type CartContextType } from "@providers/CartProvider";
 
 /**
  * Custom hook to access the CartContext.
@@ -8,7 +8,6 @@ import { CartContext } from "@providers/CartProvider";
  * It must be used within a component that is wrapped by `CartProvider`.
  *
  * @returns {CartContextType} The cart context value.
- * @throws {Error} If used outside of a CartProvider.
  */
 export const useCart = () => {
   const context = useContext(CartContext);

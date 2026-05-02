@@ -74,16 +74,16 @@ export function CascadingCategoryPicker({
     [],
   );
 
-  // Initialize active path when opening
-  React.useEffect(() => {
-    if (open && selectedId) {
+  const handleOpenChange = (isOpen: boolean) => {
+    setOpen(isOpen);
+    if (isOpen && selectedId) {
       const path = findPath(Number(selectedId), categories);
       if (path) setActivePath(path.slice(0, -1)); // Show up to parent of selected
-    } else if (!open) {
+    } else if (!isOpen) {
       setActivePath([]);
       setSearchQuery("");
     }
-  }, [open, selectedId, categories, findPath]);
+  };
 
   const handleHover = (level: number, categoryId: number, hasChildren: boolean) => {
     if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
@@ -147,7 +147,7 @@ export function CascadingCategoryPicker({
   }, [categories, searchQuery]);
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"

@@ -5,7 +5,7 @@ import {
   type Variant,
   type PriceListEntry,
 } from "@findeg/backend/features/catalog";
-import { resolveLocale } from "@findeg/backend/features/core";
+import { parse } from "@findeg/backend/features/core";
 import { Category } from "@hooks/useCategories";
 
 /**
@@ -15,7 +15,7 @@ import { Category } from "@hooks/useCategories";
  * available in the monorepo split.
  */
 export async function getCategoryTreeAction(locale: string = "en"): Promise<Category[]> {
-  const resolvedLocale = resolveLocale(locale);
+  const resolvedLocale = parse(locale);
   const { categories } = createCatalogServices();
 
   const allCategories = await categories.getAll(resolvedLocale);

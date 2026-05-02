@@ -17,6 +17,10 @@ export interface SchoolListResult {
   schoolName: string;
   grade: string;
   academicYear: string;
+  governorate?: string;
+  area?: string;
+  schoolType?: string;
+  academicSystem?: string;
   localizedTitle: Record<string, string>;
   localizedDescription?: Record<string, string>;
   heroImageUrl?: string;

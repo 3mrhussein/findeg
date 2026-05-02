@@ -1,5 +1,5 @@
 import env from "../env";
-import { db, connection } from "./index";
+import { db, connection } from "./connection";
 import * as seeds from "./seeds";
 import { truncateTables } from "./seeds/helpers";
 

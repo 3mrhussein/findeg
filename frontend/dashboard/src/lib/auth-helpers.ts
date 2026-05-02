@@ -8,13 +8,12 @@
 import {
   type ID,
   NotAuthenticatedError as UnauthorizedError,
-  NotAuthorizedError as ForbiddenError
+  NotAuthorizedError as ForbiddenError,
 } from "@findeg/backend/features/core";
 import { PermissionCode, RoleId } from "@findeg/backend/features/core";
 import type { User } from "@findeg/backend/features/identity";
 import type { IUserRepository, IPermissionService } from "@findeg/backend/features/identity";
 import { cookies } from "next/headers";
-
 
 /**
  * Get authenticated user from session/cookies

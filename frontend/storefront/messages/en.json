@@ -37,6 +37,10 @@
     "SignIn": "Sign In",
     "Register": "Register",
     "NewArrivals": "New Arrivals",
+    "DeliverTo": "Deliver to: {city}",
+    "AllCategories": "All Categories",
+    "Deals": "Deals",
+    "Hot": "HOT",
     "School": {
       "Title": "School Supplies",
       "Backpacks": "Backpacks",
@@ -81,7 +85,20 @@
       "AboutContact": "Contact Us",
       "FollowTitle": "Follow Us",
       "CookieSettings": "Cookie Settings",
-      "Copyright": "All rights reserved."
+      "Copyright": "All rights reserved.",
+      "AllProducts": "All Products",
+      "Categories": "Categories",
+      "Search": "Search",
+      "Cart": "Cart",
+      "SchoolsTitle": "Schools",
+      "FindYourList": "Find Your List",
+      "PartnerProgram": "Partner Program",
+      "Fundraising": "Fundraising",
+      "HelpTitle": "Help",
+      "AboutUs": "About Us",
+      "ContactSupport": "Contact Support",
+      "ReturnPolicy": "Return Policy",
+      "TermsOfService": "Terms of Service"
     },
     "Announcement": {
       "BarText": "Free shipping on orders over $50! 🎉",
@@ -97,7 +114,14 @@
         "Subtitle": "Your one-stop shop for high-quality stationary, engaging kids' toys, and essential school supplies. Spark creativity and make learning fun!",
         "ButtonShop": "Shop Now",
         "ButtonExplore": "Explore Categories",
-        "ButtonSchoolList": "Find School List"
+        "ButtonSchoolList": "Find School List",
+        "Badge": "Back to School 2024",
+        "TitleSmart": "Smart lists.",
+        "TitleStationery": "Beautiful stationery.",
+        "ButtonSchools": "For schools",
+        "CardListLabel": "School List",
+        "CardGradeLabel": "Grade 3 Supply List",
+        "CardReadyLabel": "14 items ready"
       },
       "Featured": {
         "Title": "Featured Products",
@@ -113,6 +137,12 @@
         "Subtitle": "Find exactly what you need by exploring our curated categories.",
         "ProductsCount": "{count} Products",
         "EmptyDescription": "Browse our curated collections of stationery organized perfectly for your needs."
+      },
+      "Collections": {
+        "Title": "Curated Collections",
+        "ViewAll": "View all",
+        "CategoryBadge": "Category",
+        "FallbackDescription": "Discover premium quality."
       },
       "TrustedBrands": "Our Trusted Brands",
       "Generator": {

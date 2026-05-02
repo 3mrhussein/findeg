@@ -23,12 +23,14 @@ export const useProducts = (initialProducts: Product[]) => {
         break;
       case "price-asc":
         sortable.sort(
-          (a, b) => (a.variants?.[0]?.basePrice ?? 0) - (b.variants?.[0]?.basePrice ?? 0),
+          (a, b) =>
+            Number(a.variants?.[0]?.basePrice ?? 0) - Number(b.variants?.[0]?.basePrice ?? 0),
         );
         break;
       case "price-desc":
         sortable.sort(
-          (a, b) => (b.variants?.[0]?.basePrice ?? 0) - (a.variants?.[0]?.basePrice ?? 0),
+          (a, b) =>
+            Number(b.variants?.[0]?.basePrice ?? 0) - Number(a.variants?.[0]?.basePrice ?? 0),
         );
         break;
       case "featured":

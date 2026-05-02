@@ -36,16 +36,19 @@ export function BrandsManager({
 }: BrandsManagerProps) {
   const t = (useTranslations as any)("Administration.Catalog.Brands");
   const [brands, setBrands] = useState<Brand[]>(initialBrands);
+  const [prevInitialBrands, setPrevInitialBrands] = useState<Brand[]>(initialBrands);
+
+  // Sync with initialBrands when they change (e.g. after server action revalidation)
+  if (initialBrands !== prevInitialBrands) {
+    setBrands(initialBrands);
+    setPrevInitialBrands(initialBrands);
+  }
+
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | "active" | "inactive">("all");
   const [selectedBrand, setSelectedBrand] = useState<Brand | null>(null);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [isLargeScreen, setIsLargeScreen] = useState(false);
-
-  // Sync with initialBrands when they change (e.g. after server action revalidation)
-  useEffect(() => {
-    setBrands(initialBrands);
-  }, [initialBrands]);
 
   // Screen size detection for panel vs drawer
   useEffect(() => {

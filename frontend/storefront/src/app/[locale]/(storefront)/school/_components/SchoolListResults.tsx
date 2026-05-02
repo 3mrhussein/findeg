@@ -1,7 +1,7 @@
 "use client";
 
 import { useCart } from "@hooks/useCart";
-import type { Product } from "@findeg/backend/features/catalog/domain/entities/Product";
+import type { Product } from "@/data/catalog/types";
 import { useTranslations } from "next-intl";
 import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
 import { Button } from "@findeg/ui";
@@ -60,8 +60,12 @@ export function SchoolListResults({ products, totalEstimatedCost }: SchoolListRe
             </div>
             <div className="flex items-center gap-3">
               <Price
-                price={product.variants?.[0]?.basePrice || 0}
-                strikePrice={product.variants?.[0]?.strikePrice}
+                price={Number(product.variants?.[0]?.basePrice || 0)}
+                strikePrice={
+                  product.variants?.[0]?.strikePrice
+                    ? Number(product.variants?.[0]?.strikePrice)
+                    : undefined
+                }
               />
               <Button
                 variant="outline"

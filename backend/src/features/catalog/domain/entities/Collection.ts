@@ -6,7 +6,7 @@
  */
 
 import { z } from "zod";
-import { IdSchema, LocalizedStringSchema, SlugSchema } from "../../../core/domain/types/common";
+import { IdSchema, TranslationMapSchema, SlugSchema } from "../../../core/domain/types/common";
 import { TagSchema } from "./Tag";
 
 export const CollectionSchema = z.object({
@@ -15,10 +15,10 @@ export const CollectionSchema = z.object({
   /** URL-friendly identifier (e.g., 'back-to-school') */
   slug: SlugSchema,
 
-  localizedTitle: LocalizedStringSchema,
+  localizedTitle: TranslationMapSchema,
 
   /** Optional localized subtitle or descriptive text for landing heroes */
-  localizedSubtitle: LocalizedStringSchema.optional(),
+  localizedSubtitle: TranslationMapSchema.optional(),
 
   /** Relative or absolute URL for the collection hero imagery */
   heroImageUrl: z.string().optional(),

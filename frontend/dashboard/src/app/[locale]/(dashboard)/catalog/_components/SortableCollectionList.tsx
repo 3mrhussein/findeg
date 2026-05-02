@@ -40,10 +40,12 @@ export function SortableCollectionList({
   onEdit,
 }: SortableCollectionListProps) {
   const [items, setItems] = React.useState(initialCollections);
+  const [prevInitialCollections, setPrevInitialCollections] = React.useState(initialCollections);
 
-  React.useEffect(() => {
+  if (initialCollections !== prevInitialCollections) {
     setItems(initialCollections);
-  }, [initialCollections]);
+    setPrevInitialCollections(initialCollections);
+  }
 
   const sensors = useSensors(
     useSensor(PointerSensor),

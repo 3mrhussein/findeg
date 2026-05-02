@@ -37,9 +37,11 @@ export function CreateRoleDialog({
   // Reset state when opening
   React.useEffect(() => {
     if (open) {
-      setNewCode("");
-      setNewName("");
-      setNewPermIds(new Set());
+      Promise.resolve().then(() => {
+        setNewCode("");
+        setNewName("");
+        setNewPermIds(new Set());
+      });
     }
   }, [open]);
 

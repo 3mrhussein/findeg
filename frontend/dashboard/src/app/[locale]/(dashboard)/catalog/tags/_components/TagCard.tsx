@@ -5,7 +5,7 @@ import { Tag } from "@findeg/backend/features/catalog";
 import { Card, CardContent } from "@findeg/ui";
 import { Button } from "@findeg/ui";
 import { Edit, Trash2, Eye, EyeOff } from "lucide-react";
-import { getTagDisplayName } from "../../../../../../features/catalog/presentation/config/tag-display";
+import { getTagDisplayName } from "@lib/tag-utils";
 import { cn } from "@lib/utils";
 import * as Icons from "lucide-react";
 import type { LucideIcon } from "lucide-react";

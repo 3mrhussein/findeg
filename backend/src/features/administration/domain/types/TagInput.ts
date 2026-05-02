@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { LocalizedStringSchema } from "../../../core/domain/types/common";
+import { TranslationMapSchema } from "../../../core/domain/types/common";
 import { TagScopeSchema } from "../../../catalog/domain/entities/Tag";
 
 export const TagInputSchema = z.object({

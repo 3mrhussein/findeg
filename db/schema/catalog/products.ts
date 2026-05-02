@@ -5,16 +5,7 @@
  * Purchasable details (price, stock, images) live on product_variants (SKUs).
  */
 
-import {
-  pgTable,
-  serial,
-  text,
-  integer,
-  jsonb,
-  boolean,
-  timestamp,
-  decimal,
-} from "drizzle-orm/pg-core";
+import { serial, text, integer, jsonb, boolean, timestamp, decimal } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { catalogSchema } from "../schemas";
 import { categories } from "./categories";
@@ -22,10 +13,7 @@ import { brands } from "./brands";
 import { productTags } from "./tags";
 import { productAttributes } from "./product-attributes";
 import { productVariants } from "./product-variants";
-import type {
-  LocalizedStringDraft,
-  ResponsiveMediaSet,
-} from "../../../backend/src/features/core/domain/value-objects";
+import { PartialTranslationMap, ResponsiveMediaSet } from "./types";
 
 /**
  * Products Table (SPU)
@@ -41,14 +29,14 @@ export const products = catalogSchema.table("products", {
 
   // ─── Localized Content ──────────────────────────────────────────────
 
-  localizedSlug: jsonb("localized_slug").$type<LocalizedStringDraft>().default({}).notNull(),
-  localizedName: jsonb("localized_name").$type<LocalizedStringDraft>().default({}).notNull(),
+  slug: text("slug").unique(),
+  localizedName: jsonb("localized_name").$type<PartialTranslationMap>().default({}).notNull(),
   localizedDescription: jsonb("localized_description")
-    .$type<LocalizedStringDraft>()
+    .$type<PartialTranslationMap>()
     .default({})
     .notNull(),
   localizedLongDescription: jsonb("localized_long_description")
-    .$type<LocalizedStringDraft>()
+    .$type<PartialTranslationMap>()
     .default({})
     .notNull(),
 

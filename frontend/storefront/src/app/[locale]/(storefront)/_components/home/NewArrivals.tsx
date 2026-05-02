@@ -1,5 +1,4 @@
 import { getHomePageData } from "@/data/catalog/queries";
-import { buildHomeFeaturedGroups } from "@findeg/backend/features/catalog";
 import { ProductCard } from "../ProductCard";
 
 interface NewArrivalsProps {
@@ -18,8 +17,7 @@ interface NewArrivalsProps {
  */
 export async function NewArrivals({ locale }: NewArrivalsProps) {
   const { featuredProducts } = await getHomePageData(locale);
-  const { newest } = buildHomeFeaturedGroups(featuredProducts);
-  const newArrivals = newest.slice(0, 8);
+  const newArrivals = featuredProducts;
 
   if (!newArrivals.length) return null;
 

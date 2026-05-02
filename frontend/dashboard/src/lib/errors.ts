@@ -1,10 +1,5 @@
-import { redirect } from "next/navigation";
-import type {
-  DomainError,
-  NotAuthenticatedError,
-  NotAuthorizedError,
-  ResourceNotFoundError,
-} from "@findeg/backend/features/core";
+import { redirect } from "@i18n/navigation";
+import type { DomainError } from "@findeg/backend/features/core";
 
 /**
  * Dashboard Error Handler Utilities
@@ -54,7 +49,7 @@ export function handleDomainError(error: unknown, context?: string): Response | 
   // Route by error type
   switch (domainError.code) {
     case "NOT_AUTHENTICATED":
-      redirect("/login");
+      redirect({ href: "/login", locale: "en" });
 
     case "NOT_AUTHORIZED":
       return new Response(JSON.stringify({ error: "Not authorized" }), {
@@ -114,7 +109,7 @@ export function handleDomainError(error: unknown, context?: string): Response | 
  * @param error - Error to check
  * @returns true if error is a DomainError subclass
  */
-export function isDomainError(error: unknown): error is DomainError {
+export function domainError(error: unknown): error is DomainError {
   return error instanceof Error && "code" in error && "metadata" in error;
 }
 

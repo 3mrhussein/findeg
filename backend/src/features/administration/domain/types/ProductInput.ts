@@ -3,7 +3,7 @@ import {
   IdSchema,
   PriceSchema,
   QuantitySchema,
-  LocalizedStringSchema,
+  TranslationMapSchema,
 } from "../../../core/domain/types/common";
 import { LocaleSchema } from "../../../core/domain/value-objects";
 
@@ -25,7 +25,7 @@ const SellableUomInputSchema = z.object({
   uomCode: z.string(),
   factorToBase: z.number().positive(),
   isEnabled: z.boolean().optional().default(true),
-  localizedLabel: LocalizedStringSchema.optional(),
+  localizedLabel: TranslationMapSchema.optional(),
   barcode: z.string().optional(),
 });
 
@@ -56,7 +56,7 @@ export const VariantInputSchema = z.object({
   id: IdSchema.optional(),
   sku: z.string().min(1),
   variantKey: z.string().min(1),
-  localizedLabel: LocalizedStringSchema.optional(),
+  localizedLabel: TranslationMapSchema.optional(),
   displayOrder: z.number().int().optional().default(0),
   isActive: z.boolean().optional().default(true),
   basePrice: PriceSchema,

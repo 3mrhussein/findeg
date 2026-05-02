@@ -16,6 +16,7 @@
     "dev:storefront": "pnpm --filter @findeg/storefront dev",
     "dev:dashboard": "pnpm --filter @findeg/dashboard dev",
     "dev:both": "pnpm --parallel --filter @findeg/storefront --filter @findeg/dashboard dev",
+    "dev:all": "pnpm db:setup && pnpm dev",
     "db:start": "docker-compose up -d postgres",
     "db:stop": "docker-compose stop postgres",
     "db:reset": "docker-compose down -v postgres && docker-compose up -d postgres",

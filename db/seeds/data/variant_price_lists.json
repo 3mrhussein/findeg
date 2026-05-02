@@ -3,7 +3,7 @@
         "id": 1,
         "variantId": 13,
         "customerGroup": "public_b2c",
-        "uomCode": "EA",
+        "uomCode": "pcs",
         "currency": "EGP",
         "unitPrice": 50,
         "minQty": 1,

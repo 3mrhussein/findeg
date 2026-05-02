@@ -17,7 +17,7 @@ import {
 import { Input } from "@findeg/ui";
 import { Label } from "@findeg/ui";
 import { Switch } from "@findeg/ui";
-import { createAdminAction, updateAdminAction } from "../_actions/adminUsers";
+import { createAdminAction, updateAdminAction } from "@data/access/actions";
 import type { AdminUser } from "@findeg/backend/features/identity";
 import type { RoleWithPermissions } from "@findeg/backend/features/identity";
 import { useToast } from "@hooks/use-toast";
@@ -104,36 +104,36 @@ export function AdminUsersList({
     e.preventDefault();
     setIsPending(true);
 
-    const data = new FormData();
-    data.append("email", formData.email);
-    data.append("firstName", formData.firstName);
-    data.append("lastName", formData.lastName);
-    data.append("isActive", formData.isActive.toString());
-    if (formData.password) {
-      data.append("password", formData.password);
-    }
-    formData.roles.forEach((roleId) => {
-      data.append("roleIds", roleId.toString());
-    });
-
     try {
+      let result;
       if (selectedUser) {
-        await updateAdminAction(selectedUser.id, data);
-        toast({
-          title: "Admin Updated",
-          description: `Successfully updated roles for ${formData.firstName} ${formData.lastName}`,
+        result = await updateAdminAction(selectedUser.id, {
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          isActive: formData.isActive,
+          roleIds: formData.roles,
         });
-        setEditModalOpen(false);
       } else {
-        await createAdminAction(data);
-        toast({
-          title: "Admin Created",
-          description: `Successfully created admin account for ${formData.firstName} ${formData.lastName}`,
+        result = await createAdminAction({
+          email: formData.email,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          password: formData.password,
+          roleIds: formData.roles,
         });
-        setAddModalOpen(false);
       }
 
-      router.refresh();
+      if (result.success) {
+        toast({
+          title: selectedUser ? "Admin Updated" : "Admin Created",
+          description: `Successfully ${selectedUser ? "updated" : "created"} admin account for ${formData.firstName} ${formData.lastName}`,
+        });
+        setEditModalOpen(false);
+        setAddModalOpen(false);
+        router.refresh();
+      } else {
+        throw new Error(result.error || "Action failed");
+      }
     } catch (error) {
       console.error(error);
       toast({

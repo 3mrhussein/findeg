@@ -6,7 +6,7 @@ import type {
   AuditLogFilters,
 } from "../application/interfaces/IAuditLogRepository";
 import type { AuditLogEntry } from "../domain/entities/AuditLogEntry";
-import { db } from "@findeg/db";
+import { db } from "@findeg/db/connection";
 
 /**
  * Drizzle Audit Log Repository

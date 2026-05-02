@@ -17,15 +17,15 @@ import {
   QuantitySchema,
   CustomerGroupSchema,
   UomCodeSchema,
-  LocalizedStringSchema,
+  TranslationMapSchema,
   type ID,
   type Price,
   type CustomerGroup,
   type UomCode,
+  type Locale,
 } from "../../../core/domain/types/common";
 import type { CurrencyCode, Money } from "../../../core/domain/value-objects";
-import { DEFAULT_CURRENCY, toMoney, MoneySchema } from "../../../core/domain/value-objects";
-import { type SupportedLocale } from "../../../core/domain/types/locale";
+import { DEFAULT_CURRENCY, toMoney, MoneySchema, pick } from "../../../core/domain/value-objects";
 
 // ─── Variant Image ───────────────────────────────────────────────────────────
 
@@ -44,7 +44,7 @@ export const SellableUomSchema = z.object({
   uomCode: UomCodeSchema,
   factorToBase: z.number().positive(),
   isEnabled: z.boolean().default(true),
-  localizedLabel: LocalizedStringSchema.optional(),
+  localizedLabel: TranslationMapSchema.optional(),
   barcode: z.string().optional(),
 });
 export type SellableUom = z.infer<typeof SellableUomSchema>;
@@ -91,7 +91,7 @@ export const VariantSchema = z.object({
   productId: IdSchema,
   sku: z.string(),
   variantKey: z.string(),
-  localizedLabel: LocalizedStringSchema.optional(),
+  localizedLabel: TranslationMapSchema.optional(),
   displayOrder: z.number().default(0),
   isActive: z.boolean().default(true),
 
@@ -137,8 +137,8 @@ export type UpdateVariant = z.infer<typeof UpdateVariantSchema>;
 export class VariantEntity {
   constructor(private variant: Variant) {}
 
-  getLabel(locale: SupportedLocale): string {
-    return this.variant.localizedLabel?.[locale] ?? this.variant.localizedLabel?.en ?? "";
+  getLabel(locale: Locale): string {
+    return pick(this.variant.localizedLabel, locale);
   }
 
   getDisplayPrice(currency: string = DEFAULT_CURRENCY): Money {

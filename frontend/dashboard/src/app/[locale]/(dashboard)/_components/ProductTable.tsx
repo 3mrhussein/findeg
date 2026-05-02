@@ -27,11 +27,12 @@ export function ProductTable({ products }: ProductTableProps) {
   /**
    *
    */
-  const formatPrice = (price: number) => {
+  const formatPrice = (price: number | string | undefined) => {
+    if (!price) return "";
     return new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "USD",
-    }).format(price);
+    }).format(Number(price));
   };
 
   return (
@@ -88,7 +89,7 @@ export function ProductTable({ products }: ProductTableProps) {
                 <TableCell>
                   <div className="flex flex-col">
                     <span className="font-medium">
-                      {formatPrice(product.variants?.[0]?.basePrice ?? 0)}
+                      {formatPrice(product?.variants?.[0]?.basePrice ?? 0)}
                     </span>
                     {product.variants?.[0]?.strikePrice && (
                       <span className="text-xs text-muted-foreground line-through">

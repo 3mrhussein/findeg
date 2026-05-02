@@ -1,4 +1,4 @@
-import { db } from "@findeg/db";
+import { db } from "@findeg/db/connection";
 import { eq, and, or, sql } from "drizzle-orm";
 import { IParentSessionRepository } from "../application/interfaces/IParentSessionRepository";
 import {

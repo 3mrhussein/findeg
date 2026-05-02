@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useTransition, useEffect } from "react";
+import { useState, useTransition, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
@@ -8,10 +8,7 @@ import { useRouter } from "@i18n/navigation";
 import { toast } from "sonner";
 import { Tabs, TabsContent } from "@findeg/ui";
 import { Form } from "@findeg/ui";
-import {
-  ProductFormSchema,
-  type ProductFormValues,
-} from "../../../../../../features/administration/presentation/forms/product-form";
+
 import { ProductFormHeader } from "./ProductFormHeader";
 import { ProductFormTabs } from "./ProductFormTabs";
 import { ProductFormSidebar } from "../ProductFormSidebar";
@@ -20,17 +17,9 @@ import { VariantsTab } from "./tabs/VariantsTab";
 import { MediaTab } from "./tabs/MediaTab";
 import { PricingTab } from "./tabs/PricingTab";
 import { SeoTab } from "./tabs/SeoTab";
-import type { Category, Brand, Tag } from "@findeg/backend/features/catalog";
-import {
-  createProductAction,
-  updateProductAction,
-  generateVariantsAction,
-  rebuildVariantKeysAction,
-  upsertVariantUoMsAction,
-  upsertVariantImagesAction,
-  checkSkuAvailableAction,
-  checkSlugAvailableAction,
-} from "@actions/admin-actions";
+import type { Brand, Tag } from "@findeg/backend/features/catalog";
+import { ProductFormSchema, ProductFormValues } from "@/interfaces";
+import { createProduct, updateProduct } from "@data/products/actions";
 
 interface ProductFormProps {
   initialData?: any; // TODO: Use ProductEditData type after repository-based refactoring
@@ -148,8 +137,8 @@ export function ProductForm({ initialData, categories, brands, tags, locale }: P
   const onSubmit = async (values: ProductFormValues) => {
     startTransition(async () => {
       const result = initialData
-        ? await updateProductAction(initialData.id, values as any)
-        : await createProductAction(values as any);
+        ? await updateProduct(initialData.id, values as any)
+        : await createProduct(values as any);
 
       if (result.success) {
         toast.success(initialData ? t("updated") : t("created"));

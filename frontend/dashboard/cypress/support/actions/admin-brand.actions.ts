@@ -33,10 +33,7 @@ export function createBrandFromUi(input: TestBrandInput): void {
   cy.get(adminSelectors.brandNameInput, { timeout: 10000 }).clear().type(input.name);
   cy.get(adminSelectors.brandSlugInput).clear().type(input.slug);
   cy.get(adminSelectors.brandLogoUrlInput).clear().type(input.logoUrl);
-  cy.get(adminSelectors.brandSubmitButton)
-    .should("be.visible")
-    .and("not.be.disabled")
-    .click();
+  cy.get(adminSelectors.brandSubmitButton).should("be.visible").and("not.be.disabled").click();
 }
 
 /**
@@ -56,10 +53,7 @@ export function updateBrandFromUiById(brandId: number, input: Partial<TestBrandI
     cy.get(adminSelectors.brandLogoUrlInput).clear().type(input.logoUrl);
   }
 
-  cy.get(adminSelectors.brandSubmitButton)
-    .should("be.visible")
-    .and("not.be.disabled")
-    .click();
+  cy.get(adminSelectors.brandSubmitButton).should("be.visible").and("not.be.disabled").click();
 }
 
 /**

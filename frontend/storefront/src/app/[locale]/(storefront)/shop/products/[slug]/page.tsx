@@ -8,7 +8,6 @@ import {
   getProductPdp,
   getProductBySlugOrIdForMetadata,
   getTopProductSlugsForStaticParams,
-  getProductEnglishSlug,
 } from "@data/catalog/queries";
 import { PageShell } from "../../../_components/PageShell";
 import { ProductDetailClient } from "./_components/ProductDetailClient";
@@ -44,7 +43,7 @@ export async function generateMetadata({ params }: ProductDetailPageProps): Prom
     .replace(/\s+/g, " ")
     .trim()
     .slice(0, 160);
-  const canonicalSlug = getProductEnglishSlug(product) || String(product.id);
+  const canonicalSlug = product.slug || String(product.id);
 
   return {
     title: product.name,

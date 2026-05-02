@@ -18,14 +18,15 @@ const BOUNDARY_MODE_KEY = "boundaryMode";
  *
  */
 export function BoundaryProvider({ children }: { children: React.ReactNode }) {
-  const [mode, setMode] = useState<BoundaryMode>("off");
-
-  useEffect(() => {
-    const savedMode = localStorage.getItem(BOUNDARY_MODE_KEY) as BoundaryMode;
-    if (savedMode && ["off", "rendering", "hydration"].includes(savedMode)) {
-      setMode(savedMode);
+  const [mode, setMode] = useState<BoundaryMode>(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem(BOUNDARY_MODE_KEY);
+      if (saved && ["off", "rendering", "hydration"].includes(saved)) {
+        return saved as BoundaryMode;
+      }
     }
-  }, []);
+    return "off";
+  });
 
   /**
    *

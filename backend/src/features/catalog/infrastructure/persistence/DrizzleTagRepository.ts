@@ -1,4 +1,4 @@
-import { db } from "@findeg/db";
+import { db } from "@findeg/db/connection";
 import { tags, productTags, products } from "@findeg/db/schema";
 import { ITagRepository } from "../../application/interfaces/ITagRepository";
 import { Tag, TagGroup, CreateTag } from "../../domain/entities/Tag";

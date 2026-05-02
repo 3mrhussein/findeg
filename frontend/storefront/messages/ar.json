@@ -37,6 +37,10 @@
     "SignIn": "تسجيل الدخول",
     "Register": "إنشاء حساب",
     "NewArrivals": "وصل حديثاً",
+    "DeliverTo": "التوصيل إلى: {city}",
+    "AllCategories": "جميع الفئات",
+    "Deals": "العروض",
+    "Hot": "جديد وحصري",
     "School": {
       "Title": "اللوازم المدرسية",
       "Backpacks": "حقائب ظهر",
@@ -81,7 +85,20 @@
       "AboutContact": "اتصل بنا",
       "FollowTitle": "تابعنا",
       "CookieSettings": "إعدادات ملفات تعريف الارتباط",
-      "Copyright": "كل الحقوق محفوظة."
+      "Copyright": "كل الحقوق محفوظة.",
+      "AllProducts": "جميع المنتجات",
+      "Categories": "الفئات",
+      "Search": "بحث",
+      "Cart": "عربة التسوق",
+      "SchoolsTitle": "المدارس",
+      "FindYourList": "ابحث عن قائمتك",
+      "PartnerProgram": "برنامج الشركاء",
+      "Fundraising": "جمع التبرعات",
+      "HelpTitle": "المساعدة",
+      "AboutUs": "من نحن",
+      "ContactSupport": "اتصل بالدعم",
+      "ReturnPolicy": "سياسة الإرجاع",
+      "TermsOfService": "شروط الخدمة"
     },
     "Announcement": {
       "BarText": "شحن مجاني للطلبات التي تزيد عن 200 جنيه! 🎉",
@@ -97,7 +114,14 @@
         "Subtitle": "متجرك الشامل للأدوات المكتبية عالية الجودة وألعاب الأطفال الجذابة واللوازم المدرسية الأساسية. أطلق العنان للإبداع واجعل التعلم ممتعًا!",
         "ButtonShop": "تسوق الآن",
         "ButtonExplore": "استكشف الفئات",
-        "ButtonSchoolList": "ابحث عن قائمة مدرسية"
+        "ButtonSchoolList": "ابحث عن قائمة مدرسية",
+        "Badge": "العودة للمدرسة 2024",
+        "TitleSmart": "قوائم ذكية.",
+        "TitleStationery": "قرطاسية جميلة.",
+        "ButtonSchools": "للمدارس",
+        "CardListLabel": "قائمة مدرسية",
+        "CardGradeLabel": "قائمة مستلزمات الصف الثالث",
+        "CardReadyLabel": "١٤ عنصراً جاهزاً"
       },
       "Featured": {
         "Title": "المنتجات المميزة",
@@ -115,6 +139,12 @@
         "EmptyDescription": "تصفح مجموعاتنا المنظمة من القرطاسية المصممة لتلبية احتياجاتك."
       },
       "TrustedBrands": "علاماتنا التجارية الموثوقة",
+      "Collections": {
+        "Title": "مجموعات مختارة",
+        "ViewAll": "عرض الكل",
+        "CategoryBadge": "فئة",
+        "FallbackDescription": "اكتشف الجودة الفائقة."
+      },
       "Generator": {
         "Title": "مولد أفكار المنتجات بالذكاء الاصطناعي",
         "Subtitle": "لا تستطيع العثور على ما تبحث عنه؟ صف لعبة أو أداة مكتبية، ودع الذكاء الاصطناعي لدينا يحقق فكرتك!",

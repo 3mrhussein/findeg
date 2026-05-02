@@ -1,8 +1,8 @@
-import { requireAdmin } from "@lib/auth-guard";
+import { requirePermission } from "@lib/auth-guard";
 import { PERMISSION_CODES } from "@findeg/backend/features/core";
 import { AdminUsersList } from "./_components/AdminUsersList";
 import type { Locale } from "next-intl";
-import { redirect } from "@i18n/navigation";
+import { getAdminUsers, getSystemRoles } from "@data/access/queries";
 
 export const metadata = {
   title: "Admin Users - FindEg Admins",
@@ -13,20 +13,11 @@ export const metadata = {
  */
 export default async function AdminUsersPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const session = await requireAdmin(locale as Locale);
+  await requirePermission(locale as Locale, {
+    permission: PERMISSION_CODES.ADMIN_USERS_READ,
+  });
 
-  // Check permissions (Super Admins typically handle user management)
-  const canManageUsers =
-    session.activeRoleIds?.includes("system_admin") ||
-    session.permissionCodes?.includes(PERMISSION_CODES.ADMIN_USERS_READ);
-
-  if (!canManageUsers) {
-    redirect({ href: "/", locale });
-  }
-
-  // TODO: Replace with data layer queries from @data/users/queries
-  const users: any[] = []; // Stubbed - empty users list
-  const roles: any[] = []; // Stubbed - empty roles list
+  const [users, roles] = await Promise.all([getAdminUsers(), getSystemRoles()]);
 
   return (
     <div className="space-y-6">

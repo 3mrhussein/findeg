@@ -2,7 +2,7 @@
     {
         "id": 1,
         "variantId": 13,
-        "uomCode": "EA",
+        "uomCode": "pcs",
         "factorToBase": 1,
         "localizedLabel": {
             "en": "Each",
