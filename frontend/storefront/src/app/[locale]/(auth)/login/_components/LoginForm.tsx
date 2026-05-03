@@ -1,25 +1,25 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { useRouter } from "@i18n/navigation";
-import { Button } from "@findeg/ui";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Loader2 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { useRouter } from '@i18n/navigation';
+import { Button } from '@findeg/ui';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@findeg/ui';
+import { Input } from '@findeg/ui';
+import { Loader2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 const persistSessionToken = (token: string) => {
   /* internal handler mapped later */
 };
 
 const formSchema = z.object({
   email: z.string().email({
-    message: "Please enter a valid email address.",
+    message: 'Please enter a valid email address.',
   }),
   password: z.string().min(1, {
-    message: "Password is required.",
+    message: 'Password is required.',
   }),
 });
 
@@ -45,8 +45,8 @@ export function LoginForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
   });
 
@@ -58,10 +58,10 @@ export function LoginForm() {
       setIsLoading(true);
       setServerError(null);
 
-      const response = await fetch("/api/v1/auth/login", {
-        method: "POST",
+      const response = await fetch('/api/v1/auth/login', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           email: values.email.trim(),
@@ -71,7 +71,7 @@ export function LoginForm() {
 
       const json = (await response.json().catch(() => null)) as LoginResponseBody | null;
       if (!response.ok || !json?.success) {
-        const message = json?.error?.message || t("Common.ErrorOccurred");
+        const message = json?.error?.message || t('Common.ErrorOccurred');
         setServerError(message);
         return;
       }
@@ -79,7 +79,7 @@ export function LoginForm() {
       if (json?.data?.token) {
         persistSessionToken(json.data.token);
       }
-      router.push("/my-account");
+      router.push('/my-account');
       router.refresh();
     } finally {
       setIsLoading(false);
@@ -122,7 +122,7 @@ export function LoginForm() {
         ) : null}
         <Button type="submit" className="w-full" disabled={isLoading}>
           {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          <span data-testid="login-submit-label">{t("Pages.Auth.ButtonLogin")}</span>
+          <span data-testid="login-submit-label">{t('Pages.Auth.ButtonLogin')}</span>
         </Button>
       </form>
     </Form>

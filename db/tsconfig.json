@@ -1,20 +1,29 @@
 {
-    "extends": "../tsconfig.json",
-    "compilerOptions": {
-        "resolveJsonModule": true,
-        "baseUrl": ".",
-        "paths": {
-            "@/*": [
-                "../backend/src/*"
-            ]
-        }
-    },
-    "include": [
-        "**/*.ts",
-        "**/*.json"
-    ],
-    "exclude": [
-        "node_modules",
-        "dist"
-    ]
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "outDir": "dist",
+    "rootDir": "..",
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "paths": {
+      "@findeg/db/*": ["./*"],
+      "@findeg/env": ["../env.ts"]
+    }
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.json",
+    "../env.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "migrations",
+    "**/*.test.ts"
+  ]
 }

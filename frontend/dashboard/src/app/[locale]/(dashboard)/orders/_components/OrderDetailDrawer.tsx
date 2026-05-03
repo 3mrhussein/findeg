@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { SlideOver } from "@/app/[locale]/_components/shared/SlideOver";
-import { StatusBadge } from "@components/shared/StatusBadge";
-import { OrderTimeline } from "./OrderTimeline";
+import { SlideOver } from '@/app/[locale]/_components/shared/SlideOver';
+import { StatusBadge } from '@components/shared/StatusBadge';
+import { OrderTimeline } from './OrderTimeline';
 import {
   Package,
   User,
@@ -12,9 +12,9 @@ import {
   Truck,
   Calendar,
   DollarSign,
-} from "lucide-react";
-import { format } from "date-fns";
-import type { Order } from "@findeg/backend/features/order";
+} from 'lucide-react';
+import { format } from 'date-fns';
+import type { Order } from '@findeg/backend/features/order';
 
 interface OrderDetailDrawerProps {
   order: Order | null;
@@ -36,16 +36,16 @@ export function OrderDetailDrawer({
   if (!order) return null;
 
   const orderNumber = `#${order.id}`;
-  const customerName = order.customerName || order.guestEmail || "Guest";
+  const customerName = order.customerName || order.guestEmail || 'Guest';
   const itemsCount = order.items?.length || 0;
-  const totalAmount = `${order.currency || "EGP"} ${order.totalAmount?.toFixed(2) || "0.00"}`;
+  const totalAmount = `${order.currency || 'EGP'} ${order.totalAmount?.toFixed(2) || '0.00'}`;
 
   return (
     <SlideOver
       open={isOpen}
       onOpenChange={onOpenChange}
       title={`Order ${orderNumber}`}
-      description={`Placed ${order.createdAt ? format(new Date(order.createdAt), "PPp") : "Unknown"}`}
+      description={`Placed ${order.createdAt ? format(new Date(order.createdAt), 'PPp') : 'Unknown'}`}
     >
       <div className="space-y-6">
         {/* Header Info */}
@@ -61,7 +61,7 @@ export function OrderDetailDrawer({
             <StatusBadge status={order.status} />
             <div className="flex items-center gap-2 justify-end text-sm">
               <span className="text-muted-foreground">Payment:</span>
-              <span className="font-medium capitalize">{order.paymentStatus || "unpaid"}</span>
+              <span className="font-medium capitalize">{order.paymentStatus || 'unpaid'}</span>
             </div>
           </div>
         </div>
@@ -112,7 +112,7 @@ export function OrderDetailDrawer({
               >
                 <div className="min-w-0 flex-1 space-y-1">
                   <div className="font-medium text-sm">
-                    {item.productNameSnapshot || "Unknown Product"}
+                    {item.productNameSnapshot || 'Unknown Product'}
                   </div>
                   {item.productSkuSnapshot && (
                     <div className="text-xs text-muted-foreground font-mono">
@@ -125,12 +125,12 @@ export function OrderDetailDrawer({
                     </div>
                   )}
                   <div className="text-xs text-muted-foreground">
-                    {item.quantity} {item.uomCode || "unit"} × {order.currency || "EGP"}{" "}
-                    {item.unitPrice?.toFixed(2) || "0.00"}
+                    {item.quantity} {item.uomCode || 'unit'} × {order.currency || 'EGP'}{' '}
+                    {item.unitPrice?.toFixed(2) || '0.00'}
                   </div>
                 </div>
                 <div className="text-sm font-semibold whitespace-nowrap">
-                  {order.currency || "EGP"} {item.totalPrice?.toFixed(2) || "0.00"}
+                  {order.currency || 'EGP'} {item.totalPrice?.toFixed(2) || '0.00'}
                 </div>
               </div>
             ))}
@@ -141,13 +141,13 @@ export function OrderDetailDrawer({
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Subtotal:</span>
               <span>
-                {order.currency || "EGP"} {order.subtotal?.toFixed(2) || "0.00"}
+                {order.currency || 'EGP'} {order.subtotal?.toFixed(2) || '0.00'}
               </span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Shipping:</span>
               <span>
-                {order.currency || "EGP"} {order.shippingCost?.toFixed(2) || "0.00"}
+                {order.currency || 'EGP'} {order.shippingCost?.toFixed(2) || '0.00'}
               </span>
             </div>
             <div className="flex justify-between font-semibold text-lg pt-2 border-t">
@@ -240,13 +240,13 @@ export function OrderDetailDrawer({
             {order.createdAt && (
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Created:</span>
-                <span className="font-mono">{format(new Date(order.createdAt), "PPp")}</span>
+                <span className="font-mono">{format(new Date(order.createdAt), 'PPp')}</span>
               </div>
             )}
             {order.updatedAt && (
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Updated:</span>
-                <span className="font-mono">{format(new Date(order.updatedAt), "PPp")}</span>
+                <span className="font-mono">{format(new Date(order.updatedAt), 'PPp')}</span>
               </div>
             )}
           </div>

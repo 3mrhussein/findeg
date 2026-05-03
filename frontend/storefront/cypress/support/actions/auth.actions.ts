@@ -1,10 +1,10 @@
-import { adminSelectors } from "../selectors/admin.selectors";
-import { authSelectors } from "../selectors/auth.selectors";
-import { localePath } from "../utils/url";
-import { resolveCypressEnv } from "../utils/env";
-import { API_ROUTES, UI_ROUTES } from "../constants/routes";
-import { ADMIN_MESSAGES } from "../constants/messages";
-import type { E2EUser } from "../utils/user-factory";
+import { adminSelectors } from '../selectors/admin.selectors';
+import { authSelectors } from '../selectors/auth.selectors';
+import { localePath } from '../utils/url';
+import { resolveCypressEnv } from '../utils/env';
+import { API_ROUTES, UI_ROUTES } from '../constants/routes';
+import { ADMIN_MESSAGES } from '../constants/messages';
+import type { E2EUser } from '../utils/user-factory';
 
 interface AuthApiResponse {
   success?: boolean;
@@ -20,13 +20,13 @@ interface AuthApiResponse {
  *
  */
 export function loginAsAdminThroughUi(): void {
-  const adminEmail = resolveCypressEnv("ADMIN_EMAIL", "admin@findeg.com");
-  const adminPassword = resolveCypressEnv("ADMIN_PASSWORD", "admin");
+  const adminEmail = resolveCypressEnv('ADMIN_EMAIL', 'admin@findeg.com');
+  const adminPassword = resolveCypressEnv('ADMIN_PASSWORD', 'admin');
 
   cy.get(adminSelectors.emailInput).clear().type(adminEmail);
   cy.get(adminSelectors.passwordInput).clear().type(adminPassword, { log: false });
   cy.get(adminSelectors.loginSubmit).contains(ADMIN_MESSAGES.signInButtonRegex).click();
-  cy.location("pathname", { timeout: 15000 }).should((pathname) => {
+  cy.location('pathname', { timeout: 15000 }).should((pathname) => {
     const localizedAdmin = localePath(UI_ROUTES.admin);
     const localizedAdminLogin = localePath(UI_ROUTES.adminLogin);
 
@@ -46,7 +46,7 @@ export function loginAsAdminThroughUi(): void {
  *
  */
 export function loginAsAdminSession(): void {
-  const adminEmail = resolveCypressEnv("ADMIN_EMAIL", "admin@findeg.com");
+  const adminEmail = resolveCypressEnv('ADMIN_EMAIL', 'admin@findeg.com');
 
   cy.session(
     adminEmail,
@@ -62,7 +62,7 @@ export function loginAsAdminSession(): void {
         // Simple validation to ensure we're still logged in (cookie check is implicit with session)
         // We could also do a quick visit to a protected page
         cy.visit(localePath(UI_ROUTES.admin));
-        cy.location("pathname").should("not.include", "admin-login");
+        cy.location('pathname').should('not.include', 'admin-login');
       },
       cacheAcrossSpecs: true,
     },
@@ -73,12 +73,12 @@ export function loginAsAdminSession(): void {
  *
  */
 export function fetchAdminToken(): Cypress.Chainable<string> {
-  const adminEmail = resolveCypressEnv("ADMIN_EMAIL", "admin@findeg.com");
-  const adminPassword = resolveCypressEnv("ADMIN_PASSWORD", "admin");
+  const adminEmail = resolveCypressEnv('ADMIN_EMAIL', 'admin@findeg.com');
+  const adminPassword = resolveCypressEnv('ADMIN_PASSWORD', 'admin');
 
   return cy
     .request({
-      method: "POST",
+      method: 'POST',
       url: API_ROUTES.authLogin,
       body: {
         email: adminEmail,
@@ -88,7 +88,7 @@ export function fetchAdminToken(): Cypress.Chainable<string> {
     .then((response) => {
       expect(response.status).to.eq(200);
       const token = response.body?.data?.token as string | undefined;
-      expect(token, "admin JWT token").to.be.a("string").and.not.empty;
+      expect(token, 'admin JWT token').to.be.a('string').and.not.empty;
       return token!;
     });
 }
@@ -97,7 +97,7 @@ export function fetchAdminToken(): Cypress.Chainable<string> {
  * Persists user session token in the app auth cookie.
  */
 export function setUserSessionCookie(token: string): void {
-  cy.setCookie("admin_session", token);
+  cy.setCookie('admin_session', token);
 }
 
 /**
@@ -108,7 +108,7 @@ export function registerUserViaApi(
 ): Cypress.Chainable<{ token: string; userId: number }> {
   return cy
     .request({
-      method: "POST",
+      method: 'POST',
       url: API_ROUTES.authRegister,
       body: {
         email: user.email,
@@ -119,13 +119,13 @@ export function registerUserViaApi(
       failOnStatusCode: false,
     })
     .then((response) => {
-      expect(response.status, "registration status").to.eq(201);
+      expect(response.status, 'registration status').to.eq(201);
       const body = response.body as AuthApiResponse;
       const token = body?.data?.token;
       const userId = body?.data?.user?.id;
 
-      expect(token, "user registration token").to.be.a("string").and.not.empty;
-      expect(userId, "registered user id").to.be.a("number");
+      expect(token, 'user registration token').to.be.a('string').and.not.empty;
+      expect(userId, 'registered user id').to.be.a('number');
 
       return {
         token: token!,
@@ -148,5 +148,5 @@ export function registerUserThroughUi(user: E2EUser): void {
     .type(user.password, { log: false });
   cy.get('button[type="submit"]').click();
 
-  cy.location("pathname", { timeout: 20000 }).should("include", localePath(UI_ROUTES.myAccount));
+  cy.location('pathname', { timeout: 20000 }).should('include', localePath(UI_ROUTES.myAccount));
 }

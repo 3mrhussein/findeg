@@ -1,6 +1,6 @@
-import { useState, useMemo } from "react";
-import { ProductEntity, type Product } from "@findeg/backend/features/catalog";
-import type { SortOption } from "@lib/types";
+import { useState, useMemo } from 'react';
+import { ProductEntity, type Product } from '@findeg/backend/features/catalog';
+import type { SortOption } from '@lib/types';
 
 /**
  * Custom hook for managing product filtering and sorting.
@@ -10,30 +10,30 @@ import type { SortOption } from "@lib/types";
  */
 export const useProducts = (initialProducts: Product[]) => {
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(initialProducts);
-  const [sortOption, setSortOption] = useState<SortOption>("featured");
+  const [sortOption, setSortOption] = useState<SortOption>('featured');
 
   const sortedProducts = useMemo(() => {
     let sortable = [...filteredProducts];
     switch (sortOption) {
-      case "newest":
+      case 'newest':
         sortable.sort(
           (a, b) =>
             (new ProductEntity(b).isNew() ? 1 : -1) - (new ProductEntity(a).isNew() ? 1 : -1),
         );
         break;
-      case "price-asc":
+      case 'price-asc':
         sortable.sort(
           (a, b) =>
             Number(a.variants?.[0]?.basePrice ?? 0) - Number(b.variants?.[0]?.basePrice ?? 0),
         );
         break;
-      case "price-desc":
+      case 'price-desc':
         sortable.sort(
           (a, b) =>
             Number(b.variants?.[0]?.basePrice ?? 0) - Number(a.variants?.[0]?.basePrice ?? 0),
         );
         break;
-      case "featured":
+      case 'featured':
       default:
         break;
     }

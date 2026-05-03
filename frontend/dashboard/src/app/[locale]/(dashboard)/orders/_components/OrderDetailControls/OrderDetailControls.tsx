@@ -1,28 +1,28 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useRouter } from "@i18n/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Textarea } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@findeg/ui";
-import { updateOrderPaymentStatusAction, updateOrderStatusAction } from "@actions/order-actions";
-import { useToast } from "@hooks/use-toast";
+import { useState } from 'react';
+import { useRouter } from '@i18n/navigation';
+import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
+import { Label } from '@findeg/ui';
+import { Input } from '@findeg/ui';
+import { Textarea } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@findeg/ui';
+import { updateOrderPaymentStatusAction, updateOrderStatusAction } from '@actions/order-actions';
+import { useToast } from '@hooks/use-toast';
 
 /**
  * Local type definitions
  */
 type OrderStatus =
-  | "pending"
-  | "confirmed"
-  | "processing"
-  | "shipped"
-  | "delivered"
-  | "cancelled"
-  | "refunded";
-type PaymentStatus = "pending" | "paid" | "failed" | "refunded";
+  | 'pending'
+  | 'confirmed'
+  | 'processing'
+  | 'shipped'
+  | 'delivered'
+  | 'cancelled'
+  | 'refunded';
+type PaymentStatus = 'pending' | 'paid' | 'failed' | 'refunded';
 
 /**
  * Stub helper functions (to be reimplemented)
@@ -30,15 +30,15 @@ type PaymentStatus = "pending" | "paid" | "failed" | "refunded";
 const getAllowedOrderStatusTransitions = (status: OrderStatus): OrderStatus[] => [];
 const getOrderStatusLabel = (status: OrderStatus): string => status;
 const normalizeOrderStatus = (status: string | undefined): OrderStatus =>
-  (status as OrderStatus) || "pending";
+  (status as OrderStatus) || 'pending';
 const ORDER_STATUS_OPTIONS: { value: OrderStatus; label: string }[] = [];
 const getAllowedPaymentStatusTransitions = (status: PaymentStatus): PaymentStatus[] => [];
 const getPaymentStatusLabel = (status: PaymentStatus): string => status;
 const normalizePaymentStatus = (status: string | undefined): PaymentStatus =>
-  (status as PaymentStatus) || "pending";
+  (status as PaymentStatus) || 'pending';
 const PAYMENT_STATUS_OPTIONS: { value: PaymentStatus; label: string }[] = [];
 
-import type { OrderDetailControlsProps } from "./OrderDetailControls.interface";
+import type { OrderDetailControlsProps } from './OrderDetailControls.interface';
 
 /**
  * Operational controls for admin order detail — status, tracking, notes, and payment status.
@@ -69,8 +69,8 @@ export function OrderDetailControls({
 
   const [status, setStatus] = useState<OrderStatus>(normalizedInitialStatus);
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>(normalizedInitialPaymentStatus);
-  const [trackingNumber, setTrackingNumber] = useState(initialTrackingNumber || "");
-  const [adminNotes, setAdminNotes] = useState(initialAdminNotes || "");
+  const [trackingNumber, setTrackingNumber] = useState(initialTrackingNumber || '');
+  const [adminNotes, setAdminNotes] = useState(initialAdminNotes || '');
   const [savingStatus, setSavingStatus] = useState(false);
   const [savingPayment, setSavingPayment] = useState(false);
 
@@ -80,7 +80,7 @@ export function OrderDetailControls({
   const resolveOrderId = (): number | null => {
     const numericOrderId = Number(orderId);
     if (Number.isFinite(numericOrderId)) return numericOrderId;
-    toast({ variant: "destructive", title: "Error", description: "Invalid order id." });
+    toast({ variant: 'destructive', title: 'Error', description: 'Invalid order id.' });
     return null;
   };
 
@@ -99,22 +99,22 @@ export function OrderDetailControls({
       });
       if (result.success) {
         toast({
-          title: "Order updated",
+          title: 'Order updated',
           description: `Order #${numericOrderId} status set to ${getOrderStatusLabel(status)}.`,
         });
         router.refresh();
       } else {
         toast({
-          variant: "destructive",
-          title: "Update failed",
-          description: result.error || "Could not update order.",
+          variant: 'destructive',
+          title: 'Update failed',
+          description: result.error || 'Could not update order.',
         });
       }
     } catch {
       toast({
-        variant: "destructive",
-        title: "Update failed",
-        description: "Unexpected error while updating order.",
+        variant: 'destructive',
+        title: 'Update failed',
+        description: 'Unexpected error while updating order.',
       });
     } finally {
       setSavingStatus(false);
@@ -132,22 +132,22 @@ export function OrderDetailControls({
       const result = await updateOrderPaymentStatusAction(numericOrderId, paymentStatus);
       if (result.success) {
         toast({
-          title: "Payment updated",
+          title: 'Payment updated',
           description: `Order #${numericOrderId} payment set to ${getPaymentStatusLabel(paymentStatus)}.`,
         });
         router.refresh();
       } else {
         toast({
-          variant: "destructive",
-          title: "Update failed",
-          description: result.error || "Could not update payment status.",
+          variant: 'destructive',
+          title: 'Update failed',
+          description: result.error || 'Could not update payment status.',
         });
       }
     } catch {
       toast({
-        variant: "destructive",
-        title: "Update failed",
-        description: "Unexpected error while updating payment status.",
+        variant: 'destructive',
+        title: 'Update failed',
+        description: 'Unexpected error while updating payment status.',
       });
     } finally {
       setSavingPayment(false);
@@ -184,10 +184,10 @@ export function OrderDetailControls({
             </SelectContent>
           </Select>
           <p className="text-xs text-muted-foreground">
-            Allowed next statuses:{" "}
+            Allowed next statuses:{' '}
             {allowedStatusTargets.length > 0
-              ? allowedStatusTargets.map((t) => getOrderStatusLabel(t)).join(", ")
-              : "No further transitions"}
+              ? allowedStatusTargets.map((t) => getOrderStatusLabel(t)).join(', ')
+              : 'No further transitions'}
           </p>
         </div>
 
@@ -214,7 +214,7 @@ export function OrderDetailControls({
         </div>
 
         <Button type="button" onClick={saveStatusChanges} disabled={savingStatus || savingPayment}>
-          {savingStatus ? "Saving..." : "Save Status + Notes"}
+          {savingStatus ? 'Saving...' : 'Save Status + Notes'}
         </Button>
 
         {/* Payment Status */}
@@ -241,17 +241,17 @@ export function OrderDetailControls({
             </SelectContent>
           </Select>
           <p className="text-xs text-muted-foreground">
-            Allowed next payment statuses:{" "}
+            Allowed next payment statuses:{' '}
             {allowedPaymentTargets.length > 0
-              ? allowedPaymentTargets.map((t) => getPaymentStatusLabel(t)).join(", ")
-              : "No further transitions"}
+              ? allowedPaymentTargets.map((t) => getPaymentStatusLabel(t)).join(', ')
+              : 'No further transitions'}
           </p>
           <Button
             type="button"
             onClick={savePaymentChanges}
             disabled={savingStatus || savingPayment}
           >
-            {savingPayment ? "Saving..." : "Save Payment Status"}
+            {savingPayment ? 'Saving...' : 'Save Payment Status'}
           </Button>
         </div>
       </CardContent>

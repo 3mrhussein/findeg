@@ -21,9 +21,9 @@ export function buildTestProduct(seed = Date.now()): TestProductInput {
     nameAr: `منتج ${stamp}`,
     descriptionEn: `Cypress generated product ${stamp} for category reflection flow.`,
     descriptionAr: `منتج مولد من سايبريس ${stamp} لاختبار تدفق الفئات.`,
-    price: "49.99",
-    stockQuantity: "25",
-    lowStockThreshold: "5",
+    price: '49.99',
+    stockQuantity: '25',
+    lowStockThreshold: '5',
     imageUrl: `https://picsum.photos/seed/${stamp}/900/900`,
   };
 }

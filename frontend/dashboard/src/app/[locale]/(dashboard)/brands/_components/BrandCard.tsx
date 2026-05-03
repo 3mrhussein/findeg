@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import React from "react";
-import { useTranslations } from "next-intl";
-import { Globe, Box, Pencil, Trash2, Eye, EyeOff } from "lucide-react";
-import { Button } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@findeg/ui";
-import { StatusBadge } from "@components/shared/StatusBadge";
-import { cn } from "@lib/utils";
-import { Brand } from "@findeg/backend/features/catalog";
-import Image from "next/image";
+import React from 'react';
+import { useTranslations } from 'next-intl';
+import { Globe, Box, Pencil, Trash2, Eye, EyeOff } from 'lucide-react';
+import { Button } from '@findeg/ui';
+import { Badge } from '@findeg/ui';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@findeg/ui';
+import { StatusBadge } from '@components/shared/StatusBadge';
+import { cn } from '@lib/utils';
+import { Brand } from '@findeg/backend/features/catalog';
+import Image from 'next/image';
 
 interface BrandCardProps {
   brand: Brand;
@@ -20,26 +20,26 @@ interface BrandCardProps {
 }
 
 export function BrandCard({ brand, isSelected, onEdit, onDelete, onToggleStatus }: BrandCardProps) {
-  const t = useTranslations("Administration.Catalog.Brands");
+  const t = useTranslations('Administration.Catalog.Brands');
 
   const nameEn = brand.localizedContent?.name?.en || brand.name;
   const nameAr = brand.localizedContent?.name?.ar || brand.name;
-  const descEn = brand.localizedContent?.description?.en || "";
+  const descEn = brand.localizedContent?.description?.en || '';
   const productCount = brand.productCount || 0;
 
   return (
     <div
       className={cn(
-        "group relative flex items-center p-4 rounded-2xl border transition-all duration-200",
-        "bg-white dark:bg-slate-900 border-gray-100 dark:border-slate-800",
-        "hover:border-indigo-200 dark:hover:border-indigo-800 hover:shadow-md hover:shadow-indigo-500/5",
+        'group relative flex items-center p-4 rounded-2xl border transition-all duration-200',
+        'bg-white dark:bg-slate-900 border-gray-100 dark:border-slate-800',
+        'hover:border-indigo-200 dark:hover:border-indigo-800 hover:shadow-md hover:shadow-indigo-500/5',
         isSelected &&
-          "border-indigo-200 dark:border-indigo-800 bg-indigo-50/50 dark:bg-indigo-950/20 ring-1 ring-indigo-200 dark:ring-indigo-800",
+          'border-indigo-200 dark:border-indigo-800 bg-indigo-50/50 dark:bg-indigo-950/20 ring-1 ring-indigo-200 dark:ring-indigo-800',
       )}
     >
       {/* Status Badge - Top Right */}
       <div className="absolute top-4 right-4 z-10 flex gap-2">
-        <StatusBadge status={brand.isActive ? "active" : "inactive"} />
+        <StatusBadge status={brand.isActive ? 'active' : 'inactive'} />
       </div>
 
       {/* Brand logo (existing) */}
@@ -76,7 +76,7 @@ export function BrandCard({ brand, isSelected, onEdit, onDelete, onToggleStatus 
           </div>
           <div className="flex items-center gap-1.5">
             <Box className="h-2.5 w-2.5" />
-            {productCount > 0 ? t("ProductsCount", { count: productCount }) : t("NoProducts")}
+            {productCount > 0 ? t('ProductsCount', { count: productCount }) : t('NoProducts')}
           </div>
         </div>
 
@@ -122,18 +122,18 @@ export function BrandCard({ brand, isSelected, onEdit, onDelete, onToggleStatus 
                   onToggleStatus();
                 }}
                 className={cn(
-                  "h-8 w-8 rounded-md transition-colors bg-transparent",
+                  'h-8 w-8 rounded-md transition-colors bg-transparent',
                   brand.isActive
-                    ? "text-slate-400 hover:text-gray-500 hover:bg-gray-100"
-                    : "text-slate-400 hover:text-green-600 hover:bg-green-50",
+                    ? 'text-slate-400 hover:text-gray-500 hover:bg-gray-100'
+                    : 'text-slate-400 hover:text-green-600 hover:bg-green-50',
                 )}
-                aria-label={brand.isActive ? "Set inactive" : "Set active"}
+                aria-label={brand.isActive ? 'Set inactive' : 'Set active'}
               >
                 {brand.isActive ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>{brand.isActive ? "Set inactive" : "Set active"}</p>
+              <p>{brand.isActive ? 'Set inactive' : 'Set active'}</p>
             </TooltipContent>
           </Tooltip>
 

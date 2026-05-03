@@ -8,21 +8,20 @@
  * "default" variant; multi-variant products have variants for each color/size/etc.
  */
 
-import { z } from "zod";
-import { products } from "@findeg/db/schema";
-import { type InferSelectModel } from "drizzle-orm";
+import { z } from 'zod';
+import { products } from '@findeg/db/schema';
+import { type InferSelectModel } from 'drizzle-orm';
 import {
+  ID,
   IdSchema,
   RatingSchema,
   TranslationMapSchema,
-  type ID,
-  type Rating,
   type Locale,
-} from "../../../core/domain/types/common";
-import { TagSchema } from "./Tag";
-import { ProductAttributeValueSchema } from "./AttributeDefinition";
-import { VariantSchema, type Variant, VariantEntity } from "./Variant";
-import { ResponsiveMediaSetSchema, pick } from "../../../core/domain/value-objects";
+} from '../../../core/domain/types/common';
+import { TagSchema } from './Tag';
+import { ProductAttributeValueSchema } from './AttributeDefinition';
+import { VariantSchema, type Variant, VariantEntity } from './Variant';
+import { ResponsiveMediaSetSchema, pick } from '../../../core/domain/value-objects';
 
 export const ProductLocalizedContentSchema = z.object({
   name: TranslationMapSchema,
@@ -80,11 +79,11 @@ export type Product = z.infer<typeof ProductSchema> &
   Partial<
     Omit<
       InferSelectModel<typeof products>,
-      | "localizedName"
-      | "localizedDescription"
-      | "localizedLongDescription"
-      | "rating"
-      | "reviewsCount"
+      | 'localizedName'
+      | 'localizedDescription'
+      | 'localizedLongDescription'
+      | 'rating'
+      | 'reviewsCount'
     >
   >;
 
@@ -144,7 +143,7 @@ export class ProductEntity {
   /** Returns the default / first active variant */
   getDefaultVariant(): Variant | undefined {
     const variants = this.getVariants();
-    return variants.find((v) => v.variantKey === "default") || variants[0];
+    return variants.find((v) => v.variantKey === 'default') || variants[0];
   }
 
   getVariantByKey(key: string): Variant | undefined {
@@ -201,7 +200,7 @@ export class ProductEntity {
   // ─── Status ───────────────────────────────────────────────────────
 
   isNew(): boolean {
-    return this.product.tags?.some((t) => t.key === "campaign:new-arrival") ?? false;
+    return this.product.tags?.some((t) => t.key === 'campaign:new-arrival') ?? false;
   }
 
   // ─── Data ─────────────────────────────────────────────────────────

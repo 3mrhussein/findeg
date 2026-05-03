@@ -1,7 +1,7 @@
-import { CategoryForm } from "../CategoryForm";
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import { parse } from "@findeg/backend/features/core";
-import { getCategories } from "@data/categories/queries";
+import { CategoryForm } from '../CategoryForm';
+import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
+import { parse } from '@findeg/backend/features/core';
+import { getCategories } from '@data/categories/queries';
 
 /**
  * Create Category Page — Create a new category with translations

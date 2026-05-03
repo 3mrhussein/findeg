@@ -8,31 +8,37 @@
  */
 
 // Repositories from catalog feature (reused by admin services)
-import { DrizzleProductRepository } from "../../../catalog/infrastructure/persistence/DrizzleProductRepository";
-import { DrizzleCategoryRepository } from "../../../catalog/infrastructure/persistence/DrizzleCategoryRepository";
-import { DrizzleBrandRepository } from "../../../catalog/infrastructure/persistence/DrizzleBrandRepository";
-import { DrizzleTagRepository } from "../../../catalog/infrastructure/persistence/DrizzleTagRepository";
-import { DrizzleCollectionRepository } from "../../../catalog/infrastructure/persistence/DrizzleCollectionRepository";
-import { DrizzleInventoryRepository } from "../../../catalog/infrastructure/persistence/DrizzleInventoryRepository";
-import { DrizzleVariantRepository } from "../../../catalog/infrastructure/persistence/DrizzleVariantRepository";
+import { DrizzleProductRepository } from '../../../catalog/infrastructure/persistence/DrizzleProductRepository';
+import { DrizzleCategoryRepository } from '../../../catalog/infrastructure/persistence/DrizzleCategoryRepository';
+import { DrizzleBrandRepository } from '../../../catalog/infrastructure/persistence/DrizzleBrandRepository';
+import { DrizzleTagRepository } from '../../../catalog/infrastructure/persistence/DrizzleTagRepository';
+import { DrizzleCollectionRepository } from '../../../catalog/infrastructure/persistence/DrizzleCollectionRepository';
+import { DrizzleInventoryRepository } from '../../../catalog/infrastructure/persistence/DrizzleInventoryRepository';
+import { DrizzleVariantRepository } from '../../../catalog/infrastructure/persistence/DrizzleVariantRepository';
 
 // Repository from order feature
-import { DrizzleOrderRepository } from "../../../order/infrastructure/persistence/DrizzleOrderRepository";
+import { DrizzleOrderRepository } from '../../../order/infrastructure/persistence/DrizzleOrderRepository';
 
 // Administration-specific repository
-import { DrizzleAuditLogRepository } from "../../infrastructure/DrizzleAuditLogRepository";
+import { DrizzleAuditLogRepository } from '../../infrastructure/DrizzleAuditLogRepository';
 
 // Admin services
-import { AdminProductService } from "./AdminProductService";
-import { AdminCategoryService } from "./AdminCategoryService";
-import { AdminBrandService } from "./AdminBrandService";
-import { AdminTagService } from "./AdminTagService";
-import { AdminCollectionService } from "./AdminCollectionService";
-import { AdminInventoryService } from "./AdminInventoryService";
-import { AdminOrderService } from "./AdminOrderService";
-import { AdminDashboardService } from "./AdminDashboardService";
-import { AuditLogService } from "./AuditLogService";
-import { ProductImportService } from "./ProductImportService";
+import { AdminProductService } from './AdminProductService';
+import { AdminCategoryService } from './AdminCategoryService';
+import { AdminBrandService } from './AdminBrandService';
+import { AdminTagService } from './AdminTagService';
+import { AdminCollectionService } from './AdminCollectionService';
+import { AdminInventoryService } from './AdminInventoryService';
+import { AdminOrderService } from './AdminOrderService';
+import { AdminDashboardService } from './AdminDashboardService';
+import { AuditLogService } from './AuditLogService';
+import { ProductImportService } from './ProductImportService';
+
+// Admin Queries
+import { GetCatalogHealthQuery } from '../queries/GetCatalogHealthQuery';
+import { GetCategoryDistributionQuery } from '../queries/GetCategoryDistributionQuery';
+import { GetDashboardStatsQuery } from '../queries/GetDashboardStatsQuery';
+import { IEmailService } from '@findeg/backend/features/notifications';
 
 /**
  * Create administration services with all dependencies wired
@@ -98,8 +104,16 @@ export function createAdministrationServices() {
       sendOrderConfirmation: async () => {},
       sendOrderStatusUpdate: async () => {},
       sendPasswordReset: async () => {},
-    } as any),
-    dashboard: new AdminDashboardService(productRepository, categoryRepository, orderRepository),
+      sendSchoolListAccessApproved: async () => {},
+      sendSchoolListAccessRequest: async () => {},
+      sendAdminInvitation: async () => {},
+    } as IEmailService),
+    dashboard: new AdminDashboardService(
+      orderRepository,
+      new GetCatalogHealthQuery(categoryRepository, brandRepository),
+      new GetCategoryDistributionQuery(),
+      new GetDashboardStatsQuery(),
+    ),
     auditLog: auditLogService,
     productImport: new ProductImportService(adminProductService, productRepository),
   };

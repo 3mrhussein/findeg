@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import useSWR from "swr";
+import useSWR from 'swr';
 
 export interface Category {
   id: number;
@@ -25,7 +25,7 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
  * @param {string} locale - The current locale for translations (default "en").
  * @param {string} type - The response format: "tree", "roots", or "flat" (default "tree").
  */
-export function useCategories(locale: string = "en", type: string = "tree") {
+export function useCategories(locale: string = 'en', type: string = 'tree') {
   const { data, error, isLoading } = useSWR<Category[]>(
     `/api/v1/categories?lang=${locale}&type=${type}`,
     fetcher,

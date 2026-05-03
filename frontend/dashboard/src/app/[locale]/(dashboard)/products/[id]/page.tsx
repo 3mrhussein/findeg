@@ -1,6 +1,6 @@
-import { Suspense } from "react";
-import { ProductDetailSkeleton } from "@components/skeletons";
-import { ProductDetailContent } from "./_components/ProductDetailContent";
+import { Suspense } from 'react';
+import { ProductDetailSkeleton } from '@components/skeletons';
+import { ProductDetailContent } from './_components/ProductDetailContent';
 
 /**
  * Product Edit Page

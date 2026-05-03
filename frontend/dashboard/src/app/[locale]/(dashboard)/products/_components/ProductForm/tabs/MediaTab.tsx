@@ -1,21 +1,21 @@
-"use client";
+'use client';
 
-import React from "react";
-import Image from "next/image";
-import { useFormContext, useFieldArray } from "react-hook-form";
-import { useTranslations } from "next-intl";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import { Link as LinkIcon, Star, Trash2, ImageIcon } from "lucide-react";
-import { type ProductFormValues } from "@/interfaces";
+import React from 'react';
+import Image from 'next/image';
+import { useFormContext, useFieldArray } from 'react-hook-form';
+import { useTranslations } from 'next-intl';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@findeg/ui';
+import { Input } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
+import { Link as LinkIcon, Star, Trash2, ImageIcon } from 'lucide-react';
+import { type ProductFormValues } from '@/interfaces';
 
 /**
  * Media Management Tab — URL-based only (file upload deferred to Phase 2)
  */
 export function MediaTab() {
-  const t = useTranslations("Administration.Catalog.Products.Form.Tabs.Media");
+  const t = useTranslations('Administration.Catalog.Products.Form.Tabs.Media');
   const { control, watch } = useFormContext<ProductFormValues>();
 
   const {
@@ -24,22 +24,22 @@ export function MediaTab() {
     remove,
   } = useFieldArray({
     control,
-    name: "variants.0.images",
+    name: 'variants.0.images',
   });
 
-  const [imageUrl, setImageUrl] = React.useState("");
+  const [imageUrl, setImageUrl] = React.useState('');
 
   const addImageUrl = () => {
     if (!imageUrl) return;
-    append({ url: imageUrl, displayOrder: images.length, alt: "" });
-    setImageUrl("");
+    append({ url: imageUrl, displayOrder: images.length, alt: '' });
+    setImageUrl('');
   };
 
   return (
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">{t("imageGallery")}</CardTitle>
+          <CardTitle className="text-lg">{t('imageGallery')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           {/* URL input row */}
@@ -47,15 +47,15 @@ export function MediaTab() {
             <div className="relative flex-1">
               <LinkIcon className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder={t("addByUrl")}
+                placeholder={t('addByUrl')}
                 className="pl-9"
                 value={imageUrl}
                 onChange={(e) => setImageUrl(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addImageUrl())}
+                onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addImageUrl())}
               />
             </div>
             <Button variant="secondary" onClick={addImageUrl}>
-              {t("add")}
+              {t('add')}
             </Button>
           </div>
 
@@ -69,7 +69,7 @@ export function MediaTab() {
                 >
                   <Image
                     src={img.url}
-                    alt={img.alt || "Product image"}
+                    alt={img.alt || 'Product image'}
                     fill
                     className="object-cover"
                   />

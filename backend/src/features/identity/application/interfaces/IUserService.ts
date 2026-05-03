@@ -5,10 +5,10 @@
  * profile management, and dashboard data aggregation.
  */
 
-import type { User } from "../../domain/entities/User";
-import type { Order } from "../../../order/domain/entities/Order";
-import type { Product } from "../../../catalog/domain/entities/Product";
-import type { SchoolListResult } from "../../../catalog/application/interfaces/ISchoolListRepository";
+import type { User } from '../../domain/entities/User';
+import type { Order } from '../../../order/domain/entities/Order';
+import type { Product } from '../../../catalog/domain/entities/Product';
+import type { SchoolListResult } from '../../../catalog/application/interfaces/ISchoolListRepository';
 
 export interface AdminUser {
   id: number;
@@ -17,7 +17,7 @@ export interface AdminUser {
   lastName: string | null;
   isActive: boolean;
   roles: { id: number; code: string; name: string }[];
-  permissionOverrides: { permissionCode: string; action: "grant" | "revoke" }[];
+  permissionOverrides: { permissionCode: string; action: 'grant' | 'revoke' }[];
   createdAt: Date;
 }
 
@@ -38,7 +38,7 @@ export interface UpdateAdminInput {
 
 export interface PermissionOverrideInput {
   permissionId: number;
-  action: "grant" | "revoke";
+  action: 'grant' | 'revoke';
 }
 
 export interface DashboardData {

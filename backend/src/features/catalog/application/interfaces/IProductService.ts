@@ -5,9 +5,10 @@
  * Variant-specific pricing (sell options, price quotes) has been moved to IVariantService.
  */
 
-import { type Product } from "@findeg/backend/features/catalog/domain/entities/Product";
-import type { Locale } from "@findeg/backend/features/core/domain/value-objects";
-import { type ProductFilters } from "./IProductRepository";
+import { type Product } from '@findeg/backend/features/catalog/domain/entities/Product';
+import type { Locale } from '@findeg/backend/features/core/domain/value-objects';
+import { type ProductFilters } from './IProductRepository';
+import type { ProductInput } from '@findeg/backend/features/administration/domain/types';
 
 export interface IProductService {
   getAll(language?: Locale): Promise<Product[]>;
@@ -31,7 +32,7 @@ export interface IProductService {
     language?: Locale,
   ): Promise<{ products: Product[]; total: number }>;
 
-  create(input: any): Promise<Product>;
-  update(id: number, input: any): Promise<Product>;
+  create(input: ProductInput): Promise<Product>;
+  update(id: number, input: ProductInput): Promise<Product>;
   delete(id: number): Promise<void>;
 }

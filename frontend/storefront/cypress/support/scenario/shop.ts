@@ -6,7 +6,7 @@ import {
   visitCategoryPage,
   visitSearchWithQuery,
   visitShopWithQuery,
-} from "../actions/shop.actions";
+} from '../actions/shop.actions';
 import {
   addProductToGuestCart,
   addProductToUserCart,
@@ -15,27 +15,27 @@ import {
   getFirstProductId,
   getGuestCart,
   visitWithGuest,
-} from "../actions/cart.actions";
+} from '../actions/cart.actions';
 import {
   registerUserThroughUi,
   registerUserViaApi,
   setUserSessionCookie,
-} from "../actions/auth.actions";
+} from '../actions/auth.actions';
 import {
   createOrderViaApiAsUser,
   fillCheckoutRequiredFields,
   submitCheckoutForm,
   triggerCheckoutValidationBlurWithInvalidInputs,
-} from "../actions/checkout.actions";
+} from '../actions/checkout.actions';
 import {
   expectMyAccountOrderCardVisible,
   expectMyAccountOrderDetailVisible,
-} from "../assertions/account.assertions";
+} from '../assertions/account.assertions';
 import {
   expectCheckoutErrorAlertContains,
   expectCheckoutSubmitDisabled,
   expectCheckoutValidationMessagesVisible,
-} from "../assertions/checkout.assertions";
+} from '../assertions/checkout.assertions';
 import {
   expectCartContainsProductId,
   expectCartContainsProductName,
@@ -44,14 +44,14 @@ import {
   expectSummaryToEqual,
   expectVisiblePricesAscending,
   expectVisiblePricesDescending,
-} from "../assertions/shop.assertions";
-import { localePath } from "../utils/url";
-import { shopSelectors } from "../selectors/shop.selectors";
-import { API_ROUTES, ROUTE_QUERY_KEYS, UI_ROUTES } from "../constants/routes";
-import { SHOP_MESSAGES } from "../constants/messages";
-import { API_QUERY_DEFAULTS, buildApiUrl } from "../constants/api-query";
-import { interceptCheckoutOrderFailure } from "../interceptors/checkout.intercepts";
-import { buildE2EUser } from "../utils/user-factory";
+} from '../assertions/shop.assertions';
+import { localePath } from '../utils/url';
+import { shopSelectors } from '../selectors/shop.selectors';
+import { API_ROUTES, ROUTE_QUERY_KEYS, UI_ROUTES } from '../constants/routes';
+import { SHOP_MESSAGES } from '../constants/messages';
+import { API_QUERY_DEFAULTS, buildApiUrl } from '../constants/api-query';
+import { interceptCheckoutOrderFailure } from '../interceptors/checkout.intercepts';
+import { buildE2EUser } from '../utils/user-factory';
 
 /**
  *
@@ -60,8 +60,8 @@ function toSlug(value: string): string {
   return value
     .trim()
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
 }
 
 /**
@@ -69,7 +69,7 @@ function toSlug(value: string): string {
  */
 function withGuestCheckoutCart(run: (guestId: string) => void): void {
   const guestId = createGuestId();
-  cy.clearCookie("admin_session");
+  cy.clearCookie('admin_session');
 
   clearGuestCart(guestId)
     .then(() => getFirstProductId())
@@ -77,7 +77,7 @@ function withGuestCheckoutCart(run: (guestId: string) => void): void {
     .then(() => getGuestCart(guestId))
     .then((cart) => {
       const items = (cart?.items || []) as unknown[];
-      expect(items.length, "guest checkout cart seeded items").to.be.greaterThan(0);
+      expect(items.length, 'guest checkout cart seeded items').to.be.greaterThan(0);
       run(guestId);
     });
 }
@@ -173,9 +173,9 @@ export const shouldShowTypoTolerantSearchFallback = () => {
     }),
   ).then((response) => {
     const products = response.body.products as Array<{ name: string }>;
-    expect(products.length, "keychains strict baseline").to.be.greaterThan(0);
+    expect(products.length, 'keychains strict baseline').to.be.greaterThan(0);
 
-    visitSearchWithQuery("keychainz");
+    visitSearchWithQuery('keychainz');
     cy.get(shopSelectors.searchFallbackNotice).shouldBeVisible(true);
     readResultsSummary().then((summary) => {
       expect(summary.shown).to.be.greaterThan(0);
@@ -200,8 +200,8 @@ export const shouldNavigateFromCategoryIndexToCategoryListing = () => {
     cy.visit(localePath(UI_ROUTES.categories));
     cy.get(shopSelectors.categoryCardBySlug(target.slug)).click();
 
-    cy.url().should("include", localePath(UI_ROUTES.categoryBySlug(target.slug)));
-    cy.get(shopSelectors.categoryResultsHeading).should("contain", target.name);
+    cy.url().should('include', localePath(UI_ROUTES.categoryBySlug(target.slug)));
+    cy.get(shopSelectors.categoryResultsHeading).should('contain', target.name);
   });
 };
 
@@ -219,7 +219,7 @@ export const shouldFilterByBrandWithCorrectCounts = () => {
     const total = response.body.total as number;
 
     const firstWithBrand = products.find((product) => Boolean(product.brandName));
-    expect(firstWithBrand?.brandName, "brand present in seeded data").to.be.a("string");
+    expect(firstWithBrand?.brandName, 'brand present in seeded data').to.be.a('string');
 
     const brandName = firstWithBrand!.brandName!;
     const brandSlug = toSlug(brandName);
@@ -250,17 +250,17 @@ export const shouldSortAndPaginateShopResults = () => {
 
     visitShopWithQuery();
 
-    chooseSort("price-asc");
-    cy.url().should("include", `${ROUTE_QUERY_KEYS.sort}=price-asc`);
+    chooseSort('price-asc');
+    cy.url().should('include', `${ROUTE_QUERY_KEYS.sort}=price-asc`);
     expectVisiblePricesAscending();
 
     if (total > 8) {
       goToNextPage();
     }
 
-    chooseSort("price-desc");
-    cy.url().should("include", `${ROUTE_QUERY_KEYS.sort}=price-desc`);
-    cy.url().should("not.include", `${ROUTE_QUERY_KEYS.page}=2`);
+    chooseSort('price-desc');
+    cy.url().should('include', `${ROUTE_QUERY_KEYS.sort}=price-desc`);
+    cy.url().should('not.include', `${ROUTE_QUERY_KEYS.page}=2`);
     expectVisiblePricesDescending();
   });
 };
@@ -277,7 +277,7 @@ export const shouldFilterByPriceRangeWithCorrectCounts = () => {
   ).then((response) => {
     const products = response.body.products as Array<{ price: number }>;
     const total = response.body.total as number;
-    expect(products.length, "seeded products").to.be.greaterThan(0);
+    expect(products.length, 'seeded products').to.be.greaterThan(0);
 
     const prices = products.map((product) => product.price);
     const min = Math.floor(Math.min(...prices));
@@ -287,7 +287,7 @@ export const shouldFilterByPriceRangeWithCorrectCounts = () => {
     const shown = products.filter(
       (product) => product.price >= min && product.price <= pivot,
     ).length;
-    expect(shown, "price-range filtered count").to.be.greaterThan(0);
+    expect(shown, 'price-range filtered count').to.be.greaterThan(0);
 
     visitShopWithQuery(
       `${ROUTE_QUERY_KEYS.price}=${encodeURIComponent(String(min))}&${ROUTE_QUERY_KEYS.price}=${encodeURIComponent(String(pivot))}`,
@@ -314,14 +314,14 @@ export const shouldShowEmptyStateForRestrictiveFilters = () => {
     expect(summary.shown).to.eq(0);
   });
 
-  cy.get(shopSelectors.productCardTitle).should("have.length", 0);
+  cy.get(shopSelectors.productCardTitle).should('have.length', 0);
 };
 
 /**
  * Contract case: key storefront routes should render successfully in both EN and AR locales.
  */
 export const shouldSupportEnArRouteParityForKeyPages = () => {
-  const locales: Array<"en" | "ar"> = ["en", "ar"];
+  const locales: Array<'en' | 'ar'> = ['en', 'ar'];
   const query = SHOP_MESSAGES.keychainsSlug;
 
   cy.request(
@@ -331,7 +331,7 @@ export const shouldSupportEnArRouteParityForKeyPages = () => {
     }),
   ).then((productsResponse) => {
     const products = productsResponse.body.products as Array<{ id: number }>;
-    expect(products.length, "seeded product count").to.be.greaterThan(0);
+    expect(products.length, 'seeded product count').to.be.greaterThan(0);
     const productId = products[0].id;
 
     cy.request(
@@ -341,30 +341,30 @@ export const shouldSupportEnArRouteParityForKeyPages = () => {
       }),
     ).then((categoriesResponse) => {
       const categories = categoriesResponse.body as Array<{ slug: string }>;
-      expect(categories.length, "root category count").to.be.greaterThan(0);
+      expect(categories.length, 'root category count').to.be.greaterThan(0);
       const categorySlug = categories[0].slug;
 
       locales.forEach((locale) => {
         cy.visit(localePath(UI_ROUTES.shop, locale), { timeout: 120000 });
-        cy.location("pathname").should("eq", localePath(UI_ROUTES.shop, locale));
-        cy.get(shopSelectors.shopResultsHeading).should("be.visible");
+        cy.location('pathname').should('eq', localePath(UI_ROUTES.shop, locale));
+        cy.get(shopSelectors.shopResultsHeading).should('be.visible');
 
         cy.visit(localePath(UI_ROUTES.categories, locale), { timeout: 120000 });
-        cy.location("pathname").should("eq", localePath(UI_ROUTES.categories, locale));
+        cy.location('pathname').should('eq', localePath(UI_ROUTES.categories, locale));
         cy.get(shopSelectors.categoryCardBySlug(categorySlug), { timeout: 15000 }).should(
-          "be.visible",
+          'be.visible',
         );
 
         cy.visit(localePath(`${UI_ROUTES.search}?q=${encodeURIComponent(query)}`, locale), {
           timeout: 120000,
         });
-        cy.location("pathname").should("eq", localePath(UI_ROUTES.search, locale));
-        cy.url().should("include", `q=${encodeURIComponent(query)}`);
-        cy.get(shopSelectors.searchResultsHeading).should("be.visible");
+        cy.location('pathname').should('eq', localePath(UI_ROUTES.search, locale));
+        cy.url().should('include', `q=${encodeURIComponent(query)}`);
+        cy.get(shopSelectors.searchResultsHeading).should('be.visible');
 
         cy.visit(localePath(UI_ROUTES.productById(productId), locale), { timeout: 120000 });
-        cy.location("pathname").should("eq", localePath(UI_ROUTES.productById(productId), locale));
-        cy.get(shopSelectors.productTitle).should("be.visible");
+        cy.location('pathname').should('eq', localePath(UI_ROUTES.productById(productId), locale));
+        cy.get(shopSelectors.productTitle).should('be.visible');
       });
     });
   });
@@ -403,12 +403,12 @@ export const shouldAddProductFromShopGridCardIntoCartDrawer = () => {
   cy.get(shopSelectors.productCardTitle)
     .first()
     .then(($title) => {
-      const testId = $title.attr("data-testid");
-      expect(testId, "product card title test id").to.be.a("string");
-      const productId = Number((testId || "").replace("product-card-title-", ""));
-      expect(Number.isFinite(productId), "product id").to.eq(true);
-      const productName = ($title.text() || "").trim();
-      expect(productName, "product name").to.not.equal("");
+      const testId = $title.attr('data-testid');
+      expect(testId, 'product card title test id').to.be.a('string');
+      const productId = Number((testId || '').replace('product-card-title-', ''));
+      expect(Number.isFinite(productId), 'product id').to.eq(true);
+      const productName = ($title.text() || '').trim();
+      expect(productName, 'product name').to.not.equal('');
 
       cy.get(shopSelectors.productCardAddById(productId)).first().click({ force: true });
 
@@ -422,7 +422,7 @@ export const shouldAddProductFromShopGridCardIntoCartDrawer = () => {
  */
 export const shouldPersistCartAcrossRouteTransitions = () => {
   const guestId = createGuestId();
-  cy.clearCookie("admin_session");
+  cy.clearCookie('admin_session');
 
   clearGuestCart(guestId)
     .then(() => getFirstProductId())
@@ -433,11 +433,11 @@ export const shouldPersistCartAcrossRouteTransitions = () => {
 
       cy.get('[data-testid^="cart-item-"]', { timeout: 10000 })
         .first()
-        .invoke("attr", "data-testid")
+        .invoke('attr', 'data-testid')
         .then((testId) => {
-          expect(testId, "cart item test id").to.be.a("string");
-          const cartItemId = Number((testId || "").replace("cart-item-", ""));
-          expect(Number.isFinite(cartItemId), "cart item id").to.eq(true);
+          expect(testId, 'cart item test id').to.be.a('string');
+          const cartItemId = Number((testId || '').replace('cart-item-', ''));
+          expect(Number.isFinite(cartItemId), 'cart item id').to.eq(true);
           expectCartContainsProductId(cartItemId);
 
           visitWithGuest(localePath(UI_ROUTES.categories), guestId);
@@ -452,7 +452,7 @@ export const shouldPersistCartAcrossRouteTransitions = () => {
  */
 export const shouldSupportCartItemQuantityAndRemovalOperations = () => {
   const guestId = createGuestId();
-  cy.clearCookie("admin_session");
+  cy.clearCookie('admin_session');
 
   clearGuestCart(guestId)
     .then(() => getFirstProductId())
@@ -463,11 +463,11 @@ export const shouldSupportCartItemQuantityAndRemovalOperations = () => {
 
       cy.get('[data-testid^="cart-item-"]', { timeout: 10000 })
         .first()
-        .invoke("attr", "data-testid")
+        .invoke('attr', 'data-testid')
         .then((testId) => {
-          expect(testId, "cart item test id").to.be.a("string");
-          const cartItemId = Number((testId || "").replace("cart-item-", ""));
-          expect(Number.isFinite(cartItemId), "cart item id").to.eq(true);
+          expect(testId, 'cart item test id').to.be.a('string');
+          const cartItemId = Number((testId || '').replace('cart-item-', ''));
+          expect(Number.isFinite(cartItemId), 'cart item id').to.eq(true);
 
           expectCartContainsProductId(cartItemId);
           expectCartQuantity(cartItemId, 1);
@@ -486,9 +486,9 @@ export const shouldSupportCartItemQuantityAndRemovalOperations = () => {
           expectCartQuantity(cartItemId, 1);
 
           cy.get(shopSelectors.cartRemoveById(cartItemId)).click({ force: true });
-          cy.get("body")
+          cy.get('body')
             .find(shopSelectors.cartItemById(cartItemId), { timeout: 10000 })
-            .should("not.exist");
+            .should('not.exist');
         });
     });
 };
@@ -501,7 +501,7 @@ export const shouldShowCheckoutEmptyStateForEmptyCart = () => {
   clearGuestCart(guestId).then(() => {
     visitWithGuest(localePath(UI_ROUTES.checkout), guestId);
 
-    cy.contains("h1", SHOP_MESSAGES.checkoutTitle).shouldBeVisible(true);
+    cy.contains('h1', SHOP_MESSAGES.checkoutTitle).shouldBeVisible(true);
     cy.contains(SHOP_MESSAGES.checkoutEmptyDescription).shouldBeVisible(true);
   });
 };
@@ -550,9 +550,9 @@ export const shouldShowCheckoutErrorWhenOrderApiFails = () => {
     fillCheckoutRequiredFields();
     submitCheckoutForm();
 
-    cy.wait("@checkoutOrderFailure");
+    cy.wait('@checkoutOrderFailure');
     expectCheckoutErrorAlertContains(SHOP_MESSAGES.checkoutOrderCreateFailed);
-    cy.contains(SHOP_MESSAGES.orderConfirmed).should("not.exist");
+    cy.contains(SHOP_MESSAGES.orderConfirmed).should('not.exist');
   });
 };
 
@@ -562,7 +562,7 @@ export const shouldShowCheckoutErrorWhenOrderApiFails = () => {
 export const shouldAllowRegistrationHappyPath = () => {
   const user = buildE2EUser();
   registerUserThroughUi(user);
-  cy.contains("h1", /My Account|حسابي/).should("be.visible");
+  cy.contains('h1', /My Account|حسابي/).should('be.visible');
 };
 
 /**
@@ -576,14 +576,14 @@ export const shouldRenderMyAccountOrderHistoryAndDetail = () => {
       addProductToUserCart(token, productId, 1);
 
       cy.request({
-        method: "GET",
+        method: 'GET',
         url: API_ROUTES.cart,
         headers: {
           Authorization: `Bearer ${token}`,
         },
       }).then((cartResponse) => {
         const itemCount = cartResponse.body?.data?.cart?.itemCount ?? 0;
-        expect(itemCount, "authenticated cart seeded items").to.be.greaterThan(0);
+        expect(itemCount, 'authenticated cart seeded items').to.be.greaterThan(0);
       });
 
       createOrderViaApiAsUser(token).then((orderId) => {
@@ -593,7 +593,7 @@ export const shouldRenderMyAccountOrderHistoryAndDetail = () => {
         expectMyAccountOrderCardVisible(orderId);
         cy.get(`[data-testid="my-account-order-card-${orderId}"]`).click();
 
-        cy.url().should("include", localePath(`/my-account/orders/${orderId}`));
+        cy.url().should('include', localePath(`/my-account/orders/${orderId}`));
         expectMyAccountOrderDetailVisible(orderId);
       });
     });
@@ -604,7 +604,7 @@ export const shouldRenderMyAccountOrderHistoryAndDetail = () => {
  * Security case: unauthenticated user must be redirected away from account pages.
  */
 export const shouldRedirectGuestFromMyAccountToRegistration = () => {
-  cy.clearCookie("admin_session");
+  cy.clearCookie('admin_session');
   cy.visit(localePath(UI_ROUTES.myAccount));
-  cy.url().should("include", localePath(UI_ROUTES.registration));
+  cy.url().should('include', localePath(UI_ROUTES.registration));
 };

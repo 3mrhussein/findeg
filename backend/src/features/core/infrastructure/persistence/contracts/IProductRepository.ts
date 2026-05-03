@@ -37,11 +37,11 @@ export type ProductFilters = {
   tags?: string[];
   limit?: number;
   offset?: number;
-  sortBy?: "price" | "name" | "createdAt" | "updatedAt";
-  sortOrder?: "asc" | "desc";
+  sortBy?: 'price' | 'name' | 'createdAt' | 'updatedAt';
+  sortOrder?: 'asc' | 'desc';
 };
 
-export type CreateProductInput = Omit<Product, "id" | "createdAt" | "updatedAt">;
+export type CreateProductInput = Omit<Product, 'id' | 'createdAt' | 'updatedAt'>;
 export type UpdateProductInput = Partial<CreateProductInput>;
 
 export interface IProductRepository {

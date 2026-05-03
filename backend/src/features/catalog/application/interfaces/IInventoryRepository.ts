@@ -5,8 +5,8 @@
  * All operations are at the variant + warehouse granularity.
  */
 
-import { type ID, type Quantity } from "@findeg/backend/features/core/domain/types/common";
-import type { Variant } from "../../domain/entities/Variant";
+import { type ID } from '@findeg/backend/features/core/domain/types/common';
+import type { Variant } from '../../domain/entities/Variant';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -21,7 +21,7 @@ export interface InventoryBalanceResult {
 }
 
 export interface StockMovementInput {
-  movementType: "receipt" | "sale" | "adjustment" | "return" | "reserve" | "unreserve";
+  movementType: 'receipt' | 'sale' | 'adjustment' | 'return' | 'reserve' | 'unreserve';
   quantity: number;
   referenceType?: string;
   referenceId?: string;

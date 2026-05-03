@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Button } from "@findeg/ui";
-import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
+import { Button } from '@findeg/ui';
+import { ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react';
 
 interface OrderTablePaginationProps {
   page: number;
@@ -33,7 +33,7 @@ export function OrderTablePagination({
         pages.push(
           <Button
             key={i}
-            variant={page === i ? "default" : "outline"}
+            variant={page === i ? 'default' : 'outline'}
             size="sm"
             onClick={() => onPageChange(i)}
             disabled={isPending}
@@ -48,7 +48,7 @@ export function OrderTablePagination({
       pages.push(
         <Button
           key={1}
-          variant={page === 1 ? "default" : "outline"}
+          variant={page === 1 ? 'default' : 'outline'}
           size="sm"
           onClick={() => onPageChange(1)}
           disabled={isPending}
@@ -73,7 +73,7 @@ export function OrderTablePagination({
         pages.push(
           <Button
             key={i}
-            variant={page === i ? "default" : "outline"}
+            variant={page === i ? 'default' : 'outline'}
             size="sm"
             onClick={() => onPageChange(i)}
             disabled={isPending}
@@ -95,7 +95,7 @@ export function OrderTablePagination({
       pages.push(
         <Button
           key={totalPages}
-          variant={page === totalPages ? "default" : "outline"}
+          variant={page === totalPages ? 'default' : 'outline'}
           size="sm"
           onClick={() => onPageChange(totalPages)}
           disabled={isPending}

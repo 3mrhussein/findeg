@@ -1,19 +1,19 @@
-import { buildTestProduct } from "../utils/product-factory";
-import { buildTestCategory } from "../utils/category-factory";
-import { buildTestBrand } from "../utils/brand-factory";
+import { buildTestProduct } from '../utils/product-factory';
+import { buildTestCategory } from '../utils/category-factory';
+import { buildTestBrand } from '../utils/brand-factory';
 import {
   addProductToGuestCartExpectStatus,
   clearGuestCart,
   createGuestId,
   getGuestCart,
-} from "../actions/cart.actions";
-import { visitSearchWithQuery, visitShopWithQuery } from "../actions/shop.actions";
-import { expectProductVisibleByName } from "../assertions/shop.assertions";
-import { API_ROUTES, ROUTE_QUERY_KEYS } from "../constants/routes";
-import { SHOP_MESSAGES } from "../constants/messages";
-import { API_QUERY_DEFAULTS, buildApiUrl } from "../constants/api-query";
-import { shopSelectors } from "../selectors/shop.selectors";
-import { adminSelectors } from "../selectors/admin.selectors";
+} from '../actions/cart.actions';
+import { visitSearchWithQuery, visitShopWithQuery } from '../actions/shop.actions';
+import { expectProductVisibleByName } from '../assertions/shop.assertions';
+import { API_ROUTES, ROUTE_QUERY_KEYS } from '../constants/routes';
+import { SHOP_MESSAGES } from '../constants/messages';
+import { API_QUERY_DEFAULTS, buildApiUrl } from '../constants/api-query';
+import { shopSelectors } from '../selectors/shop.selectors';
+import { adminSelectors } from '../selectors/admin.selectors';
 import {
   clearAdminProductsFilters,
   deleteProductFromListById,
@@ -23,7 +23,7 @@ import {
   updateProductFromUi,
   visitAdminProductsList,
   visitEditProductForm,
-} from "../actions/admin-product.actions";
+} from '../actions/admin-product.actions';
 import {
   createCategoryFromUi,
   deleteCategoryBySlug,
@@ -32,18 +32,18 @@ import {
   visitAdminCategoriesList,
   visitAdminEditCategoryForm,
   visitAdminNewCategoryForm,
-} from "../actions/admin-category.actions";
+} from '../actions/admin-category.actions';
 import {
   createBrandFromUi,
   deleteBrandBySlug,
   deleteBrandFromListById,
   updateBrandFromUiById,
   visitAdminBrandsList,
-} from "../actions/admin-brand.actions";
+} from '../actions/admin-brand.actions';
 import {
   updateInventoryFromUiByProductId,
   visitAdminInventoryList,
-} from "../actions/admin-inventory.actions";
+} from '../actions/admin-inventory.actions';
 
 interface ApiProductSnapshot {
   id?: number;
@@ -142,7 +142,7 @@ function waitForStorefrontProductStockBySku(
 function waitForAdminCategoryIdBySlug(slug: string, attempts = 12): Cypress.Chainable<any> {
   return cy
     .request({
-      method: "GET",
+      method: 'GET',
       url: API_ROUTES.adminCategories,
     })
     .then((response) => {
@@ -151,7 +151,7 @@ function waitForAdminCategoryIdBySlug(slug: string, attempts = 12): Cypress.Chai
       if (category?.id) return category.id;
 
       if (attempts <= 1) {
-        expect(category?.id, `admin category id for slug ${slug}`).to.be.a("number");
+        expect(category?.id, `admin category id for slug ${slug}`).to.be.a('number');
         return undefined;
       }
 
@@ -166,7 +166,7 @@ function waitForAdminCategoryIdBySlug(slug: string, attempts = 12): Cypress.Chai
 function waitForAdminBrandIdBySlug(slug: string, attempts = 12): Cypress.Chainable<any> {
   return cy
     .request({
-      method: "GET",
+      method: 'GET',
       url: API_ROUTES.adminBrands,
     })
     .then((response) => {
@@ -175,7 +175,7 @@ function waitForAdminBrandIdBySlug(slug: string, attempts = 12): Cypress.Chainab
       if (brand?.id) return brand.id;
 
       if (attempts <= 1) {
-        expect(brand?.id, `admin brand id for slug ${slug}`).to.be.a("number");
+        expect(brand?.id, `admin brand id for slug ${slug}`).to.be.a('number');
         return undefined;
       }
 
@@ -202,7 +202,7 @@ export const shouldReflectNewlyCreatedProductFromAdminInShop = () => {
   ).then((categoriesResponse) => {
     const categories = categoriesResponse.body as Array<{ id: number; slug: string }>;
     const keychains = categories.find((category) => category.slug === SHOP_MESSAGES.keychainsSlug);
-    expect(keychains, "keychains category").to.not.be.undefined;
+    expect(keychains, 'keychains category').to.not.be.undefined;
 
     cy.request(
       buildApiUrl(API_ROUTES.products, {
@@ -213,7 +213,7 @@ export const shouldReflectNewlyCreatedProductFromAdminInShop = () => {
     ).then((productsResponse) => {
       const products = productsResponse.body.products as Array<{ name: string }>;
       const found = products.some((product) => product.name === testProduct.nameEn);
-      expect(found, "created product must be in keychains category results").to.eq(true);
+      expect(found, 'created product must be in keychains category results').to.eq(true);
     });
   });
 
@@ -223,7 +223,7 @@ export const shouldReflectNewlyCreatedProductFromAdminInShop = () => {
 
   // Keep shop query-state validation on category filter URL.
   visitShopWithQuery(`${ROUTE_QUERY_KEYS.categories}=${SHOP_MESSAGES.keychainsSlug}`);
-  cy.url().should("include", `${ROUTE_QUERY_KEYS.categories}=${SHOP_MESSAGES.keychainsSlug}`);
+  cy.url().should('include', `${ROUTE_QUERY_KEYS.categories}=${SHOP_MESSAGES.keychainsSlug}`);
 
   cy.cleanupProductBySku(testProduct.sku);
 };
@@ -239,13 +239,13 @@ export const shouldFilterAdminProductsListWithServerFilters = () => {
 
   visitAdminProductsList();
   filterAdminProductsBySearch(testProduct.sku);
-  cy.contains("td", testProduct.nameEn, { timeout: 10000 }).should("be.visible");
+  cy.contains('td', testProduct.nameEn, { timeout: 10000 }).should('be.visible');
 
   filterAdminProductsByCategory(SHOP_MESSAGES.keychainsLabel);
-  cy.contains("td", testProduct.nameEn, { timeout: 10000 }).should("be.visible");
+  cy.contains('td', testProduct.nameEn, { timeout: 10000 }).should('be.visible');
 
   clearAdminProductsFilters();
-  cy.contains("td", testProduct.nameEn, { timeout: 10000 }).should("be.visible");
+  cy.contains('td', testProduct.nameEn, { timeout: 10000 }).should('be.visible');
 
   cy.cleanupProductBySku(testProduct.sku);
 };
@@ -260,7 +260,7 @@ export const shouldReflectUpdatedProductFromAdminInShop = () => {
   const updatedNameAr = `منتج محدث سايبريس E2E-${updateStamp}`;
   const updatedDescriptionEn = `${testProduct.descriptionEn} Updated details.`;
   const updatedDescriptionAr = `${testProduct.descriptionAr} تفاصيل محدثة.`;
-  const updatedPrice = "79.99";
+  const updatedPrice = '79.99';
 
   cy.loginAsAdminSession();
   cy.createAdminProductApi(testProduct, SHOP_MESSAGES.keychainsLabel);
@@ -281,9 +281,9 @@ export const shouldReflectUpdatedProductFromAdminInShop = () => {
   expectProductVisibleByName(updatedNameEn);
   cy.get(shopSelectors.productCardTitle).should(($titles) => {
     const oldNameStillExists = [...$titles].some(
-      (title) => (title.textContent || "").trim() === testProduct.nameEn,
+      (title) => (title.textContent || '').trim() === testProduct.nameEn,
     );
-    expect(oldNameStillExists, "exact old name should not remain after update").to.eq(false);
+    expect(oldNameStillExists, 'exact old name should not remain after update').to.eq(false);
   });
 
   cy.cleanupProductBySku(testProduct.sku);
@@ -301,13 +301,13 @@ export const shouldReflectDeletedProductFromAdminInShop = () => {
   findAdminProductIdBySku(testProduct.sku).then((productId) => {
     visitAdminProductsList();
     filterAdminProductsBySearch(testProduct.sku);
-    cy.get(adminSelectors.productRowById(productId), { timeout: 15000 }).should("exist");
+    cy.get(adminSelectors.productRowById(productId), { timeout: 15000 }).should('exist');
 
     deleteProductFromListById(productId);
   });
 
   visitSearchWithQuery(testProduct.sku);
-  cy.contains(shopSelectors.productCardTitle, testProduct.nameEn).should("not.exist");
+  cy.contains(shopSelectors.productCardTitle, testProduct.nameEn).should('not.exist');
 
   cy.cleanupProductBySku(testProduct.sku);
 };
@@ -342,14 +342,14 @@ export const shouldManageAdminCategoriesCrudFromDashboard = () => {
   waitForAdminCategoryIdBySlug(updatedSlug).then((updatedCategoryId) => {
     visitAdminCategoriesList();
     cy.get(adminSelectors.categoriesFilterInput).clear().type(updatedNameEn);
-    cy.contains("td", updatedNameEn).should("be.visible");
-    cy.contains("td", updatedSlug).should("be.visible");
+    cy.contains('td', updatedNameEn).should('be.visible');
+    cy.contains('td', updatedSlug).should('be.visible');
 
     deleteCategoryFromListById(updatedCategoryId);
   });
 
   cy.request({
-    method: "GET",
+    method: 'GET',
     url: API_ROUTES.adminCategories,
   }).then((response) => {
     const categories = (response.body?.data?.categories || []) as AdminCategoryApiSnapshot[];
@@ -386,15 +386,15 @@ export const shouldManageAdminBrandsCrudFromDashboard = () => {
 
   waitForAdminBrandIdBySlug(updatedSlug).then((updatedBrandId) => {
     visitAdminBrandsList();
-    cy.get(adminSelectors.brandRowById(updatedBrandId)).should("exist");
-    cy.contains("td", updatedName).should("be.visible");
-    cy.contains("td", updatedSlug).should("be.visible");
+    cy.get(adminSelectors.brandRowById(updatedBrandId)).should('exist');
+    cy.contains('td', updatedName).should('be.visible');
+    cy.contains('td', updatedSlug).should('be.visible');
 
     deleteBrandFromListById(updatedBrandId);
   });
 
   cy.request({
-    method: "GET",
+    method: 'GET',
     url: API_ROUTES.adminBrands,
   }).then((response) => {
     const brands = (response.body?.data?.brands || []) as AdminBrandApiSnapshot[];
@@ -421,7 +421,7 @@ export const shouldReflectInventoryUpdateFromAdminInStorefrontStockBehavior = ()
     {
       ...testProduct,
       stockQuantity: String(initialStock),
-      lowStockThreshold: "1",
+      lowStockThreshold: '1',
     },
     SHOP_MESSAGES.keychainsLabel,
   );
@@ -434,31 +434,31 @@ export const shouldReflectInventoryUpdateFromAdminInStorefrontStockBehavior = ()
     clearGuestCart(guestId)
       .then(() =>
         cy.request({
-          method: "POST",
+          method: 'POST',
           url: API_ROUTES.cartItems,
           headers: {
-            "Content-Type": "application/json",
-            "X-Guest-Id": guestId,
+            'Content-Type': 'application/json',
+            'X-Guest-Id': guestId,
           },
           body: {
             productId,
             quantity: 1,
-            variantKey: "default",
-            uomCode: "pcs",
-            customerGroup: "public_b2c",
+            variantKey: 'default',
+            uomCode: 'pcs',
+            customerGroup: 'public_b2c',
           },
           failOnStatusCode: false,
         }),
       )
       .then((response) => {
         expect(response.status).to.eq(400);
-        expect(response.body?.error?.errorCode).to.eq("CART_INSUFFICIENT_STOCK");
+        expect(response.body?.error?.errorCode).to.eq('CART_INSUFFICIENT_STOCK');
       })
       .then(() => getGuestCart(guestId))
       .then((cart) => {
         const items = (cart?.items || []) as Array<{ id: number }>;
         const exists = items.some((item) => item.id === productId);
-        expect(exists, "out-of-stock product must not be added to cart").to.eq(false);
+        expect(exists, 'out-of-stock product must not be added to cart').to.eq(false);
       });
 
     visitAdminInventoryList();
@@ -469,8 +469,8 @@ export const shouldReflectInventoryUpdateFromAdminInStorefrontStockBehavior = ()
     getGuestCart(guestId).then((cart) => {
       const items = (cart?.items || []) as Array<{ id: number; quantity: number }>;
       const matched = items.find((item) => item.id === productId);
-      expect(matched, "restocked product should be addable").to.not.be.undefined;
-      expect(matched?.quantity, "restocked cart quantity").to.eq(1);
+      expect(matched, 'restocked product should be addable').to.not.be.undefined;
+      expect(matched?.quantity, 'restocked cart quantity').to.eq(1);
     });
   });
 

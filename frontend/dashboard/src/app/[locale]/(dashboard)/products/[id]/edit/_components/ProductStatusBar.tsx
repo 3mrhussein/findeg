@@ -10,15 +10,15 @@
  * Used by: ProductEditForm (edit mode only)
  */
 
-"use client";
+'use client';
 
-import * as React from "react";
-import { Link } from "@i18n/navigation";
-import { Badge } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { ExternalLink, Clock } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
-import { cn } from "@lib/utils";
+import * as React from 'react';
+import { Link } from '@i18n/navigation';
+import { Badge } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { ExternalLink, Clock } from 'lucide-react';
+import { formatDistanceToNow } from 'date-fns';
+import { cn } from '@lib/utils';
 
 interface ProductStatusBarProps {
   /** Product ID for storefront link */
@@ -53,23 +53,23 @@ export function ProductStatusBar({
 }: ProductStatusBarProps) {
   const lastSavedText = updatedAt
     ? `Saved ${formatDistanceToNow(updatedAt, { addSuffix: true })}`
-    : "Not saved yet";
+    : 'Not saved yet';
 
   const storefrontUrl = slug ? `/products/${slug}` : `/products/${productId}`;
 
   return (
     <div
       className={cn(
-        "flex items-center justify-between gap-4 rounded-lg border bg-muted/30 px-4 py-3",
+        'flex items-center justify-between gap-4 rounded-lg border bg-muted/30 px-4 py-3',
         className,
       )}
     >
       {/* Left: Status & Last Saved */}
       <div className="flex items-center gap-4">
         {/* Status Badge */}
-        <Badge variant={isActive ? "default" : "secondary"} className="gap-1.5">
-          <span className={cn("h-2 w-2 rounded-full", isActive ? "bg-green-500" : "bg-gray-400")} />
-          {isActive ? "Live" : "Draft"}
+        <Badge variant={isActive ? 'default' : 'secondary'} className="gap-1.5">
+          <span className={cn('h-2 w-2 rounded-full', isActive ? 'bg-green-500' : 'bg-gray-400')} />
+          {isActive ? 'Live' : 'Draft'}
         </Badge>
 
         {/* Last Saved */}

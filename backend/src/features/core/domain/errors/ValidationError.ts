@@ -1,4 +1,4 @@
-import { DomainError } from "./DomainError";
+import { DomainError } from './DomainError';
 
 /**
  * Thrown when a single input field fails validation.
@@ -15,10 +15,10 @@ import { DomainError } from "./DomainError";
  */
 export class ValidationError extends DomainError {
   public readonly field: string;
-  public readonly invalidValue?: any;
+  public readonly invalidValue?: unknown;
 
-  constructor(field: string, message: string, invalidValue?: any) {
-    super("VALIDATION_ERROR", message, {
+  constructor(field: string, message: string, invalidValue?: unknown) {
+    super('VALIDATION_ERROR', message, {
       statusCode: 400,
       field,
       invalidValue,
@@ -50,8 +50,8 @@ export class ValidationErrors extends DomainError {
   public readonly errors: Array<{ field: string; message: string }>;
 
   constructor(errors: Array<{ field: string; message: string }>) {
-    const fieldNames = errors.map((e) => e.field).join(", ");
-    super("VALIDATION_ERRORS", `Validation failed for: ${fieldNames}`, {
+    const fieldNames = errors.map((e) => e.field).join(', ');
+    super('VALIDATION_ERRORS', `Validation failed for: ${fieldNames}`, {
       statusCode: 400,
       errors,
     });
@@ -59,7 +59,7 @@ export class ValidationErrors extends DomainError {
   }
 
   getClientMessage(): string {
-    return "Please fix the validation errors and try again.";
+    return 'Please fix the validation errors and try again.';
   }
 
   /**

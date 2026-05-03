@@ -1,19 +1,19 @@
-import { OrdersTable } from "./_components/OrdersTable";
-import { PageHeader } from "@/app/[locale]/_components/shared/PageHeader";
-import { parse } from "@findeg/backend/features/core";
+import { OrdersTable } from './_components/OrdersTable';
+import { PageHeader } from '@/app/[locale]/_components/shared/PageHeader';
+import { parse } from '@findeg/backend/features/core';
 
 /**
  * Local type definitions
  */
 type OrderStatus =
-  | "pending"
-  | "confirmed"
-  | "processing"
-  | "shipped"
-  | "delivered"
-  | "cancelled"
-  | "refunded";
-type PaymentStatus = "pending" | "paid" | "failed" | "refunded";
+  | 'pending'
+  | 'confirmed'
+  | 'processing'
+  | 'shipped'
+  | 'delivered'
+  | 'cancelled'
+  | 'refunded';
+type PaymentStatus = 'pending' | 'paid' | 'failed' | 'refunded';
 
 /**
  * Admin Orders List Page
@@ -43,7 +43,7 @@ export default async function OrdersPage({
   const page = Number(query.page) > 0 ? Number(query.page) : 1;
   const limit = Number(query.limit) > 0 ? Number(query.limit) : 20;
   const offset = (page - 1) * limit;
-  const search = query.search?.trim() || "";
+  const search = query.search?.trim() || '';
   const status = query.status as OrderStatus | undefined;
   const paymentStatus = query.paymentStatus as PaymentStatus | undefined;
   const startDate = query.startDate ? new Date(query.startDate) : undefined;

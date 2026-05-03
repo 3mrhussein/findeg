@@ -1,15 +1,15 @@
 // ========================================
 // DOMAIN LAYER EXPORTS
 // ========================================
-export * from "./domain/entities/Review";
+export * from './domain/entities/Review';
 
 // ========================================
 // APPLICATION LAYER EXPORTS
 // ========================================
-export * from "./application/interfaces/IReviewRepository";
-export * from "./application/interfaces/IReviewService";
-export * from "./application/services/ReviewService";
-export * from "./application/services/factory";
+export * from './application/interfaces/IReviewRepository';
+export * from './application/interfaces/IReviewService';
+export * from './application/services/ReviewService';
+export * from './application/services/factory';
 
 // ========================================
 // INFRASTRUCTURE EXPORTS REMOVED

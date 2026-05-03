@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { useTranslations } from "next-intl";
-import { Lock, UserCircle, LogIn, UserPlus } from "lucide-react";
-import { Button } from "@findeg/ui";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@findeg/ui";
-import { Link } from "@i18n/navigation";
-import { usePathname } from "@i18n/navigation";
-import { useSearchParams } from "next/navigation";
+import { useTranslations } from 'next-intl';
+import { Lock, UserCircle, LogIn, UserPlus } from 'lucide-react';
+import { Button } from '@findeg/ui';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@findeg/ui';
+import { Link } from '@i18n/navigation';
+import { usePathname } from '@i18n/navigation';
+import { useSearchParams } from 'next/navigation';
 
 interface SchoolAuthWallProps {
   schoolName?: string;
@@ -20,11 +20,11 @@ interface SchoolAuthWallProps {
  * Renders BEFORE the content for unauthenticated users.
  */
 export function SchoolAuthWall({ schoolName, listTitle }: SchoolAuthWallProps) {
-  const t = useTranslations("School.AuthWall");
+  const t = useTranslations('School.AuthWall');
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const callbackUrl = `${pathname}${searchParams.toString() ? `?${searchParams.toString()}` : ""}`;
+  const callbackUrl = `${pathname}${searchParams.toString() ? `?${searchParams.toString()}` : ''}`;
 
   return (
     <div className="flex flex-col items-center justify-center py-12 px-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -41,9 +41,9 @@ export function SchoolAuthWall({ schoolName, listTitle }: SchoolAuthWallProps) {
             {schoolName ? (
               <span className="block text-xl text-muted-foreground mb-1">{schoolName}</span>
             ) : null}
-            {listTitle || t("title")}
+            {listTitle || t('title')}
           </CardTitle>
-          <CardDescription className="text-center text-base">{t("description")}</CardDescription>
+          <CardDescription className="text-center text-base">{t('description')}</CardDescription>
         </div>
 
         <CardContent className="p-8">
@@ -52,7 +52,7 @@ export function SchoolAuthWall({ schoolName, listTitle }: SchoolAuthWallProps) {
               <Button asChild size="lg" className="w-full gap-2 text-base font-semibold">
                 <Link href={`/login?callbackUrl=${encodeURIComponent(callbackUrl)}`}>
                   <LogIn className="w-4 h-4" />
-                  {t("signIn")}
+                  {t('signIn')}
                 </Link>
               </Button>
               <Button
@@ -63,13 +63,13 @@ export function SchoolAuthWall({ schoolName, listTitle }: SchoolAuthWallProps) {
               >
                 <Link href={`/register?callbackUrl=${encodeURIComponent(callbackUrl)}`}>
                   <UserPlus className="w-4 h-4" />
-                  {t("createAccount")}
+                  {t('createAccount')}
                 </Link>
               </Button>
             </div>
 
             <div className="pt-4 border-t border-muted text-center text-sm text-muted-foreground italic">
-              {t("whyLogin")}
+              {t('whyLogin')}
             </div>
           </div>
         </CardContent>

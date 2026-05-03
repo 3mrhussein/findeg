@@ -1,4 +1,4 @@
-import { DomainError } from "./DomainError";
+import { DomainError } from './DomainError';
 
 /**
  * Thrown when an operation violates a business rule enforced by the domain model.
@@ -26,7 +26,7 @@ import { DomainError } from "./DomainError";
  */
 export class BusinessRuleViolationError extends DomainError {
   constructor(message: string) {
-    super("BUSINESS_RULE_VIOLATION", message, { statusCode: 422 });
+    super('BUSINESS_RULE_VIOLATION', message, { statusCode: 422 });
   }
 
   getClientMessage(): string {

@@ -1,13 +1,7 @@
 import { z, ZodError } from "zod";
-import dotenv from "dotenv";
-import path from "path";
-import { fileURLToPath } from "url";
 
-if (typeof process !== "undefined" && !process.env.NEXT_RUNTIME) {
-  const __filename = fileURLToPath(import.meta.url);
-  const __dirname = path.dirname(__filename);
-  dotenv.config({ path: path.join(__dirname, ".env") });
-}
+// env.ts
+const isServer = typeof window === "undefined";
 
 const stringToBool = z
   .string()
@@ -22,17 +16,17 @@ const envSchema = z.object({
   // Database
   DB_HOST: z.string().default("localhost"),
   DB_PORT: z.coerce.number().default(5432),
-  DB_USER: z.string(),
-  DB_PASSWORD: z.string(),
-  DB_NAME: z.string(),
-  DATABASE_URL: z.string(),
+  DB_USER: isServer ? z.string() : z.string().optional(),
+  DB_PASSWORD: isServer ? z.string() : z.string().optional(),
+  DB_NAME: isServer ? z.string() : z.string().optional(),
+  DATABASE_URL: isServer ? z.string() : z.string().optional(),
   DB_MIGRATING: stringToBool.default(false),
   DB_SEEDING: stringToBool.default(false),
   DB_SSL: stringToBool.default(false),
 
   // JWT
-  JWT_SECRET: z.string().min(32),
-  JWT_REFRESH_SECRET: z.string().min(32),
+  JWT_SECRET: isServer ? z.string().min(32) : z.string().optional(),
+  JWT_REFRESH_SECRET: isServer ? z.string().min(32) : z.string().optional(),
 
   // Email / Notifications
   RESEND_API_KEY: z.string().optional(),
@@ -52,22 +46,25 @@ const envSchema = z.object({
   STORAGE_REGION: z.string().optional(),
 });
 
-try {
-  envSchema.parse(process.env);
-} catch (error) {
-  if (error instanceof ZodError) {
-    let message = "❌ Missing or invalid required values in .env:\n";
-    error.issues.forEach((issue) => {
-      message += ` - ${String(issue.path[0])}: ${issue.message}\n`;
-    });
-    const e = new Error(message);
-    e.stack = "";
-    throw e;
-  } else {
-    console.error("❌ Unexpected error during environment validation:", error);
+function validateEnv() {
+  try {
+    return envSchema.parse(process.env);
+  } catch (error) {
+    if (error instanceof ZodError && isServer) {
+      let message = "❌ Missing or invalid required values in .env:\n";
+      error.issues.forEach((issue) => {
+        message += ` - ${String(issue.path[0])}: ${issue.message}\n`;
+      });
+      const e = new Error(message);
+      e.stack = "";
+      throw e;
+    }
+    // In client, we just return what we have (likely partially parsed)
+    return process.env as any;
   }
 }
 
-export type EnvSchema = z.infer<typeof envSchema>;
+const env = validateEnv();
 
-export default envSchema.parse(process.env);
+export type EnvSchema = z.infer<typeof envSchema>;
+export default env as EnvSchema;

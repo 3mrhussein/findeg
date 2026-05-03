@@ -1,59 +1,59 @@
-import type { Metadata, Viewport } from "next";
-import { Inter, Cairo } from "next/font/google";
-import "../globals.css";
-import { hasLocale, Locale, NextIntlClientProvider } from "next-intl";
-import { routing } from "@i18n/routing";
-import { notFound } from "next/navigation";
-import { getMessages, setRequestLocale } from "next-intl/server";
-import Providers from "@providers/Providers";
-import { Suspense } from "react";
-import { BoundaryProvider } from "@lib/internal/BoundaryProvider";
-import BoundaryToggle from "@lib/internal/BoundaryToggle";
-import { WebMCPInitializer } from "@components/shared/WebMCPInitializer";
-import { cn } from "@lib/utils";
+import type { Metadata, Viewport } from 'next';
+import { Inter, Cairo } from 'next/font/google';
+import '../globals.css';
+import { hasLocale, Locale, NextIntlClientProvider } from 'next-intl';
+import { routing } from '@i18n/routing';
+import { notFound } from 'next/navigation';
+import { getMessages, setRequestLocale } from 'next-intl/server';
+import Providers from '@providers/Providers';
+import { Suspense } from 'react';
+import { BoundaryProvider } from '@lib/internal/BoundaryProvider';
+import BoundaryToggle from '@lib/internal/BoundaryToggle';
+import { WebMCPInitializer } from '@components/shared/WebMCPInitializer';
+import { cn } from '@lib/utils';
 
 const inter = Inter({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "900"],
-  variable: "--font-inter",
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700', '900'],
+  variable: '--font-inter',
 });
 
 const cairo = Cairo({
-  subsets: ["arabic"],
-  weight: ["300", "400", "500", "600", "700", "900"],
-  variable: "--font-cairo",
+  subsets: ['arabic'],
+  weight: ['300', '400', '500', '600', '700', '900'],
+  variable: '--font-cairo',
 });
 
 export const metadata: Metadata = {
   title: {
-    default: "FindEg - School & Stationery Marketplace",
-    template: "%s | FindEg",
+    default: 'FindEg - School & Stationery Marketplace',
+    template: '%s | FindEg',
   },
   description:
-    "Storefront-first marketplace for stationery, school supplies, and educational essentials in Egypt.",
-  keywords: ["ecommerce", "stationery", "school supplies", "online shopping", "FindEg"],
-  authors: [{ name: "FindEg Team" }],
+    'Storefront-first marketplace for stationery, school supplies, and educational essentials in Egypt.',
+  keywords: ['ecommerce', 'stationery', 'school supplies', 'online shopping', 'FindEg'],
+  authors: [{ name: 'FindEg Team' }],
   openGraph: {
-    type: "website",
-    locale: "en_US",
-    url: "https://findeg.com",
-    siteName: "FindEg",
-    title: "FindEg - School & Stationery Marketplace",
-    description: "Storefront-first marketplace for stationery and school supplies.",
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://findeg.com',
+    siteName: 'FindEg',
+    title: 'FindEg - School & Stationery Marketplace',
+    description: 'Storefront-first marketplace for stationery and school supplies.',
     images: [
       {
-        url: "/og-image.jpg",
+        url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: "FindEg",
+        alt: 'FindEg',
       },
     ],
   },
   twitter: {
-    card: "summary_large_image",
-    title: "FindEg - School & Stationery Marketplace",
-    description: "Storefront-first marketplace for stationery and school supplies.",
-    images: ["/og-image.jpg"],
+    card: 'summary_large_image',
+    title: 'FindEg - School & Stationery Marketplace',
+    description: 'Storefront-first marketplace for stationery and school supplies.',
+    images: ['/og-image.jpg'],
   },
   robots: {
     index: true,
@@ -63,8 +63,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#14b8a6" },
-    { media: "(prefers-color-scheme: dark)", color: "#14b8a6" },
+    { media: '(prefers-color-scheme: light)', color: '#14b8a6' },
+    { media: '(prefers-color-scheme: dark)', color: '#14b8a6' },
   ],
 };
 
@@ -74,8 +74,6 @@ export const viewport: Viewport = {
  * This component wraps all pages and provides the base HTML structure,
  * including the `html` and `body` tags. It also wraps the application
  * with global providers (theme, context, etc.) and applies global styles.
- *
- * @param {React.ReactNode} children - The content to render within the layout.
  */
 
 /** Returns pre-defined locale params for static generation. */
@@ -101,7 +99,7 @@ export default async function RootLayout({
   // Enable static rendering
   setRequestLocale(typedLocale);
   const messages = await getMessages({ locale: typedLocale });
-  const direction = typedLocale === "ar" ? "rtl" : "ltr";
+  const direction = typedLocale === 'ar' ? 'rtl' : 'ltr';
 
   return (
     <html
@@ -119,8 +117,8 @@ export default async function RootLayout({
       <body
         suppressHydrationWarning
         className={cn(
-          "min-h-screen bg-background font-sans antialiased",
-          typedLocale === "ar" ? "font-arabic" : "font-inter",
+          'min-h-screen bg-background font-sans antialiased',
+          typedLocale === 'ar' ? 'font-arabic' : 'font-inter',
         )}
       >
         <NextIntlClientProvider locale={typedLocale} messages={messages}>

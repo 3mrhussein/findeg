@@ -15,12 +15,12 @@
  * - Errors in Route Handlers that handle errors themselves
  */
 
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import { AlertCircle, Home, RefreshCw } from "lucide-react";
-import { Button } from "@findeg/ui";
-import { Link } from "@i18n/navigation";
+import { useEffect } from 'react';
+import { AlertCircle, Home, RefreshCw } from 'lucide-react';
+import { Button } from '@findeg/ui';
+import { Link } from '@i18n/navigation';
 
 interface ErrorProps {
   error: Error & { digest?: string };
@@ -30,7 +30,7 @@ interface ErrorProps {
 export default function AdminDashboardError({ error, reset }: ErrorProps) {
   useEffect(() => {
     // Log error to monitoring service (Sentry, LogRocket, etc.)
-    console.error("[AdminDashboardError]", error);
+    console.error('[AdminDashboardError]', error);
   }, [error]);
 
   return (
@@ -56,7 +56,7 @@ export default function AdminDashboardError({ error, reset }: ErrorProps) {
           </div>
 
           {/* Error Details (Development Only) */}
-          {process.env.NODE_ENV === "development" && (
+          {process.env.NODE_ENV === 'development' && (
             <details className="rounded-lg bg-red-50 dark:bg-red-950/20 p-4 text-sm text-slate-700 dark:text-slate-300">
               <summary className="cursor-pointer font-semibold text-red-600 dark:text-red-400 mb-2">
                 Error Details

@@ -1,7 +1,7 @@
 /**
  * Cart Services Factory
  */
-import { CartService } from "./CartService";
+import { CartService } from './CartService';
 
 /**
  * Create cart services

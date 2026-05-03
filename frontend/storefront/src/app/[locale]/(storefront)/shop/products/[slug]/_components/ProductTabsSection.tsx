@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { FileText, Package, Ruler, Star } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@findeg/ui";
-import type { Product } from "@findeg/backend/features/catalog/domain/entities/Product";
-import type { Variant } from "@findeg/backend/features/catalog/domain/entities/Variant";
-import type { ProductReviewSummary } from "@findeg/backend/features/review/application/interfaces/IReviewRepository";
-import type { Review } from "@findeg/backend/features/review/domain/entities/Review";
-import { sanitizeHtml } from "@lib/sanitize-html";
-import { ReviewsSection } from "./ReviewsSection";
+import { FileText, Package, Ruler, Star } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@findeg/ui';
+import type { Product } from '@findeg/backend/features/catalog/domain/entities/Product';
+import type { Variant } from '@findeg/backend/features/catalog/domain/entities/Variant';
+import type { ProductReviewSummary } from '@findeg/backend/features/review/application/interfaces/IReviewRepository';
+import type { Review } from '@findeg/backend/features/review/domain/entities/Review';
+import { sanitizeHtml } from '@lib/sanitize-html';
+import { ReviewsSection } from './ReviewsSection';
 
 interface ProductTabsSectionProps {
   product: Product;
@@ -32,9 +32,9 @@ export function ProductTabsSection({
   initialReviews,
   reviewTotal,
 }: ProductTabsSectionProps) {
-  const t = useTranslations("Pages.ProductDetail");
+  const t = useTranslations('Pages.ProductDetail');
 
-  const description = sanitizeHtml(product.longDescription || product.description || "");
+  const description = sanitizeHtml(product.longDescription || product.description || '');
 
   return (
     <section id="pdp-tabs" className="space-y-4">
@@ -42,20 +42,20 @@ export function ProductTabsSection({
         <TabsList className="h-auto w-full flex-wrap justify-start gap-2 bg-transparent p-0">
           <TabsTrigger value="description" className="gap-2 rounded-full border px-4 py-2">
             <FileText className="size-4" />
-            {t("Description")}
+            {t('Description')}
           </TabsTrigger>
           <TabsTrigger value="specifications" className="gap-2 rounded-full border px-4 py-2">
             <Ruler className="size-4" />
-            {t("Specifications")}
+            {t('Specifications')}
           </TabsTrigger>
           <TabsTrigger value="reviews" className="gap-2 rounded-full border px-4 py-2">
             <Star className="size-4" />
-            {t("Reviews")}
+            {t('Reviews')}
             <span className="text-xs text-muted-foreground">({reviewTotal})</span>
           </TabsTrigger>
           <TabsTrigger value="shipping" className="gap-2 rounded-full border px-4 py-2">
             <Package className="size-4" />
-            {t("ShippingReturns")}
+            {t('ShippingReturns')}
           </TabsTrigger>
         </TabsList>
 
@@ -71,12 +71,12 @@ export function ProductTabsSection({
             <table className="w-full text-sm">
               <tbody>
                 <tr className="border-b">
-                  <td className="w-1/3 bg-muted/30 px-4 py-3 font-medium">{t("SkuLabel")}</td>
-                  <td className="px-4 py-3">{selectedVariant?.sku || "-"}</td>
+                  <td className="w-1/3 bg-muted/30 px-4 py-3 font-medium">{t('SkuLabel')}</td>
+                  <td className="px-4 py-3">{selectedVariant?.sku || '-'}</td>
                 </tr>
                 <tr className="border-b">
-                  <td className="w-1/3 bg-muted/30 px-4 py-3 font-medium">{t("BarcodeLabel")}</td>
-                  <td className="px-4 py-3">{selectedVariant?.barcode || "-"}</td>
+                  <td className="w-1/3 bg-muted/30 px-4 py-3 font-medium">{t('BarcodeLabel')}</td>
+                  <td className="px-4 py-3">{selectedVariant?.barcode || '-'}</td>
                 </tr>
                 {(selectedVariant?.attributes || []).map((attribute) => (
                   <tr
@@ -87,7 +87,7 @@ export function ProductTabsSection({
                     <td className="px-4 py-3">
                       {attribute.valueText ||
                         attribute.valueNum ||
-                        String(attribute.valueBool ?? "-")}
+                        String(attribute.valueBool ?? '-')}
                     </td>
                   </tr>
                 ))}
@@ -107,10 +107,10 @@ export function ProductTabsSection({
 
         <TabsContent value="shipping" className="mt-4">
           <div className="rounded-2xl border bg-card p-4 text-sm text-foreground/90">
-            <h3 className="mb-2 text-base font-semibold">{t("ShippingTitle")}</h3>
-            <p className="mb-4 text-muted-foreground">{t("ShippingDescription")}</p>
-            <h3 className="mb-2 text-base font-semibold">{t("ReturnsTitle")}</h3>
-            <p className="text-muted-foreground">{t("ReturnsDescription")}</p>
+            <h3 className="mb-2 text-base font-semibold">{t('ShippingTitle')}</h3>
+            <p className="mb-4 text-muted-foreground">{t('ShippingDescription')}</p>
+            <h3 className="mb-2 text-base font-semibold">{t('ReturnsTitle')}</h3>
+            <p className="text-muted-foreground">{t('ReturnsDescription')}</p>
           </div>
         </TabsContent>
       </Tabs>

@@ -1,4 +1,4 @@
-import { DomainError } from "./DomainError";
+import { DomainError } from './DomainError';
 
 /**
  * Thrown when a user is not authenticated (no valid session or token).
@@ -14,8 +14,8 @@ import { DomainError } from "./DomainError";
  * }
  */
 export class NotAuthenticatedError extends DomainError {
-  constructor(message = "User not authenticated") {
-    super("NOT_AUTHENTICATED", message, { statusCode: 401 });
+  constructor(message = 'User not authenticated') {
+    super('NOT_AUTHENTICATED', message, { statusCode: 401 });
   }
 
   /**
@@ -25,10 +25,10 @@ export class NotAuthenticatedError extends DomainError {
    * @returns Path to login page
    */
   getRedirectPath(): string {
-    return "/login";
+    return '/login';
   }
 
   getClientMessage(): string {
-    return "Session expired or invalid. Please log in again.";
+    return 'Session expired or invalid. Please log in again.';
   }
 }

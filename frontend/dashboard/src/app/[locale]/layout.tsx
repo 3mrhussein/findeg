@@ -1,12 +1,18 @@
-import { NextIntlClientProvider } from "next-intl";
-import { getMessages, setRequestLocale } from "next-intl/server";
-import Providers from "@/providers/Providers";
-import { ThemeProvider } from "@/providers/ThemeProvider";
-import { Toaster } from "@findeg/ui";
-import { routing } from "@i18n/routing";
-import { notFound } from "next/navigation";
-import { type Locale } from "@findeg/backend/features/core";
-import "../globals.css";
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages, setRequestLocale } from 'next-intl/server';
+import type { Metadata } from 'next';
+import Providers from '@/providers/Providers';
+import { ThemeProvider } from '@/providers/ThemeProvider';
+import { Toaster } from '@findeg/ui';
+import { routing } from '@i18n/routing';
+import { notFound } from 'next/navigation';
+import { type Locale } from '@findeg/backend/features/core';
+import '../globals.css';
+
+export const metadata: Metadata = {
+  title: 'FindEg Dashboard',
+  description: 'FindEg E-commerce Platform - Admin Dashboard',
+};
 
 /**
  * Generate static params for all supported locales
@@ -41,7 +47,7 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} dir={locale === "ar" ? "rtl" : "ltr"} suppressHydrationWarning>
+    <html lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'} suppressHydrationWarning>
       <body className="antialiased" suppressHydrationWarning>
         <ThemeProvider
           attribute="class"

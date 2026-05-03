@@ -1,5 +1,5 @@
-import { z } from "zod";
-import { IdSchema, TranslationMapSchema, SlugSchema } from "../../../core/domain/types/common";
+import { z } from 'zod';
+import { IdSchema, TranslationMapSchema, SlugSchema } from '../../../core/domain/types/common';
 
 export const CollectionInputSchema = z.object({
   slug: SlugSchema,

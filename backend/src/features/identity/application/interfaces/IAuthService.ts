@@ -6,12 +6,12 @@
  * through injected dependencies (IUserRepository + ISessionProvider).
  */
 
-import { Email } from "@findeg/backend/features/core/domain/types/common";
+import { Email } from '@findeg/backend/features/core/domain/types/common';
 import {
   AuthResult,
   RegisterInput,
   SessionPayload,
-} from "@findeg/backend/features/core/domain/auth";
+} from '@findeg/backend/features/core/domain/auth';
 
 export interface IAuthService {
   /**

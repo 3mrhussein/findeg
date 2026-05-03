@@ -7,15 +7,15 @@
  * delete role — all with loading state.
  */
 
-"use client";
+'use client';
 
-import { useState, useCallback } from "react";
+import { useState, useCallback } from 'react';
 import {
   createRoleAction,
   updateRolePermissionsAction,
   deleteRoleAction,
-} from "@data/access/actions";
-import { getSystemRoles, getPermissionCodes } from "@data/access/queries";
+} from '@data/access/actions';
+import { getSystemRoles, getPermissionCodes } from '@data/access/queries';
 
 export interface Permission {
   id: number;
@@ -85,7 +85,7 @@ export function useAdminRoles(): UseAdminRolesReturn {
     try {
       await Promise.all([fetchRoles(), fetchPermissions()]);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Unexpected error");
+      setError(err instanceof Error ? err.message : 'Unexpected error');
     } finally {
       setLoading(false);
     }
@@ -95,7 +95,7 @@ export function useAdminRoles(): UseAdminRolesReturn {
     async (code: string, name: string, permissionIds: number[]) => {
       const result = await createRoleAction(code, name, permissionIds);
       if (!result.success) {
-        throw new Error(result.error || "Failed to create role");
+        throw new Error(result.error || 'Failed to create role');
       }
       await fetchRoles();
     },
@@ -120,7 +120,7 @@ export function useAdminRoles(): UseAdminRolesReturn {
 
         const result = await updateRolePermissionsAction(roleId, permissionIds);
         if (!result.success) {
-          throw new Error(result.error || "Failed to update role");
+          throw new Error(result.error || 'Failed to update role');
         }
         // Refresh to get accurate server state
         await fetchRoles();
@@ -144,7 +144,7 @@ export function useAdminRoles(): UseAdminRolesReturn {
       try {
         const result = await deleteRoleAction(roleId);
         if (!result.success) {
-          throw new Error(result.error || "Failed to delete role");
+          throw new Error(result.error || 'Failed to delete role');
         }
       } catch (err) {
         setRoles(snapshot);

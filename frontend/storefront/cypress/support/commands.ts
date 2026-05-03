@@ -1,12 +1,12 @@
-import { loginAsAdminSession, loginAsAdminThroughUi } from "./actions/auth.actions";
+import { loginAsAdminSession, loginAsAdminThroughUi } from './actions/auth.actions';
 import {
   createProductFromUi,
   createProductViaApi,
   deleteProductBySku,
   visitNewProductForm,
-} from "./actions/admin-product.actions";
-import type { TestProductInput } from "./utils/product-factory";
-import { SHOP_MESSAGES } from "./constants/messages";
+} from './actions/admin-product.actions';
+import type { TestProductInput } from './utils/product-factory';
+import { SHOP_MESSAGES } from './constants/messages';
 
 declare global {
   namespace Cypress {
@@ -24,49 +24,49 @@ declare global {
   }
 }
 
-Cypress.Commands.add("loginAsAdminUi", () => {
+Cypress.Commands.add('loginAsAdminUi', () => {
   loginAsAdminThroughUi();
 });
 
-Cypress.Commands.add("loginAsAdminSession", () => {
+Cypress.Commands.add('loginAsAdminSession', () => {
   loginAsAdminSession();
 });
 
-Cypress.Commands.add("visitAdminNewProductForm", () => {
+Cypress.Commands.add('visitAdminNewProductForm', () => {
   visitNewProductForm();
 });
 
 Cypress.Commands.add(
-  "createAdminProductUi",
+  'createAdminProductUi',
   (input: TestProductInput, categoryName: string = SHOP_MESSAGES.keychainsLabel) => {
     createProductFromUi(input, categoryName);
   },
 );
 
 Cypress.Commands.add(
-  "createAdminProductApi",
+  'createAdminProductApi',
   (input: TestProductInput, categoryName: string = SHOP_MESSAGES.keychainsLabel) => {
     return createProductViaApi(input, categoryName);
   },
 );
 
-Cypress.Commands.add("cleanupProductBySku", (sku: string) => {
+Cypress.Commands.add('cleanupProductBySku', (sku: string) => {
   deleteProductBySku(sku);
 });
 
 Cypress.Commands.add(
-  "shouldBeVisible",
-  { prevSubject: "element" },
+  'shouldBeVisible',
+  { prevSubject: 'element' },
   (subject: JQuery<HTMLElement>, visible: boolean) => {
-    return cy.wrap(subject).should(visible ? "be.visible" : "not.be.visible");
+    return cy.wrap(subject).should(visible ? 'be.visible' : 'not.be.visible');
   },
 );
 
 Cypress.Commands.add(
-  "shouldExist",
-  { prevSubject: "element" },
+  'shouldExist',
+  { prevSubject: 'element' },
   (subject: JQuery<HTMLElement>, exists: boolean) => {
-    return cy.wrap(subject).should(exists ? "exist" : "not.exist");
+    return cy.wrap(subject).should(exists ? 'exist' : 'not.exist');
   },
 );
 

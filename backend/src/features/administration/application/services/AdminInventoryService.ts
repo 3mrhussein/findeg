@@ -1,11 +1,10 @@
-import { ID, Quantity } from "../../../core/domain/types/common";
-import { IAdminInventoryService } from "../interfaces/IAdminInventoryService";
-import { IProductRepository } from "../../../catalog/application/interfaces/IProductRepository";
-import { IInventoryRepository } from "../../../catalog/application/interfaces/IInventoryRepository";
-import { IVariantRepository } from "../../../catalog/application/interfaces/IVariantRepository";
-import { IAuditLogService } from "../interfaces/IAuditLogService";
-import { Product } from "../../../catalog/domain/entities/Product";
-import { InventoryUpdate } from "../../domain/types/InventoryUpdate";
+import { IAdminInventoryService } from '../interfaces/IAdminInventoryService';
+import { IProductRepository } from '../../../catalog/application/interfaces/IProductRepository';
+import { IInventoryRepository } from '../../../catalog/application/interfaces/IInventoryRepository';
+import { IVariantRepository } from '../../../catalog/application/interfaces/IVariantRepository';
+import { IAuditLogService } from '../interfaces/IAuditLogService';
+import { Product } from '../../../catalog/domain/entities/Product';
+import { InventoryUpdate } from '../../domain/types/InventoryUpdate';
 
 /**
  * Admin Inventory Service
@@ -53,7 +52,7 @@ export class AdminInventoryService implements IAdminInventoryService {
       };
     }
 
-    return this.productRepository.getFiltered({ limit, offset, sort: "newest" });
+    return this.productRepository.getFiltered({ limit, offset, sort: 'newest' });
   }
 
   /**
@@ -76,9 +75,9 @@ export class AdminInventoryService implements IAdminInventoryService {
 
     if (diff !== 0) {
       await this.inventoryRepository.adjustStock(update.variantId, Number(warehouseId), {
-        movementType: "adjustment",
+        movementType: 'adjustment',
         quantity: diff,
-        notes: update.notes || "Admin manual update",
+        notes: update.notes || 'Admin manual update',
       });
     }
 
@@ -89,9 +88,9 @@ export class AdminInventoryService implements IAdminInventoryService {
     }
 
     await this.auditLogService.logAction({
-      entityType: "variant",
+      entityType: 'variant',
       entityId: String(update.variantId),
-      action: "update_inventory",
+      action: 'update_inventory',
       oldValues: {
         onHand: currentQty,
         lowStockThreshold: variant.lowStockThreshold,

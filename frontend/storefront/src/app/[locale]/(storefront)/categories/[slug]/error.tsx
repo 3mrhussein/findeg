@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { PageStateError } from "@components/shared/state/PageStateError";
-import { useTranslations } from "next-intl";
+import { PageStateError } from '@components/shared/state/PageStateError';
+import { useTranslations } from 'next-intl';
 
 interface CategoryErrorProps {
   reset: () => void;
@@ -15,9 +15,9 @@ export default function CategoryError({ reset }: CategoryErrorProps) {
 
   return (
     <PageStateError
-      title={t("Common.ErrorOccurred")}
-      description={t("Pages.Shop.NoProductsDescription")}
-      retryLabel={t("Common.TryAgain")}
+      title={t('Common.ErrorOccurred')}
+      description={t('Pages.Shop.NoProductsDescription')}
+      retryLabel={t('Common.TryAgain')}
       onRetry={reset}
     />
   );

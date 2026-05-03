@@ -1,16 +1,16 @@
-import { db } from "@findeg/db/connection";
-import { attributeDefinitions, productAttributes } from "@findeg/db/schema";
+import { db } from '@findeg/db/connection';
+import { attributeDefinitions, productAttributes } from '@findeg/db/schema';
 import {
   IAttributeRepository,
   AttributeFilter,
-} from "../../application/interfaces/IAttributeRepository";
+} from '../../application/interfaces/IAttributeRepository';
 import {
   AttributeDefinition,
   CreateAttributeDefinition,
   ProductAttributeValue,
-} from "../../domain/entities/AttributeDefinition";
-import { eq, and, sql, inArray, lt, lte, gt, gte } from "drizzle-orm";
-import { ID } from "@findeg/backend/features/core/domain/types/common";
+} from '../../domain/entities/AttributeDefinition';
+import { eq } from 'drizzle-orm';
+import { ID } from '@findeg/backend/features/core/domain/types/common';
 
 export class DrizzleAttributeRepository implements IAttributeRepository {
   async getAllDefinitions(): Promise<AttributeDefinition[]> {

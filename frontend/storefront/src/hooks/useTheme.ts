@@ -1,4 +1,4 @@
-import { useTheme as useNextTheme } from "next-themes";
+import { useTheme as useNextTheme } from 'next-themes';
 
 /**
  *

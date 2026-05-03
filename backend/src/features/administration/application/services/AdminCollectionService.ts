@@ -1,10 +1,10 @@
-import { ID } from "../../../core/domain/types/common";
-import { IAdminCollectionService } from "../interfaces/IAdminCollectionService";
-import { ICollectionRepository } from "../../../catalog/application/interfaces/ICollectionRepository";
-import { Collection } from "../../../catalog/domain/entities/Collection";
-import { Tag } from "../../../catalog/domain/entities/Tag";
-import { CollectionInput } from "../../domain/types/CollectionInput";
-import { IAuditLogService } from "../interfaces/IAuditLogService";
+import { ID } from '../../../core/domain/types/common';
+import { IAdminCollectionService } from '../interfaces/IAdminCollectionService';
+import { ICollectionRepository } from '../../../catalog/application/interfaces/ICollectionRepository';
+import { Collection } from '../../../catalog/domain/entities/Collection';
+import { Tag } from '../../../catalog/domain/entities/Tag';
+import { CollectionInput } from '../../domain/types/CollectionInput';
+import { IAuditLogService } from '../interfaces/IAuditLogService';
 
 /**
  * Admin Collection Service
@@ -48,9 +48,9 @@ export class AdminCollectionService implements IAdminCollectionService {
 
     await this.auditLogService.logAction({
       adminUserId,
-      entityType: "collection",
+      entityType: 'collection',
       entityId: String(collection.id),
-      action: "create",
+      action: 'create',
       newValues: { ...collection, tagIds },
     });
 
@@ -73,9 +73,9 @@ export class AdminCollectionService implements IAdminCollectionService {
 
     await this.auditLogService.logAction({
       adminUserId,
-      entityType: "collection",
+      entityType: 'collection',
       entityId: String(id),
-      action: "update",
+      action: 'update',
       oldValues: oldCollection as unknown as Record<string, unknown>,
       newValues: { ...collection, tagIds },
     });
@@ -92,9 +92,9 @@ export class AdminCollectionService implements IAdminCollectionService {
 
     await this.auditLogService.logAction({
       adminUserId,
-      entityType: "collection",
+      entityType: 'collection',
       entityId: String(id),
-      action: "delete",
+      action: 'delete',
       oldValues: oldCollection as unknown as Record<string, unknown>,
     });
   }
@@ -107,9 +107,9 @@ export class AdminCollectionService implements IAdminCollectionService {
 
     await this.auditLogService.logAction({
       adminUserId,
-      entityType: "collection",
-      entityId: "bulk",
-      action: "reorder",
+      entityType: 'collection',
+      entityId: 'bulk',
+      action: 'reorder',
       newValues: { items },
     });
   }

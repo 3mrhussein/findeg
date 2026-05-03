@@ -4,17 +4,17 @@
  * Provides cached data for admin notifications.
  * Adheres to Next.js 16 "use cache" standards.
  */
-"use cache";
+'use cache';
 
-import { cacheLife, cacheTag } from "next/cache";
-import { createNotificationServices } from "@findeg/backend/features/notifications";
+import { cacheLife, cacheTag } from 'next/cache';
+import { createNotificationServices } from '@findeg/backend/features/notifications';
 
 /**
  * Get unread notifications for a user
  */
 export async function getUnreadNotifications(userId: number) {
-  cacheTag(`notifications-user-${userId}`, "notifications-unread");
-  cacheLife("minutes");
+  cacheTag(`notifications-user-${userId}`, 'notifications-unread');
+  cacheLife('minutes');
 
   const { notifications } = createNotificationServices();
   return await notifications.getUnread(userId);
@@ -25,7 +25,7 @@ export async function getUnreadNotifications(userId: number) {
  */
 export async function getAllNotifications(userId: number, page: number = 1) {
   cacheTag(`notifications-user-${userId}`);
-  cacheLife("hours");
+  cacheLife('hours');
 
   const { notifications } = createNotificationServices();
   return await notifications.getAll(userId, page);
@@ -35,8 +35,8 @@ export async function getAllNotifications(userId: number, page: number = 1) {
  * Get notification badge count
  */
 export async function getNotificationCount(userId: number) {
-  cacheTag(`notifications-user-${userId}`, "notifications-count");
-  cacheLife("minutes");
+  cacheTag(`notifications-user-${userId}`, 'notifications-count');
+  cacheLife('minutes');
 
   const { notifications } = createNotificationServices();
   return await notifications.getUnreadCount(userId);

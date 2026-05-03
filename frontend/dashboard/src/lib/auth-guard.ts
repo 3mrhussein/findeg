@@ -1,8 +1,8 @@
-import { redirect } from "@i18n/navigation";
-import { adminSession } from "@findeg/backend/features/core";
-import type { SessionPayload } from "@findeg/backend/features/core";
-import type { Locale } from "next-intl";
-import { getSession } from "@lib/session";
+import { redirect } from '@i18n/navigation';
+import { adminSession } from '@findeg/backend/features/core';
+import type { SessionPayload } from '@findeg/backend/features/core';
+import type { Locale } from 'next-intl';
+import { getSession } from '@lib/session';
 
 /**
  * Require any authenticated user — redirects to /login if not.
@@ -11,7 +11,7 @@ import { getSession } from "@lib/session";
 export async function requireAuth(locale: Locale): Promise<SessionPayload> {
   const session = await getSession();
   if (!session) {
-    redirect({ href: "/login", locale });
+    redirect({ href: '/login', locale });
   }
   return session!;
 }
@@ -23,7 +23,7 @@ export async function requireAuth(locale: Locale): Promise<SessionPayload> {
 export async function requireAdmin(locale: Locale): Promise<SessionPayload> {
   const session = await getSession();
   if (!session || !adminSession(session)) {
-    redirect({ href: "/login", locale });
+    redirect({ href: '/login', locale });
   }
   return session!;
 }
@@ -36,9 +36,9 @@ export async function redirectIfAuthenticated(locale: Locale): Promise<void> {
   const session = await getSession();
   if (session) {
     if (adminSession(session)) {
-      redirect({ href: "/", locale });
+      redirect({ href: '/', locale });
     } else {
-      redirect({ href: "/", locale });
+      redirect({ href: '/', locale });
     }
   }
 }
@@ -64,7 +64,7 @@ export async function requirePermission(
   const session = await requireAdmin(locale);
 
   // System admins bypass checks
-  if (session.activeRoleIds?.includes("system_admin")) {
+  if (session.activeRoleIds?.includes('system_admin')) {
     return session;
   }
 
@@ -78,7 +78,7 @@ export async function requirePermission(
   }
 
   if (!allowed) {
-    redirect({ href: "/", locale });
+    redirect({ href: '/', locale });
   }
 
   return session;

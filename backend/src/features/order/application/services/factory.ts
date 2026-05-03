@@ -8,8 +8,8 @@
  * This factory provides read-only order query functionality.
  */
 
-import { DrizzleOrderRepository } from "../../infrastructure/persistence/DrizzleOrderRepository";
-import { OrderService } from "./OrderService";
+import { DrizzleOrderRepository } from '../../infrastructure/persistence/DrizzleOrderRepository';
+import { OrderService } from './OrderService';
 
 /**
  * Create order services with all dependencies wired

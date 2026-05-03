@@ -1,4 +1,4 @@
-import { DomainError } from "./DomainError";
+import { DomainError } from './DomainError';
 
 /**
  * Thrown when a requested resource does not exist.
@@ -20,7 +20,7 @@ export class ResourceNotFoundError extends DomainError {
 
   constructor(resourceType: string, identifier: string | number) {
     const message = `${resourceType} with identifier "${identifier}" not found`;
-    super("RESOURCE_NOT_FOUND", message, {
+    super('RESOURCE_NOT_FOUND', message, {
       statusCode: 404,
       resourceType,
       identifier,
@@ -30,6 +30,6 @@ export class ResourceNotFoundError extends DomainError {
   }
 
   getClientMessage(): string {
-    return "The requested resource could not be found.";
+    return 'The requested resource could not be found.';
   }
 }

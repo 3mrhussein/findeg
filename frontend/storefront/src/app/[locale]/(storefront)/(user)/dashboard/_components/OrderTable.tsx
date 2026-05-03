@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import React from "react";
-import type { Order } from "@findeg/backend/features/order/domain/entities/Order";
-import { useTranslations } from "next-intl";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@findeg/ui";
+import React from 'react';
+import type { Order } from '@findeg/backend/features/order/domain/entities/Order';
+import { useTranslations } from 'next-intl';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@findeg/ui';
 
 /**
  *
  */
-const OrderStatusBadge: React.FC<{ status: Order["status"] }> = ({ status }) => {
+const OrderStatusBadge: React.FC<{ status: Order['status'] }> = ({ status }) => {
   const statusClasses: Record<string, string> = {
-    processing: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300",
-    shipped: "bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300",
-    delivered: "bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300",
-    cancelled: "bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300",
+    processing: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300',
+    shipped: 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300',
+    delivered: 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300',
+    cancelled: 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300',
   };
   return (
     <span className={`px-2 py-1 text-xs font-medium rounded-full ${statusClasses[status]}`}>
@@ -34,11 +34,11 @@ export const OrderTableUI: React.FC<OrderTableUIProps> = ({ orders, t }) => (
   <Table>
     <TableHeader>
       <TableRow>
-        <TableHead>{t("Pages.Dashboard.Table.OrderId")}</TableHead>
-        <TableHead>{t("Pages.Dashboard.Table.Customer")}</TableHead>
-        <TableHead>{t("Pages.Dashboard.Table.Date")}</TableHead>
-        <TableHead>{t("Pages.Dashboard.Table.Total")}</TableHead>
-        <TableHead>{t("Pages.Dashboard.Table.Status")}</TableHead>
+        <TableHead>{t('Pages.Dashboard.Table.OrderId')}</TableHead>
+        <TableHead>{t('Pages.Dashboard.Table.Customer')}</TableHead>
+        <TableHead>{t('Pages.Dashboard.Table.Date')}</TableHead>
+        <TableHead>{t('Pages.Dashboard.Table.Total')}</TableHead>
+        <TableHead>{t('Pages.Dashboard.Table.Status')}</TableHead>
       </TableRow>
     </TableHeader>
     <TableBody>
@@ -47,7 +47,7 @@ export const OrderTableUI: React.FC<OrderTableUIProps> = ({ orders, t }) => (
           <TableCell className="font-medium text-foreground">{order.id}</TableCell>
           <TableCell>{order.customerName}</TableCell>
           <TableCell>
-            {order.createdAt ? new Date(order.createdAt).toLocaleDateString() : order.date || "-"}
+            {order.createdAt ? new Date(order.createdAt).toLocaleDateString() : order.date || '-'}
           </TableCell>
           <TableCell>${(order.total ?? order.totalAmount ?? 0).toFixed(2)}</TableCell>
           <TableCell>

@@ -1,4 +1,4 @@
-import { DomainError } from "./DomainError";
+import { DomainError } from './DomainError';
 
 /**
  * Thrown when an authenticated user lacks required permissions for an action.
@@ -18,8 +18,8 @@ export class NotAuthorizedError extends DomainError {
   public readonly resource?: string;
 
   constructor(action: string, resource?: string) {
-    const message = `Not authorized to ${action}${resource ? ` on ${resource}` : ""}`;
-    super("NOT_AUTHORIZED", message, {
+    const message = `Not authorized to ${action}${resource ? ` on ${resource}` : ''}`;
+    super('NOT_AUTHORIZED', message, {
       statusCode: 403,
       action,
       resource,

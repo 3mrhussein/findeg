@@ -7,11 +7,11 @@
  * Location: src/app/[locale]/admin/_components/shared/ (admin-wide)
  */
 
-"use client";
+'use client';
 
-import * as React from "react";
-import { cn } from "@lib/utils";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@findeg/ui";
+import * as React from 'react';
+import { cn } from '@lib/utils';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@findeg/ui';
 
 export interface StockHealthBarProps {
   /** Number of variants with healthy stock */
@@ -23,7 +23,7 @@ export interface StockHealthBarProps {
   /** Show labels */
   showLabels?: boolean;
   /** Size variant */
-  size?: "sm" | "md";
+  size?: 'sm' | 'md';
   /** Additional CSS classes */
   className?: string;
 }
@@ -44,26 +44,26 @@ export function StockHealthBar({
   low,
   out,
   showLabels = false,
-  size = "md",
+  size = 'md',
   className,
 }: StockHealthBarProps) {
   const total = healthy + low + out;
 
   if (total === 0) {
-    return <div className={cn("text-sm text-muted-foreground", className)}>No stock data</div>;
+    return <div className={cn('text-sm text-muted-foreground', className)}>No stock data</div>;
   }
 
   const healthyPercent = (healthy / total) * 100;
   const lowPercent = (low / total) * 100;
   const outPercent = (out / total) * 100;
 
-  const barHeight = size === "sm" ? "h-2" : "h-3";
+  const barHeight = size === 'sm' ? 'h-2' : 'h-3';
 
   return (
-    <div className={cn("space-y-2", className)}>
+    <div className={cn('space-y-2', className)}>
       {/* Visual bar */}
       <TooltipProvider>
-        <div className={cn("flex overflow-hidden rounded-full", barHeight)}>
+        <div className={cn('flex overflow-hidden rounded-full', barHeight)}>
           {/* Healthy segment */}
           {healthy > 0 && (
             <Tooltip>

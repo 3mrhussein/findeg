@@ -5,15 +5,15 @@
  * These helpers simplify common auth patterns and throw appropriate errors when checks fail.
  */
 
+import { type ID } from '@findeg/db';
 import {
-  type ID,
   NotAuthenticatedError as UnauthorizedError,
   NotAuthorizedError as ForbiddenError,
-} from "@findeg/backend/features/core";
-import { PermissionCode, RoleId } from "@findeg/backend/features/core";
-import type { User } from "@findeg/backend/features/identity";
-import type { IUserRepository, IPermissionService } from "@findeg/backend/features/identity";
-import { cookies } from "next/headers";
+} from '@findeg/backend/features/core';
+import { PermissionCode, RoleId } from '@findeg/backend/features/core';
+import type { User } from '@findeg/backend/features/identity';
+import type { IUserRepository, IPermissionService } from '@findeg/backend/features/identity';
+import { cookies } from 'next/headers';
 
 /**
  * Get authenticated user from session/cookies
@@ -26,10 +26,10 @@ import { cookies } from "next/headers";
  */
 export async function getAuthenticatedUser(userRepository: IUserRepository): Promise<User> {
   const cookieStore = await cookies();
-  const sessionCookie = cookieStore.get("session");
+  const sessionCookie = cookieStore.get('session');
 
   if (!sessionCookie?.value) {
-    throw new UnauthorizedError("No active session. Please log in.");
+    throw new UnauthorizedError('No active session. Please log in.');
   }
 
   // Parse session (simplified - in production, verify JWT or session token)
@@ -38,16 +38,16 @@ export async function getAuthenticatedUser(userRepository: IUserRepository): Pro
     const session = JSON.parse(sessionCookie.value);
     userId = session.userId as ID;
   } catch (error) {
-    throw new UnauthorizedError("Invalid session format.");
+    throw new UnauthorizedError('Invalid session format.');
   }
 
   if (!userId) {
-    throw new UnauthorizedError("Session missing user ID.");
+    throw new UnauthorizedError('Session missing user ID.');
   }
 
   const user = await userRepository.getById(userId);
   if (!user) {
-    throw new UnauthorizedError("User not found.");
+    throw new UnauthorizedError('User not found.');
   }
 
   return user;

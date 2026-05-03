@@ -5,16 +5,16 @@
  * All operations require system_admin privileges (enforced at the API layer).
  */
 
-import { eq, inArray, count } from "drizzle-orm";
+import { eq, inArray, count } from 'drizzle-orm';
 
-import { db } from "@findeg/db/connection";
-import { roles, permissions, rolePermissions, userRoles } from "@findeg/db/schema";
+import { db } from '@findeg/db/connection';
+import { roles, permissions, rolePermissions, userRoles } from '@findeg/db/schema';
 
 import type {
   RoleWithPermissions,
   PermissionItem,
   IAdminRoleService,
-} from "../interfaces/IAdminRoleService";
+} from '../interfaces/IAdminRoleService';
 
 /**
  *
@@ -56,7 +56,7 @@ export class AdminRoleService implements IAdminRoleService {
     }
 
     const result = await this.getRole(newRole.id);
-    if (!result) throw new Error("Failed to fetch created role");
+    if (!result) throw new Error('Failed to fetch created role');
     return result;
   }
 
@@ -79,7 +79,7 @@ export class AdminRoleService implements IAdminRoleService {
     }
 
     const result = await this.getRole(roleId);
-    if (!result) throw new Error("Role not found after update");
+    if (!result) throw new Error('Role not found after update');
     return result;
   }
 
@@ -94,7 +94,7 @@ export class AdminRoleService implements IAdminRoleService {
 
     if (Number(userCount) > 0) {
       throw new Error(
-        "Cannot delete role: users are currently assigned to it. Remove all user assignments first.",
+        'Cannot delete role: users are currently assigned to it. Remove all user assignments first.',
       );
     }
 

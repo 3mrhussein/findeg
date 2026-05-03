@@ -1,9 +1,9 @@
-import { CollectionsPageClient } from "./_components/CollectionsPageClient";
-import { Metadata } from "next";
+import { CollectionsPageClient } from './_components/CollectionsPageClient';
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Collections Management | FindEg Admin",
-  description: "Manage catalog collections and marketing banners.",
+  title: 'Collections Management | FindEg Admin',
+  description: 'Manage catalog collections and marketing banners.',
 };
 
 /**

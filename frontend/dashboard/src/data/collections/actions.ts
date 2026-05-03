@@ -1,9 +1,9 @@
-"use server";
+'use server';
 
-import { CollectionInput } from "@findeg/backend/features/administration/domain/types";
-import { revalidateTag } from "next/cache";
-import { createAdministrationServices } from "@findeg/backend/features/administration";
-import { getErrorMessage } from "@lib/type-guards";
+import { CollectionInput } from '@findeg/backend/features/administration/domain/types';
+import { revalidateTag } from 'next/cache';
+import { createAdministrationServices } from '@findeg/backend/features/administration';
+import { getErrorMessage } from '@lib/type-guards';
 
 /**
  * Admin Collection Actions (Dashboard Data Layer)
@@ -13,10 +13,10 @@ export async function createCollectionAction(input: CollectionInput) {
   try {
     const { collections } = createAdministrationServices();
     const result = await collections.create(input);
-    revalidateTag("collections", "max");
+    revalidateTag('collections', 'max');
     return { success: true, data: result };
   } catch (error: unknown) {
-    console.error("[createCollectionAction]", error);
+    console.error('[createCollectionAction]', error);
     return { success: false, error: getErrorMessage(error) };
   }
 }
@@ -25,10 +25,10 @@ export async function updateCollectionAction(id: number, input: CollectionInput)
   try {
     const { collections } = createAdministrationServices();
     const result = await collections.update(id, input);
-    revalidateTag("collections", "max");
+    revalidateTag('collections', 'max');
     return { success: true, data: result };
   } catch (error: unknown) {
-    console.error("[updateCollectionAction]", error);
+    console.error('[updateCollectionAction]', error);
     return { success: false, error: getErrorMessage(error) };
   }
 }
@@ -37,10 +37,10 @@ export async function deleteCollectionAction(id: number) {
   try {
     const { collections } = createAdministrationServices();
     await collections.delete(id);
-    revalidateTag("collections", "max");
+    revalidateTag('collections', 'max');
     return { success: true };
   } catch (error: unknown) {
-    console.error("[deleteCollectionAction]", error);
+    console.error('[deleteCollectionAction]', error);
     return { success: false, error: getErrorMessage(error) };
   }
 }
@@ -49,10 +49,10 @@ export async function reorderCollectionsAction(updates: Array<{ id: number; sort
   try {
     const { collections } = createAdministrationServices();
     await collections.reorder(updates);
-    revalidateTag("collections", "max");
+    revalidateTag('collections', 'max');
     return { success: true };
   } catch (error: unknown) {
-    console.error("[reorderCollectionsAction]", error);
+    console.error('[reorderCollectionsAction]', error);
     return { success: false, error: getErrorMessage(error) };
   }
 }

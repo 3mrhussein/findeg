@@ -7,26 +7,26 @@
  * Architecture: Backend exports pure TS factories → Apps create data layer with caching
  */
 
-import { DrizzleProductRepository } from "../../infrastructure/persistence/DrizzleProductRepository";
-import { DrizzleCategoryRepository } from "../../infrastructure/persistence/DrizzleCategoryRepository";
-import { DrizzleBrandRepository } from "../../infrastructure/persistence/DrizzleBrandRepository";
-import { DrizzleVariantRepository } from "../../infrastructure/persistence/DrizzleVariantRepository";
-import { DrizzleTagRepository } from "../../infrastructure/persistence/DrizzleTagRepository";
-import { DrizzleCollectionRepository } from "../../infrastructure/persistence/DrizzleCollectionRepository";
-import { DrizzleInventoryRepository } from "../../infrastructure/persistence/DrizzleInventoryRepository";
-import { DrizzleSchoolListRepository } from "../../infrastructure/persistence/DrizzleSchoolListRepository";
-import { DrizzleAdminSearchAnalyticsRepository } from "../../infrastructure/persistence/DrizzleAdminSearchAnalyticsRepository";
+import { DrizzleProductRepository } from '../../infrastructure/persistence/DrizzleProductRepository';
+import { DrizzleCategoryRepository } from '../../infrastructure/persistence/DrizzleCategoryRepository';
+import { DrizzleBrandRepository } from '../../infrastructure/persistence/DrizzleBrandRepository';
+import { DrizzleVariantRepository } from '../../infrastructure/persistence/DrizzleVariantRepository';
+import { DrizzleTagRepository } from '../../infrastructure/persistence/DrizzleTagRepository';
+import { DrizzleCollectionRepository } from '../../infrastructure/persistence/DrizzleCollectionRepository';
+import { DrizzleInventoryRepository } from '../../infrastructure/persistence/DrizzleInventoryRepository';
+import { DrizzleSchoolListRepository } from '../../infrastructure/persistence/DrizzleSchoolListRepository';
+import { DrizzleAdminSearchAnalyticsRepository } from '../../infrastructure/persistence/DrizzleAdminSearchAnalyticsRepository';
 
-import { ProductService } from "./ProductService";
-import { CategoryService } from "./CategoryService";
-import { VariantService } from "./VariantService";
-import { TagService } from "./TagService";
-import { CollectionService } from "./CollectionService";
-import { SearchService } from "./SearchService";
-import { InventoryService } from "./InventoryService";
-import { SchoolListService } from "./SchoolListService";
-import { BrandService } from "./BrandService";
-import { AdminSearchAnalyticsService } from "./AdminSearchAnalyticsService";
+import { ProductService } from './ProductService';
+import { CategoryService } from './CategoryService';
+import { VariantService } from './VariantService';
+import { TagService } from './TagService';
+import { CollectionService } from './CollectionService';
+import { SearchService } from './SearchService';
+import { InventoryService } from './InventoryService';
+import { SchoolListService } from './SchoolListService';
+import { BrandService } from './BrandService';
+import { AdminSearchAnalyticsService } from './AdminSearchAnalyticsService';
 
 /**
  * Create catalog services with all dependencies wired

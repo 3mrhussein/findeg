@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import React from "react";
-import { useFormContext } from "react-hook-form";
-import { useTranslations } from "next-intl";
+import React from 'react';
+import { useFormContext } from 'react-hook-form';
+import { useTranslations } from 'next-intl';
 import {
   FormControl,
   FormField,
@@ -10,18 +10,18 @@ import {
   FormLabel,
   FormMessage,
   FormDescription,
-} from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Textarea } from "@findeg/ui";
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import { type ProductFormValues } from "@/interfaces";
-import { Globe, Search } from "lucide-react";
+} from '@findeg/ui';
+import { Input } from '@findeg/ui';
+import { Textarea } from '@findeg/ui';
+import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
+import { type ProductFormValues } from '@/interfaces';
+import { Globe, Search } from 'lucide-react';
 
 /**
  * SEO & Meta Management Tab
  */
 export function SeoTab() {
-  const t = useTranslations("Administration.Catalog.Products.Form.Tabs.Seo");
+  const t = useTranslations('Administration.Catalog.Products.Form.Tabs.Seo');
   const { control } = useFormContext<ProductFormValues>();
 
   return (
@@ -30,7 +30,7 @@ export function SeoTab() {
         <CardHeader>
           <CardTitle className="text-lg flex items-center gap-2">
             <Globe className="h-5 w-5 text-primary" />
-            {t("urlHandle")}
+            {t('urlHandle')}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -39,7 +39,7 @@ export function SeoTab() {
             name="localizedSlug.en"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t("slugEn")}</FormLabel>
+                <FormLabel>{t('slugEn')}</FormLabel>
                 <FormControl>
                   <div className="relative">
                     <span className="absolute left-3 top-2.5 text-muted-foreground text-sm">
@@ -48,7 +48,7 @@ export function SeoTab() {
                     <Input className="pl-[88px]" placeholder="classic-pen-blue" {...field} />
                   </div>
                 </FormControl>
-                <FormDescription>{t("slugDesc")}</FormDescription>
+                <FormDescription>{t('slugDesc')}</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -60,7 +60,7 @@ export function SeoTab() {
         <CardHeader>
           <CardTitle className="text-lg flex items-center gap-2">
             <Search className="h-5 w-5 text-primary" />
-            {t("searchEngines")}
+            {t('searchEngines')}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -70,7 +70,7 @@ export function SeoTab() {
               name="localizedMetaTitle.en"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t("metaTitleEn")}</FormLabel>
+                  <FormLabel>{t('metaTitleEn')}</FormLabel>
                   <FormControl>
                     <Input placeholder="SEO Title" {...field} />
                   </FormControl>
@@ -83,7 +83,7 @@ export function SeoTab() {
               name="localizedMetaTitle.ar"
               render={({ field }) => (
                 <FormItem dir="rtl">
-                  <FormLabel className="flex w-full justify-end">{t("metaTitleAr")}</FormLabel>
+                  <FormLabel className="flex w-full justify-end">{t('metaTitleAr')}</FormLabel>
                   <FormControl>
                     <Input placeholder="عنوان السيو" className="text-right" {...field} />
                   </FormControl>
@@ -99,7 +99,7 @@ export function SeoTab() {
               name="localizedMetaDescription.en"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t("metaDescriptionEn")}</FormLabel>
+                  <FormLabel>{t('metaDescriptionEn')}</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="Meta description..."
@@ -117,7 +117,7 @@ export function SeoTab() {
               render={({ field }) => (
                 <FormItem dir="rtl">
                   <FormLabel className="flex w-full justify-end">
-                    {t("metaDescriptionAr")}
+                    {t('metaDescriptionAr')}
                   </FormLabel>
                   <FormControl>
                     <Textarea
@@ -137,7 +137,7 @@ export function SeoTab() {
       {/* Preview Section */}
       <Card className="bg-muted/30 border-dashed">
         <CardContent className="p-6">
-          <h4 className="text-sm font-medium mb-4 text-muted-foreground">{t("searchPreview")}</h4>
+          <h4 className="text-sm font-medium mb-4 text-muted-foreground">{t('searchPreview')}</h4>
           <div className="space-y-1">
             <div className="text-blue-600 hover:underline cursor-pointer text-lg font-medium">
               Product Name | FindEg

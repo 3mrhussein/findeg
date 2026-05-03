@@ -1,5 +1,5 @@
-import { API_ROUTES } from "../constants/routes";
-import { SHOP_MESSAGES } from "../constants/messages";
+import { API_ROUTES } from '../constants/routes';
+import { SHOP_MESSAGES } from '../constants/messages';
 
 /**
  * Forces checkout order endpoint to fail for client error-path testing.
@@ -7,7 +7,7 @@ import { SHOP_MESSAGES } from "../constants/messages";
 export function interceptCheckoutOrderFailure(
   message: string = SHOP_MESSAGES.checkoutOrderCreateFailed,
 ): void {
-  cy.intercept("POST", API_ROUTES.checkoutOrder, {
+  cy.intercept('POST', API_ROUTES.checkoutOrder, {
     statusCode: 500,
     body: {
       success: false,
@@ -15,5 +15,5 @@ export function interceptCheckoutOrderFailure(
         message,
       },
     },
-  }).as("checkoutOrderFailure");
+  }).as('checkoutOrderFailure');
 }

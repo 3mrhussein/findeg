@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Button } from "@findeg/ui";
-import { useToggleLanguage } from "@hooks/useToggleLanguage";
+import { Button } from '@findeg/ui';
+import { useToggleLanguage } from '@hooks/useToggleLanguage';
 
 /**
  * A component that allows toggling between available languages with a single button.
@@ -16,10 +16,10 @@ const ToggleLanguage = () => {
       variant="ghost"
       size="sm"
       className="flex items-center gap-2 px-3"
-      onClick={() => toggleLanguage(locale === "en" ? "ar" : "en")}
-      aria-label={locale === "en" ? "Switch to Arabic" : "Switch to English"}
+      onClick={() => toggleLanguage(locale === 'en' ? 'ar' : 'en')}
+      aria-label={locale === 'en' ? 'Switch to Arabic' : 'Switch to English'}
     >
-      {locale === "en" ? (
+      {locale === 'en' ? (
         <>
           <span className="text-base" role="img" aria-label="UK Flag">
             🇬🇧

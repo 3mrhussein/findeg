@@ -4,7 +4,7 @@ import {
   ZeroResultSearch,
   LowCTRSearch,
   LanguageBreakdown,
-} from "./IAdminSearchAnalyticsRepository";
+} from './IAdminSearchAnalyticsRepository';
 
 export interface IAdminSearchAnalyticsService {
   getMetrics(days?: number): Promise<SearchAnalyticsMetrics>;

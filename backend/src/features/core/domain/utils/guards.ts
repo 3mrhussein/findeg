@@ -1,6 +1,6 @@
-import { EmailSchema, IdSchema } from "../types/common";
-import { valid } from "../value-objects/Locale";
-import type { Locale } from "../value-objects/Locale";
+import { EmailSchema, IdSchema } from '../types/common';
+import { valid } from '../value-objects/Locale';
+import type { Locale } from '../value-objects/Locale';
 
 /**
  * Type-safe check if a value is defined (not null or undefined).
@@ -23,7 +23,7 @@ export function hasProperty<T extends object, K extends PropertyKey>(
  * Validates if a value is a non-empty string.
  */
 export function isNonEmptyString(val: unknown): val is string {
-  return typeof val === "string" && val.trim().length > 0;
+  return typeof val === 'string' && val.trim().length > 0;
 }
 
 /**

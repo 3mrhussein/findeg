@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Link } from "@i18n/navigation";
-import { useTranslations } from "next-intl";
-import { useUser } from "@hooks/useUser";
-import { useCategories, type Category } from "@hooks/useCategories";
+import { useState } from 'react';
+import { Link } from '@i18n/navigation';
+import { useTranslations } from 'next-intl';
+import { useUser } from '@hooks/useUser';
+import { useCategories, type Category } from '@hooks/useCategories';
 
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from "@findeg/ui";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@findeg/ui";
-import { Menu, User, Settings, Heart, Image as ImageIcon, Search } from "lucide-react";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from '@findeg/ui';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@findeg/ui';
+import { Menu, User, Settings, Heart, Image as ImageIcon, Search } from 'lucide-react';
 
-import ToggleLanguage from "@components/shared/ToggleLanguage";
-import { ToggleTheme } from "@findeg/ui";
+import ToggleLanguage from '@components/shared/ToggleLanguage';
+import { ToggleTheme } from '@findeg/ui';
 
 /**
  * Mobile Navigation Sheet
@@ -20,7 +20,7 @@ import { ToggleTheme } from "@findeg/ui";
 export function MobileNavSheet() {
   const [open, setOpen] = useState(false);
   const { isLoggedIn, currentUser } = useUser();
-  const t = useTranslations("Nav");
+  const t = useTranslations('Nav');
   const { categories, isLoading } = useCategories();
 
   const topLevelCategories = categories.filter((c: Category) => !c.parentId || c.depth === 0) || [];
@@ -48,7 +48,7 @@ export function MobileNavSheet() {
                 {isLoggedIn ? (
                   <>
                     <span className="text-sm font-bold text-slate-900 dark:text-white line-clamp-1">
-                      Hello, {currentUser?.name || "User"}
+                      Hello, {currentUser?.name || 'User'}
                     </span>
                     <Link
                       href="/dashboard"
@@ -164,28 +164,28 @@ export function MobileNavSheet() {
           <div className="mt-auto border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/50 p-4">
             <div className="grid grid-cols-2 gap-4 mb-4">
               <Link
-                href={isLoggedIn ? "/dashboard/wishlist" : "/login"}
+                href={isLoggedIn ? '/dashboard/wishlist' : '/login'}
                 onClick={() => setOpen(false)}
                 className="flex items-center gap-3 p-2 rounded-lg hover:bg-white dark:hover:bg-slate-900 text-slate-600 dark:text-slate-300 transition-colors"
               >
                 <Heart className="size-4" />
-                <span className="text-sm font-medium">{t("SavedItems") || "Saved"}</span>
+                <span className="text-sm font-medium">{t('SavedItems') || 'Saved'}</span>
               </Link>
               <Link
-                href={isLoggedIn ? "/dashboard/orders" : "/login"}
+                href={isLoggedIn ? '/dashboard/orders' : '/login'}
                 onClick={() => setOpen(false)}
                 className="flex items-center gap-3 p-2 rounded-lg hover:bg-white dark:hover:bg-slate-900 text-slate-600 dark:text-slate-300 transition-colors"
               >
                 <span className="material-symbols-outlined text-[18px]">inventory_2</span>
-                <span className="text-sm font-medium">{t("Orders") || "Orders"}</span>
+                <span className="text-sm font-medium">{t('Orders') || 'Orders'}</span>
               </Link>
               <Link
-                href={isLoggedIn ? "/dashboard/settings" : "/login"}
+                href={isLoggedIn ? '/dashboard/settings' : '/login'}
                 onClick={() => setOpen(false)}
                 className="flex items-center gap-3 p-2 rounded-lg hover:bg-white dark:hover:bg-slate-900 text-slate-600 dark:text-slate-300 transition-colors"
               >
                 <Settings className="size-4" />
-                <span className="text-sm font-medium">{t("Settings") || "Settings"}</span>
+                <span className="text-sm font-medium">{t('Settings') || 'Settings'}</span>
               </Link>
             </div>
 

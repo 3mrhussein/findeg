@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React, { createContext, useState, useMemo, useEffect } from "react";
-import type { ClientUser as User } from "@lib/types";
+import React, { createContext, useState, useMemo, useEffect } from 'react';
+import type { ClientUser as User } from '@lib/types';
 
 export interface UserContextType {
   currentUser: User | null;
@@ -14,7 +14,7 @@ export interface UserContextType {
 
 export const UserContext = createContext<UserContextType | undefined>(undefined);
 
-import { getCurrentUserAction } from "@/app/[locale]/(storefront)/_actions/user";
+import { getCurrentUserAction } from '@/app/[locale]/(storefront)/_actions/user';
 
 // ... (types)
 
@@ -43,7 +43,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
           });
         }
       } catch (error) {
-        console.error("Failed to hydrate user session:", error);
+        console.error('Failed to hydrate user session:', error);
       } finally {
         setIsLoading(false);
       }

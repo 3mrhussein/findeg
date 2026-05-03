@@ -42,7 +42,7 @@ export type VariantCombination = Record<string, string>;
  * // ]
  */
 export function generateVariantMatrix(
-  dimensions: Pick<VariantDimension, "attributeKey" | "options">[],
+  dimensions: Pick<VariantDimension, 'attributeKey' | 'options'>[],
 ): VariantCombination[] {
   if (!dimensions.length) return [];
 

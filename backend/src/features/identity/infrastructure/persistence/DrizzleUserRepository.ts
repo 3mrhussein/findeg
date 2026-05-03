@@ -1,5 +1,5 @@
-import { ID } from "../../../core/domain/types/common";
-import { BaseDrizzleRepository } from "../../../core/infrastructure/persistence/BaseDrizzleRepository";
+import { ID } from '../../../core/domain/types/common';
+import { BaseDrizzleRepository } from '../../../core/infrastructure/persistence/BaseDrizzleRepository';
 import {
   users,
   userRoles,
@@ -9,12 +9,12 @@ import {
   passwordCredentials,
   roles,
   type User as DbUser,
-} from "@findeg/db/schema";
-import { IUserRepository } from "../../application/interfaces/IUserRepository";
-import { User } from "../../domain/entities/User";
-import { PasswordCredentials, HashStrategy } from "../../domain/entities/PasswordCredentials";
-import { eq } from "drizzle-orm";
-import type { PermissionCode, RoleId } from "../../../core/domain/value-objects";
+} from '@findeg/db/schema';
+import { IUserRepository } from '../../application/interfaces/IUserRepository';
+import { User } from '../../domain/entities/User';
+import { PasswordCredentials, HashStrategy } from '../../domain/entities/PasswordCredentials';
+import { eq } from 'drizzle-orm';
+import type { PermissionCode, RoleId } from '../../../core/domain/value-objects';
 
 /**
  * Drizzle User Repository
@@ -71,24 +71,24 @@ export class DrizzleUserRepository
       const activeRoleIds = Array.from(
         new Set(
           roleRows
-            .map((row: any) => row.roleCode?.trim())
-            .filter((value: string | undefined): value is string => Boolean(value)),
+            .map((row) => row.roleCode?.trim())
+            .filter((value: string | null | undefined): value is string => Boolean(value)),
         ),
       ) as RoleId[];
 
       // Start with role-based permissions
       const effectivePermissions = new Set(
         permissionRows
-          .map((row: any) => row.permissionCode?.trim())
-          .filter((value: string | undefined): value is string => Boolean(value)),
+          .map((row) => row.permissionCode?.trim())
+          .filter((value: string | null | undefined): value is string => Boolean(value)),
       );
 
       // Apply user-level overrides: 'grant' adds, 'revoke' removes
       for (const override of overrideRows) {
         if (!override.permissionCode) continue;
-        if (override.action === "grant") {
+        if (override.action === 'grant') {
           effectivePermissions.add(override.permissionCode);
-        } else if (override.action === "revoke") {
+        } else if (override.action === 'revoke') {
           effectivePermissions.delete(override.permissionCode);
         }
       }
@@ -96,7 +96,7 @@ export class DrizzleUserRepository
       const permissionCodes = Array.from(effectivePermissions) as PermissionCode[];
 
       const scopedRole = roleRows.find(
-        (row: any) => row.scope === "organization" && row.organizationId !== null,
+        (row) => row.scope === 'organization' && row.organizationId !== null,
       );
 
       return {
@@ -133,7 +133,7 @@ export class DrizzleUserRepository
   /**
    * Retrieves a user explicitly including the password hash.
    */
-  async getByEmailWithPassword(email: string): Promise<any | null> {
+  async getByEmailWithPassword(email: string): Promise<(User & { password: string | null }) | null> {
     const result = await this.db
       .select({
         user: users,
@@ -174,7 +174,7 @@ export class DrizzleUserRepository
 
   async upsertPasswordCredentials(
     userId: ID,
-    payload: Omit<PasswordCredentials, "userId" | "createdAt" | "updatedAt">,
+    payload: Omit<PasswordCredentials, 'userId' | 'createdAt' | 'updatedAt'>,
   ): Promise<void> {
     await this.db
       .insert(passwordCredentials)

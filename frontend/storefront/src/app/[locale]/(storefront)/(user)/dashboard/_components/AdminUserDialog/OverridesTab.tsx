@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useTranslations } from "next-intl";
-import { Badge } from "@findeg/ui";
-import { ScrollArea } from "@findeg/ui";
-import type { Permission, OverrideAction } from "./AdminUserDialog.interface";
+import { useTranslations } from 'next-intl';
+import { Badge } from '@findeg/ui';
+import { ScrollArea } from '@findeg/ui';
+import type { Permission, OverrideAction } from './AdminUserDialog.interface';
 
 interface OverridesTabProps {
   permissions: Permission[];
@@ -11,21 +11,21 @@ interface OverridesTabProps {
   onCycle: (permId: number) => void;
 }
 
-const OVERRIDE_ACTIONS: OverrideAction[] = ["default", "grant", "revoke"];
+const OVERRIDE_ACTIONS: OverrideAction[] = ['default', 'grant', 'revoke'];
 
 /**
  * Permission overrides tab — per-user grant/revoke cycling UI.
  */
 export function OverridesTab({ permissions, overrides, onCycle }: OverridesTabProps) {
-  const t = useTranslations("Pages.Dashboard");
+  const t = useTranslations('Pages.Dashboard');
 
   return (
     <>
-      <p className="text-xs text-muted-foreground mb-3">{t("OverridesDescription")}</p>
+      <p className="text-xs text-muted-foreground mb-3">{t('OverridesDescription')}</p>
       <ScrollArea className="h-64 pr-3">
         <div className="space-y-1.5">
           {permissions.map((perm) => {
-            const action = overrides.get(perm.id) ?? "default";
+            const action = overrides.get(perm.id) ?? 'default';
             return (
               <div
                 key={perm.id}
@@ -39,17 +39,17 @@ export function OverridesTab({ permissions, overrides, onCycle }: OverridesTabPr
                   {OVERRIDE_ACTIONS.map((a) => (
                     <Badge
                       key={a}
-                      variant={action === a ? "default" : "outline"}
+                      variant={action === a ? 'default' : 'outline'}
                       className={`cursor-pointer text-xs capitalize ${
-                        action === a && a === "grant"
-                          ? "bg-green-600"
-                          : action === a && a === "revoke"
-                            ? "bg-red-600"
-                            : ""
+                        action === a && a === 'grant'
+                          ? 'bg-green-600'
+                          : action === a && a === 'revoke'
+                            ? 'bg-red-600'
+                            : ''
                       }`}
                       onClick={() => onCycle(perm.id)}
                     >
-                      {a === "default" ? "Role" : a}
+                      {a === 'default' ? 'Role' : a}
                     </Badge>
                   ))}
                 </div>

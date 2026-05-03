@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useTranslations } from "next-intl";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@findeg/ui";
-import { Checkbox } from "@findeg/ui";
-import { ProductRow } from "./ProductRow";
-import type { ProductListItem } from "@findeg/backend/features/administration";
+import { useTranslations } from 'next-intl';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@findeg/ui';
+import { Checkbox } from '@findeg/ui';
+import { ProductRow } from './ProductRow';
+import { ProductListItem } from '@findeg/backend/features/administration/application/interfaces/IAdminProductService';
 
 interface ProductsTableProps {
   products: ProductListItem[];
@@ -22,7 +22,7 @@ export function ProductsTable({
   onDuplicate,
   onDelete,
 }: ProductsTableProps) {
-  const t = useTranslations("Administration.Catalog.Products");
+  const t = useTranslations('Administration.Catalog.Products');
 
   const allSelected = products.length > 0 && selectedIds.length === products.length;
   const partialSelected = selectedIds.length > 0 && selectedIds.length < products.length;
@@ -50,19 +50,19 @@ export function ProductsTable({
           <TableRow className="hover:bg-transparent bg-muted/30">
             <TableHead className="w-10">
               <Checkbox
-                checked={allSelected || (partialSelected ? "indeterminate" : false)}
+                checked={allSelected || (partialSelected ? 'indeterminate' : false)}
                 onCheckedChange={handleSelectAll}
               />
             </TableHead>
-            <TableHead>{t("Table.Product")}</TableHead>
+            <TableHead>{t('Table.Product')}</TableHead>
             <TableHead className="hidden lg:table-cell">
-              {t("Table.Category")} / {t("Table.Brand")}
+              {t('Table.Category')} / {t('Table.Brand')}
             </TableHead>
-            <TableHead>{t("Table.Price")}</TableHead>
-            <TableHead>{t("Table.Stock")}</TableHead>
-            <TableHead className="hidden md:table-cell">{t("Table.Status")}</TableHead>
-            <TableHead className="hidden xl:table-cell">{t("Table.LastUpdated")}</TableHead>
-            <TableHead className="text-right w-[80px]">{t("Table.Actions")}</TableHead>
+            <TableHead>{t('Table.Price')}</TableHead>
+            <TableHead>{t('Table.Stock')}</TableHead>
+            <TableHead className="hidden md:table-cell">{t('Table.Status')}</TableHead>
+            <TableHead className="hidden xl:table-cell">{t('Table.LastUpdated')}</TableHead>
+            <TableHead className="text-right w-[80px]">{t('Table.Actions')}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

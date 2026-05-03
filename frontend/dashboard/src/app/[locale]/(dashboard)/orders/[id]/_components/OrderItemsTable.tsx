@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
-import { AlertCircle } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@findeg/ui";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@findeg/ui';
+import { Badge } from '@findeg/ui';
+import { AlertCircle } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@findeg/ui';
 
 interface OrderItem {
   productId: number;
@@ -43,12 +43,12 @@ export function OrderItemsTable({ items, currency }: OrderItemsTableProps) {
         <TableBody>
           {items.map((item, index) => {
             // Mapping fields from snapshot data
-            const name = item.productNameSnapshot || item.productName || "Product";
+            const name = item.productNameSnapshot || item.productName || 'Product';
             const price = Number(item.unitPriceSnapshot || item.unitPrice || 0);
             const total = Number(item.totalPriceSnapshot || item.totalPrice || 0);
             const qty = Number(item.quantity || 0);
-            const sku = item.skuSnapshot || item.sku || "-";
-            const variant = item.variantNameSnapshot || item.variantName || "";
+            const sku = item.skuSnapshot || item.sku || '-';
+            const variant = item.variantNameSnapshot || item.variantName || '';
 
             return (
               <TableRow key={index}>

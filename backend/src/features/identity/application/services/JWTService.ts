@@ -10,7 +10,7 @@
  * - Algorithm: HS256 (HMAC SHA-256)
  */
 
-import jwt from "jsonwebtoken";
+import jwt from 'jsonwebtoken';
 
 export type TokenPair = {
   accessToken: string;
@@ -27,12 +27,12 @@ export type JWTPayload = {
   exp: number; // expires at (Unix timestamp)
 };
 
-export type TokenType = "access" | "refresh";
+export type TokenType = 'access' | 'refresh';
 
 export class UnauthorizedError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = "UnauthorizedError";
+    this.name = 'UnauthorizedError';
   }
 }
 
@@ -51,17 +51,15 @@ export interface IJWTService {
 export class JWTService implements IJWTService {
   private readonly accessTokenSecret: string;
   private readonly refreshTokenSecret: string;
-  private readonly accessTokenExpiry: string = "15m"; // 15 minutes
-  private readonly refreshTokenExpiry: string = "7d"; // 7 days
+  private readonly accessTokenExpiry: string = '15m'; // 15 minutes
+  private readonly refreshTokenExpiry: string = '7d'; // 7 days
 
   constructor(accessTokenSecret?: string, refreshTokenSecret?: string) {
-    this.accessTokenSecret = accessTokenSecret || process.env.JWT_SECRET || "";
-    this.refreshTokenSecret = refreshTokenSecret || process.env.JWT_REFRESH_SECRET || "";
+    this.accessTokenSecret = accessTokenSecret ?? process.env.JWT_SECRET ?? '';
+    this.refreshTokenSecret = refreshTokenSecret ?? process.env.JWT_REFRESH_SECRET ?? '';
 
     if (!this.accessTokenSecret || !this.refreshTokenSecret) {
-      throw new Error(
-        "JWT secrets are required. Set JWT_SECRET and JWT_REFRESH_SECRET environment variables.",
-      );
+      throw new Error('JWT secrets are required');
     }
   }
 
@@ -92,16 +90,16 @@ export class JWTService implements IJWTService {
     };
 
     const accessToken = jwt.sign(payload, this.accessTokenSecret, {
-      algorithm: "HS256" as const,
-      expiresIn: "15m",
+      algorithm: 'HS256' as const,
+      expiresIn: '15m',
     });
 
     const refreshToken = jwt.sign(
       { userId, email, roles, permissions, jti: `${jti}-refresh` },
       this.refreshTokenSecret,
       {
-        algorithm: "HS256" as const,
-        expiresIn: "7d",
+        algorithm: 'HS256' as const,
+        expiresIn: '7d',
       },
     );
 
@@ -120,11 +118,11 @@ export class JWTService implements IJWTService {
    * @returns Decoded payload if valid
    * @throws {UnauthorizedError} if token is invalid or expired
    */
-  verifyToken(token: string, type: TokenType = "access"): JWTPayload {
+  verifyToken(token: string, type: TokenType = 'access'): JWTPayload {
     try {
-      const secret = type === "access" ? this.accessTokenSecret : this.refreshTokenSecret;
+      const secret = type === 'access' ? this.accessTokenSecret : this.refreshTokenSecret;
       const decoded = jwt.verify(token, secret, {
-        algorithms: ["HS256"],
+        algorithms: ['HS256'],
       }) as jwt.JwtPayload;
 
       return {
@@ -137,12 +135,12 @@ export class JWTService implements IJWTService {
       };
     } catch (error) {
       if (error instanceof jwt.TokenExpiredError) {
-        throw new UnauthorizedError("Token has expired");
+        throw new UnauthorizedError('Token has expired');
       }
       if (error instanceof jwt.JsonWebTokenError) {
-        throw new UnauthorizedError("Invalid token");
+        throw new UnauthorizedError('Invalid token');
       }
-      throw new UnauthorizedError("Token verification failed");
+      throw new UnauthorizedError('Token verification failed');
     }
   }
 
@@ -156,13 +154,13 @@ export class JWTService implements IJWTService {
   refreshTokens(refreshToken: string): TokenPair {
     try {
       // Verify the refresh token
-      const decoded = this.verifyToken(refreshToken, "refresh");
+      const decoded = this.verifyToken(refreshToken, 'refresh');
 
       // Generate new token pair
       // Note: In production, you should fetch the latest user roles/permissions from DB
       return this.generateTokens(decoded.userId, decoded.email, decoded.roles, decoded.permissions);
-    } catch (error) {
-      throw new UnauthorizedError("Invalid or expired refresh token");
+    } catch {
+      throw new UnauthorizedError('Invalid or expired refresh token');
     }
   }
 }

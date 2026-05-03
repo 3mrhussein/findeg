@@ -1,1 +1,1 @@
-export { default } from "./[[...slug]]/loading";
+export { default } from './[[...slug]]/loading';

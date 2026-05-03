@@ -1,14 +1,14 @@
-import { eq, desc, or, sql } from "drizzle-orm";
-import { ID, Slug } from "../../../core/domain/types/common";
-import { db } from "@findeg/db/connection";
-import { brands, products } from "@findeg/db/schema";
+import { eq, desc, sql } from 'drizzle-orm';
+import { ID, Slug } from '../../../core/domain/types/common';
+import { db } from '@findeg/db/connection';
+import { brands, products } from '@findeg/db/schema';
 import {
   IBrandRepository,
   BrandCreateInput,
   BrandUpdateInput,
-} from "../../application/interfaces/IBrandRepository";
-import { Brand } from "../../domain/entities/Brand";
-import { DEFAULT_LOCALE, asTranslationMap, type Locale } from "../../../core/domain/value-objects";
+} from '../../application/interfaces/IBrandRepository';
+import { Brand } from '../../domain/entities/Brand';
+import { DEFAULT_LOCALE, asTranslationMap, type Locale } from '../../../core/domain/value-objects';
 
 type DbBrand = typeof brands.$inferSelect;
 
@@ -30,7 +30,7 @@ export class DrizzleBrandRepository implements IBrandRepository {
           : { en: dbBrand.name, ar: dbBrand.name },
         dbBrand.name,
       ),
-      description: asTranslationMap(localizedDescDraft, ""),
+      description: asTranslationMap(localizedDescDraft, ''),
     };
 
     return {
@@ -47,18 +47,18 @@ export class DrizzleBrandRepository implements IBrandRepository {
     };
   }
 
-  async getAll(activeOnly: boolean = false, language: Locale = DEFAULT_LOCALE): Promise<Brand[]> {
+  async getAll(activeOnly: boolean = false, _language: Locale = DEFAULT_LOCALE): Promise<Brand[]> {
     const whereClause = activeOnly ? eq(brands.isActive, true) : undefined;
 
     // Subquery for product count
     const productCountSubquery = db
       .select({
         brandId: products.brandId,
-        count: sql<number>`count(*)`.as("count"),
+        count: sql<number>`count(*)`.as('count'),
       })
       .from(products)
       .groupBy(products.brandId)
-      .as("pc");
+      .as('pc');
 
     const dbBrands = await db
       .select({
@@ -75,12 +75,12 @@ export class DrizzleBrandRepository implements IBrandRepository {
     );
   }
 
-  async getById(id: ID, language: Locale = DEFAULT_LOCALE): Promise<Brand | null> {
+  async getById(id: ID, _language: Locale = DEFAULT_LOCALE): Promise<Brand | null> {
     const result = await db.select().from(brands).where(eq(brands.id, id));
     return result[0] ? this.mapToDomain(result[0]) : null;
   }
 
-  async getBySlug(slug: Slug, language: Locale = DEFAULT_LOCALE): Promise<Brand | null> {
+  async getBySlug(slug: Slug, _language: Locale = DEFAULT_LOCALE): Promise<Brand | null> {
     const result = await db.select().from(brands).where(eq(brands.slug, slug));
     return result[0] ? this.mapToDomain(result[0]) : null;
   }

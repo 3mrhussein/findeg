@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import React from "react";
-import { useTranslations } from "next-intl";
-import { Badge } from "@findeg/ui";
-import { Lock, ChevronDown, Check, Plus, RotateCcw } from "lucide-react";
-import { cn } from "@lib/utils";
-import { Button } from "@findeg/ui";
+import React from 'react';
+import { useTranslations } from 'next-intl';
+import { Badge } from '@findeg/ui';
+import { Lock, ChevronDown, Check, Plus, RotateCcw } from 'lucide-react';
+import { cn } from '@lib/utils';
+import { Button } from '@findeg/ui';
 
 interface ListItemRowProps {
   item: any;
@@ -27,18 +27,18 @@ export function ListItemRow({
   isOptional,
   isLocked,
 }: ListItemRowProps) {
-  const t = useTranslations("School.ParentExperience.List");
+  const t = useTranslations('School.ParentExperience.List');
   const isExcluded = isOptional && selection?.isExcluded;
   const hasSwap = !!selection?.variantId;
 
   return (
     <div
       className={cn(
-        "group relative flex items-center gap-4 p-4 rounded-2xl border transition-all duration-300",
+        'group relative flex items-center gap-4 p-4 rounded-2xl border transition-all duration-300',
         isExcluded
-          ? "opacity-60 bg-slate-50 border-transparent grayscale"
-          : "bg-white border-slate-200 hover:shadow-xl hover:shadow-slate-200/50 hover:border-primary/20",
-        hasSwap && !isExcluded && "border-primary/30 ring-1 ring-primary/10",
+          ? 'opacity-60 bg-slate-50 border-transparent grayscale'
+          : 'bg-white border-slate-200 hover:shadow-xl hover:shadow-slate-200/50 hover:border-primary/20',
+        hasSwap && !isExcluded && 'border-primary/30 ring-1 ring-primary/10',
       )}
     >
       {/* Selection State / Checkbox */}
@@ -46,10 +46,10 @@ export function ListItemRow({
         {isOptional ? (
           <Button
             size="icon"
-            variant={isExcluded ? "outline" : "default"}
+            variant={isExcluded ? 'outline' : 'default'}
             className={cn(
-              "w-10 h-10 rounded-xl transition-all",
-              !isExcluded && "bg-emerald-500 hover:bg-emerald-600 shadow-lg shadow-emerald-200",
+              'w-10 h-10 rounded-xl transition-all',
+              !isExcluded && 'bg-emerald-500 hover:bg-emerald-600 shadow-lg shadow-emerald-200',
             )}
             onClick={() => onToggle?.(!!isExcluded)}
           >
@@ -65,7 +65,7 @@ export function ListItemRow({
       {/* Image Placeholder */}
       <div className="w-16 h-16 bg-slate-50 rounded-lg flex items-center justify-center border p-1 border-slate-100 overflow-hidden shrink-0">
         <img
-          src={selection?.image || item.defaultImage || "https://placehold.co/100x100"}
+          src={selection?.image || item.defaultImage || 'https://placehold.co/100x100'}
           alt={item.name}
           className="w-full h-full object-contain mix-blend-multiply"
         />
@@ -82,7 +82,7 @@ export function ListItemRow({
               variant="secondary"
               className="bg-slate-100 text-[10px] text-slate-500 gap-1 font-medium"
             >
-              <Lock className="w-3 h-3" /> {t("BrandRequired")}
+              <Lock className="w-3 h-3" /> {t('BrandRequired')}
             </Badge>
           )}
           {hasSwap && !isExcluded && (
@@ -90,12 +90,12 @@ export function ListItemRow({
               variant="secondary"
               className="bg-primary/10 text-primary border-primary/20 text-[10px] gap-1 font-medium"
             >
-              {t("Swapped")}
+              {t('Swapped')}
             </Badge>
           )}
         </div>
         <p className="text-sm text-muted-foreground leading-snug">
-          {item.description || "School requested brand: Faber-Castell"}
+          {item.description || 'School requested brand: Faber-Castell'}
         </p>
       </div>
 
@@ -109,12 +109,12 @@ export function ListItemRow({
               className="h-9 px-3 text-primary hover:bg-primary/5 font-bold gap-2 text-xs"
               onClick={onSwap}
             >
-              {t("ChangeBrand")}
+              {t('ChangeBrand')}
               <ChevronDown className="w-4 h-4" />
             </Button>
             {hasSwap && (
               <button className="text-[10px] flex items-center gap-1 text-muted-foreground hover:text-primary transition-colors">
-                <RotateCcw className="w-3 h-3" /> {t("ResetToDefault")}
+                <RotateCcw className="w-3 h-3" /> {t('ResetToDefault')}
               </button>
             )}
           </div>
@@ -123,7 +123,7 @@ export function ListItemRow({
         {isExcluded && (
           <div className="flex items-center gap-2">
             <Badge variant="outline" className="bg-slate-50 text-slate-400 border-slate-200">
-              {t("OptionalSelected")}
+              {t('OptionalSelected')}
             </Badge>
           </div>
         )}

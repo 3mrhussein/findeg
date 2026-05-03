@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useEffect, useMemo, useState } from "react";
-import Image from "next/image";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Button } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
-import { Dialog, DialogContent } from "@findeg/ui";
-import { IconTooltip } from "@findeg/ui";
-import { cn } from "@lib/utils";
+import { useEffect, useMemo, useState } from 'react';
+import Image from 'next/image';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Button } from '@findeg/ui';
+import { Badge } from '@findeg/ui';
+import { Dialog, DialogContent } from '@findeg/ui';
+import { IconTooltip } from '@findeg/ui';
+import { cn } from '@lib/utils';
 
 export interface GalleryImage {
   url: string;
@@ -32,8 +32,8 @@ export function ImageGallery({ images, badge }: ImageGalleryProps) {
         ? images
         : [
             {
-              url: "https://picsum.photos/seed/findeg-pdp/900/900",
-              alt: "Product image",
+              url: 'https://picsum.photos/seed/findeg-pdp/900/900',
+              alt: 'Product image',
             },
           ],
     [images],
@@ -52,16 +52,16 @@ export function ImageGallery({ images, badge }: ImageGalleryProps) {
     if (!isLightboxOpen) return;
 
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "ArrowLeft") {
+      if (event.key === 'ArrowLeft') {
         setActiveIndex((prev) => (prev - 1 + safeImages.length) % safeImages.length);
       }
-      if (event.key === "ArrowRight") {
+      if (event.key === 'ArrowRight') {
         setActiveIndex((prev) => (prev + 1) % safeImages.length);
       }
     };
 
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
   }, [isLightboxOpen, safeImages.length]);
 
   const activeImage = safeImages[activeIndex];
@@ -76,14 +76,14 @@ export function ImageGallery({ images, badge }: ImageGalleryProps) {
         <Image
           key={activeImage.url}
           src={activeImage.url}
-          alt={activeImage.alt || "Product image"}
+          alt={activeImage.alt || 'Product image'}
           fill
           className="object-cover transition duration-300 group-hover:scale-150"
           sizes="(max-width: 1024px) 100vw, 60vw"
         />
 
         {badge ? (
-          <Badge className={cn("absolute start-3 top-3 z-20 rounded-full", badge.className)}>
+          <Badge className={cn('absolute start-3 top-3 z-20 rounded-full', badge.className)}>
             {badge.text}
           </Badge>
         ) : null}
@@ -101,16 +101,16 @@ export function ImageGallery({ images, badge }: ImageGalleryProps) {
               type="button"
               onClick={() => setActiveIndex(index)}
               className={cn(
-                "relative size-20 shrink-0 overflow-hidden rounded-xl border transition",
+                'relative size-20 shrink-0 overflow-hidden rounded-xl border transition',
                 index === activeIndex
-                  ? "border-primary ring-2 ring-primary/40"
-                  : "border-border hover:border-primary/60",
+                  ? 'border-primary ring-2 ring-primary/40'
+                  : 'border-border hover:border-primary/60',
               )}
               aria-label={`View image ${index + 1}`}
             >
               <Image
                 src={image.url}
-                alt={image.alt || "Thumbnail"}
+                alt={image.alt || 'Thumbnail'}
                 fill
                 className="object-cover"
                 sizes="80px"
@@ -125,7 +125,7 @@ export function ImageGallery({ images, badge }: ImageGalleryProps) {
           <div className="relative flex h-full items-center justify-center">
             <Image
               src={activeImage.url}
-              alt={activeImage.alt || "Product image"}
+              alt={activeImage.alt || 'Product image'}
               fill
               className="object-contain"
               sizes="100vw"

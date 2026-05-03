@@ -1,5 +1,5 @@
-import { getSession } from "@/lib/session";
-import { createOrderServices } from "@findeg/backend/features/order";
+import { getSession } from '@/lib/session';
+import { createOrderServices } from '@findeg/backend/features/order';
 
 /**
  * Checkout prefill data shape
@@ -44,15 +44,15 @@ export async function getCheckoutPrefill(): Promise<CheckoutPrefillData | null> 
     fullName:
       user?.firstName && user?.lastName
         ? `${user.firstName} ${user.lastName}`
-        : address?.fullName || "",
-    guestEmail: user?.email ?? "",
-    phone: address?.phone ?? "",
-    city: address?.city ?? "",
-    area: address?.area ?? "",
-    street: address?.street ?? "",
-    building: address?.building ?? "",
-    floor: address?.floor ?? "",
-    apartment: address?.apartment ?? "",
-    notes: address?.notes ?? "",
+        : address?.fullName || '',
+    guestEmail: user?.email ?? '',
+    phone: address?.phone ?? '',
+    city: address?.city ?? '',
+    area: address?.area ?? '',
+    street: address?.street ?? '',
+    building: address?.building ?? '',
+    floor: address?.floor ?? '',
+    apartment: address?.apartment ?? '',
+    notes: address?.notes ?? '',
   };
 }

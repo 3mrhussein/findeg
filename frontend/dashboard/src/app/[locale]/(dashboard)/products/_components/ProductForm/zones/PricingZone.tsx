@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { useFormContext } from "react-hook-form";
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import { InfoIcon } from "lucide-react";
-import { PriceInput } from "../shared/PriceInput";
+import * as React from 'react';
+import { useFormContext } from 'react-hook-form';
+import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
+import { Label } from '@findeg/ui';
+import { InfoIcon } from 'lucide-react';
+import { PriceInput } from '../shared/PriceInput';
 
 interface PricingZoneProps {
   /** When true, shows a per-variant warning if switching pricing mode */
@@ -23,8 +23,8 @@ interface PricingZoneProps {
 export function PricingZone({ hasVariants, variantIndex }: PricingZoneProps) {
   const { watch, setValue } = useFormContext();
 
-  const pricingMode = watch("pricingMode");
-  const isShared = pricingMode === "shared";
+  const pricingMode = watch('pricingMode');
+  const isShared = pricingMode === 'shared';
 
   // Field prefix logic
   const isTopLevelPricing = variantIndex === undefined;
@@ -57,20 +57,20 @@ export function PricingZone({ hasVariants, variantIndex }: PricingZoneProps) {
               Pricing Mode
             </Label>
             <div className="flex gap-4">
-              {(["shared", "per-variant"] as const).map((mode) => (
+              {(['shared', 'per-variant'] as const).map((mode) => (
                 <label key={mode} className="flex cursor-pointer items-center gap-1.5">
                   <input
                     type="radio"
                     name="pricingMode"
                     value={mode}
                     checked={pricingMode === mode}
-                    onChange={() => setValue("pricingMode", mode)}
+                    onChange={() => setValue('pricingMode', mode)}
                     className="h-3.5 w-3.5 accent-primary"
                   />
                   <span className="text-sm">
-                    {mode === "shared"
-                      ? "Same price for all variants"
-                      : "Different price per variant"}
+                    {mode === 'shared'
+                      ? 'Same price for all variants'
+                      : 'Different price per variant'}
                   </span>
                 </label>
               ))}
@@ -90,13 +90,13 @@ export function PricingZone({ hasVariants, variantIndex }: PricingZoneProps) {
 
         {/* Price fields */}
         <div className="grid grid-cols-3 gap-3">
-          <PriceInput name={getFieldName("BasePrice")} label="Base Price" required />
+          <PriceInput name={getFieldName('BasePrice')} label="Base Price" required />
           <PriceInput
-            name={getFieldName("StrikePrice")}
+            name={getFieldName('StrikePrice')}
             label="Original Price"
             hint="Shown as strikethrough"
           />
-          <PriceInput name={getFieldName("CostPrice")} label="Cost Price" hint="Internal only" />
+          <PriceInput name={getFieldName('CostPrice')} label="Cost Price" hint="Internal only" />
         </div>
       </CardContent>
     </Card>

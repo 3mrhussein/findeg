@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@findeg/ui";
-import { Progress } from "@findeg/ui";
-import { ArrowRight, CheckCircle2, AlertCircle } from "lucide-react";
-import { Link } from "@i18n/navigation";
-import { useTranslations } from "next-intl";
-import { CatalogHealthStats } from "@findeg/backend/features/administration/domain/types";
+import * as React from 'react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@findeg/ui';
+import { Progress } from '@findeg/ui';
+import { ArrowRight, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Link } from '@i18n/navigation';
+import { useTranslations } from 'next-intl';
+import { CatalogHealthStats } from '@findeg/backend/features/administration/domain/types';
 
 interface CatalogCompletionBoardProps {
   stats: CatalogHealthStats;
 }
 
 export function CatalogCompletionBoard({ stats }: CatalogCompletionBoardProps) {
-  const t = useTranslations("Administration.Dashboard.CatalogHealth");
+  const t = useTranslations('Administration.Dashboard.CatalogHealth');
 
   const completionPercentage =
     stats.totalProducts > 0 ? Math.round((stats.fullyComplete / stats.totalProducts) * 100) : 0;
@@ -24,16 +24,16 @@ export function CatalogCompletionBoard({ stats }: CatalogCompletionBoardProps) {
         <div className="flex items-center justify-between">
           <div>
             <CardTitle className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-              {t("Title")}
+              {t('Title')}
             </CardTitle>
-            <CardDescription className="text-sm mt-1">{t("Description")}</CardDescription>
+            <CardDescription className="text-sm mt-1">{t('Description')}</CardDescription>
           </div>
           <div className="text-right">
             <div className="text-3xl font-bold text-slate-900 dark:text-slate-100">
               {completionPercentage}%
             </div>
             <div className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-              {t("OverallScore")}
+              {t('OverallScore')}
             </div>
           </div>
         </div>
@@ -41,49 +41,49 @@ export function CatalogCompletionBoard({ stats }: CatalogCompletionBoardProps) {
       <CardContent className="p-0">
         <div className="divide-y divide-slate-100 dark:divide-slate-800">
           <CompletionRow
-            title={t("FullyComplete")}
+            title={t('FullyComplete')}
             count={stats.fullyComplete}
             total={stats.totalProducts}
             href="/products"
             isSuccessRow={true}
-            suffix={t("AllSet")}
-            allSet={t("AllSet")}
+            suffix={t('AllSet')}
+            allSet={t('AllSet')}
           />
           <CompletionRow
-            title={t("MissingCategory")}
+            title={t('MissingCategory')}
             count={stats.missingCategory}
             total={stats.totalProducts}
             href="/products?filter=missing_category"
             isCritical={true}
-            suffix={t("NeedsAttention")}
-            allSet={t("AllSet")}
+            suffix={t('NeedsAttention')}
+            allSet={t('AllSet')}
           />
           <CompletionRow
-            title={t("MissingImages")}
+            title={t('MissingImages')}
             count={stats.missingImages}
             total={stats.totalProducts}
             href="/products?filter=missing_images"
             isCritical={true}
-            suffix={t("NeedsAttention")}
-            allSet={t("AllSet")}
+            suffix={t('NeedsAttention')}
+            allSet={t('AllSet')}
           />
           <CompletionRow
-            title={t("MissingPrice")}
+            title={t('MissingPrice')}
             count={stats.missingPrice}
             total={stats.totalProducts}
             href="/products?filter=missing_price"
             isCritical={true}
-            suffix={t("NeedsAttention")}
-            allSet={t("AllSet")}
+            suffix={t('NeedsAttention')}
+            allSet={t('AllSet')}
           />
           <CompletionRow
-            title={t("DraftProducts")}
+            title={t('DraftProducts')}
             count={stats.draftProducts}
             total={stats.totalProducts}
             href="/products?filter=draft"
             isCritical={false}
-            suffix={t("NeedsAttention")}
-            allSet={t("AllSet")}
+            suffix={t('NeedsAttention')}
+            allSet={t('AllSet')}
           />
         </div>
       </CardContent>
@@ -151,12 +151,12 @@ function CompletionRow({
               className="h-2 w-full"
               indicatorClassName={
                 isHealthy
-                  ? "bg-emerald-500"
+                  ? 'bg-emerald-500'
                   : isSuccessRow
-                    ? "bg-emerald-500"
+                    ? 'bg-emerald-500'
                     : isCritical
-                      ? "bg-rose-500"
-                      : "bg-amber-500"
+                      ? 'bg-rose-500'
+                      : 'bg-amber-500'
               }
             />
           </div>

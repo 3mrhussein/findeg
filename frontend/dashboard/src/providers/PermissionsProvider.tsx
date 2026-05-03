@@ -6,17 +6,17 @@
  * and exposes it via a React Context to the rest of the component tree.
  */
 
-"use client";
+'use client';
 
-import React, { createContext, useContext, useMemo } from "react";
+import React, { createContext, useContext, useMemo } from 'react';
 import {
   hasPermission,
   systemAdmin as checkSystemAdmin,
   hasAnyPermission,
   hasAllPermissions,
-  PermissionCode,
   SessionPayload,
-} from "@findeg/backend/features/core";
+} from '@findeg/backend/features/core';
+import type { PermissionCode } from '@findeg/db';
 
 /**
  * The set of helpers available to any component nested within a PermissionsProvider.
@@ -118,7 +118,7 @@ export function PermissionsProvider({
 export function usePermissions(): PermissionsContextValue {
   const ctx = useContext(PermissionsContext);
   if (!ctx) {
-    throw new Error("usePermissions() must be used inside <PermissionsProvider>");
+    throw new Error('usePermissions() must be used inside <PermissionsProvider>');
   }
   return ctx;
 }

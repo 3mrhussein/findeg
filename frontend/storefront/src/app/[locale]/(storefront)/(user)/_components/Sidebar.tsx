@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { Link, usePathname } from "@i18n/navigation";
-import { cn } from "@lib/utils";
-import { Button } from "@findeg/ui";
-import { IconTooltip } from "@findeg/ui";
-import { LayoutDashboard, Package, ShoppingCart, Users, Settings, Menu } from "lucide-react";
-import { Sheet, SheetContent, SheetTrigger } from "@findeg/ui";
-import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { Link, usePathname } from '@i18n/navigation';
+import { cn } from '@lib/utils';
+import { Button } from '@findeg/ui';
+import { IconTooltip } from '@findeg/ui';
+import { LayoutDashboard, Package, ShoppingCart, Users, Settings, Menu } from 'lucide-react';
+import { Sheet, SheetContent, SheetTrigger } from '@findeg/ui';
+import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 /**
  * Sidebar for the user dashboard (My Account).
@@ -15,26 +15,26 @@ import { useTranslations } from "next-intl";
 export function Sidebar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-  const t = useTranslations("Pages.MyAccount");
+  const t = useTranslations('Pages.MyAccount');
 
   const routes = [
     {
-      href: "/my-account",
-      label: t("Profile"),
+      href: '/my-account',
+      label: t('Profile'),
       icon: LayoutDashboard,
-      active: pathname === "/my-account",
+      active: pathname === '/my-account',
     },
     {
-      href: "/my-account/orders",
-      label: t("Orders"),
+      href: '/my-account/orders',
+      label: t('Orders'),
       icon: ShoppingCart,
-      active: pathname.includes("/my-account/orders"),
+      active: pathname.includes('/my-account/orders'),
     },
     {
-      href: "/my-account/settings",
-      label: t("Settings"),
+      href: '/my-account/settings',
+      label: t('Settings'),
       icon: Settings,
-      active: pathname.includes("/my-account/settings"),
+      active: pathname.includes('/my-account/settings'),
     },
   ];
 
@@ -54,8 +54,8 @@ export function Sidebar() {
                   key={route.href}
                   href={route.href}
                   className={cn(
-                    "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary",
-                    route.active ? "bg-muted text-primary" : "text-muted-foreground",
+                    'flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary',
+                    route.active ? 'bg-muted text-primary' : 'text-muted-foreground',
                   )}
                 >
                   <route.icon className="h-4 w-4" />
@@ -100,8 +100,8 @@ export function Sidebar() {
                     href={route.href}
                     onClick={() => setIsOpen(false)}
                     className={cn(
-                      "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary",
-                      route.active ? "bg-muted text-primary" : "text-muted-foreground",
+                      'flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary',
+                      route.active ? 'bg-muted text-primary' : 'text-muted-foreground',
                     )}
                   >
                     <route.icon className="h-4 w-4" />

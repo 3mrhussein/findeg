@@ -16,9 +16,9 @@
  *   ❌ [doc] @param id The id [doc]   → obvious from the parameter name
  *   ❌ Empty JSDoc blocks             → pure noise
  */
-import nextConfig from "eslint-config-next/core-web-vitals";
-import jsdoc from "eslint-plugin-jsdoc";
-import prettierRecommended from "eslint-plugin-prettier/recommended";
+import nextConfig from 'eslint-config-next/core-web-vitals';
+import jsdoc from 'eslint-plugin-jsdoc';
+import prettierRecommended from 'eslint-plugin-prettier/recommended';
 
 const config = [
   ...nextConfig,
@@ -27,55 +27,55 @@ const config = [
     plugins: {
       jsdoc,
     },
-    ignores: [".next/**", "node_modules/**"],
+    ignores: ['.next/**', 'node_modules/**'],
     rules: {
-      "no-restricted-imports": [
-        "error",
+      'no-restricted-imports': [
+        'error',
         {
           paths: [
             {
-              name: "next/navigation",
-              importNames: ["useRouter", "usePathname", "redirect", "Link"],
-              message: "Please use @i18n/navigation instead to ensure localized routing.",
+              name: 'next/navigation',
+              importNames: ['useRouter', 'usePathname', 'redirect', 'Link'],
+              message: 'Please use @i18n/navigation instead to ensure localized routing.',
             },
             {
-              name: "next/link",
-              message: "Please use @i18n/navigation instead to ensure localized routing.",
+              name: 'next/link',
+              message: 'Please use @i18n/navigation instead to ensure localized routing.',
             },
           ],
           patterns: [
-            "@presentation/storefront/*",
-            "src/presentation/storefront/*",
-            "@features/**/presentation/components/**",
-            "@features/**/presentation/hoc/**",
-            "src/features/**/presentation/components/**",
-            "src/features/**/presentation/hoc/**",
+            '@presentation/storefront/*',
+            'src/presentation/storefront/*',
+            '@features/**/presentation/components/**',
+            '@features/**/presentation/hoc/**',
+            'src/features/**/presentation/components/**',
+            'src/features/**/presentation/hoc/**',
           ],
         },
       ],
-      "jsdoc/check-alignment": "warn",
-      "jsdoc/check-syntax": "warn",
-      "jsdoc/check-tag-names": "warn",
-      "jsdoc/no-undefined-types": "warn",
-      "jsdoc/check-types": "warn",
-      "jsdoc/check-values": "warn",
-      "jsdoc/no-multi-asterisks": "warn",
+      'jsdoc/check-alignment': 'warn',
+      'jsdoc/check-syntax': 'warn',
+      'jsdoc/check-tag-names': 'warn',
+      'jsdoc/no-undefined-types': 'warn',
+      'jsdoc/check-types': 'warn',
+      'jsdoc/check-values': 'warn',
+      'jsdoc/no-multi-asterisks': 'warn',
     },
   },
   {
-    files: ["src/features/**/presentation/**/*.{tsx}"],
+    files: ['src/features/**/presentation/**/*.{tsx}'],
     rules: {
-      "no-restricted-syntax": [
-        "error",
+      'no-restricted-syntax': [
+        'error',
         {
-          selector: "JSXElement",
+          selector: 'JSXElement',
           message:
-            "JSX is not allowed in src/features/**/presentation/**. Move components into src/app/**/_components or src/components/shared.",
+            'JSX is not allowed in src/features/**/presentation/**. Move components into src/app/**/_components or src/components/shared.',
         },
         {
-          selector: "JSXFragment",
+          selector: 'JSXFragment',
           message:
-            "JSX is not allowed in src/features/**/presentation/**. Move components into src/app/**/_components or src/components/shared.",
+            'JSX is not allowed in src/features/**/presentation/**. Move components into src/app/**/_components or src/components/shared.',
         },
       ],
     },

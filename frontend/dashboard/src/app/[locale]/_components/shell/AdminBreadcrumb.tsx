@@ -1,28 +1,28 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { usePathname } from "@i18n/navigation";
-import { Link } from "@i18n/navigation";
-import { ChevronRight, Home } from "lucide-react";
-import { NavItem } from "@/interfaces";
-import { ADMIN_NAV } from "@/constants";
+import * as React from 'react';
+import { usePathname } from '@i18n/navigation';
+import { Link } from '@i18n/navigation';
+import { ChevronRight, Home } from 'lucide-react';
+import { NavItem } from '@/interfaces';
+import { ADMIN_NAV } from '@/constants';
 
 export interface AdminBreadcrumbProps {
   locale?: string;
 }
 
-export function AdminBreadcrumb({ locale = "en" }: AdminBreadcrumbProps) {
+export function AdminBreadcrumb({ locale = 'en' }: AdminBreadcrumbProps) {
   const pathname = usePathname();
 
   // Normalize pathname: remove locale
-  const normalizedPathname = pathname.replace(new RegExp(`^/${locale}`), "") || "/";
+  const normalizedPathname = pathname.replace(new RegExp(`^/${locale}`), '') || '/';
 
   // Do not render breadcrumbs on dashboard (root)
-  if (normalizedPathname === "/") {
+  if (normalizedPathname === '/') {
     return null;
   }
 
-  const segments = normalizedPathname.split("/").filter(Boolean);
+  const segments = normalizedPathname.split('/').filter(Boolean);
   // Example: segments = ["products", "create"]
 
   // Flatten tree to find labels
@@ -38,22 +38,22 @@ export function AdminBreadcrumb({ locale = "en" }: AdminBreadcrumbProps) {
 
   const getLabelForSegment = (segment: string, currentIndex: number) => {
     // Reconstruct the path up to this segment
-    const segmentPath = `/${segments.slice(0, currentIndex + 1).join("/")}`;
+    const segmentPath = `/${segments.slice(0, currentIndex + 1).join('/')}`;
 
     // Check matching nav item
     const matchingItem = flatNav.find((item) => item.href === segmentPath);
     if (matchingItem) {
-      return locale === "ar" ? matchingItem.labelAr : matchingItem.label;
+      return locale === 'ar' ? matchingItem.labelAr : matchingItem.label;
     }
 
     // Default: capitalize
-    return segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, " ");
+    return segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, ' ');
   };
 
   const breadcrumbs = segments.map((segment, index) => {
     return {
       label: getLabelForSegment(segment, index),
-      href: `/${segments.slice(0, index + 1).join("/")}`,
+      href: `/${segments.slice(0, index + 1).join('/')}`,
       isLast: index === segments.length - 1,
     };
   });

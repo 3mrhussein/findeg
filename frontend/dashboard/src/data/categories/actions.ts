@@ -4,12 +4,12 @@
  * Uses "use server" directive and revalidateTag(, "max") for cache invalidation.
  * Wraps admin service factory calls with proper error handling.
  */
-"use server";
+'use server';
 
-import { revalidatePath, revalidateTag } from "next/cache";
-import { createAdministrationServices } from "@findeg/backend/features/administration";
-import type { CategoryInput } from "@findeg/backend/features/administration/domain/types";
-import { getErrorMessage } from "@lib/type-guards";
+import { revalidatePath, revalidateTag } from 'next/cache';
+import { createAdministrationServices } from '@findeg/backend/features/administration';
+import type { CategoryInput } from '@findeg/backend/features/administration/domain/types';
+import { getErrorMessage } from '@lib/type-guards';
 
 /**
  * Create a new category
@@ -23,12 +23,12 @@ export async function createCategoryAction(input: CategoryInput) {
     const result = await categories.create(input);
 
     // Invalidate all category caches
-    revalidateTag("categories", "max");
-    revalidatePath("/categories");
+    revalidateTag('categories', 'max');
+    revalidatePath('/categories');
 
     return { success: true, data: result };
   } catch (error: unknown) {
-    console.error("[createCategoryAction] Error:", error);
+    console.error('[createCategoryAction] Error:', error);
     return { success: false, error: getErrorMessage(error) };
   }
 }
@@ -46,14 +46,14 @@ export async function updateCategoryAction(id: number, input: CategoryInput) {
     const result = await categories.update(id, input);
 
     // Invalidate category detail and lists
-    revalidateTag("categories", "max");
-    revalidateTag(`category-${id}`, "max");
-    revalidatePath("/categories");
+    revalidateTag('categories', 'max');
+    revalidateTag(`category-${id}`, 'max');
+    revalidatePath('/categories');
     revalidatePath(`/categories/${id}`);
 
     return { success: true, data: result };
   } catch (error: unknown) {
-    console.error("[updateCategoryAction] Error:", error);
+    console.error('[updateCategoryAction] Error:', error);
     return { success: false, error: getErrorMessage(error) };
   }
 }
@@ -70,13 +70,13 @@ export async function deleteCategoryAction(id: number) {
     await categories.delete(id);
 
     // Invalidate all category caches
-    revalidateTag("categories", "max");
-    revalidateTag(`category-${id}`, "max");
-    revalidatePath("/categories");
+    revalidateTag('categories', 'max');
+    revalidateTag(`category-${id}`, 'max');
+    revalidatePath('/categories');
 
     return { success: true };
   } catch (error: unknown) {
-    console.error("[deleteCategoryAction] Error:", error);
+    console.error('[deleteCategoryAction] Error:', error);
     return { success: false, error: getErrorMessage(error) };
   }
 }
@@ -93,12 +93,12 @@ export async function reorderCategoriesAction(items: { id: number; sortOrder: nu
     await categories.reorderCategories(items);
 
     // Invalidate all category caches
-    revalidateTag("categories", "max");
-    revalidatePath("/categories");
+    revalidateTag('categories', 'max');
+    revalidatePath('/categories');
 
     return { success: true };
   } catch (error: unknown) {
-    console.error("[reorderCategoriesAction] Error:", error);
+    console.error('[reorderCategoriesAction] Error:', error);
     return { success: false, error: getErrorMessage(error) };
   }
 }
@@ -110,7 +110,7 @@ export async function moveCategoryUpAction(id: number) {
   try {
     const { categories } = createAdministrationServices();
     await categories.moveCategoryUp(id);
-    revalidateTag("categories", "max");
+    revalidateTag('categories', 'max');
     return { success: true };
   } catch (error: unknown) {
     return { success: false, error: getErrorMessage(error) };
@@ -121,7 +121,7 @@ export async function moveCategoryDownAction(id: number) {
   try {
     const { categories } = createAdministrationServices();
     await categories.moveCategoryDown(id);
-    revalidateTag("categories", "max");
+    revalidateTag('categories', 'max');
     return { success: true };
   } catch (error: unknown) {
     return { success: false, error: getErrorMessage(error) };

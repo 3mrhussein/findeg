@@ -6,13 +6,13 @@
  * Location: src/app/[locale]/admin/(dashboard)/products/[id]/edit/_components/
  */
 
-"use client";
+'use client';
 
-import { useFormContext } from "react-hook-form";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@findeg/ui";
-import { MediaUpload } from "@/app/[locale]/_components/shared/MediaUpload";
-import { Image as ImageIcon } from "lucide-react";
-import type { ProductFormValues } from "@/interfaces";
+import { useFormContext } from 'react-hook-form';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@findeg/ui';
+import { MediaUpload } from '@/app/[locale]/_components/shared/MediaUpload';
+import { Image as ImageIcon } from 'lucide-react';
+import type { ProductFormValues } from '@/interfaces';
 
 /**
  * MediaTab — Product images and gallery
@@ -34,7 +34,7 @@ export function MediaTab() {
         <CardContent>
           <MediaUpload
             images={[]}
-            onChange={(images: any[]) => console.log("Images changed:", images)}
+            onChange={(images: any[]) => console.log('Images changed:', images)}
             maxImages={10}
             label="Upload product images"
           />
@@ -49,7 +49,7 @@ export function MediaTab() {
         </p>
 
         <div className="grid gap-6">
-          {watch("variants")?.map((variant: any, index: number) => (
+          {watch('variants')?.map((variant: any, index: number) => (
             <Card key={variant.id || index}>
               <CardHeader className="py-4">
                 <CardTitle className="text-base font-medium">
@@ -66,12 +66,12 @@ export function MediaTab() {
                     console.log(`Variant ${index} images changed:`, images)
                   }
                   maxImages={5}
-                  label={`Upload images for ${variant.nameEn || "this variant"}`}
+                  label={`Upload images for ${variant.nameEn || 'this variant'}`}
                 />
               </CardContent>
             </Card>
           ))}
-          {(!watch("variants") || watch("variants").length === 0) && (
+          {(!watch('variants') || watch('variants').length === 0) && (
             <div className="text-center py-8 border-2 border-dashed rounded-lg bg-muted/30">
               <p className="text-sm text-muted-foreground">
                 No variants added yet. Manage variants in the &quot;Variants&quot; tab.

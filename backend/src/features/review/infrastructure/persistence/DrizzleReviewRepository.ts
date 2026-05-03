@@ -1,31 +1,31 @@
-import { ID, Rating } from "@findeg/backend/features/core/domain/types/common";
-import { db } from "@findeg/db/connection";
+import { ID, Rating } from '@findeg/backend/features/core/domain/types/common';
+import { db } from '@findeg/db/connection';
 import {
   reviews,
   users,
   reviewHelpfulVotes,
   products,
   type Review as DbReview,
-} from "@findeg/db/schema";
+} from '@findeg/db/schema';
 import {
   IReviewRepository,
   ProductReviewFilters,
   ProductReviewSummary,
-} from "../../application/interfaces/IReviewRepository";
-import { Review } from "../../domain/entities/Review";
-import { and, desc, eq, sql } from "drizzle-orm";
+} from '../../application/interfaces/IReviewRepository';
+import { Review } from '../../domain/entities/Review';
+import { and, desc, eq, sql } from 'drizzle-orm';
 
 type SelectedReviewRow = Pick<
   DbReview,
-  | "id"
-  | "productId"
-  | "userId"
-  | "rating"
-  | "comment"
-  | "isVerifiedPurchase"
-  | "status"
-  | "createdAt"
-  | "updatedAt"
+  | 'id'
+  | 'productId'
+  | 'userId'
+  | 'rating'
+  | 'comment'
+  | 'isVerifiedPurchase'
+  | 'status'
+  | 'createdAt'
+  | 'updatedAt'
 > & {
   helpfulCount?: number | null;
 };
@@ -42,12 +42,12 @@ export class DrizzleReviewRepository implements IReviewRepository {
    *
    */
   private toBoolean(value: unknown): boolean {
-    if (typeof value === "boolean") return value;
-    if (typeof value === "number") return value === 1;
-    if (typeof value === "string") {
+    if (typeof value === 'boolean') return value;
+    if (typeof value === 'number') return value === 1;
+    if (typeof value === 'string') {
       const normalized = value.trim().toLowerCase();
       return (
-        normalized === "true" || normalized === "t" || normalized === "1" || normalized === "yes"
+        normalized === 'true' || normalized === 't' || normalized === '1' || normalized === 'yes'
       );
     }
     return false;
@@ -104,7 +104,7 @@ export class DrizzleReviewRepository implements IReviewRepository {
     dbUser?: { firstName: string | null; lastName: string | null } | null,
   ): Review {
     const resolvedAuthor = dbUser
-      ? [dbUser.firstName, dbUser.lastName].filter(Boolean).join(" ").trim()
+      ? [dbUser.firstName, dbUser.lastName].filter(Boolean).join(' ').trim()
       : undefined;
 
     return {
@@ -177,7 +177,7 @@ export class DrizzleReviewRepository implements IReviewRepository {
     if (filters.verifiedOnly) {
       conditions.push(eq(reviews.isVerifiedPurchase, true));
     }
-    if (typeof filters.rating === "number" && filters.rating >= 1 && filters.rating <= 5) {
+    if (typeof filters.rating === 'number' && filters.rating >= 1 && filters.rating <= 5) {
       conditions.push(sql`FLOOR(CAST(${reviews.rating} AS numeric)) = ${filters.rating}`);
     }
 
@@ -389,7 +389,7 @@ export class DrizzleReviewRepository implements IReviewRepository {
       .insert(reviews)
       .values({
         ...review,
-        rating: review.rating ? String(review.rating) : "0",
+        rating: review.rating ? String(review.rating) : '0',
         productId: review.productId!,
       } as unknown as typeof reviews.$inferInsert)
       .returning({

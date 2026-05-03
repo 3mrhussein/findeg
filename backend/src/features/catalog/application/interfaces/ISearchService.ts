@@ -1,6 +1,6 @@
-import { type ID } from "@findeg/backend/features/core/domain/types/common";
-import { type Locale } from "@findeg/backend/features/core/domain/value-objects";
-import { type Product } from "../../domain/entities/Product";
+import { type ID } from '@findeg/backend/features/core/domain/types/common';
+import { type Locale } from '@findeg/backend/features/core/domain/value-objects';
+import { type Product } from '../../domain/entities/Product';
 
 export interface SearchParams {
   query: string;
@@ -10,7 +10,7 @@ export interface SearchParams {
   minPrice?: number;
   maxPrice?: number;
   inStockOnly?: boolean;
-  sort?: "relevance" | "price_asc" | "price_desc" | "newest" | "rating";
+  sort?: 'relevance' | 'price_asc' | 'price_desc' | 'newest' | 'rating';
   limit?: number;
   offset?: number;
   page?: number;
@@ -25,7 +25,7 @@ export interface Suggestion {
   id: ID;
   name: string;
   slug?: string;
-  type: "product" | "category";
+  type: 'product' | 'category';
   imageUrl?: string;
 }
 

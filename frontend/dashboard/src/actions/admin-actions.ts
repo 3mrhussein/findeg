@@ -1,4 +1,4 @@
-"use server";
+'use server';
 
 /**
  * Dashboard Admin Actions Registry
@@ -17,7 +17,7 @@ import {
   generateVariants,
   checkSkuAvailable,
   checkSlugAvailable,
-} from "@data/products/actions";
+} from '@data/products/actions';
 
 export {
   createProduct,
@@ -40,7 +40,7 @@ import {
   toggleTagStatusAction,
   getTagProductCountAction,
   getDistinctTagGroupsAction,
-} from "@data/tags/actions";
+} from '@data/tags/actions';
 
 export {
   createTagAction as createTag,
@@ -62,7 +62,7 @@ import {
   moveCategoryUpAction,
   moveCategoryDownAction,
   checkCategorySlugAvailableAction,
-} from "@data/categories/actions";
+} from '@data/categories/actions';
 
 export {
   createCategoryAction as createCategory,
@@ -80,7 +80,7 @@ import {
   updateBrandAction,
   deleteBrandAction,
   toggleBrandStatusAction,
-} from "@data/brands/actions";
+} from '@data/brands/actions';
 
 export {
   createBrandAction as createBrand,
@@ -95,7 +95,7 @@ import {
   updateCollectionAction,
   deleteCollectionAction,
   reorderCollectionsAction,
-} from "@data/collections/actions";
+} from '@data/collections/actions';
 
 export {
   createCollectionAction as createCollection,
@@ -105,7 +105,7 @@ export {
 };
 
 // Order Actions
-import { updateOrderStatusAction, updateOrderPaymentStatusAction } from "@data/orders/actions";
+import { updateOrderStatusAction, updateOrderPaymentStatusAction } from '@data/orders/actions';
 
 export {
   updateOrderStatusAction as updateOrderStatus,
@@ -113,16 +113,16 @@ export {
 };
 
 // Inventory Actions
-import { updateStock, bulkUpdateStock } from "@data/inventory/actions";
+import { updateStock, bulkUpdateStock } from '@data/inventory/actions';
 export { updateStock, bulkUpdateStock };
 
 // Authentication
-import { logoutAction } from "./auth-actions";
+import { logoutAction } from './auth-actions';
 export { logoutAction as logout };
 
 /**
  * Log request action - stubbed implementation
  */
 export async function logRequestAction(data: any) {
-  console.log("[dashboard] logRequestAction (stubbed):", data);
+  console.log('[dashboard] logRequestAction (stubbed):', data);
 }

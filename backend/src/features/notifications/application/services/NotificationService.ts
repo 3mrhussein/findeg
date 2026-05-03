@@ -1,6 +1,6 @@
-import { INotificationService } from "../interfaces/INotificationService";
-import { INotificationRepository } from "../interfaces/INotificationRepository";
-import { Notification } from "@findeg/db/schema";
+import { INotificationService } from '../interfaces/INotificationService';
+import { INotificationRepository } from '../interfaces/INotificationRepository';
+import { Notification } from '@findeg/db/schema';
 
 /**
  * Notification Application Service
@@ -32,7 +32,7 @@ export class NotificationService implements INotificationService {
       });
     } catch (error) {
       // Fire-and-forget: log but don't crash
-      console.error("[NotificationService] Create failed:", error);
+      console.error('[NotificationService] Create failed:', error);
     }
   }
 

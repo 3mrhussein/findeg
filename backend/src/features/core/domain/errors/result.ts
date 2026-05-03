@@ -1,5 +1,5 @@
-import { z, ZodTypeAny } from "zod";
-import { AppErrorCode, getErrorDefinition } from "./error-catalog";
+import { z, ZodTypeAny } from 'zod';
+import { AppErrorCode, getErrorDefinition } from './error-catalog';
 
 export type Result<T> = { ok: true; value: T } | { ok: false; error: ResultError };
 
@@ -36,7 +36,7 @@ export function fail<T>(code: AppErrorCode, details?: Record<string, unknown>): 
 export function validateWithResult<TSchema extends ZodTypeAny>(
   schema: TSchema,
   input: unknown,
-  invalidCode: AppErrorCode = "VALIDATION_INVALID_REQUEST",
+  invalidCode: AppErrorCode = 'VALIDATION_INVALID_REQUEST',
 ): Result<z.output<TSchema>> {
   const parsed = schema.safeParse(input);
   if (!parsed.success) {

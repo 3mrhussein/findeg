@@ -5,8 +5,9 @@
  * Separate from IAdminCategoryService which includes CRUD operations.
  */
 
-import { Category } from "@findeg/backend/features/catalog/domain/entities/Category";
-import type { Locale } from "@findeg/backend/features/core/domain/value-objects";
+import { Category } from '@findeg/backend/features/catalog/domain/entities/Category';
+import type { Locale } from '@findeg/backend/features/core/domain/value-objects';
+import type { CategoryInput } from '@findeg/backend/features/administration/domain/types';
 
 export interface ICategoryService {
   /**
@@ -44,7 +45,7 @@ export interface ICategoryService {
    */
   getTree(language?: Locale): Promise<Category[]>;
 
-  create(input: any): Promise<Category>;
-  update(id: number, input: any): Promise<Category>;
+  create(input: CategoryInput): Promise<Category>;
+  update(id: number, input: CategoryInput): Promise<Category>;
   delete(id: number): Promise<void>;
 }

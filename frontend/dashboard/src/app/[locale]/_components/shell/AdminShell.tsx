@@ -1,9 +1,9 @@
-import * as React from "react";
-import { AdminSidebar } from "./AdminSidebar";
-import { AdminHeader } from "./AdminHeader";
-import { AdminBreadcrumb } from "./AdminBreadcrumb";
-import { SidebarProvider } from "./SidebarContext";
-import { logoutAction as logout } from "@actions/auth-actions";
+import * as React from 'react';
+import { AdminSidebar } from './AdminSidebar';
+import { AdminHeader } from './AdminHeader';
+import { AdminBreadcrumb } from './AdminBreadcrumb';
+import { SidebarProvider } from './SidebarContext';
+import { logoutAction as logout } from '@actions/auth-actions';
 
 export interface AdminShellProps {
   children: React.ReactNode;
@@ -15,13 +15,13 @@ export interface AdminShellProps {
 
 export function AdminShell({
   children,
-  locale = "en",
+  locale = 'en',
   userEmail,
   userName,
   userRole,
 }: AdminShellProps) {
   const handleLogout = async () => {
-    "use server";
+    'use server';
     await logout();
   };
 

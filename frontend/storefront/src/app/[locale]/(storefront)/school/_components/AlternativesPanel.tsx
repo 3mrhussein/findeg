@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import React from "react";
-import { useTranslations } from "next-intl";
-import { Button } from "@findeg/ui";
-import { Check, X } from "lucide-react";
-import { cn } from "@lib/utils";
+import React from 'react';
+import { useTranslations } from 'next-intl';
+import { Button } from '@findeg/ui';
+import { Check, X } from 'lucide-react';
+import { cn } from '@lib/utils';
 
 interface Alternative {
   id: string;
@@ -30,12 +30,12 @@ export function AlternativesPanel({
   onSelect,
   onClose,
 }: AlternativesPanelProps) {
-  const t = useTranslations("School.ParentExperience.Alternatives");
+  const t = useTranslations('School.ParentExperience.Alternatives');
 
   return (
     <div className="bg-white border rounded-2xl shadow-xl overflow-hidden animate-in slide-in-from-bottom-4 duration-300">
       <div className="p-4 border-b bg-slate-50 flex items-center justify-between">
-        <h3 className="font-bold text-sm text-slate-700">{t("Title")}</h3>
+        <h3 className="font-bold text-sm text-slate-700">{t('Title')}</h3>
         <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full" onClick={onClose}>
           <X className="w-4 h-4" />
         </Button>
@@ -50,13 +50,13 @@ export function AlternativesPanel({
                 key={alt.id}
                 onClick={() => onSelect(alt.id)}
                 className={cn(
-                  "flex items-center gap-3 p-3 rounded-xl transition-all text-left",
-                  isSelected ? "bg-primary/5 ring-1 ring-primary/20" : "hover:bg-slate-50",
+                  'flex items-center gap-3 p-3 rounded-xl transition-all text-left',
+                  isSelected ? 'bg-primary/5 ring-1 ring-primary/20' : 'hover:bg-slate-50',
                 )}
               >
                 <div className="w-12 h-12 bg-white rounded-lg border flex items-center justify-center p-1 shrink-0">
                   <img
-                    src={alt.image || "https://placehold.co/50x50"}
+                    src={alt.image || 'https://placehold.co/50x50'}
                     alt={alt.name}
                     className="w-full h-full object-contain"
                   />
@@ -69,7 +69,7 @@ export function AlternativesPanel({
                   <p className="font-bold text-sm">{alt.price} EGP</p>
                   {isSelected && (
                     <span className="flex items-center gap-1 text-[10px] text-primary font-bold uppercase">
-                      <Check className="w-3 h-3" /> {t("Selected")}
+                      <Check className="w-3 h-3" /> {t('Selected')}
                     </span>
                   )}
                 </div>

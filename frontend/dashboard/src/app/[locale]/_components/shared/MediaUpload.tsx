@@ -7,15 +7,15 @@
  * Location: src/app/[locale]/admin/_components/shared/ (admin-wide)
  */
 
-"use client";
+'use client';
 
-import * as React from "react";
-import { Plus, X, GripVertical } from "lucide-react";
-import { Input } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import { cn } from "@lib/utils";
-import Image from "next/image";
+import * as React from 'react';
+import { Plus, X, GripVertical } from 'lucide-react';
+import { Input } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { Label } from '@findeg/ui';
+import { cn } from '@lib/utils';
+import Image from 'next/image';
 
 export interface MediaItem {
   /** Image URL */
@@ -71,7 +71,7 @@ export function MediaUpload({
   helperText,
   className,
 }: MediaUploadProps) {
-  const [newUrl, setNewUrl] = React.useState("");
+  const [newUrl, setNewUrl] = React.useState('');
 
   const handleAddImage = () => {
     if (!newUrl.trim()) return;
@@ -83,7 +83,7 @@ export function MediaUpload({
     };
 
     onChange([...images, newImage]);
-    setNewUrl("");
+    setNewUrl('');
   };
 
   const handleRemoveImage = (index: number) => {
@@ -103,7 +103,7 @@ export function MediaUpload({
   const canAddMore = images.length < maxImages;
 
   return (
-    <div className={cn("space-y-3", className)}>
+    <div className={cn('space-y-3', className)}>
       {label && (
         <Label className="text-sm font-medium">
           {label}
@@ -118,8 +118,8 @@ export function MediaUpload({
             <div
               key={index}
               className={cn(
-                "group relative aspect-square overflow-hidden rounded-lg border-2",
-                img.featured ? "border-primary" : "border-border",
+                'group relative aspect-square overflow-hidden rounded-lg border-2',
+                img.featured ? 'border-primary' : 'border-border',
               )}
             >
               {/* Image */}
@@ -130,7 +130,7 @@ export function MediaUpload({
                 className="object-cover"
                 sizes="150px"
                 onError={(e) => {
-                  (e.target as HTMLImageElement).src = "/placeholder-image.png";
+                  (e.target as HTMLImageElement).src = '/placeholder-image.png';
                 }}
               />
 
@@ -143,7 +143,7 @@ export function MediaUpload({
                     variant="secondary"
                     className="h-8 w-8"
                     onClick={() => handleSetFeatured(index)}
-                    title={img.featured ? "Featured" : "Set as featured"}
+                    title={img.featured ? 'Featured' : 'Set as featured'}
                   >
                     <span className="text-lg">★</span>
                   </Button>
@@ -180,7 +180,7 @@ export function MediaUpload({
             value={newUrl}
             onChange={(e) => setNewUrl(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === "Enter") {
+              if (e.key === 'Enter') {
                 e.preventDefault();
                 handleAddImage();
               }

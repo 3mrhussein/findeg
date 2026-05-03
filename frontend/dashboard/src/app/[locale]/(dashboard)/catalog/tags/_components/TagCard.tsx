@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { useTranslations, useLocale } from "next-intl";
-import { Tag } from "@findeg/backend/features/catalog";
-import { Card, CardContent } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Edit, Trash2, Eye, EyeOff } from "lucide-react";
-import { getTagDisplayName } from "@lib/tag-utils";
-import { cn } from "@lib/utils";
-import * as Icons from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import { useTranslations, useLocale } from 'next-intl';
+import { Tag } from '@findeg/backend/features/catalog';
+import { Card, CardContent } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { Edit, Trash2, Eye, EyeOff } from 'lucide-react';
+import { getTagDisplayName } from '@lib/tag-utils';
+import { cn } from '@lib/utils';
+import * as Icons from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 interface TagCardProps {
   tag: Tag;
@@ -18,21 +18,21 @@ interface TagCardProps {
 }
 
 export function TagCard({ tag, onEdit, onDelete, onToggle }: TagCardProps) {
-  const t = useTranslations("Administration.Catalog.Tags");
-  const locale = useLocale() as "en" | "ar";
+  const t = useTranslations('Administration.Catalog.Tags');
+  const locale = useLocale() as 'en' | 'ar';
   const displayName = getTagDisplayName(tag.key, locale);
 
   // Dynamically render the icon
   // Note: the icon string should match a lucide-react export Name
   const IconComponent =
-    ((Icons as unknown as Record<string, LucideIcon>)[tag.icon || "Tag"] as LucideIcon) ||
+    ((Icons as unknown as Record<string, LucideIcon>)[tag.icon || 'Tag'] as LucideIcon) ||
     Icons.Tag;
 
   return (
     <Card
       className={cn(
-        "overflow-hidden transition-all duration-200 hover:shadow-md",
-        !tag.isActive && "opacity-60 grayscale-[0.5]",
+        'overflow-hidden transition-all duration-200 hover:shadow-md',
+        !tag.isActive && 'opacity-60 grayscale-[0.5]',
       )}
     >
       <CardContent className="p-5 flex flex-col h-full relative">
@@ -41,8 +41,8 @@ export function TagCard({ tag, onEdit, onDelete, onToggle }: TagCardProps) {
             <div
               className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
               style={{
-                backgroundColor: tag.color ? `${tag.color}20` : "#f3f4f6",
-                color: tag.color || "#4b5563",
+                backgroundColor: tag.color ? `${tag.color}20` : '#f3f4f6',
+                color: tag.color || '#4b5563',
               }}
             >
               <IconComponent className="w-5 h-5" />
@@ -52,8 +52,8 @@ export function TagCard({ tag, onEdit, onDelete, onToggle }: TagCardProps) {
                 {displayName}
                 <span
                   className={cn(
-                    "w-2 h-2 rounded-full inline-block",
-                    tag.isActive ? "bg-green-500" : "bg-gray-300",
+                    'w-2 h-2 rounded-full inline-block',
+                    tag.isActive ? 'bg-green-500' : 'bg-gray-300',
                   )}
                 />
               </h3>
@@ -72,7 +72,7 @@ export function TagCard({ tag, onEdit, onDelete, onToggle }: TagCardProps) {
               size="icon"
               className="h-8 w-8 text-muted-foreground hover:text-primary"
               onClick={() => onToggle(tag)}
-              title={tag.isActive ? t("FieldStatus") : t("FieldStatus")}
+              title={tag.isActive ? t('FieldStatus') : t('FieldStatus')}
             >
               {tag.isActive ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
             </Button>
@@ -81,7 +81,7 @@ export function TagCard({ tag, onEdit, onDelete, onToggle }: TagCardProps) {
               size="icon"
               className="h-8 w-8 text-muted-foreground hover:text-blue-600"
               onClick={() => onEdit(tag)}
-              title={t("EditTag")}
+              title={t('EditTag')}
             >
               <Edit className="w-4 h-4" />
             </Button>
@@ -90,7 +90,7 @@ export function TagCard({ tag, onEdit, onDelete, onToggle }: TagCardProps) {
               size="icon"
               className="h-8 w-8 text-muted-foreground hover:text-destructive"
               onClick={() => onDelete(tag)}
-              title={t("DeleteConfirmTitle", { key: tag.key })}
+              title={t('DeleteConfirmTitle', { key: tag.key })}
             >
               <Trash2 className="w-4 h-4" />
             </Button>

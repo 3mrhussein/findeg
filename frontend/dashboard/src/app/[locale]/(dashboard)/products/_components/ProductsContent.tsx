@@ -5,17 +5,17 @@
  * Used within Suspense boundaries in products page for progressive rendering.
  */
 
-import { parse } from "@findeg/backend/features/core";
-import { getTranslations } from "next-intl/server";
-import { PageHeader } from "@/app/[locale]/_components/shared/PageHeader";
-import { Button } from "@findeg/ui";
-import { Link } from "@i18n/navigation";
-import { Plus } from "lucide-react";
-import type { ProductListFilters } from "@findeg/backend/features/administration";
-import { ProductsClient } from "./ProductsClient";
-import { getProducts } from "@data/products/queries";
-import { getAllCategories } from "@data/resources/queries";
-import { getAllBrands } from "@data/resources/queries";
+import { parse } from '@findeg/backend/features/core';
+import { getTranslations } from 'next-intl/server';
+import { PageHeader } from '@/app/[locale]/_components/shared/PageHeader';
+import { Button } from '@findeg/ui';
+import { Link } from '@i18n/navigation';
+import { Plus } from 'lucide-react';
+import { ProductsClient } from './ProductsClient';
+import { getProducts } from '@data/products/queries';
+import { getAllCategories } from '@data/resources/queries';
+import { getAllBrands } from '@data/resources/queries';
+import { ProductListFilters } from '@findeg/backend/features/administration/application/interfaces/IAdminProductService';
 
 interface ProductsContentProps {
   locale: string;
@@ -24,7 +24,7 @@ interface ProductsContentProps {
 
 export async function ProductsContent({ locale, filters }: ProductsContentProps) {
   const resolvedLocale = parse(locale);
-  const t = await getTranslations("Administration.Catalog.Products");
+  const t = await getTranslations('Administration.Catalog.Products');
 
   // Fetch data from data layer
   const [initialData, categories, brands] = await Promise.all([
@@ -36,13 +36,13 @@ export async function ProductsContent({ locale, filters }: ProductsContentProps)
   return (
     <>
       <PageHeader
-        title={t("Title")}
+        title={t('Title')}
         description={`${initialData.total || 0} products in catalog`}
         actions={
           <Button asChild>
             <Link href={`/${locale}/products/new`}>
               <Plus className="h-4 w-4 me-2" />
-              {t("AddProduct")}
+              {t('AddProduct')}
             </Link>
           </Button>
         }

@@ -5,44 +5,17 @@
  * for proper display and address form pre-filling.
  */
 
-import { ID, Email, PortalRole } from "@findeg/backend/features/core/domain/types/common";
-import type {
-  AuthProvider,
-  PaymentProvider,
-  PermissionCode,
-  RoleId,
-  RoleScope,
-} from "@findeg/backend/features/core/domain/value-objects";
-import { type InferSelectModel } from "drizzle-orm";
-import { users } from "@findeg/db/schema";
+import {
+  type PermissionCode,
+  type RoleId,
+  type LinkedAuthAccount,
+  type OrganizationMembership,
+  type SavedPaymentMethod,
+} from '@findeg/db';
+import { type InferSelectModel } from 'drizzle-orm';
+import { users } from '@findeg/db/schema';
 
-export interface LinkedAuthAccount {
-  id: string;
-  provider: AuthProvider;
-  providerAccountId: string;
-  isPrimary?: boolean;
-}
 
-export interface UserRoleGrant {
-  roleId: RoleId;
-  scope: RoleScope;
-  organizationId?: string;
-  permissionCodes?: PermissionCode[];
-}
-
-export interface OrganizationMembership {
-  id: string;
-  organizationId: string;
-  status: "active" | "invited" | "suspended";
-  roleGrants: UserRoleGrant[];
-}
-
-export interface SavedPaymentMethod {
-  id: string;
-  provider: PaymentProvider;
-  tokenReference: string;
-  isDefault: boolean;
-}
 
 /**
  * Domain Entity: User
@@ -67,6 +40,6 @@ export interface User extends InferSelectModel<typeof users> {
  * Derives a full name from a user's `firstName` and `lastName`.
  * Falls back to an empty string if neither is provided.
  */
-export const getUserFullName = (user: Pick<User, "firstName" | "lastName">) => {
-  return [user.firstName, user.lastName].filter(Boolean).join(" ").trim();
+export const getUserFullName = (user: Pick<User, 'firstName' | 'lastName'>) => {
+  return [user.firstName, user.lastName].filter(Boolean).join(' ').trim();
 };

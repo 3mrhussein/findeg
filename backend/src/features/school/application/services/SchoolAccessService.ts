@@ -1,17 +1,17 @@
-import { ID } from "@findeg/backend/features/core/domain/types/common";
-import { ISchoolAccessRepository } from "../interfaces/ISchoolAccessRepository";
+import { ID } from '@findeg/backend/features/core/domain/types/common';
+import { ISchoolAccessRepository } from '../interfaces/ISchoolAccessRepository';
 import {
   ISchoolAccessService,
   AccessState,
   VerifyCodeResult,
-} from "../interfaces/ISchoolAccessService";
+} from '../interfaces/ISchoolAccessService';
 import {
   SchoolListAccessGrant,
   SchoolListAccessRequest,
   SchoolListAccessToken,
-} from "@findeg/db/schema";
-import { ISchoolListRepository } from "@findeg/backend/features/catalog/application/interfaces/ISchoolListRepository";
-import { IUserRepository } from "@findeg/backend/features/identity/application/interfaces/IUserRepository";
+} from '@findeg/db/schema';
+import { ISchoolListRepository } from '@findeg/backend/features/catalog/application/interfaces/ISchoolListRepository';
+import { IUserRepository } from '@findeg/backend/features/identity/application/interfaces/IUserRepository';
 
 /**
  *
@@ -33,7 +33,7 @@ export class SchoolAccessService implements ISchoolAccessService {
    *
    */
   async getAccessState(listId: ID, userId: ID | null): Promise<AccessState> {
-    const list = await this.schoolListRepo.getItem(listId); // This method should be on ISchoolListRepository or I'll need to check the schema directly
+    // const list = await this.schoolListRepo.getItem(listId); // This method should be on ISchoolListRepository or I'll need to check the schema directly
     // Wait, let me check the schoolListRepo.getItem(listId) first. It returns SchoolListItemResult.
     // I need the school list itself to check accessMode.
     // I'll call a hypothetical getListById on schoolListRepo or use the schema directly.
@@ -46,25 +46,25 @@ export class SchoolAccessService implements ISchoolAccessService {
 
     // I'll implement getAccessState using the access records.
 
-    if (!userId) return "public"; // Handled by AuthWall usually, but for internal state:
+    if (!userId) return 'public'; // Handled by AuthWall usually, but for internal state:
 
     const grant = await this.accessRepo.getGrant(listId, userId);
-    if (grant) return "granted";
+    if (grant) return 'granted';
 
     const pendingRequest = await this.accessRepo.getPendingRequest(listId, userId);
-    if (pendingRequest) return "pending";
+    if (pendingRequest) return 'pending';
 
     const schoolList = await this.schoolListRepo.getById(listId);
-    if (!schoolList) return "public";
+    if (!schoolList) return 'public';
 
     // For now we default to public if no access mode is specified in schema
-    return "public";
+    return 'public';
   }
 
   /**
    *
    */
-  async verifyCode(listId: ID, userId: ID, code: string): Promise<VerifyCodeResult> {
+  async verifyCode(listId: ID, userId: ID, _code: string): Promise<VerifyCodeResult> {
     const attempt = await this.accessRepo.getCodeAttempt(listId, userId);
 
     if (attempt && attempt.lockedUntil && attempt.lockedUntil > new Date()) {
@@ -82,7 +82,7 @@ export class SchoolAccessService implements ISchoolAccessService {
       await this.accessRepo.createGrant({
         listId: listId as number,
         userId: userId as number,
-        grantedVia: "code",
+        grantedVia: 'code',
       });
       return { success: true };
     }
@@ -98,7 +98,7 @@ export class SchoolAccessService implements ISchoolAccessService {
 
     return {
       success: false,
-      error: "Invalid code",
+      error: 'Invalid code',
       locked: newAttemptCount >= this.MAX_ATTEMPTS,
       lockedUntil,
     };
@@ -113,16 +113,16 @@ export class SchoolAccessService implements ISchoolAccessService {
     input: { childName?: string; note?: string },
   ): Promise<SchoolListAccessRequest> {
     const user = await this.userRepo.getById(userId);
-    if (!user) throw new Error("User not found");
+    if (!user) throw new Error('User not found');
 
     return this.accessRepo.createRequest({
       listId: listId as number,
       userId: userId as number,
       childName: input.childName,
       note: input.note,
-      parentName: `${user.firstName || ""} ${user.lastName || ""}`.trim() || "Unknown",
+      parentName: `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Unknown',
       parentEmail: user.email,
-      status: "pending",
+      status: 'pending',
     });
   }
 
@@ -159,7 +159,7 @@ export class SchoolAccessService implements ISchoolAccessService {
     return this.accessRepo.createGrant({
       listId: listId as number,
       userId: userId as number,
-      grantedVia: "token",
+      grantedVia: 'token',
     });
   }
 }

@@ -1,6 +1,6 @@
-import { redirectIfAuthenticated } from "@lib/auth-guard";
-import type { Locale } from "next-intl";
-import { Suspense } from "react";
+import { redirectIfAuthenticated } from '@lib/auth-guard';
+import type { Locale } from 'next-intl';
+import { Suspense } from 'react';
 
 /**
  * Admin Login Layout

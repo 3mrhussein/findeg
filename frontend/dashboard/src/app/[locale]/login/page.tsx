@@ -1,15 +1,15 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { getTranslations, setRequestLocale } from "next-intl/server";
-import { loginAction } from "@actions/auth-actions";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@findeg/ui';
+import { Label } from '@findeg/ui';
+import { Input } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { loginAction } from '@actions/auth-actions';
 
 /**
  * Generate static params for supported locales
  */
 export async function generateStaticParams() {
-  return [{ locale: "en" }, { locale: "ar" }];
+  return [{ locale: 'en' }, { locale: 'ar' }];
 }
 
 /**
@@ -21,7 +21,7 @@ export async function generateStaticParams() {
 export default async function AdminLoginPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const t = await getTranslations({ locale: locale, namespace: "Pages.Auth" });
+  const t = await getTranslations({ locale: locale, namespace: 'Pages.Auth' });
 
   return (
     <div className="flex h-screen w-full items-center justify-center bg-gray-50 dark:bg-gray-900">

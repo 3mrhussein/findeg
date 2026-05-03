@@ -1,5 +1,5 @@
-import { getHomePageData } from "@/data/catalog/queries";
-import { ProductCard } from "../ProductCard";
+import { getHomePageData } from '@/data/catalog/queries';
+import { ProductCard } from '../ProductCard';
 
 interface NewArrivalsProps {
   locale: string;

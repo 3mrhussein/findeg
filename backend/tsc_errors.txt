@@ -1,0 +1,266 @@
+src/features/administration/application/queries/GetCatalogHealthQuery.ts(4,37): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/queries/index.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+  The file is in the program because:
+    Imported via '@findeg/db/queries' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/administration/application/queries/GetCatalogHealthQuery.ts'
+    Imported via '@findeg/db/queries' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/administration/application/queries/GetCategoryDistributionQuery.ts'
+    Imported via '@findeg/db/queries' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/administration/application/queries/GetDashboardStatsQuery.ts'
+    Imported via '@findeg/db/queries' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/administration/application/queries/__tests__/GetCatalogHealthQuery.test.ts'
+    Imported via '@findeg/db/queries' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/administration/application/queries/__tests__/GetCategoryDistributionQuery.test.ts'
+    Imported via '@findeg/db/queries' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/administration/application/queries/__tests__/GetDashboardStatsQuery.test.ts'
+src/features/core/domain/auth/RegisterInput.ts(6,29): error TS2307: Cannot find module '../types/primitives' or its corresponding type declarations.
+src/features/core/domain/types/common.ts(39,8): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/index.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+  The file is in the program because:
+    Imported via '@findeg/db' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/core/domain/types/common.ts'
+    Imported via '@findeg/db' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/core/domain/auth/AuthCredentials.ts'
+    Imported via '@findeg/db' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/core/domain/auth/SessionPayload.ts'
+    Imported via '@findeg/db' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/core/domain/auth/authorization.ts'
+    Imported via '@findeg/db' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/core/domain/value-objects/User.ts'
+    Imported via '@findeg/db' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/identity/domain/entities/User.ts'
+    Imported via '@findeg/db' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/core/domain/value-objects/Locale.ts'
+    Imported via '@findeg/db' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/core/domain/value-objects/Locale.ts'
+    Imported via '@findeg/db' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/core/domain/value-objects/Money.ts'
+    Imported via '@findeg/db' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/core/domain/value-objects/Identity.ts'
+    Imported via '@findeg/db' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/core/domain/value-objects/Pricing.ts'
+    Imported via '@findeg/db' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/core/domain/value-objects/Media.ts'
+    Imported via '@findeg/db' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/order/domain/value-objects/ShippingAddress.ts'
+    Imported via '@findeg/db' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/order/domain/value-objects/VariantSnapshot.ts'
+    Imported via '@findeg/db' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/core/index.ts'
+src/features/core/index.ts(9,1): error TS2308: Module '@findeg/db' has already exported a member named 'Notification'. Consider explicitly re-exporting to resolve the ambiguity.
+src/features/core/infrastructure/persistence/BaseDrizzleRepository.ts(1,20): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/connection.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+  The file is in the program because:
+    Imported via '@findeg/db/connection' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/core/infrastructure/persistence/BaseDrizzleRepository.ts'
+    Imported via '@findeg/db/connection' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/identity/application/services/AdminUserService.ts'
+    Imported via '@findeg/db/connection' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/identity/application/services/AdminRoleService.ts'
+    Imported via '@findeg/db/connection' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/identity/application/services/UserService.ts'
+    Imported via '@findeg/db/connection' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/catalog/infrastructure/persistence/DrizzleCategoryRepository.ts'
+    Imported via '@findeg/db/connection' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/catalog/infrastructure/persistence/DrizzleBrandRepository.ts'
+    Imported via '@findeg/db/connection' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/catalog/infrastructure/persistence/DrizzleVariantRepository.ts'
+    Imported via '@findeg/db/connection' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/catalog/infrastructure/persistence/DrizzleTagRepository.ts'
+    Imported via '@findeg/db/connection' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/catalog/infrastructure/persistence/DrizzleCollectionRepository.ts'
+    Imported via '@findeg/db/connection' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/catalog/infrastructure/persistence/DrizzleInventoryRepository.ts'
+    Imported via '@findeg/db/connection' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/catalog/infrastructure/persistence/DrizzleSchoolListRepository.ts'
+    Imported via '@findeg/db/connection' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/catalog/infrastructure/persistence/DrizzleAdminSearchAnalyticsRepository.ts'
+    Imported via '@findeg/db/connection' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/catalog/application/services/SearchService.ts'
+    Imported via '@findeg/db/connection' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/order/infrastructure/persistence/DrizzleOrderRepository.ts'
+    Imported via '@findeg/db/connection' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/school/application/services/SchoolDirectoryService.ts'
+    Imported via '@findeg/db/connection' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/administration/infrastructure/DrizzleAuditLogRepository.ts'
+    Imported via '@findeg/db/connection' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/administration/application/services/AdminProductService.ts'
+    Imported via '@findeg/db/connection' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/administration/application/services/AdminTagService.ts'
+    Imported via "../connection" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/queries/dashboard.ts'
+    Imported via '@findeg/db/connection' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/catalog/infrastructure/persistence/DrizzleAttributeRepository.ts'
+    Imported via '@findeg/db/connection' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/core/infrastructure/persistence/index.ts'
+    Imported via '@findeg/db/connection' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/review/infrastructure/persistence/DrizzleReviewRepository.ts'
+    Imported via '@findeg/db/connection' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/school/infrastructure/DrizzleSchoolAccessRepository.ts'
+    Imported via '@findeg/db/connection' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/school/infrastructure/DrizzleParentSessionRepository.ts'
+    Imported via '@findeg/db/connection' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/notifications/infrastructure/DrizzleNotificationRepository.ts'
+src/index.ts(9,1): error TS2308: Module './features/core' has already exported a member named 'Address'. Consider explicitly re-exporting to resolve the ambiguity.
+src/index.ts(9,1): error TS2308: Module './features/core' has already exported a member named 'User'. Consider explicitly re-exporting to resolve the ambiguity.
+../db/index.ts(11,15): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/index.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+  The file is in the program because:
+    Imported via "./schema" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/index.ts'
+    Imported via "./schema" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/connection.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/identity/infrastructure/persistence/DrizzleUserRepository.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/core/domain/types/index.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/identity/domain/entities/User.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/identity/application/services/AdminUserService.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/identity/application/services/AdminRoleService.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/identity/application/services/UserService.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/catalog/domain/entities/Product.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/catalog/domain/entities/Variant.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/catalog/application/interfaces/ISchoolListRepository.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/catalog/infrastructure/persistence/DrizzleProductRepository.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/catalog/infrastructure/persistence/DrizzleCategoryRepository.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/catalog/infrastructure/persistence/DrizzleCategoryRepository.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/catalog/infrastructure/persistence/DrizzleCategoryRepository.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/catalog/infrastructure/persistence/DrizzleBrandRepository.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/catalog/infrastructure/persistence/DrizzleVariantRepository.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/catalog/infrastructure/persistence/DrizzleTagRepository.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/catalog/infrastructure/persistence/DrizzleCollectionRepository.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/catalog/infrastructure/persistence/DrizzleInventoryRepository.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/catalog/infrastructure/persistence/DrizzleSchoolListRepository.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/catalog/infrastructure/persistence/DrizzleAdminSearchAnalyticsRepository.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/catalog/infrastructure/persistence/DrizzleAdminSearchAnalyticsRepository.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/catalog/application/services/SearchService.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/order/infrastructure/persistence/DrizzleOrderRepository.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/school/application/interfaces/ISchoolAccessRepository.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/school/application/interfaces/ISchoolAccessService.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/school/application/services/SchoolAccessService.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/school/application/services/SchoolDirectoryService.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/school/application/interfaces/IParentListService.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/school/application/interfaces/IParentListService.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/school/application/interfaces/IParentSessionRepository.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/school/application/services/ParentListService.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/school/application/services/ParentListService.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/administration/infrastructure/DrizzleAuditLogRepository.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/administration/application/services/AdminProductService.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/administration/application/services/AdminTagService.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/catalog/infrastructure/persistence/DrizzleAttributeRepository.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/core/application/services/LoggerService.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/review/infrastructure/persistence/DrizzleReviewRepository.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/school/infrastructure/DrizzleSchoolAccessRepository.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/school/infrastructure/DrizzleParentSessionRepository.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/school/infrastructure/DrizzleParentSessionRepository.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/notifications/application/interfaces/INotificationRepository.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/notifications/application/interfaces/INotificationService.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/notifications/infrastructure/DrizzleNotificationRepository.ts'
+    Imported via '@findeg/db/schema' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/notifications/application/services/NotificationService.ts'
+../db/queries/index.ts(3,15): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/queries/dashboard.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+../db/schema/addresses.ts(3,23): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/identity/users.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+  The file is in the program because:
+    Imported via "./identity/users" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/addresses.ts'
+    Imported via "../identity/users" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/sales/orders.ts'
+    Imported via "../identity/users" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/sales/reviews.ts'
+    Imported via "../identity/users" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/system/audit-log.ts'
+    Imported via "./users" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/identity/identity-access.ts'
+    Imported via './users' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/identity/index.ts'
+    Imported via "../identity/users" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/inventory/inventory.ts'
+    Imported via "../identity/users" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/school-engine/school-list-sessions.ts'
+    Imported via "../identity/users" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/school-engine/school-access.ts'
+    Imported via "../identity/users" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/system/search-logs.ts'
+    Imported via "../identity/users" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/system/notifications.ts'
+../db/schema/catalog/categories.ts(12,39): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/types.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+  The file is in the program because:
+    Imported via "./types" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/categories.ts'
+    Imported via "./types" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/brands.ts'
+    Imported via "./types" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/product-variants.ts'
+    Imported via "./types" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/collections.ts'
+../db/schema/catalog/index.ts(8,15): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/collections.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+../db/schema/catalog/product-variants.ts(32,56): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/variant-pricing.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+  The file is in the program because:
+    Imported via "./variant-pricing" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/product-variants.ts'
+    Imported via './variant-pricing' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/index.ts'
+../db/schema/catalog/products.ts(11,28): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/categories.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+  The file is in the program because:
+    Imported via "./categories" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/products.ts'
+    Imported via "../catalog/categories" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/school-engine/school-lists.ts'
+    Imported via './categories' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/index.ts'
+../db/schema/catalog/products.ts(12,24): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/brands.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+  The file is in the program because:
+    Imported via "./brands" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/products.ts'
+    Imported via './brands' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/index.ts'
+../db/schema/catalog/products.ts(13,29): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/tags.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+  The file is in the program because:
+    Imported via "./tags" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/products.ts'
+    Imported via './tags' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/index.ts'
+    Imported via "./tags" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/collections.ts'
+../db/schema/catalog/products.ts(14,35): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/product-attributes.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+  The file is in the program because:
+    Imported via "./product-attributes" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/products.ts'
+    Imported via "./product-attributes" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/product-variants.ts'
+    Imported via './product-attributes' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/index.ts'
+../db/schema/catalog/products.ts(15,33): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/product-variants.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+  The file is in the program because:
+    Imported via "./product-variants" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/products.ts'
+    Imported via "./product-variants" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/variant-pricing.ts'
+    Imported via "../catalog/product-variants" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/sales/orders.ts'
+    Imported via "../catalog/product-variants" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/school-engine/school-lists.ts'
+    Imported via './product-variants' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/index.ts'
+    Imported via "../catalog/product-variants" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/inventory/inventory.ts'
+../db/schema/catalog/variant-pricing.ts(16,53): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/types/index.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+  The file is in the program because:
+    Imported via "../../types" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/variant-pricing.ts'
+    Imported via "../../types" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/products.ts'
+    Imported via "../../types" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/school-engine/school-lists.ts'
+    Imported via "../../types" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/sales/orders.ts'
+    Imported via "../../types" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/identity/identity-access.ts'
+    Imported via "./types" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/index.ts'
+../db/schema/identity/index.ts(1,15): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/identity/identity-access.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+../db/schema/identity/users.ts(5,24): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/sales/orders.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+  The file is in the program because:
+    Imported via "../sales/orders" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/identity/users.ts'
+    Imported via './orders' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/sales/index.ts'
+../db/schema/identity/users.ts(6,25): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/sales/reviews.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+  The file is in the program because:
+    Imported via "../sales/reviews" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/identity/users.ts'
+    Imported via './reviews' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/sales/index.ts'
+../db/schema/identity/users.ts(8,26): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/system/audit-log.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+  The file is in the program because:
+    Imported via "../system/audit-log" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/identity/users.ts'
+    Imported via './audit-log' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/system/index.ts'
+../db/schema/index.ts(1,15): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/schemas.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+  The file is in the program because:
+    Imported via "./schemas" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/index.ts'
+    Imported via "./schemas" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/enums.ts'
+    Imported via "../schemas" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/identity/users.ts'
+    Imported via "../schemas" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/sales/orders.ts'
+    Imported via "../schemas" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/products.ts'
+    Imported via "../schemas" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/categories.ts'
+    Imported via "../schemas" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/brands.ts'
+    Imported via "../schemas" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/tags.ts'
+    Imported via "../schemas" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/product-attributes.ts'
+    Imported via "../schemas" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/product-variants.ts'
+    Imported via "../schemas" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/variant-pricing.ts'
+    Imported via "../schemas" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/sales/cart-kits.ts'
+    Imported via "../schemas" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/school-engine/school-lists.ts'
+    Imported via "../schemas" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/sales/reviews.ts'
+    Imported via "../schemas" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/system/audit-log.ts'
+    Imported via "./schemas" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/addresses.ts'
+    Imported via "../schemas" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/identity/identity-access.ts'
+    Imported via "../schemas" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/collections.ts'
+    Imported via "../schemas" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/sales/discount-rules.ts'
+    Imported via "../schemas" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/inventory/inventory.ts'
+    Imported via "../schemas" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/school-engine/school-list-sessions.ts'
+    Imported via "../schemas" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/school-engine/school-access.ts'
+    Imported via "../schemas" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/system/server-logs.ts'
+    Imported via "../schemas" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/system/search-logs.ts'
+    Imported via "../schemas" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/system/notifications.ts'
+../db/schema/index.ts(2,15): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/enums.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+  The file is in the program because:
+    Imported via "./enums" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/index.ts'
+    Imported via "../enums" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/identity/users.ts'
+    Imported via "../enums" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/variant-pricing.ts'
+    Imported via '../schema/enums' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/types/identity.ts'
+    Imported via "../enums" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/sales/orders.ts'
+../db/schema/index.ts(3,15): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/addresses.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+  The file is in the program because:
+    Imported via "./addresses" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/index.ts'
+    Imported via "../addresses" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/identity/users.ts'
+../db/schema/index.ts(4,15): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/identity/index.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+../db/schema/index.ts(5,15): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/index.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+  The file is in the program because:
+    Imported via "./catalog" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/index.ts'
+    Imported via "../schema/catalog" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/queries/dashboard.ts'
+../db/schema/index.ts(6,15): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/sales/index.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+  The file is in the program because:
+    Imported via "./sales" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/index.ts'
+    Imported via "../schema/sales" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/queries/dashboard.ts'
+../db/schema/index.ts(7,15): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/inventory/index.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+  The file is in the program because:
+    Imported via "./inventory" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/index.ts'
+    Imported via "../schema/inventory" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/queries/dashboard.ts'
+../db/schema/index.ts(8,15): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/school-engine/index.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+../db/schema/index.ts(9,15): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/system/index.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+../db/schema/inventory/index.ts(1,15): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/inventory/inventory.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+../db/schema/sales/cart-kits.ts(7,29): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/school-engine/school-lists.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+  The file is in the program because:
+    Imported via "../school-engine/school-lists" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/sales/cart-kits.ts'
+    Imported via './school-lists' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/school-engine/index.ts'
+    Imported via "./school-lists" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/school-engine/school-list-sessions.ts'
+    Imported via "./school-lists" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/school-engine/school-access.ts'
+../db/schema/sales/index.ts(3,15): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/sales/discount-rules.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+../db/schema/sales/orders.ts(14,26): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/products.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+  The file is in the program because:
+    Imported via "../catalog/products" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/sales/orders.ts'
+    Imported via "./products" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/categories.ts'
+    Imported via "./products" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/brands.ts'
+    Imported via "./products" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/tags.ts'
+    Imported via "./products" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/product-attributes.ts'
+    Imported via "./products" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/product-variants.ts'
+    Imported via "../catalog/products" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/sales/reviews.ts'
+    Imported via './products' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/catalog/index.ts'
+../db/schema/sales/orders.ts(16,26): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/sales/cart-kits.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+  The file is in the program because:
+    Imported via "./cart-kits" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/sales/orders.ts'
+    Imported via './cart-kits' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/sales/index.ts'
+../db/schema/school-engine/index.ts(2,15): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/school-engine/school-list-sessions.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+../db/schema/school-engine/index.ts(3,15): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/school-engine/school-access.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+../db/schema/system/index.ts(2,15): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/system/server-logs.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+../db/schema/system/index.ts(3,15): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/system/search-logs.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+../db/schema/system/index.ts(4,15): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/schema/system/notifications.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+../db/types/index.ts(1,15): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/types/common.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+  The file is in the program because:
+    Imported via './common' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/types/index.ts'
+    Imported via './common' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/types/identity.ts'
+    Imported via './common' from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/types/pricing.ts'
+../db/types/index.ts(2,15): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/types/identity.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+../db/types/index.ts(3,15): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/types/sales.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.
+../db/types/index.ts(4,15): error TS6307: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/types/pricing.ts' is not listed within the file list of project '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/tsconfig.json'. Projects must list all files or use an 'include' pattern.

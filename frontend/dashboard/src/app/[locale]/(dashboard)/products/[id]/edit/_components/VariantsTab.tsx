@@ -6,10 +6,10 @@
  * Location: src/app/[locale]/admin/(dashboard)/products/[id]/edit/_components/
  */
 
-"use client";
+'use client';
 
-import * as React from "react";
-import { VariantsZone } from "../../../_components/ProductForm/zones/VariantsZone";
+import * as React from 'react';
+import { VariantsZone } from '../../../_components/ProductForm/zones/VariantsZone';
 
 /**
  * VariantsTab — Variant management

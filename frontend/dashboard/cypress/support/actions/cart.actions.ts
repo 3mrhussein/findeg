@@ -1,7 +1,7 @@
-import { API_ROUTES } from "../constants/routes";
-import { API_QUERY_DEFAULTS, buildApiUrl } from "../constants/api-query";
+import { API_ROUTES } from '../constants/routes';
+import { API_QUERY_DEFAULTS, buildApiUrl } from '../constants/api-query';
 
-const GUEST_ID_KEY = "findeg_guest_id";
+const GUEST_ID_KEY = 'findeg_guest_id';
 
 export function createGuestId(seed = Date.now()): string {
   return `guest_cypress_${seed}`;
@@ -25,9 +25,9 @@ export function visitWithGuest(path: string, guestId: string): void {
 export function getGuestCart(guestId: string): Cypress.Chainable<any> {
   return cy
     .request({
-      method: "GET",
+      method: 'GET',
       url: API_ROUTES.cart,
-      headers: { "X-Guest-Id": guestId },
+      headers: { 'X-Guest-Id': guestId },
     })
     .then((response) => response.body?.data?.cart);
 }
@@ -46,15 +46,15 @@ export function clearGuestCart(guestId: string): Cypress.Chainable<void> {
       items.forEach((item) => {
         chain = chain.then(() => {
           const qs = new URLSearchParams();
-          if (item.variantKey) qs.set("variantKey", item.variantKey);
-          if (item.uomCode) qs.set("uomCode", item.uomCode);
-          if (item.customerGroup) qs.set("customerGroup", item.customerGroup);
+          if (item.variantKey) qs.set('variantKey', item.variantKey);
+          if (item.uomCode) qs.set('uomCode', item.uomCode);
+          if (item.customerGroup) qs.set('customerGroup', item.customerGroup);
           const suffix = qs.toString();
 
           return cy.request({
-            method: "DELETE",
-            url: `${API_ROUTES.cartItemById(item.id)}${suffix ? `?${suffix}` : ""}`,
-            headers: { "X-Guest-Id": guestId },
+            method: 'DELETE',
+            url: `${API_ROUTES.cartItemById(item.id)}${suffix ? `?${suffix}` : ''}`,
+            headers: { 'X-Guest-Id': guestId },
             failOnStatusCode: false,
           });
         });
@@ -88,18 +88,18 @@ export function addProductToGuestCartRequest(
   failOnStatusCode = true,
 ): Cypress.Chainable<Cypress.Response<any>> {
   return cy.request({
-    method: "POST",
+    method: 'POST',
     url: API_ROUTES.cartItems,
     headers: {
-      "Content-Type": "application/json",
-      "X-Guest-Id": guestId,
+      'Content-Type': 'application/json',
+      'X-Guest-Id': guestId,
     },
     body: {
       productId,
       quantity,
-      variantKey: "default",
-      uomCode: "pcs",
-      customerGroup: "public_b2c",
+      variantKey: 'default',
+      uomCode: 'pcs',
+      customerGroup: 'public_b2c',
     },
     failOnStatusCode,
   });
@@ -124,18 +124,18 @@ export function addProductToUserCart(
 ): Cypress.Chainable<number> {
   return cy
     .request({
-      method: "POST",
+      method: 'POST',
       url: API_ROUTES.cartItems,
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
       body: {
         productId,
         quantity,
-        variantKey: "default",
-        uomCode: "pcs",
-        customerGroup: "public_b2c",
+        variantKey: 'default',
+        uomCode: 'pcs',
+        customerGroup: 'public_b2c',
       },
     })
     .then((response) => {

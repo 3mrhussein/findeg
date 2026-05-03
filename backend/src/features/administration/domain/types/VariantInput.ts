@@ -1,8 +1,8 @@
-import type { UoMCode, CustomerGroup } from "../../../catalog/domain/types/UoMTypes";
-import type { PartialTranslationMap } from "../../../core/domain/value-objects";
+import type { UoMCode, CustomerGroup } from '../../../catalog/domain/types/UoMTypes';
+import type { PartialTranslationMap } from '../../../core/domain/value-objects';
 
-export type PricingMode = "shared" | "per-variant";
-export type UoMSharingMode = "shared" | "per-variant";
+export type PricingMode = 'shared' | 'per-variant';
+export type UoMSharingMode = 'shared' | 'per-variant';
 
 export interface ImageInput {
   url: string;
@@ -84,7 +84,7 @@ export interface CreateProductWithVariantsInput {
 }
 
 export interface UpdateProductWithVariantsInput extends Partial<
-  Omit<CreateProductWithVariantsInput, "variants">
+  Omit<CreateProductWithVariantsInput, 'variants'>
 > {
   variants?: (UpdateVariantInput | CreateVariantInput)[];
   variantsToDelete?: number[];

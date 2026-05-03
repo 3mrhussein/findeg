@@ -5,12 +5,12 @@
  */
 
 const AVATAR_COLORS = [
-  "bg-indigo-500",
-  "bg-violet-500",
-  "bg-sky-500",
-  "bg-emerald-500",
-  "bg-amber-500",
-  "bg-rose-500",
+  'bg-indigo-500',
+  'bg-violet-500',
+  'bg-sky-500',
+  'bg-emerald-500',
+  'bg-amber-500',
+  'bg-rose-500',
 ];
 
 export function getAvatarColorClass(name: string): string {
@@ -38,5 +38,5 @@ export function getInitials(name?: string, email?: string): string {
     return email.substring(0, 2).toUpperCase();
   }
 
-  return "A";
+  return 'A';
 }

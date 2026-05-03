@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useTranslations } from "next-intl";
-import { X, Trash2, CheckCircle, Ban } from "lucide-react";
-import { Button } from "@findeg/ui";
-import { Separator } from "@findeg/ui";
-import { cn } from "@lib/utils";
+import { useTranslations } from 'next-intl';
+import { X, Trash2, CheckCircle, Ban } from 'lucide-react';
+import { Button } from '@findeg/ui';
+import { Separator } from '@findeg/ui';
+import { cn } from '@lib/utils';
 
 interface BulkActionsBarProps {
   selectedIds: number[];
@@ -21,7 +21,7 @@ export function BulkActionsBar({
   onDeactivate,
   onDelete,
 }: BulkActionsBarProps) {
-  const t = useTranslations("Administration.Catalog.Products");
+  const t = useTranslations('Administration.Catalog.Products');
   const count = selectedIds.length;
 
   if (count === 0) return null;
@@ -39,7 +39,7 @@ export function BulkActionsBar({
             <X className="h-4 w-4" />
           </Button>
           <span className="text-sm font-medium whitespace-nowrap">
-            {t("Bulk.Selected", { count })}
+            {t('Bulk.Selected', { count })}
           </span>
         </div>
 
@@ -53,7 +53,7 @@ export function BulkActionsBar({
             className="h-8 hover:bg-white/20 dark:hover:bg-slate-700 text-white dark:text-slate-200"
           >
             <CheckCircle className="mr-2 h-4 w-4" />
-            {t("Bulk.Activate")}
+            {t('Bulk.Activate')}
           </Button>
           <Button
             variant="ghost"
@@ -62,7 +62,7 @@ export function BulkActionsBar({
             className="h-8 hover:bg-white/20 dark:hover:bg-slate-700 text-white dark:text-slate-200"
           >
             <Ban className="mr-2 h-4 w-4" />
-            {t("Bulk.Deactivate")}
+            {t('Bulk.Deactivate')}
           </Button>
           <Button
             variant="ghost"
@@ -71,7 +71,7 @@ export function BulkActionsBar({
             className="h-8 hover:bg-destructive/80 hover:text-destructive-foreground text-destructive-foreground/90 font-medium"
           >
             <Trash2 className="mr-2 h-4 w-4" />
-            {t("Bulk.Delete")}
+            {t('Bulk.Delete')}
           </Button>
         </div>
       </div>

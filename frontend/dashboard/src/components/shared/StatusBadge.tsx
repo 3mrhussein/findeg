@@ -7,15 +7,15 @@
  * Location: src/components/shared/ (cross-cutting)
  */
 
-"use client";
+'use client';
 
-import * as React from "react";
-import { Badge } from "@findeg/ui";
-import { cn } from "@lib/utils";
-import { OrderStatus } from "@findeg/backend/features/core/domain/types/common";
+import * as React from 'react';
+import { Badge } from '@findeg/ui';
+import { cn } from '@lib/utils';
+import { OrderStatus } from '@findeg/backend/features/core/domain/types/common';
 
-type ProductStatus = "active" | "draft" | "inactive";
-type StockStatus = "healthy" | "low" | "out";
+type ProductStatus = 'active' | 'draft' | 'inactive';
+type StockStatus = 'healthy' | 'low' | 'out';
 
 export type StatusType = OrderStatus | ProductStatus | StockStatus;
 
@@ -25,7 +25,7 @@ export interface StatusBadgeProps {
   /** Display label (overrides default label) */
   label?: string;
   /** Size variant */
-  size?: "sm" | "md";
+  size?: 'sm' | 'md';
   /** Additional CSS classes */
   className?: string;
 }
@@ -35,42 +35,42 @@ export interface StatusBadgeProps {
  */
 const STATUS_COLORS: Record<StatusType, string> = {
   // Product statuses
-  active: "var(--status-active)",
-  draft: "var(--status-draft)",
+  active: 'var(--status-active)',
+  draft: 'var(--status-draft)',
 
   // Order statuses
-  pending: "var(--status-pending)",
-  confirmed: "var(--status-confirmed)",
-  processing: "var(--status-processing)",
-  shipped: "var(--status-shipped)",
-  delivered: "var(--status-delivered)",
-  cancelled: "var(--status-cancelled)",
-  refunded: "var(--status-cancelled)",
+  pending: 'var(--status-pending)',
+  confirmed: 'var(--status-confirmed)',
+  processing: 'var(--status-processing)',
+  shipped: 'var(--status-shipped)',
+  delivered: 'var(--status-delivered)',
+  cancelled: 'var(--status-cancelled)',
+  refunded: 'var(--status-cancelled)',
 
   // Stock health
-  healthy: "var(--stock-healthy)",
-  low: "var(--stock-low)",
-  out: "var(--stock-out)",
-  inactive: "var(--status-draft)",
+  healthy: 'var(--stock-healthy)',
+  low: 'var(--stock-low)',
+  out: 'var(--stock-out)',
+  inactive: 'var(--status-draft)',
 };
 
 /**
  * Default labels for common statuses
  */
 const STATUS_LABELS: Record<StatusType, string> = {
-  active: "Active",
-  draft: "Draft",
-  inactive: "Inactive",
-  pending: "Pending",
-  confirmed: "Confirmed",
-  processing: "Processing",
-  shipped: "Shipped",
-  delivered: "Delivered",
-  cancelled: "Cancelled",
-  refunded: "Refunded",
-  healthy: "Healthy",
-  low: "Low Stock",
-  out: "Out of Stock",
+  active: 'Active',
+  draft: 'Draft',
+  inactive: 'Inactive',
+  pending: 'Pending',
+  confirmed: 'Confirmed',
+  processing: 'Processing',
+  shipped: 'Shipped',
+  delivered: 'Delivered',
+  cancelled: 'Cancelled',
+  refunded: 'Refunded',
+  healthy: 'Healthy',
+  low: 'Low Stock',
+  out: 'Out of Stock',
 };
 
 /**
@@ -81,16 +81,16 @@ const STATUS_LABELS: Record<StatusType, string> = {
  * <StatusBadge status="pending" label="Awaiting Payment" />
  * <StatusBadge status="low" size="sm" />
  */
-export function StatusBadge({ status, label, size = "md", className }: StatusBadgeProps) {
-  const color = STATUS_COLORS[status] || "var(--status-draft)";
+export function StatusBadge({ status, label, size = 'md', className }: StatusBadgeProps) {
+  const color = STATUS_COLORS[status] || 'var(--status-draft)';
   const displayLabel = label || STATUS_LABELS[status] || status;
 
   return (
     <Badge
       variant="outline"
       className={cn(
-        "border-0 font-medium capitalize",
-        size === "sm" ? "px-2 py-0.5 text-xs" : "px-2.5 py-1 text-sm",
+        'border-0 font-medium capitalize',
+        size === 'sm' ? 'px-2 py-0.5 text-xs' : 'px-2.5 py-1 text-sm',
         className,
       )}
       style={{
@@ -100,8 +100,8 @@ export function StatusBadge({ status, label, size = "md", className }: StatusBad
     >
       <span
         className={cn(
-          "me-1.5 inline-block rounded-full",
-          size === "sm" ? "h-1.5 w-1.5" : "h-2 w-2",
+          'me-1.5 inline-block rounded-full',
+          size === 'sm' ? 'h-1.5 w-1.5' : 'h-2 w-2',
         )}
         style={{ backgroundColor: color }}
         aria-hidden="true"

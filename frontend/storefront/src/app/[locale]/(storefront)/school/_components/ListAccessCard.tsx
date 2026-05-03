@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useTranslations } from "next-intl";
+import { useTranslations } from 'next-intl';
 import {
   Lock,
   FileText,
@@ -9,16 +9,16 @@ import {
   ShieldQuestion,
   ChevronRight,
   Loader2,
-} from "lucide-react";
-import { Card, CardContent } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { AccessState } from "@findeg/backend/features/school/application/interfaces/ISchoolAccessService";
+} from 'lucide-react';
+import { Card, CardContent } from '@findeg/ui';
+import { Badge } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { AccessState } from '@findeg/backend/features/school/application/interfaces/ISchoolAccessService';
 
 interface ListAccessCardProps {
   list: any; // Type from schoolLists table
   accessState: AccessState;
-  onAction: (action: "enter_code" | "request_access" | "view_list") => void;
+  onAction: (action: 'enter_code' | 'request_access' | 'view_list') => void;
 }
 
 /**
@@ -27,53 +27,53 @@ interface ListAccessCardProps {
  * Displays a single grade list with its current access state controls.
  */
 export function ListAccessCard({ list, accessState, onAction }: ListAccessCardProps) {
-  const t = useTranslations("School.AccessCard");
+  const t = useTranslations('School.AccessCard');
 
   /**
    *
    */
   const getStatusConfig = () => {
     switch (accessState) {
-      case "granted":
+      case 'granted':
         return {
           icon: <CheckCircle2 className="w-5 h-5 text-emerald-500" />,
-          label: t("accessGranted"),
-          badgeClass: "bg-emerald-50 text-emerald-700 border-emerald-100",
-          buttonLabel: t("viewList"),
-          buttonAction: "view_list" as const,
+          label: t('accessGranted'),
+          badgeClass: 'bg-emerald-50 text-emerald-700 border-emerald-100',
+          buttonLabel: t('viewList'),
+          buttonAction: 'view_list' as const,
         };
-      case "pending":
+      case 'pending':
         return {
           icon: <Timer className="w-5 h-5 text-amber-500" />,
-          label: t("accessPending"),
-          badgeClass: "bg-amber-50 text-amber-700 border-amber-100",
-          buttonLabel: t("checkStatus"),
+          label: t('accessPending'),
+          badgeClass: 'bg-amber-50 text-amber-700 border-amber-100',
+          buttonLabel: t('checkStatus'),
           buttonAction: null,
         };
-      case "code_required":
+      case 'code_required':
         return {
           icon: <Lock className="w-5 h-5 text-blue-500" />,
-          label: t("codeRequired"),
-          badgeClass: "bg-blue-50 text-blue-700 border-blue-100",
-          buttonLabel: t("enterCode"),
-          buttonAction: "enter_code" as const,
+          label: t('codeRequired'),
+          badgeClass: 'bg-blue-50 text-blue-700 border-blue-100',
+          buttonLabel: t('enterCode'),
+          buttonAction: 'enter_code' as const,
         };
-      case "private":
+      case 'private':
         return {
           icon: <ShieldQuestion className="w-5 h-5 text-slate-500" />,
-          label: t("privateList"),
-          badgeClass: "bg-slate-50 text-slate-700 border-slate-100",
-          buttonLabel: t("requestAccess"),
-          buttonAction: "request_access" as const,
+          label: t('privateList'),
+          badgeClass: 'bg-slate-50 text-slate-700 border-slate-100',
+          buttonLabel: t('requestAccess'),
+          buttonAction: 'request_access' as const,
         };
-      case "public":
+      case 'public':
       default:
         return {
           icon: <FileText className="w-5 h-5 text-indigo-500" />,
-          label: t("publicAccess"),
-          badgeClass: "bg-indigo-50 text-indigo-700 border-indigo-100",
-          buttonLabel: t("viewList"),
-          buttonAction: "view_list" as const,
+          label: t('publicAccess'),
+          badgeClass: 'bg-indigo-50 text-indigo-700 border-indigo-100',
+          buttonLabel: t('viewList'),
+          buttonAction: 'view_list' as const,
         };
     }
   };
@@ -102,7 +102,7 @@ export function ListAccessCard({ list, accessState, onAction }: ListAccessCardPr
                 onClick={() => onAction(config.buttonAction!)}
                 className="gap-2 shadow-sm"
                 variant={
-                  accessState === "granted" || accessState === "public" ? "default" : "outline"
+                  accessState === 'granted' || accessState === 'public' ? 'default' : 'outline'
                 }
               >
                 {config.buttonLabel}

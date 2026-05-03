@@ -1,10 +1,10 @@
-import { getAllTagsGrouped } from "@data/resources/queries";
-import { TagsClient } from "./_components/TagsClient";
-import { Metadata } from "next";
+import { getAllTagsGrouped } from '@data/resources/queries';
+import { TagsClient } from './_components/TagsClient';
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "Tags Management | FindEg Admin",
-  description: "Manage catalog tags and groupings.",
+  title: 'Tags Management | FindEg Admin',
+  description: 'Manage catalog tags and groupings.',
 };
 
 export default async function TagsPage() {

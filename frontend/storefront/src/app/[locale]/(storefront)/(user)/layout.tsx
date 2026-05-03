@@ -1,10 +1,10 @@
-import React from "react";
-import { Sidebar } from "./_components/Sidebar";
-import { Topbar } from "./_components/Topbar";
-import { requireAuth } from "@lib/auth-guard";
-import { adminSession } from "@findeg/backend/features/core/domain/auth/authorization";
-import { AdminAccessForbidden } from "@components/shared/AdminAccessForbidden";
-import type { Locale } from "next-intl";
+import React from 'react';
+import { Sidebar } from './_components/Sidebar';
+import { Topbar } from './_components/Topbar';
+import { requireAuth } from '@lib/auth-guard';
+import { adminSession } from '@findeg/backend/features/core/domain/auth/authorization';
+import { AdminAccessForbidden } from '@components/shared/AdminAccessForbidden';
+import type { Locale } from 'next-intl';
 
 /**
  * Dashboard Layout

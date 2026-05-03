@@ -7,11 +7,11 @@
  * Location: src/app/[locale]/admin/_components/shared/ (admin-wide)
  */
 
-"use client";
+'use client';
 
-import * as React from "react";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@findeg/ui";
-import { cn } from "@lib/utils";
+import * as React from 'react';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@findeg/ui';
+import { cn } from '@lib/utils';
 
 export interface SlideOverProps {
   /** Panel open state */
@@ -25,16 +25,16 @@ export interface SlideOverProps {
   /** Panel content */
   children: React.ReactNode;
   /** Width variant */
-  size?: "sm" | "md" | "lg" | "xl";
+  size?: 'sm' | 'md' | 'lg' | 'xl';
   /** Additional CSS classes */
   className?: string;
 }
 
 const SIZE_CLASSES = {
-  sm: "max-w-sm",
-  md: "max-w-md",
-  lg: "max-w-lg",
-  xl: "max-w-xl",
+  sm: 'max-w-sm',
+  md: 'max-w-md',
+  lg: 'max-w-lg',
+  xl: 'max-w-xl',
 };
 
 /**
@@ -57,7 +57,7 @@ export function SlideOver({
   title,
   description,
   children,
-  size = "lg",
+  size = 'lg',
   className,
 }: SlideOverProps) {
   return (

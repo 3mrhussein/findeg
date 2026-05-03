@@ -1,4 +1,4 @@
-import { ID } from "@findeg/backend/features/core/domain/types/common";
+import { ID } from '@findeg/backend/features/core/domain/types/common';
 import {
   SchoolListAccessGrant,
   NewSchoolListAccessGrant,
@@ -6,7 +6,7 @@ import {
   NewSchoolListAccessRequest,
   SchoolListAccessToken,
   SchoolListCodeAttempt,
-} from "@findeg/db/schema";
+} from '@findeg/db/schema';
 
 export interface ISchoolAccessRepository {
   // Grants
@@ -20,7 +20,7 @@ export interface ISchoolAccessRepository {
   createRequest(request: NewSchoolListAccessRequest): Promise<SchoolListAccessRequest>;
   updateRequestStatus(
     requestId: ID,
-    status: SchoolListAccessRequest["status"],
+    status: SchoolListAccessRequest['status'],
     reviewerId?: ID,
   ): Promise<void>;
   deleteRequest(requestId: ID, userId: ID): Promise<void>;

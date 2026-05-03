@@ -4,10 +4,10 @@
  * Provides cached data for admin identity and users.
  * Adheres to Next.js 16 "use cache" standards.
  */
-"use cache";
+'use cache';
 
-import { cacheLife, cacheTag } from "next/cache";
-import { createIdentityServices } from "@findeg/backend/features/identity";
+import { cacheLife, cacheTag } from 'next/cache';
+import { createIdentityServices } from '@findeg/backend/features/identity';
 
 /**
  * Get all admin users
@@ -15,8 +15,8 @@ import { createIdentityServices } from "@findeg/backend/features/identity";
  * Cache: Moderate TTL
  */
 export async function getAdminUsers() {
-  cacheLife("hours");
-  cacheTag("admin-users");
+  cacheLife('hours');
+  cacheTag('admin-users');
 
   const { adminUsers } = createIdentityServices();
   return await adminUsers.listAdmins();
@@ -26,8 +26,8 @@ export async function getAdminUsers() {
  * Get admin user by ID
  */
 export async function getAdminUserById(id: number) {
-  cacheTag("admin-users", `admin-user-${id}`);
-  cacheLife("hours");
+  cacheTag('admin-users', `admin-user-${id}`);
+  cacheLife('hours');
 
   const { adminUsers } = createIdentityServices();
   return await adminUsers.getAdmin(id);

@@ -1,4 +1,4 @@
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@findeg/ui";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@findeg/ui';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -6,14 +6,14 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { IconTooltip } from "@findeg/ui";
-import { MoreHorizontal, Pencil, Trash2, Eye } from "lucide-react";
-import type { Product } from "@findeg/backend/features/catalog";
-import { ProductEntity } from "@findeg/backend/features/catalog";
-import Image from "next/image";
-import { Badge } from "@findeg/ui";
+} from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { IconTooltip } from '@findeg/ui';
+import { MoreHorizontal, Pencil, Trash2, Eye } from 'lucide-react';
+import type { Product } from '@findeg/backend/features/catalog';
+import { ProductEntity } from '@findeg/backend/features/catalog';
+import Image from 'next/image';
+import { Badge } from '@findeg/ui';
 
 interface ProductTableProps {
   products: Product[];
@@ -28,10 +28,10 @@ export function ProductTable({ products }: ProductTableProps) {
    *
    */
   const formatPrice = (price: number | string | undefined) => {
-    if (!price) return "";
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
+    if (!price) return '';
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
     }).format(Number(price));
   };
 

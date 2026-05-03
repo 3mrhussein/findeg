@@ -1,4 +1,4 @@
-import type { Product } from "@findeg/backend/features/catalog/domain/entities/Product";
+import type { Product } from '@findeg/backend/features/catalog/domain/entities/Product';
 
 interface ScoredProduct {
   product: Product;
@@ -12,11 +12,11 @@ const MIN_FUZZY_SCORE = 8;
  */
 function normalizeText(value: string): string {
   return value
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
     .trim()
-    .replace(/\s+/g, " ");
+    .replace(/\s+/g, ' ');
 }
 
 /**
@@ -63,19 +63,19 @@ function scoreProduct(product: Product, normalizedQuery: string): number {
     product.name,
     product.description,
     product.longDescription,
-    product.skuPrefix || "",
+    product.skuPrefix || '',
     ...(product.variants || []).map((v) => v.sku),
-    product.brandName || "",
-    product.categoryName || "",
+    product.brandName || '',
+    product.categoryName || '',
   ]
     .map(normalizeText)
     .filter(Boolean);
 
   if (fields.length === 0) return 0;
 
-  const haystack = fields.join(" ");
-  const queryTokens = normalizedQuery.split(" ").filter(Boolean);
-  const searchableTokens = new Set(haystack.split(" ").filter(Boolean));
+  const haystack = fields.join(' ');
+  const queryTokens = normalizedQuery.split(' ').filter(Boolean);
+  const searchableTokens = new Set(haystack.split(' ').filter(Boolean));
 
   let score = 0;
   let matchedTokens = 0;

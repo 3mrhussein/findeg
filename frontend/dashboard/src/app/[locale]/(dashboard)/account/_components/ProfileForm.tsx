@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Input, Button } from "@findeg/ui";
+import { useState } from 'react';
+import { Input, Button } from '@findeg/ui';
 
 interface ProfileFormProps {
   userData: {
@@ -27,8 +27,8 @@ export function ProfileForm({ userData, action }: ProfileFormProps) {
         setError(result.error);
       }
     } catch (err) {
-      setError("Failed to update profile");
-      console.error("[dashboard] Profile update error:", err);
+      setError('Failed to update profile');
+      console.error('[dashboard] Profile update error:', err);
     } finally {
       setPending(false);
     }
@@ -40,23 +40,23 @@ export function ProfileForm({ userData, action }: ProfileFormProps) {
 
       <div className="space-y-2">
         <label className="block text-sm font-medium">First Name</label>
-        <Input defaultValue={userData.firstName || ""} name="firstName" required />
+        <Input defaultValue={userData.firstName || ''} name="firstName" required />
       </div>
 
       <div className="space-y-2">
         <label className="block text-sm font-medium">Last Name</label>
-        <Input defaultValue={userData.lastName || ""} name="lastName" required />
+        <Input defaultValue={userData.lastName || ''} name="lastName" required />
       </div>
 
       <div className="space-y-2">
         <label className="block text-sm font-medium">Email</label>
-        <Input defaultValue={userData.email || ""} type="email" disabled />
+        <Input defaultValue={userData.email || ''} type="email" disabled />
       </div>
 
       {error && <div className="text-red-600 text-sm">{error}</div>}
 
       <Button type="submit" disabled={pending}>
-        {pending ? "Saving..." : "Save Changes"}
+        {pending ? 'Saving...' : 'Save Changes'}
       </Button>
     </form>
   );

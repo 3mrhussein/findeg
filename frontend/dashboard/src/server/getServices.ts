@@ -15,5 +15,5 @@
  *   const data = await getProducts(locale);
  */
 export function getServices(): never {
-  throw new Error("getServices() is deprecated. Use queries/actions from @data/* instead.");
+  throw new Error('getServices() is deprecated. Use queries/actions from @data/* instead.');
 }

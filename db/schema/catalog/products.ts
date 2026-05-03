@@ -13,7 +13,7 @@ import { brands } from "./brands";
 import { productTags } from "./tags";
 import { productAttributes } from "./product-attributes";
 import { productVariants } from "./product-variants";
-import { PartialTranslationMap, ResponsiveMediaSet } from "./types";
+import { PartialTranslationMap, ResponsiveMediaSet } from "../../types";
 
 /**
  * Products Table (SPU)

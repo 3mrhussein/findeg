@@ -1,11 +1,11 @@
-import { ID } from "@findeg/backend/features/core/domain/types/common";
+import { ID } from '@findeg/backend/features/core/domain/types/common';
 import {
   SchoolListAccessGrant,
   SchoolListAccessRequest,
   SchoolListAccessToken,
-} from "@findeg/db/schema";
+} from '@findeg/db/schema';
 
-export type AccessState = "public" | "code_required" | "private" | "granted" | "pending";
+export type AccessState = 'public' | 'code_required' | 'private' | 'granted' | 'pending';
 
 export interface VerifyCodeResult {
   success: boolean;

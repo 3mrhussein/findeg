@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { Input } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@findeg/ui";
-import type { ProductFilters, UpdateQueryParams } from "./ProductTable.interface";
+import { Input } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@findeg/ui';
+import type { ProductFilters, UpdateQueryParams } from './ProductTable.interface';
 
 interface ProductTableFiltersProps {
   filters: ProductFilters;
@@ -33,15 +33,15 @@ export function ProductTableFilters({
           placeholder="Search name, SKU, barcode..."
           defaultValue={filters.search}
           onKeyDown={(event) => {
-            if (event.key === "Enter") {
-              onUpdate({ search: (event.target as HTMLInputElement).value, page: "1" });
+            if (event.key === 'Enter') {
+              onUpdate({ search: (event.target as HTMLInputElement).value, page: '1' });
             }
           }}
         />
         <Select
-          value={filters.categoryId ? String(filters.categoryId) : "all"}
+          value={filters.categoryId ? String(filters.categoryId) : 'all'}
           onValueChange={(value) =>
-            onUpdate({ categoryId: value === "all" ? "" : value, page: "1" })
+            onUpdate({ categoryId: value === 'all' ? '' : value, page: '1' })
           }
         >
           <SelectTrigger data-testid="admin-products-filter-category">
@@ -57,8 +57,8 @@ export function ProductTableFilters({
           </SelectContent>
         </Select>
         <Select
-          value={filters.brandId ? String(filters.brandId) : "all"}
-          onValueChange={(value) => onUpdate({ brandId: value === "all" ? "" : value, page: "1" })}
+          value={filters.brandId ? String(filters.brandId) : 'all'}
+          onValueChange={(value) => onUpdate({ brandId: value === 'all' ? '' : value, page: '1' })}
         >
           <SelectTrigger data-testid="admin-products-filter-brand">
             <SelectValue placeholder="All brands" />
@@ -73,8 +73,8 @@ export function ProductTableFilters({
           </SelectContent>
         </Select>
         <Select
-          value={filters.isActive || "all"}
-          onValueChange={(value) => onUpdate({ isActive: value, page: "1" })}
+          value={filters.isActive || 'all'}
+          onValueChange={(value) => onUpdate({ isActive: value, page: '1' })}
         >
           <SelectTrigger data-testid="admin-products-filter-status">
             <SelectValue placeholder="All statuses" />
@@ -86,8 +86,8 @@ export function ProductTableFilters({
           </SelectContent>
         </Select>
         <Select
-          value={filters.stockLevel || "all"}
-          onValueChange={(value) => onUpdate({ stockLevel: value, page: "1" })}
+          value={filters.stockLevel || 'all'}
+          onValueChange={(value) => onUpdate({ stockLevel: value, page: '1' })}
         >
           <SelectTrigger data-testid="admin-products-filter-stock">
             <SelectValue placeholder="All stock levels" />
@@ -109,12 +109,12 @@ export function ProductTableFilters({
           variant="outline"
           onClick={() =>
             onUpdate({
-              search: "",
-              categoryId: "",
-              brandId: "",
-              isActive: "all",
-              stockLevel: "all",
-              page: "1",
+              search: '',
+              categoryId: '',
+              brandId: '',
+              isActive: 'all',
+              stockLevel: 'all',
+              page: '1',
             })
           }
         >

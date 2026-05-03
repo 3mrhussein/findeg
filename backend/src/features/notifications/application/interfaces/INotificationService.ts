@@ -1,4 +1,4 @@
-import { Notification } from "@findeg/db/schema";
+import { Notification } from '@findeg/db/schema';
 
 /**
  * Interface for the Notification Application Service

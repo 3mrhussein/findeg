@@ -4,10 +4,10 @@
  * Defines the contract for data access operations related to curated collections.
  */
 
-import { ID, Locale } from "@findeg/backend/features/core/domain/types/common";
-import { Collection, CreateCollection } from "../../domain/entities/Collection";
-import { Tag } from "../../domain/entities/Tag";
-import { Product } from "../../domain/entities/Product";
+import { ID, Locale } from '@findeg/backend/features/core/domain/types/common';
+import { Collection, CreateCollection } from '../../domain/entities/Collection';
+import { Tag } from '../../domain/entities/Tag';
+import { Product } from '../../domain/entities/Product';
 
 export interface ICollectionRepository {
   /**

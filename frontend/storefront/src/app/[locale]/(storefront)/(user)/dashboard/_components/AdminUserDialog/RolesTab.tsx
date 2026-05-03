@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { Checkbox } from "@findeg/ui";
-import { ScrollArea } from "@findeg/ui";
-import type { Role } from "./AdminUserDialog.interface";
+import { Checkbox } from '@findeg/ui';
+import { ScrollArea } from '@findeg/ui';
+import type { Role } from './AdminUserDialog.interface';
 
 interface RolesTabProps {
   roles: Role[];

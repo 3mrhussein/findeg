@@ -4,8 +4,8 @@
  * Repesents a flexible tag used for categorization beyond the main category tree.
  */
 
-import { z } from "zod";
-import { IdSchema, TranslationMapSchema } from "../../../core/domain/types/common";
+import { z } from 'zod';
+import { IdSchema } from '../../../core/domain/types/common';
 
 /**
  * Valid tag groups.
@@ -20,12 +20,12 @@ export type TagGroup = z.infer<typeof TagGroupSchema>;
  * Defines where the tag is applicable.
  */
 export const TagScopeSchema = z.enum([
-  "catalog",
-  "school",
-  "campaign",
-  "system",
-  "search",
-  "editorial",
+  'catalog',
+  'school',
+  'campaign',
+  'system',
+  'search',
+  'editorial',
 ]);
 export type TagScope = z.infer<typeof TagScopeSchema>;
 
@@ -37,7 +37,7 @@ export const TagSchema = z.object({
   icon: z.string().optional().nullable(),
   color: z.string().optional().nullable(),
   isActive: z.boolean(),
-  scope: TagScopeSchema.default("catalog"),
+  scope: TagScopeSchema.default('catalog'),
   createdAt: z.date(),
   updatedAt: z.date(),
 });
@@ -47,7 +47,7 @@ export type Tag = z.infer<typeof TagSchema>;
 /**
  * Full tag identifier — used as the stable key for frontend mapping
  */
-export function tagIdentifier(tag: Pick<Tag, "group" | "key">): string {
+export function tagIdentifier(tag: Pick<Tag, 'group' | 'key'>): string {
   return `${tag.group}:${tag.key}`;
 }
 

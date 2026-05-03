@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { Button } from "@findeg/ui";
+import { Button } from '@findeg/ui';
 import {
   Dialog,
   DialogContent,
@@ -8,7 +8,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@findeg/ui";
+} from '@findeg/ui';
 
 interface ProductDeleteDialogProps {
   open: boolean;
@@ -45,7 +45,7 @@ export function ProductDeleteDialog({
             disabled={isDeleting}
             data-testid="admin-product-delete-confirm"
           >
-            {isDeleting ? "Deleting…" : "Delete"}
+            {isDeleting ? 'Deleting…' : 'Delete'}
           </Button>
         </DialogFooter>
       </DialogContent>

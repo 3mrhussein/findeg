@@ -10,14 +10,14 @@
  * Location: src/app/[locale]/admin/_components/shared/
  */
 
-"use client";
+'use client';
 
-import * as React from "react";
-import { ChevronRight, ChevronDown, Plus, Minus, Check } from "lucide-react";
-import { cn } from "@lib/utils";
-import type { Category } from "@findeg/backend/features/catalog";
-import { Button } from "@findeg/ui";
-import { ScrollArea } from "@findeg/ui";
+import * as React from 'react';
+import { ChevronRight, ChevronDown, Plus, Minus, Check } from 'lucide-react';
+import { cn } from '@lib/utils';
+import type { Category } from '@findeg/backend/features/catalog';
+import { Button } from '@findeg/ui';
+import { ScrollArea } from '@findeg/ui';
 
 interface CollapsibleCategoryPickerProps {
   categories: Category[];
@@ -30,7 +30,7 @@ export function CollapsibleCategoryPicker({
   categories,
   selectedId,
   onSelect,
-  placeholder = "None",
+  placeholder = 'None',
 }: CollapsibleCategoryPickerProps) {
   const [expandedIds, setExpandedIds] = React.useState<Set<number>>(new Set());
 
@@ -56,11 +56,11 @@ export function CollapsibleCategoryPicker({
       <div key={category.id} className="flex flex-col">
         <div
           className={cn(
-            "flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer transition-colors group",
+            'flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer transition-colors group',
             isSelected
-              ? "bg-indigo-50 text-indigo-700 dark:bg-indigo-950/30 dark:text-indigo-300"
-              : "hover:bg-gray-50 dark:hover:bg-accent",
-            depth > 0 && "ml-4",
+              ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-950/30 dark:text-indigo-300'
+              : 'hover:bg-gray-50 dark:hover:bg-accent',
+            depth > 0 && 'ml-4',
           )}
           onClick={() => onSelect(category.id)}
         >
@@ -71,10 +71,10 @@ export function CollapsibleCategoryPicker({
                 variant="ghost"
                 size="icon"
                 className={cn(
-                  "h-4 w-4 p-0 hover:bg-transparent",
+                  'h-4 w-4 p-0 hover:bg-transparent',
                   isSelected
-                    ? "text-primary-foreground"
-                    : "text-muted-foreground group-hover:text-foreground",
+                    ? 'text-primary-foreground'
+                    : 'text-muted-foreground group-hover:text-foreground',
                 )}
                 onClick={(e) => toggleExpand(e, category.id)}
               >
@@ -106,10 +106,10 @@ export function CollapsibleCategoryPicker({
           {/* "None" option */}
           <div
             className={cn(
-              "flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer transition-colors",
+              'flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer transition-colors',
               selectedId === null
-                ? "bg-indigo-50 text-indigo-700 dark:bg-indigo-950/30 dark:text-indigo-300"
-                : "hover:bg-gray-50 dark:hover:bg-accent",
+                ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-950/30 dark:text-indigo-300'
+                : 'hover:bg-gray-50 dark:hover:bg-accent',
             )}
             onClick={() => onSelect(0)} // Use 0 for "None"
           >

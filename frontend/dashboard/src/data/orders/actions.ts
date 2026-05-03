@@ -4,12 +4,12 @@
  * Uses "use server" directive and revalidateTag() for cache invalidation.
  * Apps own cache invalidation - backend stays pure TypeScript.
  */
-"use server";
+'use server';
 
-import { revalidateTag } from "next/cache";
-import { createAdministrationServices } from "@findeg/backend/features/administration";
-import type { OrderStatusUpdate } from "@findeg/backend/features/administration/domain/types";
-import { getErrorMessage } from "@lib/type-guards";
+import { revalidateTag } from 'next/cache';
+import { createAdministrationServices } from '@findeg/backend/features/administration';
+import type { OrderStatusUpdate } from '@findeg/backend/features/administration/domain/types';
+import { getErrorMessage } from '@lib/type-guards';
 
 /**
  * Update order status
@@ -21,11 +21,11 @@ export async function updateOrderStatusAction(id: number, input: OrderStatusUpda
     const { orders } = createAdministrationServices();
     const result = await orders.updateStatus(id, input);
 
-    revalidateTag("orders", "max");
+    revalidateTag('orders', 'max');
 
     return { success: true, data: result };
   } catch (error: unknown) {
-    console.error("[updateOrderStatusAction]", error);
+    console.error('[updateOrderStatusAction]', error);
     return { success: false, error: getErrorMessage(error) };
   }
 }
@@ -37,17 +37,17 @@ export async function updateOrderStatusAction(id: number, input: OrderStatusUpda
  */
 export async function updateOrderPaymentStatusAction(
   id: number,
-  paymentStatus: "unpaid" | "paid" | "refunded",
+  paymentStatus: 'unpaid' | 'paid' | 'refunded',
 ) {
   try {
     const { orders } = createAdministrationServices();
     const result = await orders.updatePaymentStatus(id, paymentStatus);
 
-    revalidateTag("orders", "max");
+    revalidateTag('orders', 'max');
 
     return { success: true, data: result };
   } catch (error: unknown) {
-    console.error("[updateOrderPaymentStatusAction]", error);
+    console.error('[updateOrderPaymentStatusAction]', error);
     return { success: false, error: getErrorMessage(error) };
   }
 }

@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { Link } from "@i18n/navigation";
-import { Button } from "@findeg/ui";
-import { Separator } from "@findeg/ui";
-import { SheetClose, SheetFooter } from "@findeg/ui";
-import { useTranslations } from "next-intl";
+import { Link } from '@i18n/navigation';
+import { Button } from '@findeg/ui';
+import { Separator } from '@findeg/ui';
+import { SheetClose, SheetFooter } from '@findeg/ui';
+import { useTranslations } from 'next-intl';
 
-const egpFormatter = new Intl.NumberFormat("en-EG", { style: "currency", currency: "EGP" });
+const egpFormatter = new Intl.NumberFormat('en-EG', { style: 'currency', currency: 'EGP' });
 
 interface CartSummaryProps {
   cartTotal: number;
@@ -34,7 +34,7 @@ export function CartSummary({ cartTotal }: CartSummaryProps) {
         <Separator className="dark:bg-slate-800" />
         <div className="flex justify-between items-center mt-2">
           <span className="font-bold text-slate-900 dark:text-white">
-            {t("Pages.Checkout.Total")}
+            {t('Pages.Checkout.Total')}
           </span>
           <span className="text-2xl font-black text-primary">{egpFormatter.format(cartTotal)}</span>
         </div>
@@ -44,7 +44,7 @@ export function CartSummary({ cartTotal }: CartSummaryProps) {
         <SheetClose asChild>
           <Link href="/checkout" className="w-full">
             <Button className="w-full h-14 text-lg font-bold rounded-full shadow-lg shadow-primary/25 hover:scale-[1.02] active:scale-[0.98] transition-all">
-              {t("Pages.Cart.Checkout")}
+              {t('Pages.Cart.Checkout')}
             </Button>
           </Link>
         </SheetClose>

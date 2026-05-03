@@ -45,6 +45,7 @@ Backend packages (`@backend`) MUST be pure TypeScript libraries containing ONLY 
 **Service Factory Pattern**: Backend features export factory functions (e.g., `createCatalogServices()`, `createOrderServices()`) that return service instances. Apps call these factories to get service instances, then wrap the service calls in `'use cache'` queries or `'use server'` actions at the app layer.
 
 **Example**:
+
 ```typescript
 // Backend (pure TS, no Next.js)
 export function createCatalogServices() {
@@ -53,10 +54,10 @@ export function createCatalogServices() {
 }
 
 // App data layer (with Next.js caching)
-'use cache';
-import { createCatalogServices } from '@backend/features/catalog';
+("use cache");
+import { createCatalogServices } from "@backend/features/catalog";
 export async function getProducts(locale) {
-  cacheTag('products');
+  cacheTag("products");
   const { products } = createCatalogServices();
   return await products.getAll(locale);
 }
@@ -64,7 +65,22 @@ export async function getProducts(locale) {
 
 ### IX. Monorepo Architecture & Package Boundaries
 
-The monorepo structure enforces strict package boundaries via Turborepo and pnpm workspaces. Four packages exist: `@ui` (shared React components), `@backend` (business logic), `@dashboard` (admin app), and `@storefront` (customer app). Apps depend on `@ui` and `@backend`; backend and UI packages are independent with NO circular dependencies. Features within the backend package MUST be self-contained—cross-feature dependencies are ONLY permitted through application-layer interfaces defined in `core`. Backend packages CANNOT depend on app-layer code or UI components. All shared utilities, types, and cross-cutting concerns live in `@backend/features/core` or `@ui/lib`. Violating package boundaries (e.g., importing another feature's infrastructure directly, or importing app code into backend) is a critical architecture violation and must be refactored immediately.
+The monorepo structure enforces strict package boundaries via Turborepo and pnpm workspaces.
+Five packages exist: **@db** (database access layer), **@backend** (business logic), **@ui**
+(shared React components), **@dashboard** (admin app), and **@storefront** (customer app).
+
+Apps (`@dashboard`, `@storefront`) depend on `@ui` and `@backend`; `@backend` depends on `@db`;
+`@db` and `@ui` are leaf packages with no dependencies on other workspace packages. The
+dependency flow is: `@db ← @backend ← [@dashboard, @storefront]` and `@ui → [@dashboard, @storefront]`.
+
+NO circular dependencies are permitted. Features within the `@backend` package MUST be
+self-contained—cross-feature dependencies are ONLY permitted through application-layer
+interfaces defined in `core`. Backend packages CANNOT depend on app-layer code or UI components.
+
+All shared utilities, types, and cross-cutting concerns live in `@backend/features/core`,
+`@db/shared` (if needed), or `@ui/lib`. Violating package boundaries (e.g., importing another
+feature's infrastructure directly, importing app code into backend, or `@db` importing from
+`@backend`) is a critical architecture violation and must be refactored immediately.
 
 ### X. Source vs Build Artifacts (STRICT)
 

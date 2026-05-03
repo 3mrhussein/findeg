@@ -1,25 +1,11 @@
-import { z } from "zod";
+import {
+  SUPPORTED_LOCALES,
+  DEFAULT_LOCALE,
+  LocaleSchema,
+  type Locale,
+} from '@findeg/db';
 
-/**
- * Canonical locale values supported by the product domain.
- * Keep this aligned with i18n routing locales.
- */
-export const SUPPORTED_LOCALES = ["en", "ar"] as const;
-
-/**
- * The default locale used when no locale is specified or supported.
- */
-export const DEFAULT_LOCALE: (typeof SUPPORTED_LOCALES)[number] = "en";
-
-/**
- * Zod schema for validating supported locales.
- */
-export const LocaleSchema = z.enum(SUPPORTED_LOCALES);
-
-/**
- * Type representing a supported locale string.
- */
-export type Locale = z.infer<typeof LocaleSchema>;
+export { SUPPORTED_LOCALES, DEFAULT_LOCALE, LocaleSchema, type Locale };
 
 /**
  * Checks if a value is a supported domain locale.
@@ -31,7 +17,7 @@ export type Locale = z.infer<typeof LocaleSchema>;
  * if (valid("en")) { ... }
  */
 export function valid(value: unknown): value is Locale {
-  return typeof value === "string" && (SUPPORTED_LOCALES as readonly string[]).includes(value);
+  return typeof value === 'string' && (SUPPORTED_LOCALES as readonly string[]).includes(value);
 }
 
 /**
@@ -51,30 +37,19 @@ export function parse(value?: string | null): Locale {
 
 // ─── Translation Structures ──────────────────────────────────────────
 
-/**
- * Strict translation map that requires a value for all supported locales.
- * Ensuring all locales have at least an empty string prevents runtime errors
- * when accessing localized fields.
- */
-export type TranslationMap<TLocale extends string = Locale> = Record<TLocale, string>;
+import {
+  TranslationMapSchema,
+  PartialTranslationMapSchema,
+  type TranslationMap,
+  type PartialTranslationMap,
+} from '@findeg/db';
 
-/**
- * Zod schema for a full TranslationMap requiring values for all supported locales.
- */
-export const TranslationMapSchema = z.object({
-  en: z.string(),
-  ar: z.string(),
-});
-
-/**
- * Zod schema for a partial set of translations, often used for user inputs.
- */
-export const PartialTranslationMapSchema = TranslationMapSchema.partial();
-
-/**
- * Type representing a partial set of translations.
- */
-export type PartialTranslationMap = z.infer<typeof PartialTranslationMapSchema>;
+export {
+  TranslationMapSchema,
+  PartialTranslationMapSchema,
+  type TranslationMap,
+  type PartialTranslationMap,
+};
 
 /**
  * Normalizes partial translation data into a strict TranslationMap.
@@ -89,7 +64,7 @@ export type PartialTranslationMap = z.infer<typeof PartialTranslationMapSchema>;
  */
 export function asTranslationMap(
   value: PartialTranslationMap | undefined,
-  fallback: string = "",
+  fallback: string = '',
 ): TranslationMap {
   const result = {} as TranslationMap;
   for (const locale of SUPPORTED_LOCALES) {
@@ -115,6 +90,6 @@ export function pick(
   locale: Locale,
   fallbackLocale: Locale = DEFAULT_LOCALE,
 ): string {
-  if (!value) return "";
-  return value[locale] ?? value[fallbackLocale] ?? "";
+  if (!value) return '';
+  return value[locale] ?? value[fallbackLocale] ?? '';
 }

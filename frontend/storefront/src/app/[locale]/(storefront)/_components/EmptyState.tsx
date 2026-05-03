@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
-import { cn } from "@lib/utils";
+import { ReactNode } from 'react';
+import { cn } from '@lib/utils';
 
 interface EmptyStateProps {
   title: string;
@@ -15,7 +15,7 @@ export function EmptyState({ title, description, icon, className }: EmptyStatePr
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-center py-20 text-center bg-white dark:bg-surface-dark rounded-2xl border border-slate-100 dark:border-slate-800 border-dashed",
+        'flex flex-col items-center justify-center py-20 text-center bg-white dark:bg-surface-dark rounded-2xl border border-slate-100 dark:border-slate-800 border-dashed',
         className,
       )}
     >

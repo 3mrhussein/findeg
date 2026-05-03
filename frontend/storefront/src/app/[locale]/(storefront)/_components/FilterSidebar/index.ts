@@ -1,2 +1,2 @@
-export { FilterSidebar } from "./FilterSidebar";
-export type { FilterSidebarProps } from "./FilterSidebar.interface";
+export { FilterSidebar } from './FilterSidebar';
+export type { FilterSidebarProps } from './FilterSidebar.interface';

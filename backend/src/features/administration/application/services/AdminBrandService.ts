@@ -1,9 +1,9 @@
-import { ID, Slug } from "../../../core/domain/types/common";
-import { IAdminBrandService } from "../interfaces/IAdminBrandService";
-import { IBrandRepository } from "../../../catalog/application/interfaces/IBrandRepository";
-import { Brand } from "../../../catalog/domain/entities/Brand";
-import { BrandInput } from "../../domain/types/BrandInput";
-import { IAuditLogService } from "../interfaces/IAuditLogService";
+import { ID, Slug } from '../../../core/domain/types/common';
+import { IAdminBrandService } from '../interfaces/IAdminBrandService';
+import { IBrandRepository } from '../../../catalog/application/interfaces/IBrandRepository';
+import { Brand } from '../../../catalog/domain/entities/Brand';
+import { BrandInput } from '../../domain/types/BrandInput';
+import { IAuditLogService } from '../interfaces/IAuditLogService';
 
 /**
  * Admin Brand Service
@@ -56,7 +56,7 @@ export class AdminBrandService implements IAdminBrandService {
       logoUrl: input.logoUrl,
       isActive: input.isActive ?? true,
       localizedName: { en: input.nameEn!, ar: input.nameAr! },
-      localizedDescription: { en: input.descriptionEn || "", ar: input.descriptionAr || "" },
+      localizedDescription: { en: input.descriptionEn || '', ar: input.descriptionAr || '' },
     });
     return brand;
   }
@@ -75,7 +75,7 @@ export class AdminBrandService implements IAdminBrandService {
       logoUrl: input.logoUrl,
       isActive: input.isActive,
       localizedName: { en: input.nameEn!, ar: input.nameAr! },
-      localizedDescription: { en: input.descriptionEn || "", ar: input.descriptionAr || "" },
+      localizedDescription: { en: input.descriptionEn || '', ar: input.descriptionAr || '' },
     });
     return brand;
   }
@@ -103,13 +103,13 @@ export class AdminBrandService implements IAdminBrandService {
    */
   async toggleBrandStatus(id: ID): Promise<Brand> {
     const brand = await this.getById(id);
-    if (!brand) throw new Error("Brand not found");
+    if (!brand) throw new Error('Brand not found');
     return this.update(id, {
       slug: brand.slug,
       nameEn: brand.localizedContent?.name?.en || brand.name,
       nameAr: brand.localizedContent?.name?.ar || brand.name,
-      descriptionEn: (brand.localizedContent as Record<string, any>)?.description?.en || "",
-      descriptionAr: (brand.localizedContent as Record<string, any>)?.description?.ar || "",
+      descriptionEn: brand.localizedContent?.description?.en || '',
+      descriptionAr: brand.localizedContent?.description?.ar || '',
       isActive: !brand.isActive,
     } as unknown as BrandInput);
   }

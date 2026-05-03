@@ -13,19 +13,19 @@
  * - Better perceived performance
  */
 
-import { Suspense } from "react";
-import { getTranslations, setRequestLocale } from "next-intl/server";
-import { requireAdmin } from "@lib/auth-guard";
-import { DashboardStatsSkeleton } from "@components/skeletons";
+import { Suspense } from 'react';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { requireAdmin } from '@lib/auth-guard';
+import { DashboardStatsSkeleton } from '@components/skeletons';
 import {
   FastDashboardSection,
   MediumDashboardSection,
   SlowDashboardSection,
-} from "./_components/DashboardWidgets";
+} from './_components/DashboardWidgets';
 import {
   MediumDashboardMiniSkeleton,
   SlowDashboardSkeleton,
-} from "./_components/DashboardSkeletons";
+} from './_components/DashboardSkeletons';
 
 interface AdminDashboardPageProps {
   params: Promise<{ locale: string }>;

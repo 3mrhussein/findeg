@@ -1,98 +1,64 @@
-/**
- * Backend ESLint Configuration
- *
- * Enforces that @backend remains a pure TypeScript library
- * with no dependencies on Next.js framework APIs.
- */
-import jsdoc from "eslint-plugin-jsdoc";
-import prettierRecommended from "eslint-plugin-prettier/recommended";
-import tseslint from "typescript-eslint";
-import tsPlugin from "@typescript-eslint/eslint-plugin";
+import js from '@eslint/js';
+import tseslint from 'typescript-eslint';
+import jsdoc from 'eslint-plugin-jsdoc';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const config = tseslint.config(
-  prettierRecommended,
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+export default tseslint.config(
+  js.configs.recommended,
+  ...tseslint.configs.recommended,
   {
-    languageOptions: {
-      parser: tseslint.parser,
-      parserOptions: {
-        project: true,
-        tsconfigRootDir: import.meta.dirname,
-        ecmaVersion: "latest",
-        sourceType: "module",
-      },
-    },
-    files: ["src/**/*.{js,ts,jsx,tsx}"],
+    files: ['src/**/*.ts'],
     plugins: {
       jsdoc,
-      "@typescript-eslint": tsPlugin,
     },
-    ignores: ["dist/**", "node_modules/**"],
+    languageOptions: {
+      parserOptions: {
+        project: './tsconfig.json',
+        tsconfigRootDir: __dirname,
+      },
+    },
     rules: {
-      /**
-       * CRITICAL: Prevent Next.js framework imports in backend package.
-       * Backend must be pure TypeScript/Node.js to:
-       * - Run unit tests in pure Node.js environment (Vitest)
-       * - Enable framework portability
-       * - Maintain Clean Architecture separation
-       */
-      "no-restricted-imports": [
-        "error",
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/explicit-function-return-type': 'off',
+      '@typescript-eslint/no-explicit-any': 'warn',
+      'no-restricted-imports': [
+        'error',
         {
           patterns: [
             {
-              group: ["next", "next/*"],
-              message:
-                "❌ Next.js imports are not allowed in @backend. " +
-                "Backend must be pure TypeScript/Node.js. " +
-                "Move framework integration to @dashboard or @storefront.",
+              group: ['@findeg/dashboard', '@findeg/dashboard/**'],
+              message: 'Backend should not import from dashboard.',
             },
-            // {
-            //   group: ["react", "react/*"],
-            //   message:
-            //     "❌ React imports are not allowed in @backend. " +
-            //     "Backend must have no UI dependencies. " +
-            //     "Use @ui in app packages instead.",
-            // },
+            {
+              group: ['@findeg/storefront', '@findeg/storefront/**'],
+              message: 'Backend should not import from storefront.',
+            },
+            {
+              group: ['@findeg/ui', '@findeg/ui/**'],
+              message: 'Backend should not import from UI components.',
+            },
+            {
+              group: ['next', 'next/**', 'next/navigation', 'next/headers'],
+              message:
+                'Backend should not import from Next.js APIs. Use framework-agnostic interfaces.',
+            },
           ],
         },
       ],
-      "jsdoc/check-alignment": "warn",
-      "jsdoc/check-syntax": "warn",
-      "jsdoc/check-tag-names": "warn",
-      "jsdoc/no-undefined-types": "warn",
-      "jsdoc/check-types": "warn",
-      "jsdoc/check-values": "warn",
-      "jsdoc/no-multi-asterisks": "warn",
-      "@typescript-eslint/naming-convention": [
-        "error",
-        {
-          selector: "enum",
-          format: ["PascalCase"],
-        },
-        {
-          selector: "variable",
-          modifiers: ["global", "const"],
-          types: ["string", "number", "boolean", "array"],
-          format: ["UPPER_CASE"],
-        },
-        {
-          selector: "variable",
-          modifiers: ["global", "const"],
-          format: ["PascalCase"],
-          filter: {
-            regex: "Schema$",
-            match: true,
-          },
-        },
-      ],
+      // JSDoc rules
+      'jsdoc/check-alignment': 'warn',
+      'jsdoc/check-syntax': 'warn',
+      'jsdoc/check-tag-names': 'warn',
+      'jsdoc/no-undefined-types': 'warn',
+      'jsdoc/check-types': 'warn',
+      'jsdoc/check-values': 'warn',
+      'jsdoc/no-multi-asterisks': 'warn',
     },
   },
   {
-    files: ["src/features/notifications/infrastructure/templates/*.tsx"],
-    rules: {
-      "no-restricted-imports": "off",
-    },
+    ignores: ['**/dist/**', '**/node_modules/**', 'eslint.config.js'],
   },
 );
-
-export default config;

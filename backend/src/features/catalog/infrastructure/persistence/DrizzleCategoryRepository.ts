@@ -1,16 +1,15 @@
-import { ID, Slug } from "../../../core/domain/types/common";
-import { db } from "@findeg/db/connection";
-import { categories } from "@findeg/db/schema";
-import { ICategoryRepository } from "../../application/interfaces/ICategoryRepository";
-import { Category } from "../../domain/entities/Category";
-import { CategoryInput } from "../../../administration/domain/types";
-import { eq, and, sql, desc, asc, like, isNull, or, count } from "drizzle-orm";
+import { ID, Slug } from '../../../core/domain/types/common';
+import { db } from '@findeg/db/connection';
+import { categories } from '@findeg/db/schema';
+import { ICategoryRepository } from '../../application/interfaces/ICategoryRepository';
+import { Category } from '../../domain/entities/Category';
+import { CategoryInput } from '../../../administration/domain/types';
+import { eq, count, asc, isNull, or, like, sql } from 'drizzle-orm';
 import {
   DEFAULT_LOCALE,
   asTranslationMap,
   type Locale,
-  type TranslationMap,
-} from "../../../core/domain/value-objects";
+} from '../../../core/domain/value-objects';
 
 type DbCategory = typeof categories.$inferSelect;
 
@@ -24,8 +23,8 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
     return value
       .trim()
       .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "");
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
   }
 
   private mapToDomain(
@@ -38,9 +37,9 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
     let localizedDescriptionDraft: Record<string, string> = {};
 
     try {
-      if (typeof dbCategory.localizedName === "string") {
+      if (typeof dbCategory.localizedName === 'string') {
         localizedNameDraft = JSON.parse(dbCategory.localizedName);
-      } else if (dbCategory.localizedName && typeof dbCategory.localizedName === "object") {
+      } else if (dbCategory.localizedName && typeof dbCategory.localizedName === 'object') {
         localizedNameDraft = dbCategory.localizedName as Record<string, string>;
       }
     } catch {
@@ -48,11 +47,11 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
     }
 
     try {
-      if (typeof dbCategory.localizedDescription === "string") {
+      if (typeof dbCategory.localizedDescription === 'string') {
         localizedDescriptionDraft = JSON.parse(dbCategory.localizedDescription);
       } else if (
         dbCategory.localizedDescription &&
-        typeof dbCategory.localizedDescription === "object"
+        typeof dbCategory.localizedDescription === 'object'
       ) {
         localizedDescriptionDraft = dbCategory.localizedDescription as Record<string, string>;
       }
@@ -61,11 +60,11 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
     }
 
     const localizedContent = {
-      name: asTranslationMap(localizedNameDraft, ""),
+      name: asTranslationMap(localizedNameDraft, ''),
       slug: dbCategory.slug as Slug,
       description:
         localizedDescriptionDraft && Object.keys(localizedDescriptionDraft).length > 0
-          ? asTranslationMap(localizedDescriptionDraft, "")
+          ? asTranslationMap(localizedDescriptionDraft, '')
           : undefined,
     };
 
@@ -111,7 +110,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
 
   async getTree(language: Locale = DEFAULT_LOCALE): Promise<Category[]> {
     const allCategories = await this.getAll(language);
-    const { products } = await import("@findeg/db/schema");
+    const { products } = await import('@findeg/db/schema');
 
     // Get direct product counts for all categories in one query
     const productCountsResult = await db
@@ -215,7 +214,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
   async create(input: CategoryInput): Promise<Category> {
     return await db.transaction(async (tx) => {
       // Determine path and depth based on parentId
-      let path = "/";
+      let path = '/';
       let depth = 0;
 
       if (input.parentId) {
@@ -255,7 +254,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
       // Update path to include own ID to ensure uniqueness or easy query?
       // Strategy: path stores inclusive path e.g. /1/3/7/
       // Let's update it to be strictly ancestors + self
-      const inclusivePath = path === "/" ? `/${newCategory.id}/` : `${path}/${newCategory.id}/`;
+      const inclusivePath = path === '/' ? `/${newCategory.id}/` : `${path}/${newCategory.id}/`;
 
       const [finalCategory] = await tx
         .update(categories)
@@ -276,7 +275,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
   async update(id: ID, input: CategoryInput): Promise<Category> {
     return await db.transaction(async (tx) => {
       const existing = await tx.select().from(categories).where(eq(categories.id, id)).limit(1);
-      if (existing.length === 0) throw new Error("Category not found");
+      if (existing.length === 0) throw new Error('Category not found');
 
       const oldPath = existing[0].path;
       const oldDepth = existing[0].depth;
@@ -286,7 +285,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
       let newDepth = oldDepth;
 
       if (input.parentId !== oldParentId) {
-        let parentPath = "/";
+        let parentPath = '/';
         let parentDepth = 0;
 
         if (input.parentId) {
@@ -300,7 +299,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
             parentDepth = parentResult[0].depth;
           }
         }
-        newPath = parentPath === "/" ? `/${id}/` : `${parentPath}${id}/`;
+        newPath = parentPath === '/' ? `/${id}/` : `${parentPath}${id}/`;
         newDepth = parentDepth + 1;
 
         // Update all descendants
@@ -361,7 +360,7 @@ export class DrizzleCategoryRepository implements ICategoryRepository {
   }
 
   async getProductCount(categoryId: number): Promise<number> {
-    const { products } = await import("@findeg/db/schema");
+    const { products } = await import('@findeg/db/schema');
     const result = await db
       .select({ value: count() })
       .from(products)

@@ -11,14 +11,14 @@
  * Location: src/app/[locale]/admin/(dashboard)/categories/_components/
  */
 
-"use client";
+'use client';
 
-import * as React from "react";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { Badge } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { StatusBadge } from "@components/shared/StatusBadge";
+import * as React from 'react';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { Badge } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { StatusBadge } from '@components/shared/StatusBadge';
 import {
   ChevronRight,
   ChevronDown,
@@ -31,12 +31,12 @@ import {
   Trash2,
   ArrowUp,
   ArrowDown,
-} from "lucide-react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@findeg/ui";
-import { cn } from "@lib/utils";
-import type { Category } from "@findeg/backend/features/catalog";
+} from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@findeg/ui';
+import { cn } from '@lib/utils';
+import type { Category } from '@findeg/backend/features/catalog';
 
-import { useTranslations } from "next-intl";
+import { useTranslations } from 'next-intl';
 
 interface CategoryRowProps {
   category: Category;
@@ -67,7 +67,7 @@ export function CategoryRow({
   onMoveDown,
   id,
 }: CategoryRowProps) {
-  const t = useTranslations("Administration.Catalog.Categories");
+  const t = useTranslations('Administration.Catalog.Categories');
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id,
@@ -86,12 +86,12 @@ export function CategoryRow({
       ref={setNodeRef}
       style={style}
       className={cn(
-        "group relative flex items-center gap-2 rounded-md border px-3 py-2 hover:bg-accent/50 transition-colors",
-        hasChildren && depth === 0 && "bg-slate-200 dark:bg-slate-950/50 shadow-sm",
-        hasChildren && depth === 1 && "bg-slate-100 dark:bg-slate-900/50",
-        (!hasChildren || depth >= 2) && "bg-slate-50 dark:bg-slate-800/30",
-        depth > 0 && "border-s-2 border-s-muted ml-4",
-        isDragging && "opacity-50 shadow-lg z-50",
+        'group relative flex items-center gap-2 rounded-md border px-3 py-2 hover:bg-accent/50 transition-colors',
+        hasChildren && depth === 0 && 'bg-slate-200 dark:bg-slate-950/50 shadow-sm',
+        hasChildren && depth === 1 && 'bg-slate-100 dark:bg-slate-900/50',
+        (!hasChildren || depth >= 2) && 'bg-slate-50 dark:bg-slate-800/30',
+        depth > 0 && 'border-s-2 border-s-muted ml-4',
+        isDragging && 'opacity-50 shadow-lg z-50',
       )}
     >
       {/* Indent spacer */}
@@ -153,14 +153,14 @@ export function CategoryRow({
 
       {/* Status Badge */}
       <div className="shrink-0">
-        <StatusBadge status={category.isActive ? "active" : "draft"} />
+        <StatusBadge status={category.isActive ? 'active' : 'draft'} />
       </div>
 
       {/* Product Count (Hidden if 0) */}
       {(category as Category & { productCount?: number }).productCount !== undefined &&
       (category as Category & { productCount?: number }).productCount! > 0 ? (
         <span className="shrink-0 text-[13px] text-gray-400 font-normal">
-          {t("Form.ProductCount", {
+          {t('Form.ProductCount', {
             count: (category as Category & { productCount?: number }).productCount || 0,
           })}
         </span>
@@ -182,7 +182,7 @@ export function CategoryRow({
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>{t("Tree.AddSub")}</p>
+              <p>{t('Tree.AddSub')}</p>
             </TooltipContent>
           </Tooltip>
 
@@ -199,7 +199,7 @@ export function CategoryRow({
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>{t("Tree.MoveUp")}</p>
+              <p>{t('Tree.MoveUp')}</p>
             </TooltipContent>
           </Tooltip>
 
@@ -216,7 +216,7 @@ export function CategoryRow({
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>{t("Tree.MoveDown")}</p>
+              <p>{t('Tree.MoveDown')}</p>
             </TooltipContent>
           </Tooltip>
 
@@ -233,7 +233,7 @@ export function CategoryRow({
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>{t("Form.Edit") || "Edit category"}</p>
+              <p>{t('Form.Edit') || 'Edit category'}</p>
             </TooltipContent>
           </Tooltip>
 
@@ -250,7 +250,7 @@ export function CategoryRow({
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>{t("DeleteCategory")}</p>
+              <p>{t('DeleteCategory')}</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>

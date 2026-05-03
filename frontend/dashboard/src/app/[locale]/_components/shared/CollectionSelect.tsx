@@ -7,16 +7,16 @@
  * Location: src/app/[locale]/admin/_components/shared/ (admin-wide)
  */
 
-"use client";
+'use client';
 
-import * as React from "react";
-import { Check, ChevronsUpDown } from "lucide-react";
-import { Button } from "@findeg/ui";
-import { Popover, PopoverContent, PopoverTrigger } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Checkbox } from "@findeg/ui";
-import { cn } from "@lib/utils";
+import * as React from 'react';
+import { Check, ChevronsUpDown } from 'lucide-react';
+import { Button } from '@findeg/ui';
+import { Popover, PopoverContent, PopoverTrigger } from '@findeg/ui';
+import { Badge } from '@findeg/ui';
+import { Input } from '@findeg/ui';
+import { Checkbox } from '@findeg/ui';
+import { cn } from '@lib/utils';
 
 export interface Collection {
   id: number;
@@ -32,7 +32,7 @@ export interface CollectionSelectProps {
   /** Change handler */
   onChange: (selectedIds: number[]) => void;
   /** Current locale */
-  locale?: "en" | "ar";
+  locale?: 'en' | 'ar';
   /** Placeholder text */
   placeholder?: string;
   /** Additional CSS classes */
@@ -54,12 +54,12 @@ export function CollectionSelect({
   collections,
   selectedIds,
   onChange,
-  locale = "en",
-  placeholder = "Select collections...",
+  locale = 'en',
+  placeholder = 'Select collections...',
   className,
 }: CollectionSelectProps) {
   const [open, setOpen] = React.useState(false);
-  const [searchQuery, setSearchQuery] = React.useState("");
+  const [searchQuery, setSearchQuery] = React.useState('');
 
   const toggleCollection = (collectionId: number) => {
     const updated = selectedIds.includes(collectionId)
@@ -71,7 +71,7 @@ export function CollectionSelect({
   const selectedCollections = collections.filter((c) => selectedIds.includes(c.id));
 
   const getCollectionName = (collection: Collection) => {
-    return locale === "ar" && collection.nameAr ? collection.nameAr : collection.name;
+    return locale === 'ar' && collection.nameAr ? collection.nameAr : collection.name;
   };
 
   const filteredCollections = collections.filter((c) => {
@@ -80,7 +80,7 @@ export function CollectionSelect({
   });
 
   return (
-    <div className={cn("space-y-2", className)}>
+    <div className={cn('space-y-2', className)}>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button

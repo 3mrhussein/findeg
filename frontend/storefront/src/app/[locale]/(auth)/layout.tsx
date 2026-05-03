@@ -1,6 +1,6 @@
-import React from "react";
-import { redirectIfAuthenticated } from "@lib/auth-guard";
-import type { Locale } from "next-intl";
+import React from 'react';
+import { redirectIfAuthenticated } from '@lib/auth-guard';
+import type { Locale } from 'next-intl';
 
 async function AuthGuard({ locale }: { locale: string }) {
   await redirectIfAuthenticated(locale as Locale);

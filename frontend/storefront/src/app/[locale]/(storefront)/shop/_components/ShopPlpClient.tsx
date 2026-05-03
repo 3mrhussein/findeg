@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import { usePathname, useRouter } from "@i18n/navigation";
-import { useTranslations } from "next-intl";
+import { useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { usePathname, useRouter } from '@i18n/navigation';
+import { useTranslations } from 'next-intl';
 import {
   ArrowLeft,
   ArrowRight,
@@ -13,17 +13,17 @@ import {
   SlidersHorizontal,
   SortAsc,
   X,
-} from "lucide-react";
-import { Link } from "@i18n/navigation";
-import { Badge } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { IconTooltip } from "@findeg/ui";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@findeg/ui";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@findeg/ui";
-import { FilterPanel, type FilterPanelBrand } from "./FilterPanel";
-import { ProductCard, type ProductCardBrand } from "./ProductCard";
-import type { ShopPlpFilters, ShopPlpSort, ShopPlpViewModel } from "@data/catalog/types";
-import { cn } from "@lib/utils";
+} from 'lucide-react';
+import { Link } from '@i18n/navigation';
+import { Badge } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { IconTooltip } from '@findeg/ui';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@findeg/ui';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@findeg/ui';
+import { FilterPanel, type FilterPanelBrand } from './FilterPanel';
+import { ProductCard, type ProductCardBrand } from './ProductCard';
+import type { ShopPlpFilters, ShopPlpSort, ShopPlpViewModel } from '@data/catalog/types';
+import { cn } from '@lib/utils';
 
 interface ShopPlpClientProps {
   vm: ShopPlpViewModel;
@@ -36,38 +36,38 @@ interface ActiveChip {
 }
 
 type SortOptionMessageKey =
-  | "SortPopular"
-  | "SortNewest"
-  | "SortPriceLowHigh"
-  | "SortPriceHighLow"
-  | "SortRating";
+  | 'SortPopular'
+  | 'SortNewest'
+  | 'SortPriceLowHigh'
+  | 'SortPriceHighLow'
+  | 'SortRating';
 
 const SORT_OPTIONS: Array<{ value: ShopPlpSort; key: SortOptionMessageKey }> = [
-  { value: "popular", key: "SortPopular" },
-  { value: "newest", key: "SortNewest" },
-  { value: "price-low-high", key: "SortPriceLowHigh" },
-  { value: "price-high-low", key: "SortPriceHighLow" },
-  { value: "rating", key: "SortRating" },
+  { value: 'popular', key: 'SortPopular' },
+  { value: 'newest', key: 'SortNewest' },
+  { value: 'price-low-high', key: 'SortPriceLowHigh' },
+  { value: 'price-high-low', key: 'SortPriceHighLow' },
+  { value: 'rating', key: 'SortRating' },
 ];
 
 const PER_PAGE_OPTIONS = [24, 48, 96] as const;
 
-function getVisiblePages(currentPage: number, totalPages: number): Array<number | "ellipsis"> {
+function getVisiblePages(currentPage: number, totalPages: number): Array<number | 'ellipsis'> {
   if (totalPages <= 7) {
     return Array.from({ length: totalPages }, (_, index) => index + 1);
   }
 
   if (currentPage <= 3) {
-    return [1, 2, 3, 4, "ellipsis", totalPages];
+    return [1, 2, 3, 4, 'ellipsis', totalPages];
   }
   if (currentPage >= totalPages - 2) {
-    return [1, "ellipsis", totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+    return [1, 'ellipsis', totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
   }
-  return [1, "ellipsis", currentPage - 1, currentPage, currentPage + 1, "ellipsis", totalPages];
+  return [1, 'ellipsis', currentPage - 1, currentPage, currentPage + 1, 'ellipsis', totalPages];
 }
 
 export function ShopPlpClient({ vm }: ShopPlpClientProps) {
-  const t = useTranslations("Pages.Shop");
+  const t = useTranslations('Pages.Shop');
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -80,9 +80,9 @@ export function ShopPlpClient({ vm }: ShopPlpClientProps) {
 
     const loadBrands = async () => {
       try {
-        const response = await fetch("/api/v1/brands?active=true", {
+        const response = await fetch('/api/v1/brands?active=true', {
           signal: abort.signal,
-          cache: "no-store",
+          cache: 'no-store',
         });
         if (!response.ok) return;
         const data = (await response.json()) as FilterPanelBrand[];
@@ -97,9 +97,9 @@ export function ShopPlpClient({ vm }: ShopPlpClientProps) {
   }, []);
 
   const shopRootPath = useMemo(() => {
-    const index = pathname.indexOf("/shop");
+    const index = pathname.indexOf('/shop');
     if (index < 0) return pathname;
-    return pathname.slice(0, index + "/shop".length);
+    return pathname.slice(0, index + '/shop'.length);
   }, [pathname]);
 
   const brandById = useMemo(() => {
@@ -126,68 +126,68 @@ export function ShopPlpClient({ vm }: ShopPlpClientProps) {
 
   const handleApplyFilters = (nextFilters: ShopPlpFilters) => {
     pushWithMutation((params) => {
-      params.delete("brandId");
-      nextFilters.brandIds.forEach((brandId) => params.append("brandId", String(brandId)));
+      params.delete('brandId');
+      nextFilters.brandIds.forEach((brandId) => params.append('brandId', String(brandId)));
 
       if (nextFilters.minPrice <= vm.minPriceBound && nextFilters.maxPrice >= vm.maxPriceBound) {
-        params.delete("minPrice");
-        params.delete("maxPrice");
+        params.delete('minPrice');
+        params.delete('maxPrice');
       } else {
-        params.set("minPrice", String(nextFilters.minPrice));
-        params.set("maxPrice", String(nextFilters.maxPrice));
+        params.set('minPrice', String(nextFilters.minPrice));
+        params.set('maxPrice', String(nextFilters.maxPrice));
       }
 
       if (nextFilters.inStockOnly) {
-        params.delete("inStock");
+        params.delete('inStock');
       } else {
-        params.set("inStock", "false");
+        params.set('inStock', 'false');
       }
 
       if (nextFilters.ratingMin) {
-        params.set("ratingMin", String(nextFilters.ratingMin));
+        params.set('ratingMin', String(nextFilters.ratingMin));
       } else {
-        params.delete("ratingMin");
+        params.delete('ratingMin');
       }
 
-      params.delete("discount");
-      nextFilters.discounts.forEach((discount) => params.append("discount", discount));
+      params.delete('discount');
+      nextFilters.discounts.forEach((discount) => params.append('discount', discount));
 
-      params.delete("page");
+      params.delete('page');
     });
   };
 
   const handleCategoryChange = (slugPath: string[]) => {
     const nextCategoryPath =
-      slugPath.length > 0 ? `${shopRootPath}/${slugPath.join("/")}` : shopRootPath;
+      slugPath.length > 0 ? `${shopRootPath}/${slugPath.join('/')}` : shopRootPath;
     pushWithMutation((params) => {
-      params.delete("page");
+      params.delete('page');
     }, nextCategoryPath);
   };
 
   const handleClearAll = () => {
     pushWithMutation((params) => {
       [
-        "q",
-        "brandId",
-        "minPrice",
-        "maxPrice",
-        "inStock",
-        "sort",
-        "page",
-        "perPage",
-        "ratingMin",
-        "discount",
+        'q',
+        'brandId',
+        'minPrice',
+        'maxPrice',
+        'inStock',
+        'sort',
+        'page',
+        'perPage',
+        'ratingMin',
+        'discount',
       ].forEach((key) => params.delete(key));
     }, shopRootPath);
   };
 
-  const currentView = searchParams.get("view") === "list" ? "list" : "grid";
+  const currentView = searchParams.get('view') === 'list' ? 'list' : 'grid';
 
   const activeChips: ActiveChip[] = [];
 
   if (vm.currentCategoryName) {
     activeChips.push({
-      id: "category",
+      id: 'category',
       label: vm.currentCategoryName,
       onRemove: () => handleCategoryChange([]),
     });
@@ -195,18 +195,18 @@ export function ShopPlpClient({ vm }: ShopPlpClientProps) {
 
   if (vm.query.trim()) {
     activeChips.push({
-      id: "q",
-      label: t("ChipQuery", { query: vm.query }),
+      id: 'q',
+      label: t('ChipQuery', { query: vm.query }),
       onRemove: () =>
         pushWithMutation((params) => {
-          params.delete("q");
-          params.delete("page");
+          params.delete('q');
+          params.delete('page');
         }),
     });
   }
 
   for (const brandId of vm.filters.brandIds) {
-    const brandName = brandById.get(brandId)?.name || t("BrandFallback", { id: String(brandId) });
+    const brandName = brandById.get(brandId)?.name || t('BrandFallback', { id: String(brandId) });
     activeChips.push({
       id: `brand-${brandId}`,
       label: brandName,
@@ -220,8 +220,8 @@ export function ShopPlpClient({ vm }: ShopPlpClientProps) {
 
   if (vm.filters.minPrice > vm.minPriceBound || vm.filters.maxPrice < vm.maxPriceBound) {
     activeChips.push({
-      id: "price",
-      label: t("ChipPrice", {
+      id: 'price',
+      label: t('ChipPrice', {
         min: vm.filters.minPrice.toLocaleString(),
         max: vm.filters.maxPrice.toLocaleString(),
       }),
@@ -236,8 +236,8 @@ export function ShopPlpClient({ vm }: ShopPlpClientProps) {
 
   if (vm.filters.ratingMin) {
     activeChips.push({
-      id: "rating",
-      label: t("RatingAndAbove", { rating: vm.filters.ratingMin }),
+      id: 'rating',
+      label: t('RatingAndAbove', { rating: vm.filters.ratingMin }),
       onRemove: () =>
         handleApplyFilters({
           ...vm.filters,
@@ -247,7 +247,7 @@ export function ShopPlpClient({ vm }: ShopPlpClientProps) {
   }
 
   for (const discount of vm.filters.discounts) {
-    const label = discount === "on-sale" ? t("OnSale") : t("BundleDeals");
+    const label = discount === 'on-sale' ? t('OnSale') : t('BundleDeals');
     activeChips.push({
       id: `discount-${discount}`,
       label,
@@ -261,8 +261,8 @@ export function ShopPlpClient({ vm }: ShopPlpClientProps) {
 
   if (!vm.filters.inStockOnly) {
     activeChips.push({
-      id: "availability",
-      label: t("IncludeOutOfStock"),
+      id: 'availability',
+      label: t('IncludeOutOfStock'),
       onRemove: () =>
         handleApplyFilters({
           ...vm.filters,
@@ -284,17 +284,17 @@ export function ShopPlpClient({ vm }: ShopPlpClientProps) {
             <Button variant="outline" className="w-full justify-between">
               <span className="inline-flex items-center gap-2">
                 <SlidersHorizontal />
-                {t("FiltersTitle")}
+                {t('FiltersTitle')}
               </span>
               {activeChips.length > 0 ? <Badge>{activeChips.length}</Badge> : null}
             </Button>
           </SheetTrigger>
           <SheetContent
-            side={vm.locale === "ar" ? "right" : "left"}
+            side={vm.locale === 'ar' ? 'right' : 'left'}
             className="w-[320px] overflow-y-auto sm:w-[360px]"
           >
             <SheetHeader>
-              <SheetTitle>{t("FiltersTitle")}</SheetTitle>
+              <SheetTitle>{t('FiltersTitle')}</SheetTitle>
             </SheetHeader>
             <FilterPanel
               locale={vm.locale}
@@ -334,7 +334,7 @@ export function ShopPlpClient({ vm }: ShopPlpClientProps) {
         <main className="min-w-0 space-y-4">
           <div className="flex flex-col gap-3 rounded-xl border bg-background p-3 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm text-muted-foreground">
-              {t("ShowingRange", { from: vm.from, to: vm.to, total: vm.total })}
+              {t('ShowingRange', { from: vm.from, to: vm.to, total: vm.total })}
             </p>
 
             <div className="flex flex-wrap items-center gap-2">
@@ -344,8 +344,8 @@ export function ShopPlpClient({ vm }: ShopPlpClientProps) {
                   value={vm.sort}
                   onValueChange={(value) =>
                     pushWithMutation((params) => {
-                      params.set("sort", value);
-                      params.delete("page");
+                      params.set('sort', value);
+                      params.delete('page');
                     })
                   }
                 >
@@ -363,30 +363,30 @@ export function ShopPlpClient({ vm }: ShopPlpClientProps) {
               </div>
 
               <div className="inline-flex items-center gap-1 rounded-lg border bg-muted/30 p-1">
-                <IconTooltip label={t("GridView")} asChild>
+                <IconTooltip label={t('GridView')} asChild>
                   <Button
                     size="icon-sm"
-                    variant={currentView === "grid" ? "default" : "ghost"}
+                    variant={currentView === 'grid' ? 'default' : 'ghost'}
                     onClick={() =>
                       pushWithMutation((params) => {
-                        params.delete("view");
+                        params.delete('view');
                       })
                     }
-                    aria-label={t("GridView")}
+                    aria-label={t('GridView')}
                   >
                     <LayoutGrid />
                   </Button>
                 </IconTooltip>
-                <IconTooltip label={t("ListView")} asChild>
+                <IconTooltip label={t('ListView')} asChild>
                   <Button
                     size="icon-sm"
-                    variant={currentView === "list" ? "default" : "ghost"}
+                    variant={currentView === 'list' ? 'default' : 'ghost'}
                     onClick={() =>
                       pushWithMutation((params) => {
-                        params.set("view", "list");
+                        params.set('view', 'list');
                       })
                     }
-                    aria-label={t("ListView")}
+                    aria-label={t('ListView')}
                   >
                     <List />
                   </Button>
@@ -404,11 +404,11 @@ export function ShopPlpClient({ vm }: ShopPlpClientProps) {
                   className="inline-flex items-center gap-1 ps-2"
                 >
                   <span>{chip.label}</span>
-                  <IconTooltip label={t("RemoveFilter")} asChild>
+                  <IconTooltip label={t('RemoveFilter')} asChild>
                     <button
                       type="button"
                       onClick={chip.onRemove}
-                      aria-label={t("RemoveFilter")}
+                      aria-label={t('RemoveFilter')}
                       className="inline-flex size-4 items-center justify-center rounded-full hover:bg-muted"
                     >
                       <X className="size-3" />
@@ -424,18 +424,18 @@ export function ShopPlpClient({ vm }: ShopPlpClientProps) {
               <div className="mx-auto mb-4 inline-flex size-14 items-center justify-center rounded-full bg-muted text-muted-foreground">
                 <Package className="size-7" />
               </div>
-              <h2 className="text-xl font-semibold">{t("NoProductsTitle")}</h2>
-              <p className="mt-2 text-sm text-muted-foreground">{t("NoProductsSuggestion")}</p>
+              <h2 className="text-xl font-semibold">{t('NoProductsTitle')}</h2>
+              <p className="mt-2 text-sm text-muted-foreground">{t('NoProductsSuggestion')}</p>
               <Button asChild className="mt-5">
-                <Link href="/categories">{t("BrowseAllCategories")}</Link>
+                <Link href="/categories">{t('BrowseAllCategories')}</Link>
               </Button>
             </div>
           ) : (
             <div
               className={cn(
-                currentView === "list"
-                  ? "space-y-4"
-                  : "grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3",
+                currentView === 'list'
+                  ? 'space-y-4'
+                  : 'grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3',
               )}
             >
               {vm.products.map((product) => (
@@ -444,7 +444,7 @@ export function ShopPlpClient({ vm }: ShopPlpClientProps) {
                   product={product}
                   view={currentView}
                   brand={
-                    typeof product.brandId === "number" ? brandById.get(product.brandId) : undefined
+                    typeof product.brandId === 'number' ? brandById.get(product.brandId) : undefined
                   }
                 />
               ))}
@@ -454,13 +454,13 @@ export function ShopPlpClient({ vm }: ShopPlpClientProps) {
           {vm.total > 0 && (
             <div className="flex flex-col gap-3 border-t pt-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="inline-flex items-center gap-2 text-sm">
-                <span className="text-muted-foreground">{t("ItemsPerPage")}</span>
+                <span className="text-muted-foreground">{t('ItemsPerPage')}</span>
                 <Select
                   value={String(vm.perPage)}
                   onValueChange={(value) =>
                     pushWithMutation((params) => {
-                      params.set("perPage", value);
-                      params.delete("page");
+                      params.set('perPage', value);
+                      params.delete('page');
                     })
                   }
                 >
@@ -479,24 +479,24 @@ export function ShopPlpClient({ vm }: ShopPlpClientProps) {
 
               {vm.totalPages > 1 && (
                 <div className="inline-flex items-center gap-1">
-                  <IconTooltip label={t("PaginationPrevious")} asChild>
+                  <IconTooltip label={t('PaginationPrevious')} asChild>
                     <Button
                       variant="outline"
                       size="icon-sm"
                       disabled={vm.page <= 1}
                       onClick={() =>
                         pushWithMutation((params) => {
-                          params.set("page", String(vm.page - 1));
+                          params.set('page', String(vm.page - 1));
                         })
                       }
-                      aria-label={t("PaginationPrevious")}
+                      aria-label={t('PaginationPrevious')}
                     >
                       <ArrowLeft />
                     </Button>
                   </IconTooltip>
 
                   {visiblePages.map((entry, index) =>
-                    entry === "ellipsis" ? (
+                    entry === 'ellipsis' ? (
                       <span
                         key={`ellipsis-${index}`}
                         className="px-1 text-sm text-muted-foreground"
@@ -506,12 +506,12 @@ export function ShopPlpClient({ vm }: ShopPlpClientProps) {
                     ) : (
                       <Button
                         key={entry}
-                        variant={entry === vm.page ? "default" : "outline"}
+                        variant={entry === vm.page ? 'default' : 'outline'}
                         size="sm"
                         className="min-w-8"
                         onClick={() =>
                           pushWithMutation((params) => {
-                            params.set("page", String(entry));
+                            params.set('page', String(entry));
                           })
                         }
                       >
@@ -520,17 +520,17 @@ export function ShopPlpClient({ vm }: ShopPlpClientProps) {
                     ),
                   )}
 
-                  <IconTooltip label={t("PaginationNext")} asChild>
+                  <IconTooltip label={t('PaginationNext')} asChild>
                     <Button
                       variant="outline"
                       size="icon-sm"
                       disabled={vm.page >= vm.totalPages}
                       onClick={() =>
                         pushWithMutation((params) => {
-                          params.set("page", String(vm.page + 1));
+                          params.set('page', String(vm.page + 1));
                         })
                       }
-                      aria-label={t("PaginationNext")}
+                      aria-label={t('PaginationNext')}
                     >
                       <ArrowRight />
                     </Button>

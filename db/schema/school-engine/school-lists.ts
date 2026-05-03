@@ -18,9 +18,12 @@ import { relations } from "drizzle-orm";
 import { schoolEngineSchema } from "../schemas";
 import { categories } from "../catalog/categories";
 import { productVariants } from "../catalog/product-variants";
-import type { PartialTranslationMap } from "../../../backend/src/features/core/domain/value-objects";
+import { PartialTranslationMap } from "../../types";
 
 export type MatchRulesDraft = {
+  categoryId?: number;
+  brandIds?: number[];
+  tags?: string[];
   attributes?: Record<string, string | number | boolean>;
   brandId?: number;
   minPrice?: number;

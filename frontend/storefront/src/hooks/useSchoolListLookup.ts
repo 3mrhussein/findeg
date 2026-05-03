@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { usePathname, useRouter } from "@i18n/navigation";
+import { useState } from 'react';
+import { usePathname, useRouter } from '@i18n/navigation';
 
 interface UseSchoolListLookupParams {
   initialCode?: string;
@@ -10,7 +10,7 @@ interface UseSchoolListLookupParams {
 /**
  * Encapsulates school list lookup input and URL submit behavior.
  */
-export function useSchoolListLookup({ initialCode = "" }: UseSchoolListLookupParams = {}) {
+export function useSchoolListLookup({ initialCode = '' }: UseSchoolListLookupParams = {}) {
   const router = useRouter();
   const pathname = usePathname();
   const [code, setCode] = useState(initialCode);
@@ -26,7 +26,7 @@ export function useSchoolListLookup({ initialCode = "" }: UseSchoolListLookupPar
     }
 
     const params = new URLSearchParams();
-    params.set("code", value);
+    params.set('code', value);
     router.push(`${pathname}?${params.toString()}`);
   }
 

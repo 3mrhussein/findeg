@@ -1,12 +1,12 @@
 /**
  * School Data Layer (Storefront)
  */
-"use cache";
+'use cache';
 
-import { cacheTag, cacheLife } from "next/cache";
-import { createCatalogServices } from "@findeg/backend/features/catalog";
-import { parse } from "@findeg/backend/features/core";
-import type { Product, Category } from "../catalog/types";
+import { cacheTag, cacheLife } from 'next/cache';
+import { createCatalogServices } from '@findeg/backend/features/catalog';
+import { parse } from '@findeg/backend/features/core';
+import type { Product, Category } from '../catalog/types';
 
 /**
  * Helper to map backend product to storefront product
@@ -14,7 +14,7 @@ import type { Product, Category } from "../catalog/types";
 function mapProduct(p: any, locale: string): Product {
   return {
     ...p,
-    slug: p.localizedSlug?.[locale] || p.localizedSlug?.en || p.slug || "",
+    slug: p.localizedSlug?.[locale] || p.localizedSlug?.en || p.slug || '',
     variants: (p.variants || []).map((v: any) => ({
       ...v,
       inventory: v.inventory || [],
@@ -31,7 +31,7 @@ function mapProduct(p: any, locale: string): Product {
 export async function getSchoolListData(locale: string, code: string) {
   const resLocale = parse(locale);
   cacheTag(`school-list-${code}`);
-  cacheLife("hours");
+  cacheLife('hours');
 
   const { schoolLists, products: productService } = createCatalogServices();
   const list = await schoolLists.getListBySlug(code);
@@ -75,8 +75,8 @@ export async function getSchoolListData(locale: string, code: string) {
  * Search schools in the directory.
  */
 export async function searchSchools(params: any) {
-  cacheTag("schools", `school-search-${JSON.stringify(params)}`);
-  cacheLife("hours");
+  cacheTag('schools', `school-search-${JSON.stringify(params)}`);
+  cacheLife('hours');
 
   const { schoolLists } = createCatalogServices();
   const all = await schoolLists.getActiveLists();
@@ -91,17 +91,17 @@ export async function searchSchools(params: any) {
     if (!groups.has(list.schoolName)) {
       groups.set(list.schoolName, {
         schoolName: list.schoolName,
-        schoolType: list.schoolType || "General",
-        academicSystem: list.academicSystem || "Mixed",
-        area: list.area || "Unknown",
-        governorate: list.governorate || "Egypt",
+        schoolType: list.schoolType || 'General',
+        academicSystem: list.academicSystem || 'Mixed',
+        area: list.area || 'Unknown',
+        governorate: list.governorate || 'Egypt',
         gradeCount: 0,
         hasCurrentLists: false,
       });
     }
     const group = groups.get(list.schoolName);
     group.gradeCount++;
-    if (list.academicYear?.includes("2024") || list.academicYear?.includes("2025")) {
+    if (list.academicYear?.includes('2024') || list.academicYear?.includes('2025')) {
       group.hasCurrentLists = true;
     }
   }
@@ -118,12 +118,12 @@ export async function searchSchools(params: any) {
  * Get filter options for schools.
  */
 export async function getSchoolFilterOptions() {
-  cacheTag("school-filters");
-  cacheLife("days");
+  cacheTag('school-filters');
+  cacheLife('days');
 
   return {
-    governorates: ["Cairo", "Giza", "Alexandria", "Qaliubiya"],
-    schoolTypes: ["National", "International", "Language", "IGCSE", "American"],
+    governorates: ['Cairo', 'Giza', 'Alexandria', 'Qaliubiya'],
+    schoolTypes: ['National', 'International', 'Language', 'IGCSE', 'American'],
   };
 }
 
@@ -132,14 +132,14 @@ export async function getSchoolFilterOptions() {
  */
 export async function getSchoolProfile(slug: string, userId: number | null = null) {
   cacheTag(`school-${slug}`);
-  cacheLife("hours");
+  cacheLife('hours');
 
   const { schoolLists } = createCatalogServices();
   const allActive = await schoolLists.getActiveLists();
 
   // Find all lists for this school (grouped by schoolName)
   // In a real app we might have a separate school entity, but for now we group by common properties
-  const schoolNameFromSlug = slug.replace(/-/g, " ");
+  const schoolNameFromSlug = slug.replace(/-/g, ' ');
   const schoolListsForProfile = allActive.filter(
     (s) =>
       s.schoolName.toLowerCase() === schoolNameFromSlug.toLowerCase() || s.slug.startsWith(slug),
@@ -151,10 +151,10 @@ export async function getSchoolProfile(slug: string, userId: number | null = nul
 
   return {
     name: main.schoolName,
-    schoolType: main.schoolType || "General",
-    academicSystem: main.academicSystem || "Mixed",
-    area: main.area || "Unknown",
-    governorate: main.governorate || "Egypt",
+    schoolType: main.schoolType || 'General',
+    academicSystem: main.academicSystem || 'Mixed',
+    area: main.area || 'Unknown',
+    governorate: main.governorate || 'Egypt',
     lists: schoolListsForProfile.map((l) => ({
       ...l,
       name: `${l.grade} - ${l.academicYear}`,
@@ -166,9 +166,9 @@ export async function getSchoolProfile(slug: string, userId: number | null = nul
  * Get school list page data.
  */
 export async function getSchoolListPageData(slug: string, userId: number | null) {
-  const resLocale = "en"; // Defaulting to en for lists
+  const resLocale = 'en'; // Defaulting to en for lists
   cacheTag(`school-list-${slug}`);
-  cacheLife("hours");
+  cacheLife('hours');
 
   const { schoolLists } = createCatalogServices();
   const list = await schoolLists.getListBySlug(slug);
@@ -180,8 +180,8 @@ export async function getSchoolListPageData(slug: string, userId: number | null)
 
   return {
     list,
-    accessState: "public", // TODO: Integrate with schoolAccess service if needed
-    sessionState: userId ? "has_session" : "first_visit",
+    accessState: 'public', // TODO: Integrate with schoolAccess service if needed
+    sessionState: userId ? 'has_session' : 'first_visit',
     fullList: {
       ...list,
       ...fullListDetails,

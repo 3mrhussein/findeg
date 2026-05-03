@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import * as React from "react";
+import * as React from 'react';
 import {
   DndContext,
   closestCenter,
@@ -9,19 +9,19 @@ import {
   useSensor,
   useSensors,
   DragEndEvent,
-} from "@dnd-kit/core";
+} from '@dnd-kit/core';
 import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
   useSortable,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { Collection } from "@findeg/backend/features/catalog";
-import { GripVertical, Eye, EyeOff } from "lucide-react";
-import { cn } from "@lib/utils";
-import { Badge } from "@findeg/ui";
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { Collection } from '@findeg/backend/features/catalog';
+import { GripVertical, Eye, EyeOff } from 'lucide-react';
+import { cn } from '@lib/utils';
+import { Badge } from '@findeg/ui';
 
 interface SortableCollectionListProps {
   collections: Collection[];
@@ -121,8 +121,8 @@ function SortableItem({ collection, onEdit }: SortableItemProps) {
       ref={setNodeRef}
       style={style}
       className={cn(
-        "flex items-center gap-4 rounded-lg border bg-card p-4 transition-shadow",
-        isDragging && "shadow-lg border-primary/50 opacity-50",
+        'flex items-center gap-4 rounded-lg border bg-card p-4 transition-shadow',
+        isDragging && 'shadow-lg border-primary/50 opacity-50',
       )}
     >
       <button
@@ -163,4 +163,4 @@ function SortableItem({ collection, onEdit }: SortableItemProps) {
 }
 
 // Minimal Button component to avoid heavy imports if possible, but we use shadcn usually
-import { Button } from "@findeg/ui";
+import { Button } from '@findeg/ui';

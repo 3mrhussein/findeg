@@ -2,7 +2,7 @@
  * Collection Service Interface
  */
 
-import { Collection } from "../../domain/entities/Collection";
+import { Collection } from '../../domain/entities/Collection';
 
 export interface ICollectionService {
   /** Retrieves all active collections */

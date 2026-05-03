@@ -13,7 +13,7 @@
  */
 export function getOrderCachePaths(orderId: number): string[] {
   return [
-    "/admin/orders", // Orders list
+    '/admin/orders', // Orders list
     `/admin/orders/${orderId}`, // Order detail
   ];
 }
@@ -27,7 +27,7 @@ export function getOrderCachePaths(orderId: number): string[] {
  */
 export function getOrderCacheTags(orderId: number): string[] {
   return [
-    "orders", // All orders
+    'orders', // All orders
     `order-${orderId}`, // Specific order
   ];
 }

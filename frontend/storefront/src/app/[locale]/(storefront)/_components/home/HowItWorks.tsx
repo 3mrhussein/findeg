@@ -1,4 +1,4 @@
-import { Card, CardContent } from "@findeg/ui";
+import { Card, CardContent } from '@findeg/ui';
 
 /**
  *

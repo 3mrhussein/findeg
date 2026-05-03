@@ -1,11 +1,11 @@
-import { requirePermission } from "@lib/auth-guard";
-import { PERMISSION_CODES } from "@findeg/backend/features/core";
-import { AdminUsersList } from "./_components/AdminUsersList";
-import type { Locale } from "next-intl";
-import { getAdminUsers, getSystemRoles } from "@data/access/queries";
+import { requirePermission } from '@lib/auth-guard';
+import { PERMISSION_CODES } from '@findeg/backend/features/core';
+import { AdminUsersList } from './_components/AdminUsersList';
+import type { Locale } from 'next-intl';
+import { getAdminUsers, getSystemRoles } from '@data/access/queries';
 
 export const metadata = {
-  title: "Admin Users - FindEg Admins",
+  title: 'Admin Users - FindEg Admins',
 };
 
 /**

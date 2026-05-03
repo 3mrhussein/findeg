@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { Check, ChevronsUpDown, X } from "lucide-react";
-import { Badge } from "@findeg/ui";
-import { Button } from "@findeg/ui";
+import * as React from 'react';
+import { Check, ChevronsUpDown, X } from 'lucide-react';
+import { Badge } from '@findeg/ui';
+import { Button } from '@findeg/ui';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -11,11 +11,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@findeg/ui";
-import { ScrollArea } from "@findeg/ui";
-import { Tag } from "@findeg/backend/features/catalog";
-import { TagBadge } from "@components/shared/TagBadge";
-import { cn } from "@lib/utils";
+} from '@findeg/ui';
+import { ScrollArea } from '@findeg/ui';
+import { Tag } from '@findeg/backend/features/catalog';
+import { TagBadge } from '@components/shared/TagBadge';
+import { cn } from '@lib/utils';
 
 interface TagSelectProps {
   allTags: Tag[];
@@ -34,14 +34,14 @@ export function TagSelect({
   allTags,
   selectedIds,
   onChange,
-  placeholder = "Select tags...",
+  placeholder = 'Select tags...',
   className,
 }: TagSelectProps) {
   // Group tags by their 'group' field
   const groupedTags = React.useMemo(() => {
     const groups: Record<string, Tag[]> = {};
     allTags.forEach((tag) => {
-      const groupName = tag.group || "Other";
+      const groupName = tag.group || 'Other';
       if (!groups[groupName]) groups[groupName] = [];
       groups[groupName].push(tag);
     });
@@ -70,7 +70,7 @@ export function TagSelect({
   };
 
   return (
-    <div className={cn("space-y-2", className)}>
+    <div className={cn('space-y-2', className)}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button

@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { Checkbox } from "@findeg/ui";
-import { cn } from "@lib/utils";
-import type { FilterOption } from "./FilterSidebar.interface";
+import { Checkbox } from '@findeg/ui';
+import { cn } from '@lib/utils';
+import type { FilterOption } from './FilterSidebar.interface';
 
 interface BrandFilterProps {
   brands: FilterOption[];
@@ -29,10 +29,10 @@ export function BrandFilter({ brands, selectedBrandIds, onToggle }: BrandFilterP
             <label
               htmlFor={`brand-${brand.id}`}
               className={cn(
-                "text-sm leading-none cursor-pointer select-none transition-colors",
+                'text-sm leading-none cursor-pointer select-none transition-colors',
                 checked
-                  ? "font-semibold text-primary"
-                  : "font-medium text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white",
+                  ? 'font-semibold text-primary'
+                  : 'font-medium text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white',
               )}
             >
               {brand.label}

@@ -5,11 +5,11 @@
  * Used within Suspense boundaries in product detail page for progressive rendering.
  */
 
-import { parse } from "@findeg/backend/features/core";
-import { notFound } from "next/navigation";
-import { ProductForm } from "../../_components/ProductForm";
-import { getProductById } from "@data/products/queries";
-import { getAllCategories, getAllBrands } from "@data/resources/queries";
+import { parse } from '@findeg/backend/features/core';
+import { notFound } from 'next/navigation';
+import { ProductForm } from '../../_components/ProductForm';
+import { getProductById } from '@data/products/queries';
+import { getAllCategories, getAllBrands } from '@data/resources/queries';
 
 interface ProductDetailContentProps {
   productId: number;

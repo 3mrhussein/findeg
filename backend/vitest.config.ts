@@ -37,6 +37,7 @@ export default defineConfig({
         "./src/features/core/domain/types/validation",
       ),
       "@types/domain": resolve(import.meta.dirname, "./src/features/core/domain/types"),
+      "@findeg/env": resolve(import.meta.dirname, "../env.ts"),
     },
   },
 });

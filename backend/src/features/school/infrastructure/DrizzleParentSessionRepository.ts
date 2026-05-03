@@ -1,12 +1,11 @@
-import { db } from "@findeg/db/connection";
-import { eq, and, or, sql } from "drizzle-orm";
-import { IParentSessionRepository } from "../application/interfaces/IParentSessionRepository";
+import { db } from '@findeg/db/connection';
+import { eq, and, or, sql } from 'drizzle-orm';
+import { IParentSessionRepository } from '../application/interfaces/IParentSessionRepository';
 import {
   schoolListParentSessions,
   SchoolListParentSession,
   NewSchoolListParentSession,
-} from "@findeg/db/schema";
-import { orders } from "@findeg/db/schema";
+} from '@findeg/db/schema';
 
 /**
  *

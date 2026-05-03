@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import type React from "react";
-import { useTranslations } from "next-intl";
-import { Input } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { IconTooltip } from "@findeg/ui";
-import { Search } from "lucide-react";
-import { useRouter } from "@i18n/navigation";
-import { useState } from "react";
+import type React from 'react';
+import { useTranslations } from 'next-intl';
+import { Input } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { IconTooltip } from '@findeg/ui';
+import { Search } from 'lucide-react';
+import { useRouter } from '@i18n/navigation';
+import { useState } from 'react';
 
 interface HeaderSearchFormProps {
   compact?: boolean;
@@ -19,7 +19,7 @@ interface HeaderSearchFormProps {
 export function HeaderSearchForm({ compact = false }: HeaderSearchFormProps) {
   const t = useTranslations();
   const router = useRouter();
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState('');
 
   function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -34,11 +34,11 @@ export function HeaderSearchForm({ compact = false }: HeaderSearchFormProps) {
         <Input
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder={t("Nav.SearchPlaceholder")}
+          placeholder={t('Nav.SearchPlaceholder')}
           className="h-9"
         />
-        <IconTooltip label={t("Layout.Header.SearchButton")} asChild>
-          <Button type="submit" size="icon" aria-label={t("Layout.Header.SearchButton")}>
+        <IconTooltip label={t('Layout.Header.SearchButton')} asChild>
+          <Button type="submit" size="icon" aria-label={t('Layout.Header.SearchButton')}>
             <Search className="h-4 w-4" />
           </Button>
         </IconTooltip>
@@ -51,9 +51,9 @@ export function HeaderSearchForm({ compact = false }: HeaderSearchFormProps) {
       <Input
         value={query}
         onChange={(event) => setQuery(event.target.value)}
-        placeholder={t("Nav.SearchPlaceholder")}
+        placeholder={t('Nav.SearchPlaceholder')}
       />
-      <Button type="submit">{t("Layout.Header.SearchButton")}</Button>
+      <Button type="submit">{t('Layout.Header.SearchButton')}</Button>
     </form>
   );
 }

@@ -1,8 +1,8 @@
-import { usePagination } from "@hooks/usePagination";
-import { OrderTable } from "./OrderTable";
-import { Pagination } from "@findeg/ui";
-import { Card, CardContent } from "@findeg/ui";
-import type { Order } from "@findeg/backend/features/order/domain/entities/Order";
+import { usePagination } from '@hooks/usePagination';
+import { OrderTable } from './OrderTable';
+import { Pagination } from '@findeg/ui';
+import { Card, CardContent } from '@findeg/ui';
+import type { Order } from '@findeg/backend/features/order/domain/entities/Order';
 
 interface OrdersProps {
   orders: Order[];

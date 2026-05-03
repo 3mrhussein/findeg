@@ -1,7 +1,7 @@
-import { Suspense } from "react";
-import { Locale } from "next-intl";
-import { setRequestLocale } from "next-intl/server";
-import { LoginContent } from "./_components/LoginContent";
+import { Suspense } from 'react';
+import { Locale } from 'next-intl';
+import { setRequestLocale } from 'next-intl/server';
+import { LoginContent } from './_components/LoginContent';
 
 type Props = {
   params: Promise<{ locale: Locale }>;

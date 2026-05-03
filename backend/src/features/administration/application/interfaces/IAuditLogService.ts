@@ -1,4 +1,4 @@
-import type { AuditLogEntry, AuditLogCreateInput, AuditLogFilters } from "./IAuditLogRepository";
+import type { AuditLogEntry, AuditLogCreateInput, AuditLogFilters } from './IAuditLogRepository';
 
 export interface IAuditLogService {
   /**

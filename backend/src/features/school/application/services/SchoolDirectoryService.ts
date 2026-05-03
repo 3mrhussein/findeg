@@ -1,12 +1,13 @@
-import { db } from "@findeg/db/connection";
-import { schoolLists } from "@findeg/db/schema";
-import { eq, and, ilike, sql, desc, count, asc } from "drizzle-orm";
+import { db } from '@findeg/db/connection';
+import { schoolLists } from '@findeg/db/schema';
+import { eq, and, ilike, sql, desc, count, asc } from 'drizzle-orm';
 import {
   ISchoolDirectoryService,
   SchoolSearchParams,
   SchoolSearchResult,
   SchoolFilterOptions,
-} from "../interfaces/ISchoolDirectoryService";
+  SchoolProfile,
+} from '../interfaces/ISchoolDirectoryService';
 
 /**
  *
@@ -75,13 +76,13 @@ export class SchoolDirectoryService implements ISchoolDirectoryService {
   /**
    *
    */
-  async getBySlug(slug: string): Promise<any> {
+  async getBySlug(slug: string): Promise<SchoolProfile | null> {
     // A "school slug" in this grouped model is effectively the school name URL-encoded or a canonical slug.
     // For now, we'll fetch all lists for a specific school name.
     const results = await db
       .select()
       .from(schoolLists)
-      .where(ilike(schoolLists.schoolName, slug.replace(/-/g, " "))) // Simple slug to name conversion
+      .where(ilike(schoolLists.schoolName, slug.replace(/-/g, ' '))) // Simple slug to name conversion
       .orderBy(desc(schoolLists.isActive), asc(schoolLists.grade));
 
     if (results.length === 0) return null;
@@ -89,6 +90,7 @@ export class SchoolDirectoryService implements ISchoolDirectoryService {
     const schoolInfo = results[0];
 
     return {
+      id: schoolInfo.id,
       name: schoolInfo.schoolName,
       governorate: schoolInfo.governorate,
       area: schoolInfo.area,
@@ -103,7 +105,7 @@ export class SchoolDirectoryService implements ISchoolDirectoryService {
    */
   async suggestSchool(input: { schoolName: string; area: string; email: string }): Promise<void> {
     // In a real scenario, this would send an email or log a request.
-    console.log("School suggestion received:", input);
+    console.log('School suggestion received:', input);
   }
 
   /**
@@ -128,9 +130,15 @@ export class SchoolDirectoryService implements ISchoolDirectoryService {
       .orderBy(asc(schoolLists.academicSystem));
 
     return {
-      governorates: governorates.map((g: any) => g.value).filter(Boolean) as string[],
-      schoolTypes: schoolTypes.map((t: any) => t.value).filter(Boolean) as string[],
-      academicSystems: academicSystems.map((s: any) => s.value).filter(Boolean) as string[],
+      governorates: governorates
+        .map((g: { value: string | null }) => g.value)
+        .filter((v): v is string => Boolean(v)),
+      schoolTypes: schoolTypes
+        .map((t: { value: string | null }) => t.value)
+        .filter((v): v is string => Boolean(v)),
+      academicSystems: academicSystems
+        .map((s: { value: string | null }) => s.value)
+        .filter((v): v is string => Boolean(v)),
     };
   }
 }

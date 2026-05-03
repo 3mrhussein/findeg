@@ -5,9 +5,9 @@
  * including the attribute-based variant matching engine.
  */
 
-import { type ID } from "@findeg/backend/features/core/domain/types/common";
-import type { Variant } from "../../domain/entities/Variant";
-import type { MatchRulesDraft } from "@findeg/db/schema";
+import { type ID } from '@findeg/backend/features/core/domain/types/common';
+import type { Variant } from '../../domain/entities/Variant';
+import type { MatchRulesDraft } from '@findeg/db/schema';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 

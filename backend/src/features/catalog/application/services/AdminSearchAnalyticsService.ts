@@ -1,12 +1,12 @@
-import { IAdminSearchAnalyticsRepository } from "../interfaces/IAdminSearchAnalyticsRepository";
-import { IAdminSearchAnalyticsService } from "../interfaces/IAdminSearchAnalyticsService";
+import { IAdminSearchAnalyticsRepository } from '../interfaces/IAdminSearchAnalyticsRepository';
+import { IAdminSearchAnalyticsService } from '../interfaces/IAdminSearchAnalyticsService';
 import {
   SearchAnalyticsMetrics,
   TopSearchQuery,
   ZeroResultSearch,
   LowCTRSearch,
   LanguageBreakdown,
-} from "../interfaces/IAdminSearchAnalyticsRepository";
+} from '../interfaces/IAdminSearchAnalyticsRepository';
 
 export class AdminSearchAnalyticsService implements IAdminSearchAnalyticsService {
   constructor(private repository: IAdminSearchAnalyticsRepository) {}

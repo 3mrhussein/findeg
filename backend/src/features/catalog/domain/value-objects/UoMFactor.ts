@@ -21,10 +21,10 @@ export class UoMFactor {
    */
   static create(value: number): UoMFactor {
     if (!Number.isInteger(value)) {
-      throw new Error("UoMFactor must be an integer");
+      throw new Error('UoMFactor must be an integer');
     }
     if (value < 1) {
-      throw new Error("UoMFactor must be at least 1");
+      throw new Error('UoMFactor must be at least 1');
     }
     return new UoMFactor(value);
   }

@@ -1,11 +1,11 @@
-import { Suspense } from "react";
-import { AdminSessionGate } from "../_components/AdminSessionGate";
+import { Suspense } from 'react';
+import { AdminSessionGate } from '../_components/AdminSessionGate';
 
 /**
  * Generate static params for supported locales
  */
 export async function generateStaticParams() {
-  return [{ locale: "en" }, { locale: "ar" }];
+  return [{ locale: 'en' }, { locale: 'ar' }];
 }
 
 /**

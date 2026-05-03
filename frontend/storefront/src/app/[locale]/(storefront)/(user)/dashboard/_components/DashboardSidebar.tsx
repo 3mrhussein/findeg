@@ -8,15 +8,15 @@
  * - Permission-gated nav items
  */
 
-"use client";
+'use client';
 
-import React from "react";
-import { useRouter } from "@i18n/navigation";
-import { useTranslations, useLocale } from "next-intl";
-import { Logo } from "@findeg/ui";
-import { Icon } from "@findeg/ui";
-import { PERMISSION_CODES } from "@findeg/backend/features/core/domain/auth";
-import { usePermissions } from "@providers/PermissionsProvider";
+import React from 'react';
+import { useRouter } from '@i18n/navigation';
+import { useTranslations, useLocale } from 'next-intl';
+import { Logo } from '@findeg/ui';
+import { Icon } from '@findeg/ui';
+import { PERMISSION_CODES } from '@findeg/backend/features/core/domain/auth';
+import { usePermissions } from '@providers/PermissionsProvider';
 import {
   Sidebar,
   SidebarContent,
@@ -30,20 +30,20 @@ import {
   SidebarRail,
   SidebarSeparator,
   useSidebar,
-} from "@findeg/ui";
-import { ToggleTheme } from "@findeg/ui";
-import ToggleLanguage from "@components/shared/ToggleLanguage";
+} from '@findeg/ui';
+import { ToggleTheme } from '@findeg/ui';
+import ToggleLanguage from '@components/shared/ToggleLanguage';
 
 type DashboardView =
-  | "overview"
-  | "products"
-  | "orders"
-  | "customers"
-  | "school_lists"
-  | "inventory"
-  | "media"
-  | "team"
-  | "settings";
+  | 'overview'
+  | 'products'
+  | 'orders'
+  | 'customers'
+  | 'school_lists'
+  | 'inventory'
+  | 'media'
+  | 'team'
+  | 'settings';
 
 interface NavItem {
   id: DashboardView;
@@ -84,68 +84,68 @@ const LogoIcon = () => (
  *
  */
 export function DashboardSidebar({ activeView, onNavigate }: DashboardSidebarProps) {
-  const t = useTranslations("Pages.Dashboard");
+  const t = useTranslations('Pages.Dashboard');
   const router = useRouter();
   const locale = useLocale();
-  const isRtl = locale === "ar";
+  const isRtl = locale === 'ar';
   const { hasPermission } = usePermissions();
   const { state, isMobile, setOpenMobile } = useSidebar();
-  const isCollapsed = state === "collapsed" && !isMobile;
+  const isCollapsed = state === 'collapsed' && !isMobile;
 
   const allNavItems: NavItem[] = [
     {
-      id: "overview",
+      id: 'overview',
       permission: PERMISSION_CODES.ADMIN_DASHBOARD_READ,
-      label: t("Overview"),
-      icon: "dashboard",
+      label: t('Overview'),
+      icon: 'dashboard',
     },
     {
-      id: "products",
+      id: 'products',
       permission: PERMISSION_CODES.ADMIN_PRODUCTS_READ,
-      label: t("Products"),
-      icon: "package_2",
+      label: t('Products'),
+      icon: 'package_2',
     },
     {
-      id: "inventory",
+      id: 'inventory',
       permission: PERMISSION_CODES.ADMIN_INVENTORY_READ,
-      label: t("Inventory"),
-      icon: "inventory_2",
+      label: t('Inventory'),
+      icon: 'inventory_2',
     },
     {
-      id: "orders",
+      id: 'orders',
       permission: PERMISSION_CODES.ADMIN_ORDERS_READ,
-      label: t("Orders"),
-      icon: "shopping_cart",
+      label: t('Orders'),
+      icon: 'shopping_cart',
     },
     {
-      id: "customers",
+      id: 'customers',
       permission: PERMISSION_CODES.ADMIN_USERS_READ,
-      label: t("Customers"),
-      icon: "group",
+      label: t('Customers'),
+      icon: 'group',
     },
     {
-      id: "school_lists",
+      id: 'school_lists',
       permission: PERMISSION_CODES.ADMIN_SCHOOL_LISTS_READ,
-      label: t("SchoolLists"),
-      icon: "menu_book",
+      label: t('SchoolLists'),
+      icon: 'menu_book',
     },
     {
-      id: "media",
+      id: 'media',
       permission: PERMISSION_CODES.ADMIN_MEDIA_READ,
-      label: t("Media"),
-      icon: "image",
+      label: t('Media'),
+      icon: 'image',
     },
     {
-      id: "team",
+      id: 'team',
       permission: PERMISSION_CODES.ADMIN_USERS_READ,
-      label: t("Team"),
-      icon: "shield_person",
+      label: t('Team'),
+      icon: 'shield_person',
     },
     {
-      id: "settings",
+      id: 'settings',
       permission: PERMISSION_CODES.ADMIN_ROLES_READ,
-      label: t("Settings"),
-      icon: "manage_accounts",
+      label: t('Settings'),
+      icon: 'manage_accounts',
     },
   ];
 
@@ -160,11 +160,11 @@ export function DashboardSidebar({ activeView, onNavigate }: DashboardSidebarPro
   };
 
   return (
-    <Sidebar side={isRtl ? "right" : "left"} collapsible="icon" dir={isRtl ? "rtl" : "ltr"}>
+    <Sidebar side={isRtl ? 'right' : 'left'} collapsible="icon" dir={isRtl ? 'rtl' : 'ltr'}>
       {/* Logo */}
       <SidebarHeader className="h-16 items-center justify-center border-b border-sidebar-border">
         <button
-          onClick={() => router.push("/")}
+          onClick={() => router.push('/')}
           className="flex items-center justify-center outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-md"
           aria-label="Go to homepage"
         >

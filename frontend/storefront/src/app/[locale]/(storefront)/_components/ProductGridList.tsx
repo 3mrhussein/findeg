@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useSearchParams } from "next/navigation";
-import { ProductCard } from "./ProductCard";
-import type { Product } from "@/data/catalog/types";
+import { useSearchParams } from 'next/navigation';
+import { ProductCard } from './ProductCard';
+import type { Product } from '@/data/catalog/types';
 
 interface ProductGridListProps {
   products: Product[];
@@ -13,9 +13,9 @@ interface ProductGridListProps {
  */
 export function ProductGridList({ products }: ProductGridListProps) {
   const searchParams = useSearchParams();
-  const view = searchParams.get("view") === "list" ? "list" : "grid";
+  const view = searchParams.get('view') === 'list' ? 'list' : 'grid';
 
-  if (view === "list") {
+  if (view === 'list') {
     return (
       <div className="flex flex-col gap-6">
         {products.map((product) => (

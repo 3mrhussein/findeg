@@ -1,10 +1,10 @@
-import { ID } from "../../../core/domain/types/common";
-import { IAdminCategoryService } from "../interfaces/IAdminCategoryService";
-import { ICategoryRepository } from "../../../catalog/application/interfaces/ICategoryRepository";
-import { IAuditLogService } from "../interfaces/IAuditLogService";
-import { Category } from "../../../catalog/domain/entities/Category";
-import { CategoryInput } from "../../domain/types/CategoryInput";
-import type { Locale } from "../../../core/domain/value-objects";
+import { ID } from '../../../core/domain/types/common';
+import { IAdminCategoryService } from '../interfaces/IAdminCategoryService';
+import { ICategoryRepository } from '../../../catalog/application/interfaces/ICategoryRepository';
+import { IAuditLogService } from '../interfaces/IAuditLogService';
+import { Category } from '../../../catalog/domain/entities/Category';
+import { CategoryInput } from '../../domain/types/CategoryInput';
+import type { Locale } from '../../../core/domain/value-objects';
 
 /**
  * Admin Category Service
@@ -36,9 +36,9 @@ export class AdminCategoryService implements IAdminCategoryService {
 
     if (this.auditLogService) {
       await this.auditLogService.logAction({
-        entityType: "category",
+        entityType: 'category',
         entityId: String(category.id),
-        action: "create",
+        action: 'create',
         adminUserId: undefined,
         newValues: input as unknown as Record<string, unknown>,
       });
@@ -65,9 +65,9 @@ export class AdminCategoryService implements IAdminCategoryService {
 
     if (this.auditLogService) {
       await this.auditLogService.logAction({
-        entityType: "category",
+        entityType: 'category',
         entityId: String(id),
-        action: "update",
+        action: 'update',
         adminUserId: undefined,
         oldValues: existing as unknown as Record<string, unknown>,
         newValues: input as unknown as Record<string, unknown>,
@@ -93,9 +93,9 @@ export class AdminCategoryService implements IAdminCategoryService {
 
     if (this.auditLogService) {
       await this.auditLogService.logAction({
-        entityType: "category",
+        entityType: 'category',
         entityId: String(id),
-        action: "delete",
+        action: 'delete',
         adminUserId: undefined,
         oldValues: existing as unknown as Record<string, unknown>,
       });
@@ -109,7 +109,7 @@ export class AdminCategoryService implements IAdminCategoryService {
    * @returns The category if found.
    */
   async getById(id: ID): Promise<Category | null> {
-    return this.categoryRepository.getById(id, "en");
+    return this.categoryRepository.getById(id, 'en');
   }
 
   /**
@@ -153,7 +153,7 @@ export class AdminCategoryService implements IAdminCategoryService {
    */
   async moveCategoryUp(id: number): Promise<void> {
     const category = await this.categoryRepository.getById(id);
-    if (!category) throw new Error("Category not found");
+    if (!category) throw new Error('Category not found');
 
     const siblings = await this.categoryRepository.getChildren(category.parentId || 0);
     // filter by same depth if repository doesn't guarantee it (materialized path usually does)
@@ -175,7 +175,7 @@ export class AdminCategoryService implements IAdminCategoryService {
    */
   async moveCategoryDown(id: number): Promise<void> {
     const category = await this.categoryRepository.getById(id);
-    if (!category) throw new Error("Category not found");
+    if (!category) throw new Error('Category not found');
 
     const siblings = await this.categoryRepository.getChildren(category.parentId || 0);
     const sortedSiblings = siblings.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));

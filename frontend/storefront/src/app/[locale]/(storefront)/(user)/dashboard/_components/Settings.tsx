@@ -9,19 +9,19 @@
  * All data logic lives in useAdminRoles hook.
  */
 
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import { useTranslations } from "next-intl";
-import { Button } from "@findeg/ui";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import { Icon } from "@findeg/ui";
-import { PERMISSION_CODES } from "@findeg/backend/features/core";
-import { usePermissions } from "@providers/PermissionsProvider";
+import React, { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
+import { Button } from '@findeg/ui';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@findeg/ui';
+import { Input } from '@findeg/ui';
+import { Label } from '@findeg/ui';
+import { Icon } from '@findeg/ui';
+import { PERMISSION_CODES } from '@findeg/backend/features/core';
+import { usePermissions } from '@providers/PermissionsProvider';
 // @ts-ignore
-import { useAdminRoles } from "@hooks/useAdminRoles";
+import { useAdminRoles } from '@hooks/useAdminRoles';
 export type Permission = { id: number; name: string; code: string };
 export type RoleWithPermissions = {
   id: number;
@@ -31,22 +31,22 @@ export type RoleWithPermissions = {
   permissions: Permission[];
   [key: string]: any;
 };
-import { RoleCard } from "./settings/RoleCard";
-import { PermissionMatrixDialog } from "./settings/PermissionMatrixDialog";
-import { CreateRoleDialog } from "./settings/CreateRoleDialog";
+import { RoleCard } from './settings/RoleCard';
+import { PermissionMatrixDialog } from './settings/PermissionMatrixDialog';
+import { CreateRoleDialog } from './settings/CreateRoleDialog';
 
 /**
  *
  */
-function fireToast(message: string, type: "success" | "error" = "success") {
-  window.dispatchEvent(new CustomEvent("dashboard-toast", { detail: { message, type } }));
+function fireToast(message: string, type: 'success' | 'error' = 'success') {
+  window.dispatchEvent(new CustomEvent('dashboard-toast', { detail: { message, type } }));
 }
 
 /**
  *
  */
 export function SettingsView() {
-  const t = useTranslations("Pages.Dashboard");
+  const t = useTranslations('Pages.Dashboard');
   const { hasPermission } = usePermissions();
   const canWrite = hasPermission(PERMISSION_CODES.ADMIN_ROLES_WRITE);
 
@@ -75,9 +75,9 @@ export function SettingsView() {
   const handleUpdatePermissions = async (roleId: number, permIds: number[]) => {
     try {
       await updateRolePermissions(roleId, permIds);
-      fireToast(t("RoleUpdated"));
+      fireToast(t('RoleUpdated'));
     } catch (err) {
-      fireToast(err instanceof Error ? err.message : t("RoleUpdateFailed"), "error");
+      fireToast(err instanceof Error ? err.message : t('RoleUpdateFailed'), 'error');
       throw err;
     }
   };
@@ -86,12 +86,12 @@ export function SettingsView() {
    *
    */
   const handleDelete = async (role: RoleWithPermissions) => {
-    if (!confirm(t("DeleteRoleConfirm", { name: role.name }))) return;
+    if (!confirm(t('DeleteRoleConfirm', { name: role.name }))) return;
     try {
       await deleteRole(role.id);
-      fireToast(t("RoleDeleted", { name: role.name }));
+      fireToast(t('RoleDeleted', { name: role.name }));
     } catch (err) {
-      fireToast(err instanceof Error ? err.message : t("RoleDeleteFailed"), "error");
+      fireToast(err instanceof Error ? err.message : t('RoleDeleteFailed'), 'error');
     }
   };
 
@@ -101,10 +101,10 @@ export function SettingsView() {
   const handleCreate = async (code: string, name: string, permIds: number[]) => {
     try {
       await createRole(code, name, permIds);
-      fireToast(t("RoleCreated", { name }));
+      fireToast(t('RoleCreated', { name }));
       setCreateOpen(false);
     } catch (err) {
-      fireToast(err instanceof Error ? err.message : t("RoleCreateFailed"), "error");
+      fireToast(err instanceof Error ? err.message : t('RoleCreateFailed'), 'error');
       throw err;
     }
   };
@@ -114,13 +114,13 @@ export function SettingsView() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">{t("Settings")}</h2>
-          <p className="text-sm text-muted-foreground mt-0.5">{t("SettingsDescription")}</p>
+          <h2 className="text-2xl font-bold tracking-tight">{t('Settings')}</h2>
+          <p className="text-sm text-muted-foreground mt-0.5">{t('SettingsDescription')}</p>
         </div>
         {canWrite && (
           <Button onClick={() => setCreateOpen(true)}>
             <Icon name="add" className="text-base ltr:mr-2 rtl:ml-2" />
-            {t("NewRole")}
+            {t('NewRole')}
           </Button>
         )}
       </div>
@@ -139,7 +139,7 @@ export function SettingsView() {
             onClick={fetchAll}
             className="ltr:ml-auto rtl:mr-auto"
           >
-            {t("TryAgain")}
+            {t('TryAgain')}
           </Button>
         </div>
       )}

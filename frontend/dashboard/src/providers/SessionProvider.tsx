@@ -5,10 +5,10 @@
  * Wraps the session payload for client-side access.
  */
 
-"use client";
+'use client';
 
-import * as React from "react";
-import type { SessionPayload } from "@findeg/backend/features/core";
+import * as React from 'react';
+import type { SessionPayload } from '@findeg/backend/features/core';
 
 interface SessionContextValue {
   session: SessionPayload;
@@ -36,7 +36,7 @@ export function SessionProvider({ session, children }: SessionProviderProps) {
 export function useSession(): SessionPayload {
   const ctx = React.useContext(SessionContext);
   if (!ctx) {
-    throw new Error("useSession() must be used inside <SessionProvider>");
+    throw new Error('useSession() must be used inside <SessionProvider>');
   }
   return ctx.session;
 }

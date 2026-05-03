@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import * as React from "react";
+import * as React from 'react';
 
 interface SidebarContextType {
   isCollapsed: boolean;
@@ -11,15 +11,15 @@ const SidebarContext = React.createContext<SidebarContextType | undefined>(undef
 
 export function SidebarProvider({ children }: { children: React.ReactNode }) {
   const [isCollapsed, setIsCollapsed] = React.useState(() => {
-    if (typeof window === "undefined") return false;
-    const stored = localStorage.getItem("findeg-admin-sidebar");
-    return stored === "true";
+    if (typeof window === 'undefined') return false;
+    const stored = localStorage.getItem('findeg-admin-sidebar');
+    return stored === 'true';
   });
 
   const toggleSidebar = React.useCallback(() => {
     setIsCollapsed((prev) => {
       const newState = !prev;
-      localStorage.setItem("findeg-admin-sidebar", String(newState));
+      localStorage.setItem('findeg-admin-sidebar', String(newState));
       return newState;
     });
   }, []);
@@ -34,7 +34,7 @@ export function SidebarProvider({ children }: { children: React.ReactNode }) {
 export function useSidebar() {
   const context = React.useContext(SidebarContext);
   if (context === undefined) {
-    throw new Error("useSidebar must be used within a SidebarProvider");
+    throw new Error('useSidebar must be used within a SidebarProvider');
   }
   return context;
 }

@@ -1,5 +1,5 @@
-import { revalidatePath, revalidateTag } from "next/cache";
-import type { ServiceResult } from "@findeg/backend/features/core";
+import { revalidatePath, revalidateTag } from 'next/cache';
+import type { ServiceResult } from '@findeg/backend/features/core';
 
 /**
  * Storefront Cache Invalidation Helpers
@@ -32,7 +32,7 @@ export async function invalidateCaches<T>(result: ServiceResult<T>): Promise<voi
   // Revalidate by tags
   if (result.cacheTags?.length) {
     for (const tag of result.cacheTags) {
-      revalidateTag(tag, "max");
+      revalidateTag(tag, 'max');
     }
   }
 }
@@ -56,6 +56,6 @@ export async function invalidatePaths(paths: string[]): Promise<void> {
  */
 export async function invalidateTags(tags: string[]): Promise<void> {
   for (const tag of tags) {
-    revalidateTag(tag, "max");
+    revalidateTag(tag, 'max');
   }
 }

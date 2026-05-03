@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useEffect } from "react";
-import { Button } from "@findeg/ui";
+import { useEffect } from 'react';
+import { Button } from '@findeg/ui';
 
 /**
  * Global Error Boundary
@@ -18,18 +18,18 @@ export default function GlobalError({
 }) {
   useEffect(() => {
     // Log exception to server
-    fetch("/api/v1/logging/request", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+    fetch('/api/v1/logging/request', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        level: "error",
+        level: 'error',
         message: `Global Client Error: ${error.message}`,
         metadata: {
           digest: error.digest,
           stack: error.stack,
         },
       }),
-    }).catch((e) => console.error("Failed to report global error:", e));
+    }).catch((e) => console.error('Failed to report global error:', e));
   }, [error]);
 
   return (

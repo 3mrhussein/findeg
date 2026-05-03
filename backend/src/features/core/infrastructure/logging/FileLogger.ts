@@ -6,13 +6,13 @@
  * Note: Intended for server-side use only (requires filesystem access).
  */
 
-import * as fs from "fs";
-import * as path from "path";
-import { LogLevel, LogMetadata } from "../../application/interfaces/ILoggerService";
+import * as fs from 'fs';
+import * as path from 'path';
+import { LogLevel, LogMetadata } from '../../application/interfaces/ILoggerService';
 
-const LOG_DIRECTORY = path.join(process.cwd(), "logs");
+const LOG_DIRECTORY = path.join(process.cwd(), 'logs');
 const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5MB limit
-const CURRENT_LOG_FILE = path.join(LOG_DIRECTORY, "app.log");
+const CURRENT_LOG_FILE = path.join(LOG_DIRECTORY, 'app.log');
 
 /**
  *
@@ -49,9 +49,9 @@ export class FileLogger {
     this.rotateIfNecessary();
 
     try {
-      fs.appendFileSync(CURRENT_LOG_FILE, logEntry + "\n", "utf8");
+      fs.appendFileSync(CURRENT_LOG_FILE, logEntry + '\n', 'utf8');
     } catch (error) {
-      console.error("Failed to write to log file:", error);
+      console.error('Failed to write to log file:', error);
     }
   }
 
@@ -71,7 +71,7 @@ export class FileLogger {
         // Optional: Keep only last N rotated files if needed
       }
     } catch (error) {
-      console.error("Log rotation failed:", error);
+      console.error('Log rotation failed:', error);
     }
   }
 }

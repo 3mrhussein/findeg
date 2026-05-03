@@ -1,24 +1,22 @@
-import { db } from "@findeg/db/connection";
+import { db } from '@findeg/db/connection';
 import {
   schoolLists,
   schoolListItems,
   schoolListItemAlternatives,
   productVariants,
-  variantAttributes,
-  attributeDefinitions,
-  productTags,
-} from "@findeg/db/schema";
+  type MatchRulesDraft,
+} from '@findeg/db/schema';
 import {
   ISchoolListRepository,
   SchoolListResult,
   SchoolListItemResult,
   SchoolListInput,
   SchoolListItemInput,
-} from "../../application/interfaces/ISchoolListRepository";
-import { DrizzleVariantRepository } from "./DrizzleVariantRepository";
-import { eq, and, sql, inArray, or } from "drizzle-orm";
-import { ID } from "@findeg/backend/features/core/domain/types/common";
-import { Variant } from "../../domain/entities/Variant";
+} from '../../application/interfaces/ISchoolListRepository';
+import { DrizzleVariantRepository } from './DrizzleVariantRepository';
+import { eq, and, sql, inArray } from 'drizzle-orm';
+import { ID } from '@findeg/backend/features/core/domain/types/common';
+import { Variant } from '../../domain/entities/Variant';
 
 /**
  * Drizzle School List Repository
@@ -172,7 +170,7 @@ export class DrizzleSchoolListRepository implements ISchoolListRepository {
    * Auto-matches variants using attribute-based match rules.
    * This is a complex dynamic query engine.
    */
-  async matchVariants(matchRules: any): Promise<Variant[]> {
+  async matchVariants(matchRules: MatchRulesDraft): Promise<Variant[]> {
     const conditions = [];
 
     // Category filter

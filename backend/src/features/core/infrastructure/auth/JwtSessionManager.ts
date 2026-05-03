@@ -1,10 +1,9 @@
-import { SignJWT, jwtVerify } from "jose";
-import type { SessionPayload } from "@findeg/backend/features/core/domain/auth";
-import { adminSession } from "@findeg/backend/features/core/domain/auth/authorization";
-import type { ISessionManager } from "@findeg/backend/features/core/application/interfaces/ISessionManager";
-import type { PortalRole } from "@findeg/backend/features/core/domain/types/common";
-import { AUTH_CONSTANTS } from "@findeg/backend/features/core/domain/constants/auth";
-import env from "@findeg/env";
+import { SignJWT, jwtVerify } from 'jose';
+import type { SessionPayload } from '@findeg/backend/features/core/domain/auth';
+import { adminSession } from '@findeg/backend/features/core/domain/auth/authorization';
+import type { ISessionManager } from '@findeg/backend/features/core/application/interfaces/ISessionManager';
+import type { PortalRole } from '@findeg/backend/features/core/domain/types/common';
+import env from '@findeg/env';
 
 /**
  * JWT implementation of SessionManager
@@ -13,7 +12,7 @@ import env from "@findeg/env";
  * Handles token extraction from Authorization header or cookies.
  */
 export class JwtSessionManager implements ISessionManager {
-  private readonly SESSION_COOKIE_NAME = "admin_session";
+  private readonly SESSION_COOKIE_NAME = 'admin_session';
   private readonly SESSION_DURATION = 60 * 60 * 24; // 24 hours
   private readonly JWT_SECRET: Uint8Array;
 
@@ -41,9 +40,9 @@ export class JwtSessionManager implements ISessionManager {
       return {
         userId: payload.userId as number,
         portalRole: payload.portalRole as PortalRole,
-        user: payload.user as SessionPayload["user"],
+        user: payload.user as SessionPayload['user'],
         subjectId: payload.subjectId as string | undefined,
-        actorType: payload.actorType as SessionPayload["actorType"],
+        actorType: payload.actorType as SessionPayload['actorType'],
         activeRoleIds: payload.activeRoleIds as string[] | undefined,
         permissionCodes: payload.permissionCodes as string[] | undefined,
         organizationId: payload.organizationId as string | undefined,
@@ -66,7 +65,7 @@ export class JwtSessionManager implements ISessionManager {
    */
   async createToken(payload: SessionPayload): Promise<string> {
     return new SignJWT({ ...payload })
-      .setProtectedHeader({ alg: "HS256" })
+      .setProtectedHeader({ alg: 'HS256' })
       .setIssuedAt()
       .setExpirationTime(`${this.SESSION_DURATION}s`)
       .sign(this.JWT_SECRET);
@@ -80,10 +79,10 @@ export class JwtSessionManager implements ISessionManager {
       name: this.SESSION_COOKIE_NAME,
       options: {
         httpOnly: true,
-        secure: env.NODE_ENV === "production",
-        sameSite: "lax" as const,
+        secure: env.NODE_ENV === 'production',
+        sameSite: 'lax' as const,
         maxAge: this.SESSION_DURATION,
-        path: "/",
+        path: '/',
       },
     };
   }
@@ -92,12 +91,12 @@ export class JwtSessionManager implements ISessionManager {
    *
    */
   private extractToken(request: Request): string | null {
-    const authHeader = request.headers.get("Authorization");
-    if (authHeader?.startsWith("Bearer ")) {
+    const authHeader = request.headers.get('Authorization');
+    if (authHeader?.startsWith('Bearer ')) {
       return authHeader.substring(7);
     }
 
-    const cookieHeader = request.headers.get("Cookie");
+    const cookieHeader = request.headers.get('Cookie');
     if (cookieHeader) {
       const match = cookieHeader.match(new RegExp(`${this.SESSION_COOKIE_NAME}=([^;]+)`));
       if (match) return match[1];

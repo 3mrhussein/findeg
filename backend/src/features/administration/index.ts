@@ -1,14 +1,12 @@
 // NOTE: Domain types are NOT exported (removed from domain/index.ts) because many have @ imports
 // that break Turbopack bundling (e.g., TagInput imports from @backend/features/catalog/domain/entities/Tag)
 // Apps should define their own input types or use minimal interfaces
-export * from "./domain";
-export * from "./domain/types";
-export * from "./application/interfaces";
+export * from './domain';
 
 // ✅ NEW: Service factory for administration feature
 // Export factory function that apps can use to get service instances
-export { createAdministrationServices } from "./application/services/factory";
-export type { AdministrationServices } from "./application/services/factory";
+export { createAdministrationServices } from './application/services/factory';
+export type { AdministrationServices } from './application/services/factory';
 
 // NOTE: Service classes are NOT exported because they contain @ imports
 // that break Turbopack bundling. Apps should use the factory function above.

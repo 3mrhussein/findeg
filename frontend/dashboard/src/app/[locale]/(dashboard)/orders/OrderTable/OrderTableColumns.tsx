@@ -1,34 +1,34 @@
-"use client";
+'use client';
 
-import { type ColumnDef } from "@tanstack/react-table";
-import { type Order } from "@findeg/backend/features/order";
-import { Checkbox } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
-import { MoreHorizontal, Phone, Eye, Check } from "lucide-react";
+import { type ColumnDef } from '@tanstack/react-table';
+import { type Order } from '@findeg/backend/features/order';
+import { Checkbox } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { Badge } from '@findeg/ui';
+import { MoreHorizontal, Phone, Eye, Check } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@findeg/ui";
-import { Link } from "@i18n/navigation";
-import { formatDistanceToNow } from "date-fns";
+} from '@findeg/ui';
+import { Link } from '@i18n/navigation';
+import { formatDistanceToNow } from 'date-fns';
 
 /**
  * Helper to generate color variants for Payment Status
  */
 function getPaymentStatusVariant(status?: string | null) {
   switch (status) {
-    case "paid":
-      return "default"; // green-ish in custom CSS ideally
-    case "unpaid":
-      return "secondary";
-    case "refunded":
-      return "destructive";
+    case 'paid':
+      return 'default'; // green-ish in custom CSS ideally
+    case 'unpaid':
+      return 'secondary';
+    case 'refunded':
+      return 'destructive';
     default:
-      return "outline";
+      return 'outline';
   }
 }
 
@@ -37,19 +37,19 @@ function getPaymentStatusVariant(status?: string | null) {
  */
 function getOrderStatusVariant(status?: string | null) {
   switch (status) {
-    case "delivered":
-      return "default";
-    case "cancelled":
-    case "refunded":
-      return "destructive";
-    case "shipped":
-    case "processing":
-      return "secondary";
-    case "confirmed":
-      return "outline";
-    case "pending":
+    case 'delivered':
+      return 'default';
+    case 'cancelled':
+    case 'refunded':
+      return 'destructive';
+    case 'shipped':
+    case 'processing':
+      return 'secondary';
+    case 'confirmed':
+      return 'outline';
+    case 'pending':
     default:
-      return "secondary"; // Maybe amber
+      return 'secondary'; // Maybe amber
   }
 }
 
@@ -59,7 +59,7 @@ function getOrderStatusVariant(status?: string | null) {
 export function buildOrderColumns(): ColumnDef<Order>[] {
   return [
     {
-      id: "select",
+      id: 'select',
       /**
        *
        */
@@ -67,7 +67,7 @@ export function buildOrderColumns(): ColumnDef<Order>[] {
         <Checkbox
           checked={
             table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
+            (table.getIsSomePageRowsSelected() && 'indeterminate')
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
           aria-label="Select all"
@@ -89,8 +89,8 @@ export function buildOrderColumns(): ColumnDef<Order>[] {
       enableHiding: false,
     },
     {
-      accessorKey: "id",
-      header: "Order #",
+      accessorKey: 'id',
+      header: 'Order #',
       /**
        *
        */
@@ -98,19 +98,19 @@ export function buildOrderColumns(): ColumnDef<Order>[] {
         const id = row.original.id;
         return (
           <Link href={`/orders/${id}`} className="font-medium hover:underline text-primary">
-            #FE-{String(id).padStart(5, "0")}
+            #FE-{String(id).padStart(5, '0')}
           </Link>
         );
       },
     },
     {
-      id: "customer",
-      header: "Customer",
+      id: 'customer',
+      header: 'Customer',
       /**
        *
        */
       cell: ({ row }) => {
-        const name = row.original.customerName || "Guest";
+        const name = row.original.customerName || 'Guest';
         // To do: if phone exists, link it. Since we don't have phone on Order easily, we might skip or fallback.
         // Assuming shippingAddressSnapshot might have phone.
         const phone = row.original.shippingAddressSnapshot?.phone;
@@ -132,17 +132,17 @@ export function buildOrderColumns(): ColumnDef<Order>[] {
       },
     },
     {
-      accessorKey: "createdAt",
-      header: "Date",
+      accessorKey: 'createdAt',
+      header: 'Date',
       /**
        *
        */
       cell: ({ row }) => {
         const date = new Date(row.original.createdAt!);
-        const formatted = date.toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
+        const formatted = date.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
         });
         const relative = formatDistanceToNow(date, { addSuffix: true });
 
@@ -155,8 +155,8 @@ export function buildOrderColumns(): ColumnDef<Order>[] {
       },
     },
     {
-      id: "items",
-      header: "Items",
+      id: 'items',
+      header: 'Items',
       /**
        *
        */
@@ -164,20 +164,20 @@ export function buildOrderColumns(): ColumnDef<Order>[] {
         const count = row.original.items?.length || 0;
         return (
           <span>
-            {count} item{count !== 1 ? "s" : ""}
+            {count} item{count !== 1 ? 's' : ''}
           </span>
         );
       },
     },
     {
-      accessorKey: "totalAmount",
-      header: "Total",
+      accessorKey: 'totalAmount',
+      header: 'Total',
       /**
        *
        */
       cell: ({ row }) => {
         const total = row.original.totalAmount;
-        const currency = row.original.currency || "EGP";
+        const currency = row.original.currency || 'EGP';
         return (
           <span className="font-medium">
             {currency} {Number(total).toFixed(2)}
@@ -186,8 +186,8 @@ export function buildOrderColumns(): ColumnDef<Order>[] {
       },
     },
     {
-      accessorKey: "paymentStatus",
-      header: "Payment",
+      accessorKey: 'paymentStatus',
+      header: 'Payment',
       /**
        *
        */
@@ -201,8 +201,8 @@ export function buildOrderColumns(): ColumnDef<Order>[] {
       },
     },
     {
-      accessorKey: "status",
-      header: "Status",
+      accessorKey: 'status',
+      header: 'Status',
       /**
        *
        */
@@ -216,7 +216,7 @@ export function buildOrderColumns(): ColumnDef<Order>[] {
       },
     },
     {
-      id: "actions",
+      id: 'actions',
       /**
        *
        */
@@ -225,7 +225,7 @@ export function buildOrderColumns(): ColumnDef<Order>[] {
 
         return (
           <div className="flex items-center justify-end gap-2">
-            {order.status === "pending" && (
+            {order.status === 'pending' && (
               <Button variant="outline" size="sm" className="hidden lg:flex" asChild>
                 <Link href={`/orders/${order.id}?action=confirm`}>
                   <Check className="h-4 w-4 mr-1" /> Confirm

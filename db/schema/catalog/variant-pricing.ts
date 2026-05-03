@@ -13,8 +13,7 @@ import { relations } from "drizzle-orm";
 import { productVariants } from "./product-variants";
 import { catalogSchema } from "../schemas";
 import { customerGroupEnum, uomCodeEnum } from "../enums";
-import type { CurrencyCode } from "../../../backend/src/features/core/domain/types/common";
-import type { PartialTranslationMap } from "../../../backend/src/features/core/domain/value-objects";
+import { CurrencyCode, PartialTranslationMap } from "../../types";
 
 /**
  * Variant Sellable Units of Measure (UOM)

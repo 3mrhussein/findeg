@@ -3,10 +3,10 @@
  * Used by API routes for validating checkout/order creation requests.
  */
 
-import { z } from "zod";
-import { ShippingAddressSchema } from "../value-objects";
-import { EmailSchema } from "@findeg/backend/features/core/domain/types/common";
-import { PaymentMethodSchema } from "@findeg/backend/features/core/domain/types/common";
+import { z } from 'zod';
+import { ShippingAddressSchema } from '../value-objects';
+import { EmailSchema } from '@findeg/backend/features/core/domain/types/common';
+import { PaymentMethodSchema } from '@findeg/backend/features/core/domain/types/common';
 
 export const CheckoutOrderSchema = z.object({
   address: ShippingAddressSchema,

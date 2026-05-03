@@ -3,12 +3,12 @@
  * Max 4 actions, no destructive actions (delete should be in bulk actions or detail page)
  */
 
-"use client";
+'use client';
 
-import { Button } from "@findeg/ui";
-import { Edit, Copy, Eye, FileStack } from "lucide-react";
-import { Link } from "@i18n/navigation";
-import { useToast } from "@hooks/use-toast";
+import { Button } from '@findeg/ui';
+import { Edit, Copy, Eye, FileStack } from 'lucide-react';
+import { Link } from '@i18n/navigation';
+import { useToast } from '@hooks/use-toast';
 
 interface ProductQuickActionsProps {
   productId: number;
@@ -23,7 +23,7 @@ export function ProductQuickActions({ productId, productName, sku }: ProductQuic
     if (!sku) return;
     navigator.clipboard.writeText(sku);
     toast({
-      title: "SKU copied",
+      title: 'SKU copied',
       description: `${sku} copied to clipboard`,
     });
   };
@@ -31,8 +31,8 @@ export function ProductQuickActions({ productId, productName, sku }: ProductQuic
   const handleDuplicate = () => {
     // TODO: Implement duplicate logic (server action)
     toast({
-      title: "Duplicate product",
-      description: "This feature will be available soon",
+      title: 'Duplicate product',
+      description: 'This feature will be available soon',
     });
   };
 

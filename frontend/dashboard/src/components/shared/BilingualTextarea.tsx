@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { useFormContext } from "react-hook-form";
-import { Textarea } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import { cn } from "@lib/utils";
+import * as React from 'react';
+import { useFormContext } from 'react-hook-form';
+import { Textarea } from '@findeg/ui';
+import { Label } from '@findeg/ui';
+import { cn } from '@lib/utils';
 
 interface BilingualTextareaProps {
   nameEn: string;
@@ -24,8 +24,8 @@ interface BilingualTextareaProps {
 export function BilingualTextarea({
   nameEn,
   nameAr,
-  labelEn = "English",
-  labelAr = "Arabic",
+  labelEn = 'English',
+  labelAr = 'Arabic',
   placeholderEn,
   placeholderAr,
   rows = 3,
@@ -38,20 +38,20 @@ export function BilingualTextarea({
   } = useFormContext();
 
   const errorEn = nameEn
-    .split(".")
+    .split('.')
     .reduce(
       (o: Record<string, unknown>, k) => (o?.[k] as Record<string, unknown>) ?? {},
       errors as Record<string, unknown>,
     );
   const errorAr = nameAr
-    .split(".")
+    .split('.')
     .reduce(
       (o: Record<string, unknown>, k) => (o?.[k] as Record<string, unknown>) ?? {},
       errors as Record<string, unknown>,
     );
 
   return (
-    <div className={cn("grid grid-cols-2 gap-3", className)}>
+    <div className={cn('grid grid-cols-2 gap-3', className)}>
       <div className="space-y-1">
         <Label htmlFor={nameEn} className="text-xs font-medium text-muted-foreground">
           {labelEn}
@@ -64,8 +64,8 @@ export function BilingualTextarea({
           placeholder={placeholderEn}
           rows={rows}
           className={cn(
-            "text-sm resize-none",
-            !!(errorEn as { message?: string })?.message && "border-destructive",
+            'text-sm resize-none',
+            !!(errorEn as { message?: string })?.message && 'border-destructive',
           )}
         />
         {!!(errorEn as { message?: string })?.message && (
@@ -85,8 +85,8 @@ export function BilingualTextarea({
           placeholder={placeholderAr}
           rows={rows}
           className={cn(
-            "text-sm font-arabic resize-none",
-            !!(errorAr as { message?: string })?.message && "border-destructive",
+            'text-sm font-arabic resize-none',
+            !!(errorAr as { message?: string })?.message && 'border-destructive',
           )}
         />
         {!!(errorAr as { message?: string })?.message && (

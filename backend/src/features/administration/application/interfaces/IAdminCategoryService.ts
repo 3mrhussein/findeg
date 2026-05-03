@@ -4,9 +4,9 @@
  * Defines CRUD operations for category management in the admin dashboard.
  */
 
-import { Category } from "@findeg/backend/features/catalog/domain/entities/Category";
-import { CategoryInput } from "@findeg/backend/features/administration/domain/types";
-import type { Locale } from "@findeg/backend/features/core/domain/value-objects";
+import { Category } from '@findeg/backend/features/catalog/domain/entities/Category';
+import { CategoryInput } from '@findeg/backend/features/administration/domain/types';
+import type { Locale } from '@findeg/backend/features/core/domain/value-objects';
 
 export interface IAdminCategoryService {
   /**

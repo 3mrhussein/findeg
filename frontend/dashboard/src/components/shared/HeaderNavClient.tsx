@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Link } from "@i18n/navigation";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@findeg/ui";
-import ToggleLanguage from "./ToggleLanguage";
-import { ToggleTheme } from "@findeg/ui";
-import { Menu, User, LayoutDashboard } from "lucide-react";
-import { useUser } from "@hooks/useUser";
-import { useTranslations } from "next-intl";
+import { useState } from 'react';
+import { Link } from '@i18n/navigation';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@findeg/ui';
+import ToggleLanguage from './ToggleLanguage';
+import { ToggleTheme } from '@findeg/ui';
+import { Menu, User, LayoutDashboard } from 'lucide-react';
+import { useUser } from '@hooks/useUser';
+import { useTranslations } from 'next-intl';
 
 /**
  * Admin Header Navigation Client Component
@@ -15,7 +15,7 @@ import { useTranslations } from "next-intl";
 export function HeaderNavClient() {
   const [open, setOpen] = useState(false);
   const { isLoggedIn, currentUser, isLoading } = useUser();
-  const t = useTranslations("Nav");
+  const t = useTranslations('Nav');
 
   return (
     <>
@@ -66,11 +66,11 @@ export function HeaderNavClient() {
                   For Schools
                 </Link>
                 <Link
-                  href={isLoggedIn ? "/dashboard" : "/login"}
+                  href={isLoggedIn ? '/dashboard' : '/login'}
                   onClick={() => setOpen(false)}
                   className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-3 hover:text-primary transition-colors"
                 >
-                  {isLoggedIn ? t("Dashboard") : t("Login")}
+                  {isLoggedIn ? t('Dashboard') : t('Login')}
                 </Link>
               </nav>
 

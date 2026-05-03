@@ -1,24 +1,24 @@
-"use client";
+'use client';
 
-import { Check } from "lucide-react";
+import { Check } from 'lucide-react';
 
 interface OrderTimelineProps {
   status: string;
 }
 
 const steps = [
-  { id: "pending", label: "Pending" },
-  { id: "confirmed", label: "Confirmed" },
-  { id: "processing", label: "Processing" },
-  { id: "shipped", label: "Shipped" },
-  { id: "delivered", label: "Delivered" },
+  { id: 'pending', label: 'Pending' },
+  { id: 'confirmed', label: 'Confirmed' },
+  { id: 'processing', label: 'Processing' },
+  { id: 'shipped', label: 'Shipped' },
+  { id: 'delivered', label: 'Delivered' },
 ];
 
 /**
  *
  */
 export function OrderTimeline({ status }: OrderTimelineProps) {
-  if (status === "cancelled" || status === "refunded") {
+  if (status === 'cancelled' || status === 'refunded') {
     return (
       <div className="w-full bg-destructive/10 p-4 rounded-lg flex items-center justify-center border border-destructive/20">
         <span className="text-destructive font-semibold uppercase tracking-wider">
@@ -53,15 +53,15 @@ export function OrderTimeline({ status }: OrderTimelineProps) {
               <div
                 className={`w-10 h-10 rounded-full flex items-center justify-center border-4 z-10 transition-colors duration-300 ${
                   isCompleted
-                    ? "bg-primary border-primary text-primary-foreground"
-                    : "bg-background border-muted text-muted-foreground"
-                } ${isCurrent ? "ring-4 ring-primary/20" : ""}`}
+                    ? 'bg-primary border-primary text-primary-foreground'
+                    : 'bg-background border-muted text-muted-foreground'
+                } ${isCurrent ? 'ring-4 ring-primary/20' : ''}`}
               >
                 {isCompleted ? <Check className="w-5 h-5" /> : <span>{index + 1}</span>}
               </div>
               <span
                 className={`mt-2 text-sm font-medium ${
-                  isCurrent ? "text-foreground" : "text-muted-foreground"
+                  isCurrent ? 'text-foreground' : 'text-muted-foreground'
                 }`}
               >
                 {step.label}

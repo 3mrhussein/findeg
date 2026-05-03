@@ -1,11 +1,11 @@
-import { Locale } from "next-intl";
-import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import { getMyAccountData } from "@findeg/backend";
-import { requireAuth } from "@lib/auth-guard";
+import { Locale } from 'next-intl';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { Input } from '@findeg/ui';
+import { Label } from '@findeg/ui';
+import { getMyAccountData } from '@findeg/backend';
+import { requireAuth } from '@lib/auth-guard';
 
 type Props = {
   params: Promise<{ locale: Locale }>;
@@ -17,15 +17,15 @@ type Props = {
 export default async function SettingsPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const t = await getTranslations({ locale, namespace: "Pages.MyAccount" });
+  const t = await getTranslations({ locale, namespace: 'Pages.MyAccount' });
   const session = await requireAuth(locale);
   const { user } = await getMyAccountData(session.userId);
 
   return (
     <div className="space-y-6">
       <div className="space-y-1">
-        <h1 className="text-3xl font-bold">{t("Settings")}</h1>
-        <p className="text-muted-foreground">{t("SettingsDescription")}</p>
+        <h1 className="text-3xl font-bold">{t('Settings')}</h1>
+        <p className="text-muted-foreground">{t('SettingsDescription')}</p>
       </div>
 
       <div className="grid gap-4">

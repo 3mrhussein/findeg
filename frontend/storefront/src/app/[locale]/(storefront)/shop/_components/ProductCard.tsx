@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import { useMemo, useState } from "react";
-import Image from "next/image";
-import { useLocale, useTranslations } from "next-intl";
-import { Heart, Eye, Star, ShoppingCart } from "lucide-react";
-import { Link } from "@i18n/navigation";
-import type { Product, UomCode } from "@data/catalog/types";
-import { useCart } from "@hooks/useCart";
-import { useToast } from "@hooks/use-toast";
-import { useUser } from "@hooks/useUser";
-import { Button } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
-import { Skeleton } from "@findeg/ui";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@findeg/ui";
-import { IconTooltip } from "@findeg/ui";
-import { cn } from "@lib/utils";
+import { useMemo, useState } from 'react';
+import Image from 'next/image';
+import { useLocale, useTranslations } from 'next-intl';
+import { Heart, Eye, Star, ShoppingCart } from 'lucide-react';
+import { Link } from '@i18n/navigation';
+import type { Product, UomCode } from '@data/catalog/types';
+import { useCart } from '@hooks/useCart';
+import { useToast } from '@hooks/use-toast';
+import { useUser } from '@hooks/useUser';
+import { Button } from '@findeg/ui';
+import { Badge } from '@findeg/ui';
+import { Skeleton } from '@findeg/ui';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@findeg/ui';
+import { IconTooltip } from '@findeg/ui';
+import { cn } from '@lib/utils';
 
 export interface ProductCardBrand {
   id: number;
@@ -24,7 +24,7 @@ export interface ProductCardBrand {
 
 interface ProductCardProps {
   product: Product;
-  view: "grid" | "list";
+  view: 'grid' | 'list';
   brand?: ProductCardBrand;
 }
 
@@ -41,19 +41,19 @@ function resolveUomLabel(
   fallback: string,
 ): string {
   if (!localizedLabel) return fallback;
-  if (typeof localizedLabel === "string") return localizedLabel;
-  if (locale === "ar" && localizedLabel.ar) return localizedLabel.ar;
+  if (typeof localizedLabel === 'string') return localizedLabel;
+  if (locale === 'ar' && localizedLabel.ar) return localizedLabel.ar;
   return localizedLabel.en || localizedLabel.ar || fallback;
 }
 
 export function ProductCard({ product, view, brand }: ProductCardProps) {
   const locale = useLocale();
-  const t = useTranslations("Pages.ProductCard");
+  const t = useTranslations('Pages.ProductCard');
   const egpFormatter = useMemo(
     () =>
-      new Intl.NumberFormat(locale === "ar" ? "ar-EG" : "en-EG", {
-        style: "currency",
-        currency: "EGP",
+      new Intl.NumberFormat(locale === 'ar' ? 'ar-EG' : 'en-EG', {
+        style: 'currency',
+        currency: 'EGP',
       }),
     [locale],
   );
@@ -64,7 +64,7 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
 
   const primaryVariant = useMemo(() => {
     const variants = product.variants || [];
-    return variants.find((variant) => variant.variantKey === "default") || variants[0];
+    return variants.find((variant) => variant.variantKey === 'default') || variants[0];
   }, [product.variants]);
 
   const stockSnapshot = useMemo(() => {
@@ -117,8 +117,8 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
     if (sellableUoms.length === 0) {
       return [
         {
-          code: "pcs",
-          label: "pcs",
+          code: 'pcs',
+          label: 'pcs',
           price: Number(primaryVariant.basePrice),
           strikePrice: primaryVariant.strikePrice ? Number(primaryVariant.strikePrice) : undefined,
         },
@@ -168,14 +168,14 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
   const badge = useMemo(() => {
     if (discountPercentage > 0) {
       return {
-        text: t("SaleBadge", { percent: discountPercentage }),
-        className: "bg-amber-500 text-white",
+        text: t('SaleBadge', { percent: discountPercentage }),
+        className: 'bg-amber-500 text-white',
       };
     }
     if (stockSnapshot.lowStock) {
       return {
-        text: t("LowStockBadge"),
-        className: "bg-orange-500 text-white",
+        text: t('LowStockBadge'),
+        className: 'bg-orange-500 text-white',
       };
     }
     const isNew = product.createdAt
@@ -183,8 +183,8 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
       : false;
     if (isNew) {
       return {
-        text: t("NewBadge"),
-        className: "bg-emerald-600 text-white",
+        text: t('NewBadge'),
+        className: 'bg-emerald-600 text-white',
       };
     }
     return null;
@@ -203,22 +203,22 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
     toggleWishlistItem(product.id);
     if (isAdding) {
       toast({
-        title: t("SavedToWishlist"),
+        title: t('SavedToWishlist'),
       });
     }
   };
 
   const stockLabel = !stockSnapshot.inStock
-    ? t("OutOfStock")
+    ? t('OutOfStock')
     : stockSnapshot.lowStock
-      ? t("OnlyLeft", { count: stockSnapshot.availableUnits })
-      : t("InStock");
+      ? t('OnlyLeft', { count: stockSnapshot.availableUnits })
+      : t('InStock');
 
   const stockClassName = !stockSnapshot.inStock
-    ? "text-red-600 dark:text-red-400"
+    ? 'text-red-600 dark:text-red-400'
     : stockSnapshot.lowStock
-      ? "text-orange-600 dark:text-orange-400"
-      : "text-emerald-600 dark:text-emerald-400";
+      ? 'text-orange-600 dark:text-orange-400'
+      : 'text-emerald-600 dark:text-emerald-400';
 
   const imageSection = (
     <div className="relative overflow-hidden rounded-xl bg-muted">
@@ -231,32 +231,32 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
         loading="lazy"
         onLoad={() => setImageLoaded(true)}
         className={cn(
-          "h-full w-full object-cover transition duration-300",
-          view === "grid" ? "aspect-square group-hover:scale-[1.02]" : "aspect-square",
+          'h-full w-full object-cover transition duration-300',
+          view === 'grid' ? 'aspect-square group-hover:scale-[1.02]' : 'aspect-square',
         )}
-        sizes={view === "grid" ? "(max-width: 768px) 50vw, 25vw" : "120px"}
+        sizes={view === 'grid' ? '(max-width: 768px) 50vw, 25vw' : '120px'}
       />
 
       {badge && (
-        <Badge className={cn("absolute inset-s-3 top-3 z-20 rounded-full", badge.className)}>
+        <Badge className={cn('absolute inset-s-3 top-3 z-20 rounded-full', badge.className)}>
           {badge.text}
         </Badge>
       )}
 
-      <IconTooltip label={isWishlisted ? t("RemoveWishlist") : t("SaveToWishlist")} asChild>
+      <IconTooltip label={isWishlisted ? t('RemoveWishlist') : t('SaveToWishlist')} asChild>
         <Button
           type="button"
           variant="secondary"
           size="icon-sm"
           className="absolute inset-e-3 top-3 z-20 rounded-full bg-background/90 hover:bg-background"
           onClick={handleWishlistToggle}
-          aria-label={isWishlisted ? t("RemoveWishlist") : t("SaveToWishlist")}
+          aria-label={isWishlisted ? t('RemoveWishlist') : t('SaveToWishlist')}
         >
-          <Heart className={cn("size-4", isWishlisted && "fill-current text-red-500")} />
+          <Heart className={cn('size-4', isWishlisted && 'fill-current text-red-500')} />
         </Button>
       </IconTooltip>
 
-      {view === "grid" && (
+      {view === 'grid' && (
         <div className="pointer-events-none absolute inset-0 z-20 hidden items-center justify-center md:flex">
           <div className="rounded-full bg-background/90 p-3 text-foreground opacity-0 shadow-md transition-opacity duration-200 group-hover:opacity-100">
             <Eye className="size-4" />
@@ -290,7 +290,7 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
             className="size-5 rounded-sm object-contain"
           />
         ) : null}
-        <span className="truncate">{brand?.name || product.brandName || t("UnknownBrand")}</span>
+        <span className="truncate">{brand?.name || product.brandName || t('UnknownBrand')}</span>
       </div>
 
       <div className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
@@ -338,10 +338,10 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
                 type="button"
                 onClick={() => setSelectedUomCode(option.code)}
                 className={cn(
-                  "rounded-full border px-2 py-0.5 text-[11px] font-medium",
+                  'rounded-full border px-2 py-0.5 text-[11px] font-medium',
                   (selectedUomCode || selectedUom?.code) === option.code
-                    ? "border-primary bg-primary/10 text-primary"
-                    : "border-border text-muted-foreground hover:text-foreground",
+                    ? 'border-primary bg-primary/10 text-primary'
+                    : 'border-border text-muted-foreground hover:text-foreground',
                 )}
               >
                 {option.label}
@@ -351,13 +351,13 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
         </div>
       )}
 
-      <div className={cn("mt-2 text-xs font-medium", stockClassName)}>{stockLabel}</div>
+      <div className={cn('mt-2 text-xs font-medium', stockClassName)}>{stockLabel}</div>
 
       <div className="mt-4">
         {stockSnapshot.inStock ? (
           <Button className="w-full" onClick={handleAddToCart}>
             <ShoppingCart />
-            {t("AddToCartFull")}
+            {t('AddToCartFull')}
           </Button>
         ) : (
           <Tooltip>
@@ -365,18 +365,18 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
               <span className="block w-full">
                 <Button className="w-full" disabled>
                   <ShoppingCart />
-                  {t("OutOfStock")}
+                  {t('OutOfStock')}
                 </Button>
               </span>
             </TooltipTrigger>
-            <TooltipContent>{t("OutOfStockTooltip")}</TooltipContent>
+            <TooltipContent>{t('OutOfStockTooltip')}</TooltipContent>
           </Tooltip>
         )}
       </div>
     </div>
   );
 
-  if (view === "list") {
+  if (view === 'list') {
     return (
       <article className="group flex gap-4 rounded-2xl border bg-card p-4 shadow-xs transition hover:-translate-y-0.5 hover:shadow-md">
         <div className="w-[120px] shrink-0">{imageSection}</div>

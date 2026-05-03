@@ -1,11 +1,11 @@
-import { type ID } from "../../../core/domain/types/common";
+import { type ID } from '../../../core/domain/types/common';
 import {
   type IProductImportService,
   type ImportResult,
   type ImportRowPreview,
-} from "../interfaces/IProductImportService";
-import { type IAdminProductService } from "../interfaces/IAdminProductService";
-import { type IProductRepository } from "../../../catalog/application/interfaces/IProductRepository";
+} from '../interfaces/IProductImportService';
+import { type IAdminProductService } from '../interfaces/IAdminProductService';
+import { type IProductRepository } from '../../../catalog/application/interfaces/IProductRepository';
 
 /**
  *
@@ -24,36 +24,36 @@ export class ProductImportService implements IProductImportService {
    */
   generateTemplate(): Buffer {
     const headers = [
-      "sku",
-      "name_en",
-      "name_ar",
-      "description_en",
-      "description_ar",
-      "brand_id",
-      "category_id",
-      "base_price",
-      "cost_price",
-      "barcode",
-      "weight_grams",
-      "is_active",
+      'sku',
+      'name_en',
+      'name_ar',
+      'description_en',
+      'description_ar',
+      'brand_id',
+      'category_id',
+      'base_price',
+      'cost_price',
+      'barcode',
+      'weight_grams',
+      'is_active',
     ];
     const example = [
-      "STA-88-BLU-04",
-      "Stabilo Point 88 - Blue 0.4",
-      "ستابيلو بوينت ٨٨ - أزرق ٠.٤",
-      "Fine liner pen",
-      "قلم تحديد دقيق",
-      "1",
-      "10",
-      "15.50",
-      "10.00",
-      "4006381333627",
-      "10",
-      "true",
+      'STA-88-BLU-04',
+      'Stabilo Point 88 - Blue 0.4',
+      'ستابيلو بوينت ٨٨ - أزرق ٠.٤',
+      'Fine liner pen',
+      'قلم تحديد دقيق',
+      '1',
+      '10',
+      '15.50',
+      '10.00',
+      '4006381333627',
+      '10',
+      'true',
     ];
 
-    const csvContent = [headers.join(","), example.join(",")].join("\n");
-    return Buffer.from(csvContent, "utf-8");
+    const csvContent = [headers.join(','), example.join(',')].join('\n');
+    return Buffer.from(csvContent, 'utf-8');
   }
 
   /**
@@ -71,15 +71,15 @@ export class ProductImportService implements IProductImportService {
       const errors: string[] = [];
 
       // Basic validation
-      if (!row.sku) errors.push("SKU is required.");
-      if (!row.name_en || !row.name_ar) errors.push("Both EN and AR names are required.");
+      if (!row.sku) errors.push('SKU is required.');
+      if (!row.name_en || !row.name_ar) errors.push('Both EN and AR names are required.');
       if (!row.base_price || isNaN(Number(row.base_price)))
-        errors.push("Valid base_price is required.");
+        errors.push('Valid base_price is required.');
 
-      const status = errors.length > 0 ? "error" : warnings.length > 0 ? "warning" : "valid";
+      const status = errors.length > 0 ? 'error' : warnings.length > 0 ? 'warning' : 'valid';
 
-      if (status === "error") errorCount++;
-      else if (status === "warning") warningCount++;
+      if (status === 'error') errorCount++;
+      else if (status === 'warning') warningCount++;
       else validCount++;
 
       previews.push({
@@ -107,7 +107,7 @@ export class ProductImportService implements IProductImportService {
     rows: Record<string, string>[],
     upsert: boolean,
     dryRun: boolean,
-    auditUserId: ID,
+    _auditUserId: ID,
   ): Promise<ImportResult> {
     const validationResult = await this.validateRows(rows);
     if (dryRun || validationResult.errorCount > 0) {

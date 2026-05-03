@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useTranslations } from "next-intl";
-import { Search, X, ChevronDown, Filter } from "lucide-react";
-import { Input } from "@findeg/ui";
-import { Button } from "@findeg/ui";
+import { useTranslations } from 'next-intl';
+import { Search, X, ChevronDown, Filter } from 'lucide-react';
+import { Input } from '@findeg/ui';
+import { Button } from '@findeg/ui';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -11,11 +11,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@findeg/ui";
-import { Badge } from "@findeg/ui";
-import { Separator } from "@findeg/ui";
-import { cn } from "@lib/utils";
-import { Options } from "nuqs";
+} from '@findeg/ui';
+import { Badge } from '@findeg/ui';
+import { Separator } from '@findeg/ui';
+import { cn } from '@lib/utils';
+import { Options } from 'nuqs';
 
 interface ProductsFilterBarProps {
   filters: {
@@ -46,7 +46,7 @@ export function ProductsFilterBar({
   categories,
   brands,
 }: ProductsFilterBarProps) {
-  const t = useTranslations("Administration.Catalog.Products");
+  const t = useTranslations('Administration.Catalog.Products');
 
   const hasActiveFilters =
     filters.search ||
@@ -68,7 +68,7 @@ export function ProductsFilterBar({
 
   /** Resolve display name for a category, preferring localizedContent.name.en */
   const getCategoryDisplayName = (cat: any): string => {
-    return cat.localizedContent?.name?.en ?? cat.name ?? cat.slug ?? "—";
+    return cat.localizedContent?.name?.en ?? cat.name ?? cat.slug ?? '—';
   };
 
   return (
@@ -77,7 +77,7 @@ export function ProductsFilterBar({
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder={t("SearchPlaceholder")}
+            placeholder={t('SearchPlaceholder')}
             value={filters.search}
             onChange={(e) => setFilters({ search: e.target.value || null, page: 1 })}
             className="pl-9 pr-9"
@@ -97,7 +97,7 @@ export function ProductsFilterBar({
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="h-10 border-dashed">
               <Filter className="mr-2 h-4 w-4" />
-              {t("Filters.AllCategories")}
+              {t('Filters.AllCategories')}
               {filters.categoryIds.length > 0 && (
                 <>
                   <Separator orientation="vertical" className="mx-2 h-4" />
@@ -128,7 +128,7 @@ export function ProductsFilterBar({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-[220px]">
-            <DropdownMenuLabel>{t("Filters.AllCategories")}</DropdownMenuLabel>
+            <DropdownMenuLabel>{t('Filters.AllCategories')}</DropdownMenuLabel>
             <DropdownMenuSeparator />
             {categories.map((cat) => (
               <DropdownMenuCheckboxItem
@@ -153,7 +153,7 @@ export function ProductsFilterBar({
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="h-10 border-dashed">
               <ChevronDown className="mr-2 h-4 w-4" />
-              {t("Filters.AllBrands")}
+              {t('Filters.AllBrands')}
               {filters.brandIds.length > 0 && (
                 <>
                   <Separator orientation="vertical" className="mx-2 h-4" />
@@ -184,7 +184,7 @@ export function ProductsFilterBar({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-[200px]">
-            <DropdownMenuLabel>{t("Filters.AllBrands")}</DropdownMenuLabel>
+            <DropdownMenuLabel>{t('Filters.AllBrands')}</DropdownMenuLabel>
             <DropdownMenuSeparator />
             {brands.map((brand) => (
               <DropdownMenuCheckboxItem
@@ -205,18 +205,18 @@ export function ProductsFilterBar({
 
         {/* Status — Segmented Control */}
         <div className="flex rounded-lg border border-gray-200 dark:border-slate-800 overflow-hidden text-sm">
-          {(["all", "active", "inactive"] as const).map((s) => (
+          {(['all', 'active', 'inactive'] as const).map((s) => (
             <button
               key={s}
-              onClick={() => setFilters({ status: s === "all" ? null : s, page: 1 })}
+              onClick={() => setFilters({ status: s === 'all' ? null : s, page: 1 })}
               className={cn(
-                "px-3 py-1.5 capitalize transition-colors",
-                (s === "all" && !filters.status) || filters.status === s
-                  ? "bg-indigo-600 text-white"
-                  : "bg-white dark:bg-slate-900 text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800/50",
+                'px-3 py-1.5 capitalize transition-colors',
+                (s === 'all' && !filters.status) || filters.status === s
+                  ? 'bg-indigo-600 text-white'
+                  : 'bg-white dark:bg-slate-900 text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-800/50',
               )}
             >
-              {s === "all" ? "All" : s.charAt(0).toUpperCase() + s.slice(1)}
+              {s === 'all' ? 'All' : s.charAt(0).toUpperCase() + s.slice(1)}
             </button>
           ))}
         </div>
@@ -225,7 +225,7 @@ export function ProductsFilterBar({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="h-10 border-dashed">
-              {t("Filters.AllCompleteness")}
+              {t('Filters.AllCompleteness')}
               {filters.completeness && (
                 <Badge variant="secondary" className="ml-2 rounded-sm px-1 font-normal">
                   {filters.completeness}
@@ -234,14 +234,14 @@ export function ProductsFilterBar({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
-            {["complete", "no-category", "no-images", "no-price", "draft"].map((opt) => (
+            {['complete', 'no-category', 'no-images', 'no-price', 'draft'].map((opt) => (
               <DropdownMenuCheckboxItem
                 key={opt}
                 checked={filters.completeness === opt}
                 onCheckedChange={() => setFilters({ completeness: opt, page: 1 })}
               >
                 {t(
-                  `Completeness.${opt.charAt(0).toUpperCase() + opt.slice(1).replace("-c", "C").replace("-i", "I").replace("-p", "P")}` as any,
+                  `Completeness.${opt.charAt(0).toUpperCase() + opt.slice(1).replace('-c', 'C').replace('-i', 'I').replace('-p', 'P')}` as any,
                 )}
               </DropdownMenuCheckboxItem>
             ))}
@@ -250,14 +250,14 @@ export function ProductsFilterBar({
               checked={!filters.completeness}
               onCheckedChange={() => setFilters({ completeness: null, page: 1 })}
             >
-              {t("Filters.AllCompleteness")}
+              {t('Filters.AllCompleteness')}
             </DropdownMenuCheckboxItem>
           </DropdownMenuContent>
         </DropdownMenu>
 
         {hasActiveFilters && (
           <Button variant="ghost" onClick={handleClear} className="h-10 px-2 lg:px-3">
-            {t("Filters.Clear")}
+            {t('Filters.Clear')}
             <X className="ml-2 h-4 w-4" />
           </Button>
         )}

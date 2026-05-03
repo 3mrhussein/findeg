@@ -5,34 +5,34 @@
  * Includes variant-aware mutations, SKU validation, and UoM management.
  */
 
-import type { Product } from "@findeg/backend/features/catalog/domain/entities/Product";
-import type { ProductInput } from "@findeg/backend/features/administration/domain/types";
-import type { Locale } from "@findeg/backend/features/core/domain/value-objects";
+import type { Product } from '@findeg/backend/features/catalog/domain/entities/Product';
+import type { ProductInput } from '@findeg/backend/features/administration/domain/types';
+import type { Locale } from '@findeg/backend/features/core/domain/value-objects';
 import type {
   CreateProductWithVariantsInput,
   UpdateProductWithVariantsInput,
   UoMInput,
   ImageInput,
   CreateVariantInput,
-} from "@findeg/backend/features/administration/domain/types/VariantInput";
-import type { VariantDimension } from "@findeg/backend/features/catalog/domain/types/VariantDimension";
+} from '@findeg/backend/features/administration/domain/types/VariantInput';
+import type { VariantDimension } from '@findeg/backend/features/catalog/domain/types/VariantDimension';
 import type {
   Variant,
   VariantImage,
   VariantAttributeValue,
   SellableUom,
   PriceListEntry,
-} from "@findeg/backend/features/catalog/domain/entities/Variant";
-import type { Tag } from "@findeg/backend/features/catalog/domain/entities/Tag";
+} from '@findeg/backend/features/catalog/domain/entities/Variant';
+import type { Tag } from '@findeg/backend/features/catalog/domain/entities/Tag';
 
 export interface ProductListFilters {
   search?: string;
   categoryIds?: number[];
   brandIds?: number[];
-  status?: "active" | "inactive";
-  completeness?: "complete" | "no-category" | "no-images" | "no-price" | "draft";
-  sortBy?: "name" | "price" | "stock" | "updatedAt";
-  sortDir?: "asc" | "desc";
+  status?: 'active' | 'inactive';
+  completeness?: 'complete' | 'no-category' | 'no-images' | 'no-price' | 'draft';
+  sortBy?: 'name' | 'price' | 'stock' | 'updatedAt';
+  sortDir?: 'asc' | 'desc';
   page?: number;
   pageSize?: number;
 }
@@ -52,7 +52,7 @@ export interface ProductListItem {
   updatedAt: Date;
   variantCount: number;
   thumbnailUrl: string | null;
-  completeness: "complete" | "no-category" | "no-images" | "no-price" | "draft";
+  completeness: 'complete' | 'no-category' | 'no-images' | 'no-price' | 'draft';
 }
 
 export interface ProductListResult {

@@ -1,6 +1,6 @@
-import { Link } from "@i18n/navigation";
-import { Inbox } from "lucide-react";
-import { Button } from "@findeg/ui";
+import { Link } from '@i18n/navigation';
+import { Inbox } from 'lucide-react';
+import { Button } from '@findeg/ui';
 
 interface SectionStateEmptyProps {
   title: string;

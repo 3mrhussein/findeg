@@ -4,16 +4,16 @@ import type {
   Brand as BaseBrand,
   Category as BaseCategory,
   Collection as BaseCollection,
-} from "@findeg/backend/features/catalog/domain";
-import type { Review as BaseReview } from "@findeg/backend/features/review/domain/entities/Review";
+} from '@findeg/backend/features/catalog/domain';
+import type { Review as BaseReview } from '@findeg/backend/features/review/domain/entities/Review';
 import type {
   CustomerGroup as BaseCustomerGroup,
   UomCode,
-} from "@findeg/backend/features/core/domain/types/common";
+} from '@findeg/backend/features/core/domain/types/common';
 
 export type { UomCode };
 
-export interface Product extends Omit<BaseProduct, "variants"> {
+export interface Product extends Omit<BaseProduct, 'variants'> {
   slug: string;
   brandName?: string;
   categoryName?: string;
@@ -46,7 +46,7 @@ export interface FilterOption {
   isSelected?: boolean;
 }
 
-export type ShopPlpDiscount = "on-sale" | "bundle-deals";
+export type ShopPlpDiscount = 'on-sale' | 'bundle-deals';
 
 export interface ShopPlpFilters {
   query?: string;
@@ -90,7 +90,7 @@ export interface ReviewSummary {
 /**
  * Shared Listing View Model Base
  */
-export type ShopPlpSort = "popular" | "newest" | "price-low-high" | "price-high-low" | "rating";
+export type ShopPlpSort = 'popular' | 'newest' | 'price-low-high' | 'price-high-low' | 'rating';
 
 export interface BaseListingViewModel {
   products: Product[];
@@ -125,7 +125,7 @@ export interface ShopPlpViewModel extends BaseListingViewModel {
  * Search Page View Model
  */
 export interface SearchPageViewModel extends ShopPlpViewModel {
-  mode: "search" | "fallback";
+  mode: 'search' | 'fallback';
   query: string;
   exactCount: boolean;
 }

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   flexRender,
@@ -6,18 +6,18 @@ import {
   useReactTable,
   getSortedRowModel,
   type SortingState,
-} from "@tanstack/react-table";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@findeg/ui";
-import { useState, useTransition } from "react";
-import { usePathname, useRouter } from "@i18n/navigation";
-import { deleteProduct, setProductStatus } from "@data/products/actions";
-import { useToast } from "@hooks/use-toast";
-import type { ProductTableProps, UpdateQueryParams } from "./ProductTable.interface";
-import { buildProductColumns } from "./ProductTableColumns";
-import { ProductTableFilters } from "./ProductTableFilters";
-import { ProductTablePagination } from "./ProductTablePagination";
-import { ProductDeleteDialog } from "./ProductDeleteDialog";
-import { ProductBulkActionBar } from "./ProductBulkActionBar";
+} from '@tanstack/react-table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@findeg/ui';
+import { useState, useTransition } from 'react';
+import { usePathname, useRouter } from '@i18n/navigation';
+import { deleteProduct, setProductStatus } from '@data/products/actions';
+import { useToast } from '@hooks/use-toast';
+import type { ProductTableProps, UpdateQueryParams } from './ProductTable.interface';
+import { buildProductColumns } from './ProductTableColumns';
+import { ProductTableFilters } from './ProductTableFilters';
+import { ProductTablePagination } from './ProductTablePagination';
+import { ProductDeleteDialog } from './ProductDeleteDialog';
+import { ProductBulkActionBar } from './ProductBulkActionBar';
 
 /**
  * ProductTable — orchestrates filter toolbar, data grid, pagination, and delete dialog.
@@ -48,19 +48,19 @@ export function ProductTable({
     const params = new URLSearchParams();
     const nextSearch = (next.search ?? filters.search).trim();
     const nextCategoryId =
-      next.categoryId ?? (filters.categoryId ? String(filters.categoryId) : "");
-    const nextBrandId = next.brandId ?? (filters.brandId ? String(filters.brandId) : "");
+      next.categoryId ?? (filters.categoryId ? String(filters.categoryId) : '');
+    const nextBrandId = next.brandId ?? (filters.brandId ? String(filters.brandId) : '');
     const nextIsActive = next.isActive ?? filters.isActive;
     const nextStockLevel = next.stockLevel ?? filters.stockLevel;
-    const nextPage = next.page ?? "1";
+    const nextPage = next.page ?? '1';
 
-    if (nextSearch) params.set("search", nextSearch);
-    if (nextCategoryId) params.set("categoryId", nextCategoryId);
-    if (nextBrandId) params.set("brandId", nextBrandId);
-    if (nextIsActive && nextIsActive !== "all") params.set("isActive", nextIsActive);
-    if (nextStockLevel && nextStockLevel !== "all") params.set("stockLevel", nextStockLevel);
-    params.set("page", nextPage);
-    params.set("limit", String(limit));
+    if (nextSearch) params.set('search', nextSearch);
+    if (nextCategoryId) params.set('categoryId', nextCategoryId);
+    if (nextBrandId) params.set('brandId', nextBrandId);
+    if (nextIsActive && nextIsActive !== 'all') params.set('isActive', nextIsActive);
+    if (nextStockLevel && nextStockLevel !== 'all') params.set('stockLevel', nextStockLevel);
+    params.set('page', nextPage);
+    params.set('limit', String(limit));
 
     const qs = params.toString();
     startTransition(() => {
@@ -77,21 +77,21 @@ export function ProductTable({
     try {
       const result = await deleteProduct(deleteId);
       if (result.success) {
-        toast({ title: "Product deleted", description: "The product was deleted successfully." });
+        toast({ title: 'Product deleted', description: 'The product was deleted successfully.' });
         setDeleteId(null);
         router.refresh();
       } else {
         toast({
-          variant: "destructive",
-          title: "Delete failed",
-          description: result.error || "Unable to delete product.",
+          variant: 'destructive',
+          title: 'Delete failed',
+          description: result.error || 'Unable to delete product.',
         });
       }
     } catch {
       toast({
-        variant: "destructive",
-        title: "Delete failed",
-        description: "An unexpected error occurred while deleting the product.",
+        variant: 'destructive',
+        title: 'Delete failed',
+        description: 'An unexpected error occurred while deleting the product.',
       });
     } finally {
       setIsDeleting(false);
@@ -124,7 +124,7 @@ export function ProductTable({
       />
 
       <div
-        className={`rounded-md border bg-card transition-opacity relative ${isPending ? "opacity-50 pointer-events-none" : ""}`}
+        className={`rounded-md border bg-card transition-opacity relative ${isPending ? 'opacity-50 pointer-events-none' : ''}`}
       >
         {isPending && (
           <div className="absolute inset-0 flex items-center justify-center z-10">
@@ -150,7 +150,7 @@ export function ProductTable({
               table.getRowModel().rows.map((row: any) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
+                  data-state={row.getIsSelected() && 'selected'}
                   data-testid={`admin-product-row-${row.original.id}`}
                 >
                   {row.getVisibleCells().map((cell: any) => (

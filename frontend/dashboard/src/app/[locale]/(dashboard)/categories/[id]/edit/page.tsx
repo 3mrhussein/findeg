@@ -1,8 +1,8 @@
-import { CategoryForm } from "../../CategoryForm";
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import { notFound } from "next/navigation";
-import { parse } from "@findeg/backend/features/core";
-import { getCategoryById, getCategories } from "@data/categories/queries";
+import { CategoryForm } from '../../CategoryForm';
+import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
+import { notFound } from 'next/navigation';
+import { parse } from '@findeg/backend/features/core';
+import { getCategoryById, getCategories } from '@data/categories/queries';
 
 /**
  * Edit Category Page — Edit an existing category with translations
@@ -37,8 +37,8 @@ export default async function EditCategoryPage({
     parentId: category.parentId,
     icon: category.image, // mapping image to icon for now
     translations: (category as any).translations || [
-      { language: "en", name: category.name || "", description: category.description || "" },
-      { language: "ar", name: "", description: "" },
+      { language: 'en', name: category.name || '', description: category.description || '' },
+      { language: 'ar', name: '', description: '' },
     ],
   };
 

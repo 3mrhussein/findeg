@@ -1,75 +1,75 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import * as LucideIcons from "lucide-react";
-import { Check, ChevronsUpDown, Search } from "lucide-react";
-import { cn } from "@lib/utils";
-import { Button } from "@findeg/ui";
-import { Popover, PopoverContent, PopoverTrigger } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { ScrollArea } from "@findeg/ui";
+import * as React from 'react';
+import * as LucideIcons from 'lucide-react';
+import { Check, ChevronsUpDown, Search } from 'lucide-react';
+import { cn } from '@lib/utils';
+import { Button } from '@findeg/ui';
+import { Popover, PopoverContent, PopoverTrigger } from '@findeg/ui';
+import { Input } from '@findeg/ui';
+import { ScrollArea } from '@findeg/ui';
 
 const COMMON_ICONS = [
-  "Tag",
-  "Star",
-  "Heart",
-  "Clock",
-  "Package",
-  "Truck",
-  "Sparkles",
-  "Percent",
-  "Gift",
-  "Zap",
-  "Shield",
-  "Award",
-  "Flame",
-  "Crown",
-  "Anchor",
-  "Bell",
-  "Book",
-  "Check",
-  "Circle",
-  "Eye",
-  "Flag",
-  "Ghost",
-  "GlassWater",
-  "Home",
-  "Image",
-  "Info",
-  "Leaf",
-  "Lightbulb",
-  "Lock",
-  "Map",
-  "Moon",
-  "Music",
-  "Palette",
-  "Phone",
-  "Pin",
-  "Plane",
-  "Rocket",
-  "Scissors",
-  "Search",
-  "Settings",
-  "Share",
-  "ShoppingCart",
-  "Smile",
-  "Sun",
-  "Target",
-  "ThumbsUp",
-  "Trophy",
-  "User",
-  "Video",
-  "Watch",
-  "Scissors",
-  "Pen",
-  "Eraser",
-  "Pencil",
-  "GraduationCap",
-  "Library",
-  "School",
-  "Medal",
-  "TrendingUp",
-  "Flashlight",
+  'Tag',
+  'Star',
+  'Heart',
+  'Clock',
+  'Package',
+  'Truck',
+  'Sparkles',
+  'Percent',
+  'Gift',
+  'Zap',
+  'Shield',
+  'Award',
+  'Flame',
+  'Crown',
+  'Anchor',
+  'Bell',
+  'Book',
+  'Check',
+  'Circle',
+  'Eye',
+  'Flag',
+  'Ghost',
+  'GlassWater',
+  'Home',
+  'Image',
+  'Info',
+  'Leaf',
+  'Lightbulb',
+  'Lock',
+  'Map',
+  'Moon',
+  'Music',
+  'Palette',
+  'Phone',
+  'Pin',
+  'Plane',
+  'Rocket',
+  'Scissors',
+  'Search',
+  'Settings',
+  'Share',
+  'ShoppingCart',
+  'Smile',
+  'Sun',
+  'Target',
+  'ThumbsUp',
+  'Trophy',
+  'User',
+  'Video',
+  'Watch',
+  'Scissors',
+  'Pen',
+  'Eraser',
+  'Pencil',
+  'GraduationCap',
+  'Library',
+  'School',
+  'Medal',
+  'TrendingUp',
+  'Flashlight',
 ].sort();
 
 interface IconPickerProps {
@@ -81,9 +81,9 @@ interface IconPickerProps {
 /**
  *
  */
-export function IconPicker({ value, onChange, placeholder = "Select icon..." }: IconPickerProps) {
+export function IconPicker({ value, onChange, placeholder = 'Select icon...' }: IconPickerProps) {
   const [open, setOpen] = React.useState(false);
-  const [searchQuery, setSearchQuery] = React.useState("");
+  const [searchQuery, setSearchQuery] = React.useState('');
 
   const filteredIcons = COMMON_ICONS.filter((icon) =>
     icon.toLowerCase().includes(searchQuery.toLowerCase()),
@@ -130,8 +130,8 @@ export function IconPicker({ value, onChange, placeholder = "Select icon..." }: 
                   key={iconName}
                   variant="ghost"
                   className={cn(
-                    "h-11 w-full flex flex-col items-center justify-center p-0.5 hover:bg-muted relative rounded-sm transition-colors",
-                    value === iconName && "bg-muted text-primary font-bold",
+                    'h-11 w-full flex flex-col items-center justify-center p-0.5 hover:bg-muted relative rounded-sm transition-colors',
+                    value === iconName && 'bg-muted text-primary font-bold',
                   )}
                   onClick={() => {
                     onChange(iconName);
@@ -141,7 +141,7 @@ export function IconPicker({ value, onChange, placeholder = "Select icon..." }: 
                 >
                   {Icon && (
                     <Icon
-                      className={cn("h-4 w-4", value === iconName ? "opacity-100" : "opacity-70")}
+                      className={cn('h-4 w-4', value === iconName ? 'opacity-100' : 'opacity-70')}
                     />
                   )}
                   <span className="text-[7px] mt-0.5 truncate w-full px-1 text-center opacity-70">

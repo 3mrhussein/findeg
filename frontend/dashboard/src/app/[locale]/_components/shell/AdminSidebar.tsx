@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { Link } from "@i18n/navigation";
-import { PanelLeftClose, PanelLeftOpen, LogOut } from "lucide-react";
-import { Avatar, AvatarFallback } from "@findeg/ui";
-import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@findeg/ui";
-import { ScrollArea } from "@findeg/ui";
-import { cn } from "@lib/utils";
-import { NavGroup } from "./NavGroup";
-import { ADMIN_NAV } from "@/constants";
-import { getAvatarColorClass, getInitials } from "@lib/avatar-color";
-import { useSidebar } from "./SidebarContext";
+import * as React from 'react';
+import { Link } from '@i18n/navigation';
+import { PanelLeftClose, PanelLeftOpen, LogOut } from 'lucide-react';
+import { Avatar, AvatarFallback } from '@findeg/ui';
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@findeg/ui';
+import { ScrollArea } from '@findeg/ui';
+import { cn } from '@lib/utils';
+import { NavGroup } from './NavGroup';
+import { ADMIN_NAV } from '@/constants';
+import { getAvatarColorClass, getInitials } from '@lib/avatar-color';
+import { useSidebar } from './SidebarContext';
 
 export interface AdminSidebarProps {
   userEmail?: string;
@@ -24,30 +24,30 @@ export function AdminSidebar({
   userEmail,
   userName,
   userRole,
-  locale = "en",
+  locale = 'en',
   onLogout,
 }: AdminSidebarProps) {
   const { isCollapsed, toggleSidebar } = useSidebar();
 
   const initials = getInitials(userName, userEmail);
-  const avatarBgClass = getAvatarColorClass(userName || userEmail || "A");
+  const avatarBgClass = getAvatarColorClass(userName || userEmail || 'A');
 
-  const displayName = userName || userEmail || "Admin";
-  const displayEmail = userEmail || "";
-  const displayRole = userRole || "Staff";
+  const displayName = userName || userEmail || 'Admin';
+  const displayEmail = userEmail || '';
+  const displayRole = userRole || 'Staff';
 
   return (
     <aside
       className={cn(
-        "flex h-screen flex-col bg-white dark:bg-slate-900 border-e border-gray-200 dark:border-slate-800 transition-all duration-300 ease-in-out shrink-0",
-        isCollapsed ? "w-[64px]" : "w-[240px]",
+        'flex h-screen flex-col bg-white dark:bg-slate-900 border-e border-gray-200 dark:border-slate-800 transition-all duration-300 ease-in-out shrink-0',
+        isCollapsed ? 'w-[64px]' : 'w-[240px]',
       )}
     >
       {/* Top Logo Area (60px) */}
       <div
         className={cn(
-          "flex items-center h-[60px] border-b border-gray-200 dark:border-slate-800 px-4 shrink-0",
-          isCollapsed ? "justify-center" : "justify-between",
+          'flex items-center h-[60px] border-b border-gray-200 dark:border-slate-800 px-4 shrink-0',
+          isCollapsed ? 'justify-center' : 'justify-between',
         )}
       >
         {!isCollapsed && (
@@ -58,7 +58,7 @@ export function AdminSidebar({
         <button
           onClick={toggleSidebar}
           className="flex items-center justify-center h-8 w-8 hover:bg-gray-100 dark:hover:bg-slate-800 rounded-md transition-colors"
-          title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
           {isCollapsed ? (
             <PanelLeftOpen className="h-4 w-4 text-gray-500" />
@@ -82,7 +82,7 @@ export function AdminSidebar({
             <div className="flex items-center gap-3 mb-3">
               <Avatar className="h-[32px] w-[32px]">
                 <AvatarFallback
-                  className={cn("text-[11px] font-semibold text-white", avatarBgClass)}
+                  className={cn('text-[11px] font-semibold text-white', avatarBgClass)}
                 >
                   {initials}
                 </AvatarFallback>
@@ -111,7 +111,7 @@ export function AdminSidebar({
                 <div className="flex justify-center w-full">
                   <Avatar className="h-[32px] w-[32px] cursor-pointer">
                     <AvatarFallback
-                      className={cn("text-[11px] font-semibold text-white", avatarBgClass)}
+                      className={cn('text-[11px] font-semibold text-white', avatarBgClass)}
                     >
                       {initials}
                     </AvatarFallback>

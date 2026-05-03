@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import { FormEvent, useRef, useState } from "react";
-import { useRouter } from "@i18n/navigation";
-import { Upload } from "lucide-react";
-import { Button } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@findeg/ui";
-import { useToast } from "@hooks/use-toast";
+import { FormEvent, useRef, useState } from 'react';
+import { useRouter } from '@i18n/navigation';
+import { Upload } from 'lucide-react';
+import { Button } from '@findeg/ui';
+import { Input } from '@findeg/ui';
+import { Label } from '@findeg/ui';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@findeg/ui';
+import { useToast } from '@hooks/use-toast';
 
 const FOLDER_OPTIONS = [
-  { value: "general", label: "General" },
-  { value: "products", label: "Products" },
-  { value: "brands", label: "Brands" },
+  { value: 'general', label: 'General' },
+  { value: 'products', label: 'Products' },
+  { value: 'brands', label: 'Brands' },
 ] as const;
 
 /**
@@ -22,7 +22,7 @@ export function MediaUploadForm() {
   const router = useRouter();
   const { toast } = useToast();
   const fileRef = useRef<HTMLInputElement>(null);
-  const [folder, setFolder] = useState<string>("general");
+  const [folder, setFolder] = useState<string>('general');
   const [uploading, setUploading] = useState(false);
 
   /**
@@ -35,9 +35,9 @@ export function MediaUploadForm() {
     const file = fileRef.current?.files?.[0];
     if (!file) {
       toast({
-        variant: "destructive",
-        title: "Upload failed",
-        description: "Please choose a file first.",
+        variant: 'destructive',
+        title: 'Upload failed',
+        description: 'Please choose a file first.',
       });
       return;
     }
@@ -45,33 +45,33 @@ export function MediaUploadForm() {
     setUploading(true);
     try {
       const formData = new FormData();
-      formData.append("file", file);
-      formData.append("folder", folder);
+      formData.append('file', file);
+      formData.append('folder', folder);
 
-      const response = await fetch("/api/v1/media", {
-        method: "POST",
+      const response = await fetch('/api/v1/media', {
+        method: 'POST',
         body: formData,
       });
       const payload = await response.json();
 
       if (!response.ok || !payload?.success) {
-        throw new Error(payload?.error?.message || "Upload failed.");
+        throw new Error(payload?.error?.message || 'Upload failed.');
       }
 
       toast({
-        title: "Media uploaded",
-        description: "Your file has been uploaded successfully.",
+        title: 'Media uploaded',
+        description: 'Your file has been uploaded successfully.',
       });
 
       if (fileRef.current) {
-        fileRef.current.value = "";
+        fileRef.current.value = '';
       }
       router.refresh();
     } catch (error) {
       toast({
-        variant: "destructive",
-        title: "Upload failed",
-        description: error instanceof Error ? error.message : "Unexpected upload error.",
+        variant: 'destructive',
+        title: 'Upload failed',
+        description: error instanceof Error ? error.message : 'Unexpected upload error.',
       });
     } finally {
       setUploading(false);
@@ -110,7 +110,7 @@ export function MediaUploadForm() {
 
       <Button type="submit" disabled={uploading} data-testid="admin-media-upload-submit">
         <Upload className="mr-2 h-4 w-4" />
-        {uploading ? "Uploading..." : "Upload"}
+        {uploading ? 'Uploading...' : 'Upload'}
       </Button>
     </form>
   );

@@ -1,10 +1,10 @@
-import { shopSelectors } from "../selectors/shop.selectors";
+import { shopSelectors } from '../selectors/shop.selectors';
 
 /**
  * Asserts checkout submit button disabled state.
  */
 export function expectCheckoutSubmitDisabled(disabled: boolean): void {
-  cy.get(shopSelectors.checkoutSubmitButton).should(disabled ? "be.disabled" : "not.be.disabled");
+  cy.get(shopSelectors.checkoutSubmitButton).should(disabled ? 'be.disabled' : 'not.be.disabled');
 }
 
 /**
@@ -12,7 +12,7 @@ export function expectCheckoutSubmitDisabled(disabled: boolean): void {
  */
 export function expectCheckoutValidationMessagesVisible(messages: string[]): void {
   messages.forEach((message) => {
-    cy.contains(message).should("be.visible");
+    cy.contains(message).should('be.visible');
   });
 }
 
@@ -20,5 +20,5 @@ export function expectCheckoutValidationMessagesVisible(messages: string[]): voi
  * Asserts that checkout error alert includes the expected message.
  */
 export function expectCheckoutErrorAlertContains(message: string): void {
-  cy.get(shopSelectors.checkoutErrorAlert).should("be.visible").and("contain", message);
+  cy.get(shopSelectors.checkoutErrorAlert).should('be.visible').and('contain', message);
 }

@@ -1,6 +1,6 @@
-import { CollectionForm } from "../_components/CollectionForm";
-import { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { CollectionForm } from '../_components/CollectionForm';
+import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 
 interface CollectionEditPageProps {
   params: Promise<{ id: string }>;

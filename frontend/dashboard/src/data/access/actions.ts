@@ -4,17 +4,17 @@
  * Centralized mutations for roles, permissions, and admin users.
  * Uses "use server" and revalidateTag for cache invalidation.
  */
-"use server";
+'use server';
 
-import { revalidateTag } from "next/cache";
-import { createIdentityServices } from "@findeg/backend/features/identity";
-import { getErrorMessage } from "@lib/type-guards";
+import { revalidateTag } from 'next/cache';
+import { createIdentityServices } from '@findeg/backend/features/identity';
+import { getErrorMessage } from '@lib/type-guards';
 import type {
   CreateAdminInput,
   UpdateAdminInput,
   PermissionOverrideInput,
-} from "@findeg/backend/features/identity";
-import { getSession } from "@lib/session";
+} from '@findeg/backend/features/identity';
+import { getSession } from '@lib/session';
 
 /**
  * Create a new custom role
@@ -24,7 +24,7 @@ export async function createRoleAction(code: string, name: string, permissionIds
     const { adminRoles } = createIdentityServices();
     const result = await adminRoles.createRole(code, name, permissionIds);
 
-    revalidateTag("access", "max");
+    revalidateTag('access', 'max');
     return { success: true, data: result };
   } catch (error: unknown) {
     return { success: false, error: getErrorMessage(error) };
@@ -39,8 +39,8 @@ export async function updateRolePermissionsAction(roleId: number, permissionIds:
     const { adminRoles } = createIdentityServices();
     const result = await adminRoles.updateRolePermissions(roleId, permissionIds);
 
-    revalidateTag("access", "max");
-    revalidateTag(`role-${roleId}`, "max");
+    revalidateTag('access', 'max');
+    revalidateTag(`role-${roleId}`, 'max');
     return { success: true, data: result };
   } catch (error: unknown) {
     return { success: false, error: getErrorMessage(error) };
@@ -55,7 +55,7 @@ export async function deleteRoleAction(roleId: number) {
     const { adminRoles } = createIdentityServices();
     await adminRoles.deleteRole(roleId);
 
-    revalidateTag("access", "max");
+    revalidateTag('access', 'max');
     return { success: true };
   } catch (error: unknown) {
     return { success: false, error: getErrorMessage(error) };
@@ -70,7 +70,7 @@ export async function createAdminAction(input: CreateAdminInput) {
     const { adminUsers } = createIdentityServices();
     const result = await adminUsers.createAdmin(input);
 
-    revalidateTag("access", "max");
+    revalidateTag('access', 'max');
     return { success: true, data: result };
   } catch (error: unknown) {
     return { success: false, error: getErrorMessage(error) };
@@ -85,8 +85,8 @@ export async function updateAdminAction(userId: number, input: UpdateAdminInput)
     const { adminUsers } = createIdentityServices();
     const result = await adminUsers.updateAdmin(userId, input);
 
-    revalidateTag("access", "max");
-    revalidateTag(`user-${userId}`, "max");
+    revalidateTag('access', 'max');
+    revalidateTag(`user-${userId}`, 'max');
     return { success: true, data: result };
   } catch (error: unknown) {
     return { success: false, error: getErrorMessage(error) };
@@ -100,19 +100,19 @@ export async function setPermissionOverridesAction(userId: number, permissionIds
   try {
     const session = await getSession();
     if (!session?.userId) {
-      throw new Error("Unauthorized: Missing session user ID");
+      throw new Error('Unauthorized: Missing session user ID');
     }
 
     const { adminUsers } = createIdentityServices();
     const overrides: PermissionOverrideInput[] = permissionIds.map((id) => ({
       permissionId: id,
-      action: "grant",
+      action: 'grant',
     }));
 
     await adminUsers.setPermissionOverrides(userId, overrides, session.userId);
 
-    revalidateTag("access", "max");
-    revalidateTag(`user-${userId}`, "max");
+    revalidateTag('access', 'max');
+    revalidateTag(`user-${userId}`, 'max');
     return { success: true };
   } catch (error: unknown) {
     return { success: false, error: getErrorMessage(error) };

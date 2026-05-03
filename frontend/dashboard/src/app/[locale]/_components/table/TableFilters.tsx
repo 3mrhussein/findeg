@@ -7,14 +7,14 @@
  * Location: src/app/[locale]/admin/_components/table/ (admin-wide)
  */
 
-"use client";
+'use client';
 
-import * as React from "react";
-import { Search, X } from "lucide-react";
-import { Input } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@findeg/ui";
-import { cn } from "@lib/utils";
+import * as React from 'react';
+import { Search, X } from 'lucide-react';
+import { Input } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@findeg/ui';
+import { cn } from '@lib/utils';
 
 export interface FilterOption {
   value: string;
@@ -73,8 +73,8 @@ export interface TableFiltersProps {
  * />
  */
 export function TableFilters({
-  searchQuery = "",
-  searchPlaceholder = "Search...",
+  searchQuery = '',
+  searchPlaceholder = 'Search...',
   onSearchChange,
   filters = [],
   showClear = false,
@@ -82,10 +82,10 @@ export function TableFilters({
   className,
 }: TableFiltersProps) {
   const hasActiveFilters =
-    searchQuery || filters.some((f) => f.value && f.value !== "all" && f.value !== "");
+    searchQuery || filters.some((f) => f.value && f.value !== 'all' && f.value !== '');
 
   return (
-    <div className={cn("flex flex-wrap items-center gap-3", className)}>
+    <div className={cn('flex flex-wrap items-center gap-3', className)}>
       {/* Search Input */}
       {onSearchChange && (
         <div className="relative flex-1 min-w-[200px] max-w-md">

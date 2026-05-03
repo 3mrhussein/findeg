@@ -1,12 +1,12 @@
-import { getTranslations, setRequestLocale } from "next-intl/server";
-import { BrandsManager } from "./_components/BrandsManager";
+import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { BrandsManager } from './_components/BrandsManager';
 import {
   createBrandAction,
   updateBrandAction,
   deleteBrandAction,
   toggleBrandStatusAction,
-} from "@data/brands/actions";
-import { BrandInput } from "@findeg/backend/features/administration/domain/types";
+} from '@data/brands/actions';
+import { BrandInput } from '@findeg/backend/features/administration/domain/types';
 
 /**
  *
@@ -15,9 +15,9 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale } = await params;
   const t = (await (getTranslations as any)({
     locale,
-    namespace: "Administration.Catalog.Brands",
+    namespace: 'Administration.Catalog.Brands',
   })) as any;
-  return { title: `${t("Title")} | FindEg Admin` };
+  return { title: `${t('Title')} | FindEg Admin` };
 }
 
 /**
@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 export default async function BrandsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale as any);
-  const t = await getTranslations("Administration.Catalog.Brands");
+  const t = await getTranslations('Administration.Catalog.Brands');
 
   // TODO: Replace with proper data layer query from @data/brands/queries
   // const brands = await getBrands(locale);
@@ -36,7 +36,7 @@ export default async function BrandsPage({ params }: { params: Promise<{ locale:
    * Wrapper for Save (Create/Update)
    */
   const handleSave = async (data: BrandInput, id?: number) => {
-    "use server";
+    'use server';
     if (id) {
       return updateBrandAction(id, data);
     }
@@ -47,7 +47,7 @@ export default async function BrandsPage({ params }: { params: Promise<{ locale:
    * Wrapper for Delete
    */
   const handleDelete = async (id: number) => {
-    "use server";
+    'use server';
     // TODO: Check product count using data layer query
     // const pro const productCount = await getBrandProductCount(id);
     const productCount = 0; // Stubbed
@@ -56,7 +56,7 @@ export default async function BrandsPage({ params }: { params: Promise<{ locale:
     if (productCount > 0) {
       return {
         success: false,
-        error: "DELETE_BLOCKED",
+        error: 'DELETE_BLOCKED',
         count: productCount,
       };
     }
@@ -68,7 +68,7 @@ export default async function BrandsPage({ params }: { params: Promise<{ locale:
    * Wrapper for Toggle
    */
   const handleToggle = async (id: number) => {
-    "use server";
+    'use server';
     return toggleBrandStatusAction(id);
   };
 
@@ -76,9 +76,9 @@ export default async function BrandsPage({ params }: { params: Promise<{ locale:
     <div className="space-y-6">
       <div className="flex flex-col gap-1 px-1">
         <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100">
-          {t("Title")}
+          {t('Title')}
         </h1>
-        <p className="text-muted-foreground text-sm font-medium">{t("Subtitle")}</p>
+        <p className="text-muted-foreground text-sm font-medium">{t('Subtitle')}</p>
       </div>
 
       <BrandsManager

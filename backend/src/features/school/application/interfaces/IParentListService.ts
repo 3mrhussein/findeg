@@ -1,7 +1,7 @@
-import { SchoolListParentSession } from "@findeg/db/schema";
-import { SchoolList } from "@findeg/db/schema";
+import { SchoolProfile } from './ISchoolDirectoryService';
+import { AccessState } from './ISchoolAccessService';
 
-export type SessionState = "first_visit" | "has_session" | "completed_order";
+export type SessionState = 'first_visit' | 'has_session' | 'completed_order';
 
 export interface SessionSummary {
   swappedItemsCount: number;
@@ -10,11 +10,18 @@ export interface SessionSummary {
   totalAmount: number;
 }
 
+export interface SchoolListPageData {
+  list: SchoolProfile;
+  accessState: AccessState;
+  sessionState: SessionState;
+  fullList: SchoolProfile; // For now, refine later if fullList has more than SchoolProfile
+}
+
 export interface IParentListService {
   /**
    * Get the full list with all items, alternatives, and variant data.
    */
-  getListWithDetails(slug: string): Promise<any>; // Using any for now, will refine types as we go
+  getListWithDetails(slug: string): Promise<SchoolProfile | null>; 
 
   /**
    * Determine the current session state for a user/guest.
@@ -49,5 +56,5 @@ export interface IParentListService {
   /**
    * Orchestrates the retrieval of all data required for the school list page.
    */
-  getSchoolListPageData(slug: string, userId?: number): Promise<any>;
+  getSchoolListPageData(slug: string, userId?: number): Promise<SchoolListPageData | null>;
 }

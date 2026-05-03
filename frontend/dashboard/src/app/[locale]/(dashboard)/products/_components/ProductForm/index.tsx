@@ -1,25 +1,25 @@
-"use client";
+'use client';
 
-import { useState, useTransition, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useTranslations } from "next-intl";
-import { useRouter } from "@i18n/navigation";
-import { toast } from "sonner";
-import { Tabs, TabsContent } from "@findeg/ui";
-import { Form } from "@findeg/ui";
+import { useState, useTransition, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
+import { useRouter } from '@i18n/navigation';
+import { toast } from 'sonner';
+import { Tabs, TabsContent } from '@findeg/ui';
+import { Form } from '@findeg/ui';
 
-import { ProductFormHeader } from "./ProductFormHeader";
-import { ProductFormTabs } from "./ProductFormTabs";
-import { ProductFormSidebar } from "../ProductFormSidebar";
-import { InfoTab } from "./tabs/InfoTab";
-import { VariantsTab } from "./tabs/VariantsTab";
-import { MediaTab } from "./tabs/MediaTab";
-import { PricingTab } from "./tabs/PricingTab";
-import { SeoTab } from "./tabs/SeoTab";
-import type { Brand, Tag } from "@findeg/backend/features/catalog";
-import { ProductFormSchema, ProductFormValues } from "@/interfaces";
-import { createProduct, updateProduct } from "@data/products/actions";
+import { ProductFormHeader } from './ProductFormHeader';
+import { ProductFormTabs } from './ProductFormTabs';
+import { ProductFormSidebar } from '../ProductFormSidebar';
+import { InfoTab } from './tabs/InfoTab';
+import { VariantsTab } from './tabs/VariantsTab';
+import { MediaTab } from './tabs/MediaTab';
+import { PricingTab } from './tabs/PricingTab';
+import { SeoTab } from './tabs/SeoTab';
+import type { Brand, Tag } from '@findeg/backend/features/catalog';
+import { ProductFormSchema, ProductFormValues } from '@/interfaces';
+import { createProduct, updateProduct } from '@data/products/actions';
 
 interface ProductFormProps {
   initialData?: any; // TODO: Use ProductEditData type after repository-based refactoring
@@ -33,50 +33,50 @@ interface ProductFormProps {
  * Unified Product Create/Edit Form
  */
 export function ProductForm({ initialData, categories, brands, tags, locale }: ProductFormProps) {
-  const t = useTranslations("Administration.Catalog.Products.Form");
+  const t = useTranslations('Administration.Catalog.Products.Form');
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const [activeTab, setActiveTab] = useState("info");
+  const [activeTab, setActiveTab] = useState('info');
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(ProductFormSchema) as any,
     defaultValues: (initialData
       ? {
-          localizedName: initialData.localizedContent?.name || { en: "", ar: "" },
-          localizedDescription: initialData.localizedContent?.description || { en: "", ar: "" },
+          localizedName: initialData.localizedContent?.name || { en: '', ar: '' },
+          localizedDescription: initialData.localizedContent?.description || { en: '', ar: '' },
           localizedLongDescription: initialData.localizedContent?.longDescription || {
-            en: "",
-            ar: "",
+            en: '',
+            ar: '',
           },
-          localizedSlug: initialData.localizedContent?.slug || { en: "", ar: "" },
+          localizedSlug: initialData.localizedContent?.slug || { en: '', ar: '' },
           categoryId: initialData.categoryId,
           brandId: initialData.brandId,
           tagIds: initialData.tags?.map((t: any) => t.id) || [],
           isActive: initialData.isActive,
           skuPrefix: initialData.skuPrefix || undefined,
-          pricingMode: (initialData as any).pricingMode || "per-variant",
-          uomSharingMode: (initialData as any).uomSharingMode || "shared",
+          pricingMode: (initialData as any).pricingMode || 'per-variant',
+          uomSharingMode: (initialData as any).uomSharingMode || 'shared',
           variants: initialData.variants.map((v: any) => ({
             id: v.id,
             sku: v.sku,
             basePrice: Number(v.basePrice),
             isActive: v.isActive,
             displayOrder: v.displayOrder,
-            localizedLabel: v.localizedLabel || { en: "", ar: "" },
+            localizedLabel: v.localizedLabel || { en: '', ar: '' },
             images: (v.images || []).map((img: any) => ({
               url: img.url,
-              alt: img.alt || "",
+              alt: img.alt || '',
               displayOrder: img.displayOrder,
             })),
             attributes: (v.attributes || []).map((attr: any) => ({
               attributeKey: attr.key,
-              value: attr.valueText || "",
+              value: attr.valueText || '',
               isVariantDefining: true,
             })),
             uoms: (v.sellableUoms || []).map((u: any) => ({
               uomCode: u.uomCode,
               factorToBase: Number(u.factorToBase),
-              localizedLabel: u.localizedLabel || { en: "", ar: "" },
+              localizedLabel: u.localizedLabel || { en: '', ar: '' },
               isEnabled: u.isEnabled,
               priceLists: ((u as any).priceLists || []).map((pl: any) => ({
                 customerGroup: pl.customerGroup,
@@ -90,19 +90,19 @@ export function ProductForm({ initialData, categories, brands, tags, locale }: P
         }
       : {
           isActive: true,
-          localizedName: { en: "", ar: "" },
-          localizedDescription: { en: "", ar: "" },
-          localizedLongDescription: { en: "", ar: "" },
-          localizedSlug: { en: "", ar: "" },
+          localizedName: { en: '', ar: '' },
+          localizedDescription: { en: '', ar: '' },
+          localizedLongDescription: { en: '', ar: '' },
+          localizedSlug: { en: '', ar: '' },
           variants: [
             {
-              sku: "",
-              localizedLabel: { en: "Standard", ar: "قياسي" },
+              sku: '',
+              localizedLabel: { en: 'Standard', ar: 'قياسي' },
               basePrice: 0,
               costPrice: 0,
               strikePrice: null,
               weightGrams: null,
-              barcode: "",
+              barcode: '',
               lowStockThreshold: 10,
               isActive: true,
               displayOrder: 0,
@@ -110,14 +110,14 @@ export function ProductForm({ initialData, categories, brands, tags, locale }: P
               attributes: [],
               uoms: [
                 {
-                  uomCode: "pcs",
+                  uomCode: 'pcs',
                   factorToBase: 1,
-                  localizedLabel: { en: "Piece", ar: "قطعة" },
+                  localizedLabel: { en: 'Piece', ar: 'قطعة' },
                   isEnabled: true,
                   priceLists: [
                     {
-                      customerGroup: "public_b2c" as const,
-                      uomCode: "pcs",
+                      customerGroup: 'public_b2c' as const,
+                      uomCode: 'pcs',
                       unitPrice: 0,
                       minQty: 1,
                       isSellable: true,
@@ -127,11 +127,11 @@ export function ProductForm({ initialData, categories, brands, tags, locale }: P
               ],
             },
           ],
-          pricingMode: "per-variant",
-          uomSharingMode: "shared",
+          pricingMode: 'per-variant',
+          uomSharingMode: 'shared',
           tagIds: [],
         }) as any,
-    mode: "onChange",
+    mode: 'onChange',
   });
 
   const onSubmit = async (values: ProductFormValues) => {
@@ -141,12 +141,12 @@ export function ProductForm({ initialData, categories, brands, tags, locale }: P
         : await createProduct(values as any);
 
       if (result.success) {
-        toast.success(initialData ? t("updated") : t("created"));
+        toast.success(initialData ? t('updated') : t('created'));
         if (!initialData && (result as any).productId) {
           router.push(`/products/${(result as any).productId}/edit`);
         }
       } else {
-        toast.error(result.error || "Save failed");
+        toast.error(result.error || 'Save failed');
       }
     });
   };
@@ -172,7 +172,7 @@ export function ProductForm({ initialData, categories, brands, tags, locale }: P
           isEdit={!!initialData}
           isPending={isPending}
           onSaveDraft={() => form.handleSubmit(onSubmit)()}
-          productName={initialData?.localizedContent?.name?.en || ""}
+          productName={initialData?.localizedContent?.name?.en || ''}
         />
 
         {/* Sticky tab bar — below header */}

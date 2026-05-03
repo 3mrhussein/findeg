@@ -5,9 +5,9 @@
  * They represent themed "views" like "Back to School" or "Creative & Hobby".
  */
 
-import { z } from "zod";
-import { IdSchema, TranslationMapSchema, SlugSchema } from "../../../core/domain/types/common";
-import { TagSchema } from "./Tag";
+import { z } from 'zod';
+import { IdSchema, TranslationMapSchema, SlugSchema } from '../../../core/domain/types/common';
+import { TagSchema } from './Tag';
 
 export const CollectionSchema = z.object({
   id: IdSchema,

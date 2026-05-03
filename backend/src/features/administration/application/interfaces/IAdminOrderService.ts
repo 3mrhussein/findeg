@@ -1,7 +1,12 @@
-import { Order } from "@findeg/backend/features/order/domain/entities/Order";
-import { OrderStatusUpdate } from "@findeg/backend/features/administration/domain/types";
-import { OrderFilters } from "@findeg/backend/features/order/application/interfaces/IOrderRepository";
-import { PaymentStatus } from "@findeg/backend/features/core/domain/types/common";
+import { Order } from '@findeg/backend/features/order/domain/entities/Order';
+import { OrderStatusUpdate } from '@findeg/backend/features/administration/domain/types';
+import { OrderFilters } from '@findeg/backend/features/order/application/interfaces/IOrderRepository';
+import { PaymentStatus, OrderStatus } from '@findeg/backend/features/core/domain/types/common';
+
+export interface DashboardStats {
+  totalRevenue: number;
+  ordersByStatus: Partial<Record<OrderStatus, number>>;
+}
 
 export interface IAdminOrderService {
   /**
@@ -27,7 +32,7 @@ export interface IAdminOrderService {
   /**
    * Retrieves high-level order statistics for the dashboard.
    */
-  getDashboardStats(): Promise<any>;
+  getDashboardStats(): Promise<DashboardStats>;
 
   /**
    * Retrieves a breakdown of order counts by their lifecycle status.

@@ -5,15 +5,17 @@ trigger: manual
 # findeg.stationary Development Guidelines
 
 <<<<<<< HEAD
-Auto-generated from all feature plans. Last updated: 2026-04-05
+Auto-generated from all feature plans. Last updated: 2026-05-02
 
 ## Active Technologies
+- TypeScript 5.x + Next.js 16+, Drizzle ORM, Zod, date-fns (008-backend-arch-audit)
+- PostgreSQL (via Drizzle) (008-backend-arch-audit)
 
 - TypeScript 5.x, Node 22+ + Turbo 2.x, Vitest, Cypress, Next.js 16 (004-test-pipeline-fixes)
 - N/A (Build/Script task) (004-test-pipeline-fixes)
 
 - # TypeScript 5.7+ + Next.js 16.0, React 19, @ui, drizzle-orm, resend, swr, @react-email/components (003-fix-storefront-types)
-  Auto-generated from all feature plans. Last updated: 2026-04-19
+  Auto-generated from all feature plans. Last updated: 2026-05-02
 
 ## Active Technologies
 
@@ -37,6 +39,7 @@ npm test && npm run lint
 TypeScript 5.7+: Follow standard conventions
 
 ## Recent Changes
+- 008-backend-arch-audit: Added TypeScript 5.x + Next.js 16+, Drizzle ORM, Zod, date-fns
 
 - 004-test-pipeline-fixes: Added TypeScript 5.x, Node 22+ + Turbo 2.x, Vitest, Cypress, Next.js 16
 
@@ -49,8 +52,8 @@ TypeScript 5.7+: Follow standard conventions
 Markdown (GitHub Flavored Markdown + Mermaid): Follow standard conventions
 
 ## Recent Changes
+- 008-backend-arch-audit: Added TypeScript 5.x + Next.js 16+, Drizzle ORM, Zod, date-fns
 
-- 006-docs-restructure: Added Markdown (GitHub Flavored Markdown + Mermaid) + Mermaid (native GitHub rendering), Drizzle schema (for auto-generated ER diagrams)
   > > > > > > > 006-docs-restructure
 
 <!-- MANUAL ADDITIONS START -->

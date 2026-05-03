@@ -1,12 +1,12 @@
-"use server";
+'use server';
 
 import {
   createCatalogServices,
   type Variant,
   type PriceListEntry,
-} from "@findeg/backend/features/catalog";
-import { parse } from "@findeg/backend/features/core";
-import { Category } from "@hooks/useCategories";
+} from '@findeg/backend/features/catalog';
+import { parse } from '@findeg/backend/features/core';
+import { Category } from '@hooks/useCategories';
 
 /**
  * Server action to fetch hierarchical category tree.
@@ -14,7 +14,7 @@ import { Category } from "@hooks/useCategories";
  * Replaces the legacy /api/v1/categories REST endpoint which is no longer
  * available in the monorepo split.
  */
-export async function getCategoryTreeAction(locale: string = "en"): Promise<Category[]> {
+export async function getCategoryTreeAction(locale: string = 'en'): Promise<Category[]> {
   const resolvedLocale = parse(locale);
   const { categories } = createCatalogServices();
 
@@ -48,10 +48,10 @@ export async function getProductPricingAction(payload: {
   // Note: This logic should ideally call a specialized pricing service
   // For now, we'll implement a basic resolution similar to the legacy API
   const product = await products.getById(payload.productId);
-  if (!product) return { success: false, error: "Product not found" };
+  if (!product) return { success: false, error: 'Product not found' };
 
   const variant = product.variants?.find((v: Variant) => v.id === payload.variantId);
-  if (!variant) return { success: false, error: "Variant not found" };
+  if (!variant) return { success: false, error: 'Variant not found' };
 
   // Finding the price based on customer group and UoM
   const priceLists = variant.priceLists || [];
@@ -60,7 +60,7 @@ export async function getProductPricingAction(payload: {
       (p: PriceListEntry) => p.customerGroup === payload.customerGroup && p.uomCode === payload.uom,
     ) ||
     priceLists.find(
-      (p: PriceListEntry) => p.customerGroup === "public_b2c" && p.uomCode === payload.uom,
+      (p: PriceListEntry) => p.customerGroup === 'public_b2c' && p.uomCode === payload.uom,
     );
 
   const unitPrice = priceEntry ? (priceEntry.unitPrice as number) : (variant.basePrice as number);
@@ -69,7 +69,7 @@ export async function getProductPricingAction(payload: {
     success: true,
     data: {
       unitPrice,
-      currency: "EGP",
+      currency: 'EGP',
     },
   };
 }

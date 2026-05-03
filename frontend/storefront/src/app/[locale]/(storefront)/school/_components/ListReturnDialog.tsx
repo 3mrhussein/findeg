@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import React from "react";
-import { Dialog, DialogContent } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { useTranslations } from "next-intl";
-import { SessionState } from "@findeg/backend/features/school/application/interfaces/IParentListService";
-import { ShoppingBag } from "lucide-react";
+import React from 'react';
+import { Dialog, DialogContent } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { useTranslations } from 'next-intl';
+import { SessionState } from '@findeg/backend/features/school/application/interfaces/IParentListService';
+import { ShoppingBag } from 'lucide-react';
 
 interface ListReturnDialogProps {
   state: SessionState;
@@ -25,11 +25,11 @@ export function ListReturnDialog({
   onReset,
   onContinue,
 }: ListReturnDialogProps) {
-  const t = useTranslations("School.ParentExperience.ReturnDialog");
+  const t = useTranslations('School.ParentExperience.ReturnDialog');
 
-  if (state === "first_visit") return null;
+  if (state === 'first_visit') return null;
 
-  const isOpen = state === "has_session" || state === "completed_order";
+  const isOpen = state === 'has_session' || state === 'completed_order';
 
   return (
     <Dialog open={isOpen} onOpenChange={() => {}}>
@@ -47,51 +47,51 @@ export function ListReturnDialog({
         <div className="p-8 text-center space-y-6">
           <div className="space-y-2">
             <h2 className="text-2xl font-black text-slate-900 leading-tight">
-              {t("WelcomeBack", { name: user?.firstName || "Friend" })}
+              {t('WelcomeBack', { name: user?.firstName || 'Friend' })}
             </h2>
             <p className="text-slate-500 font-medium">
-              {state === "completed_order" ? t("OrderCompleted") : t("ResumeSession")}
+              {state === 'completed_order' ? t('OrderCompleted') : t('ResumeSession')}
             </p>
           </div>
 
-          {state === "has_session" && (
+          {state === 'has_session' && (
             <div className="bg-slate-50 rounded-2xl p-4 border border-slate-100">
               <p className="text-sm font-bold text-slate-700">
-                {t("SavedChanges", { swapped: 0, removed: 0 })}
+                {t('SavedChanges', { swapped: 0, removed: 0 })}
               </p>
             </div>
           )}
 
           <div className="flex flex-col gap-3">
-            {state === "completed_order" ? (
+            {state === 'completed_order' ? (
               <>
-                <Button className="h-14 rounded-xl text-lg font-bold">{t("TrackOrder")}</Button>
+                <Button className="h-14 rounded-xl text-lg font-bold">{t('TrackOrder')}</Button>
                 <Button
                   variant="outline"
                   className="h-14 rounded-xl text-lg font-bold"
                   onClick={onReset}
                 >
-                  {t("StartNew")}
+                  {t('StartNew')}
                 </Button>
               </>
             ) : (
               <>
                 <Button className="h-14 rounded-xl text-lg font-bold" onClick={onContinue}>
-                  {t("UseMyVersion")}
+                  {t('UseMyVersion')}
                 </Button>
                 <Button
                   variant="outline"
                   className="h-14 rounded-xl text-lg font-bold"
                   onClick={onReset}
                 >
-                  {t("UseSchoolDefaults")}
+                  {t('UseSchoolDefaults')}
                 </Button>
               </>
             )}
           </div>
 
           <p className="text-xs text-slate-400 font-medium pt-2">
-            {state === "completed_order" ? t("ViewOnly") : t("Reassurance")}
+            {state === 'completed_order' ? t('ViewOnly') : t('Reassurance')}
           </p>
         </div>
       </DialogContent>

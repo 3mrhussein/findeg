@@ -5,9 +5,9 @@
  * to group together the items students need for a specific grade/year.
  */
 
-import { z } from "zod";
-import { IdSchema, TranslationMapSchema, type ID } from "../../../core/domain/types/common";
-import { VariantSchema, type Variant } from "./Variant";
+import { z } from 'zod';
+import { IdSchema, TranslationMapSchema } from '../../../core/domain/types/common';
+import { VariantSchema } from './Variant';
 
 // ─── School List Item Alternative ───────────────────────────────────────────
 

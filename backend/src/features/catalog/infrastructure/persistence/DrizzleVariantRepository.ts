@@ -1,4 +1,4 @@
-import { db } from "@findeg/db/connection";
+import { db } from '@findeg/db/connection';
 import {
   productVariants,
   variantImages,
@@ -6,22 +6,31 @@ import {
   variantSellableUoms,
   variantPriceLists,
   attributeDefinitions,
-} from "@findeg/db/schema";
+} from '@findeg/db/schema';
 import {
   IVariantRepository,
   SellOption,
   PriceResult,
-} from "../../application/interfaces/IVariantRepository";
-import { Variant } from "../../domain/entities/Variant";
-import { VariantInput } from "../../../administration/domain/types/ProductInput";
-import { eq, and, inArray, sql } from "drizzle-orm";
-import { ID, Price, CustomerGroup, UomCode } from "../../../core/domain/types/common";
-import {
-  DEFAULT_CURRENCY,
-  DEFAULT_LOCALE,
-  type CurrencyCode,
-  type Locale,
-} from "../../../core/domain/value-objects";
+} from '../../application/interfaces/IVariantRepository';
+import { Variant } from '../../domain/entities/Variant';
+import { VariantInput } from '../../../administration/domain/types/ProductInput';
+import { InferSelectModel, and, eq, inArray } from 'drizzle-orm';
+import { ID, Price, CustomerGroup, UomCode, CurrencyCode } from '../../../core/domain/types/common';
+import { DEFAULT_CURRENCY } from '@findeg/db/types';
+
+type VariantDB = InferSelectModel<typeof productVariants>;
+type VariantImageDB = InferSelectModel<typeof variantImages>;
+type VariantUomDB = InferSelectModel<typeof variantSellableUoms>;
+type VariantPriceDB = InferSelectModel<typeof variantPriceLists>;
+
+interface VariantAttributeRow {
+  variantId: number;
+  attributeId: number;
+  key: string;
+  valueText: string | null;
+  valueNum: string | null;
+  valueBool: boolean | null;
+}
 
 /**
  * Drizzle Variant Repository
@@ -30,18 +39,18 @@ import {
  */
 export class DrizzleVariantRepository implements IVariantRepository {
   private mapToDomain(
-    v: any,
-    images: any[] = [],
-    attrs: any[] = [],
-    uoms: any[] = [],
-    prices: any[] = [],
+    v: VariantDB,
+    images: VariantImageDB[] = [],
+    attrs: VariantAttributeRow[] = [],
+    uoms: VariantUomDB[] = [],
+    prices: VariantPriceDB[] = [],
   ): Variant {
     return {
       id: v.id,
       productId: v.productId,
       sku: v.sku,
       variantKey: v.variantKey,
-      localizedLabel: (v.localizedLabel as { en: string; ar: string }) || { en: "", ar: "" },
+      localizedLabel: (v.localizedLabel as { en: string; ar: string }) || { en: '', ar: '' },
       displayOrder: v.displayOrder,
       isActive: v.isActive,
       basePrice: Number(v.basePrice),
@@ -221,7 +230,7 @@ export class DrizzleVariantRepository implements IVariantRepository {
         await tx.insert(variantSellableUoms).values(
           input.sellableUoms.map((u) => ({
             variantId: newVariant.id,
-            uomCode: u.uomCode as "pcs" | "pack" | "carton", // Cast to match schema enum/text
+            uomCode: u.uomCode as 'pcs' | 'pack' | 'carton', // Cast to match schema enum/text
             factorToBase: String(u.factorToBase),
             isEnabled: u.isEnabled,
             localizedLabel: u.localizedLabel || {},
@@ -234,8 +243,8 @@ export class DrizzleVariantRepository implements IVariantRepository {
         await tx.insert(variantPriceLists).values(
           input.priceLists.map((p) => ({
             variantId: newVariant.id,
-            customerGroup: p.customerGroup as unknown as "public_b2c" | "school_b2b" | "wholesale", // Cast to match schema enum/text
-            uomCode: p.uomCode as "pcs" | "pack" | "carton", // Cast to match schema enum/text
+            customerGroup: p.customerGroup as unknown as 'public_b2c' | 'school_b2b' | 'wholesale', // Cast to match schema enum/text
+            uomCode: p.uomCode as 'pcs' | 'pack' | 'carton', // Cast to match schema enum/text
             unitPrice: String(p.unitPrice),
             currency: (p.currency as string) || DEFAULT_CURRENCY,
             isSellable: p.isSellable,
@@ -245,7 +254,7 @@ export class DrizzleVariantRepository implements IVariantRepository {
       }
 
       const hydrated = await this.getById(newVariant.id);
-      if (!hydrated) throw new Error("Failed to retrieve created variant");
+      if (!hydrated) throw new Error('Failed to retrieve created variant');
       return hydrated;
     });
   }
@@ -313,7 +322,7 @@ export class DrizzleVariantRepository implements IVariantRepository {
           await tx.insert(variantSellableUoms).values(
             input.sellableUoms.map((u) => ({
               variantId,
-              uomCode: u.uomCode as "pcs" | "pack" | "carton",
+              uomCode: u.uomCode as 'pcs' | 'pack' | 'carton',
               factorToBase: String(u.factorToBase),
               isEnabled: u.isEnabled,
               localizedLabel: u.localizedLabel || {},
@@ -330,10 +339,10 @@ export class DrizzleVariantRepository implements IVariantRepository {
             input.priceLists.map((p) => ({
               variantId,
               customerGroup: p.customerGroup as unknown as
-                | "public_b2c"
-                | "school_b2b"
-                | "wholesale",
-              uomCode: p.uomCode as "pcs" | "pack" | "carton",
+                | 'public_b2c'
+                | 'school_b2b'
+                | 'wholesale',
+              uomCode: p.uomCode as 'pcs' | 'pack' | 'carton',
               unitPrice: String(p.unitPrice),
               currency: (p.currency as string) || DEFAULT_CURRENCY,
               isSellable: p.isSellable,
@@ -344,7 +353,7 @@ export class DrizzleVariantRepository implements IVariantRepository {
       }
 
       const hydrated = await this.getById(variantId);
-      if (!hydrated) throw new Error("Failed to retrieve updated variant");
+      if (!hydrated) throw new Error('Failed to retrieve updated variant');
       return hydrated;
     });
   }
@@ -358,7 +367,7 @@ export class DrizzleVariantRepository implements IVariantRepository {
 
   async getSellOptions(
     variantId: ID,
-    customerGroup: CustomerGroup = "public_b2c",
+    customerGroup: CustomerGroup = 'public_b2c',
   ): Promise<SellOption[]> {
     const [uoms, prices] = await Promise.all([
       db.select().from(variantSellableUoms).where(eq(variantSellableUoms.variantId, variantId)),
@@ -446,7 +455,7 @@ export class DrizzleVariantRepository implements IVariantRepository {
       .from(productVariants)
       .where(eq(productVariants.id, variantId))
       .limit(1);
-    if (!variant) throw new Error("Variant not found");
+    if (!variant) throw new Error('Variant not found');
 
     await db.transaction(async (tx) => {
       for (const u of uoms) {
@@ -454,7 +463,7 @@ export class DrizzleVariantRepository implements IVariantRepository {
           .insert(variantSellableUoms)
           .values({
             variantId,
-            uomCode: u.uomCode as "pcs" | "pack" | "carton",
+            uomCode: u.uomCode as 'pcs' | 'pack' | 'carton',
             factorToBase: String(u.factorToBase),
             isEnabled: u.isEnabled ?? true,
           })
@@ -484,7 +493,7 @@ export class DrizzleVariantRepository implements IVariantRepository {
       .from(productVariants)
       .where(eq(productVariants.id, variantId))
       .limit(1);
-    if (!variant) throw new Error("Variant not found");
+    if (!variant) throw new Error('Variant not found');
 
     await db.transaction(async (tx) => {
       for (const p of prices) {
@@ -492,8 +501,8 @@ export class DrizzleVariantRepository implements IVariantRepository {
           .insert(variantPriceLists)
           .values({
             variantId,
-            customerGroup: p.customerGroup as unknown as "public_b2c" | "school_b2b" | "wholesale",
-            uomCode: p.uomCode as "pcs" | "pack" | "carton",
+            customerGroup: p.customerGroup as unknown as 'public_b2c' | 'school_b2b' | 'wholesale',
+            uomCode: p.uomCode as 'pcs' | 'pack' | 'carton',
             unitPrice: String(p.unitPrice),
             currency: (p.currency as string) || DEFAULT_CURRENCY,
             isSellable: p.isSellable ?? true,

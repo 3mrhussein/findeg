@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { useFormContext } from "react-hook-form";
-import { Input } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import { cn } from "@lib/utils";
-import { CheckCircle2, XCircle, Loader2 } from "lucide-react";
-import { checkSkuAvailable } from "@data/products/actions";
+import * as React from 'react';
+import { useFormContext } from 'react-hook-form';
+import { Input } from '@findeg/ui';
+import { Label } from '@findeg/ui';
+import { cn } from '@lib/utils';
+import { CheckCircle2, XCircle, Loader2 } from 'lucide-react';
+import { checkSkuAvailable } from '@data/products/actions';
 
 interface SkuInputProps {
   name: string;
@@ -18,7 +18,7 @@ interface SkuInputProps {
   className?: string;
 }
 
-type AvailabilityStatus = "idle" | "checking" | "available" | "taken";
+type AvailabilityStatus = 'idle' | 'checking' | 'available' | 'taken';
 
 /**
  * SkuInput
@@ -28,10 +28,10 @@ type AvailabilityStatus = "idle" | "checking" | "available" | "taken";
  */
 export function SkuInput({
   name,
-  label = "SKU",
+  label = 'SKU',
   required,
   excludeVariantId,
-  placeholder = "e.g. PEN-GRIP-BLU",
+  placeholder = 'e.g. PEN-GRIP-BLU',
   hint,
   className,
 }: SkuInputProps) {
@@ -42,11 +42,11 @@ export function SkuInput({
     formState: { errors },
   } = useFormContext();
 
-  const value: string = watch(name) ?? "";
-  const [status, setStatus] = React.useState<AvailabilityStatus>("idle");
+  const value: string = watch(name) ?? '';
+  const [status, setStatus] = React.useState<AvailabilityStatus>('idle');
 
   const error = name
-    .split(".")
+    .split('.')
     .reduce(
       (o: Record<string, unknown>, k) => (o?.[k] as Record<string, unknown>) ?? {},
       errors as Record<string, unknown>,
@@ -56,23 +56,23 @@ export function SkuInput({
   React.useEffect(() => {
     if (!value || value.length < 2) {
       Promise.resolve().then(() => {
-        setStatus("idle");
+        setStatus('idle');
       });
       return;
     }
 
     Promise.resolve().then(() => {
-      setStatus("checking");
+      setStatus('checking');
     });
     const timer = setTimeout(async () => {
       const result = await checkSkuAvailable(value, excludeVariantId);
       if (result.success) {
         Promise.resolve().then(() => {
-          setStatus(result.available ? "available" : "taken");
+          setStatus(result.available ? 'available' : 'taken');
         });
       } else {
         Promise.resolve().then(() => {
-          setStatus("idle");
+          setStatus('idle');
         });
       }
     }, 600);
@@ -84,13 +84,13 @@ export function SkuInput({
    *
    */
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setValue(name, e.target.value.toUpperCase().replace(/\s+/g, "-"), {
+    setValue(name, e.target.value.toUpperCase().replace(/\s+/g, '-'), {
       shouldValidate: true,
     });
   }
 
   return (
-    <div className={cn("space-y-1", className)}>
+    <div className={cn('space-y-1', className)}>
       <Label htmlFor={name} className="text-xs font-medium text-muted-foreground">
         {label}
         {required && <span className="ml-0.5 text-destructive">*</span>}
@@ -103,22 +103,22 @@ export function SkuInput({
           onChange={handleChange}
           placeholder={placeholder}
           className={cn(
-            "h-8 pr-8 font-mono text-sm uppercase tracking-wide",
-            status === "taken" && "border-destructive",
-            status === "available" && "border-emerald-500",
-            !!(error as { message?: string })?.message && "border-destructive",
+            'h-8 pr-8 font-mono text-sm uppercase tracking-wide',
+            status === 'taken' && 'border-destructive',
+            status === 'available' && 'border-emerald-500',
+            !!(error as { message?: string })?.message && 'border-destructive',
           )}
         />
         <div className="pointer-events-none absolute inset-y-0 right-2 flex items-center">
-          {status === "checking" && (
+          {status === 'checking' && (
             <Loader2 className="h-3.5 w-3.5 animate-spin text-muted-foreground" />
           )}
-          {status === "available" && <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />}
-          {status === "taken" && <XCircle className="h-3.5 w-3.5 text-destructive" />}
+          {status === 'available' && <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />}
+          {status === 'taken' && <XCircle className="h-3.5 w-3.5 text-destructive" />}
         </div>
       </div>
       {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
-      {status === "taken" && <p className="text-xs text-destructive">This SKU is already in use</p>}
+      {status === 'taken' && <p className="text-xs text-destructive">This SKU is already in use</p>}
       {!!(error as { message?: string })?.message && (
         <p className="text-xs text-destructive">{(error as { message?: string }).message}</p>
       )}

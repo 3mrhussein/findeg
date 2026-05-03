@@ -15,22 +15,22 @@
  * Location: src/app/[locale]/admin/(dashboard)/categories/_components/
  */
 
-"use client";
+'use client';
 
-import * as React from "react";
-import { useForm, FormProvider, Controller } from "react-hook-form";
-import { Input } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import { Switch } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Textarea } from "@findeg/ui";
-import { CollapsibleCategoryPicker } from "@/app/[locale]/_components/shared/CollapsibleCategoryPicker";
-import { Save, X, Check, AlertCircle, Loader2 } from "lucide-react";
-import type { Category } from "@findeg/backend/features/catalog";
-import { useTranslations } from "next-intl";
-import { checkCategorySlugAvailableAction as checkSlugAvailableAction } from "@data/categories/actions";
+import * as React from 'react';
+import { useForm, FormProvider, Controller } from 'react-hook-form';
+import { Input } from '@findeg/ui';
+import { Label } from '@findeg/ui';
+import { Switch } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { Textarea } from '@findeg/ui';
+import { CollapsibleCategoryPicker } from '@/app/[locale]/_components/shared/CollapsibleCategoryPicker';
+import { Save, X, Check, AlertCircle, Loader2 } from 'lucide-react';
+import type { Category } from '@findeg/backend/features/catalog';
+import { useTranslations } from 'next-intl';
+import { checkCategorySlugAvailableAction as checkSlugAvailableAction } from '@data/categories/actions';
 
-import { cn } from "@lib/utils";
+import { cn } from '@lib/utils';
 
 interface CategoryFormValues {
   localizedName: { en: string; ar: string };
@@ -62,7 +62,7 @@ export function CategoryFormPanel({
   onSubmit,
   onClose,
 }: CategoryFormPanelProps) {
-  const t = useTranslations("Administration.Catalog.Categories");
+  const t = useTranslations('Administration.Catalog.Categories');
   const [isSaving, setIsSaving] = React.useState(false);
   const [isSlugAvailable, setIsSlugAvailable] = React.useState<boolean | null>(null);
   const [isCheckingSlug, setIsCheckingSlug] = React.useState(false);
@@ -71,16 +71,16 @@ export function CategoryFormPanel({
   const methods = useForm<CategoryFormValues>({
     defaultValues: {
       localizedName: {
-        en: category?.localizedContent?.name?.en || "",
-        ar: category?.localizedContent?.name?.ar || "",
+        en: category?.localizedContent?.name?.en || '',
+        ar: category?.localizedContent?.name?.ar || '',
       },
       localizedDescription: {
-        en: category?.localizedContent?.description?.en || "",
-        ar: category?.localizedContent?.description?.ar || "",
+        en: category?.localizedContent?.description?.en || '',
+        ar: category?.localizedContent?.description?.ar || '',
       },
-      slug: category?.slug || "",
+      slug: category?.slug || '',
       parentId: category?.parentId || initialParentId || null,
-      icon: category?.icon || "",
+      icon: category?.icon || '',
       sortOrder: category?.sortOrder || 0,
       isActive: category?.isActive ?? true,
     },
@@ -100,16 +100,16 @@ export function CategoryFormPanel({
   React.useEffect(() => {
     reset({
       localizedName: {
-        en: category?.localizedContent?.name?.en || "",
-        ar: category?.localizedContent?.name?.ar || "",
+        en: category?.localizedContent?.name?.en || '',
+        ar: category?.localizedContent?.name?.ar || '',
       },
       localizedDescription: {
-        en: category?.localizedContent?.description?.en || "",
-        ar: category?.localizedContent?.description?.ar || "",
+        en: category?.localizedContent?.description?.en || '',
+        ar: category?.localizedContent?.description?.ar || '',
       },
-      slug: category?.slug || "",
+      slug: category?.slug || '',
       parentId: category?.parentId || initialParentId || null,
-      icon: category?.icon || "",
+      icon: category?.icon || '',
       sortOrder: category?.sortOrder || 0,
       isActive: category?.isActive ?? true,
     });
@@ -117,24 +117,24 @@ export function CategoryFormPanel({
   }, [category, initialParentId, reset]);
 
   // Slug auto-generation
-  const nameEn = watch("localizedName.en");
-  const currentSlug = watch("slug");
-  const prevNameRef = React.useRef("");
+  const nameEn = watch('localizedName.en');
+  const currentSlug = watch('slug');
+  const prevNameRef = React.useRef('');
 
   React.useEffect(() => {
     if (!isEditMode && nameEn) {
       const generated = nameEn
         .trim()
         .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-+|-+$/g, "");
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
       const prevGenerated = prevNameRef.current
         .trim()
         .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-+|-+$/g, "");
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
       if (!currentSlug || currentSlug === prevGenerated) {
-        setValue("slug", generated, { shouldValidate: true });
+        setValue('slug', generated, { shouldValidate: true });
       }
       prevNameRef.current = nameEn;
     }
@@ -168,10 +168,10 @@ export function CategoryFormPanel({
     }
   };
 
-  const isActive = watch("isActive");
-  const parentId = watch("parentId");
-  const nameEnValue = watch("localizedName.en");
-  const nameArValue = watch("localizedName.ar");
+  const isActive = watch('isActive');
+  const parentId = watch('parentId');
+  const nameEnValue = watch('localizedName.en');
+  const nameArValue = watch('localizedName.ar');
 
   return (
     <FormProvider {...methods}>
@@ -182,7 +182,7 @@ export function CategoryFormPanel({
         {/* ── HEADER ──────────────────────────────────────────── */}
         <div className="shrink-0 flex items-center justify-between px-5 py-4 border-b border-gray-200 dark:border-border bg-white dark:bg-card">
           <h2 className="text-sm font-semibold text-gray-900 dark:text-foreground">
-            {isEditMode ? t("EditCategory") : t("NewCategory")}
+            {isEditMode ? t('EditCategory') : t('NewCategory')}
           </h2>
           <button
             type="button"
@@ -198,16 +198,16 @@ export function CategoryFormPanel({
           {/* English Name */}
           <div className="space-y-1.5">
             <Label className="text-[13px] font-medium text-gray-700 dark:text-foreground">
-              {t("Form.NameEn")} <span className="text-red-500">*</span>
+              {t('Form.NameEn')} <span className="text-red-500">*</span>
             </Label>
             <div className="relative">
               <Input
-                {...register("localizedName.en", { required: "English name is required" })}
+                {...register('localizedName.en', { required: 'English name is required' })}
                 placeholder="e.g. Writing Instruments"
                 className={cn(
-                  "h-10 rounded-lg border-gray-200 dark:border-border focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/30",
+                  'h-10 rounded-lg border-gray-200 dark:border-border focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/30',
                   errors.localizedName?.en &&
-                    "border-red-400 focus:border-red-400 focus:ring-red-100",
+                    'border-red-400 focus:border-red-400 focus:ring-red-100',
                 )}
               />
               {nameEnValue && (
@@ -224,15 +224,15 @@ export function CategoryFormPanel({
           {/* Arabic Name */}
           <div className="space-y-1.5">
             <Label className="text-[13px] font-medium text-gray-700 dark:text-foreground">
-              {t("Form.NameAr")}
+              {t('Form.NameAr')}
             </Label>
             <div className="relative">
               <Input
-                {...register("localizedName.ar")}
+                {...register('localizedName.ar')}
                 dir="rtl"
                 placeholder="مثال: أدوات الكتابة"
                 className={cn(
-                  "h-10 rounded-lg border-gray-200 dark:border-border text-right focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/30",
+                  'h-10 rounded-lg border-gray-200 dark:border-border text-right focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:focus:ring-indigo-900/30',
                 )}
               />
               {nameArValue && (
@@ -247,7 +247,7 @@ export function CategoryFormPanel({
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
               <Label className="text-[13px] font-medium text-gray-700 dark:text-foreground">
-                {t("Form.Slug")} <span className="text-red-500">*</span>
+                {t('Form.Slug')} <span className="text-red-500">*</span>
               </Label>
               {isCheckingSlug ? (
                 <Loader2 className="h-3 w-3 animate-spin text-gray-400" />
@@ -262,18 +262,18 @@ export function CategoryFormPanel({
               ) : null}
             </div>
             <Input
-              {...register("slug", { required: "Slug is required" })}
-              placeholder={t("Form.SlugPlaceholder")}
+              {...register('slug', { required: 'Slug is required' })}
+              placeholder={t('Form.SlugPlaceholder')}
               className={cn(
-                "h-10 rounded-lg border-gray-200 dark:border-border font-mono text-sm focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100",
+                'h-10 rounded-lg border-gray-200 dark:border-border font-mono text-sm focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100',
                 isSlugAvailable === true &&
-                  "border-green-400 focus:border-green-400 focus:ring-green-100",
+                  'border-green-400 focus:border-green-400 focus:ring-green-100',
                 isSlugAvailable === false &&
-                  "border-red-400 focus:border-red-400 focus:ring-red-100",
-                errors.slug && "border-red-400 focus:border-red-400 focus:ring-red-100",
+                  'border-red-400 focus:border-red-400 focus:ring-red-100',
+                errors.slug && 'border-red-400 focus:border-red-400 focus:ring-red-100',
               )}
             />
-            <p className="text-[11px] text-gray-400">{t("Form.SlugHint")}</p>
+            <p className="text-[11px] text-gray-400">{t('Form.SlugHint')}</p>
             {errors.slug && <p className="text-[12px] text-red-500">{errors.slug.message}</p>}
           </div>
 
@@ -283,10 +283,10 @@ export function CategoryFormPanel({
           {/* English Description */}
           <div className="space-y-1.5">
             <Label className="text-[13px] font-medium text-gray-700 dark:text-foreground">
-              {t("Form.DescriptionEn")}
+              {t('Form.DescriptionEn')}
             </Label>
             <Textarea
-              {...register("localizedDescription.en")}
+              {...register('localizedDescription.en')}
               placeholder="Optional description in English"
               rows={2}
               className="rounded-lg border-gray-200 dark:border-border resize-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
@@ -296,10 +296,10 @@ export function CategoryFormPanel({
           {/* Arabic Description */}
           <div className="space-y-1.5">
             <Label className="text-[13px] font-medium text-gray-700 dark:text-foreground">
-              {t("Form.DescriptionAr")}
+              {t('Form.DescriptionAr')}
             </Label>
             <Textarea
-              {...register("localizedDescription.ar")}
+              {...register('localizedDescription.ar')}
               dir="rtl"
               placeholder="وصف اختياري بالعربية"
               rows={2}
@@ -313,42 +313,42 @@ export function CategoryFormPanel({
           {/* Parent Category */}
           <div className="space-y-1.5">
             <Label className="text-[13px] font-medium text-gray-700 dark:text-foreground">
-              {t("Form.Parent")}
+              {t('Form.Parent')}
             </Label>
             <CollapsibleCategoryPicker
               categories={categories.filter((c) => c.id !== category?.id)}
               selectedId={parentId}
-              onSelect={(id) => setValue("parentId", id === 0 ? null : id)}
-              placeholder={t("Form.ParentNone")}
+              onSelect={(id) => setValue('parentId', id === 0 ? null : id)}
+              placeholder={t('Form.ParentNone')}
             />
           </div>
 
           {/* Icon */}
           <div className="space-y-1.5">
             <Label className="text-[13px] font-medium text-gray-700 dark:text-foreground">
-              {t("Form.Icon")}
+              {t('Form.Icon')}
             </Label>
             <Input
-              {...register("icon")}
-              placeholder={t("Form.IconPlaceholder")}
+              {...register('icon')}
+              placeholder={t('Form.IconPlaceholder')}
               maxLength={20}
               className="h-10 rounded-lg border-gray-200 dark:border-border focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
             />
-            <p className="text-[11px] text-gray-400">{t("Form.IconHint")}</p>
+            <p className="text-[11px] text-gray-400">{t('Form.IconHint')}</p>
           </div>
 
           {/* Display Order */}
           <div className="space-y-1.5">
             <Label className="text-[13px] font-medium text-gray-700 dark:text-foreground">
-              {t("Form.DisplayOrder")}
+              {t('Form.DisplayOrder')}
             </Label>
             <Input
               type="number"
-              {...register("sortOrder", { valueAsNumber: true })}
+              {...register('sortOrder', { valueAsNumber: true })}
               placeholder="0"
               className="h-10 rounded-lg border-gray-200 dark:border-border focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
             />
-            <p className="text-[11px] text-gray-400">{t("Form.DisplayOrderHint")}</p>
+            <p className="text-[11px] text-gray-400">{t('Form.DisplayOrderHint')}</p>
           </div>
 
           {/* Divider */}
@@ -358,13 +358,13 @@ export function CategoryFormPanel({
           <div className="flex items-center justify-between">
             <div>
               <p className="text-[13px] font-medium text-gray-700 dark:text-foreground">
-                {t("Form.IsActive")}
+                {t('Form.IsActive')}
               </p>
-              <p className="text-[11px] text-gray-400 mt-0.5">{t("Form.IsActiveHint")}</p>
+              <p className="text-[11px] text-gray-400 mt-0.5">{t('Form.IsActiveHint')}</p>
             </div>
             <Switch
               checked={isActive}
-              onCheckedChange={(checked) => setValue("isActive", checked)}
+              onCheckedChange={(checked) => setValue('isActive', checked)}
             />
           </div>
         </div>
@@ -394,7 +394,7 @@ export function CategoryFormPanel({
               ) : (
                 <>
                   <Save className="h-4 w-4 me-2" />
-                  {t("SaveSuccess").includes("saved") ? "Save Category" : t("EditCategory")}
+                  {t('SaveSuccess').includes('saved') ? 'Save Category' : t('EditCategory')}
                 </>
               )}
             </Button>

@@ -12,14 +12,14 @@ import {
 import { relations } from "drizzle-orm";
 import { identitySchema } from "../schemas";
 import { users } from "./users";
-import type {
+import {
   AuthProvider,
   PaymentProvider,
   PermissionCode,
   RoleScope,
   RoleId,
   OrganizationId,
-} from "../../../backend/src/features/core/domain/value-objects";
+} from "../../types";
 
 /**
  * Linked authentication identities per user.
@@ -329,7 +329,7 @@ export type UserPermission = typeof userPermissions.$inferSelect;
 export type NewUserPermission = typeof userPermissions.$inferInsert;
 export type Organization = typeof organizations.$inferSelect;
 export type NewOrganization = typeof organizations.$inferInsert;
-export type OrganizationMembership = typeof organizationMemberships.$inferSelect;
+export type OrganizationMembershipRecord = typeof organizationMemberships.$inferSelect;
 export type NewOrganizationMembership = typeof organizationMemberships.$inferInsert;
 export type PaymentMethod = typeof paymentMethods.$inferSelect;
 export type NewPaymentMethod = typeof paymentMethods.$inferInsert;

@@ -7,13 +7,13 @@
  * Location: src/app/[locale]/admin/_components/table/ (admin-wide)
  */
 
-"use client";
+'use client';
 
-import * as React from "react";
-import { TableRow, TableCell } from "@findeg/ui";
-import { Checkbox } from "@findeg/ui";
-import { ChevronDown, ChevronRight } from "lucide-react";
-import { cn } from "@lib/utils";
+import * as React from 'react';
+import { TableRow, TableCell } from '@findeg/ui';
+import { Checkbox } from '@findeg/ui';
+import { ChevronDown, ChevronRight } from 'lucide-react';
+import { cn } from '@lib/utils';
 
 export interface EnrichedTableRowProps {
   /** Row ID for selection */
@@ -77,8 +77,8 @@ export function EnrichedTableRow({
     const target = e.target as HTMLElement;
     if (
       target.closest('input[type="checkbox"]') ||
-      target.closest("button") ||
-      target.closest("a")
+      target.closest('button') ||
+      target.closest('a')
     ) {
       return;
     }
@@ -93,9 +93,9 @@ export function EnrichedTableRow({
       {/* Compact Row */}
       <TableRow
         className={cn(
-          "group transition-colors",
-          canExpand && "cursor-pointer hover:bg-muted/50 dark:hover:bg-slate-800/50",
-          isExpanded && "bg-muted/30 dark:bg-slate-800/30",
+          'group transition-colors',
+          canExpand && 'cursor-pointer hover:bg-muted/50 dark:hover:bg-slate-800/50',
+          isExpanded && 'bg-muted/30 dark:bg-slate-800/30',
           className,
         )}
         onClick={handleRowClick}

@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { useFormContext } from "react-hook-form";
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import { Switch } from "@findeg/ui";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@findeg/ui";
-import { Separator } from "@findeg/ui";
-import { BilingualInput } from "@components/shared/BilingualInput";
-import { BilingualTextarea } from "@components/shared/BilingualTextarea";
-import { type ProductFormValues } from "@/interfaces";
+import * as React from 'react';
+import { useFormContext } from 'react-hook-form';
+import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
+import { Label } from '@findeg/ui';
+import { Switch } from '@findeg/ui';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@findeg/ui';
+import { Separator } from '@findeg/ui';
+import { BilingualInput } from '@components/shared/BilingualInput';
+import { BilingualTextarea } from '@components/shared/BilingualTextarea';
+import { type ProductFormValues } from '@/interfaces';
 
 interface ProductInfoZoneProps {
   categories: { id: number; name: string }[];
@@ -28,9 +28,9 @@ interface ProductInfoZoneProps {
 export function ProductInfoZone({ categories, brands }: ProductInfoZoneProps) {
   const { register, watch, setValue } = useFormContext<ProductFormValues>();
 
-  const isActive = watch("isActive") ?? true;
-  const categoryId = watch("categoryId");
-  const brandId = watch("brandId");
+  const isActive = watch('isActive') ?? true;
+  const categoryId = watch('categoryId');
+  const brandId = watch('brandId');
 
   return (
     <Card>
@@ -89,8 +89,8 @@ export function ProductInfoZone({ categories, brands }: ProductInfoZoneProps) {
           <div className="space-y-1">
             <Label className="text-xs font-medium text-muted-foreground">Category</Label>
             <Select
-              value={categoryId != null ? String(categoryId) : "none"}
-              onValueChange={(v) => setValue("categoryId", v === "none" ? null : Number(v))}
+              value={categoryId != null ? String(categoryId) : 'none'}
+              onValueChange={(v) => setValue('categoryId', v === 'none' ? null : Number(v))}
             >
               <SelectTrigger className="h-8 text-sm">
                 <SelectValue placeholder="Select category" />
@@ -109,8 +109,8 @@ export function ProductInfoZone({ categories, brands }: ProductInfoZoneProps) {
           <div className="space-y-1">
             <Label className="text-xs font-medium text-muted-foreground">Brand</Label>
             <Select
-              value={brandId != null ? String(brandId) : "none"}
-              onValueChange={(v) => setValue("brandId", v === "none" ? null : Number(v))}
+              value={brandId != null ? String(brandId) : 'none'}
+              onValueChange={(v) => setValue('brandId', v === 'none' ? null : Number(v))}
             >
               <SelectTrigger className="h-8 text-sm">
                 <SelectValue placeholder="Select brand" />
@@ -134,10 +134,10 @@ export function ProductInfoZone({ categories, brands }: ProductInfoZoneProps) {
           <div className="space-y-0.5">
             <Label className="text-sm font-medium">Published</Label>
             <p className="text-xs text-muted-foreground">
-              {isActive ? "Visible in the store" : "Hidden from customers"}
+              {isActive ? 'Visible in the store' : 'Hidden from customers'}
             </p>
           </div>
-          <Switch checked={isActive} onCheckedChange={(v) => setValue("isActive", v)} />
+          <Switch checked={isActive} onCheckedChange={(v) => setValue('isActive', v)} />
         </div>
       </CardContent>
     </Card>

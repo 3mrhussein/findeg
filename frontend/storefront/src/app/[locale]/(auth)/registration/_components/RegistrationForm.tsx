@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { useRouter } from "@i18n/navigation";
-import { Button } from "@findeg/ui";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Loader2 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { useRouter } from '@i18n/navigation';
+import { Button } from '@findeg/ui';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@findeg/ui';
+import { Input } from '@findeg/ui';
+import { Loader2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 const persistSessionToken = (token: string) => {
   /* internal handler mapped later */
 };
@@ -17,19 +17,19 @@ const persistSessionToken = (token: string) => {
 const formSchema = z
   .object({
     name: z.string().min(2, {
-      message: "Name must be at least 2 characters.",
+      message: 'Name must be at least 2 characters.',
     }),
     email: z.string().email({
-      message: "Please enter a valid email address.",
+      message: 'Please enter a valid email address.',
     }),
     password: z.string().min(8, {
-      message: "Password must be at least 8 characters.",
+      message: 'Password must be at least 8 characters.',
     }),
     confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
+    message: 'Passwords do not match',
+    path: ['confirmPassword'],
   });
 
 interface RegisterResponseBody {
@@ -56,7 +56,7 @@ function splitName(name: string): { firstName?: string; lastName?: string } {
 
   return {
     firstName: parts[0],
-    lastName: parts.slice(1).join(" "),
+    lastName: parts.slice(1).join(' '),
   };
 }
 
@@ -72,10 +72,10 @@ export function RegistrationForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
     },
   });
 
@@ -88,10 +88,10 @@ export function RegistrationForm() {
       setServerError(null);
 
       const { firstName, lastName } = splitName(values.name);
-      const response = await fetch("/api/v1/auth/register", {
-        method: "POST",
+      const response = await fetch('/api/v1/auth/register', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           email: values.email.trim(),
@@ -103,7 +103,7 @@ export function RegistrationForm() {
 
       const json = (await response.json().catch(() => null)) as RegisterResponseBody | null;
       if (!response.ok || !json?.success) {
-        const message = json?.error?.message || t("Common.ErrorOccurred");
+        const message = json?.error?.message || t('Common.ErrorOccurred');
         setServerError(message);
         return;
       }
@@ -111,7 +111,7 @@ export function RegistrationForm() {
       if (json?.data?.token) {
         persistSessionToken(json.data.token);
       }
-      router.push("/my-account");
+      router.push('/my-account');
       router.refresh();
     } finally {
       setIsLoading(false);
@@ -192,7 +192,7 @@ export function RegistrationForm() {
         ) : null}
         <Button type="submit" className="w-full" disabled={isLoading}>
           {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          <span data-testid="registration-submit-label">{t("Pages.Auth.ButtonRegister")}</span>
+          <span data-testid="registration-submit-label">{t('Pages.Auth.ButtonRegister')}</span>
         </Button>
       </form>
     </Form>

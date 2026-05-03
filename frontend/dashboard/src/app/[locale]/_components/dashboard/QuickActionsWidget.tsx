@@ -1,61 +1,61 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import { Plus, Tag, FolderTree, PackagePlus } from "lucide-react";
-import { Link } from "@i18n/navigation";
-import { useTranslations } from "next-intl";
+import * as React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
+import { Plus, Tag, FolderTree, PackagePlus } from 'lucide-react';
+import { Link } from '@i18n/navigation';
+import { useTranslations } from 'next-intl';
 
 export function QuickActionsWidget() {
-  const t = useTranslations("Administration.Dashboard.Widgets.QuickActions");
+  const t = useTranslations('Administration.Dashboard.Widgets.QuickActions');
 
   const actions = [
     {
-      title: t("AddProduct"),
-      description: t("AddProductDesc"),
+      title: t('AddProduct'),
+      description: t('AddProductDesc'),
       icon: PackagePlus,
-      href: "/products/new",
-      color: "text-blue-600 dark:text-blue-400",
+      href: '/products/new',
+      color: 'text-blue-600 dark:text-blue-400',
       bgColor:
-        "bg-blue-50 dark:bg-blue-900/40 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/60",
-      borderColor: "border-blue-100 dark:border-blue-900/30",
+        'bg-blue-50 dark:bg-blue-900/40 group-hover:bg-blue-100 dark:group-hover:bg-blue-900/60',
+      borderColor: 'border-blue-100 dark:border-blue-900/30',
     },
     {
-      title: t("AddCategory"),
-      description: t("AddCategoryDesc"),
+      title: t('AddCategory'),
+      description: t('AddCategoryDesc'),
       icon: FolderTree,
-      href: "/categories?action=new",
-      color: "text-emerald-600 dark:text-emerald-400",
+      href: '/categories?action=new',
+      color: 'text-emerald-600 dark:text-emerald-400',
       bgColor:
-        "bg-emerald-50 dark:bg-emerald-900/40 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-900/60",
-      borderColor: "border-emerald-100 dark:border-emerald-900/30",
+        'bg-emerald-50 dark:bg-emerald-900/40 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-900/60',
+      borderColor: 'border-emerald-100 dark:border-emerald-900/30',
     },
     {
-      title: t("ManageBrands"),
-      description: t("ManageBrandsDesc"),
+      title: t('ManageBrands'),
+      description: t('ManageBrandsDesc'),
       icon: Tag,
-      href: "/brands",
-      color: "text-purple-600 dark:text-purple-400",
+      href: '/brands',
+      color: 'text-purple-600 dark:text-purple-400',
       bgColor:
-        "bg-purple-50 dark:bg-purple-900/40 group-hover:bg-purple-100 dark:group-hover:bg-purple-900/60",
-      borderColor: "border-purple-100 dark:border-purple-900/30",
+        'bg-purple-50 dark:bg-purple-900/40 group-hover:bg-purple-100 dark:group-hover:bg-purple-900/60',
+      borderColor: 'border-purple-100 dark:border-purple-900/30',
     },
     {
-      title: t("ManageTags"),
-      description: t("ManageTagsDesc"),
+      title: t('ManageTags'),
+      description: t('ManageTagsDesc'),
       icon: Plus,
-      href: "/tags",
-      color: "text-amber-600 dark:text-amber-400",
+      href: '/tags',
+      color: 'text-amber-600 dark:text-amber-400',
       bgColor:
-        "bg-amber-50 dark:bg-amber-900/40 group-hover:bg-amber-100 dark:group-hover:bg-amber-900/60",
-      borderColor: "border-amber-100 dark:border-amber-900/30",
+        'bg-amber-50 dark:bg-amber-900/40 group-hover:bg-amber-100 dark:group-hover:bg-amber-900/60',
+      borderColor: 'border-amber-100 dark:border-amber-900/30',
     },
   ];
 
   return (
     <Card className="h-full border-slate-200 dark:border-slate-800 shadow-sm bg-white dark:bg-slate-900">
       <CardHeader className="pb-4">
-        <CardTitle className="text-base font-semibold">{t("Title")}</CardTitle>
+        <CardTitle className="text-base font-semibold">{t('Title')}</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 gap-3 mt-1">

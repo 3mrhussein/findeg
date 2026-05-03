@@ -16,7 +16,7 @@ export const portalRoleEnum = identitySchema.enum("portal_role", [
   "school_staff",
 ]);
 
-export const actorTypeEnum = identitySchema.enum("actor_type", ["system", "user", "api_key"]);
+export const actorTypeEnum = identitySchema.enum("actor_type", ["guest", "user", "service"]);
 
 // --- Sales Domain ---
 

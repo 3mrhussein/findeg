@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import { useRouter, usePathname } from "@i18n/navigation";
-import { useSearchParams } from "next/navigation";
-import { Tabs, TabsList, TabsTrigger } from "@findeg/ui";
+import { useRouter, usePathname } from '@i18n/navigation';
+import { useSearchParams } from 'next/navigation';
+import { Tabs, TabsList, TabsTrigger } from '@findeg/ui';
 
 /**
  * OrderStatus type (local definition)
  */
 type OrderStatus =
-  | "pending"
-  | "confirmed"
-  | "processing"
-  | "shipped"
-  | "delivered"
-  | "cancelled"
-  | "refunded";
+  | 'pending'
+  | 'confirmed'
+  | 'processing'
+  | 'shipped'
+  | 'delivered'
+  | 'cancelled'
+  | 'refunded';
 
 interface OrderStatusTabsProps {
   counts: {
@@ -29,35 +29,35 @@ interface OrderStatusTabsProps {
 }
 
 const STATUS_TABS = [
-  { value: "all", label: "All Orders" },
-  { value: "pending", label: "Pending" },
-  { value: "confirmed", label: "Confirmed" },
-  { value: "processing", label: "Processing" },
-  { value: "shipped", label: "Shipped" },
-  { value: "delivered", label: "Delivered" },
-  { value: "cancelled", label: "Cancelled" },
+  { value: 'all', label: 'All Orders' },
+  { value: 'pending', label: 'Pending' },
+  { value: 'confirmed', label: 'Confirmed' },
+  { value: 'processing', label: 'Processing' },
+  { value: 'shipped', label: 'Shipped' },
+  { value: 'delivered', label: 'Delivered' },
+  { value: 'cancelled', label: 'Cancelled' },
 ] as const;
 
 export function OrderStatusTabs({ counts }: OrderStatusTabsProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const currentStatus = searchParams.get("status") || "all";
+  const currentStatus = searchParams.get('status') || 'all';
 
   const handleTabChange = (value: string) => {
     const params = new URLSearchParams(searchParams.toString());
 
-    if (value === "all") {
-      params.delete("status");
+    if (value === 'all') {
+      params.delete('status');
     } else {
-      params.set("status", value);
+      params.set('status', value);
     }
 
     // Reset to page 1 when changing status
-    params.delete("page");
+    params.delete('page');
 
     const queryString = params.toString();
-    router.push(`${pathname}${queryString ? `?${queryString}` : ""}`);
+    router.push(`${pathname}${queryString ? `?${queryString}` : ''}`);
   };
 
   return (

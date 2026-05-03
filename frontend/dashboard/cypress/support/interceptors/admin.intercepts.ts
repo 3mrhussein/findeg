@@ -10,15 +10,15 @@ export const adminIntercepts = {
    * (Server Action postback or direct API request).
    */
   interceptProductCreation: () => {
-    cy.intercept("POST", "**/admin/products/new").as("createProductDetails");
-    return cy.intercept("POST", "**/api/v1/admin/products").as("createProductDetails");
+    cy.intercept('POST', '**/admin/products/new').as('createProductDetails');
+    return cy.intercept('POST', '**/api/v1/admin/products').as('createProductDetails');
   },
 
   /**
    * Wait for product creation to complete.
    */
   waitForProductCreation: () => {
-    return cy.wait("@createProductDetails", { timeout: 20000 });
+    return cy.wait('@createProductDetails', { timeout: 20000 });
   },
 
   /**
@@ -26,13 +26,13 @@ export const adminIntercepts = {
    * These are GET requests with query parameters triggered by router.push.
    */
   interceptProductListUpdate: () => {
-    return cy.intercept("GET", "**/admin/products?*").as("adminProductListUpdate");
+    return cy.intercept('GET', '**/admin/products?*').as('adminProductListUpdate');
   },
 
   /**
    * Wait for product list update to complete.
    */
   waitForProductListUpdate: () => {
-    return cy.wait("@adminProductListUpdate", { timeout: 15000 });
+    return cy.wait('@adminProductListUpdate', { timeout: 15000 });
   },
 };

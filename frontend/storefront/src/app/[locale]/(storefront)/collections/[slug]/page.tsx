@@ -1,12 +1,12 @@
-import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Suspense } from "react";
-import type { Locale } from "next-intl";
-import Image from "next/image";
-import { notFound } from "next/navigation";
-import { parse } from "@findeg/backend/features/core/domain/value-objects";
-import { getCollectionPageViewModel } from "@/data/catalog/queries";
-import { PageShell } from "../../_components/PageShell";
-import { ProductListingLayout } from "../../_components/ProductListingLayout";
+import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { Suspense } from 'react';
+import type { Locale } from 'next-intl';
+import Image from 'next/image';
+import { notFound } from 'next/navigation';
+import { parse } from '@findeg/backend/features/core/domain/value-objects';
+import { getCollectionPageViewModel } from '@/data/catalog/queries';
+import { PageShell } from '../../_components/PageShell';
+import { ProductListingLayout } from '../../_components/ProductListingLayout';
 
 interface CollectionPageProps {
   params: Promise<{ slug: string; locale: string }>;
@@ -41,7 +41,7 @@ async function CollectionPageContent({ params, searchParams }: CollectionPagePro
   const resolvedLocale = parse(locale);
   setRequestLocale(resolvedLocale);
   const query = await searchParams;
-  const t = await getTranslations({ locale: locale as Locale, namespace: "Pages.Shop" });
+  const t = await getTranslations({ locale: locale as Locale, namespace: 'Pages.Shop' });
 
   const vm = await getCollectionPageViewModel(slug, locale, query);
   if (!vm) notFound();
@@ -68,7 +68,7 @@ async function CollectionPageContent({ params, searchParams }: CollectionPagePro
         <div className="absolute inset-0 bg-linear-to-r from-slate-900/80 to-slate-900/20" />
         <div className="relative z-10 p-10 lg:p-16 flex flex-col justify-center min-h-[240px]">
           <div className="inline-flex items-center w-fit rounded bg-white/20 px-3 py-1 text-xs font-bold uppercase tracking-widest text-white backdrop-blur-md mb-4">
-            {t("CollectionBadge")}
+            {t('CollectionBadge')}
           </div>
           <h1 className="text-4xl lg:text-5xl font-black tracking-tight text-white mb-4">
             {title}
@@ -81,14 +81,14 @@ async function CollectionPageContent({ params, searchParams }: CollectionPagePro
 
       <ProductListingLayout
         {...vm}
-        resultsCountLabel={t("ShowingResults", {
+        resultsCountLabel={t('ShowingResults', {
           count: (vm.filteredProducts || vm.products).length,
           total: vm.products.length,
         })}
-        filtersTitle={t("FiltersTitle")}
+        filtersTitle={t('FiltersTitle')}
         noProductsTitle={title}
-        noProductsDescription={t("NoProductsDescription")}
-        loadMoreLabel={t("LoadMore")}
+        noProductsDescription={t('NoProductsDescription')}
+        loadMoreLabel={t('LoadMore')}
       />
     </PageShell>
   );

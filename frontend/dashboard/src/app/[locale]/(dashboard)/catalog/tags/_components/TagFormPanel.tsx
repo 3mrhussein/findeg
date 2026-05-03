@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import { useTranslations, useLocale } from "next-intl";
-import { useForm, type Resolver } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import React, { useEffect, useState } from 'react';
+import { useTranslations, useLocale } from 'next-intl';
+import { useForm, type Resolver } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   X,
   Check,
@@ -15,21 +15,21 @@ import {
   Hash,
   Zap,
   LucideIcon,
-} from "lucide-react";
-import { Button } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import { RadioGroup, RadioGroupItem } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@findeg/ui";
-import { TagInput, TagInputSchema } from "@findeg/backend/features/administration/domain/types";
-import { slugify } from "@lib/slugify";
-import { Tag } from "@findeg/backend/features/catalog";
-import { cn } from "@lib/utils";
-import { useDebounce } from "@hooks/use-debounce";
-import { useToast } from "@hooks/use-toast";
-import { getTagDisplayName } from "@lib/tag-utils";
-import * as Icons from "lucide-react";
+} from 'lucide-react';
+import { Button } from '@findeg/ui';
+import { Input } from '@findeg/ui';
+import { Label } from '@findeg/ui';
+import { RadioGroup, RadioGroupItem } from '@findeg/ui';
+import { Badge } from '@findeg/ui';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@findeg/ui';
+import { TagInput, TagInputSchema } from '@findeg/backend/features/administration/domain/types';
+import { slugify } from '@lib/slugify';
+import { Tag } from '@findeg/backend/features/catalog';
+import { cn } from '@lib/utils';
+import { useDebounce } from '@hooks/use-debounce';
+import { useToast } from '@hooks/use-toast';
+import { getTagDisplayName } from '@lib/tag-utils';
+import * as Icons from 'lucide-react';
 
 interface TagFormPanelProps {
   tag: Tag | null;
@@ -39,35 +39,35 @@ interface TagFormPanelProps {
 }
 
 const PRESET_COLORS = [
-  "#EF4444",
-  "#F97316",
-  "#F59E0B",
-  "#10B981",
-  "#3B82F6",
-  "#6366F1",
-  "#8B5CF6",
-  "#EC4899",
-  "#64748B",
+  '#EF4444',
+  '#F97316',
+  '#F59E0B',
+  '#10B981',
+  '#3B82F6',
+  '#6366F1',
+  '#8B5CF6',
+  '#EC4899',
+  '#64748B',
 ];
 
 const PRESET_ICONS = [
-  "Star",
-  "Zap",
-  "Heart",
-  "Clock",
-  "Shield",
-  "Crown",
-  "Flame",
-  "Award",
-  "BadgeCheck",
-  "Package",
-  "Gift",
-  "Tag",
+  'Star',
+  'Zap',
+  'Heart',
+  'Clock',
+  'Shield',
+  'Crown',
+  'Flame',
+  'Award',
+  'BadgeCheck',
+  'Package',
+  'Gift',
+  'Tag',
 ];
 
 export function TagFormPanel({ tag, productCount = 0, onSubmit, onClose }: TagFormPanelProps) {
-  const t = useTranslations("Administration.Catalog.Tags");
-  const locale = useLocale() as "en" | "ar";
+  const t = useTranslations('Administration.Catalog.Tags');
+  const locale = useLocale() as 'en' | 'ar';
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSlugChecking, setIsSlugChecking] = useState(false);
   const [isSlugAvailable, setIsSlugAvailable] = useState<boolean | null>(null);
@@ -87,19 +87,19 @@ export function TagFormPanel({ tag, productCount = 0, onSubmit, onClose }: TagFo
           group: tag.group,
           key: tag.key,
           slug: tag.slug,
-          icon: tag.icon || "Tag",
-          color: tag.color || "#6366F1",
+          icon: tag.icon || 'Tag',
+          color: tag.color || '#6366F1',
           isActive: tag.isActive,
           scope: tag.scope,
         }
       : {
-          group: "campaign",
-          key: "",
-          slug: "",
-          icon: "Tag",
-          color: "#6366F1",
+          group: 'campaign',
+          key: '',
+          slug: '',
+          icon: 'Tag',
+          color: '#6366F1',
           isActive: true,
-          scope: "catalog",
+          scope: 'catalog',
         },
   });
 
@@ -109,35 +109,35 @@ export function TagFormPanel({ tag, productCount = 0, onSubmit, onClose }: TagFo
         group: tag.group,
         key: tag.key,
         slug: tag.slug,
-        icon: tag.icon || "Tag",
-        color: tag.color || "#6366F1",
+        icon: tag.icon || 'Tag',
+        color: tag.color || '#6366F1',
         isActive: tag.isActive,
         scope: tag.scope,
       });
     } else {
       reset({
-        group: "campaign",
-        key: "",
-        slug: "",
-        icon: "Tag",
-        color: "#6366F1",
+        group: 'campaign',
+        key: '',
+        slug: '',
+        icon: 'Tag',
+        color: '#6366F1',
         isActive: true,
-        scope: "catalog",
+        scope: 'catalog',
       });
     }
   }, [tag, reset]);
 
-  const key = watch("key");
-  const slug = watch("slug");
-  const color = watch("color");
-  const icon = watch("icon") as string;
+  const key = watch('key');
+  const slug = watch('slug');
+  const color = watch('color');
+  const icon = watch('icon') as string;
   const debouncedValue = useDebounce(slug, 500);
 
   // Auto-generate slug from key
   useEffect(() => {
     if (!tag && key && !slug) {
       const generated = slugify(key);
-      setValue("slug", generated, { shouldValidate: true });
+      setValue('slug', generated, { shouldValidate: true });
     }
   }, [key, tag, setValue, slug]);
 
@@ -157,12 +157,12 @@ export function TagFormPanel({ tag, productCount = 0, onSubmit, onClose }: TagFo
       setIsSlugChecking(true);
       try {
         const res = await fetch(
-          `/api/v1/admin/tags/check-slug?slug=${debouncedValue}${tag ? `&excludeId=${tag.id}` : ""}`,
+          `/api/v1/admin/tags/check-slug?slug=${debouncedValue}${tag ? `&excludeId=${tag.id}` : ''}`,
         );
         const data = await res.json();
         setIsSlugAvailable(data.available);
       } catch (error) {
-        console.error("Slug check failed", error);
+        console.error('Slug check failed', error);
       } finally {
         setIsSlugChecking(false);
       }
@@ -173,8 +173,8 @@ export function TagFormPanel({ tag, productCount = 0, onSubmit, onClose }: TagFo
   const onFormSubmit = async (data: TagInput) => {
     if (isSlugAvailable === false) {
       toast({
-        title: t("SlugTaken"),
-        variant: "destructive",
+        title: t('SlugTaken'),
+        variant: 'destructive',
       });
       return;
     }
@@ -184,12 +184,12 @@ export function TagFormPanel({ tag, productCount = 0, onSubmit, onClose }: TagFo
       const result = await onSubmit(data);
       if (result.success) {
         toast({
-          title: tag ? t("ToastUpdated") : t("ToastCreated"),
+          title: tag ? t('ToastUpdated') : t('ToastCreated'),
         });
       } else {
         toast({
-          title: result.error || "Error",
-          variant: "destructive",
+          title: result.error || 'Error',
+          variant: 'destructive',
         });
       }
     } finally {
@@ -208,7 +208,7 @@ export function TagFormPanel({ tag, productCount = 0, onSubmit, onClose }: TagFo
       <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-10">
         <div>
           <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
-            {tag ? t("PanelEditTitle") : t("PanelCreateTitle")}
+            {tag ? t('PanelEditTitle') : t('PanelCreateTitle')}
           </h2>
           {tag && (
             <div className="flex items-center gap-2 mt-0.5">
@@ -217,7 +217,7 @@ export function TagFormPanel({ tag, productCount = 0, onSubmit, onClose }: TagFo
                 className="h-5 px-1.5 text-[10px] bg-indigo-50 text-indigo-600 border-none dark:bg-indigo-500/10 dark:text-indigo-400"
               >
                 <TagIcon className="h-3 w-3 me-1" />
-                {productCount} {t("ProductsCount", { count: productCount })}
+                {productCount} {t('ProductsCount', { count: productCount })}
               </Badge>
             </div>
           )}
@@ -247,13 +247,13 @@ export function TagFormPanel({ tag, productCount = 0, onSubmit, onClose }: TagFo
               </div>
               <div>
                 <p className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 uppercase tracking-tight">
-                  {t("Preview")}
+                  {t('Preview')}
                 </p>
                 <p className="text-sm font-bold">{getTagDisplayName(key, locale)}</p>
               </div>
             </div>
             <p className="text-[10px] text-indigo-400 italic leading-none">
-              {t("GroupKeyPreview")}: {watch("group")}:{key}
+              {t('GroupKeyPreview')}: {watch('group')}:{key}
             </p>
           </div>
         )}
@@ -262,19 +262,19 @@ export function TagFormPanel({ tag, productCount = 0, onSubmit, onClose }: TagFo
           {/* Group Dropdown */}
           <div className="space-y-2">
             <Label className="text-xs font-bold uppercase tracking-widest text-slate-400">
-              {t("FieldGroup")}
+              {t('FieldGroup')}
             </Label>
             <Select
-              onValueChange={(val) => setValue("group", val, { shouldDirty: true })}
-              defaultValue={watch("group")}
+              onValueChange={(val) => setValue('group', val, { shouldDirty: true })}
+              defaultValue={watch('group')}
             >
               <SelectTrigger className="rounded-xl h-11 border-gray-200 dark:border-slate-800">
-                <SelectValue placeholder={t("FieldGroup")} />
+                <SelectValue placeholder={t('FieldGroup')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="campaign">{t("GroupCampaign")}</SelectItem>
-                <SelectItem value="audience">{t("GroupAudience")}</SelectItem>
-                <SelectItem value="quality">{t("GroupQuality")}</SelectItem>
+                <SelectItem value="campaign">{t('GroupCampaign')}</SelectItem>
+                <SelectItem value="audience">{t('GroupAudience')}</SelectItem>
+                <SelectItem value="quality">{t('GroupQuality')}</SelectItem>
               </SelectContent>
             </Select>
             {errors.group && (
@@ -285,14 +285,14 @@ export function TagFormPanel({ tag, productCount = 0, onSubmit, onClose }: TagFo
           {/* Key Input */}
           <div className="space-y-2">
             <Label className="text-xs font-bold uppercase tracking-widest text-slate-400">
-              {t("FieldKey")}
+              {t('FieldKey')}
             </Label>
             <Input
-              {...register("key")}
+              {...register('key')}
               placeholder="e.g. best-seller"
               className="rounded-xl border-gray-200 dark:border-slate-800 h-11 focus:ring-indigo-500"
             />
-            <p className="text-[10px] text-muted-foreground italic">{t("FieldKeyHint")}</p>
+            <p className="text-[10px] text-muted-foreground italic">{t('FieldKeyHint')}</p>
             {errors.key && (
               <p className="text-[10px] text-rose-500 font-medium">{errors.key.message}</p>
             )}
@@ -303,11 +303,11 @@ export function TagFormPanel({ tag, productCount = 0, onSubmit, onClose }: TagFo
         <div className="space-y-2 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800/60">
           <Label className="text-xs font-bold uppercase tracking-widest text-slate-400 flex items-center gap-1.5">
             <Globe className="h-3 w-3" />
-            {t("FieldSlug")}
+            {t('FieldSlug')}
           </Label>
           <div className="relative">
             <Input
-              {...register("slug")}
+              {...register('slug')}
               placeholder="tag-slug"
               className="rounded-xl border-gray-200 dark:border-slate-800 h-10 pr-24 font-mono text-sm tracking-tight"
             />
@@ -316,11 +316,11 @@ export function TagFormPanel({ tag, productCount = 0, onSubmit, onClose }: TagFo
                 <Loader2 className="h-4 w-4 animate-spin text-slate-300" />
               ) : isSlugAvailable === true ? (
                 <Badge className="bg-emerald-50 text-emerald-600 border-emerald-100 dark:bg-emerald-500/10 dark:text-emerald-400 font-normal px-1.5 h-5 text-[10px]">
-                  {t("SlugAvailable")}
+                  {t('SlugAvailable')}
                 </Badge>
               ) : isSlugAvailable === false ? (
                 <Badge className="bg-rose-50 text-rose-600 border-rose-100 dark:bg-rose-500/10 dark:text-rose-400 font-normal px-1.5 h-5 text-[10px]">
-                  {t("SlugTaken")}
+                  {t('SlugTaken')}
                 </Badge>
               ) : null}
             </div>
@@ -332,14 +332,14 @@ export function TagFormPanel({ tag, productCount = 0, onSubmit, onClose }: TagFo
           <div className="space-y-2">
             <Label className="text-xs font-bold uppercase tracking-widest text-slate-400 flex items-center gap-1.5">
               <TagIcon className="h-3 w-3" />
-              {t("FieldIcon")}
+              {t('FieldIcon')}
             </Label>
             <Select
-              onValueChange={(val) => setValue("icon", val, { shouldDirty: true })}
-              defaultValue={watch("icon")}
+              onValueChange={(val) => setValue('icon', val, { shouldDirty: true })}
+              defaultValue={watch('icon')}
             >
               <SelectTrigger className="rounded-xl h-11 border-gray-200 dark:border-slate-800">
-                <SelectValue placeholder={t("FieldIcon")} />
+                <SelectValue placeholder={t('FieldIcon')} />
               </SelectTrigger>
               <SelectContent>
                 {PRESET_ICONS.map((i) => {
@@ -360,7 +360,7 @@ export function TagFormPanel({ tag, productCount = 0, onSubmit, onClose }: TagFo
           <div className="space-y-2">
             <Label className="text-xs font-bold uppercase tracking-widest text-slate-400 flex items-center gap-1.5">
               <Palette className="h-3 w-3" />
-              {t("FieldColor")}
+              {t('FieldColor')}
             </Label>
             <div className="flex gap-2 items-center">
               <div
@@ -368,7 +368,7 @@ export function TagFormPanel({ tag, productCount = 0, onSubmit, onClose }: TagFo
                 style={{ backgroundColor: color }}
               />
               <Input
-                {...register("color")}
+                {...register('color')}
                 placeholder="#000000"
                 className="rounded-xl border-gray-200 dark:border-slate-800 h-10 font-mono text-xs"
               />
@@ -378,10 +378,10 @@ export function TagFormPanel({ tag, productCount = 0, onSubmit, onClose }: TagFo
                 <button
                   key={c}
                   type="button"
-                  onClick={() => setValue("color", c, { shouldDirty: true })}
+                  onClick={() => setValue('color', c, { shouldDirty: true })}
                   className={cn(
-                    "w-6 h-6 rounded-lg transition-transform active:scale-90",
-                    color === c && "ring-2 ring-indigo-500 ring-offset-2",
+                    'w-6 h-6 rounded-lg transition-transform active:scale-90',
+                    color === c && 'ring-2 ring-indigo-500 ring-offset-2',
                   )}
                   style={{ backgroundColor: c }}
                 />
@@ -393,43 +393,43 @@ export function TagFormPanel({ tag, productCount = 0, onSubmit, onClose }: TagFo
         {/* Scope Section */}
         <div className="space-y-4">
           <Label className="text-xs font-bold uppercase tracking-widest text-slate-400">
-            {t("FieldScope")}
+            {t('FieldScope')}
           </Label>
           <RadioGroup
-            defaultValue={watch("scope")}
-            onValueChange={(val) => setValue("scope", val as any, { shouldDirty: true })}
+            defaultValue={watch('scope')}
+            onValueChange={(val) => setValue('scope', val as any, { shouldDirty: true })}
             className="grid grid-cols-2 gap-3"
           >
             <Label
               htmlFor="scope-catalog"
               className={cn(
-                "flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all cursor-pointer h-24 text-center",
-                watch("scope") === "catalog"
-                  ? "bg-indigo-50/50 border-indigo-500 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-400"
-                  : "bg-white border-gray-100 text-slate-400 dark:bg-slate-900 dark:border-slate-800",
+                'flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all cursor-pointer h-24 text-center',
+                watch('scope') === 'catalog'
+                  ? 'bg-indigo-50/50 border-indigo-500 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-400'
+                  : 'bg-white border-gray-100 text-slate-400 dark:bg-slate-900 dark:border-slate-800',
               )}
             >
               <RadioGroupItem value="catalog" id="scope-catalog" className="sr-only" />
               <Hash className="h-4 w-4 mb-2" />
-              <span className="text-sm font-semibold">{t("ScopeCatalog")}</span>
+              <span className="text-sm font-semibold">{t('ScopeCatalog')}</span>
               <span className="text-[10px] mt-1 opacity-70 leading-tight">
-                {t("ScopeCatalogDesc")}
+                {t('ScopeCatalogDesc')}
               </span>
             </Label>
             <Label
               htmlFor="scope-campaign"
               className={cn(
-                "flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all cursor-pointer h-24 text-center",
-                watch("scope") === "campaign"
-                  ? "bg-amber-50/50 border-amber-500 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400"
-                  : "bg-white border-gray-100 text-slate-400 dark:bg-slate-900 dark:border-slate-800",
+                'flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all cursor-pointer h-24 text-center',
+                watch('scope') === 'campaign'
+                  ? 'bg-amber-50/50 border-amber-500 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400'
+                  : 'bg-white border-gray-100 text-slate-400 dark:bg-slate-900 dark:border-slate-800',
               )}
             >
               <RadioGroupItem value="campaign" id="scope-campaign" className="sr-only" />
               <Zap className="h-4 w-4 mb-2" />
-              <span className="text-sm font-semibold">{t("ScopeCampaign")}</span>
+              <span className="text-sm font-semibold">{t('ScopeCampaign')}</span>
               <span className="text-[10px] mt-1 opacity-70 leading-tight">
-                {t("ScopeCampaignDesc")}
+                {t('ScopeCampaignDesc')}
               </span>
             </Label>
           </RadioGroup>
@@ -438,43 +438,43 @@ export function TagFormPanel({ tag, productCount = 0, onSubmit, onClose }: TagFo
         {/* Status Section */}
         <div className="space-y-4">
           <Label className="text-xs font-bold uppercase tracking-widest text-slate-400">
-            {t("FieldStatus")}
+            {t('FieldStatus')}
           </Label>
           <RadioGroup
-            defaultValue={watch("isActive") ? "active" : "inactive"}
-            onValueChange={(val) => setValue("isActive", val === "active", { shouldDirty: true })}
+            defaultValue={watch('isActive') ? 'active' : 'inactive'}
+            onValueChange={(val) => setValue('isActive', val === 'active', { shouldDirty: true })}
             className="grid grid-cols-2 gap-3"
           >
             <Label
               htmlFor="status-active"
               className={cn(
-                "flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all cursor-pointer",
-                watch("isActive")
-                  ? "bg-emerald-50/50 border-emerald-500 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400"
-                  : "bg-white border-gray-100 text-slate-400 dark:bg-slate-900 dark:border-slate-800",
+                'flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all cursor-pointer',
+                watch('isActive')
+                  ? 'bg-emerald-50/50 border-emerald-500 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400'
+                  : 'bg-white border-gray-100 text-slate-400 dark:bg-slate-900 dark:border-slate-800',
               )}
             >
               <RadioGroupItem value="active" id="status-active" className="sr-only" />
               <Check
-                className={cn("h-4 w-4 mb-2", watch("isActive") ? "opacity-100" : "opacity-0")}
+                className={cn('h-4 w-4 mb-2', watch('isActive') ? 'opacity-100' : 'opacity-0')}
               />
               <span className="text-sm font-semibold">
-                {t("FieldStatus")} ({t("Active")})
+                {t('FieldStatus')} ({t('Active')})
               </span>
             </Label>
             <Label
               htmlFor="status-inactive"
               className={cn(
-                "flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all cursor-pointer",
-                !watch("isActive")
-                  ? "bg-slate-50 border-slate-400 text-slate-600 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-300"
-                  : "bg-white border-gray-100 text-slate-400 dark:bg-slate-900 dark:border-slate-800",
+                'flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all cursor-pointer',
+                !watch('isActive')
+                  ? 'bg-slate-50 border-slate-400 text-slate-600 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-300'
+                  : 'bg-white border-gray-100 text-slate-400 dark:bg-slate-900 dark:border-slate-800',
               )}
             >
               <RadioGroupItem value="inactive" id="status-inactive" className="sr-only" />
-              <X className={cn("h-4 w-4 mb-2", !watch("isActive") ? "opacity-100" : "opacity-0")} />
+              <X className={cn('h-4 w-4 mb-2', !watch('isActive') ? 'opacity-100' : 'opacity-0')} />
               <span className="text-sm font-semibold">
-                {t("FieldStatus")} ({t("Inactive")})
+                {t('FieldStatus')} ({t('Inactive')})
               </span>
             </Label>
           </RadioGroup>
@@ -489,14 +489,14 @@ export function TagFormPanel({ tag, productCount = 0, onSubmit, onClose }: TagFo
           onClick={onClose}
           className="flex-1 h-12 rounded-xl border-gray-200 dark:border-slate-800"
         >
-          {t("Cancel")}
+          {t('Cancel')}
         </Button>
         <Button
           type="submit"
           disabled={isSubmitting || isSlugChecking || !isDirty}
           className="flex-2 h-12 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold shadow-lg shadow-indigo-200 dark:shadow-none transition-all active:scale-[0.98]"
         >
-          {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin" /> : t("Save")}
+          {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin" /> : t('Save')}
         </Button>
       </div>
     </form>

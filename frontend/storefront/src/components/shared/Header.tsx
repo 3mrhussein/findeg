@@ -1,11 +1,11 @@
-import { getTranslations } from "next-intl/server";
-import type { Locale } from "next-intl";
-import { Link } from "@i18n/navigation";
-import { HeaderNavClient } from "./HeaderNavClient";
-import ToggleLanguage from "./ToggleLanguage";
-import { ToggleTheme } from "@findeg/ui";
-import { SearchOverlay } from "./SearchOverlay";
-import { cacheLife } from "next/cache";
+import { getTranslations } from 'next-intl/server';
+import type { Locale } from 'next-intl';
+import { Link } from '@i18n/navigation';
+import { HeaderNavClient } from './HeaderNavClient';
+import ToggleLanguage from './ToggleLanguage';
+import { ToggleTheme } from '@findeg/ui';
+import { SearchOverlay } from './SearchOverlay';
+import { cacheLife } from 'next/cache';
 
 interface HeaderProps {
   locale: Locale;
@@ -21,7 +21,7 @@ interface HeaderProps {
  */
 export async function Header({ locale }: HeaderProps) {
   // ✅ locale + namespace together — next-intl skips headers() call
-  const t = await getTranslations({ locale, namespace: "Nav" });
+  const t = await getTranslations({ locale, namespace: 'Nav' });
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-background/80 backdrop-blur-md">
@@ -44,25 +44,25 @@ export async function Header({ locale }: HeaderProps) {
             href="/shop"
             className="text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors"
           >
-            {t("Shop") || "Shop"}
+            {t('Shop') || 'Shop'}
           </Link>
           <Link
             href="/categories"
             className="text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors"
           >
-            {t("Categories") || "Categories"}
+            {t('Categories') || 'Categories'}
           </Link>
           <Link
             href="/collections"
             className="text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors"
           >
-            {t("Collections") || "Collections"}
+            {t('Collections') || 'Collections'}
           </Link>
           <Link
             href="/school-lists"
             className="text-sm font-bold text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors"
           >
-            {t("SchoolLists") || "For Schools"}
+            {t('SchoolLists') || 'For Schools'}
           </Link>
         </nav>
 

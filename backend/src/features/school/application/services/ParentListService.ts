@@ -1,13 +1,11 @@
+
+import { IParentSessionRepository } from '@findeg/backend/features/school/application/interfaces/IParentSessionRepository';
 import {
-  IParentListService,
-  SessionState,
-  SessionSummary,
-} from "@findeg/backend/features/school/application/interfaces/IParentListService";
-import { IParentSessionRepository } from "@findeg/backend/features/school/application/interfaces/IParentSessionRepository";
-import { ISchoolDirectoryService } from "@findeg/backend/features/school/application/interfaces/ISchoolDirectoryService";
-import { ISchoolAccessService } from "@findeg/backend/features/school/application/interfaces/ISchoolAccessService";
-import { schoolLists, schoolListItems } from "@findeg/db/schema";
-import { schoolListParentSessions } from "@findeg/db/schema";
+  ISchoolDirectoryService,
+  SchoolProfile,
+} from '@findeg/backend/features/school/application/interfaces/ISchoolDirectoryService';
+import { ISchoolAccessService } from '@findeg/backend/features/school/application/interfaces/ISchoolAccessService';
+import { IParentListService, SchoolListPageData, SessionState, SessionSummary } from '../interfaces/IParentListService';
 
 /**
  *
@@ -26,7 +24,7 @@ export class ParentListService implements IParentListService {
   /**
    *
    */
-  async getListWithDetails(slug: string): Promise<any> {
+  async getListWithDetails(slug: string): Promise<SchoolProfile | null> {
     // This will call the existing schoolListService or list repository
     // We need to fetch items + alternatives + variant data (price, stock, image)
     const list = await this.schoolListService.getBySlug(slug);
@@ -46,19 +44,19 @@ export class ParentListService implements IParentListService {
   ): Promise<SessionState> {
     if (userId) {
       const hasOrder = await this.sessionRepo.hasCompletedOrder(listId, userId);
-      if (hasOrder) return "completed_order";
+      if (hasOrder) return 'completed_order';
     }
 
     const session = await this.sessionRepo.getSession(listId, userId, sessionToken);
-    if (session) return "has_session";
+    if (session) return 'has_session';
 
-    return "first_visit";
+    return 'first_visit';
   }
 
   /**
    *
    */
-  async getSessionSummary(sessionId: number): Promise<SessionSummary> {
+  async getSessionSummary(_sessionId: number): Promise<SessionSummary> {
     // Fetch session and list items to calculate summary
     // This is a placeholder summary
     return {
@@ -72,7 +70,7 @@ export class ParentListService implements IParentListService {
   /**
    *
    */
-  async saveItemSelection(sessionId: number, itemId: number, variantId: number): Promise<void> {
+  async saveItemSelection(_sessionId: number, _itemId: number, _variantId: number): Promise<void> {
     // Fetch existing session selections and update
     // sessionRepo.upsertSession(...)
   }
@@ -80,21 +78,21 @@ export class ParentListService implements IParentListService {
   /**
    *
    */
-  async toggleOptionalItem(sessionId: number, itemId: number, include: boolean): Promise<void> {
+  async toggleOptionalItem(_sessionId: number, _itemId: number, _include: boolean): Promise<void> {
     // Update optionalInclusions/Exclusions arrays
   }
 
   /**
    *
    */
-  async resetToDefaults(sessionId: number): Promise<void> {
+  async resetToDefaults(_sessionId: number): Promise<void> {
     // Update session with empty selections and optionals
   }
 
   /**
    *
    */
-  async addListToCart(sessionId: number, cartId: number): Promise<void> {
+  async addListToCart(_sessionId: number, _cartId: number): Promise<void> {
     // 1. Fetch list items + session overrides
     // 2. Create cart_kit record
     // 3. Add items to cart with cart_kit_id
@@ -103,7 +101,7 @@ export class ParentListService implements IParentListService {
   /**
    * Orchestrates the retrieval of all data required for the school list page.
    */
-  async getSchoolListPageData(slug: string, userId?: number): Promise<any> {
+  async getSchoolListPageData(slug: string, userId?: number): Promise<SchoolListPageData | null> {
     const list = await this.schoolListService.getBySlug(slug);
     if (!list) return null;
 
@@ -117,7 +115,7 @@ export class ParentListService implements IParentListService {
       list,
       accessState,
       sessionState,
-      fullList,
+      fullList:fullList as SchoolProfile,
     };
   }
 }

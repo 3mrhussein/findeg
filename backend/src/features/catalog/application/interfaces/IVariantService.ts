@@ -4,9 +4,9 @@
  * Read operations for variant-level pricing and sell options.
  */
 
-import type { CustomerGroup, UomCode } from "@findeg/backend/features/core/domain/types/common";
-import type { CurrencyCode } from "@findeg/backend/features/core/domain/value-objects";
-import type { SellOption } from "./IVariantRepository";
+import type { CustomerGroup, UomCode } from '@findeg/backend/features/core/domain/types/common';
+import type { CurrencyCode } from '@findeg/backend/features/core/domain/value-objects';
+import type { SellOption } from './IVariantRepository';
 
 export interface IVariantService {
   /** Gets combined sell options (UoM + optional prices) for a variant */

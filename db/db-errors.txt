@@ -1,0 +1,15 @@
+
+> @findeg/db@0.1.0 type-check /Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db
+> tsc --noEmit
+
+connection.ts(4,17): error TS6059: File '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/env.ts' is not under 'rootDir' '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Imported via "../env" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/connection.ts'
+    Imported via "../env" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/drizzle.config.ts'
+    Imported via "../env" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/migrate.ts'
+    Imported via "../env" from file '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/seed.ts'
+    Matched by include pattern '../env.ts' in '/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/db/tsconfig.json'
+index.ts(12,1): error TS2308: Module "./schema" has already exported a member named 'DiscountRule'. Consider explicitly re-exporting to resolve the ambiguity.
+index.ts(12,1): error TS2308: Module "./schema" has already exported a member named 'OrganizationMembership'. Consider explicitly re-exporting to resolve the ambiguity.
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @findeg/db@0.1.0 type-check: `tsc --noEmit`
+Exit status 2

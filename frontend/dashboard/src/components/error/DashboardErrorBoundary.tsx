@@ -10,11 +10,11 @@
  * </DashboardErrorBoundary>
  */
 
-"use client";
+'use client';
 
-import React from "react";
-import { AlertCircle, RotateCcw } from "lucide-react";
-import { Button } from "@findeg/ui";
+import React from 'react';
+import { AlertCircle, RotateCcw } from 'lucide-react';
+import { Button } from '@findeg/ui';
 
 interface DashboardErrorBoundaryProps {
   children: React.ReactNode;
@@ -55,7 +55,7 @@ export class DashboardErrorBoundary extends React.Component<
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     // Log error for monitoring
-    console.error("[DashboardErrorBoundary]", this.props.widgetName, error, errorInfo);
+    console.error('[DashboardErrorBoundary]', this.props.widgetName, error, errorInfo);
 
     // Call custom error handler if provided
     if (this.props.onError) {
@@ -94,12 +94,12 @@ export class DashboardErrorBoundary extends React.Component<
               <h3 className="font-semibold text-red-900 dark:text-red-100">
                 {this.props.widgetName
                   ? `${this.props.widgetName} Failed to Load`
-                  : "Widget Failed to Load"}
+                  : 'Widget Failed to Load'}
               </h3>
               <p className="mt-1 text-sm text-red-800 dark:text-red-200">
                 An error occurred while loading this widget. Please try again.
               </p>
-              {process.env.NODE_ENV === "development" && this.state.error && (
+              {process.env.NODE_ENV === 'development' && this.state.error && (
                 <details className="mt-3 text-xs text-red-700 dark:text-red-300">
                   <summary className="cursor-pointer font-mono">Error Details</summary>
                   <pre className="mt-2 overflow-auto bg-red-100/50 dark:bg-red-900/30 p-2 rounded">
@@ -130,8 +130,8 @@ export class DashboardErrorBoundary extends React.Component<
  * Simple error fallback component
  */
 export function ErrorFallback({
-  title = "Something went wrong",
-  message = "We encountered an error loading this widget. Please refresh the page.",
+  title = 'Something went wrong',
+  message = 'We encountered an error loading this widget. Please refresh the page.',
   onRetry,
 }: {
   title?: string;

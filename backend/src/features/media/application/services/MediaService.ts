@@ -1,7 +1,7 @@
-import type { IStorageProvider } from "@findeg/backend/features/core/application/interfaces/IStorageProvider";
-import type { MediaAsset } from "@findeg/backend/features/media/domain/entities/MediaAsset";
+import type { IStorageProvider } from '@findeg/backend/features/core/application/interfaces/IStorageProvider';
+import type { MediaAsset } from '@findeg/backend/features/media/domain/entities/MediaAsset';
 
-export const MANAGED_MEDIA_FOLDERS = ["", "products", "brands"] as const;
+export const MANAGED_MEDIA_FOLDERS = ['', 'products', 'brands'] as const;
 
 /**
  * Media Service
@@ -25,14 +25,14 @@ export class MediaService {
    * @returns The public URL of the uploaded image.
    * @throws Error if file type is invalid or size exceeds 5MB.
    */
-  async uploadImage(file: File, folder: string = "general"): Promise<string> {
-    if (!file.type.startsWith("image/")) {
-      throw new Error("Invalid file type. Only images are allowed.");
+  async uploadImage(file: File, folder: string = 'general'): Promise<string> {
+    if (!file.type.startsWith('image/')) {
+      throw new Error('Invalid file type. Only images are allowed.');
     }
 
     const MAX_SIZE = 5 * 1024 * 1024; // 5MB
     if (file.size > MAX_SIZE) {
-      throw new Error("File too large. Maximum size is 5MB.");
+      throw new Error('File too large. Maximum size is 5MB.');
     }
 
     const arrayBuffer = await file.arrayBuffer();
@@ -48,7 +48,7 @@ export class MediaService {
    * @param folder - Destination folder.
    * @returns Array of public URLs.
    */
-  async uploadImages(files: File[], folder: string = "general"): Promise<string[]> {
+  async uploadImages(files: File[], folder: string = 'general'): Promise<string[]> {
     return Promise.all(files.map((file) => this.uploadImage(file, folder)));
   }
 
@@ -67,7 +67,7 @@ export class MediaService {
    * @param folder - Subdirectory to scan.
    * @returns List of objects with file URLs and names.
    */
-  async getFiles(folder: string = ""): Promise<{ url: string; name: string }[]> {
+  async getFiles(folder: string = ''): Promise<{ url: string; name: string }[]> {
     return this.storageProvider.listFiles(folder);
   }
 
@@ -86,7 +86,7 @@ export class MediaService {
           (file): MediaAsset => ({
             url: file.url,
             name: file.name,
-            folder: folder || "general",
+            folder: folder || 'general',
           }),
         );
       }),

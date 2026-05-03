@@ -34,7 +34,7 @@ export class Sku {
       throw new Error(`SKU must be at most ${Sku.MAX_LENGTH} characters`);
     }
     if (!Sku.PATTERN.test(value)) {
-      throw new Error("SKU may only contain uppercase letters, digits, and hyphens");
+      throw new Error('SKU may only contain uppercase letters, digits, and hyphens');
     }
 
     return new Sku(value);
@@ -50,12 +50,12 @@ export class Sku {
       .map((p) =>
         p
           .toUpperCase()
-          .replace(/[^A-Z0-9]/g, "-")
-          .replace(/-+/g, "-"),
+          .replace(/[^A-Z0-9]/g, '-')
+          .replace(/-+/g, '-'),
       )
-      .join("-")
-      .replace(/-+/g, "-")
-      .replace(/^-|-$/g, "");
+      .join('-')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '');
   }
 
   /**

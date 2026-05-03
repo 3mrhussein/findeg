@@ -1,6 +1,6 @@
-import { Link } from "@i18n/navigation";
-import Image from "next/image";
-import { getHomePageData } from "@/data/catalog/queries";
+import { Link } from '@i18n/navigation';
+import Image from 'next/image';
+import { getHomePageData } from '@/data/catalog/queries';
 
 interface CollectionsGridProps {
   locale: string;
@@ -41,7 +41,7 @@ export async function CollectionsGrid({ locale }: CollectionsGridProps) {
             <Link
               key={category.id}
               href={`/categories/${category.slug || category.id}`}
-              className={`group relative overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-800 ${idx === 2 ? "aspect-4/5 sm:aspect-3/4 sm:col-span-2 lg:col-span-1" : "aspect-4/5 sm:aspect-3/4"}`}
+              className={`group relative overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-800 ${idx === 2 ? 'aspect-4/5 sm:aspect-3/4 sm:col-span-2 lg:col-span-1' : 'aspect-4/5 sm:aspect-3/4'}`}
             >
               <Image
                 alt={category.name}
@@ -56,7 +56,7 @@ export async function CollectionsGrid({ locale }: CollectionsGridProps) {
                 </span>
                 <h3 className="text-2xl font-bold text-white">{category.name}</h3>
                 <p className="mt-1 text-sm text-slate-200 opacity-0 transform translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
-                  {category.description || "Discover premium quality."}
+                  {category.description || 'Discover premium quality.'}
                 </p>
               </div>
             </Link>

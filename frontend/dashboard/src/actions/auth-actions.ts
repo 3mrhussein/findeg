@@ -13,12 +13,12 @@
  * 4. Handle redirects and cache invalidation
  */
 
-"use server";
+'use server';
 
-import { redirect } from "@i18n/navigation";
-import { createIdentityServices } from "@findeg/backend/features/identity";
-import { adminSession, createUserVO, type SessionPayload } from "@findeg/backend/features/core";
-import { createSession, deleteSession } from "@lib/session";
+import { redirect } from '@i18n/navigation';
+import { createIdentityServices } from '@findeg/backend/features/identity';
+import { adminSession, createUserVO, type SessionPayload } from '@findeg/backend/features/core';
+import { createSession, deleteSession } from '@lib/session';
 
 /**
  * Server Action: User login
@@ -26,11 +26,11 @@ import { createSession, deleteSession } from "@lib/session";
  * @param formData - Form data with 'email' and 'password' fields
  */
 export async function loginAction(formData: FormData) {
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
+  const email = formData.get('email') as string;
+  const password = formData.get('password') as string;
 
   if (!email || !password) {
-    throw new Error("Email and password are required");
+    throw new Error('Email and password are required');
   }
 
   try {
@@ -38,7 +38,7 @@ export async function loginAction(formData: FormData) {
     const result = await auth.login(email, password);
 
     if (!result.success || !result.user) {
-      throw new Error(result.error || "Invalid email or password");
+      throw new Error(result.error || 'Invalid email or password');
     }
 
     // Construct SessionPayload mapping from AuthResult.user
@@ -51,7 +51,7 @@ export async function loginAction(formData: FormData) {
         lastName: result.user.lastName,
       }),
       subjectId: String(result.user.id),
-      actorType: result.user.actorType || "user",
+      actorType: result.user.actorType || 'user',
       activeRoleIds: result.user.activeRoleIds,
       permissionCodes: result.user.permissionCodes,
       organizationId: result.user.organizationId,
@@ -59,7 +59,7 @@ export async function loginAction(formData: FormData) {
     };
 
     if (!adminSession(sessionPayload as SessionPayload)) {
-      throw new Error("Forbidden: This portal is for administrators only");
+      throw new Error('Forbidden: This portal is for administrators only');
     }
 
     await createSession(sessionPayload as SessionPayload);
@@ -67,18 +67,18 @@ export async function loginAction(formData: FormData) {
     // If it's a redirect, let it bubble up (standard Next.js behavior)
     if (
       error &&
-      typeof error === "object" &&
-      "digest" in error &&
-      typeof error.digest === "string" &&
-      error.digest.startsWith("NEXT_REDIRECT")
+      typeof error === 'object' &&
+      'digest' in error &&
+      typeof error.digest === 'string' &&
+      error.digest.startsWith('NEXT_REDIRECT')
     ) {
       throw error;
     }
-    console.error("[dashboard] Login error:", error);
+    console.error('[dashboard] Login error:', error);
     throw error;
   }
 
-  redirect({ href: "/", locale: "en" });
+  redirect({ href: '/', locale: 'en' });
 }
 
 /**
@@ -92,20 +92,20 @@ export async function logoutAction(formData?: FormData) {
     await deleteSession();
 
     // Redirect after logout
-    const redirectTo = (formData?.get("redirectTo") as string) || "/";
-    redirect({ href: redirectTo, locale: "en" });
+    const redirectTo = (formData?.get('redirectTo') as string) || '/';
+    redirect({ href: redirectTo, locale: 'en' });
   } catch (error: unknown) {
     if (
       error &&
-      typeof error === "object" &&
-      "digest" in error &&
-      typeof error.digest === "string" &&
-      error.digest.startsWith("NEXT_REDIRECT")
+      typeof error === 'object' &&
+      'digest' in error &&
+      typeof error.digest === 'string' &&
+      error.digest.startsWith('NEXT_REDIRECT')
     ) {
       throw error;
     }
-    console.error("[dashboard] Logout action error:", error);
+    console.error('[dashboard] Logout action error:', error);
     // Even if error occurs, redirect to home
-    redirect({ href: "/", locale: "en" });
+    redirect({ href: '/', locale: 'en' });
   }
 }

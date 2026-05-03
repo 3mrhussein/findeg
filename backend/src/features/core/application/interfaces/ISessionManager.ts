@@ -1,4 +1,4 @@
-import type { SessionPayload } from "@findeg/backend/features/core/domain/auth";
+import type { SessionPayload } from '@findeg/backend/features/core/domain/auth';
 
 /**
  * Session Manager Interface

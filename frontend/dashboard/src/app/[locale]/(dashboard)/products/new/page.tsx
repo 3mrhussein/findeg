@@ -1,6 +1,6 @@
-import { getAllCategories, getAllBrands, getAllTags } from "@data/resources/queries";
-import { ProductForm } from "@/app/[locale]/(dashboard)/products/_components/ProductForm";
-import { parse } from "@findeg/backend/features/core";
+import { getAllCategories, getAllBrands, getAllTags } from '@data/resources/queries';
+import { ProductForm } from '@/app/[locale]/(dashboard)/products/_components/ProductForm';
+import { parse } from '@findeg/backend/features/core';
 
 /**
  * /admin/products/new

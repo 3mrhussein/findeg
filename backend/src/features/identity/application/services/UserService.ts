@@ -5,23 +5,22 @@
  * Coordinates between Identity, Catalog, and Order domains.
  */
 
-import bcrypt from "bcryptjs";
-import { eq, inArray } from "drizzle-orm";
-import { db } from "@findeg/db/connection";
+import bcrypt from 'bcryptjs';
+import { eq, inArray } from 'drizzle-orm';
+import { db } from '@findeg/db/connection';
 import {
   users,
   userRoles,
   userPermissions,
   roles,
   permissions,
-  passwordCredentials,
-} from "@findeg/db/schema";
+} from '@findeg/db/schema';
 
-import { NotAuthenticatedError, ResourceNotFoundError } from "../../../core/domain/errors";
-import { parse } from "../../../core/domain/value-objects";
-import { createCatalogServices } from "../../../catalog";
-import { createOrderServices } from "../../../order";
-import { IUserRepository } from "../interfaces/IUserRepository";
+import { ResourceNotFoundError } from '../../../core/domain/errors';
+import { parse } from '../../../core/domain/value-objects';
+import { createCatalogServices } from '../../../catalog';
+import { createOrderServices } from '../../../order';
+import { IUserRepository } from '../interfaces/IUserRepository';
 import {
   AdminUser,
   CreateAdminInput,
@@ -29,9 +28,9 @@ import {
   PermissionOverrideInput,
   IUserService,
   DashboardData,
-} from "../interfaces/IUserService";
-import { User } from "../../domain/entities/User";
-import { Order } from "../../../order/domain/entities/Order";
+} from '../interfaces/IUserService';
+import { User } from '../../domain/entities/User';
+import { Order } from '../../../order/domain/entities/Order';
 
 export class UserService implements IUserService {
   constructor(private userRepository: IUserRepository) {}
@@ -69,13 +68,13 @@ export class UserService implements IUserService {
       email: input.email,
       firstName: input.firstName,
       lastName: input.lastName,
-      portalRole: "staff",
+      portalRole: 'staff',
       isActive: true,
     });
 
     await this.userRepository.upsertPasswordCredentials(newUser.id, {
       passwordHash,
-      hashStrategy: "bcrypt",
+      hashStrategy: 'bcrypt',
     });
 
     if (input.roleIds.length > 0) {
@@ -83,13 +82,13 @@ export class UserService implements IUserService {
         input.roleIds.map((roleId) => ({
           userId: newUser.id,
           roleId,
-          scope: "global" as const,
+          scope: 'global' as const,
         })),
       );
     }
 
     const result = await this.getAdmin(newUser.id);
-    if (!result) throw new Error("Failed to fetch created admin user");
+    if (!result) throw new Error('Failed to fetch created admin user');
     return result;
   }
 
@@ -113,14 +112,14 @@ export class UserService implements IUserService {
           input.roleIds.map((roleId) => ({
             userId,
             roleId,
-            scope: "global" as const,
+            scope: 'global' as const,
           })),
         );
       }
     }
 
     const result = await this.getAdmin(userId);
-    if (!result) throw new Error("Admin user not found after update");
+    if (!result) throw new Error('Admin user not found after update');
     return result;
   }
 
@@ -164,7 +163,7 @@ export class UserService implements IUserService {
     ]);
 
     if (!user) {
-      throw new ResourceNotFoundError("User", userId);
+      throw new ResourceNotFoundError('User', userId);
     }
 
     return { user, orders: userOrders };
@@ -245,7 +244,7 @@ export class UserService implements IUserService {
         .filter((o) => o.userId === user.id)
         .map((o) => ({
           permissionCode: o.permissionCode,
-          action: o.action as "grant" | "revoke",
+          action: o.action as 'grant' | 'revoke',
         })),
     }));
   }

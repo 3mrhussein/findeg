@@ -2,12 +2,12 @@
  * Admin Dashboard - Audit Log
  */
 
-import { getAuditLogs } from "@data/admin/queries";
-import { format } from "date-fns";
-import { Link } from "@i18n/navigation";
-import { Input } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
+import { getAuditLogs } from '@data/admin/queries';
+import { format } from 'date-fns';
+import { Link } from '@i18n/navigation';
+import { Input } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { Badge } from '@findeg/ui';
 
 const LIMIT = 50;
 
@@ -16,14 +16,14 @@ const LIMIT = 50;
  */
 function buildEntityHref(entityType: string, entityId: string): string | null {
   switch (entityType) {
-    case "product":
+    case 'product':
       return `/products/${entityId}/edit`;
-    case "category":
+    case 'category':
       return `/categories/${entityId}/edit`;
-    case "order":
+    case 'order':
       return `/orders/${entityId}`;
-    case "brand":
-      return "/brands";
+    case 'brand':
+      return '/brands';
     default:
       return null;
   }
@@ -38,7 +38,7 @@ function safeJson(value: unknown): string {
     if (json.length > 1200) return `${json.slice(0, 1200)}\n...`;
     return json;
   } catch {
-    return "{}";
+    return '{}';
   }
 }
 
@@ -55,7 +55,7 @@ export default async function AuditLogPage({
     entityId?: string;
   }>;
 }) {
-  const { page: pageParam, entityType = "", action = "", entityId = "" } = await searchParams;
+  const { page: pageParam, entityType = '', action = '', entityId = '' } = await searchParams;
   const page = Number(pageParam) || 1;
 
   const { data: logs, total } = await getAuditLogs({
@@ -118,7 +118,7 @@ export default async function AuditLogPage({
             {logs.map((log) => (
               <tr key={log.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/30">
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-slate-400">
-                  {format(new Date(log.createdAt), "yyyy-MM-dd HH:mm:ss")}
+                  {format(new Date(log.createdAt), 'yyyy-MM-dd HH:mm:ss')}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-slate-200">
                   {log.adminUserId}
@@ -165,7 +165,7 @@ export default async function AuditLogPage({
                       Open
                     </Link>
                   ) : (
-                    "-"
+                    '-'
                   )}
                 </td>
               </tr>
@@ -197,7 +197,7 @@ export default async function AuditLogPage({
             <Button asChild variant="outline" size="sm">
               <Link
                 href={{
-                  pathname: "/audit-log",
+                  pathname: '/audit-log',
                   query: {
                     page: Math.max(1, page - 1).toString(),
                     entityType: entityType || undefined,
@@ -218,7 +218,7 @@ export default async function AuditLogPage({
             <Button asChild variant="outline" size="sm">
               <Link
                 href={{
-                  pathname: "/audit-log",
+                  pathname: '/audit-log',
                   query: {
                     page: Math.min(totalPages, page + 1).toString(),
                     entityType: entityType || undefined,

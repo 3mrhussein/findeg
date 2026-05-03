@@ -1,8 +1,8 @@
-import { Link } from "@i18n/navigation";
-import type { AuditLogEntry } from "@findeg/backend/features/administration";
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
-import { getOrderStatusLabel, normalizeOrderStatus } from "@findeg/backend/features/order";
+import { Link } from '@i18n/navigation';
+import type { AuditLogEntry } from '@findeg/backend/features/administration';
+import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
+import { Badge } from '@findeg/ui';
+import { getOrderStatusLabel, normalizeOrderStatus } from '@findeg/backend/features/order';
 
 interface OrderAuditTimelineProps {
   orderId: number | string;
@@ -23,7 +23,7 @@ function safeJson(value: unknown): string {
   try {
     return JSON.stringify(value ?? {}, null, 2);
   } catch {
-    return "{}";
+    return '{}';
   }
 }
 
@@ -31,7 +31,7 @@ function safeJson(value: unknown): string {
  *
  */
 function maybeOrderStatus(value: unknown): string | undefined {
-  if (typeof value !== "string" || value.length === 0) return undefined;
+  if (typeof value !== 'string' || value.length === 0) return undefined;
   return getOrderStatusLabel(normalizeOrderStatus(value));
 }
 
@@ -61,9 +61,9 @@ export function OrderAuditTimeline({ orderId, logs }: OrderAuditTimelineProps) {
               const oldStatus = maybeOrderStatus(log.oldValues?.status);
               const newStatus = maybeOrderStatus(log.newValues?.status);
               const trackingNumber =
-                typeof log.newValues?.trackingNumber === "string"
+                typeof log.newValues?.trackingNumber === 'string'
                   ? log.newValues.trackingNumber
-                  : "";
+                  : '';
 
               return (
                 <div key={log.id} className="rounded-md border p-3">
@@ -77,7 +77,7 @@ export function OrderAuditTimeline({ orderId, logs }: OrderAuditTimelineProps) {
                   <div className="space-y-1 text-sm">
                     {oldStatus && newStatus ? (
                       <p>
-                        Status: <span className="font-medium">{oldStatus}</span> to{" "}
+                        Status: <span className="font-medium">{oldStatus}</span> to{' '}
                         <span className="font-medium">{newStatus}</span>
                       </p>
                     ) : null}

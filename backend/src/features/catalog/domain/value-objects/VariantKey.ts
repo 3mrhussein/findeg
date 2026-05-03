@@ -36,17 +36,17 @@ export class VariantKey {
    */
   static build(attributes: DefiningAttribute[]): VariantKey {
     if (!attributes.length) {
-      throw new Error("VariantKey requires at least one defining attribute");
+      throw new Error('VariantKey requires at least one defining attribute');
     }
 
     const value = attributes
       .filter((a) => a.key.trim() && a.value.trim())
       .sort((a, b) => a.key.localeCompare(b.key))
-      .map((a) => a.value.toLowerCase().trim().replace(/\s+/g, "-"))
-      .join("-");
+      .map((a) => a.value.toLowerCase().trim().replace(/\s+/g, '-'))
+      .join('-');
 
     if (!value) {
-      throw new Error("VariantKey could not be built — all attribute values were empty");
+      throw new Error('VariantKey could not be built — all attribute values were empty');
     }
 
     return new VariantKey(value);
@@ -57,7 +57,7 @@ export class VariantKey {
    */
   static fromString(value: string): VariantKey {
     if (!value.trim()) {
-      throw new Error("VariantKey value cannot be empty");
+      throw new Error('VariantKey value cannot be empty');
     }
     return new VariantKey(value);
   }

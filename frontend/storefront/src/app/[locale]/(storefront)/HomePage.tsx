@@ -1,13 +1,13 @@
-import { Suspense } from "react";
+import { Suspense } from 'react';
 
 // Sub-components
-import { HeroSection } from "./_components/home/HeroSection";
-import { HowItWorks } from "./_components/home/HowItWorks";
-import { CollectionsGrid } from "./_components/home/CollectionsGrid";
-import { NewArrivals } from "./_components/home/NewArrivals";
-import { SchoolBanner } from "./_components/home/SchoolBanner";
-import { NewsletterSection } from "./_components/home/NewsletterSection";
-import Boundary from "@lib/internal/Boundary";
+import { HeroSection } from './_components/home/HeroSection';
+import { HowItWorks } from './_components/home/HowItWorks';
+import { CollectionsGrid } from './_components/home/CollectionsGrid';
+import { NewArrivals } from './_components/home/NewArrivals';
+import { SchoolBanner } from './_components/home/SchoolBanner';
+import { NewsletterSection } from './_components/home/NewsletterSection';
+import Boundary from '@lib/internal/Boundary';
 
 interface HomePageProps {
   language?: string;
@@ -23,7 +23,7 @@ interface HomePageProps {
  *
  * Dynamic holes (currently none) would be wrapped in `<Suspense>` below.
  */
-export default async function HomePage({ language = "en" }: HomePageProps) {
+export default async function HomePage({ language = 'en' }: HomePageProps) {
   return (
     <div className="flex min-h-screen w-full flex-col overflow-x-hidden bg-background">
       {/* Pure static — no data, renders at build time */}

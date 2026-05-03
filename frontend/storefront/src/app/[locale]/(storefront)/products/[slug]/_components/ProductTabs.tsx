@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@findeg/ui";
-import { ProductReviews } from "./ProductReviews";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@findeg/ui';
+import { ProductReviews } from './ProductReviews';
 
 interface ProductTabsProps {
   product: any;

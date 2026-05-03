@@ -1,5 +1,5 @@
-export * from "./interfaces";
-export * from "./services";
+export * from './interfaces';
+export * from './services';
 
 // NOTE: Action functions (createProduct, createBrand, etc.) are NOT exported because they:
 // 1. Use old ServiceContainer pattern with @ imports that break Turbopack bundling

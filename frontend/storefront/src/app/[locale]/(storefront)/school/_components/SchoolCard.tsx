@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { useTranslations } from "next-intl";
-import { MapPin, School, GraduationCap, ChevronRight, CheckCircle2, History } from "lucide-react";
-import { Card, CardContent, CardFooter } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Link } from "@i18n/navigation";
-import { SchoolSearchResult } from "@findeg/backend/features/school/application/interfaces/ISchoolDirectoryService";
+import { useTranslations } from 'next-intl';
+import { MapPin, School, GraduationCap, ChevronRight, CheckCircle2, History } from 'lucide-react';
+import { Card, CardContent, CardFooter } from '@findeg/ui';
+import { Badge } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { Link } from '@i18n/navigation';
+import { SchoolSearchResult } from '@findeg/backend/features/school/application/interfaces/ISchoolDirectoryService';
 
 interface SchoolCardProps {
   school: SchoolSearchResult;
@@ -18,9 +18,9 @@ interface SchoolCardProps {
  * Displays school summary in the directory search results.
  */
 export function SchoolCard({ school }: SchoolCardProps) {
-  const t = useTranslations("School.Directory");
+  const t = useTranslations('School.Directory');
 
-  const slug = school.schoolName.toLowerCase().replace(/\s+/g, "-");
+  const slug = school.schoolName.toLowerCase().replace(/\s+/g, '-');
 
   return (
     <Card className="group hover:border-primary/40 transition-all duration-300 hover:shadow-lg overflow-hidden flex flex-col h-full">
@@ -58,24 +58,24 @@ export function SchoolCard({ school }: SchoolCardProps) {
 
           <div className="grid grid-cols-2 gap-4 pt-2">
             <div className="flex flex-col">
-              <span className="text-xs text-muted-foreground uppercase">{t("gradeCount")}</span>
+              <span className="text-xs text-muted-foreground uppercase">{t('gradeCount')}</span>
               <span className="text-lg font-bold flex items-center gap-1.5">
                 <GraduationCap className="w-4 h-4 text-primary/60" />
                 {school.gradeCount}
               </span>
             </div>
             <div className="flex flex-col">
-              <span className="text-xs text-muted-foreground uppercase">{t("listStatus")}</span>
+              <span className="text-xs text-muted-foreground uppercase">{t('listStatus')}</span>
               <div className="flex items-center gap-1.5 mt-1">
                 {school.hasCurrentLists ? (
                   <Badge className="bg-emerald-50 text-emerald-700 border-emerald-100 hover:bg-emerald-50 gap-1 pr-2">
                     <CheckCircle2 className="w-3.5 h-3.5" />
-                    {t("currentYear")}
+                    {t('currentYear')}
                   </Badge>
                 ) : (
                   <Badge variant="outline" className="text-muted-foreground gap-1 pr-2">
                     <History className="w-3.5 h-3.5" />
-                    {t("lastYear")}
+                    {t('lastYear')}
                   </Badge>
                 )}
               </div>
@@ -87,7 +87,7 @@ export function SchoolCard({ school }: SchoolCardProps) {
       <CardFooter className="p-6 pt-0">
         <Button asChild className="w-full gap-2 group/btn shadow-sm" size="lg">
           <Link href={`/schools/${slug}`}>
-            {t("viewSchool")}
+            {t('viewSchool')}
             <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
           </Link>
         </Button>

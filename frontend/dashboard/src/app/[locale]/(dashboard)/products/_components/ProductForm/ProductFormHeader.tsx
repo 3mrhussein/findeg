@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import React from "react";
-import { useRouter } from "@i18n/navigation";
-import { useTranslations } from "next-intl";
-import { Button } from "@findeg/ui";
-import { ChevronLeft, Save, Globe } from "lucide-react";
-import { Separator } from "@findeg/ui";
+import React from 'react';
+import { useRouter } from '@i18n/navigation';
+import { useTranslations } from 'next-intl';
+import { Button } from '@findeg/ui';
+import { ChevronLeft, Save, Globe } from 'lucide-react';
+import { Separator } from '@findeg/ui';
 
 interface ProductFormHeaderProps {
   isEdit: boolean;
@@ -23,14 +23,14 @@ export function ProductFormHeader({
   onSaveDraft,
   productName,
 }: ProductFormHeaderProps) {
-  const t = useTranslations("Administration.Catalog.Products.Form");
+  const t = useTranslations('Administration.Catalog.Products.Form');
   const router = useRouter();
 
   const displayTitle = isEdit
     ? productName
-      ? `${t("editProduct")} ${productName.length > 40 ? productName.slice(0, 40) + "…" : productName}`
-      : t("editProduct")
-    : t("newProduct");
+      ? `${t('editProduct')} ${productName.length > 40 ? productName.slice(0, 40) + '…' : productName}`
+      : t('editProduct')
+    : t('newProduct');
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -46,11 +46,11 @@ export function ProductFormHeader({
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" disabled={isPending} onClick={onSaveDraft}>
             <Save className="mr-2 h-4 w-4" />
-            {t("saveDraft")}
+            {t('saveDraft')}
           </Button>
           <Button size="sm" type="submit" disabled={isPending}>
             <Globe className="mr-2 h-4 w-4" />
-            {t("publish")}
+            {t('publish')}
           </Button>
         </div>
       </div>

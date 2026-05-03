@@ -1,0 +1,45 @@
+
+> @findeg/backend@0.1.0 lint
+> eslint . --fix
+
+(node:78764) ESLintEnvWarning: /* eslint-env */ comments are no longer recognized when linting with flat config and will be reported as errors as of v10.0.0. Replace them with /* global */ comments or define globals in your config file. See https://eslint.org/docs/latest/use/configure/migration-guide#eslint-env-configuration-comments for details. Found in /Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/scripts/convert-to-json.js at line 1.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/administration/application/queries/__tests__/GetCatalogHealthQuery.test.ts
+  20:10  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  23:10  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/administration/application/services/factory.ts
+  106:10  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/core/application/actions/logging.ts
+  13:70  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/core/application/types/__tests__/ServiceResult.test.ts
+  64:35  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/core/infrastructure/auth/__tests__/CookieSessionProvider.test.ts
+   27:47  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   56:50  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   89:25  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  268:55  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  269:63  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  271:38  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/core/infrastructure/persistence/BaseDrizzleRepository.ts
+  45:23  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/school/application/services/ParentListService.ts
+  118:6  error  Parsing error: Property assignment expected
+
+/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/features/school/application/services/SchoolDirectoryService.ts
+  2:23  error  'SchoolList' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/index.ts
+  44:51  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/faraga4/Desktop/Moro/Personal/Projects/findeg.stationary/backend/src/lib/webmcp/webmcp-tools.ts
+  10:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+✖ 16 problems (2 errors, 14 warnings)
+

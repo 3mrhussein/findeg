@@ -1,7 +1,7 @@
-import { getSession } from "./session";
-import { redirect } from "@i18n/navigation";
-import { adminSession } from "@findeg/backend/features/core";
-import type { SessionPayload, Locale } from "@findeg/backend/features/core";
+import { getSession } from './session';
+import { redirect } from '@i18n/navigation';
+import { adminSession } from '@findeg/backend/features/core';
+import type { SessionPayload, Locale } from '@findeg/backend/features/core';
 
 /**
  * Require any authenticated user — redirects to /login if not.
@@ -10,7 +10,7 @@ import type { SessionPayload, Locale } from "@findeg/backend/features/core";
 export async function requireAuth(locale: string): Promise<SessionPayload> {
   const session = await getSession();
   if (!session) {
-    redirect({ href: "/login", locale: locale as any });
+    redirect({ href: '/login', locale: locale as any });
   }
   return session!;
 }
@@ -22,7 +22,7 @@ export async function requireAuth(locale: string): Promise<SessionPayload> {
 export async function requireAdmin(locale: string): Promise<SessionPayload> {
   const session = await getSession();
   if (!session || !adminSession(session)) {
-    redirect({ href: "/admin/login", locale: locale as any });
+    redirect({ href: '/admin/login', locale: locale as any });
   }
   return session!;
 }
@@ -35,9 +35,9 @@ export async function redirectIfAuthenticated(locale: string): Promise<void> {
   const session = await getSession();
   if (session) {
     if (adminSession(session)) {
-      redirect({ href: "/admin", locale: locale as any });
+      redirect({ href: '/admin', locale: locale as any });
     } else {
-      redirect({ href: "/dashboard", locale: locale as any });
+      redirect({ href: '/dashboard', locale: locale as any });
     }
   }
 }
@@ -63,7 +63,7 @@ export async function requirePermission(
   const session = await requireAdmin(locale);
 
   // System admins bypass checks
-  if (session.activeRoleIds?.includes("system_admin")) {
+  if (session.activeRoleIds?.includes('system_admin')) {
     return session;
   }
 
@@ -77,7 +77,7 @@ export async function requirePermission(
   }
 
   if (!allowed) {
-    redirect({ href: "/dashboard", locale: locale as any });
+    redirect({ href: '/dashboard', locale: locale as any });
   }
 
   return session;

@@ -1,4 +1,4 @@
-import { and, eq, inArray, sql, asc, desc, ilike, or, count } from "drizzle-orm";
+import { and, eq, inArray, sql, asc, desc, ilike, or, count, InferSelectModel, InferInsertModel } from 'drizzle-orm';
 import {
   products,
   productVariants,
@@ -8,21 +8,23 @@ import {
   productTags,
   attributeDefinitions,
   variantAttributes,
-} from "@findeg/db/schema";
-import { type Product } from "../../domain/entities/Product";
-import { type Variant } from "../../domain/entities/Variant";
+} from '@findeg/db/schema';
+import { type Product } from '../../domain/entities/Product';
+import { type Variant } from '../../domain/entities/Variant';
 import {
   type IProductRepository,
   type ProductFilters,
-} from "../../application/interfaces/IProductRepository";
+} from '../../application/interfaces/IProductRepository';
 import {
   type TranslationMap,
   type Locale,
   parse,
   asTranslationMap,
   pick,
-} from "../../../core/domain/value-objects";
-import { BaseDrizzleRepository } from "../../../core/infrastructure/persistence/BaseDrizzleRepository";
+} from '../../../core/domain/value-objects';
+import { BaseDrizzleRepository } from '../../../core/infrastructure/persistence/BaseDrizzleRepository';
+import { type Tag } from '../../domain/entities/Tag';
+import { type ProductAttributeValue } from '../../domain/entities/AttributeDefinition';
 
 /**
  * Drizzle Product Repository
@@ -38,13 +40,13 @@ export class DrizzleProductRepository
   }
 
   protected mapToDomain(
-    dbProduct: any,
+    dbProduct: InferSelectModel<typeof products>,
     variants: Variant[] = [],
     categoryName?: string,
     brandName?: string,
-    tags: any[] = [],
-    attributes: any[] = [],
-    language: Locale = "en",
+    tags: Tag[] = [],
+    attributes: ProductAttributeValue[] = [],
+    language: Locale = 'en',
   ): Product {
     const nameMap = asTranslationMap(dbProduct.localizedName);
     const descMap = asTranslationMap(dbProduct.localizedDescription);
@@ -52,17 +54,17 @@ export class DrizzleProductRepository
 
     return {
       id: dbProduct.id,
-      sku: dbProduct.sku || "",
+      sku: dbProduct.sku || '',
       isActive: dbProduct.isActive,
-      brandId: dbProduct.brandId,
-      categoryId: dbProduct.categoryId,
+      brandId: dbProduct.brandId ?? undefined,
+      categoryId: dbProduct.categoryId ?? undefined,
       brandName,
       categoryName,
       // Resolved strings
       name: pick(nameMap, language),
       description: pick(descMap, language),
       longDescription: pick(longDescMap, language),
-      slug: dbProduct.slug || "",
+      slug: dbProduct.slug || '',
       // Localized JSONB
       localizedName: nameMap,
       localizedDescription: descMap,
@@ -88,10 +90,10 @@ export class DrizzleProductRepository
       .orderBy(asc(products.id));
 
     if (results.length === 0) return [];
-    const productIds = results.map((r: any) => r.product.id);
+    const productIds = results.map((r) => r.product.id);
     const variantsMap = await this.getHydratedVariants(productIds, lang);
 
-    return results.map((row: any) => {
+    return results.map((row) => {
       const catName = pick(asTranslationMap(row.category?.localizedName), lang);
       return this.mapToDomain(
         row.product,
@@ -121,7 +123,7 @@ export class DrizzleProductRepository
     const attrs = await this.getProductAttributes(id, lang);
 
     const catNameMap = (results[0].category?.localizedName as Record<string, string>) || {};
-    const catName = catNameMap[lang] || catNameMap["en"];
+    const catName = catNameMap[lang] || catNameMap['en'];
 
     return this.mapToDomain(
       results[0].product,
@@ -154,7 +156,7 @@ export class DrizzleProductRepository
       .orderBy(desc(products.createdAt))
       .limit(limit);
     if (results.length === 0) return [];
-    const all = await Promise.all(results.map((r: any) => this.getById(r.id, lang)));
+    const all = await Promise.all(results.map((r) => this.getById(r.id, lang)));
     return all.filter((p): p is Product => p !== null);
   }
 
@@ -175,7 +177,7 @@ export class DrizzleProductRepository
       .limit(20);
 
     if (results.length === 0) return [];
-    const all = await Promise.all(results.map((r: any) => this.getById(r.id, lang)));
+    const all = await Promise.all(results.map((r) => this.getById(r.id, lang)));
     return all.filter((p): p is Product => p !== null);
   }
 
@@ -187,7 +189,7 @@ export class DrizzleProductRepository
       .where(eq(products.categoryId, categoryId))
       .limit(50);
     if (results.length === 0) return [];
-    const all = await Promise.all(results.map((r: any) => this.getById(r.id, lang)));
+    const all = await Promise.all(results.map((r) => this.getById(r.id, lang)));
     return all.filter((p): p is Product => p !== null);
   }
 
@@ -199,7 +201,7 @@ export class DrizzleProductRepository
       .where(eq(products.brandId, brandId))
       .limit(50);
     if (results.length === 0) return [];
-    const all = await Promise.all(results.map((r: any) => this.getById(r.id, lang)));
+    const all = await Promise.all(results.map((r) => this.getById(r.id, lang)));
     return all.filter((p): p is Product => p !== null);
   }
 
@@ -226,11 +228,11 @@ export class DrizzleProductRepository
       .offset(filters.offset || 0)
       .limit(filters.limit || 20)
       .orderBy(desc(products.id));
-    const productIds = data.map((r: any) => r.product.id);
+    const productIds = data.map((r) => r.product.id);
     const variantsMap = await this.getHydratedVariants(productIds, lang);
     return {
       total,
-      products: data.map((row: any) =>
+      products: data.map((row) =>
         this.mapToDomain(
           row.product,
           variantsMap[row.product.id] || [],
@@ -253,7 +255,7 @@ export class DrizzleProductRepository
   }
 
   // Administrative Operations
-  async create(input: any): Promise<Product> {
+  async create(input: InferInsertModel<typeof products>): Promise<Product> {
     const [newProduct] = await this.db
       .insert(products)
       .values({
@@ -270,7 +272,7 @@ export class DrizzleProductRepository
     return this.getById(newProduct.id) as Promise<Product>;
   }
 
-  async update(id: number, input: any): Promise<Product> {
+  async update(id: number, input: Partial<InferInsertModel<typeof products>>): Promise<Product> {
     await this.db.update(products).set(input).where(eq(products.id, id));
     return this.getById(id) as Promise<Product>;
   }
@@ -282,7 +284,7 @@ export class DrizzleProductRepository
   // Hydration Helpers
   private async getHydratedVariants(
     productIds: number[],
-    language: Locale,
+    _language: Locale,
   ): Promise<Record<number, Variant[]>> {
     if (productIds.length === 0) return {};
     const rows = await this.db
@@ -294,7 +296,7 @@ export class DrizzleProductRepository
     for (const row of rows) {
       const pid = row.variant.productId;
       if (!map[pid]) map[pid] = [];
-      const labelMap = (row.variant.localizedLabel as TranslationMap) || { en: "", ar: "" };
+      const labelMap = (row.variant.localizedLabel as TranslationMap) || { en: '', ar: '' };
       map[pid].push({
         id: row.variant.id,
         productId: pid,
@@ -316,26 +318,44 @@ export class DrizzleProductRepository
     return map;
   }
 
-  private async getProductTags(productId: number, language: Locale): Promise<any[]> {
-    return this.db
-      .select({ id: tags.id, key: tags.key, slug: tags.slug })
+  private async getProductTags(productId: number, _language: Locale): Promise<Tag[]> {
+    const results = await this.db
+      .select({ tag: tags })
       .from(productTags)
       .innerJoin(tags, eq(tags.id, productTags.tagId))
       .where(eq(productTags.productId, productId));
+    return results.map((r) => r.tag as Tag);
   }
 
-  private async getProductAttributes(productId: number, language: Locale): Promise<any[]> {
-    return this.db
-      .select({ attributeId: attributeDefinitions.id, key: attributeDefinitions.key })
+  private async getProductAttributes(
+    productId: number,
+    _language: Locale,
+  ): Promise<ProductAttributeValue[]> {
+    const results = await this.db
+      .select({
+        attributeId: attributeDefinitions.id,
+        key: attributeDefinitions.key,
+        valueText: variantAttributes.valueText,
+        valueNum: variantAttributes.valueNum,
+        valueBool: variantAttributes.valueBool,
+      })
       .from(variantAttributes)
       .innerJoin(attributeDefinitions, eq(attributeDefinitions.id, variantAttributes.attributeId))
       .innerJoin(productVariants, eq(productVariants.id, variantAttributes.variantId))
       .where(eq(productVariants.productId, productId));
+
+    return results.map((r) => ({
+      attributeId: r.attributeId,
+      key: r.key,
+      valueText: r.valueText || undefined,
+      valueNum: r.valueNum ? Number(r.valueNum) : undefined,
+      valueBool: r.valueBool ?? undefined,
+    })) as ProductAttributeValue[];
   }
 
-  async getLowStockProducts(threshold?: number, language: Locale = "ar"): Promise<Product[]> {
+  async getLowStockProducts(threshold?: number, language: Locale = 'ar'): Promise<Product[]> {
     const data = await this.db.select().from(products).limit(5);
-    const all = await Promise.all(data.map((p: any) => this.getById(p.id, language)));
+    const all = await Promise.all(data.map((p) => this.getById(p.id, language)));
     return all.filter((p): p is Product => p !== null);
   }
 

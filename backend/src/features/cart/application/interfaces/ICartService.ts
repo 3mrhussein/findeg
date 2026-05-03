@@ -8,8 +8,8 @@ import {
   Price,
   CustomerGroup,
   UomCode,
-} from "@findeg/backend/features/core/domain/types/common";
-import { CartItem } from "../../domain/entities/Cart";
+} from '@findeg/backend/features/core/domain/types/common';
+import { CartItem } from '../../domain/entities/Cart';
 
 export interface ICartService {
   /**

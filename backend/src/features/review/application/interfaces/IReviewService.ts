@@ -1,6 +1,6 @@
-import type { ID, Rating } from "@findeg/backend/features/core/domain/types/common";
-import type { Review } from "../../domain/entities/Review";
-import type { ProductReviewSummary } from "./IReviewRepository";
+import type { ID, Rating } from '@findeg/backend/features/core/domain/types/common';
+import type { Review } from '../../domain/entities/Review';
+import type { ProductReviewSummary } from './IReviewRepository';
 
 export interface ProductReviewQuery {
   page?: number;

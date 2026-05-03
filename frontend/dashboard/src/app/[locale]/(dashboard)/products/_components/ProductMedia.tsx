@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import Image from "next/image";
-import { useFormContext } from "react-hook-form";
-import { useDropzone } from "react-dropzone";
+import React, { useState } from 'react';
+import Image from 'next/image';
+import { useFormContext } from 'react-hook-form';
+import { useDropzone } from 'react-dropzone';
 import {
   DndContext,
   closestCenter,
@@ -12,18 +12,18 @@ import {
   useSensor,
   useSensors,
   DragEndEvent,
-} from "@dnd-kit/core";
+} from '@dnd-kit/core';
 import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   useSortable,
   horizontalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Image as ImageIcon, X, GripVertical, UploadCloud } from "lucide-react";
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { Image as ImageIcon, X, GripVertical, UploadCloud } from 'lucide-react';
 
 /**
  * Sortable Image Item Component
@@ -80,7 +80,7 @@ function SortableImageItem({
 function MediaUploader({ field, sensors }: { field: any; sensors: any }) {
   const images = field.value
     ? (field.value as string)
-        .split(",")
+        .split(',')
         .map((s: string) => s.trim())
         .filter(Boolean)
     : [];
@@ -90,12 +90,12 @@ function MediaUploader({ field, sensors }: { field: any; sensors: any }) {
       () =>
         `https://placehold.co/400x400/png?text=New+Img+${Math.random().toString(36).substring(7)}`,
     );
-    field.onChange([...images, ...newImages].join(", "));
+    field.onChange([...images, ...newImages].join(', '));
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: { "image/jpeg": [], "image/png": [], "image/webp": [] },
+    accept: { 'image/jpeg': [], 'image/png': [], 'image/webp': [] },
   });
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -104,12 +104,12 @@ function MediaUploader({ field, sensors }: { field: any; sensors: any }) {
       const oldIndex = images.indexOf(active.id as string);
       const newIndex = images.indexOf(over.id as string);
       const newOrder = arrayMove(images, oldIndex, newIndex);
-      field.onChange(newOrder.join(", "));
+      field.onChange(newOrder.join(', '));
     }
   };
 
   const handleRemove = (urlToRemove: string) => {
-    field.onChange(images.filter((url) => url !== urlToRemove).join(", "));
+    field.onChange(images.filter((url) => url !== urlToRemove).join(', '));
   };
 
   return (
@@ -149,7 +149,7 @@ function MediaUploader({ field, sensors }: { field: any; sensors: any }) {
           <div
             {...getRootProps()}
             className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
-              isDragActive ? "border-primary bg-primary/5" : "border-border hover:border-primary/50"
+              isDragActive ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'
             }`}
           >
             <input {...getInputProps()} />
@@ -157,8 +157,8 @@ function MediaUploader({ field, sensors }: { field: any; sensors: any }) {
               <UploadCloud className="w-8 h-8" />
               <p className="text-sm font-medium">
                 {isDragActive
-                  ? "Drop the files here..."
-                  : "Drag & drop images here, or click to select files"}
+                  ? 'Drop the files here...'
+                  : 'Drag & drop images here, or click to select files'}
               </p>
               <p className="text-xs">Supports JPG, PNG and WEBP (max 2MB)</p>
             </div>

@@ -5,7 +5,7 @@
  * Used with Next.js 16 PPR and Suspense boundaries.
  */
 
-import { ProductListSkeleton } from "@components/skeletons";
+import { ProductListSkeleton } from '@components/skeletons';
 
 export default function ProductsLoading() {
   return <ProductListSkeleton />;

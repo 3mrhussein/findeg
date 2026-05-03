@@ -1,6 +1,6 @@
-import { ICollectionRepository } from "../interfaces/ICollectionRepository";
-import { ICollectionService } from "../interfaces/ICollectionService";
-import { Collection } from "../../domain/entities/Collection";
+import { ICollectionRepository } from '../interfaces/ICollectionRepository';
+import { ICollectionService } from '../interfaces/ICollectionService';
+import { Collection } from '../../domain/entities/Collection';
 
 export class CollectionService implements ICollectionService {
   constructor(private collectionRepository: ICollectionRepository) {}

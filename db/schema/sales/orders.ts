@@ -14,13 +14,11 @@ import { users } from "../identity/users";
 import { products } from "../catalog/products";
 import { productVariants } from "../catalog/product-variants";
 import { cartKits } from "./cart-kits";
-import type { ShippingAddress } from "../../../backend/src/features/order/domain/value-objects/ShippingAddress";
-import type { VariantSnapshot } from "../../../backend/src/features/order/domain/value-objects/VariantSnapshot";
+import { ShippingAddress, VariantSnapshot, CurrencyCode } from "../../types";
 import { orderStatusEnum, paymentStatusEnum, paymentMethodEnum } from "../enums";
-import type { CurrencyCode } from "../../../backend/src/features/core/domain/types/common";
 
 /** Re-export for consumers */
-export type { ShippingAddress as ShippingAddressSnapshot } from "../../../backend/src/features/order/domain/value-objects/ShippingAddress";
+export type ShippingAddressSnapshot = ShippingAddress;
 
 /**
  * Orders Table

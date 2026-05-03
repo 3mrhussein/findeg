@@ -5,20 +5,20 @@
  * Apps call this factory to get services, then wrap service calls in "use cache" directives.
  */
 
-import { DrizzleUserRepository } from "../../infrastructure/persistence/DrizzleUserRepository";
-import { AuthService } from "./AuthService";
-import { PermissionService } from "./PermissionService";
-import { JWTService } from "./JWTService";
-import { AdminUserService } from "./AdminUserService";
-import { AdminRoleService } from "./AdminRoleService";
-import { UserService } from "./UserService";
+import { DrizzleUserRepository } from '../../infrastructure/persistence/DrizzleUserRepository';
+import { AuthService } from './AuthService';
+import { PermissionService } from './PermissionService';
+import { JWTService } from './JWTService';
+import { AdminUserService } from './AdminUserService';
+import { AdminRoleService } from './AdminRoleService';
+import { UserService } from './UserService';
 
-import { IUserRepository } from "../interfaces/IUserRepository";
-import { IAuthService } from "../interfaces/IAuthService";
-import { IPermissionService } from "../interfaces/IPermissionService";
-import { IJWTService } from "./JWTService";
-import { IAdminUserService } from "../interfaces/IAdminUserService";
-import { IAdminRoleService } from "../interfaces/IAdminRoleService";
+import { IUserRepository } from '../interfaces/IUserRepository';
+import { IAuthService } from '../interfaces/IAuthService';
+import { IPermissionService } from '../interfaces/IPermissionService';
+import { IJWTService } from './JWTService';
+import { IAdminUserService } from '../interfaces/IAdminUserService';
+import { IAdminRoleService } from '../interfaces/IAdminRoleService';
 
 export interface IdentityServices {
   auth: IAuthService;

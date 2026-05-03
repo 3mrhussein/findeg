@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React from "react";
-import { useTranslations } from "next-intl";
+import React from 'react';
+import { useTranslations } from 'next-intl';
 
 interface DeviceData {
   name: string;
@@ -89,5 +89,5 @@ interface DeviceUsageChartProps {
  */
 export const DeviceUsageChart: React.FC<DeviceUsageChartProps> = ({ data }) => {
   const t = useTranslations();
-  return <DeviceUsageChartUI data={data} title={t("Pages.Dashboard.DeviceUsage")} />;
+  return <DeviceUsageChartUI data={data} title={t('Pages.Dashboard.DeviceUsage')} />;
 };

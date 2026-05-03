@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useEffect, useMemo, useState } from "react";
-import Image from "next/image";
+import { useEffect, useMemo, useState } from 'react';
+import Image from 'next/image';
 import {
   Check,
   Heart,
@@ -12,35 +12,35 @@ import {
   ShoppingCart,
   Star,
   Truck,
-} from "lucide-react";
-import { useLocale, useTranslations } from "next-intl";
-import { Link } from "@i18n/navigation";
-import { Button } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
-import { IconTooltip } from "@findeg/ui";
-import { useCart } from "@hooks/useCart";
-import { useUser } from "@hooks/useUser";
-import { cn } from "@lib/utils";
+} from 'lucide-react';
+import { useLocale, useTranslations } from 'next-intl';
+import { Link } from '@i18n/navigation';
+import { Button } from '@findeg/ui';
+import { Badge } from '@findeg/ui';
+import { IconTooltip } from '@findeg/ui';
+import { useCart } from '@hooks/useCart';
+import { useUser } from '@hooks/useUser';
+import { cn } from '@lib/utils';
 import type {
   Product,
   Variant,
   CustomerGroup,
   ProductPdpViewModel,
   UomCode as UoMCode,
-} from "@/data/catalog/types";
-import { ImageGallery } from "./ImageGallery";
-import { ProductTabsSection } from "./ProductTabsSection";
-import { RelatedProductsRail } from "./RelatedProductsRail";
-import { RecentlyViewedRail, type RecentlyViewedItem } from "./RecentlyViewedRail";
-import { getProductPricingAction } from "@/app/[locale]/(storefront)/_actions/catalog";
+} from '@/data/catalog/types';
+import { ImageGallery } from './ImageGallery';
+import { ProductTabsSection } from './ProductTabsSection';
+import { RelatedProductsRail } from './RelatedProductsRail';
+import { RecentlyViewedRail, type RecentlyViewedItem } from './RecentlyViewedRail';
+import { getProductPricingAction } from '@/app/[locale]/(storefront)/_actions/catalog';
 
 function getProductStatusBadge({ product, variant, lowStock }: any) {
-  if (lowStock) return { kind: "low-stock" as const };
+  if (lowStock) return { kind: 'low-stock' as const };
   const strike = Number(variant.strikePrice);
   const base = Number(variant.basePrice);
   if (strike && strike > base) {
     const percent = Math.round(((strike - base) / strike) * 100);
-    return { kind: "sale" as const, percent };
+    return { kind: 'sale' as const, percent };
   }
   return null;
 }
@@ -85,13 +85,13 @@ function isCssColorCandidate(value: string): boolean {
 
 function resolveUomLabel(uom: UomOption, locale: string): string {
   const labels: Record<UoMCode, { en: string; ar: string }> = {
-    pcs: { en: "pcs", ar: "قطعة" },
-    pack: { en: "pack", ar: "عبوة" },
-    carton: { en: "carton", ar: "كرتونة" },
+    pcs: { en: 'pcs', ar: 'قطعة' },
+    pack: { en: 'pack', ar: 'عبوة' },
+    carton: { en: 'carton', ar: 'كرتونة' },
   };
 
   const label = labels[uom.code];
-  return locale === "ar" ? label.ar : label.en;
+  return locale === 'ar' ? label.ar : label.en;
 }
 
 function resolveVariantStock(product: Product, variant?: Variant) {
@@ -134,7 +134,7 @@ function getFallbackUomPrice(
   if (exact) return exact.unitPrice;
 
   const b2c = variant.priceLists?.find(
-    (entry) => entry.customerGroup === "public_b2c" && entry.uomCode === uom.code,
+    (entry) => entry.customerGroup === 'public_b2c' && entry.uomCode === uom.code,
   );
   if (b2c) return Number(b2c.unitPrice);
 
@@ -145,14 +145,14 @@ function getFallbackUomPrice(
  * Interactive PDP content.
  */
 export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
-  const t = useTranslations("Pages.ProductDetail");
-  const tCard = useTranslations("Pages.ProductCard");
+  const t = useTranslations('Pages.ProductDetail');
+  const tCard = useTranslations('Pages.ProductCard');
   const locale = useLocale();
   const egpFormatter = useMemo(
     () =>
-      new Intl.NumberFormat(locale === "ar" ? "ar-EG" : "en-EG", {
-        style: "currency",
-        currency: "EGP",
+      new Intl.NumberFormat(locale === 'ar' ? 'ar-EG' : 'en-EG', {
+        style: 'currency',
+        currency: 'EGP',
       }),
     [locale],
   );
@@ -170,7 +170,7 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
 
   const selectedVariant =
     variants.find((variant: any) => variant.id === selectedVariantId) ||
-    variants.find((variant: any) => variant.variantKey === "default") ||
+    variants.find((variant: any) => variant.variantKey === 'default') ||
     variants[0];
 
   const [selectedAttributes, setSelectedAttributes] = useState<Record<string, string>>(() =>
@@ -186,8 +186,8 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
     if (enabled.length === 0) {
       return [
         {
-          code: "pcs",
-          label: "pcs",
+          code: 'pcs',
+          label: 'pcs',
           factorToBase: 1,
         },
       ];
@@ -208,7 +208,7 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
 
   const [priceState, setPriceState] = useState<PriceState>({
     unitPrice: Number(selectedVariant?.basePrice || 0),
-    currency: "EGP",
+    currency: 'EGP',
     loading: false,
   });
 
@@ -237,7 +237,7 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
         if (json?.success && json.data) {
           setPriceState({
             unitPrice: Number(json.data.unitPrice || selectedVariant.basePrice),
-            currency: json.data.currency || "EGP",
+            currency: json.data.currency || 'EGP',
             loading: false,
           });
           return;
@@ -249,7 +249,7 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
             selectedUom,
             vm.customerGroup,
           ),
-          currency: "EGP",
+          currency: 'EGP',
           loading: false,
         });
       })
@@ -257,7 +257,7 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
         if (!active) return;
         setPriceState({
           unitPrice: getFallbackUomPrice(selectedVariant, selectedUom, vm.customerGroup),
-          currency: "EGP",
+          currency: 'EGP',
           loading: false,
         });
       });
@@ -289,7 +289,7 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
   const [quantity, setQuantity] = useState(1);
 
   const [isAdded, setIsAdded] = useState(false);
-  const [activeTab, setActiveTab] = useState("description");
+  const [activeTab, setActiveTab] = useState('description');
 
   const onAddToCart = () => {
     if (!selectedVariant || !selectedUom || !stockSnapshot.inStock) return;
@@ -300,7 +300,7 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
     });
 
     setIsAdded(true);
-    window.dispatchEvent(new CustomEvent("findeg:cart-added", { detail: { count: quantity } }));
+    window.dispatchEvent(new CustomEvent('findeg:cart-added', { detail: { count: quantity } }));
     window.setTimeout(() => setIsAdded(false), 1500);
   };
 
@@ -338,47 +338,47 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
 
     if (!resolved) return null;
 
-    if (resolved.kind === "sale") {
+    if (resolved.kind === 'sale') {
       return {
-        text: tCard("SaleBadge", { percent: resolved.percent || 0 }),
-        className: "bg-amber-500 text-white",
+        text: tCard('SaleBadge', { percent: resolved.percent || 0 }),
+        className: 'bg-amber-500 text-white',
       };
     }
-    if (resolved.kind === "low-stock") {
+    if (resolved.kind === 'low-stock') {
       return {
-        text: tCard("LowStockBadge"),
-        className: "bg-orange-500 text-white",
+        text: tCard('LowStockBadge'),
+        className: 'bg-orange-500 text-white',
       };
     }
 
     return {
-      text: tCard("NewBadge"),
-      className: "bg-emerald-600 text-white",
+      text: tCard('NewBadge'),
+      className: 'bg-emerald-600 text-white',
     };
   }, [selectedVariant, stockSnapshot.lowStock, tCard, vm.product]);
 
   const stockText = !stockSnapshot.inStock
-    ? tCard("OutOfStock")
+    ? tCard('OutOfStock')
     : stockSnapshot.lowStock
-      ? tCard("OnlyLeft", { count: stockSnapshot.availableUnits })
-      : tCard("InStock");
+      ? tCard('OnlyLeft', { count: stockSnapshot.availableUnits })
+      : tCard('InStock');
 
   const stockClass = !stockSnapshot.inStock
-    ? "text-red-600"
+    ? 'text-red-600'
     : stockSnapshot.lowStock
-      ? "text-orange-600"
-      : "text-emerald-600";
+      ? 'text-orange-600'
+      : 'text-emerald-600';
 
   const [recentlyViewed, setRecentlyViewed] = useState<RecentlyViewedItem[]>(() => {
-    if (typeof window === "undefined") return [];
-    const raw = window.localStorage.getItem("findeg_recently_viewed");
+    if (typeof window === 'undefined') return [];
+    const raw = window.localStorage.getItem('findeg_recently_viewed');
     return raw ? (JSON.parse(raw) as RecentlyViewedItem[]) : [];
   });
 
   useEffect(() => {
     if (!selectedVariant) return;
 
-    const storageKey = "findeg_recently_viewed";
+    const storageKey = 'findeg_recently_viewed';
     const current: RecentlyViewedItem = {
       id: vm.product.id,
       slug: vm.canonicalSlug,
@@ -401,8 +401,8 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
     Promise.resolve().then(() => {
       setRecentlyViewed((prev) => {
         const filtered = next.filter((item) => item.id !== current.id);
-        const prevIds = prev.map((i) => i.id).join(",");
-        const nextIds = filtered.map((i) => i.id).join(",");
+        const prevIds = prev.map((i) => i.id).join(',');
+        const nextIds = filtered.map((i) => i.id).join(',');
         if (prevIds === nextIds) return prev;
         return filtered;
       });
@@ -450,8 +450,8 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
   };
 
   const onReviewsClick = () => {
-    setActiveTab("reviews");
-    document.getElementById("pdp-tabs")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setActiveTab('reviews');
+    document.getElementById('pdp-tabs')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   return (
@@ -498,14 +498,14 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
 
           <details className="rounded-xl border bg-card px-4 py-3 text-sm">
             <summary className="cursor-pointer font-medium text-foreground">
-              {t("SkuDetails")}
+              {t('SkuDetails')}
             </summary>
             <div className="mt-2 space-y-1 text-muted-foreground">
               <div>
-                {t("SkuLabel")}: {selectedVariant?.sku || "-"}
+                {t('SkuLabel')}: {selectedVariant?.sku || '-'}
               </div>
               <div>
-                {t("BarcodeLabel")}: {selectedVariant?.barcode || "-"}
+                {t('BarcodeLabel')}: {selectedVariant?.barcode || '-'}
               </div>
             </div>
           </details>
@@ -514,8 +514,8 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
             <div className="flex flex-wrap items-center gap-2">
               <span
                 className={cn(
-                  "text-3xl font-black",
-                  priceState.loading ? "opacity-60" : "text-primary",
+                  'text-3xl font-black',
+                  priceState.loading ? 'opacity-60' : 'text-primary',
                 )}
               >
                 {egpFormatter.format(priceState.unitPrice || 0)}
@@ -529,7 +529,7 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
                 </span>
               ) : null}
 
-              {badge?.text?.includes("SALE") || badge?.text?.includes("خصم") ? (
+              {badge?.text?.includes('SALE') || badge?.text?.includes('خصم') ? (
                 <Badge className="bg-amber-500 text-white">{badge.text}</Badge>
               ) : null}
             </div>
@@ -541,22 +541,22 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
                   type="button"
                   onClick={() => setSelectedUomCode(uom.code)}
                   className={cn(
-                    "inline-flex items-center gap-1 rounded-full border px-3 py-1 text-sm font-medium",
+                    'inline-flex items-center gap-1 rounded-full border px-3 py-1 text-sm font-medium',
                     selectedUom?.code === uom.code
-                      ? "border-primary bg-primary/10 text-primary"
-                      : "border-border text-muted-foreground hover:text-foreground",
+                      ? 'border-primary bg-primary/10 text-primary'
+                      : 'border-border text-muted-foreground hover:text-foreground',
                   )}
                 >
                   <span>{resolveUomLabel(uom, locale)}</span>
                   {bestValueCode === uom.code ? (
-                    <Badge variant="outline">{t("BestValue")}</Badge>
+                    <Badge variant="outline">{t('BestValue')}</Badge>
                   ) : null}
                 </button>
               ))}
             </div>
 
-            {vm.customerGroup === "school_b2b" ? (
-              <p className="mt-3 text-sm text-emerald-600">🏫 {t("SchoolPriceApplied")}</p>
+            {vm.customerGroup === 'school_b2b' ? (
+              <p className="mt-3 text-sm text-emerald-600">🏫 {t('SchoolPriceApplied')}</p>
             ) : null}
           </div>
 
@@ -595,12 +595,12 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
                               disabled={!isAvailable}
                               onClick={() => handleSelectAttribute(key, value)}
                               className={cn(
-                                "relative inline-flex items-center justify-center rounded-full border px-3 py-1 text-sm",
-                                isColorKey(key) ? "size-8 p-0" : "",
-                                isSelected ? "ring-2 ring-primary ring-offset-2" : "",
+                                'relative inline-flex items-center justify-center rounded-full border px-3 py-1 text-sm',
+                                isColorKey(key) ? 'size-8 p-0' : '',
+                                isSelected ? 'ring-2 ring-primary ring-offset-2' : '',
                                 !isAvailable
-                                  ? "cursor-not-allowed opacity-40 after:absolute after:inset-0 after:-rotate-45 after:border-t-2 after:border-muted-foreground"
-                                  : "",
+                                  ? 'cursor-not-allowed opacity-40 after:absolute after:inset-0 after:-rotate-45 after:border-t-2 after:border-muted-foreground'
+                                  : '',
                               )}
                               style={colorStyle}
                             >
@@ -619,12 +619,12 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
           <div className="space-y-4 rounded-2xl border bg-card p-4">
             <div className="flex items-center gap-2">
               <div className="inline-flex items-center rounded-full border">
-                <IconTooltip label={t("DecreaseQuantity")} asChild>
+                <IconTooltip label={t('DecreaseQuantity')} asChild>
                   <button
                     type="button"
                     className="inline-flex size-10 items-center justify-center rounded-full hover:bg-muted"
                     onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
-                    aria-label={t("DecreaseQuantity")}
+                    aria-label={t('DecreaseQuantity')}
                   >
                     <Minus className="size-4" />
                   </button>
@@ -645,8 +645,8 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
                 <IconTooltip
                   label={
                     quantity >= maxQuantity
-                      ? t("MaximumQuantity", { count: maxQuantity })
-                      : t("IncreaseQuantity")
+                      ? t('MaximumQuantity', { count: maxQuantity })
+                      : t('IncreaseQuantity')
                   }
                   asChild
                 >
@@ -655,7 +655,7 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
                     className="inline-flex size-10 items-center justify-center rounded-full hover:bg-muted disabled:opacity-50"
                     onClick={() => setQuantity((prev) => Math.min(maxQuantity, prev + 1))}
                     disabled={quantity >= maxQuantity}
-                    aria-label={t("IncreaseQuantity")}
+                    aria-label={t('IncreaseQuantity')}
                   >
                     <span className="text-lg">+</span>
                   </button>
@@ -668,37 +668,37 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
                 disabled={!stockSnapshot.inStock || !selectedVariant}
               >
                 {isAdded ? <Check className="size-4" /> : <ShoppingCart className="size-4" />}
-                {isAdded ? t("Added") : tCard("AddToCartFull")}
+                {isAdded ? t('Added') : tCard('AddToCartFull')}
               </Button>
 
               <Button variant="outline" className="h-11" onClick={onWishlistToggle}>
-                <Heart className={cn("size-4", isWishlisted ? "fill-current text-red-500" : "")} />
-                {t("Wishlist")}
+                <Heart className={cn('size-4', isWishlisted ? 'fill-current text-red-500' : '')} />
+                {t('Wishlist')}
               </Button>
             </div>
 
-            <div className={cn("text-sm font-semibold", stockClass)}>{stockText}</div>
+            <div className={cn('text-sm font-semibold', stockClass)}>{stockText}</div>
           </div>
 
           <div className="rounded-2xl border bg-card p-4 text-sm">
             <div className="flex items-start gap-3 py-1">
               <Truck className="mt-0.5 size-4 text-primary" />
-              <span>{t("DeliveryEstimate")}</span>
+              <span>{t('DeliveryEstimate')}</span>
             </div>
             <div className="flex items-start gap-3 py-1">
               <RefreshCw className="mt-0.5 size-4 text-primary" />
-              <span>{t("ReturnsPolicy")}</span>
+              <span>{t('ReturnsPolicy')}</span>
             </div>
             <div className="flex items-start gap-3 py-1">
               <Shield className="mt-0.5 size-4 text-primary" />
-              <span>{t("SecureCheckout")}</span>
+              <span>{t('SecureCheckout')}</span>
             </div>
             <div className="flex items-start gap-3 py-1">
               <Package className="mt-0.5 size-4 text-primary" />
               <span>
                 {stockSnapshot.inStock
-                  ? t("StockAvailable", { count: stockSnapshot.availableUnits })
-                  : tCard("OutOfStock")}
+                  ? t('StockAvailable', { count: stockSnapshot.availableUnits })
+                  : tCard('OutOfStock')}
               </span>
             </div>
           </div>

@@ -11,12 +11,12 @@
  * if (can('admin.products.write')) { ... }
  */
 
-"use client";
+'use client';
 
-import { useMemo } from "react";
-import { usePermissions } from "@providers/PermissionsProvider";
-import { useSession } from "@providers/SessionProvider";
-import { staffRole, type PortalRole, type PermissionCode } from "@findeg/backend/features/core";
+import { useMemo } from 'react';
+import { usePermissions } from '@providers/PermissionsProvider';
+import { useSession } from '@providers/SessionProvider';
+import { staffRole, type PortalRole, type PermissionCode } from '@findeg/db';
 
 /**
  * Admin-specific permission helper interface

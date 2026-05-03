@@ -1,25 +1,25 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { Search, Bell, Menu, Package, ShoppingCart } from "lucide-react";
-import { Input } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Avatar, AvatarFallback } from "@findeg/ui";
+import * as React from 'react';
+import { Search, Bell, Menu, Package, ShoppingCart } from 'lucide-react';
+import { Input } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { Avatar, AvatarFallback } from '@findeg/ui';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@findeg/ui";
-import { ToggleTheme } from "@findeg/ui";
-import ToggleLanguage from "@components/shared/ToggleLanguage";
-import { WebMCPBadge } from "@components/shared/WebMCPBadge";
-import { cn } from "@lib/utils";
-import { useRouter } from "@i18n/navigation";
-import { useSidebar } from "./SidebarContext";
-import { getAvatarColorClass, getInitials } from "@lib/avatar-color";
-import useSWR from "swr";
+} from '@findeg/ui';
+import { ToggleTheme } from '@findeg/ui';
+import ToggleLanguage from '@components/shared/ToggleLanguage';
+import { WebMCPBadge } from '@components/shared/WebMCPBadge';
+import { cn } from '@lib/utils';
+import { useRouter } from '@i18n/navigation';
+import { useSidebar } from './SidebarContext';
+import { getAvatarColorClass, getInitials } from '@lib/avatar-color';
+import useSWR from 'swr';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -35,14 +35,14 @@ export function AdminHeader({
   userEmail,
   userName,
   notificationCount = 0,
-  locale = "en",
+  locale = 'en',
   onLogout,
 }: AdminHeaderProps) {
   const router = useRouter();
   const { toggleSidebar } = useSidebar();
 
   // Search Palette State
-  const [searchQuery, setSearchQuery] = React.useState("");
+  const [searchQuery, setSearchQuery] = React.useState('');
   const [isSearchOpen, setIsSearchOpen] = React.useState(false);
   const searchInputRef = React.useRef<HTMLInputElement>(null);
   const searchPaletteRef = React.useRef<HTMLDivElement>(null);
@@ -52,7 +52,7 @@ export function AdminHeader({
   const notificationsRef = React.useRef<HTMLDivElement>(null);
 
   const { data: notifData, mutate: mutateNotifs } = useSWR(
-    "/api/v1/notifications/unread-count",
+    '/api/v1/notifications/unread-count',
     fetcher,
     { refreshInterval: 30000 },
   );
@@ -62,17 +62,17 @@ export function AdminHeader({
   // Keyboard shortcut Cmd/Ctrl+K
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
         setIsSearchOpen(true);
       }
-      if (e.key === "Escape") {
+      if (e.key === 'Escape') {
         setIsSearchOpen(false);
         setIsNotificationsOpen(false);
       }
     };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, []);
 
   // Autofocus input when palette opens
@@ -102,34 +102,34 @@ export function AdminHeader({
         setIsNotificationsOpen(false);
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [isSearchOpen, isNotificationsOpen]);
 
   // OS detection for keyboard shortcuts to avoid hydration mismatch
-  const [platformLabel, setPlatformLabel] = React.useState("Ctrl+K");
+  const [platformLabel, setPlatformLabel] = React.useState('Ctrl+K');
 
   React.useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       const nav = navigator as Navigator & { userAgentData?: { platform: string } };
       const isMac =
-        nav.platform.toLowerCase().includes("mac") ||
-        nav.userAgentData?.platform?.toLowerCase().includes("mac");
+        nav.platform.toLowerCase().includes('mac') ||
+        nav.userAgentData?.platform?.toLowerCase().includes('mac');
       Promise.resolve().then(() => {
-        setPlatformLabel(isMac ? "⌘K" : "Ctrl+K");
+        setPlatformLabel(isMac ? '⌘K' : 'Ctrl+K');
       });
     }
   }, []);
 
   const initials = getInitials(userName, userEmail);
-  const avatarBgClass = getAvatarColorClass(userName || userEmail || "A");
+  const avatarBgClass = getAvatarColorClass(userName || userEmail || 'A');
 
-  const displayName = userName || userEmail || "Admin";
-  const displayEmail = userEmail || "";
+  const displayName = userName || userEmail || 'Admin';
+  const displayEmail = userEmail || '';
 
   const handleMarkAllRead = async () => {
     try {
-      await fetch("/api/v1/notifications/mark-read", { method: "POST" });
+      await fetch('/api/v1/notifications/mark-read', { method: 'POST' });
       mutateNotifs({ count: 0 }, false);
     } catch (e) {
       console.error(e);
@@ -255,7 +255,7 @@ export function AdminHeader({
             <Bell className="h-[20px] w-[20px] text-gray-600 dark:text-gray-400" />
             {unreadCount > 0 && (
               <span className="absolute -inset-e-1 -top-1 flex h-[16px] min-w-[16px] items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
-                {unreadCount > 9 ? "9+" : unreadCount}
+                {unreadCount > 9 ? '9+' : unreadCount}
               </span>
             )}
           </button>
@@ -325,7 +325,7 @@ export function AdminHeader({
             <button className="flex h-[32px] w-[32px] items-center justify-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-indigo-400">
               <Avatar className="h-full w-full">
                 <AvatarFallback
-                  className={cn("text-[11px] font-semibold text-white", avatarBgClass)}
+                  className={cn('text-[11px] font-semibold text-white', avatarBgClass)}
                 >
                   {initials}
                 </AvatarFallback>
@@ -345,13 +345,13 @@ export function AdminHeader({
             <div className="py-1">
               <DropdownMenuItem
                 className="text-[13px] text-gray-700 dark:text-gray-300 cursor-pointer focus:bg-gray-50 dark:focus:bg-slate-800"
-                onClick={() => router.push("/account")}
+                onClick={() => router.push('/account')}
               >
                 <span className="mr-2">👤</span> View Profile
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="text-[13px] text-gray-700 dark:text-gray-300 cursor-pointer focus:bg-gray-50 dark:focus:bg-slate-800"
-                onClick={() => window.open("/", "_blank")}
+                onClick={() => window.open('/', '_blank')}
               >
                 <span className="mr-2">↗</span> Switch to Storefront
               </DropdownMenuItem>

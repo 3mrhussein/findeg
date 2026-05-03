@@ -6,10 +6,10 @@
  * This ensures UI/routes never perform role-string checks (Clean Architecture principle).
  */
 
-import { ID } from "../../../core/domain/types/common";
-import { PermissionCode, RoleId } from "../../../core/domain/value-objects";
-import { IPermissionService } from "../interfaces/IPermissionService";
-import { IUserRepository } from "../interfaces/IUserRepository";
+import { ID } from '../../../core/domain/types/common';
+import { PermissionCode, RoleId } from '../../../core/domain/value-objects';
+import { IPermissionService } from '../interfaces/IPermissionService';
+import { IUserRepository } from '../interfaces/IUserRepository';
 
 export class PermissionService implements IPermissionService {
   constructor(private readonly userRepository: IUserRepository) {}

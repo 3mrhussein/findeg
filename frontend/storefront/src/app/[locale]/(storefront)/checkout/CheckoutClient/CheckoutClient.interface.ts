@@ -2,7 +2,7 @@
  * CheckoutClient — shared types & interfaces
  */
 
-import { type CheckoutPrefillData } from "@findeg/backend/features/order/application/services/OrderService";
+import { type CheckoutPrefillData } from '@findeg/backend/features/order/application/services/OrderService';
 
 export interface CheckoutTotals {
   subtotal: number;
@@ -25,7 +25,7 @@ export interface CheckoutClientProps {
  * Retrieves or generates a stable guest ID stored in localStorage.
  */
 export function getGuestId(): string {
-  const storageKey = "findeg_guest_id";
+  const storageKey = 'findeg_guest_id';
   const existing = window.localStorage.getItem(storageKey);
   if (existing) return existing;
   const generated = `guest_${crypto.randomUUID()}`;

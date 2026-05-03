@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import React from "react";
-import { useFormContext, useFieldArray } from "react-hook-form";
-import { useTranslations } from "next-intl";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@findeg/ui";
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import { type Category, type Brand, type Tag } from "@findeg/backend/features/catalog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@findeg/ui";
-import { TagInput } from "@/app/[locale]/_components/shared/TagInput";
+import React from 'react';
+import { useFormContext, useFieldArray } from 'react-hook-form';
+import { useTranslations } from 'next-intl';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@findeg/ui';
+import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
+import { type Category, type Brand, type Tag } from '@findeg/backend/features/catalog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@findeg/ui';
+import { TagInput } from '@/app/[locale]/_components/shared/TagInput';
 import {
   CascadingCategoryPicker,
   type CategoryTreeNode,
-} from "@/app/[locale]/_components/shared/CascadingCategoryPicker";
-import { cn } from "@lib/utils";
+} from '@/app/[locale]/_components/shared/CascadingCategoryPicker';
+import { cn } from '@lib/utils';
 
 interface ProductFormSidebarProps {
   categories: Category[];
@@ -56,13 +56,13 @@ export function ProductFormSidebar({
   brands,
   tags,
 }: ProductFormSidebarProps) {
-  const t = useTranslations("Administration.Catalog.Products.Form.Sidebar");
+  const t = useTranslations('Administration.Catalog.Products.Form.Sidebar');
   const { control, watch } = useFormContext();
 
   const categoryTree = React.useMemo(() => buildCategoryTree(flatCategories), [flatCategories]);
 
   // Live summary values
-  const variants = watch("variants") || [];
+  const variants = watch('variants') || [];
   const firstVariant = variants[0];
   const variantCount = variants.length;
   const imageCount = firstVariant?.images?.length || 0;
@@ -74,7 +74,7 @@ export function ProductFormSidebar({
       <Card>
         <CardHeader>
           <CardTitle className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
-            {t("status")}
+            {t('status')}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -86,10 +86,10 @@ export function ProductFormSidebar({
                 <div className="flex flex-col gap-2">
                   <label
                     className={cn(
-                      "flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors",
+                      'flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors',
                       field.value
-                        ? "border-green-200 bg-green-50 dark:border-green-900/30 dark:bg-green-950/20"
-                        : "border-gray-200 bg-white hover:bg-gray-50 dark:border-slate-800 dark:bg-slate-900 dark:hover:bg-slate-800/50",
+                        ? 'border-green-200 bg-green-50 dark:border-green-900/30 dark:bg-green-950/20'
+                        : 'border-gray-200 bg-white hover:bg-gray-50 dark:border-slate-800 dark:bg-slate-900 dark:hover:bg-slate-800/50',
                     )}
                   >
                     <input
@@ -113,10 +113,10 @@ export function ProductFormSidebar({
 
                   <label
                     className={cn(
-                      "flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors",
+                      'flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors',
                       !field.value
-                        ? "border-gray-300 bg-gray-50 dark:border-slate-700 dark:bg-slate-800/50"
-                        : "border-gray-200 bg-white hover:bg-gray-50 dark:border-slate-800 dark:bg-slate-900 dark:hover:bg-slate-800/50",
+                        ? 'border-gray-300 bg-gray-50 dark:border-slate-700 dark:bg-slate-800/50'
+                        : 'border-gray-200 bg-white hover:bg-gray-50 dark:border-slate-800 dark:bg-slate-900 dark:hover:bg-slate-800/50',
                     )}
                   >
                     <input
@@ -148,7 +148,7 @@ export function ProductFormSidebar({
       <Card>
         <CardHeader>
           <CardTitle className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
-            {t("organization")}
+            {t('organization')}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -157,7 +157,7 @@ export function ProductFormSidebar({
             name="categoryId"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t("category")}</FormLabel>
+                <FormLabel>{t('category')}</FormLabel>
                 <FormControl>
                   <CascadingCategoryPicker
                     categories={categoryTree}
@@ -175,21 +175,21 @@ export function ProductFormSidebar({
             name="brandId"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t("brand")}</FormLabel>
+                <FormLabel>{t('brand')}</FormLabel>
                 <Select
-                  onValueChange={(val) => field.onChange(val === "none" ? null : parseInt(val))}
-                  value={field.value?.toString() || "none"}
+                  onValueChange={(val) => field.onChange(val === 'none' ? null : parseInt(val))}
+                  value={field.value?.toString() || 'none'}
                 >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder={t("selectBrand")} />
+                      <SelectValue placeholder={t('selectBrand')} />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="none">{t("noBrand")}</SelectItem>
+                    <SelectItem value="none">{t('noBrand')}</SelectItem>
                     {brands.map((brand) => (
                       <SelectItem key={brand.id} value={brand.id.toString()}>
-                        {(brand as any).localizedName?.en || brand.name || "Unnamed Brand"}
+                        {(brand as any).localizedName?.en || brand.name || 'Unnamed Brand'}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -204,7 +204,7 @@ export function ProductFormSidebar({
             name="tagIds"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t("tags")}</FormLabel>
+                <FormLabel>{t('tags')}</FormLabel>
                 <FormControl>
                   <TagInput tags={tags} selectedIds={field.value || []} onChange={field.onChange} />
                 </FormControl>
@@ -225,15 +225,15 @@ export function ProductFormSidebar({
         <CardContent>
           <div className="space-y-2">
             {[
-              { label: "Variants", value: String(variantCount) },
-              { label: "Images", value: String(imageCount) },
+              { label: 'Variants', value: String(variantCount) },
+              { label: 'Images', value: String(imageCount) },
               {
-                label: "Price",
-                value: defaultPrice > 0 ? `EGP ${defaultPrice.toFixed(2)}` : "—",
+                label: 'Price',
+                value: defaultPrice > 0 ? `EGP ${defaultPrice.toFixed(2)}` : '—',
               },
               {
-                label: "Last saved",
-                value: "Not saved",
+                label: 'Last saved',
+                value: 'Not saved',
               },
             ].map(({ label, value }) => (
               <div key={label} className="flex justify-between">

@@ -1,14 +1,14 @@
-import React from "react";
-import { useTranslations } from "next-intl";
-import { StatCard } from "./StatCard";
-import { SalesChart } from "./SalesChart";
-import { UserActivityChart } from "./UserActivityChart";
-import { DeviceUsageChart } from "./DeviceUsageChart";
-import { Icon } from "@findeg/ui";
-import { OrderTable } from "./OrderTable";
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import type { Product } from "@findeg/backend/features/catalog/domain/entities/Product";
-import type { Order } from "@findeg/backend/features/order/domain/entities/Order";
+import React from 'react';
+import { useTranslations } from 'next-intl';
+import { StatCard } from './StatCard';
+import { SalesChart } from './SalesChart';
+import { UserActivityChart } from './UserActivityChart';
+import { DeviceUsageChart } from './DeviceUsageChart';
+import { Icon } from '@findeg/ui';
+import { OrderTable } from './OrderTable';
+import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
+import type { Product } from '@findeg/backend/features/catalog/domain/entities/Product';
+import type { Order } from '@findeg/backend/features/order/domain/entities/Order';
 
 interface OverviewProps {
   products: Product[];
@@ -22,59 +22,59 @@ export const Overview: React.FC<OverviewProps> = ({ products, orders }) => {
   const t = useTranslations();
 
   const totalRevenue = orders.reduce(
-    (sum, order) => (order.status !== "cancelled" ? sum + (order.total ?? 0) : sum),
+    (sum, order) => (order.status !== 'cancelled' ? sum + (order.total ?? 0) : sum),
     0,
   );
   const totalOrders = orders.length;
   const totalProducts = products.length;
 
   const monthlySalesData = [
-    { name: "Jan", total: 4000 },
-    { name: "Feb", total: 3000 },
-    { name: "Mar", total: 2000 },
-    { name: "Apr", total: 4500 },
-    { name: "May", total: 5900 },
-    { name: "Jun", total: 4800 },
+    { name: 'Jan', total: 4000 },
+    { name: 'Feb', total: 3000 },
+    { name: 'Mar', total: 2000 },
+    { name: 'Apr', total: 4500 },
+    { name: 'May', total: 5900 },
+    { name: 'Jun', total: 4800 },
   ];
 
   const weeklyActivityData = [
-    { day: "Mon", users: 120 },
-    { day: "Tue", users: 150 },
-    { day: "Wed", users: 200 },
-    { day: "Thu", users: 180 },
-    { day: "Fri", users: 250 },
-    { day: "Sat", users: 300 },
-    { day: "Sun", users: 280 },
+    { day: 'Mon', users: 120 },
+    { day: 'Tue', users: 150 },
+    { day: 'Wed', users: 200 },
+    { day: 'Thu', users: 180 },
+    { day: 'Fri', users: 250 },
+    { day: 'Sat', users: 300 },
+    { day: 'Sun', users: 280 },
   ];
 
   const deviceUsageData = [
-    { name: "Desktop", value: 65, color: "hsl(174, 85%, 40%)" },
-    { name: "Mobile", value: 25, color: "hsl(40, 95%, 50%)" },
-    { name: "Tablet", value: 10, color: "hsl(210, 80%, 60%)" },
+    { name: 'Desktop', value: 65, color: 'hsl(174, 85%, 40%)' },
+    { name: 'Mobile', value: 25, color: 'hsl(40, 95%, 50%)' },
+    { name: 'Tablet', value: 10, color: 'hsl(210, 80%, 60%)' },
   ];
 
   return (
     <div className="space-y-6 md:space-y-8">
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6">
         <StatCard
-          title={t("Pages.Dashboard.TotalRevenue")}
+          title={t('Pages.Dashboard.TotalRevenue')}
           value={totalRevenue}
           prefix="$"
           decimals={2}
           icon={<Icon name="dashboard" className="w-6 h-6" />}
         />
         <StatCard
-          title={t("Pages.Dashboard.TotalOrders")}
+          title={t('Pages.Dashboard.TotalOrders')}
           value={totalOrders}
           icon={<Icon name="shopping_cart" className="w-6 h-6" />}
         />
         <StatCard
-          title={t("Pages.Dashboard.TotalProducts")}
+          title={t('Pages.Dashboard.TotalProducts')}
           value={totalProducts}
           icon={<Icon name="package_2" className="w-6 h-6" />}
         />
         <StatCard
-          title={t("Pages.Dashboard.TotalCustomers")}
+          title={t('Pages.Dashboard.TotalCustomers')}
           value={153}
           icon={<Icon name="group" className="w-6 h-6" />}
         />
@@ -90,7 +90,7 @@ export const Overview: React.FC<OverviewProps> = ({ products, orders }) => {
       </div>
       <Card>
         <CardHeader>
-          <CardTitle>{t("Pages.Dashboard.RecentOrders")}</CardTitle>
+          <CardTitle>{t('Pages.Dashboard.RecentOrders')}</CardTitle>
         </CardHeader>
         <CardContent>
           <OrderTable orders={orders.slice(0, 5)} />

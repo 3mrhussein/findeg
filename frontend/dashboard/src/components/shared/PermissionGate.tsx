@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import React from "react";
-import { usePermissions } from "@providers/PermissionsProvider";
-import { PermissionCode } from "@findeg/backend/features/core";
+import React from 'react';
+import { usePermissions } from '@providers/PermissionsProvider';
+import { PermissionCode } from '@findeg/backend/features/core';
 
 interface PermissionGateProps {
   children: React.ReactNode;

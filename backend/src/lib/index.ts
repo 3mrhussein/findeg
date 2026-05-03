@@ -8,7 +8,8 @@
  *       import { ValidationError, ConflictError } from '@findeg/backend'
  */
 
-export * from "./i18n";
+export * from './i18n';
+export * from './db-error-handler';
 
 // Re-export HTTP error classes only (AppError-based)
 // Domain errors (ValidationError, ConflictError) come from core
@@ -20,4 +21,4 @@ export {
   InternalServerError,
   ServiceUnavailableError,
   operationalError,
-} from "./errors";
+} from './errors';

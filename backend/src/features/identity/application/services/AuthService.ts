@@ -10,12 +10,12 @@
  * Uses bcryptjs for password verification.
  */
 
-import { IAuthService } from "../interfaces/IAuthService";
-import { IUserRepository } from "../interfaces/IUserRepository";
-import { AuthResult, RegisterInput, SessionPayload, createUserVO } from "../../../core/domain/auth";
-import { adminSession, PERMISSION_CODES } from "../../../core/domain/auth/authorization";
-import bcrypt from "bcryptjs";
-import { getErrorDefinition, resolveErrorMessage } from "../../../core/domain/errors";
+import { IAuthService } from '../interfaces/IAuthService';
+import { IUserRepository } from '../interfaces/IUserRepository';
+import { AuthResult, RegisterInput, SessionPayload, createUserVO } from '../../../core/domain/auth';
+import { adminSession, PERMISSION_CODES } from '../../../core/domain/auth/authorization';
+import bcrypt from 'bcryptjs';
+import { getErrorDefinition, resolveErrorMessage } from '../../../core/domain/errors';
 
 /**
  * Authentication Service
@@ -45,16 +45,16 @@ export class AuthService implements IAuthService {
     const user = await this.userRepository.getByEmailWithPassword(email);
 
     if (!user) {
-      return { success: false, error: getErrorDefinition("AUTH_INVALID_CREDENTIALS").message };
+      return { success: false, error: getErrorDefinition('AUTH_INVALID_CREDENTIALS').message };
     }
 
     if (!user.password) {
-      return { success: false, error: getErrorDefinition("AUTH_ACCOUNT_NO_PASSWORD").message };
+      return { success: false, error: getErrorDefinition('AUTH_ACCOUNT_NO_PASSWORD').message };
     }
 
     const isValid = await bcrypt.compare(password, user.password);
     if (!isValid) {
-      return { success: false, error: getErrorDefinition("AUTH_INVALID_CREDENTIALS").message };
+      return { success: false, error: getErrorDefinition('AUTH_INVALID_CREDENTIALS').message };
     }
 
     const authorization = await this.userRepository.getAuthorizationContext(user.id);
@@ -62,7 +62,7 @@ export class AuthService implements IAuthService {
     const permissionCodes = Array.from(
       new Set([
         ...(authorization.permissionCodes || []),
-        ...(user.portalRole === "staff" || user.portalRole === "school_staff"
+        ...(user.portalRole === 'staff' || user.portalRole === 'school_staff'
           ? [PERMISSION_CODES.ADMIN_PORTAL]
           : []),
       ]),
@@ -77,7 +77,7 @@ export class AuthService implements IAuthService {
         lastName: user.lastName || undefined,
       }),
       subjectId: String(user.id),
-      actorType: "user",
+      actorType: 'user',
       activeRoleIds,
       permissionCodes,
       organizationId: authorization.organizationId,
@@ -114,13 +114,12 @@ export class AuthService implements IAuthService {
       if (existing) {
         return {
           success: false,
-          error: getErrorDefinition("AUTH_EMAIL_ALREADY_REGISTERED").message,
+          error: getErrorDefinition('AUTH_EMAIL_ALREADY_REGISTERED').message,
         };
       }
 
       // Hash password
       const password = await bcrypt.hash(input.password, 10);
-      const displayName = [input.firstName, input.lastName].filter(Boolean).join(" ").trim();
 
       // Create user
       const user = await this.userRepository.create({
@@ -128,13 +127,13 @@ export class AuthService implements IAuthService {
         firstName: input.firstName,
         lastName: input.lastName,
         phone: input.phone,
-        portalRole: "customer",
+        portalRole: 'customer',
       } as unknown as Record<string, unknown>);
 
       // Save password
       await this.userRepository.upsertPasswordCredentials(user.id, {
         passwordHash: password,
-        hashStrategy: "bcrypt",
+        hashStrategy: 'bcrypt',
       });
 
       // Log them in automatically
@@ -142,7 +141,7 @@ export class AuthService implements IAuthService {
     } catch (error) {
       return {
         success: false,
-        error: resolveErrorMessage(error, "AUTH_REGISTER_FAILED"),
+        error: resolveErrorMessage(error, 'AUTH_REGISTER_FAILED'),
       };
     }
   }
@@ -153,7 +152,7 @@ export class AuthService implements IAuthService {
    * @throws Error - This function should not be called from backend
    */
   async logout(): Promise<void> {
-    throw new Error("logout() should not be called in backend - handle in app-layer");
+    throw new Error('logout() should not be called in backend - handle in app-layer');
   }
 
   /**
@@ -162,7 +161,7 @@ export class AuthService implements IAuthService {
    * @throws Error - This function should not be called from backend
    */
   async getSession(): Promise<SessionPayload | null> {
-    throw new Error("getSession() should not be called in backend - handle in app-layer");
+    throw new Error('getSession() should not be called in backend - handle in app-layer');
   }
 
   /**
@@ -171,7 +170,7 @@ export class AuthService implements IAuthService {
    * @throws Error - This function should not be called from backend
    */
   async validateAdmin(): Promise<SessionPayload> {
-    throw new Error("validateAdmin() should not be called in backend - handle in app-layer");
+    throw new Error('validateAdmin() should not be called in backend - handle in app-layer');
   }
 
   /**

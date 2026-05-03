@@ -16,15 +16,14 @@
  *   ❌ [doc] @param id The id [doc]   → obvious from the parameter name
  *   ❌ Empty JSDoc blocks             → pure noise
  */
-import nextConfig from "eslint-config-next/core-web-vitals";
-import jsdoc from "eslint-plugin-jsdoc";
-import prettierRecommended from "eslint-plugin-prettier/recommended";
-import tseslint from "typescript-eslint";
-import tsPlugin from "@typescript-eslint/eslint-plugin";
+import nextConfig from 'eslint-config-next/core-web-vitals';
+import jsdoc from 'eslint-plugin-jsdoc';
+import prettierPlugin from 'eslint-plugin-prettier';
+import tseslint from 'typescript-eslint';
+import tsPlugin from '@typescript-eslint/eslint-plugin';
 
-const config = tseslint.config(
+export default [
   ...nextConfig,
-  prettierRecommended,
   {
     languageOptions: {
       parser: tseslint.parser,
@@ -35,48 +34,49 @@ const config = tseslint.config(
     },
     plugins: {
       jsdoc,
-      "@typescript-eslint": tsPlugin,
+      '@typescript-eslint': tsPlugin,
+      prettier: prettierPlugin,
     },
-    ignores: [".next/**", "node_modules/**"],
+    ignores: ['.next/**', 'node_modules/**'],
     rules: {
-      "no-restricted-imports": [
-        "error",
+      'no-restricted-imports': [
+        'error',
         {
           patterns: [
-            "@presentation/storefront/*",
-            "src/presentation/storefront/*",
-            "@features/**/presentation/components/**",
-            "@features/**/presentation/hoc/**",
-            "src/features/**/presentation/components/**",
-            "src/features/**/presentation/hoc/**",
+            '@presentation/storefront/*',
+            'src/presentation/storefront/*',
+            '@features/**/presentation/components/**',
+            '@features/**/presentation/hoc/**',
+            'src/features/**/presentation/components/**',
+            'src/features/**/presentation/hoc/**',
           ],
         },
       ],
-      "jsdoc/check-alignment": "warn",
-      "jsdoc/check-syntax": "warn",
-      "jsdoc/check-tag-names": "warn",
-      "jsdoc/no-undefined-types": "warn",
-      "jsdoc/check-types": "warn",
-      "jsdoc/check-values": "warn",
-      "jsdoc/no-multi-asterisks": "warn",
-      "@typescript-eslint/naming-convention": [
-        "error",
+      'jsdoc/check-alignment': 'warn',
+      'jsdoc/check-syntax': 'warn',
+      'jsdoc/check-tag-names': 'warn',
+      'jsdoc/no-undefined-types': 'warn',
+      'jsdoc/check-types': 'warn',
+      'jsdoc/check-values': 'warn',
+      'jsdoc/no-multi-asterisks': 'warn',
+      '@typescript-eslint/naming-convention': [
+        'error',
         {
-          selector: "enum",
-          format: ["PascalCase"],
+          selector: 'enum',
+          format: ['PascalCase'],
         },
         {
-          selector: "variable",
-          modifiers: ["global", "const"],
-          types: ["string", "number", "boolean", "array"],
-          format: ["UPPER_CASE"],
+          selector: 'variable',
+          modifiers: ['global', 'const'],
+          types: ['string', 'number', 'boolean', 'array'],
+          format: ['UPPER_CASE'],
         },
         {
-          selector: "variable",
-          modifiers: ["global", "const"],
-          format: ["PascalCase"],
+          selector: 'variable',
+          modifiers: ['global', 'const'],
+          format: ['PascalCase'],
           filter: {
-            regex: "Schema$",
+            regex: 'Schema$',
             match: true,
           },
         },
@@ -84,23 +84,21 @@ const config = tseslint.config(
     },
   },
   {
-    files: ["src/features/**/presentation/**/*.{tsx}"],
+    files: ['src/features/**/presentation/**/*.{tsx}'],
     rules: {
-      "no-restricted-syntax": [
-        "error",
+      'no-restricted-syntax': [
+        'error',
         {
-          selector: "JSXElement",
+          selector: 'JSXElement',
           message:
-            "JSX is not allowed in src/features/**/presentation/**. Move components into src/app/**/_components or src/components/shared.",
+            'JSX is not allowed in src/features/**/presentation/**. Move components into src/app/**/_components or src/components/shared.',
         },
         {
-          selector: "JSXFragment",
+          selector: 'JSXFragment',
           message:
-            "JSX is not allowed in src/features/**/presentation/**. Move components into src/app/**/_components or src/components/shared.",
+            'JSX is not allowed in src/features/**/presentation/**. Move components into src/app/**/_components or src/components/shared.',
         },
       ],
     },
-  }
-);
-
-export default config;
+  },
+];

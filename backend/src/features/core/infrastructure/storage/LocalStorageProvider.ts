@@ -1,8 +1,8 @@
-import fs from "fs";
+import fs from 'fs';
 
-import path from "path";
-import { v4 as uuidv4 } from "uuid";
-import type { IStorageProvider } from "@findeg/backend/features/core/application/interfaces/IStorageProvider";
+import path from 'path';
+import { v4 as uuidv4 } from 'uuid';
+import type { IStorageProvider } from '@findeg/backend/features/core/application/interfaces/IStorageProvider';
 
 /**
  * Local Storage Provider
@@ -18,7 +18,7 @@ export class LocalStorageProvider implements IStorageProvider {
   /**
    *
    */
-  constructor(uploadDir: string = "./public/uploads", baseUrl: string = "/uploads") {
+  constructor(uploadDir: string = './public/uploads', baseUrl: string = '/uploads') {
     this.uploadDir = uploadDir;
     this.baseUrl = baseUrl;
     // Ensure upload directory exists
@@ -30,7 +30,7 @@ export class LocalStorageProvider implements IStorageProvider {
   /**
    *
    */
-  async upload(file: Buffer, filename: string, folder: string = ""): Promise<string> {
+  async upload(file: Buffer, filename: string, folder: string = ''): Promise<string> {
     const ext = path.extname(filename);
     const uniqueName = `${uuidv4()}${ext}`;
     const targetDir = path.join(this.uploadDir, folder);
@@ -45,7 +45,7 @@ export class LocalStorageProvider implements IStorageProvider {
     await fs.promises.writeFile(filePath, file);
 
     // Return public URL
-    const urlPath = path.join(folder, uniqueName).replace(/\\/g, "/"); // Ensure forward slashes for URL
+    const urlPath = path.join(folder, uniqueName).replace(/\\/g, '/'); // Ensure forward slashes for URL
     return `${this.baseUrl}/${urlPath}`;
   }
 
@@ -56,7 +56,7 @@ export class LocalStorageProvider implements IStorageProvider {
     try {
       // Extract relative path from URL
       // URL: /uploads/products/image.jpg -> Path: ./public/uploads/products/image.jpg
-      const relativePath = url.replace(this.baseUrl, "");
+      const relativePath = url.replace(this.baseUrl, '');
       const filePath = path.join(this.uploadDir, relativePath);
 
       if (fs.existsSync(filePath)) {
@@ -78,7 +78,7 @@ export class LocalStorageProvider implements IStorageProvider {
   /**
    *
    */
-  async listFiles(folder: string = ""): Promise<{ url: string; name: string }[]> {
+  async listFiles(folder: string = ''): Promise<{ url: string; name: string }[]> {
     const targetDir = path.join(this.uploadDir, folder);
 
     if (!fs.existsSync(targetDir)) {
@@ -96,9 +96,9 @@ export class LocalStorageProvider implements IStorageProvider {
     );
 
     return fileStats
-      .filter((f) => f.isFile && !f.name.startsWith(".")) // Exclude hidden files
+      .filter((f) => f.isFile && !f.name.startsWith('.')) // Exclude hidden files
       .map((f) => {
-        const urlPath = path.join(folder, f.name).replace(/\\/g, "/");
+        const urlPath = path.join(folder, f.name).replace(/\\/g, '/');
         return {
           name: f.name,
           url: `${this.baseUrl}/${urlPath}`,

@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Input } from "@findeg/ui";
-import type { SortKey } from "./InventoryTable.interface";
+import { Input } from '@findeg/ui';
+import type { SortKey } from './InventoryTable.interface';
 
 interface InventoryFiltersProps {
   searchTerm: string;

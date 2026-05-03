@@ -1,25 +1,25 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { useState } from "react";
-import { Link } from "@i18n/navigation";
-import { useTranslations } from "next-intl";
-import { MapPin, User, Heart, ShoppingCart, Menu, Flame, Sparkles } from "lucide-react";
-import { useUser } from "@hooks/useUser";
+import * as React from 'react';
+import { useState } from 'react';
+import { Link } from '@i18n/navigation';
+import { useTranslations } from 'next-intl';
+import { MapPin, User, Heart, ShoppingCart, Menu, Flame, Sparkles } from 'lucide-react';
+import { useUser } from '@hooks/useUser';
 
-import ToggleLanguage from "@components/shared/ToggleLanguage";
-import { ToggleTheme } from "@findeg/ui";
-import { IconTooltip } from "@findeg/ui";
+import ToggleLanguage from '@components/shared/ToggleLanguage';
+import { ToggleTheme } from '@findeg/ui';
+import { IconTooltip } from '@findeg/ui';
 // Assuming CartTrigger exists in _components, we'll wrap it or use directly.
 // For now we'll put a placeholder cart icon until CartSheet context is clear.
-import { CartTrigger } from "@app/[locale]/(storefront)/_components/CartTrigger";
-import { NotificationBell } from "@components/shared/NotificationBell";
+import { CartTrigger } from '@app/[locale]/(storefront)/_components/CartTrigger';
+import { NotificationBell } from '@components/shared/NotificationBell';
 
-import { SearchBar } from "./SearchBar";
-import { MobileNavSheet } from "./MobileNavSheet";
-import { MegaMenuOverlay } from "./MegaMenuOverlay";
-import { useCategories } from "@hooks/useCategories";
-import { useLocale } from "next-intl";
+import { SearchBar } from './SearchBar';
+import { MobileNavSheet } from './MobileNavSheet';
+import { MegaMenuOverlay } from './MegaMenuOverlay';
+import { useCategories } from '@hooks/useCategories';
+import { useLocale } from 'next-intl';
 
 /**
  * Storefront Navbar with Mega Menu
@@ -30,9 +30,9 @@ import { useLocale } from "next-intl";
  * 3. Category Bar (with Mega Menu Desktop)
  */
 export function Navbar() {
-  const t = useTranslations("Nav");
+  const t = useTranslations('Nav');
   const locale = useLocale();
-  const { categories, isLoading } = useCategories(locale, "tree");
+  const { categories, isLoading } = useCategories(locale, 'tree');
   const { isLoggedIn, currentUser } = useUser();
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
   const [activeCategorySlug, setActiveCategorySlug] = useState<string | null>(null);
@@ -70,7 +70,7 @@ export function Navbar() {
       <div className="hidden h-9 w-full items-center justify-between border-b border-slate-100 bg-slate-50 px-4 text-xs dark:border-slate-800 dark:bg-slate-900/50 sm:flex lg:px-8">
         <div className="flex items-center gap-2 text-slate-500 hover:text-slate-900 dark:hover:text-white cursor-pointer transition-colors">
           <MapPin className="size-3.5" />
-          <span>{t("DeliverTo", { city: "Cairo" })}</span>
+          <span>{t('DeliverTo', { city: 'Cairo' })}</span>
         </div>
         <div className="flex items-center gap-4">
           <ToggleLanguage />
@@ -101,11 +101,11 @@ export function Navbar() {
         </div>
         {/* Right: Actions */}
         <div className="flex items-center gap-2 sm:gap-4">
-          <Link href={isLoggedIn ? "/dashboard" : "/login"}>
+          <Link href={isLoggedIn ? '/dashboard' : '/login'}>
             <div className="flex size-10 items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors">
               <IconTooltip
                 icon={User}
-                label={isLoggedIn ? t("MyAccount") : t("SignIn")}
+                label={isLoggedIn ? t('MyAccount') : t('SignIn')}
                 size={20}
               />
             </div>
@@ -113,9 +113,9 @@ export function Navbar() {
 
           {isLoggedIn && <NotificationBell />}
 
-          <Link href={isLoggedIn ? "/dashboard/wishlist" : "/login?returnUrl=/dashboard/wishlist"}>
+          <Link href={isLoggedIn ? '/dashboard/wishlist' : '/login?returnUrl=/dashboard/wishlist'}>
             <div className="flex size-10 items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition-colors">
-              <IconTooltip icon={Heart} label={t("SavedItems")} size={20} />
+              <IconTooltip icon={Heart} label={t('SavedItems')} size={20} />
             </div>
           </Link>
 
@@ -134,7 +134,7 @@ export function Navbar() {
           onMouseLeave={handleMouseLeaveMenu}
         >
           <Menu className="size-5" />
-          <span>{t("AllCategories")}</span>
+          <span>{t('AllCategories')}</span>
         </div>
 
         {/* Dynamic Category Shortcuts */}
@@ -166,9 +166,9 @@ export function Navbar() {
             className="flex items-center gap-1.5 hover:text-amber-200 transition-colors"
           >
             <Flame className="size-4 text-amber-400" />
-            <span>{t("Deals")}</span>
+            <span>{t('Deals')}</span>
             <span className="bg-amber-500 text-white text-[10px] px-1.5 py-0.5 rounded-sm ml-1">
-              {t("Hot")}
+              {t('Hot')}
             </span>
           </Link>
           <Link
@@ -176,7 +176,7 @@ export function Navbar() {
             className="flex items-center gap-1.5 hover:text-blue-200 transition-colors"
           >
             <Sparkles className="size-4" />
-            <span>{t("NewArrivals")}</span>
+            <span>{t('NewArrivals')}</span>
           </Link>
         </div>
 

@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useTranslations } from "next-intl";
-import { useFormContext, useWatch } from "react-hook-form";
-import { cn } from "@lib/utils";
+import { useTranslations } from 'next-intl';
+import { useFormContext, useWatch } from 'react-hook-form';
+import { cn } from '@lib/utils';
 import {
   Info,
   Layers,
@@ -12,14 +12,14 @@ import {
   CheckCircle2,
   AlertCircle,
   XCircle,
-} from "lucide-react";
-import { ProductFormValues } from "@/interfaces";
+} from 'lucide-react';
+import { ProductFormValues } from '@/interfaces';
 
 interface TabItem {
   id: string;
   label: string;
   icon: React.ReactNode;
-  status: "complete" | "warning" | "error" | "default";
+  status: 'complete' | 'warning' | 'error' | 'default';
 }
 
 interface ProductFormTabsProps {
@@ -31,72 +31,72 @@ interface ProductFormTabsProps {
  * Tab navigation for Product Form with completion indicators
  */
 export function ProductFormTabs({ activeTab, onTabChange }: ProductFormTabsProps) {
-  const t = useTranslations("Administration.Catalog.Products.Form.Tabs");
+  const t = useTranslations('Administration.Catalog.Products.Form.Tabs');
   const { control } = useFormContext<ProductFormValues>();
 
   // Watch all values to compute status
   const values = useWatch({ control });
 
-  const getTabStatus = (tabId: string): TabItem["status"] => {
+  const getTabStatus = (tabId: string): TabItem['status'] => {
     switch (tabId) {
-      case "info": {
+      case 'info': {
         const enName = values.localizedName?.en?.trim();
         const arName = values.localizedName?.ar?.trim();
-        if (enName && arName) return "complete";
-        if (enName || arName) return "warning";
-        return "error";
+        if (enName && arName) return 'complete';
+        if (enName || arName) return 'warning';
+        return 'error';
       }
-      case "variants": {
+      case 'variants': {
         const variants = values.variants || [];
-        if (variants.length === 0) return "error";
+        if (variants.length === 0) return 'error';
         const hasIncomplete = variants.some(
           (v) => !v.sku?.trim() || !v.basePrice || v.basePrice <= 0,
         );
-        return hasIncomplete ? "warning" : "default";
+        return hasIncomplete ? 'warning' : 'default';
       }
-      case "pricing": {
+      case 'pricing': {
         // Warning only if UoMs exist but are incomplete
         const firstVariantUoms = values.variants?.[0]?.uoms || [];
         const hasIncomplete = firstVariantUoms.some((u) => !u.uomCode?.trim() || !u.factorToBase);
-        return hasIncomplete ? "warning" : "default";
+        return hasIncomplete ? 'warning' : 'default';
       }
-      case "media":
-      case "seo":
+      case 'media':
+      case 'seo':
       default:
-        return "default";
+        return 'default';
     }
   };
 
   const tabs: TabItem[] = [
     {
-      id: "info",
-      label: t("info"),
+      id: 'info',
+      label: t('info'),
       icon: <Info className="h-4 w-4" />,
-      status: getTabStatus("info"),
+      status: getTabStatus('info'),
     },
     {
-      id: "variants",
-      label: t("variants"),
+      id: 'variants',
+      label: t('variants'),
       icon: <Layers className="h-4 w-4" />,
-      status: getTabStatus("variants"),
+      status: getTabStatus('variants'),
     },
-    { id: "media", label: t("media"), icon: <ImageIcon className="h-4 w-4" />, status: "default" },
+    { id: 'media', label: t('media'), icon: <ImageIcon className="h-4 w-4" />, status: 'default' },
     {
-      id: "pricing",
-      label: t("pricing"),
+      id: 'pricing',
+      label: t('pricing'),
       icon: <CircleDollarSign className="h-4 w-4" />,
-      status: getTabStatus("pricing"),
+      status: getTabStatus('pricing'),
     },
-    { id: "seo", label: t("seo"), icon: <Search className="h-4 w-4" />, status: "default" },
+    { id: 'seo', label: t('seo'), icon: <Search className="h-4 w-4" />, status: 'default' },
   ];
 
-  const getStatusIcon = (status: TabItem["status"]) => {
+  const getStatusIcon = (status: TabItem['status']) => {
     switch (status) {
-      case "complete":
+      case 'complete':
         return <CheckCircle2 className="h-3 w-3 text-green-500" />;
-      case "warning":
+      case 'warning':
         return <AlertCircle className="h-3 w-3 text-amber-500" />;
-      case "error":
+      case 'error':
         return <XCircle className="h-3 w-3 text-red-500" />;
       default:
         return null;
@@ -112,10 +112,10 @@ export function ProductFormTabs({ activeTab, onTabChange }: ProductFormTabsProps
             type="button"
             onClick={() => onTabChange(tab.id)}
             className={cn(
-              "flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors whitespace-nowrap",
+              'flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-colors whitespace-nowrap',
               activeTab === tab.id
-                ? "bg-primary/10 text-primary"
-                : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                ? 'bg-primary/10 text-primary'
+                : 'text-muted-foreground hover:bg-muted hover:text-foreground',
             )}
           >
             {tab.icon}

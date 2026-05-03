@@ -6,8 +6,8 @@
  * role-string checks in UI layer (Clean Architecture principle).
  */
 
-import { ID } from "@findeg/backend/features/core/domain/types/common";
-import { PermissionCode, RoleId } from "@findeg/backend/features/core/domain/value-objects";
+import { ID } from '@findeg/backend/features/core/domain/types/common';
+import { PermissionCode, RoleId } from '@findeg/backend/features/core/domain/value-objects';
 
 export interface IPermissionService {
   /**

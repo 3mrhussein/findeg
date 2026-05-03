@@ -1,4 +1,4 @@
-import { DomainError } from "./DomainError";
+import { DomainError } from './DomainError';
 
 /**
  * Thrown when an operation creates a resource that already exists (conflict).
@@ -22,11 +22,11 @@ import { DomainError } from "./DomainError";
 export class ConflictError extends DomainError {
   public readonly resourceType: string;
   public readonly field: string;
-  public readonly value: any;
+  public readonly value: unknown;
 
-  constructor(resourceType: string, field: string, value: any) {
+  constructor(resourceType: string, field: string, value: unknown) {
     const message = `${resourceType} with ${field} "${value}" already exists`;
-    super("CONFLICT_ERROR", message, {
+    super('CONFLICT_ERROR', message, {
       statusCode: 409,
       resourceType,
       field,

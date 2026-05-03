@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import { useMemo, useState } from "react";
-import { Copy, Trash2 } from "lucide-react";
-import { Button } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
-import { Checkbox } from "@findeg/ui";
-import { useToast } from "@hooks/use-toast";
-import type { MediaAsset } from "@findeg/backend/features/media";
+import Image from 'next/image';
+import { useMemo, useState } from 'react';
+import { Copy, Trash2 } from 'lucide-react';
+import { Button } from '@findeg/ui';
+import { Badge } from '@findeg/ui';
+import { Checkbox } from '@findeg/ui';
+import { useToast } from '@hooks/use-toast';
+import type { MediaAsset } from '@findeg/backend/features/media';
 
 interface MediaLibraryProps {
   initialAssets: MediaAsset[];
@@ -17,9 +17,9 @@ interface MediaLibraryProps {
  *
  */
 function normalizeFolderLabel(folder: string): string {
-  if (folder === "general") return "General";
-  if (folder === "products") return "Products";
-  if (folder === "brands") return "Brands";
+  if (folder === 'general') return 'General';
+  if (folder === 'products') return 'Products';
+  if (folder === 'brands') return 'Brands';
   return folder;
 }
 
@@ -31,10 +31,10 @@ export function MediaLibrary({ initialAssets }: MediaLibraryProps) {
   const [assets, setAssets] = useState<MediaAsset[]>(initialAssets);
   const [selectedUrls, setSelectedUrls] = useState<Set<string>>(new Set());
   const [deletingUrl, setDeletingUrl] = useState<string | null>(null);
-  const [activeFolder, setActiveFolder] = useState<string>("all");
+  const [activeFolder, setActiveFolder] = useState<string>('all');
 
   const visibleAssets = useMemo(() => {
-    if (activeFolder === "all") return assets;
+    if (activeFolder === 'all') return assets;
     return assets.filter((asset) => asset.folder === activeFolder);
   }, [assets, activeFolder]);
 
@@ -57,14 +57,14 @@ export function MediaLibrary({ initialAssets }: MediaLibraryProps) {
     try {
       await navigator.clipboard.writeText(value);
       toast({
-        title: "Copied",
+        title: 'Copied',
         description: successMessage,
       });
     } catch {
       toast({
-        variant: "destructive",
-        title: "Copy failed",
-        description: "Clipboard access is not available.",
+        variant: 'destructive',
+        title: 'Copy failed',
+        description: 'Clipboard access is not available.',
       });
     }
   };
@@ -78,11 +78,11 @@ export function MediaLibrary({ initialAssets }: MediaLibraryProps) {
 
     try {
       const response = await fetch(`/api/v1/media?url=${encodeURIComponent(url)}`, {
-        method: "DELETE",
+        method: 'DELETE',
       });
       const payload = await response.json();
       if (!response.ok || !payload?.success) {
-        throw new Error(payload?.error?.message || "Failed to delete media file.");
+        throw new Error(payload?.error?.message || 'Failed to delete media file.');
       }
 
       setAssets((prev) => prev.filter((asset) => asset.url !== url));
@@ -92,14 +92,14 @@ export function MediaLibrary({ initialAssets }: MediaLibraryProps) {
         return next;
       });
       toast({
-        title: "Media deleted",
-        description: "The selected file was removed.",
+        title: 'Media deleted',
+        description: 'The selected file was removed.',
       });
     } catch (error) {
       toast({
-        variant: "destructive",
-        title: "Delete failed",
-        description: error instanceof Error ? error.message : "Unexpected delete error.",
+        variant: 'destructive',
+        title: 'Delete failed',
+        description: error instanceof Error ? error.message : 'Unexpected delete error.',
       });
     } finally {
       setDeletingUrl(null);
@@ -116,17 +116,17 @@ export function MediaLibrary({ initialAssets }: MediaLibraryProps) {
         <Button
           type="button"
           size="sm"
-          variant={activeFolder === "all" ? "default" : "outline"}
-          onClick={() => setActiveFolder("all")}
+          variant={activeFolder === 'all' ? 'default' : 'outline'}
+          onClick={() => setActiveFolder('all')}
         >
           All
         </Button>
-        {["general", "products", "brands"].map((folder) => (
+        {['general', 'products', 'brands'].map((folder) => (
           <Button
             key={folder}
             type="button"
             size="sm"
-            variant={activeFolder === folder ? "default" : "outline"}
+            variant={activeFolder === folder ? 'default' : 'outline'}
             onClick={() => setActiveFolder(folder)}
           >
             {normalizeFolderLabel(folder)}
@@ -141,8 +141,8 @@ export function MediaLibrary({ initialAssets }: MediaLibraryProps) {
             disabled={selectedUrls.size === 0}
             onClick={() =>
               copyText(
-                Array.from(selectedUrls).join(", "),
-                "Selected media URLs copied. You can paste them into product/brand forms.",
+                Array.from(selectedUrls).join(', '),
+                'Selected media URLs copied. You can paste them into product/brand forms.',
               )
             }
             data-testid="admin-media-copy-selected"
@@ -201,7 +201,7 @@ export function MediaLibrary({ initialAssets }: MediaLibraryProps) {
                     onClick={() =>
                       copyText(
                         asset.url,
-                        "Media URL copied. You can paste it into product/brand form fields.",
+                        'Media URL copied. You can paste it into product/brand form fields.',
                       )
                     }
                   >
@@ -217,7 +217,7 @@ export function MediaLibrary({ initialAssets }: MediaLibraryProps) {
                     data-testid={`admin-media-delete-${asset.name}`}
                   >
                     <Trash2 className="mr-2 h-4 w-4" />
-                    {isDeleting ? "Deleting..." : "Delete"}
+                    {isDeleting ? 'Deleting...' : 'Delete'}
                   </Button>
                 </div>
               </div>

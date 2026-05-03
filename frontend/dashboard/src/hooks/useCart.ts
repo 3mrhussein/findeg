@@ -1,5 +1,5 @@
-import { useContext } from "react";
-import { CartContext, type CartContextType } from "@providers/CartProvider";
+import { useContext } from 'react';
+import { CartContext, type CartContextType } from '@providers/CartProvider';
 
 /**
  * Custom hook to access the CartContext.
@@ -11,6 +11,6 @@ import { CartContext, type CartContextType } from "@providers/CartProvider";
  */
 export const useCart = () => {
   const context = useContext(CartContext);
-  if (!context) throw new Error("useCart must be used within a CartProvider");
+  if (!context) throw new Error('useCart must be used within a CartProvider');
   return context;
 };

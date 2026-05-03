@@ -1,5 +1,5 @@
-import { z } from "zod";
-import { OrderStatusSchema } from "../../../core/domain/types/common";
+import { z } from 'zod';
+import { OrderStatusSchema } from '../../../core/domain/types/common';
 
 export const OrderStatusUpdateSchema = z.object({
   status: OrderStatusSchema,

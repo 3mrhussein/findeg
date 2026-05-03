@@ -1,8 +1,8 @@
-import { adminSelectors } from "../selectors/admin.selectors";
-import { localePath } from "../utils/url";
-import { API_ROUTES, UI_ROUTES } from "../constants/routes";
-import { fetchAdminToken } from "./auth.actions";
-import type { TestBrandInput } from "../utils/brand-factory";
+import { adminSelectors } from '../selectors/admin.selectors';
+import { localePath } from '../utils/url';
+import { API_ROUTES, UI_ROUTES } from '../constants/routes';
+import { fetchAdminToken } from './auth.actions';
+import type { TestBrandInput } from '../utils/brand-factory';
 
 interface AdminBrandApiRecord {
   id: number;
@@ -14,7 +14,7 @@ interface AdminBrandApiRecord {
  */
 export function visitAdminBrandsList(): void {
   cy.visit(UI_ROUTES.adminBrands);
-  cy.location("pathname", { timeout: 15000 }).should((pathname) => {
+  cy.location('pathname', { timeout: 15000 }).should((pathname) => {
     const localizedPath = localePath(UI_ROUTES.adminBrands);
     const isBrandsPath =
       pathname === UI_ROUTES.adminBrands ||
@@ -22,7 +22,7 @@ export function visitAdminBrandsList(): void {
       pathname.startsWith(localizedPath);
     expect(isBrandsPath, `expected admin brands path, got ${pathname}`).to.eq(true);
   });
-  cy.get(adminSelectors.brandsAddButton, { timeout: 15000 }).should("be.visible");
+  cy.get(adminSelectors.brandsAddButton, { timeout: 15000 }).should('be.visible');
 }
 
 /**
@@ -33,7 +33,7 @@ export function createBrandFromUi(input: TestBrandInput): void {
   cy.get(adminSelectors.brandNameInput, { timeout: 10000 }).clear().type(input.name);
   cy.get(adminSelectors.brandSlugInput).clear().type(input.slug);
   cy.get(adminSelectors.brandLogoUrlInput).clear().type(input.logoUrl);
-  cy.get(adminSelectors.brandSubmitButton).should("be.visible").and("not.be.disabled").click();
+  cy.get(adminSelectors.brandSubmitButton).should('be.visible').and('not.be.disabled').click();
 }
 
 /**
@@ -41,35 +41,35 @@ export function createBrandFromUi(input: TestBrandInput): void {
  */
 export function updateBrandFromUiById(brandId: number, input: Partial<TestBrandInput>): void {
   cy.get(adminSelectors.brandEditById(brandId), { timeout: 15000 }).click({ force: true });
-  cy.get(adminSelectors.brandNameInput, { timeout: 10000 }).should("be.visible");
+  cy.get(adminSelectors.brandNameInput, { timeout: 10000 }).should('be.visible');
 
-  if (typeof input.name === "string") {
+  if (typeof input.name === 'string') {
     cy.get(adminSelectors.brandNameInput).clear().type(input.name);
   }
-  if (typeof input.slug === "string") {
+  if (typeof input.slug === 'string') {
     cy.get(adminSelectors.brandSlugInput).clear().type(input.slug);
   }
-  if (typeof input.logoUrl === "string") {
+  if (typeof input.logoUrl === 'string') {
     cy.get(adminSelectors.brandLogoUrlInput).clear().type(input.logoUrl);
   }
 
-  cy.get(adminSelectors.brandSubmitButton).should("be.visible").and("not.be.disabled").click();
+  cy.get(adminSelectors.brandSubmitButton).should('be.visible').and('not.be.disabled').click();
 }
 
 /**
  *
  */
 export function deleteBrandFromListById(brandId: number): void {
-  cy.get(adminSelectors.brandRowById(brandId), { timeout: 15000 }).should("exist");
+  cy.get(adminSelectors.brandRowById(brandId), { timeout: 15000 }).should('exist');
   cy.get(adminSelectors.brandDeleteById(brandId), { timeout: 15000 })
     .scrollIntoView()
     .click({ force: true });
 
-  cy.get("body").then(($body) => {
+  cy.get('body').then(($body) => {
     if ($body.find(adminSelectors.brandDeleteConfirm).length > 0) {
       cy.get(adminSelectors.brandDeleteConfirm, { timeout: 10000 })
-        .should("be.visible")
-        .and("not.be.disabled")
+        .should('be.visible')
+        .and('not.be.disabled')
         .click({ force: true });
       return;
     }
@@ -77,7 +77,7 @@ export function deleteBrandFromListById(brandId: number): void {
     // Fallback for flaky dialog rendering: enforce deletion via API using the same id.
     fetchAdminToken().then((token) => {
       cy.request({
-        method: "DELETE",
+        method: 'DELETE',
         url: API_ROUTES.adminBrandById(brandId),
         headers: { Authorization: `Bearer ${token}` },
         failOnStatusCode: false,
@@ -90,7 +90,7 @@ export function deleteBrandFromListById(brandId: number): void {
   });
 
   cy.reload();
-  cy.get(adminSelectors.brandRowById(brandId), { timeout: 15000 }).should("not.exist");
+  cy.get(adminSelectors.brandRowById(brandId), { timeout: 15000 }).should('not.exist');
 }
 
 /**
@@ -100,14 +100,14 @@ export function findAdminBrandIdBySlug(slug: string): Cypress.Chainable<number> 
   return fetchAdminToken().then((token) =>
     cy
       .request({
-        method: "GET",
+        method: 'GET',
         url: API_ROUTES.adminBrands,
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
         const brands = (response.body?.data?.brands || []) as AdminBrandApiRecord[];
         const brand = brands.find((item) => item.slug === slug);
-        expect(brand?.id, `admin brand id for slug ${slug}`).to.be.a("number");
+        expect(brand?.id, `admin brand id for slug ${slug}`).to.be.a('number');
         return brand!.id;
       }),
   );
@@ -120,11 +120,11 @@ export function createBrandViaApi(input: TestBrandInput): Cypress.Chainable<numb
   return fetchAdminToken().then((token) =>
     cy
       .request({
-        method: "POST",
+        method: 'POST',
         url: API_ROUTES.adminBrands,
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: {
           name: input.name,
@@ -136,7 +136,7 @@ export function createBrandViaApi(input: TestBrandInput): Cypress.Chainable<numb
       .then((response) => {
         expect(response.status).to.eq(201);
         const brandId = response.body?.data?.id as number | undefined;
-        expect(brandId, "created admin brand id").to.be.a("number");
+        expect(brandId, 'created admin brand id').to.be.a('number');
         return brandId!;
       }),
   );
@@ -148,7 +148,7 @@ export function createBrandViaApi(input: TestBrandInput): Cypress.Chainable<numb
 export function deleteBrandBySlug(slug: string): void {
   fetchAdminToken().then((token) => {
     cy.request({
-      method: "GET",
+      method: 'GET',
       url: API_ROUTES.adminBrands,
       headers: { Authorization: `Bearer ${token}` },
     }).then((response) => {
@@ -157,7 +157,7 @@ export function deleteBrandBySlug(slug: string): void {
       if (!brand?.id) return;
 
       cy.request({
-        method: "DELETE",
+        method: 'DELETE',
         url: API_ROUTES.adminBrandById(brand.id),
         headers: { Authorization: `Bearer ${token}` },
         failOnStatusCode: false,

@@ -7,12 +7,12 @@
  * Location: src/app/[locale]/admin/_components/shared/ (admin-wide)
  */
 
-"use client";
+'use client';
 
-import * as React from "react";
-import { Skeleton } from "@findeg/ui";
-import { TableHeader, TableRow, TableHead, TableBody, TableCell, Table } from "@findeg/ui";
-import { cn } from "@lib/utils";
+import * as React from 'react';
+import { Skeleton } from '@findeg/ui';
+import { TableHeader, TableRow, TableHead, TableBody, TableCell, Table } from '@findeg/ui';
+import { cn } from '@lib/utils';
 
 export interface DataTableSkeletonProps {
   /** Number of rows to show (default: 5) */
@@ -38,7 +38,7 @@ export function DataTableSkeleton({
   className,
 }: DataTableSkeletonProps) {
   return (
-    <div className={cn("rounded-md border", className)}>
+    <div className={cn('rounded-md border', className)}>
       <Table>
         {showHeader && (
           <TableHeader>
@@ -60,7 +60,7 @@ export function DataTableSkeleton({
                     className="h-4 w-full"
                     style={{
                       maxWidth:
-                        colIndex === 0 ? "200px" : colIndex === columns - 1 ? "80px" : "120px",
+                        colIndex === 0 ? '200px' : colIndex === columns - 1 ? '80px' : '120px',
                     }}
                   />
                 </TableCell>

@@ -46,5 +46,5 @@ export const discountRules = salesSchema.table("discount_rules", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-export type DiscountRule = typeof discountRules.$inferSelect;
+export type DiscountRuleRecord = typeof discountRules.$inferSelect;
 export type NewDiscountRule = typeof discountRules.$inferInsert;

@@ -1,1 +1,1 @@
-export * from "./MediaAsset";
+export * from './MediaAsset';

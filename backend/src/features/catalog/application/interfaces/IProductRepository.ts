@@ -8,14 +8,13 @@
 
 import {
   type ID,
-  type Quantity,
   type Slug,
-} from "@findeg/backend/features/core/domain/types/common";
-import type { Locale } from "@findeg/backend/features/core/domain/value-objects";
-import type { Product } from "../../domain/entities/Product";
-import type { ProductInput } from "@findeg/backend/features/administration/domain/types";
-import type { TagGroup } from "../../domain/entities/Tag";
-import type { AttributeFilter } from "./IAttributeRepository";
+} from '@findeg/backend/features/core/domain/types/common';
+import type { Locale } from '@findeg/backend/features/core/domain/value-objects';
+import type { Product } from '../../domain/entities/Product';
+import type { ProductInput } from '@findeg/backend/features/administration/domain/types';
+import type { TagGroup } from '../../domain/entities/Tag';
+import type { AttributeFilter } from './IAttributeRepository';
 
 export interface ProductFilters {
   categoryId?: ID;
@@ -30,7 +29,7 @@ export interface ProductFilters {
   limit?: number;
   offset?: number;
   page?: number;
-  sort?: "price_asc" | "price_desc" | "newest" | "rating";
+  sort?: 'price_asc' | 'price_desc' | 'newest' | 'rating';
   tagIds?: ID[];
   tagGroups?: TagGroup[];
   attributeFilters?: AttributeFilter[];

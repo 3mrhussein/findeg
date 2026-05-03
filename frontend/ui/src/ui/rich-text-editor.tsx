@@ -18,7 +18,6 @@ export function RichTextEditor({
   content,
   onChange,
   dir = "ltr",
-  placeholder,
 }: RichTextEditorProps) {
   const editor = useEditor({
     extensions: [StarterKit],

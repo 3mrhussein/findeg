@@ -13,7 +13,7 @@
  */
 export function getProductCachePaths(productId?: number): string[] {
   const paths = [
-    "/admin/products", // Products list
+    '/admin/products', // Products list
   ];
 
   if (productId) {
@@ -32,9 +32,9 @@ export function getProductCachePaths(productId?: number): string[] {
  */
 export function getProductCacheTags(productId?: number): string[] {
   const tags = [
-    "products", // All products
-    "catalog:products", // Catalog products
-    "shop", // Shop pages affected
+    'products', // All products
+    'catalog:products', // Catalog products
+    'shop', // Shop pages affected
   ];
 
   if (productId) {
@@ -52,7 +52,7 @@ export function getProductCacheTags(productId?: number): string[] {
  */
 export function getBrandCachePaths(brandId?: number): string[] {
   const paths = [
-    "/admin/brands", // Brands list
+    '/admin/brands', // Brands list
   ];
 
   if (brandId) {
@@ -71,10 +71,10 @@ export function getBrandCachePaths(brandId?: number): string[] {
  */
 export function getBrandCacheTags(brandId?: number): string[] {
   const tags = [
-    "brands", // All brands
-    "catalog:brands", // Catalog brands
-    "products", // Products affected (brands filter products)
-    "shop", // Shop pages affected
+    'brands', // All brands
+    'catalog:brands', // Catalog brands
+    'products', // Products affected (brands filter products)
+    'shop', // Shop pages affected
   ];
 
   if (brandId) {
@@ -92,7 +92,7 @@ export function getBrandCacheTags(brandId?: number): string[] {
  */
 export function getCategoryCachePaths(categoryId?: number): string[] {
   const paths = [
-    "/admin/categories", // Categories list
+    '/admin/categories', // Categories list
   ];
 
   if (categoryId) {
@@ -111,10 +111,10 @@ export function getCategoryCachePaths(categoryId?: number): string[] {
  */
 export function getCategoryCacheTags(categoryId?: number): string[] {
   const tags = [
-    "categories", // All categories
-    "catalog:categories", // Catalog categories
-    "products", // Products affected (categories filter products)
-    "shop", // Shop pages affected
+    'categories', // All categories
+    'catalog:categories', // Catalog categories
+    'products', // Products affected (categories filter products)
+    'shop', // Shop pages affected
   ];
 
   if (categoryId) {

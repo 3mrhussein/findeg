@@ -1,10 +1,7 @@
 /**
  * School Services Factory
  */
-import { container } from "@findeg/backend/features/core/infrastructure/di/ServiceContainer";
-import type { ISchoolDirectoryService } from "../interfaces/ISchoolDirectoryService";
-import type { ISchoolAccessService } from "../interfaces/ISchoolAccessService";
-import type { IParentListService } from "../interfaces/IParentListService";
+import { container } from '@findeg/backend/features/core/infrastructure/di/ServiceContainer';
 
 export function createSchoolServices() {
   return {

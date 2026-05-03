@@ -1,29 +1,29 @@
-"use client";
+'use client';
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { IconTooltip } from "@findeg/ui";
-import { Order } from "@findeg/backend/features/order";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@findeg/ui";
-import { updateOrderPaymentStatusAction, updateOrderStatusAction } from "@actions/order-actions";
-import { useToast } from "@hooks/use-toast";
-import { useState } from "react";
-import { Link } from "@i18n/navigation";
-import { Eye } from "lucide-react";
-import { useRouter } from "@i18n/navigation";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { IconTooltip } from '@findeg/ui';
+import { Order } from '@findeg/backend/features/order';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@findeg/ui';
+import { updateOrderPaymentStatusAction, updateOrderStatusAction } from '@actions/order-actions';
+import { useToast } from '@hooks/use-toast';
+import { useState } from 'react';
+import { Link } from '@i18n/navigation';
+import { Eye } from 'lucide-react';
+import { useRouter } from '@i18n/navigation';
 
 /**
  * Local type definitions
  */
 type OrderStatus =
-  | "pending"
-  | "confirmed"
-  | "processing"
-  | "shipped"
-  | "delivered"
-  | "cancelled"
-  | "refunded";
-type PaymentStatus = "pending" | "paid" | "failed" | "refunded";
+  | 'pending'
+  | 'confirmed'
+  | 'processing'
+  | 'shipped'
+  | 'delivered'
+  | 'cancelled'
+  | 'refunded';
+type PaymentStatus = 'pending' | 'paid' | 'failed' | 'refunded';
 
 /**
  * Stub helper functions (to be reimplemented)
@@ -31,12 +31,12 @@ type PaymentStatus = "pending" | "paid" | "failed" | "refunded";
 const getAllowedOrderStatusTransitions = (status: OrderStatus): OrderStatus[] => [];
 const getOrderStatusLabel = (status: OrderStatus): string => status;
 const normalizeOrderStatus = (status: string | undefined): OrderStatus =>
-  (status as OrderStatus) || "pending";
+  (status as OrderStatus) || 'pending';
 const ORDER_STATUS_OPTIONS: { value: OrderStatus; label: string }[] = [];
 const getAllowedPaymentStatusTransitions = (status: PaymentStatus): PaymentStatus[] => [];
 const getPaymentStatusLabel = (status: PaymentStatus): string => status;
 const normalizePaymentStatus = (status: string | undefined): PaymentStatus =>
-  (status as PaymentStatus) || "pending";
+  (status as PaymentStatus) || 'pending';
 const PAYMENT_STATUS_OPTIONS: { value: PaymentStatus; label: string }[] = [];
 
 interface OrdersTableProps {
@@ -61,15 +61,15 @@ export function OrdersTable({ orders }: OrdersTableProps) {
       const result = await updateOrderStatusAction(orderId, { status: newStatus });
       if (result.success) {
         toast({
-          title: "Status updated",
+          title: 'Status updated',
           description: `Order #${orderId} status changed to ${newStatus}.`,
         });
         router.refresh();
       } else {
-        toast({ variant: "destructive", title: "Error", description: result.error });
+        toast({ variant: 'destructive', title: 'Error', description: result.error });
       }
     } catch (e) {
-      toast({ variant: "destructive", title: "Error", description: "Failed to update status." });
+      toast({ variant: 'destructive', title: 'Error', description: 'Failed to update status.' });
     } finally {
       setUpdatingStatusId(null);
     }
@@ -84,18 +84,18 @@ export function OrdersTable({ orders }: OrdersTableProps) {
       const result = await updateOrderPaymentStatusAction(orderId, newPaymentStatus);
       if (result.success) {
         toast({
-          title: "Payment status updated",
+          title: 'Payment status updated',
           description: `Order #${orderId} payment changed to ${getPaymentStatusLabel(newPaymentStatus)}.`,
         });
         router.refresh();
       } else {
-        toast({ variant: "destructive", title: "Error", description: result.error });
+        toast({ variant: 'destructive', title: 'Error', description: result.error });
       }
     } catch {
       toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to update payment status.",
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Failed to update payment status.',
       });
     } finally {
       setUpdatingPaymentId(null);
@@ -134,7 +134,7 @@ export function OrdersTable({ orders }: OrdersTableProps) {
                 <TableRow key={order.id}>
                   <TableCell className="font-medium">#{order.id}</TableCell>
                   <TableCell>
-                    {order.date ? new Date(order.date).toLocaleDateString() : "-"}
+                    {order.date ? new Date(order.date).toLocaleDateString() : '-'}
                   </TableCell>
                   <TableCell>{order.customerName}</TableCell>
                   <TableCell>

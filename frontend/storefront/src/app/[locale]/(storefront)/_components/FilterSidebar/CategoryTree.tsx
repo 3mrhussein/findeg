@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Checkbox } from "@findeg/ui";
-import { ChevronRight } from "lucide-react";
-import { cn } from "@lib/utils";
-import type { CategoryFilterOption } from "./FilterSidebar.interface";
-import { getAllSlugs } from "./FilterSidebar.interface";
+import { useState } from 'react';
+import { Checkbox } from '@findeg/ui';
+import { ChevronRight } from 'lucide-react';
+import { cn } from '@lib/utils';
+import type { CategoryFilterOption } from './FilterSidebar.interface';
+import { getAllSlugs } from './FilterSidebar.interface';
 
 interface CategoryTreeProps {
   category: CategoryFilterOption;
@@ -25,13 +25,13 @@ export function CategoryTree({ category, selectedSlugs, onToggle, depth = 0 }: C
   const selfSelected = selectedSlugs.includes(category.id);
   const selectedChildCount = childSlugs.filter((s) => selectedSlugs.includes(s)).length;
 
-  let checkedState: boolean | "indeterminate";
+  let checkedState: boolean | 'indeterminate';
   if (!hasChildren) {
     checkedState = selfSelected;
   } else {
     const allSelected = childSlugs.length > 0 && selectedChildCount === childSlugs.length;
     const someSelected = selectedChildCount > 0;
-    checkedState = allSelected ? true : someSelected ? "indeterminate" : false;
+    checkedState = allSelected ? true : someSelected ? 'indeterminate' : false;
   }
 
   /**
@@ -50,8 +50,8 @@ export function CategoryTree({ category, selectedSlugs, onToggle, depth = 0 }: C
     <div>
       <div
         className={cn(
-          "flex items-center gap-2.5 py-1.5 rounded-lg",
-          depth > 0 && "ps-3 border-s-2 border-slate-200 dark:border-slate-700 ms-3",
+          'flex items-center gap-2.5 py-1.5 rounded-lg',
+          depth > 0 && 'ps-3 border-s-2 border-slate-200 dark:border-slate-700 ms-3',
         )}
       >
         {hasChildren ? (
@@ -59,10 +59,10 @@ export function CategoryTree({ category, selectedSlugs, onToggle, depth = 0 }: C
             type="button"
             onClick={() => setExpanded((v) => !v)}
             className="shrink-0 flex items-center justify-center text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-colors"
-            aria-label={expanded ? "Collapse" : "Expand"}
+            aria-label={expanded ? 'Collapse' : 'Expand'}
           >
             <ChevronRight
-              className={cn("size-3.5 transition-transform duration-200", expanded && "rotate-90")}
+              className={cn('size-3.5 transition-transform duration-200', expanded && 'rotate-90')}
             />
           </button>
         ) : (
@@ -74,22 +74,22 @@ export function CategoryTree({ category, selectedSlugs, onToggle, depth = 0 }: C
           checked={checkedState}
           onCheckedChange={handleToggle}
           className={cn(
-            "rounded-[4px] shrink-0",
-            "border-slate-300 dark:border-slate-600",
-            "data-[state=checked]:bg-primary data-[state=checked]:border-primary",
-            "data-[state=indeterminate]:bg-primary/20 data-[state=indeterminate]:border-primary dark:data-[state=indeterminate]:bg-primary/30",
+            'rounded-[4px] shrink-0',
+            'border-slate-300 dark:border-slate-600',
+            'data-[state=checked]:bg-primary data-[state=checked]:border-primary',
+            'data-[state=indeterminate]:bg-primary/20 data-[state=indeterminate]:border-primary dark:data-[state=indeterminate]:bg-primary/30',
           )}
         />
 
         <label
           htmlFor={`cat-${category.id}-${depth}`}
           className={cn(
-            "flex-1 text-sm leading-none cursor-pointer select-none transition-colors",
+            'flex-1 text-sm leading-none cursor-pointer select-none transition-colors',
             checkedState === true
-              ? "font-semibold text-primary"
-              : checkedState === "indeterminate"
-                ? "font-medium text-primary/80 dark:text-primary/70"
-                : "font-medium text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white",
+              ? 'font-semibold text-primary'
+              : checkedState === 'indeterminate'
+                ? 'font-medium text-primary/80 dark:text-primary/70'
+                : 'font-medium text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white',
           )}
         >
           {category.label}
