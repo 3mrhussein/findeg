@@ -18,42 +18,42 @@ export interface UoMDefinition {
 /** The predefined UoM options shown in the admin dropdown */
 export const PREDEFINED_UOMS: UoMDefinition[] = [
   {
-    code: "pcs",
+    code: 'pcs',
     factorToBase: 1,
-    label: { en: "Piece", ar: "قطعة" },
+    label: { en: 'Piece', ar: 'قطعة' },
     isPredefined: true,
   },
   {
-    code: "pack",
+    code: 'pack',
     factorToBase: 12,
-    label: { en: "Pack of 12", ar: "علبة ١٢" },
+    label: { en: 'Pack of 12', ar: 'علبة ١٢' },
     isPredefined: true,
   },
   {
-    code: "box",
+    code: 'box',
     factorToBase: 6,
-    label: { en: "Box of 6", ar: "صندوق ٦" },
+    label: { en: 'Box of 6', ar: 'صندوق ٦' },
     isPredefined: true,
   },
   {
-    code: "dozen",
+    code: 'dozen',
     factorToBase: 12,
-    label: { en: "Dozen", ar: "دستة" },
+    label: { en: 'Dozen', ar: 'دستة' },
     isPredefined: true,
   },
   {
-    code: "carton",
+    code: 'carton',
     factorToBase: 144,
-    label: { en: "Carton", ar: "كرتون" },
+    label: { en: 'Carton', ar: 'كرتون' },
     isPredefined: true,
   },
 ];
 
-import type { CustomerGroup } from "../../../core/domain/types/common";
+import type { CustomerGroup } from '../../../core/domain/types/common';
 export type { CustomerGroup };
 
 export const CUSTOMER_GROUPS: { code: CustomerGroup; label: { en: string; ar: string } }[] = [
-  { code: "public_b2c", label: { en: "Public (B2C)", ar: "عام" } },
-  { code: "school_b2b", label: { en: "Schools (B2B)", ar: "مدارس" } },
-  { code: "wholesale", label: { en: "Wholesale", ar: "جملة" } },
+  { code: 'public_b2c', label: { en: 'Public (B2C)', ar: 'عام' } },
+  { code: 'school_b2b', label: { en: 'Schools (B2B)', ar: 'مدارس' } },
+  { code: 'wholesale', label: { en: 'Wholesale', ar: 'جملة' } },
 ];

@@ -1,4 +1,4 @@
-import { SchoolListParentSession, NewSchoolListParentSession } from "@findeg/db/schema";
+import { SchoolListParentSession, NewSchoolListParentSession } from '@findeg/db/schema';
 
 export interface IParentSessionRepository {
   /**

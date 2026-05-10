@@ -1,14 +1,14 @@
-import { db } from "@findeg/db/connection";
-import { inventoryBalances, stockMovements, warehouses, productVariants } from "@findeg/db/schema";
+import { db } from '@findeg/db/connection';
+import { inventoryBalances, stockMovements, warehouses, productVariants } from '@findeg/db/schema';
 import {
   IInventoryRepository,
   InventoryBalanceResult,
   StockMovementInput,
   LowStockResult,
-} from "../../application/interfaces/IInventoryRepository";
-import { DrizzleVariantRepository } from "./DrizzleVariantRepository";
-import { eq, and, sql, desc } from "drizzle-orm";
-import { ID } from "@findeg/backend/features/core/domain/types/common";
+} from '../../application/interfaces/IInventoryRepository';
+import { DrizzleVariantRepository } from './DrizzleVariantRepository';
+import { eq, and, sql, desc } from 'drizzle-orm';
+import { ID } from '@findeg/backend/features/core/domain/types/common';
 
 /**
  * Drizzle Inventory Repository
@@ -116,7 +116,7 @@ export class DrizzleInventoryRepository implements IInventoryRepository {
             eq(inventoryBalances.warehouseId, warehouseId),
           ),
         )
-        .for("update");
+        .for('update');
 
       const available = (balance?.onHand || 0) - (balance?.reserved || 0);
       if (available < quantity) return false;
@@ -141,9 +141,9 @@ export class DrizzleInventoryRepository implements IInventoryRepository {
       await tx.insert(stockMovements).values({
         variantId,
         warehouseId,
-        movementType: "reserve",
+        movementType: 'reserve',
         quantity,
-        referenceType: "order",
+        referenceType: 'order',
         referenceId: orderId,
         notes: `Reservation for order ${orderId}`,
       });
@@ -174,9 +174,9 @@ export class DrizzleInventoryRepository implements IInventoryRepository {
       await tx.insert(stockMovements).values({
         variantId,
         warehouseId,
-        movementType: "unreserve",
+        movementType: 'unreserve',
         quantity,
-        referenceType: "order",
+        referenceType: 'order',
         referenceId: orderId,
         notes: `Release reservation for order ${orderId}`,
       });

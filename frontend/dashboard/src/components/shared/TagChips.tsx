@@ -7,13 +7,13 @@
  * Location: src/components/shared/ (cross-cutting)
  */
 
-"use client";
+'use client';
 
-import * as React from "react";
-import { Badge } from "@findeg/ui";
-import { Popover, PopoverContent, PopoverTrigger } from "@findeg/ui";
-import { cn } from "@lib/utils";
-import { X } from "lucide-react";
+import * as React from 'react';
+import { Badge } from '@findeg/ui';
+import { Popover, PopoverContent, PopoverTrigger } from '@findeg/ui';
+import { cn } from '@lib/utils';
+import { X } from 'lucide-react';
 
 export interface Tag {
   id: number;
@@ -30,7 +30,7 @@ export interface TagChipsProps {
   /** Enable remove functionality (for edit mode) */
   onRemove?: (tagId: number) => void;
   /** Current locale for bilingual support */
-  locale?: "en" | "ar";
+  locale?: 'en' | 'ar';
   /** Additional CSS classes */
   className?: string;
 }
@@ -50,7 +50,7 @@ export function TagChips({
   tags,
   maxVisible = 3,
   onRemove,
-  locale = "en",
+  locale = 'en',
   className,
 }: TagChipsProps) {
   if (!tags || tags.length === 0) return null;
@@ -60,16 +60,16 @@ export function TagChips({
   const hasMore = hiddenTags.length > 0;
 
   const renderTagChip = (tag: Tag, showRemove = true) => {
-    const tagName = locale === "ar" && tag.nameAr ? tag.nameAr : tag.name;
-    const bgColor = tag.color || "#6b7280";
+    const tagName = locale === 'ar' && tag.nameAr ? tag.nameAr : tag.name;
+    const bgColor = tag.color || '#6b7280';
 
     return (
       <Badge
         key={tag.id}
         variant="outline"
         className={cn(
-          "gap-1 border-0 px-2 py-0.5 text-xs font-medium",
-          onRemove && showRemove && "pe-1",
+          'gap-1 border-0 px-2 py-0.5 text-xs font-medium',
+          onRemove && showRemove && 'pe-1',
         )}
         style={{
           backgroundColor: `${bgColor}15`,
@@ -100,7 +100,7 @@ export function TagChips({
   };
 
   return (
-    <div className={cn("flex flex-wrap items-center gap-1.5", className)}>
+    <div className={cn('flex flex-wrap items-center gap-1.5', className)}>
       {visibleTags.map((tag) => renderTagChip(tag))}
 
       {hasMore && (

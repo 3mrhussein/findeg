@@ -1,6 +1,6 @@
-import type { SessionPayload } from "@findeg/backend/features/core/domain/auth";
-import type { ISessionProvider } from "@findeg/backend/features/core/application/interfaces/ISessionProvider";
-import { JwtSessionManager } from "./JwtSessionManager";
+import type { SessionPayload } from '@findeg/backend/features/core/domain/auth';
+import type { ISessionProvider } from '@findeg/backend/features/core/application/interfaces/ISessionProvider';
+import { JwtSessionManager } from './JwtSessionManager';
 
 /**
  * Cookie store interface - abstracts Next.js cookies() API
@@ -23,7 +23,7 @@ export interface ICookieStore {
     options?: {
       httpOnly?: boolean;
       secure?: boolean;
-      sameSite?: "lax" | "strict" | "none";
+      sameSite?: 'lax' | 'strict' | 'none';
       maxAge?: number;
       path?: string;
     },
@@ -72,7 +72,7 @@ export class CookieSessionProvider implements ISessionProvider {
     if (!token) return null;
 
     return this.sessionManager.validateSession(
-      new Request("http://localhost", {
+      new Request('http://localhost', {
         headers: { Cookie: `${name}=${token}` },
       }),
     );

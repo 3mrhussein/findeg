@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import React from "react";
-import { useTranslations } from "next-intl";
-import { Button } from "@findeg/ui";
-import { Icon } from "@findeg/ui";
-import type { SchoolListResult } from "@findeg/backend/features/catalog/application/interfaces/ISchoolListRepository";
+import React from 'react';
+import { useTranslations } from 'next-intl';
+import { Button } from '@findeg/ui';
+import { Icon } from '@findeg/ui';
+import type { SchoolListResult } from '@findeg/backend/features/catalog/application/interfaces/ISchoolListRepository';
 
 interface SchoolListsProps {
   schoolLists: SchoolListResult[];
@@ -22,7 +22,7 @@ export const SchoolLists: React.FC<SchoolListsProps> = ({ schoolLists }) => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">{t("Pages.Dashboard.SchoolLists")}</h2>
+          <h2 className="text-2xl font-bold tracking-tight">{t('Pages.Dashboard.SchoolLists')}</h2>
           <p className="text-muted-foreground">Manage grade-specific supply lists for schools.</p>
         </div>
         <Button>
@@ -75,11 +75,11 @@ export const SchoolLists: React.FC<SchoolListsProps> = ({ schoolLists }) => {
                     <span
                       className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
                         list.isActive
-                          ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100"
-                          : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100"
+                          ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100'
+                          : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100'
                       }`}
                     >
-                      {list.isActive ? "Active" : "Draft"}
+                      {list.isActive ? 'Active' : 'Draft'}
                     </span>
                   </td>
                   <td className="p-4 align-middle text-right gap-2 flex justify-end">

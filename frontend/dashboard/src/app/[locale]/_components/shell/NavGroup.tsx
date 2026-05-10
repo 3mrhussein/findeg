@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { NavItem } from "./NavItem";
-import { useAdminPermissions } from "../../../../hooks/useAdminPermissions";
-import type { NavGroup as NavGroupType } from "@/interfaces";
+import * as React from 'react';
+import { NavItem } from './NavItem';
+import { useAdminPermissions } from '../../../../hooks/useAdminPermissions';
+import type { NavGroup as NavGroupType } from '@/interfaces';
 
 export interface NavGroupProps {
   group: NavGroupType;
@@ -11,8 +11,8 @@ export interface NavGroupProps {
   locale?: string;
 }
 
-export function NavGroup({ group, collapsed = false, locale = "en" }: NavGroupProps) {
-  const label = locale === "ar" ? group.labelAr : group.label;
+export function NavGroup({ group, collapsed = false, locale = 'en' }: NavGroupProps) {
+  const label = locale === 'ar' ? group.labelAr : group.label;
 
   // We check if the group ends up having any visible items.
   // We can just rely on NavItem to filter itself out, but if NavGroup is effectively empty,

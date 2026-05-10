@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useTranslations } from "next-intl";
-import { Lock, ShieldAlert, Loader2, ArrowRight } from "lucide-react";
+import { useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { Lock, ShieldAlert, Loader2, ArrowRight } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -10,11 +10,11 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from "@findeg/ui";
-import { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { useToast } from "@hooks/use-toast";
-import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
+} from '@findeg/ui';
+import { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { useToast } from '@hooks/use-toast';
+import { REGEXP_ONLY_DIGITS_AND_CHARS } from 'input-otp';
 
 interface CodeEntryDialogProps {
   isOpen: boolean;
@@ -37,9 +37,9 @@ export function CodeEntryDialog({
   listTitle,
   onSuccess,
 }: CodeEntryDialogProps) {
-  const t = useTranslations("School.CodeEntry");
+  const t = useTranslations('School.CodeEntry');
   const { toast } = useToast();
-  const [code, setCode] = useState("");
+  const [code, setCode] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [lockedUntil, setLockedUntil] = useState<string | null>(null);
@@ -55,27 +55,27 @@ export function CodeEntryDialog({
 
     try {
       const response = await fetch(`/api/v1/school-lists/${listId}/verify-code`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code }),
       });
 
       const result = await response.json();
 
       if (response.ok) {
-        toast({ title: t("successToast") });
+        toast({ title: t('successToast') });
         onSuccess();
         onClose();
       } else {
-        setError(result.error || t("wrongCode"));
+        setError(result.error || t('wrongCode'));
         if (result.locked) {
           setLockedUntil(result.lockedUntil);
         }
-        toast({ variant: "destructive", title: result.error || t("errorToast") });
+        toast({ variant: 'destructive', title: result.error || t('errorToast') });
       }
     } catch (err) {
-      setError(t("connectionError"));
-      toast({ variant: "destructive", title: t("connectionError") });
+      setError(t('connectionError'));
+      toast({ variant: 'destructive', title: t('connectionError') });
     } finally {
       setIsVerifying(false);
     }
@@ -88,9 +88,9 @@ export function CodeEntryDialog({
           <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
             <Lock className="w-6 h-6 text-primary" />
           </div>
-          <DialogTitle className="text-xl">{t("title")}</DialogTitle>
+          <DialogTitle className="text-xl">{t('title')}</DialogTitle>
           <DialogDescription className="text-base">
-            {t("description", { list: listTitle })}
+            {t('description', { list: listTitle })}
           </DialogDescription>
         </DialogHeader>
 
@@ -124,14 +124,14 @@ export function CodeEntryDialog({
 
           {lockedUntil && (
             <div className="text-sm text-muted-foreground italic">
-              {t("lockedUntil", { time: new Date(lockedUntil).toLocaleTimeString() })}
+              {t('lockedUntil', { time: new Date(lockedUntil).toLocaleTimeString() })}
             </div>
           )}
         </div>
 
         <DialogFooter className="flex sm:justify-center gap-2">
           <Button variant="ghost" onClick={onClose} disabled={isVerifying}>
-            {t("cancel")}
+            {t('cancel')}
           </Button>
           <Button
             onClick={handleVerify}
@@ -141,11 +141,11 @@ export function CodeEntryDialog({
             {isVerifying ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                {t("verifying")}
+                {t('verifying')}
               </>
             ) : (
               <>
-                {t("verifyButton")}
+                {t('verifyButton')}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </>
             )}

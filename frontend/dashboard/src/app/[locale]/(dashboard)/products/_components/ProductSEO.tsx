@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useFormContext } from "react-hook-form";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Textarea } from "@findeg/ui";
+import { useFormContext } from 'react-hook-form';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@findeg/ui';
+import { Input } from '@findeg/ui';
+import { Textarea } from '@findeg/ui';
 
 /**
  *

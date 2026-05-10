@@ -1,13 +1,13 @@
-import * as React from "react";
-import { Section, Text, Button, Heading, Row, Column, Hr, Img } from "@react-email/components";
-import { EmailLayout } from "./EmailLayout";
+import * as React from 'react';
+import { Section, Text, Button, Heading, Row, Column, Hr } from '@react-email/components';
+import { EmailLayout } from './EmailLayout';
 
 // Redefining colors locally for the template to avoid complex imports in emails
 const colors = {
-  primary: "#4338CA",
-  textPrimary: "#111827",
-  textMuted: "#6B7280",
-  border: "#E5E7EB",
+  primary: '#4338CA',
+  textPrimary: '#111827',
+  textMuted: '#6B7280',
+  border: '#E5E7EB',
 };
 
 interface OrderConfirmationEmailProps {
@@ -23,7 +23,7 @@ interface OrderConfirmationEmailProps {
   locale?: string;
 }
 
-import env from "@findeg/env";
+import env from '@findeg/env';
 
 const BASE_URL = env.NEXT_PUBLIC_APP_URL;
 
@@ -31,28 +31,28 @@ const BASE_URL = env.NEXT_PUBLIC_APP_URL;
  *
  */
 export const OrderConfirmationEmail = ({
-  orderId = "10001",
-  customerName = "Customer",
-  items = [{ name: "Sample Item", quantity: 1, price: "EGP 100.00" }],
-  total = "EGP 100.00",
-  deliveryAddress = "123 Main St, Cairo, Egypt",
-  locale = "en",
+  orderId = '10001',
+  customerName = 'Customer',
+  items = [{ name: 'Sample Item', quantity: 1, price: 'EGP 100.00' }],
+  total = 'EGP 100.00',
+  deliveryAddress = '123 Main St, Cairo, Egypt',
+  locale = 'en',
 }: OrderConfirmationEmailProps) => {
-  const isRtl = locale === "ar";
+  const isRtl = locale === 'ar';
 
   const content = {
-    title: isRtl ? "تأكيد الطلب 🧾" : "Order Confirmation 🧾",
+    title: isRtl ? 'تأكيد الطلب 🧾' : 'Order Confirmation 🧾',
     greeting: isRtl ? `مرحباً ${customerName}،` : `Hello ${customerName},`,
     message: isRtl
       ? `شكراً لتسوقك من فايند إي جي. لقد استلمنا طلبك (#${orderId}) ونقوم حالياً بتجهيزه. سنرسل لك بريداً إلكترونياً آخر عندما يتم شحن طلبك.`
       : `Thank you for shopping at FindEg. We've received your order (#${orderId}) and are currently processing it. We'll send you another email when your order has been shipped.`,
-    orderSummaryStr: isRtl ? "ملخص الطلب" : "Order Summary",
-    itemStr: isRtl ? "العنصر" : "Item",
-    qtyStr: isRtl ? "الكمية" : "Qty",
-    priceStr: isRtl ? "السعر" : "Price",
-    totalStr: isRtl ? "المجموع الكلي" : "Total",
-    shippingAddressStr: isRtl ? "عنوان التوصيل" : "Shipping Address",
-    trackOrderStr: isRtl ? "تتبع الطلب" : "Track Order",
+    orderSummaryStr: isRtl ? 'ملخص الطلب' : 'Order Summary',
+    itemStr: isRtl ? 'العنصر' : 'Item',
+    qtyStr: isRtl ? 'الكمية' : 'Qty',
+    priceStr: isRtl ? 'السعر' : 'Price',
+    totalStr: isRtl ? 'المجموع الكلي' : 'Total',
+    shippingAddressStr: isRtl ? 'عنوان التوصيل' : 'Shipping Address',
+    trackOrderStr: isRtl ? 'تتبع الطلب' : 'Track Order',
   };
 
   return (
@@ -92,7 +92,7 @@ export const OrderConfirmationEmail = ({
         <Hr style={divider} />
 
         <Row>
-          <Column style={{ width: "60%" }}></Column>
+          <Column style={{ width: '60%' }}></Column>
           <Column style={isRtl ? colQtyRtl : colQty}>
             <Text style={itemBold}>{content.totalStr}</Text>
           </Column>
@@ -121,119 +121,119 @@ export const OrderConfirmationEmail = ({
 // Styles
 const h1 = {
   color: colors.primary,
-  fontSize: "24px",
-  fontWeight: "600",
-  lineHeight: "28px",
-  margin: "0 0 24px 0",
+  fontSize: '24px',
+  fontWeight: '600',
+  lineHeight: '28px',
+  margin: '0 0 24px 0',
 };
 
 const h2 = {
   color: colors.textPrimary,
-  fontSize: "18px",
-  fontWeight: "600",
-  margin: "0 0 16px 0",
+  fontSize: '18px',
+  fontWeight: '600',
+  margin: '0 0 16px 0',
 };
 
 const h3 = {
   color: colors.textPrimary,
-  fontSize: "14px",
-  fontWeight: "600",
-  margin: "0 0 8px 0",
-  textTransform: "uppercase" as const,
-  letterSpacing: "0.5px",
+  fontSize: '14px',
+  fontWeight: '600',
+  margin: '0 0 8px 0',
+  textTransform: 'uppercase' as const,
+  letterSpacing: '0.5px',
 };
 
 const paragraph = {
   color: colors.textPrimary,
-  fontSize: "16px",
-  lineHeight: "24px",
-  margin: "0 0 16px 0",
+  fontSize: '16px',
+  lineHeight: '24px',
+  margin: '0 0 16px 0',
 };
 
 const orderSummaryBox = {
-  backgroundColor: "#F9FAFB",
+  backgroundColor: '#F9FAFB',
   border: `1px solid ${colors.border}`,
-  borderRadius: "8px",
-  padding: "24px",
-  margin: "32px 0",
+  borderRadius: '8px',
+  padding: '24px',
+  margin: '32px 0',
 };
 
 const tableHeader = {
   borderBottom: `2px solid ${colors.border}`,
-  paddingBottom: "8px",
-  marginBottom: "12px",
+  paddingBottom: '8px',
+  marginBottom: '12px',
 };
 
 const tableRow = {
   borderBottom: `1px solid ${colors.border}`,
-  paddingVertical: "12px",
+  paddingVertical: '12px',
 };
 
 const divider = {
   borderColor: colors.border,
-  margin: "16px 0",
+  margin: '16px 0',
 };
 
-const colItem = { width: "60%" };
-const colQty = { width: "15%", textAlign: "center" as const };
-const colPrice = { width: "25%", textAlign: "right" as const };
+const colItem = { width: '60%' };
+const colQty = { width: '15%', textAlign: 'center' as const };
+const colPrice = { width: '25%', textAlign: 'right' as const };
 
-const colItemRtl = { width: "60%", textAlign: "right" as const };
-const colQtyRtl = { width: "15%", textAlign: "center" as const };
-const colPriceRtl = { width: "25%", textAlign: "left" as const };
+const colItemRtl = { width: '60%', textAlign: 'right' as const };
+const colQtyRtl = { width: '15%', textAlign: 'center' as const };
+const colPriceRtl = { width: '25%', textAlign: 'left' as const };
 
 const itemName = {
-  fontSize: "14px",
+  fontSize: '14px',
   color: colors.textPrimary,
-  margin: "0",
-  lineHeight: "20px",
+  margin: '0',
+  lineHeight: '20px',
 };
 
 const itemText = {
-  fontSize: "14px",
+  fontSize: '14px',
   color: colors.textPrimary,
-  margin: "0",
+  margin: '0',
 };
 
 const itemBold = {
-  fontSize: "14px",
-  fontWeight: "600",
+  fontSize: '14px',
+  fontWeight: '600',
   color: colors.textPrimary,
-  margin: "0",
+  margin: '0',
 };
 
 const totalText = {
-  fontSize: "16px",
-  fontWeight: "700",
+  fontSize: '16px',
+  fontWeight: '700',
   color: colors.primary,
-  margin: "0",
+  margin: '0',
 };
 
 const addressBox = {
-  margin: "0 0 32px 0",
+  margin: '0 0 32px 0',
 };
 
 const addressText = {
   color: colors.textMuted,
-  fontSize: "14px",
-  lineHeight: "20px",
-  margin: "0",
+  fontSize: '14px',
+  lineHeight: '20px',
+  margin: '0',
 };
 
 const btnContainer = {
-  textAlign: "center" as const,
+  textAlign: 'center' as const,
 };
 
 const button = {
   backgroundColor: colors.primary,
-  borderRadius: "6px",
-  color: "#fff",
-  fontSize: "16px",
-  fontWeight: "600",
-  textDecoration: "none",
-  textAlign: "center" as const,
-  display: "inline-block",
-  padding: "14px 28px",
+  borderRadius: '6px',
+  color: '#fff',
+  fontSize: '16px',
+  fontWeight: '600',
+  textDecoration: 'none',
+  textAlign: 'center' as const,
+  display: 'inline-block',
+  padding: '14px 28px',
 };
 
 export default OrderConfirmationEmail;

@@ -9,13 +9,13 @@
  * destructive action is not the default focused button.
  */
 
-"use client";
+'use client';
 
-import React from "react";
-import { useTranslations } from "next-intl";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Icon } from "@findeg/ui";
+import React from 'react';
+import { useTranslations } from 'next-intl';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { Icon } from '@findeg/ui';
 
 interface DeactivateConfirmDialogProps {
   open: boolean;
@@ -36,7 +36,7 @@ export function DeactivateConfirmDialog({
   onCancel,
   loading,
 }: DeactivateConfirmDialogProps) {
-  const t = useTranslations("Pages.Dashboard");
+  const t = useTranslations('Pages.Dashboard');
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onCancel()}>
@@ -45,11 +45,11 @@ export function DeactivateConfirmDialog({
           <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10">
             <Icon name="warning" className="text-destructive" style={{ fontSize: 28 }} />
           </div>
-          <DialogTitle className="text-xl">{t("DeactivateTitle")}</DialogTitle>
+          <DialogTitle className="text-xl">{t('DeactivateTitle')}</DialogTitle>
         </DialogHeader>
 
         <p id="deactivate-body" className="text-center text-sm text-muted-foreground px-2">
-          {t("DeactivateBody", { name: userName })}
+          {t('DeactivateBody', { name: userName })}
         </p>
 
         <DialogFooter className="flex-row gap-2 sm:flex-row">
@@ -61,13 +61,13 @@ export function DeactivateConfirmDialog({
             autoFocus
             disabled={loading}
           >
-            {t("KeepActive")}
+            {t('KeepActive')}
           </Button>
           <Button variant="destructive" className="flex-1" onClick={onConfirm} disabled={loading}>
             {loading && (
               <Icon name="progress_activity" className="w-4 h-4 ltr:mr-2 rtl:ml-2 animate-spin" />
             )}
-            {t("Deactivate")}
+            {t('Deactivate')}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -3,15 +3,15 @@
  *
  * Apps own cache invalidation - backend stays pure TypeScript.
  */
-"use server";
+'use server';
 
-import { revalidateTag } from "next/cache";
-import { createAdministrationServices } from "@findeg/backend/features/administration";
+import { revalidateTag } from 'next/cache';
+import { createAdministrationServices } from '@findeg/backend/features/administration';
 import type {
   CreateProductWithVariantsInput,
   UpdateProductWithVariantsInput,
-} from "@findeg/backend/features/administration/domain/types";
-import { getErrorMessage } from "@lib/type-guards";
+} from '@findeg/backend/features/administration/domain/types';
+import { getErrorMessage } from '@lib/type-guards';
 
 /**
  * Create a new product
@@ -24,11 +24,11 @@ export async function createProduct(input: CreateProductWithVariantsInput) {
     const result = await products.createProduct(input);
 
     // Invalidate product caches
-    revalidateTag("products", "max");
+    revalidateTag('products', 'max');
 
     return { success: true, data: result };
   } catch (error: unknown) {
-    console.error("[createProduct]", error);
+    console.error('[createProduct]', error);
     return { success: false, error: getErrorMessage(error) };
   }
 }
@@ -43,11 +43,11 @@ export async function updateProduct(id: number, input: UpdateProductWithVariants
     const { products } = createAdministrationServices();
     const result = await products.updateProduct(id, input);
 
-    revalidateTag("products", "max");
+    revalidateTag('products', 'max');
 
     return { success: true, data: result };
   } catch (error: unknown) {
-    console.error("[updateProduct]", error);
+    console.error('[updateProduct]', error);
     return { success: false, error: getErrorMessage(error) };
   }
 }
@@ -62,11 +62,11 @@ export async function deleteProduct(id: number) {
     const { products } = createAdministrationServices();
     await products.deleteProduct(id);
 
-    revalidateTag("products", "max");
+    revalidateTag('products', 'max');
 
     return { success: true };
   } catch (error: unknown) {
-    console.error("[deleteProduct]", error);
+    console.error('[deleteProduct]', error);
     return { success: false, error: getErrorMessage(error) };
   }
 }
@@ -81,11 +81,11 @@ export async function importProducts(csvFile: any) {
     const { products } = createAdministrationServices();
     // await products.importFromCSV(csvFile);
 
-    revalidateTag("products", "max");
+    revalidateTag('products', 'max');
 
     return { success: true };
   } catch (error: unknown) {
-    console.error("[importProducts]", error);
+    console.error('[importProducts]', error);
     return { success: false, error: getErrorMessage(error) };
   }
 }
@@ -97,13 +97,13 @@ export async function setProductStatus(id: number, isActive: boolean) {
   try {
     const { products } = createAdministrationServices();
     const existingProduct = await products.getById(id);
-    if (!existingProduct) return { success: false, error: "Product not found" };
+    if (!existingProduct) return { success: false, error: 'Product not found' };
 
     await products.updateProduct(id, { ...existingProduct, isActive } as any);
-    revalidateTag("products", "max");
+    revalidateTag('products', 'max');
     return { success: true };
   } catch (error: unknown) {
-    console.error("[setProductStatus]", error);
+    console.error('[setProductStatus]', error);
     return { success: false, error: getErrorMessage(error) };
   }
 }
@@ -119,10 +119,10 @@ export async function generateVariants(
   try {
     const { products } = createAdministrationServices();
     await products.generateVariants(productId, dimensions, defaults);
-    revalidateTag("products", "max");
+    revalidateTag('products', 'max');
     return { success: true };
   } catch (error: unknown) {
-    console.error("[generateVariants]", error);
+    console.error('[generateVariants]', error);
     return { success: false, error: getErrorMessage(error) };
   }
 }

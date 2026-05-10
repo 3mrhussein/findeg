@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useTranslations } from "next-intl";
-import { Send, Loader2, FileText, User, MessageSquare } from "lucide-react";
+import { useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { Send, Loader2, FileText, User, MessageSquare } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -10,12 +10,12 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Textarea } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import { useToast } from "@hooks/use-toast";
+} from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { Input } from '@findeg/ui';
+import { Textarea } from '@findeg/ui';
+import { Label } from '@findeg/ui';
+import { useToast } from '@hooks/use-toast';
 
 interface AccessRequestDialogProps {
   isOpen: boolean;
@@ -40,11 +40,11 @@ export function AccessRequestDialog({
   listTitle,
   onSuccess,
 }: AccessRequestDialogProps) {
-  const t = useTranslations("School.AccessRequest");
+  const t = useTranslations('School.AccessRequest');
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [childName, setChildName] = useState("");
-  const [note, setNote] = useState("");
+  const [childName, setChildName] = useState('');
+  const [note, setNote] = useState('');
 
   /**
    *
@@ -57,22 +57,22 @@ export function AccessRequestDialog({
 
     try {
       const response = await fetch(`/api/v1/school-lists/${listId}/request-access`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ childName, note }),
       });
 
       const result = await response.json();
 
       if (response.ok) {
-        toast({ title: t("successToast") });
+        toast({ title: t('successToast') });
         onSuccess?.();
         onClose();
       } else {
-        toast({ variant: "destructive", title: result.error || t("errorToast") });
+        toast({ variant: 'destructive', title: result.error || t('errorToast') });
       }
     } catch (error) {
-      toast({ variant: "destructive", title: t("connectionError") });
+      toast({ variant: 'destructive', title: t('connectionError') });
     } finally {
       setIsSubmitting(false);
     }
@@ -85,9 +85,9 @@ export function AccessRequestDialog({
           <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
             <FileText className="w-6 h-6 text-primary" />
           </div>
-          <DialogTitle className="text-xl">{t("title")}</DialogTitle>
+          <DialogTitle className="text-xl">{t('title')}</DialogTitle>
           <DialogDescription className="text-base">
-            {t("description", { school: schoolName, list: listTitle })}
+            {t('description', { school: schoolName, list: listTitle })}
           </DialogDescription>
         </DialogHeader>
 
@@ -95,11 +95,11 @@ export function AccessRequestDialog({
           <div className="space-y-2">
             <Label htmlFor="childName" className="flex items-center gap-2">
               <User className="w-4 h-4 text-muted-foreground" />
-              {t("childNameLabel")}
+              {t('childNameLabel')}
             </Label>
             <Input
               id="childName"
-              placeholder={t("childNamePlaceholder")}
+              placeholder={t('childNamePlaceholder')}
               value={childName}
               onChange={(e) => setChildName(e.target.value)}
               required
@@ -111,22 +111,22 @@ export function AccessRequestDialog({
           <div className="space-y-2">
             <Label htmlFor="note" className="flex items-center gap-2">
               <MessageSquare className="w-4 h-4 text-muted-foreground" />
-              {t("noteLabel")}
+              {t('noteLabel')}
             </Label>
             <Textarea
               id="note"
-              placeholder={t("notePlaceholder")}
+              placeholder={t('notePlaceholder')}
               value={note}
               onChange={(e) => setNote(e.target.value)}
               disabled={isSubmitting}
               className="min-h-[100px] resize-none"
             />
-            <p className="text-xs text-muted-foreground italic">{t("noteHint")}</p>
+            <p className="text-xs text-muted-foreground italic">{t('noteHint')}</p>
           </div>
 
           <DialogFooter className="pt-4">
             <Button type="button" variant="ghost" onClick={onClose} disabled={isSubmitting}>
-              {t("cancel")}
+              {t('cancel')}
             </Button>
             <Button
               type="submit"
@@ -136,11 +136,11 @@ export function AccessRequestDialog({
               {isSubmitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {t("sending")}
+                  {t('sending')}
                 </>
               ) : (
                 <>
-                  {t("submitButton")}
+                  {t('submitButton')}
                   <Send className="ml-2 h-4 w-4" />
                 </>
               )}

@@ -9,4 +9,4 @@
  */
 
 // Validation schemas only (domain types exported from features)
-export * from "./validation";
+export * from './validation';

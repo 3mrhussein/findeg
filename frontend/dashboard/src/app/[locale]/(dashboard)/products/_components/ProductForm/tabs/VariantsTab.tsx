@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import React, { useEffect } from "react";
-import { useFormContext, useFieldArray } from "react-hook-form";
-import { useTranslations } from "next-intl";
+import React, { useEffect } from 'react';
+import { useFormContext, useFieldArray } from 'react-hook-form';
+import { useTranslations } from 'next-intl';
 import {
   FormControl,
   FormField,
@@ -10,25 +10,25 @@ import {
   FormLabel,
   FormMessage,
   FormDescription,
-} from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import { Plus, Trash2, Layers, GripVertical, ChevronDown, ChevronRight } from "lucide-react";
-import { ProductFormValues } from "@/interfaces";
-import { Badge } from "@findeg/ui";
-import { Switch } from "@findeg/ui";
-import { cn } from "@lib/utils";
+} from '@findeg/ui';
+import { Input } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
+import { Plus, Trash2, Layers, GripVertical, ChevronDown, ChevronRight } from 'lucide-react';
+import { ProductFormValues } from '@/interfaces';
+import { Badge } from '@findeg/ui';
+import { Switch } from '@findeg/ui';
+import { cn } from '@lib/utils';
 
 /**
  * Variants Management Tab
  */
 export function VariantsTab() {
-  const t = useTranslations("Administration.Catalog.Products.Form.Tabs.Variants");
+  const t = useTranslations('Administration.Catalog.Products.Form.Tabs.Variants');
   const { control, watch } = useFormContext<ProductFormValues>();
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "variants",
+    name: 'variants',
   });
 
   const [expandedIds, setExpandedIds] = React.useState<string[]>([]);
@@ -40,15 +40,15 @@ export function VariantsTab() {
   // Auto-create a default variant if none exist (new product)
   useEffect(() => {
     if (fields.length === 0) {
-      const defaultId = "default-variant";
+      const defaultId = 'default-variant';
       append({
-        sku: "",
-        localizedLabel: { en: "Standard", ar: "قياسي" },
+        sku: '',
+        localizedLabel: { en: 'Standard', ar: 'قياسي' },
         basePrice: 0,
         costPrice: 0,
         strikePrice: null,
         weightGrams: null,
-        barcode: "",
+        barcode: '',
         lowStockThreshold: 10,
         isActive: true,
         displayOrder: 0,
@@ -64,13 +64,13 @@ export function VariantsTab() {
 
   const addVariant = () => {
     append({
-      sku: "",
-      localizedLabel: { en: "", ar: "" },
+      sku: '',
+      localizedLabel: { en: '', ar: '' },
       basePrice: 0,
       costPrice: 0,
       isActive: true,
       displayOrder: fields.length,
-      barcode: "",
+      barcode: '',
       lowStockThreshold: 10,
       images: [],
       attributes: [],
@@ -83,14 +83,14 @@ export function VariantsTab() {
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-lg font-medium">{t("productVariants")}</h3>
-            <p className="text-sm text-muted-foreground">{t("variantsDesc")}</p>
+            <h3 className="text-lg font-medium">{t('productVariants')}</h3>
+            <p className="text-sm text-muted-foreground">{t('variantsDesc')}</p>
           </div>
         </div>
         <div className="flex justify-start">
           <Button size="sm" onClick={addVariant} variant="outline" className="h-9">
             <Plus className="mr-2 h-4 w-4" />
-            {t("addVariant")}
+            {t('addVariant')}
           </Button>
         </div>
       </div>
@@ -104,8 +104,8 @@ export function VariantsTab() {
             <Card
               key={field.id}
               className={cn(
-                "overflow-hidden transition-all",
-                isExpanded ? "ring-1 ring-primary/20" : "hover:bg-muted/30",
+                'overflow-hidden transition-all',
+                isExpanded ? 'ring-1 ring-primary/20' : 'hover:bg-muted/30',
               )}
             >
               {/* Collapsed Header / Summary */}
@@ -126,10 +126,10 @@ export function VariantsTab() {
                   <div className="flex items-center gap-4 flex-1">
                     <div className="flex flex-col">
                       <span className="text-sm font-medium truncate">
-                        {variant.sku || "New Variant"}
+                        {variant.sku || 'New Variant'}
                       </span>
                       <span className="text-xs text-muted-foreground">
-                        {variant.localizedLabel?.en || "Unnamed"}
+                        {variant.localizedLabel?.en || 'Unnamed'}
                       </span>
                     </div>
 
@@ -138,14 +138,14 @@ export function VariantsTab() {
                         variant="outline"
                         className={cn(
                           variant.isActive
-                            ? "bg-green-50 dark:bg-green-950/20 text-green-700 dark:text-green-400 border-green-200 dark:border-green-900/30"
-                            : "bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-300",
+                            ? 'bg-green-50 dark:bg-green-950/20 text-green-700 dark:text-green-400 border-green-200 dark:border-green-900/30'
+                            : 'bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-slate-300',
                         )}
                       >
-                        {variant.isActive ? "Active" : "Draft"}
+                        {variant.isActive ? 'Active' : 'Draft'}
                       </Badge>
                       <span className="text-sm font-semibold tabular-nums">
-                        EGP {variant.basePrice?.toFixed(2) || "0.00"}
+                        EGP {variant.basePrice?.toFixed(2) || '0.00'}
                       </span>
                     </div>
                   </div>
@@ -177,7 +177,7 @@ export function VariantsTab() {
                         name={`variants.${index}.sku`}
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-xs">{t("sku")}</FormLabel>
+                            <FormLabel className="text-xs">{t('sku')}</FormLabel>
                             <FormControl>
                               <Input placeholder="e.g. STA-PEN-BLUE" {...field} />
                             </FormControl>
@@ -222,7 +222,7 @@ export function VariantsTab() {
                           name={`variants.${index}.basePrice`}
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-xs">{t("basePrice")} (EGP)</FormLabel>
+                              <FormLabel className="text-xs">{t('basePrice')} (EGP)</FormLabel>
                               <FormControl>
                                 <Input
                                   type="number"
@@ -246,10 +246,10 @@ export function VariantsTab() {
                                   type="number"
                                   placeholder="0.00"
                                   {...field}
-                                  value={field.value ?? ""}
+                                  value={field.value ?? ''}
                                   onChange={(e) =>
                                     field.onChange(
-                                      e.target.value === "" ? null : parseFloat(e.target.value),
+                                      e.target.value === '' ? null : parseFloat(e.target.value),
                                     )
                                   }
                                 />
@@ -270,7 +270,7 @@ export function VariantsTab() {
                                 <Input
                                   placeholder="EAN/UPC..."
                                   {...field}
-                                  value={field.value ?? ""}
+                                  value={field.value ?? ''}
                                 />
                               </FormControl>
                             </FormItem>

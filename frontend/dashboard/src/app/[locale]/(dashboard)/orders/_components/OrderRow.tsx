@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { EnrichedTableRow } from "@/app/[locale]/_components/table/EnrichedTableRow";
-import { StatusBadge } from "@components/shared/StatusBadge";
-import { Package, User, CreditCard, MapPin, FileText } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
-import { cn } from "@lib/utils";
-import { OrderTimeline } from "./OrderTimeline";
-import type { Order } from "@findeg/backend/features/order";
+import { useState } from 'react';
+import { EnrichedTableRow } from '@/app/[locale]/_components/table/EnrichedTableRow';
+import { StatusBadge } from '@components/shared/StatusBadge';
+import { Package, User, CreditCard, MapPin, FileText } from 'lucide-react';
+import { formatDistanceToNow } from 'date-fns';
+import { cn } from '@lib/utils';
+import { OrderTimeline } from './OrderTimeline';
+import type { Order } from '@findeg/backend/features/order';
 
 interface OrderRowProps {
   order: Order;
@@ -21,12 +21,12 @@ export function OrderRow({ order, isSelected, onSelect, onOpenDetail }: OrderRow
 
   // Compute display values
   const orderNumber = `#${order.id}`;
-  const customerName = order.customerName || order.guestEmail || "Guest";
+  const customerName = order.customerName || order.guestEmail || 'Guest';
   const itemsCount = order.items?.length || 0;
-  const totalAmount = `${order.currency || "EGP"} ${order.totalAmount?.toFixed(2) || "0.00"}`;
+  const totalAmount = `${order.currency || 'EGP'} ${order.totalAmount?.toFixed(2) || '0.00'}`;
   const timeAgo = order.createdAt
     ? formatDistanceToNow(new Date(order.createdAt), { addSuffix: true })
-    : "Unknown";
+    : 'Unknown';
 
   // Order status badge variant is not needed - StatusBadge handles styles internally
 
@@ -75,7 +75,7 @@ export function OrderRow({ order, isSelected, onSelect, onOpenDetail }: OrderRow
               >
                 <div className="min-w-0 flex-1">
                   <div className="font-medium text-sm truncate">
-                    {item.productNameSnapshot || "Unknown Product"}
+                    {item.productNameSnapshot || 'Unknown Product'}
                   </div>
                   {item.productSkuSnapshot && (
                     <div className="text-xs text-muted-foreground font-mono">
@@ -88,11 +88,11 @@ export function OrderRow({ order, isSelected, onSelect, onOpenDetail }: OrderRow
                     </div>
                   )}
                   <div className="text-xs text-muted-foreground mt-1">
-                    Qty: {item.quantity} {item.uomCode || "unit"}
+                    Qty: {item.quantity} {item.uomCode || 'unit'}
                   </div>
                 </div>
                 <div className="text-sm font-semibold whitespace-nowrap">
-                  {order.currency || "EGP"} {item.totalPrice?.toFixed(2) || "0.00"}
+                  {order.currency || 'EGP'} {item.totalPrice?.toFixed(2) || '0.00'}
                 </div>
               </div>
             ))}
@@ -103,13 +103,13 @@ export function OrderRow({ order, isSelected, onSelect, onOpenDetail }: OrderRow
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Subtotal:</span>
               <span>
-                {order.currency || "EGP"} {order.subtotal?.toFixed(2) || "0.00"}
+                {order.currency || 'EGP'} {order.subtotal?.toFixed(2) || '0.00'}
               </span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Shipping:</span>
               <span>
-                {order.currency || "EGP"} {order.shippingCost?.toFixed(2) || "0.00"}
+                {order.currency || 'EGP'} {order.shippingCost?.toFixed(2) || '0.00'}
               </span>
             </div>
             <div className="flex justify-between font-semibold pt-1 border-t">
@@ -132,7 +132,7 @@ export function OrderRow({ order, isSelected, onSelect, onOpenDetail }: OrderRow
             <CreditCard className="size-4 text-muted-foreground" />
             <span className="text-sm text-muted-foreground">Payment:</span>
             <span className="text-sm font-medium capitalize">
-              {order.paymentStatus || "unpaid"}
+              {order.paymentStatus || 'unpaid'}
             </span>
           </div>
 

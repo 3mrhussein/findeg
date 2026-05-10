@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { useFormContext } from "react-hook-form";
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Separator } from "@findeg/ui";
-import { SkuInput } from "../shared/SkuInput";
-import { WeightInput } from "../shared/WeightInput";
-import { ProductFormValues } from "@/interfaces";
+import * as React from 'react';
+import { useFormContext } from 'react-hook-form';
+import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
+import { Label } from '@findeg/ui';
+import { Input } from '@findeg/ui';
+import { Separator } from '@findeg/ui';
+import { SkuInput } from '../shared/SkuInput';
+import { WeightInput } from '../shared/WeightInput';
+import { ProductFormValues } from '@/interfaces';
 
 interface ProductStockSectionProps {
   variantIndex?: number;
@@ -31,7 +31,7 @@ export function ProductStockSection({ variantIndex, excludeVariantId }: ProductS
     <Card>
       <CardHeader className="pb-3">
         <CardTitle className="text-sm font-semibold">
-          {isVariant ? "Variant Stock & Identity" : "Stock & Identity"}
+          {isVariant ? 'Variant Stock & Identity' : 'Stock & Identity'}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">

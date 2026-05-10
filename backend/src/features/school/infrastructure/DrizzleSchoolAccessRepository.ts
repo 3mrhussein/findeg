@@ -1,7 +1,7 @@
-import { db } from "@findeg/db/connection";
-import { eq, and, desc, sql } from "drizzle-orm";
-import { ID } from "@findeg/backend/features/core/domain/types/common";
-import { ISchoolAccessRepository } from "@findeg/backend/features/school/application/interfaces/ISchoolAccessRepository";
+import { db } from '@findeg/db/connection';
+import { eq, and, desc, sql } from 'drizzle-orm';
+import { ID } from '@findeg/backend/features/core/domain/types/common';
+import { ISchoolAccessRepository } from '@findeg/backend/features/school/application/interfaces/ISchoolAccessRepository';
 import {
   schoolListAccessGrants,
   schoolListAccessRequests,
@@ -13,7 +13,7 @@ import {
   type NewSchoolListAccessRequest,
   type SchoolListAccessToken,
   type SchoolListCodeAttempt,
-} from "@findeg/db/schema";
+} from '@findeg/db/schema';
 
 /**
  *
@@ -89,7 +89,7 @@ export class DrizzleSchoolAccessRepository implements ISchoolAccessRepository {
         and(
           eq(schoolListAccessRequests.listId, listId as number),
           eq(schoolListAccessRequests.userId, userId as number),
-          eq(schoolListAccessRequests.status, "pending"),
+          eq(schoolListAccessRequests.status, 'pending'),
         ),
       )
       .limit(1);
@@ -110,7 +110,7 @@ export class DrizzleSchoolAccessRepository implements ISchoolAccessRepository {
    */
   async updateRequestStatus(
     requestId: ID,
-    status: SchoolListAccessRequest["status"],
+    status: SchoolListAccessRequest['status'],
     reviewerId?: ID,
   ): Promise<void> {
     await db

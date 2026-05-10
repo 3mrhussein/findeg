@@ -1,57 +1,23 @@
 {
   "name": "findeg-app",
-  "version": "1.0.0",
-  "description": "FindEg.com E-commerce Application",
   "private": true,
+  "packageManager": "pnpm@10.33.0",
   "type": "module",
   "scripts": {
-    "dev": "turbo run dev --filter=@findeg/storefront --filter=@findeg/dashboard",
+    "dev": "turbo run dev --parallel",
+    "dx": "docker compose up -d postgres && turbo run dev --filter=@findeg/storefront --filter=@findeg/dashboard",
     "build": "turbo run build",
     "start": "turbo run start",
-    "type-check": "turbo run type-check",
     "lint": "turbo run lint",
-    "test": "turbo run type-check && turbo run test:unit && turbo run test:e2e",
-    "test:unit": "turbo run test:unit",
-    "test:e2e": "turbo run test:e2e",
-    "dev:storefront": "pnpm --filter @findeg/storefront dev",
-    "dev:dashboard": "pnpm --filter @findeg/dashboard dev",
-    "dev:both": "pnpm --parallel --filter @findeg/storefront --filter @findeg/dashboard dev",
-    "dev:all": "pnpm db:setup && pnpm dev",
-    "db:start": "docker-compose up -d postgres",
-    "db:stop": "docker-compose stop postgres",
-    "db:reset": "docker-compose down -v postgres && docker-compose up -d postgres",
-    "db:logs": "docker-compose logs -f postgres",
-    "db:shell": "docker-compose exec postgres psql -U findeg_user -d findeg_dev",
-    "db:status": "docker-compose ps && docker-compose exec postgres pg_isready -U findeg_user",
-    "db:setup": "pnpm db:start && pnpm db:push && pnpm db:seed",
-    "db:generate": "pnpm --filter @findeg/db db:generate",
-    "db:migrate": "pnpm --filter @findeg/db db:migrate",
-    "db:push": "pnpm --filter @findeg/db db:push",
-    "db:seed": "pnpm --filter @findeg/db db:seed",
-    "db:studio": "pnpm --filter @findeg/db db:studio"
-  },
-  "dependencies": {
-    "dotenv": "17.4.2",
-    "zod": "^4.3.6"
+    "type-check": "turbo run type-check",
+    "test": "turbo run test",
+    "db:setup": "pnpm db:generate && pnpm db:push && pnpm db:seed",
+    "db:studio": "docker compose up -d postgres && pnpm --filter @findeg/db db:studio",
+    "clean": "turbo run clean && rm -rf node_modules .turbo",
+    "clean:next": "rm -rf frontend/dashboard/.next frontend/storefront/.next"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^8.58.2",
-    "@typescript-eslint/parser": "^8.58.2",
-    "eslint": "^9.0.0",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.5",
-    "prettier": "^3.8.0",
-    "start-server-and-test": "^3.0.0",
     "turbo": "^2.9.3",
-    "typescript": "^5.7.3",
-    "typescript-eslint": "^8.58.2"
-  },
-  "keywords": [
-    "react",
-    "ecommerce",
-    "tailwindcss",
-    "nextjs"
-  ],
-  "author": "FindEg Team",
-  "packageManager": "pnpm@10.33.0"
+    "typescript": "^5.7.3"
+  }
 }

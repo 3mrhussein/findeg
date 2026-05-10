@@ -1,9 +1,9 @@
-import type { IAuditLogService } from "../interfaces/IAuditLogService";
+import type { IAuditLogService } from '../interfaces/IAuditLogService';
 import type {
   IAuditLogRepository,
   AuditLogFilters,
   AuditLogCreateInput,
-} from "../interfaces/IAuditLogRepository";
+} from '../interfaces/IAuditLogRepository';
 
 /**
  * Audit Log Service
@@ -29,7 +29,7 @@ export class AuditLogService implements IAuditLogService {
     try {
       await this.auditLogRepository.create(entry);
     } catch (error) {
-      console.error("Failed to create audit log entry:", error);
+      console.error('Failed to create audit log entry:', error);
     }
   }
 

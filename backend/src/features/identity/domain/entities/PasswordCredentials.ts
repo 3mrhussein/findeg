@@ -1,6 +1,6 @@
-import { ID } from "@findeg/backend/features/core/domain/types/common";
+import { ID } from '@findeg/backend/features/core/domain/types/common';
 
-export type HashStrategy = "bcrypt" | "argon2";
+export type HashStrategy = 'bcrypt' | 'argon2';
 
 export interface PasswordCredentials {
   userId: ID;

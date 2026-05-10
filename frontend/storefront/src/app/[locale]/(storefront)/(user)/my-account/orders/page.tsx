@@ -1,10 +1,10 @@
-import { Locale } from "next-intl";
-import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Link } from "@i18n/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import { getMyAccountData } from "@findeg/backend";
-import { requireAuth } from "@lib/auth-guard";
-import { SectionStateEmpty } from "@components/shared/state/SectionStateEmpty";
+import { Locale } from 'next-intl';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { Link } from '@i18n/navigation';
+import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
+import { getMyAccountData } from '@findeg/backend';
+import { requireAuth } from '@lib/auth-guard';
+import { SectionStateEmpty } from '@components/shared/state/SectionStateEmpty';
 
 type Props = {
   params: Promise<{ locale: Locale }>;
@@ -23,7 +23,7 @@ export default async function OrdersPage({ params }: Props) {
   return (
     <div className="space-y-6">
       <div className="space-y-1">
-        <h1 className="text-3xl font-bold">{t("Pages.MyAccount.Orders")}</h1>
+        <h1 className="text-3xl font-bold">{t('Pages.MyAccount.Orders')}</h1>
         <p className="text-muted-foreground">View and track all your past orders.</p>
       </div>
 
@@ -31,8 +31,8 @@ export default async function OrdersPage({ params }: Props) {
         <CardContent className="pt-6">
           {orders.length === 0 ? (
             <SectionStateEmpty
-              title={t("Pages.MyAccount.NoOrders")}
-              description={t("Pages.MyAccount.NoOrders")}
+              title={t('Pages.MyAccount.NoOrders')}
+              description={t('Pages.MyAccount.NoOrders')}
             />
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -50,17 +50,17 @@ export default async function OrdersPage({ params }: Props) {
                   </div>
                   <div className="space-y-1 text-sm text-muted-foreground">
                     <div className="flex justify-between">
-                      <span>{t("Pages.MyAccount.OrderDate")}:</span>
+                      <span>{t('Pages.MyAccount.OrderDate')}:</span>
                       <span className="text-foreground">
                         {order.createdAt
                           ? new Date(order.createdAt).toLocaleDateString(locale)
-                          : "-"}
+                          : '-'}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span>{t("Pages.MyAccount.OrderTotal")}:</span>
+                      <span>{t('Pages.MyAccount.OrderTotal')}:</span>
                       <span className="text-foreground font-medium">
-                        {order.currency || "EGP"} {(order.totalAmount ?? 0).toFixed(2)}
+                        {order.currency || 'EGP'} {(order.totalAmount ?? 0).toFixed(2)}
                       </span>
                     </div>
                   </div>

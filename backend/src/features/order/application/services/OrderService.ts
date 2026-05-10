@@ -1,6 +1,6 @@
-import { type ID } from "@findeg/backend/features/core/domain/types/common";
-import { type IOrderRepository, type OrderFilters } from "../interfaces/IOrderRepository";
-import { type Order } from "../../domain/entities/Order";
+import { type ID } from '@findeg/backend/features/core/domain/types/common';
+import { type IOrderRepository, type OrderFilters } from '../interfaces/IOrderRepository';
+import { type Order } from '../../domain/entities/Order';
 
 export interface CheckoutPrefillData {
   fullName: string;
@@ -66,19 +66,19 @@ export class OrderService {
       })[0];
 
     const address = latestOrder?.shippingAddressSnapshot;
-    const fullName = [userProfile.firstName, userProfile.lastName].filter(Boolean).join(" ");
+    const fullName = [userProfile.firstName, userProfile.lastName].filter(Boolean).join(' ');
 
     return {
-      fullName: fullName || address?.fullName || "",
-      guestEmail: userProfile.email || "",
-      phone: userProfile.phone || address?.phone || "",
-      city: address?.city || "",
-      area: address?.area || "",
-      street: address?.street || "",
-      building: address?.building || "",
-      floor: address?.floor || "",
-      apartment: address?.apartment || "",
-      notes: address?.notes || "",
+      fullName: fullName || address?.fullName || '',
+      guestEmail: userProfile.email || '',
+      phone: userProfile.phone || address?.phone || '',
+      city: address?.city || '',
+      area: address?.area || '',
+      street: address?.street || '',
+      building: address?.building || '',
+      floor: address?.floor || '',
+      apartment: address?.apartment || '',
+      notes: address?.notes || '',
     };
   }
 }

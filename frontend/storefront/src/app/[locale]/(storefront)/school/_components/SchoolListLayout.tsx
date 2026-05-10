@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import React from "react";
-import { Link } from "@i18n/navigation";
-import { useTranslations } from "next-intl";
-import { useUser } from "@hooks/useUser";
-import { User } from "lucide-react";
+import React from 'react';
+import { Link } from '@i18n/navigation';
+import { useTranslations } from 'next-intl';
+import { useUser } from '@hooks/useUser';
+import { User } from 'lucide-react';
 
 interface SchoolListLayoutProps {
   children: React.ReactNode;
@@ -17,7 +17,7 @@ interface SchoolListLayoutProps {
 function UserIconNav() {
   const { isLoggedIn } = useUser();
   return (
-    <Link href={isLoggedIn ? "/dashboard" : "/login"}>
+    <Link href={isLoggedIn ? '/dashboard' : '/login'}>
       <div className="flex size-10 items-center justify-center rounded-full hover:bg-slate-100 text-slate-700 transition-colors">
         <User className="size-5" />
       </div>
@@ -29,7 +29,7 @@ function UserIconNav() {
  *
  */
 export function SchoolListLayout({ children, locale }: SchoolListLayoutProps) {
-  const t = useTranslations("School.ParentExperience.Layout");
+  const t = useTranslations('School.ParentExperience.Layout');
 
   return (
     <div className="min-h-screen bg-slate-50/50 flex flex-col">
@@ -44,7 +44,7 @@ export function SchoolListLayout({ children, locale }: SchoolListLayoutProps) {
               <div className="flex flex-col">
                 <span className="font-bold text-slate-900 leading-none tracking-tight">FindEg</span>
                 <span className="text-[10px] text-slate-500 font-medium tracking-wide">
-                  {t("PoweredBy")}
+                  {t('PoweredBy')}
                 </span>
               </div>
             </Link>
@@ -55,7 +55,7 @@ export function SchoolListLayout({ children, locale }: SchoolListLayoutProps) {
               href="/schools"
               className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
             >
-              {t("FindAnotherSchool")}
+              {t('FindAnotherSchool')}
             </Link>
             <UserIconNav />
           </div>
@@ -68,7 +68,7 @@ export function SchoolListLayout({ children, locale }: SchoolListLayoutProps) {
       <footer className="py-8 border-t bg-white">
         <div className="container mx-auto px-4 flex flex-col items-center gap-4">
           <p className="text-sm text-muted-foreground">
-            &copy; {new Date().getFullYear()} FindEg. {t("AllRightsReserved")}
+            &copy; {new Date().getFullYear()} FindEg. {t('AllRightsReserved')}
           </p>
         </div>
       </footer>

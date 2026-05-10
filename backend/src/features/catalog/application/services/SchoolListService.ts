@@ -1,12 +1,12 @@
-import { ID } from "@findeg/backend/features/core/domain/types/common";
+import { ID } from '@findeg/backend/features/core/domain/types/common';
 import {
   type ISchoolListRepository,
   type SchoolListResult,
   type SchoolListItemResult,
   type SchoolListInput,
   type SchoolListItemInput,
-} from "../interfaces/ISchoolListRepository";
-import { Variant } from "../../domain/entities/Variant";
+} from '../interfaces/ISchoolListRepository';
+import { Variant } from '../../domain/entities/Variant';
 
 export interface ISchoolListService {
   /** Gets a school list by slug with hydrated items and alternatives */
@@ -48,8 +48,8 @@ export class SchoolListService implements ISchoolListService {
     const items = await this.schoolListRepo.getItemsWithAlternatives(list.id);
     return {
       ...list,
-      items,
-    };
+      items,  
+    };  
   }
 
   async getActiveLists(): Promise<SchoolListResult[]> {

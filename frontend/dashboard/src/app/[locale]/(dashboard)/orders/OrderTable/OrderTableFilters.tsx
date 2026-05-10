@@ -1,8 +1,8 @@
-import { Input } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Search, X } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@findeg/ui";
-import type { OrderTableFiltersData } from "./OrderTable.interface";
+import { Input } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { Search, X } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@findeg/ui';
+import type { OrderTableFiltersData } from './OrderTable.interface';
 
 interface OrderTableFiltersProps {
   filters: OrderTableFiltersData;
@@ -23,7 +23,7 @@ export function OrderTableFilters({
   total,
 }: OrderTableFiltersProps) {
   const hasActiveFilters =
-    Boolean(filters.search) || Boolean(filters.paymentStatus && filters.paymentStatus !== "all");
+    Boolean(filters.search) || Boolean(filters.paymentStatus && filters.paymentStatus !== 'all');
   // Add date checks here later if necessary
 
   return (
@@ -40,7 +40,7 @@ export function OrderTableFilters({
             onChange={(e) => {
               const val = e.target.value;
               const timeoutId = setTimeout(() => {
-                onFilterChange("search", val);
+                onFilterChange('search', val);
               }, 400);
               return () => clearTimeout(timeoutId);
             }}
@@ -49,8 +49,8 @@ export function OrderTableFilters({
 
         <Select
           disabled={isPending}
-          value={filters.paymentStatus || "all"}
-          onValueChange={(val) => onFilterChange("paymentStatus", val)}
+          value={filters.paymentStatus || 'all'}
+          onValueChange={(val) => onFilterChange('paymentStatus', val)}
         >
           <SelectTrigger className="w-[180px] bg-background">
             <SelectValue placeholder="Payment status" />

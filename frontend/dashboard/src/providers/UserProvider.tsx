@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React, { createContext, useState, useMemo, useEffect } from "react";
-import type { ClientUser as User } from "@lib/types";
+import React, { createContext, useState, useMemo, useEffect } from 'react';
+import type { ClientUser as User } from '@lib/types';
 
 export interface UserContextType {
   currentUser: User | null;
@@ -30,7 +30,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
      */
     const fetchSession = async () => {
       try {
-        const response = await fetch("/api/v1/auth/me");
+        const response = await fetch('/api/v1/auth/me');
         if (response.ok) {
           const { data } = await response.json();
           const session = data.user;
@@ -41,7 +41,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
           });
         }
       } catch (error) {
-        console.error("Failed to hydrate user session:", error);
+        console.error('Failed to hydrate user session:', error);
       } finally {
         setIsLoading(false);
       }

@@ -1,8 +1,8 @@
-import { type ID } from "@findeg/backend/features/core/domain/types/common";
+import { type ID } from '@findeg/backend/features/core/domain/types/common';
 import {
   type IInventoryRepository,
   type InventoryBalanceResult,
-} from "../interfaces/IInventoryRepository";
+} from '../interfaces/IInventoryRepository';
 
 export class InventoryService {
   constructor(private inventoryRepository: IInventoryRepository) {}

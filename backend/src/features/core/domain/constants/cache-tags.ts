@@ -6,12 +6,12 @@
  */
 export const CACHE_TAGS = {
   // Collection-level tags — use with revalidateTag after any write to that table
-  CATALOG_PRODUCTS: "catalog:products",
-  CATALOG_CATEGORIES: "catalog:categories",
-  CATALOG_BRANDS: "catalog:brands",
-  CATALOG_TAGS: "catalog:tags",
-  CATALOG_COLLECTIONS: "catalog:collections",
-  CATALOG_REVIEWS: "catalog:reviews",
+  CATALOG_PRODUCTS: 'catalog:products',
+  CATALOG_CATEGORIES: 'catalog:categories',
+  CATALOG_BRANDS: 'catalog:brands',
+  CATALOG_TAGS: 'catalog:tags',
+  CATALOG_COLLECTIONS: 'catalog:collections',
+  CATALOG_REVIEWS: 'catalog:reviews',
 
   // Entity-level tag factories — use for surgical per-item invalidation
   /** Tag for a single product detail cache entry. */

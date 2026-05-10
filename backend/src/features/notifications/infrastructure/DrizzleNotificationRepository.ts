@@ -1,7 +1,7 @@
-import { db } from "@findeg/db/connection";
-import { notifications, Notification, NewNotification } from "@findeg/db/schema";
-import { INotificationRepository } from "../application/interfaces/INotificationRepository";
-import { eq, and, desc, count } from "drizzle-orm";
+import { db } from '@findeg/db/connection';
+import { notifications, Notification, NewNotification } from '@findeg/db/schema';
+import { INotificationRepository } from '../application/interfaces/INotificationRepository';
+import { eq, and, desc, count } from 'drizzle-orm';
 
 /**
  * Drizzle implementation of the Notification Repository.

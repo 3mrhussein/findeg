@@ -1,11 +1,11 @@
-import { z } from "zod";
+import { z } from 'zod';
 import {
   IdSchema,
   PriceSchema,
   QuantitySchema,
   TranslationMapSchema,
-} from "../../../core/domain/types/common";
-import { LocaleSchema } from "../../../core/domain/value-objects";
+} from '../../../core/domain/types/common';
+import { LocaleSchema } from '../../../core/domain/value-objects';
 
 // ─── Product Translation (unchanged) ────────────────────────────────────────
 
@@ -33,7 +33,7 @@ const PriceListInputSchema = z.object({
   customerGroup: z.string(),
   uomCode: z.string(),
   unitPrice: PriceSchema,
-  currency: z.string().optional().default("EGP"),
+  currency: z.string().optional().default('EGP'),
   isSellable: z.boolean().optional().default(true),
   minQty: z.number().int().positive().optional().default(1),
 });
@@ -105,7 +105,7 @@ export const ProductInputSchema = z.object({
   isActive: z.boolean().optional().default(true),
 
   /** Localized content — at least one language required */
-  translations: z.array(ProductTranslationSchema).min(1, "At least one translation is required"),
+  translations: z.array(ProductTranslationSchema).min(1, 'At least one translation is required'),
 
   /** SPU-level hero imagery */
   mediaSet: z.any().optional(),

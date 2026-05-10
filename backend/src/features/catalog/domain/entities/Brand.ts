@@ -1,10 +1,6 @@
-import { z } from "zod";
-import { IdSchema, SlugSchema, type ID, type Slug } from "../../../core/domain/types/common";
-import {
-  TranslationMapSchema,
-  type Locale,
-  type TranslationMap,
-} from "../../../core/domain/value-objects";
+import { z } from 'zod';
+import { IdSchema, SlugSchema } from '../../../core/domain/types/common';
+import { TranslationMapSchema } from '../../../core/domain/value-objects';
 
 export const BrandLocalizedContentSchema = z.object({
   name: TranslationMapSchema,

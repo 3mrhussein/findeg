@@ -7,22 +7,22 @@
  * Provides: list, create, update, deactivate, reactivate, setPermissionOverrides
  */
 
-"use client";
+'use client';
 
-import { useState, useCallback } from "react";
+import { useState, useCallback } from 'react';
 import {
   createAdminAction,
   updateAdminAction,
   setPermissionOverridesAction,
-} from "@data/access/actions";
-import { getAdminUsers } from "@data/access/queries";
+} from '@data/access/actions';
+import { getAdminUsers } from '@data/access/queries';
 
 import type {
   AdminUser,
   CreateAdminInput,
   UpdateAdminInput,
   PermissionOverrideInput,
-} from "@findeg/backend/features/identity";
+} from '@findeg/backend/features/identity';
 
 export interface AdminUserRole {
   id: number;
@@ -32,7 +32,7 @@ export interface AdminUserRole {
 
 export interface PermissionOverride {
   permissionCode: string;
-  action: "grant" | "revoke";
+  action: 'grant' | 'revoke';
 }
 
 interface UseAdminUsersReturn {
@@ -69,7 +69,7 @@ export function useAdminUsers(): UseAdminUsersReturn {
       const result = await getAdminUsers();
       setAdmins(result as any);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Unexpected error");
+      setError(err instanceof Error ? err.message : 'Unexpected error');
     } finally {
       setLoading(false);
     }
@@ -94,7 +94,7 @@ export function useAdminUsers(): UseAdminUsersReturn {
     async (input: CreateAdminInput) => {
       const result = await createAdminAction(input);
       if (!result.success) {
-        throw new Error(result.error || "Failed to create admin");
+        throw new Error(result.error || 'Failed to create admin');
       }
       await fetchAdmins();
     },
@@ -107,7 +107,7 @@ export function useAdminUsers(): UseAdminUsersReturn {
       try {
         const result = await updateAdminAction(userId, input);
         if (!result.success) {
-          throw new Error(result.error || "Failed to update admin");
+          throw new Error(result.error || 'Failed to update admin');
         }
         await fetchAdmins();
       } finally {
@@ -125,7 +125,7 @@ export function useAdminUsers(): UseAdminUsersReturn {
     try {
       const result = await updateAdminAction(userId, { isActive: false });
       if (!result.success) {
-        throw new Error(result.error || "Failed to deactivate admin");
+        throw new Error(result.error || 'Failed to deactivate admin');
       }
     } catch (err) {
       // Revert optimistic update
@@ -143,7 +143,7 @@ export function useAdminUsers(): UseAdminUsersReturn {
     try {
       const result = await updateAdminAction(userId, { isActive: true });
       if (!result.success) {
-        throw new Error(result.error || "Failed to reactivate admin");
+        throw new Error(result.error || 'Failed to reactivate admin');
       }
     } catch (err) {
       setAdmins((prev) => prev.map((a) => (a.id === userId ? { ...a, isActive: false } : a)));
@@ -155,10 +155,10 @@ export function useAdminUsers(): UseAdminUsersReturn {
 
   const setPermissionOverrides = useCallback(
     async (userId: number, overrides: PermissionOverrideInput[]) => {
-      const permIds = overrides.filter((o) => o.action === "grant").map((o) => o.permissionId);
+      const permIds = overrides.filter((o) => o.action === 'grant').map((o) => o.permissionId);
       const result = await setPermissionOverridesAction(userId, permIds);
       if (!result.success) {
-        throw new Error(result.error || "Failed to save overrides");
+        throw new Error(result.error || 'Failed to save overrides');
       }
     },
     [],

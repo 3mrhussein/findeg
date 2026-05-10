@@ -1,11 +1,11 @@
-import { getSchoolProfile } from "@/data/school/queries";
-import { getOptionalSession } from "@lib/auth-guard";
-import { SchoolAuthWall } from "@app/[locale]/(storefront)/school/_components/SchoolAuthWall";
-import { SchoolProfileClient } from "./SchoolProfileClient";
-import { notFound } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
-import { School, MapPin, GraduationCap, Calendar, Clock, Info, ShieldCheck } from "lucide-react";
+import { getSchoolProfile } from '@/data/school/queries';
+import { getOptionalSession } from '@lib/auth-guard';
+import { SchoolAuthWall } from '@app/[locale]/(storefront)/school/_components/SchoolAuthWall';
+import { SchoolProfileClient } from './SchoolProfileClient';
+import { notFound } from 'next/navigation';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@findeg/ui';
+import { Badge } from '@findeg/ui';
+import { School, MapPin, GraduationCap, Calendar, Clock, Info, ShieldCheck } from 'lucide-react';
 
 interface PageProps {
   params: { locale: string; slug: string };
@@ -21,7 +21,7 @@ export default async function SchoolProfilePage({ params }: PageProps) {
   const session = await getOptionalSession();
 
   if (!session) {
-    return <SchoolAuthWall schoolName={params.slug.replace(/-/g, " ")} />;
+    return <SchoolAuthWall schoolName={params.slug.replace(/-/g, ' ')} />;
   }
 
   const school = await getSchoolProfile(params.slug, session.userId);

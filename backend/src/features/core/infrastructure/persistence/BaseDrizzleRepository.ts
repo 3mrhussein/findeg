@@ -1,6 +1,6 @@
-import { db } from "@findeg/db/connection";
-import { eq, InferSelectModel, InferInsertModel } from "drizzle-orm";
-import { PgTable, TableConfig } from "drizzle-orm/pg-core";
+import { db } from '@findeg/db/connection';
+import { eq, InferSelectModel, InferInsertModel } from 'drizzle-orm';
+import { PgTable, AnyPgColumn, TableConfig } from 'drizzle-orm/pg-core';
 
 /**
  * Base Drizzle Repository
@@ -13,7 +13,7 @@ import { PgTable, TableConfig } from "drizzle-orm/pg-core";
  * @template TID - The ID type (defaults to number)
  */
 export abstract class BaseDrizzleRepository<
-  TTable extends PgTable<TableConfig>,
+  TTable extends PgTable<TableConfig> & { id: AnyPgColumn },
   TDomain,
   TID = number,
 > {
@@ -31,8 +31,15 @@ export abstract class BaseDrizzleRepository<
    * Retrieves a record by its unique ID.
    */
   async getById(id: TID): Promise<TDomain | null> {
-    // @ts-ignore - Assuming most tables have an 'id' column
-    const result = await this.db.select().from(this.table).where(eq(this.table.id, id)).limit(1);
+    // We cast to 'any' for the from() and where() clauses to satisfy Drizzle's internal type complexity
+    // while maintaining the public API type safety of TTable and TID.
+    const result = await this.db
+      .select()
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .from(this.table as any)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .where(eq((this.table as any).id, id as any))
+      .limit(1);
     if (result.length === 0) return null;
     return this.mapToDomain(result[0] as InferSelectModel<TTable>);
   }
@@ -42,7 +49,9 @@ export abstract class BaseDrizzleRepository<
    */
   async create(data: InferInsertModel<TTable>): Promise<TDomain> {
     const result = await this.db
-      .insert(this.table)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .insert(this.table as any)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .values(data as any)
       .returning();
     return this.mapToDomain(result[0] as InferSelectModel<TTable>);
@@ -55,16 +64,17 @@ export abstract class BaseDrizzleRepository<
     const payload = { ...data };
 
     // Auto-update updatedAt if it exists in the schema
-    if ("updatedAt" in this.table) {
-      (payload as any).updatedAt = new Date();
+    if ('updatedAt' in this.table) {
+      (payload as Record<string, unknown>).updatedAt = new Date();
     }
 
     const result = await this.db
-      .update(this.table)
-      // @ts-ignore
-      .set(payload)
-      // @ts-ignore
-      .where(eq(this.table.id, id))
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .update(this.table as any)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .set(payload as any)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .where(eq((this.table as any).id, id as any))
       .returning();
 
     if (result.length === 0) {
@@ -78,7 +88,12 @@ export abstract class BaseDrizzleRepository<
    * Deletes a record by its ID.
    */
   async delete(id: TID): Promise<void> {
-    // @ts-ignore
-    await this.db.delete(this.table).where(eq(this.table.id, id));
+    await this.db
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .delete(this.table as any)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .where(eq((this.table as any).id, id as any));
   }
 }
+
+

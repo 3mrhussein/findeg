@@ -10,10 +10,10 @@ import {
   type CustomerGroup,
   type UomCode,
   type Price,
-} from "@findeg/backend/features/core/domain/types/common";
-import type { CurrencyCode, Locale } from "@findeg/backend/features/core/domain/value-objects";
-import type { Variant } from "../../domain/entities/Variant";
-import type { VariantInput } from "@findeg/backend/features/administration/domain/types/ProductInput";
+} from '@findeg/backend/features/core/domain/types/common';
+import type { CurrencyCode } from '@findeg/backend/features/core/domain/value-objects';
+import type { Variant } from '../../domain/entities/Variant';
+import type { VariantInput } from '@findeg/backend/features/administration/domain/types/ProductInput';
 
 // ─── Sell Option ─────────────────────────────────────────────────────────────
 

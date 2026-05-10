@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { Collection } from "@findeg/backend/features/catalog";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { Button } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
-import { GripVertical, Edit, Trash, Eye, EyeOff, Move, Pencil, Trash2 } from "lucide-react";
-import { cn } from "@lib/utils";
-import { Link } from "@i18n/navigation";
-import { useLocale } from "next-intl";
-import Image from "next/image";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@findeg/ui";
-import { StatusBadge } from "@components/shared/StatusBadge";
+import { Collection } from '@findeg/backend/features/catalog';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { Button } from '@findeg/ui';
+import { Badge } from '@findeg/ui';
+import { GripVertical, Edit, Trash, Eye, EyeOff, Move, Pencil, Trash2 } from 'lucide-react';
+import { cn } from '@lib/utils';
+import { Link } from '@i18n/navigation';
+import { useLocale } from 'next-intl';
+import Image from 'next/image';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@findeg/ui';
+import { StatusBadge } from '@components/shared/StatusBadge';
 
 interface CollectionCardProps {
   collection: Collection;
@@ -30,17 +30,17 @@ export function CollectionCard({ collection, onDelete }: CollectionCardProps) {
     zIndex: isDragging ? 50 : undefined,
   };
 
-  const title = collection.localizedTitle?.[locale as "en" | "ar"] || collection.slug;
+  const title = collection.localizedTitle?.[locale as 'en' | 'ar'] || collection.slug;
 
   return (
     <div
       ref={setNodeRef}
       style={style}
       className={cn(
-        "group relative flex items-center p-3 sm:p-4 rounded-xl sm:rounded-2xl border transition-all duration-200",
-        "bg-white dark:bg-slate-900 border-gray-100 dark:border-slate-800",
-        "hover:border-indigo-200 dark:hover:border-indigo-800 hover:shadow-md hover:shadow-indigo-500/5",
-        isDragging && "opacity-50 ring-1 ring-indigo-200 dark:ring-indigo-800",
+        'group relative flex items-center p-3 sm:p-4 rounded-xl sm:rounded-2xl border transition-all duration-200',
+        'bg-white dark:bg-slate-900 border-gray-100 dark:border-slate-800',
+        'hover:border-indigo-200 dark:hover:border-indigo-800 hover:shadow-md hover:shadow-indigo-500/5',
+        isDragging && 'opacity-50 ring-1 ring-indigo-200 dark:ring-indigo-800',
       )}
     >
       {/* Drag Handle */}
@@ -57,7 +57,7 @@ export function CollectionCard({ collection, onDelete }: CollectionCardProps) {
         <span className="hidden sm:inline-block text-[10px] font-mono text-muted-foreground bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">
           #{collection.sortOrder}
         </span>
-        <StatusBadge status={collection.isActive ? "active" : "inactive"} />
+        <StatusBadge status={collection.isActive ? 'active' : 'inactive'} />
       </div>
 
       {/* Collection Image */}
@@ -88,9 +88,9 @@ export function CollectionCard({ collection, onDelete }: CollectionCardProps) {
           </span>
         </div>
 
-        {collection.localizedSubtitle?.[locale as "en" | "ar"] && (
+        {collection.localizedSubtitle?.[locale as 'en' | 'ar'] && (
           <p className="mt-1 text-[10px] sm:text-xs text-slate-400 dark:text-slate-500 line-clamp-1 max-w-sm italic pr-20">
-            {collection.localizedSubtitle[locale as "en" | "ar"]}
+            {collection.localizedSubtitle[locale as 'en' | 'ar']}
           </p>
         )}
       </div>

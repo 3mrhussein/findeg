@@ -1,29 +1,24 @@
 {
-  "extends": "../tsconfig.json",
+  "extends": "../tsconfig.base.json",
   "compilerOptions": {
     "composite": true,
     "declaration": true,
     "declarationMap": true,
     "outDir": "dist",
-    "noEmit": false,
-    "rootDir": "..",
-    "jsx": "react-jsx",
-    "paths": {
-      "@findeg/backend/*": [
-        "./src/*"
-      ],
-      "@findeg/env": [
-        "../env.ts"
-      ]
-    }
+    "rootDir": "src",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx"
   },
+  "references": [
+    { "path": "../db" },
+    { "path": "../packages/env" }
+  ],
   "include": [
-    "src/**/*",
-    "../env.ts"
+    "src/**/*"
   ],
   "exclude": [
     "node_modules",
-    "dist",
-    "src/__tests__"
+    "dist"
   ]
 }

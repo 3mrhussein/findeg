@@ -1,14 +1,14 @@
-import type { ID } from "@findeg/backend/features/core/domain/types/common";
-import type { IOrderRepository } from "@findeg/backend/features/order/application/interfaces/IOrderRepository";
-import type { IReviewRepository, ProductReviewSummary } from "../interfaces/IReviewRepository";
+import type { ID } from '@findeg/backend/features/core/domain/types/common';
+import type { IOrderRepository } from '@findeg/backend/features/order/application/interfaces/IOrderRepository';
+import type { IReviewRepository, ProductReviewSummary } from '../interfaces/IReviewRepository';
 import type {
   CreateReviewInput,
   IReviewService,
   ProductReviewListResult,
   ProductReviewQuery,
   ReviewEligibility,
-} from "../interfaces/IReviewService";
-import type { Review } from "../../domain/entities/Review";
+} from '../interfaces/IReviewService';
+import type { Review } from '../../domain/entities/Review';
 
 /**
  * ReviewService handles storefront review queries and mutations.
@@ -83,15 +83,15 @@ export class ReviewService implements IReviewService {
   async createReview(input: CreateReviewInput): Promise<Review> {
     const rating = Number(input.rating);
     if (!Number.isFinite(rating) || rating < 1 || rating > 5) {
-      throw new Error("REVIEW_INVALID_RATING");
+      throw new Error('REVIEW_INVALID_RATING');
     }
 
     const eligibility = await this.getEligibility(input.productId, input.userId);
     if (!eligibility.hasPurchased) {
-      throw new Error("REVIEW_PURCHASE_REQUIRED");
+      throw new Error('REVIEW_PURCHASE_REQUIRED');
     }
     if (eligibility.alreadyReviewed) {
-      throw new Error("REVIEW_ALREADY_SUBMITTED");
+      throw new Error('REVIEW_ALREADY_SUBMITTED');
     }
 
     const created = await this.reviewRepository.create({
@@ -111,7 +111,7 @@ export class ReviewService implements IReviewService {
    */
   async markHelpful(reviewId: ID, voterKey: string): Promise<number> {
     if (!voterKey.trim()) {
-      throw new Error("REVIEW_INVALID_VOTER");
+      throw new Error('REVIEW_INVALID_VOTER');
     }
     return this.reviewRepository.markHelpful(reviewId, voterKey.trim());
   }

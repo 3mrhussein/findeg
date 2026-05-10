@@ -1,5 +1,5 @@
-import { getInventoryWithProducts, getLowStockAlerts } from "@data/inventory/queries";
-import { InventoryTable } from "./_components/InventoryTable";
+import { getInventoryWithProducts, getLowStockAlerts } from '@data/inventory/queries';
+import { InventoryTable } from './_components/InventoryTable';
 
 /**
  *

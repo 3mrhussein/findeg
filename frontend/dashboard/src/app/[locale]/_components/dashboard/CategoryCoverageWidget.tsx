@@ -1,34 +1,34 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@findeg/ui";
-import { Progress } from "@findeg/ui";
-import { useTranslations } from "next-intl";
-import { Link } from "@i18n/navigation";
-import { ArrowRight } from "lucide-react";
-import { CategoryProductDistribution } from "@findeg/backend/features/administration/domain/types";
+import * as React from 'react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@findeg/ui';
+import { Progress } from '@findeg/ui';
+import { useTranslations } from 'next-intl';
+import { Link } from '@i18n/navigation';
+import { ArrowRight } from 'lucide-react';
+import { CategoryProductDistribution } from '@findeg/backend/features/administration/domain/types';
 
 interface CategoryCoverageWidgetProps {
   distributions: CategoryProductDistribution[];
 }
 
 export function CategoryCoverageWidget({ distributions }: CategoryCoverageWidgetProps) {
-  const t = useTranslations("Administration.Dashboard.Widgets.CategoryCoverage");
-  const tCommon = useTranslations("Administration.Dashboard");
+  const t = useTranslations('Administration.Dashboard.Widgets.CategoryCoverage');
+  const tCommon = useTranslations('Administration.Dashboard');
 
   return (
     <Card className="h-full border-slate-200 dark:border-slate-800 flex flex-col shadow-sm bg-white dark:bg-slate-900">
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="text-base font-semibold">{t("Title")}</CardTitle>
-            <CardDescription className="text-sm">{t("Description")}</CardDescription>
+            <CardTitle className="text-base font-semibold">{t('Title')}</CardTitle>
+            <CardDescription className="text-sm">{t('Description')}</CardDescription>
           </div>
           <Link
             href="/categories"
             className="text-sm text-primary hover:text-primary/80 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors font-medium flex items-center gap-1"
           >
-            {t("ViewAll")} <ArrowRight className="h-4 w-4" />
+            {t('ViewAll')} <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
       </CardHeader>
@@ -36,7 +36,7 @@ export function CategoryCoverageWidget({ distributions }: CategoryCoverageWidget
         <div className="space-y-5 mt-2">
           {distributions.length === 0 ? (
             <div className="text-sm text-slate-500 dark:text-slate-400 text-center py-8">
-              {t("NoData")}
+              {t('NoData')}
             </div>
           ) : (
             distributions.map((dist) => (
@@ -46,7 +46,7 @@ export function CategoryCoverageWidget({ distributions }: CategoryCoverageWidget
                     {dist.categoryName}
                   </span>
                   <span className="text-slate-500 dark:text-slate-400 whitespace-nowrap">
-                    {t("ProductsCount", { count: dist.productCount })}
+                    {t('ProductsCount', { count: dist.productCount })}
                   </span>
                 </div>
                 <Progress value={dist.percentage} className="h-2" />

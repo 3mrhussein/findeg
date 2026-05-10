@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   ColumnDef,
@@ -7,20 +7,20 @@ import {
   useReactTable,
   ColumnFiltersState,
   getFilteredRowModel,
-} from "@tanstack/react-table";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { IconTooltip } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { useState } from "react";
-import { Category } from "@findeg/backend/features/catalog";
-import { Pencil, Trash2 } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@findeg/ui";
-import { Link } from "@i18n/navigation";
-import { deleteCategoryAction } from "@data/categories/actions";
+} from '@tanstack/react-table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { IconTooltip } from '@findeg/ui';
+import { Input } from '@findeg/ui';
+import { useState } from 'react';
+import { Category } from '@findeg/backend/features/catalog';
+import { Pencil, Trash2 } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@findeg/ui';
+import { Link } from '@i18n/navigation';
+import { deleteCategoryAction } from '@data/categories/actions';
 
-import { useToast } from "@hooks/use-toast";
-import { useRouter } from "@i18n/navigation";
+import { useToast } from '@hooks/use-toast';
+import { useRouter } from '@i18n/navigation';
 
 interface CategoryTableProps {
   data: Category[];
@@ -38,13 +38,13 @@ export function CategoryTable({ data }: CategoryTableProps) {
    *
    */
   const handleDelete = async (id: number) => {
-    if (confirm("Are you sure you want to delete this category?")) {
+    if (confirm('Are you sure you want to delete this category?')) {
       const result = await deleteCategoryAction(id);
       if (result.success) {
-        toast({ title: "Category deleted" });
+        toast({ title: 'Category deleted' });
         router.refresh();
       } else {
-        toast({ variant: "destructive", title: "Error", description: result.error });
+        toast({ variant: 'destructive', title: 'Error', description: result.error });
       }
     }
   };
@@ -69,16 +69,16 @@ export function CategoryTable({ data }: CategoryTableProps) {
 
   const columns: ColumnDef<Category & { depth: number }>[] = [
     {
-      accessorKey: "id",
-      header: "ID",
+      accessorKey: 'id',
+      header: 'ID',
       /**
        *
        */
-      cell: ({ row }) => <div className="w-[40px]">#{row.getValue("id")}</div>,
+      cell: ({ row }) => <div className="w-[40px]">#{row.getValue('id')}</div>,
     },
     {
-      accessorKey: "name",
-      header: "Name",
+      accessorKey: 'name',
+      header: 'Name',
       /**
        *
        */
@@ -88,16 +88,16 @@ export function CategoryTable({ data }: CategoryTableProps) {
           style={{ paddingInlineStart: `${row.original.depth * 24}px` }}
         >
           {row.original.depth > 0 && <span className="text-muted-foreground me-2">└─</span>}
-          <span className="font-medium">{row.getValue("name")}</span>
+          <span className="font-medium">{row.getValue('name')}</span>
         </div>
       ),
     },
     {
-      accessorKey: "slug",
-      header: "Slug",
+      accessorKey: 'slug',
+      header: 'Slug',
     },
     {
-      id: "actions",
+      id: 'actions',
       /**
        *
        */
@@ -167,8 +167,8 @@ export function CategoryTable({ data }: CategoryTableProps) {
         <Input
           data-testid="admin-categories-filter-input"
           placeholder="Filter categories..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-          onChange={(event) => table.getColumn("name")?.setFilterValue(event.target.value)}
+          value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
+          onChange={(event) => table.getColumn('name')?.setFilterValue(event.target.value)}
           className="max-w-sm"
         />
       </div>
@@ -194,7 +194,7 @@ export function CategoryTable({ data }: CategoryTableProps) {
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
+                  data-state={row.getIsSelected() && 'selected'}
                   data-testid={`admin-category-row-${row.original.id}`}
                 >
                   {row.getVisibleCells().map((cell) => (

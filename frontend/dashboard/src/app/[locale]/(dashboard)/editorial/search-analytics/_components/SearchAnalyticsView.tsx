@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useRouter, usePathname } from "@i18n/navigation";
+import { useState } from 'react';
+import { useRouter, usePathname } from '@i18n/navigation';
 import {
   Search,
   TrendingUp,
@@ -11,21 +11,21 @@ import {
   Languages,
   Download,
   Plus,
-} from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@findeg/ui";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@findeg/ui";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@findeg/ui";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
-import { Link } from "@i18n/navigation";
+} from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@findeg/ui';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@findeg/ui';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@findeg/ui';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
+import { Link } from '@i18n/navigation';
 import {
   SearchAnalyticsMetrics,
   TopSearchQuery,
   ZeroResultSearch,
   LowCTRSearch,
   LanguageBreakdown,
-} from "@findeg/backend/features/catalog";
+} from '@findeg/backend/features/catalog';
 
 interface Props {
   initialData: {
@@ -38,7 +38,7 @@ interface Props {
   };
 }
 
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884d8"];
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
 
 /**
  *
@@ -60,7 +60,7 @@ export function SearchAnalyticsView({ initialData }: Props) {
    *
    */
   const exportCSV = () => {
-    const headers = ["Query", "Count", "Last Searched", "Locale"];
+    const headers = ['Query', 'Count', 'Last Searched', 'Locale'];
     const rows = initialData.zeroResults.map((r) => [
       r.query,
       r.count,
@@ -69,17 +69,17 @@ export function SearchAnalyticsView({ initialData }: Props) {
     ]);
 
     const csvContent =
-      "data:text/csv;charset=utf-8," +
-      headers.join(",") +
-      "\n" +
-      rows.map((e) => e.join(",")).join("\n");
+      'data:text/csv;charset=utf-8,' +
+      headers.join(',') +
+      '\n' +
+      rows.map((e) => e.join(',')).join('\n');
 
     const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
     link.setAttribute(
-      "download",
-      `zero_result_searches_${new Date().toISOString().split("T")[0]}.csv`,
+      'download',
+      `zero_result_searches_${new Date().toISOString().split('T')[0]}.csv`,
     );
     document.body.appendChild(link);
     link.click();
@@ -272,7 +272,7 @@ export function SearchAnalyticsView({ initialData }: Props) {
             <CardHeader>
               <CardTitle>Poor Performance Queries</CardTitle>
               <CardDescription>
-                Queries with {">"}10 impressions but {"<"}10% click rate. Indicates irrelevant
+                Queries with {'>'}10 impressions but {'<'}10% click rate. Indicates irrelevant
                 results.
               </CardDescription>
             </CardHeader>

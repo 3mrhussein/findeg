@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { Button } from "@findeg/ui";
-import { CheckCircle2 } from "lucide-react";
-import { useRouter } from "@i18n/navigation";
-import type { PlaceOrderResult } from "./CheckoutClient.interface";
+import { Button } from '@findeg/ui';
+import { CheckCircle2 } from 'lucide-react';
+import { useRouter } from '@i18n/navigation';
+import type { PlaceOrderResult } from './CheckoutClient.interface';
 
 interface OrderConfirmationProps {
   result: PlaceOrderResult;
@@ -35,7 +35,7 @@ export function OrderConfirmation({ result, continueLabel, confirmTitle }: Order
       )}
       <div>
         <Button
-          onClick={() => router.push("/shop")}
+          onClick={() => router.push('/shop')}
           size="lg"
           className="rounded-full px-8 h-12 text-base shadow-sm"
         >

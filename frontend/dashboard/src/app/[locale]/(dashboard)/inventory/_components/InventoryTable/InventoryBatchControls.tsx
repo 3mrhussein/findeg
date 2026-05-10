@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Button } from "@findeg/ui";
-import { Input } from "@findeg/ui";
+import { Button } from '@findeg/ui';
+import { Input } from '@findeg/ui';
 
 interface InventoryBatchControlsProps {
   selectedCount: number;

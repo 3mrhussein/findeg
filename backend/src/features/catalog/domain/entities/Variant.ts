@@ -7,25 +7,21 @@
  * For simple products with no dimensions, a single "default" variant exists.
  */
 
-import { z } from "zod";
-import { productVariants } from "@findeg/db/schema";
-import { type InferSelectModel } from "drizzle-orm";
+import { z } from 'zod';
+import { productVariants } from '@findeg/db/schema';
+import { type InferSelectModel } from 'drizzle-orm';
 import {
   IdSchema,
   PriceSchema,
-  SkuRequiredSchema,
-  QuantitySchema,
   CustomerGroupSchema,
   UomCodeSchema,
   TranslationMapSchema,
-  type ID,
-  type Price,
   type CustomerGroup,
   type UomCode,
   type Locale,
-} from "../../../core/domain/types/common";
-import type { CurrencyCode, Money } from "../../../core/domain/value-objects";
-import { DEFAULT_CURRENCY, toMoney, MoneySchema, pick } from "../../../core/domain/value-objects";
+} from '../../../core/domain/types/common';
+import type { CurrencyCode, Money } from '../../../core/domain/value-objects';
+import { DEFAULT_CURRENCY, toMoney, pick } from '../../../core/domain/value-objects';
 
 // ─── Variant Image ───────────────────────────────────────────────────────────
 
@@ -55,7 +51,7 @@ export const PriceListEntrySchema = z.object({
   customerGroup: CustomerGroupSchema,
   uomCode: UomCodeSchema,
   unitPrice: PriceSchema,
-  currency: z.string().default("EGP"),
+  currency: z.string().default('EGP'),
   isSellable: z.boolean().default(true),
   minQty: z.number().int().positive().default(1),
   startsAt: z.string().datetime().optional(),
@@ -119,7 +115,7 @@ export const VariantSchema = z.object({
 
 export type Variant = z.infer<typeof VariantSchema> &
   Partial<
-    Omit<InferSelectModel<typeof productVariants>, "basePrice" | "strikePrice" | "costPrice">
+    Omit<InferSelectModel<typeof productVariants>, 'basePrice' | 'strikePrice' | 'costPrice'>
   >;
 
 // ─── Input Schemas ───────────────────────────────────────────────────────────
@@ -163,7 +159,7 @@ export class VariantEntity {
    */
   getPriceForUom(
     uomCode: UomCode,
-    customerGroup: CustomerGroup = "public_b2c",
+    customerGroup: CustomerGroup = 'public_b2c',
   ): { unitPrice: number; currency: string; isSellable: boolean } | null {
     // Try the price list first
     const entry = this.variant.priceLists?.find(

@@ -5,22 +5,22 @@
  * Used within Suspense boundaries in dashboard page for progressive rendering.
  */
 
-import { getTranslations } from "next-intl/server";
-import { type Locale } from "@findeg/backend/features/core";
+import { getTranslations } from 'next-intl/server';
+import { type Locale } from '@findeg/backend/features/core';
 import {
   getDashboardData,
   getRecentOrders,
   getCatalogHealthStats,
   getCategoryProductDistribution,
   getRecentActivity,
-} from "@data/admin/queries";
+} from '@data/admin/queries';
 import {
   KpiCard,
   CatalogCompletionBoard,
   CategoryCoverageWidget,
   QuickActionsWidget,
   RecentActivityWidget,
-} from "../../_components/dashboard";
+} from '../../_components/dashboard';
 
 interface DashboardStatsProps {
   locale: string;
@@ -29,7 +29,7 @@ interface DashboardStatsProps {
 export async function DashboardStats({ locale }: DashboardStatsProps) {
   const t = await getTranslations({
     locale: locale as Locale,
-    namespace: "Administration.Dashboard",
+    namespace: 'Administration.Dashboard',
   });
 
   const [rawCatalogStats, rawCategoryDist, rawRecentActivity] = await Promise.all([
@@ -37,7 +37,7 @@ export async function DashboardStats({ locale }: DashboardStatsProps) {
     getCategoryProductDistribution(),
     getRecentActivity({
       limit: 8,
-      entityTypes: ["product", "category", "brand", "tag"],
+      entityTypes: ['product', 'category', 'brand', 'tag'],
     }),
   ]);
 
@@ -48,19 +48,19 @@ export async function DashboardStats({ locale }: DashboardStatsProps) {
 
   const now = new Date();
   const hour = now.getHours();
-  const greetingKey = (hour < 12 ? "GoodMorning" : hour < 18 ? "GoodAfternoon" : "GoodEvening") as
-    | "GoodMorning"
-    | "GoodAfternoon"
-    | "GoodEvening";
-  const dateFormatted = now.toLocaleDateString(locale === "ar" ? "ar-EG" : "en-US", {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
+  const greetingKey = (hour < 12 ? 'GoodMorning' : hour < 18 ? 'GoodAfternoon' : 'GoodEvening') as
+    | 'GoodMorning'
+    | 'GoodAfternoon'
+    | 'GoodEvening';
+  const dateFormatted = now.toLocaleDateString(locale === 'ar' ? 'ar-EG' : 'en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
   });
 
   // Placeholder for session - in a real implementation, this would come from auth
-  const firstName = "Admin";
+  const firstName = 'Admin';
 
   return (
     <>
@@ -75,7 +75,7 @@ export async function DashboardStats({ locale }: DashboardStatsProps) {
       {/* ── KPI Cards ───────────────────────────────────────────── */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 px-1">
         <KpiCard
-          title={t("TotalProducts")}
+          title={t('TotalProducts')}
           value={catalogStats.totalProducts.toLocaleString(locale)}
           iconName="package"
           href="/products"
@@ -83,7 +83,7 @@ export async function DashboardStats({ locale }: DashboardStatsProps) {
           iconBg="bg-blue-50 dark:bg-blue-500/10"
         />
         <KpiCard
-          title={t("TotalCategories")}
+          title={t('TotalCategories')}
           value={catalogStats.totalCategories.toLocaleString(locale)}
           iconName="layers"
           href="/categories"
@@ -91,7 +91,7 @@ export async function DashboardStats({ locale }: DashboardStatsProps) {
           iconBg="bg-purple-50 dark:bg-purple-500/10"
         />
         <KpiCard
-          title={t("TotalBrands")}
+          title={t('TotalBrands')}
           value={catalogStats.totalBrands.toLocaleString(locale)}
           iconName="award"
           href="/brands"
@@ -99,7 +99,7 @@ export async function DashboardStats({ locale }: DashboardStatsProps) {
           iconBg="bg-orange-50 dark:bg-orange-500/10"
         />
         <KpiCard
-          title={t("CatalogCompletion")}
+          title={t('CatalogCompletion')}
           value={`${
             catalogStats.totalProducts > 0
               ? Math.round((catalogStats.fullyComplete / catalogStats.totalProducts) * 100)
@@ -111,8 +111,8 @@ export async function DashboardStats({ locale }: DashboardStatsProps) {
           iconBg="bg-emerald-50 dark:bg-emerald-500/10"
           change={{
             value: catalogStats.fullyComplete,
-            label: t("KPIs.FullyComplete"),
-            direction: "up",
+            label: t('KPIs.FullyComplete'),
+            direction: 'up',
           }}
         />
       </div>

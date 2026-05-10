@@ -1,10 +1,10 @@
-import type { Product } from "@findeg/backend/features/catalog";
-import { Link } from "@i18n/navigation";
-import { ExternalLink, Edit, Eye } from "lucide-react";
-import { TagChips } from "@components/shared/TagChips";
-import { StockHealthBar } from "@/app/[locale]/_components/shared/StockHealthBar";
-import { Badge } from "@findeg/ui";
-import { format } from "date-fns";
+import type { Product } from '@findeg/backend/features/catalog';
+import { Link } from '@i18n/navigation';
+import { ExternalLink, Edit, Eye } from 'lucide-react';
+import { TagChips } from '@components/shared/TagChips';
+import { StockHealthBar } from '@/app/[locale]/_components/shared/StockHealthBar';
+import { Badge } from '@findeg/ui';
+import { format } from 'date-fns';
 
 // Helper to calculate available stock from inventory
 function getVariantStock(variant: any): number {
@@ -21,7 +21,7 @@ export function ProductExpanded({ product }: ProductExpandedProps) {
     product.tags?.map((t) => ({
       id: t.id,
       name: t.key,
-      color: t.color || "#6366f1",
+      color: t.color || '#6366f1',
     })) || [];
   const variants = product.variants || [];
   const totalStock = variants.reduce((sum, v) => sum + getVariantStock(v), 0);
@@ -46,8 +46,8 @@ export function ProductExpanded({ product }: ProductExpandedProps) {
   }).length;
   const healthyVariants = inStockVariants - lowStockVariants;
 
-  const createdDate = product.createdAt ? format(product.createdAt, "PPP") : "—";
-  const updatedDate = product.updatedAt ? format(product.updatedAt, "PPP") : "—";
+  const createdDate = product.createdAt ? format(product.createdAt, 'PPP') : '—';
+  const updatedDate = product.updatedAt ? format(product.updatedAt, 'PPP') : '—';
 
   return (
     <div className="space-y-4 py-4 px-2 bg-muted/30 rounded-md">
@@ -117,14 +117,14 @@ export function ProductExpanded({ product }: ProductExpandedProps) {
       {/* Action Links */}
       <div className="pt-4 mt-4 border-t flex flex-wrap gap-3">
         <Link
-          href={`/${product.locale || "en"}/admin/products/${product.id}`}
+          href={`/${product.locale || 'en'}/admin/products/${product.id}`}
           className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
         >
           <Edit className="h-4 w-4" />
           Edit Product
         </Link>
         <Link
-          href={`/${product.locale || "en"}/products/${product.slug || product.id}`}
+          href={`/${product.locale || 'en'}/products/${product.slug || product.id}`}
           target="_blank"
           className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:underline"
         >

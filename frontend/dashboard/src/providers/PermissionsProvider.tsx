@@ -6,17 +6,17 @@
  * and exposes it via a React Context to the rest of the component tree.
  */
 
-"use client";
+'use client';
 
-import React, { createContext, useContext, useMemo } from "react";
+import React, { createContext, useContext, useMemo } from 'react';
 import {
   hasPermission,
   systemAdmin as checkSystemAdmin,
   hasAnyPermission,
   hasAllPermissions,
-  PermissionCode,
   SessionPayload,
-} from "@findeg/backend/features/core";
+} from '@findeg/backend/features/core';
+import type { PermissionCode } from '@findeg/db';
 
 /**
  * The set of helpers available to any component nested within a PermissionsProvider.
@@ -66,7 +66,7 @@ export function PermissionsProvider({
   session,
   children,
 }: {
-  session: SessionPayload;
+  session: SessionPayload | null;
   children: React.ReactNode;
 }) {
   const value = useMemo<PermissionsContextValue>(
@@ -74,27 +74,27 @@ export function PermissionsProvider({
       /**
        * Check if a specific permission code is present in the session.
        */
-      hasPermission: (code) => hasPermission(session, code as PermissionCode),
+      hasPermission: (code) => session ? hasPermission(session, code as PermissionCode) : false,
 
       /**
        * Check if the session contains any of the provided codes.
        */
-      hasAnyPermission: (codes) => hasAnyPermission(session, codes as PermissionCode[]),
+      hasAnyPermission: (codes) => session ? hasAnyPermission(session, codes as PermissionCode[]) : false,
 
       /**
        * Check if the session contains all of the provided codes.
        */
-      hasAllPermissions: (codes) => hasAllPermissions(session, codes as PermissionCode[]),
+      hasAllPermissions: (codes) => session ? hasAllPermissions(session, codes as PermissionCode[]) : false,
 
       /**
        * Boolean flag for system administrators.
        */
-      systemAdmin: checkSystemAdmin(session),
+      systemAdmin: session ? checkSystemAdmin(session) : false,
 
       /**
        * The raw array of effective permission codes.
        */
-      permissionCodes: session.permissionCodes ?? [],
+      permissionCodes: session?.permissionCodes ?? [],
     }),
     [session],
   );
@@ -118,7 +118,7 @@ export function PermissionsProvider({
 export function usePermissions(): PermissionsContextValue {
   const ctx = useContext(PermissionsContext);
   if (!ctx) {
-    throw new Error("usePermissions() must be used inside <PermissionsProvider>");
+    throw new Error('usePermissions() must be used inside <PermissionsProvider>');
   }
   return ctx;
 }

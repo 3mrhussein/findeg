@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   FormControl,
@@ -7,12 +7,12 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Checkbox } from "@findeg/ui";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@findeg/ui";
-import type { UseFormReturn } from "react-hook-form";
-import type { CategoryFormValues } from "./CategoryForm.interface";
+} from '@findeg/ui';
+import { Input } from '@findeg/ui';
+import { Checkbox } from '@findeg/ui';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@findeg/ui';
+import type { UseFormReturn } from 'react-hook-form';
+import type { CategoryFormValues } from './CategoryForm.interface';
 
 interface CategoryMetaFieldsProps {
   form: UseFormReturn<CategoryFormValues>;

@@ -5,17 +5,17 @@
  * Applies changes optimistically via the onSave callback.
  */
 
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import { useTranslations } from "next-intl";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Checkbox } from "@findeg/ui";
-import { ScrollArea } from "@findeg/ui";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@findeg/ui";
-import { Icon } from "@findeg/ui";
-import type { RoleWithPermissions, Permission } from "../Settings";
+import React, { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { Checkbox } from '@findeg/ui';
+import { ScrollArea } from '@findeg/ui';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@findeg/ui';
+import { Icon } from '@findeg/ui';
+import type { RoleWithPermissions, Permission } from '../Settings';
 
 interface PermissionMatrixDialogProps {
   role: RoleWithPermissions | null;
@@ -28,8 +28,8 @@ interface PermissionMatrixDialogProps {
 function groupByDomain(permissions: Permission[]): Record<string, Permission[]> {
   const groups: Record<string, Permission[]> = {};
   for (const p of permissions) {
-    const parts = p.code.split(".");
-    const domain = parts[1] ?? "other";
+    const parts = p.code.split('.');
+    const domain = parts[1] ?? 'other';
     if (!groups[domain]) groups[domain] = [];
     groups[domain].push(p);
   }
@@ -45,7 +45,7 @@ export function PermissionMatrixDialog({
   onSave,
   onClose,
 }: PermissionMatrixDialogProps) {
-  const t = useTranslations("Pages.Dashboard");
+  const t = useTranslations('Pages.Dashboard');
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [saving, setSaving] = useState(false);
 
@@ -94,30 +94,30 @@ export function PermissionMatrixDialog({
       >
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <span>{t("EditRole")}:</span>
+            <span>{t('EditRole')}:</span>
             <span className="text-primary">{role?.name}</span>
           </DialogTitle>
         </DialogHeader>
 
         <p id="matrix-description" className="text-xs text-muted-foreground -mt-2">
-          {t("PermissionMatrixDescription")}
+          {t('PermissionMatrixDescription')}
         </p>
 
         <ScrollArea className="max-h-[calc(100dvh-220px)] sm:max-h-[440px] rounded-md border">
           <Table>
             <TableHeader className="sticky top-0 bg-muted/80 backdrop-blur-sm z-10">
               <TableRow>
-                <TableHead className="w-[60%]">{t("PermissionDomain")}</TableHead>
-                <TableHead className="text-center w-[20%]">{t("Read")}</TableHead>
-                <TableHead className="text-center w-[20%]">{t("Write")}</TableHead>
+                <TableHead className="w-[60%]">{t('PermissionDomain')}</TableHead>
+                <TableHead className="text-center w-[20%]">{t('Read')}</TableHead>
+                <TableHead className="text-center w-[20%]">{t('Write')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {Object.entries(groups).map(([domain, perms]) => {
-                const read = perms.find((p) => p.code.endsWith(".read"));
-                const write = perms.find((p) => p.code.endsWith(".write"));
+                const read = perms.find((p) => p.code.endsWith('.read'));
+                const write = perms.find((p) => p.code.endsWith('.write'));
                 const standalones = perms.filter(
-                  (p) => !p.code.endsWith(".read") && !p.code.endsWith(".write"),
+                  (p) => !p.code.endsWith('.read') && !p.code.endsWith('.write'),
                 );
                 return (
                   <React.Fragment key={domain}>
@@ -176,13 +176,13 @@ export function PermissionMatrixDialog({
 
         <DialogFooter>
           <Button variant="outline" onClick={onClose} disabled={saving}>
-            {t("Cancel")}
+            {t('Cancel')}
           </Button>
           <Button onClick={handleSave} disabled={saving}>
             {saving && (
               <Icon name="progress_activity" className="text-base ltr:mr-2 rtl:ml-2 animate-spin" />
             )}
-            {t("Save")}
+            {t('Save')}
           </Button>
         </DialogFooter>
       </DialogContent>

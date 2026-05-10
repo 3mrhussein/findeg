@@ -5,9 +5,10 @@
  * including the attribute-based variant matching engine.
  */
 
-import { type ID } from "@findeg/backend/features/core/domain/types/common";
-import type { Variant } from "../../domain/entities/Variant";
-import type { MatchRulesDraft } from "@findeg/db/schema";
+import { type ID } from '@findeg/backend/features/core/domain/types/common';
+import type { Variant } from '../../domain/entities/Variant';
+import { type MatchRulesDraft } from '@findeg/db';
+import { Locale, PartialTranslationMap } from '@findeg/db/types';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -17,22 +18,22 @@ export interface SchoolListResult {
   schoolName: string;
   grade: string;
   academicYear: string;
-  governorate?: string;
-  area?: string;
-  schoolType?: string;
-  academicSystem?: string;
-  localizedTitle: Record<string, string>;
-  localizedDescription?: Record<string, string>;
-  heroImageUrl?: string;
+  governorate: string | null;
+  area: string | null;
+  schoolType: string | null;
+  academicSystem: string | null;
+  localizedTitle: PartialTranslationMap;
+  localizedDescription: PartialTranslationMap | null;
+  heroImageUrl: string | null;
   isActive: boolean;
-  publishedAt?: Date;
+  publishedAt: Date | null;
   items?: SchoolListItemResult[];
 }
 
 export interface SchoolListItemResult {
   id: ID;
   displayOrder: number;
-  localizedLabel: Record<string, string>;
+  localizedLabel: Record<Locale, string>;
   categoryId?: ID;
   quantityRequired: number;
   isLocked: boolean;
@@ -56,15 +57,15 @@ export interface SchoolListInput {
   schoolName: string;
   grade: string;
   academicYear: string;
-  localizedTitle: Record<string, string>;
-  localizedDescription?: Record<string, string>;
+  localizedTitle: Record<Locale, string>;
+  localizedDescription?: Record<Locale, string>;
   heroImageUrl?: string;
   isActive?: boolean;
 }
 
 export interface SchoolListItemInput {
   displayOrder?: number;
-  localizedLabel: Record<string, string>;
+  localizedLabel: Record< Locale, string>;
   categoryId?: ID;
   quantityRequired?: number;
   isLocked?: boolean;

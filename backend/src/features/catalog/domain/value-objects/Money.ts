@@ -11,25 +11,25 @@
  *
  */
 export class Money {
-  static readonly CURRENCY = "EGP";
+  static readonly CURRENCY = 'EGP';
 
   /**
    *
    */
   private constructor(
     private readonly _amount: number,
-    private readonly _currency: string = "EGP",
+    private readonly _currency: string = 'EGP',
   ) {}
 
   /**
    *
    */
-  static create(amount: number, currency = "EGP"): Money {
+  static create(amount: number, currency = 'EGP'): Money {
     if (!isFinite(amount) || isNaN(amount)) {
-      throw new Error("Money amount must be a finite number");
+      throw new Error('Money amount must be a finite number');
     }
     if (amount < 0) {
-      throw new Error("Money amount cannot be negative");
+      throw new Error('Money amount cannot be negative');
     }
     // Round to 2 decimal places
     const rounded = Math.round(amount * 100) / 100;

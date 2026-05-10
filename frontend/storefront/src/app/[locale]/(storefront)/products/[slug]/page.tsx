@@ -1,14 +1,14 @@
-import { Suspense } from "react";
-import { notFound } from "next/navigation";
-import { getProductDetailPageData, getProductIdsForStaticParams } from "@/data/catalog/queries";
+import { Suspense } from 'react';
+import { notFound } from 'next/navigation';
+import { getProductDetailPageData, getProductIdsForStaticParams } from '@/data/catalog/queries';
 
-import { setRequestLocale } from "next-intl/server";
-import type { Locale } from "next-intl";
-import { ProductGallery } from "./_components/ProductGallery";
-import { AddToCartSection } from "./_components/AddToCartSection";
-import { ProductTabs } from "./_components/ProductTabs";
-import { Star, Truck, ShieldCheck, ArrowLeft } from "lucide-react";
-import { Link } from "@i18n/navigation";
+import { setRequestLocale } from 'next-intl/server';
+import type { Locale } from 'next-intl';
+import { ProductGallery } from './_components/ProductGallery';
+import { AddToCartSection } from './_components/AddToCartSection';
+import { ProductTabs } from './_components/ProductTabs';
+import { Star, Truck, ShieldCheck, ArrowLeft } from 'lucide-react';
+import { Link } from '@i18n/navigation';
 
 /**
  *
@@ -116,9 +116,9 @@ async function ProductPageContent({ locale, productId }: ProductContentProps) {
               </h1>
 
               <div className="text-3xl font-bold text-primary mb-6">
-                {new Intl.NumberFormat("en-EG", {
-                  style: "currency",
-                  currency: "EGP",
+                {new Intl.NumberFormat('en-EG', {
+                  style: 'currency',
+                  currency: 'EGP',
                 }).format(Number(product.variants?.[0]?.basePrice ?? 0))}
               </div>
 

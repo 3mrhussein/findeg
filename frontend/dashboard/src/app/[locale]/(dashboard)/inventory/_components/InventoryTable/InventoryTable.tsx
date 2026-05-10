@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@findeg/ui";
-import { useMemo, useState } from "react";
-import { useRouter } from "@i18n/navigation";
-import { useToast } from "@hooks/use-toast";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@findeg/ui';
+import { useMemo, useState } from 'react';
+import { useRouter } from '@i18n/navigation';
+import { useToast } from '@hooks/use-toast';
 
-import type { Product } from "@findeg/backend/features/catalog";
-import type { InventoryTableProps, SortKey } from "./InventoryTable.interface";
-import { InventoryFilters } from "./InventoryFilters";
-import { InventoryBatchControls } from "./InventoryBatchControls";
-import { InventoryRow } from "./InventoryRow";
-import { bulkUpdateStock, updateStock } from "@data/inventory/actions";
+import type { Product } from '@findeg/backend/features/catalog';
+import type { InventoryTableProps, SortKey } from './InventoryTable.interface';
+import { InventoryFilters } from './InventoryFilters';
+import { InventoryBatchControls } from './InventoryBatchControls';
+import { InventoryRow } from './InventoryRow';
+import { bulkUpdateStock, updateStock } from '@data/inventory/actions';
 
 /**
  * InventoryTable — orchestrates search/sort/filter, batch adjustment, and inline row editing.
@@ -22,9 +22,9 @@ export function InventoryTable({ products }: InventoryTableProps) {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editStock, setEditStock] = useState(0);
   const [saving, setSaving] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [lowStockOnly, setLowStockOnly] = useState(false);
-  const [sortKey, setSortKey] = useState<SortKey>("name-asc");
+  const [sortKey, setSortKey] = useState<SortKey>('name-asc');
   const [selectedProductIds, setSelectedProductIds] = useState<number[]>([]);
   const [batchDelta, setBatchDelta] = useState(1);
   const [batchSaving, setBatchSaving] = useState(false);
@@ -33,7 +33,7 @@ export function InventoryTable({ products }: InventoryTableProps) {
     const query = searchTerm.trim().toLowerCase();
     const filtered = products.filter((product) => {
       const firstVariant = product.variants?.[0];
-      const sku = firstVariant?.sku ?? "";
+      const sku = firstVariant?.sku ?? '';
       const matchesSearch =
         query.length === 0 ||
         product.name.toLowerCase().includes(query) ||
@@ -47,8 +47,8 @@ export function InventoryTable({ products }: InventoryTableProps) {
     return filtered.sort((a, b) => {
       const aStock = a.variants?.[0]?.inventory?.[0]?.onHand ?? 0;
       const bStock = b.variants?.[0]?.inventory?.[0]?.onHand ?? 0;
-      if (sortKey === "stock-asc") return aStock - bStock;
-      if (sortKey === "stock-desc") return bStock - aStock;
+      if (sortKey === 'stock-asc') return aStock - bStock;
+      if (sortKey === 'stock-desc') return bStock - aStock;
       return a.name.localeCompare(b.name);
     });
   }, [products, searchTerm, lowStockOnly, sortKey]);
@@ -84,14 +84,14 @@ export function InventoryTable({ products }: InventoryTableProps) {
         quantity: editStock,
       });
       if (result.success) {
-        toast({ title: "Stock updated", description: "Inventory updated successfully." });
+        toast({ title: 'Stock updated', description: 'Inventory updated successfully.' });
         setEditingId(null);
         router.refresh();
       } else {
-        toast({ variant: "destructive", title: "Error", description: result.error });
+        toast({ variant: 'destructive', title: 'Error', description: result.error });
       }
     } catch {
-      toast({ variant: "destructive", title: "Error", description: "Failed to save." });
+      toast({ variant: 'destructive', title: 'Error', description: 'Failed to save.' });
     } finally {
       setSaving(false);
     }
@@ -140,19 +140,19 @@ export function InventoryTable({ products }: InventoryTableProps) {
       const result = await bulkUpdateStock(updates);
       if (result.success) {
         toast({
-          title: "Batch update complete",
+          title: 'Batch update complete',
           description: `Updated ${updates.length} products.`,
         });
         setSelectedProductIds([]);
         router.refresh();
       } else {
-        toast({ variant: "destructive", title: "Error", description: result.error });
+        toast({ variant: 'destructive', title: 'Error', description: result.error });
       }
     } catch {
       toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to apply batch update.",
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Failed to apply batch update.',
       });
     } finally {
       setBatchSaving(false);

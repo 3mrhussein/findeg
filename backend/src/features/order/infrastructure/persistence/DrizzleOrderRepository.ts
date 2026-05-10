@@ -1,25 +1,23 @@
 import {
   ID,
   Price,
-  Sku,
   Quantity,
-  Email,
   OrderStatus,
   PaymentStatus,
-} from "../../../core/domain/types/common";
-import { db } from "@findeg/db/connection";
+} from '../../../core/domain/types/common';
+import { db } from '@findeg/db/connection';
 import {
   orders,
   orderItems,
   users,
   type Order as DbOrder,
   type OrderItem as DbOrderItem,
-} from "@findeg/db/schema";
-import { IOrderRepository, OrderFilters } from "../../application/interfaces/IOrderRepository";
-import { Order, OrderItem } from "../../domain/entities/Order";
-import { ShippingAddress } from "../../domain/value-objects";
-import { OrderStatusUpdate } from "@findeg/backend/features/administration/domain/types";
-import { eq, count as sqlCount, sql, desc, and, gte, lte, ilike, or, inArray } from "drizzle-orm";
+} from '@findeg/db/schema';
+import { IOrderRepository, OrderFilters } from '../../application/interfaces/IOrderRepository';
+import { Order } from '../../domain/entities/Order';
+import { ShippingAddress } from '../../domain/value-objects';
+import { OrderStatusUpdate } from '@findeg/backend/features/administration/domain/types';
+import { eq, count as sqlCount, sql, desc, and, gte, lte, ilike, or, inArray } from 'drizzle-orm';
 
 /**
  * Drizzle Order Repository
@@ -100,10 +98,10 @@ export class DrizzleOrderRepository implements IOrderRepository {
       ((orderResult[0].user
         ? [orderResult[0].user.firstName, orderResult[0].user.lastName]
             .filter(Boolean)
-            .join(" ")
+            .join(' ')
             .trim()
         : (orderResult[0].order.shippingAddressSnapshot as ShippingAddress)?.fullName) as string) ||
-      "Guest";
+      'Guest';
 
     return this.mapToDomain(
       orderResult[0].order,
@@ -138,11 +136,11 @@ export class DrizzleOrderRepository implements IOrderRepository {
    */
   async hasPurchasedProduct(userId: ID, productId: ID): Promise<boolean> {
     const purchasableStatuses: OrderStatus[] = [
-      "pending",
-      "confirmed",
-      "processing",
-      "shipped",
-      "delivered",
+      'pending',
+      'confirmed',
+      'processing',
+      'shipped',
+      'delivered',
     ];
 
     const rows = await db
@@ -222,9 +220,9 @@ export class DrizzleOrderRepository implements IOrderRepository {
 
           const name =
             ((row.user
-              ? [row.user.firstName, row.user.lastName].filter(Boolean).join(" ").trim()
+              ? [row.user.firstName, row.user.lastName].filter(Boolean).join(' ').trim()
               : (row.order.shippingAddressSnapshot as ShippingAddress)?.fullName) as string) ||
-            "Guest";
+            'Guest';
 
           return this.mapToDomain(row.order, items, name, row.user?.email || undefined);
         }),
@@ -243,12 +241,12 @@ export class DrizzleOrderRepository implements IOrderRepository {
       const dbOrderData: typeof orders.$inferInsert = {
         userId: rest.userId,
         guestEmail: rest.guestEmail,
-        status: rest.status || "pending",
-        paymentStatus: rest.paymentStatus || "unpaid",
+        status: rest.status || 'pending',
+        paymentStatus: rest.paymentStatus || 'unpaid',
         subtotal: String(rest.subtotal || 0),
         shippingCost: String(rest.shippingCost || 0),
         totalAmount: String(rest.totalAmount || 0),
-        currency: rest.currency || "EGP",
+        currency: rest.currency || 'EGP',
         paymentMethod: rest.paymentMethod,
         shippingAddressSnapshot: rest.shippingAddressSnapshot,
       };
@@ -395,10 +393,10 @@ export class DrizzleOrderRepository implements IOrderRepository {
   async getRevenueByPeriod(
     startDate: Date,
     endDate: Date,
-    interval: "day" | "month" = "day",
+    interval: 'day' | 'month' = 'day',
   ): Promise<{ date: string; revenue: number }[]> {
     // This is PG specific
-    const dateFormat = interval === "day" ? "YYYY-MM-DD" : "YYYY-MM";
+    const dateFormat = interval === 'day' ? 'YYYY-MM-DD' : 'YYYY-MM';
 
     // Ensure dates are converted to strings for postgres.js driver
     const startStr = startDate.toISOString();

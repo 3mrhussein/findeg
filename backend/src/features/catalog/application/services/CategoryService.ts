@@ -1,8 +1,9 @@
-import { ID, Slug } from "@findeg/backend/features/core/domain/types/common";
-import type { ICategoryRepository } from "../interfaces/ICategoryRepository";
-import type { ICategoryService } from "@findeg/backend/features/catalog/application/interfaces/ICategoryService";
-import type { Category } from "@findeg/backend/features/catalog/domain/entities/Category";
-import type { Locale } from "@findeg/backend/features/core/domain/value-objects";
+import { ID, Slug } from '@findeg/backend/features/core/domain/types/common';
+import type { ICategoryRepository } from '../interfaces/ICategoryRepository';
+import type { ICategoryService } from '@findeg/backend/features/catalog/application/interfaces/ICategoryService';
+import type { Category } from '@findeg/backend/features/catalog/domain/entities/Category';
+import type { Locale } from '@findeg/backend/features/core/domain/value-objects';
+import type { CategoryInput } from '@findeg/backend/features/administration/domain/types';
 
 export class CategoryService implements ICategoryService {
   constructor(private categoryRepository: ICategoryRepository) {}
@@ -23,11 +24,11 @@ export class CategoryService implements ICategoryService {
     return this.categoryRepository.getTree(language);
   }
 
-  async create(input: any): Promise<Category> {
+  async create(input: CategoryInput): Promise<Category> {
     return this.categoryRepository.create(input);
   }
 
-  async update(id: ID, input: any): Promise<Category> {
+  async update(id: ID, input: CategoryInput): Promise<Category> {
     return this.categoryRepository.update(id, input);
   }
 

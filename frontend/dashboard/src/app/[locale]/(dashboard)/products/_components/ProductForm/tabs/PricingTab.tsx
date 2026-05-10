@@ -1,24 +1,24 @@
-"use client";
+'use client';
 
-import React, { useEffect } from "react";
-import { useFormContext, useFieldArray } from "react-hook-form";
-import { useTranslations } from "next-intl";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import { Switch } from "@findeg/ui";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@findeg/ui";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@findeg/ui";
-import { Plus, Trash2, DollarSign, Ruler } from "lucide-react";
-import { type ProductFormValues } from "@/interfaces";
+import React, { useEffect } from 'react';
+import { useFormContext, useFieldArray } from 'react-hook-form';
+import { useTranslations } from 'next-intl';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@findeg/ui';
+import { Input } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
+import { Switch } from '@findeg/ui';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@findeg/ui';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@findeg/ui';
+import { Plus, Trash2, DollarSign, Ruler } from 'lucide-react';
+import { type ProductFormValues } from '@/interfaces';
 
 /**
  * Pricing & Units of Measure Tab
  * Two sections: Price Lists (top) and Units of Measure (bottom)
  */
 export function PricingTab() {
-  const t = useTranslations("Administration.Catalog.Products.Form.Tabs.Pricing");
+  const t = useTranslations('Administration.Catalog.Products.Form.Tabs.Pricing');
   const { control, watch } = useFormContext<ProductFormValues>();
 
   // Manage UoMs for the first variant
@@ -28,7 +28,7 @@ export function PricingTab() {
     remove: removeUom,
   } = useFieldArray({
     control,
-    name: "variants.0.uoms",
+    name: 'variants.0.uoms',
   });
 
   // Manage Price Lists nested under the first UoM
@@ -38,11 +38,11 @@ export function PricingTab() {
     remove: removePriceList,
   } = useFieldArray({
     control,
-    name: "variants.0.uoms.0.priceLists",
+    name: 'variants.0.uoms.0.priceLists',
   });
 
   // Watch UoMs to use as select options in Price Lists
-  const uoms = watch("variants.0.uoms") || [];
+  const uoms = watch('variants.0.uoms') || [];
 
   return (
     <div className="space-y-6">
@@ -64,8 +64,8 @@ export function PricingTab() {
             type="button"
             onClick={() =>
               appendPriceList({
-                customerGroup: "public_b2c",
-                uomCode: uoms[0]?.uomCode || "pcs",
+                customerGroup: 'public_b2c',
+                uomCode: uoms[0]?.uomCode || 'pcs',
                 unitPrice: 0,
                 minQty: 1,
                 isSellable: true,
@@ -145,9 +145,9 @@ export function PricingTab() {
                             className="h-9 text-xs"
                             placeholder="0.00"
                             {...field}
-                            value={field.value ?? ""}
+                            value={field.value ?? ''}
                             onChange={(e) =>
-                              field.onChange(e.target.value === "" ? 0 : parseFloat(e.target.value))
+                              field.onChange(e.target.value === '' ? 0 : parseFloat(e.target.value))
                             }
                           />
                         )}
@@ -163,9 +163,9 @@ export function PricingTab() {
                             className="h-9 text-xs"
                             placeholder="1"
                             {...field}
-                            value={field.value ?? ""}
+                            value={field.value ?? ''}
                             onChange={(e) =>
-                              field.onChange(e.target.value === "" ? 1 : parseInt(e.target.value))
+                              field.onChange(e.target.value === '' ? 1 : parseInt(e.target.value))
                             }
                           />
                         )}
@@ -216,9 +216,9 @@ export function PricingTab() {
             type="button"
             onClick={() =>
               appendUom({
-                uomCode: "",
+                uomCode: '',
                 factorToBase: 1,
-                localizedLabel: { en: "", ar: "" },
+                localizedLabel: { en: '', ar: '' },
                 isEnabled: true,
                 priceLists: [],
               })
@@ -284,9 +284,9 @@ export function PricingTab() {
                           className="h-9 text-xs text-right font-mono"
                           placeholder="1"
                           {...field}
-                          value={field.value ?? ""}
+                          value={field.value ?? ''}
                           onChange={(e) =>
-                            field.onChange(e.target.value === "" ? 1 : parseInt(e.target.value))
+                            field.onChange(e.target.value === '' ? 1 : parseInt(e.target.value))
                           }
                         />
                       )}

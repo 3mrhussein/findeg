@@ -1,62 +1,115 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": [
+    ".env",
+    ".env.*",
+    "tsconfig.json",
+    "tsconfig.base.json",
+    "tsconfig.eslint.json",
+    "package.json"
+  ],
+  "globalEnv": [
+    "NODE_ENV",
+    "CI"
+  ],
   "tasks": {
+    // ----------------------------
+    // BUILD PIPELINE (CORE FLOW)
+    // ----------------------------
     "build": {
       "dependsOn": [
         "^build",
-        "type-check",
-        "lint"
+        "type-check"
       ],
       "outputs": [
         "dist/**",
+        "*.tsbuildinfo",
         ".next/**",
-        "!.next/cache/**"
+        "!.next/cache/**",
+        "build/**"
       ]
     },
+    // ----------------------------
+    // DEV MODE
+    // ----------------------------
     "dev": {
       "cache": false,
       "persistent": true
     },
+    // ----------------------------
+    // TYPE CHECKING
+    // ----------------------------
     "type-check": {
       "dependsOn": [
         "^build"
       ],
-      "inputs": [
-        "src/**/*.ts",
-        "src/**/*.tsx",
-        "tsconfig*.json"
+      "outputs": [
+        "*.tsbuildinfo"
       ]
     },
+    // ----------------------------
+    // LINT
+    // ----------------------------
     "lint": {
-      "inputs": [
-        "src/**/*.ts",
-        "src/**/*.tsx",
-        "eslint.config.*",
-        ".eslintrc*"
-      ]
+      "outputs": []
     },
+    // ----------------------------
+    // TESTING
+    // ----------------------------
     "test": {
       "dependsOn": [
         "^build"
+      ],
+      "outputs": [
+        "coverage/**"
       ]
     },
     "test:unit": {
-      "inputs": [
-        "src/**/*.ts",
-        "src/**/*.tsx",
-        "vitest.config.*"
+      "outputs": [
+        "coverage/**"
       ]
     },
     "test:e2e": {
+      "cache": false
+    },
+    // ----------------------------
+    // NEXT APPS
+    // ----------------------------
+    "start": {
+      "cache": false
+    },
+    // ----------------------------
+    // DATABASE PIPELINE (CRITICAL)
+    // ----------------------------
+    "db:generate": {
+      "cache": false,
+      "outputs": [
+        "db/migrations/**"
+      ]
+    },
+    "db:migrate": {
       "dependsOn": [
-        "build"
+        "db:generate"
       ],
       "cache": false
     },
-    "start": {
+    "db:push": {
+      "cache": false
+    },
+    "db:seed": {
       "dependsOn": [
-        "^build"
+        "db:push"
       ],
+      "cache": false
+    },
+    "db:studio": {
+      "cache": false,
+      "persistent": true
+    },
+    // ----------------------------
+    // CLEAN
+    // ----------------------------
+    "clean": {
       "cache": false
     }
   }

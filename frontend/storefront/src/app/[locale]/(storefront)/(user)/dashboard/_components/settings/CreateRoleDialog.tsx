@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { useTranslations } from "next-intl";
-import { Button } from "@findeg/ui";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import { Checkbox } from "@findeg/ui";
-import { ScrollArea } from "@findeg/ui";
-import { Icon } from "@findeg/ui";
-import type { Permission } from "../Settings";
+import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { Button } from '@findeg/ui';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@findeg/ui';
+import { Input } from '@findeg/ui';
+import { Label } from '@findeg/ui';
+import { Checkbox } from '@findeg/ui';
+import { ScrollArea } from '@findeg/ui';
+import { Icon } from '@findeg/ui';
+import type { Permission } from '../Settings';
 
 interface CreateRoleDialogProps {
   open: boolean;
@@ -27,10 +27,10 @@ export function CreateRoleDialog({
   permissions,
   onCreate,
 }: CreateRoleDialogProps) {
-  const t = useTranslations("Pages.Dashboard");
+  const t = useTranslations('Pages.Dashboard');
 
-  const [newCode, setNewCode] = useState("");
-  const [newName, setNewName] = useState("");
+  const [newCode, setNewCode] = useState('');
+  const [newName, setNewName] = useState('');
   const [newPermIds, setNewPermIds] = useState<Set<number>>(new Set());
   const [creating, setCreating] = useState(false);
 
@@ -38,8 +38,8 @@ export function CreateRoleDialog({
   React.useEffect(() => {
     if (open) {
       Promise.resolve().then(() => {
-        setNewCode("");
-        setNewName("");
+        setNewCode('');
+        setNewName('');
         setNewPermIds(new Set());
       });
     }
@@ -64,15 +64,15 @@ export function CreateRoleDialog({
     <Dialog open={open} onOpenChange={(v) => !v && onOpenChange(false)}>
       <DialogContent className="max-w-lg" aria-describedby="create-role-desc">
         <DialogHeader>
-          <DialogTitle>{t("NewRole")}</DialogTitle>
+          <DialogTitle>{t('NewRole')}</DialogTitle>
         </DialogHeader>
         <p id="create-role-desc" className="text-xs text-muted-foreground -mt-2">
-          {t("NewRoleDescription")}
+          {t('NewRoleDescription')}
         </p>
         <div className="space-y-4">
           <div className="space-y-1.5">
             <Label htmlFor="role-code">
-              {t("RoleCode")}
+              {t('RoleCode')}
               <span className="text-muted-foreground text-xs ltr:ml-1 rtl:mr-1">
                 (e.g. content_editor)
               </span>
@@ -80,13 +80,13 @@ export function CreateRoleDialog({
             <Input
               id="role-code"
               value={newCode}
-              onChange={(e) => setNewCode(e.target.value.toLowerCase().replace(/\s+/g, "_"))}
+              onChange={(e) => setNewCode(e.target.value.toLowerCase().replace(/\s+/g, '_'))}
               placeholder="role_code"
               className="font-mono"
             />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="role-name">{t("RoleName")}</Label>
+            <Label htmlFor="role-name">{t('RoleName')}</Label>
             <Input
               id="role-name"
               value={newName}
@@ -95,7 +95,7 @@ export function CreateRoleDialog({
             />
           </div>
           <div className="space-y-2">
-            <Label>{t("Permissions")}</Label>
+            <Label>{t('Permissions')}</Label>
             <ScrollArea className="h-52 border rounded-md p-3">
               <div className="space-y-2">
                 {permissions.map((p) => (
@@ -123,13 +123,13 @@ export function CreateRoleDialog({
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={creating}>
-            {t("Cancel")}
+            {t('Cancel')}
           </Button>
           <Button onClick={handleCreate} disabled={creating || !newCode || !newName}>
             {creating && (
               <Icon name="progress_activity" className="text-base ltr:mr-2 rtl:ml-2 animate-spin" />
             )}
-            {t("Create")}
+            {t('Create')}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { Product } from "@findeg/backend/features/catalog";
-import { Button } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { TableCell, TableRow } from "@findeg/ui";
-import { AlertTriangle, Loader2, Save } from "lucide-react";
+import { Product } from '@findeg/backend/features/catalog';
+import { Button } from '@findeg/ui';
+import { Input } from '@findeg/ui';
+import { TableCell, TableRow } from '@findeg/ui';
+import { AlertTriangle, Loader2, Save } from 'lucide-react';
 interface InventoryRowProps {
   product: Product;
   isSelected: boolean;
@@ -59,7 +59,7 @@ export function InventoryRow({
           )}
         </div>
       </TableCell>
-      <TableCell className="text-muted-foreground">{firstVariant?.sku ?? "–"}</TableCell>
+      <TableCell className="text-muted-foreground">{firstVariant?.sku ?? '–'}</TableCell>
       <TableCell>
         {isEditing ? (
           <Input
@@ -72,7 +72,7 @@ export function InventoryRow({
         ) : (
           <span
             data-testid={`admin-inventory-stock-value-${product.id}`}
-            className={isLow ? "text-red-600 font-bold" : ""}
+            className={isLow ? 'text-red-600 font-bold' : ''}
           >
             {onHand}
           </span>

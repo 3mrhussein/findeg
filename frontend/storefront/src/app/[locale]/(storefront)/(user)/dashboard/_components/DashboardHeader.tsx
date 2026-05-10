@@ -6,15 +6,15 @@
  * page title, and contextual actions.
  */
 
-"use client";
+'use client';
 
-import React from "react";
-import { useTranslations } from "next-intl";
-import { SidebarTrigger } from "@findeg/ui";
-import { Separator } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Icon } from "@findeg/ui";
-import type { DashboardView } from "./DashboardSidebar";
+import React from 'react';
+import { useTranslations } from 'next-intl';
+import { SidebarTrigger } from '@findeg/ui';
+import { Separator } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { Icon } from '@findeg/ui';
+import type { DashboardView } from './DashboardSidebar';
 
 interface DashboardHeaderProps {
   activeView: DashboardView;
@@ -24,19 +24,19 @@ interface DashboardHeaderProps {
  *
  */
 export function DashboardHeader({ activeView }: DashboardHeaderProps) {
-  const t = useTranslations("Pages.Dashboard");
+  const t = useTranslations('Pages.Dashboard');
 
   /** Maps view IDs to translated page titles */
   const VIEW_LABELS: Record<DashboardView, string> = {
-    overview: t("Overview"),
-    products: t("Products"),
-    inventory: t("Inventory"),
-    orders: t("Orders"),
-    customers: t("Customers"),
-    school_lists: t("SchoolLists"),
-    media: t("Media"),
-    team: t("Team"),
-    settings: t("Settings"),
+    overview: t('Overview'),
+    products: t('Products'),
+    inventory: t('Inventory'),
+    orders: t('Orders'),
+    customers: t('Customers'),
+    school_lists: t('SchoolLists'),
+    media: t('Media'),
+    team: t('Team'),
+    settings: t('Settings'),
   };
 
   return (
@@ -49,10 +49,10 @@ export function DashboardHeader({ activeView }: DashboardHeaderProps) {
 
       {/* Contextual actions */}
       <div className="ms-auto flex items-center gap-2">
-        {activeView === "products" && (
+        {activeView === 'products' && (
           <Button size="sm">
             <Icon name="add" className="text-base ltr:mr-1.5 rtl:ml-1.5" />
-            <span className="hidden sm:inline">{t("AddProduct")}</span>
+            <span className="hidden sm:inline">{t('AddProduct')}</span>
           </Button>
         )}
       </div>

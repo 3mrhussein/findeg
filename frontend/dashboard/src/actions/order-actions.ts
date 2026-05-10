@@ -5,11 +5,11 @@
  * Implements cache invalidation via updateTag().
  */
 
-"use server";
+'use server';
 
-import { revalidateTag } from "next/cache";
-import { createAdministrationServices } from "@findeg/backend/features/administration";
-import { getErrorMessage } from "@lib/type-guards";
+import { revalidateTag } from 'next/cache';
+import { createAdministrationServices } from '@findeg/backend/features/administration';
+import { getErrorMessage } from '@lib/type-guards';
 
 /**
  * Server Action: Update order status
@@ -22,10 +22,10 @@ export async function updateOrderStatusAction(orderId: number, input: any) {
     const { orders } = createAdministrationServices();
     await orders.updateStatus(orderId, input);
 
-    revalidateTag("orders", "max");
+    revalidateTag('orders', 'max');
     return { success: true };
   } catch (error: unknown) {
-    console.error("[updateOrderStatusAction]", error);
+    console.error('[updateOrderStatusAction]', error);
     return { success: false, error: getErrorMessage(error) };
   }
 }
@@ -41,10 +41,10 @@ export async function updateOrderPaymentStatusAction(orderId: number, paymentSta
     const { orders } = createAdministrationServices();
     await orders.updatePaymentStatus(orderId, paymentStatus);
 
-    revalidateTag("orders", "max");
+    revalidateTag('orders', 'max');
     return { success: true };
   } catch (error: unknown) {
-    console.error("[updateOrderPaymentStatusAction]", error);
+    console.error('[updateOrderPaymentStatusAction]', error);
     return { success: false, error: getErrorMessage(error) };
   }
 }

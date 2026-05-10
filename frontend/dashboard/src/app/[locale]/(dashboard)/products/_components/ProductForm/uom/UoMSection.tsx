@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { useFieldArray, useFormContext } from "react-hook-form";
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Switch } from "@findeg/ui";
-import { Separator } from "@findeg/ui";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
-import { Plus, Trash2, ChevronDown, ChevronRight, Package2 } from "lucide-react";
-import { PREDEFINED_UOMS, CUSTOMER_GROUPS } from "@findeg/backend/features/catalog";
-import { BilingualInput } from "@components/shared/BilingualInput";
-import { cn } from "@lib/utils";
-import { ProductFormValues } from "@/interfaces";
+import * as React from 'react';
+import { useFieldArray, useFormContext } from 'react-hook-form';
+import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { Label } from '@findeg/ui';
+import { Input } from '@findeg/ui';
+import { Switch } from '@findeg/ui';
+import { Separator } from '@findeg/ui';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@findeg/ui';
+import { Badge } from '@findeg/ui';
+import { Plus, Trash2, ChevronDown, ChevronRight, Package2 } from 'lucide-react';
+import { PREDEFINED_UOMS, CUSTOMER_GROUPS } from '@findeg/backend/features/catalog';
+import { BilingualInput } from '@components/shared/BilingualInput';
+import { cn } from '@lib/utils';
+import { ProductFormValues } from '@/interfaces';
 
 interface UoMSectionProps {
   /** Path prefix in form — e.g. "sharedUoMs" or "variants.0.uoms" */
@@ -32,7 +32,7 @@ interface UoMSectionProps {
  * - Optional barcode
  * - Expandable price list rows (per customer group)
  */
-export function UoMSection({ fieldArrayName, title = "Units of Measure" }: UoMSectionProps) {
+export function UoMSection({ fieldArrayName, title = 'Units of Measure' }: UoMSectionProps) {
   const { control, register, watch, setValue } = useFormContext<ProductFormValues>();
   const [expandedRows, setExpandedRows] = React.useState<Record<number, boolean>>({});
   const [customUomIndex, setCustomUomIndex] = React.useState<number | null>(null);
@@ -54,7 +54,7 @@ export function UoMSection({ fieldArrayName, title = "Units of Measure" }: UoMSe
       uomCode: def.code,
       factorToBase: def.factorToBase,
       localizedLabel: def.label,
-      barcode: "",
+      barcode: '',
       isEnabled: true,
       priceLists: [],
     } as any);
@@ -66,10 +66,10 @@ export function UoMSection({ fieldArrayName, title = "Units of Measure" }: UoMSe
   function addCustomUoM() {
     const idx = fields.length;
     append({
-      uomCode: "",
+      uomCode: '',
       factorToBase: 1,
-      localizedLabel: { en: "", ar: "" },
-      barcode: "",
+      localizedLabel: { en: '', ar: '' },
+      barcode: '',
       isEnabled: true,
       priceLists: [],
     } as any);
@@ -93,8 +93,8 @@ export function UoMSection({ fieldArrayName, title = "Units of Measure" }: UoMSe
     setValue(`${fieldArrayName}.${uomIndex}.priceLists` as any, [
       ...current,
       {
-        customerGroup: "public_b2c",
-        uomCode: fields[uomIndex] ? (fields[uomIndex] as Record<string, unknown>).uomCode : "",
+        customerGroup: 'public_b2c',
+        uomCode: fields[uomIndex] ? (fields[uomIndex] as Record<string, unknown>).uomCode : '',
         unitPrice: 0,
         minQty: 1,
         isSellable: true,
@@ -167,12 +167,12 @@ export function UoMSection({ fieldArrayName, title = "Units of Measure" }: UoMSe
                     <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />
                   )}
                   <span className="font-mono text-xs font-semibold uppercase">
-                    {uomCode || "NEW"}
+                    {uomCode || 'NEW'}
                   </span>
                   <span className="text-xs text-muted-foreground">×{factor}</span>
                   {priceLists.length > 0 && (
                     <Badge variant="secondary" className="h-4 px-1.5 text-[10px]">
-                      {priceLists.length} price{priceLists.length !== 1 ? "s" : ""}
+                      {priceLists.length} price{priceLists.length !== 1 ? 's' : ''}
                     </Badge>
                   )}
                 </button>
@@ -293,7 +293,7 @@ export function UoMSection({ fieldArrayName, title = "Units of Measure" }: UoMSe
                           value={
                             (watch(
                               `${fieldArrayName}.${index}.priceLists.${plIdx}.customerGroup` as any,
-                            ) as string) || "public_b2c"
+                            ) as string) || 'public_b2c'
                           }
                           onValueChange={(v) =>
                             setValue(

@@ -8,19 +8,19 @@
  * closes on Escape.
  */
 
-"use client";
+'use client';
 
-import React from "react";
-import { useTranslations } from "next-intl";
-import { Button } from "@findeg/ui";
+import React from 'react';
+import { useTranslations } from 'next-intl';
+import { Button } from '@findeg/ui';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@findeg/ui";
-import { Icon } from "@findeg/ui";
+} from '@findeg/ui';
+import { Icon } from '@findeg/ui';
 
 interface AdminActionsMenuProps {
   userId: number;
@@ -47,7 +47,7 @@ export function AdminActionsMenu({
   onDeactivate,
   onReactivate,
 }: AdminActionsMenuProps) {
-  const t = useTranslations("Pages.Dashboard");
+  const t = useTranslations('Pages.Dashboard');
 
   if (!canWrite) return null;
 
@@ -58,7 +58,7 @@ export function AdminActionsMenu({
           variant="ghost"
           size="icon"
           className="h-8 w-8 data-[state=open]:bg-muted"
-          aria-label={t("ActionsFor", { name: userName })}
+          aria-label={t('ActionsFor', { name: userName })}
           disabled={isPending}
         >
           {isPending ? (
@@ -71,11 +71,11 @@ export function AdminActionsMenu({
       <DropdownMenuContent align="end" className="w-48">
         <DropdownMenuItem onClick={onEdit}>
           <Icon name="edit" className="w-4 h-4 ltr:mr-2 rtl:ml-2" />
-          {t("Edit")}
+          {t('Edit')}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={onManagePermissions}>
           <Icon name="key" className="w-4 h-4 ltr:mr-2 rtl:ml-2" />
-          {t("ManagePermissions")}
+          {t('ManagePermissions')}
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         {isActive ? (
@@ -84,12 +84,12 @@ export function AdminActionsMenu({
             onClick={onDeactivate}
           >
             <Icon name="person_off" className="w-4 h-4 ltr:mr-2 rtl:ml-2" />
-            {t("Deactivate")}
+            {t('Deactivate')}
           </DropdownMenuItem>
         ) : (
           <DropdownMenuItem className="text-green-600 focus:text-green-600" onClick={onReactivate}>
             <Icon name="person_check" className="w-4 h-4 ltr:mr-2 rtl:ml-2" />
-            {t("Reactivate")}
+            {t('Reactivate')}
           </DropdownMenuItem>
         )}
       </DropdownMenuContent>

@@ -1,77 +1,35 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "noEmit": true,
+    "jsx": "react-jsx",
+    "moduleResolution": "Bundler",
+    "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@components/*": [
-        "./src/components/*"
-      ],
-      "@hooks/*": [
-        "./src/hooks/*"
-      ],
-      "@i18n/*": [
-        "./src/i18n/*"
-      ],
-      "@lib/*": [
-        "./src/lib/*"
-      ],
-      "@providers/*": [
-        "./src/providers/*"
-      ],
-      "@server/*": [
-        "./src/server/*"
-      ],
-      "@data/*": [
-        "./src/data/*"
-      ],
-      "@actions/*": [
-        "./src/actions/*"
-      ],
-      "@types/*": [
-        "./src/types/*"
-      ],
-      "@queries/*": [
-        "./src/queries/*"
-      ],
-      "@app/*": [
-        "./src/app/*"
-      ],
-      "@findeg/backend": [
-        "../../backend/src"
-      ],
-      "@findeg/backend/*": [
-        "../../backend/src/*"
-      ],
-      "@findeg/ui": [
-        "../ui/src"
-      ],
-      "@findeg/ui/*": [
-        "../ui/src/*"
-      ],
-      "@findeg/env": [
-        "../../env.ts"
-      ]
+      "@/*": ["./src/*"],
+      "@components/*": ["./src/components/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@i18n/*": ["./src/i18n/*"],
+      "@lib/*": ["./src/lib/*"],
+      "@providers/*": ["./src/providers/*"],
+      "@server/*": ["./src/server/*"],
+      "@features/*": ["./src/features/*"],
+      "@data/*": ["./src/data/*"],
+      "@app/*": ["./src/app/*"],
+      "@actions/*": ["./src/actions/*"],
+      "@queries/*": ["./src/queries/*"],
+      "@findeg/env": ["../../packages/env/src"],
+      "@findeg/env/*": ["../../packages/env/src/*"],
+      "@findeg/backend": ["../../backend/src"],
+      "@findeg/backend/*": ["../../backend/src/*"],
+      "@findeg/db": ["../../db/src"],
+      "@findeg/db/*": ["../../db/src/*"],
+      "@findeg/ui": ["../ui/src"],
+      "@findeg/ui/*": ["../ui/src/*"]
     }
   },
-  "references": [
-    {
-      "path": "../../backend"
-    },
-    {
-      "path": "../ui"
-    }
-  ],
   "include": [
-    "next-env.d.ts",
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.mts",
-    "src/**/*.cts",
-    "src/**/*.js",
-    "src/**/*.jsx"
+    "src/**/*"
   ],
   "exclude": [
     "node_modules",

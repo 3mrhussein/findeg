@@ -4,10 +4,10 @@
  * Defines a product specification/attribute that can be used for filtering.
  */
 
-import { z } from "zod";
-import { IdSchema, TranslationMapSchema } from "../../../core/domain/types/common";
+import { z } from 'zod';
+import { IdSchema, TranslationMapSchema } from '../../../core/domain/types/common';
 
-export const AttributeDataTypeSchema = z.enum(["string", "number", "boolean", "enum"]);
+export const AttributeDataTypeSchema = z.enum(['string', 'number', 'boolean', 'enum']);
 export type AttributeDataType = z.infer<typeof AttributeDataTypeSchema>;
 
 export const AttributeDefinitionSchema = z.object({

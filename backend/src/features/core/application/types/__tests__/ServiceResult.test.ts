@@ -1,20 +1,20 @@
-import { describe, it, expect } from "vitest";
-import type { ServiceResult } from "../ServiceResult";
+import { describe, it, expect } from 'vitest';
+import type { ServiceResult } from '../ServiceResult';
 
-describe("ServiceResult Type", () => {
-  describe("Basic ServiceResult", () => {
-    it("creates a successful result with data", () => {
+describe('ServiceResult Type', () => {
+  describe('Basic ServiceResult', () => {
+    it('creates a successful result with data', () => {
       const result: ServiceResult<{ id: number; name: string }> = {
         success: true,
-        data: { id: 1, name: "Test" },
+        data: { id: 1, name: 'Test' },
       };
 
       expect(result.success).toBe(true);
       expect(result.data?.id).toBe(1);
-      expect(result.data?.name).toBe("Test");
+      expect(result.data?.name).toBe('Test');
     });
 
-    it("creates a successful result with void data", () => {
+    it('creates a successful result with void data', () => {
       const result: ServiceResult<void> = {
         success: true,
       };
@@ -24,34 +24,34 @@ describe("ServiceResult Type", () => {
     });
   });
 
-  describe("Cache metadata", () => {
-    it("includes cache paths for revalidation", () => {
+  describe('Cache metadata', () => {
+    it('includes cache paths for revalidation', () => {
       const result: ServiceResult<{ id: number }> = {
         success: true,
         data: { id: 1 },
-        cachePaths: ["/profile", "/dashboard", "/settings"],
+        cachePaths: ['/profile', '/dashboard', '/settings'],
       };
 
-      expect(result.cachePaths).toContain("/profile");
+      expect(result.cachePaths).toContain('/profile');
       expect(result.cachePaths).toHaveLength(3);
     });
 
-    it("includes cache tags for revalidation", () => {
+    it('includes cache tags for revalidation', () => {
       const result: ServiceResult<void> = {
         success: true,
-        cacheTags: ["products", "catalog", "inventory"],
+        cacheTags: ['products', 'catalog', 'inventory'],
       };
 
-      expect(result.cacheTags).toContain("products");
+      expect(result.cacheTags).toContain('products');
       expect(result.cacheTags).toHaveLength(3);
     });
 
-    it("includes both paths and tags", () => {
+    it('includes both paths and tags', () => {
       const result: ServiceResult<{ productId: number }> = {
         success: true,
         data: { productId: 1 },
-        cachePaths: ["/shop", "/admin/products"],
-        cacheTags: ["products", "inventory"],
+        cachePaths: ['/shop', '/admin/products'],
+        cacheTags: ['products', 'inventory'],
       };
 
       expect(result.cachePaths).toHaveLength(2);
@@ -59,26 +59,26 @@ describe("ServiceResult Type", () => {
     });
   });
 
-  describe("Cache config for server queries", () => {
-    it("includes cache config with tags and lifetime", () => {
-      const result: ServiceResult<any[]> = {
+  describe('Cache config for server queries', () => {
+    it('includes cache config with tags and lifetime', () => {
+      const result: ServiceResult<unknown[]> = {
         success: true,
         data: [],
         cacheConfig: {
-          tags: ["products", "shop"],
+          tags: ['products', 'shop'],
           lifetime: 3600,
         },
       };
 
-      expect(result.cacheConfig?.tags).toContain("products");
+      expect(result.cacheConfig?.tags).toContain('products');
       expect(result.cacheConfig?.lifetime).toBe(3600);
     });
 
-    it("supports different lifetimes", () => {
+    it('supports different lifetimes', () => {
       const shortLived: ServiceResult<void> = {
         success: true,
         cacheConfig: {
-          tags: ["orders"],
+          tags: ['orders'],
           lifetime: 60, // 1 minute
         },
       };
@@ -86,7 +86,7 @@ describe("ServiceResult Type", () => {
       const longLived: ServiceResult<void> = {
         success: true,
         cacheConfig: {
-          tags: ["products"],
+          tags: ['products'],
           lifetime: 86400, // 24 hours
         },
       };
@@ -96,8 +96,8 @@ describe("ServiceResult Type", () => {
     });
   });
 
-  describe("Real-world examples", () => {
-    it("handles user creation with cache invalidation", () => {
+  describe('Real-world examples', () => {
+    it('handles user creation with cache invalidation', () => {
       interface User {
         id: string;
         email: string;
@@ -106,19 +106,19 @@ describe("ServiceResult Type", () => {
       const result: ServiceResult<User> = {
         success: true,
         data: {
-          id: "user-123",
-          email: "user@example.com",
+          id: 'user-123',
+          email: 'user@example.com',
         },
-        cachePaths: ["/admin/users"],
-        cacheTags: ["users"],
+        cachePaths: ['/admin/users'],
+        cacheTags: ['users'],
       };
 
       expect(result.success).toBe(true);
-      expect(result.data?.email).toBe("user@example.com");
-      expect(result.cacheTags).toContain("users");
+      expect(result.data?.email).toBe('user@example.com');
+      expect(result.cacheTags).toContain('users');
     });
 
-    it("handles product update with multiple cache invalidations", () => {
+    it('handles product update with multiple cache invalidations', () => {
       interface Product {
         id: number;
         name: string;
@@ -126,16 +126,16 @@ describe("ServiceResult Type", () => {
 
       const result: ServiceResult<Product> = {
         success: true,
-        data: { id: 1, name: "Updated Product" },
-        cachePaths: ["/shop", "/admin/products", "/admin/products/1"],
-        cacheTags: ["products", "catalog"],
+        data: { id: 1, name: 'Updated Product' },
+        cachePaths: ['/shop', '/admin/products', '/admin/products/1'],
+        cacheTags: ['products', 'catalog'],
       };
 
       expect(result.cachePaths?.length).toBe(3);
       expect(result.cacheTags?.length).toBe(2);
     });
 
-    it("handles query result with cache config", () => {
+    it('handles query result with cache config', () => {
       interface ProductResult {
         products: Array<{ id: number; name: string }>;
         total: number;
@@ -144,11 +144,11 @@ describe("ServiceResult Type", () => {
       const result: ServiceResult<ProductResult> = {
         success: true,
         data: {
-          products: [{ id: 1, name: "Product" }],
+          products: [{ id: 1, name: 'Product' }],
           total: 1,
         },
         cacheConfig: {
-          tags: ["products", "shop"],
+          tags: ['products', 'shop'],
           lifetime: 3600,
         },
       };
@@ -157,7 +157,7 @@ describe("ServiceResult Type", () => {
       expect(result.cacheConfig?.lifetime).toBe(3600);
     });
 
-    it("handles operation with no cache impact", () => {
+    it('handles operation with no cache impact', () => {
       const result: ServiceResult<{ success: boolean }> = {
         success: true,
         data: { success: true },
@@ -169,18 +169,18 @@ describe("ServiceResult Type", () => {
     });
   });
 
-  describe("Type safety", () => {
-    it("enforces success always true", () => {
+  describe('Type safety', () => {
+    it('enforces success always true', () => {
       // This would fail TypeScript compilation if trying to set success: false
       const result: ServiceResult<string> = {
         success: true,
-        data: "test",
+        data: 'test',
       };
 
       expect(result.success).toBe(true);
     });
 
-    it("allows optional data fields", () => {
+    it('allows optional data fields', () => {
       const resultWithData: ServiceResult<number> = {
         success: true,
         data: 42,

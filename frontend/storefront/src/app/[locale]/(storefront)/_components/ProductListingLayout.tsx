@@ -1,9 +1,9 @@
-import { ReactNode } from "react";
-import { FilterSidebar } from "./FilterSidebar";
-import { ShopSortSelect } from "./ShopSortSelect";
-import { ShopViewSwitcher } from "./ShopViewSwitcher";
-import { ProductGridList } from "./ProductGridList";
-import { Button } from "@findeg/ui";
+import { ReactNode } from 'react';
+import { FilterSidebar } from './FilterSidebar';
+import { ShopSortSelect } from './ShopSortSelect';
+import { ShopViewSwitcher } from './ShopViewSwitcher';
+import { ProductGridList } from './ProductGridList';
+import { Button } from '@findeg/ui';
 import {
   Sheet,
   SheetContent,
@@ -11,10 +11,10 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@findeg/ui";
-import { Filter } from "lucide-react";
-import { EmptyState } from "./EmptyState";
-import { FilterOption, CategoryFilterOption, Product } from "@/data/catalog/types";
+} from '@findeg/ui';
+import { Filter } from 'lucide-react';
+import { EmptyState } from './EmptyState';
+import { FilterOption, CategoryFilterOption, Product } from '@/data/catalog/types';
 
 interface ProductListingLayoutProps {
   products: Product[];
@@ -41,10 +41,10 @@ export function ProductListingLayout({
   minPriceBound,
   maxPriceBound,
   resultsCountLabel,
-  filtersTitle = "Filters",
-  noProductsTitle = "No products found",
-  noProductsDescription = "Try adjusting your filters to see more options.",
-  loadMoreLabel = "Load More",
+  filtersTitle = 'Filters',
+  noProductsTitle = 'No products found',
+  noProductsDescription = 'Try adjusting your filters to see more options.',
+  loadMoreLabel = 'Load More',
 }: ProductListingLayoutProps) {
   const displayProducts = filteredProducts || products;
   return (

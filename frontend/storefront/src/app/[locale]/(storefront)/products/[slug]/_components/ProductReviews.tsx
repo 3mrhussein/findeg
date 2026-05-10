@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Star } from "lucide-react";
-import { Button } from "@findeg/ui";
-import { Card, CardContent } from "@findeg/ui";
+import { useState } from 'react';
+import { Star } from 'lucide-react';
+import { Button } from '@findeg/ui';
+import { Card, CardContent } from '@findeg/ui';
 
 interface Review {
   id: number | string;
@@ -45,17 +45,17 @@ export function ProductReviews({ reviews }: { reviews: Review[] }) {
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <div className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary font-bold">
-                    {(review.author || "A")[0].toUpperCase()}
+                    {(review.author || 'A')[0].toUpperCase()}
                   </div>
                   <div>
                     <div className="font-bold text-sm text-slate-900 dark:text-white">
-                      {review.author || "Anonymous"}
+                      {review.author || 'Anonymous'}
                     </div>
                     <div className="flex items-center gap-0.5 text-yellow-500">
                       {Array.from({ length: 5 }).map((_, i) => (
                         <Star
                           key={i}
-                          className={`w-3.5 h-3.5 ${i < review.rating ? "fill-current" : "text-slate-200 dark:text-slate-700"}`}
+                          className={`w-3.5 h-3.5 ${i < review.rating ? 'fill-current' : 'text-slate-200 dark:text-slate-700'}`}
                         />
                       ))}
                     </div>
@@ -63,7 +63,7 @@ export function ProductReviews({ reviews }: { reviews: Review[] }) {
                 </div>
               </div>
               <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-4">
-                &quot;{review.comment || "Great product! Highly recommended."}&quot;
+                &quot;{review.comment || 'Great product! Highly recommended.'}&quot;
               </p>
             </CardContent>
           </Card>

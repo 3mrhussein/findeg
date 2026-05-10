@@ -3,8 +3,8 @@
  * Keep all high-churn path segments and endpoint builders here.
  */
 export const API_SEGMENTS = {
-  root: "/api",
-  version: "v1",
+  root: '/api',
+  version: 'v1',
 } as const;
 
 export const API_BASE = `${API_SEGMENTS.root}/${API_SEGMENTS.version}`;
@@ -29,31 +29,31 @@ export const API_ROUTES = {
 } as const;
 
 export const UI_ROUTES = {
-  shop: "/shop",
-  search: "/search",
-  categories: "/categories",
+  shop: '/shop',
+  search: '/search',
+  categories: '/categories',
   categoryBySlug: (slug: string) => `/categories/${slug}`,
-  checkout: "/checkout",
-  myAccount: "/my-account",
-  registration: "/registration",
-  admin: "/admin",
-  adminLogin: "/admin-login",
-  adminProducts: "/admin/products",
-  adminProductsNew: "/admin/products/new",
+  checkout: '/checkout',
+  myAccount: '/my-account',
+  registration: '/registration',
+  admin: '/admin',
+  adminLogin: '/admin-login',
+  adminProducts: '/admin/products',
+  adminProductsNew: '/admin/products/new',
   adminProductEditById: (id: number) => `/admin/products/${id}/edit`,
-  adminCategories: "/admin/categories",
-  adminCategoriesNew: "/admin/categories/new",
+  adminCategories: '/admin/categories',
+  adminCategoriesNew: '/admin/categories/new',
   adminCategoryEditById: (id: number) => `/admin/categories/${id}/edit`,
-  adminBrands: "/admin/brands",
-  adminInventory: "/admin/inventory",
+  adminBrands: '/admin/brands',
+  adminInventory: '/admin/inventory',
   productById: (id: number) => `/products/${id}`,
 } as const;
 
 export const ROUTE_QUERY_KEYS = {
-  categories: "categories",
-  brands: "brands",
-  price: "price",
-  sort: "sort",
-  page: "page",
-  search: "q",
+  categories: 'categories',
+  brands: 'brands',
+  price: 'price',
+  sort: 'sort',
+  page: 'page',
+  search: 'q',
 } as const;

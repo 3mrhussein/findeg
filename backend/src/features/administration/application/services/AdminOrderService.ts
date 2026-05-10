@@ -1,24 +1,23 @@
-import { ID } from "../../../core/domain/types/common";
-import { IAdminOrderService } from "../interfaces/IAdminOrderService";
+import { DashboardStats, IAdminOrderService } from '../interfaces/IAdminOrderService';
 import {
   IOrderRepository,
   OrderFilters,
-} from "../../../order/application/interfaces/IOrderRepository";
-import { IAuditLogService } from "../interfaces/IAuditLogService";
-import { IEmailService } from "../../../notifications/application/services/IEmailService";
-import { Order } from "../../../order/domain/entities/Order";
-import { OrderStatusUpdate } from "../../domain/types/OrderStatusUpdate";
-import { PaymentStatus } from "../../../core/domain/types/common";
+} from '../../../order/application/interfaces/IOrderRepository';
+import { IAuditLogService } from '../interfaces/IAuditLogService';
+import { IEmailService } from '../../../notifications/application/services/IEmailService';
+import { Order } from '../../../order/domain/entities/Order';
+import { OrderStatusUpdate } from '../../domain/types/OrderStatusUpdate';
+import { PaymentStatus, OrderStatus } from '../../../core/domain/types/common';
 import {
   canTransitionOrderStatus,
   getAllowedOrderStatusTransitions,
   normalizeOrderStatus,
-} from "../../../order/application/utils/order-status-transitions";
+} from '../../../order/application/utils/order-status-transitions';
 import {
   canTransitionPaymentStatus,
   getAllowedPaymentStatusTransitions,
   normalizePaymentStatus,
-} from "../../../order/application/utils/order-payment-status-transitions";
+} from '../../../order/application/utils/order-payment-status-transitions';
 
 /**
  * Admin Order Service
@@ -56,7 +55,7 @@ export class AdminOrderService implements IAdminOrderService {
    * @param id - The order ID.
    * @returns The order if found, null otherwise.
    */
-  async getById(id: ID | string): Promise<Order | null> {
+  async getById(id: number): Promise<Order | null> {
     return this.orderRepository.getById(id);
   }
 
@@ -68,7 +67,7 @@ export class AdminOrderService implements IAdminOrderService {
    * @param update - Status, tracking number, and internal notes.
    * @throws Error if the order is not found.
    */
-  async updateStatus(id: ID | string, update: OrderStatusUpdate): Promise<void> {
+  async updateStatus(id: number, update: OrderStatusUpdate): Promise<void> {
     const order = await this.orderRepository.getById(id);
     if (!order) {
       throw new Error(`Order #${id} not found`);
@@ -80,7 +79,7 @@ export class AdminOrderService implements IAdminOrderService {
 
     if (!isValidTransition) {
       const allowedTargets = getAllowedOrderStatusTransitions(currentStatus);
-      const allowedList = allowedTargets.length > 0 ? allowedTargets.join(", ") : "none";
+      const allowedList = allowedTargets.length > 0 ? allowedTargets.join(', ') : 'none';
       throw new Error(
         `Invalid status transition from ${currentStatus} to ${nextStatus}. Allowed: ${allowedList}.`,
       );
@@ -89,9 +88,9 @@ export class AdminOrderService implements IAdminOrderService {
     await this.orderRepository.updateStatusWithTracking(id, update);
 
     await this.auditLogService.logAction({
-      entityType: "order",
+      entityType: 'order',
       entityId: String(id),
-      action: "update_status",
+      action: 'update_status',
       adminUserId: undefined,
       oldValues: { status: order.status } as Record<string, unknown>,
       newValues: {
@@ -103,7 +102,7 @@ export class AdminOrderService implements IAdminOrderService {
 
     // Send email notification to customer
     await this.emailService.sendOrderStatusUpdate(order, update.status).catch((err) => {
-      console.error("[AdminOrderService] Failed to send status update email:", err);
+      console.error('[AdminOrderService] Failed to send status update email:', err);
     });
   }
 
@@ -114,7 +113,7 @@ export class AdminOrderService implements IAdminOrderService {
    * @param status - The new payment status string.
    * @throws Error if the order is not found.
    */
-  async updatePaymentStatus(id: ID | string, status: PaymentStatus): Promise<void> {
+  async updatePaymentStatus(id: number, status: PaymentStatus): Promise<void> {
     const order = await this.orderRepository.getById(id);
     if (!order) {
       throw new Error(`Order #${id} not found`);
@@ -126,7 +125,7 @@ export class AdminOrderService implements IAdminOrderService {
 
     if (!isValidTransition) {
       const allowedTargets = getAllowedPaymentStatusTransitions(oldStatus);
-      const allowedList = allowedTargets.length > 0 ? allowedTargets.join(", ") : "none";
+      const allowedList = allowedTargets.length > 0 ? allowedTargets.join(', ') : 'none';
       throw new Error(
         `Invalid payment status transition from ${oldStatus} to ${nextStatus}. Allowed: ${allowedList}.`,
       );
@@ -135,9 +134,9 @@ export class AdminOrderService implements IAdminOrderService {
     await this.orderRepository.updatePaymentStatus(id, status);
 
     await this.auditLogService.logAction({
-      entityType: "order",
+      entityType: 'order',
       entityId: String(id),
-      action: "update_payment_status",
+      action: 'update_payment_status',
       oldValues: { paymentStatus: oldStatus },
       newValues: { paymentStatus: nextStatus },
     });
@@ -146,13 +145,13 @@ export class AdminOrderService implements IAdminOrderService {
   /**
    * Gathers high-level statistics about orders and revenue for the admin dashboard.
    */
-  async getDashboardStats(): Promise<unknown> {
+  async getDashboardStats(): Promise<DashboardStats> {
     const revenue = await this.orderRepository.getTotalRevenue();
     const statusCounts = await this.orderRepository.getOrdersCountByStatus();
 
     return {
       totalRevenue: revenue,
-      ordersByStatus: statusCounts,
+      ordersByStatus: statusCounts as Partial<Record<OrderStatus, number>>,
     };
   }
 

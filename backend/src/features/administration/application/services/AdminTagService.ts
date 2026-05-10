@@ -1,12 +1,12 @@
-import { ID } from "../../../core/domain/types/common";
-import { IAdminTagService } from "../interfaces/IAdminTagService";
-import { ITagRepository } from "../../../catalog/application/interfaces/ITagRepository";
-import { Tag } from "../../../catalog/domain/entities/Tag";
-import { TagInput } from "../../domain/types/TagInput";
-import { IAuditLogService } from "../interfaces/IAuditLogService";
-import { db } from "@findeg/db/connection";
-import { tags, productTags } from "@findeg/db/schema";
-import { eq, and, ne, count } from "drizzle-orm";
+import { ID } from '../../../core/domain/types/common';
+import { IAdminTagService } from '../interfaces/IAdminTagService';
+import { ITagRepository } from '../../../catalog/application/interfaces/ITagRepository';
+import { Tag } from '../../../catalog/domain/entities/Tag';
+import { TagInput } from '../../domain/types/TagInput';
+import { IAuditLogService } from '../interfaces/IAuditLogService';
+import { db } from '@findeg/db/connection';
+import { tags, productTags } from '@findeg/db/schema';
+import { eq, and, ne, count } from 'drizzle-orm';
 
 /**
  * Admin Tag Service
@@ -69,9 +69,9 @@ export class AdminTagService implements IAdminTagService {
 
     await this.auditLogService.logAction({
       adminUserId,
-      entityType: "tag",
+      entityType: 'tag',
       entityId: String(tag.id),
-      action: "create",
+      action: 'create',
       newValues: tag as unknown as Record<string, unknown>,
     });
 
@@ -87,9 +87,9 @@ export class AdminTagService implements IAdminTagService {
 
     await this.auditLogService.logAction({
       adminUserId,
-      entityType: "tag",
+      entityType: 'tag',
       entityId: String(id),
-      action: "update",
+      action: 'update',
       oldValues: oldTag as unknown as Record<string, unknown>,
       newValues: tag as unknown as Record<string, unknown>,
     });
@@ -106,9 +106,9 @@ export class AdminTagService implements IAdminTagService {
 
     await this.auditLogService.logAction({
       adminUserId,
-      entityType: "tag",
+      entityType: 'tag',
       entityId: String(id),
-      action: "delete",
+      action: 'delete',
       oldValues: oldTag as unknown as Record<string, unknown>,
     });
   }
@@ -121,9 +121,9 @@ export class AdminTagService implements IAdminTagService {
 
     await this.auditLogService.logAction({
       adminUserId,
-      entityType: "tag",
-      entityId: "multiple",
-      action: "bulk_delete",
+      entityType: 'tag',
+      entityId: 'multiple',
+      action: 'bulk_delete',
       newValues: { ids },
     });
   }
@@ -136,9 +136,9 @@ export class AdminTagService implements IAdminTagService {
 
     await this.auditLogService.logAction({
       adminUserId,
-      entityType: "tag",
-      entityId: "multiple",
-      action: "bulk_status_update",
+      entityType: 'tag',
+      entityId: 'multiple',
+      action: 'bulk_status_update',
       newValues: { ids, isActive },
     });
   }
@@ -148,7 +148,7 @@ export class AdminTagService implements IAdminTagService {
    */
   async toggleTagStatus(id: number, adminUserId?: number): Promise<Tag> {
     const tag = await this.tagRepository.getById(id);
-    if (!tag) throw new Error("Tag not found");
+    if (!tag) throw new Error('Tag not found');
 
     const newStatus = !tag.isActive;
     return this.update(id, { isActive: newStatus }, adminUserId);

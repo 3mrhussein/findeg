@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 import {
   DndContext,
   closestCenter,
@@ -9,23 +9,23 @@ import {
   useSensor,
   useSensors,
   DragEndEvent,
-} from "@dnd-kit/core";
+} from '@dnd-kit/core';
 import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { Collection } from "@findeg/backend/features/catalog";
-import { CollectionCard } from "./CollectionCard";
+} from '@dnd-kit/sortable';
+import { Collection } from '@findeg/backend/features/catalog';
+import { CollectionCard } from './CollectionCard';
 import {
   createCollectionAction as createCollection,
   updateCollectionAction as updateCollection,
   reorderCollectionsAction as reorderCollections,
-} from "@data/collections/actions";
+} from '@data/collections/actions';
 
-import { useToast } from "@hooks/use-toast";
-import { useRouter } from "@i18n/navigation";
+import { useToast } from '@hooks/use-toast';
+import { useRouter } from '@i18n/navigation';
 
 interface CollectionGridProps {
   collections: Collection[];
@@ -81,10 +81,10 @@ export function CollectionGrid({ collections, onDelete }: CollectionGridProps) {
       // Call server action
       const result = await reorderCollections(reorderData);
       if (result.success) {
-        toast({ title: "Order saved" });
+        toast({ title: 'Order saved' });
         router.refresh();
       } else {
-        toast({ variant: "destructive", title: "Failed to save order", description: result.error });
+        toast({ variant: 'destructive', title: 'Failed to save order', description: result.error });
         // Revert on failure
         setItems(items);
       }

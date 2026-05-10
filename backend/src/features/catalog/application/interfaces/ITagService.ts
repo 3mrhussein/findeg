@@ -2,8 +2,8 @@
  * Tag Service Interface
  */
 
-import { ID, Locale } from "@findeg/backend/features/core/domain/types/common";
-import { Tag, TagGroup } from "../../domain/entities/Tag";
+import { ID } from '@findeg/backend/features/core/domain/types/common';
+import { Tag, TagGroup } from '../../domain/entities/Tag';
 
 export interface ITagService {
   /** Retrieves all tags */

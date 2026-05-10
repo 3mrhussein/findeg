@@ -1,11 +1,10 @@
 import {
   ID,
-  Price,
   OrderStatus,
   PaymentStatus,
-} from "@findeg/backend/features/core/domain/types/common";
-import { Order } from "../../domain/entities/Order";
-import { OrderStatusUpdate } from "@findeg/backend/features/administration/domain/types";
+} from '@findeg/backend/features/core/domain/types/common';
+import { Order } from '../../domain/entities/Order';
+import { OrderStatusUpdate } from '@findeg/backend/features/administration/domain/types';
 
 export interface OrderFilters {
   status?: OrderStatus;
@@ -38,6 +37,6 @@ export interface IOrderRepository {
   getRevenueByPeriod(
     startDate: Date,
     endDate: Date,
-    interval: "day" | "month",
+    interval: 'day' | 'month',
   ): Promise<{ date: string; revenue: number }[]>;
 }

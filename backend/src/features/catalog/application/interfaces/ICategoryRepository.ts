@@ -1,7 +1,7 @@
-import { ID, Slug } from "@findeg/backend/features/core/domain/types/common";
-import type { Locale } from "@findeg/backend/features/core/domain/value-objects";
-import type { Category } from "@findeg/backend/features/catalog/domain/entities/Category";
-import type { CategoryInput } from "@findeg/backend/features/administration/domain/types";
+import { ID, Slug } from '@findeg/backend/features/core/domain/types/common';
+import type { Locale } from '@findeg/backend/features/core/domain/value-objects';
+import type { Category } from '@findeg/backend/features/catalog/domain/entities/Category';
+import type { CategoryInput } from '@findeg/backend/features/administration/domain/types';
 
 /**
  * Category Repository Interface

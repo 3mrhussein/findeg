@@ -1,4 +1,4 @@
-import { Email, PortalRole } from "../types/primitives";
+import { Email, PortalRole } from '../types';
 
 /**
  * User with password hash — only for auth verification.

@@ -31,7 +31,7 @@ export type CreateUserInput = {
   roles?: string[];
 };
 
-export type UpdateUserInput = Partial<Omit<CreateUserInput, "email">>;
+export type UpdateUserInput = Partial<Omit<CreateUserInput, 'email'>>;
 
 export interface IUserRepository {
   findById(id: string): Promise<User | null>;

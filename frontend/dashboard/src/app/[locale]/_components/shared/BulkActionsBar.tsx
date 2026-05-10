@@ -7,12 +7,12 @@
  * Location: src/app/[locale]/admin/_components/shared/ (admin-wide)
  */
 
-"use client";
+'use client';
 
-import * as React from "react";
-import { X } from "lucide-react";
-import { Button } from "@findeg/ui";
-import { cn } from "@lib/utils";
+import * as React from 'react';
+import { X } from 'lucide-react';
+import { Button } from '@findeg/ui';
+import { cn } from '@lib/utils';
 
 export interface BulkAction {
   /** Unique action key */
@@ -24,7 +24,7 @@ export interface BulkAction {
   /** Action handler */
   onClick: () => void | Promise<void>;
   /** Button variant */
-  variant?: "default" | "outline" | "destructive" | "secondary";
+  variant?: 'default' | 'outline' | 'destructive' | 'secondary';
   /** Disabled state */
   disabled?: boolean;
 }
@@ -70,7 +70,7 @@ export function BulkActionsBar({
         {/* Selection count */}
         <div className="flex items-center gap-2 border-e pe-4">
           <span className="text-sm font-medium">
-            {selectedCount} {selectedCount === 1 ? "item" : "items"} selected
+            {selectedCount} {selectedCount === 1 ? 'item' : 'items'} selected
           </span>
         </div>
 
@@ -79,7 +79,7 @@ export function BulkActionsBar({
           {actions.map((action) => (
             <Button
               key={action.key}
-              variant={action.variant || "outline"}
+              variant={action.variant || 'outline'}
               size="sm"
               onClick={action.onClick}
               disabled={loading || action.disabled}

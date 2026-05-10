@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import { useMemo, useState } from "react";
-import { MessageSquare, Star, ThumbsUp } from "lucide-react";
-import { useLocale, useTranslations } from "next-intl";
-import { Button } from "@findeg/ui";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@findeg/ui";
-import { Textarea } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
-import { IconTooltip } from "@findeg/ui";
-import type { ProductReviewSummary } from "@findeg/backend/features/review/application/interfaces/IReviewRepository";
-import type { Review } from "@findeg/backend/features/review/domain/entities/Review";
-import { cn } from "@lib/utils";
+import { useMemo, useState } from 'react';
+import { MessageSquare, Star, ThumbsUp } from 'lucide-react';
+import { useLocale, useTranslations } from 'next-intl';
+import { Button } from '@findeg/ui';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@findeg/ui';
+import { Textarea } from '@findeg/ui';
+import { Badge } from '@findeg/ui';
+import { IconTooltip } from '@findeg/ui';
+import type { ProductReviewSummary } from '@findeg/backend/features/review/application/interfaces/IReviewRepository';
+import type { Review } from '@findeg/backend/features/review/domain/entities/Review';
+import { cn } from '@lib/utils';
 
-type ReviewFilter = "all" | "5" | "4" | "verified";
+type ReviewFilter = 'all' | '5' | '4' | 'verified';
 
 interface ReviewsSectionProps {
   productId: number;
@@ -29,7 +29,7 @@ interface ReviewEligibility {
 }
 
 function getGuestId() {
-  const storageKey = "findeg_guest_id";
+  const storageKey = 'findeg_guest_id';
   const existing = window.localStorage.getItem(storageKey);
   if (existing) return existing;
 
@@ -40,12 +40,12 @@ function getGuestId() {
 
 function colorFromName(name: string): string {
   const palette = [
-    "bg-rose-100 text-rose-700",
-    "bg-amber-100 text-amber-700",
-    "bg-blue-100 text-blue-700",
-    "bg-emerald-100 text-emerald-700",
-    "bg-fuchsia-100 text-fuchsia-700",
-    "bg-cyan-100 text-cyan-700",
+    'bg-rose-100 text-rose-700',
+    'bg-amber-100 text-amber-700',
+    'bg-blue-100 text-blue-700',
+    'bg-emerald-100 text-emerald-700',
+    'bg-fuchsia-100 text-fuchsia-700',
+    'bg-cyan-100 text-cyan-700',
   ];
 
   let hash = 0;
@@ -66,10 +66,10 @@ export function ReviewsSection({
   initialSummary,
   initialTotal,
 }: ReviewsSectionProps) {
-  const t = useTranslations("Pages.ProductDetail");
+  const t = useTranslations('Pages.ProductDetail');
   const locale = useLocale();
 
-  const [filter, setFilter] = useState<ReviewFilter>("all");
+  const [filter, setFilter] = useState<ReviewFilter>('all');
   const [page, setPage] = useState(1);
   const [reviews, setReviews] = useState<Review[]>(initialReviews);
   const [summary, setSummary] = useState<ProductReviewSummary>(initialSummary);
@@ -78,7 +78,7 @@ export function ReviewsSection({
   const [eligibility, setEligibility] = useState<ReviewEligibility | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [rating, setRating] = useState(5);
-  const [comment, setComment] = useState("");
+  const [comment, setComment] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const pageSize = 10;
@@ -88,7 +88,7 @@ export function ReviewsSection({
 
   const fetchEligibility = async () => {
     const response = await fetch(`/api/v1/products/${productId}/reviews/eligibility`, {
-      cache: "no-store",
+      cache: 'no-store',
     });
     const json = await response.json();
     if (json?.success) {
@@ -104,17 +104,17 @@ export function ReviewsSection({
       limit: String(pageSize),
     });
 
-    if (nextFilter === "5") {
-      query.set("rating", "5");
-    } else if (nextFilter === "4") {
-      query.set("rating", "4");
-    } else if (nextFilter === "verified") {
-      query.set("verified", "true");
+    if (nextFilter === '5') {
+      query.set('rating', '5');
+    } else if (nextFilter === '4') {
+      query.set('rating', '4');
+    } else if (nextFilter === 'verified') {
+      query.set('verified', 'true');
     }
 
     try {
       const response = await fetch(`/api/v1/products/${productId}/reviews?${query.toString()}`, {
-        cache: "no-store",
+        cache: 'no-store',
       });
       const json = await response.json();
       if (json?.success) {
@@ -141,10 +141,10 @@ export function ReviewsSection({
   const handleHelpful = async (reviewId: number) => {
     const guestId = getGuestId();
     const response = await fetch(`/api/v1/reviews/${reviewId}/helpful`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
-        "X-Guest-Id": guestId,
+        'Content-Type': 'application/json',
+        'X-Guest-Id': guestId,
       },
     });
 
@@ -166,9 +166,9 @@ export function ReviewsSection({
     setIsSubmitting(true);
     try {
       const response = await fetch(`/api/v1/products/${productId}/reviews`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           rating,
@@ -179,7 +179,7 @@ export function ReviewsSection({
       const json = await response.json();
       if (json?.success) {
         setIsDialogOpen(false);
-        setComment("");
+        setComment('');
         setRating(5);
         await fetchEligibility();
         await fetchReviews(filter, 1);
@@ -196,7 +196,7 @@ export function ReviewsSection({
         <div>
           <div className="text-4xl font-black text-foreground">{avgLabel}</div>
           <div className="mt-1 text-sm text-muted-foreground">
-            {t("BasedOnReviews", { count: total })}
+            {t('BasedOnReviews', { count: total })}
           </div>
         </div>
 
@@ -219,22 +219,22 @@ export function ReviewsSection({
 
         <Button variant="outline" onClick={openReviewDialog}>
           <MessageSquare />
-          {t("WriteReview")}
+          {t('WriteReview')}
         </Button>
       </div>
 
       <div className="flex flex-wrap gap-2">
         {(
           [
-            { id: "all", label: t("FilterAll") },
-            { id: "5", label: t("Filter5Star") },
-            { id: "4", label: t("Filter4Star") },
-            { id: "verified", label: t("FilterVerified") },
+            { id: 'all', label: t('FilterAll') },
+            { id: '5', label: t('Filter5Star') },
+            { id: '4', label: t('Filter4Star') },
+            { id: 'verified', label: t('FilterVerified') },
           ] as Array<{ id: ReviewFilter; label: string }>
         ).map((item) => (
           <Button
             key={item.id}
-            variant={filter === item.id ? "default" : "outline"}
+            variant={filter === item.id ? 'default' : 'outline'}
             size="sm"
             onClick={() => handleFilterChange(item.id)}
           >
@@ -245,22 +245,22 @@ export function ReviewsSection({
 
       {isLoading ? (
         <div className="rounded-2xl border bg-card p-6 text-sm text-muted-foreground animate-pulse">
-          {t("ReviewsLoading")}
+          {t('ReviewsLoading')}
         </div>
       ) : reviews.length === 0 ? (
         <div className="rounded-2xl border border-dashed bg-card p-8 text-center text-muted-foreground">
-          {t("NoReviews")}
+          {t('NoReviews')}
         </div>
       ) : (
         <div className="space-y-4">
           {reviews.map((review) => {
-            const author = review.author || t("Anonymous");
+            const author = review.author || t('Anonymous');
             const initials = author
-              .split(" ")
+              .split(' ')
               .filter(Boolean)
               .slice(0, 2)
               .map((entry) => entry[0])
-              .join("")
+              .join('')
               .toUpperCase();
 
             return (
@@ -269,17 +269,17 @@ export function ReviewsSection({
                   <div className="flex items-center gap-3">
                     <div
                       className={cn(
-                        "flex size-10 shrink-0 items-center justify-center rounded-full text-sm font-bold",
+                        'flex size-10 shrink-0 items-center justify-center rounded-full text-sm font-bold',
                         colorFromName(author),
                       )}
                     >
-                      {initials || "A"}
+                      {initials || 'A'}
                     </div>
                     <div>
                       <div className="flex items-center gap-2">
                         <span className="font-semibold text-foreground">{author}</span>
                         {review.isVerifiedPurchase ? (
-                          <Badge variant="outline">{t("VerifiedPurchase")}</Badge>
+                          <Badge variant="outline">{t('VerifiedPurchase')}</Badge>
                         ) : null}
                       </div>
                       <div className="mt-1 flex items-center gap-1 text-amber-500">
@@ -287,10 +287,10 @@ export function ReviewsSection({
                           <Star
                             key={index}
                             className={cn(
-                              "size-3.5",
+                              'size-3.5',
                               index < Math.round(Number(review.rating))
-                                ? "fill-current"
-                                : "text-muted stroke-current",
+                                ? 'fill-current'
+                                : 'text-muted stroke-current',
                             )}
                           />
                         ))}
@@ -301,9 +301,9 @@ export function ReviewsSection({
                   <span className="text-xs text-muted-foreground">
                     {review.createdAt
                       ? new Date(review.createdAt).toLocaleDateString(
-                          locale === "ar" ? "ar-EG" : "en-EG",
+                          locale === 'ar' ? 'ar-EG' : 'en-EG',
                         )
-                      : ""}
+                      : ''}
                   </span>
                 </div>
 
@@ -312,7 +312,7 @@ export function ReviewsSection({
                 ) : null}
 
                 <div className="mt-3 flex justify-end">
-                  <IconTooltip label={t("Helpful") as string} asChild>
+                  <IconTooltip label={t('Helpful') as string} asChild>
                     <button
                       type="button"
                       className="inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs text-muted-foreground hover:bg-muted"
@@ -337,7 +337,7 @@ export function ReviewsSection({
             disabled={page <= 1}
             onClick={() => handlePageChange(page - 1)}
           >
-            {t("PaginationPrevious")}
+            {t('PaginationPrevious')}
           </Button>
           <span className="text-sm text-muted-foreground">
             {page} / {totalPages}
@@ -348,7 +348,7 @@ export function ReviewsSection({
             disabled={page >= totalPages}
             onClick={() => handlePageChange(page + 1)}
           >
-            {t("PaginationNext")}
+            {t('PaginationNext')}
           </Button>
         </div>
       ) : null}
@@ -356,21 +356,21 @@ export function ReviewsSection({
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{t("WriteReview")}</DialogTitle>
+            <DialogTitle>{t('WriteReview')}</DialogTitle>
           </DialogHeader>
 
           {eligibility && !eligibility.canWriteReview ? (
             <div className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
               {!eligibility.loggedIn
-                ? t("ReviewLoginRequired")
+                ? t('ReviewLoginRequired')
                 : eligibility.alreadyReviewed
-                  ? t("ReviewAlreadySubmitted")
-                  : t("ReviewPurchaseRequired")}
+                  ? t('ReviewAlreadySubmitted')
+                  : t('ReviewPurchaseRequired')}
             </div>
           ) : (
             <>
               <div>
-                <div className="mb-2 text-sm font-medium">{t("ReviewForm.Rating")}</div>
+                <div className="mb-2 text-sm font-medium">{t('ReviewForm.Rating')}</div>
                 <div className="flex gap-1">
                   {Array.from({ length: 5 }).map((_, index) => (
                     <button
@@ -381,10 +381,10 @@ export function ReviewsSection({
                     >
                       <Star
                         className={cn(
-                          "size-6",
+                          'size-6',
                           index < rating
-                            ? "fill-amber-400 text-amber-400"
-                            : "text-muted-foreground",
+                            ? 'fill-amber-400 text-amber-400'
+                            : 'text-muted-foreground',
                         )}
                       />
                     </button>
@@ -393,17 +393,17 @@ export function ReviewsSection({
               </div>
 
               <div>
-                <div className="mb-2 text-sm font-medium">{t("ReviewForm.Comment")}</div>
+                <div className="mb-2 text-sm font-medium">{t('ReviewForm.Comment')}</div>
                 <Textarea
                   value={comment}
                   onChange={(event) => setComment(event.target.value)}
                   rows={5}
-                  placeholder={t("ReviewCommentPlaceholder")}
+                  placeholder={t('ReviewCommentPlaceholder')}
                 />
               </div>
 
               <Button onClick={submitReview} disabled={isSubmitting}>
-                {isSubmitting ? t("ReviewSubmitting") : t("ReviewForm.Submit")}
+                {isSubmitting ? t('ReviewSubmitting') : t('ReviewForm.Submit')}
               </Button>
             </>
           )}

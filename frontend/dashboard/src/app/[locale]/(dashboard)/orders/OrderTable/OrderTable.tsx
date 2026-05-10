@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
 import {
   flexRender,
   getCoreRowModel,
   useReactTable,
   type SortingState,
-} from "@tanstack/react-table";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@findeg/ui";
-import { useState, useTransition } from "react";
-import { usePathname, useRouter } from "@i18n/navigation";
-import type { OrderTableProps, UpdateOrderQueryParams } from "./OrderTable.interface";
-import { buildOrderColumns } from "./OrderTableColumns";
-import { OrderTableFilters } from "./OrderTableFilters";
-import { OrderTablePagination } from "./OrderTablePagination";
-import { OrderStatusPills } from "./OrderStatusPills";
-import { OrderBulkActionBar } from "./OrderBulkActionBar";
+} from '@tanstack/react-table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@findeg/ui';
+import { useState, useTransition } from 'react';
+import { usePathname, useRouter } from '@i18n/navigation';
+import type { OrderTableProps, UpdateOrderQueryParams } from './OrderTable.interface';
+import { buildOrderColumns } from './OrderTableColumns';
+import { OrderTableFilters } from './OrderTableFilters';
+import { OrderTablePagination } from './OrderTablePagination';
+import { OrderStatusPills } from './OrderStatusPills';
+import { OrderBulkActionBar } from './OrderBulkActionBar';
 
 /**
  *
@@ -32,25 +32,25 @@ export function OrderTable({ data, page, limit, total, statusCounts, filters }: 
    */
   const updateQuery = (next: UpdateOrderQueryParams) => {
     const params = new URLSearchParams();
-    const nextSearch = (next.search ?? filters.search ?? "").trim();
+    const nextSearch = (next.search ?? filters.search ?? '').trim();
     const nextStatus = next.status ?? filters.status;
     const nextPaymentStatus = next.paymentStatus ?? filters.paymentStatus;
-    const nextPage = next.page ?? "1";
+    const nextPage = next.page ?? '1';
 
-    if (nextSearch) params.set("search", nextSearch);
-    if (nextStatus && nextStatus !== "all") params.set("status", nextStatus);
-    if (nextPaymentStatus && nextPaymentStatus !== "all")
-      params.set("paymentStatus", nextPaymentStatus);
+    if (nextSearch) params.set('search', nextSearch);
+    if (nextStatus && nextStatus !== 'all') params.set('status', nextStatus);
+    if (nextPaymentStatus && nextPaymentStatus !== 'all')
+      params.set('paymentStatus', nextPaymentStatus);
 
     // Add date format if needed
-    if (next.startDate) params.set("startDate", next.startDate);
-    else if (filters.startDate) params.set("startDate", filters.startDate.toISOString());
+    if (next.startDate) params.set('startDate', next.startDate);
+    else if (filters.startDate) params.set('startDate', filters.startDate.toISOString());
 
-    if (next.endDate) params.set("endDate", next.endDate);
-    else if (filters.endDate) params.set("endDate", filters.endDate.toISOString());
+    if (next.endDate) params.set('endDate', next.endDate);
+    else if (filters.endDate) params.set('endDate', filters.endDate.toISOString());
 
-    params.set("page", nextPage);
-    params.set("limit", String(limit));
+    params.set('page', nextPage);
+    params.set('limit', String(limit));
 
     const qs = params.toString();
     startTransition(() => {
@@ -78,22 +78,22 @@ export function OrderTable({ data, page, limit, total, statusCounts, filters }: 
     <div className="space-y-4">
       <OrderStatusPills
         statusCounts={statusCounts}
-        activeStatus={filters.status || "all"}
-        onStatusChange={(status) => updateQuery({ status, page: "1" })}
+        activeStatus={filters.status || 'all'}
+        onStatusChange={(status) => updateQuery({ status, page: '1' })}
         total={total}
       />
 
       <OrderTableFilters
         filters={filters}
-        onFilterChange={(key, value) => updateQuery({ [key]: value, page: "1" })}
+        onFilterChange={(key, value) => updateQuery({ [key]: value, page: '1' })}
         onClear={() =>
           updateQuery({
-            search: "",
-            status: "all",
-            paymentStatus: "all",
+            search: '',
+            status: 'all',
+            paymentStatus: 'all',
             startDate: undefined,
             endDate: undefined,
-            page: "1",
+            page: '1',
           })
         }
         isPending={isPending}
@@ -122,10 +122,10 @@ export function OrderTable({ data, page, limit, total, statusCounts, filters }: 
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
+                  data-state={row.getIsSelected() && 'selected'}
                   className={
-                    row.original.status === "processing" || row.original.status === "pending"
-                      ? "hover:bg-amber-500/10" // Tinting for stuck or specific orders could be added here
+                    row.original.status === 'processing' || row.original.status === 'pending'
+                      ? 'hover:bg-amber-500/10' // Tinting for stuck or specific orders could be added here
                       : undefined
                   }
                 >

@@ -4,11 +4,11 @@
  * Provides cached data for the storefront catalog features.
  * Adheres to Next.js 16 "use cache" standards.
  */
-"use cache";
+'use cache';
 
-import { cacheTag, cacheLife } from "next/cache";
-import { createCatalogServices } from "@findeg/backend/features/catalog";
-import { parse } from "@findeg/backend/features/core";
+import { cacheTag, cacheLife } from 'next/cache';
+import { createCatalogServices } from '@findeg/backend/features/catalog';
+import { parse } from '@findeg/backend/features/core';
 import type {
   ShopPlpViewModel,
   SearchPageViewModel,
@@ -28,8 +28,8 @@ import type {
   ShopPlpSort,
   FilterOption,
   CategoryFilterOption,
-} from "./types";
-import { mapBrandOptions, mapCategoryOptions, mapProduct } from "../helpers/mappers";
+} from './types';
+import { mapBrandOptions, mapCategoryOptions, mapProduct } from '../helpers/mappers';
 
 /**
  * Shop PLP Data
@@ -40,8 +40,8 @@ export async function getShopPlpViewModel(
   query: any,
 ): Promise<ShopPlpViewModel | null> {
   const resolvedLocale = parse(locale);
-  cacheTag("products", "categories", `plp-${resolvedLocale}-${slug.join("-")}`);
-  cacheLife("hours");
+  cacheTag('products', 'categories', `plp-${resolvedLocale}-${slug.join('-')}`);
+  cacheLife('hours');
 
   const {
     products: productService,
@@ -50,7 +50,7 @@ export async function getShopPlpViewModel(
   } = createCatalogServices();
 
   let category = null;
-  let currentCategoryName = "";
+  let currentCategoryName = '';
 
   if (slug.length > 0) {
     const categorySlug = slug[slug.length - 1];
@@ -102,16 +102,16 @@ export async function getShopPlpViewModel(
     from: 1,
     to: Math.min(result.total, 20),
     locale: resolvedLocale,
-    query: query.q || "",
+    query: query.q || '',
     categorySlugPath: slug,
     filters: {
       minPrice: Number(query.minPrice) || 0,
       maxPrice: Number(query.maxPrice) || 1000,
-      brandIds: query.brandIds ? String(query.brandIds).split(",").map(Number).filter(Boolean) : [],
-      inStockOnly: query.inStock === "true",
+      brandIds: query.brandIds ? String(query.brandIds).split(',').map(Number).filter(Boolean) : [],
+      inStockOnly: query.inStock === 'true',
       discounts: [],
     },
-    sort: (query.sort as ShopPlpSort) || "newest",
+    sort: (query.sort as ShopPlpSort) || 'newest',
   };
 }
 
@@ -124,8 +124,8 @@ export async function getSearchPageViewModel(
   query: any,
 ): Promise<SearchPageViewModel> {
   const resolvedLocale = parse(locale);
-  cacheTag("products", "categories", `search-${resolvedLocale}-${rawQuery}`);
-  cacheLife("hours");
+  cacheTag('products', 'categories', `search-${resolvedLocale}-${rawQuery}`);
+  cacheLife('hours');
 
   const {
     search: searchService,
@@ -141,7 +141,7 @@ export async function getSearchPageViewModel(
   const mappedItems = result.items.map((p) => mapProduct(p, resolvedLocale));
 
   return {
-    mode: mappedItems.length > 0 ? "search" : "fallback",
+    mode: mappedItems.length > 0 ? 'search' : 'fallback',
     query: rawQuery,
     products: mappedItems,
     categoryOptions: mapCategoryOptions(
@@ -177,7 +177,7 @@ export async function getSearchPageViewModel(
       inStockOnly: false,
       discounts: [],
     },
-    sort: "newest",
+    sort: 'newest',
   };
 }
 
@@ -200,7 +200,7 @@ export async function getProductBySlugOrIdForMetadata(locale: string, slug: stri
  */
 export async function getTopProductSlugsForStaticParams(limit: number = 100) {
   const { products } = createCatalogServices();
-  const allProducts = await products.getAll("en");
+  const allProducts = await products.getAll('en');
 
   return allProducts.slice(0, limit).map((p: any) => p.slug || String(p.id));
 }
@@ -247,7 +247,7 @@ export async function getProductPdp(
     },
     initialReviews: [],
     reviewTotal: product.reviewsCount || 0,
-    customerGroup: (session?.customerGroup as any) || "public_b2c",
+    customerGroup: (session?.customerGroup as any) || 'public_b2c',
     shouldRedirect: false,
     canonicalPath: `/shop/products/${slug}`,
     stockSnapshot: {
@@ -256,8 +256,8 @@ export async function getProductPdp(
         mappedProduct.variants?.reduce((acc, v) => acc + (v.inventory?.[0]?.onHand || 0), 0) || 0,
     },
     breadcrumbs: [
-      { label: "Home", href: "/" },
-      { label: "Shop", href: "/shop" },
+      { label: 'Home', href: '/' },
+      { label: 'Shop', href: '/shop' },
       ...(categories[0]
         ? [{ label: categories[0].name, href: `/shop?categoryId=${categories[0].id}` }]
         : []),
@@ -274,8 +274,8 @@ export async function getProductDetailPageData(
   language: string,
 ): Promise<ProductDetailPageData | null> {
   const locale = parse(language);
-  cacheTag("products", `product-${productId}`, `product-${productId}-${locale}`);
-  cacheLife("hours");
+  cacheTag('products', `product-${productId}`, `product-${productId}-${locale}`);
+  cacheLife('hours');
 
   const { products: productService } = createCatalogServices();
   const product = await productService.getById(productId, locale);
@@ -304,7 +304,7 @@ export async function getProductDetailPageData(
  */
 export async function getProductIdsForStaticParams(): Promise<number[]> {
   const { products } = createCatalogServices();
-  const all = await products.getAll("en");
+  const all = await products.getAll('en');
   return all.map((p) => p.id);
 }
 
@@ -313,8 +313,8 @@ export async function getProductIdsForStaticParams(): Promise<number[]> {
  */
 export async function getHomePageData(language: string): Promise<HomePageData> {
   const locale = parse(language);
-  cacheTag("home-page", "products", "categories", `home-${locale}`);
-  cacheLife("hours");
+  cacheTag('home-page', 'products', 'categories', `home-${locale}`);
+  cacheLife('hours');
 
   const {
     products: productService,
@@ -341,8 +341,8 @@ export async function getHomePageData(language: string): Promise<HomePageData> {
  */
 export async function getShopPageData(language: string): Promise<ShopPageData> {
   const locale = parse(language);
-  cacheTag("products", `shop-${locale}`);
-  cacheLife("hours");
+  cacheTag('products', `shop-${locale}`);
+  cacheLife('hours');
 
   const { products: productService, categories: categoryService } = createCatalogServices();
   const products = await productService.getAll(locale);
@@ -362,8 +362,8 @@ export async function getShopPageData(language: string): Promise<ShopPageData> {
  */
 export async function getCollectionsPage(language: string): Promise<CollectionsPageData> {
   const locale = parse(language);
-  cacheTag("collections", "categories", `collections-${locale}`);
-  cacheLife("days");
+  cacheTag('collections', 'categories', `collections-${locale}`);
+  cacheLife('days');
 
   const { collections: collectionService, categories: categoryService } = createCatalogServices();
   const collections = await collectionService.getAllCollections();
@@ -384,8 +384,8 @@ export async function getCollectionPageViewModel(
   query: any,
 ): Promise<CollectionPageViewModel | null> {
   const resolvedLocale = parse(locale);
-  cacheTag("products", "collections", `collection-${resolvedLocale}-${slug}`);
-  cacheLife("hours");
+  cacheTag('products', 'collections', `collection-${resolvedLocale}-${slug}`);
+  cacheLife('hours');
 
   const {
     collections: collectionService,
@@ -435,6 +435,6 @@ export async function getCollectionPageViewModel(
       inStockOnly: false,
       discounts: [],
     },
-    sort: "newest",
+    sort: 'newest',
   };
 }

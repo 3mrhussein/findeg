@@ -1,10 +1,10 @@
-import React, { Suspense } from "react";
-import { Navbar } from "@components/layout/Navbar";
-import { Footer } from "@components/shared/Footer";
-import { CartDrawer } from "./_components/CartDrawer";
-import type { Locale } from "next-intl";
+import React, { Suspense } from 'react';
+import { Navbar } from '@components/layout/Navbar';
+import { Footer } from '@components/shared/Footer';
+import { CartDrawer } from './_components/CartDrawer';
+import type { Locale } from 'next-intl';
 
-import { setRequestLocale } from "next-intl/server";
+import { setRequestLocale } from 'next-intl/server';
 
 /**
  *

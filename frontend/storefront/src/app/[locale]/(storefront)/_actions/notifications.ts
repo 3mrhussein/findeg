@@ -1,6 +1,6 @@
-"use server";
+'use server';
 
-import { getSession } from "@lib/session";
+import { getSession } from '@lib/session';
 
 /**
  * Server action to get unread notification count.
@@ -20,14 +20,14 @@ export async function getUnreadNotificationCountAction() {
  */
 export async function logAction(payload: any): Promise<void> {
   const { logRequestAction: backendLogAction } =
-    await import("@findeg/backend/features/core/application/actions/logging");
+    await import('@findeg/backend/features/core/application/actions/logging');
   const { ServiceContainer } =
-    await import("@findeg/backend/features/core/infrastructure/di/ServiceContainer");
+    await import('@findeg/backend/features/core/infrastructure/di/ServiceContainer');
 
   try {
     const container = ServiceContainer.getInstance();
     await backendLogAction(container.loggerService, payload);
   } catch (error) {
-    console.error("Log action failed:", error);
+    console.error('Log action failed:', error);
   }
 }

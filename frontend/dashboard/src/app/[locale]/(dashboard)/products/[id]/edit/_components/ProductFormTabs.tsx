@@ -14,16 +14,16 @@
  * Used by: ProductEditForm (edit mode only)
  */
 
-"use client";
+'use client';
 
-import * as React from "react";
-import { useRouter, usePathname } from "@i18n/navigation";
-import { useSearchParams } from "next/navigation";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@findeg/ui";
-import { FileText, Layers, Image, DollarSign, Search } from "lucide-react";
-import { cn } from "@lib/utils";
+import * as React from 'react';
+import { useRouter, usePathname } from '@i18n/navigation';
+import { useSearchParams } from 'next/navigation';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@findeg/ui';
+import { FileText, Layers, Image, DollarSign, Search } from 'lucide-react';
+import { cn } from '@lib/utils';
 
-export type ProductTab = "info" | "variants" | "media" | "pricing" | "seo";
+export type ProductTab = 'info' | 'variants' | 'media' | 'pricing' | 'seo';
 
 interface ProductFormTabsProps {
   /** Tab content components */
@@ -35,11 +35,11 @@ interface ProductFormTabsProps {
 }
 
 const TAB_CONFIG: Record<ProductTab, { label: string; icon: React.ElementType }> = {
-  info: { label: "Info", icon: FileText },
-  variants: { label: "Variants", icon: Layers },
-  media: { label: "Media", icon: Image },
-  pricing: { label: "Pricing & UoMs", icon: DollarSign },
-  seo: { label: "SEO", icon: Search },
+  info: { label: 'Info', icon: FileText },
+  variants: { label: 'Variants', icon: Layers },
+  media: { label: 'Media', icon: Image },
+  pricing: { label: 'Pricing & UoMs', icon: DollarSign },
+  seo: { label: 'SEO', icon: Search },
 };
 
 /**
@@ -63,7 +63,7 @@ const TAB_CONFIG: Record<ProductTab, { label: string; icon: React.ElementType }>
  */
 export function ProductFormTabs({
   children,
-  defaultTab = "info",
+  defaultTab = 'info',
   className,
 }: ProductFormTabsProps) {
   const router = useRouter();
@@ -71,16 +71,16 @@ export function ProductFormTabs({
   const searchParams = useSearchParams();
 
   // Get current tab from URL or use default
-  const currentTab = (searchParams.get("tab") as ProductTab) || defaultTab;
+  const currentTab = (searchParams.get('tab') as ProductTab) || defaultTab;
 
   const handleTabChange = (tab: string) => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set("tab", tab);
+    params.set('tab', tab);
     router.push(`${pathname}?${params.toString()}`);
   };
 
   return (
-    <Tabs value={currentTab} onValueChange={handleTabChange} className={cn("w-full", className)}>
+    <Tabs value={currentTab} onValueChange={handleTabChange} className={cn('w-full', className)}>
       {/* Tab Navigation */}
       <TabsList className="grid w-full grid-cols-5 mb-6">
         {Object.entries(TAB_CONFIG).map(([key, { label, icon: Icon }]) => (

@@ -1,9 +1,9 @@
-"use server";
+'use server';
 
-import { createCartServices } from "@findeg/backend/features/cart";
-import { createCatalogServices } from "@findeg/backend/features/catalog";
-import { UomCode } from "@findeg/backend/features/core/domain/types/common";
-import { revalidateTag } from "next/cache";
+import { createCartServices } from '@findeg/backend/features/cart';
+import { createCatalogServices } from '@findeg/backend/features/catalog';
+import { UomCode } from '@findeg/backend/features/core/domain/types/common';
+import { revalidateTag } from 'next/cache';
 
 /**
  * Server action to fetch the current cart.
@@ -29,14 +29,14 @@ export async function addToCartAction(
   const { cart } = createCartServices();
   const { products } = createCatalogServices();
 
-  const locale = payload.locale === "ar" ? "ar" : "en";
+  const locale = payload.locale === 'ar' ? 'ar' : 'en';
 
   // Resolve product details for the CartItem
   const product = await products.getById(payload.productId, locale);
-  if (!product) throw new Error("Product not found");
+  if (!product) throw new Error('Product not found');
 
   const variant = product.variants?.find((v: any) => v.id === payload.variantId);
-  if (!variant) throw new Error("Variant not found");
+  if (!variant) throw new Error('Variant not found');
 
   const priceEntry = variant.priceLists?.find((p: any) => p.uomCode === payload.uomCode) || {
     unitPrice: variant.basePrice,
@@ -54,11 +54,11 @@ export async function addToCartAction(
     uomCode: payload.uomCode,
     uomFactor: 1, // Defaulting for now
     unitPrice: priceEntry.unitPrice as number,
-    currency: "EGP",
+    currency: 'EGP',
   };
 
   const result = await cart.addItem(guestId, cartItem as any);
-  revalidateTag(`cart-${guestId}`, "max"); // Next.js 16 revalidate works on the tag across profiles
+  revalidateTag(`cart-${guestId}`, 'max'); // Next.js 16 revalidate works on the tag across profiles
   return result;
 }
 
@@ -68,7 +68,7 @@ export async function addToCartAction(
 export async function removeFromCartAction(guestId: string, variantId: number, uomCode: UomCode) {
   const { cart } = createCartServices();
   const result = await cart.removeItem(guestId, variantId, { uomCode });
-  revalidateTag(`cart-${guestId}`, "max");
+  revalidateTag(`cart-${guestId}`, 'max');
   return result;
 }
 
@@ -87,6 +87,6 @@ export async function updateQuantityAction(
   const result = await cart.updateItemQuantity(guestId, payload.variantId, payload.quantity, {
     uomCode: payload.uomCode,
   });
-  revalidateTag(`cart-${guestId}`, "max");
+  revalidateTag(`cart-${guestId}`, 'max');
   return result;
 }

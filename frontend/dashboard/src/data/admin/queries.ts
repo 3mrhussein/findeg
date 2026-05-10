@@ -4,12 +4,12 @@
  * Administrative data fetching with "use cache" for audit logs, dashboard stats, etc.
  * Uses "use cache" directive to wrap backend service calls.
  */
-"use cache";
+'use cache';
 
-import { cacheLife, cacheTag } from "next/cache";
-import { createAdministrationServices } from "@findeg/backend/features/administration";
-import type { AuditLogEntry } from "@findeg/backend/features/administration/domain/entities/AuditLogEntry";
-import type { Locale } from "@findeg/backend/features/core";
+import { cacheLife, cacheTag } from 'next/cache';
+import { createAdministrationServices } from '@findeg/backend/features/administration';
+import type { AuditLogEntry } from '@findeg/backend/features/administration/domain/entities/AuditLogEntry';
+import type { Locale } from '@findeg/backend/features/core';
 
 /**
  * Get catalog health statistics for admin dashboard
@@ -17,8 +17,8 @@ import type { Locale } from "@findeg/backend/features/core";
  * Cache: Short TTL for real-time stats
  */
 export async function getCatalogHealthStats() {
-  cacheLife("minutes");
-  cacheTag("dashboard", "catalog-health");
+  cacheLife('minutes');
+  cacheTag('dashboard', 'catalog-health');
 
   const { dashboard } = createAdministrationServices();
   return await dashboard.getCatalogHealthStats();
@@ -30,8 +30,8 @@ export async function getCatalogHealthStats() {
  * Cache: Moderate TTL - doesn't change rapidly
  */
 export async function getCategoryProductDistribution() {
-  cacheLife("hours");
-  cacheTag("dashboard", "category-distribution");
+  cacheLife('hours');
+  cacheTag('dashboard', 'category-distribution');
 
   const { dashboard } = createAdministrationServices();
   return await dashboard.getCategoryProductDistribution();
@@ -43,8 +43,8 @@ export async function getCategoryProductDistribution() {
  * Cache: Short TTL - activity happens frequently
  */
 export async function getRecentActivity(options?: { limit?: number; entityTypes?: string[] }) {
-  cacheLife("minutes");
-  cacheTag("audit-logs");
+  cacheLife('minutes');
+  cacheTag('audit-logs');
 
   const { auditLog } = createAdministrationServices();
   // Call getRecentActivity on the service
@@ -61,8 +61,8 @@ export async function getRecentActivity(options?: { limit?: number; entityTypes?
  * Cache: Very short TTL for real-time stats
  */
 export async function getDashboardData() {
-  cacheLife("minutes");
-  cacheTag("dashboard");
+  cacheLife('minutes');
+  cacheTag('dashboard');
 
   const { dashboard } = createAdministrationServices();
   return await dashboard.getDashboardStats();
@@ -74,8 +74,8 @@ export async function getDashboardData() {
  * Cache: Short TTL for real-time orders
  */
 export async function getRecentOrders(limit: number = 5) {
-  cacheLife("minutes");
-  cacheTag("dashboard", "recent-orders");
+  cacheLife('minutes');
+  cacheTag('dashboard', 'recent-orders');
 
   const { dashboard } = createAdministrationServices();
   return await dashboard.getRecentOrders(limit);
@@ -93,8 +93,8 @@ export async function getAuditLogs(options?: {
   limit?: number;
   offset?: number;
 }): Promise<{ data: AuditLogEntry[]; total: number }> {
-  cacheLife("minutes");
-  cacheTag("audit-logs");
+  cacheLife('minutes');
+  cacheTag('audit-logs');
 
   const { auditLog } = createAdministrationServices();
   const logs = await auditLog.getRecentActivity({ limit: options?.limit || 50 });

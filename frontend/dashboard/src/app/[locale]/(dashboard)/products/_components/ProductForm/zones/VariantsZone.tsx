@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { useFieldArray, useFormContext } from "react-hook-form";
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
-import { Separator } from "@findeg/ui";
-import { Switch } from "@findeg/ui";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@findeg/ui";
+import * as React from 'react';
+import { useFieldArray, useFormContext } from 'react-hook-form';
+import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { Label } from '@findeg/ui';
+import { Input } from '@findeg/ui';
+import { Badge } from '@findeg/ui';
+import { Separator } from '@findeg/ui';
+import { Switch } from '@findeg/ui';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@findeg/ui';
 import {
   Plus,
   ChevronDown,
@@ -18,13 +18,13 @@ import {
   AlertTriangle,
   Trash2,
   Settings2,
-} from "lucide-react";
-import { PricingZone } from "./PricingZone";
-import { ProductStockSection } from "./ProductStockSection";
-import { UoMSection } from "../uom/UoMSection";
-import { BilingualInput } from "@components/shared/BilingualInput";
-import { generateVariantMatrix, Sku } from "@findeg/backend/features/catalog";
-import { ProductFormValues } from "@/interfaces";
+} from 'lucide-react';
+import { PricingZone } from './PricingZone';
+import { ProductStockSection } from './ProductStockSection';
+import { UoMSection } from '../uom/UoMSection';
+import { BilingualInput } from '@components/shared/BilingualInput';
+import { generateVariantMatrix, Sku } from '@findeg/backend/features/catalog';
+import { ProductFormValues } from '@/interfaces';
 
 /**
  * VariantsZone — Zone 2
@@ -40,8 +40,8 @@ export function VariantsZone() {
   const [dimensions, setDimensions] = React.useState<
     { key: string; options: string; label: string }[]
   >([]);
-  const [newDimKey, setNewDimKey] = React.useState("");
-  const [newDimOptions, setNewDimOptions] = React.useState("");
+  const [newDimKey, setNewDimKey] = React.useState('');
+  const [newDimOptions, setNewDimOptions] = React.useState('');
 
   const {
     fields: variantFields,
@@ -49,11 +49,11 @@ export function VariantsZone() {
     remove,
   } = useFieldArray({
     control: control as any,
-    name: "variants",
+    name: 'variants',
   });
 
-  const variants = watch("variants") ?? [];
-  const skuPrefix = watch("sku") ?? "";
+  const variants = watch('variants') ?? [];
+  const skuPrefix = watch('sku') ?? '';
 
   // ─── Matrix generation ──────────────────────────────────────────────────────
 
@@ -66,7 +66,7 @@ export function VariantsZone() {
     const dimsForMatrix = dimensions.map((d) => ({
       attributeKey: d.key,
       options: d.options
-        .split(",")
+        .split(',')
         .map((o) => o.trim())
         .filter(Boolean),
     }));
@@ -76,13 +76,13 @@ export function VariantsZone() {
     combos.forEach((combo, i) => {
       const attrEntries = Object.entries(combo);
       const suggestedSku = Sku.suggestVariantSku(
-        skuPrefix || "SKU",
+        skuPrefix || 'SKU',
         attrEntries.map(([, v]) => v),
       );
 
       append({
         sku: suggestedSku,
-        localizedLabel: { en: attrEntries.map(([, v]) => v).join(" / "), ar: "" },
+        localizedLabel: { en: attrEntries.map(([, v]) => v).join(' / '), ar: '' },
         displayOrder: variants.length + i,
         isActive: true,
         basePrice: 0,
@@ -110,13 +110,13 @@ export function VariantsZone() {
     setDimensions((prev) => [
       ...prev,
       {
-        key: newDimKey.trim().toLowerCase().replace(/\s+/g, "_"),
+        key: newDimKey.trim().toLowerCase().replace(/\s+/g, '_'),
         options: newDimOptions,
         label: newDimKey.trim(),
       },
     ]);
-    setNewDimKey("");
-    setNewDimOptions("");
+    setNewDimKey('');
+    setNewDimOptions('');
   }
 
   return (
@@ -211,18 +211,18 @@ export function VariantsZone() {
                 <div className="flex items-center gap-2">
                   <Button type="button" onClick={generateMatrix} className="h-7 text-xs" size="sm">
                     <Plus className="mr-1 h-3 w-3" />
-                    Generate{" "}
+                    Generate{' '}
                     {
                       generateVariantMatrix(
                         dimensions.map((d) => ({
                           attributeKey: d.key,
                           options: d.options
-                            .split(",")
+                            .split(',')
                             .map((o) => o.trim())
                             .filter(Boolean),
                         })),
                       ).length
-                    }{" "}
+                    }{' '}
                     Variants
                   </Button>
                   <span className="text-xs text-muted-foreground">
@@ -265,11 +265,11 @@ function VariantCard({ index, onRemove }: VariantCardProps) {
   const [isExpanded, setIsExpanded] = React.useState(index === 0);
   const { watch, setValue } = useFormContext<ProductFormValues>();
 
-  const sku = watch(`variants.${index}.sku`) ?? "";
+  const sku = watch(`variants.${index}.sku`) ?? '';
   const isActive = watch(`variants.${index}.isActive`) ?? true;
   const attrs: { value: string }[] = watch(`variants.${index}.attributes`) ?? [];
   const displayLabel = attrs.length
-    ? attrs.map((a) => a.value).join(" / ")
+    ? attrs.map((a) => a.value).join(' / ')
     : sku || `Variant ${index + 1}`;
 
   return (

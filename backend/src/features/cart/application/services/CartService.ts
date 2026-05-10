@@ -2,9 +2,9 @@
  * Cart Service
  */
 
-import { CartEntity, CartItem } from "../../domain/entities/Cart";
-import { ICartService } from "../interfaces/ICartService";
-import { CustomerGroup, UomCode } from "@findeg/backend/features/core/domain/types/common";
+import { CartEntity, CartItem } from '../../domain/entities/Cart';
+import { ICartService } from '../interfaces/ICartService';
+import { CustomerGroup, UomCode } from '@findeg/backend/features/core/domain/types/common';
 
 type GlobalWithManagedCartStore = typeof globalThis & {
   __findegManagedCartStore?: Map<string, CartItem[]>;

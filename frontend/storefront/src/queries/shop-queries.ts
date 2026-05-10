@@ -7,14 +7,14 @@
  * Future components should import directly from @/data/catalog/queries.
  */
 
-"use cache";
+'use cache';
 
 export {
   getHomePageData,
   getShopPageData,
   getProductDetailPageData as getProductDetailData,
   getSearchPageViewModel as getSearchPageData,
-} from "@/data/catalog/queries";
+} from '@/data/catalog/queries';
 
 // Re-export types from the new central types file if needed by legacy components
 export type {
@@ -22,4 +22,4 @@ export type {
   ShopPageData,
   SearchPageViewModel as SearchPageData,
   ProductDetailPageData,
-} from "@/data/catalog/types";
+} from '@/data/catalog/types';

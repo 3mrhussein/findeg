@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import React from "react";
-import { useFormContext } from "react-hook-form";
-import { useTranslations } from "next-intl";
+import React from 'react';
+import { useFormContext } from 'react-hook-form';
+import { useTranslations } from 'next-intl';
 import {
   FormControl,
   FormField,
@@ -10,29 +10,29 @@ import {
   FormLabel,
   FormMessage,
   FormDescription,
-} from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Textarea } from "@findeg/ui";
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import { type ProductFormValues } from "@/interfaces";
+} from '@findeg/ui';
+import { Input } from '@findeg/ui';
+import { Textarea } from '@findeg/ui';
+import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
+import { type ProductFormValues } from '@/interfaces';
 
 /**
  * Basic Information Tab — Stacked EN/AR fields (full-width)
  */
 export function InfoTab() {
-  const t = useTranslations("Administration.Catalog.Products.Form.Tabs.Info");
+  const t = useTranslations('Administration.Catalog.Products.Form.Tabs.Info');
   const { control, watch } = useFormContext<ProductFormValues>();
 
-  const enName = watch("localizedName.en") || "";
-  const arName = watch("localizedName.ar") || "";
-  const enDesc = watch("localizedDescription.en") || "";
-  const arDesc = watch("localizedDescription.ar") || "";
+  const enName = watch('localizedName.en') || '';
+  const arName = watch('localizedName.ar') || '';
+  const enDesc = watch('localizedDescription.en') || '';
+  const arDesc = watch('localizedDescription.ar') || '';
 
   return (
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">{t("basicInfo")}</CardTitle>
+          <CardTitle className="text-lg">{t('basicInfo')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-5">
           {/* Product Name — Stacked vertically */}
@@ -43,7 +43,7 @@ export function InfoTab() {
               <FormItem>
                 <div className="flex justify-between mb-1">
                   <FormLabel className="text-sm font-medium text-gray-700">
-                    {t("nameEn")} *
+                    {t('nameEn')} *
                   </FormLabel>
                   <span className="text-xs text-gray-400">{enName.length}/120</span>
                 </div>
@@ -67,7 +67,7 @@ export function InfoTab() {
                 <div className="flex justify-between mb-1">
                   <span className="text-xs text-gray-400">{arName.length}/120</span>
                   <FormLabel className="text-sm font-medium text-gray-700">
-                    {t("nameAr")} *
+                    {t('nameAr')} *
                   </FormLabel>
                 </div>
                 <FormControl>
@@ -90,7 +90,7 @@ export function InfoTab() {
               <FormItem>
                 <div className="flex justify-between mb-1">
                   <FormLabel className="text-sm font-medium text-gray-700">
-                    {t("descriptionEn")}
+                    {t('descriptionEn')}
                   </FormLabel>
                   <span className="text-xs text-gray-400">{enDesc.length}/500</span>
                 </div>
@@ -114,7 +114,7 @@ export function InfoTab() {
                 <div className="flex justify-between mb-1">
                   <span className="text-xs text-gray-400">{arDesc.length}/500</span>
                   <FormLabel className="text-sm font-medium text-gray-700">
-                    {t("descriptionAr")}
+                    {t('descriptionAr')}
                   </FormLabel>
                 </div>
                 <FormControl>
@@ -133,7 +133,7 @@ export function InfoTab() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">{t("identifiers")}</CardTitle>
+          <CardTitle className="text-lg">{t('identifiers')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           <FormField
@@ -141,11 +141,11 @@ export function InfoTab() {
             name="skuPrefix"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t("skuPrefix")}</FormLabel>
+                <FormLabel>{t('skuPrefix')}</FormLabel>
                 <FormControl>
                   <Input placeholder="e.g. STA-PEN" {...field} />
                 </FormControl>
-                <FormDescription>{t("skuPrefixDesc")}</FormDescription>
+                <FormDescription>{t('skuPrefixDesc')}</FormDescription>
                 <FormMessage />
               </FormItem>
             )}

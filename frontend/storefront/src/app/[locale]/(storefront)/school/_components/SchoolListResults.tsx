@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useCart } from "@hooks/useCart";
-import type { Product } from "@/data/catalog/types";
-import { useTranslations } from "next-intl";
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Price } from "@findeg/ui";
+import { useCart } from '@hooks/useCart';
+import type { Product } from '@/data/catalog/types';
+import { useTranslations } from 'next-intl';
+import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { Price } from '@findeg/ui';
 
 interface SchoolListResultsProps {
   products: Product[];
@@ -25,9 +25,9 @@ export function SchoolListResults({ products, totalEstimatedCost }: SchoolListRe
   function addBundleToCart() {
     products.forEach((product) => {
       const variants = product.variants || [];
-      const defaultVariant = variants.find((v) => v.variantKey === "default") || variants[0];
+      const defaultVariant = variants.find((v) => v.variantKey === 'default') || variants[0];
       if (defaultVariant) {
-        addToCart(product.id, 1, { variantId: defaultVariant.id, uomCode: "pcs" });
+        addToCart(product.id, 1, { variantId: defaultVariant.id, uomCode: 'pcs' });
       }
     });
   }
@@ -35,12 +35,12 @@ export function SchoolListResults({ products, totalEstimatedCost }: SchoolListRe
   return (
     <Card className="border-primary/20">
       <CardHeader className="space-y-3">
-        <CardTitle>{t("Pages.SchoolLists.BundleTitle")}</CardTitle>
+        <CardTitle>{t('Pages.SchoolLists.BundleTitle')}</CardTitle>
         <div className="flex flex-col gap-1 text-sm text-muted-foreground md:flex-row md:justify-between">
-          <span>{t("Pages.SchoolLists.ItemsCount", { count: products.length })}</span>
+          <span>{t('Pages.SchoolLists.ItemsCount', { count: products.length })}</span>
           <span>
-            {t("Pages.SchoolLists.EstimatedCost")}:{" "}
-            {new Intl.NumberFormat("en-EG", { style: "currency", currency: "EGP" }).format(
+            {t('Pages.SchoolLists.EstimatedCost')}:{' '}
+            {new Intl.NumberFormat('en-EG', { style: 'currency', currency: 'EGP' }).format(
               totalEstimatedCost,
             )}
           </span>
@@ -72,20 +72,20 @@ export function SchoolListResults({ products, totalEstimatedCost }: SchoolListRe
                 onClick={() => {
                   const variants = product.variants || [];
                   const defaultVariant =
-                    variants.find((v) => v.variantKey === "default") || variants[0];
+                    variants.find((v) => v.variantKey === 'default') || variants[0];
                   if (defaultVariant) {
-                    addToCart(product.id, 1, { variantId: defaultVariant.id, uomCode: "pcs" });
+                    addToCart(product.id, 1, { variantId: defaultVariant.id, uomCode: 'pcs' });
                   }
                 }}
               >
-                {t("Pages.ProductCard.AddToCart")}
+                {t('Pages.ProductCard.AddToCart')}
               </Button>
             </div>
           </div>
         ))}
         <div className="pt-2">
           <Button size="lg" className="w-full md:w-auto" onClick={addBundleToCart}>
-            {t("Pages.SchoolLists.AddBundleToCart")}
+            {t('Pages.SchoolLists.AddBundleToCart')}
           </Button>
         </div>
       </CardContent>

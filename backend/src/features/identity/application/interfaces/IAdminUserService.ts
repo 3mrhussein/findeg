@@ -12,7 +12,7 @@ export interface AdminUser {
   lastName: string | null;
   isActive: boolean;
   roles: { id: number; code: string; name: string }[];
-  permissionOverrides: { permissionCode: string; action: "grant" | "revoke" }[];
+  permissionOverrides: { permissionCode: string; action: 'grant' | 'revoke' }[];
   createdAt: Date;
 }
 
@@ -33,7 +33,7 @@ export interface UpdateAdminInput {
 
 export interface PermissionOverrideInput {
   permissionId: number;
-  action: "grant" | "revoke";
+  action: 'grant' | 'revoke';
 }
 
 export interface IAdminUserService {

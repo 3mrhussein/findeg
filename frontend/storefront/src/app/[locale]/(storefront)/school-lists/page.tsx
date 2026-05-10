@@ -1,4 +1,4 @@
-import { redirect } from "@i18n/navigation";
+import { redirect } from '@i18n/navigation';
 
 /**
  * /school-lists [Deprecated/Alias]
@@ -19,5 +19,5 @@ export default async function SchoolListsAliasPage({
     redirect({ href: `/school?code=${encodeURIComponent(code)}`, locale });
   }
 
-  redirect({ href: "/school", locale });
+  redirect({ href: '/school', locale });
 }

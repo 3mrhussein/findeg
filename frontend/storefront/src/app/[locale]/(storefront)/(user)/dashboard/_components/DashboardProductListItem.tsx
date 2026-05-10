@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import React from "react";
-import Image from "next/image";
-import { useRouter } from "@i18n/navigation";
-import { Product } from "@/data/catalog/types";
-import { Button } from "@findeg/ui";
-import { Price } from "@findeg/ui";
-import { useTranslations } from "next-intl";
-import { useCart } from "@hooks/useCart";
-import { Icon } from "@findeg/ui";
+import React from 'react';
+import Image from 'next/image';
+import { useRouter } from '@i18n/navigation';
+import { Product } from '@/data/catalog/types';
+import { Button } from '@findeg/ui';
+import { Price } from '@findeg/ui';
+import { useTranslations } from 'next-intl';
+import { useCart } from '@hooks/useCart';
+import { Icon } from '@findeg/ui';
 
 interface ProductListItemUIProps {
   product: Product;
@@ -37,7 +37,7 @@ export const ProductListItemUI: React.FC<ProductListItemUIProps> = ({
             product.variants?.[0]?.images?.[0]?.url ||
             product.mediaSet?.card?.url ||
             product.mediaSet?.thumbnail?.url ||
-            "/placeholder.png"
+            '/placeholder.png'
           }
           alt={product.name}
           width={400}
@@ -88,12 +88,12 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product }) => 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
     const variants = product.variants || [];
-    const defaultVariant = variants.find((v) => v.variantKey === "default") || variants[0];
+    const defaultVariant = variants.find((v) => v.variantKey === 'default') || variants[0];
 
     if (defaultVariant) {
       addToCart(product.id, 1, {
         variantId: defaultVariant.id,
-        uomCode: "pcs",
+        uomCode: 'pcs',
       });
     }
   };
@@ -109,7 +109,7 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product }) => 
     <ProductListItemUI
       product={product}
       onAddToCart={handleAddToCart}
-      addToCartText={t("Pages.ProductCard.AddToCart")}
+      addToCartText={t('Pages.ProductCard.AddToCart')}
       onCardClick={handleCardClick}
     />
   );

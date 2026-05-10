@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React, { useRef, useEffect } from "react";
-import { useTranslations } from "next-intl";
+import React, { useRef, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 
 interface ActivityData {
   day: string;
@@ -42,7 +42,7 @@ export const UserActivityChartUI: React.FC<UserActivityChartUIProps> = ({ data, 
       const y = height - (point.users / maxValue) * height;
       return `${x},${y}`;
     })
-    .join(" ");
+    .join(' ');
 
   return (
     <div className="bg-card p-6 rounded-lg border border-border shadow-sm">
@@ -168,5 +168,5 @@ interface UserActivityChartProps {
  */
 export const UserActivityChart: React.FC<UserActivityChartProps> = ({ data }) => {
   const t = useTranslations();
-  return <UserActivityChartUI data={data} title={t("Pages.Dashboard.WeeklyActivity")} />;
+  return <UserActivityChartUI data={data} title={t('Pages.Dashboard.WeeklyActivity')} />;
 };

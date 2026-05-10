@@ -1,7 +1,7 @@
-"use server";
+'use server';
 
-import { deleteSession } from "@lib/session";
-import { redirect } from "@i18n/navigation";
+import { deleteSession } from '@lib/session';
+import { redirect } from '@i18n/navigation';
 
 /**
  * Storefront logout server action.
@@ -12,5 +12,5 @@ import { redirect } from "@i18n/navigation";
  */
 export async function logoutAction(): Promise<void> {
   await deleteSession();
-  redirect({ href: "/login", locale: "en" });
+  redirect({ href: '/login', locale: 'en' });
 }

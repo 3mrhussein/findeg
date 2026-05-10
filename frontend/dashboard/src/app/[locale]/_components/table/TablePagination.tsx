@@ -7,13 +7,13 @@
  * Location: src/app/[locale]/admin/_components/table/ (admin-wide)
  */
 
-"use client";
+'use client';
 
-import * as React from "react";
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
-import { Button } from "@findeg/ui";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@findeg/ui";
-import { cn } from "@lib/utils";
+import * as React from 'react';
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
+import { Button } from '@findeg/ui';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@findeg/ui';
+import { cn } from '@lib/utils';
 
 export interface TablePaginationProps {
   /** Current page (1-indexed) */
@@ -71,7 +71,7 @@ export function TablePagination({
   const canGoNext = page < totalPages;
 
   return (
-    <div className={cn("flex items-center justify-between gap-4", className)}>
+    <div className={cn('flex items-center justify-between gap-4', className)}>
       {/* Page Info */}
       <div className="text-sm text-muted-foreground">
         Showing {startItem} to {endItem} of {total} results

@@ -5,7 +5,7 @@
  * Used with Next.js 16 PPR and Suspense boundaries.
  */
 
-import { CategoryListSkeleton } from "@components/skeletons";
+import { CategoryListSkeleton } from '@components/skeletons';
 
 export default function CategoriesLoading() {
   return <CategoryListSkeleton />;

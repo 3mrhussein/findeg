@@ -1,8 +1,8 @@
-import { Link } from "@i18n/navigation";
-import { Button } from "@findeg/ui";
-import Image from "next/image";
-import { getTranslations } from "next-intl/server";
-import type { Locale } from "next-intl";
+import { Link } from '@i18n/navigation';
+import { Button } from '@findeg/ui';
+import Image from 'next/image';
+import { getTranslations } from 'next-intl/server';
+import type { Locale } from 'next-intl';
 
 interface HeroSectionProps {
   locale?: Locale;
@@ -11,8 +11,8 @@ interface HeroSectionProps {
 /**
  *
  */
-export async function HeroSection({ locale = "en" }: HeroSectionProps) {
-  const t = await getTranslations({ locale, namespace: "Pages.Home.Hero" });
+export async function HeroSection({ locale = 'en' }: HeroSectionProps) {
+  const t = await getTranslations({ locale, namespace: 'Pages.Home.Hero' });
 
   return (
     <section className="w-full bg-slate-50 dark:bg-background py-12 lg:py-20">
@@ -21,21 +21,21 @@ export async function HeroSection({ locale = "en" }: HeroSectionProps) {
           <div className="flex flex-col gap-6 max-w-xl">
             <div className="inline-flex items-center gap-2 w-fit rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
               <span className="size-2 rounded-full bg-primary animate-pulse"></span>
-              {t("Badge")}
+              {t('Badge')}
             </div>
             <h1 className="text-4xl font-black leading-[1.1] tracking-tight text-slate-900 dark:text-white sm:text-5xl lg:text-6xl">
-              {t("TitleSmart")} <br />
-              <span className="text-primary">{t("TitleStationery")}</span>
+              {t('TitleSmart')} <br />
+              <span className="text-primary">{t('TitleStationery')}</span>
             </h1>
             <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed max-w-md">
-              {t("Subtitle")}
+              {t('Subtitle')}
             </p>
             <div className="flex flex-wrap gap-4 pt-2">
               <Button
                 asChild
                 className="rounded-full px-8 font-bold shadow-lg shadow-primary/25 transition-transform hover:scale-105 active:scale-95 h-12"
               >
-                <Link href="/shop">{t("ButtonShop")}</Link>
+                <Link href="/shop">{t('ButtonShop')}</Link>
               </Button>
               <Button
                 asChild
@@ -43,7 +43,7 @@ export async function HeroSection({ locale = "en" }: HeroSectionProps) {
                 className="rounded-full px-6 font-bold hover:bg-slate-100 dark:hover:bg-slate-800 h-12"
               >
                 <Link href="/school-lists" className="gap-2">
-                  {t("ButtonSchools")}
+                  {t('ButtonSchools')}
                   <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
                 </Link>
               </Button>
@@ -69,10 +69,10 @@ export async function HeroSection({ locale = "en" }: HeroSectionProps) {
                 </div>
                 <div>
                   <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
-                    {t("CardListLabel")}
+                    {t('CardListLabel')}
                   </p>
                   <p className="text-sm font-bold text-slate-900 dark:text-white">
-                    {t("CardGradeLabel")}
+                    {t('CardGradeLabel')}
                   </p>
                 </div>
               </div>
@@ -80,7 +80,7 @@ export async function HeroSection({ locale = "en" }: HeroSectionProps) {
                 <div className="h-2 w-full rounded-full bg-slate-100 dark:bg-slate-700 overflow-hidden">
                   <div className="h-full w-4/5 rounded-full bg-mint"></div>
                 </div>
-                <p className="text-xs font-medium text-mint">{t("CardReadyLabel")}</p>
+                <p className="text-xs font-medium text-mint">{t('CardReadyLabel')}</p>
               </div>
             </div>
           </div>

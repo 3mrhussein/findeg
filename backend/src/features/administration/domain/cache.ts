@@ -13,7 +13,7 @@
  */
 export function getTagCachePaths(tagId?: number): string[] {
   const paths = [
-    "/catalog/tags", // Tags list
+    '/catalog/tags', // Tags list
   ];
 
   if (tagId) {
@@ -31,8 +31,8 @@ export function getTagCachePaths(tagId?: number): string[] {
  */
 export function getTagCacheTags(tagId?: number): string[] {
   const tags = [
-    "tags", // All tags
-    "admin:tags", // Admin tags
+    'tags', // All tags
+    'admin:tags', // Admin tags
   ];
 
   if (tagId) {
@@ -50,7 +50,7 @@ export function getTagCacheTags(tagId?: number): string[] {
  */
 export function getCollectionCachePaths(collectionId?: number): string[] {
   const paths = [
-    "/catalog/collections", // Collections list
+    '/catalog/collections', // Collections list
   ];
 
   if (collectionId) {
@@ -68,9 +68,9 @@ export function getCollectionCachePaths(collectionId?: number): string[] {
  */
 export function getCollectionCacheTags(collectionId?: number): string[] {
   const tags = [
-    "collections", // All collections
-    "admin:collections", // Admin collections
-    "products", // Collections affect product listings
+    'collections', // All collections
+    'admin:collections', // Admin collections
+    'products', // Collections affect product listings
   ];
 
   if (collectionId) {
@@ -89,7 +89,7 @@ export function getCollectionCacheTags(collectionId?: number): string[] {
  */
 export function getAdminProductCachePaths(productId?: number): string[] {
   const paths = [
-    "/products", // Products list
+    '/products', // Products list
   ];
 
   if (productId) {
@@ -107,8 +107,8 @@ export function getAdminProductCachePaths(productId?: number): string[] {
  */
 export function getAdminProductCacheTags(productId?: number): string[] {
   const tags = [
-    "products", // All products
-    "admin:products", // Admin products
+    'products', // All products
+    'admin:products', // Admin products
   ];
 
   if (productId) {
@@ -126,7 +126,7 @@ export function getAdminProductCacheTags(productId?: number): string[] {
  */
 export function getInventoryCachePaths(inventoryId?: number): string[] {
   const paths = [
-    "/inventory", // Inventory list
+    '/inventory', // Inventory list
   ];
 
   if (inventoryId) {
@@ -144,9 +144,9 @@ export function getInventoryCachePaths(inventoryId?: number): string[] {
  */
 export function getInventoryCacheTags(inventoryId?: number): string[] {
   const tags = [
-    "inventory", // All inventory
-    "admin:inventory", // Admin inventory
-    "products", // Inventory affects product pages
+    'inventory', // All inventory
+    'admin:inventory', // Admin inventory
+    'products', // Inventory affects product pages
   ];
 
   if (inventoryId) {
@@ -160,7 +160,7 @@ export function getInventoryCacheTags(inventoryId?: number): string[] {
  * Get all cache paths affected by category changes
  */
 export function getCategoryCachePaths(categoryId?: number): string[] {
-  const paths = ["/categories"];
+  const paths = ['/categories'];
   if (categoryId) paths.push(`/categories/${categoryId}`);
   return paths;
 }
@@ -169,7 +169,7 @@ export function getCategoryCachePaths(categoryId?: number): string[] {
  * Get all cache tags affected by category changes
  */
 export function getCategoryCacheTags(categoryId?: number): string[] {
-  const tags = ["categories", "admin:categories", "products"];
+  const tags = ['categories', 'admin:categories', 'products'];
   if (categoryId) tags.push(`category-${categoryId}`);
   return tags;
 }
@@ -178,7 +178,7 @@ export function getCategoryCacheTags(categoryId?: number): string[] {
  * Get all cache paths affected by order changes
  */
 export function getOrderCachePaths(orderId?: string): string[] {
-  const paths = ["/orders"];
+  const paths = ['/orders'];
   if (orderId) paths.push(`/orders/${orderId}`);
   return paths;
 }
@@ -187,7 +187,7 @@ export function getOrderCachePaths(orderId?: string): string[] {
  * Get all cache tags affected by order changes
  */
 export function getOrderCacheTags(orderId?: string): string[] {
-  const tags = ["orders", "admin:orders", "dashboard"];
+  const tags = ['orders', 'admin:orders', 'dashboard'];
   if (orderId) tags.push(`order-${orderId}`);
   return tags;
 }

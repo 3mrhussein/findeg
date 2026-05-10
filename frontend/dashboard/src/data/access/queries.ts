@@ -4,17 +4,17 @@
  * Centralized fetching for roles, permissions, and admin users.
  * Uses "use cache" for optimized performance.
  */
-"use cache";
+'use cache';
 
-import { cacheLife, cacheTag } from "next/cache";
-import { createIdentityServices } from "@findeg/backend/features/identity";
+import { cacheLife, cacheTag } from 'next/cache';
+import { createIdentityServices } from '@findeg/backend/features/identity';
 
 /**
  * Get all available system roles with their permissions
  */
 export async function getSystemRoles() {
-  cacheLife("hours");
-  cacheTag("access", "roles");
+  cacheLife('hours');
+  cacheTag('access', 'roles');
 
   const { adminRoles } = createIdentityServices();
   return await adminRoles.listRoles();
@@ -24,8 +24,8 @@ export async function getSystemRoles() {
  * Get all available permission codes
  */
 export async function getPermissionCodes() {
-  cacheLife("weeks");
-  cacheTag("access", "permissions");
+  cacheLife('weeks');
+  cacheTag('access', 'permissions');
 
   const { adminRoles } = createIdentityServices();
   return await adminRoles.listPermissions();
@@ -35,8 +35,8 @@ export async function getPermissionCodes() {
  * Get all admin users
  */
 export async function getAdminUsers() {
-  cacheLife("minutes");
-  cacheTag("access", "users");
+  cacheLife('minutes');
+  cacheTag('access', 'users');
 
   const { adminUsers } = createIdentityServices();
   return await adminUsers.listAdmins();
@@ -46,8 +46,8 @@ export async function getAdminUsers() {
  * Get a single role by ID
  */
 export async function getRoleById(roleId: number) {
-  cacheLife("hours");
-  cacheTag("access", "roles", `role-${roleId}`);
+  cacheLife('hours');
+  cacheTag('access', 'roles', `role-${roleId}`);
 
   const { adminRoles } = createIdentityServices();
   return await adminRoles.getRole(roleId);
@@ -57,8 +57,8 @@ export async function getRoleById(roleId: number) {
  * Get a single admin user by ID
  */
 export async function getAdminById(userId: number) {
-  cacheLife("minutes");
-  cacheTag("access", "users", `user-${userId}`);
+  cacheLife('minutes');
+  cacheTag('access', 'users', `user-${userId}`);
 
   const { adminUsers } = createIdentityServices();
   return await adminUsers.getAdmin(userId);

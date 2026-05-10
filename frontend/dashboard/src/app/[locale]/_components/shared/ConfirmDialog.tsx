@@ -6,9 +6,9 @@
  * Location: src/app/[locale]/admin/_components/shared/ (admin-wide)
  */
 
-"use client";
+'use client';
 
-import * as React from "react";
+import * as React from 'react';
 import {
   Dialog,
   DialogContent,
@@ -16,8 +16,8 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@findeg/ui";
-import { Button } from "@findeg/ui";
+} from '@findeg/ui';
+import { Button } from '@findeg/ui';
 
 export interface ConfirmDialogProps {
   /** Dialog open state */
@@ -35,7 +35,7 @@ export interface ConfirmDialogProps {
   /** Cancel button label (default: "Cancel") */
   cancelLabel?: string;
   /** Destructive action styling (default: true) */
-  variant?: "destructive" | "default";
+  variant?: 'destructive' | 'default';
   /** Loading state */
   loading?: boolean;
 }
@@ -60,9 +60,9 @@ export function ConfirmDialog({
   onConfirm,
   title,
   description,
-  confirmLabel = "Confirm",
-  cancelLabel = "Cancel",
-  variant = "destructive",
+  confirmLabel = 'Confirm',
+  cancelLabel = 'Cancel',
+  variant = 'destructive',
   loading = false,
 }: ConfirmDialogProps) {
   const handleConfirm = async () => {
@@ -81,7 +81,7 @@ export function ConfirmDialog({
             {cancelLabel}
           </Button>
           <Button onClick={handleConfirm} disabled={loading} variant={variant}>
-            {loading ? "Processing..." : confirmLabel}
+            {loading ? 'Processing...' : confirmLabel}
           </Button>
         </DialogFooter>
       </DialogContent>

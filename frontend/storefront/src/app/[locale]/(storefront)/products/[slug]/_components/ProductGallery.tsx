@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import { useTranslations } from "next-intl";
+import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "@findeg/ui";
-import { Card, CardContent } from "@findeg/ui";
-import { Button } from "@findeg/ui";
+} from '@findeg/ui';
+import { Card, CardContent } from '@findeg/ui';
+import { Button } from '@findeg/ui';
 
 interface ProductGalleryProps {
   images: string[];
@@ -25,7 +25,7 @@ export function ProductGallery({ images }: ProductGalleryProps) {
   if (!images || images.length === 0) {
     return (
       <div className="aspect-square bg-muted flex items-center justify-center rounded-lg">
-        <span className="text-muted-foreground">{t("Pages.ProductDetail.NoImages")}</span>
+        <span className="text-muted-foreground">{t('Pages.ProductDetail.NoImages')}</span>
       </div>
     );
   }
@@ -41,7 +41,7 @@ export function ProductGallery({ images }: ProductGalleryProps) {
                   <CardContent className="flex aspect-square items-center justify-center p-0 relative overflow-hidden rounded-md">
                     <Image
                       src={src}
-                      alt={t("Pages.ProductDetail.ImageAlt", { index: index + 1 })}
+                      alt={t('Pages.ProductDetail.ImageAlt', { index: index + 1 })}
                       fill
                       className="object-cover"
                     />
@@ -63,11 +63,11 @@ export function ProductGallery({ images }: ProductGalleryProps) {
             type="button"
             key={index}
             className="relative w-20 h-20 shrink-0 cursor-pointer overflow-hidden hover:border-primary transition-colors p-0 rounded-md"
-            aria-label={t("Pages.ProductDetail.ThumbnailLabel", { index: index + 1 })}
+            aria-label={t('Pages.ProductDetail.ThumbnailLabel', { index: index + 1 })}
           >
             <Image
               src={src}
-              alt={t("Pages.ProductDetail.ThumbnailAlt", { index: index + 1 })}
+              alt={t('Pages.ProductDetail.ThumbnailAlt', { index: index + 1 })}
               fill
               className="object-cover"
             />

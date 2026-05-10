@@ -21,14 +21,14 @@ export interface AdminUser {
   lastName: string | null;
   isActive: boolean;
   roles: Role[];
-  permissionOverrides: { permissionCode: string; action: "grant" | "revoke" }[];
+  permissionOverrides: { permissionCode: string; action: 'grant' | 'revoke' }[];
 }
 
 export interface AdminUserDialogProps {
   open: boolean;
   user: AdminUser | null;
-  defaultTab?: "profile" | "roles" | "overrides";
+  defaultTab?: 'profile' | 'roles' | 'overrides';
   onClose: (refreshed?: boolean) => void;
 }
 
-export type OverrideAction = "default" | "grant" | "revoke";
+export type OverrideAction = 'default' | 'grant' | 'revoke';

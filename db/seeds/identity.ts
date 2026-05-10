@@ -8,7 +8,7 @@ import {
   OrganizationIdSchema,
   AuthProviderSchema,
   PaymentProviderSchema,
-} from "@/features/core/domain/value-objects/Identity";
+} from "../types";
 import { z } from "zod";
 
 import permissionsData from "./data/permissions.json";

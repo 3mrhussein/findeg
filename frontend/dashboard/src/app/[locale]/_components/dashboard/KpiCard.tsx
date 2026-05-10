@@ -7,10 +7,10 @@
  * Location: src/app/[locale]/admin/_components/dashboard/ (admin-wide)
  */
 
-"use client";
+'use client';
 
-import * as React from "react";
-import { Link } from "@i18n/navigation";
+import * as React from 'react';
+import { Link } from '@i18n/navigation';
 import {
   Layers,
   Award,
@@ -23,9 +23,9 @@ import {
   TrendingDown,
   Minus,
   AlertCircle,
-} from "lucide-react";
-import { Card, CardContent } from "@findeg/ui";
-import { cn } from "@lib/utils";
+} from 'lucide-react';
+import { Card, CardContent } from '@findeg/ui';
+import { cn } from '@lib/utils';
 
 const ICON_MAP = {
   package: Package,
@@ -34,13 +34,13 @@ const ICON_MAP = {
   hash: Hash,
   layers: Layers,
   award: Award,
-  "check-circle": CheckCircle2,
+  'check-circle': CheckCircle2,
 };
 
 export interface KpiChange {
   value?: number;
   label?: string;
-  direction?: "up" | "down" | "neutral";
+  direction?: 'up' | 'down' | 'neutral';
 }
 
 export interface KpiCardProps {
@@ -60,24 +60,24 @@ export function KpiCard({
   value,
   change,
   iconName,
-  iconColor = "text-primary",
-  iconBg = "bg-primary/10",
+  iconColor = 'text-primary',
+  iconBg = 'bg-primary/10',
   href,
   alert = false,
   className,
 }: KpiCardProps) {
   const Icon = ICON_MAP[iconName] || Package;
-  const isPositive = change?.direction === "up";
-  const isNegative = change?.direction === "down";
-  const isNeutral = change?.direction === "neutral";
+  const isPositive = change?.direction === 'up';
+  const isNegative = change?.direction === 'down';
+  const isNeutral = change?.direction === 'neutral';
 
   const content = (
     <Card
       className={cn(
-        "transition-all hover:shadow-md h-full flex flex-col justify-between",
+        'transition-all hover:shadow-md h-full flex flex-col justify-between',
         alert
-          ? "border-l-4 border-l-amber-500 border-amber-200 dark:border-amber-900/50 bg-amber-50 dark:bg-amber-950/30"
-          : "hover:border-primary/50",
+          ? 'border-l-4 border-l-amber-500 border-amber-200 dark:border-amber-900/50 bg-amber-50 dark:bg-amber-950/30'
+          : 'hover:border-primary/50',
         className,
       )}
     >
@@ -86,7 +86,7 @@ export function KpiCard({
           <h3 className="text-sm font-medium text-muted-foreground">{title}</h3>
           <div
             className={cn(
-              "flex h-10 w-10 items-center justify-center rounded-full",
+              'flex h-10 w-10 items-center justify-center rounded-full',
               iconBg,
               iconColor,
             )}
@@ -100,16 +100,16 @@ export function KpiCard({
             <div className="flex items-center text-xs text-muted-foreground mt-1">
               <span
                 className={cn(
-                  "flex items-center font-medium mr-1.5",
-                  isPositive && "text-emerald-600 dark:text-emerald-400",
-                  isNegative && "text-rose-600 dark:text-rose-400",
-                  isNeutral && "text-slate-600 dark:text-slate-400",
+                  'flex items-center font-medium mr-1.5',
+                  isPositive && 'text-emerald-600 dark:text-emerald-400',
+                  isNegative && 'text-rose-600 dark:text-rose-400',
+                  isNeutral && 'text-slate-600 dark:text-slate-400',
                 )}
               >
                 {isPositive && <TrendingUp className="mr-1 h-3.5 w-3.5" />}
                 {isNegative && <TrendingDown className="mr-1 h-3.5 w-3.5" />}
                 {isNeutral && <Minus className="mr-1 h-3.5 w-3.5" />}
-                {change.value !== undefined ? `${isPositive ? "+" : ""}${change.value}%` : ""}
+                {change.value !== undefined ? `${isPositive ? '+' : ''}${change.value}%` : ''}
               </span>
               {change.label && <span>{change.label}</span>}
             </div>

@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { Button } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Checkbox } from "@findeg/ui";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@findeg/ui";
-import { Loader2, Plus, Trash2 } from "lucide-react";
-import type { CustomerGroup, UomCode } from "@findeg/backend/features/core/domain/types/common";
+import { Button } from '@findeg/ui';
+import { Label } from '@findeg/ui';
+import { Input } from '@findeg/ui';
+import { Checkbox } from '@findeg/ui';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@findeg/ui';
+import { Loader2, Plus, Trash2 } from 'lucide-react';
+import type { CustomerGroup, UomCode } from '@findeg/backend/features/core/domain/types/common';
 
-const UOM_VALUES = ["pcs", "pack", "carton"] as const;
-const CUSTOMER_GROUP_VALUES = ["public_b2c", "school_b2b", "wholesale"] as const;
+const UOM_VALUES = ['pcs', 'pack', 'carton'] as const;
+const CUSTOMER_GROUP_VALUES = ['public_b2c', 'school_b2b', 'wholesale'] as const;
 
 export interface VariantPricingConfig {
   variantKey: string;
@@ -27,12 +27,12 @@ export interface VariantPricingConfig {
   }[];
 }
 
-const DEFAULT_UOM = { uomCode: "pcs", factorToBase: 1, isEnabled: true };
+const DEFAULT_UOM = { uomCode: 'pcs', factorToBase: 1, isEnabled: true };
 const DEFAULT_PRICE = {
-  customerGroup: "public_b2c",
-  uomCode: "pcs",
+  customerGroup: 'public_b2c',
+  uomCode: 'pcs',
   unitPrice: 0,
-  currency: "EGP",
+  currency: 'EGP',
   isSellable: true,
 };
 
@@ -62,7 +62,7 @@ export function ProductVariants({ configs, setConfigs, loading }: ProductVariant
   const addVariantConfig = () => {
     setConfigs((prev) => [
       ...prev,
-      { variantKey: "default", uoms: [DEFAULT_UOM], prices: [DEFAULT_PRICE] },
+      { variantKey: 'default', uoms: [DEFAULT_UOM], prices: [DEFAULT_PRICE] },
     ]);
   };
 
@@ -292,7 +292,7 @@ export function ProductVariants({ configs, setConfigs, loading }: ProductVariant
                 />
 
                 <Input
-                  value={price.currency || "EGP"}
+                  value={price.currency || 'EGP'}
                   maxLength={3}
                   onChange={(e) =>
                     updateVariantConfig(configIndex, (item) => ({

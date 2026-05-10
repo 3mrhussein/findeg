@@ -6,24 +6,24 @@
  * Location: src/app/[locale]/admin/(dashboard)/products/[id]/edit/_components/
  */
 
-"use client";
+'use client';
 
-import * as React from "react";
-import { useFormContext } from "react-hook-form";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import { BilingualInput } from "@components/shared/BilingualInput";
-import { BilingualTextarea } from "@components/shared/BilingualTextarea";
-import { Search } from "lucide-react";
-import { ProductFormValues } from "@/interfaces";
+import * as React from 'react';
+import { useFormContext } from 'react-hook-form';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@findeg/ui';
+import { Label } from '@findeg/ui';
+import { BilingualInput } from '@components/shared/BilingualInput';
+import { BilingualTextarea } from '@components/shared/BilingualTextarea';
+import { Search } from 'lucide-react';
+import { ProductFormValues } from '@/interfaces';
 
 /**
  * SeoTab — SEO metadata and search optimization
  */
 export function SeoTab() {
   const { watch } = useFormContext<ProductFormValues>();
-  const nameEn = watch("localizedName.en") || "";
-  const nameAr = watch("localizedName.ar") || "";
+  const nameEn = watch('localizedName.en') || '';
+  const nameAr = watch('localizedName.ar') || '';
 
   return (
     <div className="space-y-6">
@@ -56,8 +56,8 @@ export function SeoTab() {
             <BilingualInput
               nameEn="localizedMetaTitle.en"
               nameAr="localizedMetaTitle.ar"
-              placeholderEn={nameEn || "Product name"}
-              placeholderAr={nameAr || "اسم المنتج"}
+              placeholderEn={nameEn || 'Product name'}
+              placeholderAr={nameAr || 'اسم المنتج'}
             />
             <p className="text-xs text-muted-foreground">
               Defaults to product name if empty (recommended: 50-60 characters)
@@ -90,21 +90,21 @@ export function SeoTab() {
                   <span className="mx-1">›</span>
                   products
                   <span className="mx-1">›</span>
-                  {watch("localizedSlug.en") || watch("localizedSlug.ar") || "example-product"}
+                  {watch('localizedSlug.en') || watch('localizedSlug.ar') || 'example-product'}
                 </div>
               </div>
               <h3 className="text-[#1a0dab] text-xl leading-snug hover:underline cursor-pointer">
-                {watch("localizedMetaTitle.en") ||
-                  watch("localizedMetaTitle.ar") ||
+                {watch('localizedMetaTitle.en') ||
+                  watch('localizedMetaTitle.ar') ||
                   nameEn ||
                   nameAr ||
-                  "Product Title"}
-                {" | FindEg"}
+                  'Product Title'}
+                {' | FindEg'}
               </h3>
               <p className="text-[#4d5156] text-sm leading-normal mt-1 line-clamp-2">
-                {watch("localizedMetaDescription.en") ||
-                  watch("localizedMetaDescription.ar") ||
-                  "No description provided. Add a meta description to improve search visibility and click-through rates."}
+                {watch('localizedMetaDescription.en') ||
+                  watch('localizedMetaDescription.ar') ||
+                  'No description provided. Add a meta description to improve search visibility and click-through rates.'}
               </p>
             </div>
           </div>

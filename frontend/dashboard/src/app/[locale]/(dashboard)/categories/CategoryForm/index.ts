@@ -1,2 +1,2 @@
-export { CategoryForm } from "./CategoryForm";
-export type { CategoryFormProps } from "./CategoryForm.interface";
+export { CategoryForm } from './CategoryForm';
+export type { CategoryFormProps } from './CategoryForm.interface';

@@ -1,18 +1,17 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "composite": true,
-    "outDir": "dist",
-    "rootDir": "src",
     "noEmit": false,
-    "jsx": "react-jsx",
+    "composite": true,
     "declaration": true,
     "declarationMap": true,
-    "sourceMap": true,
+    "jsx": "react-jsx",
+    "moduleResolution": "Bundler",
+    "outDir": "dist",
+    "rootDir": "src",
+    "baseUrl": ".",
     "paths": {
-      "@findeg/ui/*": [
-        "./src/*"
-      ]
+      "@findeg/ui/*": ["./src/*"]
     }
   },
   "include": [

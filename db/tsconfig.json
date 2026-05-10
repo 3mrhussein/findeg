@@ -1,20 +1,28 @@
 {
-    "extends": "../tsconfig.json",
+    "extends": "../tsconfig.base.json",
     "compilerOptions": {
-        "resolveJsonModule": true,
-        "baseUrl": ".",
-        "paths": {
-            "@/*": [
-                "../backend/src/*"
-            ]
-        }
+        "noEmit": false,
+        "composite": true,
+        "declaration": true,
+        "declarationMap": true,
+        "outDir": "dist",
+        // IMPORTANT: keep src-based root (correct for your structure)
+        "rootDir": "src",
+        "module": "ESNext",
+        "moduleResolution": "Bundler",
+        "strict": true,
+        "skipLibCheck": true
     },
     "include": [
-        "**/*.ts",
-        "**/*.json"
+        "src/**/*"
     ],
     "exclude": [
         "node_modules",
-        "dist"
+        "dist",
+        "migrations",
+        "**/*.test.ts"
+    ],
+    "references": [
+        { "path": "../packages/env" }
     ]
 }

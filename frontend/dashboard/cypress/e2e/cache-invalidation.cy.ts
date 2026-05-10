@@ -6,36 +6,36 @@
  * page reloads (T128-T131).
  */
 
-import { buildTestProduct } from "../support/utils/product-factory";
-import { buildTestCategory } from "../support/utils/category-factory";
+import { buildTestProduct } from '../support/utils/product-factory';
+import { buildTestCategory } from '../support/utils/category-factory';
 import {
   visitAdminProductsList,
   findAdminProductIdBySku,
   updateProductFromUi,
   visitEditProductForm,
   deleteProductFromListById,
-} from "../support/actions/admin-product.actions";
+} from '../support/actions/admin-product.actions';
 import {
   visitAdminCategoriesList,
   createCategoryFromUi,
   deleteCategoryFromListById,
-} from "../support/actions/admin-category.actions";
-import { adminSelectors } from "../support/selectors/admin.selectors";
-import { UI_ROUTES, API_ROUTES } from "../support/constants/routes";
-import { API_QUERY_DEFAULTS, buildApiUrl } from "../support/constants/api-query";
-import { localePath } from "../support/utils/url";
+} from '../support/actions/admin-category.actions';
+import { adminSelectors } from '../support/selectors/admin.selectors';
+import { UI_ROUTES, API_ROUTES } from '../support/constants/routes';
+import { API_QUERY_DEFAULTS, buildApiUrl } from '../support/constants/api-query';
+import { localePath } from '../support/utils/url';
 
-describe("Cache Invalidation E2E (Phase 5.3)", () => {
+describe('Cache Invalidation E2E (Phase 5.3)', () => {
   beforeEach(() => {
     cy.loginAsAdminSession();
   });
 
-  describe("T128: Product creation → list update (read-your-writes)", () => {
-    it("should show newly created product in list immediately after creation", () => {
+  describe('T128: Product creation → list update (read-your-writes)', () => {
+    it('should show newly created product in list immediately after creation', () => {
       const testProduct = buildTestProduct();
 
       // Create new product via API
-      cy.createAdminProductApi(testProduct, "Keychains");
+      cy.createAdminProductApi(testProduct, 'Keychains');
 
       // Visit products list - should include the newly created product via cache invalidation
       visitAdminProductsList();
@@ -44,18 +44,18 @@ describe("Cache Invalidation E2E (Phase 5.3)", () => {
       cy.get(adminSelectors.productsFilterSearchInput, { timeout: 10000 }).type(testProduct.sku);
 
       // Verify new product appears in the list (cache tag "products" was invalidated)
-      cy.contains("td", testProduct.nameEn, { timeout: 10000 }).should("be.visible");
+      cy.contains('td', testProduct.nameEn, { timeout: 10000 }).should('be.visible');
 
       // Cleanup
       cy.cleanupProductBySku(testProduct.sku);
     });
 
-    it("should immediately reflect product update in list (cache invalidation)", () => {
+    it('should immediately reflect product update in list (cache invalidation)', () => {
       const testProduct = buildTestProduct();
       const updatedName = `Updated-${Date.now()}`;
 
       // Create product via API
-      cy.createAdminProductApi(testProduct, "Keychains");
+      cy.createAdminProductApi(testProduct, 'Keychains');
 
       // Find product ID
       findAdminProductIdBySku(testProduct.sku).then((productId) => {
@@ -69,23 +69,23 @@ describe("Cache Invalidation E2E (Phase 5.3)", () => {
         // Verify the updated name appears in the list
         // The "products" cache tag was invalidated by updateProduct action
         cy.get(adminSelectors.productsFilterSearchInput, { timeout: 10000 }).type(testProduct.sku);
-        cy.contains("td", updatedName, { timeout: 10000 }).should("be.visible");
+        cy.contains('td', updatedName, { timeout: 10000 }).should('be.visible');
       });
 
       // Cleanup
       cy.cleanupProductBySku(testProduct.sku);
     });
 
-    it("should immediately remove deleted product from list", () => {
+    it('should immediately remove deleted product from list', () => {
       const testProduct = buildTestProduct();
 
       // Create product
-      cy.createAdminProductApi(testProduct, "Keychains");
+      cy.createAdminProductApi(testProduct, 'Keychains');
 
       // Visit products list and verify product exists
       visitAdminProductsList();
       cy.get(adminSelectors.productsFilterSearchInput, { timeout: 10000 }).type(testProduct.sku);
-      cy.contains("td", testProduct.nameEn, { timeout: 10000 }).should("be.visible");
+      cy.contains('td', testProduct.nameEn, { timeout: 10000 }).should('be.visible');
 
       // Delete product
       findAdminProductIdBySku(testProduct.sku).then((productId) => {
@@ -98,18 +98,18 @@ describe("Cache Invalidation E2E (Phase 5.3)", () => {
         cy.get(adminSelectors.productsFilterSearchInput, { timeout: 10000 }).clear();
         cy.get(adminSelectors.productsFilterSearchInput).type(testProduct.sku);
 
-        cy.get("tbody tr", { timeout: 5000 }).then(($rows) => {
+        cy.get('tbody tr', { timeout: 5000 }).then(($rows) => {
           const productFound = [...$rows].some(
             (row) => row.textContent && row.textContent.includes(testProduct.nameEn),
           );
-          expect(productFound, "deleted product should not appear in list").to.eq(false);
+          expect(productFound, 'deleted product should not appear in list').to.eq(false);
         });
       });
     });
   });
 
-  describe("T130: Category update → immediate list reflection (cache invalidation)", () => {
-    it("should show newly created category immediately in list", () => {
+  describe('T130: Category update → immediate list reflection (cache invalidation)', () => {
+    it('should show newly created category immediately in list', () => {
       const testCategory = buildTestCategory();
 
       // Create category via API
@@ -119,13 +119,13 @@ describe("Cache Invalidation E2E (Phase 5.3)", () => {
       visitAdminCategoriesList();
 
       // Verify new category appears in the tree (cache tag "categories" invalidated)
-      cy.contains(testCategory.nameEn, { timeout: 10000 }).should("be.visible");
+      cy.contains(testCategory.nameEn, { timeout: 10000 }).should('be.visible');
 
       // Cleanup
       cy.deleteCategoryBySlug(testCategory.slug);
     });
 
-    it("should immediately remove deleted category from list", () => {
+    it('should immediately remove deleted category from list', () => {
       const testCategory = buildTestCategory();
 
       // Create category
@@ -133,7 +133,7 @@ describe("Cache Invalidation E2E (Phase 5.3)", () => {
 
       // Visit list and verify it exists
       visitAdminCategoriesList();
-      cy.contains(testCategory.nameEn, { timeout: 10000 }).should("be.visible");
+      cy.contains(testCategory.nameEn, { timeout: 10000 }).should('be.visible');
 
       // Delete category (invalidates "categories" cache)
       cy.deleteCategoryBySlug(testCategory.slug);
@@ -142,31 +142,31 @@ describe("Cache Invalidation E2E (Phase 5.3)", () => {
       visitAdminCategoriesList();
 
       // Verify deleted category is gone (cache was invalidated)
-      cy.get("body").then(($body) => {
+      cy.get('body').then(($body) => {
         const categoryFound = $body.text().includes(testCategory.nameEn);
-        expect(categoryFound, "deleted category should not appear in list").to.eq(false);
+        expect(categoryFound, 'deleted category should not appear in list').to.eq(false);
       });
     });
   });
 
-  describe("T131: Cache invalidation mechanism verification", () => {
-    it("should verify updateTag() causes immediate data refresh", () => {
+  describe('T131: Cache invalidation mechanism verification', () => {
+    it('should verify updateTag() causes immediate data refresh', () => {
       const testProduct = buildTestProduct();
 
       // Create product
-      cy.createAdminProductApi(testProduct, "Keychains");
+      cy.createAdminProductApi(testProduct, 'Keychains');
 
       // Query product list immediately - should return fresh data including new product
       // This verifies that createProduct action called updateTag("products")
       cy.request({
-        method: "GET",
+        method: 'GET',
         url: buildApiUrl(API_ROUTES.products, {
           lang: API_QUERY_DEFAULTS.language,
           q: testProduct.sku,
         }),
       }).then((response) => {
         const found = (response.body?.products || []).some((p: any) => p.sku === testProduct.sku);
-        expect(found, "product should appear immediately after creation via updateTag()").to.eq(
+        expect(found, 'product should appear immediately after creation via updateTag()').to.eq(
           true,
         );
       });
@@ -175,16 +175,16 @@ describe("Cache Invalidation E2E (Phase 5.3)", () => {
       cy.cleanupProductBySku(testProduct.sku);
     });
 
-    it("should verify all CRUD operations call updateTag()", () => {
+    it('should verify all CRUD operations call updateTag()', () => {
       const testProduct = buildTestProduct();
 
       // Track cache invalidation through product lifecycle
-      cy.createAdminProductApi(testProduct, "Keychains");
+      cy.createAdminProductApi(testProduct, 'Keychains');
 
       // Verify creation: product appears in list
       visitAdminProductsList();
       cy.get(adminSelectors.productsFilterSearchInput).type(testProduct.sku);
-      cy.contains("td", testProduct.nameEn).should("be.visible");
+      cy.contains('td', testProduct.nameEn).should('be.visible');
 
       // Verify update: changed data is visible
       const updatedName = `Updated-${Date.now()}`;
@@ -193,13 +193,13 @@ describe("Cache Invalidation E2E (Phase 5.3)", () => {
         updateProductFromUi({ nameEn: updatedName });
         cy.visit(localePath(UI_ROUTES.adminProducts));
         cy.get(adminSelectors.productsFilterSearchInput).clear().type(testProduct.sku);
-        cy.contains("td", updatedName).should("be.visible");
+        cy.contains('td', updatedName).should('be.visible');
 
         // Verify deletion: product is removed from list
         deleteProductFromListById(productId);
         cy.visit(localePath(UI_ROUTES.adminProducts));
         cy.get(adminSelectors.productsFilterSearchInput).clear().type(testProduct.sku);
-        cy.get("tbody tr").then(($rows) => {
+        cy.get('tbody tr').then(($rows) => {
           const found = [...$rows].some((row) => row.textContent?.includes(testProduct.nameEn));
           expect(found).to.eq(false);
         });

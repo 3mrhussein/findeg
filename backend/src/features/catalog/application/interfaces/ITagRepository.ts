@@ -2,9 +2,9 @@
  * Tag Repository Interface
  */
 
-import { ID, Locale } from "@findeg/backend/features/core/domain/types/common";
-import { Tag, TagGroup, CreateTag } from "../../domain/entities/Tag";
-import { Product } from "../../domain/entities/Product";
+import { ID, Locale } from '@findeg/backend/features/core/domain/types/common';
+import { Tag, TagGroup, CreateTag } from '../../domain/entities/Tag';
+import { Product } from '../../domain/entities/Product';
 
 export interface ITagRepository {
   /** Retrieves all tags in the system */

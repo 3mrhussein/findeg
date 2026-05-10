@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import { History } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { Link } from "@i18n/navigation";
+import Image from 'next/image';
+import { History } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { Link } from '@i18n/navigation';
 
 export interface RecentlyViewedItem {
   id: number;
@@ -21,7 +21,7 @@ interface RecentlyViewedRailProps {
  * Compact recently viewed products strip.
  */
 export function RecentlyViewedRail({ items }: RecentlyViewedRailProps) {
-  const t = useTranslations("Pages.ProductDetail");
+  const t = useTranslations('Pages.ProductDetail');
 
   if (items.length === 0) {
     return null;
@@ -31,7 +31,7 @@ export function RecentlyViewedRail({ items }: RecentlyViewedRailProps) {
     <section className="space-y-3">
       <h2 className="inline-flex items-center gap-2 text-xl font-bold text-foreground">
         <History className="size-5" />
-        {t("RecentlyViewed")}
+        {t('RecentlyViewed')}
       </h2>
 
       <div className="flex gap-3 overflow-x-auto pb-2">

@@ -1,8 +1,8 @@
-import { useCategories } from "@hooks/useCategories";
-import { Link } from "@i18n/navigation";
-import { ChevronRight, Image as ImageIcon } from "lucide-react";
-import { useLocale } from "next-intl";
-import Image from "next/image";
+import { useCategories } from '@hooks/useCategories';
+import { Link } from '@i18n/navigation';
+import { ChevronRight, Image as ImageIcon } from 'lucide-react';
+import { useLocale } from 'next-intl';
+import Image from 'next/image';
 
 interface MegaMenuOverlayProps {
   activeCategorySlug: string | null;
@@ -18,7 +18,7 @@ export function MegaMenuOverlay({
   setActiveCategorySlug,
 }: MegaMenuOverlayProps) {
   const locale = useLocale();
-  const { categories, isLoading } = useCategories(locale, "tree");
+  const { categories, isLoading } = useCategories(locale, 'tree');
 
   // Top level categories (Depth 0)
   const topLevelCategories = categories.filter((c) => c.depth === 0 || !c.parentId) || [];
@@ -56,8 +56,8 @@ export function MegaMenuOverlay({
               key={cat.id}
               className={`flex items-center justify-between px-6 py-3 cursor-pointer transition-colors group ${
                 isActive
-                  ? "bg-white dark:bg-slate-950 text-primary border-l-4 border-primary font-semibold"
-                  : "hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium border-l-4 border-transparent"
+                  ? 'bg-white dark:bg-slate-950 text-primary border-l-4 border-primary font-semibold'
+                  : 'hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 font-medium border-l-4 border-transparent'
               }`}
               onMouseEnter={() => setActiveCategorySlug(cat.slug)}
             >
@@ -157,7 +157,7 @@ export function MegaMenuOverlay({
         </div>
 
         <Link
-          href={`/categories/${activeCategory?.slug || ""}`}
+          href={`/categories/${activeCategory?.slug || ''}`}
           className="text-sm font-bold text-primary hover:underline flex items-center gap-2 group w-fit mt-auto"
         >
           <span>View all {activeCategory?.name}</span>

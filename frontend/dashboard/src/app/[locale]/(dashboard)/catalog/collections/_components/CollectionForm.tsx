@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { useForm, type Resolver } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, type Resolver } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   CollectionInput,
   CollectionInputSchema,
-} from "@findeg/backend/features/administration/domain/types";
-import { Collection } from "@findeg/backend/features/catalog";
-import { Tag } from "@findeg/backend/features/catalog";
-import { useTranslations } from "next-intl";
-import { useRouter } from "@i18n/navigation";
-import { useToast } from "@hooks/use-toast";
-import { useState, useEffect } from "react";
+} from '@findeg/backend/features/administration/domain/types';
+import { Collection } from '@findeg/backend/features/catalog';
+import { Tag } from '@findeg/backend/features/catalog';
+import { useTranslations } from 'next-intl';
+import { useRouter } from '@i18n/navigation';
+import { useToast } from '@hooks/use-toast';
+import { useState, useEffect } from 'react';
 import {
   Form,
   FormControl,
@@ -20,18 +20,18 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Switch } from "@findeg/ui";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@findeg/ui";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
-import { ChevronLeft, Save, Loader2, Image as ImageIcon, Tag as TagIcon } from "lucide-react";
+} from '@findeg/ui';
+import { Input } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { Switch } from '@findeg/ui';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@findeg/ui';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@findeg/ui';
+import { Badge } from '@findeg/ui';
+import { ChevronLeft, Save, Loader2, Image as ImageIcon, Tag as TagIcon } from 'lucide-react';
 
-import { Checkbox } from "@findeg/ui";
-import Image from "next/image";
-import { createCollectionAction, updateCollectionAction } from "@/data/collections/actions";
+import { Checkbox } from '@findeg/ui';
+import Image from 'next/image';
+import { createCollectionAction, updateCollectionAction } from '@/data/collections/actions';
 
 interface CollectionFormProps {
   collection?: Collection;
@@ -42,8 +42,8 @@ interface CollectionFormProps {
  *
  */
 export function CollectionForm({ collection, availableTags }: CollectionFormProps) {
-  const t = useTranslations("Pages.Dashboard.Collections.Form");
-  const commonT = useTranslations("Common");
+  const t = useTranslations('Pages.Dashboard.Collections.Form');
+  const commonT = useTranslations('Common');
   const { toast } = useToast();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -51,10 +51,10 @@ export function CollectionForm({ collection, availableTags }: CollectionFormProp
   const form = useForm<CollectionInput>({
     resolver: zodResolver(CollectionInputSchema) as Resolver<CollectionInput>,
     defaultValues: {
-      slug: collection?.slug || "",
-      localizedTitle: collection?.localizedTitle || { en: "", ar: "" },
+      slug: collection?.slug || '',
+      localizedTitle: collection?.localizedTitle || { en: '', ar: '' },
       localizedSubtitle: collection?.localizedSubtitle ?? undefined,
-      heroImageUrl: collection?.heroImageUrl || "",
+      heroImageUrl: collection?.heroImageUrl || '',
       sortOrder: collection?.sortOrder || 0,
       isActive: collection?.isActive !== undefined ? collection.isActive : true,
       tagIds: collection?.tags?.map((t) => t.id as number) || [],
@@ -62,14 +62,14 @@ export function CollectionForm({ collection, availableTags }: CollectionFormProp
   });
 
   // Auto-slugify
-  const watchTitle = form.watch("localizedTitle.en");
+  const watchTitle = form.watch('localizedTitle.en');
   useEffect(() => {
     if (watchTitle && !collection) {
       const slug = watchTitle
         .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/(^-|-$)/g, "");
-      form.setValue("slug", slug);
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
+      form.setValue('slug', slug);
     }
   }, [watchTitle, form, collection]);
 
@@ -84,14 +84,14 @@ export function CollectionForm({ collection, availableTags }: CollectionFormProp
         : await createCollectionAction(data);
 
       if (result.success) {
-        toast({ title: collection ? "Collection updated" : "Collection created" });
-        router.push("/catalog/collections");
+        toast({ title: collection ? 'Collection updated' : 'Collection created' });
+        router.push('/catalog/collections');
         router.refresh();
       } else {
-        toast({ variant: "destructive", title: "Error", description: result.error });
+        toast({ variant: 'destructive', title: 'Error', description: result.error });
       }
     } catch (error) {
-      toast({ variant: "destructive", title: "Error", description: "Something went wrong" });
+      toast({ variant: 'destructive', title: 'Error', description: 'Something went wrong' });
     } finally {
       setIsSubmitting(false);
     }
@@ -106,7 +106,7 @@ export function CollectionForm({ collection, availableTags }: CollectionFormProp
               <ChevronLeft className="h-4 w-4" />
             </Button>
             <h2 className="text-2xl font-bold tracking-tight">
-              {collection ? "Edit Collection" : "New Collection"}
+              {collection ? 'Edit Collection' : 'New Collection'}
             </h2>
           </div>
           <Button type="submit" disabled={isSubmitting}>
@@ -115,7 +115,7 @@ export function CollectionForm({ collection, availableTags }: CollectionFormProp
             ) : (
               <Save className="mr-2 h-4 w-4" />
             )}
-            {collection ? "Save Changes" : "Create Collection"}
+            {collection ? 'Save Changes' : 'Create Collection'}
           </Button>
         </div>
 
@@ -184,7 +184,7 @@ export function CollectionForm({ collection, availableTags }: CollectionFormProp
                       <FormItem>
                         <FormLabel>Subtitle (English)</FormLabel>
                         <FormControl>
-                          <Input {...field} value={field.value || ""} />
+                          <Input {...field} value={field.value || ''} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -197,7 +197,7 @@ export function CollectionForm({ collection, availableTags }: CollectionFormProp
                       <FormItem>
                         <FormLabel>Subtitle (Arabic)</FormLabel>
                         <FormControl>
-                          <Input {...field} value={field.value || ""} dir="rtl" />
+                          <Input {...field} value={field.value || ''} dir="rtl" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -213,12 +213,12 @@ export function CollectionForm({ collection, availableTags }: CollectionFormProp
                       <FormLabel>Hero Image URL</FormLabel>
                       <FormControl>
                         <div className="flex gap-2">
-                          <Input {...field} value={field.value || ""} placeholder="https://..." />
+                          <Input {...field} value={field.value || ''} placeholder="https://..." />
                           <div className="relative h-10 w-10 shrink-0 border rounded overflow-hidden bg-muted flex items-center justify-center">
                             {field.value ? (
                               <Image
                                 src={field.value}
-                                alt={form.getValues("localizedTitle.en") || "Collection image"}
+                                alt={form.getValues('localizedTitle.en') || 'Collection image'}
                                 className="object-cover"
                                 fill
                               />
@@ -287,14 +287,14 @@ export function CollectionForm({ collection, availableTags }: CollectionFormProp
                     >
                       <Checkbox
                         id={`tag-${tag.id}`}
-                        checked={form.watch("tagIds").includes(tag.id as number)}
+                        checked={form.watch('tagIds').includes(tag.id as number)}
                         onCheckedChange={(checked) => {
-                          const current = form.getValues("tagIds");
+                          const current = form.getValues('tagIds');
                           if (checked) {
-                            form.setValue("tagIds", [...current, tag.id as number]);
+                            form.setValue('tagIds', [...current, tag.id as number]);
                           } else {
                             form.setValue(
-                              "tagIds",
+                              'tagIds',
                               current.filter((id: number) => id !== tag.id),
                             );
                           }
@@ -306,7 +306,7 @@ export function CollectionForm({ collection, availableTags }: CollectionFormProp
                       >
                         <div
                           className="w-3 h-3 rounded-full"
-                          style={{ backgroundColor: tag.color || "#ccc" }}
+                          style={{ backgroundColor: tag.color || '#ccc' }}
                         />
                         <span className="text-sm font-medium">{tag.key}</span>
                         <Badge variant="outline" className="text-[10px] h-4 px-1">

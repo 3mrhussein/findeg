@@ -4,22 +4,21 @@
  * PostgreSQL implementation of collection management using Drizzle ORM.
  */
 
-import { db } from "@findeg/db/connection";
-import { collections, collectionTags, productTags, tags } from "@findeg/db/schema";
-import { ICollectionRepository } from "../../application/interfaces/ICollectionRepository";
-import { Collection, CreateCollection } from "../../domain/entities/Collection";
-import { Product } from "../../domain/entities/Product";
-import { Tag } from "../../domain/entities/Tag";
-import { eq, asc, inArray } from "drizzle-orm";
-import { ID, Locale } from "../../../core/domain/types/common";
-import { DEFAULT_LOCALE } from "../../../core/domain/value-objects";
+import { db } from '@findeg/db/connection';
+import { collections, collectionTags, tags } from '@findeg/db/schema';
+import { ICollectionRepository } from '../../application/interfaces/ICollectionRepository';
+import { Collection, CreateCollection } from '../../domain/entities/Collection';
+import { Product } from '../../domain/entities/Product';
+import { Tag } from '../../domain/entities/Tag';
+import { eq, asc } from 'drizzle-orm';
+import { ID, Locale } from '../../../core/domain/types/common';
+import { DEFAULT_LOCALE } from '../../../core/domain/value-objects';
 
 export class DrizzleCollectionRepository implements ICollectionRepository {
   async getAll(options?: { includeInactive?: boolean }): Promise<Collection[]> {
-    let query = db.select().from(collections);
+    let query = db.select().from(collections).$dynamic();
 
     if (!options?.includeInactive) {
-      // @ts-ignore - Drizzle query builder typing
       query = query.where(eq(collections.isActive, true));
     }
 
@@ -75,7 +74,7 @@ export class DrizzleCollectionRepository implements ICollectionRepository {
    */
   async getProductsByCollection(
     collectionId: ID,
-    language: Locale = DEFAULT_LOCALE,
+    _language: Locale = DEFAULT_LOCALE,
   ): Promise<Product[]> {
     // 1. Get the tag IDs associated with this collection
     const collectionTagResults = await db

@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import ErrorPage from "@components/shared/ErrorPage";
+import ErrorPage from '@components/shared/ErrorPage';
 
 /**
  *

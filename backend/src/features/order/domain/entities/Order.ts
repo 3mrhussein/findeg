@@ -7,9 +7,9 @@ import {
   OrderStatus,
   PaymentMethod,
   PaymentStatus,
-} from "@findeg/backend/features/core/domain/types/common";
-import type { CurrencyCode } from "@findeg/backend/features/core/domain/value-objects";
-import type { ShippingAddress, VariantSnapshot } from "../value-objects";
+} from '@findeg/backend/features/core/domain/types/common';
+import type { CurrencyCode } from '@findeg/backend/features/core/domain/value-objects';
+import type { ShippingAddress, VariantSnapshot } from '../value-objects';
 
 /**
  * Order Item with product snapshots at time of purchase.

@@ -1,16 +1,16 @@
-import type { Metadata } from "next";
-import type { Locale } from "next-intl";
-import { setRequestLocale } from "next-intl/server";
-import { notFound, permanentRedirect } from "next/navigation";
-import { Link } from "@i18n/navigation";
-import env from "@findeg/env";
+import type { Metadata } from 'next';
+import type { Locale } from 'next-intl';
+import { setRequestLocale } from 'next-intl/server';
+import { notFound, permanentRedirect } from 'next/navigation';
+import { Link } from '@i18n/navigation';
+import env from '@findeg/env';
 import {
   getProductPdp,
   getProductBySlugOrIdForMetadata,
   getTopProductSlugsForStaticParams,
-} from "@data/catalog/queries";
-import { PageShell } from "../../../_components/PageShell";
-import { ProductDetailClient } from "./_components/ProductDetailClient";
+} from '@data/catalog/queries';
+import { PageShell } from '../../../_components/PageShell';
+import { ProductDetailClient } from './_components/ProductDetailClient';
 
 interface ProductDetailPageProps {
   params: Promise<{ locale: string; slug: string }>;
@@ -33,14 +33,14 @@ export async function generateMetadata({ params }: ProductDetailPageProps): Prom
 
   if (!product) {
     return {
-      title: "Product",
-      description: "FindEg school and stationery products.",
+      title: 'Product',
+      description: 'FindEg school and stationery products.',
     };
   }
 
-  const description = (product.description || "")
-    .replace(/<[^>]*>/g, " ")
-    .replace(/\s+/g, " ")
+  const description = (product.description || '')
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/\s+/g, ' ')
     .trim()
     .slice(0, 160);
   const canonicalSlug = product.slug || String(product.id);
@@ -54,7 +54,7 @@ export async function generateMetadata({ params }: ProductDetailPageProps): Prom
   };
 }
 
-import { getSession } from "@lib/session";
+import { getSession } from '@lib/session';
 
 // ... (imports)
 
@@ -81,25 +81,25 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
   const siteUrl = env.NEXT_PUBLIC_SITE_URL;
 
   const productSchema = {
-    "@context": "https://schema.org",
-    "@type": "Product",
+    '@context': 'https://schema.org',
+    '@type': 'Product',
     name: vm.product.name,
     image: imageUrls.length > 0 ? imageUrls : undefined,
     sku: vm.selectedVariant?.sku || vm.product.skuPrefix || undefined,
-    brand: vm.brand ? { "@type": "Brand", name: vm.brand.name } : undefined,
+    brand: vm.brand ? { '@type': 'Brand', name: vm.brand.name } : undefined,
     offers: {
-      "@type": "Offer",
-      priceCurrency: "EGP",
+      '@type': 'Offer',
+      priceCurrency: 'EGP',
       price: String(vm.selectedVariant?.basePrice || 0),
       availability: vm.stockSnapshot.inStock
-        ? "https://schema.org/InStock"
-        : "https://schema.org/OutOfStock",
+        ? 'https://schema.org/InStock'
+        : 'https://schema.org/OutOfStock',
       url: `${siteUrl}/${locale}${vm.canonicalPath}`,
     },
     aggregateRating:
       vm.reviewSummary.totalReviews > 0
         ? {
-            "@type": "AggregateRating",
+            '@type': 'AggregateRating',
             ratingValue: vm.reviewSummary.averageRating,
             reviewCount: vm.reviewSummary.totalReviews,
           }
@@ -118,7 +118,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
                   {item.label}
                 </Link>
               ) : (
-                <span className={isLast ? "font-semibold text-foreground" : undefined}>
+                <span className={isLast ? 'font-semibold text-foreground' : undefined}>
                   {item.label}
                 </span>
               )}

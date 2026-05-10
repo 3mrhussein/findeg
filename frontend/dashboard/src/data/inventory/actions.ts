@@ -3,11 +3,11 @@
  *
  * Stock updates and inventory management.
  */
-"use server";
+'use server';
 
-import { revalidateTag } from "next/cache";
-import { createAdministrationServices } from "@findeg/backend/features/administration";
-import { getErrorMessage } from "@lib/type-guards";
+import { revalidateTag } from 'next/cache';
+import { createAdministrationServices } from '@findeg/backend/features/administration';
+import { getErrorMessage } from '@lib/type-guards';
 
 /**
  * Update stock for a single variant
@@ -18,11 +18,11 @@ export async function updateStock(input: { variantId: number; quantity: number }
     await inventory.updateStock({ variantId: input.variantId, quantity: input.quantity });
 
     // Invalidate inventory caches
-    revalidateTag("inventory", "max");
+    revalidateTag('inventory', 'max');
 
     return { success: true };
   } catch (error: unknown) {
-    console.error("[updateStock]", error);
+    console.error('[updateStock]', error);
     return { success: false, error: getErrorMessage(error) };
   }
 }
@@ -40,11 +40,11 @@ export async function bulkUpdateStock(
     await inventory.bulkUpdateStock(updates);
 
     // Invalidate inventory caches
-    revalidateTag("inventory", "max");
+    revalidateTag('inventory', 'max');
 
     return { success: true };
   } catch (error: unknown) {
-    console.error("[bulkUpdateStock]", error);
+    console.error('[bulkUpdateStock]', error);
     return { success: false, error: getErrorMessage(error) };
   }
 }

@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { X, Plus, Search, Check } from "lucide-react";
-import { Badge } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Popover, PopoverContent, PopoverTrigger } from "@findeg/ui";
-import { ScrollArea } from "@findeg/ui";
-import { cn } from "@lib/utils";
-import { type Tag } from "@findeg/backend/features/catalog";
+import * as React from 'react';
+import { X, Plus, Search, Check } from 'lucide-react';
+import { Badge } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { Input } from '@findeg/ui';
+import { Popover, PopoverContent, PopoverTrigger } from '@findeg/ui';
+import { ScrollArea } from '@findeg/ui';
+import { cn } from '@lib/utils';
+import { type Tag } from '@findeg/backend/features/catalog';
 
 interface TagInputProps {
   tags: Tag[];
@@ -24,10 +24,10 @@ export function TagInput({
   tags,
   selectedIds,
   onChange,
-  placeholder = "Select tags...",
+  placeholder = 'Select tags...',
 }: TagInputProps) {
   const [open, setOpen] = React.useState(false);
-  const [search, setSearch] = React.useState("");
+  const [search, setSearch] = React.useState('');
 
   const selectedTags = tags.filter((t) => selectedIds.includes(t.id));
   const filteredTags = tags.filter(
@@ -112,15 +112,15 @@ export function TagInput({
                         key={tag.id}
                         type="button"
                         className={cn(
-                          "relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground",
-                          isSelected && "bg-accent/50",
+                          'relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground',
+                          isSelected && 'bg-accent/50',
                         )}
                         onClick={() => toggleTag(tag.id)}
                       >
                         <div className="flex items-center gap-2 w-full">
                           <div
                             className="h-2 w-2 rounded-full shrink-0"
-                            style={{ backgroundColor: tag.color || "#ccc" }}
+                            style={{ backgroundColor: tag.color || '#ccc' }}
                           />
                           <div className="flex flex-col items-start">
                             <span className="font-medium">{tag.key}</span>

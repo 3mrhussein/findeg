@@ -1,32 +1,32 @@
-import { Resend } from "resend";
-import React from "react";
-import { Order } from "@findeg/backend/features/order/domain/entities/Order";
+import { Resend } from 'resend';
+import React from 'react';
+import { Order } from '@findeg/backend/features/order/domain/entities/Order';
 import {
   AccessRequest,
   EmailSchoolList,
   IEmailService,
-} from "../application/services/IEmailService";
+} from '../application/services/IEmailService';
 
 // Import Templates
-import OrderConfirmationEmail from "./templates/OrderConfirmationEmail";
-import OrderStatusUpdateEmail from "./templates/OrderStatusUpdateEmail";
-import PasswordResetEmail from "./templates/PasswordResetEmail";
-import SchoolListAccessApprovedEmail from "./templates/SchoolListAccessApprovedEmail";
-import SchoolListAccessRequestEmail from "./templates/SchoolListAccessRequestEmail";
-import AdminInvitationEmail from "./templates/AdminInvitationEmail";
+import OrderConfirmationEmail from './templates/OrderConfirmationEmail';
+import OrderStatusUpdateEmail from './templates/OrderStatusUpdateEmail';
+import PasswordResetEmail from './templates/PasswordResetEmail';
+import SchoolListAccessApprovedEmail from './templates/SchoolListAccessApprovedEmail';
+import SchoolListAccessRequestEmail from './templates/SchoolListAccessRequestEmail';
+import AdminInvitationEmail from './templates/AdminInvitationEmail';
 // Helper to format prices
 /**
  *
  */
 const formatCurrency = (amount: number, currency: string | undefined, locale: string) => {
-  return new Intl.NumberFormat(locale === "ar" ? "ar-EG" : "en-EG", {
-    style: "currency",
-    currency: currency || "EGP",
+  return new Intl.NumberFormat(locale === 'ar' ? 'ar-EG' : 'en-EG', {
+    style: 'currency',
+    currency: currency || 'EGP',
   }).format(amount);
 };
 
-import env from "@findeg/env";
-import { parse } from "../../core/domain/value-objects";
+import env from '@findeg/env';
+import { parse } from '../../core/domain/value-objects';
 
 /**
  *
@@ -39,7 +39,7 @@ export class ResendEmailService implements IEmailService {
    *
    */
   constructor() {
-    this.resend = new Resend(env.RESEND_API_KEY || "re_fallback_key");
+    this.resend = new Resend(env.RESEND_API_KEY || 're_fallback_key');
     this.defaultFrom = `${env.EMAIL_FROM_NAME} <${env.EMAIL_FROM}>`;
   }
 
@@ -53,7 +53,7 @@ export class ResendEmailService implements IEmailService {
   ): Promise<void> {
     try {
       if (!env.RESEND_API_KEY) {
-        console.warn("Emails not sent: RESEND_API_KEY is not configured.");
+        console.warn('Emails not sent: RESEND_API_KEY is not configured.');
         return;
       }
 
@@ -65,7 +65,7 @@ export class ResendEmailService implements IEmailService {
       });
     } catch (error) {
       // Fire-and-forget: we don't want email failures to break business flows
-      console.error("[EmailService] Failed to send email:", error);
+      console.error('[EmailService] Failed to send email:', error);
     }
   }
 
@@ -77,10 +77,10 @@ export class ResendEmailService implements IEmailService {
     customer: { email: string; firstName?: string; lastName?: string; locale?: string | null },
   ): Promise<void> {
     const locale = parse(customer.locale);
-    const subject = locale === "ar" ? `تأكيد طلبك #${order.id}` : `Order Confirmation #${order.id}`;
+    const subject = locale === 'ar' ? `تأكيد طلبك #${order.id}` : `Order Confirmation #${order.id}`;
 
     const items = (order.items || []).map((item) => ({
-      name: item.productNameSnapshot || "",
+      name: item.productNameSnapshot || '',
       quantity: item.quantity,
       price: formatCurrency(item.totalPrice || 0, order.currency, locale),
     }));
@@ -90,12 +90,12 @@ export class ResendEmailService implements IEmailService {
       order.shippingAddressSnapshot?.area,
       order.shippingAddressSnapshot?.city,
     ].filter(Boolean);
-    const address = addressParts.join(", ");
+    const address = addressParts.join(', ');
 
     const template = React.createElement(OrderConfirmationEmail, {
       orderId: order.id.toString(),
       customerName:
-        [customer.firstName, customer.lastName].filter(Boolean).join(" ").trim() || "Customer",
+        [customer.firstName, customer.lastName].filter(Boolean).join(' ').trim() || 'Customer',
       items,
       total: formatCurrency(order.totalAmount || 0, order.currency, locale),
       deliveryAddress: address,
@@ -112,14 +112,14 @@ export class ResendEmailService implements IEmailService {
     if (!order.customerEmail) return;
 
     const locale = parse(
-      "customerLocale" in order ? (order as { customerLocale?: string }).customerLocale : "en",
+      'customerLocale' in order ? (order as { customerLocale?: string }).customerLocale : 'en',
     );
     const subject =
-      locale === "ar" ? `تحديث حالة طلبك #${order.id}` : `Update on your order #${order.id}`;
+      locale === 'ar' ? `تحديث حالة طلبك #${order.id}` : `Update on your order #${order.id}`;
 
     const template = React.createElement(OrderStatusUpdateEmail, {
       orderId: order.id,
-      customerName: order.customerName || "Customer",
+      customerName: order.customerName || 'Customer',
       newStatus,
       trackingNumber: order.trackingNumber || undefined,
       locale,
@@ -136,12 +136,12 @@ export class ResendEmailService implements IEmailService {
     resetToken: string,
   ): Promise<void> {
     const locale = parse(user.locale);
-    const subject = locale === "ar" ? "إعادة تعيين كلمة المرور" : "Reset your password";
+    const subject = locale === 'ar' ? 'إعادة تعيين كلمة المرور' : 'Reset your password';
     const baseUrl = env.NEXT_PUBLIC_APP_URL;
     const resetLink = `${baseUrl}/${locale}/reset-password?token=${resetToken}`;
 
     const template = React.createElement(PasswordResetEmail, {
-      customerName: [user.firstName, user.lastName].filter(Boolean).join(" ").trim() || "User",
+      customerName: [user.firstName, user.lastName].filter(Boolean).join(' ').trim() || 'User',
       resetLink,
       locale,
     });
@@ -157,10 +157,10 @@ export class ResendEmailService implements IEmailService {
     list: EmailSchoolList,
   ): Promise<void> {
     const locale = parse(user.locale);
-    const subject = locale === "ar" ? "تمت الموافقة على وصولك" : "Access Approved";
+    const subject = locale === 'ar' ? 'تمت الموافقة على وصولك' : 'Access Approved';
 
     const template = React.createElement(SchoolListAccessApprovedEmail, {
-      customerName: [user.firstName, user.lastName].filter(Boolean).join(" ").trim() || "Parent",
+      customerName: [user.firstName, user.lastName].filter(Boolean).join(' ').trim() || 'Parent',
       listName: list.listName,
       schoolName: list.schoolName,
       listId: list.id,
@@ -178,11 +178,11 @@ export class ResendEmailService implements IEmailService {
     request: AccessRequest,
   ): Promise<void> {
     const locale = parse(schoolAdmin.locale);
-    const subject = locale === "ar" ? "طلب وصول جديد إلى القائمة" : "New List Access Request";
+    const subject = locale === 'ar' ? 'طلب وصول جديد إلى القائمة' : 'New List Access Request';
 
     const template = React.createElement(SchoolListAccessRequestEmail, {
       adminName:
-        [schoolAdmin.firstName, schoolAdmin.lastName].filter(Boolean).join(" ").trim() || "Admin",
+        [schoolAdmin.firstName, schoolAdmin.lastName].filter(Boolean).join(' ').trim() || 'Admin',
       requesterName: request.requesterName,
       requesterEmail: request.requesterEmail,
       schoolName: request.schoolName,
@@ -201,12 +201,12 @@ export class ResendEmailService implements IEmailService {
     inviteToken: string,
   ): Promise<void> {
     const locale = parse(admin.locale);
-    const subject = locale === "ar" ? "دعوة لإدارة فايند إي جي" : "Invitation to manage FindEg";
+    const subject = locale === 'ar' ? 'دعوة لإدارة فايند إي جي' : 'Invitation to manage FindEg';
     const baseUrl = env.NEXT_PUBLIC_APP_URL;
     const inviteLink = `${baseUrl}/admin/accept-invite?token=${inviteToken}`;
 
     const template = React.createElement(AdminInvitationEmail, {
-      adminName: [admin.firstName, admin.lastName].filter(Boolean).join(" ").trim() || "Admin",
+      adminName: [admin.firstName, admin.lastName].filter(Boolean).join(' ').trim() || 'Admin',
       inviteLink,
       locale,
     });

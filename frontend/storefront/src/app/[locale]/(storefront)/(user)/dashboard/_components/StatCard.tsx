@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
+import React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
 
 interface StatCardProps {
   title: string;
@@ -19,11 +19,11 @@ export const StatCard: React.FC<StatCardProps> = ({
   title,
   value,
   icon,
-  prefix = "",
-  suffix = "",
+  prefix = '',
+  suffix = '',
   decimals = 0,
 }) => {
-  const formattedValue = new Intl.NumberFormat("en-US", {
+  const formattedValue = new Intl.NumberFormat('en-US', {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
   }).format(value);

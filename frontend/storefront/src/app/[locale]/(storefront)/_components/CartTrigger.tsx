@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { ShoppingCart } from "lucide-react";
-import { Button } from "@findeg/ui";
-import { IconTooltip } from "@findeg/ui";
-import { useCart } from "@hooks/useCart";
-import { useTranslations } from "next-intl";
+import { ShoppingCart } from 'lucide-react';
+import { Button } from '@findeg/ui';
+import { IconTooltip } from '@findeg/ui';
+import { useCart } from '@hooks/useCart';
+import { useTranslations } from 'next-intl';
 
 /**
  * Trigger button for the cart drawer with item count badge.
@@ -14,12 +14,12 @@ export function CartTrigger() {
   const t = useTranslations();
 
   return (
-    <IconTooltip label={t("Layout.Header.CartButton")} asChild>
+    <IconTooltip label={t('Layout.Header.CartButton')} asChild>
       <Button
         variant="outline"
         size="icon"
         className="relative"
-        aria-label={t("Layout.Header.CartButton")}
+        aria-label={t('Layout.Header.CartButton')}
         data-testid="header-cart-trigger"
         onClick={() => setIsCartOpen(true)}
       >

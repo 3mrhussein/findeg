@@ -1,4 +1,4 @@
-import type { AuditLogEntry } from "../../domain/entities/AuditLogEntry";
+import type { AuditLogEntry } from '../../domain/entities/AuditLogEntry';
 export type { AuditLogEntry };
 
 /** Input for creating an audit log entry */

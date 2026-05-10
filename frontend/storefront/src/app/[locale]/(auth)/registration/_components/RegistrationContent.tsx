@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { useTranslations } from "next-intl";
-import { Container } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Icon } from "@findeg/ui";
-import { RegistrationForm } from "./RegistrationForm";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@findeg/ui";
-import { Link } from "@i18n/navigation";
-import { Logo } from "@findeg/ui";
+import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { Container } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { Icon } from '@findeg/ui';
+import { RegistrationForm } from './RegistrationForm';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@findeg/ui';
+import { Link } from '@i18n/navigation';
+import { Logo } from '@findeg/ui';
 
 /**
  * Registration view content component.
@@ -25,12 +25,12 @@ export const RegistrationContent: React.FC = () => {
         <Card className="max-w-md mx-auto w-full shadow-lg">
           <CardHeader className="text-center space-y-1">
             <CardTitle className="text-2xl font-bold tracking-tight">
-              {t("Pages.Auth.RegistrationTitle")}
+              {t('Pages.Auth.RegistrationTitle')}
             </CardTitle>
             <CardDescription>
-              {t("Pages.Auth.HaveAccount")}{" "}
+              {t('Pages.Auth.HaveAccount')}{' '}
               <Link href="/login" className="text-primary hover:underline font-medium ml-1">
-                {t("Pages.Auth.SigninLink")}
+                {t('Pages.Auth.SigninLink')}
               </Link>
             </CardDescription>
           </CardHeader>
@@ -43,7 +43,7 @@ export const RegistrationContent: React.FC = () => {
               </div>
               <div className="relative flex justify-center text-xs uppercase">
                 <span className="bg-background px-2 text-muted-foreground">
-                  {t("Pages.Auth.SocialPrompt") || "Or continue with"}
+                  {t('Pages.Auth.SocialPrompt') || 'Or continue with'}
                 </span>
               </div>
             </div>

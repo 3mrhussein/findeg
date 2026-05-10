@@ -1,6 +1,6 @@
-import { NextResponse } from "next/server";
-import { getSession } from "@lib/session";
-import { getMyAccountDataQuery } from "@queries/dashboard-queries";
+import { NextResponse } from 'next/server';
+import { getSession } from '@lib/session';
+import { getMyAccountDataQuery } from '@queries/dashboard-queries';
 
 export async function GET() {
   try {
@@ -32,7 +32,7 @@ export async function GET() {
       },
     });
   } catch (error) {
-    console.error("[api] auth/me error:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    console.error('[api] auth/me error:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

@@ -28,7 +28,7 @@ export type CategoryFilters = {
   search?: string;
 };
 
-export type CreateCategoryInput = Omit<Category, "id" | "createdAt" | "updatedAt">;
+export type CreateCategoryInput = Omit<Category, 'id' | 'createdAt' | 'updatedAt'>;
 export type UpdateCategoryInput = Partial<CreateCategoryInput>;
 
 export interface ICategoryRepository {

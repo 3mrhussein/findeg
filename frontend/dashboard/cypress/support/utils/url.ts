@@ -1,9 +1,9 @@
-import { parse } from "./env";
+import { parse } from './env';
 
 /**
  * Returns locale-prefixed route path for E2E navigation.
  */
 export function localePath(pathname: string, locale?: string): string {
-  const normalized = pathname.startsWith("/") ? pathname : `/${pathname}`;
+  const normalized = pathname.startsWith('/') ? pathname : `/${pathname}`;
   return `/${parse(locale)}${normalized}`;
 }

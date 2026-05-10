@@ -1,6 +1,6 @@
-import { Link } from "@i18n/navigation";
-import { Button } from "@findeg/ui";
-import { Container } from "@findeg/ui";
+import { Link } from '@i18n/navigation';
+import { Button } from '@findeg/ui';
+import { Container } from '@findeg/ui';
 
 interface ErrorPageProps {
   title?: string;
@@ -13,10 +13,10 @@ interface ErrorPageProps {
  *
  */
 export default function ErrorPage({
-  title = "Page not found",
-  subtitle = "The page you are looking for does not exist.",
-  ctaLabel = "Back to Home",
-  ctaHref = "/",
+  title = 'Page not found',
+  subtitle = 'The page you are looking for does not exist.',
+  ctaLabel = 'Back to Home',
+  ctaHref = '/',
 }: ErrorPageProps) {
   return (
     <Container className="py-20 text-center">

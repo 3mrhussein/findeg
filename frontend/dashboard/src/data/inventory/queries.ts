@@ -4,10 +4,10 @@
  * Inventory and stock-related data with "use cache"
  * Uses "use cache" directive to wrap backend service calls.
  */
-"use cache";
+'use cache';
 
-import { cacheLife, cacheTag } from "next/cache";
-import { createAdministrationServices } from "@findeg/backend/features/administration";
+import { cacheLife, cacheTag } from 'next/cache';
+import { createAdministrationServices } from '@findeg/backend/features/administration';
 
 /**
  * Get all products with inventory info
@@ -19,8 +19,8 @@ export async function getInventoryWithProducts(options?: {
   limit?: number;
   offset?: number;
 }) {
-  cacheLife("hours");
-  cacheTag("inventory");
+  cacheLife('hours');
+  cacheTag('inventory');
 
   const { inventory } = createAdministrationServices();
   const result = await inventory.getInventory(
@@ -38,8 +38,8 @@ export async function getInventoryWithProducts(options?: {
  * Cache: Short TTL for dashboard widget freshness
  */
 export async function getLowStockAlerts(threshold: number = 10) {
-  cacheLife("minutes");
-  cacheTag("inventory", "low-stock");
+  cacheLife('minutes');
+  cacheTag('inventory', 'low-stock');
 
   const { inventory } = createAdministrationServices();
   const lowStockProducts = await inventory.getLowStockAlerts(threshold);

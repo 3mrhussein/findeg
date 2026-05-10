@@ -5,10 +5,10 @@
  * All operations require system_admin privileges (enforced at the API layer).
  */
 
-import bcrypt from "bcryptjs";
-import { eq, inArray } from "drizzle-orm";
+import bcrypt from 'bcryptjs';
+import { eq, inArray } from 'drizzle-orm';
 
-import { db } from "@findeg/db/connection";
+import { db } from '@findeg/db/connection';
 import {
   users,
   userRoles,
@@ -16,7 +16,7 @@ import {
   roles,
   permissions,
   passwordCredentials,
-} from "@findeg/db/schema";
+} from '@findeg/db/schema';
 
 import type {
   AdminUser,
@@ -24,7 +24,7 @@ import type {
   UpdateAdminInput,
   PermissionOverrideInput,
   IAdminUserService,
-} from "../interfaces/IAdminUserService";
+} from '../interfaces/IAdminUserService';
 
 /**
  *
@@ -39,7 +39,7 @@ export class AdminUserService implements IAdminUserService {
       .selectDistinct({ userId: userRoles.userId })
       .from(userRoles)
       .innerJoin(roles, eq(roles.id, userRoles.roleId))
-      .where(eq(roles.code, "system_admin"))
+      .where(eq(roles.code, 'system_admin'))
       .union(
         db
           .selectDistinct({ userId: userRoles.userId })
@@ -73,7 +73,7 @@ export class AdminUserService implements IAdminUserService {
         email: input.email,
         firstName: input.firstName,
         lastName: input.lastName,
-        portalRole: "staff",
+        portalRole: 'staff',
         isActive: true,
       })
       .returning({ id: users.id });
@@ -82,7 +82,7 @@ export class AdminUserService implements IAdminUserService {
     await db.insert(passwordCredentials).values({
       userId: newUser.id,
       passwordHash,
-      hashStrategy: "bcrypt",
+      hashStrategy: 'bcrypt',
     });
 
     // Assign roles
@@ -91,13 +91,13 @@ export class AdminUserService implements IAdminUserService {
         input.roleIds.map((roleId) => ({
           userId: newUser.id,
           roleId,
-          scope: "global" as const,
+          scope: 'global' as const,
         })),
       );
     }
 
     const result = await this.getAdmin(newUser.id);
-    if (!result) throw new Error("Failed to fetch created admin user");
+    if (!result) throw new Error('Failed to fetch created admin user');
     return result;
   }
 
@@ -130,14 +130,14 @@ export class AdminUserService implements IAdminUserService {
           input.roleIds.map((roleId) => ({
             userId,
             roleId,
-            scope: "global" as const,
+            scope: 'global' as const,
           })),
         );
       }
     }
 
     const result = await this.getAdmin(userId);
-    if (!result) throw new Error("Admin user not found after update");
+    if (!result) throw new Error('Admin user not found after update');
     return result;
   }
 
@@ -227,7 +227,7 @@ export class AdminUserService implements IAdminUserService {
         .filter((o) => o.userId === user.id)
         .map((o) => ({
           permissionCode: o.permissionCode,
-          action: o.action as "grant" | "revoke",
+          action: o.action as 'grant' | 'revoke',
         })),
     }));
   }

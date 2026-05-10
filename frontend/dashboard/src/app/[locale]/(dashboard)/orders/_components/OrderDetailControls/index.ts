@@ -1,2 +1,2 @@
-export { OrderDetailControls } from "./OrderDetailControls";
-export type { OrderDetailControlsProps } from "./OrderDetailControls.interface";
+export { OrderDetailControls } from './OrderDetailControls';
+export type { OrderDetailControlsProps } from './OrderDetailControls.interface';

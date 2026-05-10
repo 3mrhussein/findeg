@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useTranslations } from "next-intl";
-import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react";
-import { Button } from "@findeg/ui";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@findeg/ui";
-import { cn } from "@lib/utils";
-import { Options } from "nuqs";
+import { useTranslations } from 'next-intl';
+import { ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react';
+import { Button } from '@findeg/ui';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@findeg/ui';
+import { cn } from '@lib/utils';
+import { Options } from 'nuqs';
 
 interface ProductsPaginationProps {
   total: number;
@@ -23,15 +23,15 @@ interface ProductsPaginationProps {
  * Build a list of page numbers to show, with ellipsis gaps.
  * Always shows first page, last page, and up to 3 pages around the current.
  */
-function getPageNumbers(currentPage: number, totalPages: number): (number | "ellipsis")[] {
+function getPageNumbers(currentPage: number, totalPages: number): (number | 'ellipsis')[] {
   if (totalPages <= 7) {
     return Array.from({ length: totalPages }, (_, i) => i + 1);
   }
 
-  const pages: (number | "ellipsis")[] = [1];
+  const pages: (number | 'ellipsis')[] = [1];
 
   if (currentPage > 3) {
-    pages.push("ellipsis");
+    pages.push('ellipsis');
   }
 
   const start = Math.max(2, currentPage - 1);
@@ -42,7 +42,7 @@ function getPageNumbers(currentPage: number, totalPages: number): (number | "ell
   }
 
   if (currentPage < totalPages - 2) {
-    pages.push("ellipsis");
+    pages.push('ellipsis');
   }
 
   pages.push(totalPages);
@@ -51,7 +51,7 @@ function getPageNumbers(currentPage: number, totalPages: number): (number | "ell
 }
 
 export function ProductsPagination({ total, filters, setFilters }: ProductsPaginationProps) {
-  const t = useTranslations("Administration.Catalog.Products");
+  const t = useTranslations('Administration.Catalog.Products');
 
   const totalPages = Math.ceil(total / filters.pageSize);
   const start = total > 0 ? (filters.page - 1) * filters.pageSize + 1 : 0;
@@ -63,13 +63,13 @@ export function ProductsPagination({ total, filters, setFilters }: ProductsPagin
     <div className="flex flex-col-reverse gap-4 sm:flex-row sm:items-center sm:justify-between py-2">
       {/* Showing X–Y of Z */}
       <p className="text-sm text-gray-500">
-        {total > 0 ? `Showing ${start}–${end} of ${total} products` : "No products to show"}
+        {total > 0 ? `Showing ${start}–${end} of ${total} products` : 'No products to show'}
       </p>
 
       <div className="flex items-center gap-6 lg:gap-8">
         {/* Items per page */}
         <div className="flex items-center gap-2">
-          <p className="text-sm font-medium hidden sm:block">{t("Pagination.ItemsPerPage")}</p>
+          <p className="text-sm font-medium hidden sm:block">{t('Pagination.ItemsPerPage')}</p>
           <Select
             value={`${filters.pageSize}`}
             onValueChange={(value) => {
@@ -97,12 +97,12 @@ export function ProductsPagination({ total, filters, setFilters }: ProductsPagin
             onClick={() => setFilters({ page: filters.page - 1 })}
             disabled={filters.page <= 1}
           >
-            <span className="sr-only">{t("Pagination.Previous")}</span>
+            <span className="sr-only">{t('Pagination.Previous')}</span>
             <ChevronLeft className="h-4 w-4" />
           </Button>
 
           {pageNumbers.map((pageNum, idx) =>
-            pageNum === "ellipsis" ? (
+            pageNum === 'ellipsis' ? (
               <span
                 key={`ellipsis-${idx}`}
                 className="flex h-8 w-8 items-center justify-center text-muted-foreground"
@@ -112,10 +112,10 @@ export function ProductsPagination({ total, filters, setFilters }: ProductsPagin
             ) : (
               <Button
                 key={pageNum}
-                variant={filters.page === pageNum ? "default" : "outline"}
+                variant={filters.page === pageNum ? 'default' : 'outline'}
                 className={cn(
-                  "h-8 w-8 p-0 text-xs",
-                  filters.page === pageNum && "pointer-events-none",
+                  'h-8 w-8 p-0 text-xs',
+                  filters.page === pageNum && 'pointer-events-none',
                 )}
                 onClick={() => setFilters({ page: pageNum })}
               >
@@ -130,7 +130,7 @@ export function ProductsPagination({ total, filters, setFilters }: ProductsPagin
             onClick={() => setFilters({ page: filters.page + 1 })}
             disabled={filters.page >= totalPages}
           >
-            <span className="sr-only">{t("Pagination.Next")}</span>
+            <span className="sr-only">{t('Pagination.Next')}</span>
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>

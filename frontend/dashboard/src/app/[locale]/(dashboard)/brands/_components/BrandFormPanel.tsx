@@ -1,23 +1,23 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState, useCallback } from "react";
-import { useTranslations } from "next-intl";
-import { useForm, type Resolver } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { X, Check, Loader2, Globe, ImageIcon, AlertCircle, Box } from "lucide-react";
-import { Button } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Textarea } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import { RadioGroup, RadioGroupItem } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
-import { slugify } from "@lib/slugify";
-import { Brand } from "@findeg/backend/features/catalog";
-import { cn } from "@lib/utils";
-import Image from "next/image";
-import { useDebounce } from "@hooks/use-debounce";
-import { useToast } from "@hooks/use-toast";
-import { BrandInput, BrandInputSchema } from "@findeg/backend/features/administration/domain/types";
+import React, { useEffect, useState, useCallback } from 'react';
+import { useTranslations } from 'next-intl';
+import { useForm, type Resolver } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { X, Check, Loader2, Globe, ImageIcon, AlertCircle, Box } from 'lucide-react';
+import { Button } from '@findeg/ui';
+import { Input } from '@findeg/ui';
+import { Textarea } from '@findeg/ui';
+import { Label } from '@findeg/ui';
+import { RadioGroup, RadioGroupItem } from '@findeg/ui';
+import { Badge } from '@findeg/ui';
+import { slugify } from '@lib/slugify';
+import { Brand } from '@findeg/backend/features/catalog';
+import { cn } from '@lib/utils';
+import Image from 'next/image';
+import { useDebounce } from '@hooks/use-debounce';
+import { useToast } from '@hooks/use-toast';
+import { BrandInput, BrandInputSchema } from '@findeg/backend/features/administration/domain/types';
 
 interface BrandFormPanelProps {
   brand: Brand | null;
@@ -32,7 +32,7 @@ export function BrandFormPanel({
   onSubmit,
   onClose,
 }: BrandFormPanelProps) {
-  const t = useTranslations("Administration.Catalog.Brands");
+  const t = useTranslations('Administration.Catalog.Brands');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSlugChecking, setIsSlugChecking] = useState(false);
   const [isSlugAvailable, setIsSlugAvailable] = useState<boolean | null>(null);
@@ -50,20 +50,20 @@ export function BrandFormPanel({
     defaultValues: brand
       ? {
           slug: brand.slug,
-          nameEn: brand.localizedContent?.name?.en || brand.name || "",
-          nameAr: brand.localizedContent?.name?.ar || "",
-          descriptionEn: brand.localizedContent?.description?.en || "",
-          descriptionAr: brand.localizedContent?.description?.ar || "",
-          logoUrl: brand.logoUrl || "",
+          nameEn: brand.localizedContent?.name?.en || brand.name || '',
+          nameAr: brand.localizedContent?.name?.ar || '',
+          descriptionEn: brand.localizedContent?.description?.en || '',
+          descriptionAr: brand.localizedContent?.description?.ar || '',
+          logoUrl: brand.logoUrl || '',
           isActive: brand.isActive,
         }
       : {
-          slug: "",
-          nameEn: "",
-          nameAr: "",
-          descriptionEn: "",
-          descriptionAr: "",
-          logoUrl: "",
+          slug: '',
+          nameEn: '',
+          nameAr: '',
+          descriptionEn: '',
+          descriptionAr: '',
+          logoUrl: '',
           isActive: true,
         },
   });
@@ -73,29 +73,29 @@ export function BrandFormPanel({
     if (brand) {
       reset({
         slug: brand.slug,
-        nameEn: brand.localizedContent?.name?.en || brand.name || "",
-        nameAr: brand.localizedContent?.name?.ar || "",
-        descriptionEn: brand.localizedContent?.description?.en || "",
-        descriptionAr: brand.localizedContent?.description?.ar || "",
-        logoUrl: brand.logoUrl || "",
+        nameEn: brand.localizedContent?.name?.en || brand.name || '',
+        nameAr: brand.localizedContent?.name?.ar || '',
+        descriptionEn: brand.localizedContent?.description?.en || '',
+        descriptionAr: brand.localizedContent?.description?.ar || '',
+        logoUrl: brand.logoUrl || '',
         isActive: brand.isActive,
       });
     } else {
       reset({
-        slug: "",
-        nameEn: "",
-        nameAr: "",
-        descriptionEn: "",
-        descriptionAr: "",
-        logoUrl: "",
+        slug: '',
+        nameEn: '',
+        nameAr: '',
+        descriptionEn: '',
+        descriptionAr: '',
+        logoUrl: '',
         isActive: true,
       });
     }
   }, [brand, reset]);
 
-  const nameEn = watch("nameEn");
-  const slug = watch("slug");
-  const logoUrl = watch("logoUrl");
+  const nameEn = watch('nameEn');
+  const slug = watch('slug');
+  const logoUrl = watch('logoUrl');
   const [debouncedSlug, setDebouncedSlug] = useState(slug);
   const debouncedValue = useDebounce(slug, 500);
 
@@ -107,7 +107,7 @@ export function BrandFormPanel({
   useEffect(() => {
     if (!brand && nameEn && !slug) {
       const generated = slugify(nameEn);
-      setValue("slug", generated, { shouldValidate: true });
+      setValue('slug', generated, { shouldValidate: true });
     }
   }, [nameEn, brand, setValue, slug]);
 
@@ -127,12 +127,12 @@ export function BrandFormPanel({
       setIsSlugChecking(true);
       try {
         const res = await fetch(
-          `/api/v1/admin/brands/check-slug?slug=${debouncedValue}${brand ? `&excludeId=${brand.id}` : ""}`,
+          `/api/v1/admin/brands/check-slug?slug=${debouncedValue}${brand ? `&excludeId=${brand.id}` : ''}`,
         );
         const data = await res.json();
         setIsSlugAvailable(data.available);
       } catch (error) {
-        console.error("Slug check failed", error);
+        console.error('Slug check failed', error);
       } finally {
         setIsSlugChecking(false);
       }
@@ -143,8 +143,8 @@ export function BrandFormPanel({
   const onFormSubmit = async (data: BrandInput) => {
     if (isSlugAvailable === false) {
       toast({
-        title: t("SlugTaken"),
-        variant: "destructive",
+        title: t('SlugTaken'),
+        variant: 'destructive',
       });
       return;
     }
@@ -154,12 +154,12 @@ export function BrandFormPanel({
       const result = await onSubmit(data);
       if (result.success) {
         toast({
-          title: brand ? t("ToastUpdated") : t("ToastCreated"),
+          title: brand ? t('ToastUpdated') : t('ToastCreated'),
         });
       } else {
         toast({
-          title: result.error || "Error",
-          variant: "destructive",
+          title: result.error || 'Error',
+          variant: 'destructive',
         });
       }
     } finally {
@@ -176,7 +176,7 @@ export function BrandFormPanel({
       <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md sticky top-0 z-10">
         <div>
           <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
-            {brand ? t("PanelEditTitle") : t("PanelCreateTitle")}
+            {brand ? t('PanelEditTitle') : t('PanelCreateTitle')}
           </h2>
           {brand && (
             <div className="flex items-center gap-2 mt-0.5">
@@ -185,8 +185,8 @@ export function BrandFormPanel({
                 className="h-5 px-1.5 text-[10px] bg-indigo-50 text-indigo-600 border-none dark:bg-indigo-500/10 dark:text-indigo-400"
               >
                 <Box className="h-3 w-3 me-1" />
-                {productCount}{" "}
-                {t("ProductsCount", { count: productCount }).split(" ")[1] || "Products"}
+                {productCount}{' '}
+                {t('ProductsCount', { count: productCount }).split(' ')[1] || 'Products'}
               </Badge>
             </div>
           )}
@@ -207,7 +207,7 @@ export function BrandFormPanel({
         {/* Logo Section */}
         <div className="space-y-4">
           <Label className="text-xs font-bold uppercase tracking-widest text-slate-400">
-            {t("FieldLogoUrl")}
+            {t('FieldLogoUrl')}
           </Label>
           <div className="flex gap-4">
             <div className="relative h-24 w-32 shrink-0 bg-slate-50 dark:bg-slate-800 rounded-2xl border-2 border-dashed border-gray-200 dark:border-slate-700 flex flex-col items-center justify-center overflow-hidden">
@@ -224,18 +224,18 @@ export function BrandFormPanel({
               ) : (
                 <>
                   <ImageIcon className="h-6 w-6 text-slate-300 mb-1" />
-                  <span className="text-[10px] text-slate-400 font-medium">{t("NoPreview")}</span>
+                  <span className="text-[10px] text-slate-400 font-medium">{t('NoPreview')}</span>
                 </>
               )}
             </div>
             <div className="flex-1 space-y-2">
               <Input
-                {...register("logoUrl")}
+                {...register('logoUrl')}
                 placeholder="https://..."
                 className="rounded-xl border-gray-200 dark:border-slate-800 h-10"
               />
               <p className="text-[10px] text-muted-foreground leading-relaxed italic">
-                {t("FieldLogoHint")}
+                {t('FieldLogoHint')}
               </p>
               {errors.logoUrl && (
                 <p className="text-[10px] text-rose-500 font-medium flex items-center gap-1">
@@ -251,18 +251,18 @@ export function BrandFormPanel({
         <div className="grid grid-cols-1 gap-6">
           <div className="space-y-2">
             <Label className="text-xs font-bold uppercase tracking-widest text-slate-400 flex justify-between">
-              {t("FieldNameEn")}
+              {t('FieldNameEn')}
               <span
                 className={cn(
-                  "text-[10px] font-normal",
-                  (nameEn?.length || 0) > 50 ? "text-amber-500" : "text-slate-300",
+                  'text-[10px] font-normal',
+                  (nameEn?.length || 0) > 50 ? 'text-amber-500' : 'text-slate-300',
                 )}
               >
                 {nameEn?.length || 0}/60
               </span>
             </Label>
             <Input
-              {...register("nameEn")}
+              {...register('nameEn')}
               placeholder="e.g. Faber-Castell"
               className="rounded-xl border-gray-200 dark:border-slate-800 h-11 focus:ring-indigo-500"
             />
@@ -273,10 +273,10 @@ export function BrandFormPanel({
 
           <div className="space-y-2">
             <Label className="text-xs font-bold uppercase tracking-widest text-slate-400">
-              {t("FieldNameAr")}
+              {t('FieldNameAr')}
             </Label>
             <Input
-              {...register("nameAr")}
+              {...register('nameAr')}
               placeholder="مثلاً: فابر كاستل"
               className="rounded-xl border-gray-200 dark:border-slate-800 text-right font-arabic dir-rtl h-11"
             />
@@ -290,11 +290,11 @@ export function BrandFormPanel({
         <div className="space-y-2 p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800/60">
           <Label className="text-xs font-bold uppercase tracking-widest text-slate-400 flex items-center gap-1.5">
             <Globe className="h-3 w-3" />
-            {t("FieldSlug")}
+            {t('FieldSlug')}
           </Label>
           <div className="relative">
             <Input
-              {...register("slug")}
+              {...register('slug')}
               placeholder="brand-slug"
               className="rounded-xl border-gray-200 dark:border-slate-800 h-10 pr-24 font-mono text-sm tracking-tight"
             />
@@ -303,26 +303,26 @@ export function BrandFormPanel({
                 <Loader2 className="h-4 w-4 animate-spin text-slate-300" />
               ) : isSlugAvailable === true ? (
                 <Badge className="bg-emerald-50 text-emerald-600 border-emerald-100 dark:bg-emerald-500/10 dark:text-emerald-400 font-normal px-1.5 h-5 text-[10px]">
-                  {t("SlugAvailable")}
+                  {t('SlugAvailable')}
                 </Badge>
               ) : isSlugAvailable === false ? (
                 <Badge className="bg-rose-50 text-rose-600 border-rose-100 dark:bg-rose-500/10 dark:text-rose-400 font-normal px-1.5 h-5 text-[10px]">
-                  {t("SlugTaken")}
+                  {t('SlugTaken')}
                 </Badge>
               ) : null}
             </div>
           </div>
-          <p className="text-[10px] text-slate-400 italic">findeg.com/brands/{slug || "..."}</p>
+          <p className="text-[10px] text-slate-400 italic">findeg.com/brands/{slug || '...'}</p>
         </div>
 
         {/* Descriptions (Localized) */}
         <div className="space-y-6">
           <div className="space-y-2">
             <Label className="text-xs font-bold uppercase tracking-widest text-slate-400">
-              {t("FieldDescriptionEn")}
+              {t('FieldDescriptionEn')}
             </Label>
             <Textarea
-              {...register("descriptionEn")}
+              {...register('descriptionEn')}
               rows={3}
               placeholder="Enter brand history or details..."
               className="rounded-xl border-gray-200 dark:border-slate-800 resize-none py-3"
@@ -330,10 +330,10 @@ export function BrandFormPanel({
           </div>
           <div className="space-y-2">
             <Label className="text-xs font-bold uppercase tracking-widest text-slate-400">
-              {t("FieldDescriptionAr")}
+              {t('FieldDescriptionAr')}
             </Label>
             <Textarea
-              {...register("descriptionAr")}
+              {...register('descriptionAr')}
               rows={3}
               placeholder="أدخل تفاصيل الماركة باللغة العربية..."
               className="rounded-xl border-gray-200 dark:border-slate-800 resize-none py-3 text-right font-arabic dir-rtl"
@@ -344,40 +344,40 @@ export function BrandFormPanel({
         {/* Status Section */}
         <div className="space-y-4">
           <Label className="text-xs font-bold uppercase tracking-widest text-slate-400">
-            {t("FieldStatus")}
+            {t('FieldStatus')}
           </Label>
           <RadioGroup
-            defaultValue={brand?.isActive ? "active" : "inactive"}
-            onValueChange={(val) => setValue("isActive", val === "active", { shouldDirty: true })}
+            defaultValue={brand?.isActive ? 'active' : 'inactive'}
+            onValueChange={(val) => setValue('isActive', val === 'active', { shouldDirty: true })}
             className="grid grid-cols-2 gap-3"
           >
             <Label
               htmlFor="status-active"
               className={cn(
-                "flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all cursor-pointer",
-                watch("isActive")
-                  ? "bg-emerald-50/50 border-emerald-500 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400"
-                  : "bg-white border-gray-100 text-slate-400 dark:bg-slate-900 dark:border-slate-800",
+                'flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all cursor-pointer',
+                watch('isActive')
+                  ? 'bg-emerald-50/50 border-emerald-500 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400'
+                  : 'bg-white border-gray-100 text-slate-400 dark:bg-slate-900 dark:border-slate-800',
               )}
             >
               <RadioGroupItem value="active" id="status-active" className="sr-only" />
               <Check
-                className={cn("h-4 w-4 mb-2", watch("isActive") ? "opacity-100" : "opacity-0")}
+                className={cn('h-4 w-4 mb-2', watch('isActive') ? 'opacity-100' : 'opacity-0')}
               />
-              <span className="text-sm font-semibold">{t("FilterActive")}</span>
+              <span className="text-sm font-semibold">{t('FilterActive')}</span>
             </Label>
             <Label
               htmlFor="status-inactive"
               className={cn(
-                "flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all cursor-pointer",
-                !watch("isActive")
-                  ? "bg-slate-50 border-slate-400 text-slate-600 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-300"
-                  : "bg-white border-gray-100 text-slate-400 dark:bg-slate-900 dark:border-slate-800",
+                'flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all cursor-pointer',
+                !watch('isActive')
+                  ? 'bg-slate-50 border-slate-400 text-slate-600 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-300'
+                  : 'bg-white border-gray-100 text-slate-400 dark:bg-slate-900 dark:border-slate-800',
               )}
             >
               <RadioGroupItem value="inactive" id="status-inactive" className="sr-only" />
-              <X className={cn("h-4 w-4 mb-2", !watch("isActive") ? "opacity-100" : "opacity-0")} />
-              <span className="text-sm font-semibold">{t("FilterInactive")}</span>
+              <X className={cn('h-4 w-4 mb-2', !watch('isActive') ? 'opacity-100' : 'opacity-0')} />
+              <span className="text-sm font-semibold">{t('FilterInactive')}</span>
             </Label>
           </RadioGroup>
         </div>
@@ -391,14 +391,14 @@ export function BrandFormPanel({
           onClick={onClose}
           className="flex-1 h-12 rounded-xl border-gray-200 dark:border-slate-800"
         >
-          {t("Cancel")}
+          {t('Cancel')}
         </Button>
         <Button
           type="submit"
           disabled={isSubmitting || isSlugChecking || !isDirty}
           className="flex-2 h-12 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold shadow-lg shadow-indigo-200 dark:shadow-none transition-all active:scale-[0.98]"
         >
-          {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin" /> : t("Save")}
+          {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin" /> : t('Save')}
         </Button>
       </div>
     </form>

@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import Image from "next/image";
-import { useTranslations } from "next-intl";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 import {
   ChevronDown,
   FolderTree,
@@ -15,17 +15,17 @@ import {
   Check,
   RotateCcw,
   SlidersHorizontal,
-} from "lucide-react";
-import { Button } from "@findeg/ui";
-import { Checkbox } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Slider } from "@findeg/ui";
-import { Switch } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
-import { IconTooltip } from "@findeg/ui";
-import { useDebounce } from "@hooks/use-debounce";
-import { cn } from "@lib/utils";
-import type { ShopPlpDiscount, ShopPlpFacetCounts, ShopPlpFilters } from "@data/catalog/types";
+} from 'lucide-react';
+import { Button } from '@findeg/ui';
+import { Checkbox } from '@findeg/ui';
+import { Input } from '@findeg/ui';
+import { Slider } from '@findeg/ui';
+import { Switch } from '@findeg/ui';
+import { Badge } from '@findeg/ui';
+import { IconTooltip } from '@findeg/ui';
+import { useDebounce } from '@hooks/use-debounce';
+import { cn } from '@lib/utils';
+import type { ShopPlpDiscount, ShopPlpFacetCounts, ShopPlpFilters } from '@data/catalog/types';
 
 interface ApiCategoryNode {
   id: number;
@@ -63,7 +63,7 @@ interface CategoryTreeNodeProps {
   depth?: number;
 }
 
-type GroupId = "categories" | "brands" | "price" | "rating" | "availability" | "discount";
+type GroupId = 'categories' | 'brands' | 'price' | 'rating' | 'availability' | 'discount';
 
 function sanitizePriceRange(
   minPrice: number,
@@ -86,7 +86,7 @@ function CategoryTreeNode({
 }: CategoryTreeNodeProps) {
   const hasChildren = Boolean(node.children && node.children.length > 0);
   const nodePath = [...path, node.slug];
-  const isCurrent = nodePath.join("/") === currentPath.join("/");
+  const isCurrent = nodePath.join('/') === currentPath.join('/');
   const isCurrentBranch = nodePath.every((slug, index) => currentPath[index] === slug);
   const [expanded, setExpanded] = useState(isCurrentBranch);
   const isExpanded = expanded || isCurrentBranch;
@@ -95,21 +95,21 @@ function CategoryTreeNode({
     <div>
       <div
         className={cn(
-          "flex items-center gap-1 rounded-md px-1 py-1.5",
-          isCurrent && "bg-primary/10",
+          'flex items-center gap-1 rounded-md px-1 py-1.5',
+          isCurrent && 'bg-primary/10',
         )}
         style={{ paddingInlineStart: `${depth * 12 + 4}px` }}
       >
         {hasChildren ? (
-          <IconTooltip label={isExpanded ? "Collapse" : "Expand"} asChild>
+          <IconTooltip label={isExpanded ? 'Collapse' : 'Expand'} asChild>
             <button
               type="button"
               onClick={() => setExpanded((value) => !value)}
               className="inline-flex size-6 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
-              aria-label={isExpanded ? "Collapse" : "Expand"}
+              aria-label={isExpanded ? 'Collapse' : 'Expand'}
             >
               <ChevronDown
-                className={cn("size-4 transition-transform", !isExpanded && "-rotate-90")}
+                className={cn('size-4 transition-transform', !isExpanded && '-rotate-90')}
               />
             </button>
           </IconTooltip>
@@ -121,10 +121,10 @@ function CategoryTreeNode({
           type="button"
           onClick={() => onSelect(nodePath)}
           className={cn(
-            "flex min-w-0 flex-1 items-center justify-between gap-2 rounded-md px-1 py-0.5 text-start text-sm",
+            'flex min-w-0 flex-1 items-center justify-between gap-2 rounded-md px-1 py-0.5 text-start text-sm',
             isCurrent
-              ? "font-semibold text-primary"
-              : "text-foreground/90 hover:text-foreground hover:underline",
+              ? 'font-semibold text-primary'
+              : 'text-foreground/90 hover:text-foreground hover:underline',
           )}
         >
           <span className="truncate">{node.name}</span>
@@ -177,7 +177,7 @@ function FilterGroup({
           {icon}
           {title}
         </span>
-        <ChevronDown className={cn("size-4 transition-transform", !open && "-rotate-90")} />
+        <ChevronDown className={cn('size-4 transition-transform', !open && '-rotate-90')} />
       </button>
       {open && <div className="border-t px-3 py-3">{children}</div>}
     </section>
@@ -197,11 +197,11 @@ export function FilterPanel({
   onBrandsLoaded,
   onApplyComplete,
 }: FilterPanelProps) {
-  const t = useTranslations("Pages.Shop");
+  const t = useTranslations('Pages.Shop');
 
   const [categories, setCategories] = useState<ApiCategoryNode[]>([]);
   const [brands, setBrands] = useState<FilterPanelBrand[]>([]);
-  const [brandSearch, setBrandSearch] = useState("");
+  const [brandSearch, setBrandSearch] = useState('');
   const [openGroups, setOpenGroups] = useState<Record<GroupId, boolean>>({
     categories: true,
     brands: true,
@@ -233,11 +233,11 @@ export function FilterPanel({
         const [categoriesResponse, brandsResponse] = await Promise.all([
           fetch(`/api/v1/categories?type=tree&lang=${locale}`, {
             signal: abort.signal,
-            cache: "no-store",
+            cache: 'no-store',
           }),
           fetch(`/api/v1/brands?active=true`, {
             signal: abort.signal,
-            cache: "no-store",
+            cache: 'no-store',
           }),
         ]);
 
@@ -345,9 +345,9 @@ export function FilterPanel({
     <div className="space-y-3">
       <FilterGroup
         icon={<FolderTree className="size-4 text-primary" />}
-        title={t("FiltersCategories")}
+        title={t('FiltersCategories')}
         open={openGroups.categories}
-        onToggle={() => toggleGroup("categories")}
+        onToggle={() => toggleGroup('categories')}
       >
         <div className="max-h-72 space-y-0.5 overflow-auto pe-1">
           {categories.map((category) => (
@@ -365,9 +365,9 @@ export function FilterPanel({
 
       <FilterGroup
         icon={<Tag className="size-4 text-primary" />}
-        title={t("FiltersBrands")}
+        title={t('FiltersBrands')}
         open={openGroups.brands}
-        onToggle={() => toggleGroup("brands")}
+        onToggle={() => toggleGroup('brands')}
       >
         <div className="space-y-2">
           {brands.length > 8 && (
@@ -376,7 +376,7 @@ export function FilterPanel({
               <Input
                 value={brandSearch}
                 onChange={(event) => setBrandSearch(event.target.value)}
-                placeholder={t("BrandSearchPlaceholder")}
+                placeholder={t('BrandSearchPlaceholder')}
                 className="h-9 ps-8"
               />
             </div>
@@ -414,7 +414,7 @@ export function FilterPanel({
               );
             })}
             {filteredBrands.length === 0 && (
-              <p className="py-2 text-xs text-muted-foreground">{t("NoBrandsFound")}</p>
+              <p className="py-2 text-xs text-muted-foreground">{t('NoBrandsFound')}</p>
             )}
           </div>
         </div>
@@ -422,9 +422,9 @@ export function FilterPanel({
 
       <FilterGroup
         icon={<Wallet className="size-4 text-primary" />}
-        title={t("FiltersPrice")}
+        title={t('FiltersPrice')}
         open={openGroups.price}
-        onToggle={() => toggleGroup("price")}
+        onToggle={() => toggleGroup('price')}
       >
         <div className="space-y-4">
           <p className="text-xs font-semibold text-muted-foreground">{priceLabel}</p>
@@ -443,7 +443,7 @@ export function FilterPanel({
           <div className="grid grid-cols-2 gap-2">
             <div>
               <label className="mb-1 block text-[11px] text-muted-foreground">
-                {t("MinPriceLabel")}
+                {t('MinPriceLabel')}
               </label>
               <Input
                 type="number"
@@ -458,7 +458,7 @@ export function FilterPanel({
             </div>
             <div>
               <label className="mb-1 block text-[11px] text-muted-foreground">
-                {t("MaxPriceLabel")}
+                {t('MaxPriceLabel')}
               </label>
               <Input
                 type="number"
@@ -477,9 +477,9 @@ export function FilterPanel({
 
       <FilterGroup
         icon={<Star className="size-4 text-primary" />}
-        title={t("RatingFilterTitle")}
+        title={t('RatingFilterTitle')}
         open={openGroups.rating}
-        onToggle={() => toggleGroup("rating")}
+        onToggle={() => toggleGroup('rating')}
       >
         <div className="space-y-1">
           {ratingRows.map((row) => {
@@ -504,7 +504,7 @@ export function FilterPanel({
                     }
                     className="size-4 accent-primary"
                   />
-                  <span>{t("RatingAndAbove", { rating: row })}</span>
+                  <span>{t('RatingAndAbove', { rating: row })}</span>
                 </span>
                 <Badge variant="outline" className="text-[10px]">
                   {count}
@@ -527,7 +527,7 @@ export function FilterPanel({
               }
             >
               <RotateCcw />
-              {t("ClearRating")}
+              {t('ClearRating')}
             </Button>
           ) : null}
         </div>
@@ -535,13 +535,13 @@ export function FilterPanel({
 
       <FilterGroup
         icon={<PackageCheck className="size-4 text-primary" />}
-        title={t("AvailabilityFilterTitle")}
+        title={t('AvailabilityFilterTitle')}
         open={openGroups.availability}
-        onToggle={() => toggleGroup("availability")}
+        onToggle={() => toggleGroup('availability')}
       >
         <div className="flex items-center justify-between rounded-lg border px-3 py-2.5">
           <label htmlFor="in-stock-only" className="text-sm font-medium">
-            {t("InStockOnly")}
+            {t('InStockOnly')}
           </label>
           <Switch
             id="in-stock-only"
@@ -558,18 +558,18 @@ export function FilterPanel({
 
       <FilterGroup
         icon={<Percent className="size-4 text-primary" />}
-        title={t("DiscountFilterTitle")}
+        title={t('DiscountFilterTitle')}
         open={openGroups.discount}
-        onToggle={() => toggleGroup("discount")}
+        onToggle={() => toggleGroup('discount')}
       >
         <div className="space-y-2">
           <label className="flex cursor-pointer items-center justify-between rounded-md px-1 py-1.5 text-sm">
             <span className="flex items-center gap-2">
               <Checkbox
-                checked={draftFilters.discounts.includes("on-sale")}
-                onCheckedChange={(value) => handleDiscountToggle("on-sale", Boolean(value))}
+                checked={draftFilters.discounts.includes('on-sale')}
+                onCheckedChange={(value) => handleDiscountToggle('on-sale', Boolean(value))}
               />
-              {t("OnSale")}
+              {t('OnSale')}
             </span>
             <Badge variant="outline" className="text-[10px]">
               {facetCounts.discounts.onSale}
@@ -579,10 +579,10 @@ export function FilterPanel({
           <label className="flex cursor-pointer items-center justify-between rounded-md px-1 py-1.5 text-sm">
             <span className="flex items-center gap-2">
               <Checkbox
-                checked={draftFilters.discounts.includes("bundle-deals")}
-                onCheckedChange={(value) => handleDiscountToggle("bundle-deals", Boolean(value))}
+                checked={draftFilters.discounts.includes('bundle-deals')}
+                onCheckedChange={(value) => handleDiscountToggle('bundle-deals', Boolean(value))}
               />
-              {t("BundleDeals")}
+              {t('BundleDeals')}
             </span>
             <Badge variant="outline" className="text-[10px]">
               {facetCounts.discounts.bundleDeals}
@@ -600,7 +600,7 @@ export function FilterPanel({
           }}
         >
           <SlidersHorizontal />
-          {t("ApplyFilters")}
+          {t('ApplyFilters')}
         </Button>
         <Button
           variant="ghost"
@@ -611,7 +611,7 @@ export function FilterPanel({
           }}
         >
           <RotateCcw />
-          {t("FiltersClearAll")}
+          {t('FiltersClearAll')}
         </Button>
       </div>
     </div>

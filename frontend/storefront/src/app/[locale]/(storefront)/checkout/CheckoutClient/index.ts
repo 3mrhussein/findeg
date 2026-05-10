@@ -1,2 +1,2 @@
-export { CheckoutClient } from "./CheckoutClient";
-export type { CheckoutClientProps } from "./CheckoutClient.interface";
+export { CheckoutClient } from './CheckoutClient';
+export type { CheckoutClientProps } from './CheckoutClient.interface';

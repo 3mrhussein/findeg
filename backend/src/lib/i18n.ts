@@ -5,12 +5,12 @@
  * Supports English and Arabic locales.
  */
 
-import { readFile } from "fs/promises";
-import { join } from "path";
+import { readFile } from 'fs/promises';
+import { join } from 'path';
 
-type Locale = "en" | "ar";
+type Locale = 'en' | 'ar';
 
-type Messages = Record<string, any>;
+type Messages = Record<string, unknown>;
 
 /**
  * Load translation messages for a specific app and locale
@@ -20,24 +20,24 @@ type Messages = Record<string, any>;
  * @returns Translation messages object
  */
 export async function getMessages(
-  app: "dashboard" | "storefront",
+  app: 'dashboard' | 'storefront',
   locale: Locale,
 ): Promise<Messages> {
   try {
     const messagesPath = join(
       process.cwd(),
-      "packages",
-      "backend",
-      "src",
-      "features",
-      "core",
-      "infrastructure",
-      "cms",
-      "messages",
+      'packages',
+      'backend',
+      'src',
+      'features',
+      'core',
+      'infrastructure',
+      'cms',
+      'messages',
       `${app}.${locale}.json`,
     );
 
-    const content = await readFile(messagesPath, "utf-8");
+    const content = await readFile(messagesPath, 'utf-8');
     return JSON.parse(content);
   } catch (error) {
     console.error(`Failed to load messages for ${app}.${locale}:`, error);
@@ -59,17 +59,17 @@ export async function getMessages(
  */
 export function formatCurrency(
   amount: number,
-  locale: Locale = "en",
-  currency: string = "EGP",
+  locale: Locale = 'en',
+  currency: string = 'EGP',
 ): string {
   try {
-    return new Intl.NumberFormat(locale === "ar" ? "ar-EG" : "en-US", {
-      style: "currency",
+    return new Intl.NumberFormat(locale === 'ar' ? 'ar-EG' : 'en-US', {
+      style: 'currency',
       currency,
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(amount);
-  } catch (error) {
+  } catch{
     // Fallback formatting
     return `${currency} ${amount.toFixed(2)}`;
   }
@@ -85,23 +85,23 @@ export function formatCurrency(
  */
 export function formatDate(
   date: Date | number | string,
-  locale: Locale = "en",
+  locale: Locale = 'en',
   options?: Intl.DateTimeFormatOptions,
 ): string {
   try {
-    const dateObj = typeof date === "string" || typeof date === "number" ? new Date(date) : date;
+    const dateObj = typeof date === 'string' || typeof date === 'number' ? new Date(date) : date;
 
     const defaultOptions: Intl.DateTimeFormatOptions = {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
       ...options,
     };
 
-    return new Intl.DateTimeFormat(locale === "ar" ? "ar-EG" : "en-US", defaultOptions).format(
+    return new Intl.DateTimeFormat(locale === 'ar' ? 'ar-EG' : 'en-US', defaultOptions).format(
       dateObj,
     );
-  } catch (error) {
+  } catch  {
     return String(date);
   }
 }
@@ -113,13 +113,13 @@ export function formatDate(
  * @param locale - Locale code ('en' or 'ar')
  * @returns Formatted date and time string
  */
-export function formatDateTime(date: Date | number | string, locale: Locale = "en"): string {
+export function formatDateTime(date: Date | number | string, locale: Locale = 'en'): string {
   return formatDate(date, locale, {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
   });
 }
 
@@ -130,9 +130,9 @@ export function formatDateTime(date: Date | number | string, locale: Locale = "e
  * @param locale - Locale code ('en' or 'ar')
  * @returns Relative time string
  */
-export function formatRelativeTime(date: Date | number | string, locale: Locale = "en"): string {
+export function formatRelativeTime(date: Date | number | string, locale: Locale = 'en'): string {
   try {
-    const dateObj = typeof date === "string" || typeof date === "number" ? new Date(date) : date;
+    const dateObj = typeof date === 'string' || typeof date === 'number' ? new Date(date) : date;
 
     const now = new Date();
     const diffMs = dateObj.getTime() - now.getTime();
@@ -141,20 +141,20 @@ export function formatRelativeTime(date: Date | number | string, locale: Locale 
     const diffHour = Math.round(diffMin / 60);
     const diffDay = Math.round(diffHour / 24);
 
-    const rtf = new Intl.RelativeTimeFormat(locale === "ar" ? "ar-EG" : "en-US", {
-      numeric: "auto",
+    const rtf = new Intl.RelativeTimeFormat(locale === 'ar' ? 'ar-EG' : 'en-US', {
+      numeric: 'auto',
     });
 
     if (Math.abs(diffDay) >= 1) {
-      return rtf.format(diffDay, "day");
+      return rtf.format(diffDay, 'day');
     } else if (Math.abs(diffHour) >= 1) {
-      return rtf.format(diffHour, "hour");
+      return rtf.format(diffHour, 'hour');
     } else if (Math.abs(diffMin) >= 1) {
-      return rtf.format(diffMin, "minute");
+      return rtf.format(diffMin, 'minute');
     } else {
-      return rtf.format(diffSec, "second");
+      return rtf.format(diffSec, 'second');
     }
-  } catch (error) {
+  } catch {
     return String(date);
   }
 }
@@ -169,12 +169,12 @@ export function formatRelativeTime(date: Date | number | string, locale: Locale 
  */
 export function formatNumber(
   value: number,
-  locale: Locale = "en",
+  locale: Locale = 'en',
   options?: Intl.NumberFormatOptions,
 ): string {
   try {
-    return new Intl.NumberFormat(locale === "ar" ? "ar-EG" : "en-US", options).format(value);
-  } catch (error) {
+    return new Intl.NumberFormat(locale === 'ar' ? 'ar-EG' : 'en-US', options).format(value);
+  } catch {
     return String(value);
   }
 }

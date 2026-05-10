@@ -1,6 +1,6 @@
-import { Locale } from "next-intl";
-import { setRequestLocale } from "next-intl/server";
-import { RegistrationContent } from "./_components/RegistrationContent";
+import { Locale } from 'next-intl';
+import { setRequestLocale } from 'next-intl/server';
+import { RegistrationContent } from './_components/RegistrationContent';
 
 type Props = {
   params: Promise<{ locale: Locale }>;

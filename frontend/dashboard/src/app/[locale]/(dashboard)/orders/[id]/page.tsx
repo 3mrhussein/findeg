@@ -1,14 +1,14 @@
-import { notFound } from "next/navigation";
-import { Button } from "@findeg/ui";
-import { ArrowLeft } from "lucide-react";
-import { Link } from "@i18n/navigation";
-import { OrderHeader } from "./_components/OrderHeader";
-import { OrderTimeline } from "./_components/OrderTimeline";
-import { OrderItemsTable } from "./_components/OrderItemsTable";
-import { OrderTotals } from "./_components/OrderTotals";
-import { OrderCustomerInfo } from "./_components/OrderCustomerInfo";
-import { OrderPaymentFulfillment } from "./_components/OrderPaymentFulfillment";
-import { OrderActivityLog } from "./_components/OrderActivityLog";
+import { notFound } from 'next/navigation';
+import { Button } from '@findeg/ui';
+import { ArrowLeft } from 'lucide-react';
+import { Link } from '@i18n/navigation';
+import { OrderHeader } from './_components/OrderHeader';
+import { OrderTimeline } from './_components/OrderTimeline';
+import { OrderItemsTable } from './_components/OrderItemsTable';
+import { OrderTotals } from './_components/OrderTotals';
+import { OrderCustomerInfo } from './_components/OrderCustomerInfo';
+import { OrderPaymentFulfillment } from './_components/OrderPaymentFulfillment';
+import { OrderActivityLog } from './_components/OrderActivityLog';
 
 /**
  * Admin Order Detail Page
@@ -42,7 +42,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         {/* Left Column - 65% width on xl screens */}
         <div className="xl:col-span-2 space-y-6">
-          <OrderItemsTable items={order.items || []} currency={order.currency || "EGP"} />
+          <OrderItemsTable items={order.items || []} currency={order.currency || 'EGP'} />
           <OrderTotals order={order} />
 
           <div className="mt-8 space-y-4">

@@ -1,18 +1,20 @@
-import fs from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
+/* eslint-env node */
+import console from 'node:console';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const TABLE_SNAPSHOT_DIR = path.resolve(__dirname, "data/seed/tables");
-const DEST_DIR = path.resolve(__dirname, "../../../db/seeds/data");
+const TABLE_SNAPSHOT_DIR = path.resolve(__dirname, 'data/seed/tables');
+const DEST_DIR = path.resolve(__dirname, '../../../db/seeds/data');
 
 fs.mkdirSync(DEST_DIR, { recursive: true });
 
 function parseCsvLine(line) {
   const values = [];
-  let current = "";
+  let current = '';
   let inQuotes = false;
   for (let i = 0; i < line.length; i += 1) {
     const char = line[i];
@@ -26,9 +28,9 @@ function parseCsvLine(line) {
       inQuotes = !inQuotes;
       continue;
     }
-    if (char === "," && !inQuotes) {
+    if (char === ',' && !inQuotes) {
       values.push(current);
-      current = "";
+      current = '';
       continue;
     }
     current += char;
@@ -38,34 +40,25 @@ function parseCsvLine(line) {
 }
 
 function castValue(val) {
-  if (val === "") return null;
+  if (val === '') return null;
   const lower = val.toLowerCase();
 
-  if (lower === "true" || lower === "t") return true;
-  if (lower === "false" || lower === "f") return false;
+  if (lower === 'true' || lower === 't') return true;
+  if (lower === 'false' || lower === 'f') return false;
 
   // Is it a number? Ensure we don't accidentally cast empty strings or completely whitespace strings
-  if (!isNaN(val) && val.trim() !== "") {
+  if (!isNaN(val) && val.trim() !== '') {
     // If it's a huge ID (like a UUID or Snowflake), keep it as string if it isn't safely parsed
     const parsed = Number(val);
-    if (Number.isSafeInteger(parsed) || (!Number.isNaN(parsed) && val.includes("."))) {
+    if (Number.isSafeInteger(parsed) || (!Number.isNaN(parsed) && val.includes('.'))) {
       // Actually, leading zeros are important for things like ZIP codes.
       // E.g., '0123' should stay '0123'.
       // If `val` has leading zero and isn't '0' or '0.x', it's probably a string.
-      if (val.length > 1 && val.startsWith("0") && !val.startsWith("0.")) {
+      if (val.length > 1 && val.startsWith('0') && !val.startsWith('0.')) {
         return val; // Treat as string
       }
       return parsed;
     }
-  }
-
-  // Try JSON
-  try {
-    if (val.startsWith("{") || val.startsWith("[")) {
-      return JSON.parse(val);
-    }
-  } catch (e) {
-    // Ignore JSON parse errors and return original string
   }
 
   return val;
@@ -78,7 +71,7 @@ function convertTable(tableName) {
     return;
   }
 
-  const raw = fs.readFileSync(filePath, "utf8");
+  const raw = fs.readFileSync(filePath, 'utf8');
   const lines = raw.split(/\r?\n/).filter((line) => line.length > 0);
 
   if (lines.length === 0) {
@@ -98,22 +91,22 @@ function convertTable(tableName) {
     const cells = parseCsvLine(line);
     const row = {};
     headers.forEach((header, index) => {
-      row[header] = castValue(cells[index] ?? "");
+      row[header] = castValue(cells[index] ?? '');
     });
     return row;
   });
 
   const outputFilePath = path.join(DEST_DIR, `${tableName}.json`);
-  fs.writeFileSync(outputFilePath, JSON.stringify(rows, null, 2), "utf8");
+  fs.writeFileSync(outputFilePath, JSON.stringify(rows, null, 2), 'utf8');
   console.log(`[Success] -> Converted ${tableName}.csv to ${tableName}.json (${rows.length} rows)`);
 }
 
 const csvFiles = fs.readdirSync(TABLE_SNAPSHOT_DIR);
 for (const file of csvFiles) {
-  if (file.endsWith(".csv")) {
-    const tableName = file.replace(".csv", "");
+  if (file.endsWith('.csv')) {
+    const tableName = file.replace('.csv', '');
     convertTable(tableName);
   }
 }
 
-console.log("Migration script finished!");
+console.log('Migration script finished!');

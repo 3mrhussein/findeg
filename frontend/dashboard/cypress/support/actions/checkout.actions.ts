@@ -1,7 +1,7 @@
-import { shopSelectors } from "../selectors/shop.selectors";
-import { GUEST_CHECKOUT_DATA } from "../constants/test-data";
-import { SHOP_MESSAGES } from "../constants/messages";
-import { API_ROUTES } from "../constants/routes";
+import { shopSelectors } from '../selectors/shop.selectors';
+import { GUEST_CHECKOUT_DATA } from '../constants/test-data';
+import { SHOP_MESSAGES } from '../constants/messages';
+import { API_ROUTES } from '../constants/routes';
 
 export interface CheckoutFormInput {
   fullName: string;
@@ -16,7 +16,7 @@ export interface CheckoutFormInput {
  * Waits until checkout form inputs are mounted and interactive.
  */
 function waitForCheckoutFormReady(): void {
-  cy.get(shopSelectors.checkoutFullName, { timeout: 30000 }).should("exist");
+  cy.get(shopSelectors.checkoutFullName, { timeout: 30000 }).should('exist');
 }
 
 /**
@@ -38,8 +38,8 @@ export function fillCheckoutRequiredFields(data: CheckoutFormInput = GUEST_CHECK
 export function triggerCheckoutValidationBlurWithInvalidInputs(): void {
   waitForCheckoutFormReady();
   cy.get(shopSelectors.checkoutFullName).clear().focus().blur();
-  cy.get(shopSelectors.checkoutEmail).clear().type("invalid-email").blur();
-  cy.get(shopSelectors.checkoutPhone).clear().type("12345").blur();
+  cy.get(shopSelectors.checkoutEmail).clear().type('invalid-email').blur();
+  cy.get(shopSelectors.checkoutPhone).clear().type('12345').blur();
   cy.get(shopSelectors.checkoutCity).clear().focus().blur();
   cy.get(shopSelectors.checkoutArea).clear().focus().blur();
   cy.get(shopSelectors.checkoutStreet).clear().focus().blur();
@@ -60,12 +60,12 @@ export function submitCheckoutForm(): void {
 export function createOrderViaApiAsUser(token: string): Cypress.Chainable<number> {
   return cy
     .request({
-      method: "POST",
+      method: 'POST',
       url: API_ROUTES.checkoutOrder,
       headers: {
         Authorization: `Bearer ${token}`,
         Cookie: `admin_session=${token}`,
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: {
         address: {
@@ -75,14 +75,14 @@ export function createOrderViaApiAsUser(token: string): Cypress.Chainable<number
           area: GUEST_CHECKOUT_DATA.area,
           street: GUEST_CHECKOUT_DATA.street,
         },
-        paymentMethod: "cod",
+        paymentMethod: 'cod',
       },
       failOnStatusCode: false,
     })
     .then((response) => {
-      expect(response.status, "checkout order status").to.eq(201);
+      expect(response.status, 'checkout order status').to.eq(201);
       const orderId = response.body?.data?.order?.id as number | undefined;
-      expect(orderId, "created order id").to.be.a("number");
+      expect(orderId, 'created order id').to.be.a('number');
       return orderId!;
     });
 }

@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { ChevronRight, X, Loader2, Folder } from "lucide-react";
-import { cn } from "@lib/utils";
-import { Button } from "@findeg/ui";
-import { Popover, PopoverContent, PopoverTrigger } from "@findeg/ui";
-import { ScrollArea } from "@findeg/ui";
+import * as React from 'react';
+import { ChevronRight, X, Loader2, Folder } from 'lucide-react';
+import { cn } from '@lib/utils';
+import { Button } from '@findeg/ui';
+import { Popover, PopoverContent, PopoverTrigger } from '@findeg/ui';
+import { ScrollArea } from '@findeg/ui';
 
 export interface Category {
   id: number;
@@ -32,7 +32,7 @@ export function CascadingCategoryPicker({
   value,
   onChange,
   categories,
-  placeholder = "Select category...",
+  placeholder = 'Select category...',
   disabled = false,
   className,
 }: CascadingCategoryPickerProps) {
@@ -106,9 +106,9 @@ export function CascadingCategoryPicker({
               <div
                 key={node.id}
                 className={cn(
-                  "flex h-9 cursor-pointer items-center justify-between rounded-md px-3 py-2 text-sm transition-colors",
-                  isActive ? "bg-accent text-accent-foreground" : "hover:bg-accent/50",
-                  isSelected && !isActive && "text-primary font-medium",
+                  'flex h-9 cursor-pointer items-center justify-between rounded-md px-3 py-2 text-sm transition-colors',
+                  isActive ? 'bg-accent text-accent-foreground' : 'hover:bg-accent/50',
+                  isSelected && !isActive && 'text-primary font-medium',
                 )}
                 onMouseEnter={() => handleMouseEnter(node, depth)}
                 onClick={() => handleItemClick(node)}
@@ -142,7 +142,7 @@ export function CascadingCategoryPicker({
           role="combobox"
           disabled={disabled}
           className={cn(
-            "h-auto min-h-[40px] w-full justify-between gap-2 px-3 py-2 font-normal hover:bg-background",
+            'h-auto min-h-[40px] w-full justify-between gap-2 px-3 py-2 font-normal hover:bg-background',
             className,
           )}
         >
@@ -167,8 +167,8 @@ export function CascadingCategoryPicker({
             )}
             <ChevronRight
               className={cn(
-                "h-4 w-4 shrink-0 rotate-90 opacity-50 transition-transform duration-200",
-                open && "-rotate-90",
+                'h-4 w-4 shrink-0 rotate-90 opacity-50 transition-transform duration-200',
+                open && '-rotate-90',
               )}
             />
           </div>

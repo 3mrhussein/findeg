@@ -1,13 +1,13 @@
-import { Container } from "@findeg/ui";
-import { FadeIn } from "@providers/animation-provider";
-import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Suspense } from "react";
-import type { Locale } from "next-intl";
-import { SchoolListLookupForm } from "./_components/SchoolListLookupForm";
-import { getSchoolListData } from "@/data/school/queries";
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import { SchoolListResults } from "./_components/SchoolListResults";
-import { SectionStateEmpty } from "@components/shared/state/SectionStateEmpty";
+import { Container } from '@findeg/ui';
+import { FadeIn } from '@providers/animation-provider';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { Suspense } from 'react';
+import type { Locale } from 'next-intl';
+import { SchoolListLookupForm } from './_components/SchoolListLookupForm';
+import { getSchoolListData } from '@/data/school/queries';
+import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
+import { SchoolListResults } from './_components/SchoolListResults';
+import { SectionStateEmpty } from '@components/shared/state/SectionStateEmpty';
 
 interface SchoolPageProps {
   params: Promise<{ locale: string }>;
@@ -32,7 +32,7 @@ export default function SchoolPage(props: SchoolPageProps) {
 /** Async inner page that reads params/searchParams. */
 async function SchoolPageInner({ params, searchParams }: SchoolPageProps) {
   const { locale } = await params;
-  const { code = "" } = await searchParams;
+  const { code = '' } = await searchParams;
   const resLocale = locale as Locale;
   setRequestLocale(resLocale);
   const t = await getTranslations({ locale: resLocale });
@@ -41,16 +41,16 @@ async function SchoolPageInner({ params, searchParams }: SchoolPageProps) {
     <div className="bg-background py-12 md:py-20">
       <Container>
         <FadeIn className="text-center mb-12 space-y-4">
-          <h1 className="text-4xl font-bold tracking-tight">{t("Pages.SchoolLists.Title")}</h1>
+          <h1 className="text-4xl font-bold tracking-tight">{t('Pages.SchoolLists.Title')}</h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            {t("Pages.SchoolLists.Subtitle")}
+            {t('Pages.SchoolLists.Subtitle')}
           </p>
         </FadeIn>
 
         <div className="mx-auto max-w-4xl space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>{t("Pages.SchoolLists.FormTitle")}</CardTitle>
+              <CardTitle>{t('Pages.SchoolLists.FormTitle')}</CardTitle>
             </CardHeader>
             <CardContent>
               <SchoolListLookupForm initialCode={code} />
@@ -75,15 +75,15 @@ async function SchoolListContent({ locale, code }: { locale: string; code: strin
     <>
       {code && viewModel.productIds.length === 0 ? (
         <SectionStateEmpty
-          title={t("Pages.SchoolLists.InvalidCodeTitle")}
-          description={t("Pages.SchoolLists.InvalidCodeDescription")}
+          title={t('Pages.SchoolLists.InvalidCodeTitle')}
+          description={t('Pages.SchoolLists.InvalidCodeDescription')}
         />
       ) : null}
 
       {code && viewModel.productIds.length > 0 && viewModel.products.length === 0 ? (
         <SectionStateEmpty
-          title={t("Pages.SchoolLists.NoResultsTitle")}
-          description={t("Pages.SchoolLists.NoResultsDescription")}
+          title={t('Pages.SchoolLists.NoResultsTitle')}
+          description={t('Pages.SchoolLists.NoResultsDescription')}
         />
       ) : null}
 

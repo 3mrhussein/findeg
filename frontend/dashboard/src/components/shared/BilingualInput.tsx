@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { useFormContext, Controller, FieldPath, FieldValues } from "react-hook-form";
-import { Input } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import { cn } from "@lib/utils";
+import * as React from 'react';
+import { useFormContext, Controller, FieldPath, FieldValues } from 'react-hook-form';
+import { Input } from '@findeg/ui';
+import { Label } from '@findeg/ui';
+import { cn } from '@lib/utils';
 
 interface BilingualInputProps {
   nameEn: string;
@@ -28,8 +28,8 @@ interface BilingualInputProps {
 export function BilingualInput({
   nameEn,
   nameAr,
-  labelEn = "English",
-  labelAr = "Arabic",
+  labelEn = 'English',
+  labelAr = 'Arabic',
   placeholderEn,
   placeholderAr,
   required,
@@ -41,20 +41,20 @@ export function BilingualInput({
   } = useFormContext();
 
   const errorEn = nameEn
-    .split(".")
+    .split('.')
     .reduce(
       (o: Record<string, unknown>, k) => (o?.[k] as Record<string, unknown>) ?? {},
       errors as Record<string, unknown>,
     );
   const errorAr = nameAr
-    .split(".")
+    .split('.')
     .reduce(
       (o: Record<string, unknown>, k) => (o?.[k] as Record<string, unknown>) ?? {},
       errors as Record<string, unknown>,
     );
 
   return (
-    <div className={cn("grid grid-cols-2 gap-3", className)}>
+    <div className={cn('grid grid-cols-2 gap-3', className)}>
       {/* English */}
       <div className="space-y-1">
         <Label htmlFor={nameEn} className="text-xs font-medium text-muted-foreground">
@@ -67,8 +67,8 @@ export function BilingualInput({
           dir="ltr"
           placeholder={placeholderEn}
           className={cn(
-            "h-8 text-sm",
-            !!(errorEn as { message?: string })?.message && "border-destructive",
+            'h-8 text-sm',
+            !!(errorEn as { message?: string })?.message && 'border-destructive',
           )}
         />
         {!!(errorEn as { message?: string })?.message && (
@@ -88,8 +88,8 @@ export function BilingualInput({
           dir="rtl"
           placeholder={placeholderAr}
           className={cn(
-            "h-8 text-sm font-arabic",
-            !!(errorAr as { message?: string })?.message && "border-destructive",
+            'h-8 text-sm font-arabic',
+            !!(errorAr as { message?: string })?.message && 'border-destructive',
           )}
         />
         {!!(errorAr as { message?: string })?.message && (

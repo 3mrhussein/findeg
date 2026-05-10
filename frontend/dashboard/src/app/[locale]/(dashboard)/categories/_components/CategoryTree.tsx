@@ -13,9 +13,9 @@
  * Location: src/app/[locale]/admin/(dashboard)/categories/_components/
  */
 
-"use client";
+'use client';
 
-import * as React from "react";
+import * as React from 'react';
 import {
   DndContext,
   closestCenter,
@@ -24,29 +24,29 @@ import {
   useSensor,
   useSensors,
   type DragEndEvent,
-} from "@dnd-kit/core";
+} from '@dnd-kit/core';
 import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { Button } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Plus, Search } from "lucide-react";
-import { CategoryRow } from "./CategoryRow";
-import { CategoryFormPanel } from "./CategoryFormPanel";
-import { CategoryDrawer } from "./CategoryDrawer";
-import { EmptyState } from "@findeg/ui";
+} from '@dnd-kit/sortable';
+import { Button } from '@findeg/ui';
+import { Input } from '@findeg/ui';
+import { Plus, Search } from 'lucide-react';
+import { CategoryRow } from './CategoryRow';
+import { CategoryFormPanel } from './CategoryFormPanel';
+import { CategoryDrawer } from './CategoryDrawer';
+import { EmptyState } from '@findeg/ui';
 import {
   checkCategorySlugAvailableAction as checkSlugAvailableAction,
   moveCategoryUpAction as moveCategoryUp,
   moveCategoryDownAction as moveCategoryDown,
-} from "@data/categories/actions";
-import type { Category } from "@findeg/backend/features/catalog";
-import { useTranslations } from "next-intl";
+} from '@data/categories/actions';
+import type { Category } from '@findeg/backend/features/catalog';
+import { useTranslations } from 'next-intl';
 
-import { ConfirmDialog } from "@/app/[locale]/_components/shared/ConfirmDialog";
+import { ConfirmDialog } from '@/app/[locale]/_components/shared/ConfirmDialog';
 import {
   Dialog,
   DialogContent,
@@ -54,8 +54,8 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@findeg/ui";
-import { cn } from "@lib/utils";
+} from '@findeg/ui';
+import { cn } from '@lib/utils';
 
 interface CategoryTreeProps {
   categories: Category[];
@@ -68,25 +68,25 @@ interface CategoryTreeProps {
 function useIsLargeScreen() {
   const [isLarge, setIsLarge] = React.useState(false);
   React.useEffect(() => {
-    const mq = window.matchMedia("(min-width: 1024px)");
+    const mq = window.matchMedia('(min-width: 1024px)');
     Promise.resolve().then(() => {
       setIsLarge(mq.matches);
     });
     const handler = (e: MediaQueryListEvent) => setIsLarge(e.matches);
-    mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
   }, []);
   return isLarge;
 }
 
 export function CategoryTree({ categories, onReorder, onSave, onDelete }: CategoryTreeProps) {
-  const t = useTranslations("Administration.Catalog.Categories");
+  const t = useTranslations('Administration.Catalog.Categories');
   const isLargeScreen = useIsLargeScreen();
 
   // Tree state
   const [items, setItems] = React.useState<Category[]>(categories);
   const [expandedIds, setExpandedIds] = React.useState<Set<number>>(new Set());
-  const [searchQuery, setSearchQuery] = React.useState("");
+  const [searchQuery, setSearchQuery] = React.useState('');
 
   // Panel state — which category (or null = create) is open
   const [panelOpen, setPanelOpen] = React.useState(false);
@@ -97,7 +97,7 @@ export function CategoryTree({ categories, onReorder, onSave, onDelete }: Catego
   const [showDeleteConfirm, setShowDeleteConfirm] = React.useState(false);
   const [categoryToDelete, setCategoryToDelete] = React.useState<Category | null>(null);
   const [showBlockedDialog, setShowBlockedDialog] = React.useState(false);
-  const [blockedMessage, setBlockedMessage] = React.useState("");
+  const [blockedMessage, setBlockedMessage] = React.useState('');
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -200,7 +200,7 @@ export function CategoryTree({ categories, onReorder, onSave, onDelete }: Catego
   // ── Delete ────────────────────────────────────────────────────────────────
   const handleDelete = (cat: Category) => {
     if (cat.children && cat.children.length > 0) {
-      setBlockedMessage("This category has sub-categories. Please delete or move them first.");
+      setBlockedMessage('This category has sub-categories. Please delete or move them first.');
       setShowBlockedDialog(true);
       return;
     }
@@ -235,9 +235,9 @@ export function CategoryTree({ categories, onReorder, onSave, onDelete }: Catego
       <React.Fragment key={cat.id}>
         <div
           className={cn(
-            "transition-colors",
+            'transition-colors',
             (isSelectedForEdit || isParentSelected) &&
-              "ring-1 ring-inset ring-indigo-400 rounded-md bg-indigo-50 dark:bg-indigo-950/30",
+              'ring-1 ring-inset ring-indigo-400 rounded-md bg-indigo-50 dark:bg-indigo-950/30',
           )}
         >
           <CategoryRow
@@ -273,9 +273,9 @@ export function CategoryTree({ categories, onReorder, onSave, onDelete }: Catego
     return (
       <>
         <EmptyState
-          title={t("Tree.Empty")}
-          description={t("Subtitle", { count: 0 })}
-          action={{ label: t("AddCategory"), onClick: openCreate }}
+          title={t('Tree.Empty')}
+          description={t('Subtitle', { count: 0 })}
+          action={{ label: t('AddCategory'), onClick: openCreate }}
         />
         {/* Mobile drawer — always rendered */}
         <div className="lg:hidden">
@@ -295,7 +295,7 @@ export function CategoryTree({ categories, onReorder, onSave, onDelete }: Catego
   return (
     <>
       {/* ── 3-Column Layout ─────────────────────────────────── */}
-      <div className={cn("relative flex gap-0", "transition-all duration-300")}>
+      <div className={cn('relative flex gap-0', 'transition-all duration-300')}>
         {/* Column 2: Tree */}
         <div className="flex-1 min-w-0 space-y-6">
           {/* Toolbar */}
@@ -303,7 +303,7 @@ export function CategoryTree({ categories, onReorder, onSave, onDelete }: Catego
             <div className="relative w-full sm:w-72">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder={t("Tree.SearchPlaceholder")}
+                placeholder={t('Tree.SearchPlaceholder')}
                 className="pl-9 h-10 rounded-lg border-gray-200 dark:border-border focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -311,12 +311,13 @@ export function CategoryTree({ categories, onReorder, onSave, onDelete }: Catego
             </div>
             <Button onClick={openCreate} className="bg-indigo-600 hover:bg-indigo-700 text-white">
               <Plus className="h-4 w-4 me-2" />
-              {t("AddCategory")}
+              {t('AddCategory')}
             </Button>
           </div>
 
           {/* Tree rows */}
           <DndContext
+            id="category-tree-dnd"
             sensors={sensors}
             collisionDetection={closestCenter}
             onDragEnd={handleDragEnd}
@@ -335,16 +336,16 @@ export function CategoryTree({ categories, onReorder, onSave, onDelete }: Catego
         {/* Column 3: Form Panel — lg+ only, inline */}
         <div
           className={cn(
-            "hidden lg:flex flex-col",
-            "shrink-0",
-            "border rounded-xl overflow-hidden",
-            "bg-white dark:bg-card border-gray-200 dark:border-border",
-            "sticky top-6 self-start",
-            "transition-all duration-300 ease-in-out",
+            'hidden lg:flex flex-col',
+            'shrink-0',
+            'border rounded-xl overflow-hidden',
+            'bg-white dark:bg-card border-gray-200 dark:border-border',
+            'sticky top-6 self-start',
+            'transition-all duration-300 ease-in-out',
             panelOpen
-              ? "w-[420px] opacity-100 translate-x-0 ms-6"
-              : "w-0 opacity-0 pointer-events-none translate-x-8 ms-0 border-0",
-            "h-[calc(100vh-160px)]",
+              ? 'w-[420px] opacity-100 translate-x-0 ms-6'
+              : 'w-0 opacity-0 pointer-events-none translate-x-8 ms-0 border-0',
+            'h-[calc(100vh-160px)]',
           )}
         >
           {panelOpen && (
@@ -376,11 +377,11 @@ export function CategoryTree({ categories, onReorder, onSave, onDelete }: Catego
         open={showDeleteConfirm}
         onOpenChange={setShowDeleteConfirm}
         onConfirm={handleConfirmDelete}
-        title={t("DeleteConfirmTitle")}
-        description={t("DeleteConfirmDescription", {
-          name: categoryToDelete?.localizedContent?.name?.en ?? categoryToDelete?.slug ?? "",
+        title={t('DeleteConfirmTitle')}
+        description={t('DeleteConfirmDescription', {
+          name: categoryToDelete?.localizedContent?.name?.en ?? categoryToDelete?.slug ?? '',
         })}
-        confirmLabel={t("DeleteCategory")}
+        confirmLabel={t('DeleteCategory')}
         variant="destructive"
       />
 
@@ -388,7 +389,7 @@ export function CategoryTree({ categories, onReorder, onSave, onDelete }: Catego
       <Dialog open={showBlockedDialog} onOpenChange={setShowBlockedDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{t("Tree.DeleteBlockedTitle")}</DialogTitle>
+            <DialogTitle>{t('Tree.DeleteBlockedTitle')}</DialogTitle>
             <DialogDescription>{blockedMessage}</DialogDescription>
           </DialogHeader>
           <DialogFooter>

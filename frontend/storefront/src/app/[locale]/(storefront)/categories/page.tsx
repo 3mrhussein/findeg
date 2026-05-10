@@ -1,9 +1,9 @@
-import { getTranslations, setRequestLocale } from "next-intl/server";
-import type { Locale } from "next-intl";
-import Image from "next/image";
-import { Link } from "@i18n/navigation";
-import { getCategoriesPageData } from "@/data/categories/queries";
-import { PageShell } from "../_components/PageShell";
+import { getTranslations, setRequestLocale } from 'next-intl/server';
+import type { Locale } from 'next-intl';
+import Image from 'next/image';
+import { Link } from '@i18n/navigation';
+import { getCategoriesPageData } from '@/data/categories/queries';
+import { PageShell } from '../_components/PageShell';
 
 /**
  * Categories page — data is served from the cached `getAll()` queries in
@@ -25,8 +25,8 @@ export default async function CategoriesPage({ params }: { params: Promise<{ loc
  * a `'use cache'` directive here.
  */
 async function CategoriesPageContent({ locale }: { locale: string }) {
-  const t = await getTranslations({ locale: locale as Locale, namespace: "Pages.Categories" });
-  const tNav = await getTranslations({ locale: locale as Locale, namespace: "Nav" });
+  const t = await getTranslations({ locale: locale as Locale, namespace: 'Pages.Categories' });
+  const tNav = await getTranslations({ locale: locale as Locale, namespace: 'Nav' });
 
   const activeCategories = await getCategoriesPageData(locale);
 
@@ -35,10 +35,10 @@ async function CategoriesPageContent({ locale }: { locale: string }) {
       {/* Page Header */}
       <div className="mb-10 lg:mb-12">
         <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white mb-4">
-          {tNav("Categories")}
+          {tNav('Categories')}
         </h1>
         <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl">
-          {t("EmptyDescription")}
+          {t('EmptyDescription')}
         </p>
       </div>
 
@@ -58,11 +58,11 @@ async function CategoriesPageContent({ locale }: { locale: string }) {
             />
             <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent p-6 flex flex-col justify-end">
               <span className="mb-3 inline-block rounded bg-white/20 px-3 py-1.5 text-xs font-bold text-white backdrop-blur-md w-fit shadow-sm">
-                {t("ProductsCount", { count: category.productsCount || 0 })}
+                {t('ProductsCount', { count: category.productsCount || 0 })}
               </span>
               <h3 className="text-2xl font-bold text-white mb-2">{category.name}</h3>
               <p className="text-sm text-slate-200 opacity-0 transform translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0 line-clamp-2">
-                {category.description || t("EmptyDescription")}
+                {category.description || t('EmptyDescription')}
               </p>
             </div>
           </Link>

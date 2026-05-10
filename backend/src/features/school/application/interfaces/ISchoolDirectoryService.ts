@@ -1,9 +1,21 @@
-import { ID } from "@findeg/backend/features/core/domain/types/common";
+
+
+import { SchoolList } from '@findeg/db/schema';
 
 export interface SchoolFilterOptions {
   governorates: string[];
   schoolTypes: string[];
   academicSystems: string[];
+}
+
+export interface SchoolProfile {
+  id: number;
+  name: string;
+  governorate: string | null;
+  area: string | null;
+  schoolType: string | null;
+  academicSystem: string | null;
+  lists: SchoolList[];
 }
 
 export interface SchoolSearchResult {
@@ -33,7 +45,7 @@ export interface ISchoolDirectoryService {
   searchSchools(
     params: SchoolSearchParams,
   ): Promise<{ items: SchoolSearchResult[]; totalCount: number }>;
-  getBySlug(slug: string): Promise<any>; // Returns school profile with lists
+  getBySlug(slug: string): Promise<SchoolProfile | null>; // Returns school profile with lists
   suggestSchool(input: { schoolName: string; area: string; email: string }): Promise<void>;
   getFilterOptions(): Promise<SchoolFilterOptions>;
 }

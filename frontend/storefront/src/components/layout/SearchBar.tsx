@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Link } from "@i18n/navigation";
-import { Search } from "lucide-react";
+import { useState } from 'react';
+import { Link } from '@i18n/navigation';
+import { Search } from 'lucide-react';
 
 /**
  * Placeholder SearchBar
  * To be replaced by the full SearchBar component prompt.
  */
 export function SearchBar() {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState('');
 
   /**
    *

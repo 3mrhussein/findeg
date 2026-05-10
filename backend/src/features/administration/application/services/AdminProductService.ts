@@ -1,25 +1,25 @@
-import type { ID } from "../../../core/domain/types/common";
-import type { IAdminProductService } from "../interfaces/IAdminProductService";
-import type { IProductRepository } from "../../../catalog/application/interfaces/IProductRepository";
-import type { ICategoryRepository } from "../../../catalog/application/interfaces/ICategoryRepository";
-import type { IBrandRepository } from "../../../catalog/application/interfaces/IBrandRepository";
-import type { IAuditLogService } from "../interfaces/IAuditLogService";
-import type { MediaService } from "../../../media/application/services/MediaService";
-import type { Product } from "../../../catalog/domain/entities/Product";
-import type { ProductInput } from "../../domain/types/ProductInput";
-import type { Locale } from "../../../core/domain/value-objects";
+import type { ID } from '../../../core/domain/types/common';
+import type { IAdminProductService } from '../interfaces/IAdminProductService';
+import type { IProductRepository } from '../../../catalog/application/interfaces/IProductRepository';
+import type { ICategoryRepository } from '../../../catalog/application/interfaces/ICategoryRepository';
+import type { IBrandRepository } from '../../../catalog/application/interfaces/IBrandRepository';
+import type { IAuditLogService } from '../interfaces/IAuditLogService';
+import type { MediaService } from '../../../media/application/services/MediaService';
+import type { Product } from '../../../catalog/domain/entities/Product';
+import type { ProductInput } from '../../domain/types/ProductInput';
+import type { Locale } from '../../../core/domain/value-objects';
 import type {
   CreateProductWithVariantsInput,
   UpdateProductWithVariantsInput,
   UoMInput,
   ImageInput,
   CreateVariantInput,
-} from "../../domain/types/VariantInput";
-import type { VariantDimension } from "../../../catalog/domain/types/VariantDimension";
-import { VariantKey } from "../../../catalog/domain/value-objects/VariantKey";
-import { Sku } from "../../../catalog/domain/value-objects/Sku";
-import { generateVariantMatrix } from "../../../catalog/domain/types/VariantDimension";
-import { db } from "@findeg/db/connection";
+} from '../../domain/types/VariantInput';
+import type { VariantDimension } from '../../../catalog/domain/types/VariantDimension';
+import { VariantKey } from '../../../catalog/domain/value-objects/VariantKey';
+import { Sku } from '../../../catalog/domain/value-objects/Sku';
+import { generateVariantMatrix } from '../../../catalog/domain/types/VariantDimension';
+import { db, Db } from '@findeg/db/connection';
 import {
   products,
   productVariants,
@@ -31,14 +31,17 @@ import {
   attributeDefinitions,
   categories,
   brands,
-} from "@findeg/db/schema";
-import { eq, and, ne, inArray, sql, desc, asc, or, ilike, count } from "drizzle-orm";
+  uomCodeEnum,
+} from '@findeg/db/schema';
+import { eq, and, ne, inArray, sql, desc, asc, or, ilike, count, SQL, Column } from 'drizzle-orm';
 import {
   ProductListFilters,
   ProductListItem,
   ProductListResult,
   ProductEditData,
-} from "../interfaces/IAdminProductService";
+} from '../interfaces/IAdminProductService';
+
+type Transaction = Parameters<Parameters<Db['transaction']>[0]>[0];
 
 /**
  * Admin Product Service
@@ -132,33 +135,33 @@ export class AdminProductService implements IAdminProductService {
     }
 
     if (filters.status) {
-      whereClauses.push(eq(products.isActive, filters.status === "active"));
+      whereClauses.push(eq(products.isActive, filters.status === 'active'));
     }
 
     // Completeness filter logic handled in subquery or post-filter
     // For performance, we'll apply it in a HAVING-like clause or subquery-based WHERE
     if (filters.completeness) {
       switch (filters.completeness) {
-        case "no-category":
+        case 'no-category':
           whereClauses.push(sql`${products.categoryId} IS NULL`);
           break;
-        case "draft":
+        case 'draft':
           whereClauses.push(eq(products.isActive, false));
           break;
-        case "no-images":
+        case 'no-images':
           whereClauses.push(
             sql`NOT EXISTS (SELECT 1 FROM "catalog"."product_variants" pv 
                 JOIN "catalog"."variant_images" vi ON pv."id" = vi."variant_id" 
                 WHERE pv."product_id" = ${products.id})`,
           );
           break;
-        case "no-price":
+        case 'no-price':
           whereClauses.push(
             sql`NOT EXISTS (SELECT 1 FROM "catalog"."product_variants" pv 
                 WHERE pv."product_id" = ${products.id} AND CAST(pv."base_price" AS DECIMAL) > 0)`,
           );
           break;
-        case "complete":
+        case 'complete':
           whereClauses.push(
             and(
               sql`${products.categoryId} IS NOT NULL`,
@@ -177,20 +180,20 @@ export class AdminProductService implements IAdminProductService {
     const where = whereClauses.length > 0 ? and(...whereClauses) : undefined;
 
     // Sorting
-    let orderBy: any = desc(products.updatedAt);
+    let orderBy: SQL | Column = desc(products.updatedAt);
     if (filters.sortBy) {
-      const dir = filters.sortDir === "asc" ? asc : desc;
+      const dir = filters.sortDir === 'asc' ? asc : desc;
       switch (filters.sortBy) {
-        case "name":
+        case 'name':
           orderBy = dir(sql`${products.localizedName}->>'en'`);
           break;
-        case "price":
+        case 'price':
           orderBy = dir(sql`pv_stats.min_price`);
           break;
-        case "stock":
+        case 'stock':
           orderBy = dir(sql`inv_stats.total_stock`);
           break;
-        case "updatedAt":
+        case 'updatedAt':
           orderBy = dir(products.updatedAt);
           break;
       }
@@ -231,16 +234,16 @@ export class AdminProductService implements IAdminProductService {
 
     const items: ProductListItem[] = mainRows.map((row) => {
       // Determine completeness
-      let completeness: ProductListItem["completeness"] = "complete";
-      if (!row.categoryId) completeness = "no-category";
-      else if (!row.isActive) completeness = "draft";
-      else if (!row.hasImages) completeness = "no-images";
+      let completeness: ProductListItem['completeness'] = 'complete';
+      if (!row.categoryId) completeness = 'no-category';
+      else if (!row.isActive) completeness = 'draft';
+      else if (!row.hasImages) completeness = 'no-images';
       else if (!row.defaultVariantPrice || Number(row.defaultVariantPrice) === 0)
-        completeness = "no-price";
+        completeness = 'no-price';
 
       return {
         ...row,
-        sku: row.sku || "N/A",
+        sku: row.sku || 'N/A',
         localizedName: row.localizedName as { en: string; ar: string },
         defaultVariantPrice: row.defaultVariantPrice ? Number(row.defaultVariantPrice) : null,
         totalStock: Number(row.totalStock),
@@ -323,7 +326,7 @@ export class AdminProductService implements IAdminProductService {
 
       // 3. Insert variants
       const variants =
-        input.pricingMode === "shared"
+        input.pricingMode === 'shared'
           ? input.variants.map((v) => ({
               ...v,
               basePrice: input.sharedBasePrice ?? v.basePrice,
@@ -340,9 +343,9 @@ export class AdminProductService implements IAdminProductService {
     });
 
     await this.auditLogService?.logAction({
-      entityType: "product",
+      entityType: 'product',
       entityId: String(productId),
-      action: "create",
+      action: 'create',
       adminUserId,
       newValues: { ...input } as Record<string, unknown>,
     });
@@ -413,7 +416,7 @@ export class AdminProductService implements IAdminProductService {
 
       // Upsert variants provided
       for (const v of input.variants ?? []) {
-        if ("id" in v && v.id) {
+        if ('id' in v && v.id) {
           // Update existing variant
           await tx
             .update(productVariants)
@@ -461,9 +464,9 @@ export class AdminProductService implements IAdminProductService {
     });
 
     await this.auditLogService?.logAction({
-      entityType: "product",
+      entityType: 'product',
       entityId: String(id),
-      action: "update",
+      action: 'update',
       adminUserId,
       newValues: input as Record<string, unknown>,
     });
@@ -489,8 +492,8 @@ export class AdminProductService implements IAdminProductService {
         .values({
           sku: `${product.sku}-copy-${Date.now()}`,
           localizedName: {
-            en: `${(product.localizedName as Record<"en" | "ar", string>).en} (Copy)`,
-            ar: `${(product.localizedName as Record<"en" | "ar", string>).ar} (نسخة)`,
+            en: `${(product.localizedName as Record<'en' | 'ar', string>).en} (Copy)`,
+            ar: `${(product.localizedName as Record<'en' | 'ar', string>).ar} (نسخة)`,
           },
           localizedDescription: product.localizedDescription,
           localizedLongDescription: product.localizedLongDescription,
@@ -539,9 +542,9 @@ export class AdminProductService implements IAdminProductService {
     });
 
     await this.auditLogService?.logAction({
-      entityType: "product",
+      entityType: 'product',
       entityId: String(id),
-      action: "duplicate",
+      action: 'duplicate',
       adminUserId,
       newValues: { newProductId: result.newId },
     });
@@ -559,9 +562,9 @@ export class AdminProductService implements IAdminProductService {
     await db.update(products).set({ isActive: true }).where(inArray(products.id, ids));
 
     await this.auditLogService?.logAction({
-      entityType: "product",
-      entityId: "multiple",
-      action: "bulk_activate",
+      entityType: 'product',
+      entityId: 'multiple',
+      action: 'bulk_activate',
       adminUserId,
       newValues: { ids },
     });
@@ -575,9 +578,9 @@ export class AdminProductService implements IAdminProductService {
     await db.update(products).set({ isActive: false }).where(inArray(products.id, ids));
 
     await this.auditLogService?.logAction({
-      entityType: "product",
-      entityId: "multiple",
-      action: "bulk_deactivate",
+      entityType: 'product',
+      entityId: 'multiple',
+      action: 'bulk_deactivate',
       adminUserId,
       newValues: { ids },
     });
@@ -592,9 +595,9 @@ export class AdminProductService implements IAdminProductService {
     await db.delete(products).where(inArray(products.id, ids));
 
     await this.auditLogService?.logAction({
-      entityType: "product",
-      entityId: "multiple",
-      action: "bulk_delete",
+      entityType: 'product',
+      entityId: 'multiple',
+      action: 'bulk_delete',
       adminUserId,
       newValues: { ids },
     });
@@ -612,9 +615,9 @@ export class AdminProductService implements IAdminProductService {
     await this.productRepository.delete(id);
 
     await this.auditLogService?.logAction({
-      entityType: "product",
+      entityType: 'product',
       entityId: String(id),
-      action: "delete",
+      action: 'delete',
       adminUserId,
       oldValues: existing as unknown as Record<string, unknown>,
     });
@@ -632,9 +635,9 @@ export class AdminProductService implements IAdminProductService {
       .where(eq(productVariants.id, variantId));
 
     await this.auditLogService?.logAction({
-      entityType: "product_variant",
+      entityType: 'product_variant',
       entityId: String(variantId),
-      action: "deactivate",
+      action: 'deactivate',
       adminUserId,
     });
   }
@@ -663,7 +666,7 @@ export class AdminProductService implements IAdminProductService {
         ).toString();
 
         const suggestedSku = Sku.suggestVariantSku(
-          defaults.sku ?? "SKU",
+          defaults.sku ?? 'SKU',
           attrEntries.map(([, v]) => v),
         );
 
@@ -673,7 +676,7 @@ export class AdminProductService implements IAdminProductService {
             productId,
             sku: defaults.sku ?? suggestedSku,
             variantKey,
-            localizedLabel: defaults.localizedLabel ?? { en: "", ar: "" },
+            localizedLabel: defaults.localizedLabel ?? { en: '', ar: '' },
             displayOrder: i,
             isActive: defaults.isActive ?? true,
             basePrice: String(defaults.basePrice ?? 0),
@@ -712,9 +715,9 @@ export class AdminProductService implements IAdminProductService {
     });
 
     await this.auditLogService?.logAction({
-      entityType: "product",
+      entityType: 'product',
       entityId: String(productId),
-      action: "generate_variants",
+      action: 'generate_variants',
       adminUserId,
       newValues: { count: newIds.length } as Record<string, unknown>,
     });
@@ -752,7 +755,7 @@ export class AdminProductService implements IAdminProductService {
       if (!attrs.length) continue;
 
       const newKey = VariantKey.build(
-        attrs.map((a) => ({ key: a.key, value: a.valueText ?? "" })),
+        attrs.map((a) => ({ key: a.key, value: a.valueText ?? '' })),
       ).toString();
 
       await db
@@ -762,9 +765,9 @@ export class AdminProductService implements IAdminProductService {
     }
 
     await this.auditLogService?.logAction({
-      entityType: "product",
+      entityType: 'product',
       entityId: String(productId),
-      action: "rebuild_variant_keys",
+      action: 'rebuild_variant_keys',
       adminUserId,
     });
   }
@@ -804,9 +807,9 @@ export class AdminProductService implements IAdminProductService {
     });
 
     await this.auditLogService?.logAction({
-      entityType: "product_variant",
+      entityType: 'product_variant',
       entityId: String(variantId),
-      action: "upsert_uoms",
+      action: 'upsert_uoms',
       adminUserId,
     });
   }
@@ -836,9 +839,9 @@ export class AdminProductService implements IAdminProductService {
     });
 
     await this.auditLogService?.logAction({
-      entityType: "product_variant",
+      entityType: 'product_variant',
       entityId: String(variantId),
-      action: "upsert_images",
+      action: 'upsert_images',
       adminUserId,
     });
   }
@@ -853,9 +856,9 @@ export class AdminProductService implements IAdminProductService {
     }
     const product = await this.productRepository.create(input);
     await this.auditLogService?.logAction({
-      entityType: "product",
+      entityType: 'product',
       entityId: String(product.id),
-      action: "create",
+      action: 'create',
       adminUserId,
       newValues: input as unknown as Record<string, unknown>,
     });
@@ -868,9 +871,9 @@ export class AdminProductService implements IAdminProductService {
     if (!existing) throw new Error(`Product ${id} not found`);
     const updated = await this.productRepository.update(id, input);
     await this.auditLogService?.logAction({
-      entityType: "product",
+      entityType: 'product',
       entityId: String(id),
-      action: "update",
+      action: 'update',
       adminUserId,
       newValues: input as unknown as Record<string, unknown>,
     });
@@ -888,7 +891,7 @@ export class AdminProductService implements IAdminProductService {
    *
    */
   private async _insertVariantInTx(
-    tx: any,
+    tx: Transaction,
     productId: number,
     variant: CreateVariantInput,
     displayOrder: number,
@@ -903,8 +906,8 @@ export class AdminProductService implements IAdminProductService {
             ?.filter((a) => a.isVariantDefining)
             .sort((a, b) => a.attributeKey.localeCompare(b.attributeKey))
             .map((a) => a.value.toLowerCase())
-            .join("-") ?? "default",
-        localizedLabel: variant.localizedLabel ?? { en: "", ar: "" },
+            .join('-') ?? 'default',
+        localizedLabel: variant.localizedLabel ?? { en: '', ar: '' },
         displayOrder,
         isActive: variant.isActive ?? true,
         basePrice: String(variant.basePrice),
@@ -960,18 +963,18 @@ export class AdminProductService implements IAdminProductService {
   /**
    *
    */
-  private async _upsertUoMsInTx(tx: any, variantId: number, uoms: UoMInput[]): Promise<void> {
+  private async _upsertUoMsInTx(tx: Transaction, variantId: number, uoms: UoMInput[]): Promise<void> {
     // Replace all UoMs
     await tx.delete(variantSellableUoms).where(eq(variantSellableUoms.variantId, variantId));
 
     if (!uoms.length) return;
 
     for (const uom of uoms) {
-      const [uomRow] = await tx
+      await tx
         .insert(variantSellableUoms)
         .values({
           variantId,
-          uomCode: uom.uomCode,
+          uomCode: uom.uomCode as (typeof uomCodeEnum.enumValues)[number],
           factorToBase: String(uom.factorToBase),
           localizedLabel: uom.localizedLabel,
           barcode: uom.barcode ?? null,
@@ -984,7 +987,7 @@ export class AdminProductService implements IAdminProductService {
         await tx.insert(variantPriceLists).values(
           uom.priceLists.map((pl) => ({
             variantId,
-            uomCode: uom.uomCode,
+            uomCode: uom.uomCode as (typeof uomCodeEnum.enumValues)[number],
             customerGroup: pl.customerGroup,
             unitPrice: String(pl.unitPrice),
             minQty: pl.minQty,

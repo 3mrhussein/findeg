@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { Check, ChevronsUpDown, X } from "lucide-react";
-import { Badge } from "@findeg/ui";
-import { Button } from "@findeg/ui";
+import * as React from 'react';
+import { Check, ChevronsUpDown, X } from 'lucide-react';
+import { Badge } from '@findeg/ui';
+import { Button } from '@findeg/ui';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "@findeg/ui";
-import { ScrollArea } from "@findeg/ui";
-import { Collection } from "@findeg/backend/features/catalog";
-import { cn } from "@lib/utils";
+} from '@findeg/ui';
+import { ScrollArea } from '@findeg/ui';
+import { Collection } from '@findeg/backend/features/catalog';
+import { cn } from '@lib/utils';
 
 interface CollectionSelectProps {
   allCollections: Collection[];
@@ -29,7 +29,7 @@ export function CollectionSelect({
   allCollections,
   selectedIds,
   onChange,
-  placeholder = "Select collections...",
+  placeholder = 'Select collections...',
   className,
 }: CollectionSelectProps) {
   const selectedCollections = allCollections.filter((c) => selectedIds.includes(c.id));
@@ -54,7 +54,7 @@ export function CollectionSelect({
   };
 
   return (
-    <div className={cn("space-y-2", className)}>
+    <div className={cn('space-y-2', className)}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button

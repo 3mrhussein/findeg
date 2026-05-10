@@ -7,11 +7,11 @@
  * Location: src/app/[locale]/admin/_components/table/ (admin-wide)
  */
 
-"use client";
+'use client';
 
-import * as React from "react";
-import { Table, TableBody, TableHead, TableHeader, TableRow } from "@findeg/ui";
-import { cn } from "@lib/utils";
+import * as React from 'react';
+import { Table, TableBody, TableHead, TableHeader, TableRow } from '@findeg/ui';
+import { cn } from '@lib/utils';
 
 export interface Column {
   /** Column key */
@@ -21,7 +21,7 @@ export interface Column {
   /** Column width (CSS class or style) */
   width?: string;
   /** Align content */
-  align?: "left" | "center" | "right";
+  align?: 'left' | 'center' | 'right';
 }
 
 export interface EnrichedTableProps {
@@ -69,7 +69,7 @@ export function EnrichedTable({
   return (
     <div
       className={cn(
-        "rounded-md border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/50",
+        'rounded-md border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900/50',
         className,
       )}
     >
@@ -92,8 +92,8 @@ export function EnrichedTable({
                 key={column.key}
                 className={cn(
                   column.width,
-                  column.align === "center" && "text-center",
-                  column.align === "right" && "text-right",
+                  column.align === 'center' && 'text-center',
+                  column.align === 'right' && 'text-right',
                 )}
               >
                 {column.label}

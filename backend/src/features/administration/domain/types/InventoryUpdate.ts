@@ -1,5 +1,5 @@
-import { z } from "zod";
-import { IdSchema, QuantitySchema } from "../../../core/domain/types/common";
+import { z } from 'zod';
+import { IdSchema, QuantitySchema } from '../../../core/domain/types/common';
 
 /**
  * Inventory Update schema — now operates at the variant (SKU) level.
@@ -22,7 +22,7 @@ export const InventoryUpdateSchema = z.object({
   lowStockThreshold: QuantitySchema.optional(),
 
   /** Type of stock movement for audit */
-  movementType: z.enum(["receipt", "adjustment", "return"]).optional(),
+  movementType: z.enum(['receipt', 'adjustment', 'return']).optional(),
 
   /** Admin notes explaining the change */
   notes: z.string().optional(),
@@ -33,7 +33,7 @@ export const InventoryUpdateBodySchema = z.object({
   warehouseId: IdSchema.optional(),
   quantity: QuantitySchema,
   lowStockThreshold: QuantitySchema.optional(),
-  movementType: z.enum(["receipt", "adjustment", "return"]).optional(),
+  movementType: z.enum(['receipt', 'adjustment', 'return']).optional(),
   notes: z.string().optional(),
 });
 

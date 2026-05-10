@@ -1,8 +1,8 @@
-import { CollectionForm } from "../_components/CollectionForm";
-import { Metadata } from "next";
+import { CollectionForm } from '../_components/CollectionForm';
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "New Collection | FindEg Admin",
+  title: 'New Collection | FindEg Admin',
 };
 
 /**

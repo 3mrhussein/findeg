@@ -1,9 +1,9 @@
-import { getTranslations } from "next-intl/server";
-import type { Locale } from "next-intl";
-import { Link } from "@i18n/navigation";
-import { Button } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
-import { BookOpen, GraduationCap } from "lucide-react";
+import { getTranslations } from 'next-intl/server';
+import type { Locale } from 'next-intl';
+import { Link } from '@i18n/navigation';
+import { Button } from '@findeg/ui';
+import { Badge } from '@findeg/ui';
+import { BookOpen, GraduationCap } from 'lucide-react';
 
 /**
  * SchoolBanner — Homepage CTA section for school lists.
@@ -27,15 +27,15 @@ export async function SchoolBanner({ locale }: { locale: string }) {
               {/* Badge pill */}
               <div className="inline-flex w-fit items-center gap-2 rounded-full bg-white/15 backdrop-blur-sm px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-white/90">
                 <GraduationCap className="size-3.5" />
-                {t("Nav.School.SmartTool")}
+                {t('Nav.School.SmartTool')}
               </div>
 
               <h2 className="text-3xl font-black tracking-tight text-white sm:text-4xl leading-tight">
-                {t("Pages.SchoolLists.SecondaryCtaTitle")}
+                {t('Pages.SchoolLists.SecondaryCtaTitle')}
               </h2>
 
               <p className="text-base lg:text-lg text-white/80 leading-relaxed max-w-lg">
-                {t("Pages.SchoolLists.SecondaryCtaDescription")}
+                {t('Pages.SchoolLists.SecondaryCtaDescription')}
               </p>
 
               {/* Bullet trust points */}
@@ -59,14 +59,14 @@ export async function SchoolBanner({ locale }: { locale: string }) {
                   asChild
                   className="rounded-full px-7 font-bold bg-white text-primary hover:bg-white/90 shadow-lg shadow-black/10"
                 >
-                  <Link href="/school-lists">{t("Nav.School.CreateList")}</Link>
+                  <Link href="/school-lists">{t('Nav.School.CreateList')}</Link>
                 </Button>
                 <Button
                   asChild
                   variant="ghost"
                   className="rounded-full px-7 font-bold text-white hover:bg-white/10 border border-white/20"
                 >
-                  <Link href="/school-lists">{t("Nav.School.LearnMore")}</Link>
+                  <Link href="/school-lists">{t('Nav.School.LearnMore')}</Link>
                 </Button>
               </div>
             </div>
@@ -97,9 +97,9 @@ export async function SchoolBanner({ locale }: { locale: string }) {
                 {/* Line items */}
                 <div className="space-y-2.5">
                   {[
-                    { label: "Composition Notebook × 3", price: "EGP 45" },
-                    { label: "Ballpoint Pens Set (12pc)", price: "EGP 30" },
-                    { label: "Scientific Calculator", price: "EGP 180" },
+                    { label: 'Composition Notebook × 3', price: 'EGP 45' },
+                    { label: 'Ballpoint Pens Set (12pc)', price: 'EGP 30' },
+                    { label: 'Scientific Calculator', price: 'EGP 180' },
                   ].map((item) => (
                     <div
                       key={item.label}
@@ -136,7 +136,7 @@ export async function SchoolBanner({ locale }: { locale: string }) {
                     asChild
                     className="w-full mt-4 rounded-xl font-bold bg-primary hover:bg-primary/90 text-white"
                   >
-                    <Link href="/school-lists">{t("Pages.SchoolLists.AddBundleToCart")}</Link>
+                    <Link href="/school-lists">{t('Pages.SchoolLists.AddBundleToCart')}</Link>
                   </Button>
                 </div>
               </div>

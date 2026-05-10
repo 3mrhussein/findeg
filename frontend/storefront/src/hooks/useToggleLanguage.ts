@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useLocale } from "next-intl";
-import { usePathname, useRouter } from "@i18n/navigation";
-import { useSearchParams } from "next/navigation";
-import type { Language } from "@lib/types";
+import { useLocale } from 'next-intl';
+import { usePathname, useRouter } from '@i18n/navigation';
+import { useSearchParams } from 'next/navigation';
+import type { Language } from '@lib/types';
 
 /**
  * Hook to handle language toggling logic.

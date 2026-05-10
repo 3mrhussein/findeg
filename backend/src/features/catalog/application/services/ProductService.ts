@@ -1,8 +1,9 @@
-import { ID } from "@findeg/backend/features/core/domain/types/common";
-import { type IProductRepository, type ProductFilters } from "../interfaces/IProductRepository";
-import { type IProductService } from "../interfaces/IProductService";
-import { type Product } from "@findeg/backend/features/catalog/domain/entities/Product";
-import { type Locale } from "@findeg/backend/features/core/domain/value-objects";
+import { ID } from '@findeg/backend/features/core/domain/types/common';
+import { type IProductRepository, type ProductFilters } from '../interfaces/IProductRepository';
+import { type IProductService } from '../interfaces/IProductService';
+import { type Product } from '@findeg/backend/features/catalog/domain/entities/Product';
+import { type Locale } from '@findeg/backend/features/core/domain/value-objects';
+import type { ProductInput } from '@findeg/backend/features/administration/domain/types';
 
 export class ProductService implements IProductService {
   constructor(private productRepository: IProductRepository) {}
@@ -54,7 +55,7 @@ export class ProductService implements IProductService {
       {
         limit,
         isActive: true,
-        sort: "rating", // Using rating as proxy for top selling for now
+        sort: 'rating', // Using rating as proxy for top selling for now
       },
       language,
     );
@@ -68,11 +69,11 @@ export class ProductService implements IProductService {
     return this.productRepository.getFiltered(filters, language);
   }
 
-  async create(input: any): Promise<Product> {
+  async create(input: ProductInput): Promise<Product> {
     return this.productRepository.create(input);
   }
 
-  async update(id: ID, input: any): Promise<Product> {
+  async update(id: ID, input: ProductInput): Promise<Product> {
     return this.productRepository.update(id, input);
   }
 

@@ -1,5 +1,5 @@
-import { CheckoutClient } from "./CheckoutClient";
-import { getCheckoutPrefill } from "@/data/order/queries";
+import { CheckoutClient } from './CheckoutClient';
+import { getCheckoutPrefill } from '@/data/order/queries';
 
 /**
  *

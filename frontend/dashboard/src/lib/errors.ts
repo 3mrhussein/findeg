@@ -1,5 +1,5 @@
-import { redirect } from "@i18n/navigation";
-import type { DomainError } from "@findeg/backend/features/core";
+import { redirect } from '@i18n/navigation';
+import type { DomainError } from '@findeg/backend/features/core';
 
 /**
  * Dashboard Error Handler Utilities
@@ -27,10 +27,10 @@ import type { DomainError } from "@findeg/backend/features/core";
  */
 export function handleDomainError(error: unknown, context?: string): Response | never {
   if (!(error instanceof Error)) {
-    console.error("Unknown error in dashboard:", context, error);
-    return new Response(JSON.stringify({ error: "An unexpected error occurred" }), {
+    console.error('Unknown error in dashboard:', context, error);
+    return new Response(JSON.stringify({ error: 'An unexpected error occurred' }), {
       status: 500,
-      headers: { "Content-Type": "application/json" },
+      headers: { 'Content-Type': 'application/json' },
     });
   }
 
@@ -41,63 +41,63 @@ export function handleDomainError(error: unknown, context?: string): Response | 
   };
 
   // Log error for debugging
-  console.error(`[${context}] ${domainError.name || "Error"}:`, {
+  console.error(`[${context}] ${domainError.name || 'Error'}:`, {
     code: domainError.code,
     message: domainError.message,
   });
 
   // Route by error type
   switch (domainError.code) {
-    case "NOT_AUTHENTICATED":
-      redirect({ href: "/login", locale: "en" });
+    case 'NOT_AUTHENTICATED':
+      redirect({ href: '/login', locale: 'en' });
 
-    case "NOT_AUTHORIZED":
-      return new Response(JSON.stringify({ error: "Not authorized" }), {
+    case 'NOT_AUTHORIZED':
+      return new Response(JSON.stringify({ error: 'Not authorized' }), {
         status: 403,
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
       });
 
-    case "RESOURCE_NOT_FOUND":
-      return new Response(JSON.stringify({ error: "Resource not found" }), {
+    case 'RESOURCE_NOT_FOUND':
+      return new Response(JSON.stringify({ error: 'Resource not found' }), {
         status: 404,
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
       });
 
-    case "VALIDATION_ERROR":
-    case "VALIDATION_ERRORS":
+    case 'VALIDATION_ERROR':
+    case 'VALIDATION_ERRORS':
       return new Response(
         JSON.stringify({
-          error: domainError.getClientMessage?.() || "Validation failed",
+          error: domainError.getClientMessage?.() || 'Validation failed',
           details: domainError.metadata,
         }),
         {
           status: 400,
-          headers: { "Content-Type": "application/json" },
+          headers: { 'Content-Type': 'application/json' },
         },
       );
 
-    case "CONFLICT_ERROR":
+    case 'CONFLICT_ERROR':
       return new Response(
-        JSON.stringify({ error: domainError.getClientMessage?.() || "Resource already exists" }),
+        JSON.stringify({ error: domainError.getClientMessage?.() || 'Resource already exists' }),
         {
           status: 409,
-          headers: { "Content-Type": "application/json" },
+          headers: { 'Content-Type': 'application/json' },
         },
       );
 
-    case "BUSINESS_RULE_VIOLATION":
+    case 'BUSINESS_RULE_VIOLATION':
       return new Response(JSON.stringify({ error: domainError.message }), {
         status: 422,
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
       });
 
     default:
-      console.error("[dashboard] Unhandled domain error code:", domainError.code, domainError);
+      console.error('[dashboard] Unhandled domain error code:', domainError.code, domainError);
       return new Response(
-        JSON.stringify({ error: domainError.getClientMessage?.() || "An error occurred" }),
+        JSON.stringify({ error: domainError.getClientMessage?.() || 'An error occurred' }),
         {
           status: domainError.getStatusCode?.() || 500,
-          headers: { "Content-Type": "application/json" },
+          headers: { 'Content-Type': 'application/json' },
         },
       );
   }
@@ -110,7 +110,7 @@ export function handleDomainError(error: unknown, context?: string): Response | 
  * @returns true if error is a DomainError subclass
  */
 export function domainError(error: unknown): error is DomainError {
-  return error instanceof Error && "code" in error && "metadata" in error;
+  return error instanceof Error && 'code' in error && 'metadata' in error;
 }
 
 /**
@@ -120,7 +120,7 @@ export function domainError(error: unknown): error is DomainError {
  * @returns Safe message for client
  */
 export function getErrorMessage(error: DomainError): string {
-  if (typeof (error as any).getClientMessage === "function") {
+  if (typeof (error as any).getClientMessage === 'function') {
     return (error as any).getClientMessage();
   }
   return error.message;

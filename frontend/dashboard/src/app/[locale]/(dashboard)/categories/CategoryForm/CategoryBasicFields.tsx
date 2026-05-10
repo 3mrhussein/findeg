@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Textarea } from "@findeg/ui";
-import type { UseFormReturn } from "react-hook-form";
-import type { CategoryFormValues } from "./CategoryForm.interface";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@findeg/ui';
+import { Input } from '@findeg/ui';
+import { Textarea } from '@findeg/ui';
+import type { UseFormReturn } from 'react-hook-form';
+import type { CategoryFormValues } from './CategoryForm.interface';
 
 interface CategoryBasicFieldsProps {
   form: UseFormReturn<CategoryFormValues>;

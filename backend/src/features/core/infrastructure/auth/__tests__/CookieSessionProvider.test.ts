@@ -9,9 +9,9 @@
  * 4. Pure TypeScript execution (no Next.js runtime)
  */
 
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { CookieSessionProvider, type ICookieStore } from "../CookieSessionProvider";
-import type { SessionPayload } from "@findeg/backend/features/core/domain/auth";
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { CookieSessionProvider, type ICookieStore } from '../CookieSessionProvider';
+import type { SessionPayload } from '@findeg/backend/features/core/domain/auth';
 
 /**
  * Mock cookie store implementation for testing
@@ -24,7 +24,7 @@ class MockCookieStore implements ICookieStore {
     return value ? { value } : undefined;
   }
 
-  set(name: string, value: string, options?: any) {
+  set(name: string, value: string, _options?: Record<string, unknown>) {
     this.cookies.set(name, value);
   }
 
@@ -46,17 +46,17 @@ class MockCookieStore implements ICookieStore {
  */
 const testSession: SessionPayload = {
   userId: 123,
-  portalRole: "staff",
+  portalRole: 'staff',
   user: {
-    email: "admin@test.local",
-    firstName: "Admin",
-    lastName: "User",
-    fullName: "Admin User",
+    email: 'admin@test.local',
+    firstName: 'Admin',
+    lastName: 'User',
+    fullName: 'Admin User',
   },
-  activeRoleIds: ["admin", "catalog_manager"] as any[],
+  activeRoleIds: ['admin', 'catalog_manager'],
 };
 
-describe("CookieSessionProvider - Pure TypeScript with Injected Cookie Store", () => {
+describe('CookieSessionProvider - Pure TypeScript with Injected Cookie Store', () => {
   let mockCookieStore: MockCookieStore;
   let provider: CookieSessionProvider;
 
@@ -66,29 +66,29 @@ describe("CookieSessionProvider - Pure TypeScript with Injected Cookie Store", (
     provider = new CookieSessionProvider(mockCookieStore);
   });
 
-  describe("Session Creation", () => {
-    it("should create a session with JWT token in cookie store", async () => {
+  describe('Session Creation', () => {
+    it('should create a session with JWT token in cookie store', async () => {
       await provider.createSession(testSession);
 
-      expect(mockCookieStore.has("admin_session")).toBe(true);
+      expect(mockCookieStore.has('admin_session')).toBe(true);
     });
 
-    it("should sign JWT with correct payload", async () => {
+    it('should sign JWT with correct payload', async () => {
       await provider.createSession(testSession);
 
-      const cookie = mockCookieStore.get("admin_session");
+      const cookie = mockCookieStore.get('admin_session');
       expect(cookie).toBeDefined();
       expect(cookie!.value).toBeTruthy();
 
       // JWT format: header.payload.signature
-      const parts = cookie!.value.split(".");
+      const parts = cookie!.value.split('.');
       expect(parts.length).toBe(3);
     });
 
-    it("should set HttpOnly and secure cookie options", async () => {
-      const setOptions: any[] = [];
-      const spySet = vi.spyOn(mockCookieStore, "set").mockImplementation((name, value, options) => {
-        setOptions.push(options);
+    it('should set HttpOnly and secure cookie options', async () => {
+      const setOptions: Record<string, unknown>[] = [];
+      const spySet = vi.spyOn(mockCookieStore, 'set').mockImplementation((name, value, options) => {
+        setOptions.push(options || {});
       });
 
       await provider.createSession(testSession);
@@ -96,34 +96,34 @@ describe("CookieSessionProvider - Pure TypeScript with Injected Cookie Store", (
       expect(spySet).toHaveBeenCalled();
       const options = setOptions[0];
       expect(options.httpOnly).toBe(true);
-      expect(options.sameSite).toBe("lax");
-      expect(typeof options.maxAge).toBe("number");
+      expect(options.sameSite).toBe('lax');
+      expect(typeof options.maxAge).toBe('number');
     });
 
-    it("should work with minimal session payload", async () => {
+    it('should work with minimal session payload', async () => {
       const minimal: SessionPayload = {
         userId: 456,
-        portalRole: "customer",
+        portalRole: 'customer',
         user: {
-          email: "user@test.local",
-          firstName: "Test",
-          lastName: "User",
-          fullName: "Test User",
+          email: 'user@test.local',
+          firstName: 'Test',
+          lastName: 'User',
+          fullName: 'Test User',
         },
       };
 
       await provider.createSession(minimal);
-      expect(mockCookieStore.has("admin_session")).toBe(true);
+      expect(mockCookieStore.has('admin_session')).toBe(true);
     });
   });
 
-  describe("Session Retrieval", () => {
-    it("should return null when no session cookie exists", async () => {
+  describe('Session Retrieval', () => {
+    it('should return null when no session cookie exists', async () => {
       const session = await provider.getSession();
       expect(session).toBeNull();
     });
 
-    it("should retrieve and validate existing session", async () => {
+    it('should retrieve and validate existing session', async () => {
       await provider.createSession(testSession);
       const retrieved = await provider.getSession();
 
@@ -133,46 +133,46 @@ describe("CookieSessionProvider - Pure TypeScript with Injected Cookie Store", (
       expect(retrieved?.user.email).toBe(testSession.user.email);
     });
 
-    it("should include active roles in retrieved session", async () => {
+    it('should include active roles in retrieved session', async () => {
       await provider.createSession(testSession);
       const retrieved = await provider.getSession();
 
       expect(retrieved?.activeRoleIds).toEqual(testSession.activeRoleIds);
     });
 
-    it("should return null for invalid JWT", async () => {
-      mockCookieStore.set("admin_session", "invalid.jwt.token");
+    it('should return null for invalid JWT', async () => {
+      mockCookieStore.set('admin_session', 'invalid.jwt.token');
       const session = await provider.getSession();
       expect(session).toBeNull();
     });
 
-    it("should return null for corrupted cookie", async () => {
-      mockCookieStore.set("admin_session", "not-a-jwt");
+    it('should return null for corrupted cookie', async () => {
+      mockCookieStore.set('admin_session', 'not-a-jwt');
       const session = await provider.getSession();
       expect(session).toBeNull();
     });
   });
 
-  describe("Session Deletion", () => {
-    it("should delete session cookie", async () => {
+  describe('Session Deletion', () => {
+    it('should delete session cookie', async () => {
       await provider.createSession(testSession);
-      expect(mockCookieStore.has("admin_session")).toBe(true);
+      expect(mockCookieStore.has('admin_session')).toBe(true);
 
       await provider.deleteSession();
-      expect(mockCookieStore.has("admin_session")).toBe(false);
+      expect(mockCookieStore.has('admin_session')).toBe(false);
     });
 
-    it("should handle deleting non-existent session gracefully", async () => {
-      expect(mockCookieStore.has("admin_session")).toBe(false);
+    it('should handle deleting non-existent session gracefully', async () => {
+      expect(mockCookieStore.has('admin_session')).toBe(false);
       await expect(provider.deleteSession()).resolves.not.toThrow();
     });
   });
 
-  describe("Session Lifecycle", () => {
-    it("should handle full create-retrieve-delete lifecycle", async () => {
+  describe('Session Lifecycle', () => {
+    it('should handle full create-retrieve-delete lifecycle', async () => {
       // Create
       await provider.createSession(testSession);
-      expect(mockCookieStore.has("admin_session")).toBe(true);
+      expect(mockCookieStore.has('admin_session')).toBe(true);
 
       // Retrieve and verify
       const retrieved = await provider.getSession();
@@ -180,14 +180,14 @@ describe("CookieSessionProvider - Pure TypeScript with Injected Cookie Store", (
 
       // Delete
       await provider.deleteSession();
-      expect(mockCookieStore.has("admin_session")).toBe(false);
+      expect(mockCookieStore.has('admin_session')).toBe(false);
 
       // Verify deleted
       const afterDelete = await provider.getSession();
       expect(afterDelete).toBeNull();
     });
 
-    it("should support updating session", async () => {
+    it('should support updating session', async () => {
       const session1 = { ...testSession, userId: 100 };
       const session2 = { ...testSession, userId: 200 };
 
@@ -203,15 +203,15 @@ describe("CookieSessionProvider - Pure TypeScript with Injected Cookie Store", (
     });
   });
 
-  describe("Pure TypeScript Verification", () => {
-    it("should not require Next.js runtime", async () => {
+  describe('Pure TypeScript Verification', () => {
+    it('should not require Next.js runtime', async () => {
       // This test proves that CookieSessionProvider works in pure Node.js
       // If it required Next.js (e.g., importing 'next/headers'), it would fail here
       const session = await provider.getSession();
       expect(session).toBeNull();
     });
 
-    it("should accept any ICookieStore implementation", async () => {
+    it('should accept any ICookieStore implementation', async () => {
       /**
        * Alternative cookie store for testing different implementations
        */
@@ -241,35 +241,35 @@ describe("CookieSessionProvider - Pure TypeScript with Injected Cookie Store", (
       expect(retrieved?.userId).toBe(testSession.userId);
     });
 
-    it("should work with mocked cookie store", async () => {
-      const mockStore = vi.fn<[name: string], ICookieStore>((name: string) => ({
-        get: vi.fn((n: string) => (n === "admin_session" ? { value: "jwt-token" } : undefined)),
+    it('should work with mocked cookie store', async () => {
+      const mockStore = vi.fn<[name: string], ICookieStore>((_name: string) => ({
+        get: vi.fn((n: string) => (n === 'admin_session' ? { value: 'jwt-token' } : undefined)),
         set: vi.fn(),
         delete: vi.fn(),
       }));
 
       // This demonstrates that CookieSessionProvider accepts any object
       // matching the ICookieStore interface (duck typing)
-      expect(typeof mockStore).toBe("function");
+      expect(typeof mockStore).toBe('function');
     });
   });
 
-  describe("Different Session Payloads", () => {
-    it("should preserve all session properties", async () => {
+  describe('Different Session Payloads', () => {
+    it('should preserve all session properties', async () => {
       const fullSession: SessionPayload = {
         userId: 789,
-        portalRole: "school_staff",
+        portalRole: 'school_staff',
         user: {
-          email: "school@test.local",
-          firstName: "School",
-          lastName: "Admin",
-          fullName: "School Admin",
+          email: 'school@test.local',
+          firstName: 'School',
+          lastName: 'Admin',
+          fullName: 'School Admin',
         },
-        activeRoleIds: ["school_admin", "teacher"] as any[],
-        permissionCodes: ["read:students", "write:grades"] as any[],
-        subjectId: "school-123",
-        actorType: "school_staff" as any,
-        organizationId: "org-456",
+        activeRoleIds: ['school_admin', 'teacher'],
+        permissionCodes: ['read:students', 'write:grades'],
+        subjectId: 'school-123',
+        actorType: 'user',
+        organizationId: 'org-456',
         tokenVersion: 1,
       };
 
@@ -286,15 +286,15 @@ describe("CookieSessionProvider - Pure TypeScript with Injected Cookie Store", (
       expect(retrieved?.tokenVersion).toBe(fullSession.tokenVersion);
     });
 
-    it("should handle sessions with minimal properties", async () => {
+    it('should handle sessions with minimal properties', async () => {
       const minimalSession: SessionPayload = {
         userId: 999,
-        portalRole: "customer",
+        portalRole: 'customer',
         user: {
-          email: "customer@test.local",
-          firstName: "Customer",
-          lastName: "User",
-          fullName: "Customer User",
+          email: 'customer@test.local',
+          firstName: 'Customer',
+          lastName: 'User',
+          fullName: 'Customer User',
         },
       };
 
@@ -307,8 +307,8 @@ describe("CookieSessionProvider - Pure TypeScript with Injected Cookie Store", (
     });
   });
 
-  describe("Dependency Injection", () => {
-    it("should use injected cookie store, not global cookies()", async () => {
+  describe('Dependency Injection', () => {
+    it('should use injected cookie store, not global cookies()', async () => {
       const trackCalls: string[] = [];
       const trackingStore: ICookieStore = {
         get(name: string) {
@@ -328,26 +328,26 @@ describe("CookieSessionProvider - Pure TypeScript with Injected Cookie Store", (
       const trackingProvider = new CookieSessionProvider(trackingStore);
 
       await trackingProvider.createSession(testSession);
-      expect(trackCalls).toContain("set:admin_session");
+      expect(trackCalls).toContain('set:admin_session');
 
       trackCalls.length = 0;
 
       await trackingProvider.getSession();
-      expect(trackCalls).toContain("get:admin_session");
+      expect(trackCalls).toContain('get:admin_session');
 
       trackCalls.length = 0;
 
       await trackingProvider.deleteSession();
-      expect(trackCalls).toContain("delete:admin_session");
+      expect(trackCalls).toContain('delete:admin_session');
     });
 
-    it("should not import or call next/headers", async () => {
+    it('should not import or call next/headers', async () => {
       // This test proves the provider doesn't have a hard dependency on Next.js
       // If it did, it would fail at import time in this Node.js test environment
       expect(provider).toBeDefined();
-      expect(typeof provider.createSession).toBe("function");
-      expect(typeof provider.getSession).toBe("function");
-      expect(typeof provider.deleteSession).toBe("function");
+      expect(typeof provider.createSession).toBe('function');
+      expect(typeof provider.getSession).toBe('function');
+      expect(typeof provider.deleteSession).toBe('function');
     });
   });
 });

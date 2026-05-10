@@ -1,6 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import { MediaUploadForm } from "./_components/media-upload-form";
-import { MediaLibrary } from "./_components/media-library";
+import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
+import { MediaUploadForm } from './_components/media-upload-form';
+import { MediaLibrary } from './_components/media-library';
 
 /**
  *

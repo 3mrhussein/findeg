@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { Bell, Check, ExternalLink, Loader2, Filter, MoreVertical, Trash } from "lucide-react";
-import { useTranslations, useLocale } from "next-intl";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Badge } from "@findeg/ui";
-import { ScrollArea } from "@findeg/ui";
+import { useState, useEffect } from 'react';
+import { Bell, Check, ExternalLink, Loader2, Filter, MoreVertical, Trash } from 'lucide-react';
+import { useTranslations, useLocale } from 'next-intl';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { Badge } from '@findeg/ui';
+import { ScrollArea } from '@findeg/ui';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@findeg/ui";
-import { Link } from "@i18n/navigation";
-import { cn } from "@lib/utils";
+} from '@findeg/ui';
+import { Link } from '@i18n/navigation';
+import { cn } from '@lib/utils';
 
 /**
  * Notification type (local definition)
@@ -39,7 +39,7 @@ export default function AdminNotificationsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
-  const t = useTranslations("Notifications");
+  const t = useTranslations('Notifications');
   const locale = useLocale();
 
   /**
@@ -58,7 +58,7 @@ export default function AdminNotificationsPage() {
         setHasMore(data.data.hasMore);
       }
     } catch (error) {
-      console.error("[AdminNotifications] Fetch failed:", error);
+      console.error('[AdminNotifications] Fetch failed:', error);
     } finally {
       setIsLoading(false);
     }
@@ -76,12 +76,12 @@ export default function AdminNotificationsPage() {
    */
   const handleMarkAllRead = async () => {
     try {
-      const res = await fetch("/api/v1/notifications/mark-read", { method: "POST" });
+      const res = await fetch('/api/v1/notifications/mark-read', { method: 'POST' });
       if (res.ok) {
         setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
       }
     } catch (error) {
-      console.error("[AdminNotifications] Mark all read failed:", error);
+      console.error('[AdminNotifications] Mark all read failed:', error);
     }
   };
 
@@ -90,15 +90,15 @@ export default function AdminNotificationsPage() {
    */
   const handleMarkRead = async (id: number) => {
     try {
-      const res = await fetch("/api/v1/notifications/mark-read", {
-        method: "POST",
+      const res = await fetch('/api/v1/notifications/mark-read', {
+        method: 'POST',
         body: JSON.stringify({ notificationId: id }),
       });
       if (res.ok) {
         setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, isRead: true } : n)));
       }
     } catch (error) {
-      console.error("[AdminNotifications] Mark read failed:", error);
+      console.error('[AdminNotifications] Mark read failed:', error);
     }
   };
 
@@ -109,7 +109,7 @@ export default function AdminNotificationsPage() {
     const key = type
       .split(/[._]/)
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join("") as any;
+      .join('') as any;
     try {
       return t(`Types.${key}` as any);
     } catch {
@@ -121,13 +121,13 @@ export default function AdminNotificationsPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">{t("Title")}</h1>
+          <h1 className="text-3xl font-bold tracking-tight">{t('Title')}</h1>
           <p className="text-muted-foreground">Manage your alerts and system events.</p>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={handleMarkAllRead}>
             <Check className="mr-2 h-4 w-4" />
-            {t("MarkAllRead")}
+            {t('MarkAllRead')}
           </Button>
         </div>
       </div>
@@ -151,15 +151,15 @@ export default function AdminNotificationsPage() {
             ) : notifications.length === 0 ? (
               <div className="flex h-64 flex-col items-center justify-center p-8 text-center">
                 <Bell className="mb-4 h-12 w-12 text-muted-foreground/20" />
-                <p className="text-muted-foreground">{t("Empty")}</p>
+                <p className="text-muted-foreground">{t('Empty')}</p>
               </div>
             ) : (
               notifications.map((n) => (
                 <div
                   key={n.id}
                   className={cn(
-                    "flex flex-col gap-1 p-6 transition-colors hover:bg-slate-50/50 dark:hover:bg-slate-900/10 sm:flex-row sm:items-start sm:gap-6",
-                    !n.isRead && "bg-blue-50/30 dark:bg-blue-900/5",
+                    'flex flex-col gap-1 p-6 transition-colors hover:bg-slate-50/50 dark:hover:bg-slate-900/10 sm:flex-row sm:items-start sm:gap-6',
+                    !n.isRead && 'bg-blue-50/30 dark:bg-blue-900/5',
                   )}
                 >
                   <div className="flex min-w-0 flex-1 flex-col gap-1">
@@ -171,19 +171,19 @@ export default function AdminNotificationsPage() {
                       <span className="text-xs text-muted-foreground">•</span>
                       <span className="text-xs text-muted-foreground">
                         {new Date(n.createdAt).toLocaleDateString(locale, {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit',
                         })}
                       </span>
                     </div>
                     <h3 className="text-base font-semibold">
-                      {locale === "ar" ? n.titleAr : n.titleEn}
+                      {locale === 'ar' ? n.titleAr : n.titleEn}
                     </h3>
                     <p className="max-w-2xl text-sm text-muted-foreground">
-                      {locale === "ar" ? n.bodyAr : n.bodyEn}
+                      {locale === 'ar' ? n.bodyAr : n.bodyEn}
                     </p>
                     {n.actionUrl && (
                       <div className="mt-4 flex items-center gap-3">
@@ -238,7 +238,7 @@ export default function AdminNotificationsPage() {
                 }}
                 disabled={isLoading}
               >
-                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Load more"}
+                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Load more'}
               </Button>
             </div>
           )}

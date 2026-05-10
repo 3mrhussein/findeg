@@ -62,5 +62,5 @@ export type ServiceResult<T = void> = {
  * @example
  * type UserData = ExtractServiceResultData<ServiceResult<User>>; // User
  */
-export type ExtractServiceResultData<T extends ServiceResult<any>> =
+export type ExtractServiceResultData<T extends ServiceResult<unknown>> =
   T extends ServiceResult<infer U> ? U : never;

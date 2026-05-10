@@ -1,12 +1,12 @@
-import { useState } from "react";
+import { useState } from 'react';
 
 export type CheckoutValidationError =
-  | "fullName_required"
-  | "email_invalid"
-  | "phone_invalid"
-  | "city_required"
-  | "area_required"
-  | "street_required";
+  | 'fullName_required'
+  | 'email_invalid'
+  | 'phone_invalid'
+  | 'city_required'
+  | 'area_required'
+  | 'street_required';
 
 export interface CheckoutFormValues {
   fullName: string;
@@ -29,30 +29,30 @@ export function useCheckoutForm({
   initialValues?: Partial<CheckoutFormValues>;
 }) {
   const [formValues, setFormValues] = useState<CheckoutFormValues>({
-    fullName: initialValues?.fullName || "",
-    phone: initialValues?.phone || "",
-    city: initialValues?.city || "",
-    area: initialValues?.area || "",
-    street: initialValues?.street || "",
-    building: initialValues?.building || "",
-    floor: initialValues?.floor || "",
-    apartment: initialValues?.apartment || "",
-    notes: initialValues?.notes || "",
-    guestEmail: initialValues?.guestEmail || "",
+    fullName: initialValues?.fullName || '',
+    phone: initialValues?.phone || '',
+    city: initialValues?.city || '',
+    area: initialValues?.area || '',
+    street: initialValues?.street || '',
+    building: initialValues?.building || '',
+    floor: initialValues?.floor || '',
+    apartment: initialValues?.apartment || '',
+    notes: initialValues?.notes || '',
+    guestEmail: initialValues?.guestEmail || '',
   });
 
-  const [paymentMethod, setPaymentMethod] = useState<"cod" | "card">("cod");
+  const [paymentMethod, setPaymentMethod] = useState<'cod' | 'card'>('cod');
   const [touchedFields, setTouchedFields] = useState<
     Partial<Record<keyof CheckoutFormValues, boolean>>
   >({});
   const [showAllErrors, setShowAllErrors] = useState(false);
 
   const errors: Partial<Record<keyof CheckoutFormValues, CheckoutValidationError>> = {};
-  if (!formValues.fullName?.trim()) errors.fullName = "fullName_required";
-  if (!formValues.phone?.trim()) errors.phone = "phone_invalid";
-  if (!formValues.city?.trim()) errors.city = "city_required";
-  if (!formValues.area?.trim()) errors.area = "area_required";
-  if (!formValues.street?.trim()) errors.street = "street_required";
+  if (!formValues.fullName?.trim()) errors.fullName = 'fullName_required';
+  if (!formValues.phone?.trim()) errors.phone = 'phone_invalid';
+  if (!formValues.city?.trim()) errors.city = 'city_required';
+  if (!formValues.area?.trim()) errors.area = 'area_required';
+  if (!formValues.street?.trim()) errors.street = 'street_required';
 
   const canSubmit = Object.keys(errors).length === 0;
 

@@ -1,21 +1,21 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useCart } from "@hooks/useCart";
-import { Button } from "@findeg/ui";
-import { useTranslations } from "next-intl";
-import { SectionStateEmpty } from "@components/shared/state/SectionStateEmpty";
-import { useCheckoutForm, type CheckoutValidationError } from "./useCheckoutForm";
-import { ShippingForm } from "../_components/ShippingForm";
-import { PaymentForm } from "../_components/PaymentForm";
-import { OrderSummary } from "../_components/OrderSummary";
+import { useState } from 'react';
+import { useCart } from '@hooks/useCart';
+import { Button } from '@findeg/ui';
+import { useTranslations } from 'next-intl';
+import { SectionStateEmpty } from '@components/shared/state/SectionStateEmpty';
+import { useCheckoutForm, type CheckoutValidationError } from './useCheckoutForm';
+import { ShippingForm } from '../_components/ShippingForm';
+import { PaymentForm } from '../_components/PaymentForm';
+import { OrderSummary } from '../_components/OrderSummary';
 import type {
   CheckoutClientProps,
   CheckoutTotals,
   PlaceOrderResult,
-} from "./CheckoutClient.interface";
-import { getGuestId } from "./CheckoutClient.interface";
-import { OrderConfirmation } from "./OrderConfirmation";
+} from './CheckoutClient.interface';
+import { getGuestId } from './CheckoutClient.interface';
+import { OrderConfirmation } from './OrderConfirmation';
 
 /**
  * CheckoutClient — multi-step checkout wizard: shipping → payment → confirmation.
@@ -40,7 +40,7 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
     initialValues: initialPrefill || undefined,
   });
 
-  const optimisticShipping = paymentMethod === "cod" ? 50 : 30;
+  const optimisticShipping = paymentMethod === 'cod' ? 50 : 30;
   const optimisticTotal = cartTotal + optimisticShipping;
   const [validatedTotals, setValidatedTotals] = useState<CheckoutTotals | null>(null);
 
@@ -48,7 +48,7 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
     subtotal: cartTotal,
     shippingCost: optimisticShipping,
     total: optimisticTotal,
-    currency: "EGP",
+    currency: 'EGP',
   };
 
   /**
@@ -57,18 +57,18 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
   function toFieldErrorMessage(error: CheckoutValidationError | null) {
     if (!error) return null;
     switch (error) {
-      case "fullName_required":
-        return t("Pages.Checkout.ErrorFullName");
-      case "email_invalid":
-        return t("Pages.Checkout.ErrorEmail");
-      case "phone_invalid":
-        return t("Pages.Checkout.ErrorPhone");
-      case "city_required":
-        return t("Pages.Checkout.ErrorCity");
-      case "area_required":
-        return t("Pages.Checkout.ErrorArea");
-      case "street_required":
-        return t("Pages.Checkout.ErrorStreet");
+      case 'fullName_required':
+        return t('Pages.Checkout.ErrorFullName');
+      case 'email_invalid':
+        return t('Pages.Checkout.ErrorEmail');
+      case 'phone_invalid':
+        return t('Pages.Checkout.ErrorPhone');
+      case 'city_required':
+        return t('Pages.Checkout.ErrorCity');
+      case 'area_required':
+        return t('Pages.Checkout.ErrorArea');
+      case 'street_required':
+        return t('Pages.Checkout.ErrorStreet');
       default:
         return null;
     }
@@ -99,34 +99,34 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
         apartment: formValues.apartment.trim() || undefined,
         notes: formValues.notes.trim() || undefined,
       };
-      const validateResponse = await fetch("/api/v1/checkout/validate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "X-Guest-Id": guestId },
+      const validateResponse = await fetch('/api/v1/checkout/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Guest-Id': guestId },
         body: JSON.stringify({ address, paymentMethod }),
       });
       const validateJson = await validateResponse.json();
       if (!validateResponse.ok || !validateJson?.success) {
-        throw new Error(validateJson?.error?.message || t("Pages.Checkout.ValidationFailed"));
+        throw new Error(validateJson?.error?.message || t('Pages.Checkout.ValidationFailed'));
       }
       setValidatedTotals(validateJson.data.totals);
-      const orderResponse = await fetch("/api/v1/checkout/order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "X-Guest-Id": guestId },
+      const orderResponse = await fetch('/api/v1/checkout/order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Guest-Id': guestId },
         body: JSON.stringify({ address, paymentMethod, guestEmail: formValues.guestEmail.trim() }),
       });
       const orderJson = await orderResponse.json();
       if (!orderResponse.ok || !orderJson?.success) {
-        throw new Error(orderJson?.error?.message || t("Pages.Checkout.OrderCreationFailed"));
+        throw new Error(orderJson?.error?.message || t('Pages.Checkout.OrderCreationFailed'));
       }
       setOrderResult({
         success: true,
         orderId: orderJson?.data?.order?.id,
-        message: orderJson?.data?.message || t("Pages.Checkout.OrderCreatedSuccessfully"),
+        message: orderJson?.data?.message || t('Pages.Checkout.OrderCreatedSuccessfully'),
       });
       clearCart();
     } catch (error) {
       const message =
-        error instanceof Error ? error.message : t("Pages.Checkout.FailedToPlaceOrder");
+        error instanceof Error ? error.message : t('Pages.Checkout.FailedToPlaceOrder');
       setErrorMessage(message);
       setOrderResult({ success: false, message });
     } finally {
@@ -145,7 +145,7 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
             id="checkout-title"
             className="text-4xl font-black tracking-tight text-slate-900 dark:text-white mb-4"
           >
-            {t("Pages.Checkout.Title") || "Secure Checkout"}
+            {t('Pages.Checkout.Title') || 'Secure Checkout'}
           </h1>
           {!orderResult?.success && cartItems.length > 0 && (
             <p className="text-lg text-slate-500 max-w-lg mx-auto">
@@ -156,9 +156,9 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
 
         {cartItems.length === 0 && !orderResult?.success && (
           <SectionStateEmpty
-            title={t("Pages.Cart.Empty")}
-            description={t("Pages.Checkout.EmptyDescription")}
-            ctaLabel={t("Pages.Checkout.ContinueShopping")}
+            title={t('Pages.Cart.Empty')}
+            description={t('Pages.Checkout.EmptyDescription')}
+            ctaLabel={t('Pages.Checkout.ContinueShopping')}
             ctaHref="/shop"
           />
         )}
@@ -166,8 +166,8 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
         {orderResult?.success ? (
           <OrderConfirmation
             result={orderResult}
-            continueLabel={t("Pages.Checkout.ContinueShopping")}
-            confirmTitle={t("Pages.Checkout.OrderConfirmed")}
+            continueLabel={t('Pages.Checkout.ContinueShopping')}
+            confirmTitle={t('Pages.Checkout.OrderConfirmed')}
           />
         ) : cartItems.length > 0 ? (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-12">
@@ -183,7 +183,7 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
                     1
                   </div>
                   <h2 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
-                    {t("Pages.Checkout.ShippingInformation")}
+                    {t('Pages.Checkout.ShippingInformation')}
                   </h2>
                 </div>
                 <div className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-surface-dark p-6 md:p-8 shadow-sm">
@@ -204,7 +204,7 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
                     2
                   </div>
                   <h2 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
-                    {t("Pages.Checkout.PaymentMethod")}
+                    {t('Pages.Checkout.PaymentMethod')}
                   </h2>
                 </div>
                 <div className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-surface-dark p-6 md:p-8 shadow-sm">
@@ -236,10 +236,10 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
                 {isSubmitting ? (
                   <span className="flex items-center gap-2">
                     <div className="size-5 rounded-full border-2 border-white/30 border-t-white animate-spin" />
-                    {t("Pages.Checkout.PlacingOrder")}
+                    {t('Pages.Checkout.PlacingOrder')}
                   </span>
                 ) : (
-                  t("Pages.Checkout.PlaceOrder")
+                  t('Pages.Checkout.PlaceOrder')
                 )}
               </Button>
             </form>

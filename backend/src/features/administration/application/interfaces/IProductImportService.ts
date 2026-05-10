@@ -1,5 +1,5 @@
-import { type ID } from "@findeg/backend/features/core/domain/types/common";
-import { type ProductInput } from "@findeg/backend/features/administration/domain/types/ProductInput";
+import { type ID } from '@findeg/backend/features/core/domain/types/common';
+import { type ProductInput } from '@findeg/backend/features/administration/domain/types/ProductInput';
 
 export interface ImportResult {
   validCount: number;
@@ -10,7 +10,7 @@ export interface ImportResult {
 
 export interface ImportRowPreview {
   rowIndex: number;
-  status: "valid" | "warning" | "error";
+  status: 'valid' | 'warning' | 'error';
   productInput: Partial<ProductInput>;
   warnings: string[];
   errors: string[];

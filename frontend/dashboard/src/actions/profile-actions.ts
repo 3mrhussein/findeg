@@ -12,14 +12,14 @@
  * 3. Handle session and error management
  */
 
-"use server";
+'use server';
 
-import { redirect } from "@i18n/navigation";
-import { getSession, createSession } from "@lib/session";
-import { createIdentityServices } from "@findeg/backend/features/identity";
-import { revalidatePath } from "next/cache";
-import { getErrorMessage } from "@lib/type-guards";
-import type { SessionPayload } from "@findeg/backend/features/core";
+import { redirect } from '@i18n/navigation';
+import { getSession, createSession } from '@lib/session';
+import { createIdentityServices } from '@findeg/backend/features/identity';
+import { revalidatePath } from 'next/cache';
+import { getErrorMessage } from '@lib/type-guards';
+import type { SessionPayload } from '@findeg/backend/features/core';
 
 /**
  * Server Action: Update current user's profile
@@ -32,14 +32,14 @@ export async function updateMyProfileAction(
   try {
     const session = await getSession();
     if (!session?.userId) {
-      throw new Error("Not authenticated");
+      throw new Error('Not authenticated');
     }
 
-    const firstName = formData.get("firstName") as string;
-    const lastName = formData.get("lastName") as string;
+    const firstName = formData.get('firstName') as string;
+    const lastName = formData.get('lastName') as string;
 
     if (!firstName || !lastName) {
-      throw new Error("First name and last name are required");
+      throw new Error('First name and last name are required');
     }
 
     // 1. Update backend profile
@@ -66,11 +66,11 @@ export async function updateMyProfileAction(
     await createSession(newSession);
 
     // 3. Revalidate path to update UI
-    revalidatePath("/", "layout");
+    revalidatePath('/', 'layout');
 
     return { success: true };
   } catch (error: unknown) {
-    console.error("[updateMyProfileAction] Error:", error);
+    console.error('[updateMyProfileAction] Error:', error);
     return { success: false, error: getErrorMessage(error) };
   }
 }

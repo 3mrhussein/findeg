@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import React, { createContext, useEffect, useMemo, useState } from "react";
-import type { CartItem } from "@findeg/backend/features/cart";
-import type { Product } from "@findeg/backend/features/catalog";
-import { CustomerGroup, UomCode } from "@findeg/backend/features/core/domain/types/common";
+import React, { createContext, useEffect, useMemo, useState } from 'react';
+import type { CartItem } from '@findeg/backend/features/cart';
+import type { Product } from '@findeg/backend/features/catalog';
+import { CustomerGroup, UomCode } from '@findeg/backend/features/core/domain/types/common';
 
 export interface CartContextType {
   cartItems: CartItem[];
@@ -34,7 +34,7 @@ interface CartSelectors {
  *
  */
 function getGuestId() {
-  const storageKey = "findeg_guest_id";
+  const storageKey = 'findeg_guest_id';
   const existing = window.localStorage.getItem(storageKey);
   if (existing) return existing;
 
@@ -71,13 +71,13 @@ function toCartItems(rawItems: any[]): CartItem[] {
     variantId: item.variantId,
     sku: item.sku,
     productName: item.productName || item.name || `Product #${item.productId}`,
-    variantLabel: item.variantLabel || item.variantKey || "Default",
+    variantLabel: item.variantLabel || item.variantKey || 'Default',
     imageUrl: item.imageUrl || (item.images && item.images[0]?.url),
     quantity: item.quantity,
     uomCode: item.uomCode,
     uomFactor: item.uomFactor ?? 1,
     unitPrice: item.unitPrice ?? item.unitPriceSnapshot ?? item.price ?? 0,
-    currency: item.currency || "EGP",
+    currency: item.currency || 'EGP',
     customerGroup: item.customerGroup,
     cartKitId: item.cartKitId,
   }));
@@ -95,9 +95,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
    */
   const refreshCart = async () => {
     const guestId = getGuestId();
-    const response = await fetch("/api/v1/cart", {
-      headers: { "X-Guest-Id": guestId },
-      cache: "no-store",
+    const response = await fetch('/api/v1/cart', {
+      headers: { 'X-Guest-Id': guestId },
+      cache: 'no-store',
     });
     const json = await response.json();
     const items = json?.data?.cart?.items || [];
@@ -106,9 +106,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const guestId = getGuestId();
-    void fetch("/api/v1/cart", {
-      headers: { "X-Guest-Id": guestId },
-      cache: "no-store",
+    void fetch('/api/v1/cart', {
+      headers: { 'X-Guest-Id': guestId },
+      cache: 'no-store',
     })
       .then((response) => response.json())
       .then((json) => {
@@ -138,11 +138,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       quantity,
     };
 
-    void fetch("/api/v1/cart/items", {
-      method: "POST",
+    void fetch('/api/v1/cart/items', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
-        "X-Guest-Id": guestId,
+        'Content-Type': 'application/json',
+        'X-Guest-Id': guestId,
       },
       body: JSON.stringify(payload),
     }).then(() => refreshCart());
@@ -161,8 +161,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     });
 
     void fetch(`/api/v1/cart/items?${query.toString()}`, {
-      method: "DELETE",
-      headers: { "X-Guest-Id": guestId },
+      method: 'DELETE',
+      headers: { 'X-Guest-Id': guestId },
     }).then(() => refreshCart());
   };
 
@@ -174,10 +174,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
     const guestId = getGuestId();
     void fetch(`/api/v1/cart/items`, {
-      method: "PUT",
+      method: 'PUT',
       headers: {
-        "Content-Type": "application/json",
-        "X-Guest-Id": guestId,
+        'Content-Type': 'application/json',
+        'X-Guest-Id': guestId,
       },
       body: JSON.stringify({
         variantId,
@@ -201,8 +201,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           uomCode: item.uomCode,
         });
         return fetch(`/api/v1/cart/items?${query.toString()}`, {
-          method: "DELETE",
-          headers: { "X-Guest-Id": guestId },
+          method: 'DELETE',
+          headers: { 'X-Guest-Id': guestId },
         });
       }),
     ).then(() => refreshCart());

@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { Button } from "@findeg/ui";
-import { Archive, Trash2, Eye, EyeOff } from "lucide-react";
-import { useTransition } from "react";
-import { useToast } from "@hooks/use-toast";
-import { setProductStatus, deleteProduct } from "@data/products/actions";
-import { useRouter } from "@i18n/navigation";
+import { Button } from '@findeg/ui';
+import { Archive, Trash2, Eye, EyeOff } from 'lucide-react';
+import { useTransition } from 'react';
+import { useToast } from '@hooks/use-toast';
+import { setProductStatus, deleteProduct } from '@data/products/actions';
+import { useRouter } from '@i18n/navigation';
 
 interface ProductBulkActionBarProps {
   selectedIds: number[];
@@ -25,8 +25,8 @@ export function ProductBulkActionBar({ selectedIds, onClearSelection }: ProductB
   /**
    *
    */
-  const handleBulkAction = (action: "active" | "draft" | "archive" | "delete") => {
-    if (action === "delete") {
+  const handleBulkAction = (action: 'active' | 'draft' | 'archive' | 'delete') => {
+    if (action === 'delete') {
       if (
         !confirm(
           `Are you sure you want to delete ${selectedIds.length} products? This cannot be undone.`,
@@ -43,13 +43,13 @@ export function ProductBulkActionBar({ selectedIds, onClearSelection }: ProductB
       for (const id of selectedIds) {
         let result;
         try {
-          if (action === "active") {
+          if (action === 'active') {
             result = await setProductStatus(id, true);
-          } else if (action === "draft") {
+          } else if (action === 'draft') {
             result = await setProductStatus(id, false);
-          } else if (action === "archive") {
+          } else if (action === 'archive') {
             result = await setProductStatus(id, false);
-          } else if (action === "delete") {
+          } else if (action === 'delete') {
             result = await deleteProduct(id);
           }
 
@@ -64,8 +64,8 @@ export function ProductBulkActionBar({ selectedIds, onClearSelection }: ProductB
       }
 
       toast({
-        title: "Bulk Action Completed",
-        description: `Successfully updated ${successCount} products. ${failureCount > 0 ? `Failed: ${failureCount}.` : ""}`,
+        title: 'Bulk Action Completed',
+        description: `Successfully updated ${successCount} products. ${failureCount > 0 ? `Failed: ${failureCount}.` : ''}`,
       });
 
       onClearSelection();
@@ -89,7 +89,7 @@ export function ProductBulkActionBar({ selectedIds, onClearSelection }: ProductB
         size="sm"
         disabled={isPending}
         className="text-xs"
-        onClick={() => handleBulkAction("active")}
+        onClick={() => handleBulkAction('active')}
       >
         <Eye className="w-4 h-4 mr-2" />
         Set Active
@@ -99,7 +99,7 @@ export function ProductBulkActionBar({ selectedIds, onClearSelection }: ProductB
         size="sm"
         disabled={isPending}
         className="text-xs"
-        onClick={() => handleBulkAction("draft")}
+        onClick={() => handleBulkAction('draft')}
       >
         <EyeOff className="w-4 h-4 mr-2" />
         Set Draft
@@ -109,7 +109,7 @@ export function ProductBulkActionBar({ selectedIds, onClearSelection }: ProductB
         size="sm"
         disabled={isPending}
         className="text-xs"
-        onClick={() => handleBulkAction("archive")}
+        onClick={() => handleBulkAction('archive')}
       >
         <Archive className="w-4 h-4 mr-2" />
         Archive
@@ -122,7 +122,7 @@ export function ProductBulkActionBar({ selectedIds, onClearSelection }: ProductB
         size="sm"
         disabled={isPending}
         className="text-xs text-destructive hover:text-destructive hover:bg-destructive/10"
-        onClick={() => handleBulkAction("delete")}
+        onClick={() => handleBulkAction('delete')}
       >
         <Trash2 className="w-4 h-4 mr-2" />
         Delete

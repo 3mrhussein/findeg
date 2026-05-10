@@ -6,10 +6,10 @@
  * Location: src/app/[locale]/admin/(dashboard)/products/[id]/edit/_components/
  */
 
-"use client";
+'use client';
 
-import * as React from "react";
-import { ProductInfoZone } from "../../../_components/ProductForm/zones/ProductInfoZone";
+import * as React from 'react';
+import { ProductInfoZone } from '../../../_components/ProductForm/zones/ProductInfoZone';
 
 interface InfoTabProps {
   categories: { id: number; name: string }[];

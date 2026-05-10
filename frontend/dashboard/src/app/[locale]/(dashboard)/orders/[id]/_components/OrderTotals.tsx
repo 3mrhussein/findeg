@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { Separator } from "@findeg/ui";
+import { Separator } from '@findeg/ui';
 
 interface OrderTotalsProps {
   order: any;
@@ -10,7 +10,7 @@ interface OrderTotalsProps {
  *
  */
 export function OrderTotals({ order }: OrderTotalsProps) {
-  const currency = order.currency || "EGP";
+  const currency = order.currency || 'EGP';
   const subtotal = Number(order.subtotal || 0);
   const shippingTotal = Number(order.shippingTotal || 0);
   const discountTotal = Number(order.discountTotal || 0);
@@ -50,7 +50,7 @@ export function OrderTotals({ order }: OrderTotalsProps) {
         {order.paymentMethod && (
           <div className="pt-2 text-right">
             <span className="text-[10px] uppercase tracking-widest text-muted-foreground">
-              Paid via {order.paymentMethod.replace("_", " ")}
+              Paid via {order.paymentMethod.replace('_', ' ')}
             </span>
           </div>
         )}

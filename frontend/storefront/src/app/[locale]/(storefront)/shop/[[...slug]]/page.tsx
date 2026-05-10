@@ -1,9 +1,9 @@
-import { notFound } from "next/navigation";
-import type { Locale } from "next-intl";
-import { getTranslations, setRequestLocale } from "next-intl/server";
-import { PageShell } from "../../_components/PageShell";
-import { getShopPlpViewModel } from "@/data/catalog/queries";
-import { ShopPlpClient } from "../_components/ShopPlpClient";
+import { notFound } from 'next/navigation';
+import type { Locale } from 'next-intl';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { PageShell } from '../../_components/PageShell';
+import { getShopPlpViewModel } from '@/data/catalog/queries';
+import { ShopPlpClient } from '../_components/ShopPlpClient';
 
 interface ShopCatchAllPageProps {
   params: Promise<{ locale: string; slug?: string[] }>;
@@ -21,7 +21,7 @@ export default async function ShopCatchAllPage({ params, searchParams }: ShopCat
   const query = await searchParams;
   setRequestLocale(locale as Locale);
 
-  const t = await getTranslations({ locale: locale as Locale, namespace: "Pages.Shop" });
+  const t = await getTranslations({ locale: locale as Locale, namespace: 'Pages.Shop' });
   const vm = await getShopPlpViewModel(locale, slug, query);
 
   if (!vm) {
@@ -32,12 +32,12 @@ export default async function ShopCatchAllPage({ params, searchParams }: ShopCat
     <PageShell>
       <div className="mb-6 lg:mb-8">
         <h1 className="text-3xl md:text-4xl font-black tracking-tight text-foreground">
-          {vm.currentCategoryName || t("Title")}
+          {vm.currentCategoryName || t('Title')}
         </h1>
         <p className="mt-2 max-w-2xl text-sm md:text-base text-muted-foreground">
           {vm.currentCategoryName
-            ? t("CategoryDescription", { category: vm.currentCategoryName })
-            : t("Description")}
+            ? t('CategoryDescription', { category: vm.currentCategoryName })
+            : t('Description')}
         </p>
       </div>
 

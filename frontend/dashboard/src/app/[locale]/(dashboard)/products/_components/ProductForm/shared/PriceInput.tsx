@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { useFormContext } from "react-hook-form";
-import { Input } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import { cn } from "@lib/utils";
+import * as React from 'react';
+import { useFormContext } from 'react-hook-form';
+import { Input } from '@findeg/ui';
+import { Label } from '@findeg/ui';
+import { cn } from '@lib/utils';
 
 interface PriceInputProps {
   name: string;
@@ -27,14 +27,14 @@ export function PriceInput({ name, label, required, className, hint }: PriceInpu
   } = useFormContext();
 
   const error = name
-    .split(".")
+    .split('.')
     .reduce(
       (o: Record<string, unknown>, k) => (o?.[k] as Record<string, unknown>) ?? {},
       errors as Record<string, unknown>,
     );
 
   return (
-    <div className={cn("space-y-1", className)}>
+    <div className={cn('space-y-1', className)}>
       <Label htmlFor={name} className="text-xs font-medium text-muted-foreground">
         {label}
         {required && <span className="ml-0.5 text-destructive">*</span>}
@@ -51,8 +51,8 @@ export function PriceInput({ name, label, required, className, hint }: PriceInpu
           min="0"
           placeholder="0.00"
           className={cn(
-            "h-8 pl-10 text-sm",
-            !!(error as { message?: string })?.message && "border-destructive",
+            'h-8 pl-10 text-sm',
+            !!(error as { message?: string })?.message && 'border-destructive',
           )}
         />
       </div>

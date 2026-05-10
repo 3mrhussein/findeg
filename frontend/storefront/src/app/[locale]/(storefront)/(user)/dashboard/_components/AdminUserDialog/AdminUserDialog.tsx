@@ -1,27 +1,27 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import { useTranslations } from "next-intl";
-import { Button } from "@findeg/ui";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@findeg/ui";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@findeg/ui";
-import { Icon } from "@findeg/ui";
+import React, { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
+import { Button } from '@findeg/ui';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@findeg/ui';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@findeg/ui';
+import { Icon } from '@findeg/ui';
 import type {
   AdminUser,
   AdminUserDialogProps,
   OverrideAction,
   Role,
   Permission,
-} from "./AdminUserDialog.interface";
-import { ProfileTab } from "./ProfileTab";
-import { RolesTab } from "./RolesTab";
-import { OverridesTab } from "./OverridesTab";
-import { getSystemRoles, getAllPermissions } from "@data/access/queries";
+} from './AdminUserDialog.interface';
+import { ProfileTab } from './ProfileTab';
+import { RolesTab } from './RolesTab';
+import { OverridesTab } from './OverridesTab';
+import { getSystemRoles, getAllPermissions } from '@data/access/queries';
 import {
   createAdminAction,
   updateAdminAction,
   setPermissionOverridesAction,
-} from "@data/access/actions";
+} from '@data/access/actions';
 
 /**
  * AdminUserDialog — create / edit admin users with Profile, Roles, and Override tabs.
@@ -29,16 +29,16 @@ import {
 export function AdminUserDialog({
   open,
   user,
-  defaultTab = "profile",
+  defaultTab = 'profile',
   onClose,
 }: AdminUserDialogProps) {
-  const t = useTranslations("Pages.Dashboard");
+  const t = useTranslations('Pages.Dashboard');
   const isEdit = user !== null;
 
-  const [email, setEmail] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [password, setPassword] = useState('');
   const [isActive, setIsActive] = useState(true);
   const [selectedRoleIds, setSelectedRoleIds] = useState<number[]>([]);
   const [overrides, setOverrides] = useState<Map<number, OverrideAction>>(new Map());
@@ -60,8 +60,8 @@ export function AdminUserDialog({
     if (user) {
       Promise.resolve().then(() => {
         setEmail(user.email);
-        setFirstName(user.firstName ?? "");
-        setLastName(user.lastName ?? "");
+        setFirstName(user.firstName ?? '');
+        setLastName(user.lastName ?? '');
         setIsActive(user.isActive);
         setSelectedRoleIds(user.roles.map((r) => r.id));
       });
@@ -75,10 +75,10 @@ export function AdminUserDialog({
       });
     } else {
       Promise.resolve().then(() => {
-        setEmail("");
-        setFirstName("");
-        setLastName("");
-        setPassword("");
+        setEmail('');
+        setFirstName('');
+        setLastName('');
+        setPassword('');
         setIsActive(true);
         setSelectedRoleIds([]);
       });
@@ -115,11 +115,11 @@ export function AdminUserDialog({
    */
   const cycleOverride = (permId: number) => {
     setOverrides((prev) => {
-      const current = prev.get(permId) ?? "default";
+      const current = prev.get(permId) ?? 'default';
       const next: OverrideAction =
-        current === "default" ? "grant" : current === "grant" ? "revoke" : "default";
+        current === 'default' ? 'grant' : current === 'grant' ? 'revoke' : 'default';
       const newMap = new Map(prev);
-      if (next === "default") newMap.delete(permId);
+      if (next === 'default') newMap.delete(permId);
       else newMap.set(permId, next);
       return newMap;
     });
@@ -139,10 +139,10 @@ export function AdminUserDialog({
           isActive,
           roleIds: selectedRoleIds,
         });
-        if (!updateResult.success) throw new Error(updateResult.error || "Update failed");
+        if (!updateResult.success) throw new Error(updateResult.error || 'Update failed');
 
         const grantIds = Array.from(overrides.entries())
-          .filter(([_, action]) => action === "grant")
+          .filter(([_, action]) => action === 'grant')
           .map(([id, _]) => id);
 
         // Note: setPermissionOverridesAction currently only supports grant list.
@@ -156,11 +156,11 @@ export function AdminUserDialog({
           password,
           roleIds: selectedRoleIds,
         });
-        if (!createResult.success) throw new Error(createResult.error || "Create failed");
+        if (!createResult.success) throw new Error(createResult.error || 'Create failed');
       }
       onClose(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Unexpected error");
+      setError(err instanceof Error ? err.message : 'Unexpected error');
     } finally {
       setSaving(false);
     }
@@ -170,20 +170,20 @@ export function AdminUserDialog({
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent className="max-w-xl">
         <DialogHeader>
-          <DialogTitle>{isEdit ? t("EditAdmin") : t("NewAdmin")}</DialogTitle>
+          <DialogTitle>{isEdit ? t('EditAdmin') : t('NewAdmin')}</DialogTitle>
         </DialogHeader>
 
         <Tabs defaultValue={defaultTab}>
           <TabsList className="w-full mb-4">
             <TabsTrigger value="profile" className="flex-1">
-              {t("Profile")}
+              {t('Profile')}
             </TabsTrigger>
             <TabsTrigger value="roles" className="flex-1">
-              {t("Roles")}
+              {t('Roles')}
             </TabsTrigger>
             {isEdit && (
               <TabsTrigger value="overrides" className="flex-1">
-                {t("Overrides")}
+                {t('Overrides')}
               </TabsTrigger>
             )}
           </TabsList>
@@ -223,13 +223,13 @@ export function AdminUserDialog({
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onClose()}>
-            {t("Cancel")}
+            {t('Cancel')}
           </Button>
           <Button onClick={handleSave} disabled={saving}>
             {saving && (
               <Icon name="progress_activity" className="w-4 h-4 ltr:mr-2 rtl:ml-2 animate-spin" />
             )}
-            {t("Save")}
+            {t('Save')}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { useTranslations } from "next-intl";
-import { SessionState } from "@findeg/backend/features/school/application/interfaces/IParentListService";
-import { ListReturnDialog } from "@app/[locale]/(storefront)/school/_components/ListReturnDialog";
-import { ListProgressBar } from "@app/[locale]/(storefront)/school/_components/ListProgressBar";
-import { StickyActionBar } from "@app/[locale]/(storefront)/school/_components/StickyActionBar";
-import { ListSummaryOverlay } from "@app/[locale]/(storefront)/school/_components/ListSummaryOverlay";
+import React, { useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { SessionState } from '@findeg/backend/features/school/application/interfaces/IParentListService';
+import { ListReturnDialog } from '@app/[locale]/(storefront)/school/_components/ListReturnDialog';
+import { ListProgressBar } from '@app/[locale]/(storefront)/school/_components/ListProgressBar';
+import { StickyActionBar } from '@app/[locale]/(storefront)/school/_components/StickyActionBar';
+import { ListSummaryOverlay } from '@app/[locale]/(storefront)/school/_components/ListSummaryOverlay';
 
 interface ListPageClientProps {
   list: any;
@@ -18,7 +18,7 @@ interface ListPageClientProps {
  *
  */
 export function ListPageClient({ list, initialSessionState, sessionUser }: ListPageClientProps) {
-  const t = useTranslations("School.ParentExperience.List");
+  const t = useTranslations('School.ParentExperience.List');
   const [sessionState, setSessionState] = useState(initialSessionState);
   const [isSummaryOpen, setIsSummaryOpen] = useState(false);
 
@@ -29,7 +29,7 @@ export function ListPageClient({ list, initialSessionState, sessionUser }: ListP
         state={sessionState}
         list={list}
         onReset={() => {}}
-        onContinue={() => setSessionState("has_session")}
+        onContinue={() => setSessionState('has_session')}
       />
 
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
@@ -53,7 +53,7 @@ export function ListPageClient({ list, initialSessionState, sessionUser }: ListP
               <span className="bg-primary text-primary-foreground text-xs w-6 h-6 rounded-full flex items-center justify-center">
                 1
               </span>
-              {t("RequiredItems")}
+              {t('RequiredItems')}
             </h2>
             {/* ListItemRows will go here */}
             <div className="bg-slate-50 border border-dashed rounded-xl p-12 text-center text-muted-foreground italic">
@@ -66,7 +66,7 @@ export function ListPageClient({ list, initialSessionState, sessionUser }: ListP
               <span className="bg-slate-200 text-slate-700 text-xs w-6 h-6 rounded-full flex items-center justify-center">
                 2
               </span>
-              {t("OptionalItems")}
+              {t('OptionalItems')}
             </h2>
             <div className="bg-slate-50 border border-dashed rounded-xl p-12 text-center text-muted-foreground italic">
               Loading optional items...
@@ -76,13 +76,13 @@ export function ListPageClient({ list, initialSessionState, sessionUser }: ListP
 
         <aside className="hidden lg:block space-y-6 sticky top-24 h-fit">
           <div className="bg-white border rounded-2xl p-6 shadow-sm space-y-6">
-            <h3 className="font-bold text-lg">{t("MyListSummary")}</h3>
+            <h3 className="font-bold text-lg">{t('MyListSummary')}</h3>
             {/* List Summary Content */}
             <button
               onClick={() => setIsSummaryOpen(true)}
               className="w-full py-4 px-6 bg-primary text-white rounded-xl font-bold hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2"
             >
-              {t("ReviewAndCheckout")}
+              {t('ReviewAndCheckout')}
             </button>
           </div>
         </aside>

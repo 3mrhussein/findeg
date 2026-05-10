@@ -1,5 +1,9 @@
-import { PortalRole } from "@findeg/backend/features/core/domain/types/common";
-import { z } from "zod";
+import { 
+  PortalRole, 
+  TranslationMapSchema, 
+  PricingCustomerGroupSchema 
+} from '@findeg/db';
+import { z } from 'zod';
 
 export interface NavItem {
   label: string;
@@ -18,15 +22,8 @@ export interface NavGroup {
   items: NavItem[];
 }
 
-// ─── Sub-schemas ──────────────────────────────────────────────────────────────
-
-const TranslationMapSchema = z.object({
-  en: z.string(),
-  ar: z.string(),
-});
-
 const PriceListRowSchema = z.object({
-  customerGroup: z.enum(["public_b2c", "school_b2b"]),
+  customerGroup: PricingCustomerGroupSchema,
   uomCode: z.string(),
   unitPrice: z.number().nonnegative(),
   minQty: z.number().int().positive().default(1),
@@ -54,8 +51,8 @@ export const VariantFormSchema = z.object({
     .string()
     .min(2)
     .max(100)
-    .regex(/^[A-Z0-9-]+$/, "SKU must be uppercase, digits, or hyphens"),
-  localizedLabel: TranslationMapSchema.default({ en: "", ar: "" }),
+    .regex(/^[A-Z0-9-]+$/, 'SKU must be uppercase, digits, or hyphens'),
+  localizedLabel: TranslationMapSchema.default({ en: '', ar: '' }),
   displayOrder: z.number().int().nonnegative().default(0),
   isActive: z.boolean().default(true),
   basePrice: z.number().nonnegative(),
@@ -75,9 +72,9 @@ export const VariantFormSchema = z.object({
 
 export const ProductFormSchema = z.object({
   localizedName: TranslationMapSchema,
-  localizedDescription: TranslationMapSchema.optional().default({ en: "", ar: "" }),
-  localizedLongDescription: TranslationMapSchema.optional().default({ en: "", ar: "" }),
-  localizedSlug: TranslationMapSchema.optional().default({ en: "", ar: "" }),
+  localizedDescription: TranslationMapSchema.optional().default({ en: '', ar: '' }),
+  localizedLongDescription: TranslationMapSchema.optional().default({ en: '', ar: '' }),
+  localizedSlug: TranslationMapSchema.optional().default({ en: '', ar: '' }),
   categoryId: z.number().nullable().optional(),
   brandId: z.number().nullable().optional(),
   tagIds: z.array(z.number()).default([]),
@@ -85,17 +82,17 @@ export const ProductFormSchema = z.object({
   sku: z.string().optional(),
   skuPrefix: z.string().optional(),
 
-  pricingMode: z.enum(["shared", "per-variant"]).default("per-variant"),
-  uomSharingMode: z.enum(["shared", "per-variant"]).default("shared"),
+  pricingMode: z.enum(['shared', 'per-variant']).default('per-variant'),
+  uomSharingMode: z.enum(['shared', 'per-variant']).default('shared'),
 
   sharedBasePrice: z.number().nonnegative().optional(),
   sharedStrikePrice: z.number().nonnegative().nullable().optional(),
   sharedCostPrice: z.number().nonnegative().nullable().optional(),
   sharedUoMs: z.array(UoMRowSchema).default([]),
 
-  variants: z.array(VariantFormSchema).min(1, "At least one variant is required"),
-  localizedMetaTitle: TranslationMapSchema.optional().default({ en: "", ar: "" }),
-  localizedMetaDescription: TranslationMapSchema.optional().default({ en: "", ar: "" }),
+  variants: z.array(VariantFormSchema).min(1, 'At least one variant is required'),
+  localizedMetaTitle: TranslationMapSchema.optional().default({ en: '', ar: '' }),
+  localizedMetaDescription: TranslationMapSchema.optional().default({ en: '', ar: '' }),
 });
 
 export type ProductFormValues = z.infer<typeof ProductFormSchema>;

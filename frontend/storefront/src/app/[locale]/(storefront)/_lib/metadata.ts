@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata } from 'next';
 
 const SEO_DESCRIPTION_MAX_LENGTH = 160;
 
@@ -6,7 +6,7 @@ interface BuildPageMetadataParams {
   title: string;
   description: string;
   keywords?: string[];
-  robots?: Metadata["robots"];
+  robots?: Metadata['robots'];
 }
 
 /**
@@ -26,10 +26,10 @@ export function buildPageMetadata({
     openGraph: {
       title,
       description: toMetaDescription(description),
-      type: "website",
+      type: 'website',
     },
     twitter: {
-      card: "summary_large_image",
+      card: 'summary_large_image',
       title,
       description: toMetaDescription(description),
     },

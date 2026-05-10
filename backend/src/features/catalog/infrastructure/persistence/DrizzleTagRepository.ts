@@ -1,11 +1,11 @@
-import { db } from "@findeg/db/connection";
-import { tags, productTags, products } from "@findeg/db/schema";
-import { ITagRepository } from "../../application/interfaces/ITagRepository";
-import { Tag, TagGroup, CreateTag } from "../../domain/entities/Tag";
-import { Product } from "../../domain/entities/Product";
-import { eq, and, inArray } from "drizzle-orm";
-import { ID, Locale } from "../../../core/domain/types/common";
-import { DEFAULT_LOCALE } from "../../../core/domain/value-objects";
+import { db } from '@findeg/db/connection';
+import { tags, productTags } from '@findeg/db/schema';
+import { ITagRepository } from '../../application/interfaces/ITagRepository';
+import { Tag, TagGroup, CreateTag } from '../../domain/entities/Tag';
+import { Product } from '../../domain/entities/Product';
+import { eq, inArray } from 'drizzle-orm';
+import { ID, Locale } from '../../../core/domain/types/common';
+import { DEFAULT_LOCALE } from '../../../core/domain/value-objects';
 
 export class DrizzleTagRepository implements ITagRepository {
   async getAll(): Promise<Tag[]> {
@@ -65,7 +65,7 @@ export class DrizzleTagRepository implements ITagRepository {
     });
   }
 
-  async getProductsByTag(tagId: ID, language: Locale = DEFAULT_LOCALE): Promise<Product[]> {
+  async getProductsByTag(tagId: ID, _language: Locale = DEFAULT_LOCALE): Promise<Product[]> {
     // This is a simplified version; real implementation would likely delegate to ProductRepository
     // or share the join logic.
     const results = await db

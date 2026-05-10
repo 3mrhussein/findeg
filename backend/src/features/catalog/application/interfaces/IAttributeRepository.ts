@@ -2,16 +2,16 @@
  * Attribute Repository Interface
  */
 
-import { ID } from "@findeg/backend/features/core/domain/types/common";
+import { ID } from '@findeg/backend/features/core/domain/types/common';
 import {
   AttributeDefinition,
   CreateAttributeDefinition,
   ProductAttributeValue,
-} from "../../domain/entities/AttributeDefinition";
+} from '../../domain/entities/AttributeDefinition';
 
 export interface AttributeFilter {
   attributeKey: string;
-  operator: "eq" | "lt" | "lte" | "gt" | "gte" | "in";
+  operator: 'eq' | 'lt' | 'lte' | 'gt' | 'gte' | 'in';
   value: string | number | boolean | string[];
 }
 

@@ -1,7 +1,7 @@
-import { db } from "@findeg/db/connection";
-import { sql } from "drizzle-orm";
-import { searchLogs } from "@findeg/db/schema";
-import { type IProductRepository } from "../interfaces/IProductRepository";
+import { db } from '@findeg/db/connection';
+import { sql } from 'drizzle-orm';
+import { searchLogs } from '@findeg/db/schema';
+import { type IProductRepository } from '../interfaces/IProductRepository';
 import {
   type ISearchService,
   type SearchParams,
@@ -9,9 +9,9 @@ import {
   type SuggestResult,
   type ParsedQuery,
   type Suggestion,
-} from "../interfaces/ISearchService";
-import { type Locale } from "../../../core/domain/value-objects";
-import { type ID } from "../../../core/domain/types/common";
+} from '../interfaces/ISearchService';
+import { type Locale } from '../../../core/domain/value-objects';
+import { type ID } from '../../../core/domain/types/common';
 
 export class SearchService implements ISearchService {
   constructor(private readonly productRepository: IProductRepository) {}
@@ -21,7 +21,7 @@ export class SearchService implements ISearchService {
     const arabicTerms: string[] = [];
     const englishTerms: string[] = [];
 
-    const tokens = (query || "").trim().split(/\s+/);
+    const tokens = (query || '').trim().split(/\s+/);
     for (const token of tokens) {
       if (!token) continue;
       if (arabicRegex.test(token)) {
@@ -43,17 +43,17 @@ export class SearchService implements ISearchService {
     let normalized = text;
 
     // Roughly strip diacritics (tashkeel)
-    normalized = normalized.replace(/[\u064B-\u065F\u0670]/g, "");
+    normalized = normalized.replace(/[\u064B-\u065F\u0670]/g, '');
     // Normalize Alef variants
-    normalized = normalized.replace(/[إأآٱ]/g, "ا");
+    normalized = normalized.replace(/[إأآٱ]/g, 'ا');
     // Normalize Ta Marbuta to Ha
-    normalized = normalized.replace(/ة/g, "ه");
+    normalized = normalized.replace(/ة/g, 'ه');
     // Normalize Ya variants
-    normalized = normalized.replace(/[ىئ]/g, "ي");
+    normalized = normalized.replace(/[ىئ]/g, 'ي');
     // Normalize Waw variants
-    normalized = normalized.replace(/ؤ/g, "و");
+    normalized = normalized.replace(/ؤ/g, 'و');
     // Strip definite article (ال) at the beginning of words
-    normalized = normalized.replace(/(^|\s)ال/g, "$1");
+    normalized = normalized.replace(/(^|\s)ال/g, '$1');
 
     return normalized.toLowerCase().trim();
   }
@@ -79,7 +79,7 @@ export class SearchService implements ISearchService {
         sessionId: sessionId || undefined,
       });
     } catch (error) {
-      console.error("[SearchService] Failed to log search:", error);
+      console.error('[SearchService] Failed to log search:', error);
     }
   }
 
@@ -151,12 +151,12 @@ export class SearchService implements ISearchService {
   }
 
   public async search(params: SearchParams): Promise<SearchResult> {
-    const { query, locale, limit = 20, offset = 0, sort = "relevance" } = params;
+    const { query, locale, limit = 20, offset = 0, sort = 'relevance' } = params;
 
     // If no search query, fallback to the repository's generic getFiltered
     if (!query || !query.trim()) {
       const result = await this.productRepository.getFiltered(
-        { ...params, search: undefined, sort: sort === "relevance" ? undefined : sort }, // Clear generic search as we handle text matching here
+        { ...params, search: undefined, sort: sort === 'relevance' ? undefined : sort }, // Clear generic search as we handle text matching here
         locale,
       );
       this.logSearch(query, locale, result.total, undefined, undefined).catch(() => {});
@@ -167,13 +167,13 @@ export class SearchService implements ISearchService {
     }
 
     const parsed = this.parseQuery(query);
-    let allScoredResults: { productId: number; score: number }[] = [];
+    let allScoredResults: { productId: number; score: number }[];
 
     if (parsed.arabicTerms.length > 0 && parsed.englishTerms.length > 0) {
       // Mixed query: Search both and combine results
       const [arResults, enResults] = await Promise.all([
-        this.executeScoredSearch(parsed.arabicTerms.join(" "), locale, params, true),
-        this.executeScoredSearch(parsed.englishTerms.join(" "), locale, params, false),
+        this.executeScoredSearch(parsed.arabicTerms.join(' '), locale, params, true),
+        this.executeScoredSearch(parsed.englishTerms.join(' '), locale, params, false),
       ]);
 
       // Merge and sum scores for products found in both
@@ -190,14 +190,14 @@ export class SearchService implements ISearchService {
       }));
     } else if (parsed.arabicTerms.length > 0) {
       allScoredResults = await this.executeScoredSearch(
-        parsed.arabicTerms.join(" "),
+        parsed.arabicTerms.join(' '),
         locale,
         params,
         true,
       );
     } else {
       allScoredResults = await this.executeScoredSearch(
-        parsed.englishTerms.join(" "),
+        parsed.englishTerms.join(' '),
         locale,
         params,
         false,
@@ -211,7 +211,7 @@ export class SearchService implements ISearchService {
     }
 
     // Default sorting is by score, but can be overridden by user selection
-    if (sort === "relevance") {
+    if (sort === 'relevance') {
       allScoredResults.sort((a, b) => b.score - a.score);
     } // Other sort options will be handled by Drizzle/Repo since we pass productIds. Wait, DrizzleProductRepository handles sort inside getsFiltered?
     // Actually getFiltered orders by createdAt desc, unless we add order options.
@@ -228,14 +228,14 @@ export class SearchService implements ISearchService {
         productIds: pagedIds,
         limit: pagedIds.length,
         offset: 0,
-        sort: sort === "relevance" ? undefined : sort,
+        sort: sort === 'relevance' ? undefined : sort,
       },
       locale,
     );
 
     // If sorting by relevance, ensure the fetched items match the scored order
-    let finalItems = repoResult.products;
-    if (sort === "relevance") {
+    const finalItems = repoResult.products;
+    if (sort === 'relevance') {
       const orderMap = new Map(pagedIds.map((id, index) => [id, index]));
       finalItems.sort((a, b) => {
         const indexA = orderMap.get(a.id as number) ?? 999;
@@ -261,7 +261,7 @@ export class SearchService implements ISearchService {
       return { products: [], categories: [] };
     }
 
-    const { arabicTerms, englishTerms } = this.parseQuery(query);
+    const { arabicTerms } = this.parseQuery(query);
     const isArabic = arabicTerms.length > 0;
     const normalizedTerm = isArabic ? this.normalizeArabic(query) : query.toLowerCase().trim();
     const prefixPattern = `${normalizedTerm}%`;
@@ -297,7 +297,7 @@ export class SearchService implements ISearchService {
       (r) => ({
         id: Number(r.id),
         name: String(r.name),
-        type: "product",
+        type: 'product',
         imageUrl: r.image_url ? String(r.image_url) : undefined,
       }),
     );
@@ -307,7 +307,7 @@ export class SearchService implements ISearchService {
         id: Number(r.id),
         name: String(r.name),
         slug: String(r.slug),
-        type: "category",
+        type: 'category',
       }),
     );
 

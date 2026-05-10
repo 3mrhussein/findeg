@@ -1,14 +1,14 @@
-import { getSchoolListPageData } from "@/data/school/queries";
-import { SessionState } from "@findeg/backend";
-import { createSchoolServices } from "@findeg/backend/features/school/application/services/factory";
-import { getOptionalSession } from "@lib/auth-guard";
-import { SchoolAuthWall } from "@app/[locale]/(storefront)/school/_components/SchoolAuthWall";
-import { notFound } from "next/navigation";
-import { redirect } from "@i18n/navigation";
-import { setRequestLocale } from "next-intl/server";
-import type { Locale } from "next-intl";
-import { ListPageClient } from "./ListPageClient";
-import { Suspense } from "react";
+import { getSchoolListPageData } from '@/data/school/queries';
+import { SessionState } from '@findeg/backend';
+import { createSchoolServices } from '@findeg/backend/features/school/application/services/factory';
+import { getOptionalSession } from '@lib/auth-guard';
+import { SchoolAuthWall } from '@app/[locale]/(storefront)/school/_components/SchoolAuthWall';
+import { notFound } from 'next/navigation';
+import { redirect } from '@i18n/navigation';
+import { setRequestLocale } from 'next-intl/server';
+import type { Locale } from 'next-intl';
+import { ListPageClient } from './ListPageClient';
+import { Suspense } from 'react';
 
 interface PageProps {
   params: Promise<{ locale: string; slug: string }>;
@@ -44,7 +44,7 @@ async function DirectListContent({ params, searchParams }: PageProps) {
   const session = await getOptionalSession();
 
   if (!session) {
-    return <SchoolAuthWall listTitle={slug.replace(/-/g, " ")} />;
+    return <SchoolAuthWall listTitle={slug.replace(/-/g, ' ')} />;
   }
 
   const pageData = await getSchoolListPageData(slug, session?.userId || null);
@@ -63,8 +63,8 @@ async function DirectListContent({ params, searchParams }: PageProps) {
   }
 
   // 3. Final Access Verification
-  if (accessState !== "granted" && accessState !== "public") {
-    const schoolSlug = list.schoolName.toLowerCase().replace(/\s+/g, "-");
+  if (accessState !== 'granted' && accessState !== 'public') {
+    const schoolSlug = list.schoolName.toLowerCase().replace(/\s+/g, '-');
     redirect({ href: `/schools/${schoolSlug}?restricted=${list.id}`, locale });
   }
 

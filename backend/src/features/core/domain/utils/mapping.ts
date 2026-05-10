@@ -1,5 +1,5 @@
-import { ID, IdSchema } from "../types/common";
-
+import { ID, IdSchema } from '../types/common';
+import { ZodError } from 'zod';
 /**
  * Domain Mapping Utilities
  *

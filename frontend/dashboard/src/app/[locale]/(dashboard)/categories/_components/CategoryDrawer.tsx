@@ -13,26 +13,26 @@
  * Location: src/app/[locale]/admin/(dashboard)/categories/_components/
  */
 
-"use client";
+'use client';
 
-import * as React from "react";
-import { useForm, FormProvider } from "react-hook-form";
-import { SlideOver } from "@/app/[locale]/_components/shared/SlideOver";
-import { ConfirmDialog } from "@/app/[locale]/_components/shared/ConfirmDialog";
-import { Button } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import { Switch } from "@findeg/ui";
-import { CollapsibleCategoryPicker } from "@/app/[locale]/_components/shared/CollapsibleCategoryPicker";
-import { BilingualInput } from "@components/shared/BilingualInput";
-import { BilingualTextarea } from "@components/shared/BilingualTextarea";
-import { Separator } from "@findeg/ui";
-import { Save, Trash2, Check, AlertCircle, Loader2 } from "lucide-react";
-import type { Category } from "@findeg/backend/features/catalog";
-import { useTranslations } from "next-intl";
-import { checkCategorySlugAvailableAction as checkSlugAvailableAction } from "@data/categories/actions";
+import * as React from 'react';
+import { useForm, FormProvider } from 'react-hook-form';
+import { SlideOver } from '@/app/[locale]/_components/shared/SlideOver';
+import { ConfirmDialog } from '@/app/[locale]/_components/shared/ConfirmDialog';
+import { Button } from '@findeg/ui';
+import { Input } from '@findeg/ui';
+import { Label } from '@findeg/ui';
+import { Switch } from '@findeg/ui';
+import { CollapsibleCategoryPicker } from '@/app/[locale]/_components/shared/CollapsibleCategoryPicker';
+import { BilingualInput } from '@components/shared/BilingualInput';
+import { BilingualTextarea } from '@components/shared/BilingualTextarea';
+import { Separator } from '@findeg/ui';
+import { Save, Trash2, Check, AlertCircle, Loader2 } from 'lucide-react';
+import type { Category } from '@findeg/backend/features/catalog';
+import { useTranslations } from 'next-intl';
+import { checkCategorySlugAvailableAction as checkSlugAvailableAction } from '@data/categories/actions';
 
-import { cn } from "@lib/utils";
+import { cn } from '@lib/utils';
 
 interface CategoryFormValues {
   localizedName: {
@@ -79,8 +79,8 @@ export function CategoryDrawer({
   onSubmit,
   onDelete,
 }: CategoryDrawerProps) {
-  const t = useTranslations("Administration.Catalog.Categories");
-  const commonT = useTranslations("Common");
+  const t = useTranslations('Administration.Catalog.Categories');
+  const commonT = useTranslations('Common');
   const [isSaving, setIsSaving] = React.useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = React.useState(false);
   const [isSlugAvailable, setIsSlugAvailable] = React.useState<boolean | null>(null);
@@ -90,16 +90,16 @@ export function CategoryDrawer({
   const methods = useForm<CategoryFormValues>({
     defaultValues: {
       localizedName: {
-        en: category?.localizedContent?.name?.en || "",
-        ar: category?.localizedContent?.name?.ar || "",
+        en: category?.localizedContent?.name?.en || '',
+        ar: category?.localizedContent?.name?.ar || '',
       },
       localizedDescription: {
-        en: category?.localizedContent?.description?.en || "",
-        ar: category?.localizedContent?.description?.ar || "",
+        en: category?.localizedContent?.description?.en || '',
+        ar: category?.localizedContent?.description?.ar || '',
       },
-      slug: category?.slug || "",
+      slug: category?.slug || '',
       parentId: category?.parentId || initialParentId || null,
-      icon: category?.icon || "",
+      icon: category?.icon || '',
       sortOrder: category?.sortOrder || 0,
       isActive: category?.isActive ?? true,
     },
@@ -119,16 +119,16 @@ export function CategoryDrawer({
     if (open) {
       reset({
         localizedName: {
-          en: category?.localizedContent?.name?.en || "",
-          ar: category?.localizedContent?.name?.ar || "",
+          en: category?.localizedContent?.name?.en || '',
+          ar: category?.localizedContent?.name?.ar || '',
         },
         localizedDescription: {
-          en: category?.localizedContent?.description?.en || "",
-          ar: category?.localizedContent?.description?.ar || "",
+          en: category?.localizedContent?.description?.en || '',
+          ar: category?.localizedContent?.description?.ar || '',
         },
-        slug: category?.slug || "",
+        slug: category?.slug || '',
         parentId: category?.parentId || initialParentId || null,
-        icon: category?.icon || "",
+        icon: category?.icon || '',
         sortOrder: category?.sortOrder || 0,
         isActive: category?.isActive ?? true,
       });
@@ -137,25 +137,25 @@ export function CategoryDrawer({
   }, [category, initialParentId, open, reset]);
 
   // Slug auto-generation logic
-  const nameEn = watch("localizedName.en");
-  const currentSlug = watch("slug");
+  const nameEn = watch('localizedName.en');
+  const currentSlug = watch('slug');
 
-  const prevNameRef = React.useRef("");
+  const prevNameRef = React.useRef('');
   React.useEffect(() => {
     if (!isEditMode && nameEn) {
       const generated = nameEn
         .trim()
         .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-+|-+$/g, "");
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
       // Auto-update slug if it's empty, or still matches the previously auto-generated value
       const prevGenerated = prevNameRef.current
         .trim()
         .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-+|-+$/g, "");
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
       if (!currentSlug || currentSlug === prevGenerated) {
-        setValue("slug", generated, { shouldValidate: true });
+        setValue('slug', generated, { shouldValidate: true });
       }
       prevNameRef.current = nameEn;
     }
@@ -205,16 +205,16 @@ export function CategoryDrawer({
     }
   };
 
-  const isActive = watch("isActive");
-  const parentId = watch("parentId");
+  const isActive = watch('isActive');
+  const parentId = watch('parentId');
 
   return (
     <>
       <SlideOver
         open={open}
         onOpenChange={(isOpen) => !isOpen && onClose()}
-        title={isEditMode ? t("EditCategory") : t("NewCategory")}
-        description={isEditMode ? t("Form.ProductCount", { count: 0 }) : undefined}
+        title={isEditMode ? t('EditCategory') : t('NewCategory')}
+        description={isEditMode ? t('Form.ProductCount', { count: 0 }) : undefined}
       >
         <FormProvider {...methods}>
           <form onSubmit={handleSubmit(handleFormSubmit)} className="flex flex-col h-full">
@@ -222,12 +222,12 @@ export function CategoryDrawer({
             <div className="flex-1 overflow-y-auto px-6 py-4 space-y-6">
               {/* Name (Bilingual) */}
               <div className="space-y-2">
-                <Label className="text-sm font-medium">{t("Form.NameEn")} *</Label>
+                <Label className="text-sm font-medium">{t('Form.NameEn')} *</Label>
                 <BilingualInput
                   nameEn="localizedName.en"
                   nameAr="localizedName.ar"
-                  placeholderEn={t("Form.SlugPlaceholder")}
-                  placeholderAr={t("Form.NameAr")}
+                  placeholderEn={t('Form.SlugPlaceholder')}
+                  placeholderAr={t('Form.NameAr')}
                   required
                 />
                 {errors.localizedName?.en && (
@@ -238,7 +238,7 @@ export function CategoryDrawer({
               {/* Slug */}
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <Label className="text-sm font-medium">{t("Form.Slug")} *</Label>
+                  <Label className="text-sm font-medium">{t('Form.Slug')} *</Label>
                   {isCheckingSlug ? (
                     <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />
                   ) : isSlugAvailable === true ? (
@@ -252,27 +252,27 @@ export function CategoryDrawer({
                   ) : null}
                 </div>
                 <Input
-                  {...register("slug", { required: true })}
-                  placeholder={t("Form.SlugPlaceholder")}
+                  {...register('slug', { required: true })}
+                  placeholder={t('Form.SlugPlaceholder')}
                   className={cn(
-                    isSlugAvailable === true && "border-green-500 focus-visible:ring-green-500",
+                    isSlugAvailable === true && 'border-green-500 focus-visible:ring-green-500',
                     isSlugAvailable === false &&
-                      "border-destructive focus-visible:ring-destructive",
+                      'border-destructive focus-visible:ring-destructive',
                   )}
                 />
-                <p className="text-xs text-muted-foreground">{t("Form.SlugHint")}</p>
+                <p className="text-xs text-muted-foreground">{t('Form.SlugHint')}</p>
               </div>
 
               <Separator />
 
               {/* Description (Bilingual) */}
               <div className="space-y-2">
-                <Label className="text-sm font-medium">{t("Form.DescriptionEn")}</Label>
+                <Label className="text-sm font-medium">{t('Form.DescriptionEn')}</Label>
                 <BilingualTextarea
                   nameEn="localizedDescription.en"
                   nameAr="localizedDescription.ar"
-                  placeholderEn={t("Form.DescriptionEn")}
-                  placeholderAr={t("Form.DescriptionAr")}
+                  placeholderEn={t('Form.DescriptionEn')}
+                  placeholderAr={t('Form.DescriptionAr')}
                   rows={3}
                 />
               </div>
@@ -281,35 +281,35 @@ export function CategoryDrawer({
 
               {/* Parent Category */}
               <div className="space-y-2">
-                <Label className="text-sm font-medium">{t("Form.Parent")}</Label>
+                <Label className="text-sm font-medium">{t('Form.Parent')}</Label>
                 <CollapsibleCategoryPicker
                   categories={categories.filter((c) => c.id !== category?.id)} // Don't allow self as parent
                   selectedId={parentId}
-                  onSelect={(id) => setValue("parentId", id === 0 ? null : id)}
-                  placeholder={t("Form.ParentNone")}
+                  onSelect={(id) => setValue('parentId', id === 0 ? null : id)}
+                  placeholder={t('Form.ParentNone')}
                 />
               </div>
 
               {/* Icon (Lucide name or Emoji) */}
               <div className="space-y-2">
-                <Label className="text-sm font-medium">{t("Form.Icon")}</Label>
+                <Label className="text-sm font-medium">{t('Form.Icon')}</Label>
                 <Input
-                  {...register("icon")}
-                  placeholder={t("Form.IconPlaceholder")}
+                  {...register('icon')}
+                  placeholder={t('Form.IconPlaceholder')}
                   maxLength={20}
                 />
-                <p className="text-xs text-muted-foreground">{t("Form.IconHint")}</p>
+                <p className="text-xs text-muted-foreground">{t('Form.IconHint')}</p>
               </div>
 
               {/* Sort Order */}
               <div className="space-y-2">
-                <Label className="text-sm font-medium">{t("Form.DisplayOrder")}</Label>
+                <Label className="text-sm font-medium">{t('Form.DisplayOrder')}</Label>
                 <Input
                   type="number"
-                  {...register("sortOrder", { valueAsNumber: true })}
+                  {...register('sortOrder', { valueAsNumber: true })}
                   placeholder="0"
                 />
-                <p className="text-xs text-muted-foreground">{t("Form.DisplayOrderHint")}</p>
+                <p className="text-xs text-muted-foreground">{t('Form.DisplayOrderHint')}</p>
               </div>
 
               <Separator />
@@ -317,14 +317,14 @@ export function CategoryDrawer({
               {/* Status Toggle */}
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label className="text-sm font-medium">{t("Form.IsActive")}</Label>
+                  <Label className="text-sm font-medium">{t('Form.IsActive')}</Label>
                   <p className="text-xs text-muted-foreground">
-                    {isActive ? t("Form.IsActive") : t("Form.IsActiveHint")}
+                    {isActive ? t('Form.IsActive') : t('Form.IsActiveHint')}
                   </p>
                 </div>
                 <Switch
                   checked={isActive}
-                  onCheckedChange={(checked) => setValue("isActive", checked)}
+                  onCheckedChange={(checked) => setValue('isActive', checked)}
                 />
               </div>
             </div>
@@ -342,7 +342,7 @@ export function CategoryDrawer({
                     disabled={isSaving}
                   >
                     <Trash2 className="h-4 w-4 me-2" />
-                    {t("DeleteCategory")}
+                    {t('DeleteCategory')}
                   </Button>
                 )}
 
@@ -351,11 +351,11 @@ export function CategoryDrawer({
                 {/* Cancel & Save */}
                 <div className="flex gap-2">
                   <Button type="button" variant="outline" onClick={onClose} disabled={isSaving}>
-                    {commonT("Cancel")}
+                    {commonT('Cancel')}
                   </Button>
                   <Button type="submit" disabled={isSaving}>
                     <Save className="h-4 w-4 me-2" />
-                    {isSaving ? commonT("Loading") : commonT("Save")}
+                    {isSaving ? commonT('Loading') : commonT('Save')}
                   </Button>
                 </div>
               </div>
@@ -369,11 +369,11 @@ export function CategoryDrawer({
         open={showDeleteConfirm}
         onOpenChange={setShowDeleteConfirm}
         onConfirm={handleDelete}
-        title={t("DeleteConfirmTitle")}
-        description={t("DeleteConfirmDescription", {
-          name: category?.localizedContent?.name?.en ?? category?.slug ?? "",
+        title={t('DeleteConfirmTitle')}
+        description={t('DeleteConfirmDescription', {
+          name: category?.localizedContent?.name?.en ?? category?.slug ?? '',
         })}
-        confirmLabel={t("DeleteCategory")}
+        confirmLabel={t('DeleteCategory')}
         variant="destructive"
       />
     </>

@@ -1,6 +1,8 @@
-import { ProductForm } from "../../_components/ProductForm";
-import { notFound } from "next/navigation";
-import { parse } from "@findeg/backend/features/core";
+import { ProductForm } from '../../_components/ProductForm';
+import { notFound } from 'next/navigation';
+import { parse } from '@findeg/backend/features/core';
+import { getProductForEdit } from '@data/products/queries';
+import { getAllCategories, getAllBrands, getAllTags } from '@data/resources/queries';
 
 /**
  * /admin/products/[id]/edit
@@ -17,11 +19,13 @@ export default async function EditProductPage({
 
   if (isNaN(productId)) notFound();
 
-  // TODO: Restore data fetching after repository-based refactoring
-  const categories: any[] = [];
-  const brands: any[] = [];
-  const tags: any[] = [];
-  const product = null; // Will trigger notFound()
+  // Fetch data in parallel
+  const [product, categories, brands, tags] = await Promise.all([
+    getProductForEdit(productId),
+    getAllCategories(resolvedLocale),
+    getAllBrands(false, resolvedLocale),
+    getAllTags(resolvedLocale),
+  ]);
 
   if (!product) notFound();
 

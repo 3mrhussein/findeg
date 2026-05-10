@@ -11,12 +11,12 @@
  * if (can('admin.products.write')) { ... }
  */
 
-"use client";
+'use client';
 
-import { useMemo } from "react";
-import { usePermissions } from "@providers/PermissionsProvider";
-import { useSession } from "@providers/SessionProvider";
-import { staffRole, type PortalRole, type PermissionCode } from "@findeg/backend/features/core";
+import { useMemo } from 'react';
+import { usePermissions } from '@providers/PermissionsProvider';
+import { useSession } from '@providers/SessionProvider';
+import { staffRole, type PortalRole, type PermissionCode } from '@findeg/db';
 
 /**
  * Admin-specific permission helper interface
@@ -65,12 +65,12 @@ export function useAdminPermissions(): AdminPermissions {
   const value = useMemo<AdminPermissions>(
     () => ({
       can: (permission: string | PermissionCode) => hasPermission(permission),
-      portalRole: session.portalRole,
-      staff: staffRole(session.portalRole),
+      portalRole: session?.portalRole as PortalRole,
+      staff: session ? staffRole(session.portalRole) : false,
       systemAdmin,
       permissionCodes,
     }),
-    [hasPermission, session.portalRole, systemAdmin, permissionCodes],
+    [hasPermission, session?.portalRole, systemAdmin, permissionCodes],
   );
 
   return value;

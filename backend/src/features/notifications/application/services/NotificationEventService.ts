@@ -1,6 +1,6 @@
-import { INotificationService } from "../interfaces/INotificationService";
-import { IEmailService } from "@findeg/backend/features/notifications/application/services/IEmailService";
-import { Order } from "@findeg/backend/features/order/domain/entities/Order";
+import { INotificationService } from '../interfaces/INotificationService';
+import { IEmailService } from '@findeg/backend/features/notifications/application/services/IEmailService';
+import { Order } from '@findeg/backend/features/order/domain/entities/Order';
 
 /**
  * Notification Event Service
@@ -31,11 +31,11 @@ export class NotificationEventService {
     // 1. In-app for customer
     await this.notificationService.create({
       userId: customer.id,
-      type: "order.created",
+      type: 'order.created',
       titleEn: `Order #${order.id} confirmed`,
       titleAr: `تم تأكيد الطلب رقم #${order.id}`,
       bodyEn: "We've received your order and are processing it.",
-      bodyAr: "لقد استلمنا طلبك وجاري العمل عليه.",
+      bodyAr: 'لقد استلمنا طلبك وجاري العمل عليه.',
       actionUrl: `/dashboard/orders/${order.id}`,
     });
 
@@ -55,7 +55,7 @@ export class NotificationEventService {
 
     await this.notificationService.create({
       userId: order.userId,
-      type: "order.shipped", // or generic status update
+      type: 'order.shipped', // or generic status update
       titleEn: `Order #${order.id} status updated: ${newStatus}`,
       titleAr: `تحديث حالة الطلب #${order.id}: ${newStatus}`,
       actionUrl: `/dashboard/orders/${order.id}`,
@@ -79,7 +79,7 @@ export class NotificationEventService {
   ) {
     await this.notificationService.create({
       userId: user.id,
-      type: "access.approved",
+      type: 'access.approved',
       titleEn: `Access approved for ${list.schoolName}`,
       titleAr: `تمت الموافقة على الدخول لـ ${list.schoolName}`,
       bodyEn: `You can now view the list for ${list.grade}.`,
@@ -96,12 +96,12 @@ export class NotificationEventService {
   async onLowStock(adminId: number, product: { name: string; sku: string }) {
     await this.notificationService.create({
       userId: adminId,
-      type: "inventory.low_stock",
+      type: 'inventory.low_stock',
       titleEn: `Low stock alert: ${product.name}`,
       titleAr: `تنبيه انخفاض المخزون: ${product.name}`,
       bodyEn: `SKU ${product.sku} is running low.`,
       bodyAr: `المنتج ${product.sku} على وشك النفاد.`,
-      actionUrl: "/admin/inventory",
+      actionUrl: '/admin/inventory',
     });
   }
 }

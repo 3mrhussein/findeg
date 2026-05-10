@@ -2,9 +2,9 @@
  * Checkout validation request body schema.
  */
 
-import { z } from "zod";
-import { ShippingAddressSchema } from "../value-objects";
-import { PaymentMethodSchema } from "@findeg/backend/features/core/domain/types/common";
+import { z } from 'zod';
+import { ShippingAddressSchema } from '../value-objects';
+import { PaymentMethodSchema } from '@findeg/backend/features/core/domain/types/common';
 
 export const CheckoutValidateSchema = z.object({
   address: ShippingAddressSchema,

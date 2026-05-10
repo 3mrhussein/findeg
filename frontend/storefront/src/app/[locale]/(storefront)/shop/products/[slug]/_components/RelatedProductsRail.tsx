@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { Link2 } from "lucide-react";
-import { useTranslations } from "next-intl";
-import type { Product } from "@/data/catalog/types";
-import { ProductCard } from "../../../_components/ProductCard";
+import { Link2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import type { Product } from '@/data/catalog/types';
+import { ProductCard } from '../../../_components/ProductCard';
 
 interface RelatedProductsRailProps {
   products: Product[];
@@ -13,7 +13,7 @@ interface RelatedProductsRailProps {
  * Horizontal related-products strip for PDP.
  */
 export function RelatedProductsRail({ products }: RelatedProductsRailProps) {
-  const t = useTranslations("Pages.ProductDetail");
+  const t = useTranslations('Pages.ProductDetail');
 
   if (!products.length) {
     return null;
@@ -23,7 +23,7 @@ export function RelatedProductsRail({ products }: RelatedProductsRailProps) {
     <section className="space-y-3">
       <h2 className="inline-flex items-center gap-2 text-xl font-bold text-foreground">
         <Link2 className="size-5" />
-        {t("CustomersAlsoBought")}
+        {t('CustomersAlsoBought')}
       </h2>
 
       <div className="flex gap-3 overflow-x-auto pb-2">

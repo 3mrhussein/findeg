@@ -1,4 +1,4 @@
-import { Product, CategoryFilterOption, FilterOption } from "../catalog/types";
+import { Product, CategoryFilterOption, FilterOption } from '../catalog/types';
 
 /**
  * Helpers for filter options
@@ -35,7 +35,7 @@ export function mapBrandOptions(
 export function mapProduct(p: any, locale: string): Product {
   return {
     ...p,
-    slug: p.slug || "",
+    slug: p.slug || '',
     variants: (p.variants || []).map((v: any) => ({
       ...v,
       inventory: v.inventory || [],

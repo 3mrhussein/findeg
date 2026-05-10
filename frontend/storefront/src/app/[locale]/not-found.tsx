@@ -1,5 +1,5 @@
-import ErrorPage from "@components/shared/ErrorPage";
-import { Suspense } from "react";
+import ErrorPage from '@components/shared/ErrorPage';
+import { Suspense } from 'react';
 
 /**
  *

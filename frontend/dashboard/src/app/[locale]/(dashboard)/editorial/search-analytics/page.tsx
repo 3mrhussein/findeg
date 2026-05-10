@@ -1,6 +1,6 @@
-import { requireAdmin } from "@lib/auth-guard";
-import { SearchAnalyticsView } from "./_components/SearchAnalyticsView";
-import type { Locale } from "next-intl";
+import { requireAdmin } from '@lib/auth-guard';
+import { SearchAnalyticsView } from './_components/SearchAnalyticsView';
+import type { Locale } from 'next-intl';
 
 /**
  *
@@ -19,7 +19,7 @@ export default async function SearchAnalyticsPage({
   // Authorization check (SuperAdmin or Editorial role)
   const session = await requireAdmin(locale as Locale);
   const isEditorial =
-    session.activeRoleIds?.includes("EDITORIAL") || session.activeRoleIds?.includes("SUPER_ADMIN");
+    session.activeRoleIds?.includes('EDITORIAL') || session.activeRoleIds?.includes('SUPER_ADMIN');
 
   if (!isEditorial) {
     return (

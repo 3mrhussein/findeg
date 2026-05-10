@@ -1,11 +1,12 @@
-import { z } from "zod";
-import { IdSchema, SlugSchema, type ID, type Slug } from "../../../core/domain/types/common";
+import { z } from 'zod';
 import {
-  TranslationMapSchema,
-  type TranslationMap,
+  IdSchema,
+  SlugSchema,
+  type ID,
+  type Slug,
   type Locale,
-  pick,
-} from "../../../core/domain/value-objects";
+} from '../../../core/domain/types/common';
+import { TranslationMapSchema, pick } from '../../../core/domain/value-objects';
 
 export const CategoryLocalizedContentSchema = z.object({
   name: TranslationMapSchema,
@@ -82,7 +83,7 @@ export class CategoryEntity {
 
   getDescription(locale: Locale): string {
     return (
-      pick(this.category.localizedContent?.description, locale) || this.category.description || ""
+      pick(this.category.localizedContent?.description, locale) || this.category.description || ''
     );
   }
 }

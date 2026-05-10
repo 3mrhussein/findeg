@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { formatDistanceToNow } from "date-fns";
-import { CircleDot, History, Package, CreditCard, User, Settings, AlertCircle } from "lucide-react";
+import { formatDistanceToNow } from 'date-fns';
+import { CircleDot, History, Package, CreditCard, User, Settings, AlertCircle } from 'lucide-react';
 
 interface AuditLogEntry {
   id: number;
@@ -22,10 +22,10 @@ interface OrderActivityLogProps {
  */
 const getActionIcon = (action: string) => {
   const lowerAction = action.toLowerCase();
-  if (lowerAction.includes("status") || lowerAction.includes("update"))
+  if (lowerAction.includes('status') || lowerAction.includes('update'))
     return <Package className="w-4 h-4" />;
-  if (lowerAction.includes("payment")) return <CreditCard className="w-4 h-4" />;
-  if (lowerAction.includes("customer")) return <User className="w-4 h-4" />;
+  if (lowerAction.includes('payment')) return <CreditCard className="w-4 h-4" />;
+  if (lowerAction.includes('customer')) return <User className="w-4 h-4" />;
   return <Settings className="w-4 h-4" />;
 };
 
@@ -52,7 +52,7 @@ export function OrderActivityLog({ logs }: OrderActivityLogProps) {
       {sortedLogs.map((log, index) => {
         const date = new Date(log.createdAt);
         const actionLabel = log.action
-          .replace(/_/g, " ")
+          .replace(/_/g, ' ')
           .replace(
             /\w\S*/g,
             (txt: string) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(),
@@ -75,7 +75,7 @@ export function OrderActivityLog({ logs }: OrderActivityLogProps) {
               <div className="text-sm text-muted-foreground">
                 {log.oldValue && log.newValue ? (
                   <p>
-                    Changed from <span className="font-medium text-foreground">{log.oldValue}</span>{" "}
+                    Changed from <span className="font-medium text-foreground">{log.oldValue}</span>{' '}
                     to <span className="font-medium text-primary">{log.newValue}</span>
                   </p>
                 ) : (

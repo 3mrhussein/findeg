@@ -2,7 +2,7 @@
  * ProductTable — shared types & interfaces
  */
 
-import type { Product } from "@findeg/backend/features/catalog";
+import type { Product } from '@findeg/backend/features/catalog';
 
 export interface ProductFilters {
   search: string;

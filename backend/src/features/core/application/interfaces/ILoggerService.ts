@@ -17,7 +17,7 @@ export interface LogMetadata extends Record<string, unknown> {
   sessionId?: string;
 }
 
-export type LogLevel = "info" | "warn" | "error" | "debug";
+export type LogLevel = 'info' | 'warn' | 'error' | 'debug';
 
 export interface ILoggerService {
   /**

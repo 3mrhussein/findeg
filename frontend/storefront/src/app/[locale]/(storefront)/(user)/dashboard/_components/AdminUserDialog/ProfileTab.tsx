@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { useTranslations } from "next-intl";
-import { Input } from "@findeg/ui";
-import { Label } from "@findeg/ui";
-import { Switch } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Icon } from "@findeg/ui";
-import { useState } from "react";
+import { useTranslations } from 'next-intl';
+import { Input } from '@findeg/ui';
+import { Label } from '@findeg/ui';
+import { Switch } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { Icon } from '@findeg/ui';
+import { useState } from 'react';
 
 interface ProfileTabProps {
   isEdit: boolean;
@@ -38,14 +38,14 @@ export function ProfileTab({
   isActive,
   onIsActiveChange,
 }: ProfileTabProps) {
-  const t = useTranslations("Pages.Dashboard");
+  const t = useTranslations('Pages.Dashboard');
   const [showPassword, setShowPassword] = useState(false);
 
   return (
     <div className="space-y-4">
       {!isEdit && (
         <div className="space-y-1.5">
-          <Label>{t("AdminEmail")}</Label>
+          <Label>{t('AdminEmail')}</Label>
           <Input
             type="email"
             value={email}
@@ -57,21 +57,21 @@ export function ProfileTab({
 
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-1.5">
-          <Label>{t("FirstName")}</Label>
+          <Label>{t('FirstName')}</Label>
           <Input value={firstName} onChange={(e) => onFirstNameChange(e.target.value)} />
         </div>
         <div className="space-y-1.5">
-          <Label>{t("LastName")}</Label>
+          <Label>{t('LastName')}</Label>
           <Input value={lastName} onChange={(e) => onLastNameChange(e.target.value)} />
         </div>
       </div>
 
       {!isEdit && (
         <div className="space-y-1.5">
-          <Label>{t("Password")}</Label>
+          <Label>{t('Password')}</Label>
           <div className="relative">
             <Input
-              type={showPassword ? "text" : "password"}
+              type={showPassword ? 'text' : 'password'}
               value={password}
               onChange={(e) => onPasswordChange(e.target.value)}
             />
@@ -82,7 +82,7 @@ export function ProfileTab({
               className="absolute top-0 ltr:right-0 rtl:left-0 h-full"
               onClick={() => setShowPassword((v) => !v)}
             >
-              <Icon name={showPassword ? "visibility_off" : "visibility"} className="w-4 h-4" />
+              <Icon name={showPassword ? 'visibility_off' : 'visibility'} className="w-4 h-4" />
             </Button>
           </div>
         </div>
@@ -91,7 +91,7 @@ export function ProfileTab({
       {isEdit && (
         <div className="flex items-center gap-3 pt-2">
           <Switch id="isActive" checked={isActive} onCheckedChange={onIsActiveChange} />
-          <Label htmlFor="isActive">{t("Active")}</Label>
+          <Label htmlFor="isActive">{t('Active')}</Label>
         </div>
       )}
     </div>

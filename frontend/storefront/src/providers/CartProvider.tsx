@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import React, { createContext, useEffect, useMemo, useState } from "react";
-import type { CartItem } from "@findeg/backend/features/cart/domain/entities/Cart";
-import type { Product } from "@findeg/backend/features/catalog/domain/entities/Product";
-import { CustomerGroup } from "@findeg/backend/features/catalog/domain";
-import { UomCode } from "@findeg/backend/features/core/domain/types/common";
+import React, { createContext, useEffect, useMemo, useState } from 'react';
+import type { CartItem } from '@findeg/backend/features/cart/domain/entities/Cart';
+import type { Product } from '@findeg/backend/features/catalog/domain/entities/Product';
+import { CustomerGroup } from '@findeg/backend/features/catalog/domain';
+import { UomCode } from '@findeg/backend/features/core/domain/types/common';
 
 export interface CartContextType {
   cartItems: CartItem[];
@@ -35,7 +35,7 @@ interface CartSelectors {
  *
  */
 function getGuestId() {
-  const storageKey = "findeg_guest_id";
+  const storageKey = 'findeg_guest_id';
   const existing = window.localStorage.getItem(storageKey);
   if (existing) return existing;
 
@@ -72,13 +72,13 @@ function toCartItems(rawItems: any[]): CartItem[] {
     variantId: item.variantId,
     sku: item.sku,
     productName: item.productName || item.name || `Product #${item.productId}`,
-    variantLabel: item.variantLabel || item.variantKey || "Default",
+    variantLabel: item.variantLabel || item.variantKey || 'Default',
     imageUrl: item.imageUrl || (item.images && item.images[0]?.url),
     quantity: item.quantity,
     uomCode: item.uomCode,
     uomFactor: item.uomFactor ?? 1,
     unitPrice: item.unitPrice ?? item.unitPriceSnapshot ?? item.price ?? 0,
-    currency: item.currency || "EGP",
+    currency: item.currency || 'EGP',
     customerGroup: item.customerGroup,
     cartKitId: item.cartKitId,
   }));
@@ -89,7 +89,7 @@ import {
   addToCartAction,
   removeFromCartAction,
   updateQuantityAction,
-} from "@/app/[locale]/(storefront)/_actions/cart";
+} from '@/app/[locale]/(storefront)/_actions/cart';
 
 // ... (types and helper functions)
 

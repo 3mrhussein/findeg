@@ -1,4 +1,4 @@
-import type { DomainError } from "@findeg/backend/features/core";
+import type { DomainError } from '@findeg/backend/features/core';
 
 /**
  * Storefront Error Handler Utilities
@@ -26,7 +26,7 @@ import type { DomainError } from "@findeg/backend/features/core";
  */
 export function getErrorMessage(error: unknown): string {
   if (!(error instanceof Error)) {
-    return "Something went wrong. Please try again.";
+    return 'Something went wrong. Please try again.';
   }
 
   const domainError = error as DomainError & {
@@ -35,39 +35,39 @@ export function getErrorMessage(error: unknown): string {
   };
 
   // Use domain error's client message if available
-  if (typeof domainError.getClientMessage === "function") {
+  if (typeof domainError.getClientMessage === 'function') {
     return domainError.getClientMessage();
   }
 
   // Fallback to generic messages by error code
   switch (domainError.code) {
-    case "NOT_AUTHENTICATED":
-      return "Please log in to proceed.";
+    case 'NOT_AUTHENTICATED':
+      return 'Please log in to proceed.';
 
-    case "NOT_AUTHORIZED":
+    case 'NOT_AUTHORIZED':
       return "You don't have permission for that action.";
 
-    case "RESOURCE_NOT_FOUND":
-      return "The requested item could not be found.";
+    case 'RESOURCE_NOT_FOUND':
+      return 'The requested item could not be found.';
 
-    case "VALIDATION_ERROR":
-    case "VALIDATION_ERRORS":
-      return "Please check your input and try again.";
+    case 'VALIDATION_ERROR':
+    case 'VALIDATION_ERRORS':
+      return 'Please check your input and try again.';
 
-    case "CONFLICT_ERROR":
-      return "This item already exists.";
+    case 'CONFLICT_ERROR':
+      return 'This item already exists.';
 
-    case "BUSINESS_RULE_VIOLATION":
+    case 'BUSINESS_RULE_VIOLATION':
       return domainError.message;
 
     default:
       try {
         // Don't expose error details to customer
-        console.error("[storefront] Domain error:", domainError.code, domainError.message);
+        console.error('[storefront] Domain error:', domainError.code, domainError.message);
       } catch {
         // Ignore logging errors
       }
-      return "Something went wrong. Please try again.";
+      return 'Something went wrong. Please try again.';
   }
 }
 
@@ -89,7 +89,7 @@ export function getStatusCode(error: unknown): number {
   };
 
   // Use domain error's status code if available
-  if (typeof domainError.getStatusCode === "function") {
+  if (typeof domainError.getStatusCode === 'function') {
     return domainError.getStatusCode();
   }
 
@@ -100,18 +100,18 @@ export function getStatusCode(error: unknown): number {
 
   // Default by code
   switch (domainError.code) {
-    case "NOT_AUTHENTICATED":
+    case 'NOT_AUTHENTICATED':
       return 401;
-    case "NOT_AUTHORIZED":
+    case 'NOT_AUTHORIZED':
       return 403;
-    case "RESOURCE_NOT_FOUND":
+    case 'RESOURCE_NOT_FOUND':
       return 404;
-    case "VALIDATION_ERROR":
-    case "VALIDATION_ERRORS":
+    case 'VALIDATION_ERROR':
+    case 'VALIDATION_ERRORS':
       return 400;
-    case "CONFLICT_ERROR":
+    case 'CONFLICT_ERROR':
       return 409;
-    case "BUSINESS_RULE_VIOLATION":
+    case 'BUSINESS_RULE_VIOLATION':
       return 422;
     default:
       return 500;
@@ -125,5 +125,5 @@ export function getStatusCode(error: unknown): number {
  * @returns true if error is a DomainError subclass
  */
 export function domainError(error: unknown): error is DomainError {
-  return error instanceof Error && "code" in error && "metadata" in error;
+  return error instanceof Error && 'code' in error && 'metadata' in error;
 }

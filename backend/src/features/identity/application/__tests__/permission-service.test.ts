@@ -4,13 +4,13 @@
  * Tests authorization checks with mock UserRepository
  */
 
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { PermissionService } from "../services/PermissionService";
-import { IUserRepository } from "../interfaces/IUserRepository";
-import { ID } from "@findeg/backend/features/core/domain/types/common";
-import { PermissionCode, RoleId } from "@findeg/backend/features/core/domain/value-objects";
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { PermissionService } from '../services/PermissionService';
+import { IUserRepository } from '../interfaces/IUserRepository';
+import { ID } from '@findeg/backend/features/core/domain/types/common';
+import { PermissionCode, RoleId } from '@findeg/backend/features/core/domain/value-objects';
 
-describe("PermissionService", () => {
+describe('PermissionService', () => {
   let permissionService: PermissionService;
   let mockUserRepository: IUserRepository;
 
@@ -33,46 +33,46 @@ describe("PermissionService", () => {
     permissionService = new PermissionService(mockUserRepository);
   });
 
-  describe("hasPermission", () => {
-    it("should return true when user has permission", async () => {
-      vi.spyOn(mockUserRepository, "getAuthorizationContext").mockResolvedValue({
-        activeRoleIds: ["admin" as RoleId],
-        permissionCodes: ["products:create" as PermissionCode, "products:update" as PermissionCode],
+  describe('hasPermission', () => {
+    it('should return true when user has permission', async () => {
+      vi.spyOn(mockUserRepository, 'getAuthorizationContext').mockResolvedValue({
+        activeRoleIds: ['admin' as RoleId],
+        permissionCodes: ['products:create' as PermissionCode, 'products:update' as PermissionCode],
         organizationId: undefined,
       });
 
       const result = await permissionService.hasPermission(
         123 as ID,
-        "products:create" as PermissionCode,
+        'products:create' as PermissionCode,
       );
 
       expect(result).toBe(true);
     });
 
-    it("should return false when user lacks permission", async () => {
-      vi.spyOn(mockUserRepository, "getAuthorizationContext").mockResolvedValue({
-        activeRoleIds: ["customer" as RoleId],
-        permissionCodes: ["products:read" as PermissionCode],
+    it('should return false when user lacks permission', async () => {
+      vi.spyOn(mockUserRepository, 'getAuthorizationContext').mockResolvedValue({
+        activeRoleIds: ['customer' as RoleId],
+        permissionCodes: ['products:read' as PermissionCode],
         organizationId: undefined,
       });
 
       const result = await permissionService.hasPermission(
         123 as ID,
-        "products:delete" as PermissionCode,
+        'products:delete' as PermissionCode,
       );
 
       expect(result).toBe(false);
     });
 
-    it("should return false and log error on exception", async () => {
-      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-      vi.spyOn(mockUserRepository, "getAuthorizationContext").mockRejectedValue(
-        new Error("Database error"),
+    it('should return false and log error on exception', async () => {
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+      vi.spyOn(mockUserRepository, 'getAuthorizationContext').mockRejectedValue(
+        new Error('Database error'),
       );
 
       const result = await permissionService.hasPermission(
         123 as ID,
-        "products:create" as PermissionCode,
+        'products:create' as PermissionCode,
       );
 
       expect(result).toBe(false);
@@ -81,42 +81,42 @@ describe("PermissionService", () => {
     });
   });
 
-  describe("hasRole", () => {
-    it("should return true when user has role", async () => {
-      vi.spyOn(mockUserRepository, "getAuthorizationContext").mockResolvedValue({
-        activeRoleIds: ["admin" as RoleId, "warehouse_manager" as RoleId],
+  describe('hasRole', () => {
+    it('should return true when user has role', async () => {
+      vi.spyOn(mockUserRepository, 'getAuthorizationContext').mockResolvedValue({
+        activeRoleIds: ['admin' as RoleId, 'warehouse_manager' as RoleId],
         permissionCodes: [],
         organizationId: undefined,
       });
 
-      const result = await permissionService.hasRole(123 as ID, "admin" as RoleId);
+      const result = await permissionService.hasRole(123 as ID, 'admin' as RoleId);
 
       expect(result).toBe(true);
     });
 
-    it("should return false when user lacks role", async () => {
-      vi.spyOn(mockUserRepository, "getAuthorizationContext").mockResolvedValue({
-        activeRoleIds: ["customer" as RoleId],
+    it('should return false when user lacks role', async () => {
+      vi.spyOn(mockUserRepository, 'getAuthorizationContext').mockResolvedValue({
+        activeRoleIds: ['customer' as RoleId],
         permissionCodes: [],
         organizationId: undefined,
       });
 
-      const result = await permissionService.hasRole(123 as ID, "admin" as RoleId);
+      const result = await permissionService.hasRole(123 as ID, 'admin' as RoleId);
 
       expect(result).toBe(false);
     });
   });
 
-  describe("getUserPermissions", () => {
-    it("should return all user permissions", async () => {
+  describe('getUserPermissions', () => {
+    it('should return all user permissions', async () => {
       const expectedPermissions = [
-        "products:create",
-        "products:update",
-        "products:read",
+        'products:create',
+        'products:update',
+        'products:read',
       ] as PermissionCode[];
 
-      vi.spyOn(mockUserRepository, "getAuthorizationContext").mockResolvedValue({
-        activeRoleIds: ["admin" as RoleId],
+      vi.spyOn(mockUserRepository, 'getAuthorizationContext').mockResolvedValue({
+        activeRoleIds: ['admin' as RoleId],
         permissionCodes: expectedPermissions,
         organizationId: undefined,
       });
@@ -126,10 +126,10 @@ describe("PermissionService", () => {
       expect(result).toEqual(expectedPermissions);
     });
 
-    it("should return empty array on error", async () => {
-      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-      vi.spyOn(mockUserRepository, "getAuthorizationContext").mockRejectedValue(
-        new Error("Database error"),
+    it('should return empty array on error', async () => {
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+      vi.spyOn(mockUserRepository, 'getAuthorizationContext').mockRejectedValue(
+        new Error('Database error'),
       );
 
       const result = await permissionService.getUserPermissions(123 as ID);
@@ -139,11 +139,11 @@ describe("PermissionService", () => {
     });
   });
 
-  describe("getUserRoles", () => {
-    it("should return all user roles", async () => {
-      const expectedRoles = ["admin", "warehouse_manager"] as RoleId[];
+  describe('getUserRoles', () => {
+    it('should return all user roles', async () => {
+      const expectedRoles = ['admin', 'warehouse_manager'] as RoleId[];
 
-      vi.spyOn(mockUserRepository, "getAuthorizationContext").mockResolvedValue({
+      vi.spyOn(mockUserRepository, 'getAuthorizationContext').mockResolvedValue({
         activeRoleIds: expectedRoles,
         permissionCodes: [],
         organizationId: undefined,
@@ -154,10 +154,10 @@ describe("PermissionService", () => {
       expect(result).toEqual(expectedRoles);
     });
 
-    it("should return empty array on error", async () => {
-      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-      vi.spyOn(mockUserRepository, "getAuthorizationContext").mockRejectedValue(
-        new Error("Database error"),
+    it('should return empty array on error', async () => {
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+      vi.spyOn(mockUserRepository, 'getAuthorizationContext').mockRejectedValue(
+        new Error('Database error'),
       );
 
       const result = await permissionService.getUserRoles(123 as ID);

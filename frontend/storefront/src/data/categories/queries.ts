@@ -4,13 +4,13 @@
  * Provides cached data for the storefront category features.
  * Adheres to Next.js 16 "use cache" standards.
  */
-"use cache";
+'use cache';
 
-import { cacheTag, cacheLife } from "next/cache";
-import { createCatalogServices } from "@findeg/backend/features/catalog";
-import { parse } from "@findeg/backend/features/core";
-import { mapProduct, mapCategoryOptions, mapBrandOptions } from "../helpers/mappers";
-import { ShopPlpViewModel } from "../catalog/types";
+import { cacheTag, cacheLife } from 'next/cache';
+import { createCatalogServices } from '@findeg/backend/features/catalog';
+import { parse } from '@findeg/backend/features/core';
+import { mapProduct, mapCategoryOptions, mapBrandOptions } from '../helpers/mappers';
+import { ShopPlpViewModel } from '../catalog/types';
 
 /**
  * Category Page Data
@@ -21,8 +21,8 @@ export async function getCategoryPageViewModel(
   query: any,
 ): Promise<ShopPlpViewModel | null> {
   const resolvedLocale = parse(locale);
-  cacheTag("categories", `category-${resolvedLocale}-${slug}`);
-  cacheLife("hours");
+  cacheTag('categories', `category-${resolvedLocale}-${slug}`);
+  cacheLife('hours');
 
   const {
     categories: categoryService,
@@ -63,7 +63,7 @@ export async function getCategoryPageViewModel(
     from: 1,
     to: mappedProducts.length,
     locale: resolvedLocale,
-    query: query?.q || "",
+    query: query?.q || '',
     categorySlugPath: [],
     filters: {
       minPrice: 0,
@@ -72,7 +72,7 @@ export async function getCategoryPageViewModel(
       inStockOnly: false,
       discounts: [],
     },
-    sort: "newest",
+    sort: 'newest',
   };
 }
 
@@ -81,8 +81,8 @@ export async function getCategoryPageViewModel(
  */
 export async function getCategoriesPageData(language: string): Promise<any[]> {
   const resolvedLocale = parse(language);
-  cacheTag("categories", `categories-${resolvedLocale}`);
-  cacheLife("days");
+  cacheTag('categories', `categories-${resolvedLocale}`);
+  cacheLife('days');
 
   const { categories: categoryService } = createCatalogServices();
   return await categoryService.getAll(resolvedLocale);
@@ -95,8 +95,8 @@ export async function getNavCategories(language: string) {
   const locale = parse(language);
   const { categories } = createCatalogServices();
 
-  cacheTag("categories", `nav-categories-${locale}`);
-  cacheLife("days");
+  cacheTag('categories', `nav-categories-${locale}`);
+  cacheLife('days');
 
   const all = await categories.getAll(locale);
   return all.filter((c) => c.isActive !== false);

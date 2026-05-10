@@ -1,12 +1,12 @@
-import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Suspense } from "react";
-import type { Locale } from "next-intl";
-import Image from "next/image";
-import { getCollectionsPage } from "@/data/catalog/queries";
-import { Link } from "@i18n/navigation";
-import { ImageOff, ArrowRight, Sparkles } from "lucide-react";
-import { PageShell } from "../_components/PageShell";
-import { Button } from "@findeg/ui";
+import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { Suspense } from 'react';
+import type { Locale } from 'next-intl';
+import Image from 'next/image';
+import { getCollectionsPage } from '@/data/catalog/queries';
+import { Link } from '@i18n/navigation';
+import { ImageOff, ArrowRight, Sparkles } from 'lucide-react';
+import { PageShell } from '../_components/PageShell';
+import { Button } from '@findeg/ui';
 
 /**
  *
@@ -31,8 +31,8 @@ export default async function CollectionsPage({ params }: { params: Promise<{ lo
 async function CollectionsPageContent({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale as Locale);
-  const t = await getTranslations({ locale: locale as Locale, namespace: "Pages.Shop" });
-  const tNav = await getTranslations({ locale: locale as Locale, namespace: "Nav" });
+  const t = await getTranslations({ locale: locale as Locale, namespace: 'Pages.Shop' });
+  const tNav = await getTranslations({ locale: locale as Locale, namespace: 'Nav' });
 
   const { collections, trendingCategories } = await getCollectionsPage(locale);
 
@@ -41,10 +41,10 @@ async function CollectionsPageContent({ params }: { params: Promise<{ locale: st
       {/* Hero Header */}
       <div className="text-center mb-12 lg:mb-16">
         <h1 className="text-4xl lg:text-5xl font-black tracking-tight text-slate-900 dark:text-white mb-4">
-          {t("CollectionsTitle")}
+          {t('CollectionsTitle')}
         </h1>
         <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-          {t("CollectionsDescription")}
+          {t('CollectionsDescription')}
         </p>
       </div>
 
@@ -55,7 +55,7 @@ async function CollectionsPageContent({ params }: { params: Promise<{ locale: st
             (collection.localizedTitle as Record<string, string>)?.[locale] || collection.slug;
           const subtitle =
             (collection.localizedSubtitle as Record<string, string>)?.[locale] ||
-            t("CollectionsExplore");
+            t('CollectionsExplore');
 
           return (
             <Link
@@ -103,7 +103,7 @@ async function CollectionsPageContent({ params }: { params: Promise<{ locale: st
       <section className="mb-16 lg:mb-20">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl lg:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-            {tNav("TrendingCategories") || "Trending Categories"}
+            {tNav('TrendingCategories') || 'Trending Categories'}
           </h2>
         </div>
         <div className="grid gap-6 grid-cols-2 md:grid-cols-4 lg:grid-cols-6">
@@ -127,7 +127,7 @@ async function CollectionsPageContent({ params }: { params: Promise<{ locale: st
                   {category.name}
                 </h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-1">
-                  {category.description || t("CollectionsExplore")}
+                  {category.description || t('CollectionsExplore')}
                 </p>
               </div>
             </Link>
@@ -142,18 +142,18 @@ async function CollectionsPageContent({ params }: { params: Promise<{ locale: st
           <div className="flex-1 text-center lg:text-start">
             <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary mb-4">
               <Sparkles className="size-3.5" />
-              {tNav("School.SmartTool")}
+              {tNav('School.SmartTool')}
             </div>
             <h2 className="text-2xl lg:text-3xl font-black text-white mb-3 tracking-tight">
-              {tNav("School.CreateList")}
+              {tNav('School.CreateList')}
             </h2>
             <p className="text-slate-400 max-w-lg text-sm lg:text-base leading-relaxed">
-              {tNav("School.Description")}
+              {tNav('School.Description')}
             </p>
           </div>
           <div className="flex gap-3 shrink-0">
             <Button asChild size="lg" className="rounded-full px-8 font-bold shadow-lg">
-              <Link href="/school-lists">{tNav("School.TryFree")}</Link>
+              <Link href="/school-lists">{tNav('School.TryFree')}</Link>
             </Button>
             <Button
               asChild
@@ -161,7 +161,7 @@ async function CollectionsPageContent({ params }: { params: Promise<{ locale: st
               size="lg"
               className="rounded-full px-8 font-bold border-slate-600 text-white hover:bg-slate-700"
             >
-              <Link href="/school-lists">{tNav("School.LearnMore")}</Link>
+              <Link href="/school-lists">{tNav('School.LearnMore')}</Link>
             </Button>
           </div>
         </div>

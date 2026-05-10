@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import type { ColumnDef } from "@tanstack/react-table";
-import { Badge } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { IconTooltip } from "@findeg/ui";
+import type { ColumnDef } from '@tanstack/react-table';
+import { Badge } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { IconTooltip } from '@findeg/ui';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,14 +11,14 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@findeg/ui";
-import { Edit, Trash2, MoreHorizontal } from "lucide-react";
-import { Link } from "@i18n/navigation";
-import type { Product } from "@findeg/backend/features/catalog";
-import Image from "next/image";
-import { Checkbox } from "@findeg/ui";
-import { Copy, Archive } from "lucide-react";
-import { VariantEntity } from "@findeg/backend/features/catalog";
+} from '@findeg/ui';
+import { Edit, Trash2, MoreHorizontal } from 'lucide-react';
+import { Link } from '@i18n/navigation';
+import type { Product } from '@findeg/backend/features/catalog';
+import Image from 'next/image';
+import { Checkbox } from '@findeg/ui';
+import { Copy, Archive } from 'lucide-react';
+import { VariantEntity } from '@findeg/backend/features/catalog';
 
 /**
  * Column definitions for the ProductTable.
@@ -27,7 +27,7 @@ import { VariantEntity } from "@findeg/backend/features/catalog";
 export function buildProductColumns(onDelete: (id: number) => void): ColumnDef<Product>[] {
   return [
     {
-      id: "select",
+      id: 'select',
       /**
        *
        */
@@ -54,8 +54,8 @@ export function buildProductColumns(onDelete: (id: number) => void): ColumnDef<P
       enableHiding: false,
     },
     {
-      accessorKey: "Image",
-      header: "Image",
+      accessorKey: 'Image',
+      header: 'Image',
       /**
        *
        */
@@ -69,7 +69,7 @@ export function buildProductColumns(onDelete: (id: number) => void): ColumnDef<P
             {firstImage?.url ? (
               <Image
                 src={firstImage.url}
-                alt={product.name || "Product image"}
+                alt={product.name || 'Product image'}
                 width={48}
                 height={48}
                 className="h-full w-full object-cover"
@@ -82,16 +82,16 @@ export function buildProductColumns(onDelete: (id: number) => void): ColumnDef<P
       },
     },
     {
-      accessorKey: "name",
-      header: "Name",
+      accessorKey: 'name',
+      header: 'Name',
       /**
        *
        */
       cell: ({ row }) => {
         const product = row.original;
         const defaultVariant =
-          product.variants?.find((v) => v.variantKey === "default") || product.variants?.[0];
-        const skuInfo = defaultVariant?.sku || product.skuPrefix || "No SKU";
+          product.variants?.find((v) => v.variantKey === 'default') || product.variants?.[0];
+        const skuInfo = defaultVariant?.sku || product.skuPrefix || 'No SKU';
         return (
           <div className="flex flex-col">
             <Link
@@ -106,38 +106,38 @@ export function buildProductColumns(onDelete: (id: number) => void): ColumnDef<P
       },
     },
     {
-      accessorKey: "categoryName",
-      header: "Category",
+      accessorKey: 'categoryName',
+      header: 'Category',
       /**
        *
        */
-      cell: ({ row }) => <span className="text-sm">{row.original.categoryName || "—"}</span>,
+      cell: ({ row }) => <span className="text-sm">{row.original.categoryName || '—'}</span>,
     },
     {
-      accessorKey: "brandName",
-      header: "Brand",
+      accessorKey: 'brandName',
+      header: 'Brand',
       /**
        *
        */
-      cell: ({ row }) => <span className="text-sm">{row.original.brandName || "—"}</span>,
+      cell: ({ row }) => <span className="text-sm">{row.original.brandName || '—'}</span>,
     },
     {
-      accessorKey: "price",
-      header: "Price",
+      accessorKey: 'price',
+      header: 'Price',
       /**
        *
        */
       cell: ({ row }) => {
         const product = row.original;
         const variants = product.variants || [];
-        const defaultVariant = variants.find((v) => v.variantKey === "default") || variants[0];
+        const defaultVariant = variants.find((v) => v.variantKey === 'default') || variants[0];
 
-        if (!defaultVariant) return "—";
+        if (!defaultVariant) return '—';
 
         const amount = Number(defaultVariant.basePrice ?? 0);
-        const formatted = new Intl.NumberFormat("en-US", {
-          style: "currency",
-          currency: "EGP",
+        const formatted = new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'EGP',
         }).format(amount);
 
         // Show + tooltip if multiple variants
@@ -154,8 +154,8 @@ export function buildProductColumns(onDelete: (id: number) => void): ColumnDef<P
       },
     },
     {
-      id: "stock",
-      header: "Stock",
+      id: 'stock',
+      header: 'Stock',
       /**
        *
        */
@@ -167,9 +167,9 @@ export function buildProductColumns(onDelete: (id: number) => void): ColumnDef<P
           return acc + v.inventory.reduce((sum, bal) => sum + (bal.onHand - bal.reserved), 0);
         }, 0);
 
-        let dotColor = "bg-green-500";
-        if (totalStock === 0) dotColor = "bg-red-500";
-        else if (totalStock < 10) dotColor = "bg-amber-500";
+        let dotColor = 'bg-green-500';
+        if (totalStock === 0) dotColor = 'bg-red-500';
+        else if (totalStock < 10) dotColor = 'bg-amber-500';
 
         return (
           <div className="flex items-center justify-end gap-2">
@@ -180,8 +180,8 @@ export function buildProductColumns(onDelete: (id: number) => void): ColumnDef<P
       },
     },
     {
-      accessorKey: "isActive",
-      header: "Status",
+      accessorKey: 'isActive',
+      header: 'Status',
       /**
        *
        */
@@ -195,27 +195,27 @@ export function buildProductColumns(onDelete: (id: number) => void): ColumnDef<P
         ),
     },
     {
-      accessorKey: "updatedAt",
-      header: "Last Updated",
+      accessorKey: 'updatedAt',
+      header: 'Last Updated',
       /**
        *
        */
       cell: ({ row }) => {
         const date = row.original.updatedAt;
-        if (!date) return "—";
+        if (!date) return '—';
         return (
           <div className="text-xs text-muted-foreground">
-            {new Intl.DateTimeFormat("en-US", {
-              day: "numeric",
-              month: "short",
-              year: "numeric",
+            {new Intl.DateTimeFormat('en-US', {
+              day: 'numeric',
+              month: 'short',
+              year: 'numeric',
             }).format(new Date(date))}
           </div>
         );
       },
     },
     {
-      id: "actions",
+      id: 'actions',
       /**
        *
        */
@@ -251,16 +251,16 @@ export function buildProductColumns(onDelete: (id: number) => void): ColumnDef<P
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link
-                  href={`/${product.locale || "en"}/products/${product.slug || product.id}`}
+                  href={`/${product.locale || 'en'}/products/${product.slug || product.id}`}
                   target="_blank"
                 >
                   <Copy className="mr-2 h-4 w-4" /> View on site
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => alert("Duplicate not yet implemented")}>
+              <DropdownMenuItem onClick={() => alert('Duplicate not yet implemented')}>
                 <Copy className="mr-2 h-4 w-4" /> Duplicate
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => alert("Archive not yet implemented")}>
+              <DropdownMenuItem onClick={() => alert('Archive not yet implemented')}>
                 <Archive className="mr-2 h-4 w-4" /> Archive
               </DropdownMenuItem>
               <DropdownMenuSeparator />

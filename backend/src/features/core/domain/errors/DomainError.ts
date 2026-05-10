@@ -44,9 +44,9 @@ export abstract class DomainError extends Error {
    *
    * @example { statusCode: 404, resourceType: "Product", identifier: "123" }
    */
-  public readonly metadata?: Record<string, any>;
+  public readonly metadata?: Record<string, unknown>;
 
-  constructor(code: string, message: string, metadata?: Record<string, any>) {
+  constructor(code: string, message: string, metadata?: Record<string, unknown>) {
     super(message);
     this.name = this.constructor.name;
     this.code = code;
@@ -63,7 +63,8 @@ export abstract class DomainError extends Error {
    * @returns HTTP status code (default 500)
    */
   getStatusCode(): number {
-    return this.metadata?.statusCode ?? 500;
+    const statusCode = this.metadata?.statusCode;
+    return typeof statusCode === 'number' ? statusCode : 500;
   }
 
   /**

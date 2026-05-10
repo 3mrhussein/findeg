@@ -1,8 +1,8 @@
-import { ID, Email } from "@findeg/backend/features/core/domain/types/common";
-import { UserWithPassword } from "@findeg/backend/features/core/domain/auth";
-import { User } from "../../domain/entities/User";
-import { PasswordCredentials } from "../../domain/entities/PasswordCredentials";
-import type { PermissionCode, RoleId } from "@findeg/backend/features/core/domain/value-objects";
+import { ID, Email } from '@findeg/backend/features/core/domain/types/common';
+import { UserWithPassword } from '@findeg/backend/features/core/domain/auth';
+import { User } from '../../domain/entities/User';
+import { PasswordCredentials } from '../../domain/entities/PasswordCredentials';
+import type { PermissionCode, RoleId } from '@findeg/backend/features/core/domain/value-objects';
 
 /**
  * User Repository Interface
@@ -56,6 +56,6 @@ export interface IUserRepository {
    */
   upsertPasswordCredentials(
     userId: ID,
-    payload: Omit<PasswordCredentials, "userId" | "createdAt" | "updatedAt">,
+    payload: Omit<PasswordCredentials, 'userId' | 'createdAt' | 'updatedAt'>,
   ): Promise<void>;
 }

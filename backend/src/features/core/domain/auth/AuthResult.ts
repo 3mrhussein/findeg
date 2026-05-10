@@ -1,5 +1,5 @@
-import { PortalRole } from "../types/primitives";
-import type { SessionPayload } from "./SessionPayload";
+import { PortalRole } from '../types';
+import type { SessionPayload } from './SessionPayload';
 
 /**
  * Result of an authentication attempt (login or registration).
@@ -17,9 +17,9 @@ export interface AuthResult {
     lastName?: string;
     phone?: string;
     portalRole: PortalRole;
-    activeRoleIds?: SessionPayload["activeRoleIds"];
-    permissionCodes?: SessionPayload["permissionCodes"];
-    actorType?: SessionPayload["actorType"];
-    organizationId?: SessionPayload["organizationId"];
+    activeRoleIds?: SessionPayload['activeRoleIds'];
+    permissionCodes?: SessionPayload['permissionCodes'];
+    actorType?: SessionPayload['actorType'];
+    organizationId?: SessionPayload['organizationId'];
   };
 }

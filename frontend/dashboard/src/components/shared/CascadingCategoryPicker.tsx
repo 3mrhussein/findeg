@@ -11,16 +11,16 @@
  * Location: src/components/shared/CascadingCategoryPicker.tsx
  */
 
-"use client";
+'use client';
 
-import * as React from "react";
-import { ChevronRight, Check, Search, X } from "lucide-react";
-import { cn } from "@lib/utils";
-import { Button } from "@findeg/ui";
-import { Popover, PopoverContent, PopoverTrigger } from "@findeg/ui";
-import { ScrollArea } from "@findeg/ui";
-import type { Category } from "@findeg/backend/features/catalog";
-import { useTranslations } from "next-intl";
+import * as React from 'react';
+import { ChevronRight, Check, Search, X } from 'lucide-react';
+import { cn } from '@lib/utils';
+import { Button } from '@findeg/ui';
+import { Popover, PopoverContent, PopoverTrigger } from '@findeg/ui';
+import { ScrollArea } from '@findeg/ui';
+import type { Category } from '@findeg/backend/features/catalog';
+import { useTranslations } from 'next-intl';
 
 interface CascadingCategoryPickerProps {
   /** Full tree of categories */
@@ -48,9 +48,9 @@ export function CascadingCategoryPicker({
   disabled = false,
   className,
 }: CascadingCategoryPickerProps) {
-  const t = useTranslations("Administration.Catalog.Categories");
+  const t = useTranslations('Administration.Catalog.Categories');
   const [open, setOpen] = React.useState(false);
-  const [searchQuery, setSearchQuery] = React.useState("");
+  const [searchQuery, setSearchQuery] = React.useState('');
   /** Path of active/hovered category IDs per level */
   const [activePath, setActivePath] = React.useState<number[]>([]);
   /** Timeout ref for hover delay */
@@ -81,7 +81,7 @@ export function CascadingCategoryPicker({
       if (path) setActivePath(path.slice(0, -1)); // Show up to parent of selected
     } else if (!isOpen) {
       setActivePath([]);
-      setSearchQuery("");
+      setSearchQuery('');
     }
   };
 
@@ -154,7 +154,7 @@ export function CascadingCategoryPicker({
           role="combobox"
           aria-expanded={open}
           disabled={disabled}
-          className={cn("w-full justify-between font-normal", className)}
+          className={cn('w-full justify-between font-normal', className)}
         >
           {selectedCategory ? (
             <span className="flex items-center gap-2 truncate">
@@ -162,10 +162,10 @@ export function CascadingCategoryPicker({
               {selectedCategory.name}
             </span>
           ) : (
-            <span className="text-muted-foreground">{placeholder || t("SearchPlaceholder")}</span>
+            <span className="text-muted-foreground">{placeholder || t('SearchPlaceholder')}</span>
           )}
           <ChevronRight
-            className={cn("ml-2 h-4 w-4 shrink-0 transition-transform", open && "rotate-90")}
+            className={cn('ml-2 h-4 w-4 shrink-0 transition-transform', open && 'rotate-90')}
           />
         </Button>
       </PopoverTrigger>
@@ -176,7 +176,7 @@ export function CascadingCategoryPicker({
             <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
             <input
               className="flex h-8 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
-              placeholder={t("SearchPlaceholder")}
+              placeholder={t('SearchPlaceholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -185,7 +185,7 @@ export function CascadingCategoryPicker({
                 variant="ghost"
                 size="sm"
                 className="h-6 w-6 p-0"
-                onClick={() => setSearchQuery("")}
+                onClick={() => setSearchQuery('')}
               >
                 <X className="h-4 w-4" />
               </Button>
@@ -202,9 +202,9 @@ export function CascadingCategoryPicker({
                       <button
                         key={cat.id}
                         className={cn(
-                          "relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground",
+                          'relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-2 text-sm outline-none hover:bg-accent hover:text-accent-foreground',
                           String(selectedId) === String(cat.id) &&
-                            "bg-accent/50 text-accent-foreground",
+                            'bg-accent/50 text-accent-foreground',
                         )}
                         onClick={() => {
                           onSelect(cat.id as number);
@@ -242,10 +242,10 @@ export function CascadingCategoryPicker({
                           <button
                             key={cat.id}
                             className={cn(
-                              "relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors",
+                              'relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors',
                               isActive || isSelected
-                                ? "bg-accent text-accent-foreground"
-                                : "hover:bg-accent/50 hover:text-accent-foreground",
+                                ? 'bg-accent text-accent-foreground'
+                                : 'hover:bg-accent/50 hover:text-accent-foreground',
                             )}
                             onMouseEnter={() => handleHover(level, cat.id as number, hasChildren)}
                             onClick={() => {

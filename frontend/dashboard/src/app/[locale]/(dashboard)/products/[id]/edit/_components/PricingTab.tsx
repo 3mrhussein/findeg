@@ -6,10 +6,10 @@
  * Location: src/app/[locale]/admin/(dashboard)/products/[id]/edit/_components/
  */
 
-"use client";
+'use client';
 
-import * as React from "react";
-import { PricingZone } from "../../../_components/ProductForm/zones/PricingZone";
+import * as React from 'react';
+import { PricingZone } from '../../../_components/ProductForm/zones/PricingZone';
 
 /**
  * PricingTab — Pricing and units of measure

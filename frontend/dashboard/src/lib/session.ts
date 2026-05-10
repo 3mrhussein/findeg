@@ -5,12 +5,12 @@
  * Mirrors backend's JwtSessionManager pattern but adapted for Next.js App Router.
  */
 
-import { cookies } from "next/headers";
-import { SignJWT, jwtVerify } from "jose";
-import type { SessionPayload } from "@findeg/backend/features/core";
-import env from "@findeg/env";
+import { cookies } from 'next/headers';
+import { SignJWT, jwtVerify } from 'jose';
+import type { SessionPayload } from '@findeg/backend/features/core';
+import env from '@findeg/env';
 
-const SESSION_COOKIE_NAME = "admin_session";
+const SESSION_COOKIE_NAME = 'admin_session';
 const SESSION_DURATION = 60 * 60 * 24; // 24 hours in seconds
 const JWT_SECRET = new TextEncoder().encode(env.JWT_SECRET);
 
@@ -37,10 +37,10 @@ export async function getSession(): Promise<SessionPayload | null> {
 
     return {
       userId: payload.userId as number,
-      portalRole: payload.portalRole as SessionPayload["portalRole"],
-      user: payload.user as SessionPayload["user"],
+      portalRole: payload.portalRole as SessionPayload['portalRole'],
+      user: payload.user as SessionPayload['user'],
       subjectId: payload.subjectId as string | undefined,
-      actorType: payload.actorType as SessionPayload["actorType"],
+      actorType: payload.actorType as SessionPayload['actorType'],
       activeRoleIds: payload.activeRoleIds as string[] | undefined,
       permissionCodes: payload.permissionCodes as string[] | undefined,
       organizationId: payload.organizationId as string | undefined,
@@ -64,7 +64,7 @@ export const extractSession = getSession;
  */
 export async function createSession(payload: SessionPayload): Promise<void> {
   const token = await new SignJWT({ ...payload })
-    .setProtectedHeader({ alg: "HS256" })
+    .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime(`${SESSION_DURATION}s`)
     .sign(JWT_SECRET);
@@ -72,10 +72,10 @@ export async function createSession(payload: SessionPayload): Promise<void> {
   const cookieStore = await cookies();
   cookieStore.set(SESSION_COOKIE_NAME, token, {
     httpOnly: true,
-    secure: env.NODE_ENV === "production",
-    sameSite: "lax",
+    secure: env.NODE_ENV === 'production',
+    sameSite: 'lax',
     maxAge: SESSION_DURATION,
-    path: "/",
+    path: '/',
   });
 }
 
@@ -99,7 +99,7 @@ export async function requireSession(): Promise<SessionPayload> {
   const session = await getSession();
 
   if (!session?.userId) {
-    throw new Error("Not authenticated");
+    throw new Error('Not authenticated');
   }
 
   return session;

@@ -11,9 +11,9 @@ export interface WebMCPTool {
 }
 
 const callToolApi = async (tool: string, params: any) => {
-  const response = await fetch("/api/v1/webmcp", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+  const response = await fetch('/api/v1/webmcp', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ tool, params }),
   });
   return response.json();
@@ -22,14 +22,14 @@ const callToolApi = async (tool: string, params: any) => {
 export const TOOLS: WebMCPTool[] = [
   // --- Navigation ---
   {
-    name: "findeg_navigate_to_page",
-    description: "Navigate to a specific page within the FindEg admin or storefront.",
+    name: 'findeg_navigate_to_page',
+    description: 'Navigate to a specific page within the FindEg admin or storefront.',
     inputSchema: {
-      type: "object",
+      type: 'object',
       properties: {
-        path: { type: "string", description: "The path to navigate to (e.g., /admin/products)." },
+        path: { type: 'string', description: 'The path to navigate to (e.g., /admin/products).' },
       },
-      required: ["path"],
+      required: ['path'],
     },
     execute: async ({ path }) => {
       window.location.href = path;
@@ -39,171 +39,171 @@ export const TOOLS: WebMCPTool[] = [
 
   // --- Brands ---
   {
-    name: "findeg_create_brand",
-    description: "Create a new brand in the catalog with localized names.",
+    name: 'findeg_create_brand',
+    description: 'Create a new brand in the catalog with localized names.',
     inputSchema: {
-      type: "object",
+      type: 'object',
       properties: {
-        nameEn: { type: "string" },
-        nameAr: { type: "string" },
-        slug: { type: "string" },
-        logoUrl: { type: "string" },
-        descriptionEn: { type: "string" },
-        descriptionAr: { type: "string" },
-        isActive: { type: "boolean" },
+        nameEn: { type: 'string' },
+        nameAr: { type: 'string' },
+        slug: { type: 'string' },
+        logoUrl: { type: 'string' },
+        descriptionEn: { type: 'string' },
+        descriptionAr: { type: 'string' },
+        isActive: { type: 'boolean' },
       },
-      required: ["nameEn", "nameAr", "slug"],
+      required: ['nameEn', 'nameAr', 'slug'],
     },
-    execute: (params) => callToolApi("findeg_create_brand", params),
+    execute: (params) => callToolApi('findeg_create_brand', params),
   },
   {
-    name: "findeg_update_brand",
+    name: 'findeg_update_brand',
     description: "Update an existing brand's details.",
     inputSchema: {
-      type: "object",
+      type: 'object',
       properties: {
-        id: { type: "number" },
+        id: { type: 'number' },
         input: {
-          type: "object",
+          type: 'object',
           properties: {
-            nameEn: { type: "string" },
-            nameAr: { type: "string" },
-            slug: { type: "string" },
-            logoUrl: { type: "string" },
-            descriptionEn: { type: "string" },
-            descriptionAr: { type: "string" },
-            isActive: { type: "boolean" },
+            nameEn: { type: 'string' },
+            nameAr: { type: 'string' },
+            slug: { type: 'string' },
+            logoUrl: { type: 'string' },
+            descriptionEn: { type: 'string' },
+            descriptionAr: { type: 'string' },
+            isActive: { type: 'boolean' },
           },
         },
       },
-      required: ["id", "input"],
+      required: ['id', 'input'],
     },
-    execute: (params) => callToolApi("findeg_update_brand", params),
+    execute: (params) => callToolApi('findeg_update_brand', params),
   },
   {
-    name: "findeg_delete_brand",
-    description: "Permanently delete a brand.",
+    name: 'findeg_delete_brand',
+    description: 'Permanently delete a brand.',
     inputSchema: {
-      type: "object",
+      type: 'object',
       properties: {
-        id: { type: "number" },
+        id: { type: 'number' },
       },
-      required: ["id"],
+      required: ['id'],
     },
-    execute: (params) => callToolApi("findeg_delete_brand", params),
+    execute: (params) => callToolApi('findeg_delete_brand', params),
   },
   {
-    name: "findeg_toggle_brand_status",
-    description: "Toggle the active status of a brand.",
+    name: 'findeg_toggle_brand_status',
+    description: 'Toggle the active status of a brand.',
     inputSchema: {
-      type: "object",
+      type: 'object',
       properties: {
-        id: { type: "number" },
+        id: { type: 'number' },
       },
-      required: ["id"],
+      required: ['id'],
     },
-    execute: (params) => callToolApi("findeg_toggle_brand_status", params),
+    execute: (params) => callToolApi('findeg_toggle_brand_status', params),
   },
 
   // --- Categories ---
   {
-    name: "findeg_create_category",
-    description: "Create a new product category with bilingual translations.",
+    name: 'findeg_create_category',
+    description: 'Create a new product category with bilingual translations.',
     inputSchema: {
-      type: "object",
+      type: 'object',
       properties: {
-        slug: { type: "string" },
-        parentId: { type: "number" },
-        isActive: { type: "boolean" },
-        nameEn: { type: "string" },
-        nameAr: { type: "string" },
-        descriptionEn: { type: "string" },
-        descriptionAr: { type: "string" },
+        slug: { type: 'string' },
+        parentId: { type: 'number' },
+        isActive: { type: 'boolean' },
+        nameEn: { type: 'string' },
+        nameAr: { type: 'string' },
+        descriptionEn: { type: 'string' },
+        descriptionAr: { type: 'string' },
       },
-      required: ["slug", "nameEn", "nameAr"],
+      required: ['slug', 'nameEn', 'nameAr'],
     },
-    execute: (params) => callToolApi("findeg_create_category", params),
+    execute: (params) => callToolApi('findeg_create_category', params),
   },
   {
-    name: "findeg_delete_category",
-    description: "Delete a category and its subcategories.",
+    name: 'findeg_delete_category',
+    description: 'Delete a category and its subcategories.',
     inputSchema: {
-      type: "object",
+      type: 'object',
       properties: {
-        id: { type: "number" },
+        id: { type: 'number' },
       },
-      required: ["id"],
+      required: ['id'],
     },
-    execute: (params) => callToolApi("findeg_delete_category", params),
+    execute: (params) => callToolApi('findeg_delete_category', params),
   },
 
   // --- Products ---
   {
-    name: "findeg_set_product_status",
-    description: "Enable or disable a product.",
+    name: 'findeg_set_product_status',
+    description: 'Enable or disable a product.',
     inputSchema: {
-      type: "object",
+      type: 'object',
       properties: {
-        id: { type: "number" },
-        isActive: { type: "boolean" },
+        id: { type: 'number' },
+        isActive: { type: 'boolean' },
       },
-      required: ["id", "isActive"],
+      required: ['id', 'isActive'],
     },
-    execute: (params) => callToolApi("findeg_set_product_status", params),
+    execute: (params) => callToolApi('findeg_set_product_status', params),
   },
   {
-    name: "findeg_delete_product",
-    description: "Permanently delete a product.",
+    name: 'findeg_delete_product',
+    description: 'Permanently delete a product.',
     inputSchema: {
-      type: "object",
+      type: 'object',
       properties: {
-        id: { type: "number" },
+        id: { type: 'number' },
       },
-      required: ["id"],
+      required: ['id'],
     },
-    execute: (params) => callToolApi("findeg_delete_product", params),
+    execute: (params) => callToolApi('findeg_delete_product', params),
   },
 
   // --- Inventory ---
   {
-    name: "findeg_update_stock",
-    description: "Update the stock count for a product variant.",
+    name: 'findeg_update_stock',
+    description: 'Update the stock count for a product variant.',
     inputSchema: {
-      type: "object",
+      type: 'object',
       properties: {
-        productId: { type: "number" },
-        variantId: { type: "number" },
-        quantity: { type: "number" },
+        productId: { type: 'number' },
+        variantId: { type: 'number' },
+        quantity: { type: 'number' },
       },
-      required: ["productId", "quantity"],
+      required: ['productId', 'quantity'],
     },
-    execute: (params) => callToolApi("findeg_update_stock", params),
+    execute: (params) => callToolApi('findeg_update_stock', params),
   },
 
   // --- Orders ---
   {
-    name: "findeg_update_order_status",
-    description: "Update order fulfillment status.",
+    name: 'findeg_update_order_status',
+    description: 'Update order fulfillment status.',
     inputSchema: {
-      type: "object",
+      type: 'object',
       properties: {
-        id: { type: "number" },
+        id: { type: 'number' },
         update: {
-          type: "object",
+          type: 'object',
           properties: {
             status: {
-              type: "string",
-              enum: ["pending", "processing", "shipped", "delivered", "cancelled"],
+              type: 'string',
+              enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'],
             },
-            trackingNumber: { type: "string" },
-            notes: { type: "string" },
+            trackingNumber: { type: 'string' },
+            notes: { type: 'string' },
           },
-          required: ["status"],
+          required: ['status'],
         },
       },
-      required: ["id", "update"],
+      required: ['id', 'update'],
     },
-    execute: (params) => callToolApi("findeg_update_order_status", params),
+    execute: (params) => callToolApi('findeg_update_order_status', params),
   },
 ];
 
@@ -215,12 +215,12 @@ let toolsRegistered = false;
 export function registerAllTools() {
   const nav = navigator as any;
   if (!nav.modelContext || !nav.modelContext.registerTool) {
-    console.warn("WebMCP is not supported in this browser.");
+    console.warn('WebMCP is not supported in this browser.');
     return false;
   }
 
   if (toolsRegistered) {
-    console.log("[WebMCP]: Tools already registered, skipping.");
+    console.log('[WebMCP]: Tools already registered, skipping.');
     return true;
   }
 
@@ -237,7 +237,7 @@ export function registerAllTools() {
     console.log(`[WebMCP]: Successfully registered ${TOOLS.length} tools.`);
     return true;
   } catch (error) {
-    console.error("[WebMCP Registration Error]:", error);
+    console.error('[WebMCP Registration Error]:', error);
     return false;
   }
 }

@@ -2,7 +2,7 @@
  * FilterSidebar — shared types & interfaces
  */
 
-import type { CategoryFilterOption, FilterOption } from "@/data/catalog/types";
+import type { CategoryFilterOption, FilterOption } from '@/data/catalog/types';
 
 export interface FilterSidebarProps {
   categories: CategoryFilterOption[];

@@ -13,15 +13,15 @@ export function getErrorMessage(error: unknown): string {
     return error.message;
   }
 
-  if (typeof error === "string") {
+  if (typeof error === 'string') {
     return error;
   }
 
   if (
     error &&
-    typeof error === "object" &&
-    "message" in error &&
-    typeof error.message === "string"
+    typeof error === 'object' &&
+    'message' in error &&
+    typeof error.message === 'string'
   ) {
     return error.message;
   }

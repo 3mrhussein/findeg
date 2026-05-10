@@ -1,6 +1,5 @@
-"use client";
+'use client';
 
-import { logRequestAction } from "@findeg/backend/features/core/application/actions/logging";
 
 /**
  * Client Logger
@@ -13,11 +12,11 @@ export const clientLogger = {
    */
   async logAction(action: string, metadata: Record<string, unknown> = {}) {
     const logData = {
-      level: "info" as const,
+      level: 'info' as const,
       message: `User Action: ${action}`,
       ...metadata,
-      path: typeof window !== "undefined" ? window.location.pathname : "unknown",
-      userAgent: typeof navigator !== "undefined" ? navigator.userAgent : "unknown",
+      path: typeof window !== 'undefined' ? window.location.pathname : 'unknown',
+      userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'unknown',
     };
 
     // Use console for client logging

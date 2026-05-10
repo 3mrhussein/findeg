@@ -1,12 +1,12 @@
-import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Suspense } from "react";
-import type { Locale } from "next-intl";
-import { Input } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Search } from "lucide-react";
-import { getSearchPageViewModel } from "@/data/catalog/queries";
-import { PageShell } from "../_components/PageShell";
-import { ProductListingLayout } from "../_components/ProductListingLayout";
+import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { Suspense } from 'react';
+import type { Locale } from 'next-intl';
+import { Input } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { Search } from 'lucide-react';
+import { getSearchPageViewModel } from '@/data/catalog/queries';
+import { PageShell } from '../_components/PageShell';
+import { ProductListingLayout } from '../_components/ProductListingLayout';
 
 interface SearchPageProps {
   params: Promise<{ locale: string }>;
@@ -37,9 +37,9 @@ async function SearchPageContent({ params, searchParams }: SearchPageProps) {
   const { locale } = await params;
   setRequestLocale(locale as Locale);
   const queryParams = await searchParams;
-  const t = await getTranslations({ locale: locale as Locale, namespace: "Pages.Shop" });
-  const tSearch = await getTranslations({ locale: locale as Locale, namespace: "Pages.Search" });
-  const rawQuery = typeof queryParams.q === "string" ? queryParams.q : "";
+  const t = await getTranslations({ locale: locale as Locale, namespace: 'Pages.Shop' });
+  const tSearch = await getTranslations({ locale: locale as Locale, namespace: 'Pages.Search' });
+  const rawQuery = typeof queryParams.q === 'string' ? queryParams.q : '';
 
   const vm = await getSearchPageViewModel(locale, rawQuery, queryParams);
   const { query, mode, exactCount } = vm;
@@ -52,23 +52,23 @@ async function SearchPageContent({ params, searchParams }: SearchPageProps) {
             <Search className="w-10 h-10" />
           </div>
           <h1 className="text-4xl font-black tracking-tight text-slate-900 dark:text-white">
-            {t("SearchListo")}
+            {t('SearchListo')}
           </h1>
           <form className="relative flex max-w-xl mx-auto mt-8">
             <Input
               name="q"
               defaultValue={query}
-              placeholder={tSearch("Placeholder")}
+              placeholder={tSearch('Placeholder')}
               className="w-full h-14 pl-6 pr-32 rounded-full border-slate-200 dark:border-slate-800 bg-white dark:bg-surface-dark text-lg focus-visible:ring-primary shadow-sm"
             />
             <Button
               type="submit"
               className="absolute right-2 top-2 bottom-2 rounded-full px-6 font-bold shadow-sm"
             >
-              {t("SearchButton")}
+              {t('SearchButton')}
             </Button>
           </form>
-          <p className="text-slate-500 mt-4 text-sm max-w-md mx-auto">{t("SearchHint")}</p>
+          <p className="text-slate-500 mt-4 text-sm max-w-md mx-auto">{t('SearchHint')}</p>
         </div>
       </PageShell>
     );
@@ -82,14 +82,14 @@ async function SearchPageContent({ params, searchParams }: SearchPageProps) {
           <Input
             name="q"
             defaultValue={query}
-            placeholder={tSearch("Placeholder")}
+            placeholder={tSearch('Placeholder')}
             className="w-full h-14 pl-6 pr-32 rounded-full border-slate-200 dark:border-slate-800 bg-white dark:bg-surface-dark text-lg focus-visible:ring-primary shadow-sm"
           />
           <Button
             type="submit"
             className="absolute right-2 top-2 bottom-2 rounded-full px-6 font-bold shadow-sm"
           >
-            {t("SearchButton")}
+            {t('SearchButton')}
           </Button>
         </form>
 
@@ -97,7 +97,7 @@ async function SearchPageContent({ params, searchParams }: SearchPageProps) {
           Results for &quot;{query}&quot;
         </h1>
 
-        {mode === "fallback" && (
+        {mode === 'fallback' && (
           <div
             data-testid="search-fallback-notice"
             className="mt-4 rounded-xl border border-amber-200 dark:border-amber-900/50 bg-amber-50 dark:bg-amber-900/20 p-4 text-amber-900 dark:text-amber-200 flex items-start gap-3"
@@ -106,8 +106,8 @@ async function SearchPageContent({ params, searchParams }: SearchPageProps) {
               info
             </span>
             <div>
-              <p className="font-bold text-sm">{t("SearchFallbackTitle", { query })}</p>
-              <p className="text-sm opacity-90 mt-1">{t("SearchFallbackDescription")}</p>
+              <p className="font-bold text-sm">{t('SearchFallbackTitle', { query })}</p>
+              <p className="text-sm opacity-90 mt-1">{t('SearchFallbackDescription')}</p>
             </div>
           </div>
         )}
@@ -115,14 +115,14 @@ async function SearchPageContent({ params, searchParams }: SearchPageProps) {
 
       <ProductListingLayout
         {...vm}
-        resultsCountLabel={t("ShowingResults", {
+        resultsCountLabel={t('ShowingResults', {
           count: vm.products.length,
           total: vm.products.length,
         })}
-        filtersTitle={t("FiltersTitle")}
-        noProductsTitle={t("NoProductsTitle")}
-        noProductsDescription={t("NoProductsDescription")}
-        loadMoreLabel={t("LoadMore")}
+        filtersTitle={t('FiltersTitle')}
+        noProductsTitle={t('NoProductsTitle')}
+        noProductsDescription={t('NoProductsDescription')}
+        loadMoreLabel={t('LoadMore')}
       />
     </PageShell>
   );

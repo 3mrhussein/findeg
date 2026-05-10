@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { useState, useMemo } from "react";
-import { EnrichedTable } from "@/app/[locale]/_components/table/EnrichedTable";
-import { BulkActionsBar } from "@/app/[locale]/_components/shared/BulkActionsBar";
-import type { BulkAction } from "@/app/[locale]/_components/shared/BulkActionsBar";
-import { OrderStatusTabs } from "./OrderStatusTabs";
-import { OrderRow } from "./OrderRow";
-import { OrderDetailDrawer } from "./OrderDetailDrawer";
-import type { Order } from "@findeg/backend/features/order";
-import { EmptyState } from "@findeg/ui";
+import { useState, useMemo } from 'react';
+import { EnrichedTable } from '@/app/[locale]/_components/table/EnrichedTable';
+import { BulkActionsBar } from '@/app/[locale]/_components/shared/BulkActionsBar';
+import type { BulkAction } from '@/app/[locale]/_components/shared/BulkActionsBar';
+import { OrderStatusTabs } from './OrderStatusTabs';
+import { OrderRow } from './OrderRow';
+import { OrderDetailDrawer } from './OrderDetailDrawer';
+import type { Order } from '@findeg/backend/features/order';
+import { EmptyState } from '@findeg/ui';
 
 interface OrdersTableProps {
   orders: Order[];
@@ -72,26 +72,26 @@ export function OrdersTable({
   };
 
   const handleBulkExport = () => {
-    console.log("Bulk export orders:", Array.from(selectedIds));
+    console.log('Bulk export orders:', Array.from(selectedIds));
     // TODO: Implement bulk export
   };
 
   const handleBulkCancel = () => {
-    console.log("Bulk cancel orders:", Array.from(selectedIds));
+    console.log('Bulk cancel orders:', Array.from(selectedIds));
     // TODO: Implement bulk cancel with confirmation
   };
 
   const bulkActions: BulkAction[] = [
     {
-      key: "export",
-      label: "Export Selected",
+      key: 'export',
+      label: 'Export Selected',
       onClick: handleBulkExport,
     },
     {
-      key: "cancel",
-      label: "Cancel Orders",
+      key: 'cancel',
+      label: 'Cancel Orders',
       onClick: handleBulkCancel,
-      variant: "destructive" as const,
+      variant: 'destructive' as const,
     },
   ];
 
@@ -116,12 +116,12 @@ export function OrdersTable({
       <div className="relative">
         <EnrichedTable
           columns={[
-            { key: "order", label: "Order #" },
-            { key: "customer", label: "Customer" },
-            { key: "items", label: "Items" },
-            { key: "total", label: "Total" },
-            { key: "status", label: "Status" },
-            { key: "date", label: "Date" },
+            { key: 'order', label: 'Order #' },
+            { key: 'customer', label: 'Customer' },
+            { key: 'items', label: 'Items' },
+            { key: 'total', label: 'Total' },
+            { key: 'status', label: 'Status' },
+            { key: 'date', label: 'Date' },
           ]}
           showCheckbox
           showExpand

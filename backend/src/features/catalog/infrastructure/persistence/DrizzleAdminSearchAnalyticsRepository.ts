@@ -1,6 +1,5 @@
-import { db } from "@findeg/db/connection";
-import { searchLogs } from "@findeg/db/schema";
-import { products } from "@findeg/db/schema";
+import { db } from '@findeg/db/connection';
+import { searchLogs } from '@findeg/db/schema';
 import {
   IAdminSearchAnalyticsRepository,
   SearchAnalyticsMetrics,
@@ -8,8 +7,8 @@ import {
   ZeroResultSearch,
   LowCTRSearch,
   LanguageBreakdown,
-} from "../../application/interfaces/IAdminSearchAnalyticsRepository";
-import { eq, and, gte, desc, sql, count, avg, sum } from "drizzle-orm";
+} from '../../application/interfaces/IAdminSearchAnalyticsRepository';
+import { eq, and, gte, desc, sql, count } from 'drizzle-orm';
 
 export class DrizzleAdminSearchAnalyticsRepository implements IAdminSearchAnalyticsRepository {
   private getStartDate(days?: number): Date | null {
@@ -137,7 +136,6 @@ export class DrizzleAdminSearchAnalyticsRepository implements IAdminSearchAnalyt
 
     const totalResult = await db.select({ total: count() }).from(searchLogs).where(whereClause);
 
-    // @ts-ignore - Drizzle aggregation types can be tricky, but we know it returns total
     const total = totalResult[0]?.total || 0;
     if (total === 0) return [];
 

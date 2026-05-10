@@ -1,43 +1,43 @@
-"use client";
+'use client';
 
-import { useTransition, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import { CreditCard, Package, Truck, CheckCircle2, AlertCircle } from "lucide-react";
-import { Badge } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Label } from "@findeg/ui";
+import { useTransition, useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
+import { CreditCard, Package, Truck, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Badge } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@findeg/ui';
+import { Input } from '@findeg/ui';
+import { Label } from '@findeg/ui';
 import {
   updateOrderStatusAction as adminUpdateOrderStatusAction,
   updateOrderPaymentStatusAction as adminUpdateOrderPaymentStatusAction,
-} from "@actions/order-actions";
+} from '@actions/order-actions';
 
-import { useToast } from "@hooks/use-toast";
+import { useToast } from '@hooks/use-toast';
 
 /**
  * OrderStatus type (local definition)
  */
 type OrderStatus =
-  | "pending"
-  | "confirmed"
-  | "processing"
-  | "shipped"
-  | "delivered"
-  | "cancelled"
-  | "refunded";
+  | 'pending'
+  | 'confirmed'
+  | 'processing'
+  | 'shipped'
+  | 'delivered'
+  | 'cancelled'
+  | 'refunded';
 
 interface OrderPaymentFulfillmentProps {
   order: any;
 }
 
 const STATUS_FLOW: { label: string; value: OrderStatus }[] = [
-  { label: "Pending", value: "pending" },
-  { label: "Confirmed", value: "confirmed" },
-  { label: "Processing", value: "processing" },
-  { label: "Shipped", value: "shipped" },
-  { label: "Delivered", value: "delivered" },
-  { label: "Cancelled", value: "cancelled" },
+  { label: 'Pending', value: 'pending' },
+  { label: 'Confirmed', value: 'confirmed' },
+  { label: 'Processing', value: 'processing' },
+  { label: 'Shipped', value: 'shipped' },
+  { label: 'Delivered', value: 'delivered' },
+  { label: 'Cancelled', value: 'cancelled' },
 ];
 
 /**
@@ -46,7 +46,7 @@ const STATUS_FLOW: { label: string; value: OrderStatus }[] = [
 export function OrderPaymentFulfillment({ order }: OrderPaymentFulfillmentProps) {
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
-  const [trackingNumber, setTrackingNumber] = useState(order.trackingNumber || "");
+  const [trackingNumber, setTrackingNumber] = useState(order.trackingNumber || '');
 
   /**
    *
@@ -58,9 +58,9 @@ export function OrderPaymentFulfillment({ order }: OrderPaymentFulfillmentProps)
         trackingNumber: trackingNumber || undefined,
       });
       if (result.success) {
-        toast({ title: "Order status updated" });
+        toast({ title: 'Order status updated' });
       } else {
-        toast({ title: "Update failed", description: result.error, variant: "destructive" });
+        toast({ title: 'Update failed', description: result.error, variant: 'destructive' });
       }
     });
   };
@@ -76,9 +76,9 @@ export function OrderPaymentFulfillment({ order }: OrderPaymentFulfillmentProps)
       });
 
       if (result.success) {
-        toast({ title: "Tracking information updated" });
+        toast({ title: 'Tracking information updated' });
       } else {
-        toast({ title: "Update failed", description: result.error, variant: "destructive" });
+        toast({ title: 'Update failed', description: result.error, variant: 'destructive' });
       }
     });
   };
@@ -100,8 +100,8 @@ export function OrderPaymentFulfillment({ order }: OrderPaymentFulfillmentProps)
             </span>
             <span className="font-semibold capitalize">{order.paymentStatus}</span>
           </div>
-          <Badge variant={order.paymentStatus === "paid" ? "default" : "secondary"}>
-            {order.paymentStatus === "paid" ? (
+          <Badge variant={order.paymentStatus === 'paid' ? 'default' : 'secondary'}>
+            {order.paymentStatus === 'paid' ? (
               <CheckCircle2 className="w-3 h-3 mr-1" />
             ) : (
               <AlertCircle className="w-3 h-3 mr-1" />
@@ -114,7 +114,7 @@ export function OrderPaymentFulfillment({ order }: OrderPaymentFulfillmentProps)
         <div className="space-y-2">
           <Label className="text-xs uppercase text-muted-foreground">Logistical Status</Label>
           <Select
-            disabled={isPending || order.status === "cancelled" || order.status === "refunded"}
+            disabled={isPending || order.status === 'cancelled' || order.status === 'refunded'}
             onValueChange={handleStatusChange}
             defaultValue={order.status}
           >

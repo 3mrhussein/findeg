@@ -1,1 +1,1 @@
-export * from "./DrizzleAuditLogRepository";
+export * from './DrizzleAuditLogRepository';

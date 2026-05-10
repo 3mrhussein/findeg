@@ -1,8 +1,8 @@
-import { ID, Slug } from "@findeg/backend/features/core/domain/types/common";
-import { Brand } from "@findeg/backend/features/catalog/domain/entities/Brand";
-import { Locale } from "@findeg/backend/features/core/domain/value-objects";
-import { IBrandRepository } from "../interfaces/IBrandRepository";
-import { IBrandService } from "../interfaces/IBrandService";
+import { ID, Slug } from '@findeg/backend/features/core/domain/types/common';
+import { Brand } from '@findeg/backend/features/catalog/domain/entities/Brand';
+import { Locale } from '@findeg/backend/features/core/domain/value-objects';
+import { IBrandRepository, BrandCreateInput, BrandUpdateInput } from '../interfaces/IBrandRepository';
+import { IBrandService } from '../interfaces/IBrandService';
 
 export class BrandService implements IBrandService {
   constructor(private readonly brandRepository: IBrandRepository) {}
@@ -19,11 +19,11 @@ export class BrandService implements IBrandService {
     return this.brandRepository.getBySlug(slug, language);
   }
 
-  async create(input: any): Promise<Brand> {
+  async create(input: BrandCreateInput): Promise<Brand> {
     return this.brandRepository.create(input);
   }
 
-  async update(id: ID, input: any): Promise<Brand> {
+  async update(id: ID, input: BrandUpdateInput): Promise<Brand> {
     return this.brandRepository.update(id, input);
   }
 
@@ -31,9 +31,9 @@ export class BrandService implements IBrandService {
     return this.brandRepository.delete(id);
   }
 
-  async toggleBrandStatus(id: number): Promise<any> {
+  async toggleBrandStatus(id: number): Promise<Brand> {
     const brand = await this.brandRepository.getById(id);
-    if (!brand) throw new Error("Brand not found");
+    if (!brand) throw new Error('Brand not found');
     return this.brandRepository.update(id, { isActive: !brand.isActive });
   }
 }

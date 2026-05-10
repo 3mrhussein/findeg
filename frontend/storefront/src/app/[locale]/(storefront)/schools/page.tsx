@@ -1,13 +1,13 @@
-import { SchoolCard } from "@app/[locale]/(storefront)/school/_components/SchoolCard";
-import { searchSchools, getSchoolFilterOptions } from "@/data/school/queries";
-import type { SchoolSearchParams } from "@findeg/backend/features/school";
-import { Badge } from "@findeg/ui";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { Button } from "@findeg/ui";
-import { Search, SlidersHorizontal, PlusCircle } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { Link } from "@i18n/navigation";
+import { SchoolCard } from '@app/[locale]/(storefront)/school/_components/SchoolCard';
+import { searchSchools, getSchoolFilterOptions } from '@/data/school/queries';
+import type { SchoolSearchParams } from '@findeg/backend/features/school';
+import { Badge } from '@findeg/ui';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@findeg/ui';
+import { Input } from '@findeg/ui';
+import { Button } from '@findeg/ui';
+import { Search, SlidersHorizontal, PlusCircle } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { Link } from '@i18n/navigation';
 
 interface PageProps {
   params: { locale: string };
@@ -33,8 +33,8 @@ export default async function SchoolsPage({ params, searchParams }: PageProps) {
     governorate: searchParams.gov,
     schoolType: searchParams.type,
     academicSystem: searchParams.sys,
-    activeOnly: searchParams.active === "true",
-    page: parseInt(searchParams.page || "1"),
+    activeOnly: searchParams.active === 'true',
+    page: parseInt(searchParams.page || '1'),
     pageSize: 12,
   };
 

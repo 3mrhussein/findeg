@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@findeg/ui";
-import { User, Phone, Mail, MapPin } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
+import { User, Phone, Mail, MapPin } from 'lucide-react';
 
 interface OrderCustomerInfoProps {
   order: any;
@@ -12,9 +12,9 @@ interface OrderCustomerInfoProps {
  */
 export function OrderCustomerInfo({ order }: OrderCustomerInfoProps) {
   const address = order.shippingAddressSnapshot as any;
-  const fullName = order.customerName || address?.fullName || "Guest Customer";
-  const email = order.customerEmail || address?.email || "-";
-  const phone = address?.phone || "-";
+  const fullName = order.customerName || address?.fullName || 'Guest Customer';
+  const email = order.customerEmail || address?.email || '-';
+  const phone = address?.phone || '-';
 
   return (
     <Card className="shadow-sm">

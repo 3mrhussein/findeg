@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@findeg/ui";
-import { Search, X, Clock, TrendingUp } from "lucide-react";
-import { useRouter } from "@i18n/navigation";
-import { Button } from "@findeg/ui";
-import { Input } from "@findeg/ui";
-import { IconTooltip } from "@findeg/ui";
+import { useState, useEffect } from 'react';
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@findeg/ui';
+import { Search, X, Clock, TrendingUp } from 'lucide-react';
+import { useRouter } from '@i18n/navigation';
+import { Button } from '@findeg/ui';
+import { Input } from '@findeg/ui';
+import { IconTooltip } from '@findeg/ui';
 
 /**
  *
  */
 export function SearchOverlay() {
   const [open, setOpen] = useState(false);
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState('');
   const router = useRouter();
 
   // Handle Cmd+K to open
@@ -22,13 +22,13 @@ export function SearchOverlay() {
      *
      */
     const down = (e: KeyboardEvent) => {
-      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+      if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         setOpen((open) => !open);
       }
     };
-    document.addEventListener("keydown", down);
-    return () => document.removeEventListener("keydown", down);
+    document.addEventListener('keydown', down);
+    return () => document.removeEventListener('keydown', down);
   }, []);
 
   /**
@@ -91,7 +91,7 @@ export function SearchOverlay() {
               Popular Categories
             </h3>
             <div className="flex flex-wrap gap-2">
-              {["Backpacks", "Notebooks", "Pens & Pencils", "Art Supplies", "Calculators"].map(
+              {['Backpacks', 'Notebooks', 'Pens & Pencils', 'Art Supplies', 'Calculators'].map(
                 (cat) => (
                   <Button
                     key={cat}
@@ -116,7 +116,7 @@ export function SearchOverlay() {
               Recent Searches
             </h3>
             <ul className="space-y-2">
-              {["Staedtler Noris", "Faber-Castell Highlighters", "A4 Copy Paper"].map((search) => (
+              {['Staedtler Noris', 'Faber-Castell Highlighters', 'A4 Copy Paper'].map((search) => (
                 <li key={search}>
                   <Button
                     variant="ghost"
@@ -138,10 +138,10 @@ export function SearchOverlay() {
         <div className="p-4 bg-slate-100 dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-800 flex justify-between items-center text-xs text-slate-500">
           <span>Search for products, categories, or brands</span>
           <span className="hidden sm:inline-block">
-            Press{" "}
+            Press{' '}
             <kbd className="px-2 py-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md font-mono text-xs">
               Esc
-            </kbd>{" "}
+            </kbd>{' '}
             to close
           </span>
         </div>
