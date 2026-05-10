@@ -5,10 +5,10 @@
  * These helpers simplify common auth patterns and throw appropriate errors when checks fail.
  */
 
-import { type ID } from '@findeg/db';
 import {
   NotAuthenticatedError as UnauthorizedError,
   NotAuthorizedError as ForbiddenError,
+  ID,
 } from '@findeg/backend/features/core';
 import { PermissionCode, RoleId } from '@findeg/backend/features/core';
 import type { User } from '@findeg/backend/features/identity';

@@ -1,8 +1,8 @@
-import { 
-  PortalRole, 
-  TranslationMapSchema, 
-  PricingCustomerGroupSchema 
-} from '@findeg/db';
+import {
+  PortalRole,
+  PricingCustomerGroupSchema,
+  TranslationMapSchema,
+} from '@findeg/backend/features/core';
 import { z } from 'zod';
 
 export interface NavItem {

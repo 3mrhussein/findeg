@@ -1,19 +1,19 @@
 # Dependencies
-node_modules/
-dist/
-build/
-.next/
+**/node_modules/*
+**/dist/*
+**/build/*
+**/.next/*
 
 # Build outputs
-*.tsbuildinfo
+**/.tsbuildinfo
 
 # Testing
 coverage/
 cypress/
 
 # Environment
-.env*
-*.local
+**/*.env
+**/*.local
 
 # IDE
 .vscode/

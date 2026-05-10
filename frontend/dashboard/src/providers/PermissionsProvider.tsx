@@ -15,8 +15,8 @@ import {
   hasAnyPermission,
   hasAllPermissions,
   SessionPayload,
+  PermissionCode,
 } from '@findeg/backend/features/core';
-import type { PermissionCode } from '@findeg/db';
 
 /**
  * The set of helpers available to any component nested within a PermissionsProvider.
@@ -74,17 +74,19 @@ export function PermissionsProvider({
       /**
        * Check if a specific permission code is present in the session.
        */
-      hasPermission: (code) => session ? hasPermission(session, code as PermissionCode) : false,
+      hasPermission: (code) => (session ? hasPermission(session, code as PermissionCode) : false),
 
       /**
        * Check if the session contains any of the provided codes.
        */
-      hasAnyPermission: (codes) => session ? hasAnyPermission(session, codes as PermissionCode[]) : false,
+      hasAnyPermission: (codes) =>
+        session ? hasAnyPermission(session, codes as PermissionCode[]) : false,
 
       /**
        * Check if the session contains all of the provided codes.
        */
-      hasAllPermissions: (codes) => session ? hasAllPermissions(session, codes as PermissionCode[]) : false,
+      hasAllPermissions: (codes) =>
+        session ? hasAllPermissions(session, codes as PermissionCode[]) : false,
 
       /**
        * Boolean flag for system administrators.

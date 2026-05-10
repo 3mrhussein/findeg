@@ -16,7 +16,7 @@
 import { useMemo } from 'react';
 import { usePermissions } from '@providers/PermissionsProvider';
 import { useSession } from '@providers/SessionProvider';
-import { staffRole, type PortalRole, type PermissionCode } from '@findeg/db';
+import { PermissionCode, PortalRole, staffRole } from '@findeg/backend/features/core';
 
 /**
  * Admin-specific permission helper interface

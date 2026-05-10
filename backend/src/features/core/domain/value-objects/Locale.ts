@@ -48,7 +48,7 @@ export { TranslationMapSchema, type TranslationMap };
  * const name = asTranslationMap({ en: "Product" }); // { en: "Product", ar: "" }
  */
 export function asTranslationMap(
-  value: any,
+  value: Partial<TranslationMap>,
   fallback: string = '',
 ): TranslationMap {
   const result = {} as TranslationMap;

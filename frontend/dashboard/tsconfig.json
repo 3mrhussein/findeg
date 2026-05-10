@@ -45,12 +45,6 @@
       "@findeg/backend/*": [
         "../../backend/src/*"
       ],
-      "@findeg/db": [
-        "../../db/src"
-      ],
-      "@findeg/db/*": [
-        "../../db/src/*"
-      ],
       "@findeg/env": [
         "../../packages/env/src"
       ]

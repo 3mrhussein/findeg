@@ -1,11 +1,10 @@
 {
   "name": "findeg-app",
   "private": true,
-  "packageManager": "pnpm@10.33.0",
+  "packageManager": "pnpm@11.0.9+sha512.34ce82e6780233cf9cad8685029a8f81d2e06196c5a9bad98879f7424940c6817c4e4524fb7d38b8553ceed48b9758b8ebaf1abd3600c232c4c8cf7366086f38",
   "type": "module",
   "scripts": {
-    "dev": "turbo run dev --parallel",
-    "dx": "docker compose up -d postgres && turbo run dev --filter=@findeg/storefront --filter=@findeg/dashboard",
+    "dev": "docker compose up -d postgres && turbo run dev --parallel",
     "build": "turbo run build",
     "start": "turbo run start",
     "lint": "turbo run lint",
@@ -17,7 +16,7 @@
     "clean:next": "rm -rf frontend/dashboard/.next frontend/storefront/.next"
   },
   "devDependencies": {
-    "turbo": "^2.9.3",
+    "turbo": "^2.9.12",
     "typescript": "^5.7.3"
   }
 }

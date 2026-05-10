@@ -1,4 +1,16 @@
-import { and, eq, inArray, sql, asc, desc, ilike, or, count, InferSelectModel, InferInsertModel } from 'drizzle-orm';
+import {
+  and,
+  eq,
+  inArray,
+  sql,
+  asc,
+  desc,
+  ilike,
+  or,
+  count,
+  InferSelectModel,
+  InferInsertModel,
+} from 'drizzle-orm';
 import {
   products,
   productVariants,
@@ -95,7 +107,7 @@ export class DrizzleProductRepository
     const variantsMap = await this.getHydratedVariants(productIds, lang);
 
     return results.map((row) => {
-      const catName = pick(asTranslationMap(row.category?.localizedName), lang);
+      const catName = pick(asTranslationMap(row.category?.localizedName ?? { en: '' }), lang);
       return this.mapToDomain(
         row.product,
         variantsMap[row.product.id] || [],
