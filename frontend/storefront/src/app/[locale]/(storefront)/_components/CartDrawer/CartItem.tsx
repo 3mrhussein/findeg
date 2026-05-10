@@ -11,7 +11,6 @@ interface CartItemProps {
   variantId: number;
   productName: string;
   variantLabel: string;
-  uomCode: string;
   unitPrice: number;
   quantity: number;
   imageUrl?: string;
@@ -30,7 +29,6 @@ export function CartItem({
   variantId,
   productName,
   variantLabel,
-  uomCode,
   unitPrice,
   quantity,
   imageUrl,
@@ -59,7 +57,7 @@ export function CartItem({
               {productName}
             </h4>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 capitalize">
-              {variantLabel} {uomCode !== 'pcs' ? `(${uomCode})` : ''}
+              {variantLabel}
             </p>
           </div>
           <p className="font-bold text-primary whitespace-nowrap">

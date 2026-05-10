@@ -48,8 +48,6 @@ export {
 export * from './User';
 
 export {
-  PricingCustomerGroupSchema,
-  PricingTierSchema,
   PersistedPricingSchema,
   DiscountTypeSchema,
   DiscountRuleSchema,
@@ -57,8 +55,6 @@ export {
   ResolvedPricingSchema,
   deriveStrikePrice,
   resolvePricing,
-  type PricingCustomerGroup,
-  type PricingTier,
   type PersistedPricing,
   type DiscountType,
   type DiscountRule,

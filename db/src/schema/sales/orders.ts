@@ -77,12 +77,6 @@ export const orderItems = salesSchema.table("order_items", {
 
   quantity: integer("quantity").notNull(),
 
-  /** Which UOM was purchased (EA, PACK_3, etc.) */
-  uomCode: text("uom_code"),
-
-  /** UOM factor at time of purchase */
-  uomFactor: decimal("uom_factor", { precision: 12, scale: 4 }),
-
   // Snapshot fields — preserve data at time of purchase
   /** Product name at time of order */
   productNameSnapshot: text("product_name_snapshot"),

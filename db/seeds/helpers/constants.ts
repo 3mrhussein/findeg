@@ -20,8 +20,6 @@ export const TABLE_IMPORT_ORDER = [
   "warehouses",
   "inventory_balances",
   "stock_movements",
-  "variant_sellable_uoms",
-  "variant_price_lists",
   "tags",
   "collections",
   "product_tags",

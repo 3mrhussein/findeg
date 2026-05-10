@@ -35,11 +35,3 @@ export const paymentStatusEnum = salesSchema.enum("payment_status", ["unpaid", "
 export const paymentMethodEnum = salesSchema.enum("payment_method", ["cod", "card"]);
 
 // --- Catalog Domain ---
-
-export const uomCodeEnum = pgEnum("uom_code", ["pcs", "pack", "carton"]);
-
-export const customerGroupEnum = pgEnum("customer_group", [
-  "public_b2c",
-  "school_b2b",
-  "wholesale",
-]);

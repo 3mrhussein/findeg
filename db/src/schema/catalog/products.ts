@@ -23,9 +23,6 @@ import { TranslationMap, ResponsiveMediaSet } from "../../types";
  */
 export const products = catalogSchema.table("products", {
   id: serial("id").primaryKey(),
-  sku: text("sku").unique(),
-  /** Optional family-level SKU prefix (e.g., "STA-PEN") */
-  skuPrefix: text("sku_prefix"),
 
   // ─── Localized Content ──────────────────────────────────────────────
 

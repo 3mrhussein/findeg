@@ -1,5 +1,5 @@
 export type { IProductRepository, ProductFilters } from './IProductRepository';
-export type { IVariantRepository, SellOption, PriceResult } from './IVariantRepository';
+export type { IVariantRepository } from './IVariantRepository';
 export type {
   IInventoryRepository,
   InventoryBalanceResult,

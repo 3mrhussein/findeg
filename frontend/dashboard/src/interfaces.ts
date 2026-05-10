@@ -1,6 +1,5 @@
 import {
   PortalRole,
-  PricingCustomerGroupSchema,
   TranslationMapSchema,
 } from '@findeg/backend/features/core';
 import { z } from 'zod';
@@ -22,22 +21,6 @@ export interface NavGroup {
   items: NavItem[];
 }
 
-const PriceListRowSchema = z.object({
-  customerGroup: PricingCustomerGroupSchema,
-  uomCode: z.string(),
-  unitPrice: z.number().nonnegative(),
-  minQty: z.number().int().positive().default(1),
-  isSellable: z.boolean().default(true),
-});
-
-const UoMRowSchema = z.object({
-  uomCode: z.string().min(1),
-  factorToBase: z.number().int().positive(),
-  localizedLabel: TranslationMapSchema,
-  barcode: z.string().optional(),
-  isEnabled: z.boolean().default(true),
-  priceLists: z.array(PriceListRowSchema).default([]),
-});
 
 const VariantAttributeSchema = z.object({
   attributeKey: z.string(),
@@ -67,7 +50,6 @@ export const VariantFormSchema = z.object({
     )
     .default([]),
   attributes: z.array(VariantAttributeSchema).default([]),
-  uoms: z.array(UoMRowSchema).default([]),
 });
 
 export const ProductFormSchema = z.object({
@@ -79,16 +61,7 @@ export const ProductFormSchema = z.object({
   brandId: z.number().nullable().optional(),
   tagIds: z.array(z.number()).default([]),
   isActive: z.boolean().default(true),
-  sku: z.string().optional(),
-  skuPrefix: z.string().optional(),
 
-  pricingMode: z.enum(['shared', 'per-variant']).default('per-variant'),
-  uomSharingMode: z.enum(['shared', 'per-variant']).default('shared'),
-
-  sharedBasePrice: z.number().nonnegative().optional(),
-  sharedStrikePrice: z.number().nonnegative().nullable().optional(),
-  sharedCostPrice: z.number().nonnegative().nullable().optional(),
-  sharedUoMs: z.array(UoMRowSchema).default([]),
 
   variants: z.array(VariantFormSchema).min(1, 'At least one variant is required'),
   localizedMetaTitle: TranslationMapSchema.optional().default({ en: '', ar: '' }),

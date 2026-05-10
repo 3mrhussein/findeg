@@ -131,27 +131,6 @@ export function InfoTab() {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">{t('identifiers')}</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <FormField
-            control={control}
-            name="skuPrefix"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{t('skuPrefix')}</FormLabel>
-                <FormControl>
-                  <Input placeholder="e.g. STA-PEN" {...field} />
-                </FormControl>
-                <FormDescription>{t('skuPrefixDesc')}</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </CardContent>
-      </Card>
     </div>
   );
 }

@@ -29,7 +29,6 @@ import { relations } from 'drizzle-orm';
 import { products } from './products';
 import { catalogSchema } from '../schemas';
 import { attributeDefinitions } from './product-attributes';
-import { variantSellableUoms, variantPriceLists } from './variant-pricing';
 import { TranslationMap, ResponsiveMediaSet } from './types';
 
 // ─── Product Variants (SKU rows) ────────────────────────────────────────────
@@ -165,8 +164,6 @@ export const productVariantsRelations = relations(productVariants, ({ one, many 
   }),
   images: many(variantImages),
   attributes: many(variantAttributes),
-  sellableUoms: many(variantSellableUoms),
-  priceLists: many(variantPriceLists),
 }));
 
 export const variantImagesRelations = relations(variantImages, ({ one }) => ({

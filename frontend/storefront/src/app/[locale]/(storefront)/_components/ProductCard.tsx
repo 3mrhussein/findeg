@@ -85,7 +85,6 @@ export function ProductCard({ product, layout = 'grid' }: ProductCardProps) {
                 defaultVariant &&
                 addToCart(product.id, 1, {
                   variantId: defaultVariant.id,
-                  uomCode: 'pcs',
                 })
               }
               disabled={!defaultVariant}
@@ -123,7 +122,6 @@ export function ProductCard({ product, layout = 'grid' }: ProductCardProps) {
             defaultVariant &&
             addToCart(product.id, 1, {
               variantId: defaultVariant.id,
-              uomCode: 'pcs',
             })
           }
           disabled={!defaultVariant}

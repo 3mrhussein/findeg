@@ -31,9 +31,6 @@ export { OrderStatusSchema, type OrderStatus } from '@findeg/db';
 export { PaymentStatusSchema, type PaymentStatus } from '@findeg/db';
 export { PaymentMethodSchema, type PaymentMethod } from '@findeg/db';
 
-// ─── Catalog Enums ───────────────────────────────────────────────────────────
-export { UomCodeSchema, type UomCode } from '@findeg/db';
-export { CustomerGroupSchema, type CustomerGroup } from '@findeg/db';
 
 // ─── Identity ────────────────────────────────────────────────────────────────
 export { PortalRoleSchema, type PortalRole } from '@findeg/db';

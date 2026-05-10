@@ -6,12 +6,6 @@ import type {
   Collection as BaseCollection,
 } from '@findeg/backend/features/catalog/domain';
 import type { Review as BaseReview } from '@findeg/backend/features/review/domain/entities/Review';
-import type {
-  CustomerGroup as BaseCustomerGroup,
-  UomCode,
-} from '@findeg/backend/features/core/domain/types/common';
-
-export type { UomCode };
 
 export interface Product extends Omit<BaseProduct, 'variants'> {
   slug: string;
@@ -34,7 +28,6 @@ export type Brand = BaseBrand;
 export type Category = BaseCategory;
 export type Collection = BaseCollection;
 export type Review = BaseReview;
-export type CustomerGroup = BaseCustomerGroup;
 
 /**
  * Filter Types
@@ -153,7 +146,6 @@ export interface ProductPdpViewModel {
   reviewSummary: ReviewSummary;
   initialReviews: Review[];
   reviewTotal: number;
-  customerGroup: CustomerGroup;
   shouldRedirect: boolean;
   canonicalPath: string;
   stockSnapshot: {

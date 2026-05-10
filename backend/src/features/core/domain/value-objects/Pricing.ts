@@ -1,8 +1,4 @@
 import {
-  PricingCustomerGroupSchema,
-  type PricingCustomerGroup,
-  PricingTierSchema,
-  type PricingTier,
   PersistedPricingSchema,
   type PersistedPricing,
   DiscountTypeSchema,
@@ -16,10 +12,6 @@ import {
 } from '@findeg/db';
 
 export {
-  PricingCustomerGroupSchema,
-  type PricingCustomerGroup,
-  PricingTierSchema,
-  type PricingTier,
   PersistedPricingSchema,
   type PersistedPricing,
   DiscountTypeSchema,

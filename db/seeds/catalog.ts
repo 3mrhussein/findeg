@@ -8,8 +8,6 @@ import productsData from "./data/products.json";
 import productVariantsData from "./data/product_variants.json";
 import variantImagesData from "./data/variant_images.json";
 import variantAttributesData from "./data/variant_attributes.json";
-import variantSellableUomsData from "./data/variant_sellable_uoms.json";
-import variantPriceListsData from "./data/variant_price_lists.json";
 import tagsData from "./data/tags.json";
 import collectionsData from "./data/collections.json";
 import productTagsData from "./data/product_tags.json";
@@ -88,25 +86,6 @@ export async function seedCatalog(db: PostgresJsDatabase<typeof schema>) {
       .values(prepareSeedData(schema.variantAttributes, variantAttributesData));
   }
 
-  if (variantSellableUomsData.length > 0) {
-    console.log("  - Seeding Variant Sellable UOMs...");
-    await ensureParents(db, [
-      { table: schema.productVariants, name: '"catalog"."product_variants"' },
-    ]);
-    await db
-      .insert(schema.variantSellableUoms)
-      .values(prepareSeedData(schema.variantSellableUoms, variantSellableUomsData));
-  }
-
-  if (variantPriceListsData.length > 0) {
-    console.log("  - Seeding Variant Price Lists...");
-    await ensureParents(db, [
-      { table: schema.productVariants, name: '"catalog"."product_variants"' },
-    ]);
-    await db
-      .insert(schema.variantPriceLists)
-      .values(prepareSeedData(schema.variantPriceLists, variantPriceListsData));
-  }
 
   if (productTagsData.length > 0) {
     console.log("  - Seeding Product Tags...");

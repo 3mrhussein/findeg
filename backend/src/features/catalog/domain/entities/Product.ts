@@ -29,8 +29,6 @@ export type ProductLocalizedContent = z.infer<typeof ProductLocalizedContentSche
  */
 export const ProductSchema = z.object({
   id: IdSchema,
-  sku: z.string().optional(),
-  skuPrefix: z.string().optional(),
 
   slug: z.string(),
   localizedName: TranslationMapSchema.optional(),

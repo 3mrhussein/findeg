@@ -40,7 +40,7 @@ export async function ProductsContent({ locale, filters }: ProductsContentProps)
         description={`${initialData.total || 0} products in catalog`}
         actions={
           <Button asChild>
-            <Link href={`/${locale}/products/new`}>
+            <Link href={`/products/new`}>
               <Plus className="h-4 w-4 me-2" />
               {t('AddProduct')}
             </Link>

@@ -4,19 +4,6 @@ import { CurrencyCodeSchema, MoneySchema } from './common';
 /**
  * Logical pricing segments. Keep additive for future channels.
  */
-export const PricingCustomerGroupSchema = z.enum(['public_b2c', 'school_b2b', 'wholesale']);
-export type PricingCustomerGroup = z.infer<typeof PricingCustomerGroupSchema>;
-
-/**
- * Persisted price row by customer group and sellable UoM.
- */
-export const PricingTierSchema = z.object({
-  customerGroup: PricingCustomerGroupSchema,
-  uomCode: z.string().min(1),
-  unitPrice: MoneySchema,
-  isSellable: z.boolean().default(true),
-});
-export type PricingTier = z.infer<typeof PricingTierSchema>;
 
 /**
  * Persisted pricing payload on catalog entities.
@@ -25,7 +12,6 @@ export const PersistedPricingSchema = z.object({
   base: MoneySchema,
   cost: MoneySchema.optional(),
   wholesale: MoneySchema.optional(),
-  tiers: z.array(PricingTierSchema).default([]),
 });
 export type PersistedPricing = z.infer<typeof PersistedPricingSchema>;
 

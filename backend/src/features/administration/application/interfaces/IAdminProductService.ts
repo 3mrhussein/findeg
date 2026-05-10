@@ -11,7 +11,6 @@ import type { Locale } from '@findeg/backend/features/core/domain/value-objects'
 import type {
   CreateProductWithVariantsInput,
   UpdateProductWithVariantsInput,
-  UoMInput,
   ImageInput,
   CreateVariantInput,
 } from '@findeg/backend/features/administration/domain/types/VariantInput';
@@ -20,8 +19,6 @@ import type {
   Variant,
   VariantImage,
   VariantAttributeValue,
-  SellableUom,
-  PriceListEntry,
 } from '@findeg/backend/features/catalog/domain/entities/Variant';
 import type { Tag } from '@findeg/backend/features/catalog/domain/entities/Tag';
 
@@ -66,9 +63,6 @@ export interface ProductEditData extends Product {
   variants: (Variant & {
     images: VariantImage[];
     attributes: VariantAttributeValue[];
-    sellableUoms: (SellableUom & {
-      priceLists: PriceListEntry[];
-    })[];
   })[];
   tags: Tag[];
 }
@@ -127,7 +121,7 @@ export interface IAdminProductService {
 
   /**
    * Generates and persists all variant combinations from a set of dimensions.
-   * Applies default pricing / UoM to each generated variant.
+   * Applies default pricing to each generated variant.
    */
   generateVariants(
     productId: number,
@@ -144,13 +138,6 @@ export interface IAdminProductService {
   /** Checks whether a variant SKU is available (not taken by another variant). */
   checkSkuAvailable(sku: string, excludeVariantId?: number): Promise<boolean>;
 
-  // ─── UoM & Pricing ────────────────────────────────────────────────────────
-
-  /**
-   * Replaces UoM definitions for a variant.
-   * Idempotent — safe to call multiple times.
-   */
-  upsertVariantUoMs(variantId: number, uoms: UoMInput[], adminUserId?: number): Promise<void>;
 
   /** Replaces image list for a variant. */
   upsertVariantImages(variantId: number, images: ImageInput[], adminUserId?: number): Promise<void>;
@@ -159,15 +146,13 @@ export interface IAdminProductService {
 
   /**
    * Retrieves full product data for the edit form.
-   * Includes variants, images, UoMs, price lists, and tags.
+   * Includes variants, images, and tags.
    */
   getProductForEdit(id: number): Promise<ProductEditData | null>;
 
   /** Checks whether a product slug is available. */
   checkSlugAvailable(slug: string, excludeProductId?: number): Promise<boolean>;
 
-  /** Checks whether a product SKU prefix is available. */
-  checkSkuPrefixAvailable(prefix: string, excludeProductId?: number): Promise<boolean>;
 
   // ─── Legacy compatibility (used by import workflows) ──────────────────────
 

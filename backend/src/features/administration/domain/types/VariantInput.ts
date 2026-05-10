@@ -1,8 +1,6 @@
-import type { UoMCode, CustomerGroup } from '../../../catalog/domain/types/UoMTypes';
 import type { TranslationMap } from '../../../core/domain/value-objects';
 
 export type PricingMode = 'shared' | 'per-variant';
-export type UoMSharingMode = 'shared' | 'per-variant';
 
 export interface ImageInput {
   url: string;
@@ -10,24 +8,6 @@ export interface ImageInput {
   displayOrder: number;
 }
 
-export interface PriceListRowInput {
-  customerGroup: CustomerGroup;
-  uomCode: UoMCode;
-  unitPrice: number;
-  minQty: number;
-  isSellable: boolean;
-  startsAt?: Date | null;
-  endsAt?: Date | null;
-}
-
-export interface UoMInput {
-  uomCode: UoMCode;
-  factorToBase: number;
-  localizedLabel: { en: string; ar: string };
-  barcode?: string;
-  isEnabled: boolean;
-  priceLists: PriceListRowInput[];
-}
 
 export interface VariantAttributeInput {
   attributeKey: string;
@@ -48,7 +28,6 @@ export interface CreateVariantInput {
   lowStockThreshold?: number | null;
   images: ImageInput[];
   attributes: VariantAttributeInput[];
-  uoms: UoMInput[];
 }
 
 export interface UpdateVariantInput extends Partial<CreateVariantInput> {
@@ -65,19 +44,15 @@ export interface CreateProductWithVariantsInput {
   brandId?: number | null;
   tagIds: number[];
   isActive: boolean;
-  sku?: string;
 
   // Pricing mode
   pricingMode: PricingMode;
-  uomSharingMode: UoMSharingMode;
 
   // Shared pricing (used when pricingMode = "shared")
   sharedBasePrice?: number;
   sharedStrikePrice?: number | null;
   sharedCostPrice?: number | null;
 
-  // Shared UoMs (used when uomSharingMode = "shared")
-  sharedUoMs?: UoMInput[];
 
   // Variants
   variants: CreateVariantInput[];

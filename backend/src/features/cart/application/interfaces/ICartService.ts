@@ -6,21 +6,19 @@ import {
   ID,
   Quantity,
   Price,
-  CustomerGroup,
-  UomCode,
 } from '@findeg/backend/features/core/domain/types/common';
 import { CartItem } from '../../domain/entities/Cart';
 
 export interface ICartService {
   /**
-   * Adds a CartItem to a list of items, merging if the same (variantId + uomCode) exists.
+   * Adds a CartItem to a list of items, merging if the same variantId exists.
    */
   addToCart(items: CartItem[], item: CartItem): CartItem[];
 
   /**
-   * Removes an item from a list of items by variantId and uomCode.
+   * Removes an item from a list of items by variantId.
    */
-  removeFromCart(items: CartItem[], variantId: ID, uomCode: UomCode): CartItem[];
+  removeFromCart(items: CartItem[], variantId: ID): CartItem[];
 
   /**
    * Updates the quantity of a specific item.
@@ -28,7 +26,6 @@ export interface ICartService {
   updateQuantity(
     items: CartItem[],
     variantId: ID,
-    uomCode: UomCode,
     quantity: Quantity,
   ): CartItem[];
 
@@ -48,20 +45,12 @@ export interface ICartService {
   removeItem(
     cartId: string,
     variantId: ID,
-    selectors?: {
-      uomCode?: UomCode;
-      customerGroup?: CustomerGroup;
-    },
   ): Promise<{ items: CartItem[]; subtotal: Price; itemCount: Quantity }>;
 
   updateItemQuantity(
     cartId: string,
     variantId: ID,
     quantity: Quantity,
-    selectors?: {
-      uomCode?: UomCode;
-      customerGroup?: CustomerGroup;
-    },
   ): Promise<{ items: CartItem[]; subtotal: Price; itemCount: Quantity }>;
 
   clearCart(cartId: string): Promise<void>;

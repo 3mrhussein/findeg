@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useLocale, useTranslations } from 'next-intl';
 import { Heart, Eye, Star, ShoppingCart } from 'lucide-react';
 import { Link } from '@i18n/navigation';
-import type { Product, UomCode } from '@data/catalog/types';
+import type { Product } from '@data/catalog/types';
 import { useCart } from '@hooks/useCart';
 import { useToast } from '@hooks/use-toast';
 import { useUser } from '@hooks/useUser';
@@ -28,23 +28,6 @@ interface ProductCardProps {
   brand?: ProductCardBrand;
 }
 
-interface UomOption {
-  code: UomCode;
-  label: string;
-  price: number;
-  strikePrice?: number;
-}
-
-function resolveUomLabel(
-  localizedLabel: { en?: string; ar?: string } | string | undefined,
-  locale: string,
-  fallback: string,
-): string {
-  if (!localizedLabel) return fallback;
-  if (typeof localizedLabel === 'string') return localizedLabel;
-  if (locale === 'ar' && localizedLabel.ar) return localizedLabel.ar;
-  return localizedLabel.en || localizedLabel.ar || fallback;
-}
 
 export function ProductCard({ product, view, brand }: ProductCardProps) {
   const locale = useLocale();
@@ -109,54 +92,10 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
     return Math.round((diff / strike) * 100);
   }, [primaryVariant]);
 
-  const uomOptions = useMemo<UomOption[]>(() => {
-    if (!primaryVariant) return [];
 
-    const sellableUoms = (primaryVariant.sellableUoms || []).filter((uom) => uom.isEnabled);
-
-    if (sellableUoms.length === 0) {
-      return [
-        {
-          code: 'pcs',
-          label: 'pcs',
-          price: Number(primaryVariant.basePrice),
-          strikePrice: primaryVariant.strikePrice ? Number(primaryVariant.strikePrice) : undefined,
-        },
-      ];
-    }
-
-    return sellableUoms.map((uom) => {
-      const price = Number(primaryVariant.basePrice) * uom.factorToBase;
-      const strikePrice = primaryVariant.strikePrice
-        ? Number(primaryVariant.strikePrice) * uom.factorToBase
-        : undefined;
-
-      return {
-        code: uom.uomCode,
-        label: resolveUomLabel(
-          uom.localizedLabel as { en?: string; ar?: string } | string | undefined,
-          locale,
-          uom.uomCode,
-        ),
-        price,
-        strikePrice,
-      };
-    });
-  }, [locale, primaryVariant]);
-
-  const [selectedUomCode, setSelectedUomCode] = useState<UomCode | null>(null);
+  const currentPrice = primaryVariant?.basePrice || 0;
+  const originalPrice = primaryVariant?.strikePrice;
   const [imageLoaded, setImageLoaded] = useState(false);
-
-  const selectedUom = useMemo(
-    () =>
-      (selectedUomCode
-        ? uomOptions.find((option) => option.code === selectedUomCode)
-        : undefined) || uomOptions[0],
-    [selectedUomCode, uomOptions],
-  );
-
-  const currentPrice = selectedUom?.price || primaryVariant?.basePrice || 0;
-  const originalPrice = selectedUom?.strikePrice;
   const isWishlisted = Boolean(currentUser?.wishlist.includes(product.id));
 
   const imageUrl =
@@ -191,10 +130,9 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
   }, [discountPercentage, product, stockSnapshot.lowStock, t]);
 
   const handleAddToCart = () => {
-    if (!primaryVariant || !stockSnapshot.inStock || !selectedUom) return;
+    if (!primaryVariant || !stockSnapshot.inStock) return;
     addToCart(product.id, 1, {
       variantId: primaryVariant.id,
-      uomCode: selectedUom.code,
     });
   };
 
@@ -310,46 +248,6 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
         ) : null}
       </div>
 
-      {uomOptions.length > 1 && (
-        <div className="mt-3 flex flex-wrap gap-1.5">
-          {/* Wishlist button overlay */}
-          <div className="absolute top-3 inset-s-3 hidden group-hover:block">
-            <Button
-              variant="secondary"
-              size="icon"
-              className="h-8 w-8 rounded-full bg-white/90 shadow-sm backdrop-blur-sm hover:bg-white"
-              onClick={(e) => {
-                e.preventDefault();
-                // Add to wishlist logic here
-              }}
-            >
-              <Heart className="h-4 w-4" />
-            </Button>
-          </div>
-
-          {/* Quick Add overlay */}
-          <div
-            className="absolute bottom-3 inset-e-3 hidden group-hover:block"
-            onClick={(e) => e.preventDefault()}
-          >
-            {uomOptions.map((option) => (
-              <button
-                key={option.code}
-                type="button"
-                onClick={() => setSelectedUomCode(option.code)}
-                className={cn(
-                  'rounded-full border px-2 py-0.5 text-[11px] font-medium',
-                  (selectedUomCode || selectedUom?.code) === option.code
-                    ? 'border-primary bg-primary/10 text-primary'
-                    : 'border-border text-muted-foreground hover:text-foreground',
-                )}
-              >
-                {option.label}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
 
       <div className={cn('mt-2 text-xs font-medium', stockClassName)}>{stockLabel}</div>
 

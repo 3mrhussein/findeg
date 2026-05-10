@@ -15,7 +15,6 @@ import { ProductFormSidebar } from '../ProductFormSidebar';
 import { InfoTab } from './tabs/InfoTab';
 import { VariantsTab } from './tabs/VariantsTab';
 import { MediaTab } from './tabs/MediaTab';
-import { PricingTab } from './tabs/PricingTab';
 import { SeoTab } from './tabs/SeoTab';
 import type { Brand, Tag } from '@findeg/backend/features/catalog';
 import { ProductFormSchema, ProductFormValues } from '@/interfaces';
@@ -53,9 +52,6 @@ export function ProductForm({ initialData, categories, brands, tags, locale }: P
           brandId: initialData.brandId,
           tagIds: initialData.tags?.map((t: any) => t.id) || [],
           isActive: initialData.isActive,
-          skuPrefix: initialData.skuPrefix || undefined,
-          pricingMode: (initialData as any).pricingMode || 'per-variant',
-          uomSharingMode: (initialData as any).uomSharingMode || 'shared',
           variants: initialData.variants.map((v: any) => ({
             id: v.id,
             sku: v.sku,
@@ -72,19 +68,6 @@ export function ProductForm({ initialData, categories, brands, tags, locale }: P
               attributeKey: attr.key,
               value: attr.valueText || '',
               isVariantDefining: true,
-            })),
-            uoms: (v.sellableUoms || []).map((u: any) => ({
-              uomCode: u.uomCode,
-              factorToBase: Number(u.factorToBase),
-              localizedLabel: u.localizedLabel || { en: '', ar: '' },
-              isEnabled: u.isEnabled,
-              priceLists: ((u as any).priceLists || []).map((pl: any) => ({
-                customerGroup: pl.customerGroup,
-                uomCode: pl.uomCode,
-                unitPrice: Number(pl.unitPrice),
-                minQty: pl.minQty,
-                isSellable: pl.isSellable,
-              })),
             })),
           })),
         }
@@ -108,27 +91,8 @@ export function ProductForm({ initialData, categories, brands, tags, locale }: P
               displayOrder: 0,
               images: [],
               attributes: [],
-              uoms: [
-                {
-                  uomCode: 'pcs',
-                  factorToBase: 1,
-                  localizedLabel: { en: 'Piece', ar: 'قطعة' },
-                  isEnabled: true,
-                  priceLists: [
-                    {
-                      customerGroup: 'public_b2c' as const,
-                      uomCode: 'pcs',
-                      unitPrice: 0,
-                      minQty: 1,
-                      isSellable: true,
-                    },
-                  ],
-                },
-              ],
             },
           ],
-          pricingMode: 'per-variant',
-          uomSharingMode: 'shared',
           tagIds: [],
         }) as any,
     mode: 'onChange',
@@ -191,9 +155,6 @@ export function ProductForm({ initialData, categories, brands, tags, locale }: P
                 </TabsContent>
                 <TabsContent value="media" className="mt-0 focus-visible:outline-none">
                   <MediaTab />
-                </TabsContent>
-                <TabsContent value="pricing" className="mt-0 focus-visible:outline-none">
-                  <PricingTab />
                 </TabsContent>
                 <TabsContent value="seo" className="mt-0 focus-visible:outline-none">
                   <SeoTab />

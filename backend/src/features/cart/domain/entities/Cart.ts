@@ -6,10 +6,8 @@
  */
 
 import {
-  type CustomerGroup,
   type Price,
   type Quantity,
-  type UomCode,
 } from '@findeg/backend/features/core/domain/types/common';
 
 /**
@@ -40,20 +38,11 @@ export type CartItem = {
   /** How many of this variant */
   quantity: Quantity;
 
-  /** Which UOM was selected (EA, PACK_3, etc.) */
-  uomCode: UomCode;
-
-  /** UOM factor at time of add (for display purposes) */
-  uomFactor: number;
-
-  /** Resolved unit price for the customer's group + UOM */
+  /** Resolved unit price for the variant */
   unitPrice: Price;
 
   /** Currency code */
   currency: string;
-
-  /** Customer group used for price resolution */
-  customerGroup?: CustomerGroup;
 
   /** Optional ID grouping items from the same school list kit */
   cartKitId?: string;
@@ -63,7 +52,7 @@ export type CartItem = {
  * Domain Entity: Cart
  *
  * Represents a shopping cart with business logic for cart operations.
- * Items are keyed by (variantId + uomCode) for de-duplication.
+ * Items are keyed by variantId for de-duplication.
  */
 export class CartEntity {
   /**
@@ -73,11 +62,11 @@ export class CartEntity {
 
   /**
    * Add a variant to the cart or increment quantity if already present.
-   * Matches by variantId + uomCode.
+   * Matches by variantId.
    */
   addItem(item: CartItem): CartItem[] {
     const existingIndex = this.items.findIndex(
-      (existing) => existing.variantId === item.variantId && existing.uomCode === item.uomCode,
+      (existing) => existing.variantId === item.variantId,
     );
 
     if (existingIndex >= 0) {
@@ -93,23 +82,23 @@ export class CartEntity {
   }
 
   /**
-   * Remove an item from the cart by variantId + uomCode.
+   * Remove an item from the cart by variantId.
    */
-  removeItem(variantId: number, uomCode: UomCode): CartItem[] {
-    return this.items.filter((item) => !(item.variantId === variantId && item.uomCode === uomCode));
+  removeItem(variantId: number): CartItem[] {
+    return this.items.filter((item) => item.variantId !== variantId);
   }
 
   /**
    * Update the quantity of a specific item.
    * Removes the item if quantity is 0 or negative.
    */
-  updateItemQuantity(variantId: number, uomCode: UomCode, quantity: number): CartItem[] {
+  updateItemQuantity(variantId: number, quantity: number): CartItem[] {
     if (quantity <= 0) {
-      return this.removeItem(variantId, uomCode);
+      return this.removeItem(variantId);
     }
 
     return this.items.map((item) =>
-      item.variantId === variantId && item.uomCode === uomCode ? { ...item, quantity } : item,
+      item.variantId === variantId ? { ...item, quantity } : item,
     );
   }
 

@@ -35,8 +35,6 @@ erDiagram
 
     product_variants ||--o{ variant_images : "has images"
     product_variants ||--o{ variant_attributes : "has SKU attrs"
-    product_variants ||--o{ variant_sellable_uoms : "sold in units"
-    product_variants ||--o{ variant_price_lists : "priced per group"
 ```
 
 ---
@@ -96,8 +94,6 @@ erDiagram
 | Column | Type | Business Reason |
 |---|---|---|
 | `id` | `serial PK` | Internal row identifier. |
-| `sku` | `text UNIQUE` | **Manufacturer/supplier SKU** — the official code from the supplier's catalog. Used for purchase orders and supplier communication. |
-| `sku_prefix` | `text` | **Internal family prefix** (e.g., `"PEN"`). Used as a template to auto-generate variant SKUs like `PEN-BLUE-07`. Decoupled from the supplier SKU so variant codes remain stable even if the supplier changes their numbering. |
 | `slug` | `text UNIQUE` | URL-safe handle for the product detail page (`/product/pilot-g2-pen`). |
 | `localized_name` | `jsonb` | `{ en, ar }` — Bilingual product title. Required. |
 | `localized_description` | `jsonb` | `{ en, ar }` — Short description for product cards and search results. |
@@ -294,62 +290,6 @@ erDiagram
 
 ---
 
-### 13. `catalog.variant_sellable_uoms`
-
-**Purpose:** Defines which **Units of Measure** a variant can be sold in. A box of pencils might be sold as individual pieces (`EA`), a pack of 3 (`PACK`), or a full carton of 12 (`CARTON`). Each UOM has its own barcode and conversion factor.
-
-**Source:** [variant-pricing.ts](./variant-pricing.ts)
-
-| Column | Type | Business Reason |
-|---|---|---|
-| `id` | `serial PK` | Internal row identifier. |
-| `variant_id` | `integer FK` | Which variant. `ON DELETE CASCADE`. |
-| `uom_code` | `enum` | Unit code: `"pcs"`, `"pack"`, `"carton"`. |
-| `factor_to_base` | `decimal(12,4)` | Conversion factor to base unit (pcs). E.g., `pack` = `3`, `carton` = `12`. Used to convert cart quantities to base units for inventory deduction. |
-| `localized_label` | `jsonb` | `{ en?, ar? }` — Display label (e.g., `"Pack of 3"` / `"عبوة ٣"`). |
-| `barcode` | `text` | UOM-specific barcode. A pack of 3 pencils has a different barcode than a single pencil. |
-| `is_enabled` | `boolean` | Whether this UOM is currently available for purchase. |
-| `created_at` / `updated_at` | `timestamp` | Audit timestamps. |
-
-**Unique Constraint:** `(variant_id, uom_code)` — a variant can only have one definition per unit type.
-
----
-
-### 14. `catalog.variant_price_lists`
-
-**Purpose:** Enables **multi-tier, group-based pricing**. Different customer groups (B2C walk-in, B2B schools, wholesale) pay different prices. Prices can also vary by UOM and quantity breakpoint.
-
-**Source:** [variant-pricing.ts](./variant-pricing.ts)
-
-| Column | Type | Business Reason |
-|---|---|---|
-| `id` | `serial PK` | Internal row identifier. |
-| `variant_id` | `integer FK` | Which variant. `ON DELETE CASCADE`. |
-| `customer_group` | `enum` | `"public_b2c"`, `"school_b2b"`, `"wholesale"`. Determines which price list applies based on the logged-in user's group. |
-| `uom_code` | `enum` | Which unit this price applies to. A "pack" price differs from a "pcs" price. |
-| `currency` | `text` | Currency code (default: `"EGP"`). Future-proofs for multi-currency. |
-| `unit_price` | `decimal(12,2)` | Price per single UOM unit for this customer group. |
-| `min_qty` | `integer` | **Quantity breakpoint** for tiered pricing. E.g., 1-9 packs = 50 EGP, 10+ packs = 45 EGP. The system picks the row with the highest `min_qty` that the cart quantity satisfies. |
-| `is_sellable` | `boolean` | Whether this variant/UOM/group combination can be purchased. Allows blocking wholesale purchase of certain items. |
-| `starts_at` | `timestamp` | Time-bounded pricing start (e.g., Ramadan sale starts May 1). `NULL` = always active. |
-| `ends_at` | `timestamp` | Time-bounded pricing end. `NULL` = no expiry. |
-| `created_at` / `updated_at` | `timestamp` | Audit timestamps. |
-
-**Unique Constraint:** `(variant_id, customer_group, uom_code, min_qty)` — ensures no duplicate price rows for the same tier.
-
----
-
-## Shared Enums (used by Catalog)
-
-Defined in [enums.ts](../enums.ts):
-
-| Enum | Values | Used By |
-|---|---|---|
-| `uom_code` | `pcs`, `pack`, `carton` | `variant_sellable_uoms`, `variant_price_lists` |
-| `customer_group` | `public_b2c`, `school_b2b`, `wholesale` | `variant_price_lists` |
-
----
-
 ## Cross-Schema References
 
 The catalog schema is referenced by other schemas:
@@ -370,7 +310,5 @@ Customer browses → Category tree (categories)
                  → Product listing (products + first variant price)
                  → Product detail page (product + all variants)
                  → Selects variant (variant_key lookup)
-                 → Selects UOM (variant_sellable_uoms)
-                 → Price resolved (variant_price_lists by customer_group + min_qty)
-                 → Added to cart (variant_id + uom_code + qty)
+                 → Added to cart (variant_id + qty)
 ```
