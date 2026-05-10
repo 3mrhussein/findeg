@@ -16,6 +16,7 @@ import {
 import { DrizzleVariantRepository } from './DrizzleVariantRepository';
 import { eq, and, sql, inArray } from 'drizzle-orm';
 import { ID } from '@findeg/backend/features/core/domain/types/common';
+import { type TranslationMap } from '@findeg/db/types';
 import { Variant } from '../../domain/entities/Variant';
 
 /**
@@ -30,7 +31,7 @@ export class DrizzleSchoolListRepository implements ISchoolListRepository {
     const [result] = await db.select().from(schoolLists).where(eq(schoolLists.slug, slug)).limit(1);
 
     if (!result) return null;
-    return result ;
+    return result as unknown as SchoolListResult;
   }
 
   async getById(id: ID): Promise<SchoolListResult | null> {
@@ -81,8 +82,8 @@ export class DrizzleSchoolListRepository implements ISchoolListRepository {
     if (!result) return null;
     return {
       ...result,
-      localizedLabel: result.localizedLabel as Record<string, string>,
-      matchRules: result.matchRules as Record<string, unknown>,
+      localizedLabel: result.localizedLabel,
+      matchRules: result.matchRules,
     } as SchoolListItemResult;
   }
 
@@ -116,14 +117,14 @@ export class DrizzleSchoolListRepository implements ISchoolListRepository {
       const itemAlts = alts.filter((a) => a.listItemId === item.id);
       return {
         ...item,
-        localizedLabel: item.localizedLabel as Record<string, string>,
-        matchRules: item.matchRules as Record<string, unknown>,
+        localizedLabel: item.localizedLabel as TranslationMap,
+        matchRules: item.matchRules as MatchRulesDraft,
         alternatives: itemAlts.map((a) => ({
           ...a,
           variant: variantMap[a.variantId],
         })),
-      };
-    }) as SchoolListItemResult[];
+      } as unknown as SchoolListItemResult;
+    });
   }
 
   async addItem(listId: ID, input: SchoolListItemInput): Promise<SchoolListItemResult> {
@@ -136,9 +137,9 @@ export class DrizzleSchoolListRepository implements ISchoolListRepository {
       .returning();
     return {
       ...result,
-      localizedLabel: result.localizedLabel as Record<string, string>,
-      matchRules: result.matchRules as Record<string, unknown>,
-    } as SchoolListItemResult;
+      localizedLabel: result.localizedLabel as TranslationMap,
+      matchRules: result.matchRules as MatchRulesDraft,
+    } as unknown as SchoolListItemResult;
   }
 
   /**

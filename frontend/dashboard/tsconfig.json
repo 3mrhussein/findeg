@@ -6,26 +6,54 @@
     "moduleResolution": "Bundler",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@components/*": ["./src/components/*"],
-      "@hooks/*": ["./src/hooks/*"],
-      "@i18n/*": ["./src/i18n/*"],
-      "@lib/*": ["./src/lib/*"],
-      "@providers/*": ["./src/providers/*"],
-      "@server/*": ["./src/server/*"],
-      "@features/*": ["./src/features/*"],
-      "@data/*": ["./src/data/*"],
-      "@app/*": ["./src/app/*"],
-      "@actions/*": ["./src/actions/*"],
-      "@queries/*": ["./src/queries/*"],
-      "@findeg/env": ["../../packages/env/src"],
-      "@findeg/env/*": ["../../packages/env/src/*"],
-      "@findeg/backend": ["../../backend/src"],
-      "@findeg/backend/*": ["../../backend/src/*"],
-      "@findeg/db": ["../../db/src"],
-      "@findeg/db/*": ["../../db/src/*"],
-      "@findeg/ui": ["../ui/src"],
-      "@findeg/ui/*": ["../ui/src/*"]
+      "@/*": [
+        "./src/*"
+      ],
+      "@components/*": [
+        "./src/components/*"
+      ],
+      "@hooks/*": [
+        "./src/hooks/*"
+      ],
+      "@i18n/*": [
+        "./src/i18n/*"
+      ],
+      "@lib/*": [
+        "./src/lib/*"
+      ],
+      "@providers/*": [
+        "./src/providers/*"
+      ],
+      "@server/*": [
+        "./src/server/*"
+      ],
+      "@features/*": [
+        "./src/features/*"
+      ],
+      "@data/*": [
+        "./src/data/*"
+      ],
+      "@app/*": [
+        "./src/app/*"
+      ],
+      "@actions/*": [
+        "./src/actions/*"
+      ],
+      "@queries/*": [
+        "./src/queries/*"
+      ],
+      "@findeg/backend/*": [
+        "../../backend/src/*"
+      ],
+      "@findeg/db": [
+        "../../db/src"
+      ],
+      "@findeg/db/*": [
+        "../../db/src/*"
+      ],
+      "@findeg/env": [
+        "../../packages/env/src"
+      ]
     }
   },
   "include": [

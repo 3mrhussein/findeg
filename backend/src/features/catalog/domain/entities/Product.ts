@@ -11,18 +11,12 @@
 import { z } from 'zod';
 import { products } from '@findeg/db/schema';
 import { type InferSelectModel } from 'drizzle-orm';
-import {
-  ID,
-  IdSchema,
-  RatingSchema,
-  TranslationMapSchema,
-  type Locale,
-} from '../../../core/domain/types/common';
+
 import { TagSchema } from './Tag';
 import { ProductAttributeValueSchema } from './AttributeDefinition';
 import { VariantSchema, type Variant, VariantEntity } from './Variant';
 import { ResponsiveMediaSetSchema, pick } from '../../../core/domain/value-objects';
-
+import { ID, IdSchema, Locale, RatingSchema, TranslationMapSchema } from '@findeg/db/types';
 export const ProductLocalizedContentSchema = z.object({
   name: TranslationMapSchema,
   description: TranslationMapSchema,

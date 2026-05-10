@@ -11,6 +11,9 @@ const databaseSchema = z.object({
   DB_USER: z.string().optional(),
   DB_PASSWORD: z.string().optional(),
   DB_NAME: z.string().optional(),
+  DB_MIGRATING: z.coerce.boolean().optional(),
+  DB_SEEDING: z.coerce.boolean().optional(),
+  DB_SSL: z.coerce.boolean().optional(),
 });
 
 export const env = validateEnv(databaseSchema);

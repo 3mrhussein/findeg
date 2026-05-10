@@ -94,7 +94,7 @@ export class DrizzleBrandRepository implements IBrandRepository {
         logoUrl: data.logoUrl,
         isActive: data.isActive,
         localizedName: data.localizedName || { en: data.name, ar: data.name },
-        localizedDescription: data.localizedDescription || {},
+        localizedDescription: data.localizedDescription || null,
       })
       .returning();
     return this.mapToDomain(result[0]);

@@ -125,7 +125,7 @@ export function PricingTab() {
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                              {uoms.map((u) => (
+                              {uoms.map((u: any) => (
                                 <SelectItem key={u.uomCode} value={u.uomCode}>
                                   {u.uomCode}
                                 </SelectItem>

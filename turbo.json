@@ -3,9 +3,7 @@
   "globalDependencies": [
     ".env",
     ".env.*",
-    "tsconfig.json",
     "tsconfig.base.json",
-    "tsconfig.eslint.json",
     "package.json"
   ],
   "globalEnv": [
@@ -18,15 +16,11 @@
     // ----------------------------
     "build": {
       "dependsOn": [
-        "^build",
         "type-check"
       ],
       "outputs": [
-        "dist/**",
-        "*.tsbuildinfo",
         ".next/**",
-        "!.next/cache/**",
-        "build/**"
+        "!.next/cache/**"
       ]
     },
     // ----------------------------
@@ -40,12 +34,7 @@
     // TYPE CHECKING
     // ----------------------------
     "type-check": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "*.tsbuildinfo"
-      ]
+      "outputs": []
     },
     // ----------------------------
     // LINT

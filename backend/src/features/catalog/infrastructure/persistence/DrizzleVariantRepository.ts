@@ -191,7 +191,7 @@ export class DrizzleVariantRepository implements IVariantRepository {
           productId,
           sku: input.sku,
           variantKey: input.variantKey,
-          localizedLabel: input.localizedLabel || {},
+          localizedLabel: input.localizedLabel || { en: '' },
           displayOrder: input.displayOrder || 0,
           isActive: input.isActive ?? true,
           basePrice: String(input.basePrice),
@@ -233,7 +233,7 @@ export class DrizzleVariantRepository implements IVariantRepository {
             uomCode: u.uomCode as 'pcs' | 'pack' | 'carton', // Cast to match schema enum/text
             factorToBase: String(u.factorToBase),
             isEnabled: u.isEnabled,
-            localizedLabel: u.localizedLabel || {},
+            localizedLabel: u.localizedLabel || { en: '' },
             barcode: u.barcode,
           })),
         );
@@ -325,7 +325,7 @@ export class DrizzleVariantRepository implements IVariantRepository {
               uomCode: u.uomCode as 'pcs' | 'pack' | 'carton',
               factorToBase: String(u.factorToBase),
               isEnabled: u.isEnabled,
-              localizedLabel: u.localizedLabel || {},
+              localizedLabel: u.localizedLabel || { en: '' },
               barcode: u.barcode,
             })),
           );

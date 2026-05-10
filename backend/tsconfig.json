@@ -1,19 +1,24 @@
 {
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
-    "composite": true,
-    "declaration": true,
-    "declarationMap": true,
-    "outDir": "dist",
-    "rootDir": "src",
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "jsx": "react-jsx"
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@findeg/backend/*": [
+        "./src/*"
+      ],
+      "@findeg/db": [
+        "../db/src"
+      ],
+      "@findeg/db/*": [
+        "../db/src/*"
+      ],
+      "@findeg/env": [
+        "../packages/env/src"
+      ]
+    }
   },
-  "references": [
-    { "path": "../db" },
-    { "path": "../packages/env" }
-  ],
   "include": [
     "src/**/*"
   ],

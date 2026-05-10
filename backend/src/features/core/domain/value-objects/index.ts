@@ -5,12 +5,10 @@ export {
   valid,
   type Locale,
   TranslationMapSchema,
-  PartialTranslationMapSchema,
   asTranslationMap,
   pick,
   parse,
   type TranslationMap,
-  type PartialTranslationMap,
 } from './Locale';
 
 export {

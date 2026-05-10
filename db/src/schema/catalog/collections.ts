@@ -13,38 +13,38 @@ import {
   timestamp,
   jsonb,
   primaryKey,
-} from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
-import { tags } from "./tags";
-import { catalogSchema } from "../schemas";
-import { PartialTranslationMap } from "./types";
+} from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
+import { tags } from './tags';
+import { catalogSchema } from '../schemas';
+import { TranslationMap } from './types';
 
 /**
  * Collections Table
  *
  * Used for creating marketing-driven groups of products.
  */
-export const collections = catalogSchema.table("collections", {
-  id: serial("id").primaryKey(),
+export const collections = catalogSchema.table('collections', {
+  id: serial('id').primaryKey(),
 
   /** Unique slug for collection URLs */
-  slug: text("slug").notNull().unique(),
+  slug: text('slug').notNull().unique(),
 
   /** Metadata for display */
-  localizedTitle: jsonb("localized_title").$type<PartialTranslationMap>().default({}).notNull(),
-  localizedSubtitle: jsonb("localized_subtitle").$type<PartialTranslationMap>(),
+  localizedTitle: jsonb('localized_title').$type<TranslationMap>().default({}).notNull(),
+  localizedSubtitle: jsonb('localized_subtitle').$type<TranslationMap>(),
 
   /** Optional hero image for the collection page */
-  heroImageUrl: text("hero_image_url"),
+  heroImageUrl: text('hero_image_url'),
 
   /** Display order (lower = first) */
-  sortOrder: integer("sort_order").default(0).notNull(),
+  sortOrder: integer('sort_order').default(0).notNull(),
 
   /** Whether the collection is published */
-  isActive: boolean("is_active").default(true).notNull(),
+  isActive: boolean('is_active').default(true).notNull(),
 
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
 
 /**
@@ -53,14 +53,14 @@ export const collections = catalogSchema.table("collections", {
  * Collections can be linked to multiple tags for flexible categorization.
  */
 export const collectionTags = catalogSchema.table(
-  "collection_tags",
+  'collection_tags',
   {
-    collectionId: integer("collection_id")
+    collectionId: integer('collection_id')
       .notNull()
-      .references(() => collections.id, { onDelete: "cascade" }),
-    tagId: integer("tag_id")
+      .references(() => collections.id, { onDelete: 'cascade' }),
+    tagId: integer('tag_id')
       .notNull()
-      .references(() => tags.id, { onDelete: "cascade" }),
+      .references(() => tags.id, { onDelete: 'cascade' }),
   },
   (table) => [primaryKey({ columns: [table.collectionId, table.tagId] })],
 );

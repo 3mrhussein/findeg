@@ -3,7 +3,6 @@ import { Suspense } from 'react';
 import type { Locale } from 'next-intl';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { parse } from '@findeg/backend/features/core/domain/value-objects';
 import { getCollectionPageViewModel } from '@/data/catalog/queries';
 import { PageShell } from '../../_components/PageShell';
 import { ProductListingLayout } from '../../_components/ProductListingLayout';
@@ -38,8 +37,7 @@ export default async function CollectionPage({ params, searchParams }: Collectio
  */
 async function CollectionPageContent({ params, searchParams }: CollectionPageProps) {
   const { slug, locale } = await params;
-  const resolvedLocale = parse(locale);
-  setRequestLocale(resolvedLocale);
+  setRequestLocale(locale as Locale);
   const query = await searchParams;
   const t = await getTranslations({ locale: locale as Locale, namespace: 'Pages.Shop' });
 
@@ -47,9 +45,8 @@ async function CollectionPageContent({ params, searchParams }: CollectionPagePro
   if (!vm) notFound();
 
   const { collection } = vm;
-  const title =
-    (collection.localizedTitle as Record<string, string>)?.[resolvedLocale] || collection.slug;
-  const subtitle = (collection.localizedSubtitle as Record<string, string>)?.[resolvedLocale];
+  const title = (collection.localizedTitle as any)?.[locale] || collection.slug;
+  const subtitle = (collection.localizedSubtitle as any)?.[locale];
 
   return (
     <PageShell>

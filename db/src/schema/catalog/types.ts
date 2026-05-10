@@ -5,7 +5,7 @@
 /**
  * Partial translation map for database jsonb columns.
  */
-export interface PartialTranslationMap {
+export interface TranslationMap {
   en?: string;
   ar?: string;
 }
@@ -18,7 +18,7 @@ export interface MediaAsset {
   width?: number;
   height?: number;
   mimeType?: string;
-  alt?: PartialTranslationMap;
+  alt?: TranslationMap;
 }
 
 /**

@@ -16,12 +16,13 @@ import {
   type ProductFilters,
 } from '../../application/interfaces/IProductRepository';
 import {
-  type TranslationMap,
-  type Locale,
-  parse,
   asTranslationMap,
   pick,
+  parse,
+  type TranslationMap,
+  type Locale,
 } from '../../../core/domain/value-objects';
+import { type ProductInput } from '../../../administration/domain/types/ProductInput';
 import { BaseDrizzleRepository } from '../../../core/infrastructure/persistence/BaseDrizzleRepository';
 import { type Tag } from '../../domain/entities/Tag';
 import { type ProductAttributeValue } from '../../domain/entities/AttributeDefinition';
@@ -32,7 +33,7 @@ import { type ProductAttributeValue } from '../../domain/entities/AttributeDefin
  * Implements catalog persistence using Drizzle ORM and JSONB localization.
  */
 export class DrizzleProductRepository
-  extends BaseDrizzleRepository<typeof products, Product, number>
+  extends BaseDrizzleRepository<typeof products, Product, number, ProductInput>
   implements IProductRepository
 {
   constructor() {
@@ -255,28 +256,57 @@ export class DrizzleProductRepository
   }
 
   // Administrative Operations
-  async create(input: InferInsertModel<typeof products>): Promise<Product> {
+  async create(input: ProductInput): Promise<Product> {
+    const localizedName = Object.fromEntries(input.translations.map((t) => [t.language, t.name]));
+    const localizedDescription = Object.fromEntries(
+      input.translations.map((t) => [t.language, t.description]),
+    );
+    const localizedLongDescription = Object.fromEntries(
+      input.translations.map((t) => [t.language, t.longDescription]),
+    );
+
     const [newProduct] = await this.db
       .insert(products)
       .values({
-        sku: input.sku,
-        slug: input.slug,
+        sku: input.skuPrefix ? `${input.skuPrefix}-TEMP` : null, // Prefix or generated
+        skuPrefix: input.skuPrefix,
         isActive: input.isActive ?? true,
         categoryId: input.categoryId,
         brandId: input.brandId,
-        localizedName: input.localizedName || {},
-        localizedDescription: input.localizedDescription || {},
+        localizedName: asTranslationMap(localizedName),
+        localizedDescription: asTranslationMap(localizedDescription),
+        localizedLongDescription: asTranslationMap(localizedLongDescription),
       })
       .returning({ id: products.id });
 
     return this.getById(newProduct.id) as Promise<Product>;
   }
 
-  async update(id: number, input: Partial<InferInsertModel<typeof products>>): Promise<Product> {
-    await this.db.update(products).set(input).where(eq(products.id, id));
+  async update(id: number, input: ProductInput): Promise<Product> {
+    const localizedName = Object.fromEntries(input.translations.map((t) => [t.language, t.name]));
+    const localizedDescription = Object.fromEntries(
+      input.translations.map((t) => [t.language, t.description]),
+    );
+    const localizedLongDescription = Object.fromEntries(
+      input.translations.map((t) => [t.language, t.longDescription]),
+    );
+
+    await this.db
+      .update(products)
+      .set({
+        skuPrefix: input.skuPrefix,
+        isActive: input.isActive,
+        categoryId: input.categoryId,
+        brandId: input.brandId,
+        localizedName: asTranslationMap(localizedName),
+        localizedDescription: asTranslationMap(localizedDescription),
+        localizedLongDescription: asTranslationMap(localizedLongDescription),
+        updatedAt: new Date(),
+      })
+      .where(eq(products.id, id));
+
     return this.getById(id) as Promise<Product>;
   }
-
   async delete(id: number): Promise<void> {
     await this.db.delete(products).where(eq(products.id, id));
   }

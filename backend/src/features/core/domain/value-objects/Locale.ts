@@ -1,9 +1,4 @@
-import {
-  SUPPORTED_LOCALES,
-  DEFAULT_LOCALE,
-  LocaleSchema,
-  type Locale,
-} from '@findeg/db/types';
+import { SUPPORTED_LOCALES, DEFAULT_LOCALE, LocaleSchema, type Locale } from '@findeg/db/types';
 
 export { SUPPORTED_LOCALES, DEFAULT_LOCALE, LocaleSchema, type Locale };
 
@@ -37,19 +32,9 @@ export function parse(value?: string | null): Locale {
 
 // ─── Translation Structures ──────────────────────────────────────────
 
-import {
-  TranslationMapSchema,
-  PartialTranslationMapSchema,
-  type TranslationMap,
-  type PartialTranslationMap,
-} from '@findeg/db/types';
+import { TranslationMapSchema, type TranslationMap } from '@findeg/db/types';
 
-export {
-  TranslationMapSchema,
-  PartialTranslationMapSchema,
-  type TranslationMap,
-  type PartialTranslationMap,
-};
+export { TranslationMapSchema, type TranslationMap };
 
 /**
  * Normalizes partial translation data into a strict TranslationMap.
@@ -63,7 +48,7 @@ export {
  * const name = asTranslationMap({ en: "Product" }); // { en: "Product", ar: "" }
  */
 export function asTranslationMap(
-  value: PartialTranslationMap | undefined,
+  value: any,
   fallback: string = '',
 ): TranslationMap {
   const result = {} as TranslationMap;

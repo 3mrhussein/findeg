@@ -2,25 +2,25 @@
  * Brands Database Schema
  */
 
-import { serial, text, timestamp, boolean, jsonb } from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
-import { catalogSchema } from "../schemas";
-import { products } from "./products";
-import { PartialTranslationMap } from "./types";
+import { serial, text, timestamp, boolean, jsonb } from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
+import { catalogSchema } from '../schemas';
+import { products } from './products';
+import { TranslationMap } from './types';
 
 /**
  * Brands Table
  */
-export const brands = catalogSchema.table("brands", {
-  id: serial("id").primaryKey(),
-  slug: text("slug").notNull().unique(),
-  name: text("name").notNull(),
-  localizedName: jsonb("localized_name").$type<PartialTranslationMap>().default({}).notNull(),
-  localizedDescription: jsonb("localized_description").$type<PartialTranslationMap>(),
-  logoUrl: text("logo_url"),
-  isActive: boolean("is_active").default(true).notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+export const brands = catalogSchema.table('brands', {
+  id: serial('id').primaryKey(),
+  slug: text('slug').notNull().unique(),
+  name: text('name').notNull(),
+  localizedName: jsonb('localized_name').$type<TranslationMap>().default({}).notNull(),
+  localizedDescription: jsonb('localized_description').$type<TranslationMap>(),
+  logoUrl: text('logo_url'),
+  isActive: boolean('is_active').default(true).notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
 
 export const brandsRelations = relations(brands, ({ many }) => ({

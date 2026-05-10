@@ -1,4 +1,4 @@
-import { ID } from '@findeg/backend/features/core/domain/types/common';
+import { ID } from '@findeg/db';
 import {
   SchoolListAccessGrant,
   NewSchoolListAccessGrant,

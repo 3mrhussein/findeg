@@ -1,27 +1,28 @@
-import * as schema from "../schema";
-import { eq } from "drizzle-orm";
-import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
-import { prepareSeedData, hashPassword, ensureParents } from "./helpers";
+import * as schema from '@findeg/db/schema';
+import { eq } from 'drizzle-orm';
+import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
+import { prepareSeedData, hashPassword, ensureParents } from './helpers';
+
+import { z } from 'zod';
+
+import permissionsData from './data/permissions.json';
+import rolesData from './data/roles.json';
+import organizationsData from './data/organizations.json';
+import usersData from './data/users.json';
+import rolePermissionsData from './data/role_permissions.json';
+import userRolesData from './data/user_roles.json';
+import organizationMembershipsData from './data/organization_memberships.json';
+import authAccountsData from './data/auth_accounts.json';
+import guestPrincipalsData from './data/guest_principals.json';
+import paymentMethodsData from './data/payment_methods.json';
+import userPermissionsData from './data/user_permissions.json';
 import {
+  AuthProviderSchema,
+  OrganizationIdSchema,
+  PaymentProviderSchema,
   PermissionCodeSchema,
   RoleIdSchema,
-  OrganizationIdSchema,
-  AuthProviderSchema,
-  PaymentProviderSchema,
-} from "../types";
-import { z } from "zod";
-
-import permissionsData from "./data/permissions.json";
-import rolesData from "./data/roles.json";
-import organizationsData from "./data/organizations.json";
-import usersData from "./data/users.json";
-import rolePermissionsData from "./data/role_permissions.json";
-import userRolesData from "./data/user_roles.json";
-import organizationMembershipsData from "./data/organization_memberships.json";
-import authAccountsData from "./data/auth_accounts.json";
-import guestPrincipalsData from "./data/guest_principals.json";
-import paymentMethodsData from "./data/payment_methods.json";
-import userPermissionsData from "./data/user_permissions.json";
+} from '../src/types';
 
 interface SeedUser {
   id: number;
@@ -31,11 +32,11 @@ interface SeedUser {
 }
 
 export async function seedIdentity(db: PostgresJsDatabase<typeof schema>) {
-  console.log("🌱 Seeding Identity Domain...");
+  console.log('🌱 Seeding Identity Domain...');
 
   // 1. Permissions (Independent)
   if (permissionsData.length > 0) {
-    console.log("  - Seeding Permissions...");
+    console.log('  - Seeding Permissions...');
     await db
       .insert(schema.permissions)
       .values(
@@ -49,7 +50,7 @@ export async function seedIdentity(db: PostgresJsDatabase<typeof schema>) {
 
   // 2. Roles (Independent)
   if (rolesData.length > 0) {
-    console.log("  - Seeding Roles...");
+    console.log('  - Seeding Roles...');
     await db
       .insert(schema.roles)
       .values(
@@ -59,7 +60,7 @@ export async function seedIdentity(db: PostgresJsDatabase<typeof schema>) {
 
   // 3. Organizations (Independent)
   if (organizationsData.length > 0) {
-    console.log("  - Seeding Organizations...");
+    console.log('  - Seeding Organizations...');
     await db
       .insert(schema.organizations)
       .values(
@@ -73,7 +74,7 @@ export async function seedIdentity(db: PostgresJsDatabase<typeof schema>) {
 
   // 4. Guest Principals (Independent)
   if (guestPrincipalsData.length > 0) {
-    console.log("  - Seeding Guest Principals...");
+    console.log('  - Seeding Guest Principals...');
     await db
       .insert(schema.guestPrincipals)
       .values(prepareSeedData(schema.guestPrincipals, guestPrincipalsData));
@@ -81,27 +82,27 @@ export async function seedIdentity(db: PostgresJsDatabase<typeof schema>) {
 
   // 5. Users & Credentials
   if (usersData.length > 0) {
-    console.log("  - Seeding Users & Credentials...");
+    console.log('  - Seeding Users & Credentials...');
     for (const user of usersData as SeedUser[]) {
       const [insertedUser] = await db
         .insert(schema.users)
         .values(prepareSeedData(schema.users, [user])[0])
         .returning();
 
-      const password = user.password || "password123";
+      const password = user.password || 'password123';
       const passwordHash = await hashPassword(password);
 
       await db.insert(schema.passwordCredentials).values({
         userId: insertedUser.id,
         passwordHash,
-        hashStrategy: "bcrypt",
+        hashStrategy: 'bcrypt',
       });
     }
   }
 
   // 6. Role-Permissions (Depends on Roles, Permissions)
   if (rolePermissionsData.length > 0) {
-    console.log("  - Seeding Role-Permissions...");
+    console.log('  - Seeding Role-Permissions...');
     await ensureParents(db, [
       { table: schema.roles, name: '"identity"."roles"' },
       { table: schema.permissions, name: '"identity"."permissions"' },
@@ -135,7 +136,7 @@ export async function seedIdentity(db: PostgresJsDatabase<typeof schema>) {
   if (usersData.length > 0) {
     // Auth Accounts
     if (authAccountsData.length > 0) {
-      console.log("  - Seeding Auth Accounts...");
+      console.log('  - Seeding Auth Accounts...');
       await db
         .insert(schema.authAccounts)
         .values(
@@ -149,7 +150,7 @@ export async function seedIdentity(db: PostgresJsDatabase<typeof schema>) {
 
     // User-Roles
     if (userRolesData.length > 0) {
-      console.log("  - Seeding User-Roles...");
+      console.log('  - Seeding User-Roles...');
       await ensureParents(db, [
         { table: schema.users, name: '"identity"."users"' },
         { table: schema.roles, name: '"identity"."roles"' },
@@ -183,7 +184,7 @@ export async function seedIdentity(db: PostgresJsDatabase<typeof schema>) {
 
     // User Permissions (Direct Overrides)
     if (userPermissionsData.length > 0) {
-      console.log("  - Seeding User-Permissions...");
+      console.log('  - Seeding User-Permissions...');
       await ensureParents(db, [
         { table: schema.users, name: '"identity"."users"' },
         { table: schema.permissions, name: '"identity"."permissions"' },
@@ -195,7 +196,7 @@ export async function seedIdentity(db: PostgresJsDatabase<typeof schema>) {
 
     // Organization Memberships
     if (organizationMembershipsData.length > 0) {
-      console.log("  - Seeding Organization Memberships...");
+      console.log('  - Seeding Organization Memberships...');
       await ensureParents(db, [
         { table: schema.organizations, name: '"identity"."organizations"' },
         { table: schema.users, name: '"identity"."users"' },
@@ -218,7 +219,7 @@ export async function seedIdentity(db: PostgresJsDatabase<typeof schema>) {
           return {
             organizationId: foundOrg.id,
             userId: foundUser.id,
-            status: om.status || "active",
+            status: om.status || 'active',
             createdAt: om.createdAt ? new Date(om.createdAt) : new Date(),
           };
         }),
@@ -228,7 +229,7 @@ export async function seedIdentity(db: PostgresJsDatabase<typeof schema>) {
 
     // Payment Methods
     if (paymentMethodsData.length > 0) {
-      console.log("  - Seeding Payment Methods...");
+      console.log('  - Seeding Payment Methods...');
       await db
         .insert(schema.paymentMethods)
         .values(

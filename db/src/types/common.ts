@@ -2,8 +2,8 @@ import { z } from 'zod';
 
 /**
  * Core Shared Types for Database Layer
- * 
- * These types are defined here to keep the db package framework-agnostic 
+ *
+ * These types are defined here to keep the db package framework-agnostic
  * and prevent circular dependencies with the backend package.
  */
 

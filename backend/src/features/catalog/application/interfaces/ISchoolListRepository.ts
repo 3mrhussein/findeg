@@ -8,7 +8,7 @@
 import { type ID } from '@findeg/backend/features/core/domain/types/common';
 import type { Variant } from '../../domain/entities/Variant';
 import { type MatchRulesDraft } from '@findeg/db';
-import { Locale, PartialTranslationMap } from '@findeg/db/types';
+import { Locale, TranslationMap } from '@findeg/db/types';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -22,8 +22,8 @@ export interface SchoolListResult {
   area: string | null;
   schoolType: string | null;
   academicSystem: string | null;
-  localizedTitle: PartialTranslationMap;
-  localizedDescription: PartialTranslationMap | null;
+  localizedTitle: TranslationMap;
+  localizedDescription: TranslationMap | null;
   heroImageUrl: string | null;
   isActive: boolean;
   publishedAt: Date | null;
@@ -33,7 +33,7 @@ export interface SchoolListResult {
 export interface SchoolListItemResult {
   id: ID;
   displayOrder: number;
-  localizedLabel: Record<Locale, string>;
+  localizedLabel: TranslationMap;
   categoryId?: ID;
   quantityRequired: number;
   isLocked: boolean;
@@ -57,15 +57,15 @@ export interface SchoolListInput {
   schoolName: string;
   grade: string;
   academicYear: string;
-  localizedTitle: Record<Locale, string>;
-  localizedDescription?: Record<Locale, string>;
+  localizedTitle: TranslationMap;
+  localizedDescription?: TranslationMap;
   heroImageUrl?: string;
   isActive?: boolean;
 }
 
 export interface SchoolListItemInput {
   displayOrder?: number;
-  localizedLabel: Record< Locale, string>;
+  localizedLabel: TranslationMap;
   categoryId?: ID;
   quantityRequired?: number;
   isLocked?: boolean;

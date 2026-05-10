@@ -13,13 +13,12 @@
     },
     "scripts": {
         "db:generate": "drizzle-kit generate --config ./drizzle.config.ts",
-        "db:migrate": "tsx --env-file=../.env ./migrate.ts",
+        "db:migrate": "cross-env DB_MIGRATING=true tsx --env-file=../.env ./migrate.ts",
         "db:push": "drizzle-kit push --config ./drizzle.config.ts",
         "db:seed": "cross-env DB_SEEDING=true tsx --env-file=../.env ./seed.ts",
         "db:studio": "drizzle-kit studio --config ./drizzle.config.ts",
         "type-check": "tsc --noEmit",
-        "lint": "eslint .",
-        "build": "tsc"
+        "lint": "eslint ."
     },
     "dependencies": {
         "@findeg/env": "workspace:*",

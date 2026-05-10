@@ -1,5 +1,5 @@
 import type { UoMCode, CustomerGroup } from '../../../catalog/domain/types/UoMTypes';
-import type { PartialTranslationMap } from '../../../core/domain/value-objects';
+import type { TranslationMap } from '../../../core/domain/value-objects';
 
 export type PricingMode = 'shared' | 'per-variant';
 export type UoMSharingMode = 'shared' | 'per-variant';
@@ -57,9 +57,9 @@ export interface UpdateVariantInput extends Partial<CreateVariantInput> {
 
 export interface CreateProductWithVariantsInput {
   // Product shell
-  localizedName: PartialTranslationMap;
-  localizedDescription?: PartialTranslationMap;
-  localizedLongDescription?: PartialTranslationMap;
+  localizedName: TranslationMap;
+  localizedDescription?: TranslationMap;
+  localizedLongDescription?: TranslationMap;
   slug?: string;
   categoryId?: number | null;
   brandId?: number | null;

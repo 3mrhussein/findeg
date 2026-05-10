@@ -1,8 +1,11 @@
 packages:
   - "backend"
   - "db"
-  - "frontend/*"
-  - "packages/*"
+  - "frontend/storefront"
+  - "frontend/dashboard"
+  - "frontend/ui"
+  - "packages/config"
+  - "packages/env"
 allowBuilds:
   "@parcel/watcher": false
   "@swc/core": false

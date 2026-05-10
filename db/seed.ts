@@ -1,14 +1,14 @@
-import env from "@findeg/env";
-import { db, connection } from "./connection";
-import * as seeds from "./seeds";
-import { truncateTables } from "./seeds/helpers";
+import env from '@findeg/env/database';
+import { db, connection } from './src/connection';
+import * as seeds from './seeds';
+import { truncateTables } from './seeds/helpers';
 
 if (!env.DB_SEEDING) {
   throw new Error("You must set DB_SEEDING to 'true' when running seeds.");
 }
 
 async function main() {
-  console.log("🌱 Starting Database Seed Process...");
+  console.log('🌱 Starting Database Seed Process...');
   const startedAt = Date.now();
 
   try {
@@ -26,7 +26,7 @@ async function main() {
     const duration = Date.now() - startedAt;
     console.log(`🎉 Seeding completed successfully in ${duration}ms!`);
   } catch (error) {
-    console.error("❌ Seeding failed:", error);
+    console.error('❌ Seeding failed:', error);
     process.exit(1);
   } finally {
     // Ensure postgres connection terminates so the terminal script finishes

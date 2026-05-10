@@ -9,7 +9,6 @@
         "./web": "./src/web.ts"
     },
     "scripts": {
-        "build": "tsc --build",
         "type-check": "tsc --noEmit"
     },
     "dependencies": {

@@ -305,8 +305,8 @@ export class AdminProductService implements IAdminProductService {
         .insert(products)
         .values({
           localizedName: input.localizedName,
-          localizedDescription: input.localizedDescription ?? {},
-          localizedLongDescription: input.localizedLongDescription ?? {},
+          localizedDescription: input.localizedDescription ?? { en: '' },
+          localizedLongDescription: input.localizedLongDescription ?? { en: '' },
           slug: input.slug ?? null,
           categoryId: input.categoryId ?? null,
           brandId: input.brandId ?? null,
