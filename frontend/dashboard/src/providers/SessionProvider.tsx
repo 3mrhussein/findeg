@@ -11,13 +11,13 @@ import * as React from 'react';
 import type { SessionPayload } from '@findeg/backend/features/core';
 
 interface SessionContextValue {
-  session: SessionPayload;
+  session: SessionPayload | null;
 }
 
 const SessionContext = React.createContext<SessionContextValue | null>(null);
 
 export interface SessionProviderProps {
-  session: SessionPayload;
+  session: SessionPayload | null;
   children: React.ReactNode;
 }
 
@@ -33,10 +33,8 @@ export function SessionProvider({ session, children }: SessionProviderProps) {
 /**
  * useSession — Access session data from client components
  */
-export function useSession(): SessionPayload {
+export function useSession(): SessionPayload | null {
   const ctx = React.useContext(SessionContext);
-  if (!ctx) {
-    throw new Error('useSession() must be used inside <SessionProvider>');
-  }
-  return ctx.session;
+  // We allow null session for pre-rendering or non-blocked components
+  return ctx?.session ?? null;
 }

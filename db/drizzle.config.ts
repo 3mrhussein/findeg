@@ -1,19 +1,19 @@
-import { defineConfig } from "drizzle-kit";
-import env from "@findeg/env";
+import { defineConfig } from 'drizzle-kit';
+import env from '@findeg/env/database';
 
 export default defineConfig({
-  dialect: "postgresql",
+  dialect: 'postgresql',
   schema: [
-    "./schema/identity/*.ts",
-    "./schema/catalog/*.ts",
-    "./schema/sales/*.ts",
-    "./schema/inventory/*.ts",
-    "./schema/school-engine/*.ts",
-    "./schema/system/*.ts",
-    "./schema/*.ts",
+    './src/schema/identity/*.ts',
+    './src/schema/catalog/*.ts',
+    './src/schema/sales/*.ts',
+    './src/schema/inventory/*.ts',
+    './src/schema/school-engine/*.ts',
+    './src/schema/system/*.ts',
+    './src/schema/*.ts',
   ],
-  schemaFilter: ["public", "identity", "catalog", "sales", "inventory", "school_engine", "system"],
-  out: "./migrations",
+  schemaFilter: ['public', 'identity', 'catalog', 'sales', 'inventory', 'school_engine', 'system'],
+  out: './migrations',
   dbCredentials: {
     url: env.DATABASE_URL!,
   },

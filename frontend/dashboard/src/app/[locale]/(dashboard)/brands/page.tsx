@@ -1,92 +1,27 @@
+import { Suspense } from 'react';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { BrandsManager } from './_components/BrandsManager';
-import {
-  createBrandAction,
-  updateBrandAction,
-  deleteBrandAction,
-  toggleBrandStatusAction,
-} from '@data/brands/actions';
-import { BrandInput } from '@findeg/backend/features/administration/domain/types';
+import { BrandsContent } from './_components/BrandsContent';
+import { routing } from '@i18n/routing';
 
 /**
- *
+ * Generate static params for all supported locales
  */
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
-  const { locale } = await params;
-  const t = (await (getTranslations as any)({
-    locale,
-    namespace: 'Administration.Catalog.Brands',
-  })) as any;
-  return { title: `${t('Title')} | FindEg Admin` };
+export async function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
 }
 
 /**
- *
+ * Brands Page — Catalog of product brands
  */
 export default async function BrandsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale as any);
-  const t = await getTranslations('Administration.Catalog.Brands');
-
-  // TODO: Replace with proper data layer query from @data/brands/queries
-  // const brands = await getBrands(locale);
-  const brands: any[] = []; // Stubbed - empty brand list
-
-  /**
-   * Wrapper for Save (Create/Update)
-   */
-  const handleSave = async (data: BrandInput, id?: number) => {
-    'use server';
-    if (id) {
-      return updateBrandAction(id, data);
-    }
-    return createBrandAction(data);
-  };
-
-  /**
-   * Wrapper for Delete
-   */
-  const handleDelete = async (id: number) => {
-    'use server';
-    // TODO: Check product count using data layer query
-    // const pro const productCount = await getBrandProductCount(id);
-    const productCount = 0; // Stubbed
-
-    // Check if brand can be deleted (no products)
-    if (productCount > 0) {
-      return {
-        success: false,
-        error: 'DELETE_BLOCKED',
-        count: productCount,
-      };
-    }
-
-    return deleteBrandAction(id);
-  };
-
-  /**
-   * Wrapper for Toggle
-   */
-  const handleToggle = async (id: number) => {
-    'use server';
-    return toggleBrandStatusAction(id);
-  };
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-1 px-1">
-        <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100">
-          {t('Title')}
-        </h1>
-        <p className="text-muted-foreground text-sm font-medium">{t('Subtitle')}</p>
-      </div>
-
-      <BrandsManager
-        initialBrands={brands}
-        onSave={handleSave}
-        onDelete={handleDelete}
-        onToggleStatus={handleToggle}
-      />
+      <Suspense fallback={<div className="animate-pulse bg-gray-50 h-96 rounded-lg" />}>
+        <BrandsContent locale={locale} />
+      </Suspense>
     </div>
   );
 }

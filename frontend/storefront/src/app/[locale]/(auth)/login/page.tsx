@@ -8,6 +8,13 @@ type Props = {
 };
 
 /**
+ * Generate static params for supported locales
+ */
+export async function generateStaticParams() {
+  return [{ locale: 'en' }, { locale: 'ar' }];
+}
+
+/**
  * Standalone Login Page
  */
 export default async function Page({ params }: Props) {

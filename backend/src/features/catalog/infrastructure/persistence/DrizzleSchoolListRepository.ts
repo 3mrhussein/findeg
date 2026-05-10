@@ -4,8 +4,8 @@ import {
   schoolListItems,
   schoolListItemAlternatives,
   productVariants,
-  type MatchRulesDraft,
 } from '@findeg/db/schema';
+import { type MatchRulesDraft } from '@findeg/db';
 import {
   ISchoolListRepository,
   SchoolListResult,
@@ -30,7 +30,7 @@ export class DrizzleSchoolListRepository implements ISchoolListRepository {
     const [result] = await db.select().from(schoolLists).where(eq(schoolLists.slug, slug)).limit(1);
 
     if (!result) return null;
-    return result as SchoolListResult;
+    return result ;
   }
 
   async getById(id: ID): Promise<SchoolListResult | null> {

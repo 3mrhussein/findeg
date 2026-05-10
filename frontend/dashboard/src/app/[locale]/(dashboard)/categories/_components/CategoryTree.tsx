@@ -317,6 +317,7 @@ export function CategoryTree({ categories, onReorder, onSave, onDelete }: Catego
 
           {/* Tree rows */}
           <DndContext
+            id="category-tree-dnd"
             sensors={sensors}
             collisionDetection={closestCenter}
             onDragEnd={handleDragEnd}

@@ -48,8 +48,8 @@ export class SchoolListService implements ISchoolListService {
     const items = await this.schoolListRepo.getItemsWithAlternatives(list.id);
     return {
       ...list,
-      items,
-    };
+      items,  
+    };  
   }
 
   async getActiveLists(): Promise<SchoolListResult[]> {

@@ -1,0 +1,22 @@
+{
+    "name": "@findeg/env",
+    "version": "0.1.0",
+    "type": "module",
+    "exports": {
+        ".": "./src/index.ts",
+        "./backend": "./src/backend.ts",
+        "./database": "./src/database.ts",
+        "./web": "./src/web.ts"
+    },
+    "scripts": {
+        "build": "tsc --build",
+        "type-check": "tsc --noEmit"
+    },
+    "dependencies": {
+        "zod": "^4.3.6"
+    },
+    "devDependencies": {
+        "@types/node": "^25.6.0",
+        "typescript": "^5.7.3"
+    }
+}

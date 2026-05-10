@@ -3,7 +3,7 @@ import {
   DEFAULT_LOCALE,
   LocaleSchema,
   type Locale,
-} from '@findeg/db';
+} from '@findeg/db/types';
 
 export { SUPPORTED_LOCALES, DEFAULT_LOCALE, LocaleSchema, type Locale };
 
@@ -42,7 +42,7 @@ import {
   PartialTranslationMapSchema,
   type TranslationMap,
   type PartialTranslationMap,
-} from '@findeg/db';
+} from '@findeg/db/types';
 
 export {
   TranslationMapSchema,

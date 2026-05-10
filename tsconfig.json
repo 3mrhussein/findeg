@@ -1,8 +1,23 @@
 {
   "files": [],
   "references": [
-    { "path": "./db" },
-    { "path": "./backend" },
-    { "path": "./frontend/ui" }
+    {
+      "path": "./packages/env"
+    },
+    {
+      "path": "./db"
+    },
+    {
+      "path": "./backend"
+    },
+    {
+      "path": "./frontend/ui"
+    },
+    {
+      "path": "./frontend/storefront"
+    },
+    {
+      "path": "./frontend/dashboard"
+    }
   ]
 }

@@ -1,13 +1,44 @@
 {
     "compilerOptions": {
         "target": "ES2022",
+        "lib": [
+            "ES2022",
+            "DOM",
+            "DOM.Iterable"
+        ],
         "module": "ESNext",
-        "lib": ["ESNext", "dom", "dom.iterable"],
-        "jsx": "react-jsx",
+        "moduleResolution": "Bundler",
         "strict": true,
         "skipLibCheck": true,
+        "noEmit": true,
         "esModuleInterop": true,
-        "moduleResolution": "Node",
-        "resolveJsonModule": true
+        "resolveJsonModule": true,
+        "baseUrl": ".",
+        "paths": {
+            "@findeg/env": [
+                "packages/env/src"
+            ],
+            "@findeg/env/*": [
+                "packages/env/src/*"
+            ],
+            "@findeg/backend": [
+                "backend/src"
+            ],
+            "@findeg/backend/*": [
+                "backend/src/*"
+            ],
+            "@findeg/db": [
+                "db/src"
+            ],
+            "@findeg/db/*": [
+                "db/src/*"
+            ],
+            "@findeg/ui": [
+                "frontend/ui/src"
+            ],
+            "@findeg/ui/*": [
+                "frontend/ui/src/*"
+            ],
+        }
     }
 }

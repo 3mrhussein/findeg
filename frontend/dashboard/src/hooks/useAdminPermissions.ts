@@ -65,12 +65,12 @@ export function useAdminPermissions(): AdminPermissions {
   const value = useMemo<AdminPermissions>(
     () => ({
       can: (permission: string | PermissionCode) => hasPermission(permission),
-      portalRole: session.portalRole,
-      staff: staffRole(session.portalRole),
+      portalRole: session?.portalRole as PortalRole,
+      staff: session ? staffRole(session.portalRole) : false,
       systemAdmin,
       permissionCodes,
     }),
-    [hasPermission, session.portalRole, systemAdmin, permissionCodes],
+    [hasPermission, session?.portalRole, systemAdmin, permissionCodes],
   );
 
   return value;

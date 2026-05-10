@@ -1,25 +1,17 @@
-import { OrdersTable } from './_components/OrdersTable';
-import { PageHeader } from '@/app/[locale]/_components/shared/PageHeader';
-import { parse } from '@findeg/backend/features/core';
+import { Suspense } from 'react';
+import { setRequestLocale } from 'next-intl/server';
+import { OrdersContent } from './_components/OrdersContent';
+import { routing } from '@i18n/routing';
 
 /**
- * Local type definitions
+ * Generate static params for all supported locales
  */
-type OrderStatus =
-  | 'pending'
-  | 'confirmed'
-  | 'processing'
-  | 'shipped'
-  | 'delivered'
-  | 'cancelled'
-  | 'refunded';
-type PaymentStatus = 'pending' | 'paid' | 'failed' | 'refunded';
+export async function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
 
 /**
  * Admin Orders List Page
- *
- * Displays a filtered, paginated list of all orders.
- * Includes status tabs, enriched row pattern, and bulk actions.
  */
 export default async function OrdersPage({
   params,
@@ -37,38 +29,24 @@ export default async function OrdersPage({
   }>;
 }) {
   const { locale } = await params;
-  const resolvedLocale = parse(locale);
+  setRequestLocale(locale as any);
   const query = await searchParams;
 
-  const page = Number(query.page) > 0 ? Number(query.page) : 1;
-  const limit = Number(query.limit) > 0 ? Number(query.limit) : 20;
-  const offset = (page - 1) * limit;
-  const search = query.search?.trim() || '';
-  const status = query.status as OrderStatus | undefined;
-  const paymentStatus = query.paymentStatus as PaymentStatus | undefined;
-  const startDate = query.startDate ? new Date(query.startDate) : undefined;
-  const endDate = query.endDate ? new Date(query.endDate) : undefined;
-
-  // TODO: Replace with data layer query from @data/orders/queries
-  // const { orders, total } = await getOrders({ limit, offset, search, status, paymentStatus, startDate, endDate });
-  const orders: any[] = []; // Stubbed - empty orders list
-  const total = 0;
+  const filters = {
+    page: Number(query.page) > 0 ? Number(query.page) : 1,
+    limit: Number(query.limit) > 0 ? Number(query.limit) : 20,
+    search: query.search?.trim() || '',
+    status: query.status,
+    paymentStatus: query.paymentStatus,
+    startDate: query.startDate ? new Date(query.startDate) : undefined,
+    endDate: query.endDate ? new Date(query.endDate) : undefined,
+  };
 
   return (
     <div className="flex-1 space-y-6">
-      <PageHeader
-        title="Orders"
-        description="Manage customer orders and track fulfillment"
-        count={total}
-      />
-
-      <OrdersTable
-        orders={orders}
-        totalCount={total}
-        currentPage={page}
-        pageSize={limit}
-        statusFilter={query.status}
-      />
+      <Suspense fallback={<div className="animate-pulse bg-gray-50 h-96 rounded-lg" />}>
+        <OrdersContent locale={locale} filters={filters as any} />
+      </Suspense>
     </div>
   );
 }

@@ -1,7 +1,6 @@
 import { requireAdmin } from '@lib/auth-guard';
 import { PermissionsProvider } from '@providers/PermissionsProvider';
 import { SessionProvider } from '@providers/SessionProvider';
-import { AdminShell } from './shell/AdminShell';
 import { type Locale } from '@findeg/backend/features/core';
 
 interface AdminSessionGateProps {
@@ -11,8 +10,7 @@ interface AdminSessionGateProps {
 
 /**
  * AdminSessionGate - Handles admin authentication and provides permissions context.
- * This component is designed to be wrapped in a <Suspense> boundary in the layout
- * to prevent dynamic data access from blocking the initial render of the static shell.
+ * Refactored to only wrap the dynamic page content, allowing the shell to be static.
  */
 export async function AdminSessionGate({ children, locale }: AdminSessionGateProps) {
   const session = await requireAdmin(locale as Locale);
@@ -20,14 +18,7 @@ export async function AdminSessionGate({ children, locale }: AdminSessionGatePro
   return (
     <SessionProvider session={session}>
       <PermissionsProvider session={session}>
-        <AdminShell
-          userEmail={session.user.email}
-          userName={session.user.fullName}
-          userRole={session.portalRole}
-          locale={locale}
-        >
-          {children}
-        </AdminShell>
+        {children}
       </PermissionsProvider>
     </SessionProvider>
   );

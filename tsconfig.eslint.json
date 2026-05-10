@@ -1,0 +1,12 @@
+{
+    "extends": "./tsconfig.base.json",
+    "files": [],
+    "include": [
+        "packages/env/**/*",
+        "db/**/*",
+        "backend/**/*",
+        "frontend/dashboard/**/*",
+        "frontend/storefront/**/*",
+        "frontend/ui/**/*"
+    ]
+}
