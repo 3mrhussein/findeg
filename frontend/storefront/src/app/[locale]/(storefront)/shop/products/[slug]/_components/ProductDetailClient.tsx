@@ -134,6 +134,7 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
 
   const selectedVariant =
     variants.find((variant: any) => variant.id === selectedVariantId) ||
+    variants.find((variant: any) => variant.isDefault) ||
     variants.find((variant: any) => variant.variantKey === 'default') ||
     variants[0];
 
@@ -261,8 +262,6 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
       price: Number(priceState.unitPrice || selectedVariant.basePrice),
       image:
         selectedVariant.images?.[0]?.url ||
-        vm.product.mediaSet?.card?.url ||
-        vm.product.mediaSet?.thumbnail?.url ||
         `https://picsum.photos/seed/pdp-${vm.product.id}/600/600`,
     };
 
@@ -285,8 +284,6 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
   }, [
     vm.product.id,
     vm.product.name,
-    vm.product.mediaSet?.card?.url,
-    vm.product.mediaSet?.thumbnail?.url,
     vm.canonicalSlug,
     selectedVariant,
     priceState.unitPrice,
@@ -345,13 +342,13 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
               {vm.brand.logoUrl ? (
                 <Image
                   src={vm.brand.logoUrl}
-                  alt={vm.brand.name}
+                  alt={vm.brand.name || ''}
                   width={18}
                   height={18}
                   className="rounded-sm object-contain"
                 />
               ) : null}
-              <span>{vm.brand.name}</span>
+              <span>{vm.brand.name || ''}</span>
             </Link>
           ) : null}
 

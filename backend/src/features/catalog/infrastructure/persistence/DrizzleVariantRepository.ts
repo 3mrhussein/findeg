@@ -3,7 +3,7 @@ import {
   productVariants,
   variantImages,
   variantAttributes,
-  attributeDefinitions,
+  attributes as attributeTable,
 } from '@findeg/db/schema';
 import {
   IVariantRepository,
@@ -12,7 +12,6 @@ import { Variant } from '../../domain/entities/Variant';
 import { VariantInput } from '../../../administration/domain/types/ProductInput';
 import { InferSelectModel, and, eq, inArray } from 'drizzle-orm';
 import { ID, CurrencyCode } from '../../../core/domain/types/common';
-import { DEFAULT_CURRENCY } from '@findeg/db/types';
 
 type VariantDB = InferSelectModel<typeof productVariants>;
 type VariantImageDB = InferSelectModel<typeof variantImages>;
@@ -22,8 +21,6 @@ interface VariantAttributeRow {
   attributeId: number;
   key: string;
   valueText: string | null;
-  valueNum: string | null;
-  valueBool: boolean | null;
 }
 
 /**
@@ -43,14 +40,15 @@ export class DrizzleVariantRepository implements IVariantRepository {
       sku: v.sku,
       variantKey: v.variantKey,
       localizedLabel: (v.localizedLabel as { en: string; ar: string }) || { en: '', ar: '' },
-      displayOrder: v.displayOrder,
+      sortOrder: v.sortOrder,
+      isDefault: v.isDefault,
+      mediaSet: v.mediaSet as any,
       isActive: v.isActive,
       basePrice: Number(v.basePrice),
       strikePrice: v.strikePrice ? Number(v.strikePrice) : undefined,
       costPrice: v.costPrice ? Number(v.costPrice) : undefined,
       weightGrams: v.weightGrams ? Number(v.weightGrams) : undefined,
       barcode: v.barcode || undefined,
-      lowStockThreshold: v.lowStockThreshold,
       images: images.map((img) => ({
         id: img.id,
         variantId: img.variantId,
@@ -62,8 +60,6 @@ export class DrizzleVariantRepository implements IVariantRepository {
         attributeId: a.attributeId,
         key: a.key,
         valueText: a.valueText || undefined,
-        valueNum: a.valueNum ? Number(a.valueNum) : undefined,
-        valueBool: a.valueBool ?? undefined,
       })),
     };
   }
@@ -73,7 +69,7 @@ export class DrizzleVariantRepository implements IVariantRepository {
       .select()
       .from(productVariants)
       .where(eq(productVariants.productId, productId))
-      .orderBy(productVariants.displayOrder);
+      .orderBy(productVariants.sortOrder);
 
     if (variantRows.length === 0) return [];
 
@@ -89,13 +85,11 @@ export class DrizzleVariantRepository implements IVariantRepository {
         .select({
           variantId: variantAttributes.variantId,
           attributeId: variantAttributes.attributeId,
-          key: attributeDefinitions.key,
+          key: attributeTable.key,
           valueText: variantAttributes.valueText,
-          valueNum: variantAttributes.valueNum,
-          valueBool: variantAttributes.valueBool,
         })
         .from(variantAttributes)
-        .innerJoin(attributeDefinitions, eq(variantAttributes.attributeId, attributeDefinitions.id))
+        .innerJoin(attributeTable, eq(variantAttributes.attributeId, attributeTable.id))
         .where(inArray(variantAttributes.variantId, variantIds)),
     ]);
 
@@ -125,13 +119,11 @@ export class DrizzleVariantRepository implements IVariantRepository {
         .select({
           variantId: variantAttributes.variantId,
           attributeId: variantAttributes.attributeId,
-          key: attributeDefinitions.key,
+          key: attributeTable.key,
           valueText: variantAttributes.valueText,
-          valueNum: variantAttributes.valueNum,
-          valueBool: variantAttributes.valueBool,
         })
         .from(variantAttributes)
-        .innerJoin(attributeDefinitions, eq(variantAttributes.attributeId, attributeDefinitions.id))
+        .innerJoin(attributeTable, eq(variantAttributes.attributeId, attributeTable.id))
         .where(eq(variantAttributes.variantId, variantId)),
     ]);
 
@@ -140,7 +132,7 @@ export class DrizzleVariantRepository implements IVariantRepository {
 
   async getBySku(sku: string): Promise<Variant | null> {
     const [v] = await db
-      .select()
+      .select({ id: productVariants.id })
       .from(productVariants)
       .where(eq(productVariants.sku, sku))
       .limit(1);
@@ -158,14 +150,15 @@ export class DrizzleVariantRepository implements IVariantRepository {
           sku: input.sku,
           variantKey: input.variantKey,
           localizedLabel: input.localizedLabel || { en: '' },
-          displayOrder: input.displayOrder || 0,
+          sortOrder: input.sortOrder || 0,
+          isDefault: input.isDefault || false,
+          mediaSet: input.mediaSet,
           isActive: input.isActive ?? true,
           basePrice: String(input.basePrice),
           strikePrice: input.strikePrice ? String(input.strikePrice) : null,
           costPrice: input.costPrice ? String(input.costPrice) : null,
           weightGrams: input.weightGrams,
           barcode: input.barcode,
-          lowStockThreshold: input.lowStockThreshold || 10,
         })
         .returning();
 
@@ -186,12 +179,9 @@ export class DrizzleVariantRepository implements IVariantRepository {
             variantId: newVariant.id,
             attributeId: attr.attributeId,
             valueText: attr.valueText,
-            valueNum: attr.valueNum ? String(attr.valueNum) : null,
-            valueBool: attr.valueBool,
           })),
         );
       }
-
 
       const hydrated = await this.getById(newVariant.id);
       if (!hydrated) throw new Error('Failed to retrieve created variant');
@@ -214,19 +204,19 @@ export class DrizzleVariantRepository implements IVariantRepository {
           sku: input.sku,
           variantKey: input.variantKey,
           localizedLabel: input.localizedLabel,
-          displayOrder: input.displayOrder,
+          sortOrder: input.sortOrder,
+          isDefault: input.isDefault,
+          mediaSet: input.mediaSet,
           isActive: input.isActive,
           basePrice: input.basePrice ? String(input.basePrice) : undefined,
           strikePrice: input.strikePrice ? String(input.strikePrice) : undefined,
           costPrice: input.costPrice ? String(input.costPrice) : undefined,
           weightGrams: input.weightGrams,
           barcode: input.barcode,
-          lowStockThreshold: input.lowStockThreshold,
           updatedAt: new Date(),
         })
         .where(eq(productVariants.id, variantId));
 
-      // Simple sync for images, attributes, UOMs, prices: delete and re-insert if provided
       if (input.images !== undefined) {
         await tx.delete(variantImages).where(eq(variantImages.variantId, variantId));
         if (input.images.length > 0) {
@@ -249,13 +239,10 @@ export class DrizzleVariantRepository implements IVariantRepository {
               variantId,
               attributeId: attr.attributeId,
               valueText: attr.valueText,
-              valueNum: attr.valueNum ? String(attr.valueNum) : null,
-              valueBool: attr.valueBool,
             })),
           );
         }
       }
-
 
       const hydrated = await this.getById(variantId);
       if (!hydrated) throw new Error('Failed to retrieve updated variant');
@@ -263,11 +250,7 @@ export class DrizzleVariantRepository implements IVariantRepository {
     });
   }
 
-  /**
-   * Deletes a variant and cascading data.
-   */
   async delete(variantId: ID): Promise<void> {
     await db.delete(productVariants).where(eq(productVariants.id, variantId));
   }
-
 }

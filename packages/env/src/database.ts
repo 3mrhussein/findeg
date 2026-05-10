@@ -13,7 +13,13 @@ const databaseSchema = z.object({
   DB_NAME: z.string().optional(),
   DB_MIGRATING: z.coerce.boolean().optional(),
   DB_SEEDING: z.coerce.boolean().optional(),
-  DB_SSL: z.coerce.boolean().optional(),
+  DB_SSL: z
+    .preprocess((val) => {
+      if (val === 'false') return false;
+      if (val === 'true') return true;
+      return val;
+    }, z.coerce.boolean())
+    .optional(),
 });
 
 export const env = validateEnv(databaseSchema);

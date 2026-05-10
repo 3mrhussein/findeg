@@ -32,8 +32,6 @@ export function ProductCompact({ product }: ProductCompactProps) {
 
   if (firstVariantImage && typeof firstVariantImage === 'object' && 'url' in firstVariantImage) {
     primaryImage = (firstVariantImage as any).url;
-  } else if (product.mediaSet?.thumbnail?.url) {
-    primaryImage = product.mediaSet.thumbnail.url;
   }
 
   const updatedText = product.updatedAt

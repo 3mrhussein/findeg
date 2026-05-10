@@ -1,72 +1,71 @@
 import { db } from '@findeg/db/connection';
-import { attributeDefinitions, productAttributes } from '@findeg/db/schema';
+import { attributes, productAttributes } from '@findeg/db/schema';
 import {
   IAttributeRepository,
   AttributeFilter,
 } from '../../application/interfaces/IAttributeRepository';
 import {
-  AttributeDefinition,
-  CreateAttributeDefinition,
+  Attribute,
+  CreateAttribute,
   ProductAttributeValue,
-} from '../../domain/entities/AttributeDefinition';
+} from '../../domain/entities/Attribute';
 import { eq } from 'drizzle-orm';
 import { ID } from '@findeg/backend/features/core/domain/types/common';
 
 export class DrizzleAttributeRepository implements IAttributeRepository {
-  async getAllDefinitions(): Promise<AttributeDefinition[]> {
+  async getAllDefinitions(): Promise<Attribute[]> {
     const results = await db
       .select()
-      .from(attributeDefinitions)
-      .orderBy(attributeDefinitions.sortOrder);
-    return results as AttributeDefinition[];
+      .from(attributes)
+      .orderBy(attributes.sortOrder);
+    return results as Attribute[];
   }
 
-  async getFilterableDefinitions(): Promise<AttributeDefinition[]> {
+  async getFilterableDefinitions(): Promise<Attribute[]> {
     const results = await db
       .select()
-      .from(attributeDefinitions)
-      .where(eq(attributeDefinitions.isFilterable, true))
-      .orderBy(attributeDefinitions.sortOrder);
-    return results as AttributeDefinition[];
+      .from(attributes)
+      .where(eq(attributes.isFilterable, true))
+      .orderBy(attributes.sortOrder);
+    return results as Attribute[];
   }
 
-  async createDefinition(input: CreateAttributeDefinition): Promise<AttributeDefinition> {
-    const [result] = await db.insert(attributeDefinitions).values(input).returning();
-    return result as AttributeDefinition;
+  async createDefinition(input: CreateAttribute): Promise<Attribute> {
+    const [result] = await db.insert(attributes).values(input).returning();
+    return result as Attribute;
   }
 
   async updateDefinition(
     id: ID,
-    input: Partial<CreateAttributeDefinition>,
-  ): Promise<AttributeDefinition> {
+    input: Partial<CreateAttribute>,
+  ): Promise<Attribute> {
     const [result] = await db
-      .update(attributeDefinitions)
+      .update(attributes)
       .set({ ...input, updatedAt: new Date() })
-      .where(eq(attributeDefinitions.id, id))
+      .where(eq(attributes.id, id))
       .returning();
-    return result as AttributeDefinition;
+    return result as Attribute;
   }
 
   async deleteDefinition(id: ID): Promise<void> {
-    await db.delete(attributeDefinitions).where(eq(attributeDefinitions.id, id));
+    await db.delete(attributes).where(eq(attributes.id, id));
   }
 
   async getProductAttributes(productId: ID): Promise<ProductAttributeValue[]> {
     const results = await db
       .select({
         attributeId: productAttributes.attributeId,
-        key: attributeDefinitions.key,
+        key: attributes.key,
         valueText: productAttributes.valueText,
-        valueNum: productAttributes.valueNum,
-        valueBool: productAttributes.valueBool,
       })
       .from(productAttributes)
-      .innerJoin(attributeDefinitions, eq(productAttributes.attributeId, attributeDefinitions.id))
+      .innerJoin(attributes, eq(productAttributes.attributeId, attributes.id))
       .where(eq(productAttributes.productId, productId));
 
     return results.map((r) => ({
-      ...r,
-      valueNum: r.valueNum ? Number(r.valueNum) : undefined,
+      attributeId: r.attributeId,
+      key: r.key,
+      valueText: r.valueText || undefined,
     })) as ProductAttributeValue[];
   }
 
@@ -79,8 +78,6 @@ export class DrizzleAttributeRepository implements IAttributeRepository {
             productId,
             attributeId: v.attributeId,
             valueText: v.valueText,
-            valueNum: v.valueNum ? String(v.valueNum) : null,
-            valueBool: v.valueBool,
           })),
         );
       }
@@ -89,13 +86,6 @@ export class DrizzleAttributeRepository implements IAttributeRepository {
 
   async getMatchedProductIds(filters: AttributeFilter[]): Promise<ID[]> {
     if (filters.length === 0) return [];
-
-    // This is a complex query: find products that match ALL filters (intersection)
-    // We can use a subquery per filter or a GROUP BY + HAVING approach.
-
-    // For now, let's implement a simplified version that handles one filter,
-    // or we'll properly join this in DrizzleProductRepository.getFiltered.
-
     return [];
   }
 }

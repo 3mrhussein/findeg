@@ -9,12 +9,11 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  FormDescription,
 } from '@findeg/ui';
 import { Input } from '@findeg/ui';
 import { Button } from '@findeg/ui';
-import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
-import { Plus, Trash2, Layers, GripVertical, ChevronDown, ChevronRight } from 'lucide-react';
+import { Card, CardContent } from '@findeg/ui';
+import { Plus, Trash2, GripVertical, ChevronDown, ChevronRight, Star } from 'lucide-react';
 import { ProductFormValues } from '@/interfaces';
 import { Badge } from '@findeg/ui';
 import { Switch } from '@findeg/ui';
@@ -25,7 +24,7 @@ import { cn } from '@lib/utils';
  */
 export function VariantsTab() {
   const t = useTranslations('Administration.Catalog.Products.Form.Tabs.Variants');
-  const { control, watch } = useFormContext<ProductFormValues>();
+  const { control, watch, setValue } = useFormContext<ProductFormValues>();
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'variants',
@@ -40,7 +39,6 @@ export function VariantsTab() {
   // Auto-create a default variant if none exist (new product)
   useEffect(() => {
     if (fields.length === 0) {
-      const defaultId = 'default-variant';
       append({
         sku: '',
         localizedLabel: { en: 'Standard', ar: 'قياسي' },
@@ -49,14 +47,12 @@ export function VariantsTab() {
         strikePrice: null,
         weightGrams: null,
         barcode: '',
-        lowStockThreshold: 10,
         isActive: true,
-        displayOrder: 0,
+        isDefault: true,
+        sortOrder: 0,
         images: [],
         attributes: [],
       } as any);
-      // We don't have the real ID yet, so we can't expand it easily here
-      // But usually the first one should be expanded by default on creation
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -68,12 +64,18 @@ export function VariantsTab() {
       basePrice: 0,
       costPrice: 0,
       isActive: true,
-      displayOrder: fields.length,
+      isDefault: fields.length === 0,
+      sortOrder: fields.length,
       barcode: '',
-      lowStockThreshold: 10,
       images: [],
       attributes: [],
     } as any);
+  };
+
+  const setAsDefault = (index: number) => {
+    fields.forEach((_, i) => {
+      setValue(`variants.${i}.isDefault`, i === index);
+    });
   };
 
   return (
@@ -104,6 +106,7 @@ export function VariantsTab() {
               className={cn(
                 'overflow-hidden transition-all',
                 isExpanded ? 'ring-1 ring-primary/20' : 'hover:bg-muted/30',
+                variant.isDefault && 'border-primary/50 bg-primary/5'
               )}
             >
               {/* Collapsed Header / Summary */}
@@ -123,9 +126,17 @@ export function VariantsTab() {
 
                   <div className="flex items-center gap-4 flex-1">
                     <div className="flex flex-col">
-                      <span className="text-sm font-medium truncate">
-                        {variant.sku || 'New Variant'}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium truncate">
+                          {variant.sku || 'New Variant'}
+                        </span>
+                        {variant.isDefault && (
+                          <Badge variant="secondary" className="px-1 py-0 h-4 text-[10px] bg-primary/10 text-primary border-primary/20">
+                            <Star className="h-2 w-2 mr-1 fill-current" />
+                            Default
+                          </Badge>
+                        )}
+                      </div>
                       <span className="text-xs text-muted-foreground">
                         {variant.localizedLabel?.en || 'Unnamed'}
                       </span>
@@ -150,6 +161,19 @@ export function VariantsTab() {
                 </div>
 
                 <div className="flex items-center gap-2 ml-4">
+                  {!variant.isDefault && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 text-xs px-2"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setAsDefault(index);
+                      }}
+                    >
+                      Set Default
+                    </Button>
+                  )}
                   <Button
                     variant="ghost"
                     size="icon"
@@ -175,7 +199,15 @@ export function VariantsTab() {
                         name={`variants.${index}.sku`}
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-xs">{t('sku')}</FormLabel>
+                            <div className="flex items-center justify-between">
+                              <FormLabel className="text-xs">{t('sku')}</FormLabel>
+                              {variant.isDefault && (
+                                <span className="text-[10px] text-primary font-medium flex items-center">
+                                  <Star className="h-2.5 w-2.5 mr-1 fill-current" />
+                                  Primary SKU for Product
+                                </span>
+                              )}
+                            </div>
                             <FormControl>
                               <Input placeholder="e.g. STA-PEN-BLUE" {...field} />
                             </FormControl>
@@ -276,15 +308,16 @@ export function VariantsTab() {
                         />
                         <FormField
                           control={control}
-                          name={`variants.${index}.lowStockThreshold`}
+                          name={`variants.${index}.weightGrams`}
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel className="text-xs">Low Stock Alert</FormLabel>
+                              <FormLabel className="text-xs">Weight (Grams)</FormLabel>
                               <FormControl>
                                 <Input
                                   type="number"
-                                  placeholder="10"
+                                  placeholder="0"
                                   {...field}
+                                  value={field.value ?? ''}
                                   onChange={(e) => field.onChange(parseInt(e.target.value))}
                                 />
                               </FormControl>

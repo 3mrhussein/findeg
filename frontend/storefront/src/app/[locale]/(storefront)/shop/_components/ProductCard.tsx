@@ -100,8 +100,6 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
 
   const imageUrl =
     primaryVariant?.images?.[0]?.url ||
-    product.mediaSet?.card?.url ||
-    product.mediaSet?.thumbnail?.url ||
     `https://picsum.photos/seed/${product.id}/600/600`;
 
   const badge = useMemo(() => {
@@ -228,7 +226,7 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
             className="size-5 rounded-sm object-contain"
           />
         ) : null}
-        <span className="truncate">{brand?.name || product.brandName || t('UnknownBrand')}</span>
+        <span className="truncate">{(brand as any)?.name || product.brandName || t('UnknownBrand')}</span>
       </div>
 
       <div className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">

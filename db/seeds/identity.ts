@@ -1,4 +1,4 @@
-import * as schema from '@findeg/db/schema';
+import * as schema from '../src/schema/index.ts';
 import { eq } from 'drizzle-orm';
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import { prepareSeedData, hashPassword, ensureParents } from './helpers';

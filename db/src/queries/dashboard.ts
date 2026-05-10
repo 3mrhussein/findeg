@@ -199,7 +199,7 @@ export async function getLowStockCountRaw() {
     })
     .from(inventoryBalances)
     .innerJoin(productVariants, eq(inventoryBalances.variantId, productVariants.id))
-    .where(sql`${inventoryBalances.onHand} - ${inventoryBalances.reserved} <= ${productVariants.lowStockThreshold}`);
+    .where(sql`${inventoryBalances.onHand} - ${inventoryBalances.reserved} <= 5`);
 
   return result?.count || 0;
 }

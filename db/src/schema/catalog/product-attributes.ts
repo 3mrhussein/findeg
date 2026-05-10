@@ -22,17 +22,14 @@ import { products } from "./products";
 /**
  * Global Attribute Definitions (e.g., "Color", "Size", "Material")
  */
-export const attributeDefinitions = catalogSchema.table("attribute_definitions", {
+export const attributes = catalogSchema.table("attributes", {
   id: serial("id").primaryKey(),
   key: text("key").notNull().unique(), // e.g., "ink-color"
   dataType: text("data_type").notNull(), // 'text', 'color', 'number'
   unit: text("unit"),
   localizedLabel: jsonb("localized_label").notNull(),
   enumValues: jsonb("enum_values"),
-  scope: text("scope").default("product").notNull(),
   isFilterable: boolean("is_filterable").default(true).notNull(),
-  /** When true, the attribute contributes to the variant key (VariantKey.build()) */
-  isVariantDefining: boolean("is_variant_defining").default(false).notNull(),
   sortOrder: integer("sort_order").default(0).notNull(),
   isActive: boolean("is_active").default(true).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -50,11 +47,9 @@ export const productAttributes = catalogSchema.table(
       .references(() => products.id, { onDelete: "cascade" }),
     attributeId: integer("attribute_id") // Original name
       .notNull()
-      .references(() => attributeDefinitions.id, { onDelete: "cascade" }),
+      .references(() => attributes.id, { onDelete: "cascade" }),
 
     valueText: text("value_text"),
-    valueNum: decimal("value_num", { precision: 12, scale: 4 }),
-    valueBool: boolean("value_bool"),
 
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
@@ -68,7 +63,7 @@ export const productAttributes = catalogSchema.table(
 /**
  * Relations
  */
-export const attributeDefinitionsRelations = relations(attributeDefinitions, ({ many }) => ({
+export const attributesRelations = relations(attributes, ({ many }) => ({
   productAssignments: many(productAttributes),
 }));
 
@@ -77,8 +72,15 @@ export const productAttributesRelations = relations(productAttributes, ({ one })
     fields: [productAttributes.productId],
     references: [products.id],
   }),
-  definition: one(attributeDefinitions, {
+  definition: one(attributes, {
     fields: [productAttributes.attributeId],
-    references: [attributeDefinitions.id],
+    references: [attributes.id],
   }),
 }));
+
+// ─── Type Exports ────────────────────────────────────────────────────────────
+
+export type Attribute = typeof attributes.$inferSelect;
+export type NewAttribute = typeof attributes.$inferInsert;
+export type ProductAttribute = typeof productAttributes.$inferSelect;
+export type NewProductAttribute = typeof productAttributes.$inferInsert;

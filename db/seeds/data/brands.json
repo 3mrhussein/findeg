@@ -2,90 +2,150 @@
   {
     "id": 1,
     "slug": "faber-castell",
-    "name": "Faber-Castell",
+    "localizedName": {
+      "en": "Faber-Castell",
+      "ar": "Faber-Castell"
+    },
+    "localizedDescription": {
+      "en": "",
+      "ar": ""
+    },
     "logoUrl": null,
-    "isActive": true,
     "createdAt": "2026-02-17 16:04:52.480606",
     "updatedAt": "2026-02-17 16:04:52.480606"
   },
   {
     "id": 2,
     "slug": "staedtler",
-    "name": "Staedtler",
+    "localizedName": {
+      "en": "Staedtler",
+      "ar": "Staedtler"
+    },
+    "localizedDescription": {
+      "en": "",
+      "ar": ""
+    },
     "logoUrl": null,
-    "isActive": true,
     "createdAt": "2026-02-17 16:04:52.480606",
     "updatedAt": "2026-02-17 16:04:52.480606"
   },
   {
     "id": 3,
     "slug": "maped",
-    "name": "Maped",
+    "localizedName": {
+      "en": "Maped",
+      "ar": "Maped"
+    },
+    "localizedDescription": {
+      "en": "",
+      "ar": ""
+    },
     "logoUrl": null,
-    "isActive": true,
     "createdAt": "2026-02-17 16:04:52.480606",
     "updatedAt": "2026-02-17 16:04:52.480606"
   },
   {
     "id": 4,
     "slug": "stabilo",
-    "name": "Stabilo",
+    "localizedName": {
+      "en": "Stabilo",
+      "ar": "Stabilo"
+    },
+    "localizedDescription": {
+      "en": "",
+      "ar": ""
+    },
     "logoUrl": null,
-    "isActive": true,
     "createdAt": "2026-02-17 16:04:52.480606",
     "updatedAt": "2026-02-17 16:04:52.480606"
   },
   {
     "id": 5,
     "slug": "deli",
-    "name": "Deli",
+    "localizedName": {
+      "en": "Deli",
+      "ar": "Deli"
+    },
+    "localizedDescription": {
+      "en": "",
+      "ar": ""
+    },
     "logoUrl": null,
-    "isActive": true,
     "createdAt": "2026-02-17 16:04:52.480606",
     "updatedAt": "2026-02-17 16:04:52.480606"
   },
   {
     "id": 6,
     "slug": "casio",
-    "name": "Casio",
+    "localizedName": {
+      "en": "Casio",
+      "ar": "Casio"
+    },
+    "localizedDescription": {
+      "en": "",
+      "ar": ""
+    },
     "logoUrl": null,
-    "isActive": true,
     "createdAt": "2026-02-17 16:04:52.480606",
     "updatedAt": "2026-02-17 16:04:52.480606"
   },
   {
     "id": 7,
     "slug": "m-g",
-    "name": "M&G",
+    "localizedName": {
+      "en": "M&G",
+      "ar": "M&G"
+    },
+    "localizedDescription": {
+      "en": "",
+      "ar": ""
+    },
     "logoUrl": null,
-    "isActive": true,
     "createdAt": "2026-02-17 16:04:52.480606",
     "updatedAt": "2026-02-17 16:04:52.480606"
   },
   {
     "id": 8,
     "slug": "pilot",
-    "name": "Pilot",
+    "localizedName": {
+      "en": "Pilot",
+      "ar": "Pilot"
+    },
+    "localizedDescription": {
+      "en": "",
+      "ar": ""
+    },
     "logoUrl": null,
-    "isActive": true,
     "createdAt": "2026-02-17 16:04:52.480606",
     "updatedAt": "2026-02-17 16:04:52.480606"
   },
   {
     "id": 9,
     "slug": "bic",
-    "name": "Bic",
+    "localizedName": {
+      "en": "Bic",
+      "ar": "Bic"
+    },
+    "localizedDescription": {
+      "en": "",
+      "ar": ""
+    },
     "logoUrl": null,
-    "isActive": true,
     "createdAt": "2026-02-17 16:04:52.480606",
     "updatedAt": "2026-02-17 16:04:52.480606"
   },
   {
     "id": 10,
     "slug": "dong-a",
-    "name": "Dong-A",
+    "localizedName": {
+      "en": "Dong-A",
+      "ar": "Dong-A"
+    },
+    "localizedDescription": {
+      "en": "",
+      "ar": ""
+    },
     "logoUrl": null,
-    "isActive": true,
     "createdAt": "2026-02-17 16:04:52.480606",
     "updatedAt": "2026-02-17 16:04:52.480606"
   }

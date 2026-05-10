@@ -25,7 +25,7 @@ import {
   variantImages,
   variantAttributes,
   productTags,
-  attributeDefinitions,
+  attributes as attributeTable,
   categories,
   brands,
 } from '@findeg/db/schema';
@@ -76,6 +76,7 @@ export class AdminProductService implements IAdminProductService {
     const pricingAndVariants = sql`
       (SELECT 
         "product_id",
+        MAX(CASE WHEN "is_default" = true THEN CAST("base_price" AS DECIMAL) ELSE NULL END) as default_price,
         MIN(CAST("base_price" AS DECIMAL)) as min_price,
         COUNT("id") as v_count,
         MAX(CASE WHEN "is_active" = true THEN 1 ELSE 0 END) as has_active_v
@@ -99,8 +100,9 @@ export class AdminProductService implements IAdminProductService {
         pv."product_id",
         COUNT(vi."id") as img_count,
         (SELECT "url" FROM "catalog"."variant_images" vvi 
-         WHERE vvi."variant_id" IN (SELECT "id" FROM "catalog"."product_variants" ppv WHERE ppv."product_id" = pv."product_id")
-         ORDER BY vvi."display_order" ASC, vvi."id" ASC LIMIT 1) as thumb_url
+         JOIN "catalog"."product_variants" ppv ON vvi."variant_id" = ppv."id"
+         WHERE ppv."product_id" = pv."product_id"
+         ORDER BY ppv."is_default" DESC, vvi."display_order" ASC, vvi."id" ASC LIMIT 1) as thumb_url
        FROM "catalog"."product_variants" pv
        LEFT JOIN "catalog"."variant_images" vi ON pv."id" = vi."variant_id"
        GROUP BY pv."product_id"
@@ -201,10 +203,10 @@ export class AdminProductService implements IAdminProductService {
         categoryId: products.categoryId,
         categoryName: sql<string>`${categories.localizedName}->>'en'`,
         brandId: products.brandId,
-        brandName: brands.name,
+        brandName: sql<string | null>`${brands.localizedName}->>'en'`,
         isActive: products.isActive,
         updatedAt: products.updatedAt,
-        defaultVariantPrice: sql<number | null>`pv_stats.min_price`,
+        defaultVariantPrice: sql<number | null>`COALESCE(pv_stats.default_price, pv_stats.min_price)`,
         variantCount: sql<number>`COALESCE(pv_stats.v_count, 0)`,
         totalStock: sql<number>`COALESCE(inv_stats.total_stock, 0)`,
         hasImages: sql<boolean>`COALESCE(img_stats.img_count, 0) > 0`,
@@ -417,13 +419,14 @@ export class AdminProductService implements IAdminProductService {
               sku: v.sku,
               localizedLabel: v.localizedLabel as Record<string, string> | undefined,
               isActive: v.isActive,
+              isDefault: v.isDefault,
+              mediaSet: v.mediaSet,
               basePrice: v.basePrice !== undefined ? String(v.basePrice) : undefined,
               strikePrice: v.strikePrice !== undefined ? String(v.strikePrice) : undefined,
               costPrice: v.costPrice !== undefined ? String(v.costPrice) : undefined,
               weightGrams: v.weightGrams ?? null,
               barcode: v.barcode ?? null,
-              lowStockThreshold: v.lowStockThreshold ?? 10,
-              displayOrder: v.displayOrder,
+              sortOrder: v.sortOrder,
             })
             .where(eq(productVariants.id, v.id));
 
@@ -447,7 +450,7 @@ export class AdminProductService implements IAdminProductService {
             tx,
             id as number,
             v as CreateVariantInput,
-            v.displayOrder ?? 0,
+            v.sortOrder ?? 0,
           );
         }
       }
@@ -502,14 +505,15 @@ export class AdminProductService implements IAdminProductService {
             sku: `${v.sku}-copy`,
             variantKey: v.variantKey,
             localizedLabel: v.localizedLabel as Record<string, string>,
+            isDefault: v.isDefault,
+            mediaSet: v.mediaSet,
             isActive: v.isActive,
             basePrice: v.basePrice,
             strikePrice: v.strikePrice,
             costPrice: v.costPrice,
             weightGrams: v.weightGrams,
             barcode: v.barcode,
-            lowStockThreshold: v.lowStockThreshold,
-            displayOrder: v.displayOrder,
+            sortOrder: v.sortOrder,
           })
           .returning({ id: productVariants.id });
 
@@ -666,14 +670,14 @@ export class AdminProductService implements IAdminProductService {
             sku: defaults.sku ?? suggestedSku,
             variantKey,
             localizedLabel: defaults.localizedLabel ?? { en: '', ar: '' },
-            displayOrder: i,
+            sortOrder: i,
+            isDefault: i === 0 && defaults.isDefault === undefined ? true : (defaults.isDefault ?? false),
             isActive: defaults.isActive ?? true,
             basePrice: String(defaults.basePrice ?? 0),
             strikePrice: defaults.strikePrice ? String(defaults.strikePrice) : null,
             costPrice: defaults.costPrice ? String(defaults.costPrice) : null,
             weightGrams: defaults.weightGrams ?? null,
             barcode: defaults.barcode ?? null,
-            lowStockThreshold: defaults.lowStockThreshold ?? 10,
           })
           .returning({ id: productVariants.id });
 
@@ -682,9 +686,9 @@ export class AdminProductService implements IAdminProductService {
         // Insert variant attributes
         for (const [attrKey, attrValue] of attrEntries) {
           const [attrDef] = await tx
-            .select({ id: attributeDefinitions.id })
-            .from(attributeDefinitions)
-            .where(eq(attributeDefinitions.key, attrKey))
+            .select({ id: attributeTable.id })
+            .from(attributeTable)
+            .where(eq(attributeTable.key, attrKey))
             .limit(1);
 
           if (attrDef) {
@@ -724,17 +728,13 @@ export class AdminProductService implements IAdminProductService {
     for (const variant of variants) {
       const attrs = await db
         .select({
-          key: attributeDefinitions.key,
+          key: attributeTable.key,
           valueText: variantAttributes.valueText,
-          isVariantDefining: attributeDefinitions.isVariantDefining,
         })
         .from(variantAttributes)
-        .innerJoin(attributeDefinitions, eq(variantAttributes.attributeId, attributeDefinitions.id))
+        .innerJoin(attributeTable, eq(variantAttributes.attributeId, attributeTable.id))
         .where(
-          and(
-            eq(variantAttributes.variantId, variant.id),
-            eq(attributeDefinitions.isVariantDefining, true),
-          ),
+          eq(variantAttributes.variantId, variant.id),
         );
 
       if (!attrs.length) continue;
@@ -871,19 +871,19 @@ export class AdminProductService implements IAdminProductService {
         sku: variant.sku.toUpperCase(),
         variantKey:
           variant.attributes
-            ?.filter((a) => a.isVariantDefining)
-            .sort((a, b) => a.attributeKey.localeCompare(b.attributeKey))
+            ?.sort((a, b) => a.attributeKey.localeCompare(b.attributeKey))
             .map((a) => a.value.toLowerCase())
-            .join('-') ?? 'default',
+            .join('-') || 'default',
         localizedLabel: variant.localizedLabel ?? { en: '', ar: '' },
-        displayOrder,
+        sortOrder: displayOrder,
+        isDefault: variant.isDefault || false,
+        mediaSet: variant.mediaSet,
         isActive: variant.isActive ?? true,
         basePrice: String(variant.basePrice),
         strikePrice: variant.strikePrice != null ? String(variant.strikePrice) : null,
         costPrice: variant.costPrice != null ? String(variant.costPrice) : null,
         weightGrams: variant.weightGrams ?? null,
         barcode: variant.barcode ?? null,
-        lowStockThreshold: variant.lowStockThreshold ?? 10,
       })
       .returning({ id: productVariants.id });
 
@@ -905,9 +905,9 @@ export class AdminProductService implements IAdminProductService {
     if (variant.attributes?.length) {
       for (const attr of variant.attributes) {
         const [attrDef] = await tx
-          .select({ id: attributeDefinitions.id })
-          .from(attributeDefinitions)
-          .where(eq(attributeDefinitions.key, attr.attributeKey))
+          .select({ id: attributeTable.id })
+          .from(attributeTable)
+          .where(eq(attributeTable.key, attr.attributeKey))
           .limit(1);
 
         if (attrDef) {
@@ -943,13 +943,16 @@ export class AdminProductService implements IAdminProductService {
             images: {
               orderBy: [asc(variantImages.displayOrder)],
             },
-            attributes: true,
+            attributes: {
+              with: {
+                definition: true,
+              },
+            },
           },
-          orderBy: [asc(productVariants.displayOrder)],
+          orderBy: [asc(productVariants.sortOrder)],
         },
         tags: {
           with: {
-            // productTags is a join table
             tag: true,
           },
         },
@@ -968,7 +971,10 @@ export class AdminProductService implements IAdminProductService {
         strikePrice: v.strikePrice ? Number(v.strikePrice) : null,
         costPrice: v.costPrice ? Number(v.costPrice) : null,
         images: v.images,
-        attributes: v.attributes,
+        attributes: v.attributes.map((va) => ({
+          ...va,
+          key: (va as any).definition?.key || '',
+        })),
       })),
       tags: data.tags.map((pt) => pt.tag),
     } as unknown as ProductEditData;

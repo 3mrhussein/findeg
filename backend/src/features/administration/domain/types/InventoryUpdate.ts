@@ -18,9 +18,6 @@ export const InventoryUpdateSchema = z.object({
   /** New stock quantity (for absolute set) */
   quantity: QuantitySchema,
 
-  /** Low-stock warning threshold */
-  lowStockThreshold: QuantitySchema.optional(),
-
   /** Type of stock movement for audit */
   movementType: z.enum(['receipt', 'adjustment', 'return']).optional(),
 
@@ -32,7 +29,6 @@ export const InventoryUpdateSchema = z.object({
 export const InventoryUpdateBodySchema = z.object({
   warehouseId: IdSchema.optional(),
   quantity: QuantitySchema,
-  lowStockThreshold: QuantitySchema.optional(),
   movementType: z.enum(['receipt', 'adjustment', 'return']).optional(),
   notes: z.string().optional(),
 });

@@ -25,10 +25,10 @@ import {
   primaryKey,
   jsonb,
 } from 'drizzle-orm/pg-core';
-import { relations } from 'drizzle-orm';
+import { relations, sql } from 'drizzle-orm';
 import { products } from './products';
 import { catalogSchema } from '../schemas';
-import { attributeDefinitions } from './product-attributes';
+import { attributes } from './product-attributes';
 import { TranslationMap, ResponsiveMediaSet } from './types';
 
 // ─── Product Variants (SKU rows) ────────────────────────────────────────────
@@ -57,8 +57,11 @@ export const productVariants = catalogSchema.table(
     /** Localized display label (e.g., { en: "Blue 0.7mm", ar: "أزرق ٠.٧مم" }) */
     localizedLabel: jsonb('localized_label').$type<TranslationMap>().default({}).notNull(),
 
+    /** Whether this is the primary variant for the product */
+    isDefault: boolean('is_default').default(false).notNull(),
+
     /** Sort order within the parent product */
-    displayOrder: integer('display_order').default(0).notNull(),
+    sortOrder: integer('sort_order').default(0).notNull(),
 
     /** Whether this variant is visible and purchasable */
     isActive: boolean('is_active').default(true).notNull(),
@@ -82,8 +85,10 @@ export const productVariants = catalogSchema.table(
     /** EAN/UPC barcode */
     barcode: text('barcode'),
 
-    /** Alert threshold for low-stock warnings */
-    lowStockThreshold: integer('low_stock_threshold').default(10).notNull(),
+    // ─── Media ──────────────────────────────────────────────────────────
+
+    /** Variant-specific imagery */
+    mediaSet: jsonb('media_set').$type<ResponsiveMediaSet>().default({}),
 
     // ─── Timestamps ─────────────────────────────────────────────────────
 
@@ -93,6 +98,8 @@ export const productVariants = catalogSchema.table(
   (table) => [
     /** Each variant_key is unique within a product */
     uniqueIndex('uq_variant_product_key').on(table.productId, table.variantKey),
+    /** Ensure exactly one default variant per product */
+    uniqueIndex('idx_variant_product_default').on(table.productId).where(sql`is_default = true`),
     /** Fast lookup for "all variants of a product" */
     index('idx_variant_product').on(table.productId),
     /** SKU lookup */
@@ -136,22 +143,15 @@ export const variantAttributes = catalogSchema.table(
       .references(() => productVariants.id, { onDelete: 'cascade' }),
     attributeId: integer('attribute_id')
       .notNull()
-      .references(() => attributeDefinitions.id, { onDelete: 'cascade' }),
+      .references(() => attributes.id, { onDelete: 'cascade' }),
 
     /** String / enum value */
     valueText: text('value_text'),
-
-    /** Numeric value */
-    valueNum: decimal('value_num', { precision: 12, scale: 4 }),
-
-    /** Boolean value */
-    valueBool: boolean('value_bool'),
   },
   (table) => [
     primaryKey({ columns: [table.variantId, table.attributeId] }),
     index('idx_variant_attr_variant').on(table.variantId),
     index('idx_variant_attr_text').on(table.attributeId, table.valueText),
-    index('idx_variant_attr_num').on(table.attributeId, table.valueNum),
   ],
 );
 
@@ -178,9 +178,9 @@ export const variantAttributesRelations = relations(variantAttributes, ({ one })
     fields: [variantAttributes.variantId],
     references: [productVariants.id],
   }),
-  definition: one(attributeDefinitions, {
+  definition: one(attributes, {
     fields: [variantAttributes.attributeId],
-    references: [attributeDefinitions.id],
+    references: [attributes.id],
   }),
 }));
 

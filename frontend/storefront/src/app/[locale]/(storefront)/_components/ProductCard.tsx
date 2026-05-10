@@ -22,12 +22,10 @@ export function ProductCard({ product, layout = 'grid' }: ProductCardProps) {
   const locale = useLocale();
 
   const variants = product.variants || [];
-  const defaultVariant = variants.find((v) => v.variantKey === 'default') || variants[0];
+  const defaultVariant = variants.find((v) => v.isDefault) || variants[0];
   const displayPrice = Number(defaultVariant?.basePrice ?? 0);
   const imageUrl =
     defaultVariant?.images?.[0]?.url ||
-    product.mediaSet?.card?.url ||
-    product.mediaSet?.thumbnail?.url ||
     `https://picsum.photos/seed/${product.id}/600/600`;
 
   const isNew = !!product.isNew;

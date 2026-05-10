@@ -13,7 +13,7 @@ import * as schema from "./schema";
 
 export const connection = postgres(env.DATABASE_URL!, {
   // Connection pool configuration
-  max: env.DB_MIGRATING || env.DB_SEEDING ? 1 : undefined,
+  max: env.DB_MIGRATING || env.DB_SEEDING ? 10 : undefined,
   onnotice: env.DB_SEEDING ? () => {} : undefined,
 
   idle_timeout: 20, // Close idle connections after 20 seconds

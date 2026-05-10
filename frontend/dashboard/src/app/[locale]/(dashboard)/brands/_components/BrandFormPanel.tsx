@@ -50,10 +50,10 @@ export function BrandFormPanel({
     defaultValues: brand
       ? {
           slug: brand.slug,
-          nameEn: brand.localizedContent?.name?.en || brand.name || '',
-          nameAr: brand.localizedContent?.name?.ar || '',
-          descriptionEn: brand.localizedContent?.description?.en || '',
-          descriptionAr: brand.localizedContent?.description?.ar || '',
+          nameEn: brand.localizedName?.en || brand.name || '',
+          nameAr: brand.localizedName?.ar || '',
+          descriptionEn: brand.localizedDescription?.en || '',
+          descriptionAr: brand.localizedDescription?.ar || '',
           logoUrl: brand.logoUrl || '',
           isActive: brand.isActive,
         }
@@ -73,10 +73,10 @@ export function BrandFormPanel({
     if (brand) {
       reset({
         slug: brand.slug,
-        nameEn: brand.localizedContent?.name?.en || brand.name || '',
-        nameAr: brand.localizedContent?.name?.ar || '',
-        descriptionEn: brand.localizedContent?.description?.en || '',
-        descriptionAr: brand.localizedContent?.description?.ar || '',
+        nameEn: brand.localizedName?.en || brand.name || '',
+        nameAr: brand.localizedName?.ar || '',
+        descriptionEn: brand.localizedDescription?.en || '',
+        descriptionAr: brand.localizedDescription?.ar || '',
         logoUrl: brand.logoUrl || '',
         isActive: brand.isActive,
       });

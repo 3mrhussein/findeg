@@ -4,5 +4,5 @@ export * from './SchoolList';
 export * from './Category';
 export * from './Brand';
 export * from './Tag';
-export * from './AttributeDefinition';
+export * from './Attribute';
 export * from './Collection';

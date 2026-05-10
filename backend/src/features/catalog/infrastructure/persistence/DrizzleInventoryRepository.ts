@@ -196,7 +196,7 @@ export class DrizzleInventoryRepository implements IInventoryRepository {
       .where(
         threshold !== undefined
           ? sql`${inventoryBalances.onHand} - ${inventoryBalances.reserved} <= ${threshold}`
-          : sql`${inventoryBalances.onHand} - ${inventoryBalances.reserved} <= ${productVariants.lowStockThreshold}`,
+          : sql`${inventoryBalances.onHand} - ${inventoryBalances.reserved} <= 5`,
       )
       .orderBy(desc(sql`${inventoryBalances.onHand} - ${inventoryBalances.reserved}`));
 

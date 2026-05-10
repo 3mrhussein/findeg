@@ -52,9 +52,7 @@ export class AdminBrandService implements IAdminBrandService {
   async create(input: BrandInput): Promise<Brand> {
     const brand = await this.brandRepository.create({
       slug: input.slug as Slug,
-      name: input.nameEn!,
       logoUrl: input.logoUrl,
-      isActive: input.isActive ?? true,
       localizedName: { en: input.nameEn!, ar: input.nameAr! },
       localizedDescription: { en: input.descriptionEn || '', ar: input.descriptionAr || '' },
     });
@@ -71,9 +69,7 @@ export class AdminBrandService implements IAdminBrandService {
   async update(id: ID, input: BrandInput): Promise<Brand> {
     const brand = await this.brandRepository.update(id, {
       slug: input.slug as Slug,
-      name: input.nameEn,
       logoUrl: input.logoUrl,
-      isActive: input.isActive,
       localizedName: { en: input.nameEn!, ar: input.nameAr! },
       localizedDescription: { en: input.descriptionEn || '', ar: input.descriptionAr || '' },
     });
@@ -106,10 +102,10 @@ export class AdminBrandService implements IAdminBrandService {
     if (!brand) throw new Error('Brand not found');
     return this.update(id, {
       slug: brand.slug,
-      nameEn: brand.localizedContent?.name?.en || brand.name,
-      nameAr: brand.localizedContent?.name?.ar || brand.name,
-      descriptionEn: brand.localizedContent?.description?.en || '',
-      descriptionAr: brand.localizedContent?.description?.ar || '',
+      nameEn: brand.localizedName?.en || brand.name,
+      nameAr: brand.localizedName?.ar || brand.name,
+      descriptionEn: brand.localizedDescription?.en || '',
+      descriptionAr: brand.localizedDescription?.ar || '',
       isActive: !brand.isActive,
     } as unknown as BrandInput);
   }

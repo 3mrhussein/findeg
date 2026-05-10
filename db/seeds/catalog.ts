@@ -1,4 +1,4 @@
-import * as schema from "../schema";
+import * as schema from "../src/schema/index.ts";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import { prepareSeedData, ensureParents } from "./helpers";
 
@@ -12,7 +12,7 @@ import tagsData from "./data/tags.json";
 import collectionsData from "./data/collections.json";
 import productTagsData from "./data/product_tags.json";
 import collectionTagsData from "./data/collection_tags.json";
-import attributeDefinitionsData from "./data/attribute_definitions.json";
+import attributesData from "./data/attributes.json";
 import productAttributesData from "./data/product_attributes.json";
 import reviewsData from "./data/reviews.json";
 import reviewHelpfulVotesData from "./data/review_helpful_votes.json";
@@ -39,11 +39,11 @@ export async function seedCatalog(db: PostgresJsDatabase<typeof schema>) {
       .insert(schema.collections)
       .values(prepareSeedData(schema.collections, collectionsData));
   }
-  if (attributeDefinitionsData.length > 0) {
-    console.log("  - Seeding Attribute Definitions...");
+  if (attributesData.length > 0) {
+    console.log("  - Seeding Attributes...");
     await db
-      .insert(schema.attributeDefinitions)
-      .values(prepareSeedData(schema.attributeDefinitions, attributeDefinitionsData));
+      .insert(schema.attributes)
+      .values(prepareSeedData(schema.attributes, attributesData));
   }
 
   // Level 2: Products (depends on brands, categories)
@@ -79,7 +79,7 @@ export async function seedCatalog(db: PostgresJsDatabase<typeof schema>) {
     console.log("  - Seeding Variant Attributes...");
     await ensureParents(db, [
       { table: schema.productVariants, name: '"catalog"."product_variants"' },
-      { table: schema.attributeDefinitions, name: '"catalog"."attribute_definitions"' },
+      { table: schema.attributes, name: '"catalog"."attributes"' },
     ]);
     await db
       .insert(schema.variantAttributes)
@@ -113,7 +113,7 @@ export async function seedCatalog(db: PostgresJsDatabase<typeof schema>) {
     console.log("  - Seeding Product Attributes...");
     await ensureParents(db, [
       { table: schema.products, name: '"catalog"."products"' },
-      { table: schema.attributeDefinitions, name: '"catalog"."attribute_definitions"' },
+      { table: schema.attributes, name: '"catalog"."attributes"' },
     ]);
     await db
       .insert(schema.productAttributes)

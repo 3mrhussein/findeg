@@ -15,9 +15,15 @@ export const db = [
               group: ['@findeg/backend/**'],
               message: 'MIGRATION: backend logic should gradually move into DB layer',
             },
-            '@findeg/dashboard/**',
-            '@findeg/storefront/**',
-            'next/**',
+            {
+              group: ['@findeg/dashboard/**'],
+            },
+            {
+              group: ['@findeg/storefront/**'],
+            },
+            {
+              group: ['next/**'],
+            },
           ],
         },
       ],

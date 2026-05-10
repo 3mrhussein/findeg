@@ -40,8 +40,7 @@ export function InventoryTable({ products }: InventoryTableProps) {
         sku.toLowerCase().includes(query);
       const inv = firstVariant?.inventory?.[0];
       const onHand = inv ? inv.onHand - inv.reserved : undefined;
-      const threshold = firstVariant?.lowStockThreshold;
-      const isLow = onHand !== undefined && threshold !== undefined && onHand <= threshold;
+      const isLow = onHand !== undefined && onHand <= 5; // Default threshold for MVP
       return matchesSearch && (!lowStockOnly || isLow);
     });
     return filtered.sort((a, b) => {
@@ -130,7 +129,6 @@ export function InventoryTable({ products }: InventoryTableProps) {
         {
           variantId: variant.id,
           quantity: Math.max(0, current + direction * batchDelta),
-          lowStockThreshold: variant.lowStockThreshold,
         },
       ];
     });

@@ -12,20 +12,20 @@ export interface ImageInput {
 export interface VariantAttributeInput {
   attributeKey: string;
   value: string;
-  isVariantDefining: boolean;
 }
 
 export interface CreateVariantInput {
   sku: string;
   localizedLabel: { en: string; ar: string };
-  displayOrder: number;
+  sortOrder: number;
+  isDefault: boolean;
   isActive: boolean;
   basePrice: number;
   strikePrice?: number | null;
   costPrice?: number | null;
   weightGrams?: number | null;
   barcode?: string | null;
-  lowStockThreshold?: number | null;
+  mediaSet?: any;
   images: ImageInput[];
   attributes: VariantAttributeInput[];
 }

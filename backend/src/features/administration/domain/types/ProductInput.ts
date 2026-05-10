@@ -31,8 +31,6 @@ const VariantImageInputSchema = z.object({
 const VariantAttributeInputSchema = z.object({
   attributeId: IdSchema,
   valueText: z.string().optional(),
-  valueNum: z.number().optional(),
-  valueBool: z.boolean().optional(),
 });
 
 export const VariantInputSchema = z.object({
@@ -41,7 +39,8 @@ export const VariantInputSchema = z.object({
   sku: z.string().min(1),
   variantKey: z.string().min(1),
   localizedLabel: TranslationMapSchema.optional(),
-  displayOrder: z.number().int().optional().default(0),
+  sortOrder: z.number().int().optional().default(0),
+  isDefault: z.boolean().optional().default(false),
   isActive: z.boolean().optional().default(true),
   basePrice: PriceSchema,
   strikePrice: PriceSchema.optional(),
@@ -56,7 +55,7 @@ export const VariantInputSchema = z.object({
     })
     .optional(),
   barcode: z.string().optional(),
-  lowStockThreshold: QuantitySchema.optional().default(10),
+  mediaSet: z.any().optional(), // ResponsiveMediaSetSchema
   images: z.array(VariantImageInputSchema).optional(),
   attributes: z.array(VariantAttributeInputSchema).optional(),
 });
@@ -87,11 +86,41 @@ export const ProductInputSchema = z.object({
   /** Localized content — at least one language required */
   translations: z.array(ProductTranslationSchema).min(1, 'At least one translation is required'),
 
-  /** SPU-level hero imagery */
-  mediaSet: z.any().optional(),
+  /** SPU-level hero imagery (Removed in favor of variant-level media) */
+  // mediaSet: z.any().optional(),
 
   /** Normalized variant definitions */
-  variants: z.array(VariantInputSchema).optional(),
+  variants: z.array(VariantInputSchema).min(1, 'Product must have at least one variant'),
+}).superRefine((data, ctx) => {
+  if (!data.variants || data.variants.length === 0) return;
+
+  const defaultVariants = data.variants.filter((v) => v.isDefault);
+  
+  if (defaultVariants.length === 0) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Product must have exactly one default variant',
+      path: ['variants'],
+    });
+  } else if (defaultVariants.length > 1) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Product can only have one default variant',
+      path: ['variants'],
+    });
+  }
+
+  // Ensure unique sequential sortOrder (0, 1, 2...)
+  const sortedByOrder = [...data.variants].sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+  for (let i = 0; i < sortedByOrder.length; i++) {
+    if ((sortedByOrder[i].sortOrder ?? 0) !== i) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Variants must have sequential sort orders starting from 0. Expected ${i} at index ${i}, but found ${sortedByOrder[i].sortOrder}.`,
+        path: ['variants', i, 'sortOrder'],
+      });
+    }
+  }
 });
 
 export type ProductInput = z.infer<typeof ProductInputSchema>;

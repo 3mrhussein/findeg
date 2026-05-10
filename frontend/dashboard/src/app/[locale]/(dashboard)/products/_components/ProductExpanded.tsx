@@ -42,7 +42,7 @@ export function ProductExpanded({ product }: ProductExpandedProps) {
   const outOfStockVariants = variants.filter((v) => getVariantStock(v) === 0).length;
   const lowStockVariants = variants.filter((v) => {
     const stock = getVariantStock(v);
-    return stock > 0 && stock <= (v.lowStockThreshold || 10);
+    return stock > 0 && stock <= 5;
   }).length;
   const healthyVariants = inStockVariants - lowStockVariants;
 

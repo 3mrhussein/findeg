@@ -233,7 +233,7 @@ export async function getProductPdp(
 
   return {
     product: mappedProduct,
-    selectedVariant: (mappedProduct.variants?.[0] as Variant) || null,
+    selectedVariant: (mappedProduct.variants?.find((v: any) => v.isDefault) || mappedProduct.variants?.[0]) as Variant || null,
     canonicalSlug: slug,
     brand,
     categories,

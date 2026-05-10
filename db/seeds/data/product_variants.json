@@ -8,16 +8,17 @@
       "en": "Keychains 13",
       "ar": "علاقات مفاتيح 13"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 66.9,
     "strikePrice": 76.94,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 14,
@@ -28,16 +29,17 @@
       "en": "Keychains 14",
       "ar": "علاقات مفاتيح 14"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 67,
     "strikePrice": 77.05,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 15,
@@ -48,16 +50,17 @@
       "en": "Keychains 15",
       "ar": "علاقات مفاتيح 15"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 67.1,
     "strikePrice": 77.16,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 16,
@@ -68,16 +71,17 @@
       "en": "Keychains 16",
       "ar": "علاقات مفاتيح 16"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 67.2,
     "strikePrice": 77.28,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 17,
@@ -88,16 +92,17 @@
       "en": "Keychains 17",
       "ar": "علاقات مفاتيح 17"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 67.3,
     "strikePrice": 77.39,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 18,
@@ -108,16 +113,17 @@
       "en": "Keychains 18",
       "ar": "علاقات مفاتيح 18"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 67.4,
     "strikePrice": 77.51,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 19,
@@ -128,16 +134,17 @@
       "en": "Keychains 19",
       "ar": "علاقات مفاتيح 19"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 67.5,
     "strikePrice": 77.63,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 20,
@@ -148,16 +155,17 @@
       "en": "Keychains 20",
       "ar": "علاقات مفاتيح 20"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 67.6,
     "strikePrice": 77.74,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 21,
@@ -168,16 +176,17 @@
       "en": "Watches 21",
       "ar": "ساعات 21"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 51.5,
     "strikePrice": 59.22,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 22,
@@ -188,16 +197,17 @@
       "en": "Watches 22",
       "ar": "ساعات 22"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 51.4,
     "strikePrice": 59.11,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 23,
@@ -208,16 +218,17 @@
       "en": "Watches 23",
       "ar": "ساعات 23"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 51.3,
     "strikePrice": 58.99,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 24,
@@ -228,16 +239,17 @@
       "en": "Watches 24",
       "ar": "ساعات 24"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 51.2,
     "strikePrice": 58.88,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 25,
@@ -248,16 +260,17 @@
       "en": "Watches 25",
       "ar": "ساعات 25"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 51.1,
     "strikePrice": 58.77,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 26,
@@ -268,16 +281,17 @@
       "en": "Watches 26",
       "ar": "ساعات 26"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 51,
     "strikePrice": 58.65,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 27,
@@ -288,16 +302,17 @@
       "en": "Badges 27",
       "ar": "شارات 27"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 49.2,
     "strikePrice": 56.58,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 28,
@@ -308,16 +323,17 @@
       "en": "Badges 28",
       "ar": "شارات 28"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 49.3,
     "strikePrice": 56.69,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 29,
@@ -328,16 +344,17 @@
       "en": "Badges 29",
       "ar": "شارات 29"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 49.4,
     "strikePrice": 56.81,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 30,
@@ -348,16 +365,17 @@
       "en": "Badges 30",
       "ar": "شارات 30"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 49.5,
     "strikePrice": 56.92,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 31,
@@ -368,16 +386,17 @@
       "en": "Badges 31",
       "ar": "شارات 31"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 49.6,
     "strikePrice": 57.04,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 32,
@@ -388,16 +407,17 @@
       "en": "Badges 32",
       "ar": "شارات 32"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 49.7,
     "strikePrice": 57.16,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 33,
@@ -408,16 +428,17 @@
       "en": "Frames 33",
       "ar": "إطارات 33"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 119.4,
     "strikePrice": 137.31,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 34,
@@ -428,16 +449,17 @@
       "en": "Frames 34",
       "ar": "إطارات 34"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 119.3,
     "strikePrice": 137.19,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 35,
@@ -448,16 +470,17 @@
       "en": "Frames 35",
       "ar": "إطارات 35"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 119.2,
     "strikePrice": 137.08,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 36,
@@ -468,16 +491,17 @@
       "en": "Balloons 36",
       "ar": "بالونات 36"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 17.2,
     "strikePrice": 19.78,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 37,
@@ -488,16 +512,17 @@
       "en": "Balloons 37",
       "ar": "بالونات 37"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 17.1,
     "strikePrice": 19.66,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 38,
@@ -508,16 +533,17 @@
       "en": "Balloons 38",
       "ar": "بالونات 38"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 17,
     "strikePrice": 19.55,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 39,
@@ -528,16 +554,17 @@
       "en": "Balloons 39",
       "ar": "بالونات 39"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 16.9,
     "strikePrice": 19.43,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 40,
@@ -548,16 +575,17 @@
       "en": "Balloons 40",
       "ar": "بالونات 40"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 16.8,
     "strikePrice": 19.32,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 41,
@@ -568,16 +596,17 @@
       "en": "Balloons 41",
       "ar": "بالونات 41"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 16.7,
     "strikePrice": 19.2,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 42,
@@ -588,16 +617,17 @@
       "en": "Balloons 42",
       "ar": "بالونات 42"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 16.6,
     "strikePrice": 19.09,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 43,
@@ -608,16 +638,17 @@
       "en": "Balloons 43",
       "ar": "بالونات 43"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 16.5,
     "strikePrice": 18.97,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 44,
@@ -628,16 +659,17 @@
       "en": "Posters 44",
       "ar": "ملصقات 44"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 35.4,
     "strikePrice": 40.71,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 45,
@@ -648,16 +680,17 @@
       "en": "Posters 45",
       "ar": "ملصقات 45"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 35.5,
     "strikePrice": 40.82,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 46,
@@ -668,16 +701,17 @@
       "en": "Posters 46",
       "ar": "ملصقات 46"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 35.6,
     "strikePrice": 40.94,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 47,
@@ -688,16 +722,17 @@
       "en": "Posters 47",
       "ar": "ملصقات 47"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 35.7,
     "strikePrice": 41.05,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 48,
@@ -708,16 +743,17 @@
       "en": "Posters 48",
       "ar": "ملصقات 48"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 35.8,
     "strikePrice": 41.17,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 49,
@@ -728,16 +764,17 @@
       "en": "Posters 49",
       "ar": "ملصقات 49"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 35.9,
     "strikePrice": 41.28,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 50,
@@ -748,16 +785,17 @@
       "en": "Ramadan Lanterns 50",
       "ar": "فوانيس رمضان 50"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 107.6,
     "strikePrice": 123.74,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 51,
@@ -768,16 +806,17 @@
       "en": "Ramadan Lanterns 51",
       "ar": "فوانيس رمضان 51"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 107.5,
     "strikePrice": 123.62,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 52,
@@ -788,16 +827,17 @@
       "en": "Ramadan Lanterns 52",
       "ar": "فوانيس رمضان 52"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 107.4,
     "strikePrice": 123.51,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 53,
@@ -808,16 +848,17 @@
       "en": "Ramadan Lanterns 53",
       "ar": "فوانيس رمضان 53"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 107.3,
     "strikePrice": 123.39,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 54,
@@ -828,16 +869,17 @@
       "en": "Ramadan Lanterns 54",
       "ar": "فوانيس رمضان 54"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 107.2,
     "strikePrice": 123.28,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 55,
@@ -848,16 +890,17 @@
       "en": "Ramadan Lanterns 55",
       "ar": "فوانيس رمضان 55"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 107.1,
     "strikePrice": 123.16,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 56,
@@ -868,16 +911,17 @@
       "en": "Ramadan Lanterns 56",
       "ar": "فوانيس رمضان 56"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 107,
     "strikePrice": 123.05,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 57,
@@ -888,16 +932,17 @@
       "en": "Ramadan Lanterns 57",
       "ar": "فوانيس رمضان 57"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 106.9,
     "strikePrice": 122.94,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 58,
@@ -908,16 +953,17 @@
       "en": "Certificates 58",
       "ar": "شهادات 58"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 117.6,
     "strikePrice": 135.24,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 59,
@@ -928,16 +974,17 @@
       "en": "Certificates 59",
       "ar": "شهادات 59"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 117.7,
     "strikePrice": 135.35,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 60,
@@ -948,16 +995,17 @@
       "en": "Certificates 60",
       "ar": "شهادات 60"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 117.8,
     "strikePrice": 135.47,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 61,
@@ -968,16 +1016,17 @@
       "en": "Certificates 61",
       "ar": "شهادات 61"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 117.9,
     "strikePrice": 135.59,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 62,
@@ -988,16 +1037,17 @@
       "en": "Water Bottles 62",
       "ar": "مطارات ماء 62"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 21.1,
     "strikePrice": 24.27,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 63,
@@ -1008,16 +1058,17 @@
       "en": "Water Bottles 63",
       "ar": "مطارات ماء 63"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 21.2,
     "strikePrice": 24.38,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 64,
@@ -1028,16 +1079,17 @@
       "en": "Water Bottles 64",
       "ar": "مطارات ماء 64"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 21.3,
     "strikePrice": 24.49,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 65,
@@ -1048,16 +1100,17 @@
       "en": "Water Bottles 65",
       "ar": "مطارات ماء 65"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 21.4,
     "strikePrice": 24.61,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 66,
@@ -1068,16 +1121,17 @@
       "en": "Water Bottles 66",
       "ar": "مطارات ماء 66"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 21.5,
     "strikePrice": 24.72,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 67,
@@ -1088,16 +1142,17 @@
       "en": "Water Bottles 67",
       "ar": "مطارات ماء 67"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 21.6,
     "strikePrice": 24.84,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 68,
@@ -1108,16 +1163,17 @@
       "en": "Water Bottles 68",
       "ar": "مطارات ماء 68"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 21.7,
     "strikePrice": 24.95,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 69,
@@ -1128,16 +1184,17 @@
       "en": "Water Bottles 69",
       "ar": "مطارات ماء 69"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 21.8,
     "strikePrice": 25.07,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 70,
@@ -1148,16 +1205,17 @@
       "en": "Water Bottles 70",
       "ar": "مطارات ماء 70"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 21.9,
     "strikePrice": 25.18,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 71,
@@ -1168,16 +1226,17 @@
       "en": "Water Bottles 71",
       "ar": "مطارات ماء 71"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 22,
     "strikePrice": 25.3,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 72,
@@ -1188,16 +1247,17 @@
       "en": "Lunchboxes 72",
       "ar": "صناديق غداء 72"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 99.3,
     "strikePrice": 114.19,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 73,
@@ -1208,16 +1268,17 @@
       "en": "Lunchboxes 73",
       "ar": "صناديق غداء 73"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 99.2,
     "strikePrice": 114.08,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 74,
@@ -1228,16 +1289,17 @@
       "en": "Lunchboxes 74",
       "ar": "صناديق غداء 74"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 99.1,
     "strikePrice": 113.96,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 75,
@@ -1248,16 +1310,17 @@
       "en": "Lunchboxes 75",
       "ar": "صناديق غداء 75"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 99,
     "strikePrice": 113.85,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 76,
@@ -1268,16 +1331,17 @@
       "en": "Lunchboxes 76",
       "ar": "صناديق غداء 76"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 98.9,
     "strikePrice": 113.73,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 77,
@@ -1288,16 +1352,17 @@
       "en": "Lunchboxes 77",
       "ar": "صناديق غداء 77"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 98.8,
     "strikePrice": 113.62,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 78,
@@ -1308,16 +1373,17 @@
       "en": "Lunchboxes 78",
       "ar": "صناديق غداء 78"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 98.7,
     "strikePrice": 113.5,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 79,
@@ -1328,16 +1394,17 @@
       "en": "Lunchboxes 79",
       "ar": "صناديق غداء 79"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 98.6,
     "strikePrice": 113.39,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 80,
@@ -1348,16 +1415,17 @@
       "en": "Rulers 80",
       "ar": "مساطر 80"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 66.5,
     "strikePrice": 76.47,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 81,
@@ -1368,16 +1436,17 @@
       "en": "Rulers 81",
       "ar": "مساطر 81"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 66.6,
     "strikePrice": 76.59,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 82,
@@ -1388,16 +1457,17 @@
       "en": "Rulers 82",
       "ar": "مساطر 82"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 66.7,
     "strikePrice": 76.7,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 83,
@@ -1408,16 +1478,17 @@
       "en": "Rulers 83",
       "ar": "مساطر 83"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 66.8,
     "strikePrice": 76.82,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 84,
@@ -1428,16 +1499,17 @@
       "en": "Rulers 84",
       "ar": "مساطر 84"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 66.9,
     "strikePrice": 76.94,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 85,
@@ -1448,16 +1520,17 @@
       "en": "Rulers 85",
       "ar": "مساطر 85"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 67,
     "strikePrice": 77.05,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 86,
@@ -1468,16 +1541,17 @@
       "en": "Math Sets 86",
       "ar": "أطقم رياضيات 86"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 62.6,
     "strikePrice": 71.99,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 87,
@@ -1488,16 +1562,17 @@
       "en": "Math Sets 87",
       "ar": "أطقم رياضيات 87"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 62.7,
     "strikePrice": 72.11,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 88,
@@ -1508,16 +1583,17 @@
       "en": "Math Sets 88",
       "ar": "أطقم رياضيات 88"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 62.8,
     "strikePrice": 72.22,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 89,
@@ -1528,16 +1604,17 @@
       "en": "Math Sets 89",
       "ar": "أطقم رياضيات 89"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 62.9,
     "strikePrice": 72.33,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 90,
@@ -1548,16 +1625,17 @@
       "en": "Set Squares 90",
       "ar": "مثلتات هندسية 90"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 115.7,
     "strikePrice": 133.06,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 91,
@@ -1568,16 +1646,17 @@
       "en": "Set Squares 91",
       "ar": "مثلتات هندسية 91"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 115.6,
     "strikePrice": 132.94,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 92,
@@ -1588,16 +1667,17 @@
       "en": "Set Squares 92",
       "ar": "مثلتات هندسية 92"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 115.5,
     "strikePrice": 132.82,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 93,
@@ -1608,16 +1688,17 @@
       "en": "Compasses 93",
       "ar": "فرجارات 93"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 60.8,
     "strikePrice": 69.92,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 94,
@@ -1628,16 +1709,17 @@
       "en": "Compasses 94",
       "ar": "فرجارات 94"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 60.7,
     "strikePrice": 69.8,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 95,
@@ -1648,16 +1730,17 @@
       "en": "Compasses 95",
       "ar": "فرجارات 95"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 60.6,
     "strikePrice": 69.69,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 96,
@@ -1668,16 +1751,17 @@
       "en": "Protractors 96",
       "ar": "منقلات 96"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 45.5,
     "strikePrice": 52.32,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 97,
@@ -1688,16 +1772,17 @@
       "en": "Protractors 97",
       "ar": "منقلات 97"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 45.4,
     "strikePrice": 52.21,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 98,
@@ -1708,16 +1793,17 @@
       "en": "Protractors 98",
       "ar": "منقلات 98"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 45.3,
     "strikePrice": 52.09,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 99,
@@ -1728,16 +1814,17 @@
       "en": "Erasers 99",
       "ar": "ممحاة 99"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 74.5,
     "strikePrice": 85.67,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 100,
@@ -1748,16 +1835,17 @@
       "en": "Erasers 100",
       "ar": "ممحاة 100"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 74.4,
     "strikePrice": 85.56,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 101,
@@ -1768,16 +1856,17 @@
       "en": "Erasers 101",
       "ar": "ممحاة 101"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 74.3,
     "strikePrice": 85.44,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 102,
@@ -1788,16 +1877,17 @@
       "en": "Erasers 102",
       "ar": "ممحاة 102"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 74.2,
     "strikePrice": 85.33,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 103,
@@ -1808,16 +1898,17 @@
       "en": "Erasers 103",
       "ar": "ممحاة 103"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 74.1,
     "strikePrice": 85.21,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 104,
@@ -1828,16 +1919,17 @@
       "en": "Erasers 104",
       "ar": "ممحاة 104"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 74,
     "strikePrice": 85.1,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 105,
@@ -1848,16 +1940,17 @@
       "en": "Erasers 105",
       "ar": "ممحاة 105"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 73.9,
     "strikePrice": 84.98,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 106,
@@ -1868,16 +1961,17 @@
       "en": "Erasers 106",
       "ar": "ممحاة 106"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 73.8,
     "strikePrice": 84.87,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 107,
@@ -1888,16 +1982,17 @@
       "en": "Sharpeners 107",
       "ar": "مبراة 107"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 110.1,
     "strikePrice": 126.61,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 108,
@@ -1908,16 +2003,17 @@
       "en": "Sharpeners 108",
       "ar": "مبراة 108"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 110,
     "strikePrice": 126.5,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 109,
@@ -1928,16 +2024,17 @@
       "en": "Sharpeners 109",
       "ar": "مبراة 109"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 109.9,
     "strikePrice": 126.38,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 110,
@@ -1948,16 +2045,17 @@
       "en": "Sharpeners 110",
       "ar": "مبراة 110"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 109.8,
     "strikePrice": 126.27,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 111,
@@ -1968,16 +2066,17 @@
       "en": "Sharpeners 111",
       "ar": "مبراة 111"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 109.7,
     "strikePrice": 126.15,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 112,
@@ -1988,16 +2087,17 @@
       "en": "Sharpeners 112",
       "ar": "مبراة 112"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 109.6,
     "strikePrice": 126.04,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 113,
@@ -2008,16 +2108,17 @@
       "en": "Sharpeners 113",
       "ar": "مبراة 113"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 109.5,
     "strikePrice": 125.92,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 114,
@@ -2028,16 +2129,17 @@
       "en": "Sharpeners 114",
       "ar": "مبراة 114"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 109.4,
     "strikePrice": 125.81,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 115,
@@ -2048,16 +2150,17 @@
       "en": "Whiteboard Markers 115",
       "ar": "أقلام سبورة 115"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 128.5,
     "strikePrice": 147.77,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 116,
@@ -2068,16 +2171,17 @@
       "en": "Whiteboard Markers 116",
       "ar": "أقلام سبورة 116"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 128.6,
     "strikePrice": 147.89,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 117,
@@ -2088,16 +2192,17 @@
       "en": "Whiteboard Markers 117",
       "ar": "أقلام سبورة 117"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 128.7,
     "strikePrice": 148,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 118,
@@ -2108,16 +2213,17 @@
       "en": "Whiteboard Markers 118",
       "ar": "أقلام سبورة 118"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 128.8,
     "strikePrice": 148.12,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 119,
@@ -2128,16 +2234,17 @@
       "en": "Whiteboard Markers 119",
       "ar": "أقلام سبورة 119"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 128.9,
     "strikePrice": 148.23,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 120,
@@ -2148,16 +2255,17 @@
       "en": "Whiteboard Markers 120",
       "ar": "أقلام سبورة 120"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 129,
     "strikePrice": 148.35,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 121,
@@ -2168,16 +2276,17 @@
       "en": "Permanent Markers 121",
       "ar": "أقلام دائمة 121"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 127,
     "strikePrice": 146.05,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 122,
@@ -2188,16 +2297,17 @@
       "en": "Permanent Markers 122",
       "ar": "أقلام دائمة 122"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 127.1,
     "strikePrice": 146.16,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 123,
@@ -2208,16 +2318,17 @@
       "en": "Permanent Markers 123",
       "ar": "أقلام دائمة 123"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 127.2,
     "strikePrice": 146.28,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 124,
@@ -2228,16 +2339,17 @@
       "en": "Highlighters 124",
       "ar": "أقلام تظليل 124"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 70.2,
     "strikePrice": 80.73,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 125,
@@ -2248,16 +2360,17 @@
       "en": "Highlighters 125",
       "ar": "أقلام تظليل 125"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 70.3,
     "strikePrice": 80.84,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 126,
@@ -2268,16 +2381,17 @@
       "en": "Highlighters 126",
       "ar": "أقلام تظليل 126"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 70.4,
     "strikePrice": 80.96,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 127,
@@ -2288,16 +2402,17 @@
       "en": "Gel Pens 127",
       "ar": "أقلام جل 127"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 127.1,
     "strikePrice": 146.16,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 128,
@@ -2308,16 +2423,17 @@
       "en": "Gel Pens 128",
       "ar": "أقلام جل 128"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 127,
     "strikePrice": 146.05,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 129,
@@ -2328,16 +2444,17 @@
       "en": "Gel Pens 129",
       "ar": "أقلام جل 129"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 126.9,
     "strikePrice": 145.94,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 130,
@@ -2348,16 +2465,17 @@
       "en": "Ballpoint Pens 130",
       "ar": "أقلام حبر جاف 130"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 51.4,
     "strikePrice": 59.11,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 131,
@@ -2368,16 +2486,17 @@
       "en": "Ballpoint Pens 131",
       "ar": "أقلام حبر جاف 131"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 51.5,
     "strikePrice": 59.22,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 132,
@@ -2388,16 +2507,17 @@
       "en": "Ballpoint Pens 132",
       "ar": "أقلام حبر جاف 132"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 51.6,
     "strikePrice": 59.34,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 133,
@@ -2408,16 +2528,17 @@
       "en": "Fountain Pens 133",
       "ar": "أقلام ريشة 133"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 87.7,
     "strikePrice": 100.85,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 134,
@@ -2428,16 +2549,17 @@
       "en": "Fountain Pens 134",
       "ar": "أقلام ريشة 134"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 87.6,
     "strikePrice": 100.74,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 135,
@@ -2448,16 +2570,17 @@
       "en": "Fountain Pens 135",
       "ar": "أقلام ريشة 135"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 87.5,
     "strikePrice": 100.62,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 136,
@@ -2468,16 +2591,17 @@
       "en": "Mechanical Pencil Leads 136",
       "ar": "رصاص لأقلام ميكانيكية 136"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 123.3,
     "strikePrice": 141.79,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 137,
@@ -2488,16 +2612,17 @@
       "en": "Mechanical Pencil Leads 137",
       "ar": "رصاص لأقلام ميكانيكية 137"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 123.4,
     "strikePrice": 141.91,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 138,
@@ -2508,16 +2633,17 @@
       "en": "Mechanical Pencil Leads 138",
       "ar": "رصاص لأقلام ميكانيكية 138"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 123.5,
     "strikePrice": 142.02,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 139,
@@ -2528,16 +2654,17 @@
       "en": "Vehicles 139",
       "ar": "مركبات 139"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 132.1,
     "strikePrice": 151.91,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 140,
@@ -2548,16 +2675,17 @@
       "en": "Vehicles 140",
       "ar": "مركبات 140"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 132,
     "strikePrice": 151.8,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 141,
@@ -2568,16 +2696,17 @@
       "en": "Vehicles 141",
       "ar": "مركبات 141"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 131.9,
     "strikePrice": 151.69,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 142,
@@ -2588,16 +2717,17 @@
       "en": "Vehicles 142",
       "ar": "مركبات 142"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 131.8,
     "strikePrice": 151.57,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 143,
@@ -2608,16 +2738,17 @@
       "en": "Vehicles 143",
       "ar": "مركبات 143"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 131.7,
     "strikePrice": 151.45,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 144,
@@ -2628,16 +2759,17 @@
       "en": "Vehicles 144",
       "ar": "مركبات 144"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 131.6,
     "strikePrice": 151.34,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 145,
@@ -2648,16 +2780,17 @@
       "en": "Vehicles 145",
       "ar": "مركبات 145"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 131.5,
     "strikePrice": 151.22,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 146,
@@ -2668,16 +2801,17 @@
       "en": "Vehicles 146",
       "ar": "مركبات 146"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 131.4,
     "strikePrice": 151.11,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 147,
@@ -2688,16 +2822,17 @@
       "en": "Dolls 147",
       "ar": "دمى 147"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 85.2,
     "strikePrice": 97.98,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 148,
@@ -2708,16 +2843,17 @@
       "en": "Dolls 148",
       "ar": "دمى 148"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 85.3,
     "strikePrice": 98.09,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 149,
@@ -2728,16 +2864,17 @@
       "en": "Dolls 149",
       "ar": "دمى 149"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 85.4,
     "strikePrice": 98.21,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 150,
@@ -2748,16 +2885,17 @@
       "en": "Dolls 150",
       "ar": "دمى 150"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 85.5,
     "strikePrice": 98.32,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 151,
@@ -2768,16 +2906,17 @@
       "en": "Dolls 151",
       "ar": "دمى 151"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 85.6,
     "strikePrice": 98.44,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 152,
@@ -2788,16 +2927,17 @@
       "en": "Dolls 152",
       "ar": "دمى 152"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 85.7,
     "strikePrice": 98.55,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 153,
@@ -2808,16 +2948,17 @@
       "en": "Dolls 153",
       "ar": "دمى 153"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 85.8,
     "strikePrice": 98.67,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 154,
@@ -2828,16 +2969,17 @@
       "en": "Dolls 154",
       "ar": "دمى 154"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 85.9,
     "strikePrice": 98.78,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 155,
@@ -2848,16 +2990,17 @@
       "en": "Foam Sheets 155",
       "ar": "شرائح فوم 155"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 131.6,
     "strikePrice": 151.34,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 156,
@@ -2868,16 +3011,17 @@
       "en": "Foam Sheets 156",
       "ar": "شرائح فوم 156"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 131.5,
     "strikePrice": 151.22,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 157,
@@ -2888,16 +3032,17 @@
       "en": "Foam Sheets 157",
       "ar": "شرائح فوم 157"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 131.4,
     "strikePrice": 151.11,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 158,
@@ -2908,16 +3053,17 @@
       "en": "Foam Sheets 158",
       "ar": "شرائح فوم 158"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 131.3,
     "strikePrice": 151,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 159,
@@ -2928,16 +3074,17 @@
       "en": "Foam Sheets 159",
       "ar": "شرائح فوم 159"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 131.2,
     "strikePrice": 150.88,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 160,
@@ -2948,16 +3095,17 @@
       "en": "Foam Sheets 160",
       "ar": "شرائح فوم 160"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 131.1,
     "strikePrice": 150.76,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 161,
@@ -2968,16 +3116,17 @@
       "en": "Glitter 161",
       "ar": "جليتر 161"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 31.9,
     "strikePrice": 36.68,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 162,
@@ -2988,16 +3137,17 @@
       "en": "Glitter 162",
       "ar": "جليتر 162"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 31.8,
     "strikePrice": 36.57,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 163,
@@ -3008,16 +3158,17 @@
       "en": "Glitter 163",
       "ar": "جليتر 163"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 31.7,
     "strikePrice": 36.45,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 164,
@@ -3028,16 +3179,17 @@
       "en": "Stickers 164",
       "ar": "ملصقات 164"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 18.6,
     "strikePrice": 21.39,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 165,
@@ -3048,16 +3200,17 @@
       "en": "Stickers 165",
       "ar": "ملصقات 165"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 18.5,
     "strikePrice": 21.27,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 166,
@@ -3068,16 +3221,17 @@
       "en": "Stickers 166",
       "ar": "ملصقات 166"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 18.4,
     "strikePrice": 21.16,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 167,
@@ -3088,16 +3242,17 @@
       "en": "Scissors 167",
       "ar": "مقصات 167"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 33.9,
     "strikePrice": 38.98,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 168,
@@ -3108,16 +3263,17 @@
       "en": "Scissors 168",
       "ar": "مقصات 168"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 34,
     "strikePrice": 39.1,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 169,
@@ -3128,16 +3284,17 @@
       "en": "Scissors 169",
       "ar": "مقصات 169"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 34.1,
     "strikePrice": 39.21,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 170,
@@ -3148,16 +3305,17 @@
       "en": "Scissors 170",
       "ar": "مقصات 170"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 34.2,
     "strikePrice": 39.33,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 171,
@@ -3168,16 +3326,17 @@
       "en": "Cutters 171",
       "ar": "كترات 171"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 110,
     "strikePrice": 126.5,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 172,
@@ -3188,16 +3347,17 @@
       "en": "Cutters 172",
       "ar": "كترات 172"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 109.9,
     "strikePrice": 126.38,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 173,
@@ -3208,16 +3368,17 @@
       "en": "Cutters 173",
       "ar": "كترات 173"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 109.8,
     "strikePrice": 126.27,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 174,
@@ -3228,16 +3389,17 @@
       "en": "Crayons 174",
       "ar": "ألوان شمعية 174"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 23.3,
     "strikePrice": 26.79,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 175,
@@ -3248,16 +3410,17 @@
       "en": "Crayons 175",
       "ar": "ألوان شمعية 175"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 23.4,
     "strikePrice": 26.91,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 176,
@@ -3268,16 +3431,17 @@
       "en": "Crayons 176",
       "ar": "ألوان شمعية 176"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 23.5,
     "strikePrice": 27.02,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 177,
@@ -3288,16 +3452,17 @@
       "en": "Crayons 177",
       "ar": "ألوان شمعية 177"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 23.6,
     "strikePrice": 27.14,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 178,
@@ -3308,16 +3473,17 @@
       "en": "Oil Pastels 178",
       "ar": "ألوان زيتية 178"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 81.1,
     "strikePrice": 93.26,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 179,
@@ -3328,16 +3494,17 @@
       "en": "Oil Pastels 179",
       "ar": "ألوان زيتية 179"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 81.2,
     "strikePrice": 93.38,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 180,
@@ -3348,16 +3515,17 @@
       "en": "Oil Pastels 180",
       "ar": "ألوان زيتية 180"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 81.3,
     "strikePrice": 93.49,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 181,
@@ -3368,16 +3536,17 @@
       "en": "Staplers 181",
       "ar": "دباسات 181"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 93.4,
     "strikePrice": 107.41,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 182,
@@ -3388,16 +3557,17 @@
       "en": "Staplers 182",
       "ar": "دباسات 182"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 93.5,
     "strikePrice": 107.52,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 183,
@@ -3408,16 +3578,17 @@
       "en": "Staplers 183",
       "ar": "دباسات 183"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 93.6,
     "strikePrice": 107.64,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 184,
@@ -3428,16 +3599,17 @@
       "en": "Staplers 184",
       "ar": "دباسات 184"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 93.7,
     "strikePrice": 107.75,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 185,
@@ -3448,16 +3620,17 @@
       "en": "Staplers 185",
       "ar": "دباسات 185"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 93.8,
     "strikePrice": 107.87,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 186,
@@ -3468,16 +3641,17 @@
       "en": "Staplers 186",
       "ar": "دباسات 186"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 93.9,
     "strikePrice": 107.98,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 187,
@@ -3488,16 +3662,17 @@
       "en": "Staplers 187",
       "ar": "دباسات 187"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 94,
     "strikePrice": 108.1,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 188,
@@ -3508,16 +3683,17 @@
       "en": "Staplers 188",
       "ar": "دباسات 188"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 94.1,
     "strikePrice": 108.21,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 189,
@@ -3528,16 +3704,17 @@
       "en": "Hole Punchers 189",
       "ar": "خرامات 189"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 63.5,
     "strikePrice": 73.02,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 190,
@@ -3548,16 +3725,17 @@
       "en": "Hole Punchers 190",
       "ar": "خرامات 190"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 63.4,
     "strikePrice": 72.91,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 191,
@@ -3568,16 +3746,17 @@
       "en": "Hole Punchers 191",
       "ar": "خرامات 191"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 63.3,
     "strikePrice": 72.79,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 192,
@@ -3588,16 +3767,17 @@
       "en": "Hole Punchers 192",
       "ar": "خرامات 192"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 63.2,
     "strikePrice": 72.68,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 193,
@@ -3608,16 +3788,17 @@
       "en": "Clips 193",
       "ar": "مشابك 193"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 111.9,
     "strikePrice": 128.69,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 194,
@@ -3628,16 +3809,17 @@
       "en": "Clips 194",
       "ar": "مشابك 194"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 112,
     "strikePrice": 128.8,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 195,
@@ -3648,16 +3830,17 @@
       "en": "Clips 195",
       "ar": "مشابك 195"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 112.1,
     "strikePrice": 128.91,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 196,
@@ -3668,16 +3851,17 @@
       "en": "Clips 196",
       "ar": "مشابك 196"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 112.2,
     "strikePrice": 129.03,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 197,
@@ -3688,16 +3872,17 @@
       "en": "Envelopes 197",
       "ar": "أظرفة 197"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 22.3,
     "strikePrice": 25.64,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 198,
@@ -3708,16 +3893,17 @@
       "en": "Envelopes 198",
       "ar": "أظرفة 198"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 22.4,
     "strikePrice": 25.76,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 199,
@@ -3728,16 +3914,17 @@
       "en": "Envelopes 199",
       "ar": "أظرفة 199"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 22.5,
     "strikePrice": 25.87,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 200,
@@ -3748,16 +3935,17 @@
       "en": "Envelopes 200",
       "ar": "أظرفة 200"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 22.6,
     "strikePrice": 25.99,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 201,
@@ -3768,16 +3956,17 @@
       "en": "Labels 2 201",
       "ar": "ملصقات تعريفية 2 201"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 81.2,
     "strikePrice": 93.38,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 202,
@@ -3788,16 +3977,17 @@
       "en": "Labels 2 202",
       "ar": "ملصقات تعريفية 2 202"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 81.1,
     "strikePrice": 93.26,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 203,
@@ -3808,16 +3998,17 @@
       "en": "Labels 2 203",
       "ar": "ملصقات تعريفية 2 203"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 81,
     "strikePrice": 93.15,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 204,
@@ -3828,16 +4019,17 @@
       "en": "Stands 204",
       "ar": "حوامل 204"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 127.3,
     "strikePrice": 146.39,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 205,
@@ -3848,16 +4040,17 @@
       "en": "Stands 205",
       "ar": "حوامل 205"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 127.4,
     "strikePrice": 146.51,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 206,
@@ -3868,16 +4061,17 @@
       "en": "Stands 206",
       "ar": "حوامل 206"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 127.5,
     "strikePrice": 146.63,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 207,
@@ -3888,16 +4082,17 @@
       "en": "Stands 207",
       "ar": "حوامل 207"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 127.6,
     "strikePrice": 146.74,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 208,
@@ -3908,16 +4103,17 @@
       "en": "Stands 208",
       "ar": "حوامل 208"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 127.7,
     "strikePrice": 146.85,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 209,
@@ -3928,16 +4124,17 @@
       "en": "Stands 209",
       "ar": "حوامل 209"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 127.8,
     "strikePrice": 146.97,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 210,
@@ -3948,16 +4145,17 @@
       "en": "Stands 210",
       "ar": "حوامل 210"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 127.9,
     "strikePrice": 147.09,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 211,
@@ -3968,16 +4166,17 @@
       "en": "Stands 211",
       "ar": "حوامل 211"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 128,
     "strikePrice": 147.2,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 212,
@@ -3988,16 +4187,17 @@
       "en": "Cabinets 212",
       "ar": "خزائن 212"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 80.5,
     "strikePrice": 92.57,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 213,
@@ -4008,16 +4208,17 @@
       "en": "Cabinets 213",
       "ar": "خزائن 213"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 80.4,
     "strikePrice": 92.46,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 214,
@@ -4028,16 +4229,17 @@
       "en": "Cabinets 214",
       "ar": "خزائن 214"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 80.3,
     "strikePrice": 92.34,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 215,
@@ -4048,16 +4250,17 @@
       "en": "Cabinets 215",
       "ar": "خزائن 215"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 80.2,
     "strikePrice": 92.23,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 216,
@@ -4068,16 +4271,17 @@
       "en": "Blankets 216",
       "ar": "بطانيات 216"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 19.2,
     "strikePrice": 22.08,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 217,
@@ -4088,16 +4292,17 @@
       "en": "Blankets 217",
       "ar": "بطانيات 217"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 19.1,
     "strikePrice": 21.96,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 218,
@@ -4108,16 +4313,17 @@
       "en": "Blankets 218",
       "ar": "بطانيات 218"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 19,
     "strikePrice": 21.85,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 219,
@@ -4128,16 +4334,17 @@
       "en": "Blankets 219",
       "ar": "بطانيات 219"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 18.9,
     "strikePrice": 21.73,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 220,
@@ -4148,16 +4355,17 @@
       "en": "Buckets 220",
       "ar": "أوعية 220"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 29.3,
     "strikePrice": 33.7,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 221,
@@ -4168,16 +4376,17 @@
       "en": "Buckets 221",
       "ar": "أوعية 221"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 29.4,
     "strikePrice": 33.81,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 222,
@@ -4188,16 +4397,17 @@
       "en": "Buckets 222",
       "ar": "أوعية 222"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 29.5,
     "strikePrice": 33.92,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 223,
@@ -4208,16 +4418,17 @@
       "en": "Rugs 223",
       "ar": "سجاد 223"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 24.1,
     "strikePrice": 27.71,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 224,
@@ -4228,16 +4439,17 @@
       "en": "Rugs 224",
       "ar": "سجاد 224"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 24,
     "strikePrice": 27.6,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 225,
@@ -4248,16 +4460,17 @@
       "en": "Rugs 225",
       "ar": "سجاد 225"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 23.9,
     "strikePrice": 27.48,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 226,
@@ -4268,16 +4481,17 @@
       "en": "Cups 226",
       "ar": "أكواب 226"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 18.7,
     "strikePrice": 21.5,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 227,
@@ -4288,16 +4502,17 @@
       "en": "Cups 227",
       "ar": "أكواب 227"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 18.6,
     "strikePrice": 21.39,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 228,
@@ -4308,16 +4523,17 @@
       "en": "Cups 228",
       "ar": "أكواب 228"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 18.5,
     "strikePrice": 21.27,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 229,
@@ -4328,16 +4544,17 @@
       "en": "Cups 229",
       "ar": "أكواب 229"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 18.4,
     "strikePrice": 21.16,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 230,
@@ -4348,16 +4565,17 @@
       "en": "Mugs 230",
       "ar": "مجات 230"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 39.6,
     "strikePrice": 45.54,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 231,
@@ -4368,16 +4586,17 @@
       "en": "Mugs 231",
       "ar": "مجات 231"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 39.5,
     "strikePrice": 45.42,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 232,
@@ -4388,16 +4607,17 @@
       "en": "Mugs 232",
       "ar": "مجات 232"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 39.4,
     "strikePrice": 45.31,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 233,
@@ -4408,16 +4628,17 @@
       "en": "Mugs 233",
       "ar": "مجات 233"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 39.3,
     "strikePrice": 45.19,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 234,
@@ -4428,16 +4649,17 @@
       "en": "Plates 234",
       "ar": "أطباق 234"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 82.5,
     "strikePrice": 94.87,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 235,
@@ -4448,16 +4670,17 @@
       "en": "Plates 235",
       "ar": "أطباق 235"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 82.6,
     "strikePrice": 94.99,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 236,
@@ -4468,16 +4691,17 @@
       "en": "Plates 236",
       "ar": "أطباق 236"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 82.7,
     "strikePrice": 95.1,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 237,
@@ -4488,16 +4712,17 @@
       "en": "Plates 237",
       "ar": "أطباق 237"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 82.8,
     "strikePrice": 95.22,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 238,
@@ -4508,16 +4733,17 @@
       "en": "Holders 238",
       "ar": "حوامل 238"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 128.3,
     "strikePrice": 147.54,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 239,
@@ -4528,16 +4754,17 @@
       "en": "Holders 239",
       "ar": "حوامل 239"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 128.4,
     "strikePrice": 147.66,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 240,
@@ -4548,16 +4775,17 @@
       "en": "Holders 240",
       "ar": "حوامل 240"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 128.5,
     "strikePrice": 147.77,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   },
   {
     "id": 241,
@@ -4568,15 +4796,16 @@
       "en": "Holders 241",
       "ar": "حوامل 241"
     },
-    "displayOrder": 0,
     "isActive": true,
     "basePrice": 128.6,
     "strikePrice": 147.89,
     "costPrice": null,
     "weightGrams": null,
     "barcode": null,
-    "lowStockThreshold": 10,
     "createdAt": "2026-02-17 16:04:52.480606",
-    "updatedAt": "2026-02-17 16:04:52.480606"
+    "updatedAt": "2026-02-17 16:04:52.480606",
+    "isDefault": true,
+    "sortOrder": 1,
+    "mediaSet": {}
   }
 ]

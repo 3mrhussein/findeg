@@ -18,7 +18,7 @@ import {
   categories,
   tags,
   productTags,
-  attributeDefinitions,
+  attributes as attributeTable,
   variantAttributes,
 } from '@findeg/db/schema';
 import { type Product } from '../../domain/entities/Product';
@@ -37,7 +37,7 @@ import {
 import { type ProductInput } from '../../../administration/domain/types/ProductInput';
 import { BaseDrizzleRepository } from '../../../core/infrastructure/persistence/BaseDrizzleRepository';
 import { type Tag } from '../../domain/entities/Tag';
-import { type ProductAttributeValue } from '../../domain/entities/AttributeDefinition';
+import { type ProductAttributeValue } from '../../domain/entities/Attribute';
 
 /**
  * Drizzle Product Repository
@@ -60,6 +60,7 @@ export class DrizzleProductRepository
     tags: Tag[] = [],
     attributes: ProductAttributeValue[] = [],
     language: Locale = 'en',
+    hydratedDefaultVariant?: Variant,
   ): Product {
     const nameMap = asTranslationMap(dbProduct.localizedName);
     const descMap = asTranslationMap(dbProduct.localizedDescription);
@@ -84,6 +85,7 @@ export class DrizzleProductRepository
       // Metadata
       rating: 0,
       reviewsCount: 0,
+      hydratedDefaultVariant,
       variants,
       tags,
       attributes,
@@ -107,14 +109,18 @@ export class DrizzleProductRepository
 
     return results.map((row) => {
       const catName = pick(asTranslationMap(row.category?.localizedName ?? { en: '' }), lang);
+      const productVariantsList = variantsMap[row.product.id] || [];
+      const defaultVariant = productVariantsList.find(v => v.isDefault) || productVariantsList[0];
+      
       return this.mapToDomain(
         row.product,
-        variantsMap[row.product.id] || [],
+        productVariantsList,
         catName,
-        row.brand?.name,
+        pick(asTranslationMap(row.brand?.localizedName ?? {}), lang),
         [],
         [],
         lang,
+        defaultVariant
       );
     });
   }
@@ -137,14 +143,18 @@ export class DrizzleProductRepository
     const catNameMap = (results[0].category?.localizedName as Record<string, string>) || {};
     const catName = catNameMap[lang] || catNameMap['en'];
 
+    const productVariantsList = variants[id] || [];
+    const defaultVariant = productVariantsList.find(v => v.isDefault) || productVariantsList[0];
+
     return this.mapToDomain(
       results[0].product,
-      variants[id] || [],
+      productVariantsList,
       catName,
-      results[0].brand?.name,
+      pick(asTranslationMap(results[0].brand?.localizedName ?? {}), lang),
       tagsData,
       attrs,
       lang,
+      defaultVariant
     );
   }
 
@@ -248,7 +258,7 @@ export class DrizzleProductRepository
           row.product,
           variantsMap[row.product.id] || [],
           undefined,
-          row.brand?.name,
+          pick(asTranslationMap(row.brand?.localizedName ?? {}), lang),
           [],
           [],
           lang,
@@ -344,8 +354,9 @@ export class DrizzleProductRepository
         strikePrice: row.variant.strikePrice ? String(row.variant.strikePrice) : undefined,
         costPrice: row.variant.costPrice ? String(row.variant.costPrice) : undefined,
         isActive: row.variant.isActive,
-        displayOrder: row.variant.displayOrder,
-        lowStockThreshold: row.variant.lowStockThreshold,
+        sortOrder: row.variant.sortOrder,
+        isDefault: row.variant.isDefault,
+        mediaSet: row.variant.mediaSet as any,
         barcode: row.variant.barcode || undefined,
         weightGrams: row.variant.weightGrams || undefined,
         images: [],
@@ -370,14 +381,12 @@ export class DrizzleProductRepository
   ): Promise<ProductAttributeValue[]> {
     const results = await this.db
       .select({
-        attributeId: attributeDefinitions.id,
-        key: attributeDefinitions.key,
+        attributeId: attributeTable.id,
+        key: attributeTable.key,
         valueText: variantAttributes.valueText,
-        valueNum: variantAttributes.valueNum,
-        valueBool: variantAttributes.valueBool,
       })
       .from(variantAttributes)
-      .innerJoin(attributeDefinitions, eq(attributeDefinitions.id, variantAttributes.attributeId))
+      .innerJoin(attributeTable, eq(attributeTable.id, variantAttributes.attributeId))
       .innerJoin(productVariants, eq(productVariants.id, variantAttributes.variantId))
       .where(eq(productVariants.productId, productId));
 
@@ -385,8 +394,6 @@ export class DrizzleProductRepository
       attributeId: r.attributeId,
       key: r.key,
       valueText: r.valueText || undefined,
-      valueNum: r.valueNum ? Number(r.valueNum) : undefined,
-      valueBool: r.valueBool ?? undefined,
     })) as ProductAttributeValue[];
   }
 

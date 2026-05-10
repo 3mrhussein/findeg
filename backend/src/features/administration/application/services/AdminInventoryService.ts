@@ -59,7 +59,7 @@ export class AdminInventoryService implements IAdminInventoryService {
    * Updates the stock level for a specific variant.
    * Triggers an audit log entry with the old and new values.
    *
-   * @param update - The inventory update payload (variant ID, quantity, threshold).
+   * @param update - The inventory update payload (variant ID, quantity).
    * @throws Error if the variant is not found.
    */
   async updateStock(update: InventoryUpdate): Promise<void> {
@@ -81,23 +81,15 @@ export class AdminInventoryService implements IAdminInventoryService {
       });
     }
 
-    if (update.lowStockThreshold !== undefined) {
-      await this.variantRepository.update(update.variantId, {
-        lowStockThreshold: update.lowStockThreshold,
-      });
-    }
-
     await this.auditLogService.logAction({
       entityType: 'variant',
       entityId: String(update.variantId),
       action: 'update_inventory',
       oldValues: {
         onHand: currentQty,
-        lowStockThreshold: variant.lowStockThreshold,
       },
       newValues: {
         onHand: update.quantity,
-        lowStockThreshold: update.lowStockThreshold ?? variant.lowStockThreshold,
         notes: update.notes,
       },
     });

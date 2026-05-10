@@ -2,64 +2,46 @@
   {
     "productId": 13,
     "attributeId": 1,
-    "valueText": "Blue",
-    "valueNum": null,
-    "valueBool": null
+    "valueText": "Blue"
   },
   {
     "productId": 13,
     "attributeId": 2,
-    "valueText": null,
-    "valueNum": 80,
-    "valueBool": null
+    "valueText": null
   },
   {
     "productId": 13,
     "attributeId": 3,
-    "valueText": "Metal",
-    "valueNum": null,
-    "valueBool": null
+    "valueText": "Metal"
   },
   {
     "productId": 14,
     "attributeId": 1,
-    "valueText": "Black",
-    "valueNum": null,
-    "valueBool": null
+    "valueText": "Black"
   },
   {
     "productId": 14,
     "attributeId": 2,
-    "valueText": null,
-    "valueNum": 100,
-    "valueBool": null
+    "valueText": null
   },
   {
     "productId": 14,
     "attributeId": 3,
-    "valueText": "Plastic",
-    "valueNum": null,
-    "valueBool": null
+    "valueText": "Plastic"
   },
   {
     "productId": 15,
     "attributeId": 1,
-    "valueText": "Red",
-    "valueNum": null,
-    "valueBool": null
+    "valueText": "Red"
   },
   {
     "productId": 15,
     "attributeId": 2,
-    "valueText": null,
-    "valueNum": 120,
-    "valueBool": null
+    "valueText": null
   },
   {
     "productId": 16,
     "attributeId": 1,
-    "valueText": "Green",
-    "valueNum": null,
-    "valueBool": null
+    "valueText": "Green"
   }
 ]
