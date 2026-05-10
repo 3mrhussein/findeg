@@ -84,7 +84,7 @@ export function CartDrawer() {
                         <div className="space-y-4">
                           {items.map((item) => (
                             <CartItem
-                              key={`${item.variantId}-${item.uomCode}`}
+                              key={item.variantId}
                               {...item}
                               onIncrease={() => {}}
                               onDecrease={() => {}}
@@ -96,26 +96,24 @@ export function CartDrawer() {
                     ))}
                     {nonKitItems.map((item) => (
                       <CartItem
-                        key={`${item.variantId}-${item.uomCode}`}
+                        key={item.variantId}
                         variantId={item.variantId}
                         productName={item.productName}
                         variantLabel={item.variantLabel}
-                        uomCode={item.uomCode}
                         unitPrice={item.unitPrice}
                         quantity={item.quantity}
                         imageUrl={item.imageUrl}
                         cartKitId={item.cartKitId}
                         onIncrease={() =>
-                          updateQuantity(item.variantId, item.uomCode, item.quantity + 1)
+                          updateQuantity(item.variantId, item.quantity + 1)
                         }
                         onDecrease={() =>
                           updateQuantity(
                             item.variantId,
-                            item.uomCode,
                             Math.max(1, item.quantity - 1),
                           )
                         }
-                        onRemove={() => removeFromCart(item.variantId, item.uomCode)}
+                        onRemove={() => removeFromCart(item.variantId)}
                       />
                     ))}
                   </>

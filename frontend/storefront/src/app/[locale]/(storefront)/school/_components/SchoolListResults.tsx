@@ -27,7 +27,7 @@ export function SchoolListResults({ products, totalEstimatedCost }: SchoolListRe
       const variants = product.variants || [];
       const defaultVariant = variants.find((v) => v.variantKey === 'default') || variants[0];
       if (defaultVariant) {
-        addToCart(product.id, 1, { variantId: defaultVariant.id, uomCode: 'pcs' });
+        addToCart(product.id, 1, { variantId: defaultVariant.id });
       }
     });
   }
@@ -55,7 +55,7 @@ export function SchoolListResults({ products, totalEstimatedCost }: SchoolListRe
             <div className="space-y-1">
               <p className="font-medium">{product.name}</p>
               <p className="text-xs text-muted-foreground">
-                {product.categoryName || product.skuPrefix}
+                {product.categoryName || product.variants?.[0]?.sku}
               </p>
             </div>
             <div className="flex items-center gap-3">
@@ -74,7 +74,7 @@ export function SchoolListResults({ products, totalEstimatedCost }: SchoolListRe
                   const defaultVariant =
                     variants.find((v) => v.variantKey === 'default') || variants[0];
                   if (defaultVariant) {
-                    addToCart(product.id, 1, { variantId: defaultVariant.id, uomCode: 'pcs' });
+                    addToCart(product.id, 1, { variantId: defaultVariant.id });
                   }
                 }}
               >

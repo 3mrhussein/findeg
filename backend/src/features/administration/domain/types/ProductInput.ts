@@ -21,22 +21,6 @@ const ProductTranslationSchema = z.object({
 
 // ─── Variant Input ───────────────────────────────────────────────────────────
 
-const SellableUomInputSchema = z.object({
-  uomCode: z.string(),
-  factorToBase: z.number().positive(),
-  isEnabled: z.boolean().optional().default(true),
-  localizedLabel: TranslationMapSchema.optional(),
-  barcode: z.string().optional(),
-});
-
-const PriceListInputSchema = z.object({
-  customerGroup: z.string(),
-  uomCode: z.string(),
-  unitPrice: PriceSchema,
-  currency: z.string().optional().default('EGP'),
-  isSellable: z.boolean().optional().default(true),
-  minQty: z.number().int().positive().optional().default(1),
-});
 
 const VariantImageInputSchema = z.object({
   url: z.string().url(),
@@ -75,8 +59,6 @@ export const VariantInputSchema = z.object({
   lowStockThreshold: QuantitySchema.optional().default(10),
   images: z.array(VariantImageInputSchema).optional(),
   attributes: z.array(VariantAttributeInputSchema).optional(),
-  sellableUoms: z.array(SellableUomInputSchema).optional(),
-  priceLists: z.array(PriceListInputSchema).optional(),
 });
 
 export type VariantInput = z.infer<typeof VariantInputSchema>;
@@ -86,13 +68,11 @@ export type VariantInput = z.infer<typeof VariantInputSchema>;
 /**
  * Input schema for creating/updating a product (SPU).
  *
- * Removed: sku, price, strikePrice, images, stockQuantity,
+ * Removed: sku, skuPrefix, price, strikePrice, images, stockQuantity,
  *   lowStockThreshold, variants (JSONB)
- * Added: skuPrefix, variants (normalized array)
+ * Added: variants (normalized array)
  */
 export const ProductInputSchema = z.object({
-  /** Optional family-level SKU prefix */
-  skuPrefix: z.string().optional(),
 
   /** Primary navigation category */
   categoryId: IdSchema.optional(),

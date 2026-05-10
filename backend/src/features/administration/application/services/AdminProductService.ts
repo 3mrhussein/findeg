@@ -11,7 +11,6 @@ import type { Locale } from '../../../core/domain/value-objects';
 import type {
   CreateProductWithVariantsInput,
   UpdateProductWithVariantsInput,
-  UoMInput,
   ImageInput,
   CreateVariantInput,
 } from '../../domain/types/VariantInput';
@@ -25,13 +24,10 @@ import {
   productVariants,
   variantImages,
   variantAttributes,
-  variantSellableUoms,
-  variantPriceLists,
   productTags,
   attributeDefinitions,
   categories,
   brands,
-  uomCodeEnum,
 } from '@findeg/db/schema';
 import { eq, and, ne, inArray, sql, desc, asc, or, ilike, count, SQL, Column } from 'drizzle-orm';
 import {
@@ -49,7 +45,7 @@ type Transaction = Parameters<Parameters<Db['transaction']>[0]>[0];
  * Orchestrates full product lifecycle for the admin dashboard:
  * - Product shell (SPU) creation/update/delete
  * - Variant generation from attribute dimensions
- * - UoM and price list management per variant
+ * - Price management per variant
  * - SKU uniqueness validation
  * - Audit logging for all mutations
  */
@@ -120,7 +116,6 @@ export class AdminProductService implements IAdminProductService {
         or(
           sql`${products.localizedName}->>'en' ILIKE ${search}`,
           sql`${products.localizedName}->>'ar' ILIKE ${search}`,
-          ilike(products.sku, search),
           sql`EXISTS (SELECT 1 FROM "catalog"."product_variants" pv WHERE pv."product_id" = ${products.id} AND pv."sku" ILIKE ${search})`,
         ),
       );
@@ -202,7 +197,6 @@ export class AdminProductService implements IAdminProductService {
     const mainRows = await db
       .select({
         id: products.id,
-        sku: products.sku,
         localizedName: products.localizedName,
         categoryId: products.categoryId,
         categoryName: sql<string>`${categories.localizedName}->>'en'`,
@@ -243,7 +237,7 @@ export class AdminProductService implements IAdminProductService {
 
       return {
         ...row,
-        sku: row.sku || 'N/A',
+        sku: 'N/A', // SPUs no longer have SKUs, only variants
         localizedName: row.localizedName as { en: string; ar: string },
         defaultVariantPrice: row.defaultVariantPrice ? Number(row.defaultVariantPrice) : null,
         totalStock: Number(row.totalStock),
@@ -311,7 +305,6 @@ export class AdminProductService implements IAdminProductService {
           categoryId: input.categoryId ?? null,
           brandId: input.brandId ?? null,
           isActive: input.isActive,
-          sku: input.sku ?? null,
         })
         .returning({ id: products.id });
 
@@ -448,9 +441,6 @@ export class AdminProductService implements IAdminProductService {
             }
           }
 
-          if (v.uoms !== undefined) {
-            await this._upsertUoMsInTx(tx, v.id, v.uoms);
-          }
         } else {
           // New variant to insert
           await this._insertVariantInTx(
@@ -490,7 +480,6 @@ export class AdminProductService implements IAdminProductService {
       const [newSpu] = await tx
         .insert(products)
         .values({
-          sku: `${product.sku}-copy-${Date.now()}`,
           localizedName: {
             en: `${(product.localizedName as Record<'en' | 'ar', string>).en} (Copy)`,
             ar: `${(product.localizedName as Record<'en' | 'ar', string>).ar} (نسخة)`,
@@ -707,10 +696,6 @@ export class AdminProductService implements IAdminProductService {
           }
         }
 
-        // Apply default UoMs
-        if (defaults.uoms?.length) {
-          await this._upsertUoMsInTx(tx, row.id, defaults.uoms);
-        }
       }
     });
 
@@ -792,27 +777,10 @@ export class AdminProductService implements IAdminProductService {
     return rows.length === 0;
   }
 
-  // ─── UoM Management ───────────────────────────────────────────────────────
 
   /**
    *
    */
-  async upsertVariantUoMs(
-    variantId: number,
-    uoms: UoMInput[],
-    adminUserId?: number,
-  ): Promise<void> {
-    await db.transaction(async (tx) => {
-      await this._upsertUoMsInTx(tx, variantId, uoms);
-    });
-
-    await this.auditLogService?.logAction({
-      entityType: 'product_variant',
-      entityId: String(variantId),
-      action: 'upsert_uoms',
-      adminUserId,
-    });
-  }
 
   // ─── Image Management ──────────────────────────────────────────────────────
 
@@ -952,10 +920,6 @@ export class AdminProductService implements IAdminProductService {
       }
     }
 
-    // Insert UoMs + price lists
-    if (variant.uoms?.length) {
-      await this._upsertUoMsInTx(tx, variantId, variant.uoms);
-    }
 
     return variantId;
   }
@@ -963,42 +927,6 @@ export class AdminProductService implements IAdminProductService {
   /**
    *
    */
-  private async _upsertUoMsInTx(tx: Transaction, variantId: number, uoms: UoMInput[]): Promise<void> {
-    // Replace all UoMs
-    await tx.delete(variantSellableUoms).where(eq(variantSellableUoms.variantId, variantId));
-
-    if (!uoms.length) return;
-
-    for (const uom of uoms) {
-      await tx
-        .insert(variantSellableUoms)
-        .values({
-          variantId,
-          uomCode: uom.uomCode as (typeof uomCodeEnum.enumValues)[number],
-          factorToBase: String(uom.factorToBase),
-          localizedLabel: uom.localizedLabel,
-          barcode: uom.barcode ?? null,
-          isEnabled: uom.isEnabled,
-        })
-        .returning({ id: variantSellableUoms.id });
-
-      // Insert price lists for this UoM
-      if (uom.priceLists?.length) {
-        await tx.insert(variantPriceLists).values(
-          uom.priceLists.map((pl) => ({
-            variantId,
-            uomCode: uom.uomCode as (typeof uomCodeEnum.enumValues)[number],
-            customerGroup: pl.customerGroup,
-            unitPrice: String(pl.unitPrice),
-            minQty: pl.minQty,
-            isSellable: pl.isSellable,
-            startsAt: pl.startsAt ?? null,
-            endsAt: pl.endsAt ?? null,
-          })),
-        );
-      }
-    }
-  }
 
   // ─── Fetch for Edit ────────────────────────────────────────────────────────
 
@@ -1016,13 +944,6 @@ export class AdminProductService implements IAdminProductService {
               orderBy: [asc(variantImages.displayOrder)],
             },
             attributes: true,
-            sellableUoms: {
-              with: {
-                // Price lists are shared at the variant level but keyed by uomCode
-                // In this schema, variantPriceLists is a separate many-relation of variant
-              },
-            },
-            priceLists: true,
           },
           orderBy: [asc(productVariants.displayOrder)],
         },
@@ -1046,16 +967,6 @@ export class AdminProductService implements IAdminProductService {
         basePrice: Number(v.basePrice),
         strikePrice: v.strikePrice ? Number(v.strikePrice) : null,
         costPrice: v.costPrice ? Number(v.costPrice) : null,
-        sellableUoms: v.sellableUoms.map((u) => ({
-          ...u,
-          factorToBase: Number(u.factorToBase),
-          priceLists: v.priceLists
-            .filter((p) => p.uomCode === u.uomCode)
-            .map((p) => ({
-              ...p,
-              unitPrice: Number(p.unitPrice),
-            })),
-        })),
         images: v.images,
         attributes: v.attributes,
       })),
@@ -1081,20 +992,4 @@ export class AdminProductService implements IAdminProductService {
     return !existing;
   }
 
-  /**
-   * Checks if a SKU prefix is available.
-   */
-  async checkSkuPrefixAvailable(prefix: string, excludeProductId?: number): Promise<boolean> {
-    const condition = excludeProductId
-      ? and(eq(products.skuPrefix, prefix), ne(products.id, excludeProductId))
-      : eq(products.skuPrefix, prefix);
-
-    const [existing] = await db
-      .select({ id: products.id })
-      .from(products)
-      .where(condition)
-      .limit(1);
-
-    return !existing;
-  }
 }

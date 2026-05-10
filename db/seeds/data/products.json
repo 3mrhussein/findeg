@@ -1,7 +1,6 @@
 [
   {
     "id": 13,
-    "skuPrefix": "KEYCH",
     "localizedName": {
       "en": "Keychains 13",
       "ar": "علاقات مفاتيح 13"
@@ -26,7 +25,6 @@
   },
   {
     "id": 14,
-    "skuPrefix": "KEYCH",
     "localizedName": {
       "en": "Keychains 14",
       "ar": "علاقات مفاتيح 14"
@@ -51,7 +49,6 @@
   },
   {
     "id": 15,
-    "skuPrefix": "KEYCH",
     "localizedName": {
       "en": "Keychains 15",
       "ar": "علاقات مفاتيح 15"
@@ -76,7 +73,6 @@
   },
   {
     "id": 16,
-    "skuPrefix": "KEYCH",
     "localizedName": {
       "en": "Keychains 16",
       "ar": "علاقات مفاتيح 16"
@@ -101,7 +97,6 @@
   },
   {
     "id": 17,
-    "skuPrefix": "KEYCH",
     "localizedName": {
       "en": "Keychains 17",
       "ar": "علاقات مفاتيح 17"
@@ -126,7 +121,6 @@
   },
   {
     "id": 18,
-    "skuPrefix": "KEYCH",
     "localizedName": {
       "en": "Keychains 18",
       "ar": "علاقات مفاتيح 18"
@@ -151,7 +145,6 @@
   },
   {
     "id": 19,
-    "skuPrefix": "KEYCH",
     "localizedName": {
       "en": "Keychains 19",
       "ar": "علاقات مفاتيح 19"
@@ -176,7 +169,6 @@
   },
   {
     "id": 20,
-    "skuPrefix": "KEYCH",
     "localizedName": {
       "en": "Keychains 20",
       "ar": "علاقات مفاتيح 20"
@@ -201,7 +193,6 @@
   },
   {
     "id": 21,
-    "skuPrefix": "WATCH",
     "localizedName": {
       "en": "Watches 21",
       "ar": "ساعات 21"
@@ -226,7 +217,6 @@
   },
   {
     "id": 22,
-    "skuPrefix": "WATCH",
     "localizedName": {
       "en": "Watches 22",
       "ar": "ساعات 22"
@@ -251,7 +241,6 @@
   },
   {
     "id": 23,
-    "skuPrefix": "WATCH",
     "localizedName": {
       "en": "Watches 23",
       "ar": "ساعات 23"
@@ -276,7 +265,6 @@
   },
   {
     "id": 24,
-    "skuPrefix": "WATCH",
     "localizedName": {
       "en": "Watches 24",
       "ar": "ساعات 24"
@@ -301,7 +289,6 @@
   },
   {
     "id": 25,
-    "skuPrefix": "WATCH",
     "localizedName": {
       "en": "Watches 25",
       "ar": "ساعات 25"
@@ -326,7 +313,6 @@
   },
   {
     "id": 26,
-    "skuPrefix": "WATCH",
     "localizedName": {
       "en": "Watches 26",
       "ar": "ساعات 26"
@@ -351,7 +337,6 @@
   },
   {
     "id": 27,
-    "skuPrefix": "BADGE",
     "localizedName": {
       "en": "Badges 27",
       "ar": "شارات 27"
@@ -376,7 +361,6 @@
   },
   {
     "id": 28,
-    "skuPrefix": "BADGE",
     "localizedName": {
       "en": "Badges 28",
       "ar": "شارات 28"
@@ -401,7 +385,6 @@
   },
   {
     "id": 29,
-    "skuPrefix": "BADGE",
     "localizedName": {
       "en": "Badges 29",
       "ar": "شارات 29"
@@ -426,7 +409,6 @@
   },
   {
     "id": 30,
-    "skuPrefix": "BADGE",
     "localizedName": {
       "en": "Badges 30",
       "ar": "شارات 30"
@@ -451,7 +433,6 @@
   },
   {
     "id": 31,
-    "skuPrefix": "BADGE",
     "localizedName": {
       "en": "Badges 31",
       "ar": "شارات 31"
@@ -476,7 +457,6 @@
   },
   {
     "id": 32,
-    "skuPrefix": "BADGE",
     "localizedName": {
       "en": "Badges 32",
       "ar": "شارات 32"
@@ -501,7 +481,6 @@
   },
   {
     "id": 33,
-    "skuPrefix": "FRAME",
     "localizedName": {
       "en": "Frames 33",
       "ar": "إطارات 33"
@@ -526,7 +505,6 @@
   },
   {
     "id": 34,
-    "skuPrefix": "FRAME",
     "localizedName": {
       "en": "Frames 34",
       "ar": "إطارات 34"
@@ -551,7 +529,6 @@
   },
   {
     "id": 35,
-    "skuPrefix": "FRAME",
     "localizedName": {
       "en": "Frames 35",
       "ar": "إطارات 35"
@@ -576,7 +553,6 @@
   },
   {
     "id": 36,
-    "skuPrefix": "BALLO",
     "localizedName": {
       "en": "Balloons 36",
       "ar": "بالونات 36"
@@ -601,7 +577,6 @@
   },
   {
     "id": 37,
-    "skuPrefix": "BALLO",
     "localizedName": {
       "en": "Balloons 37",
       "ar": "بالونات 37"
@@ -626,7 +601,6 @@
   },
   {
     "id": 38,
-    "skuPrefix": "BALLO",
     "localizedName": {
       "en": "Balloons 38",
       "ar": "بالونات 38"
@@ -651,7 +625,6 @@
   },
   {
     "id": 39,
-    "skuPrefix": "BALLO",
     "localizedName": {
       "en": "Balloons 39",
       "ar": "بالونات 39"
@@ -676,7 +649,6 @@
   },
   {
     "id": 40,
-    "skuPrefix": "BALLO",
     "localizedName": {
       "en": "Balloons 40",
       "ar": "بالونات 40"
@@ -701,7 +673,6 @@
   },
   {
     "id": 41,
-    "skuPrefix": "BALLO",
     "localizedName": {
       "en": "Balloons 41",
       "ar": "بالونات 41"
@@ -726,7 +697,6 @@
   },
   {
     "id": 42,
-    "skuPrefix": "BALLO",
     "localizedName": {
       "en": "Balloons 42",
       "ar": "بالونات 42"
@@ -751,7 +721,6 @@
   },
   {
     "id": 43,
-    "skuPrefix": "BALLO",
     "localizedName": {
       "en": "Balloons 43",
       "ar": "بالونات 43"
@@ -776,7 +745,6 @@
   },
   {
     "id": 44,
-    "skuPrefix": "POSTE",
     "localizedName": {
       "en": "Posters 44",
       "ar": "ملصقات 44"
@@ -801,7 +769,6 @@
   },
   {
     "id": 45,
-    "skuPrefix": "POSTE",
     "localizedName": {
       "en": "Posters 45",
       "ar": "ملصقات 45"
@@ -826,7 +793,6 @@
   },
   {
     "id": 46,
-    "skuPrefix": "POSTE",
     "localizedName": {
       "en": "Posters 46",
       "ar": "ملصقات 46"
@@ -851,7 +817,6 @@
   },
   {
     "id": 47,
-    "skuPrefix": "POSTE",
     "localizedName": {
       "en": "Posters 47",
       "ar": "ملصقات 47"
@@ -876,7 +841,6 @@
   },
   {
     "id": 48,
-    "skuPrefix": "POSTE",
     "localizedName": {
       "en": "Posters 48",
       "ar": "ملصقات 48"
@@ -901,7 +865,6 @@
   },
   {
     "id": 49,
-    "skuPrefix": "POSTE",
     "localizedName": {
       "en": "Posters 49",
       "ar": "ملصقات 49"
@@ -926,7 +889,6 @@
   },
   {
     "id": 50,
-    "skuPrefix": "RAMAD",
     "localizedName": {
       "en": "Ramadan Lanterns 50",
       "ar": "فوانيس رمضان 50"
@@ -951,7 +913,6 @@
   },
   {
     "id": 51,
-    "skuPrefix": "RAMAD",
     "localizedName": {
       "en": "Ramadan Lanterns 51",
       "ar": "فوانيس رمضان 51"
@@ -976,7 +937,6 @@
   },
   {
     "id": 52,
-    "skuPrefix": "RAMAD",
     "localizedName": {
       "en": "Ramadan Lanterns 52",
       "ar": "فوانيس رمضان 52"
@@ -1001,7 +961,6 @@
   },
   {
     "id": 53,
-    "skuPrefix": "RAMAD",
     "localizedName": {
       "en": "Ramadan Lanterns 53",
       "ar": "فوانيس رمضان 53"
@@ -1026,7 +985,6 @@
   },
   {
     "id": 54,
-    "skuPrefix": "RAMAD",
     "localizedName": {
       "en": "Ramadan Lanterns 54",
       "ar": "فوانيس رمضان 54"
@@ -1051,7 +1009,6 @@
   },
   {
     "id": 55,
-    "skuPrefix": "RAMAD",
     "localizedName": {
       "en": "Ramadan Lanterns 55",
       "ar": "فوانيس رمضان 55"
@@ -1076,7 +1033,6 @@
   },
   {
     "id": 56,
-    "skuPrefix": "RAMAD",
     "localizedName": {
       "en": "Ramadan Lanterns 56",
       "ar": "فوانيس رمضان 56"
@@ -1101,7 +1057,6 @@
   },
   {
     "id": 57,
-    "skuPrefix": "RAMAD",
     "localizedName": {
       "en": "Ramadan Lanterns 57",
       "ar": "فوانيس رمضان 57"
@@ -1126,7 +1081,6 @@
   },
   {
     "id": 58,
-    "skuPrefix": "CERTI",
     "localizedName": {
       "en": "Certificates 58",
       "ar": "شهادات 58"
@@ -1151,7 +1105,6 @@
   },
   {
     "id": 59,
-    "skuPrefix": "CERTI",
     "localizedName": {
       "en": "Certificates 59",
       "ar": "شهادات 59"
@@ -1176,7 +1129,6 @@
   },
   {
     "id": 60,
-    "skuPrefix": "CERTI",
     "localizedName": {
       "en": "Certificates 60",
       "ar": "شهادات 60"
@@ -1201,7 +1153,6 @@
   },
   {
     "id": 61,
-    "skuPrefix": "CERTI",
     "localizedName": {
       "en": "Certificates 61",
       "ar": "شهادات 61"
@@ -1226,7 +1177,6 @@
   },
   {
     "id": 62,
-    "skuPrefix": "WATER",
     "localizedName": {
       "en": "Water Bottles 62",
       "ar": "مطارات ماء 62"
@@ -1251,7 +1201,6 @@
   },
   {
     "id": 63,
-    "skuPrefix": "WATER",
     "localizedName": {
       "en": "Water Bottles 63",
       "ar": "مطارات ماء 63"
@@ -1276,7 +1225,6 @@
   },
   {
     "id": 64,
-    "skuPrefix": "WATER",
     "localizedName": {
       "en": "Water Bottles 64",
       "ar": "مطارات ماء 64"
@@ -1301,7 +1249,6 @@
   },
   {
     "id": 65,
-    "skuPrefix": "WATER",
     "localizedName": {
       "en": "Water Bottles 65",
       "ar": "مطارات ماء 65"
@@ -1326,7 +1273,6 @@
   },
   {
     "id": 66,
-    "skuPrefix": "WATER",
     "localizedName": {
       "en": "Water Bottles 66",
       "ar": "مطارات ماء 66"
@@ -1351,7 +1297,6 @@
   },
   {
     "id": 67,
-    "skuPrefix": "WATER",
     "localizedName": {
       "en": "Water Bottles 67",
       "ar": "مطارات ماء 67"
@@ -1376,7 +1321,6 @@
   },
   {
     "id": 68,
-    "skuPrefix": "WATER",
     "localizedName": {
       "en": "Water Bottles 68",
       "ar": "مطارات ماء 68"
@@ -1401,7 +1345,6 @@
   },
   {
     "id": 69,
-    "skuPrefix": "WATER",
     "localizedName": {
       "en": "Water Bottles 69",
       "ar": "مطارات ماء 69"
@@ -1426,7 +1369,6 @@
   },
   {
     "id": 70,
-    "skuPrefix": "WATER",
     "localizedName": {
       "en": "Water Bottles 70",
       "ar": "مطارات ماء 70"
@@ -1451,7 +1393,6 @@
   },
   {
     "id": 71,
-    "skuPrefix": "WATER",
     "localizedName": {
       "en": "Water Bottles 71",
       "ar": "مطارات ماء 71"
@@ -1476,7 +1417,6 @@
   },
   {
     "id": 72,
-    "skuPrefix": "LUNCH",
     "localizedName": {
       "en": "Lunchboxes 72",
       "ar": "صناديق غداء 72"
@@ -1501,7 +1441,6 @@
   },
   {
     "id": 73,
-    "skuPrefix": "LUNCH",
     "localizedName": {
       "en": "Lunchboxes 73",
       "ar": "صناديق غداء 73"
@@ -1526,7 +1465,6 @@
   },
   {
     "id": 74,
-    "skuPrefix": "LUNCH",
     "localizedName": {
       "en": "Lunchboxes 74",
       "ar": "صناديق غداء 74"
@@ -1551,7 +1489,6 @@
   },
   {
     "id": 75,
-    "skuPrefix": "LUNCH",
     "localizedName": {
       "en": "Lunchboxes 75",
       "ar": "صناديق غداء 75"
@@ -1576,7 +1513,6 @@
   },
   {
     "id": 76,
-    "skuPrefix": "LUNCH",
     "localizedName": {
       "en": "Lunchboxes 76",
       "ar": "صناديق غداء 76"
@@ -1601,7 +1537,6 @@
   },
   {
     "id": 77,
-    "skuPrefix": "LUNCH",
     "localizedName": {
       "en": "Lunchboxes 77",
       "ar": "صناديق غداء 77"
@@ -1626,7 +1561,6 @@
   },
   {
     "id": 78,
-    "skuPrefix": "LUNCH",
     "localizedName": {
       "en": "Lunchboxes 78",
       "ar": "صناديق غداء 78"
@@ -1651,7 +1585,6 @@
   },
   {
     "id": 79,
-    "skuPrefix": "LUNCH",
     "localizedName": {
       "en": "Lunchboxes 79",
       "ar": "صناديق غداء 79"
@@ -1676,7 +1609,6 @@
   },
   {
     "id": 80,
-    "skuPrefix": "RULER",
     "localizedName": {
       "en": "Rulers 80",
       "ar": "مساطر 80"
@@ -1701,7 +1633,6 @@
   },
   {
     "id": 81,
-    "skuPrefix": "RULER",
     "localizedName": {
       "en": "Rulers 81",
       "ar": "مساطر 81"
@@ -1726,7 +1657,6 @@
   },
   {
     "id": 82,
-    "skuPrefix": "RULER",
     "localizedName": {
       "en": "Rulers 82",
       "ar": "مساطر 82"
@@ -1751,7 +1681,6 @@
   },
   {
     "id": 83,
-    "skuPrefix": "RULER",
     "localizedName": {
       "en": "Rulers 83",
       "ar": "مساطر 83"
@@ -1776,7 +1705,6 @@
   },
   {
     "id": 84,
-    "skuPrefix": "RULER",
     "localizedName": {
       "en": "Rulers 84",
       "ar": "مساطر 84"
@@ -1801,7 +1729,6 @@
   },
   {
     "id": 85,
-    "skuPrefix": "RULER",
     "localizedName": {
       "en": "Rulers 85",
       "ar": "مساطر 85"
@@ -1826,7 +1753,6 @@
   },
   {
     "id": 86,
-    "skuPrefix": "MATHS",
     "localizedName": {
       "en": "Math Sets 86",
       "ar": "أطقم رياضيات 86"
@@ -1851,7 +1777,6 @@
   },
   {
     "id": 87,
-    "skuPrefix": "MATHS",
     "localizedName": {
       "en": "Math Sets 87",
       "ar": "أطقم رياضيات 87"
@@ -1876,7 +1801,6 @@
   },
   {
     "id": 88,
-    "skuPrefix": "MATHS",
     "localizedName": {
       "en": "Math Sets 88",
       "ar": "أطقم رياضيات 88"
@@ -1901,7 +1825,6 @@
   },
   {
     "id": 89,
-    "skuPrefix": "MATHS",
     "localizedName": {
       "en": "Math Sets 89",
       "ar": "أطقم رياضيات 89"
@@ -1926,7 +1849,6 @@
   },
   {
     "id": 90,
-    "skuPrefix": "SETSQ",
     "localizedName": {
       "en": "Set Squares 90",
       "ar": "مثلتات هندسية 90"
@@ -1951,7 +1873,6 @@
   },
   {
     "id": 91,
-    "skuPrefix": "SETSQ",
     "localizedName": {
       "en": "Set Squares 91",
       "ar": "مثلتات هندسية 91"
@@ -1976,7 +1897,6 @@
   },
   {
     "id": 92,
-    "skuPrefix": "SETSQ",
     "localizedName": {
       "en": "Set Squares 92",
       "ar": "مثلتات هندسية 92"
@@ -2001,7 +1921,6 @@
   },
   {
     "id": 93,
-    "skuPrefix": "COMPA",
     "localizedName": {
       "en": "Compasses 93",
       "ar": "فرجارات 93"
@@ -2026,7 +1945,6 @@
   },
   {
     "id": 94,
-    "skuPrefix": "COMPA",
     "localizedName": {
       "en": "Compasses 94",
       "ar": "فرجارات 94"
@@ -2051,7 +1969,6 @@
   },
   {
     "id": 95,
-    "skuPrefix": "COMPA",
     "localizedName": {
       "en": "Compasses 95",
       "ar": "فرجارات 95"
@@ -2076,7 +1993,6 @@
   },
   {
     "id": 96,
-    "skuPrefix": "PROTR",
     "localizedName": {
       "en": "Protractors 96",
       "ar": "منقلات 96"
@@ -2101,7 +2017,6 @@
   },
   {
     "id": 97,
-    "skuPrefix": "PROTR",
     "localizedName": {
       "en": "Protractors 97",
       "ar": "منقلات 97"
@@ -2126,7 +2041,6 @@
   },
   {
     "id": 98,
-    "skuPrefix": "PROTR",
     "localizedName": {
       "en": "Protractors 98",
       "ar": "منقلات 98"
@@ -2151,7 +2065,6 @@
   },
   {
     "id": 99,
-    "skuPrefix": "ERASE",
     "localizedName": {
       "en": "Erasers 99",
       "ar": "ممحاة 99"
@@ -2176,7 +2089,6 @@
   },
   {
     "id": 100,
-    "skuPrefix": "ERASE",
     "localizedName": {
       "en": "Erasers 100",
       "ar": "ممحاة 100"
@@ -2201,7 +2113,6 @@
   },
   {
     "id": 101,
-    "skuPrefix": "ERASE",
     "localizedName": {
       "en": "Erasers 101",
       "ar": "ممحاة 101"
@@ -2226,7 +2137,6 @@
   },
   {
     "id": 102,
-    "skuPrefix": "ERASE",
     "localizedName": {
       "en": "Erasers 102",
       "ar": "ممحاة 102"
@@ -2251,7 +2161,6 @@
   },
   {
     "id": 103,
-    "skuPrefix": "ERASE",
     "localizedName": {
       "en": "Erasers 103",
       "ar": "ممحاة 103"
@@ -2276,7 +2185,6 @@
   },
   {
     "id": 104,
-    "skuPrefix": "ERASE",
     "localizedName": {
       "en": "Erasers 104",
       "ar": "ممحاة 104"
@@ -2301,7 +2209,6 @@
   },
   {
     "id": 105,
-    "skuPrefix": "ERASE",
     "localizedName": {
       "en": "Erasers 105",
       "ar": "ممحاة 105"
@@ -2326,7 +2233,6 @@
   },
   {
     "id": 106,
-    "skuPrefix": "ERASE",
     "localizedName": {
       "en": "Erasers 106",
       "ar": "ممحاة 106"
@@ -2351,7 +2257,6 @@
   },
   {
     "id": 107,
-    "skuPrefix": "SHARP",
     "localizedName": {
       "en": "Sharpeners 107",
       "ar": "مبراة 107"
@@ -2376,7 +2281,6 @@
   },
   {
     "id": 108,
-    "skuPrefix": "SHARP",
     "localizedName": {
       "en": "Sharpeners 108",
       "ar": "مبراة 108"
@@ -2401,7 +2305,6 @@
   },
   {
     "id": 109,
-    "skuPrefix": "SHARP",
     "localizedName": {
       "en": "Sharpeners 109",
       "ar": "مبراة 109"
@@ -2426,7 +2329,6 @@
   },
   {
     "id": 110,
-    "skuPrefix": "SHARP",
     "localizedName": {
       "en": "Sharpeners 110",
       "ar": "مبراة 110"
@@ -2451,7 +2353,6 @@
   },
   {
     "id": 111,
-    "skuPrefix": "SHARP",
     "localizedName": {
       "en": "Sharpeners 111",
       "ar": "مبراة 111"
@@ -2476,7 +2377,6 @@
   },
   {
     "id": 112,
-    "skuPrefix": "SHARP",
     "localizedName": {
       "en": "Sharpeners 112",
       "ar": "مبراة 112"
@@ -2501,7 +2401,6 @@
   },
   {
     "id": 113,
-    "skuPrefix": "SHARP",
     "localizedName": {
       "en": "Sharpeners 113",
       "ar": "مبراة 113"
@@ -2526,7 +2425,6 @@
   },
   {
     "id": 114,
-    "skuPrefix": "SHARP",
     "localizedName": {
       "en": "Sharpeners 114",
       "ar": "مبراة 114"
@@ -2551,7 +2449,6 @@
   },
   {
     "id": 115,
-    "skuPrefix": "WHITE",
     "localizedName": {
       "en": "Whiteboard Markers 115",
       "ar": "أقلام سبورة 115"
@@ -2576,7 +2473,6 @@
   },
   {
     "id": 116,
-    "skuPrefix": "WHITE",
     "localizedName": {
       "en": "Whiteboard Markers 116",
       "ar": "أقلام سبورة 116"
@@ -2601,7 +2497,6 @@
   },
   {
     "id": 117,
-    "skuPrefix": "WHITE",
     "localizedName": {
       "en": "Whiteboard Markers 117",
       "ar": "أقلام سبورة 117"
@@ -2626,7 +2521,6 @@
   },
   {
     "id": 118,
-    "skuPrefix": "WHITE",
     "localizedName": {
       "en": "Whiteboard Markers 118",
       "ar": "أقلام سبورة 118"
@@ -2651,7 +2545,6 @@
   },
   {
     "id": 119,
-    "skuPrefix": "WHITE",
     "localizedName": {
       "en": "Whiteboard Markers 119",
       "ar": "أقلام سبورة 119"
@@ -2676,7 +2569,6 @@
   },
   {
     "id": 120,
-    "skuPrefix": "WHITE",
     "localizedName": {
       "en": "Whiteboard Markers 120",
       "ar": "أقلام سبورة 120"
@@ -2701,7 +2593,6 @@
   },
   {
     "id": 121,
-    "skuPrefix": "PERMA",
     "localizedName": {
       "en": "Permanent Markers 121",
       "ar": "أقلام دائمة 121"
@@ -2726,7 +2617,6 @@
   },
   {
     "id": 122,
-    "skuPrefix": "PERMA",
     "localizedName": {
       "en": "Permanent Markers 122",
       "ar": "أقلام دائمة 122"
@@ -2751,7 +2641,6 @@
   },
   {
     "id": 123,
-    "skuPrefix": "PERMA",
     "localizedName": {
       "en": "Permanent Markers 123",
       "ar": "أقلام دائمة 123"
@@ -2776,7 +2665,6 @@
   },
   {
     "id": 124,
-    "skuPrefix": "HIGHL",
     "localizedName": {
       "en": "Highlighters 124",
       "ar": "أقلام تظليل 124"
@@ -2801,7 +2689,6 @@
   },
   {
     "id": 125,
-    "skuPrefix": "HIGHL",
     "localizedName": {
       "en": "Highlighters 125",
       "ar": "أقلام تظليل 125"
@@ -2826,7 +2713,6 @@
   },
   {
     "id": 126,
-    "skuPrefix": "HIGHL",
     "localizedName": {
       "en": "Highlighters 126",
       "ar": "أقلام تظليل 126"
@@ -2851,7 +2737,6 @@
   },
   {
     "id": 127,
-    "skuPrefix": "GELPE",
     "localizedName": {
       "en": "Gel Pens 127",
       "ar": "أقلام جل 127"
@@ -2876,7 +2761,6 @@
   },
   {
     "id": 128,
-    "skuPrefix": "GELPE",
     "localizedName": {
       "en": "Gel Pens 128",
       "ar": "أقلام جل 128"
@@ -2901,7 +2785,6 @@
   },
   {
     "id": 129,
-    "skuPrefix": "GELPE",
     "localizedName": {
       "en": "Gel Pens 129",
       "ar": "أقلام جل 129"
@@ -2926,7 +2809,6 @@
   },
   {
     "id": 130,
-    "skuPrefix": "BALLP",
     "localizedName": {
       "en": "Ballpoint Pens 130",
       "ar": "أقلام حبر جاف 130"
@@ -2951,7 +2833,6 @@
   },
   {
     "id": 131,
-    "skuPrefix": "BALLP",
     "localizedName": {
       "en": "Ballpoint Pens 131",
       "ar": "أقلام حبر جاف 131"
@@ -2976,7 +2857,6 @@
   },
   {
     "id": 132,
-    "skuPrefix": "BALLP",
     "localizedName": {
       "en": "Ballpoint Pens 132",
       "ar": "أقلام حبر جاف 132"
@@ -3001,7 +2881,6 @@
   },
   {
     "id": 133,
-    "skuPrefix": "FOUNT",
     "localizedName": {
       "en": "Fountain Pens 133",
       "ar": "أقلام ريشة 133"
@@ -3026,7 +2905,6 @@
   },
   {
     "id": 134,
-    "skuPrefix": "FOUNT",
     "localizedName": {
       "en": "Fountain Pens 134",
       "ar": "أقلام ريشة 134"
@@ -3051,7 +2929,6 @@
   },
   {
     "id": 135,
-    "skuPrefix": "FOUNT",
     "localizedName": {
       "en": "Fountain Pens 135",
       "ar": "أقلام ريشة 135"
@@ -3076,7 +2953,6 @@
   },
   {
     "id": 136,
-    "skuPrefix": "MECHA",
     "localizedName": {
       "en": "Mechanical Pencil Leads 136",
       "ar": "رصاص لأقلام ميكانيكية 136"
@@ -3101,7 +2977,6 @@
   },
   {
     "id": 137,
-    "skuPrefix": "MECHA",
     "localizedName": {
       "en": "Mechanical Pencil Leads 137",
       "ar": "رصاص لأقلام ميكانيكية 137"
@@ -3126,7 +3001,6 @@
   },
   {
     "id": 138,
-    "skuPrefix": "MECHA",
     "localizedName": {
       "en": "Mechanical Pencil Leads 138",
       "ar": "رصاص لأقلام ميكانيكية 138"
@@ -3151,7 +3025,6 @@
   },
   {
     "id": 139,
-    "skuPrefix": "VEHIC",
     "localizedName": {
       "en": "Vehicles 139",
       "ar": "مركبات 139"
@@ -3176,7 +3049,6 @@
   },
   {
     "id": 140,
-    "skuPrefix": "VEHIC",
     "localizedName": {
       "en": "Vehicles 140",
       "ar": "مركبات 140"
@@ -3201,7 +3073,6 @@
   },
   {
     "id": 141,
-    "skuPrefix": "VEHIC",
     "localizedName": {
       "en": "Vehicles 141",
       "ar": "مركبات 141"
@@ -3226,7 +3097,6 @@
   },
   {
     "id": 142,
-    "skuPrefix": "VEHIC",
     "localizedName": {
       "en": "Vehicles 142",
       "ar": "مركبات 142"
@@ -3251,7 +3121,6 @@
   },
   {
     "id": 143,
-    "skuPrefix": "VEHIC",
     "localizedName": {
       "en": "Vehicles 143",
       "ar": "مركبات 143"
@@ -3276,7 +3145,6 @@
   },
   {
     "id": 144,
-    "skuPrefix": "VEHIC",
     "localizedName": {
       "en": "Vehicles 144",
       "ar": "مركبات 144"
@@ -3301,7 +3169,6 @@
   },
   {
     "id": 145,
-    "skuPrefix": "VEHIC",
     "localizedName": {
       "en": "Vehicles 145",
       "ar": "مركبات 145"
@@ -3326,7 +3193,6 @@
   },
   {
     "id": 146,
-    "skuPrefix": "VEHIC",
     "localizedName": {
       "en": "Vehicles 146",
       "ar": "مركبات 146"
@@ -3351,7 +3217,6 @@
   },
   {
     "id": 147,
-    "skuPrefix": "DOLLS",
     "localizedName": {
       "en": "Dolls 147",
       "ar": "دمى 147"
@@ -3376,7 +3241,6 @@
   },
   {
     "id": 148,
-    "skuPrefix": "DOLLS",
     "localizedName": {
       "en": "Dolls 148",
       "ar": "دمى 148"
@@ -3401,7 +3265,6 @@
   },
   {
     "id": 149,
-    "skuPrefix": "DOLLS",
     "localizedName": {
       "en": "Dolls 149",
       "ar": "دمى 149"
@@ -3426,7 +3289,6 @@
   },
   {
     "id": 150,
-    "skuPrefix": "DOLLS",
     "localizedName": {
       "en": "Dolls 150",
       "ar": "دمى 150"
@@ -3451,7 +3313,6 @@
   },
   {
     "id": 151,
-    "skuPrefix": "DOLLS",
     "localizedName": {
       "en": "Dolls 151",
       "ar": "دمى 151"
@@ -3476,7 +3337,6 @@
   },
   {
     "id": 152,
-    "skuPrefix": "DOLLS",
     "localizedName": {
       "en": "Dolls 152",
       "ar": "دمى 152"
@@ -3501,7 +3361,6 @@
   },
   {
     "id": 153,
-    "skuPrefix": "DOLLS",
     "localizedName": {
       "en": "Dolls 153",
       "ar": "دمى 153"
@@ -3526,7 +3385,6 @@
   },
   {
     "id": 154,
-    "skuPrefix": "DOLLS",
     "localizedName": {
       "en": "Dolls 154",
       "ar": "دمى 154"
@@ -3551,7 +3409,6 @@
   },
   {
     "id": 155,
-    "skuPrefix": "FOAMS",
     "localizedName": {
       "en": "Foam Sheets 155",
       "ar": "شرائح فوم 155"
@@ -3576,7 +3433,6 @@
   },
   {
     "id": 156,
-    "skuPrefix": "FOAMS",
     "localizedName": {
       "en": "Foam Sheets 156",
       "ar": "شرائح فوم 156"
@@ -3601,7 +3457,6 @@
   },
   {
     "id": 157,
-    "skuPrefix": "FOAMS",
     "localizedName": {
       "en": "Foam Sheets 157",
       "ar": "شرائح فوم 157"
@@ -3626,7 +3481,6 @@
   },
   {
     "id": 158,
-    "skuPrefix": "FOAMS",
     "localizedName": {
       "en": "Foam Sheets 158",
       "ar": "شرائح فوم 158"
@@ -3651,7 +3505,6 @@
   },
   {
     "id": 159,
-    "skuPrefix": "FOAMS",
     "localizedName": {
       "en": "Foam Sheets 159",
       "ar": "شرائح فوم 159"
@@ -3676,7 +3529,6 @@
   },
   {
     "id": 160,
-    "skuPrefix": "FOAMS",
     "localizedName": {
       "en": "Foam Sheets 160",
       "ar": "شرائح فوم 160"
@@ -3701,7 +3553,6 @@
   },
   {
     "id": 161,
-    "skuPrefix": "GLITT",
     "localizedName": {
       "en": "Glitter 161",
       "ar": "جليتر 161"
@@ -3726,7 +3577,6 @@
   },
   {
     "id": 162,
-    "skuPrefix": "GLITT",
     "localizedName": {
       "en": "Glitter 162",
       "ar": "جليتر 162"
@@ -3751,7 +3601,6 @@
   },
   {
     "id": 163,
-    "skuPrefix": "GLITT",
     "localizedName": {
       "en": "Glitter 163",
       "ar": "جليتر 163"
@@ -3776,7 +3625,6 @@
   },
   {
     "id": 164,
-    "skuPrefix": "STICK",
     "localizedName": {
       "en": "Stickers 164",
       "ar": "ملصقات 164"
@@ -3801,7 +3649,6 @@
   },
   {
     "id": 165,
-    "skuPrefix": "STICK",
     "localizedName": {
       "en": "Stickers 165",
       "ar": "ملصقات 165"
@@ -3826,7 +3673,6 @@
   },
   {
     "id": 166,
-    "skuPrefix": "STICK",
     "localizedName": {
       "en": "Stickers 166",
       "ar": "ملصقات 166"
@@ -3851,7 +3697,6 @@
   },
   {
     "id": 167,
-    "skuPrefix": "SCISS",
     "localizedName": {
       "en": "Scissors 167",
       "ar": "مقصات 167"
@@ -3876,7 +3721,6 @@
   },
   {
     "id": 168,
-    "skuPrefix": "SCISS",
     "localizedName": {
       "en": "Scissors 168",
       "ar": "مقصات 168"
@@ -3901,7 +3745,6 @@
   },
   {
     "id": 169,
-    "skuPrefix": "SCISS",
     "localizedName": {
       "en": "Scissors 169",
       "ar": "مقصات 169"
@@ -3926,7 +3769,6 @@
   },
   {
     "id": 170,
-    "skuPrefix": "SCISS",
     "localizedName": {
       "en": "Scissors 170",
       "ar": "مقصات 170"
@@ -3951,7 +3793,6 @@
   },
   {
     "id": 171,
-    "skuPrefix": "CUTTE",
     "localizedName": {
       "en": "Cutters 171",
       "ar": "كترات 171"
@@ -3976,7 +3817,6 @@
   },
   {
     "id": 172,
-    "skuPrefix": "CUTTE",
     "localizedName": {
       "en": "Cutters 172",
       "ar": "كترات 172"
@@ -4001,7 +3841,6 @@
   },
   {
     "id": 173,
-    "skuPrefix": "CUTTE",
     "localizedName": {
       "en": "Cutters 173",
       "ar": "كترات 173"
@@ -4026,7 +3865,6 @@
   },
   {
     "id": 174,
-    "skuPrefix": "CRAYO",
     "localizedName": {
       "en": "Crayons 174",
       "ar": "ألوان شمعية 174"
@@ -4051,7 +3889,6 @@
   },
   {
     "id": 175,
-    "skuPrefix": "CRAYO",
     "localizedName": {
       "en": "Crayons 175",
       "ar": "ألوان شمعية 175"
@@ -4076,7 +3913,6 @@
   },
   {
     "id": 176,
-    "skuPrefix": "CRAYO",
     "localizedName": {
       "en": "Crayons 176",
       "ar": "ألوان شمعية 176"
@@ -4101,7 +3937,6 @@
   },
   {
     "id": 177,
-    "skuPrefix": "CRAYO",
     "localizedName": {
       "en": "Crayons 177",
       "ar": "ألوان شمعية 177"
@@ -4126,7 +3961,6 @@
   },
   {
     "id": 178,
-    "skuPrefix": "OILPA",
     "localizedName": {
       "en": "Oil Pastels 178",
       "ar": "ألوان زيتية 178"
@@ -4151,7 +3985,6 @@
   },
   {
     "id": 179,
-    "skuPrefix": "OILPA",
     "localizedName": {
       "en": "Oil Pastels 179",
       "ar": "ألوان زيتية 179"
@@ -4176,7 +4009,6 @@
   },
   {
     "id": 180,
-    "skuPrefix": "OILPA",
     "localizedName": {
       "en": "Oil Pastels 180",
       "ar": "ألوان زيتية 180"
@@ -4201,7 +4033,6 @@
   },
   {
     "id": 181,
-    "skuPrefix": "STAPL",
     "localizedName": {
       "en": "Staplers 181",
       "ar": "دباسات 181"
@@ -4226,7 +4057,6 @@
   },
   {
     "id": 182,
-    "skuPrefix": "STAPL",
     "localizedName": {
       "en": "Staplers 182",
       "ar": "دباسات 182"
@@ -4251,7 +4081,6 @@
   },
   {
     "id": 183,
-    "skuPrefix": "STAPL",
     "localizedName": {
       "en": "Staplers 183",
       "ar": "دباسات 183"
@@ -4276,7 +4105,6 @@
   },
   {
     "id": 184,
-    "skuPrefix": "STAPL",
     "localizedName": {
       "en": "Staplers 184",
       "ar": "دباسات 184"
@@ -4301,7 +4129,6 @@
   },
   {
     "id": 185,
-    "skuPrefix": "STAPL",
     "localizedName": {
       "en": "Staplers 185",
       "ar": "دباسات 185"
@@ -4326,7 +4153,6 @@
   },
   {
     "id": 186,
-    "skuPrefix": "STAPL",
     "localizedName": {
       "en": "Staplers 186",
       "ar": "دباسات 186"
@@ -4351,7 +4177,6 @@
   },
   {
     "id": 187,
-    "skuPrefix": "STAPL",
     "localizedName": {
       "en": "Staplers 187",
       "ar": "دباسات 187"
@@ -4376,7 +4201,6 @@
   },
   {
     "id": 188,
-    "skuPrefix": "STAPL",
     "localizedName": {
       "en": "Staplers 188",
       "ar": "دباسات 188"
@@ -4401,7 +4225,6 @@
   },
   {
     "id": 189,
-    "skuPrefix": "HOLEP",
     "localizedName": {
       "en": "Hole Punchers 189",
       "ar": "خرامات 189"
@@ -4426,7 +4249,6 @@
   },
   {
     "id": 190,
-    "skuPrefix": "HOLEP",
     "localizedName": {
       "en": "Hole Punchers 190",
       "ar": "خرامات 190"
@@ -4451,7 +4273,6 @@
   },
   {
     "id": 191,
-    "skuPrefix": "HOLEP",
     "localizedName": {
       "en": "Hole Punchers 191",
       "ar": "خرامات 191"
@@ -4476,7 +4297,6 @@
   },
   {
     "id": 192,
-    "skuPrefix": "HOLEP",
     "localizedName": {
       "en": "Hole Punchers 192",
       "ar": "خرامات 192"
@@ -4501,7 +4321,6 @@
   },
   {
     "id": 193,
-    "skuPrefix": "CLIPS",
     "localizedName": {
       "en": "Clips 193",
       "ar": "مشابك 193"
@@ -4526,7 +4345,6 @@
   },
   {
     "id": 194,
-    "skuPrefix": "CLIPS",
     "localizedName": {
       "en": "Clips 194",
       "ar": "مشابك 194"
@@ -4551,7 +4369,6 @@
   },
   {
     "id": 195,
-    "skuPrefix": "CLIPS",
     "localizedName": {
       "en": "Clips 195",
       "ar": "مشابك 195"
@@ -4576,7 +4393,6 @@
   },
   {
     "id": 196,
-    "skuPrefix": "CLIPS",
     "localizedName": {
       "en": "Clips 196",
       "ar": "مشابك 196"
@@ -4601,7 +4417,6 @@
   },
   {
     "id": 197,
-    "skuPrefix": "ENVEL",
     "localizedName": {
       "en": "Envelopes 197",
       "ar": "أظرفة 197"
@@ -4626,7 +4441,6 @@
   },
   {
     "id": 198,
-    "skuPrefix": "ENVEL",
     "localizedName": {
       "en": "Envelopes 198",
       "ar": "أظرفة 198"
@@ -4651,7 +4465,6 @@
   },
   {
     "id": 199,
-    "skuPrefix": "ENVEL",
     "localizedName": {
       "en": "Envelopes 199",
       "ar": "أظرفة 199"
@@ -4676,7 +4489,6 @@
   },
   {
     "id": 200,
-    "skuPrefix": "ENVEL",
     "localizedName": {
       "en": "Envelopes 200",
       "ar": "أظرفة 200"
@@ -4701,7 +4513,6 @@
   },
   {
     "id": 201,
-    "skuPrefix": "LABEL",
     "localizedName": {
       "en": "Labels 2 201",
       "ar": "ملصقات تعريفية 2 201"
@@ -4726,7 +4537,6 @@
   },
   {
     "id": 202,
-    "skuPrefix": "LABEL",
     "localizedName": {
       "en": "Labels 2 202",
       "ar": "ملصقات تعريفية 2 202"
@@ -4751,7 +4561,6 @@
   },
   {
     "id": 203,
-    "skuPrefix": "LABEL",
     "localizedName": {
       "en": "Labels 2 203",
       "ar": "ملصقات تعريفية 2 203"
@@ -4776,7 +4585,6 @@
   },
   {
     "id": 204,
-    "skuPrefix": "STAND",
     "localizedName": {
       "en": "Stands 204",
       "ar": "حوامل 204"
@@ -4801,7 +4609,6 @@
   },
   {
     "id": 205,
-    "skuPrefix": "STAND",
     "localizedName": {
       "en": "Stands 205",
       "ar": "حوامل 205"
@@ -4826,7 +4633,6 @@
   },
   {
     "id": 206,
-    "skuPrefix": "STAND",
     "localizedName": {
       "en": "Stands 206",
       "ar": "حوامل 206"
@@ -4851,7 +4657,6 @@
   },
   {
     "id": 207,
-    "skuPrefix": "STAND",
     "localizedName": {
       "en": "Stands 207",
       "ar": "حوامل 207"
@@ -4876,7 +4681,6 @@
   },
   {
     "id": 208,
-    "skuPrefix": "STAND",
     "localizedName": {
       "en": "Stands 208",
       "ar": "حوامل 208"
@@ -4901,7 +4705,6 @@
   },
   {
     "id": 209,
-    "skuPrefix": "STAND",
     "localizedName": {
       "en": "Stands 209",
       "ar": "حوامل 209"
@@ -4926,7 +4729,6 @@
   },
   {
     "id": 210,
-    "skuPrefix": "STAND",
     "localizedName": {
       "en": "Stands 210",
       "ar": "حوامل 210"
@@ -4951,7 +4753,6 @@
   },
   {
     "id": 211,
-    "skuPrefix": "STAND",
     "localizedName": {
       "en": "Stands 211",
       "ar": "حوامل 211"
@@ -4976,7 +4777,6 @@
   },
   {
     "id": 212,
-    "skuPrefix": "CABIN",
     "localizedName": {
       "en": "Cabinets 212",
       "ar": "خزائن 212"
@@ -5001,7 +4801,6 @@
   },
   {
     "id": 213,
-    "skuPrefix": "CABIN",
     "localizedName": {
       "en": "Cabinets 213",
       "ar": "خزائن 213"
@@ -5026,7 +4825,6 @@
   },
   {
     "id": 214,
-    "skuPrefix": "CABIN",
     "localizedName": {
       "en": "Cabinets 214",
       "ar": "خزائن 214"
@@ -5051,7 +4849,6 @@
   },
   {
     "id": 215,
-    "skuPrefix": "CABIN",
     "localizedName": {
       "en": "Cabinets 215",
       "ar": "خزائن 215"
@@ -5076,7 +4873,6 @@
   },
   {
     "id": 216,
-    "skuPrefix": "BLANK",
     "localizedName": {
       "en": "Blankets 216",
       "ar": "بطانيات 216"
@@ -5101,7 +4897,6 @@
   },
   {
     "id": 217,
-    "skuPrefix": "BLANK",
     "localizedName": {
       "en": "Blankets 217",
       "ar": "بطانيات 217"
@@ -5126,7 +4921,6 @@
   },
   {
     "id": 218,
-    "skuPrefix": "BLANK",
     "localizedName": {
       "en": "Blankets 218",
       "ar": "بطانيات 218"
@@ -5151,7 +4945,6 @@
   },
   {
     "id": 219,
-    "skuPrefix": "BLANK",
     "localizedName": {
       "en": "Blankets 219",
       "ar": "بطانيات 219"
@@ -5176,7 +4969,6 @@
   },
   {
     "id": 220,
-    "skuPrefix": "BUCKE",
     "localizedName": {
       "en": "Buckets 220",
       "ar": "أوعية 220"
@@ -5201,7 +4993,6 @@
   },
   {
     "id": 221,
-    "skuPrefix": "BUCKE",
     "localizedName": {
       "en": "Buckets 221",
       "ar": "أوعية 221"
@@ -5226,7 +5017,6 @@
   },
   {
     "id": 222,
-    "skuPrefix": "BUCKE",
     "localizedName": {
       "en": "Buckets 222",
       "ar": "أوعية 222"
@@ -5251,7 +5041,6 @@
   },
   {
     "id": 223,
-    "skuPrefix": "RUGS-",
     "localizedName": {
       "en": "Rugs 223",
       "ar": "سجاد 223"
@@ -5276,7 +5065,6 @@
   },
   {
     "id": 224,
-    "skuPrefix": "RUGS-",
     "localizedName": {
       "en": "Rugs 224",
       "ar": "سجاد 224"
@@ -5301,7 +5089,6 @@
   },
   {
     "id": 225,
-    "skuPrefix": "RUGS-",
     "localizedName": {
       "en": "Rugs 225",
       "ar": "سجاد 225"
@@ -5326,7 +5113,6 @@
   },
   {
     "id": 226,
-    "skuPrefix": "CUPS-",
     "localizedName": {
       "en": "Cups 226",
       "ar": "أكواب 226"
@@ -5351,7 +5137,6 @@
   },
   {
     "id": 227,
-    "skuPrefix": "CUPS-",
     "localizedName": {
       "en": "Cups 227",
       "ar": "أكواب 227"
@@ -5376,7 +5161,6 @@
   },
   {
     "id": 228,
-    "skuPrefix": "CUPS-",
     "localizedName": {
       "en": "Cups 228",
       "ar": "أكواب 228"
@@ -5401,7 +5185,6 @@
   },
   {
     "id": 229,
-    "skuPrefix": "CUPS-",
     "localizedName": {
       "en": "Cups 229",
       "ar": "أكواب 229"
@@ -5426,7 +5209,6 @@
   },
   {
     "id": 230,
-    "skuPrefix": "MUGS-",
     "localizedName": {
       "en": "Mugs 230",
       "ar": "مجات 230"
@@ -5451,7 +5233,6 @@
   },
   {
     "id": 231,
-    "skuPrefix": "MUGS-",
     "localizedName": {
       "en": "Mugs 231",
       "ar": "مجات 231"
@@ -5476,7 +5257,6 @@
   },
   {
     "id": 232,
-    "skuPrefix": "MUGS-",
     "localizedName": {
       "en": "Mugs 232",
       "ar": "مجات 232"
@@ -5501,7 +5281,6 @@
   },
   {
     "id": 233,
-    "skuPrefix": "MUGS-",
     "localizedName": {
       "en": "Mugs 233",
       "ar": "مجات 233"
@@ -5526,7 +5305,6 @@
   },
   {
     "id": 234,
-    "skuPrefix": "PLATE",
     "localizedName": {
       "en": "Plates 234",
       "ar": "أطباق 234"
@@ -5551,7 +5329,6 @@
   },
   {
     "id": 235,
-    "skuPrefix": "PLATE",
     "localizedName": {
       "en": "Plates 235",
       "ar": "أطباق 235"
@@ -5576,7 +5353,6 @@
   },
   {
     "id": 236,
-    "skuPrefix": "PLATE",
     "localizedName": {
       "en": "Plates 236",
       "ar": "أطباق 236"
@@ -5601,7 +5377,6 @@
   },
   {
     "id": 237,
-    "skuPrefix": "PLATE",
     "localizedName": {
       "en": "Plates 237",
       "ar": "أطباق 237"
@@ -5626,7 +5401,6 @@
   },
   {
     "id": 238,
-    "skuPrefix": "HOLDE",
     "localizedName": {
       "en": "Holders 238",
       "ar": "حوامل 238"
@@ -5651,7 +5425,6 @@
   },
   {
     "id": 239,
-    "skuPrefix": "HOLDE",
     "localizedName": {
       "en": "Holders 239",
       "ar": "حوامل 239"
@@ -5676,7 +5449,6 @@
   },
   {
     "id": 240,
-    "skuPrefix": "HOLDE",
     "localizedName": {
       "en": "Holders 240",
       "ar": "حوامل 240"
@@ -5701,7 +5473,6 @@
   },
   {
     "id": 241,
-    "skuPrefix": "HOLDE",
     "localizedName": {
       "en": "Holders 241",
       "ar": "حوامل 241"

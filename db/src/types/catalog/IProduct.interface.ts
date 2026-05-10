@@ -2,8 +2,6 @@ export interface IProduct {
   //product Row Id in database
   id: number;
   //
-  sku: string | null;
-  skuPrefix: string | null;
   slug: string | null;
   localizedName: {
     en: string;

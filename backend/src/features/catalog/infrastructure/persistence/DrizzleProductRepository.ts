@@ -67,7 +67,6 @@ export class DrizzleProductRepository
 
     return {
       id: dbProduct.id,
-      sku: dbProduct.sku || '',
       isActive: dbProduct.isActive,
       brandId: dbProduct.brandId ?? undefined,
       categoryId: dbProduct.categoryId ?? undefined,
@@ -182,7 +181,6 @@ export class DrizzleProductRepository
         and(
           eq(products.isActive, true),
           or(
-            ilike(products.sku, `%${query}%`),
             sql`${products.localizedName}->>${lang} ILIKE ${`%${query}%`}`,
           ),
         ),
@@ -280,8 +278,6 @@ export class DrizzleProductRepository
     const [newProduct] = await this.db
       .insert(products)
       .values({
-        sku: input.skuPrefix ? `${input.skuPrefix}-TEMP` : null, // Prefix or generated
-        skuPrefix: input.skuPrefix,
         isActive: input.isActive ?? true,
         categoryId: input.categoryId,
         brandId: input.brandId,
@@ -306,7 +302,6 @@ export class DrizzleProductRepository
     await this.db
       .update(products)
       .set({
-        skuPrefix: input.skuPrefix,
         isActive: input.isActive,
         categoryId: input.categoryId,
         brandId: input.brandId,
@@ -401,16 +396,6 @@ export class DrizzleProductRepository
     return all.filter((p): p is Product => p !== null);
   }
 
-  async checkSkuAvailable(sku: string, excludeId?: number): Promise<boolean> {
-    const results = await this.db
-      .select({ id: products.id })
-      .from(products)
-      .where(
-        and(eq(products.sku, sku), excludeId ? sql`${products.id} != ${excludeId}` : sql`TRUE`),
-      )
-      .limit(1);
-    return results.length === 0;
-  }
 
   async checkSlugAvailable(slug: string, excludeId?: number): Promise<boolean> {
     const results = await this.db

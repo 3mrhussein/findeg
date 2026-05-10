@@ -7,30 +7,11 @@
 
 import {
   type ID,
-  type CustomerGroup,
-  type UomCode,
-  type Price,
 } from '@findeg/backend/features/core/domain/types/common';
 import type { CurrencyCode } from '@findeg/backend/features/core/domain/value-objects';
 import type { Variant } from '../../domain/entities/Variant';
 import type { VariantInput } from '@findeg/backend/features/administration/domain/types/ProductInput';
 
-// ─── Sell Option ─────────────────────────────────────────────────────────────
-
-export interface SellOption {
-  uomCode: UomCode;
-  factorToBase: number;
-  isEnabled: boolean;
-  unitPrice?: Price;
-  currency?: CurrencyCode;
-  isSellable?: boolean;
-}
-
-export interface PriceResult {
-  unitPrice: Price;
-  currency: CurrencyCode;
-  isSellable: boolean;
-}
 
 // ─── Interface ───────────────────────────────────────────────────────────────
 
@@ -53,31 +34,4 @@ export interface IVariantRepository {
   /** Deletes a variant and cascading data */
   delete(variantId: ID): Promise<void>;
 
-  /** Gets combined sell options (UoM + optional prices) for a variant */
-  getSellOptions(variantId: ID, customerGroup?: CustomerGroup): Promise<SellOption[]>;
-
-  /** Resolves effective unit price for a variant/UoM/customer group */
-  resolveUnitPrice(
-    variantId: ID,
-    uomCode: UomCode,
-    customerGroup: CustomerGroup,
-  ): Promise<PriceResult | null>;
-
-  /** Upserts sellable UoM definitions for a variant */
-  upsertSellableUoms(
-    variantId: ID,
-    uoms: { uomCode: UomCode; factorToBase: number; isEnabled?: boolean }[],
-  ): Promise<void>;
-
-  /** Upserts customer-group price lists for a variant */
-  upsertPriceLists(
-    variantId: ID,
-    prices: {
-      customerGroup: CustomerGroup;
-      uomCode: UomCode;
-      unitPrice: Price;
-      currency?: CurrencyCode;
-      isSellable?: boolean;
-    }[],
-  ): Promise<void>;
 }

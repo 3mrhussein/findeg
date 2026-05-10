@@ -7,7 +7,6 @@ import {
   Info,
   Layers,
   Image as ImageIcon,
-  CircleDollarSign,
   Search,
   CheckCircle2,
   AlertCircle,
@@ -54,12 +53,6 @@ export function ProductFormTabs({ activeTab, onTabChange }: ProductFormTabsProps
         );
         return hasIncomplete ? 'warning' : 'default';
       }
-      case 'pricing': {
-        // Warning only if UoMs exist but are incomplete
-        const firstVariantUoms = values.variants?.[0]?.uoms || [];
-        const hasIncomplete = firstVariantUoms.some((u) => !u.uomCode?.trim() || !u.factorToBase);
-        return hasIncomplete ? 'warning' : 'default';
-      }
       case 'media':
       case 'seo':
       default:
@@ -81,12 +74,6 @@ export function ProductFormTabs({ activeTab, onTabChange }: ProductFormTabsProps
       status: getTabStatus('variants'),
     },
     { id: 'media', label: t('media'), icon: <ImageIcon className="h-4 w-4" />, status: 'default' },
-    {
-      id: 'pricing',
-      label: t('pricing'),
-      icon: <CircleDollarSign className="h-4 w-4" />,
-      status: getTabStatus('pricing'),
-    },
     { id: 'seo', label: t('seo'), icon: <Search className="h-4 w-4" />, status: 'default' },
   ];
 

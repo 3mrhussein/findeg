@@ -3,7 +3,6 @@
 import {
   createCatalogServices,
   type Variant,
-  type PriceListEntry,
 } from '@findeg/backend/features/catalog';
 import { parse } from '@findeg/backend/features/core';
 import { Category } from '@hooks/useCategories';
@@ -39,9 +38,6 @@ export async function getCategoryTreeAction(locale: string = 'en'): Promise<Cate
 export async function getProductPricingAction(payload: {
   productId: number;
   variantId: number;
-  uom: string;
-  customerGroup: string;
-  quantity: number;
 }) {
   const { products } = createCatalogServices();
 
@@ -53,17 +49,7 @@ export async function getProductPricingAction(payload: {
   const variant = product.variants?.find((v: Variant) => v.id === payload.variantId);
   if (!variant) return { success: false, error: 'Variant not found' };
 
-  // Finding the price based on customer group and UoM
-  const priceLists = variant.priceLists || [];
-  const priceEntry =
-    priceLists.find(
-      (p: PriceListEntry) => p.customerGroup === payload.customerGroup && p.uomCode === payload.uom,
-    ) ||
-    priceLists.find(
-      (p: PriceListEntry) => p.customerGroup === 'public_b2c' && p.uomCode === payload.uom,
-    );
-
-  const unitPrice = priceEntry ? (priceEntry.unitPrice as number) : (variant.basePrice as number);
+  const unitPrice = variant.basePrice;
 
   return {
     success: true,

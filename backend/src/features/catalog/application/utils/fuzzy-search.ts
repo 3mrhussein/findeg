@@ -63,7 +63,6 @@ function scoreProduct(product: Product, normalizedQuery: string): number {
     product.name,
     product.description,
     product.longDescription,
-    product.skuPrefix || '',
     ...(product.variants || []).map((v) => v.sku),
     product.brandName || '',
     product.categoryName || '',

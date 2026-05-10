@@ -9,7 +9,6 @@ import { useTranslations } from 'next-intl';
 interface AddToCartButtonProps {
   productId: number;
   variantId: number;
-  uomCode?: string;
   size?: 'default' | 'sm' | 'lg' | 'icon';
   className?: string;
   quantity?: number;
@@ -25,7 +24,6 @@ interface AddToCartButtonProps {
 export function AddToCartButton({
   productId,
   variantId,
-  uomCode = 'pcs',
   size = 'default',
   className,
   quantity = 1,
@@ -38,7 +36,7 @@ export function AddToCartButton({
    *
    */
   const handleAddToCart = () => {
-    addToCart(productId, quantity, { variantId, uomCode: uomCode as any });
+    addToCart(productId, quantity, { variantId });
   };
 
   return (

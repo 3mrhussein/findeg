@@ -85,7 +85,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
     '@type': 'Product',
     name: vm.product.name,
     image: imageUrls.length > 0 ? imageUrls : undefined,
-    sku: vm.selectedVariant?.sku || vm.product.skuPrefix || undefined,
+    sku: vm.selectedVariant?.sku || undefined,
     brand: vm.brand ? { '@type': 'Brand', name: vm.brand.name } : undefined,
     offers: {
       '@type': 'Offer',

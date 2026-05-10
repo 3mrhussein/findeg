@@ -93,7 +93,6 @@ export const ProductListItem: React.FC<ProductListItemProps> = ({ product }) => 
     if (defaultVariant) {
       addToCart(product.id, 1, {
         variantId: defaultVariant.id,
-        uomCode: 'pcs',
       });
     }
   };

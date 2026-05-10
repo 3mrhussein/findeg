@@ -54,7 +54,6 @@ export function VariantsTab() {
         displayOrder: 0,
         images: [],
         attributes: [],
-        uoms: [],
       } as any);
       // We don't have the real ID yet, so we can't expand it easily here
       // But usually the first one should be expanded by default on creation
@@ -74,7 +73,6 @@ export function VariantsTab() {
       lowStockThreshold: 10,
       images: [],
       attributes: [],
-      uoms: [],
     } as any);
   };
 

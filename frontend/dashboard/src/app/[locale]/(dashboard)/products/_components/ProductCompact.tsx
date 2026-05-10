@@ -61,7 +61,7 @@ export function ProductCompact({ product }: ProductCompactProps) {
         <div className="flex flex-col">
           <span className="font-bold text-foreground truncate">{product.name}</span>
           <span className="text-xs font-mono text-muted-foreground">
-            {product.skuPrefix || 'No SKU'}
+            {product.variants?.[0]?.sku || 'No SKU'}
           </span>
         </div>
       </TableCell>

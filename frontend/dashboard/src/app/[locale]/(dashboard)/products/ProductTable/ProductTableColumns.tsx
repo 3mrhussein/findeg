@@ -91,7 +91,7 @@ export function buildProductColumns(onDelete: (id: number) => void): ColumnDef<P
         const product = row.original;
         const defaultVariant =
           product.variants?.find((v) => v.variantKey === 'default') || product.variants?.[0];
-        const skuInfo = defaultVariant?.sku || product.skuPrefix || 'No SKU';
+        const skuInfo = defaultVariant?.sku || 'No SKU';
         return (
           <div className="flex flex-col">
             <Link

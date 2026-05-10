@@ -3,7 +3,6 @@
 import React, { createContext, useEffect, useMemo, useState } from 'react';
 import type { CartItem } from '@findeg/backend/features/cart';
 import type { Product } from '@findeg/backend/features/catalog';
-import { CustomerGroup, UomCode } from '@findeg/backend/features/core/domain/types/common';
 
 export interface CartContextType {
   cartItems: CartItem[];
@@ -12,10 +11,10 @@ export interface CartContextType {
   addToCart: (
     productId: number,
     quantity: number,
-    options: { variantId: number; uomCode: UomCode },
+    options: { variantId: number },
   ) => void;
-  removeFromCart: (variantId: number, uomCode: UomCode) => void;
-  updateQuantity: (variantId: number, uomCode: UomCode, quantity: number) => void;
+  removeFromCart: (variantId: number) => void;
+  updateQuantity: (variantId: number, quantity: number) => void;
   clearCart: () => void;
   toggleCart: () => void;
   cartCount: number;
@@ -26,8 +25,6 @@ export const CartContext = createContext<CartContextType | undefined>(undefined)
 
 interface CartSelectors {
   variantKey?: string;
-  uomCode?: UomCode;
-  customerGroup?: CustomerGroup;
 }
 
 /**
@@ -53,8 +50,6 @@ function parseVariantId(variantId?: string): CartSelectors {
     const parsed = JSON.parse(variantId) as CartSelectors;
     return {
       variantKey: parsed.variantKey,
-      uomCode: parsed.uomCode,
-      customerGroup: parsed.customerGroup,
     };
   } catch {
     // Legacy/simple variant ids are plain keys (e.g. "default"), not JSON blobs.
@@ -74,11 +69,8 @@ function toCartItems(rawItems: any[]): CartItem[] {
     variantLabel: item.variantLabel || item.variantKey || 'Default',
     imageUrl: item.imageUrl || (item.images && item.images[0]?.url),
     quantity: item.quantity,
-    uomCode: item.uomCode,
-    uomFactor: item.uomFactor ?? 1,
     unitPrice: item.unitPrice ?? item.unitPriceSnapshot ?? item.price ?? 0,
     currency: item.currency || 'EGP',
-    customerGroup: item.customerGroup,
     cartKitId: item.cartKitId,
   }));
 }
@@ -128,13 +120,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const addToCart = (
     productId: number,
     quantity: number,
-    options: { variantId: number; uomCode: UomCode },
+    options: { variantId: number },
   ) => {
     const guestId = getGuestId();
     const payload = {
       productId,
       variantId: options.variantId,
-      uomCode: options.uomCode,
       quantity,
     };
 
@@ -153,11 +144,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   /**
    *
    */
-  const removeFromCart = (variantId: number, uomCode: UomCode) => {
+  const removeFromCart = (variantId: number) => {
     const guestId = getGuestId();
     const query = new URLSearchParams({
       variantId: String(variantId),
-      uomCode,
     });
 
     void fetch(`/api/v1/cart/items?${query.toString()}`, {
@@ -169,8 +159,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   /**
    *
    */
-  const updateQuantity = (variantId: number, uomCode: UomCode, quantity: number) => {
-    if (quantity <= 0) return removeFromCart(variantId, uomCode);
+  const updateQuantity = (variantId: number, quantity: number) => {
+    if (quantity <= 0) return removeFromCart(variantId);
 
     const guestId = getGuestId();
     void fetch(`/api/v1/cart/items`, {
@@ -181,7 +171,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       },
       body: JSON.stringify({
         variantId,
-        uomCode,
         quantity,
       }),
     }).then(() => refreshCart());
@@ -198,7 +187,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       currentItems.map((item) => {
         const query = new URLSearchParams({
           variantId: String(item.variantId),
-          uomCode: item.uomCode,
         });
         return fetch(`/api/v1/cart/items?${query.toString()}`, {
           method: 'DELETE',

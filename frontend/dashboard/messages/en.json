@@ -384,17 +384,14 @@
             "info": "Basic Info",
             "variants": "Variants",
             "media": "Media",
-            "pricing": "Pricing & UoMs",
+            "pricing": "Pricing",
             "seo": "SEO & Meta",
             "Info": {
               "basicInfo": "Basic Information",
               "nameEn": "Name (English)",
               "nameAr": "Name (Arabic)",
               "descriptionEn": "Brief Description (English)",
-              "descriptionAr": "Brief Description (Arabic)",
-              "identifiers": "Identifiers",
-              "skuPrefix": "SKU Family Prefix",
-              "skuPrefixDesc": "Used as a prefix for all variants of this product (e.g. STA-PEN)"
+              "descriptionAr": "Brief Description (Arabic)"
             },
             "Variants": {
               "productVariants": "Product Variants",
@@ -411,18 +408,6 @@
               "addByUrl": "Add image by URL...",
               "add": "Add",
               "upload": "Upload Image"
-            },
-            "Pricing": {
-              "unitsOfMeasure": "Units of Measure",
-              "uomDesc": "Define how this product is sold (e.g. Piece, Box, Pack).",
-              "addUom": "Add UoM",
-              "code": "Code",
-              "label": "Label",
-              "factor": "Factor",
-              "noCustomUoms": "No custom units defined. Only base unit will be available.",
-              "priceLists": "Price Lists",
-              "priceListDesc": "Define specific pricing for different customer groups.",
-              "priceListIntegrated": "Price list management is integrated at the UoM level for each variant."
             },
             "Seo": {
               "urlHandle": "URL & Handle",

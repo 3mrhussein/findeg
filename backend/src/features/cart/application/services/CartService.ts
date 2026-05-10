@@ -4,7 +4,6 @@
 
 import { CartEntity, CartItem } from '../../domain/entities/Cart';
 import { ICartService } from '../interfaces/ICartService';
-import { CustomerGroup, UomCode } from '@findeg/backend/features/core/domain/types/common';
 
 type GlobalWithManagedCartStore = typeof globalThis & {
   __findegManagedCartStore?: Map<string, CartItem[]>;
@@ -26,7 +25,7 @@ function getManagedCartStore(): Map<string, CartItem[]> {
  *
  * Handles shopping cart business logic including adding, removing, and updating items.
  * Delegates to CartEntity for domain logic and calculations.
- * All pricing is expressed as `unitPrice` and all items are keyed by (variantId + uomCode).
+ * All pricing is expressed as `unitPrice` and all items are keyed by variantId.
  */
 export class CartService implements ICartService {
   /**
@@ -39,11 +38,11 @@ export class CartService implements ICartService {
   }
 
   /**
-   * Removes an item from the cart based on variantId and uomCode.
+   * Removes an item from the cart based on variantId.
    */
-  removeFromCart(items: CartItem[], variantId: number, uomCode: UomCode): CartItem[] {
+  removeFromCart(items: CartItem[], variantId: number): CartItem[] {
     const cart = new CartEntity(items);
-    return cart.removeItem(variantId, uomCode);
+    return cart.removeItem(variantId);
   }
 
   /**
@@ -52,11 +51,10 @@ export class CartService implements ICartService {
   updateQuantity(
     items: CartItem[],
     variantId: number,
-    uomCode: UomCode,
     quantity: number,
   ): CartItem[] {
     const cart = new CartEntity(items);
-    return cart.updateItemQuantity(variantId, uomCode, quantity);
+    return cart.updateItemQuantity(variantId, quantity);
   }
 
   /**
@@ -90,7 +88,7 @@ export class CartService implements ICartService {
 
   /**
    * Adds an item to a managed cart by its ID.
-   * Merges by (variantId + uomCode).
+   * Merges by variantId.
    */
   async addItem(
     cartId: string,
@@ -98,7 +96,7 @@ export class CartService implements ICartService {
   ): Promise<{ items: CartItem[]; subtotal: number; itemCount: number }> {
     const items = this.carts.get(cartId) || [];
     const existing = items.find(
-      (i) => i.variantId === input.variantId && i.uomCode === input.uomCode,
+      (i) => i.variantId === input.variantId,
     );
     if (existing) {
       existing.quantity += input.quantity;
@@ -116,18 +114,9 @@ export class CartService implements ICartService {
   async removeItem(
     cartId: string,
     variantId: number,
-    selectors?: {
-      uomCode?: UomCode;
-      customerGroup?: CustomerGroup;
-    },
   ): Promise<{ items: CartItem[]; subtotal: number; itemCount: number }> {
     let items = this.carts.get(cartId) || [];
-    const uomCode = selectors?.uomCode;
-    if (uomCode) {
-      items = items.filter((i) => !(i.variantId === variantId && i.uomCode === uomCode));
-    } else {
-      items = items.filter((i) => i.variantId !== variantId);
-    }
+    items = items.filter((i) => i.variantId !== variantId);
     this.carts.set(cartId, items);
     return this.getCart(cartId);
   }
@@ -139,16 +128,9 @@ export class CartService implements ICartService {
     cartId: string,
     variantId: number,
     quantity: number,
-    selectors?: {
-      uomCode?: UomCode;
-      customerGroup?: CustomerGroup;
-    },
   ): Promise<{ items: CartItem[]; subtotal: number; itemCount: number }> {
     const items = this.carts.get(cartId) || [];
-    const uomCode = selectors?.uomCode;
-    const existing = uomCode
-      ? items.find((i) => i.variantId === variantId && i.uomCode === uomCode)
-      : items.find((i) => i.variantId === variantId);
+    const existing = items.find((i) => i.variantId === variantId);
     if (existing) {
       existing.quantity = quantity;
     }

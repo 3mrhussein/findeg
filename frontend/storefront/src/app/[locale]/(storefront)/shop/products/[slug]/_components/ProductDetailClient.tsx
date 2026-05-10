@@ -24,9 +24,7 @@ import { cn } from '@lib/utils';
 import type {
   Product,
   Variant,
-  CustomerGroup,
   ProductPdpViewModel,
-  UomCode as UoMCode,
 } from '@/data/catalog/types';
 import { ImageGallery } from './ImageGallery';
 import { ProductTabsSection } from './ProductTabsSection';
@@ -45,16 +43,9 @@ function getProductStatusBadge({ product, variant, lowStock }: any) {
   return null;
 }
 
-interface UomOption {
-  code: UoMCode;
-  label: string;
-  factorToBase: number;
-}
-
 interface PriceState {
   unitPrice: number;
   currency: string;
-  loading: boolean;
 }
 
 function hasExplicitInventory(product: Product): boolean {
@@ -83,16 +74,6 @@ function isCssColorCandidate(value: string): boolean {
   );
 }
 
-function resolveUomLabel(uom: UomOption, locale: string): string {
-  const labels: Record<UoMCode, { en: string; ar: string }> = {
-    pcs: { en: 'pcs', ar: 'قطعة' },
-    pack: { en: 'pack', ar: 'عبوة' },
-    carton: { en: 'carton', ar: 'كرتونة' },
-  };
-
-  const label = labels[uom.code];
-  return locale === 'ar' ? label.ar : label.en;
-}
 
 function resolveVariantStock(product: Product, variant?: Variant) {
   if (!variant) {
@@ -123,23 +104,6 @@ function resolveVariantStock(product: Product, variant?: Variant) {
   };
 }
 
-function getFallbackUomPrice(
-  variant: Variant,
-  uom: UomOption,
-  customerGroup: CustomerGroup,
-): number {
-  const exact = variant.priceLists?.find(
-    (entry) => entry.customerGroup === customerGroup && entry.uomCode === uom.code,
-  );
-  if (exact) return exact.unitPrice;
-
-  const b2c = variant.priceLists?.find(
-    (entry) => entry.customerGroup === 'public_b2c' && entry.uomCode === uom.code,
-  );
-  if (b2c) return Number(b2c.unitPrice);
-
-  return Number(variant.basePrice) * uom.factorToBase;
-}
 
 /**
  * Interactive PDP content.
@@ -179,109 +143,21 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
 
   // We update selectedAttributes when variant changes via selection events
 
-  const uomOptions = useMemo<UomOption[]>(() => {
-    if (!selectedVariant) return [];
-
-    const enabled = (selectedVariant.sellableUoms || []).filter((uom: any) => uom.isEnabled);
-    if (enabled.length === 0) {
-      return [
-        {
-          code: 'pcs',
-          label: 'pcs',
-          factorToBase: 1,
-        },
-      ];
-    }
-
-    return enabled.map((uom: any) => ({
-      code: uom.uomCode,
-      label: uom.uomCode,
-      factorToBase: uom.factorToBase,
-    }));
-  }, [selectedVariant]);
-
-  const [selectedUomCode, setSelectedUomCode] = useState<UoMCode | undefined>(
-    () => uomOptions[0]?.code,
-  );
-
-  const selectedUom = uomOptions.find((uom) => uom.code === selectedUomCode) || uomOptions[0];
 
   const [priceState, setPriceState] = useState<PriceState>({
     unitPrice: Number(selectedVariant?.basePrice || 0),
     currency: 'EGP',
-    loading: false,
   });
 
   useEffect(() => {
-    if (!selectedVariant || !selectedUom) return;
+    if (!selectedVariant) return;
 
-    let active = true;
-
-    // Defer loading state to avoid synchronous state update in effect warning
-    Promise.resolve().then(() => {
-      if (active) setPriceState((prev) => ({ ...prev, loading: true }));
+    setPriceState({
+      unitPrice: Number(selectedVariant.basePrice || 0),
+      currency: 'EGP',
     });
+  }, [selectedVariant]);
 
-    const payload = {
-      productId: vm.product.id,
-      variantId: selectedVariant.id,
-      uom: selectedUom.code,
-      customerGroup: vm.customerGroup,
-      quantity: 1,
-    };
-
-    getProductPricingAction(payload)
-      .then((json) => {
-        if (!active) return;
-
-        if (json?.success && json.data) {
-          setPriceState({
-            unitPrice: Number(json.data.unitPrice || selectedVariant.basePrice),
-            currency: json.data.currency || 'EGP',
-            loading: false,
-          });
-          return;
-        }
-
-        setPriceState({
-          unitPrice: getFallbackUomPrice(
-            vm.product.variants?.find((v: any) => v.id === selectedVariant.id) || selectedVariant,
-            selectedUom,
-            vm.customerGroup,
-          ),
-          currency: 'EGP',
-          loading: false,
-        });
-      })
-      .catch(() => {
-        if (!active) return;
-        setPriceState({
-          unitPrice: getFallbackUomPrice(selectedVariant, selectedUom, vm.customerGroup),
-          currency: 'EGP',
-          loading: false,
-        });
-      });
-
-    return () => {
-      active = false;
-    };
-  }, [selectedVariant, selectedUom, vm.product.id, vm.product.variants, vm.customerGroup]);
-
-  const bestValueCode = useMemo(() => {
-    if (!selectedVariant || uomOptions.length <= 1) return null;
-
-    let best: { code: UoMCode; value: number } | null = null;
-
-    for (const uom of uomOptions) {
-      const unitPrice = getFallbackUomPrice(selectedVariant, uom, vm.customerGroup);
-      const perBaseUnit = unitPrice / Math.max(uom.factorToBase, 1);
-      if (!best || perBaseUnit < best.value) {
-        best = { code: uom.code, value: perBaseUnit };
-      }
-    }
-
-    return best?.code || null;
-  }, [selectedVariant, uomOptions, vm.customerGroup]);
 
   const stockSnapshot = resolveVariantStock(vm.product, selectedVariant);
   const maxQuantity = stockSnapshot.inStock ? Math.max(stockSnapshot.availableUnits, 1) : 1;
@@ -292,11 +168,10 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
   const [activeTab, setActiveTab] = useState('description');
 
   const onAddToCart = () => {
-    if (!selectedVariant || !selectedUom || !stockSnapshot.inStock) return;
+    if (!selectedVariant || !stockSnapshot.inStock) return;
 
     addToCart(vm.product.id, quantity, {
       variantId: selectedVariant.id,
-      uomCode: selectedUom.code as any,
     });
 
     setIsAdded(true);
@@ -513,19 +388,14 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
           <div className="rounded-2xl border bg-card p-4">
             <div className="flex flex-wrap items-center gap-2">
               <span
-                className={cn(
-                  'text-3xl font-black',
-                  priceState.loading ? 'opacity-60' : 'text-primary',
-                )}
+                className="text-3xl font-black text-primary"
               >
                 {egpFormatter.format(priceState.unitPrice || 0)}
               </span>
 
               {Number(selectedVariant?.strikePrice || 0) > (priceState.unitPrice || 0) ? (
                 <span className="text-sm text-muted-foreground line-through">
-                  {egpFormatter.format(
-                    Number(selectedVariant!.strikePrice) * (selectedUom?.factorToBase || 1),
-                  )}
+                  {egpFormatter.format(Number(selectedVariant!.strikePrice))}
                 </span>
               ) : null}
 
@@ -534,30 +404,7 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
               ) : null}
             </div>
 
-            <div className="mt-4 flex flex-wrap gap-2">
-              {uomOptions.map((uom) => (
-                <button
-                  key={uom.code}
-                  type="button"
-                  onClick={() => setSelectedUomCode(uom.code)}
-                  className={cn(
-                    'inline-flex items-center gap-1 rounded-full border px-3 py-1 text-sm font-medium',
-                    selectedUom?.code === uom.code
-                      ? 'border-primary bg-primary/10 text-primary'
-                      : 'border-border text-muted-foreground hover:text-foreground',
-                  )}
-                >
-                  <span>{resolveUomLabel(uom, locale)}</span>
-                  {bestValueCode === uom.code ? (
-                    <Badge variant="outline">{t('BestValue')}</Badge>
-                  ) : null}
-                </button>
-              ))}
-            </div>
 
-            {vm.customerGroup === 'school_b2b' ? (
-              <p className="mt-3 text-sm text-emerald-600">🏫 {t('SchoolPriceApplied')}</p>
-            ) : null}
           </div>
 
           {allAttributeKeys.length > 0 ? (

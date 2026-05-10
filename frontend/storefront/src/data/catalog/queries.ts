@@ -22,7 +22,6 @@ import type {
   Brand,
   Collection,
   Review,
-  CustomerGroup,
   ProductDetailPageData,
   CollectionsPageData,
   ShopPlpSort,
@@ -247,7 +246,6 @@ export async function getProductPdp(
     },
     initialReviews: [],
     reviewTotal: product.reviewsCount || 0,
-    customerGroup: (session?.customerGroup as any) || 'public_b2c',
     shouldRedirect: false,
     canonicalPath: `/shop/products/${slug}`,
     stockSnapshot: {

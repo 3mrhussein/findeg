@@ -22,7 +22,6 @@ export function AddToCartSection({ product }: AddToCartSectionProps) {
         <AddToCartButton
           productId={product.id}
           variantId={product.variants?.[0]?.id ?? 0}
-          uomCode={product.variants?.[0]?.sellableUoms?.[0]?.uomCode}
           size="lg"
           quantity={quantity}
           className="flex-1 h-14 text-lg rounded-full shadow-lg shadow-primary/25"
