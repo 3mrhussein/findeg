@@ -1,5 +1,5 @@
 import { Order } from '@findeg/backend/features/order/domain/entities/Order';
-import { OrderStatusUpdate } from '../dtos';
+import { OrderStatusUpdate } from '@findeg/backend/features/order/application/dtos';
 import { OrderFilters } from '@findeg/backend/features/order/application/interfaces/IOrderRepository';
 import { PaymentStatus, OrderStatus } from '@findeg/backend/features/core/domain/types/common';
 

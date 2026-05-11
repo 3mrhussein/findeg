@@ -11,7 +11,7 @@ import type {
   UpdateProductWithVariantsInput,
   ImageInput,
   CreateVariantInput,
-} from '../dtos/VariantInput';
+} from '@findeg/backend/features/catalog/application/dtos/VariantInput';
 import type { VariantDimension } from '../../../catalog/domain/types/VariantDimension';
 import {
   ProductListFilters,

@@ -8,7 +8,7 @@
 
 import { revalidateTag } from 'next/cache';
 import { createAdministrationServices } from '@findeg/backend/features/administration';
-import type { OrderStatusUpdate } from '@findeg/backend/features/administration';
+import type { OrderStatusUpdate } from '@findeg/backend/features/order';
 import { getErrorMessage } from '@lib/type-guards';
 
 /**

@@ -6,6 +6,7 @@ export * from './domain/entities';
 // ========================================
 // APPLICATION LAYER EXPORTS
 // ========================================
+export * from './application/dtos';
 export * from './application/interfaces/IUserRepository';
 export * from './application/interfaces/IPermissionService';
 export type { IAuthService } from './application/interfaces/IAuthService';

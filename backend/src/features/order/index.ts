@@ -1,5 +1,6 @@
 export * from './domain';
 export type { IOrderRepository } from './application/interfaces/IOrderRepository';
+export * from './application/dtos';
 
 // NOTE: Order actions contain @ imports (ServiceContainer, domain/cache)
 // and cannot be exported. Apps should implement their own actions.

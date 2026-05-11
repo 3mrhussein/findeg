@@ -12,8 +12,9 @@
 
 import { IAuthService } from '../interfaces/IAuthService';
 import { IUserRepository } from '../interfaces/IUserRepository';
-import { AuthResult, RegisterInput, SessionPayload, createUserVO } from '../../../core/domain/auth';
+import { AuthResult, SessionPayload, createUserVO } from '../../../core/domain/auth';
 import { adminSession, PERMISSION_CODES } from '../../../core/domain/auth/authorization';
+import { RegisterInput } from '../dtos/RegisterInput';
 import bcrypt from 'bcryptjs';
 import { getErrorDefinition, resolveErrorMessage } from '../../../core/domain/errors';
 

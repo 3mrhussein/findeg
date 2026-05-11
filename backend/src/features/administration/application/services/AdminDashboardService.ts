@@ -1,6 +1,7 @@
 import { IAdminDashboardService } from '../interfaces/IAdminDashboardService';
 import { IOrderRepository } from '../../../order/application/interfaces/IOrderRepository';
-import { DashboardStats, CatalogHealthStats, CategoryProductDistribution } from '../dtos';
+import { DashboardStats } from '../dtos';
+import { CatalogHealthStats, CategoryProductDistribution } from '@findeg/backend/features/catalog/application/dtos';
 import { Order } from '../../../order/domain/entities/Order';
 import {
   getCatalogHealthRaw,

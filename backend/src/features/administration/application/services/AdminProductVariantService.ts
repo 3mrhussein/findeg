@@ -1,5 +1,5 @@
 import type { IAuditLogService } from '../interfaces/IAuditLogService';
-import type { ImageInput, CreateVariantInput } from '../dtos/VariantInput';
+import type { ImageInput, CreateVariantInput } from '@findeg/backend/features/catalog/application/dtos/VariantInput';
 import type { VariantDimension } from '../../../catalog/domain/types/VariantDimension';
 import {
   checkProductSlugAvailable,

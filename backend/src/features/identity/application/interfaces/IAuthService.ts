@@ -9,9 +9,9 @@
 import { Email } from '@findeg/backend/features/core/domain/types/common';
 import {
   AuthResult,
-  RegisterInput,
   SessionPayload,
 } from '@findeg/backend/features/core/domain/auth';
+import { RegisterInput } from '../dtos/RegisterInput';
 
 export interface IAuthService {
   /**

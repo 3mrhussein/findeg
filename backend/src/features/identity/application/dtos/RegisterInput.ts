@@ -1,7 +1,3 @@
-/**
- * Input for user registration.
- */
-
 import { z } from 'zod';
 import { EmailSchema } from '@findeg/db';
 

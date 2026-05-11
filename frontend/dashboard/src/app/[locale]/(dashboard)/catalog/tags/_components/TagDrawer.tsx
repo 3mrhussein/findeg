@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Sheet, SheetContent } from '@findeg/ui';
 import { Tag } from '@findeg/backend/features/catalog';
-import { TagInput } from '@findeg/backend/features/administration';
+import type { TagInput } from '@findeg/backend/features/catalog/application/dtos/TagInput';
 import { TagFormPanel } from './TagFormPanel';
 import { createTagAction, updateTagAction, getTagProductCountAction } from '@data/tags/actions';
 import { useRouter } from '@i18n/navigation';

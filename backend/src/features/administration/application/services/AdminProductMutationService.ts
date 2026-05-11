@@ -3,7 +3,7 @@ import type { IProductRepository } from '../../../catalog/application/interfaces
 import type { ICategoryRepository } from '../../../catalog/application/interfaces/ICategoryRepository';
 import type { IBrandRepository } from '../../../catalog/application/interfaces/IBrandRepository';
 import type { IAuditLogService } from '../interfaces/IAuditLogService';
-import type { CreateProductWithVariantsInput, UpdateProductWithVariantsInput } from '../dtos/VariantInput';
+import type { CreateProductWithVariantsInput, UpdateProductWithVariantsInput } from '@findeg/backend/features/catalog/application/dtos/VariantInput';
 import {
   bulkActivateProducts,
   bulkDeactivateProducts,

@@ -6,7 +6,7 @@ import { Progress } from '@findeg/ui';
 import { useTranslations } from 'next-intl';
 import { Link } from '@i18n/navigation';
 import { ArrowRight } from 'lucide-react';
-import { CategoryProductDistribution } from '@findeg/backend/features/administration';
+import { CategoryProductDistribution } from '@findeg/backend/features/catalog/application/dtos';
 
 interface CategoryCoverageWidgetProps {
   distributions: CategoryProductDistribution[];

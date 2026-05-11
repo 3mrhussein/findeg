@@ -6,7 +6,7 @@ import { Progress } from '@findeg/ui';
 import { ArrowRight, CheckCircle2, AlertCircle } from 'lucide-react';
 import { Link } from '@i18n/navigation';
 import { useTranslations } from 'next-intl';
-import { CatalogHealthStats } from '@findeg/backend/features/administration';
+import { CatalogHealthStats } from '@findeg/backend/features/catalog/application/dtos';
 
 interface CatalogCompletionBoardProps {
   stats: CatalogHealthStats;

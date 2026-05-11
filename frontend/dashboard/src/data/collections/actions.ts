@@ -1,6 +1,6 @@
 'use server';
 
-import { CollectionInput } from '@findeg/backend/features/administration';
+import { CollectionInput } from '@findeg/backend/features/catalog';
 import { revalidateTag } from 'next/cache';
 import { createAdministrationServices } from '@findeg/backend/features/administration';
 import { getErrorMessage } from '@lib/type-guards';
