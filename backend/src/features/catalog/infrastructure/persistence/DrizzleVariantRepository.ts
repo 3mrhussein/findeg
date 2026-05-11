@@ -9,7 +9,7 @@ import {
   IVariantRepository,
 } from '../../application/interfaces/IVariantRepository';
 import { Variant } from '../../domain/entities/Variant';
-import { VariantInput } from '../../../administration/domain/types/ProductInput';
+import { VariantInput } from '../../application/dtos/ProductInput';
 import { InferSelectModel, and, eq, inArray } from 'drizzle-orm';
 import { ID, CurrencyCode } from '../../../core/domain/types/common';
 

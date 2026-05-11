@@ -3,7 +3,7 @@ import { type IProductRepository, type ProductFilters } from '../interfaces/IPro
 import { type IProductService } from '../interfaces/IProductService';
 import { type Product } from '@findeg/backend/features/catalog/domain/entities/Product';
 import { type Locale } from '@findeg/backend/features/core/domain/value-objects';
-import type { ProductInput } from '@findeg/backend/features/administration/domain/types';
+import type { ProductInput } from '../dtos/ProductInput';
 
 export class ProductService implements IProductService {
   constructor(private productRepository: IProductRepository) {}

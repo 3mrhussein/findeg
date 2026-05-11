@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   CollectionInput,
   CollectionInputSchema,
-} from '@findeg/backend/features/administration/domain';
+} from '@findeg/backend/features/administration';
 import { Collection } from '@findeg/backend/features/catalog/domain';
 import { Tag } from '@findeg/backend/features/catalog/domain';
 import { useTranslations } from 'next-intl';

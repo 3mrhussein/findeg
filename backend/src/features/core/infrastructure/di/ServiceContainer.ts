@@ -482,7 +482,6 @@ export class ServiceContainer {
         this.categoryRepository,
         this.brandRepository,
         this.auditLogService,
-      //  this.mediaService,
       );
     }
     return this._adminProductService;

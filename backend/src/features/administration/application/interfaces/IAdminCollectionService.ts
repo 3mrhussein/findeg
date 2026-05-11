@@ -1,7 +1,7 @@
 import { ID } from '@findeg/backend/features/core/domain/types/common';
 import { Collection } from '@findeg/backend/features/catalog/domain/entities/Collection';
 import { Tag } from '@findeg/backend/features/catalog/domain/entities/Tag';
-import { CollectionInput } from '../../domain/types/CollectionInput';
+import { CollectionInput } from '../dtos/CollectionInput';
 
 export interface IAdminCollectionService {
   /** Retrieves all collections, optionally including inactive ones */

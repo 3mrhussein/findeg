@@ -12,7 +12,7 @@ import {
 } from '@findeg/backend/features/core/domain/types/common';
 import type { Locale } from '@findeg/backend/features/core/domain/value-objects';
 import type { Product } from '../../domain/entities/Product';
-import type { ProductInput } from '@findeg/backend/features/administration/domain/types';
+import type { ProductInput } from '../dtos/ProductInput';
 import type { TagGroup } from '../../domain/entities/Tag';
 import type { AttributeFilter } from './IAttributeRepository';
 

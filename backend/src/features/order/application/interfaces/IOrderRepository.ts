@@ -4,7 +4,7 @@ import {
   PaymentStatus,
 } from '@findeg/backend/features/core/domain/types/common';
 import { Order } from '../../domain/entities/Order';
-import { OrderStatusUpdate } from '@findeg/backend/features/administration/domain/types';
+import { OrderStatusUpdate } from '../../../administration/application/dtos/OrderStatusUpdate';
 
 export interface OrderFilters {
   status?: OrderStatus;

@@ -22,7 +22,7 @@ import { Label } from '@findeg/ui';
 import { RadioGroup, RadioGroupItem } from '@findeg/ui';
 import { Badge } from '@findeg/ui';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@findeg/ui';
-import { TagInput, TagInputSchema } from '@findeg/backend/features/administration/domain/types';
+import { TagInput, TagInputSchema } from '@findeg/backend/features/administration';
 import { slugify } from '@lib/slugify';
 import { Tag } from '@findeg/backend/features/catalog';
 import { cn } from '@lib/utils';

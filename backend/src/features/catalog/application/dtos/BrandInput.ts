@@ -9,7 +9,6 @@ export const BrandInputSchema = z.object({
   descriptionEn: z.string().max(300).optional(),
   descriptionAr: z.string().max(300).optional(),
   isActive: z.boolean().default(true),
-  // Keep base name for backward compatibility or simple use
   name: z.string().optional(),
 });
 

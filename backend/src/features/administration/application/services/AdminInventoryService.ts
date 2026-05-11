@@ -4,7 +4,7 @@ import { IInventoryRepository } from '../../../catalog/application/interfaces/II
 import { IVariantRepository } from '../../../catalog/application/interfaces/IVariantRepository';
 import { IAuditLogService } from '../interfaces/IAuditLogService';
 import { Product } from '../../../catalog/domain/entities/Product';
-import { InventoryUpdate } from '../../domain/types/InventoryUpdate';
+import { InventoryUpdate } from '../dtos/InventoryUpdate';
 
 /**
  * Admin Inventory Service

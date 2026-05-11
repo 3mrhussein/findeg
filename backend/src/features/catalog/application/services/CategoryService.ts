@@ -3,7 +3,7 @@ import type { ICategoryRepository } from '../interfaces/ICategoryRepository';
 import type { ICategoryService } from '@findeg/backend/features/catalog/application/interfaces/ICategoryService';
 import type { Category } from '@findeg/backend/features/catalog/domain/entities/Category';
 import type { Locale } from '@findeg/backend/features/core/domain/value-objects';
-import type { CategoryInput } from '@findeg/backend/features/administration/domain/types';
+import type { CategoryInput } from '../dtos/CategoryInput';
 
 export class CategoryService implements ICategoryService {
   constructor(private categoryRepository: ICategoryRepository) {}

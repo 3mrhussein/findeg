@@ -16,7 +16,7 @@ import {
 import { IOrderRepository, OrderFilters } from '../../application/interfaces/IOrderRepository';
 import { Order } from '../../domain/entities/Order';
 import { ShippingAddress } from '../../domain/value-objects';
-import { OrderStatusUpdate } from '@findeg/backend/features/administration/domain/types';
+import { OrderStatusUpdate } from '../../../administration/application/dtos/OrderStatusUpdate';
 import { eq, count as sqlCount, sql, desc, and, gte, lte, ilike, or, inArray } from 'drizzle-orm';
 
 /**

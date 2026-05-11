@@ -4,8 +4,6 @@ import type { IProductRepository } from '../../../catalog/application/interfaces
 import type { ICategoryRepository } from '../../../catalog/application/interfaces/ICategoryRepository';
 import type { IBrandRepository } from '../../../catalog/application/interfaces/IBrandRepository';
 import type { IAuditLogService } from '../interfaces/IAuditLogService';
-// Reserved for future product-media orchestration. Current admin product flows persist media URLs only.
-// import type { MediaService } from '../../../media/application/services/MediaService';
 import type { Product } from '../../../catalog/domain/entities/Product';
 import type { Locale } from '../../../core/domain/value-objects';
 import type {
@@ -13,36 +11,16 @@ import type {
   UpdateProductWithVariantsInput,
   ImageInput,
   CreateVariantInput,
-} from '../../domain/types/VariantInput';
+} from '../dtos/VariantInput';
 import type { VariantDimension } from '../../../catalog/domain/types/VariantDimension';
-import {
-  bulkActivateProducts,
-  bulkDeactivateProducts,
-  bulkDeleteProducts,
-  checkProductSlugAvailable,
-  checkProductVariantSkuAvailable,
-  createProductWithVariantsInDb,
-  deactivateProductVariant,
-  duplicateProductWithVariants,
-  getAdminProductForEditRaw,
-  getProductVariantAttributes,
-  getAdminProductsListRaw,
-  insertGeneratedProductVariants,
-  updateProductWithVariantsInDb,
-  updateProductVariantKey,
-  upsertProductVariantImages,
-} from '@findeg/db/queries';
-import {
-  buildGeneratedProductVariants,
-  buildVariantKeyUpdates,
-  mapAdminProductEditData,
-  mapAdminProductListResult,
-} from './AdminProductService.helpers';
 import {
   ProductListFilters,
   ProductListResult,
   ProductEditData,
 } from '../interfaces/IAdminProductService';
+import { AdminProductReadService } from './AdminProductReadService';
+import { AdminProductMutationService } from './AdminProductMutationService';
+import { AdminProductVariantService } from './AdminProductVariantService';
 
 /**
  * Admin Product Service
@@ -55,6 +33,12 @@ import {
  * - Audit logging for all mutations
  */
 export class AdminProductService implements IAdminProductService {
+  private readService: AdminProductReadService;
+
+  private mutationService: AdminProductMutationService;
+
+  private variantService: AdminProductVariantService;
+
   /**
    *
    */
@@ -63,9 +47,16 @@ export class AdminProductService implements IAdminProductService {
     private categoryRepository: ICategoryRepository,
     private brandRepository?: IBrandRepository,
     private auditLogService?: IAuditLogService,
-    // Kept for planned direct upload/delete integration; not used by the current product flows.
-   // private mediaService?: MediaService,
-  ) {}
+  ) {
+    this.readService = new AdminProductReadService(this.productRepository);
+    this.mutationService = new AdminProductMutationService({
+      productRepository: this.productRepository,
+      categoryRepository: this.categoryRepository,
+      brandRepository: this.brandRepository,
+      auditLogService: this.auditLogService,
+    });
+    this.variantService = new AdminProductVariantService(this.auditLogService);
+  }
 
   // ─── Read ──────────────────────────────────────────────────────────────────
 
@@ -73,29 +64,28 @@ export class AdminProductService implements IAdminProductService {
    * Retrieves all products for administrative listing with filters, sort, and pagination.
    */
   async getProductsList(filters: ProductListFilters): Promise<ProductListResult> {
-    const result = await getAdminProductsListRaw(filters);
-    return mapAdminProductListResult(result);
+    return this.readService.getProductsList(filters);
   }
 
   /**
    *
    */
   async getAll(language?: Locale): Promise<Product[]> {
-    return this.productRepository.getAll(language);
+    return this.readService.getAll(language);
   }
 
   /**
    *
    */
   async getById(id: ID, language?: Locale): Promise<Product | null> {
-    return this.productRepository.getById(id, language);
+    return this.readService.getById(id, language);
   }
 
   /**
    *
    */
   async count(): Promise<number> {
-    return this.productRepository.count();
+    return this.readService.count();
   }
 
   // ─── Create Product ────────────────────────────────────────────────────────
@@ -107,20 +97,7 @@ export class AdminProductService implements IAdminProductService {
     input: CreateProductWithVariantsInput,
     adminUserId?: number,
   ): Promise<{ productId: number }> {
-    await this.ensureCategoryExists(input.categoryId);
-    await this.ensureBrandExists(input.brandId);
-
-    const productId = await createProductWithVariantsInDb(input);
-
-    await this.auditLogService?.logAction({
-      entityType: 'product',
-      entityId: String(productId),
-      action: 'create',
-      adminUserId,
-      newValues: { ...input } as Record<string, unknown>,
-    });
-
-    return { productId };
+    return this.mutationService.createProduct(input, adminUserId);
   }
 
   // ─── Update Product ────────────────────────────────────────────────────────
@@ -133,35 +110,14 @@ export class AdminProductService implements IAdminProductService {
     input: UpdateProductWithVariantsInput,
     adminUserId?: number,
   ): Promise<void> {
-    await this.getExistingProductOrThrow(id);
-    await this.ensureCategoryExists(input.categoryId);
-
-    await updateProductWithVariantsInDb(id as number, input);
-
-    await this.auditLogService?.logAction({
-      entityType: 'product',
-      entityId: String(id),
-      action: 'update',
-      adminUserId,
-      newValues: input as Record<string, unknown>,
-    });
+    return this.mutationService.updateProduct(id, input, adminUserId);
   }
 
   /**
    * Duplicates an existing product and its variants.
    */
   async duplicateProduct(id: number, adminUserId?: number): Promise<{ newId: number }> {
-    const result = await duplicateProductWithVariants(id);
-
-    await this.auditLogService?.logAction({
-      entityType: 'product',
-      entityId: String(id),
-      action: 'duplicate',
-      adminUserId,
-      newValues: { newProductId: result.newId },
-    });
-
-    return result;
+    return this.mutationService.duplicateProduct(id, adminUserId);
   }
 
   // ─── Bulk Mutations ─────────────────────────────────────────────────────────
@@ -170,48 +126,21 @@ export class AdminProductService implements IAdminProductService {
    * Activates multiple products at once.
    */
   async bulkActivate(ids: number[], adminUserId?: number): Promise<void> {
-    if (!ids.length) return;
-    await bulkActivateProducts(ids);
-
-    await this.auditLogService?.logAction({
-      entityType: 'product',
-      entityId: 'multiple',
-      action: 'bulk_activate',
-      adminUserId,
-      newValues: { ids },
-    });
+    return this.mutationService.bulkActivate(ids, adminUserId);
   }
 
   /**
    * Deactivates multiple products at once.
    */
   async bulkDeactivate(ids: number[], adminUserId?: number): Promise<void> {
-    if (!ids.length) return;
-    await bulkDeactivateProducts(ids);
-
-    await this.auditLogService?.logAction({
-      entityType: 'product',
-      entityId: 'multiple',
-      action: 'bulk_deactivate',
-      adminUserId,
-      newValues: { ids },
-    });
+    return this.mutationService.bulkDeactivate(ids, adminUserId);
   }
 
   /**
    * Deletes multiple products at once.
    */
   async bulkDelete(ids: number[], adminUserId?: number): Promise<void> {
-    if (!ids.length) return;
-    await bulkDeleteProducts(ids);
-
-    await this.auditLogService?.logAction({
-      entityType: 'product',
-      entityId: 'multiple',
-      action: 'bulk_delete',
-      adminUserId,
-      newValues: { ids },
-    });
+    return this.mutationService.bulkDelete(ids, adminUserId);
   }
 
   // ─── Delete Product ────────────────────────────────────────────────────────
@@ -220,17 +149,7 @@ export class AdminProductService implements IAdminProductService {
    *
    */
   async deleteProduct(id: ID, adminUserId?: number): Promise<void> {
-    const existing = await this.getExistingProductOrThrow(id);
-
-    await this.productRepository.delete(id);
-
-    await this.auditLogService?.logAction({
-      entityType: 'product',
-      entityId: String(id),
-      action: 'delete',
-      adminUserId,
-      oldValues: existing as unknown as Record<string, unknown>,
-    });
+    return this.mutationService.deleteProduct(id, adminUserId);
   }
 
   // ─── Deactivate Variant ────────────────────────────────────────────────────
@@ -239,14 +158,7 @@ export class AdminProductService implements IAdminProductService {
    *
    */
   async deactivateVariant(variantId: number, adminUserId?: number): Promise<void> {
-    await deactivateProductVariant(variantId);
-
-    await this.auditLogService?.logAction({
-      entityType: 'product_variant',
-      entityId: String(variantId),
-      action: 'deactivate',
-      adminUserId,
-    });
+    return this.variantService.deactivateVariant(variantId, adminUserId);
   }
 
   // ─── Variant Generation ────────────────────────────────────────────────────
@@ -260,19 +172,7 @@ export class AdminProductService implements IAdminProductService {
     defaults: Partial<CreateVariantInput>,
     adminUserId?: number,
   ): Promise<number[]> {
-    const generatedVariants = buildGeneratedProductVariants(dimensions, defaults);
-
-    const newIds = await insertGeneratedProductVariants(productId, generatedVariants);
-
-    await this.auditLogService?.logAction({
-      entityType: 'product',
-      entityId: String(productId),
-      action: 'generate_variants',
-      adminUserId,
-      newValues: { count: newIds.length } as Record<string, unknown>,
-    });
-
-    return newIds;
+    return this.variantService.generateVariants(productId, dimensions, defaults, adminUserId);
   }
 
   // ─── Rebuild Variant Keys ──────────────────────────────────────────────────
@@ -281,18 +181,7 @@ export class AdminProductService implements IAdminProductService {
    *
    */
   async rebuildVariantKeys(productId: number, adminUserId?: number): Promise<void> {
-    const attributeRows = await getProductVariantAttributes(productId);
-
-    for (const update of buildVariantKeyUpdates(attributeRows)) {
-      await updateProductVariantKey(update.variantId, update.variantKey);
-    }
-
-    await this.auditLogService?.logAction({
-      entityType: 'product',
-      entityId: String(productId),
-      action: 'rebuild_variant_keys',
-      adminUserId,
-    });
+    return this.variantService.rebuildVariantKeys(productId, adminUserId);
   }
 
   // ─── SKU Validation ────────────────────────────────────────────────────────
@@ -301,8 +190,7 @@ export class AdminProductService implements IAdminProductService {
    *
    */
   async checkSkuAvailable(sku: string, excludeVariantId?: number): Promise<boolean> {
-    const normalizedSku = sku.trim().toUpperCase();
-    return checkProductVariantSkuAvailable(normalizedSku, excludeVariantId);
+    return this.variantService.checkSkuAvailable(sku, excludeVariantId);
   }
 
 
@@ -320,14 +208,7 @@ export class AdminProductService implements IAdminProductService {
     images: ImageInput[],
     adminUserId?: number,
   ): Promise<void> {
-    await upsertProductVariantImages(variantId, images);
-
-    await this.auditLogService?.logAction({
-      entityType: 'product_variant',
-      entityId: String(variantId),
-      action: 'upsert_images',
-      adminUserId,
-    });
+    return this.variantService.upsertVariantImages(variantId, images, adminUserId);
   }
 
   /**
@@ -340,11 +221,7 @@ export class AdminProductService implements IAdminProductService {
    * Retrieves full product data for the edit form.
    */
   async getProductForEdit(id: number): Promise<ProductEditData | null> {
-    const data = await getAdminProductForEditRaw(id);
-
-    if (!data) return null;
-
-    return mapAdminProductEditData(data);
+    return this.readService.getProductForEdit(id);
   }
 
   /**
@@ -352,28 +229,7 @@ export class AdminProductService implements IAdminProductService {
    * Note: This checks the 'en' slug specifically as the primary handle.
    */
   async checkSlugAvailable(slug: string, excludeProductId?: number): Promise<boolean> {
-    return checkProductSlugAvailable(slug, excludeProductId);
-  }
-
-  private async ensureCategoryExists(categoryId?: number | null): Promise<void> {
-    if (!categoryId) return;
-
-    const category = await this.categoryRepository.getById(categoryId);
-    if (!category) throw new Error(`Category ${categoryId} not found`);
-  }
-
-  private async ensureBrandExists(brandId?: number | null): Promise<void> {
-    if (!brandId || !this.brandRepository) return;
-
-    const brand = await this.brandRepository.getById(brandId);
-    if (!brand) throw new Error(`Brand ${brandId} not found`);
-  }
-
-  private async getExistingProductOrThrow(id: ID): Promise<Product> {
-    const existing = await this.productRepository.getById(id);
-    if (!existing) throw new Error(`Product ${id} not found`);
-
-    return existing;
+    return this.variantService.checkSlugAvailable(slug, excludeProductId);
   }
 
 }

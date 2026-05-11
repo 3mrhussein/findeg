@@ -3,7 +3,7 @@ import { db } from '@findeg/db/connection';
 import { categories } from '@findeg/db/schema';
 import { ICategoryRepository } from '../../application/interfaces/ICategoryRepository';
 import { Category } from '../../domain/entities/Category';
-import { CategoryInput } from '../../../administration/domain/types';
+import { CategoryInput } from '../../application/dtos/CategoryInput';
 import { eq, count, asc, isNull, or, like, sql } from 'drizzle-orm';
 import {
   DEFAULT_LOCALE,

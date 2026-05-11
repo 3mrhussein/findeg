@@ -34,7 +34,7 @@ import {
   type TranslationMap,
   type Locale,
 } from '../../../core/domain/value-objects';
-import { type ProductInput } from '../../../administration/domain/types/ProductInput';
+import { type ProductInput } from '../../application/dtos/ProductInput';
 import { BaseDrizzleRepository } from '../../../core/infrastructure/persistence/BaseDrizzleRepository';
 import { type Tag } from '../../domain/entities/Tag';
 import { type ProductAttributeValue } from '../../domain/entities/Attribute';

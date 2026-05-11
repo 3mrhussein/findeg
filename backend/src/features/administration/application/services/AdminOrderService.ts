@@ -6,7 +6,7 @@ import {
 import { IAuditLogService } from '../interfaces/IAuditLogService';
 import { IEmailService } from '../../../notifications/application/services/IEmailService';
 import { Order } from '../../../order/domain/entities/Order';
-import { OrderStatusUpdate } from '../../domain/types/OrderStatusUpdate';
+import { OrderStatusUpdate } from '../dtos/OrderStatusUpdate';
 import { PaymentStatus, OrderStatus } from '../../../core/domain/types/common';
 import {
   canTransitionOrderStatus,

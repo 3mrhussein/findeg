@@ -8,7 +8,6 @@ export interface ImageInput {
   displayOrder: number;
 }
 
-
 export interface VariantAttributeInput {
   attributeKey: string;
   value: string;
@@ -35,7 +34,6 @@ export interface UpdateVariantInput extends Partial<CreateVariantInput> {
 }
 
 export interface CreateProductWithVariantsInput {
-  // Product shell
   localizedName: TranslationMap;
   localizedDescription?: TranslationMap;
   localizedLongDescription?: TranslationMap;
@@ -44,23 +42,15 @@ export interface CreateProductWithVariantsInput {
   brandId?: number | null;
   tagIds: number[];
   isActive: boolean;
-
-  // Pricing mode
   pricingMode: PricingMode;
-
-  // Shared pricing (used when pricingMode = "shared")
   sharedBasePrice?: number;
   sharedStrikePrice?: number | null;
   sharedCostPrice?: number | null;
-
-
-  // Variants
   variants: CreateVariantInput[];
 }
 
-export interface UpdateProductWithVariantsInput extends Partial<
-  Omit<CreateProductWithVariantsInput, 'variants'>
-> {
+export interface UpdateProductWithVariantsInput
+  extends Partial<Omit<CreateProductWithVariantsInput, 'variants'>> {
   variants?: (UpdateVariantInput | CreateVariantInput)[];
   variantsToDelete?: number[];
   variantsToDeactivate?: number[];

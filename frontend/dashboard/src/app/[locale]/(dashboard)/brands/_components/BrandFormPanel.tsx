@@ -17,7 +17,7 @@ import { cn } from '@lib/utils';
 import Image from 'next/image';
 import { useDebounce } from '@hooks/use-debounce';
 import { useToast } from '@hooks/use-toast';
-import { BrandInput, BrandInputSchema } from '@findeg/backend/features/administration/domain/types';
+import { BrandInput, BrandInputSchema } from '@findeg/backend/features/catalog';
 
 interface BrandFormPanelProps {
   brand: Brand | null;

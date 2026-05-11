@@ -3,7 +3,7 @@ import { IAdminCollectionService } from '../interfaces/IAdminCollectionService';
 import { ICollectionRepository } from '../../../catalog/application/interfaces/ICollectionRepository';
 import { Collection } from '../../../catalog/domain/entities/Collection';
 import { Tag } from '../../../catalog/domain/entities/Tag';
-import { CollectionInput } from '../../domain/types/CollectionInput';
+import { CollectionInput } from '../dtos/CollectionInput';
 import { IAuditLogService } from '../interfaces/IAuditLogService';
 
 /**

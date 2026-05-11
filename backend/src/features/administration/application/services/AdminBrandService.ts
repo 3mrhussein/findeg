@@ -2,7 +2,7 @@ import { ID, Slug } from '../../../core/domain/types/common';
 import { IAdminBrandService } from '../interfaces/IAdminBrandService';
 import { IBrandRepository } from '../../../catalog/application/interfaces/IBrandRepository';
 import { Brand } from '../../../catalog/domain/entities/Brand';
-import { BrandInput } from '../../domain/types/BrandInput';
+import { BrandInput } from '../../../catalog/application/dtos/BrandInput';
 import { IAuditLogService } from '../interfaces/IAuditLogService';
 
 /**

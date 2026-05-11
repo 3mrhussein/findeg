@@ -4,7 +4,7 @@ import React from 'react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@findeg/ui';
 import { BrandFormPanel } from './BrandFormPanel';
 import { Brand } from '@findeg/backend/features/catalog';
-import { BrandInput } from '@findeg/backend/features/administration/domain/types';
+import { BrandInput } from '@findeg/backend/features/catalog';
 
 interface BrandDrawerProps {
   open: boolean;

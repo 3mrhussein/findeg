@@ -1,7 +1,6 @@
 import { IAdminDashboardService } from '../interfaces/IAdminDashboardService';
 import { IOrderRepository } from '../../../order/application/interfaces/IOrderRepository';
-import { DashboardStats } from '../../domain/types/DashboardStats';
-import { CatalogHealthStats, CategoryProductDistribution } from '../../domain/types';
+import { DashboardStats, CatalogHealthStats, CategoryProductDistribution } from '../dtos';
 import { Order } from '../../../order/domain/entities/Order';
 import {
   getCatalogHealthRaw,

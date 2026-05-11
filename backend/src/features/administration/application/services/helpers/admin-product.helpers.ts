@@ -1,10 +1,14 @@
 import type { getAdminProductForEditRaw, getAdminProductsListRaw } from '@findeg/db/queries';
-import type { ProductEditData, ProductListItem, ProductListResult } from '../interfaces/IAdminProductService';
-import type { CreateVariantInput } from '../../domain/types/VariantInput';
-import type { VariantDimension } from '../../../catalog/domain/types/VariantDimension';
-import { VariantKey } from '../../../catalog/domain/value-objects/VariantKey';
-import { Sku } from '../../../catalog/domain/value-objects/Sku';
-import { generateVariantMatrix } from '../../../catalog/domain/types/VariantDimension';
+import type {
+  ProductEditData,
+  ProductListItem,
+  ProductListResult,
+} from '../../interfaces/IAdminProductService';
+import type { CreateVariantInput } from '../../dtos/VariantInput';
+import type { VariantDimension } from '../../../../catalog/domain/types/VariantDimension';
+import { VariantKey } from '../../../../catalog/domain/value-objects/VariantKey';
+import { Sku } from '../../../../catalog/domain/value-objects/Sku';
+import { generateVariantMatrix } from '../../../../catalog/domain/types/VariantDimension';
 
 type ProductListQueryResult = Awaited<ReturnType<typeof getAdminProductsListRaw>>;
 type ProductListRow = ProductListQueryResult['rows'][number];

@@ -47,9 +47,9 @@ import { IEmailService } from '@findeg/backend/features/notifications';
  * "use server";
  * import { createAdministrationServices } from '@findeg/backend/features/administration';
  *
- * export async function createProduct(input: ProductInput) {
+ * export async function createProduct(input: CreateProductWithVariantsInput) {
  *   const { products } = createAdministrationServices();
- *   const result = await products.create(input);
+ *   const result = await products.createProduct(input);
  *
  *   updateTag('products');
  *   return { success: true, data: result };
@@ -77,11 +77,10 @@ export function createAdministrationServices() {
     categoryRepository,
     brandRepository,
     auditLogService,
-    // undefined, // mediaService - optional
   );
 
   // Create admin services (inject repository dependencies)
-  // Note: Some services have optional dependencies (mediaService, emailService)
+  // Note: Some services have optional dependencies (emailService)
   // For emailService, we pass a no-op implementation to avoid breaking the build
   return {
     products: adminProductService,

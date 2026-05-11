@@ -2,7 +2,7 @@ import { ID } from '../../../core/domain/types/common';
 import { IAdminTagService } from '../interfaces/IAdminTagService';
 import { ITagRepository } from '../../../catalog/application/interfaces/ITagRepository';
 import { Tag } from '../../../catalog/domain/entities/Tag';
-import { TagInput } from '../../domain/types/TagInput';
+import { TagInput } from '../dtos/TagInput';
 import { IAuditLogService } from '../interfaces/IAuditLogService';
 import { db } from '@findeg/db/connection';
 import { tags, productTags } from '@findeg/db/schema';

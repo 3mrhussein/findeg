@@ -12,7 +12,7 @@ import type {
   UpdateProductWithVariantsInput,
   ImageInput,
   CreateVariantInput,
-} from '@findeg/backend/features/administration/domain/types/VariantInput';
+} from '../dtos/VariantInput';
 import type { VariantDimension } from '@findeg/backend/features/catalog/domain/types/VariantDimension';
 import type {
   Variant,

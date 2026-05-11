@@ -6,7 +6,7 @@ import {
   deleteBrandAction,
   toggleBrandStatusAction,
 } from '@data/brands/actions';
-import { BrandInput } from '@findeg/backend/features/administration/domain/types';
+import { BrandInput } from '@findeg/backend/features/catalog';
 import { revalidatePath } from 'next/cache';
 
 interface BrandsContentProps {

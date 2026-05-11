@@ -3,7 +3,7 @@ import { IAdminCategoryService } from '../interfaces/IAdminCategoryService';
 import { ICategoryRepository } from '../../../catalog/application/interfaces/ICategoryRepository';
 import { IAuditLogService } from '../interfaces/IAuditLogService';
 import { Category } from '../../../catalog/domain/entities/Category';
-import { CategoryInput } from '../../domain/types/CategoryInput';
+import { CategoryInput } from '../../../catalog/application/dtos/CategoryInput';
 import type { Locale } from '../../../core/domain/value-objects';
 
 /**
