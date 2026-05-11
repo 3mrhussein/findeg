@@ -1,6 +1,6 @@
 
 
-import { SchoolList } from '@findeg/db/schema';
+import { SchoolList } from '../../domain/types';
 
 export interface SchoolFilterOptions {
   governorates: string[];

@@ -9,7 +9,7 @@ import {
   SchoolListAccessGrant,
   SchoolListAccessRequest,
   SchoolListAccessToken,
-} from '@findeg/db/schema';
+} from '../../domain/types/Access';
 import { ISchoolListRepository } from '@findeg/backend/features/catalog/application/interfaces/ISchoolListRepository';
 import { IUserRepository } from '@findeg/backend/features/identity/application/interfaces/IUserRepository';
 

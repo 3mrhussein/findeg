@@ -2,10 +2,14 @@ import { beforeEach, describe, expect, it, vi, type Mocked } from 'vitest';
 import {
   getCatalogHealthRaw,
   getCategoryDistributionRaw,
-  getDashboardKpisRaw,
+  getProductCountRaw,
+  getCategoryCountRaw,
+  getBrandCountRaw,
   getLowStockCountRaw,
   getRevenueByPeriodRaw,
   getTopProductsRaw,
+  getTotalOrderStatsRaw,
+  getOrderStatsRaw,
 } from '@findeg/db/queries';
 import { AdminDashboardService } from '../AdminDashboardService';
 import { QueryError } from '../../../../core/domain/errors/QueryError';
@@ -14,10 +18,14 @@ import { IOrderRepository } from '../../../../order/application/interfaces/IOrde
 vi.mock('@findeg/db/queries', () => ({
   getCatalogHealthRaw: vi.fn(),
   getCategoryDistributionRaw: vi.fn(),
-  getDashboardKpisRaw: vi.fn(),
+  getProductCountRaw: vi.fn(),
+  getCategoryCountRaw: vi.fn(),
+  getBrandCountRaw: vi.fn(),
   getLowStockCountRaw: vi.fn(),
   getRevenueByPeriodRaw: vi.fn(),
   getTopProductsRaw: vi.fn(),
+  getTotalOrderStatsRaw: vi.fn(),
+  getOrderStatsRaw: vi.fn(),
 }));
 
 vi.mock('date-fns', async (importOriginal) => {
@@ -44,35 +52,41 @@ describe('AdminDashboardService', () => {
   });
 
   it('retrieves and aggregates dashboard statistics', async () => {
-    vi.mocked(getDashboardKpisRaw).mockResolvedValue({
-      totalProducts: 100,
-      totalCategories: 10,
-      totalOrders: 50,
-      totalBrands: 5,
+    vi.mocked(getProductCountRaw).mockResolvedValue(100);
+    vi.mocked(getCategoryCountRaw).mockResolvedValue(10);
+    vi.mocked(getBrandCountRaw).mockResolvedValue(5);
+    vi.mocked(getTotalOrderStatsRaw).mockResolvedValue({
+      totalOrders: 150,
       totalRevenue: 5000,
-      todayRevenue: 200,
-      todayOrders: 2,
     });
+    vi.mocked(getOrderStatsRaw).mockResolvedValue({
+      totalOrders: 2,
+      totalRevenue: 200,
+    });
+    vi.mocked(getLowStockCountRaw).mockResolvedValue(3);
     vi.mocked(getRevenueByPeriodRaw).mockResolvedValue([
       { period: '2026-05-01', revenue: 150 },
       { period: '2026-05-02', revenue: 200 },
     ]);
-    vi.mocked(getLowStockCountRaw).mockResolvedValue(3);
     vi.mocked(getTopProductsRaw).mockResolvedValue([
       { id: 1, name: 'Product 1', sold: 10, revenue: 1000 },
     ]);
 
     const result = await service.getDashboardStats();
 
-    expect(getDashboardKpisRaw).toHaveBeenCalledTimes(1);
+    expect(getProductCountRaw).toHaveBeenCalledTimes(1);
+    expect(getCategoryCountRaw).toHaveBeenCalledTimes(1);
+    expect(getBrandCountRaw).toHaveBeenCalledTimes(1);
+    expect(getTotalOrderStatsRaw).toHaveBeenCalledTimes(1);
+    expect(getOrderStatsRaw).toHaveBeenCalled();
     expect(getRevenueByPeriodRaw).toHaveBeenCalledTimes(1);
     expect(getLowStockCountRaw).toHaveBeenCalledTimes(1);
     expect(getTopProductsRaw).toHaveBeenCalledWith(5);
     expect(result).toEqual({
       totalProducts: 100,
       totalCategories: 10,
-      totalOrders: 50,
       totalBrands: 5,
+      totalOrders: 150,
       totalRevenue: 5000,
       todayRevenue: 200,
       todayOrders: 2,
@@ -151,14 +165,18 @@ describe('AdminDashboardService', () => {
   });
 
   it('wraps dashboard stat failures in QueryError', async () => {
-    vi.mocked(getDashboardKpisRaw).mockRejectedValue(new Error('Kpis Failed'));
+    vi.mocked(getProductCountRaw).mockRejectedValue(new Error('Count Failed'));
+    vi.mocked(getCategoryCountRaw).mockResolvedValue(0);
+    vi.mocked(getBrandCountRaw).mockResolvedValue(0);
+    vi.mocked(getTotalOrderStatsRaw).mockResolvedValue({ totalOrders: 0, totalRevenue: 0 });
+    vi.mocked(getOrderStatsRaw).mockResolvedValue({ totalOrders: 0, totalRevenue: 0 });
     vi.mocked(getRevenueByPeriodRaw).mockResolvedValue([]);
     vi.mocked(getLowStockCountRaw).mockResolvedValue(0);
     vi.mocked(getTopProductsRaw).mockResolvedValue([]);
 
     await expect(service.getDashboardStats()).rejects.toThrow(QueryError);
     await expect(service.getDashboardStats()).rejects.toThrow(
-      'Failed to retrieve dashboard stats: Kpis Failed',
+      'Failed to retrieve dashboard stats: Count Failed',
     );
   });
 });

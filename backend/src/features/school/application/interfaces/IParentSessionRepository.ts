@@ -1,4 +1,4 @@
-import { SchoolListParentSession, NewSchoolListParentSession } from '@findeg/db/schema';
+import { SchoolListParentSession, UpsertSchoolListParentSessionInput } from '../../domain/types';
 
 export interface IParentSessionRepository {
   /**
@@ -13,7 +13,7 @@ export interface IParentSessionRepository {
   /**
    * Creates or updates a session.
    */
-  upsertSession(session: NewSchoolListParentSession): Promise<SchoolListParentSession>;
+  upsertSession(session: UpsertSchoolListParentSessionInput): Promise<SchoolListParentSession>;
 
   /**
    * Merges a guest session into a user session.

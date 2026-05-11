@@ -1,12 +1,14 @@
-
-import { Notification, NewNotification } from '@findeg/db/schema';
+import {
+  CreateNotificationInput,
+  Notification,
+} from '../../domain/types/Notification';
 
 /**
  * Data Access Interface for Notifications
  */
 export interface INotificationRepository {
   /** Creates a new notification */
-  create(data: NewNotification): Promise<void>;
+  create(data: CreateNotificationInput): Promise<void>;
 
   /** Marks a specific notification as read */
   markRead(id: number, userId: number): Promise<void>;

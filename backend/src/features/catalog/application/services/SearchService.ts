@@ -1,6 +1,8 @@
-import { db } from '@findeg/db/connection';
-import { sql } from 'drizzle-orm';
-import { searchLogs } from '@findeg/db/schema';
+import {
+  executeCatalogScoredSearchRaw,
+  getCatalogSuggestionsRaw,
+  logCatalogSearchRaw,
+} from '@findeg/db/queries';
 import { type IProductRepository } from '../interfaces/IProductRepository';
 import {
   type ISearchService,
@@ -71,12 +73,12 @@ export class SearchService implements ISearchService {
     }
 
     try {
-      await db.insert(searchLogs).values({
-        query: normalizedQuery.substring(0, 255),
+      await logCatalogSearchRaw({
+        query: normalizedQuery,
         locale,
         resultsCount,
         userId: userId ? Number(userId) : undefined,
-        sessionId: sessionId || undefined,
+        sessionId,
       });
     } catch (error) {
       console.error('[SearchService] Failed to log search:', error);
@@ -92,62 +94,13 @@ export class SearchService implements ISearchService {
     if (!term) return [];
 
     const normalizedTerm = isArabic ? this.normalizeArabic(term) : term.toLowerCase();
-    const likePattern = `%${normalizedTerm}%`;
 
-    const query = sql`
-      SELECT p.id as "productId", MAX(
-        GREATEST(
-          CASE WHEN pt.name_normalized = ${normalizedTerm} THEN 1.0 ELSE 0 END,
-          CASE WHEN pt.name_normalized ILIKE ${likePattern} THEN 0.8 ELSE 0 END,
-          similarity(COALESCE(pt.name_normalized, ''), ${normalizedTerm}),
-          
-          CASE WHEN pt.description_normalized ILIKE ${likePattern} THEN 0.8 ELSE 0 END,
-          similarity(COALESCE(pt.description_normalized, ''), ${normalizedTerm}),
-          
-          CASE WHEN pt.name = ${term} THEN 1.0 ELSE 0 END,
-          CASE WHEN pt.name ILIKE ${likePattern} THEN 0.8 ELSE 0 END,
-          similarity(COALESCE(pt.name, ''), ${term}),
-
-          CASE WHEN v.sku ILIKE ${likePattern} THEN 0.9 ELSE 0 END,
-          
-          CASE WHEN ct.name_normalized ILIKE ${likePattern} THEN 0.7 ELSE 0 END,
-          similarity(COALESCE(ct.name_normalized, ''), ${normalizedTerm})
-        )
-      ) as score
-      FROM products p
-      LEFT JOIN product_translations pt ON pt.product_id = p.id AND pt.language = ${locale}
-      LEFT JOIN product_variants v ON v.product_id = p.id
-      LEFT JOIN categories c ON c.id = p.category_id
-      LEFT JOIN category_translations ct ON ct.category_id = c.id AND ct.language = ${locale}
-      WHERE p.is_active = true
-        ${params.categoryId ? sql`AND c.path LIKE (SELECT path FROM categories WHERE id = ${params.categoryId}) || '%'` : sql``}
-        ${params.brandId ? sql`AND p.brand_id = ${params.brandId}` : sql``}
-        ${params.minPrice ? sql`AND EXISTS (SELECT 1 FROM product_variants pv WHERE pv.product_id = p.id AND pv.base_price >= ${params.minPrice})` : sql``}
-        ${params.maxPrice ? sql`AND EXISTS (SELECT 1 FROM product_variants pv WHERE pv.product_id = p.id AND pv.base_price <= ${params.maxPrice})` : sql``}
-        ${params.inStockOnly ? sql`AND EXISTS (SELECT 1 FROM product_variants pv JOIN inventory_balances ib ON ib.variant_id = pv.id WHERE pv.product_id = p.id AND (ib.on_hand - ib.reserved) > 0)` : sql``}
-      GROUP BY p.id
-      HAVING MAX(GREATEST(
-          CASE WHEN pt.name_normalized = ${normalizedTerm} THEN 1.0 ELSE 0 END,
-          CASE WHEN pt.name_normalized ILIKE ${likePattern} THEN 0.8 ELSE 0 END,
-          similarity(COALESCE(pt.name_normalized, ''), ${normalizedTerm}),
-          
-          CASE WHEN pt.description_normalized ILIKE ${likePattern} THEN 0.8 ELSE 0 END,
-          similarity(COALESCE(pt.description_normalized, ''), ${normalizedTerm}),
-          
-          CASE WHEN pt.name = ${term} THEN 1.0 ELSE 0 END,
-          CASE WHEN pt.name ILIKE ${likePattern} THEN 0.8 ELSE 0 END,
-          similarity(COALESCE(pt.name, ''), ${term}),
-
-          CASE WHEN v.sku ILIKE ${likePattern} THEN 0.9 ELSE 0 END,
-          
-          CASE WHEN ct.name_normalized ILIKE ${likePattern} THEN 0.7 ELSE 0 END,
-          similarity(COALESCE(ct.name_normalized, ''), ${normalizedTerm})
-      )) > 0.2
-      ORDER BY score DESC
-    `;
-
-    const results = await db.execute(query);
-    return results as unknown as { productId: number; score: number }[];
+    return executeCatalogScoredSearchRaw({
+      term,
+      normalizedTerm,
+      locale,
+      params,
+    });
   }
 
   public async search(params: SearchParams): Promise<SearchResult> {
@@ -264,52 +217,25 @@ export class SearchService implements ISearchService {
     const { arabicTerms } = this.parseQuery(query);
     const isArabic = arabicTerms.length > 0;
     const normalizedTerm = isArabic ? this.normalizeArabic(query) : query.toLowerCase().trim();
-    const prefixPattern = `${normalizedTerm}%`;
+    const suggestions = await getCatalogSuggestionsRaw({
+      query,
+      normalizedTerm,
+      locale,
+    });
 
-    // Fast Prefix matching for suggestions
-    const prodQuery = sql`
-      SELECT p.id, pt.name, pt.name_normalized, pv.url as image_url
-      FROM products p
-      INNER JOIN product_translations pt ON pt.product_id = p.id AND pt.language = ${locale}
-      LEFT JOIN variant_images pv ON pv.variant_id = (
-        SELECT id FROM product_variants WHERE product_id = p.id ORDER BY display_order ASC LIMIT 1
-      ) AND pv.display_order = 0
-      WHERE p.is_active = true 
-        AND (pt.name_normalized ILIKE ${prefixPattern} OR pt.name ILIKE ${prefixPattern})
-      LIMIT 5
-    `;
+    const products: Suggestion[] = suggestions.products.map((product) => ({
+      id: product.id,
+      name: product.name,
+      type: 'product',
+      imageUrl: product.imageUrl,
+    }));
 
-    const catQuery = sql`
-      SELECT c.id, c.slug, ct.name
-      FROM categories c
-      INNER JOIN category_translations ct ON ct.category_id = c.id AND ct.language = ${locale}
-      WHERE c.is_active = true 
-        AND (ct.name_normalized ILIKE ${prefixPattern} OR ct.name ILIKE ${prefixPattern})
-      LIMIT 3
-    `;
-
-    const [prodResults, catResults] = await Promise.all([
-      db.execute(prodQuery),
-      db.execute(catQuery),
-    ]);
-
-    const products: Suggestion[] = (prodResults as unknown as Record<string, unknown>[]).map(
-      (r) => ({
-        id: Number(r.id),
-        name: String(r.name),
-        type: 'product',
-        imageUrl: r.image_url ? String(r.image_url) : undefined,
-      }),
-    );
-
-    const categories: Suggestion[] = (catResults as unknown as Record<string, unknown>[]).map(
-      (r) => ({
-        id: Number(r.id),
-        name: String(r.name),
-        slug: String(r.slug),
-        type: 'category',
-      }),
-    );
+    const categories: Suggestion[] = suggestions.categories.map((category) => ({
+      id: category.id,
+      name: category.name,
+      slug: category.slug,
+      type: 'category',
+    }));
 
     return { products, categories };
   }

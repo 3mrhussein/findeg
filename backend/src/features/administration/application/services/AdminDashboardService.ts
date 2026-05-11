@@ -6,10 +6,14 @@ import { Order } from '../../../order/domain/entities/Order';
 import {
   getCatalogHealthRaw,
   getCategoryDistributionRaw,
-  getDashboardKpisRaw,
+  getProductCountRaw,
+  getCategoryCountRaw,
+  getBrandCountRaw,
   getLowStockCountRaw,
   getRevenueByPeriodRaw,
   getTopProductsRaw,
+  getTotalOrderStatsRaw,
+  getOrderStatsRaw,
 } from '@findeg/db/queries';
 import { QueryError } from '../../../core/domain/errors/QueryError';
 import { endOfDay, startOfDay, subDays } from 'date-fns';
@@ -17,7 +21,8 @@ import { endOfDay, startOfDay, subDays } from 'date-fns';
 /**
  * Admin Dashboard Service
  *
- * Aggregates KPI and catalog metrics while delegating persistence concerns to the db package.
+ * Orchestrates KPI and catalog metrics from primitives in the db layer.
+ * Handles validation, composition, and error mapping.
  */
 export class AdminDashboardService implements IAdminDashboardService {
   /**
@@ -25,7 +30,7 @@ export class AdminDashboardService implements IAdminDashboardService {
    *
    * @param orderRepository - For revenue and order volume.
    */
-  constructor(private orderRepository: IOrderRepository) {}
+  constructor(private orderRepository: IOrderRepository) { }
 
   /**
    * Aggregates key performance indicators (KPIs) for the store dashboard.
@@ -40,15 +45,27 @@ export class AdminDashboardService implements IAdminDashboardService {
       const todayEnd = endOfDay(now);
       const thirtyDaysAgo = subDays(now, 30);
 
-      const [kpis, revenueByPeriod, lowStockCount, topProducts] = await Promise.all([
-        getDashboardKpisRaw(todayStart, todayEnd),
-        getRevenueByPeriodRaw(thirtyDaysAgo, now, 'day'),
+      // Orchestrate primitives in parallel
+      const [productCount, categoryCount, brandCount, totalStats, todayStats, lowStockCount, topProducts, revenueByPeriod] = await Promise.all([
+        getProductCountRaw(),
+        getCategoryCountRaw(),
+        getBrandCountRaw(),
+        getTotalOrderStatsRaw(),
+        getOrderStatsRaw(todayStart, todayEnd),
         getLowStockCountRaw(),
         getTopProductsRaw(5),
+        getRevenueByPeriodRaw(thirtyDaysAgo, now, 'day'),
       ]);
 
+      // Map to output shape
       return {
-        ...kpis,
+        totalProducts: productCount,
+        totalCategories: categoryCount,
+        totalBrands: brandCount,
+        totalOrders: totalStats.totalOrders,
+        totalRevenue: totalStats.totalRevenue,
+        todayRevenue: todayStats.totalRevenue,
+        todayOrders: todayStats.totalOrders,
         currency: 'EGP',
         lowStockCount,
         topProducts,

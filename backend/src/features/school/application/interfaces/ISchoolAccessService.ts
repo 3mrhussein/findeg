@@ -3,7 +3,7 @@ import {
   SchoolListAccessGrant,
   SchoolListAccessRequest,
   SchoolListAccessToken,
-} from '@findeg/db/schema';
+} from '../../domain/types/Access';
 
 export type AccessState = 'public' | 'code_required' | 'private' | 'granted' | 'pending';
 

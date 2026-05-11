@@ -9,6 +9,5 @@ export type { AdministrationServices } from './application/services/factory';
 // Apps should consume the factory and DTO exports above.
 // admin-orders-page query is also intentionally not exported for the same reason.
 // export * from "./application/queries/admin-orders-page"; // REMOVED
-
 // Repository classes are not exported because they depend on db/schema internals.
 // export { DrizzleAuditLogRepository } from "./infrastructure"; // REMOVED

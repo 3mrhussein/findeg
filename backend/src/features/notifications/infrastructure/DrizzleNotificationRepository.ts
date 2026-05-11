@@ -1,7 +1,8 @@
 import { db } from '@findeg/db/connection';
-import { notifications, Notification, NewNotification } from '@findeg/db/schema';
+import { notifications } from '@findeg/db/schema';
 import { INotificationRepository } from '../application/interfaces/INotificationRepository';
 import { eq, and, desc, count } from 'drizzle-orm';
+import { CreateNotificationInput, Notification } from '../domain/types/Notification';
 
 /**
  * Drizzle implementation of the Notification Repository.
@@ -10,7 +11,7 @@ export class DrizzleNotificationRepository implements INotificationRepository {
   /**
    *
    */
-  async create(data: NewNotification): Promise<void> {
+  async create(data: CreateNotificationInput): Promise<void> {
     await db.insert(notifications).values(data);
   }
 

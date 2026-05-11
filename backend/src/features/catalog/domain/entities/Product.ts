@@ -9,9 +9,6 @@
  */
 
 import { z } from 'zod';
-import { products } from '@findeg/db/schema';
-import { type InferSelectModel } from 'drizzle-orm';
-
 import { TagSchema } from './Tag';
 import { ProductAttributeValueSchema } from './Attribute';
 import { VariantSchema, type Variant, VariantEntity } from './Variant';
@@ -68,17 +65,7 @@ export const ProductSchema = z.object({
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
 });
-export type Product = z.infer<typeof ProductSchema> &
-  Partial<
-    Omit<
-      InferSelectModel<typeof products>,
-      | 'localizedName'
-      | 'localizedDescription'
-      | 'localizedLongDescription'
-      | 'rating'
-      | 'reviewsCount'
-    >
-  >;
+export type Product = z.infer<typeof ProductSchema>;
 
 export type CreateProduct = z.infer<typeof CreateProductSchema>;
 

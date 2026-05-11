@@ -8,6 +8,18 @@ A modern, multilingual e-commerce application specializing in school supplies, s
 
 Domain logic MUST be completely isolated from technical details (database, UI framework, external services). All features follow the 4-layer model: **domain** (pure business rules), **application** (use cases/orchestration), **infrastructure** (adapters/DB), and **presentation** (UI/routes). Cross-feature dependencies are PROHIBITED at infrastructure level—only through application interfaces. No feature's infrastructure code may be imported directly by another feature or UI. Authorization checks MUST use guard interfaces (`IPermissionService`), never role-string checks in routes/components.
 
+**Database Query Layer Organization**: The infrastructure layer follows a strict separation between **query primitives** (single-purpose read operations) and **orchestration** (composition of multiple primitives). Database queries in `@db/src/queries/` are organized by **data domain** (e.g., `catalog/`, `sales/`, `inventory/`) rather than by use case. Each domain exports **primitives only**—reusable, single-purpose query functions with no orchestration or composition logic. Primitives return raw data (counts, arrays, simple objects) suitable for multiple features.
+
+**Default Pattern**: Backend services (`@backend/src/features/{feature}/application/services/`) orchestrate these primitives to build feature-specific use cases:
+1. Call multiple primitives in parallel (for performance)
+2. Validate results with Zod schemas
+3. Transform and map to the output shape needed by the feature
+4. Handle errors at the application level
+
+This ensures the **infrastructure layer** (DB) stays focused on data access, while the **application layer** (services) owns all business logic composition and transformation.
+
+**Performance Exception**: If a composed query requires database-level optimization to avoid N+1 queries or excessive round trips AND that optimization cannot be achieved by composing primitives, create an optimized query at the db layer as a single SQL statement. **MANDATORY: Document the performance reason in code comments explaining why single-query execution is necessary.** Still keep primitives available for simpler, non-performance-critical use cases.
+
 ### II. Server-Components First & Type-Safe Rendering with Next.js 16 Caching
 
 Server Components are the default for all new UI. Client Components (`'use client'`) are permitted ONLY for interactive elements (forms, client state, event handlers). All data fetching must flow through **App Data Layer** in `src/data/{feature}/{queries|actions}.ts` using Next.js 16 Cache Components (`'use cache'` directive). The app data layer is the **single source of truth for caching decisions**: it calls backend services and wraps results with `'use cache'` for queries or `'use server'` for mutations. Backend packages MUST NOT contain `'use cache'`, `'use server'`, or any `next/cache` imports—they remain pure TypeScript. Cache invalidation via `updateTag()` or `revalidateTag()` happens exclusively at the app layer, never in backend code. TypeScript strict mode is MANDATORY. No `as any` casts are permitted; interfaces and adapters must be properly typed. Every API boundary must validate input with Zod schemas; every domain entity must be strongly typed.
@@ -148,6 +160,7 @@ All code MUST follow Clean Code practices for maximum readability and maintainab
 3. Validate locally: `npm run db:setup` then test CRUD paths
 4. Update `docs/database/SCHEMA.md` if schema changes are public-facing
 5. Update project planning docs (`project-planning/`) with feature impact
+6. Ensure database queries follow Principle I: **queries organized by data domain, primitives only in @db, orchestration in @backend services**
 
 **Test Script Configuration**
 
@@ -191,7 +204,64 @@ This constitution supersedes all other architectural guidance. It is the source 
 <!--
 === CURRENT VERSION ===
 
-Version: 1.3.0 (Source vs Build Artifacts Amendment)
+Version: 1.4.0 (Database Query Layer Organization Amendment)
+Previous Version: 1.3.0
+Ratified: 2026-05-11
+Last Amended: 2026-05-11
+
+Version Bump Rationale: MINOR (1.3.0 → 1.4.0)
+- Principle I (ENHANCED): Clean Architecture now includes Database Query Layer Organization
+- Defines data domain organization (catalog, sales, inventory) as infrastructure layer standard
+- Mandates backend services orchestrate primitives; db layer provides primitives only
+- Allows performance exceptions with mandatory documentation
+- Aligns with Clean Architecture principle: DB provides access, Backend provides business logic
+- **This is a CORE PRINCIPLE, not just a development standard** — speckit agents must apply it
+
+Core Principles Updated:
+✅ Principle I (ENHANCED): Clean Architecture with Strict Layer Boundaries
+   - Added: Database Query Layer Organization pattern
+   - Added: Data domain organization (@db/src/queries/{domain}/)
+   - Added: Primitives-only export rule (no orchestration in infrastructure)
+   - Added: Backend service orchestration responsibility
+   - Added: Performance exception rule with mandatory documentation
+   - These rules apply to ALL database work in the project
+
+Database Changes Workflow Updated:
+✅ Step 6 added: Reference to Principle I for query organization compliance
+
+Patterns Formalized:
+✅ Primitive Pattern: Single query, single concept, widely reusable
+   - Lives in data domain folder (catalog/, sales/, inventory/)
+   - Exported from @db/src/queries/{domain}/
+   - Tested independently, usable by any feature
+
+✅ Orchestration Pattern: Backend service composes multiple primitives
+   - Lives in @backend/src/features/{feature}/application/services/
+   - Calls primitives in parallel via Promise.all()
+   - Validates with Zod, maps to output shape
+   - Tested with mock primitives
+
+✅ Exception Pattern: Performance-critical single queries
+   - Requires mandatory comment explaining performance reason
+   - Example: product-with-variants.ts with JOINs to avoid N+1
+   - Used sparingly, when composing primitives is insufficient
+
+Speckit Agent Impact:
+✅ Agents reading Principle I now understand database query organization
+✅ Agents enforcing Clean Architecture now enforce query layer separation
+✅ Agents generating implementation tasks now reference this principle
+✅ Code review agents can validate primitive vs orchestration boundaries
+
+Sections Aligned:
+✅ Core Principles: Principle I (ENHANCED) with database query layer organization
+✅ Development Standards & Quality Gates → Step 6 added to Database Changes Workflow
+✅ Governance/Constitution Authority implicitly updated
+
+No deferred placeholders. All tokens resolved.
+
+=== HISTORICAL AMENDMENTS ARCHIVE ===
+
+Version 1.3.0 (Source vs Build Artifacts Amendment)
 Previous Version: 1.2.1
 Ratified: 2026-04-05
 Last Amended: 2026-04-05
@@ -230,8 +300,6 @@ Follow-Up Actions:
 - Add Turborepo cache validation to CI/CD (ensure only declared outputs are cached)
 
 No deferred placeholders. All tokens resolved.
-
-=== HISTORICAL AMENDMENTS ARCHIVE ===
 
 Version 1.2.1 (Test Script Configuration Amendment)
 Previous Version: 1.2.0
@@ -273,7 +341,7 @@ Last Amended: 2026-04-05
 Version Bump Rationale: MINOR (1.1.0 → 1.2.0)
 - Principle II ENHANCED: Added Next.js 16 caching requirements ('use cache' directive enforcement, backend exclusion from cache logic)
 - New Principle VIII: Backend Packages (Pure TypeScript Libraries) — Enforces framework-agnostic backend, prohibits Next.js APIs in backend
-- New Principle IX: Monorepo Architecture & Package Boundaries — Defines 4-package structure, dependency flow rules, cross-feature interface requirements
+- New Principle IX: Monorepo Architecture & Package Boundaries — Defines 5-package structure, dependency flow rules, cross-feature interface requirements
 
 Principles Modified/Added:
 ✅ Principle II (ENHANCED): Server-Components First & Type-Safe Rendering with Next.js 16 Caching
@@ -288,8 +356,8 @@ Principles Modified/Added:
    - Can be used in Node.js, Vercel Functions, or future runtimes without modification
 
 ✅ Principle IX (NEW): Monorepo Architecture & Package Boundaries
-   - Defines 4-package structure: @ui, @backend, @dashboard, @storefront
-   - Enforces dependency flow: apps depend on ui + backend; backend/ui are independent
+   - Defines 5-package structure: @db, @ui, @backend, @dashboard, @storefront
+   - Enforces dependency flow: apps depend on ui + backend; backend depends on db; db/ui are leaf packages
    - Cross-feature dependencies only via core application interfaces
    - Violating package boundaries is critical architecture violation
 

@@ -4,9 +4,7 @@ import { ITagRepository } from '../../../catalog/application/interfaces/ITagRepo
 import { Tag } from '../../../catalog/domain/entities/Tag';
 import { TagInput } from '@findeg/backend/features/catalog/application/dtos/TagInput';
 import { IAuditLogService } from '../interfaces/IAuditLogService';
-import { db } from '@findeg/db/connection';
-import { tags, productTags } from '@findeg/db/schema';
-import { eq, and, ne, count } from 'drizzle-orm';
+import { checkTagSlugAvailableRaw, getTagProductCountRaw } from '@findeg/db/queries';
 
 /**
  * Admin Tag Service
@@ -158,27 +156,13 @@ export class AdminTagService implements IAdminTagService {
    * Checks if a slug is available.
    */
   async checkSlugAvailable(slug: string, excludeId?: number): Promise<boolean> {
-    let query = db.select({ count: count() }).from(tags).where(eq(tags.slug, slug));
-
-    if (excludeId) {
-      query = db
-        .select({ count: count() })
-        .from(tags)
-        .where(and(eq(tags.slug, slug), ne(tags.id, excludeId)));
-    }
-
-    const result = await query;
-    return Number(result[0].count) === 0;
+    return checkTagSlugAvailableRaw(slug, excludeId);
   }
 
   /**
    * Gets the number of products assigned to a tag.
    */
   async getTagProductCount(id: number): Promise<number> {
-    const result = await db
-      .select({ value: count() })
-      .from(productTags)
-      .where(eq(productTags.tagId, id));
-    return Number(result[0].value);
+    return getTagProductCountRaw(id);
   }
 }

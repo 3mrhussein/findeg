@@ -1,4 +1,12 @@
 // db/queries/index.ts
-// Export all query modules here
-export * from './dashboard';
+// Organized query module exports by data domain
+
+// Data domain primitives (reusable across features)
+export * from './catalog';
+export * from './sales';
+export * from './inventory';
+
+// Feature-specific queries (admin operations, school directory, etc.)
 export * from './products';
+export * from './identity';
+export * from './school';

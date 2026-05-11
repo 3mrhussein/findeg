@@ -6,32 +6,67 @@
  */
 
 import {
+  type PortalRole,
   type PermissionCode,
   type RoleId,
   type LinkedAuthAccount,
   type OrganizationMembership,
   type SavedPaymentMethod,
 } from '@findeg/db';
-import { type InferSelectModel } from 'drizzle-orm';
-import { users } from '@findeg/db/schema';
-
-
 
 /**
  * Domain Entity: User
  *
- * Extends the baseline database model with domain-specific associations
- * and authorization context.
+ * Represents a user account with domain-specific associations
+ * and authorization context. Does not extend database model.
  */
-export interface User extends InferSelectModel<typeof users> {
+export interface User {
+  /** User ID */
+  id: number;
+  
+  /** Unique email address (case-insensitive) */
+  email: string;
+  
+  /** User's first name */
+  firstName: string | null;
+  
+  /** User's last name */
+  lastName: string | null;
+  
+  /** User phone number (Egyptian format) */
+  phone: string | null;
+  
+  /** Phone verification status */
+  verifiedPhone: boolean;
+  
+  /** Portal routing gate (customer, staff, school_staff) */
+  portalRole: PortalRole;
+  
+  /** Email verification date */
+  emailVerified: Date | null;
+  
+  /** User avatar/profile image URL */
+  image: string | null;
+  
+  /** Account activation status */
+  isActive: boolean;
+  
+  /** Timestamps */
+  createdAt: Date;
+  updatedAt: Date;
+  
   /** Additive role IDs for permission-based model migration */
   roleIds?: RoleId[];
+  
   /** Additive permission codes for resolved/flattened authorization checks */
   permissionCodes?: PermissionCode[];
+  
   /** Linked authentication identities (credentials + oauth providers) */
   linkedAccounts?: LinkedAuthAccount[];
+  
   /** Business/tenant memberships with scoped roles */
   memberships?: OrganizationMembership[];
+  
   /** Tokenized saved payment methods */
   paymentMethods?: SavedPaymentMethod[];
 }

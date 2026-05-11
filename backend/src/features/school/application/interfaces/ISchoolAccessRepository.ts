@@ -1,23 +1,23 @@
 import { ID } from '@findeg/db';
 import {
+  CreateSchoolListAccessGrantInput,
+  CreateSchoolListAccessRequestInput,
   SchoolListAccessGrant,
-  NewSchoolListAccessGrant,
   SchoolListAccessRequest,
-  NewSchoolListAccessRequest,
   SchoolListAccessToken,
   SchoolListCodeAttempt,
-} from '@findeg/db/schema';
+} from '../../domain/types/Access';
 
 export interface ISchoolAccessRepository {
   // Grants
   getGrant(listId: ID, userId: ID): Promise<SchoolListAccessGrant | null>;
-  createGrant(grant: NewSchoolListAccessGrant): Promise<SchoolListAccessGrant>;
+  createGrant(grant: CreateSchoolListAccessGrantInput): Promise<SchoolListAccessGrant>;
   deleteGrant(listId: ID, userId: ID): Promise<void>;
 
   // Requests
   getRequest(listId: ID, userId: ID): Promise<SchoolListAccessRequest | null>;
   getPendingRequest(listId: ID, userId: ID): Promise<SchoolListAccessRequest | null>;
-  createRequest(request: NewSchoolListAccessRequest): Promise<SchoolListAccessRequest>;
+  createRequest(request: CreateSchoolListAccessRequestInput): Promise<SchoolListAccessRequest>;
   updateRequestStatus(
     requestId: ID,
     status: SchoolListAccessRequest['status'],

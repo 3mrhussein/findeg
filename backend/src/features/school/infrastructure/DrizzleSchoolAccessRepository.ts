@@ -7,13 +7,15 @@ import {
   schoolListAccessRequests,
   schoolListAccessTokens,
   schoolListCodeAttempts,
-  type SchoolListAccessGrant,
-  type NewSchoolListAccessGrant,
-  type SchoolListAccessRequest,
-  type NewSchoolListAccessRequest,
-  type SchoolListAccessToken,
-  type SchoolListCodeAttempt,
 } from '@findeg/db/schema';
+import {
+  CreateSchoolListAccessGrantInput,
+  CreateSchoolListAccessRequestInput,
+  SchoolListAccessGrant,
+  SchoolListAccessRequest,
+  SchoolListAccessToken,
+  SchoolListCodeAttempt,
+} from '../domain/types/Access';
 
 /**
  *
@@ -40,7 +42,7 @@ export class DrizzleSchoolAccessRepository implements ISchoolAccessRepository {
   /**
    *
    */
-  async createGrant(grant: NewSchoolListAccessGrant): Promise<SchoolListAccessGrant> {
+  async createGrant(grant: CreateSchoolListAccessGrantInput): Promise<SchoolListAccessGrant> {
     const results = await db.insert(schoolListAccessGrants).values(grant).returning();
     return results[0];
   }
@@ -100,7 +102,7 @@ export class DrizzleSchoolAccessRepository implements ISchoolAccessRepository {
   /**
    *
    */
-  async createRequest(request: NewSchoolListAccessRequest): Promise<SchoolListAccessRequest> {
+  async createRequest(request: CreateSchoolListAccessRequestInput): Promise<SchoolListAccessRequest> {
     const results = await db.insert(schoolListAccessRequests).values(request).returning();
     return results[0];
   }

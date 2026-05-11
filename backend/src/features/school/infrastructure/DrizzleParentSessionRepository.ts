@@ -1,11 +1,11 @@
 import { db } from '@findeg/db/connection';
 import { eq, and, or, sql } from 'drizzle-orm';
 import { IParentSessionRepository } from '../application/interfaces/IParentSessionRepository';
+import { schoolListParentSessions } from '@findeg/db/schema';
 import {
-  schoolListParentSessions,
   SchoolListParentSession,
-  NewSchoolListParentSession,
-} from '@findeg/db/schema';
+  UpsertSchoolListParentSessionInput,
+} from '../domain/types';
 
 /**
  *
@@ -48,7 +48,7 @@ export class DrizzleParentSessionRepository implements IParentSessionRepository 
   /**
    *
    */
-  async upsertSession(session: NewSchoolListParentSession): Promise<SchoolListParentSession> {
+  async upsertSession(session: UpsertSchoolListParentSessionInput): Promise<SchoolListParentSession> {
     const result = await db
       .insert(schoolListParentSessions)
       .values(session)

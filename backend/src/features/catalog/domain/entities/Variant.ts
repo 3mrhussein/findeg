@@ -8,8 +8,6 @@
  */
 
 import { z } from 'zod';
-import { productVariants } from '@findeg/db/schema';
-import { type InferSelectModel } from 'drizzle-orm';
 import {
   IdSchema,
   PriceSchema,
@@ -82,10 +80,7 @@ export const VariantSchema = z.object({
   updatedAt: z.date().optional(),
 });
 
-export type Variant = z.infer<typeof VariantSchema> &
-  Partial<
-    Omit<InferSelectModel<typeof productVariants>, 'basePrice' | 'strikePrice' | 'costPrice'>
-  >;
+export type Variant = z.infer<typeof VariantSchema>;
 
 // ─── Input Schemas ───────────────────────────────────────────────────────────
 
