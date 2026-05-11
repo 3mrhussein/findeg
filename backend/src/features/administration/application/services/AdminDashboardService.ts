@@ -3,31 +3,29 @@ import { IOrderRepository } from '../../../order/application/interfaces/IOrderRe
 import { DashboardStats } from '../../domain/types/DashboardStats';
 import { CatalogHealthStats, CategoryProductDistribution } from '../../domain/types';
 import { Order } from '../../../order/domain/entities/Order';
-import { GetCatalogHealthQuery } from '../queries/GetCatalogHealthQuery';
-import { GetCategoryDistributionQuery } from '../queries/GetCategoryDistributionQuery';
-import { GetDashboardStatsQuery } from '../queries/GetDashboardStatsQuery';
+import {
+  getCatalogHealthRaw,
+  getCategoryDistributionRaw,
+  getDashboardKpisRaw,
+  getLowStockCountRaw,
+  getRevenueByPeriodRaw,
+  getTopProductsRaw,
+} from '@findeg/db/queries';
+import { QueryError } from '../../../core/domain/errors/QueryError';
+import { endOfDay, startOfDay, subDays } from 'date-fns';
 
 /**
  * Admin Dashboard Service
  *
- * Aggregates KPIs and statistics from multiple data sources.
- * Provides real-time metrics for revenue, orders, inventory, and trends.
+ * Aggregates KPI and catalog metrics while delegating persistence concerns to the db package.
  */
 export class AdminDashboardService implements IAdminDashboardService {
   /**
    * Creates an instance of AdminDashboardService.
    *
    * @param orderRepository - For revenue and order volume.
-   * @param catalogHealthQuery - CQRS query for health stats.
-   * @param categoryDistributionQuery - CQRS query for distribution stats.
-   * @param dashboardStatsQuery - CQRS query for main dashboard KPIs.
    */
-  constructor(
-    private orderRepository: IOrderRepository,
-    private catalogHealthQuery: GetCatalogHealthQuery,
-    private categoryDistributionQuery: GetCategoryDistributionQuery,
-    private dashboardStatsQuery: GetDashboardStatsQuery,
-  ) {}
+  constructor(private orderRepository: IOrderRepository) {}
 
   /**
    * Aggregates key performance indicators (KPIs) for the store dashboard.
@@ -36,7 +34,35 @@ export class AdminDashboardService implements IAdminDashboardService {
    * @returns Comprehensive dashboard statistics object.
    */
   async getDashboardStats(): Promise<DashboardStats> {
-    return this.dashboardStatsQuery.execute();
+    try {
+      const now = new Date();
+      const todayStart = startOfDay(now);
+      const todayEnd = endOfDay(now);
+      const thirtyDaysAgo = subDays(now, 30);
+
+      const [kpis, revenueByPeriod, lowStockCount, topProducts] = await Promise.all([
+        getDashboardKpisRaw(todayStart, todayEnd),
+        getRevenueByPeriodRaw(thirtyDaysAgo, now, 'day'),
+        getLowStockCountRaw(),
+        getTopProductsRaw(5),
+      ]);
+
+      return {
+        ...kpis,
+        currency: 'EGP',
+        lowStockCount,
+        topProducts,
+        revenueByPeriod: revenueByPeriod.map((entry) => ({
+          date: entry.period,
+          revenue: entry.revenue,
+        })),
+      };
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new QueryError(`Failed to retrieve dashboard stats: ${error.message}`);
+      }
+      throw error;
+    }
   }
 
   /**
@@ -50,16 +76,43 @@ export class AdminDashboardService implements IAdminDashboardService {
   }
 
   /**
-   * Retrieves specific catalog health completion metrics using CQRS query.
+    * Retrieves specific catalog health completion metrics.
    */
   async getCatalogHealthStats(): Promise<CatalogHealthStats> {
-    return this.catalogHealthQuery.execute();
+    try {
+      return await getCatalogHealthRaw();
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new QueryError(`Failed to retrieve catalog health stats: ${error.message}`);
+      }
+      throw error;
+    }
   }
 
   /**
-   * Evaluates catalog coverage distributed across top categories using CQRS query.
+    * Evaluates catalog coverage distributed across top categories.
    */
   async getCategoryProductDistribution(): Promise<CategoryProductDistribution[]> {
-    return this.categoryDistributionQuery.execute(6);
+    try {
+      const results = await getCategoryDistributionRaw(6);
+      const totalProducts = results.reduce((sum, result) => sum + result.productCount, 0);
+
+      return results.map((result) => {
+        const nameMap = (result.localizedName || {}) as Record<string, string>;
+
+        return {
+          categoryId: String(result.categoryId),
+          categoryName: nameMap.en || result.slug || 'Unknown',
+          productCount: result.productCount,
+          percentage:
+            totalProducts > 0 ? Math.round((result.productCount / totalProducts) * 100) : 0,
+        };
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new QueryError(`Failed to retrieve category distribution: ${error.message}`);
+      }
+      throw error;
+    }
   }
 }

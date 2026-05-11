@@ -93,9 +93,6 @@ import {
   AuditLogService,
   ProductImportService,
 } from '@findeg/backend/features/administration/application/services';
-import { GetCatalogHealthQuery } from '@findeg/backend/features/administration/application/queries/GetCatalogHealthQuery';
-import { GetCategoryDistributionQuery } from '@findeg/backend/features/administration/application/queries/GetCategoryDistributionQuery';
-import { GetDashboardStatsQuery } from '@findeg/backend/features/administration/application/queries/GetDashboardStatsQuery';
 import { LoggerService } from '../../application/services/LoggerService';
 import { DrizzleParentSessionRepository } from '@findeg/backend/features/school/infrastructure/DrizzleParentSessionRepository';
 import { DrizzleNotificationRepository } from '@findeg/backend/features/notifications/infrastructure/DrizzleNotificationRepository';
@@ -485,7 +482,7 @@ export class ServiceContainer {
         this.categoryRepository,
         this.brandRepository,
         this.auditLogService,
-        this.mediaService,
+      //  this.mediaService,
       );
     }
     return this._adminProductService;
@@ -524,9 +521,6 @@ export class ServiceContainer {
     if (!this._adminDashboardService) {
       this._adminDashboardService = new AdminDashboardService(
         this.orderRepository,
-        new GetCatalogHealthQuery(this.categoryRepository, this.brandRepository),
-        new GetCategoryDistributionQuery(),
-        new GetDashboardStatsQuery(),
       );
     }
     return this._adminDashboardService;

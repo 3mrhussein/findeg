@@ -34,10 +34,6 @@ import { AdminDashboardService } from './AdminDashboardService';
 import { AuditLogService } from './AuditLogService';
 import { ProductImportService } from './ProductImportService';
 
-// Admin Queries
-import { GetCatalogHealthQuery } from '../queries/GetCatalogHealthQuery';
-import { GetCategoryDistributionQuery } from '../queries/GetCategoryDistributionQuery';
-import { GetDashboardStatsQuery } from '../queries/GetDashboardStatsQuery';
 import { IEmailService } from '@findeg/backend/features/notifications';
 
 /**
@@ -81,7 +77,7 @@ export function createAdministrationServices() {
     categoryRepository,
     brandRepository,
     auditLogService,
-    undefined, // mediaService - optional
+    // undefined, // mediaService - optional
   );
 
   // Create admin services (inject repository dependencies)
@@ -108,12 +104,7 @@ export function createAdministrationServices() {
       sendSchoolListAccessRequest: async () => {},
       sendAdminInvitation: async () => {},
     } as IEmailService),
-    dashboard: new AdminDashboardService(
-      orderRepository,
-      new GetCatalogHealthQuery(categoryRepository, brandRepository),
-      new GetCategoryDistributionQuery(),
-      new GetDashboardStatsQuery(),
-    ),
+    dashboard: new AdminDashboardService(orderRepository),
     auditLog: auditLogService,
     productImport: new ProductImportService(adminProductService, productRepository),
   };

@@ -14,7 +14,7 @@
     "db:studio": "docker compose up -d postgres && pnpm --filter @findeg/db db:studio",
     "clean": "turbo run clean && rm -rf node_modules .turbo",
     "clean:next": "rm -rf frontend/dashboard/.next frontend/storefront/.next",
-    "kill": "lsof -ti:3000,30001 | xargs kill -9 2>/dev/null || true"
+    "kill": "lsof -ti:3000,3001 | xargs kill -9 2>/dev/null || true"
   },
   "devDependencies": {
     "turbo": "^2.9.12",

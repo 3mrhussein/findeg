@@ -6,7 +6,6 @@
  */
 
 import type { Product } from '@findeg/backend/features/catalog/domain/entities/Product';
-import type { ProductInput } from '@findeg/backend/features/administration/domain/types';
 import type { Locale } from '@findeg/backend/features/core/domain/value-objects';
 import type {
   CreateProductWithVariantsInput,
@@ -152,16 +151,4 @@ export interface IAdminProductService {
 
   /** Checks whether a product slug is available. */
   checkSlugAvailable(slug: string, excludeProductId?: number): Promise<boolean>;
-
-
-  // ─── Legacy compatibility (used by import workflows) ──────────────────────
-
-  /** @deprecated Use createProduct() instead. */
-  create(input: ProductInput, adminUserId?: number): Promise<Product>;
-
-  /** @deprecated Use updateProduct() instead. */
-  update(id: number, input: ProductInput, adminUserId?: number): Promise<Product>;
-
-  /** @deprecated Use deleteProduct() instead. */
-  delete(id: number, adminUserId?: number): Promise<void>;
 }

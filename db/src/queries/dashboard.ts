@@ -15,6 +15,8 @@ export const CatalogHealthRawSchema = z.object({
   missingPrice: z.number(),
   draftProducts: z.number(),
   fullyComplete: z.number(),
+  totalCategories: z.number(),
+  totalBrands: z.number(),
 });
 
 export const CategoryDistributionRawSchema = z.array(
@@ -105,6 +107,11 @@ export async function getCatalogHealthRaw() {
       ),
     );
 
+  const [[categoryCounts], [brandCounts]] = await Promise.all([
+    db.select({ count: sql<number>`cast(count(*) as integer)` }).from(categories),
+    db.select({ count: sql<number>`cast(count(*) as integer)` }).from(brands),
+  ]);
+
   return CatalogHealthRawSchema.parse({
     totalProducts: counts?.total || 0,
     missingCategory: counts?.missingCategory || 0,
@@ -112,6 +119,8 @@ export async function getCatalogHealthRaw() {
     missingPrice: missingPrice?.count || 0,
     draftProducts: counts?.draftProducts || 0,
     fullyComplete: fullyComplete?.count || 0,
+    totalCategories: categoryCounts?.count || 0,
+    totalBrands: brandCounts?.count || 0,
   });
 }
 
