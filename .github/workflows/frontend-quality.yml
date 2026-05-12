@@ -38,13 +38,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
-      - name: Start PostgreSQL with docker-compose
+      - name: Start PostgreSQL with docker compose
         run: |
           export DB_USER=ci
           export DB_PASSWORD=ci
           export DB_NAME=findeg_ci
           export DB_PORT=5432
-          docker-compose up -d postgres
+          docker compose up -d postgres
           sleep 10  # Give PostgreSQL time to start
 
       - name: Install dependencies
@@ -75,4 +75,4 @@ jobs:
 
       - name: Stop PostgreSQL
         if: always()
-        run: docker-compose down
+        run: docker compose down
