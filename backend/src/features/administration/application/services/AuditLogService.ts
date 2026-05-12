@@ -1,9 +1,6 @@
 import type { IAuditLogService } from '../interfaces/IAuditLogService';
-import type {
-  IAuditLogRepository,
-  AuditLogFilters,
-  AuditLogCreateInput,
-} from '../interfaces/IAuditLogRepository';
+import type { AuditLogFilters, AuditLogCreateInput } from '../interfaces/IAuditLogRepository';
+import { auditLogQueries } from '@findeg/db/queries';
 
 /**
  * Audit Log Service
@@ -14,10 +11,8 @@ import type {
 export class AuditLogService implements IAuditLogService {
   /**
    * Creates an instance of AuditLogService.
-   *
-   * @param auditLogRepository - Persistence layer for audit events.
    */
-  constructor(private auditLogRepository: IAuditLogRepository) {}
+  constructor() { }
 
   /**
    * Records an administrative action in the audit trail.
@@ -27,7 +22,14 @@ export class AuditLogService implements IAuditLogService {
    */
   async logAction(entry: AuditLogCreateInput): Promise<void> {
     try {
-      await this.auditLogRepository.create(entry);
+      await auditLogQueries.create({
+        adminUserId: entry.adminUserId,
+        entityType: entry.entityType,
+        entityId: entry.entityId,
+        action: entry.action,
+        oldValues: entry.oldValues,
+        newValues: entry.newValues,
+      });
     } catch (error) {
       console.error('Failed to create audit log entry:', error);
     }
@@ -40,31 +42,47 @@ export class AuditLogService implements IAuditLogService {
    * @returns Filtered list of audit log entries.
    */
   async getLogs(filters: AuditLogFilters) {
-    return this.auditLogRepository.getAll(filters);
+    const result = await auditLogQueries.getAll({
+      page: filters.offset ? Math.floor(filters.offset / (filters.limit || 20)) + 1 : 1,
+      limit: filters.limit,
+      entityType: filters.entityType,
+      entityId: filters.entityId,
+      action: filters.action,
+      adminUserId: filters.adminUserId,
+      startDate: filters.startDate,
+      endDate: filters.endDate,
+    });
+
+    return {
+      data: result.logs.map(log => ({
+        id: log.id,
+        adminUserId: log.adminUserId || undefined,
+        entityType: log.entityType,
+        entityId: log.entityId,
+        action: log.action,
+        oldValues: (log.oldValues || undefined) as Record<string, unknown> | undefined,
+        newValues: (log.newValues || undefined) as Record<string, unknown> | undefined,
+        createdAt: log.createdAt,
+      })),
+      total: result.total,
+    };
   }
 
   /**
    * Retrieves recent activity across the system, optionally filtered by entity types.
    */
   async getRecentActivity(opts: { limit: number; entityTypes?: string[] }) {
-    // AuditLogFilters currently doesn't support an array of entityTypes in IAuditLogRepository.
-    // We fetch a larger batch and filter in memory as a simple workaround for the dashboard display,
-    // or rely on a future repository update.
-    const filters: AuditLogFilters = {
-      limit: opts.limit * (opts.entityTypes ? 3 : 1), // fetch more if we intend to filter
-      offset: 0,
-    };
-
-    const { data } = await this.auditLogRepository.getAll(filters);
-
-    if (opts.entityTypes && opts.entityTypes.length > 0) {
-      const targetTypes = opts.entityTypes.map((t) => t.toLowerCase());
-      return data
-        .filter((log) => targetTypes.includes(log.entityType.toLowerCase()))
-        .slice(0, opts.limit);
-    }
-
-    return data.slice(0, opts.limit);
+    const logs = await auditLogQueries.getRecent(opts.limit * (opts.entityTypes ? 3 : 1), opts.entityTypes);
+    return logs.slice(0, opts.limit).map(log => ({
+      id: log.id,
+      adminUserId: log.adminUserId || undefined,
+      entityType: log.entityType,
+      entityId: log.entityId,
+      action: log.action,
+      oldValues: (log.oldValues || undefined) as Record<string, unknown> | undefined,
+      newValues: (log.newValues || undefined) as Record<string, unknown> | undefined,
+      createdAt: log.createdAt,
+    }));
   }
 
   /**
@@ -75,6 +93,16 @@ export class AuditLogService implements IAuditLogService {
    * @returns Chronological list of changes for that entity.
    */
   async getEntityLogs(entityType: string, entityId: string) {
-    return this.auditLogRepository.getByEntity(entityType, entityId);
+    const logs = await auditLogQueries.getByEntity(entityType, entityId);
+    return logs.map(log => ({
+      id: log.id,
+      adminUserId: log.adminUserId || undefined,
+      entityType: log.entityType,
+      entityId: log.entityId,
+      action: log.action,
+      oldValues: (log.oldValues || undefined) as Record<string, unknown> | undefined,
+      newValues: (log.newValues || undefined) as Record<string, unknown> | undefined,
+      createdAt: log.createdAt,
+    }));
   }
 }

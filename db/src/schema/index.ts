@@ -1,6 +1,6 @@
 export * from "./schemas";
 export * from "./enums";
-export * from "./addresses";
+export * from "./identity/addresses";
 export * from "./identity";
 export * from "./catalog";
 export * from "./sales";

@@ -11,7 +11,7 @@ import { Textarea } from '@findeg/ui';
 import { Label } from '@findeg/ui';
 import { RadioGroup, RadioGroupItem } from '@findeg/ui';
 import { Badge } from '@findeg/ui';
-import { slugify } from '@lib/slugify';
+import { slugify } from '@findeg/backend/lib';
 import { Brand } from '@findeg/backend/features/catalog';
 import { cn } from '@lib/utils';
 import Image from 'next/image';

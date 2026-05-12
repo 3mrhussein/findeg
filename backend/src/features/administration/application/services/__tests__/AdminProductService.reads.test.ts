@@ -4,9 +4,6 @@ import {
   getAdminProductsListRaw,
 } from '@findeg/db/queries';
 import { AdminProductService } from '../AdminProductService';
-import type { IBrandRepository } from '../../../../catalog/application/interfaces/IBrandRepository';
-import type { ICategoryRepository } from '../../../../catalog/application/interfaces/ICategoryRepository';
-import type { IProductRepository } from '../../../../catalog/application/interfaces/IProductRepository';
 
 vi.mock('@findeg/db/queries', () => ({
   getAdminProductsListRaw: vi.fn(),
@@ -15,7 +12,7 @@ vi.mock('@findeg/db/queries', () => ({
 
 vi.mock('@findeg/db/connection', () => ({
   db: {},
-  Db: class {},
+  Db: class { },
 }));
 
 vi.mock('@findeg/db/schema', () => ({
@@ -32,11 +29,7 @@ describe('AdminProductService reads', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    service = new AdminProductService(
-      {} as unknown as IProductRepository,
-      {} as unknown as ICategoryRepository,
-      {} as unknown as IBrandRepository,
-    );
+    service = new AdminProductService();
   });
 
   it('maps product list rows for admin display', async () => {

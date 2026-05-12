@@ -5,7 +5,6 @@ import {
   type ImportRowPreview,
 } from '../interfaces/IProductImportService';
 import { type IAdminProductService } from '../interfaces/IAdminProductService';
-import { type IProductRepository } from '../../../catalog/application/interfaces/IProductRepository';
 
 /**
  *
@@ -16,7 +15,6 @@ export class ProductImportService implements IProductImportService {
    */
   constructor(
     private adminProductService: IAdminProductService,
-    private productRepository: IProductRepository,
   ) {}
 
   /**

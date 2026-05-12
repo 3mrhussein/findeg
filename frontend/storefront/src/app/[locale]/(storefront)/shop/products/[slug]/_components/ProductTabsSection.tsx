@@ -7,7 +7,7 @@ import type { Product } from '@findeg/backend/features/catalog/domain/entities/P
 import type { Variant } from '@findeg/backend/features/catalog/domain/entities/Variant';
 import type { ProductReviewSummary } from '@findeg/backend/features/review/application/interfaces/IReviewRepository';
 import type { Review } from '@findeg/backend/features/review/domain/entities/Review';
-import { sanitizeHtml } from '@lib/sanitize-html';
+import { sanitizeHtml } from '@findeg/backend/lib';
 import { ReviewsSection } from './ReviewsSection';
 
 interface ProductTabsSectionProps {

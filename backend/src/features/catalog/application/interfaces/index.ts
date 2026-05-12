@@ -1,5 +1,4 @@
 export type { IProductRepository, ProductFilters } from './IProductRepository';
-export type { IVariantRepository } from './IVariantRepository';
 export type { BrandInput } from '../dtos/BrandInput';
 export type { CategoryInput } from '../dtos/CategoryInput';
 export type { ProductInput, VariantInput } from '../dtos/ProductInput';

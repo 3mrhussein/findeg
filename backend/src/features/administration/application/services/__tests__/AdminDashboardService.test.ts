@@ -11,9 +11,9 @@ import {
   getTotalOrderStatsRaw,
   getOrderStatsRaw,
 } from '@findeg/db/queries';
+import * as orderQueries from '@findeg/db/queries/sales/orders';
 import { AdminDashboardService } from '../AdminDashboardService';
 import { QueryError } from '../../../../core/domain/errors/QueryError';
-import { IOrderRepository } from '../../../../order/application/interfaces/IOrderRepository';
 
 vi.mock('@findeg/db/queries', () => ({
   getCatalogHealthRaw: vi.fn(),
@@ -28,6 +28,10 @@ vi.mock('@findeg/db/queries', () => ({
   getOrderStatsRaw: vi.fn(),
 }));
 
+vi.mock('@findeg/db/queries/sales/orders', () => ({
+  getRecent: vi.fn(),
+}));
+
 vi.mock('date-fns', async (importOriginal) => {
   const actual = await importOriginal<typeof import('date-fns')>();
 
@@ -40,15 +44,11 @@ vi.mock('date-fns', async (importOriginal) => {
 });
 
 describe('AdminDashboardService', () => {
-  let orderRepository: Mocked<IOrderRepository>;
   let service: AdminDashboardService;
 
   beforeEach(() => {
     vi.clearAllMocks();
-    orderRepository = {
-      getRecent: vi.fn(),
-    } as unknown as Mocked<IOrderRepository>;
-    service = new AdminDashboardService(orderRepository);
+    service = new AdminDashboardService();
   });
 
   it('retrieves and aggregates dashboard statistics', async () => {
@@ -156,12 +156,12 @@ describe('AdminDashboardService', () => {
     ]);
   });
 
-  it('delegates recent orders to the order repository', async () => {
-    orderRepository.getRecent.mockResolvedValue([] as never[]);
+  it('delegates recent orders to the order queries', async () => {
+    vi.mocked(orderQueries.getRecent).mockResolvedValue([]);
 
     await service.getRecentOrders(7);
 
-    expect(orderRepository.getRecent).toHaveBeenCalledWith(7);
+    expect(vi.mocked(orderQueries.getRecent)).toHaveBeenCalledWith(7);
   });
 
   it('wraps dashboard stat failures in QueryError', async () => {

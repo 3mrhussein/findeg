@@ -12,7 +12,7 @@ import {
 } from '@findeg/backend/features/core';
 import { PermissionCode, RoleId } from '@findeg/backend/features/core';
 import type { User } from '@findeg/backend/features/identity';
-import type { IUserRepository, IPermissionService } from '@findeg/backend/features/identity';
+import type { IPermissionService } from '@findeg/backend/features/identity';
 import { cookies } from 'next/headers';
 
 /**
@@ -24,7 +24,7 @@ import { cookies } from 'next/headers';
  * const user = await getAuthenticatedUser();
  * ```
  */
-export async function getAuthenticatedUser(userRepository: IUserRepository): Promise<User> {
+export async function getAuthenticatedUser(): Promise<User> {
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get('session');
 
@@ -33,24 +33,18 @@ export async function getAuthenticatedUser(userRepository: IUserRepository): Pro
   }
 
   // Parse session (simplified - in production, verify JWT or session token)
-  let userId: ID;
+  let session: any;
   try {
-    const session = JSON.parse(sessionCookie.value);
-    userId = session.userId as ID;
+    session = JSON.parse(sessionCookie.value);
   } catch (error) {
     throw new UnauthorizedError('Invalid session format.');
   }
 
-  if (!userId) {
-    throw new UnauthorizedError('Session missing user ID.');
+  if (!session?.user || !session?.userId) {
+    throw new UnauthorizedError('Session missing user data.');
   }
 
-  const user = await userRepository.getById(userId);
-  if (!user) {
-    throw new UnauthorizedError('User not found.');
-  }
-
-  return user;
+  return session.user as User;
 }
 
 /**

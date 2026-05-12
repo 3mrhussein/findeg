@@ -2,7 +2,7 @@
  * Product Repository Interface (SPU Level)
  *
  * Defines the contract for product (SPU) data access.
- * Variant-specific operations (pricing, UOMs) have been extracted to IVariantRepository.
+ * Variant-specific operations are handled in the variant query/service layer.
  * Inventory operations have been extracted to IInventoryRepository.
  */
 

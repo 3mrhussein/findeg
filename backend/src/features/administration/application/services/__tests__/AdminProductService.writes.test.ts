@@ -16,9 +16,6 @@ import {
 } from '@findeg/db/queries';
 import { AdminProductService } from '../AdminProductService';
 import type { IAuditLogService } from '../../interfaces/IAuditLogService';
-import type { IBrandRepository } from '../../../../catalog/application/interfaces/IBrandRepository';
-import type { ICategoryRepository } from '../../../../catalog/application/interfaces/ICategoryRepository';
-import type { IProductRepository } from '../../../../catalog/application/interfaces/IProductRepository';
 
 const mocks = vi.hoisted(() => {
   return {
@@ -56,37 +53,17 @@ vi.mock('@findeg/db/schema', () => ({
 }));
 
 describe('AdminProductService writes', () => {
-  let productRepository: IProductRepository;
-  let categoryRepository: ICategoryRepository;
-  let brandRepository: IBrandRepository;
   let auditLogService: IAuditLogService;
   let service: AdminProductService;
 
   beforeEach(() => {
     vi.clearAllMocks();
 
-    productRepository = {
-      create: vi.fn(),
-      delete: vi.fn(),
-      getById: vi.fn(),
-      update: vi.fn(),
-    } as unknown as IProductRepository;
-    categoryRepository = {
-      getById: vi.fn().mockResolvedValue({ id: 10 }),
-    } as unknown as ICategoryRepository;
-    brandRepository = {
-      getById: vi.fn().mockResolvedValue({ id: 12 }),
-    } as unknown as IBrandRepository;
     auditLogService = {
       logAction: vi.fn().mockResolvedValue(undefined),
     } as unknown as IAuditLogService;
 
-    service = new AdminProductService(
-      productRepository,
-      categoryRepository,
-      brandRepository,
-      auditLogService,
-    );
+    service = new AdminProductService(auditLogService);
   });
 
   it('delegates product creation to the db helper after validation and logs the action', async () => {
@@ -132,8 +109,6 @@ describe('AdminProductService writes', () => {
     const result = await service.createProduct(input, 77);
 
     expect(result).toEqual({ productId: 123 });
-    expect(categoryRepository.getById).toHaveBeenCalledWith(10);
-    expect(brandRepository.getById).toHaveBeenCalledWith(12);
     expect(createProductWithVariantsInDb).toHaveBeenCalledWith(input);
     expect(auditLogService.logAction).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -218,7 +193,6 @@ describe('AdminProductService writes', () => {
 
   it('delegates product update to the db helper after validation and logs the action', async () => {
     vi.mocked(updateProductWithVariantsInDb).mockResolvedValue(undefined);
-    vi.mocked(productRepository.getById).mockResolvedValue({ id: 123 } as never);
 
     const input = {
       localizedName: { en: 'Updated', ar: 'محدث' },
@@ -228,7 +202,6 @@ describe('AdminProductService writes', () => {
 
     await expect(service.updateProduct(123, input, 16)).resolves.toBeUndefined();
 
-    expect(categoryRepository.getById).toHaveBeenCalledWith(10);
     expect(updateProductWithVariantsInDb).toHaveBeenCalledWith(123, input);
     expect(auditLogService.logAction).toHaveBeenCalledWith(
       expect.objectContaining({

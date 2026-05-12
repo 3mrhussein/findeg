@@ -1,13 +1,21 @@
 /**
  * School Services Factory
  */
-import { container } from '@findeg/backend/features/core/infrastructure/di/ServiceContainer';
+import { SchoolDirectoryService } from './SchoolDirectoryService';
+import { SchoolAccessService } from './SchoolAccessService';
+import { ParentListService } from './ParentListService';
+import { SchoolListService } from '@findeg/backend/features/catalog';
 
 export function createSchoolServices() {
+  const schoolLists = new SchoolListService();
+  const schoolDirectory = new SchoolDirectoryService();
+  const schoolAccess = new SchoolAccessService(schoolLists);
+  const parentList = new ParentListService(schoolDirectory, schoolAccess);
+
   return {
-    schoolDirectory: container.schoolDirectoryService,
-    schoolAccess: container.schoolAccessService,
-    parentList: container.parentListService,
-    schoolLists: container.schoolListService,
+    schoolDirectory,
+    schoolAccess,
+    parentList,
+    schoolLists,
   };
 }

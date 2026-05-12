@@ -14,7 +14,8 @@
   },
   "scripts": {
     "type-check": "tsc --noEmit",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "clean": " rm -rf node_modules dist .turbo .next"
   },
   "peerDependencies": {
     "next": ">=16.2.0",

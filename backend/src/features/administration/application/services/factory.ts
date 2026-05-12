@@ -7,21 +7,6 @@
  * Architecture: Backend exports pure TS factories → Apps create data layer with actions
  */
 
-// Repositories from catalog feature (reused by admin services)
-import { DrizzleProductRepository } from '../../../catalog/infrastructure/persistence/DrizzleProductRepository';
-import { DrizzleCategoryRepository } from '../../../catalog/infrastructure/persistence/DrizzleCategoryRepository';
-import { DrizzleBrandRepository } from '../../../catalog/infrastructure/persistence/DrizzleBrandRepository';
-import { DrizzleTagRepository } from '../../../catalog/infrastructure/persistence/DrizzleTagRepository';
-import { DrizzleCollectionRepository } from '../../../catalog/infrastructure/persistence/DrizzleCollectionRepository';
-import { DrizzleInventoryRepository } from '../../../catalog/infrastructure/persistence/DrizzleInventoryRepository';
-import { DrizzleVariantRepository } from '../../../catalog/infrastructure/persistence/DrizzleVariantRepository';
-
-// Repository from order feature
-import { DrizzleOrderRepository } from '../../../order/infrastructure/persistence/DrizzleOrderRepository';
-
-// Administration-specific repository
-import { DrizzleAuditLogRepository } from '../../infrastructure/DrizzleAuditLogRepository';
-
 // Admin services
 import { AdminProductService } from './AdminProductService';
 import { AdminCategoryService } from './AdminCategoryService';
@@ -57,55 +42,37 @@ import { IEmailService } from '@findeg/backend/features/notifications';
  * ```
  */
 export function createAdministrationServices() {
-  // Create repositories (no arguments - they use singleton db connection)
-  const productRepository = new DrizzleProductRepository();
-  const categoryRepository = new DrizzleCategoryRepository();
-  const brandRepository = new DrizzleBrandRepository();
-  const tagRepository = new DrizzleTagRepository();
-  const collectionRepository = new DrizzleCollectionRepository();
-  const inventoryRepository = new DrizzleInventoryRepository();
-  const variantRepository = new DrizzleVariantRepository();
-  const orderRepository = new DrizzleOrderRepository();
-  const auditLogRepository = new DrizzleAuditLogRepository();
-
   // Create audit log service (used by many admin services)
-  const auditLogService = new AuditLogService(auditLogRepository);
+  const auditLogService = new AuditLogService();
 
-  // Create admin product service first (needed by import service)
-  const adminProductService = new AdminProductService(
-    productRepository,
-    categoryRepository,
-    brandRepository,
-    auditLogService,
-  );
+  // Create admin product service (uses query primitives - no repositories needed)
+  const adminProductService = new AdminProductService(auditLogService);
 
   // Create admin services (inject repository dependencies)
   // Note: Some services have optional dependencies (emailService)
   // For emailService, we pass a no-op implementation to avoid breaking the build
   return {
     products: adminProductService,
-    categories: new AdminCategoryService(categoryRepository, auditLogService),
-    brands: new AdminBrandService(brandRepository, auditLogService),
-    tags: new AdminTagService(tagRepository, auditLogService),
-    collections: new AdminCollectionService(collectionRepository, auditLogService),
-    inventory: new AdminInventoryService(
-      productRepository,
-      inventoryRepository,
-      variantRepository,
+    categories: new AdminCategoryService(auditLogService),
+    brands: new AdminBrandService(auditLogService),
+    tags: new AdminTagService(auditLogService),
+    collections: new AdminCollectionService(auditLogService),
+    inventory: new AdminInventoryService(auditLogService),
+    orders: new AdminOrderService(
       auditLogService,
+      {
+        // No-op email service - apps can override with real implementation
+        sendOrderConfirmation: async () => { },
+        sendOrderStatusUpdate: async () => { },
+        sendPasswordReset: async () => { },
+        sendSchoolListAccessApproved: async () => { },
+        sendSchoolListAccessRequest: async () => { },
+        sendAdminInvitation: async () => { },
+      } as IEmailService,
     ),
-    orders: new AdminOrderService(orderRepository, auditLogService, {
-      // No-op email service - apps can override with real implementation
-      sendOrderConfirmation: async () => {},
-      sendOrderStatusUpdate: async () => {},
-      sendPasswordReset: async () => {},
-      sendSchoolListAccessApproved: async () => {},
-      sendSchoolListAccessRequest: async () => {},
-      sendAdminInvitation: async () => {},
-    } as IEmailService),
-    dashboard: new AdminDashboardService(orderRepository),
+    dashboard: new AdminDashboardService(),
     auditLog: auditLogService,
-    productImport: new ProductImportService(adminProductService, productRepository),
+    productImport: new ProductImportService(adminProductService),
   };
 }
 

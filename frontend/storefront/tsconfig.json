@@ -1,61 +1,21 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "noEmit": true,
-    "jsx": "react-jsx",
-    "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@components/*": [
-        "./src/components/*"
-      ],
-      "@hooks/*": [
-        "./src/hooks/*"
-      ],
-      "@i18n/*": [
-        "./src/i18n/*"
-      ],
-      "@lib/*": [
-        "./src/lib/*"
-      ],
-      "@providers/*": [
-        "./src/providers/*"
-      ],
-      "@server/*": [
-        "./src/server/*"
-      ],
-      "@features/*": [
-        "./src/features/*"
-      ],
-      "@data/*": [
-        "./src/data/*"
-      ],
-      "@app/*": [
-        "./src/app/*"
-      ],
-      "@findeg/backend/*": [
-        "../../backend/src/*"
-      ],
-      "@findeg/env": [
-        "../../packages/env/src"
-      ]
+      "@/*": ["./src/*"],
+      "@components/*": ["./src/components/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@i18n/*": ["./src/i18n/*"],
+      "@lib/*": ["./src/lib/*"],
+      "@providers/*": ["./src/providers/*"],
+      "@server/*": ["./src/server/*"],
+      "@features/*": ["./src/features/*"],
+      "@data/*": ["./src/data/*"],
+      "@app/*": ["./src/app/*"],
+      "@findeg/backend/*": ["../../backend/src/*"],
+      "@findeg/env": ["../../packages/env/src"]
     }
   },
-  "include": [
-    "next-env.d.ts",
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.mts",
-    "src/**/*.cts",
-    "src/**/*.js",
-    "src/**/*.jsx"
-  ],
-  "exclude": [
-    "node_modules",
-    ".next",
-    "dist",
-    "cypress"
-  ]
+  "include": ["next-env.d.ts", "src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["node_modules", ".next", "dist", "cypress", ".turbo"]
 }

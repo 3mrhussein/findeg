@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter, Cairo } from 'next/font/google';
 import '../globals.css';
 import { hasLocale, Locale, NextIntlClientProvider } from 'next-intl';
 import { routing } from '@i18n/routing';
@@ -10,19 +9,8 @@ import { Suspense } from 'react';
 import { BoundaryProvider } from '@lib/internal/BoundaryProvider';
 import BoundaryToggle from '@lib/internal/BoundaryToggle';
 import { WebMCPInitializer } from '@components/shared/WebMCPInitializer';
+import { LocaleSync } from '@components/shared/LocaleSync';
 import { cn } from '@lib/utils';
-
-const inter = Inter({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700', '900'],
-  variable: '--font-inter',
-});
-
-const cairo = Cairo({
-  subsets: ['arabic'],
-  weight: ['300', '400', '500', '600', '700', '900'],
-  variable: '--font-cairo',
-});
 
 export const metadata: Metadata = {
   title: {
@@ -99,40 +87,18 @@ export default async function RootLayout({
   // Enable static rendering
   setRequestLocale(typedLocale);
   const messages = await getMessages({ locale: typedLocale });
-  const direction = typedLocale === 'ar' ? 'rtl' : 'ltr';
 
   return (
-    <html
-      lang={typedLocale}
-      dir={direction}
-      suppressHydrationWarning
-      className={cn(inter.variable, cairo.variable)}
-    >
-      <head>
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-        />
-      </head>
-      <body
-        suppressHydrationWarning
-        className={cn(
-          'min-h-screen bg-background font-sans antialiased',
-          typedLocale === 'ar' ? 'font-arabic' : 'font-inter',
-        )}
-      >
-        <NextIntlClientProvider locale={typedLocale} messages={messages}>
-          <BoundaryProvider>
-            <Providers>
-              <div className="flex min-h-screen flex-col">
-                <Suspense fallback={null}>{children}</Suspense>
-              </div>
-              <BoundaryToggle />
-              <WebMCPInitializer />
-            </Providers>
-          </BoundaryProvider>
-        </NextIntlClientProvider>
-      </body>
-    </html>
+    <NextIntlClientProvider locale={typedLocale} messages={messages}>
+      <LocaleSync />
+      <BoundaryProvider>
+        <Providers>
+
+          <Suspense fallback={null}>{children}</Suspense>
+          {/* <BoundaryToggle /> */}
+          <WebMCPInitializer />
+        </Providers>
+      </BoundaryProvider>
+    </NextIntlClientProvider>
   );
 }

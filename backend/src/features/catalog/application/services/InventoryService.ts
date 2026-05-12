@@ -1,19 +1,15 @@
 import { type ID } from '@findeg/backend/features/core/domain/types/common';
-import {
-  type IInventoryRepository,
-  type InventoryBalanceResult,
-} from '../interfaces/IInventoryRepository';
+import { type InventoryBalanceResult } from '../interfaces/IInventoryRepository';
+import { inventoryQueries } from '@findeg/db/queries';
 
 export class InventoryService {
-  constructor(private inventoryRepository: IInventoryRepository) {}
-
   async getTotalAvailableStock(variantId: ID): Promise<number> {
-    const balances = await this.inventoryRepository.getAllBalances(variantId);
+    const balances = await inventoryQueries.getAllBalances(variantId);
     return balances.reduce((total, bal) => total + bal.available, 0);
   }
 
   async getWarehouseBalances(variantId: ID): Promise<InventoryBalanceResult[]> {
-    return this.inventoryRepository.getAllBalances(variantId);
+    return inventoryQueries.getAllBalances(variantId);
   }
 
   async isInStock(variantId: ID): Promise<boolean> {

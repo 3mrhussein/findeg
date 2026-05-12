@@ -13,12 +13,12 @@ import {
   setAdminPermissionOverridesRaw,
   updateAdminUserRaw,
 } from '@findeg/db/queries';
+import { userQueries } from '@findeg/db/queries';
 
 import { ResourceNotFoundError } from '../../../core/domain/errors';
 import { parse } from '../../../core/domain/value-objects';
 import { createCatalogServices } from '../../../catalog';
 import { createOrderServices } from '../../../order';
-import { IUserRepository } from '../interfaces/IUserRepository';
 import {
   AdminUser,
   CreateAdminInput,
@@ -31,7 +31,7 @@ import { User } from '../../domain/entities/User';
 import { Order } from '../../../order/domain/entities/Order';
 
 export class UserService implements IUserService {
-  constructor(private userRepository: IUserRepository) {}
+  constructor() { }
 
   /**
    * Returns all users who have at least one admin role assigned.
@@ -86,7 +86,7 @@ export class UserService implements IUserService {
    * Deactivates an admin account.
    */
   async deactivateAdmin(userId: number): Promise<void> {
-    await this.userRepository.update(userId, { isActive: false });
+    await userQueries.update(userId, { isActive: false });
   }
 
   /**
@@ -106,7 +106,7 @@ export class UserService implements IUserService {
   async getProfileData(userId: number): Promise<{ user: User; orders: Order[] }> {
     const { orders } = createOrderServices();
     const [user, userOrders] = await Promise.all([
-      this.userRepository.getById(userId),
+      userQueries.getById(userId),
       orders.getByUserId(userId),
     ]);
 
@@ -114,7 +114,7 @@ export class UserService implements IUserService {
       throw new ResourceNotFoundError('User', userId);
     }
 
-    return { user, orders: userOrders };
+    return { user: user as User, orders: userOrders };
   }
 
   /**

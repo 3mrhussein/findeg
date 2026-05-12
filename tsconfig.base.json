@@ -1,21 +1,25 @@
 {
-    "compilerOptions": {
-        "target": "ES2022",
-        "lib": [
-            "ES2022",
-            "DOM",
-            "DOM.Iterable"
-        ],
-        "module": "ESNext",
-        "moduleResolution": "Bundler",
-        "strict": true,
-        "skipLibCheck": true,
-        "noEmit": true,
-        "esModuleInterop": true,
-        "resolveJsonModule": true,
-        "baseUrl": ".",
-        "paths": {
-            "@findeg/env": ["./packages/env/src"]
-        }
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "jsx": "react-jsx",
+    "paths": {
+      "@findeg/env": [
+        "./packages/env/src"
+      ]
     }
+  }
 }

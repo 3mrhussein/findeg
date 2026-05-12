@@ -7,7 +7,6 @@ import { CollectionsGrid } from './_components/home/CollectionsGrid';
 import { NewArrivals } from './_components/home/NewArrivals';
 import { SchoolBanner } from './_components/home/SchoolBanner';
 import { NewsletterSection } from './_components/home/NewsletterSection';
-import Boundary from '@lib/internal/Boundary';
 
 interface HomePageProps {
   language?: string;
@@ -27,38 +26,38 @@ export default async function HomePage({ language = 'en' }: HomePageProps) {
   return (
     <div className="flex min-h-screen w-full flex-col overflow-x-hidden bg-background">
       {/* Pure static — no data, renders at build time */}
-      <Boundary rendering="static" hydration="server" label="Hero">
-        <HeroSection locale={language as any} />
-      </Boundary>
+      {/* <Boundary rendering="static" hydration="server" label="Hero"> */}
+      <HeroSection locale={language as any} />
+      {/* </Boundary> */}
 
       {/* Pure static — no data, renders at build time */}
-      <Boundary rendering="static" hydration="server" label="How it works">
-        <HowItWorks />
-      </Boundary>
+      {/* <Boundary rendering="static" hydration="server" label="How it works"> */}
+      <HowItWorks />
+      {/* </Boundary> */}
 
       {/* Cached with 'use cache' — included in static shell */}
-      <Boundary rendering="static" hydration="server" label="Collections">
-        <Suspense fallback={null}>
-          <CollectionsGrid locale={language} />
-        </Suspense>
-      </Boundary>
+      {/* <Boundary rendering="static" hydration="server" label="Collections"> */}
+      <Suspense fallback={null}>
+        <CollectionsGrid locale={language} />
+      </Suspense>
+      {/* </Boundary> */}
 
       {/* Cached with 'use cache' — included in static shell */}
-      <Boundary rendering="static" hydration="server" label="New Arrivals">
-        <Suspense fallback={null}>
-          <NewArrivals locale={language} />
-        </Suspense>
-      </Boundary>
+      {/* <Boundary rendering="static" hydration="server" label="New Arrivals"> */}
+      <Suspense fallback={null}>
+        <NewArrivals locale={language} />
+      </Suspense>
+      {/* </Boundary> */}
 
       {/* Pure static — locale text only */}
-      <Boundary rendering="static" hydration="server" label="School Banner">
-        <SchoolBanner locale={language} />
-      </Boundary>
+      {/* <Boundary rendering="static" hydration="server" label="School Banner"> */}
+      <SchoolBanner locale={language} />
+      {/* </Boundary> */}
 
       {/* Pure static — no data */}
-      <Boundary rendering="static" hydration="server" label="Newsletter">
-        <NewsletterSection />
-      </Boundary>
+      {/* <Boundary rendering="static" hydration="server" label="Newsletter"> */}
+      <NewsletterSection />
+      {/* </Boundary> */}
     </div>
   );
 }

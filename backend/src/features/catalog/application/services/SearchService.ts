@@ -2,8 +2,9 @@ import {
   executeCatalogScoredSearchRaw,
   getCatalogSuggestionsRaw,
   logCatalogSearchRaw,
+  getFilteredProducts,
+  getProductsByIds,
 } from '@findeg/db/queries';
-import { type IProductRepository } from '../interfaces/IProductRepository';
 import {
   type ISearchService,
   type SearchParams,
@@ -16,7 +17,7 @@ import { type Locale } from '../../../core/domain/value-objects';
 import { type ID } from '../../../core/domain/types/common';
 
 export class SearchService implements ISearchService {
-  constructor(private readonly productRepository: IProductRepository) {}
+  constructor() {}
 
   public parseQuery(query: string): ParsedQuery {
     const arabicRegex = /[\u0600-\u06FF]+/g;
@@ -106,15 +107,16 @@ export class SearchService implements ISearchService {
   public async search(params: SearchParams): Promise<SearchResult> {
     const { query, locale, limit = 20, offset = 0, sort = 'relevance' } = params;
 
-    // If no search query, fallback to the repository's generic getFiltered
+    // If no search query, fallback to the query primitive's generic getFiltered
     if (!query || !query.trim()) {
-      const result = await this.productRepository.getFiltered(
-        { ...params, search: undefined, sort: sort === 'relevance' ? undefined : sort }, // Clear generic search as we handle text matching here
-        locale,
-      );
+      const result = await getFilteredProducts({
+        limit,
+        offset,
+        sort: sort === 'relevance' ? undefined : (sort as any),
+      });
       this.logSearch(query, locale, result.total, undefined, undefined).catch(() => {});
       return {
-        items: result.products,
+        items: result.products as any,
         total: result.total,
       };
     }
@@ -166,31 +168,20 @@ export class SearchService implements ISearchService {
     // Default sorting is by score, but can be overridden by user selection
     if (sort === 'relevance') {
       allScoredResults.sort((a, b) => b.score - a.score);
-    } // Other sort options will be handled by Drizzle/Repo since we pass productIds. Wait, DrizzleProductRepository handles sort inside getsFiltered?
-    // Actually getFiltered orders by createdAt desc, unless we add order options.
-    // The implementation plan specifies: "Sort options: relevance, price_asc, price_desc, newest, rating"
-    // Since we are fetching specific IDs, we want to maintain relevance order, OR pass sort to getFiltered.
+    }
 
     // Calculate pagination over the IDs
     const total = allScoredResults.length;
     const pagedIds = allScoredResults.slice(offset, offset + limit).map((r) => r.productId);
 
-    // Fetch the fully hydrated products
-    const repoResult = await this.productRepository.getFiltered(
-      {
-        productIds: pagedIds,
-        limit: pagedIds.length,
-        offset: 0,
-        sort: sort === 'relevance' ? undefined : sort,
-      },
-      locale,
-    );
+    // Fetch the fully hydrated products by IDs
+    const hydratedProducts = await getProductsByIds(pagedIds);
 
     // If sorting by relevance, ensure the fetched items match the scored order
-    const finalItems = repoResult.products;
+    const finalItems = hydratedProducts;
     if (sort === 'relevance') {
       const orderMap = new Map(pagedIds.map((id, index) => [id, index]));
-      finalItems.sort((a, b) => {
+      finalItems.sort((a: any, b: any) => {
         const indexA = orderMap.get(a.id as number) ?? 999;
         const indexB = orderMap.get(b.id as number) ?? 999;
         return indexA - indexB;
@@ -204,7 +195,7 @@ export class SearchService implements ISearchService {
     this.logSearch(query, locale, total, undefined, undefined).catch(() => {});
 
     return {
-      items: finalItems,
+      items: finalItems as any,
       total,
     };
   }

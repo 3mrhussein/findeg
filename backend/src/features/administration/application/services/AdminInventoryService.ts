@@ -1,28 +1,26 @@
 import { IAdminInventoryService } from '../interfaces/IAdminInventoryService';
-import { IProductRepository } from '../../../catalog/application/interfaces/IProductRepository';
-import { IInventoryRepository } from '../../../catalog/application/interfaces/IInventoryRepository';
-import { IVariantRepository } from '../../../catalog/application/interfaces/IVariantRepository';
 import { IAuditLogService } from '../interfaces/IAuditLogService';
 import { Product } from '../../../catalog/domain/entities/Product';
 import { InventoryUpdate } from '@findeg/backend/features/catalog/application/dtos/InventoryUpdate';
+import { getBalance, adjustStock, getLowStock, productQueries } from '@findeg/db/queries';
+import { createCatalogServices } from '../../../catalog';
 
 /**
  * Admin Inventory Service
  *
- * Manages product stock levels and inventory tracking.
+ * Manages product stock levels and inventory tracking using query primitives.
  * Provides low stock alerts and bulk update capabilities.
  * Logs all stock changes to the audit trail.
  */
 export class AdminInventoryService implements IAdminInventoryService {
+  private readonly productService = createCatalogServices().products;
+
   /**
    * Creates an instance of AdminInventoryService.
    */
   constructor(
-    private productRepository: IProductRepository,
-    private inventoryRepository: IInventoryRepository,
-    private variantRepository: IVariantRepository,
     private auditLogService: IAuditLogService,
-  ) {}
+  ) { }
 
   /**
    * Retrieves a paginated list of products and their current inventory status.
@@ -38,12 +36,12 @@ export class AdminInventoryService implements IAdminInventoryService {
     offset: number = 0,
   ): Promise<{ products: Product[]; total: number }> {
     if (lowStockOnly) {
-      const lowStockResults = await this.inventoryRepository.getLowStock();
+      const lowStockResults = await getLowStock();
       const productIds = Array.from(new Set(lowStockResults.map((r) => r.variant.productId)));
       const paginatedProductIds = productIds.slice(offset, offset + limit);
 
       const products = await Promise.all(
-        paginatedProductIds.map((id) => this.productRepository.getById(id)),
+        paginatedProductIds.map((id) => this.productService.getById(id)),
       );
 
       return {
@@ -52,7 +50,7 @@ export class AdminInventoryService implements IAdminInventoryService {
       };
     }
 
-    return this.productRepository.getFiltered({ limit, offset, sort: 'newest' });
+    return this.productService.getFilteredProducts({ limit, offset, sort: 'newest' });
   }
 
   /**
@@ -63,10 +61,10 @@ export class AdminInventoryService implements IAdminInventoryService {
    * @throws Error if the variant is not found.
    */
   async updateStock(update: InventoryUpdate): Promise<void> {
-    const variant = await this.variantRepository.getById(update.variantId);
+    const variant = (await productQueries.getVariantsByIds([update.variantId as number]))[0];
     if (!variant) throw new Error(`Variant #${update.variantId} not found`);
 
-    const balance = await this.inventoryRepository.getBalance(update.variantId, update.warehouseId);
+    const balance = await getBalance(update.variantId as number, update.warehouseId as number);
     const currentQty = balance?.onHand || 0;
     const diff = update.quantity - currentQty;
 
@@ -74,7 +72,7 @@ export class AdminInventoryService implements IAdminInventoryService {
     const warehouseId = update.warehouseId || 1;
 
     if (diff !== 0) {
-      await this.inventoryRepository.adjustStock(update.variantId, Number(warehouseId), {
+      await adjustStock(update.variantId as number, Number(warehouseId), {
         movementType: 'adjustment',
         quantity: diff,
         notes: update.notes || 'Admin manual update',
@@ -113,10 +111,10 @@ export class AdminInventoryService implements IAdminInventoryService {
    * @returns List of products requiring restock attention.
    */
   async getLowStockAlerts(threshold?: number): Promise<Product[]> {
-    const lowStockResults = await this.inventoryRepository.getLowStock(threshold);
+    const lowStockResults = await getLowStock(threshold);
     const productIds = Array.from(new Set(lowStockResults.map((r) => r.variant.productId)));
 
-    const products = await Promise.all(productIds.map((id) => this.productRepository.getById(id)));
+    const products = await Promise.all(productIds.map((id) => this.productService.getById(id)));
 
     return products.filter((p): p is Product => p !== null);
   }

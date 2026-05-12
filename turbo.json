@@ -1,27 +1,15 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": [
-    ".env",
-    ".env.*",
-    "tsconfig.base.json",
-    "package.json"
-  ],
-  "globalEnv": [
-    "NODE_ENV",
-    "CI"
-  ],
+  "globalDependencies": [".env", ".env.*", "tsconfig.base.json", "package.json"],
+  "globalEnv": ["NODE_ENV", "CI"],
   "tasks": {
     // ----------------------------
     // BUILD PIPELINE (CORE FLOW)
     // ----------------------------
     "build": {
-      "dependsOn": [
-        "type-check"
-      ],
-      "outputs": [
-        ".next/**",
-        "!.next/cache/**"
-      ]
+      "dependsOn": ["^build", "type-check"],
+      "outputs": [".next/**", "!.next/cache/**"],
+      "cache": true
     },
     // ----------------------------
     // DEV MODE
@@ -34,29 +22,24 @@
     // TYPE CHECKING
     // ----------------------------
     "type-check": {
-      "outputs": []
+      "cache": false
     },
     // ----------------------------
     // LINT
     // ----------------------------
     "lint": {
-      "outputs": []
+      "outputs": [],
+      "cache": false
     },
     // ----------------------------
     // TESTING
     // ----------------------------
     "test": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        "coverage/**"
-      ]
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"]
     },
     "test:unit": {
-      "outputs": [
-        "coverage/**"
-      ]
+      "outputs": ["coverage/**"]
     },
     "test:e2e": {
       "cache": false
@@ -72,23 +55,17 @@
     // ----------------------------
     "db:generate": {
       "cache": false,
-      "outputs": [
-        "db/migrations/**"
-      ]
+      "outputs": ["db/migrations/**"]
     },
     "db:migrate": {
-      "dependsOn": [
-        "db:generate"
-      ],
+      "dependsOn": ["db:generate"],
       "cache": false
     },
     "db:push": {
       "cache": false
     },
     "db:seed": {
-      "dependsOn": [
-        "db:push"
-      ],
+      "dependsOn": ["db:push"],
       "cache": false
     },
     "db:studio": {

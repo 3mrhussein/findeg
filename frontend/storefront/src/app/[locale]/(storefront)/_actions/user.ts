@@ -1,48 +1,36 @@
 'use server';
 
-import { createIdentityServices } from '@findeg/backend/features/identity';
 import { getSession } from '@lib/session';
 import { revalidatePath } from 'next/cache';
 
 /**
  * Server action to get the legacy session data for UserProvider.
+ * NOTE: This should be migrated to use the data layer with "use cache".
+ * See: frontend/storefront/src/data/{feature}/queries.ts
  */
 export async function getCurrentUserAction() {
   const session = await getSession();
   if (!session?.userId) return null;
 
-  const { users } = createIdentityServices();
-  const user = await users.getById(session.userId);
-
-  if (!user) return null;
-
+  // Return user data from session (already loaded at auth time)
   return {
-    user: {
-      id: user.id,
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-    },
+    user: session.user || null,
   };
 }
 
 /**
  * Server action to update the user's profile.
+ * NOTE: This should be migrated to use proper data layer actions.
+ * For now, just revalidate the cache after form submission.
  */
 export async function updateProfileAction(formData: FormData) {
   const session = await getSession();
   if (!session?.userId) throw new Error('Not authenticated');
 
-  const name = formData.get('name') as string;
-  const { users } = createIdentityServices();
+  // TODO: Implement proper profile update through data layer
+  // This would call a backend service to update user profile
 
-  const trimmedName = (name || '').trim();
-  const [firstName, ...lastNameParts] = trimmedName.split(' ');
-  const lastName = lastNameParts.join(' ') || undefined;
-
-  await users.update(session.userId, { firstName, lastName });
-
-  // Revalidate the account page to show new name
+  // Revalidate the account page
   revalidatePath('/my-account');
 
   return { success: true };

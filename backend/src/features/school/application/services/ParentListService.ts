@@ -1,11 +1,11 @@
 
-import { IParentSessionRepository } from '@findeg/backend/features/school/application/interfaces/IParentSessionRepository';
 import {
   ISchoolDirectoryService,
   SchoolProfile,
 } from '@findeg/backend/features/school/application/interfaces/ISchoolDirectoryService';
 import { ISchoolAccessService } from '@findeg/backend/features/school/application/interfaces/ISchoolAccessService';
 import { IParentListService, SchoolListPageData, SessionState, SessionSummary } from '../interfaces/IParentListService';
+import { sessionQueries } from '@findeg/db/queries';
 
 /**
  *
@@ -15,11 +15,9 @@ export class ParentListService implements IParentListService {
    *
    */
   constructor(
-    private sessionRepo: IParentSessionRepository,
     private schoolListService: ISchoolDirectoryService,
     private accessService: ISchoolAccessService,
-    // private cartService: ICartService
-  ) {}
+  ) { }
 
   /**
    *
@@ -43,11 +41,11 @@ export class ParentListService implements IParentListService {
     sessionToken?: string,
   ): Promise<SessionState> {
     if (userId) {
-      const hasOrder = await this.sessionRepo.hasCompletedOrder(listId, userId);
+      const hasOrder = await sessionQueries.hasCompletedOrder(listId, userId);
       if (hasOrder) return 'completed_order';
     }
 
-    const session = await this.sessionRepo.getSession(listId, userId, sessionToken);
+    const session = await sessionQueries.getSession(listId, userId, sessionToken);
     if (session) return 'has_session';
 
     return 'first_visit';
@@ -115,7 +113,7 @@ export class ParentListService implements IParentListService {
       list,
       accessState,
       sessionState,
-      fullList:fullList as SchoolProfile,
+      fullList: fullList as SchoolProfile,
     };
   }
 }

@@ -15,6 +15,13 @@
       "when": 1777694480052,
       "tag": "0001_demonic_skaar",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1778549941734,
+      "tag": "0002_loose_quasimodo",
+      "breakpoints": true
     }
   ]
 }

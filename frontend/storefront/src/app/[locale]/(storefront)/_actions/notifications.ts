@@ -17,17 +17,10 @@ export async function getUnreadNotificationCountAction() {
 /**
  * Log a client-side action to the server log.
  * In a production app, this would forward to Datadog/Sentry.
+ * NOTE: Logging infrastructure was removed during backend refactoring.
+ * Implement via your observability provider (Datadog, Sentry, etc).
  */
 export async function logAction(payload: any): Promise<void> {
-  const { logRequestAction: backendLogAction } =
-    await import('@findeg/backend/features/core/application/actions/logging');
-  const { ServiceContainer } =
-    await import('@findeg/backend/features/core/infrastructure/di/ServiceContainer');
-
-  try {
-    const container = ServiceContainer.getInstance();
-    await backendLogAction(container.loggerService, payload);
-  } catch (error) {
-    console.error('Log action failed:', error);
-  }
+  // TODO: Integrate with Datadog/Sentry
+  console.log('Client action logged:', payload);
 }

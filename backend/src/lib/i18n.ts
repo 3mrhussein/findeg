@@ -1,49 +1,4 @@
-/**
- * i18n Utility Functions
- *
- * Provides internationalization helper functions for backend and frontend packages.
- * Supports English and Arabic locales.
- */
-
-import { readFile } from 'fs/promises';
-import { join } from 'path';
-
-type Locale = 'en' | 'ar';
-
-type Messages = Record<string, unknown>;
-
-/**
- * Load translation messages for a specific app and locale
- *
- * @param app - Application name ('dashboard' or 'storefront')
- * @param locale - Locale code ('en' or 'ar')
- * @returns Translation messages object
- */
-export async function getMessages(
-  app: 'dashboard' | 'storefront',
-  locale: Locale,
-): Promise<Messages> {
-  try {
-    const messagesPath = join(
-      process.cwd(),
-      'packages',
-      'backend',
-      'src',
-      'features',
-      'core',
-      'infrastructure',
-      'cms',
-      'messages',
-      `${app}.${locale}.json`,
-    );
-
-    const content = await readFile(messagesPath, 'utf-8');
-    return JSON.parse(content);
-  } catch (error) {
-    console.error(`Failed to load messages for ${app}.${locale}:`, error);
-    return {};
-  }
-}
+import { Locale } from "@findeg/db";
 
 /**
  * Format currency value with proper locale formatting
@@ -69,7 +24,7 @@ export function formatCurrency(
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(amount);
-  } catch{
+  } catch {
     // Fallback formatting
     return `${currency} ${amount.toFixed(2)}`;
   }
@@ -101,7 +56,7 @@ export function formatDate(
     return new Intl.DateTimeFormat(locale === 'ar' ? 'ar-EG' : 'en-US', defaultOptions).format(
       dateObj,
     );
-  } catch  {
+  } catch {
     return String(date);
   }
 }

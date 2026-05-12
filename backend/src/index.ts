@@ -10,7 +10,6 @@ export * from './features/core';
 export * from './features/identity/domain/entities';
 export type { User, Address } from './features/identity/domain/entities';
 
-export * from './features/identity/application/interfaces/IUserRepository';
 export * from './features/identity/application/interfaces/IPermissionService';
 export * from './features/identity/application/services/AuthService';
 
@@ -24,9 +23,6 @@ import {
 } from './features/identity/application/services/JWTService';
 export { JWTService, type TokenPair, type JWTPayload, type TokenType, type IJWTService };
 
-/**
- * Identity Exports (Wrappers for backward compatibility)
- */
 export async function login(email: string | { email: string; password?: string }, password?: string) {
   const { auth } = createIdentityServices();
   // Handle both (email, password) and ({ email, password }) signatures
@@ -61,7 +57,6 @@ export async function getMyOrderDetail(orderId: number) {
   return orders.getById(orderId);
 }
 
-// Only export MediaService from media
 export { MediaService } from './features/media/application/services';
 
 // School feature exports

@@ -1,40 +1,65 @@
 import type { ID } from '../../../core/domain/types/common';
-import type { IProductRepository } from '../../../catalog/application/interfaces/IProductRepository';
 import type { Locale } from '../../../core/domain/value-objects';
-import type { Product } from '../../../catalog/domain/entities/Product';
-import { getAdminProductForEditRaw, getAdminProductsListRaw } from '@findeg/db/queries';
+import {
+    getAdminProductForEditRaw,
+    getAdminProductsListRaw,
+    getAllProducts,
+    getProductById,
+    countProducts,
+    type ProductRow,
+} from '@findeg/db/queries';
 import { mapAdminProductEditData, mapAdminProductListResult } from './helpers';
 import type {
-  ProductEditData,
-  ProductListFilters,
-  ProductListResult,
+    ProductEditData,
+    ProductListFilters,
+    ProductListResult,
 } from '../interfaces/IAdminProductService';
 
+/**
+ * Admin Product Read Service
+ *
+ * Handles all product read operations for the admin dashboard.
+ * Uses query primitives from @findeg/db/queries for direct database access.
+ * Domain mapping handled by mappers for admin-specific transformations.
+ */
 export class AdminProductReadService {
-  constructor(private productRepository: IProductRepository) {}
+    async getProductsList(filters: ProductListFilters): Promise<ProductListResult> {
+        const result = await getAdminProductsListRaw(filters);
+        return mapAdminProductListResult(result);
+    }
 
-  async getProductsList(filters: ProductListFilters): Promise<ProductListResult> {
-    const result = await getAdminProductsListRaw(filters);
-    return mapAdminProductListResult(result);
-  }
+    /**
+     * Get all products (legacy method - returns raw database rows)
+     * @param _language - Ignored for query primitive compatibility
+     */
+    async getAll(_language?: Locale): Promise<ProductRow[]> {
+        return getAllProducts();
+    }
 
-  async getAll(language?: Locale): Promise<Product[]> {
-    return this.productRepository.getAll(language);
-  }
+    /**
+     * Get product by ID (legacy method - returns raw database row)
+     * @param id - Product ID
+     * @param _language - Ignored for query primitive compatibility
+     */
+    async getById(id: ID, _language?: Locale): Promise<ProductRow | null> {
+        return getProductById(id as number);
+    }
 
-  async getById(id: ID, language?: Locale): Promise<Product | null> {
-    return this.productRepository.getById(id, language);
-  }
+    /**
+     * Count total products in the system
+     */
+    async count(): Promise<number> {
+        return countProducts();
+    }
 
-  async count(): Promise<number> {
-    return this.productRepository.count();
-  }
+    /**
+     * Get product with full edit data including variants and tags
+     */
+    async getProductForEdit(id: number): Promise<ProductEditData | null> {
+        const data = await getAdminProductForEditRaw(id);
 
-  async getProductForEdit(id: number): Promise<ProductEditData | null> {
-    const data = await getAdminProductForEditRaw(id);
+        if (!data) return null;
 
-    if (!data) return null;
-
-    return mapAdminProductEditData(data);
-  }
+        return mapAdminProductEditData(data);
+    }
 }

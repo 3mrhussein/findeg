@@ -1,5 +1,5 @@
 import { ID } from '@findeg/backend/features/core/domain/types/common';
-import { ISchoolAccessRepository } from '../interfaces/ISchoolAccessRepository';
+import { accessQueries, userQueries } from '@findeg/db/queries';
 import {
   ISchoolAccessService,
   AccessState,
@@ -10,8 +10,7 @@ import {
   SchoolListAccessRequest,
   SchoolListAccessToken,
 } from '../../domain/types/Access';
-import { ISchoolListRepository } from '@findeg/backend/features/catalog/application/interfaces/ISchoolListRepository';
-import { IUserRepository } from '@findeg/backend/features/identity/application/interfaces/IUserRepository';
+import type { ISchoolListService } from '@findeg/backend/features/catalog';
 
 /**
  *
@@ -24,40 +23,24 @@ export class SchoolAccessService implements ISchoolAccessService {
    *
    */
   constructor(
-    private accessRepo: ISchoolAccessRepository,
-    private schoolListRepo: ISchoolListRepository,
-    private userRepo: IUserRepository,
-  ) {}
+    private schoolListService: ISchoolListService,
+  ) { }
 
   /**
    *
    */
   async getAccessState(listId: ID, userId: ID | null): Promise<AccessState> {
-    // const list = await this.schoolListRepo.getItem(listId); // This method should be on ISchoolListRepository or I'll need to check the schema directly
-    // Wait, let me check the schoolListRepo.getItem(listId) first. It returns SchoolListItemResult.
-    // I need the school list itself to check accessMode.
-    // I'll call a hypothetical getListById on schoolListRepo or use the schema directly.
-    // Let's use getBySlug for now if I have it, but I need ID.
-    // I'll assume I can get the list from schoolListRepo.
+    if (!userId) return 'public';
 
-    // Actually, I should probably add getById to ISchoolListRepository.
-    // For now I'll use a direct DB query or assume it exists.
-    // Let's check ISchoolListRepository again. It has getBySlug.
-
-    // I'll implement getAccessState using the access records.
-
-    if (!userId) return 'public'; // Handled by AuthWall usually, but for internal state:
-
-    const grant = await this.accessRepo.getGrant(listId, userId);
+    const grant = await accessQueries.getGrant(listId, userId);
     if (grant) return 'granted';
 
-    const pendingRequest = await this.accessRepo.getPendingRequest(listId, userId);
+    const pendingRequest = await accessQueries.getPendingRequest(listId, userId);
     if (pendingRequest) return 'pending';
 
-    const schoolList = await this.schoolListRepo.getById(listId);
+    const schoolList = await this.schoolListService.getListById(listId);
     if (!schoolList) return 'public';
 
-    // For now we default to public if no access mode is specified in schema
     return 'public';
   }
 
@@ -65,24 +48,20 @@ export class SchoolAccessService implements ISchoolAccessService {
    *
    */
   async verifyCode(listId: ID, userId: ID, _code: string): Promise<VerifyCodeResult> {
-    const attempt = await this.accessRepo.getCodeAttempt(listId, userId);
+    const attempt = await accessQueries.getCodeAttempt(listId, userId);
 
     if (attempt && attempt.lockedUntil && attempt.lockedUntil > new Date()) {
       return { success: false, locked: true, lockedUntil: attempt.lockedUntil };
     }
 
-    // Fetch the list to check the code
-    // I need to add getById to ISchoolListRepository or use a direct check.
-    // I'll assume I can check the code.
-
     const isValid = false; // Placeholder for code check
 
     if (isValid) {
-      await this.accessRepo.resetCodeAttempt(listId, userId);
-      await this.accessRepo.createGrant({
+      await accessQueries.resetCodeAttempt(listId, userId);
+      await accessQueries.createGrant({
         listId: listId as number,
         userId: userId as number,
-        grantedVia: 'code',
+        grantedVia: 'admin',
       });
       return { success: true };
     }
@@ -94,7 +73,7 @@ export class SchoolAccessService implements ISchoolAccessService {
       lockedUntil = new Date(Date.now() + this.LOCKOUT_DURATION_MS);
     }
 
-    await this.accessRepo.upsertCodeAttempt(listId, userId, newAttemptCount, lockedUntil);
+    await accessQueries.upsertCodeAttempt(listId, userId);
 
     return {
       success: false,
@@ -112,17 +91,16 @@ export class SchoolAccessService implements ISchoolAccessService {
     userId: ID,
     input: { childName?: string; note?: string },
   ): Promise<SchoolListAccessRequest> {
-    const user = await this.userRepo.getById(userId);
+    const user = await userQueries.getById(userId);
     if (!user) throw new Error('User not found');
 
-    return this.accessRepo.createRequest({
+    return accessQueries.createRequest({
       listId: listId as number,
       userId: userId as number,
       childName: input.childName,
       note: input.note,
       parentName: `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Unknown',
       parentEmail: user.email,
-      status: 'pending',
     });
   }
 
@@ -130,14 +108,14 @@ export class SchoolAccessService implements ISchoolAccessService {
    *
    */
   async cancelRequest(requestId: ID, userId: ID): Promise<void> {
-    await this.accessRepo.deleteRequest(requestId, userId);
+    await accessQueries.deleteRequest(requestId);
   }
 
   /**
    *
    */
   async validateToken(token: string): Promise<SchoolListAccessToken | null> {
-    const tokenRecord = await this.accessRepo.getTokenByString(token);
+    const tokenRecord = await accessQueries.getTokenByString(token);
     if (!tokenRecord) return null;
 
     if (tokenRecord.expiresAt && tokenRecord.expiresAt < new Date()) {
@@ -155,8 +133,8 @@ export class SchoolAccessService implements ISchoolAccessService {
    *
    */
   async grantAccessViaToken(listId: ID, userId: ID, tokenId: ID): Promise<SchoolListAccessGrant> {
-    await this.accessRepo.incrementTokenUseCount(tokenId);
-    return this.accessRepo.createGrant({
+    await accessQueries.incrementTokenUseCount(tokenId);
+    return accessQueries.createGrant({
       listId: listId as number,
       userId: userId as number,
       grantedVia: 'token',

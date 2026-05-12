@@ -2,7 +2,6 @@
  * Notification Services Factory (Pure TypeScript - Framework Agnostic)
  */
 
-import { DrizzleNotificationRepository } from '../../infrastructure/DrizzleNotificationRepository';
 import { NotificationService } from './NotificationService';
 import { NotificationEventService } from './NotificationEventService';
 import { ResendEmailService } from '../../infrastructure/ResendEmailService';
@@ -13,9 +12,9 @@ import { ResendEmailService } from '../../infrastructure/ResendEmailService';
  * @returns Object containing all notification service instances
  */
 export function createNotificationServices() {
-  const repository = new DrizzleNotificationRepository();
+  
   const emailService = new ResendEmailService();
-  const notifications = new NotificationService(repository);
+  const notifications = new NotificationService();
 
   return {
     notifications,

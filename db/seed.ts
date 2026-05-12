@@ -2,7 +2,7 @@ import env from '@findeg/env/database';
 import { db, connection } from './src/connection.ts';
 import * as seeds from './seeds/index.ts';
 import { truncateTables } from './seeds/helpers/index.ts';
-import { process } from 'zod/v4/core';
+import process from 'process';
 
 if (!env.DB_SEEDING) {
   throw new Error("You must set DB_SEEDING to 'true' when running seeds.");

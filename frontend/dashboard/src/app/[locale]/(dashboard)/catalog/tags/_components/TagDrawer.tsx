@@ -40,7 +40,7 @@ export function TagDrawer({ open, onOpenChange, tag }: TagDrawerProps) {
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full sm:max-w-[540px] p-0 border-l dark:border-slate-800">
+      <SheetContent className="w-full sm:max-w-135 p-0 border-l dark:border-slate-800">
         <TagFormPanel
           tag={tag}
           productCount={productCount}

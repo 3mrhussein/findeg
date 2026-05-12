@@ -7,16 +7,6 @@
  * Architecture: Backend exports pure TS factories → Apps create data layer with caching
  */
 
-import { DrizzleProductRepository } from '../../infrastructure/persistence/DrizzleProductRepository';
-import { DrizzleCategoryRepository } from '../../infrastructure/persistence/DrizzleCategoryRepository';
-import { DrizzleBrandRepository } from '../../infrastructure/persistence/DrizzleBrandRepository';
-import { DrizzleVariantRepository } from '../../infrastructure/persistence/DrizzleVariantRepository';
-import { DrizzleTagRepository } from '../../infrastructure/persistence/DrizzleTagRepository';
-import { DrizzleCollectionRepository } from '../../infrastructure/persistence/DrizzleCollectionRepository';
-import { DrizzleInventoryRepository } from '../../infrastructure/persistence/DrizzleInventoryRepository';
-import { DrizzleSchoolListRepository } from '../../infrastructure/persistence/DrizzleSchoolListRepository';
-import { DrizzleAdminSearchAnalyticsRepository } from '../../infrastructure/persistence/DrizzleAdminSearchAnalyticsRepository';
-
 import { ProductService } from './ProductService';
 import { CategoryService } from './CategoryService';
 import { VariantService } from './VariantService';
@@ -49,29 +39,17 @@ import { AdminSearchAnalyticsService } from './AdminSearchAnalyticsService';
  * ```
  */
 export function createCatalogServices() {
-  // Create repositories (no arguments - they use singleton db connection)
-  const productRepository = new DrizzleProductRepository();
-  const categoryRepository = new DrizzleCategoryRepository();
-  const brandRepository = new DrizzleBrandRepository();
-  const variantRepository = new DrizzleVariantRepository();
-  const tagRepository = new DrizzleTagRepository();
-  const collectionRepository = new DrizzleCollectionRepository();
-  const inventoryRepository = new DrizzleInventoryRepository();
-  const schoolListRepository = new DrizzleSchoolListRepository();
-  const adminSearchAnalyticsRepository = new DrizzleAdminSearchAnalyticsRepository();
-
-  // Create services (inject repository dependencies)
   return {
-    products: new ProductService(productRepository),
-    categories: new CategoryService(categoryRepository),
-    variants: new VariantService(variantRepository),
-    tags: new TagService(tagRepository),
-    collections: new CollectionService(collectionRepository),
-    search: new SearchService(productRepository),
-    inventory: new InventoryService(inventoryRepository),
-    schoolLists: new SchoolListService(schoolListRepository),
-    brands: new BrandService(brandRepository),
-    adminSearchAnalytics: new AdminSearchAnalyticsService(adminSearchAnalyticsRepository),
+    products: new ProductService(),
+    categories: new CategoryService(),
+    variants: new VariantService(),
+    tags: new TagService(),
+    collections: new CollectionService(),
+    search: new SearchService(),
+    inventory: new InventoryService(),
+    schoolLists: new SchoolListService(),
+    brands: new BrandService(),
+    adminSearchAnalytics: new AdminSearchAnalyticsService(),
   };
 }
 

@@ -26,7 +26,7 @@ import {
   TagInputSchema,
   type TagInput,
 } from '@findeg/backend/features/catalog/application/dtos/TagInput';
-import { slugify } from '@lib/slugify';
+import { slugify } from '@findeg/backend/lib';
 import { Tag } from '@findeg/backend/features/catalog';
 import { cn } from '@lib/utils';
 import { useDebounce } from '@hooks/use-debounce';

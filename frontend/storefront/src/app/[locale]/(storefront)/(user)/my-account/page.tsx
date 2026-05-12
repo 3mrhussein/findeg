@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
 import { Button } from '@findeg/ui';
 import { logoutAction } from '../../_actions/auth';
 import { updateProfileAction } from '../../_actions/user';
-import { getMyAccountData, getMyOrderDetail } from '@findeg/backend';
+import { getMyAccountData } from '@findeg/backend';
 import { requireAuth } from '@lib/auth-guard';
 import { SectionStateEmpty } from '@components/shared/state/SectionStateEmpty';
 import { Input } from '@findeg/ui';

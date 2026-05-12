@@ -1,32 +1,30 @@
 import { ID } from '@findeg/backend/features/core/domain/types/common';
-import { ITagRepository } from '../interfaces/ITagRepository';
 import { ITagService } from '../interfaces/ITagService';
 import { Tag, TagGroup } from '../../domain/entities/Tag';
+import { tagQueries } from '@findeg/db/queries';
 
 export class TagService implements ITagService {
-  constructor(private tagRepository: ITagRepository) {}
-
   async getAllTags(): Promise<Tag[]> {
-    return this.tagRepository.getAll();
+    return tagQueries.getAllTags() as Promise<Tag[]>;
   }
 
   async getTagsByGroup(group: TagGroup): Promise<Tag[]> {
-    return this.tagRepository.getByGroup(group);
+    return tagQueries.getTagsByGroup(group) as Promise<Tag[]>;
   }
 
   async getProductTags(productId: ID): Promise<Tag[]> {
-    return this.tagRepository.getTagsForProduct(productId);
+    return tagQueries.getTagsForProduct(productId) as Promise<Tag[]>;
   }
 
   async getGroupedTags(): Promise<Record<TagGroup, Tag[]>> {
-    const allTags = await this.tagRepository.getAll();
+    const allTags = await tagQueries.getAllTags();
     const grouped: Record<string, Tag[]> = {};
 
     for (const tag of allTags) {
       if (!grouped[tag.group]) {
         grouped[tag.group] = [];
       }
-      grouped[tag.group].push(tag);
+      grouped[tag.group].push(tag as unknown as Tag);
     }
 
     return grouped as Record<TagGroup, Tag[]>;

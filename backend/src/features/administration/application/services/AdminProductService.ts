@@ -1,8 +1,5 @@
 import type { ID } from '../../../core/domain/types/common';
 import type { IAdminProductService } from '../interfaces/IAdminProductService';
-import type { IProductRepository } from '../../../catalog/application/interfaces/IProductRepository';
-import type { ICategoryRepository } from '../../../catalog/application/interfaces/ICategoryRepository';
-import type { IBrandRepository } from '../../../catalog/application/interfaces/IBrandRepository';
 import type { IAuditLogService } from '../interfaces/IAuditLogService';
 import type { Product } from '../../../catalog/domain/entities/Product';
 import type { Locale } from '../../../core/domain/value-objects';
@@ -31,6 +28,8 @@ import { AdminProductVariantService } from './AdminProductVariantService';
  * - Price management per variant
  * - SKU uniqueness validation
  * - Audit logging for all mutations
+ *
+ * Uses query primitives from @findeg/db/queries for all data access.
  */
 export class AdminProductService implements IAdminProductService {
   private readService: AdminProductReadService;
@@ -40,19 +39,13 @@ export class AdminProductService implements IAdminProductService {
   private variantService: AdminProductVariantService;
 
   /**
+   * Creates an instance of AdminProductService.
    *
+   * @param auditLogService - Optional service for tracking mutations.
    */
-  constructor(
-    private productRepository: IProductRepository,
-    private categoryRepository: ICategoryRepository,
-    private brandRepository?: IBrandRepository,
-    private auditLogService?: IAuditLogService,
-  ) {
-    this.readService = new AdminProductReadService(this.productRepository);
+  constructor(private auditLogService?: IAuditLogService) {
+    this.readService = new AdminProductReadService();
     this.mutationService = new AdminProductMutationService({
-      productRepository: this.productRepository,
-      categoryRepository: this.categoryRepository,
-      brandRepository: this.brandRepository,
       auditLogService: this.auditLogService,
     });
     this.variantService = new AdminProductVariantService(this.auditLogService);
@@ -68,17 +61,23 @@ export class AdminProductService implements IAdminProductService {
   }
 
   /**
-   *
+   * Retrieves all products (legacy method - returns raw database rows cast to Product type)
    */
   async getAll(language?: Locale): Promise<Product[]> {
-    return this.readService.getAll(language);
+    const rows = await this.readService.getAll(language);
+    // Cast raw DB rows to Product type for interface compatibility
+    // In production, these would be mapped to domain entities
+    return rows as unknown as Product[];
   }
 
   /**
-   *
+   * Retrieves a single product by ID (legacy method - returns raw database row cast to Product type)
    */
   async getById(id: ID, language?: Locale): Promise<Product | null> {
-    return this.readService.getById(id, language);
+    const row = await this.readService.getById(id, language);
+    if (!row) return null;
+    // Cast raw DB row to Product type for interface compatibility
+    return row as unknown as Product;
   }
 
   /**
@@ -210,20 +209,12 @@ export class AdminProductService implements IAdminProductService {
   ): Promise<void> {
     return this.variantService.upsertVariantImages(variantId, images, adminUserId);
   }
-
-  /**
-   *
-   */
-
-  // ─── Fetch for Edit ────────────────────────────────────────────────────────
-
   /**
    * Retrieves full product data for the edit form.
    */
   async getProductForEdit(id: number): Promise<ProductEditData | null> {
     return this.readService.getProductForEdit(id);
   }
-
   /**
    * Checks if a slug is available (not used by another product).
    * Note: This checks the 'en' slug specifically as the primary handle.

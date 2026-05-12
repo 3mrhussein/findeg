@@ -1,62 +1,23 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "noEmit": true,
-    "jsx": "react-jsx",
-    "moduleResolution": "Bundler",
-    "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@components/*": [
-        "./src/components/*"
-      ],
-      "@hooks/*": [
-        "./src/hooks/*"
-      ],
-      "@i18n/*": [
-        "./src/i18n/*"
-      ],
-      "@lib/*": [
-        "./src/lib/*"
-      ],
-      "@providers/*": [
-        "./src/providers/*"
-      ],
-      "@server/*": [
-        "./src/server/*"
-      ],
-      "@features/*": [
-        "./src/features/*"
-      ],
-      "@data/*": [
-        "./src/data/*"
-      ],
-      "@app/*": [
-        "./src/app/*"
-      ],
-      "@actions/*": [
-        "./src/actions/*"
-      ],
-      "@queries/*": [
-        "./src/queries/*"
-      ],
-      "@findeg/backend/*": [
-        "../../backend/src/*"
-      ],
-      "@findeg/env": [
-        "../../packages/env/src"
-      ]
+      "@/*": ["./src/*"],
+      "@components/*": ["./src/components/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@i18n/*": ["./src/i18n/*"],
+      "@lib/*": ["./src/lib/*"],
+      "@providers/*": ["./src/providers/*"],
+      "@server/*": ["./src/server/*"],
+      "@features/*": ["./src/features/*"],
+      "@data/*": ["./src/data/*"],
+      "@app/*": ["./src/app/*"],
+      "@actions/*": ["./src/actions/*"],
+      "@queries/*": ["./src/queries/*"],
+      "@findeg/backend/*": ["../../backend/src/*"],
+      "@findeg/env": ["../../packages/env/src"]
     }
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    ".next",
-    "dist",
-    "cypress"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", ".next", "dist", "cypress"]
 }

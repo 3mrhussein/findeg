@@ -18,3 +18,5 @@ cypress/
 # IDE
 .vscode/
 .idea/
+
+**/*.json

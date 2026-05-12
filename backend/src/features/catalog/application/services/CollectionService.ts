@@ -1,15 +1,15 @@
-import { ICollectionRepository } from '../interfaces/ICollectionRepository';
 import { ICollectionService } from '../interfaces/ICollectionService';
 import { Collection } from '../../domain/entities/Collection';
+import { collectionQueries } from '@findeg/db/queries';
 
 export class CollectionService implements ICollectionService {
-  constructor(private collectionRepository: ICollectionRepository) {}
-
   async getAllCollections(): Promise<Collection[]> {
-    return this.collectionRepository.getAll();
+    return collectionQueries.getAllCollections() as Promise<Collection[]>;
   }
 
   async getCollectionBySlug(slug: string): Promise<Collection | null> {
-    return this.collectionRepository.getBySlug(slug);
+    return collectionQueries.getCollectionBySlugWithTags(slug) as Promise<
+      (Collection & { tags: any[] }) | null
+    >;
   }
 }

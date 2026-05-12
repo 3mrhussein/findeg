@@ -11,7 +11,7 @@ import {
 } from '@findeg/ui';
 import { cn } from '@lib/utils';
 import { useRouter } from '@i18n/navigation';
-import { getAvatarColorClass, getInitials } from '@lib/avatar-color';
+import { getAvatarColorClass, getInitials } from '@findeg/backend/lib';
 import { logoutAction as logout } from '@actions/auth-actions';
 
 interface AdminHeaderUserClientProps {
@@ -43,7 +43,7 @@ export function AdminHeaderUserClient({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="flex h-[32px] w-[32px] items-center justify-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-indigo-400">
+        <button className="flex h-8 w-8 items-center justify-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-indigo-400">
           <Avatar className="h-full w-full">
             <AvatarFallback className={cn('text-[11px] font-semibold text-white', avatarBgClass)}>
               {initials}
@@ -53,7 +53,7 @@ export function AdminHeaderUserClient({
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
-        className="w-[200px] mt-2 border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl rounded-lg"
+        className="w-50 mt-2 border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl rounded-lg"
       >
         <div className="flex flex-col px-3 py-2 border-b border-gray-100 dark:border-slate-800">
           <p className="text-[13px] font-medium text-gray-800 dark:text-gray-200 leading-none mb-1">
