@@ -1,4 +1,5 @@
 import { getSession } from './session';
+import { getCachedSession } from '@data/auth/queries';
 import { redirect } from '@i18n/navigation';
 import { adminSession } from '@findeg/backend/features/core';
 import type { SessionPayload, Locale } from '@findeg/backend/features/core';
@@ -8,7 +9,7 @@ import type { SessionPayload, Locale } from '@findeg/backend/features/core';
  * Use in layouts/pages that require a logged-in user.
  */
 export async function requireAuth(locale: string): Promise<SessionPayload> {
-  const session = await getSession();
+  const session = await getCachedSession();
   if (!session) {
     redirect({ href: '/login', locale: locale as any });
   }
@@ -20,7 +21,7 @@ export async function requireAuth(locale: string): Promise<SessionPayload> {
  * Use in the (admin) protected layout.
  */
 export async function requireAdmin(locale: string): Promise<SessionPayload> {
-  const session = await getSession();
+  const session = await getCachedSession();
   if (!session || !adminSession(session)) {
     redirect({ href: '/admin/login', locale: locale as any });
   }
@@ -32,7 +33,7 @@ export async function requireAdmin(locale: string): Promise<SessionPayload> {
  * Admins go to /admin, regular users go to /dashboard.
  */
 export async function redirectIfAuthenticated(locale: string): Promise<void> {
-  const session = await getSession();
+  const session = await getCachedSession();
   if (session) {
     if (adminSession(session)) {
       redirect({ href: '/admin', locale: locale as any });
@@ -47,7 +48,7 @@ export async function redirectIfAuthenticated(locale: string): Promise<void> {
  * Returns null for guests. Use in public pages with auth-aware components.
  */
 export async function getOptionalSession(): Promise<SessionPayload | null> {
-  return getSession();
+  return getCachedSession();
 }
 /**
  * Require specific permission — redirects to /dashboard if unauthorized.
