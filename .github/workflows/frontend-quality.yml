@@ -50,7 +50,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Create .env file for migrations
+      - name: Create .env file for schema push
         run: |
           cat > .env << EOF
           DATABASE_URL="postgresql://ci:ci@localhost:5432/findeg_ci"
@@ -59,8 +59,8 @@ jobs:
           NODE_ENV=test
           EOF
 
-      - name: Run database migrations
-        run: pnpm --filter @findeg/db run db:migrate
+      - name: Push schema to database
+        run: pnpm --filter @findeg/db run db:push
 
       - name: Seed database
         run: pnpm --filter @findeg/db run db:seed
