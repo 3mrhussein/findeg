@@ -1,7 +1,7 @@
 'use client';
 
 import useSWR from 'swr';
-import { getCategoryTreeAction } from '@/app/[locale]/(storefront)/_actions/catalog';
+import { getCategoryTreeAction } from '@data/catalog/actions';
 
 export interface Category {
   id: number;

@@ -101,6 +101,16 @@ export class UserService implements IUserService {
   }
 
   /**
+   * Updates the signed-in user's profile fields.
+   */
+  async updateProfile(
+    userId: number,
+    input: { firstName?: string; lastName?: string },
+  ): Promise<void> {
+    await userQueries.update(userId, input);
+  }
+
+  /**
    * Retrieves profile and order summary for "My Account".
    */
   async getProfileData(userId: number): Promise<{ user: User; orders: Order[] }> {

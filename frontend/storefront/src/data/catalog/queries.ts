@@ -436,3 +436,51 @@ export async function getCollectionPageViewModel(
     sort: 'newest',
   };
 }
+
+/**
+ * Get hierarchical category tree for navigation
+ */
+export async function getCategoryTree(locale: string = 'en') {
+  const resolvedLocale = parse(locale);
+  cacheTag('categories');
+  cacheLife('hours');
+
+  const { categories } = createCatalogServices();
+  const tree = await categories.getTree(resolvedLocale);
+
+  return tree.map((c) => ({
+    id: c.id,
+    slug: c.slug,
+    name: c.name,
+    parentId: c.parentId || undefined,
+    icon: c.icon,
+    image: c.image,
+  }));
+}
+
+/**
+ * Get real-time pricing for a specific product variant
+ */
+export async function getProductPricing(payload: {
+  productId: number;
+  variantId: number;
+}) {
+  cacheTag('products');
+  cacheLife('minutes');
+
+  const { products } = createCatalogServices();
+  const product = await products.getById(payload.productId);
+
+  if (!product) return { success: false, error: 'Product not found' };
+
+  const variant = product.variants?.find((v: any) => v.id === payload.variantId);
+  if (!variant) return { success: false, error: 'Variant not found' };
+
+  return {
+    success: true,
+    data: {
+      unitPrice: variant.basePrice,
+      currency: 'EGP',
+    },
+  };
+}

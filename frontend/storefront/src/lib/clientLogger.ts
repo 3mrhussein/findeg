@@ -1,6 +1,6 @@
 'use client';
 
-import { logAction } from '../app/[locale]/(storefront)/_actions/notifications';
+import { logAction } from '@data/notifications/actions';
 
 /**
  * Client Logger
@@ -39,6 +39,6 @@ export const clientLogger = {
       message: `Client Error in ${context}: ${message}`,
       error_stack: stack,
       path: typeof window !== 'undefined' ? window.location.pathname : 'unknown',
-    }).catch(() => {});
+    }).catch(() => { });
   },
 };

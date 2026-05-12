@@ -30,7 +30,7 @@ import { ImageGallery } from './ImageGallery';
 import { ProductTabsSection } from './ProductTabsSection';
 import { RelatedProductsRail } from './RelatedProductsRail';
 import { RecentlyViewedRail, type RecentlyViewedItem } from './RecentlyViewedRail';
-import { getProductPricingAction } from '@/app/[locale]/(storefront)/_actions/catalog';
+import { getProductPricingAction } from '@data/catalog/actions';
 
 function getProductStatusBadge({ product, variant, lowStock }: any) {
   if (lowStock) return { kind: 'low-stock' as const };
