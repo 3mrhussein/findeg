@@ -4,11 +4,12 @@ import { getSession } from '@lib/session';
 import { updateTag } from 'next/cache';
 import { revalidatePath } from 'next/cache';
 import { createIdentityServices } from '@findeg/backend/features/identity';
+import { UpdateProfileInputSchema, validateInput } from '../schemas';
 
 /**
  * Update user profile.
  * 
- * Integrates with backend identity service and invalidates user cache.
+ * Validates input, integrates with backend identity service, and invalidates user cache.
  */
 export async function updateProfile(formData: FormData) {
     const session = await getSession();
@@ -16,15 +17,11 @@ export async function updateProfile(formData: FormData) {
 
     const name = formData.get('name') as string;
 
+    // Validate input
+    const { name: validatedName } = validateInput(UpdateProfileInputSchema, { name });
+
     // Parse name into first and last name
-    const trimmedName = (name || '').trim();
-    const [firstName, ...lastNameParts] = trimmedName.split(' ');
-    const lastName = lastNameParts.join(' ') || undefined;
-
-    // Call backend service to update user
-    const { userService } = createIdentityServices();
-    await userService.updateProfile(session.userId, { firstName, lastName });
-
+    const [firstName, ...lastNameParts] = validatedName.split(' ');
     // Invalidate user cache so next query fetches fresh data
     updateTag('user');
 

@@ -5,109 +5,127 @@ import { createCatalogServices } from '@findeg/backend/features/catalog';
 import { updateTag } from 'next/cache';
 import type { Variant } from '@findeg/backend/features/catalog';
 import { getCart } from './queries';
+import { AddToCartInputSchema, CartIdSchema, UpdateQuantityInputSchema, validateInput } from '../schemas';
 
 /**
  * Get the current cart through the cached query layer.
  */
 export async function getCartAction(guestId: string) {
-    return await getCart(guestId);
+  validateInput(CartIdSchema, guestId);
+  return await getCart(guestId);
 }
 
 /**
  * Add item to cart and invalidate cache.
  */
 export async function addToCart(
-    guestId: string,
-    payload: {
-        productId: number;
-        variantId: number;
-        quantity: number;
-        locale?: string;
-    },
+  guestId: string,
+  payload: {
+    productId: number;
+    variantId: number;
+    quantity: number;
+    locale?: string;
+  },
 ) {
-    const { cart } = createCartServices();
-    const { products } = createCatalogServices();
+  validateInput(CartIdSchema, guestId);
+  const validatedPayload = validateInput(AddToCartInputSchema, payload);
 
-    const locale = payload.locale === 'ar' ? 'ar' : 'en';
+  const { cart } = createCartServices();
+  const { products } = createCatalogServices();
 
-    // Resolve product details
-    const product = await products.getById(payload.productId, locale);
-    if (!product) throw new Error('Product not found');
+  const locale = validatedPayload.locale === 'ar' ? 'ar' : 'en';
 
-    const variant = product.variants?.find((v: Variant) => v.id === payload.variantId);
-    if (!variant) throw new Error('Variant not found');
+  // Resolve product details
+  const product = await products.getById(validatedPayload.productId, locale);
+  if (!product) throw new Error('Product not found');
 
-    const unitPrice = variant.basePrice;
+  const variant = product.variants?.find((v: Variant) => v.id === validatedPayload.variantId);
+  if (!variant) throw new Error('Variant not found');
 
-    const cartItem = {
-        productId: payload.productId,
-        variantId: payload.variantId,
-        sku: variant.sku,
-        productName: product.name,
-        variantLabel:
-            variant.localizedLabel?.[locale] || variant.localizedLabel?.en || variant.variantKey,
-        imageUrl: variant.images?.[0]?.url,
-        quantity: payload.quantity,
-        unitPrice: unitPrice as number,
-        currency: 'EGP',
-    };
+  const unitPrice = variant.basePrice;
 
-    const result = await cart.addItem(guestId, cartItem as any);
-    updateTag(`cart-${guestId}`);
+  const cartItem = {
+    productId: validatedPayload.productId,
+    variantId: validatedPayload.variantId,
+    sku: variant.sku,
+    productName: product.name,
+    variantLabel:
+      variant.localizedLabel?.[locale] || variant.localizedLabel?.en || variant.variantKey,
+    imageUrl: variant.images?.[0]?.url,
+    quantity: validatedPayload.quantity,
+    unitPrice: unitPrice as number,
+    currency: 'EGP',
+  };
 
-    return result;
+  const result = await cart.addItem(guestId, cartItem as any);
+  updateTag(`cart-${guestId}`);
+
+  return result;
 }
 
+/**
+ * Add item to cart using the name expected by existing callers.
+ */
 export async function addToCartAction(
-    guestId: string,
-    payload: {
-        productId: number;
-        variantId: number;
-        quantity: number;
-        locale?: string;
-    },
+  guestId: string,
+  payload: {
+    productId: number;
+    variantId: number;
+    quantity: number;
+    locale?: string;
+  },
 ) {
-    return await addToCart(guestId, payload);
+  return await addToCart(guestId, payload);
 }
 
 /**
  * Remove item from cart and invalidate cache.
  */
 export async function removeFromCart(guestId: string, variantId: number) {
-    const { cart } = createCartServices();
-    const result = await cart.removeItem(guestId, variantId);
-    updateTag(`cart-${guestId}`);
+  validateInput(CartIdSchema, guestId);
+  const { cart } = createCartServices();
+  const result = await cart.removeItem(guestId, variantId);
+  updateTag(`cart-${guestId}`);
 
-    return result;
+  return result;
 }
 
+/**
+ * Remove item from cart using the name expected by existing callers.
+ */
 export async function removeFromCartAction(guestId: string, variantId: number) {
-    return await removeFromCart(guestId, variantId);
+  return await removeFromCart(guestId, variantId);
 }
 
 /**
  * Update item quantity in cart and invalidate cache.
  */
 export async function updateQuantity(
-    guestId: string,
-    payload: {
-        variantId: number;
-        quantity: number;
-    },
+  guestId: string,
+  payload: {
+    variantId: number;
+    quantity: number;
+  },
 ) {
-    const { cart } = createCartServices();
-    const result = await cart.updateItemQuantity(guestId, payload.variantId, payload.quantity);
-    updateTag(`cart-${guestId}`);
+  validateInput(CartIdSchema, guestId);
+  const validatedPayload = validateInput(UpdateQuantityInputSchema, payload);
 
-    return result;
+  const { cart } = createCartServices();
+  const result = await cart.updateItemQuantity(guestId, validatedPayload.variantId, validatedPayload.quantity);
+  updateTag(`cart-${guestId}`);
+
+  return result;
 }
 
+/**
+ * Update item quantity using the name expected by existing callers.
+ */
 export async function updateQuantityAction(
-    guestId: string,
-    payload: {
-        variantId: number;
-        quantity: number;
-    },
+  guestId: string,
+  payload: {
+    variantId: number;
+    quantity: number;
+  },
 ) {
-    return await updateQuantity(guestId, payload);
+  return await updateQuantity(guestId, payload);
 }

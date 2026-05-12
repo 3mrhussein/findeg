@@ -8,7 +8,7 @@
  *       import { ValidationError, ConflictError } from '@findeg/backend'
  */
 
-export * from './i18n';
+export * from './formatters';
 export * from './db-error-handler';
 export * from './avatar-color';
 export * from './slugify';

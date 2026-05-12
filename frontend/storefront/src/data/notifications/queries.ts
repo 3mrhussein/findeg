@@ -8,18 +8,25 @@ import { cacheLife, cacheTag } from 'next/cache';
  * 
  * TODO: Integrate with backend notification service when available.
  * Currently returns placeholder.
+ * 
+ * @returns Unread notification count or 0 on error
  */
 export async function getUnreadNotificationCount() {
     cacheLife('minutes');
 
-    const session = await getSession();
-    if (!session?.userId) return 0;
+    try {
+        const session = await getSession();
+        if (!session?.userId) return 0;
 
-    cacheTag(`notifications-${session.userId}`);
+        cacheTag(`notifications-${session.userId}`);
 
-    // Placeholder: replace with actual notification service call
-    // const { notifications } = createNotificationServices();
-    // return await notifications.getUnreadCount(session.userId);
+        // Placeholder: replace with actual notification service call
+        // const { notifications } = createNotificationServices();
+        // return await notifications.getUnreadCount(session.userId);
 
-    return 3;
+        return 3;
+    } catch (error) {
+        console.error('Failed to get unread notification count:', error);
+        return 0;
+    }
 }
