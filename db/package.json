@@ -17,6 +17,7 @@
     "db:migrate": "cross-env DB_MIGRATING=true tsx --env-file=../.env ./migrate.ts",
     "db:push": "drizzle-kit push --config ./drizzle.config.ts",
     "db:seed": "cross-env DB_SEEDING=true tsx --env-file=../.env ./seed.ts",
+    "db:drop": "drizzle-kit drop --config ./drizzle.config.ts",
     "db:studio": "drizzle-kit studio --config ./drizzle.config.ts",
     "db:setup": "npm run db:generate && npm run db:push && npm run db:seed",
     "type-check": "tsc --noEmit",
