@@ -5,7 +5,7 @@
  * for user lookup and authorization resolution.
  *
  * Performs password verification but does NOT create sessions.
- * Session creation is app-layer responsibility (done via CookieSessionProvider in app-layer).
+ * Session creation is app-layer responsibility (through the shared Current Session module).
  *
  * Uses bcryptjs for password verification.
  */

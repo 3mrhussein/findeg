@@ -37,6 +37,7 @@ export {
   type ICookieStore,
   type ICurrentSessionIdentityResolver,
 } from './application/services/CurrentSessionProvider';
+export { createCurrentSessionProvider } from './application/services/createCurrentSessionProvider';
 export { CookieSessionProvider } from './infrastructure/auth/CookieSessionProvider';
 
 // ========================================
