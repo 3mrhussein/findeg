@@ -10,8 +10,8 @@ import {
   getTopProductsRaw,
   getTotalOrderStatsRaw,
   getOrderStatsRaw,
+  orderQueries,
 } from '@findeg/db/queries';
-import * as orderQueries from '@findeg/db/queries/sales/orders';
 import { AdminDashboardService } from '../AdminDashboardService';
 import { QueryError } from '../../../../core/domain/errors/QueryError';
 
@@ -26,10 +26,9 @@ vi.mock('@findeg/db/queries', () => ({
   getTopProductsRaw: vi.fn(),
   getTotalOrderStatsRaw: vi.fn(),
   getOrderStatsRaw: vi.fn(),
-}));
-
-vi.mock('@findeg/db/queries/sales/orders', () => ({
-  getRecent: vi.fn(),
+  orderQueries: {
+    getRecent: vi.fn(),
+  },
 }));
 
 vi.mock('date-fns', async (importOriginal) => {

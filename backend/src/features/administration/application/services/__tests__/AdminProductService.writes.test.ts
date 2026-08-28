@@ -8,6 +8,9 @@ import {
   createProductWithVariantsInDb,
   deactivateProductVariant,
   duplicateProductWithVariants,
+  getBrandById,
+  getCategoryById,
+  getProductById,
   getProductVariantAttributes,
   insertGeneratedProductVariants,
   updateProductWithVariantsInDb,
@@ -32,6 +35,9 @@ vi.mock('@findeg/db/queries', () => ({
   createProductWithVariantsInDb: vi.fn(),
   deactivateProductVariant: vi.fn(),
   duplicateProductWithVariants: vi.fn(),
+  getBrandById: vi.fn(),
+  getCategoryById: vi.fn(),
+  getProductById: vi.fn(),
   getProductVariantAttributes: vi.fn(),
   insertGeneratedProductVariants: vi.fn(),
   updateProductWithVariantsInDb: vi.fn(),
@@ -68,6 +74,8 @@ describe('AdminProductService writes', () => {
 
   it('delegates product creation to the db helper after validation and logs the action', async () => {
     vi.mocked(createProductWithVariantsInDb).mockResolvedValue(123);
+    vi.mocked(getCategoryById).mockResolvedValue({ id: 10 } as never);
+    vi.mocked(getBrandById).mockResolvedValue({ id: 12 } as never);
 
     const input = {
       localizedName: { en: 'Notebook', ar: 'دفتر' },
@@ -193,6 +201,8 @@ describe('AdminProductService writes', () => {
 
   it('delegates product update to the db helper after validation and logs the action', async () => {
     vi.mocked(updateProductWithVariantsInDb).mockResolvedValue(undefined);
+    vi.mocked(getProductById).mockResolvedValue({ id: 123 } as never);
+    vi.mocked(getCategoryById).mockResolvedValue({ id: 10 } as never);
 
     const input = {
       localizedName: { en: 'Updated', ar: 'محدث' },
