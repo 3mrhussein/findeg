@@ -4,10 +4,10 @@
 
 import { ID } from '@findeg/backend/features/core/domain/types/common';
 import {
-  AttributeDefinition,
-  CreateAttributeDefinition,
+  Attribute,
+  CreateAttribute,
   ProductAttributeValue,
-} from '../../domain/entities/AttributeDefinition';
+} from '../../domain/entities/Attribute';
 
 export interface AttributeFilter {
   attributeKey: string;
@@ -17,16 +17,16 @@ export interface AttributeFilter {
 
 export interface IAttributeRepository {
   /** Retrieves all available attribute definitions */
-  getAllDefinitions(): Promise<AttributeDefinition[]>;
+  getAllDefinitions(): Promise<Attribute[]>;
 
   /** Retrieves definitions marked as filterable */
-  getFilterableDefinitions(): Promise<AttributeDefinition[]>;
+  getFilterableDefinitions(): Promise<Attribute[]>;
 
   /** Creates a new attribute definition */
-  createDefinition(input: CreateAttributeDefinition): Promise<AttributeDefinition>;
+  createDefinition(input: CreateAttribute): Promise<Attribute>;
 
   /** Updates an existing definition */
-  updateDefinition(id: ID, input: Partial<CreateAttributeDefinition>): Promise<AttributeDefinition>;
+  updateDefinition(id: ID, input: Partial<CreateAttribute>): Promise<Attribute>;
 
   /** Deletes an attribute definition */
   deleteDefinition(id: ID): Promise<void>;

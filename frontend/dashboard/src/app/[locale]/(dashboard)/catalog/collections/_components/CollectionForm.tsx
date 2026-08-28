@@ -3,9 +3,9 @@
 import { useForm, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  CollectionInput,
   CollectionInputSchema,
-} from '@findeg/backend/features/administration/domain';
+  type CollectionInput,
+} from '@findeg/backend/features/catalog/application/dtos/CollectionInput';
 import { Collection } from '@findeg/backend/features/catalog/domain';
 import { Tag } from '@findeg/backend/features/catalog/domain';
 import { useTranslations } from 'next-intl';

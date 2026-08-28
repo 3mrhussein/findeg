@@ -2,6 +2,7 @@ import { SignJWT, jwtVerify } from 'jose';
 import type { SessionPayload } from '@findeg/backend/features/core/domain/auth';
 import { adminSession } from '@findeg/backend/features/core/domain/auth/authorization';
 import type { ISessionManager } from '@findeg/backend/features/core/application/interfaces/ISessionManager';
+import type { ICurrentSessionCodec } from '@findeg/backend/features/core/application/interfaces/ICurrentSessionCodec';
 import type { PortalRole } from '@findeg/backend/features/core/domain/types/common';
 import env from '@findeg/env';
 
@@ -11,7 +12,7 @@ import env from '@findeg/env';
  * Uses 'jose' library for Edge runtime compatibility.
  * Handles token extraction from Authorization header or cookies.
  */
-export class JwtSessionManager implements ISessionManager {
+export class JwtSessionManager implements ISessionManager, ICurrentSessionCodec {
   private readonly SESSION_COOKIE_NAME = 'admin_session';
   private readonly SESSION_DURATION = 60 * 60 * 24; // 24 hours
   private readonly JWT_SECRET: Uint8Array;

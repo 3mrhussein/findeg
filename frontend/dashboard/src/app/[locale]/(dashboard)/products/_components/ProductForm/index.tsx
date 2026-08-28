@@ -52,12 +52,16 @@ export function ProductForm({ initialData, categories, brands, tags, locale }: P
           brandId: initialData.brandId,
           tagIds: initialData.tags?.map((t: any) => t.id) || [],
           isActive: initialData.isActive,
-          variants: initialData.variants.map((v: any) => ({
+          variants: (initialData.variants || []).map((v: any) => ({
             id: v.id,
             sku: v.sku,
             basePrice: Number(v.basePrice),
+            strikePrice: v.strikePrice ? Number(v.strikePrice) : null,
+            costPrice: v.costPrice ? Number(v.costPrice) : null,
+            weightGrams: v.weightGrams,
             isActive: v.isActive,
-            displayOrder: v.displayOrder,
+            isDefault: v.isDefault,
+            sortOrder: v.sortOrder,
             localizedLabel: v.localizedLabel || { en: '', ar: '' },
             images: (v.images || []).map((img: any) => ({
               url: img.url,
@@ -67,7 +71,6 @@ export function ProductForm({ initialData, categories, brands, tags, locale }: P
             attributes: (v.attributes || []).map((attr: any) => ({
               attributeKey: attr.key,
               value: attr.valueText || '',
-              isVariantDefining: true,
             })),
           })),
         }
@@ -86,9 +89,9 @@ export function ProductForm({ initialData, categories, brands, tags, locale }: P
               strikePrice: null,
               weightGrams: null,
               barcode: '',
-              lowStockThreshold: 10,
               isActive: true,
-              displayOrder: 0,
+              isDefault: true,
+              sortOrder: 0,
               images: [],
               attributes: [],
             },

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Sheet, SheetContent } from '@findeg/ui';
 import { Tag } from '@findeg/backend/features/catalog';
-import { TagInput } from '@findeg/backend/features/administration/domain/types';
+import type { TagInput } from '@findeg/backend/features/catalog/application/dtos/TagInput';
 import { TagFormPanel } from './TagFormPanel';
 import { createTagAction, updateTagAction, getTagProductCountAction } from '@data/tags/actions';
 import { useRouter } from '@i18n/navigation';
@@ -40,7 +40,7 @@ export function TagDrawer({ open, onOpenChange, tag }: TagDrawerProps) {
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full sm:max-w-[540px] p-0 border-l dark:border-slate-800">
+      <SheetContent className="w-full sm:max-w-135 p-0 border-l dark:border-slate-800">
         <TagFormPanel
           tag={tag}
           productCount={productCount}

@@ -1,6 +1,6 @@
 import { ID } from '@findeg/backend/features/core/domain/types/common';
 import { Tag } from '@findeg/backend/features/catalog/domain/entities/Tag';
-import { TagInput } from '../../domain/types/TagInput';
+import { TagInput } from '@findeg/backend/features/catalog/application/dtos/TagInput';
 
 export interface IAdminTagService {
   /** Retrieves all tags */

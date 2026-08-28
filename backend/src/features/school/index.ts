@@ -5,3 +5,4 @@ export * from './application/services/ParentListService';
 export * from './application/interfaces/ISchoolAccessService';
 export * from './application/interfaces/ISchoolDirectoryService';
 export * from './application/interfaces/IParentListService';
+export { createSchoolServices } from './application/services/factory';

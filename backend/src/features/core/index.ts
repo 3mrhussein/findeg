@@ -26,18 +26,18 @@ export * from './application/types';
 // PRESENTATION LAYER EXPORTS
 // ========================================
 /**
- * CookieSessionProvider NOT exported because it (via JwtSessionManager) has @ imports
- * that break Turbopack bundling. Apps should implement their own session provider
- * or use a lightweight adapter pattern.
+ * CurrentSessionProvider is the framework-agnostic Current Session seam. Portal
+ * adapters supply request-cookie access; signing, cookie policy, and refresh rules stay here.
  *
- * @deprecated CookieSessionProvider is infrastructure and should not be used by apps.
- * This export was temporary to unblock dashboard session management during migration.
- * Target: Remove by 2026-05-01
+ * CookieSessionProvider remains temporarily for portal migration compatibility.
  */
 export {
-  CookieSessionProvider,
+  CurrentSessionProvider,
+  type CurrentSessionIdentity,
   type ICookieStore,
-} from './infrastructure/auth/CookieSessionProvider';
+  type ICurrentSessionIdentityResolver,
+} from './application/services/CurrentSessionProvider';
+export { CookieSessionProvider } from './infrastructure/auth/CookieSessionProvider';
 
 // ========================================
 // INFRASTRUCTURE EXPORTS REMOVED

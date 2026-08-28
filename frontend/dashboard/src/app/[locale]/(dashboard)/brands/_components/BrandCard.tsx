@@ -22,9 +22,9 @@ interface BrandCardProps {
 export function BrandCard({ brand, isSelected, onEdit, onDelete, onToggleStatus }: BrandCardProps) {
   const t = useTranslations('Administration.Catalog.Brands');
 
-  const nameEn = brand.localizedContent?.name?.en || brand.name;
-  const nameAr = brand.localizedContent?.name?.ar || brand.name;
-  const descEn = brand.localizedContent?.description?.en || '';
+  const nameEn = brand.localizedName?.en || brand.name || '';
+  const nameAr = brand.localizedName?.ar || brand.name || '';
+  const descEn = brand.localizedDescription?.en || '';
   const productCount = brand.productCount || 0;
 
   return (

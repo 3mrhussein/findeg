@@ -11,7 +11,7 @@ import {
   formatDateTime,
   formatRelativeTime,
   formatNumber,
-} from '../i18n';
+} from '../formatters';
 
 describe('i18n utilities', () => {
   describe('formatCurrency', () => {

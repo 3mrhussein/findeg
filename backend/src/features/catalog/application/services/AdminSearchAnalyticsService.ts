@@ -1,4 +1,4 @@
-import { IAdminSearchAnalyticsRepository } from '../interfaces/IAdminSearchAnalyticsRepository';
+import { adminSearchAnalyticsQueries } from '@findeg/db/queries';
 import { IAdminSearchAnalyticsService } from '../interfaces/IAdminSearchAnalyticsService';
 import {
   SearchAnalyticsMetrics,
@@ -9,18 +9,16 @@ import {
 } from '../interfaces/IAdminSearchAnalyticsRepository';
 
 export class AdminSearchAnalyticsService implements IAdminSearchAnalyticsService {
-  constructor(private repository: IAdminSearchAnalyticsRepository) {}
-
   async getMetrics(days?: number): Promise<SearchAnalyticsMetrics> {
-    return this.repository.getMetrics(days);
+    return adminSearchAnalyticsQueries.getMetrics(days);
   }
 
   async getTopSearches(days?: number, limit?: number): Promise<TopSearchQuery[]> {
-    return this.repository.getTopSearches(days, limit);
+    return adminSearchAnalyticsQueries.getTopSearches(days, limit);
   }
 
   async getZeroResultSearches(days?: number, limit?: number): Promise<ZeroResultSearch[]> {
-    return this.repository.getZeroResultSearches(days, limit);
+    return adminSearchAnalyticsQueries.getZeroResultSearches(days, limit);
   }
 
   async getLowCTRSearches(
@@ -28,10 +26,10 @@ export class AdminSearchAnalyticsService implements IAdminSearchAnalyticsService
     limit?: number,
     minImpressions?: number,
   ): Promise<LowCTRSearch[]> {
-    return this.repository.getLowCTRSearches(days, limit, minImpressions);
+    return adminSearchAnalyticsQueries.getLowCTRSearches(days, limit, minImpressions);
   }
 
   async getLanguageBreakdown(days?: number): Promise<LanguageBreakdown[]> {
-    return this.repository.getLanguageBreakdown(days);
+    return adminSearchAnalyticsQueries.getLanguageBreakdown(days);
   }
 }

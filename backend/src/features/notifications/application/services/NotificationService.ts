@@ -1,20 +1,12 @@
 import { INotificationService } from '../interfaces/INotificationService';
-import { INotificationRepository } from '../interfaces/INotificationRepository';
-import { Notification } from '@findeg/db/schema';
+import { Notification } from '../../domain/types/Notification';
+import { notificationQueries } from '@findeg/db/queries';
 
 /**
  * Notification Application Service
  * Coordinates in-app notification logic.
  */
 export class NotificationService implements INotificationService {
-  /**
-   *
-   */
-  constructor(private repo: INotificationRepository) {}
-
-  /**
-   *
-   */
   async create(params: {
     userId: number;
     type: string;
@@ -25,7 +17,7 @@ export class NotificationService implements INotificationService {
     actionUrl?: string;
   }): Promise<void> {
     try {
-      await this.repo.create({
+      await notificationQueries.create({
         ...params,
         isRead: false,
         createdAt: new Date(),
@@ -36,30 +28,18 @@ export class NotificationService implements INotificationService {
     }
   }
 
-  /**
-   *
-   */
   async markRead(notificationId: number, userId: number): Promise<void> {
-    await this.repo.markRead(notificationId, userId);
+    await notificationQueries.markRead(notificationId, userId);
   }
 
-  /**
-   *
-   */
   async markAllRead(userId: number): Promise<void> {
-    await this.repo.markAllRead(userId);
+    await notificationQueries.markAllRead(userId);
   }
 
-  /**
-   *
-   */
   async getUnread(userId: number): Promise<Notification[]> {
-    return this.repo.getUnread(userId, 5);
+    return notificationQueries.getUnread(userId, 5) as Promise<Notification[]>;
   }
 
-  /**
-   *
-   */
   async getAll(
     userId: number,
     page: number = 1,
@@ -69,20 +49,16 @@ export class NotificationService implements INotificationService {
     hasMore: boolean;
   }> {
     const perPage = 20;
-    const notifications = await this.repo.getAll(userId, page, perPage);
+    const notificationsList = await notificationQueries.getAll(userId, page, perPage);
 
-    // We can optimize this by getting count separately or just checking limit
     return {
-      notifications,
-      total: 0, // Should probably be actual total if needed for pagination
-      hasMore: notifications.length === perPage,
+      notifications: notificationsList as Notification[],
+      total: 0,
+      hasMore: notificationsList.length === perPage,
     };
   }
 
-  /**
-   *
-   */
   async getUnreadCount(userId: number): Promise<number> {
-    return this.repo.getUnreadCount(userId);
+    return notificationQueries.getUnreadCount(userId);
   }
 }

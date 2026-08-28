@@ -80,7 +80,7 @@ import {
   addToCartAction,
   removeFromCartAction,
   updateQuantityAction,
-} from '@/app/[locale]/(storefront)/_actions/cart';
+} from '@data/cart/actions';
 
 // ... (types and helper functions)
 

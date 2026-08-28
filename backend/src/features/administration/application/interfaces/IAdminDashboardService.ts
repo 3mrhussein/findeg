@@ -7,9 +7,11 @@
 
 import {
   DashboardStats,
+} from '../dtos';
+import {
   CatalogHealthStats,
   CategoryProductDistribution,
-} from '@findeg/backend/features/administration/domain/types';
+} from '@findeg/backend/features/catalog/application/dtos';
 import { Order } from '@findeg/backend/features/order/domain/entities/Order';
 
 export interface IAdminDashboardService {

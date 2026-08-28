@@ -1,33 +1,75 @@
 import { IAdminDashboardService } from '../interfaces/IAdminDashboardService';
-import { IOrderRepository } from '../../../order/application/interfaces/IOrderRepository';
-import { DashboardStats } from '../../domain/types/DashboardStats';
-import { CatalogHealthStats, CategoryProductDistribution } from '../../domain/types';
+import { DashboardStats } from '../dtos';
+import { CatalogHealthStats, CategoryProductDistribution } from '@findeg/backend/features/catalog/application/dtos';
 import { Order } from '../../../order/domain/entities/Order';
-import { GetCatalogHealthQuery } from '../queries/GetCatalogHealthQuery';
-import { GetCategoryDistributionQuery } from '../queries/GetCategoryDistributionQuery';
-import { GetDashboardStatsQuery } from '../queries/GetDashboardStatsQuery';
+import {
+  getCatalogHealthRaw,
+  getCategoryDistributionRaw,
+  getProductCountRaw,
+  getCategoryCountRaw,
+  getBrandCountRaw,
+  getLowStockCountRaw,
+  getRevenueByPeriodRaw,
+  getTopProductsRaw,
+  getTotalOrderStatsRaw,
+  getOrderStatsRaw,
+} from '@findeg/db/queries';
+import { QueryError } from '../../../core/domain/errors/QueryError';
+import { endOfDay, startOfDay, subDays } from 'date-fns';
+import { ShippingAddress } from '../../../order/domain/value-objects';
+import { orderQueries } from '@findeg/db/queries';
 
 /**
  * Admin Dashboard Service
  *
- * Aggregates KPIs and statistics from multiple data sources.
- * Provides real-time metrics for revenue, orders, inventory, and trends.
+ * Orchestrates KPI and catalog metrics from primitives in the db layer.
+ * Handles validation, composition, and error mapping.
  */
 export class AdminDashboardService implements IAdminDashboardService {
   /**
    * Creates an instance of AdminDashboardService.
-   *
-   * @param orderRepository - For revenue and order volume.
-   * @param catalogHealthQuery - CQRS query for health stats.
-   * @param categoryDistributionQuery - CQRS query for distribution stats.
-   * @param dashboardStatsQuery - CQRS query for main dashboard KPIs.
    */
-  constructor(
-    private orderRepository: IOrderRepository,
-    private catalogHealthQuery: GetCatalogHealthQuery,
-    private categoryDistributionQuery: GetCategoryDistributionQuery,
-    private dashboardStatsQuery: GetDashboardStatsQuery,
-  ) {}
+  constructor() { }
+
+  private mapToDomain(
+    dbOrder: any,
+    items: any[],
+  ): Order {
+    return {
+      id: dbOrder.id,
+      userId: dbOrder.userId || undefined,
+      guestEmail: dbOrder.guestEmail || undefined,
+      status: dbOrder.status,
+      paymentStatus: dbOrder.paymentStatus,
+      subtotal: Number(dbOrder.subtotal),
+      shippingCost: Number(dbOrder.shippingCost),
+      totalAmount: Number(dbOrder.totalAmount),
+      currency: dbOrder.currency,
+      paymentMethod: dbOrder.paymentMethod || undefined,
+      shippingAddressSnapshot: (dbOrder.shippingAddressSnapshot as ShippingAddress) || undefined,
+      trackingNumber: dbOrder.trackingNumber || undefined,
+      adminNotes: dbOrder.adminNotes || undefined,
+      createdAt: dbOrder.createdAt,
+      updatedAt: dbOrder.updatedAt,
+      customerName: dbOrder.customerName,
+      customerEmail: dbOrder.customerEmail,
+      items: items.map((item) => ({
+        id: item.id,
+        orderId: item.orderId,
+        productId: item.productId!,
+        variantId: ((item as Record<string, unknown>).variantId as number) || undefined,
+        quantity: item.quantity,
+        uomCode: ((item as Record<string, unknown>).uomCode as string) || undefined,
+        unitPriceSnapshot: item.unitPriceSnapshot
+          ? Number(item.unitPriceSnapshot)
+          : undefined,
+        totalPrice: item.totalPrice ? Number(item.totalPrice) : undefined,
+        productNameSnapshot: item.productNameSnapshot || undefined,
+        productSkuSnapshot: item.productSkuSnapshot || undefined,
+        variantSnapshot: (item.variantSnapshot as Record<string, unknown>) || undefined,
+      })),
+    };
+  }
 
   /**
    * Aggregates key performance indicators (KPIs) for the store dashboard.
@@ -36,7 +78,47 @@ export class AdminDashboardService implements IAdminDashboardService {
    * @returns Comprehensive dashboard statistics object.
    */
   async getDashboardStats(): Promise<DashboardStats> {
-    return this.dashboardStatsQuery.execute();
+    try {
+      const now = new Date();
+      const todayStart = startOfDay(now);
+      const todayEnd = endOfDay(now);
+      const thirtyDaysAgo = subDays(now, 30);
+
+      // Orchestrate primitives in parallel
+      const [productCount, categoryCount, brandCount, totalStats, todayStats, lowStockCount, topProducts, revenueByPeriod] = await Promise.all([
+        getProductCountRaw(),
+        getCategoryCountRaw(),
+        getBrandCountRaw(),
+        getTotalOrderStatsRaw(),
+        getOrderStatsRaw(todayStart, todayEnd),
+        getLowStockCountRaw(),
+        getTopProductsRaw(5),
+        getRevenueByPeriodRaw(thirtyDaysAgo, now, 'day'),
+      ]);
+
+      // Map to output shape
+      return {
+        totalProducts: productCount,
+        totalCategories: categoryCount,
+        totalBrands: brandCount,
+        totalOrders: totalStats.totalOrders,
+        totalRevenue: totalStats.totalRevenue,
+        todayRevenue: todayStats.totalRevenue,
+        todayOrders: todayStats.totalOrders,
+        currency: 'EGP',
+        lowStockCount,
+        topProducts,
+        revenueByPeriod: revenueByPeriod.map((entry) => ({
+          date: entry.period,
+          revenue: entry.revenue,
+        })),
+      };
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new QueryError(`Failed to retrieve dashboard stats: ${error.message}`);
+      }
+      throw error;
+    }
   }
 
   /**
@@ -46,20 +128,48 @@ export class AdminDashboardService implements IAdminDashboardService {
    * @returns List of recent orders.
    */
   async getRecentOrders(limit: number = 5): Promise<Order[]> {
-    return this.orderRepository.getRecent(limit);
+    const results = await orderQueries.getRecent(limit);
+    return results.map((row) => this.mapToDomain(row.order, row.items));
   }
 
   /**
-   * Retrieves specific catalog health completion metrics using CQRS query.
+    * Retrieves specific catalog health completion metrics.
    */
   async getCatalogHealthStats(): Promise<CatalogHealthStats> {
-    return this.catalogHealthQuery.execute();
+    try {
+      return await getCatalogHealthRaw();
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new QueryError(`Failed to retrieve catalog health stats: ${error.message}`);
+      }
+      throw error;
+    }
   }
 
   /**
-   * Evaluates catalog coverage distributed across top categories using CQRS query.
+    * Evaluates catalog coverage distributed across top categories.
    */
   async getCategoryProductDistribution(): Promise<CategoryProductDistribution[]> {
-    return this.categoryDistributionQuery.execute(6);
+    try {
+      const results = await getCategoryDistributionRaw(6);
+      const totalProducts = results.reduce((sum, result) => sum + result.productCount, 0);
+
+      return results.map((result) => {
+        const nameMap = (result.localizedName || {}) as Record<string, string>;
+
+        return {
+          categoryId: String(result.categoryId),
+          categoryName: nameMap.en || result.slug || 'Unknown',
+          productCount: result.productCount,
+          percentage:
+            totalProducts > 0 ? Math.round((result.productCount / totalProducts) * 100) : 0,
+        };
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new QueryError(`Failed to retrieve category distribution: ${error.message}`);
+      }
+      throw error;
+    }
   }
 }

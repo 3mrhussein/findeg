@@ -36,8 +36,8 @@ export function InventoryRow({
   const firstVariant = product.variants?.[0];
   const inv = firstVariant?.inventory?.[0];
   const onHand = inv ? inv.onHand - inv.reserved : 0;
-  const threshold = firstVariant?.lowStockThreshold;
-  const isLow = threshold !== undefined && onHand <= threshold;
+  const threshold = 5;
+  const isLow = onHand <= threshold;
 
   return (
     <TableRow data-testid={`admin-inventory-row-${product.id}`}>

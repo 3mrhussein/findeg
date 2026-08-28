@@ -11,13 +11,16 @@ import { Textarea } from '@findeg/ui';
 import { Label } from '@findeg/ui';
 import { RadioGroup, RadioGroupItem } from '@findeg/ui';
 import { Badge } from '@findeg/ui';
-import { slugify } from '@lib/slugify';
+import { slugify } from '@findeg/backend/lib';
 import { Brand } from '@findeg/backend/features/catalog';
 import { cn } from '@lib/utils';
 import Image from 'next/image';
 import { useDebounce } from '@hooks/use-debounce';
 import { useToast } from '@hooks/use-toast';
-import { BrandInput, BrandInputSchema } from '@findeg/backend/features/administration/domain/types';
+import {
+  BrandInputSchema,
+  type BrandInput,
+} from '@findeg/backend/features/catalog/application/dtos/BrandInput';
 
 interface BrandFormPanelProps {
   brand: Brand | null;
@@ -50,10 +53,10 @@ export function BrandFormPanel({
     defaultValues: brand
       ? {
           slug: brand.slug,
-          nameEn: brand.localizedContent?.name?.en || brand.name || '',
-          nameAr: brand.localizedContent?.name?.ar || '',
-          descriptionEn: brand.localizedContent?.description?.en || '',
-          descriptionAr: brand.localizedContent?.description?.ar || '',
+          nameEn: brand.localizedName?.en || brand.name || '',
+          nameAr: brand.localizedName?.ar || '',
+          descriptionEn: brand.localizedDescription?.en || '',
+          descriptionAr: brand.localizedDescription?.ar || '',
           logoUrl: brand.logoUrl || '',
           isActive: brand.isActive,
         }
@@ -73,10 +76,10 @@ export function BrandFormPanel({
     if (brand) {
       reset({
         slug: brand.slug,
-        nameEn: brand.localizedContent?.name?.en || brand.name || '',
-        nameAr: brand.localizedContent?.name?.ar || '',
-        descriptionEn: brand.localizedContent?.description?.en || '',
-        descriptionAr: brand.localizedContent?.description?.ar || '',
+        nameEn: brand.localizedName?.en || brand.name || '',
+        nameAr: brand.localizedName?.ar || '',
+        descriptionEn: brand.localizedDescription?.en || '',
+        descriptionAr: brand.localizedDescription?.ar || '',
         logoUrl: brand.logoUrl || '',
         isActive: brand.isActive,
       });

@@ -12,6 +12,8 @@ export default defineConfig({
       DB_NAME: "findeg_test",
       JWT_SECRET: "test-secret-key-12345678901234567890",
       JWT_REFRESH_SECRET: "test-refresh-secret-key-12345678901234567890",
+      NEXT_PUBLIC_APP_URL: "http://localhost:3000",
+      NEXT_PUBLIC_SITE_URL: "http://localhost:3000",
     },
     coverage: {
       provider: "v8",
@@ -37,7 +39,7 @@ export default defineConfig({
         "./src/features/core/domain/types/validation",
       ),
       "@types/domain": resolve(import.meta.dirname, "./src/features/core/domain/types"),
-      "@findeg/env": resolve(import.meta.dirname, "../env.ts"),
+      "@findeg/env": resolve(import.meta.dirname, "../packages/env/src"),
     },
   },
 });

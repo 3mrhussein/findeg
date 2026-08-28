@@ -30,6 +30,10 @@ The **Identity Feature** oversees the central authentication and authorization m
    - `PortalRole` (e.g., `staff`): Checked immediately at the `src/app/[locale]/admin` Next.js Middleware layer.
    - `Permissions` (e.g., `catalog.write`): Checked individually inside `ServiceResult` pipelines before performing a DB mutation.
 
+`admin_session` is the signed browser **Current Session** cookie. It is separate from
+the legacy access/refresh token family exposed by `JWTService`; neither its lifecycle
+nor its payload should be used to resolve browser sessions.
+
 ---
 
 ## 🔄 Login Execution Pipeline

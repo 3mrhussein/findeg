@@ -7,7 +7,7 @@ import type { Product } from '@findeg/backend/features/catalog/domain/entities/P
 import type { Variant } from '@findeg/backend/features/catalog/domain/entities/Variant';
 import type { ProductReviewSummary } from '@findeg/backend/features/review/application/interfaces/IReviewRepository';
 import type { Review } from '@findeg/backend/features/review/domain/entities/Review';
-import { sanitizeHtml } from '@lib/sanitize-html';
+import { sanitizeHtml } from '@findeg/backend/lib';
 import { ReviewsSection } from './ReviewsSection';
 
 interface ProductTabsSectionProps {
@@ -85,9 +85,7 @@ export function ProductTabsSection({
                   >
                     <td className="w-1/3 bg-muted/30 px-4 py-3 font-medium">{attribute.key}</td>
                     <td className="px-4 py-3">
-                      {attribute.valueText ||
-                        attribute.valueNum ||
-                        String(attribute.valueBool ?? '-')}
+                      {attribute.valueText || '-'}
                     </td>
                   </tr>
                 ))}

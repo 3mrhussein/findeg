@@ -5,21 +5,19 @@ import type { Locale } from '@findeg/backend/features/core/domain/value-objects'
 /** Input for creating a brand */
 export interface BrandCreateInput {
   slug: Slug;
-  name: string;
+  localizedName: Record<string, string>;
+  localizedDescription?: Record<string, string> | null;
   logoUrl?: string | null;
   isActive?: boolean;
-  localizedName?: Record<string, string>;
-  localizedDescription?: Record<string, string>;
 }
 
 /** Input for updating a brand */
 export interface BrandUpdateInput {
   slug?: Slug;
-  name?: string;
+  localizedName?: Record<string, string>;
+  localizedDescription?: Record<string, string> | null;
   logoUrl?: string | null;
   isActive?: boolean;
-  localizedName?: Record<string, string>;
-  localizedDescription?: Record<string, string>;
 }
 
 /**
@@ -30,8 +28,6 @@ export interface BrandUpdateInput {
 export interface IBrandRepository {
   /**
    * Retrieves all brands.
-   *
-   * @param activeOnly - If true, returns only active brands.
    */
   getAll(activeOnly?: boolean, language?: Locale): Promise<Brand[]>;
 

@@ -5,7 +5,7 @@ import { LogOut } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@findeg/ui';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@findeg/ui';
 import { cn } from '@lib/utils';
-import { getAvatarColorClass, getInitials } from '@lib/avatar-color';
+import { getAvatarColorClass, getInitials } from '@findeg/backend/lib';
 import { useSidebar } from './SidebarContext';
 import { logoutAction as logout } from '@actions/auth-actions';
 

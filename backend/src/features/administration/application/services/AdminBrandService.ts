@@ -1,27 +1,57 @@
 import { ID, Slug } from '../../../core/domain/types/common';
 import { IAdminBrandService } from '../interfaces/IAdminBrandService';
-import { IBrandRepository } from '../../../catalog/application/interfaces/IBrandRepository';
 import { Brand } from '../../../catalog/domain/entities/Brand';
-import { BrandInput } from '../../domain/types/BrandInput';
+import { BrandInput } from '../../../catalog/application/dtos/BrandInput';
 import { IAuditLogService } from '../interfaces/IAuditLogService';
+import {
+  getAllBrands,
+  getBrandById,
+  getBrandBySlug,
+  createBrand,
+  updateBrand,
+  deleteBrand,
+  countBrands,
+  countProductsByBrandId,
+} from '@findeg/db/queries';
+import { DEFAULT_LOCALE, asTranslationMap, type Locale, pick } from '../../../core/domain/value-objects';
 
 /**
  * Admin Brand Service
  *
  * Handles brand CRUD operations for the admin dashboard.
  * Manages brand metadata including logos and active status.
+ * Uses query primitives instead of repository pattern.
  */
 export class AdminBrandService implements IAdminBrandService {
   /**
+   * Maps raw database brand to domain entity.
+   */
+  private mapToDomain(dbBrand: any, language: Locale = DEFAULT_LOCALE): Brand {
+    const localizedName = asTranslationMap(dbBrand.localizedName);
+    const localizedDescription = asTranslationMap(dbBrand.localizedDescription || {});
+
+    return {
+      id: dbBrand.id,
+      slug: dbBrand.slug as Slug,
+      localizedName,
+      localizedDescription,
+      name: pick(localizedName, language),
+      description: pick(localizedDescription, language),
+      locale: language,
+      logoUrl: dbBrand.logoUrl,
+      isActive: dbBrand.isActive,
+      productCount: (dbBrand as any).productCount as number | undefined,
+      createdAt: dbBrand.createdAt,
+      updatedAt: dbBrand.updatedAt,
+    };
+  }
+
+  /**
    * Creates an instance of AdminBrandService.
    *
-   * @param brandRepository - Repository for brand data management.
    * @param auditLogService - Service for tracking changes to brand records.
    */
-  constructor(
-    private brandRepository: IBrandRepository,
-    private auditLogService: IAuditLogService,
-  ) {}
+  constructor(private auditLogService?: IAuditLogService) { }
 
   /**
    * Retrieves all brands.
@@ -30,7 +60,8 @@ export class AdminBrandService implements IAdminBrandService {
    * @returns List of brands.
    */
   async getAll(activeOnly: boolean = false): Promise<Brand[]> {
-    return this.brandRepository.getAll(activeOnly);
+    const brands = await getAllBrands();
+    return brands.map((b) => this.mapToDomain(b));
   }
 
   /**
@@ -40,7 +71,8 @@ export class AdminBrandService implements IAdminBrandService {
    * @returns The brand if it exists.
    */
   async getById(id: ID): Promise<Brand | null> {
-    return this.brandRepository.getById(id);
+    const brand = await getBrandById(id as number);
+    return brand ? this.mapToDomain(brand) : null;
   }
 
   /**
@@ -50,15 +82,24 @@ export class AdminBrandService implements IAdminBrandService {
    * @returns The created brand.
    */
   async create(input: BrandInput): Promise<Brand> {
-    const brand = await this.brandRepository.create({
+    const brand = await createBrand({
       slug: input.slug as Slug,
-      name: input.nameEn!,
       logoUrl: input.logoUrl,
-      isActive: input.isActive ?? true,
       localizedName: { en: input.nameEn!, ar: input.nameAr! },
       localizedDescription: { en: input.descriptionEn || '', ar: input.descriptionAr || '' },
     });
-    return brand;
+
+    if (this.auditLogService) {
+      await this.auditLogService.logAction({
+        entityType: 'brand',
+        entityId: String(brand.id),
+        action: 'create',
+        adminUserId: undefined,
+        newValues: input as unknown as Record<string, unknown>,
+      });
+    }
+
+    return this.mapToDomain(brand);
   }
 
   /**
@@ -69,15 +110,30 @@ export class AdminBrandService implements IAdminBrandService {
    * @returns The updated brand.
    */
   async update(id: ID, input: BrandInput): Promise<Brand> {
-    const brand = await this.brandRepository.update(id, {
+    const existing = await getBrandById(id as number);
+    if (!existing) {
+      throw new Error(`Brand with ID ${id} not found`);
+    }
+
+    const brand = await updateBrand(id as number, {
       slug: input.slug as Slug,
-      name: input.nameEn,
       logoUrl: input.logoUrl,
-      isActive: input.isActive,
       localizedName: { en: input.nameEn!, ar: input.nameAr! },
       localizedDescription: { en: input.descriptionEn || '', ar: input.descriptionAr || '' },
     });
-    return brand;
+
+    if (this.auditLogService) {
+      await this.auditLogService.logAction({
+        entityType: 'brand',
+        entityId: String(id),
+        action: 'update',
+        adminUserId: undefined,
+        oldValues: existing as unknown as Record<string, unknown>,
+        newValues: input as unknown as Record<string, unknown>,
+      });
+    }
+
+    return this.mapToDomain(brand);
   }
 
   /**
@@ -86,14 +142,29 @@ export class AdminBrandService implements IAdminBrandService {
    * @param id - Brand unique ID.
    */
   async delete(id: ID): Promise<void> {
-    await this.brandRepository.delete(id);
+    const existing = await getBrandById(id as number);
+    if (!existing) {
+      throw new Error(`Brand with ID ${id} not found`);
+    }
+
+    await deleteBrand(id as number);
+
+    if (this.auditLogService) {
+      await this.auditLogService.logAction({
+        entityType: 'brand',
+        entityId: String(id),
+        action: 'delete',
+        adminUserId: undefined,
+        oldValues: existing as unknown as Record<string, unknown>,
+      });
+    }
   }
 
   /**
    * Checks if a slug is available.
    */
   async checkSlugAvailable(slug: string, excludeId?: number): Promise<boolean> {
-    const existing = await this.brandRepository.getBySlug(slug as Slug);
+    const existing = await getBrandBySlug(slug as Slug);
     if (!existing) return true;
     return existing.id === excludeId;
   }
@@ -106,10 +177,10 @@ export class AdminBrandService implements IAdminBrandService {
     if (!brand) throw new Error('Brand not found');
     return this.update(id, {
       slug: brand.slug,
-      nameEn: brand.localizedContent?.name?.en || brand.name,
-      nameAr: brand.localizedContent?.name?.ar || brand.name,
-      descriptionEn: brand.localizedContent?.description?.en || '',
-      descriptionAr: brand.localizedContent?.description?.ar || '',
+      nameEn: brand.localizedName?.en || brand.name,
+      nameAr: brand.localizedName?.ar || brand.name,
+      descriptionEn: brand.localizedDescription?.en || '',
+      descriptionAr: brand.localizedDescription?.ar || '',
       isActive: !brand.isActive,
     } as unknown as BrandInput);
   }
@@ -118,6 +189,6 @@ export class AdminBrandService implements IAdminBrandService {
    * Gets product count.
    */
   async getBrandProductCount(id: ID): Promise<number> {
-    return this.brandRepository.countProductsByBrandId(id);
+    return countProductsByBrandId(id as number);
   }
 }

@@ -1,6 +1,4 @@
 import type { ID } from '@findeg/backend/features/core/domain/types/common';
-import type { IOrderRepository } from '@findeg/backend/features/order/application/interfaces/IOrderRepository';
-import type { IReviewRepository, ProductReviewSummary } from '../interfaces/IReviewRepository';
 import type {
   CreateReviewInput,
   IReviewService,
@@ -9,6 +7,7 @@ import type {
   ReviewEligibility,
 } from '../interfaces/IReviewService';
 import type { Review } from '../../domain/entities/Review';
+import { reviewQueries, hasPurchasedProduct } from '@findeg/db/queries';
 
 /**
  * ReviewService handles storefront review queries and mutations.
@@ -17,10 +16,7 @@ export class ReviewService implements IReviewService {
   /**
    * Creates a review service instance.
    */
-  constructor(
-    private readonly reviewRepository: IReviewRepository,
-    private readonly orderRepository: IOrderRepository,
-  ) {}
+  constructor() { }
 
   /**
    * Returns paginated product reviews with aggregate summary.
@@ -33,17 +29,20 @@ export class ReviewService implements IReviewService {
     const limit = Math.min(Math.max(query.limit || 10, 1), 50);
 
     const [result, summary] = await Promise.all([
-      this.reviewRepository.getByProductIdPaginated(productId, {
+      reviewQueries.getByProductIdPaginated(productId as number, {
         page,
         limit,
         rating: query.rating,
         verifiedOnly: query.verified,
       }),
-      this.reviewRepository.getSummaryByProductId(productId),
+      reviewQueries.getSummaryByProductId(productId as number),
     ]);
 
     return {
-      reviews: result.reviews,
+      reviews: result.reviews.map(r => ({
+        ...r,
+        rating: Number(r.rating),
+      })) as Review[],
       total: result.total,
       page,
       limit,
@@ -65,8 +64,8 @@ export class ReviewService implements IReviewService {
     }
 
     const [hasPurchased, alreadyReviewed] = await Promise.all([
-      this.orderRepository.hasPurchasedProduct(userId, productId),
-      this.reviewRepository.hasUserReviewed(productId, userId),
+      hasPurchasedProduct(userId, productId),
+      reviewQueries.hasUserReviewed(productId as number, userId as number),
     ]);
 
     return {
@@ -94,16 +93,19 @@ export class ReviewService implements IReviewService {
       throw new Error('REVIEW_ALREADY_SUBMITTED');
     }
 
-    const created = await this.reviewRepository.create({
-      productId: input.productId,
-      userId: input.userId,
+    const created = await reviewQueries.create({
+      productId: input.productId as number,
+      userId: input.userId as number,
       rating: input.rating,
       comment: input.comment?.trim() || undefined,
       isVerifiedPurchase: true,
     });
 
-    await this.reviewRepository.recalculateProductAggregates(input.productId);
-    return created;
+    await reviewQueries.recalculateProductAggregates(input.productId);
+    return {
+      ...created,
+      rating: Number(created.rating),
+    } as Review;
   }
 
   /**
@@ -113,13 +115,13 @@ export class ReviewService implements IReviewService {
     if (!voterKey.trim()) {
       throw new Error('REVIEW_INVALID_VOTER');
     }
-    return this.reviewRepository.markHelpful(reviewId, voterKey.trim());
+    return reviewQueries.markHelpful(reviewId as number, voterKey.trim());
   }
 
   /**
    * Guarantees complete histogram buckets in API responses.
    */
-  private normalizeSummary(summary: ProductReviewSummary): ProductReviewSummary {
+  private normalizeSummary(summary: reviewQueries.ProductReviewSummary): reviewQueries.ProductReviewSummary {
     const histogram: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
     for (let i = 1; i <= 5; i += 1) {
       histogram[i] = summary.histogram[i] || 0;

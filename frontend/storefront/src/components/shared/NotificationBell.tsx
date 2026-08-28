@@ -10,7 +10,7 @@ import { ScrollArea } from '@findeg/ui';
 import { Link } from '@i18n/navigation';
 import { cn } from '@lib/utils';
 import { type Notification } from '@findeg/backend/features/core';
-import { getUnreadNotificationCountAction } from '@/app/[locale]/(storefront)/_actions/notifications';
+import { getUnreadNotificationCountAction } from '@data/notifications/actions';
 
 /**
  * Notification Bell component with unread count polling and popover.

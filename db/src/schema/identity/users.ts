@@ -1,10 +1,10 @@
-import { pgTable, serial, text, timestamp, boolean, varchar } from "drizzle-orm/pg-core";
+import { pgTable, serial, text, timestamp, boolean, varchar, integer } from "drizzle-orm/pg-core";
 import { portalRoleEnum } from "../enums";
 import { relations } from "drizzle-orm";
 import { identitySchema } from "../schemas";
 import { orders } from "../sales/orders";
 import { reviews } from "../sales/reviews";
-import { addresses } from "../addresses";
+import { addresses } from "./addresses";
 import { auditLog } from "../system/audit-log";
 
 /**
@@ -32,6 +32,8 @@ export const users = identitySchema.table("users", {
   emailVerified: timestamp("email_verified"),
   image: text("image"),
   isActive: boolean("is_active").default(true).notNull(),
+  /** Advances only when access-affecting facts change. */
+  authorizationVersion: integer("authorization_version").default(1).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

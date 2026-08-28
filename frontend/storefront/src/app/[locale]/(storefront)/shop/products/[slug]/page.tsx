@@ -63,6 +63,7 @@ import { getSession } from '@lib/session';
  */
 export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
   const { locale, slug } = await params;
+  console.log('[PDP] Rendering for slug:', slug, 'locale:', locale);
   setRequestLocale(locale as Locale);
 
   const session = await getSession();

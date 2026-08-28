@@ -2,21 +2,20 @@ import { z } from 'zod';
 import { IdSchema, SlugSchema } from '../../../core/domain/types/common';
 import { TranslationMapSchema } from '../../../core/domain/value-objects';
 
-export const BrandLocalizedContentSchema = z.object({
-  name: TranslationMapSchema,
-  description: TranslationMapSchema.optional(),
-});
-export type BrandLocalizedContent = z.infer<typeof BrandLocalizedContentSchema>;
-
 export const BrandSchema = z.object({
   id: IdSchema,
   slug: SlugSchema,
-  name: z.string(),
-  locale: z.string().optional(), // Locale
-  localizedContent: BrandLocalizedContentSchema.optional(),
+  localizedName: TranslationMapSchema,
+  localizedDescription: TranslationMapSchema.optional(),
+  isActive: z.boolean().default(true),
+  
+  // Resolved Content (for specific locale)
+  name: z.string().optional(),
+  description: z.string().optional(),
+  locale: z.string().optional(),
+  
   logoUrl: z.string().nullable().optional(),
   productCount: z.number().optional(),
-  isActive: z.boolean(),
   createdAt: z.date(),
   updatedAt: z.date(),
 });

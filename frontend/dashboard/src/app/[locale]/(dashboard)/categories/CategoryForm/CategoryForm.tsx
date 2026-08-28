@@ -8,7 +8,7 @@ import {
   createCategoryAction as createCategory,
   updateCategoryAction as updateCategory,
 } from '@data/categories/actions';
-import { CategoryInput } from '@findeg/backend/features/administration/domain/types';
+import type { CategoryInput } from '@findeg/backend/features/catalog/application/dtos/CategoryInput';
 
 import { useRouter } from '@i18n/navigation';
 import { useState } from 'react';

@@ -9,11 +9,8 @@
  */
 
 import { z } from 'zod';
-import { products } from '@findeg/db/schema';
-import { type InferSelectModel } from 'drizzle-orm';
-
 import { TagSchema } from './Tag';
-import { ProductAttributeValueSchema } from './AttributeDefinition';
+import { ProductAttributeValueSchema } from './Attribute';
 import { VariantSchema, type Variant, VariantEntity } from './Variant';
 import { ResponsiveMediaSetSchema, pick } from '../../../core/domain/value-objects';
 import { ID, IdSchema, Locale, RatingSchema, TranslationMapSchema } from '@findeg/db/types';
@@ -51,7 +48,7 @@ export const ProductSchema = z.object({
   brandName: z.string().optional(),
 
   // Media
-  mediaSet: ResponsiveMediaSetSchema.optional(),
+  // Media (Now delegated to variants)
   isActive: z.boolean().default(true),
 
   // Aggregate Ratings
@@ -59,6 +56,7 @@ export const ProductSchema = z.object({
   reviewsCount: z.number(),
 
   // Hydrated children
+  hydratedDefaultVariant: VariantSchema.optional(),
   variants: z.array(VariantSchema).optional(),
   tags: z.array(TagSchema).optional(),
   attributes: z.array(ProductAttributeValueSchema).optional(),
@@ -67,17 +65,7 @@ export const ProductSchema = z.object({
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
 });
-export type Product = z.infer<typeof ProductSchema> &
-  Partial<
-    Omit<
-      InferSelectModel<typeof products>,
-      | 'localizedName'
-      | 'localizedDescription'
-      | 'localizedLongDescription'
-      | 'rating'
-      | 'reviewsCount'
-    >
-  >;
+export type Product = z.infer<typeof ProductSchema>;
 
 export type CreateProduct = z.infer<typeof CreateProductSchema>;
 
@@ -132,10 +120,13 @@ export class ProductEntity {
     return this.product.variants || [];
   }
 
-  /** Returns the default / first active variant */
+  /** Returns the default variant (joined or filtered from list) */
   getDefaultVariant(): Variant | undefined {
+    if (this.product.hydratedDefaultVariant) {
+      return this.product.hydratedDefaultVariant;
+    }
     const variants = this.getVariants();
-    return variants.find((v) => v.variantKey === 'default') || variants[0];
+    return variants.find((v) => v.isDefault) || variants[0];
   }
 
   getVariantByKey(key: string): Variant | undefined {

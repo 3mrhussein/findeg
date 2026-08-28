@@ -1,41 +1,33 @@
 /**
  * Permission Service Unit Tests
  *
- * Tests authorization checks with mock UserRepository
+ * Tests authorization checks through db query primitives.
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { PermissionService } from '../services/PermissionService';
-import { IUserRepository } from '../interfaces/IUserRepository';
 import { ID } from '@findeg/backend/features/core/domain/types/common';
 import { PermissionCode, RoleId } from '@findeg/backend/features/core/domain/value-objects';
+import { userQueries } from '@findeg/db/queries';
+
+vi.mock('@findeg/db/queries', () => ({
+  userQueries: {
+    getAuthorizationContext: vi.fn(),
+  },
+}));
 
 describe('PermissionService', () => {
   let permissionService: PermissionService;
-  let mockUserRepository: IUserRepository;
+  const mockGetAuthorizationContext = vi.mocked(userQueries.getAuthorizationContext);
 
   beforeEach(() => {
-    // Create mock UserRepository
-    mockUserRepository = {
-      getAuthorizationContext: vi.fn(),
-      getById: vi.fn(),
-      getByEmail: vi.fn(),
-      getByEmailWithPassword: vi.fn(),
-      findPasswordCredentials: vi.fn(),
-      upsertPasswordCredentials: vi.fn(),
-      findMany: vi.fn(),
-      create: vi.fn(),
-      update: vi.fn(),
-      delete: vi.fn(),
-      count: vi.fn(),
-    } as unknown as IUserRepository;
-
-    permissionService = new PermissionService(mockUserRepository);
+    permissionService = new PermissionService();
+    mockGetAuthorizationContext.mockReset();
   });
 
   describe('hasPermission', () => {
     it('should return true when user has permission', async () => {
-      vi.spyOn(mockUserRepository, 'getAuthorizationContext').mockResolvedValue({
+      mockGetAuthorizationContext.mockResolvedValue({
         activeRoleIds: ['admin' as RoleId],
         permissionCodes: ['products:create' as PermissionCode, 'products:update' as PermissionCode],
         organizationId: undefined,
@@ -50,7 +42,7 @@ describe('PermissionService', () => {
     });
 
     it('should return false when user lacks permission', async () => {
-      vi.spyOn(mockUserRepository, 'getAuthorizationContext').mockResolvedValue({
+      mockGetAuthorizationContext.mockResolvedValue({
         activeRoleIds: ['customer' as RoleId],
         permissionCodes: ['products:read' as PermissionCode],
         organizationId: undefined,
@@ -65,10 +57,8 @@ describe('PermissionService', () => {
     });
 
     it('should return false and log error on exception', async () => {
-      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-      vi.spyOn(mockUserRepository, 'getAuthorizationContext').mockRejectedValue(
-        new Error('Database error'),
-      );
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => { });
+      mockGetAuthorizationContext.mockRejectedValue(new Error('Database error'));
 
       const result = await permissionService.hasPermission(
         123 as ID,
@@ -83,7 +73,7 @@ describe('PermissionService', () => {
 
   describe('hasRole', () => {
     it('should return true when user has role', async () => {
-      vi.spyOn(mockUserRepository, 'getAuthorizationContext').mockResolvedValue({
+      mockGetAuthorizationContext.mockResolvedValue({
         activeRoleIds: ['admin' as RoleId, 'warehouse_manager' as RoleId],
         permissionCodes: [],
         organizationId: undefined,
@@ -95,7 +85,7 @@ describe('PermissionService', () => {
     });
 
     it('should return false when user lacks role', async () => {
-      vi.spyOn(mockUserRepository, 'getAuthorizationContext').mockResolvedValue({
+      mockGetAuthorizationContext.mockResolvedValue({
         activeRoleIds: ['customer' as RoleId],
         permissionCodes: [],
         organizationId: undefined,
@@ -115,7 +105,7 @@ describe('PermissionService', () => {
         'products:read',
       ] as PermissionCode[];
 
-      vi.spyOn(mockUserRepository, 'getAuthorizationContext').mockResolvedValue({
+      mockGetAuthorizationContext.mockResolvedValue({
         activeRoleIds: ['admin' as RoleId],
         permissionCodes: expectedPermissions,
         organizationId: undefined,
@@ -127,10 +117,8 @@ describe('PermissionService', () => {
     });
 
     it('should return empty array on error', async () => {
-      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-      vi.spyOn(mockUserRepository, 'getAuthorizationContext').mockRejectedValue(
-        new Error('Database error'),
-      );
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => { });
+      mockGetAuthorizationContext.mockRejectedValue(new Error('Database error'));
 
       const result = await permissionService.getUserPermissions(123 as ID);
 
@@ -143,7 +131,7 @@ describe('PermissionService', () => {
     it('should return all user roles', async () => {
       const expectedRoles = ['admin', 'warehouse_manager'] as RoleId[];
 
-      vi.spyOn(mockUserRepository, 'getAuthorizationContext').mockResolvedValue({
+      mockGetAuthorizationContext.mockResolvedValue({
         activeRoleIds: expectedRoles,
         permissionCodes: [],
         organizationId: undefined,
@@ -155,10 +143,8 @@ describe('PermissionService', () => {
     });
 
     it('should return empty array on error', async () => {
-      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-      vi.spyOn(mockUserRepository, 'getAuthorizationContext').mockRejectedValue(
-        new Error('Database error'),
-      );
+      const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => { });
+      mockGetAuthorizationContext.mockRejectedValue(new Error('Database error'));
 
       const result = await permissionService.getUserRoles(123 as ID);
 

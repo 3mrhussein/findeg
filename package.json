@@ -1,19 +1,23 @@
 {
   "name": "findeg-app",
   "private": true,
-  "packageManager": "pnpm@11.0.9+sha512.34ce82e6780233cf9cad8685029a8f81d2e06196c5a9bad98879f7424940c6817c4e4524fb7d38b8553ceed48b9758b8ebaf1abd3600c232c4c8cf7366086f38",
+  "packageManager": "pnpm@11.24.0",
   "type": "module",
   "scripts": {
-    "dev": "docker compose up -d postgres && turbo run dev --parallel",
+    "dev": "pnpm db:run && turbo run dev",
     "build": "turbo run build",
     "start": "turbo run start",
     "lint": "turbo run lint",
     "type-check": "turbo run type-check",
     "test": "turbo run test",
-    "db:setup": "pnpm db:generate && pnpm db:push && pnpm db:seed",
-    "db:studio": "docker compose up -d postgres && pnpm --filter @findeg/db db:studio",
-    "clean": "turbo run clean && rm -rf node_modules .turbo",
-    "clean:next": "rm -rf frontend/dashboard/.next frontend/storefront/.next"
+    "db:run": "docker compose up -d postgres",
+    "db:reset": "docker compose down -v ",
+    "db:rebuild": "pnpm db:reset && pnpm db:run && pnpm --filter @findeg/db db:setup",
+    "db:setup": "pnpm db:run && pnpm --filter @findeg/db db:setup",
+    "db:studio": "pnpm db:run && pnpm --filter @findeg/db db:studio",
+    "clean": "turbo run clean && rm -rf node_modules .turbo && pnpm clean:next",
+    "clean:next": "rm -rf frontend/dashboard/.next frontend/storefront/.next",
+    "kill": "lsof -ti:3000,3001 | xargs kill -9 2>/dev/null || true"
   },
   "devDependencies": {
     "turbo": "^2.9.12",

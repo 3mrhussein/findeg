@@ -35,8 +35,6 @@ export const ProductListItemUI: React.FC<ProductListItemUIProps> = ({
         <Image
           src={
             product.variants?.[0]?.images?.[0]?.url ||
-            product.mediaSet?.card?.url ||
-            product.mediaSet?.thumbnail?.url ||
             '/placeholder.png'
           }
           alt={product.name}

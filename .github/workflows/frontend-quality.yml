@@ -8,25 +8,28 @@ on:
     branches:
       - main
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   quality-gates:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Enable corepack and prepare pnpm
         run: corepack enable && corepack prepare pnpm@8.8.0 --activate
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
-          node-version: "22"
-          cache: "pnpm"
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
 
       - name: Cache pnpm store
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             ~/.pnpm-store
@@ -35,8 +38,32 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
+      - name: Start PostgreSQL with docker compose
+        run: |
+          export DB_USER=ci
+          export DB_PASSWORD=ci
+          export DB_NAME=findeg_ci
+          export DB_PORT=5432
+          docker compose up -d postgres
+          sleep 10  # Give PostgreSQL time to start
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Create .env file for migrations
+        run: |
+          cat > .env << EOF
+          DATABASE_URL="postgresql://ci:ci@localhost:5432/findeg_ci"
+          NEXT_PUBLIC_APP_URL="http://localhost:3000"
+          NEXT_PUBLIC_SITE_URL="http://localhost:3000"
+          NODE_ENV=test
+          EOF
+
+      - name: Run database migrations
+        run: pnpm --filter @findeg/db run db:migrate
+
+      - name: Seed database
+        run: pnpm --filter @findeg/db run db:seed
 
       - name: Type check
         run: pnpm -w -r --if-present run type-check
@@ -50,3 +77,7 @@ jobs:
       - name: Run E2E (main only)
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: pnpm -w -r --if-present run e2e:run:ci
+
+      - name: Stop PostgreSQL
+        if: always()
+        run: docker compose down

@@ -37,5 +37,3 @@ export const schoolListParentSessions = schoolEngineSchema.table("school_list_pa
 
 export type SchoolListParentSession = typeof schoolListParentSessions.$inferSelect;
 export type NewSchoolListParentSession = typeof schoolListParentSessions.$inferInsert;
-export type SchoolListSession = SchoolListParentSession; // Alias for compatibility
-export type NewSchoolListSession = NewSchoolListParentSession; // Alias for compatibility

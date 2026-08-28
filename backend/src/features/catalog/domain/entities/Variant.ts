@@ -8,8 +8,6 @@
  */
 
 import { z } from 'zod';
-import { productVariants } from '@findeg/db/schema';
-import { type InferSelectModel } from 'drizzle-orm';
 import {
   IdSchema,
   PriceSchema,
@@ -17,7 +15,7 @@ import {
   type Locale,
 } from '../../../core/domain/types/common';
 import type { CurrencyCode, Money } from '../../../core/domain/value-objects';
-import { DEFAULT_CURRENCY, toMoney, pick } from '../../../core/domain/value-objects';
+import { DEFAULT_CURRENCY, toMoney, pick, ResponsiveMediaSetSchema } from '../../../core/domain/value-objects';
 
 // ─── Variant Image ───────────────────────────────────────────────────────────
 
@@ -47,8 +45,6 @@ export const VariantAttributeValueSchema = z.object({
   attributeId: IdSchema,
   key: z.string(),
   valueText: z.string().optional(),
-  valueNum: z.number().optional(),
-  valueBool: z.boolean().optional(),
 });
 export type VariantAttributeValue = z.infer<typeof VariantAttributeValueSchema>;
 
@@ -60,7 +56,9 @@ export const VariantSchema = z.object({
   sku: z.string(),
   variantKey: z.string(),
   localizedLabel: TranslationMapSchema.optional(),
-  displayOrder: z.number().default(0),
+  sortOrder: z.number().default(0),
+  isDefault: z.boolean().default(false),
+  mediaSet: ResponsiveMediaSetSchema.optional(),
   isActive: z.boolean().default(true),
 
   // Pricing
@@ -71,7 +69,6 @@ export const VariantSchema = z.object({
   // Physical
   weightGrams: z.number().optional(),
   barcode: z.string().optional(),
-  lowStockThreshold: z.number().default(10),
 
   // Hydrated children (loaded by query layer)
   images: z.array(VariantImageSchema).optional(),
@@ -83,10 +80,7 @@ export const VariantSchema = z.object({
   updatedAt: z.date().optional(),
 });
 
-export type Variant = z.infer<typeof VariantSchema> &
-  Partial<
-    Omit<InferSelectModel<typeof productVariants>, 'basePrice' | 'strikePrice' | 'costPrice'>
-  >;
+export type Variant = z.infer<typeof VariantSchema>;
 
 // ─── Input Schemas ───────────────────────────────────────────────────────────
 
@@ -135,7 +129,8 @@ export class VariantEntity {
 
   isLowStock(): boolean {
     const available = this.getAvailableStock();
-    return available > 0 && available <= this.variant.lowStockThreshold;
+    // Default low stock threshold for MVP
+    return available > 0 && available <= 5;
   }
 
   getData(): Variant {

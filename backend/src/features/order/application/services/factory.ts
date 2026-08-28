@@ -8,7 +8,6 @@
  * This factory provides read-only order query functionality.
  */
 
-import { DrizzleOrderRepository } from '../../infrastructure/persistence/DrizzleOrderRepository';
 import { OrderService } from './OrderService';
 
 /**
@@ -32,12 +31,9 @@ import { OrderService } from './OrderService';
  * ```
  */
 export function createOrderServices() {
-  // Create repositories (no arguments - they use singleton db connection)
-  const orderRepository = new DrizzleOrderRepository();
-
-  // Create services (inject repository dependencies)
+  // Create services (no arguments - they use query primitives directly)
   return {
-    orders: new OrderService(orderRepository),
+    orders: new OrderService(),
   };
 }
 

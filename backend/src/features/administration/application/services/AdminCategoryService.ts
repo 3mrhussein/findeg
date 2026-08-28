@@ -1,29 +1,36 @@
 import { ID } from '../../../core/domain/types/common';
 import { IAdminCategoryService } from '../interfaces/IAdminCategoryService';
-import { ICategoryRepository } from '../../../catalog/application/interfaces/ICategoryRepository';
 import { IAuditLogService } from '../interfaces/IAuditLogService';
 import { Category } from '../../../catalog/domain/entities/Category';
-import { CategoryInput } from '../../domain/types/CategoryInput';
+import { CategoryInput } from '../../../catalog/application/dtos/CategoryInput';
 import type { Locale } from '../../../core/domain/value-objects';
+import {
+  getCategoryById,
+  getAllCategories,
+  getCategoryBySlug,
+  getCategoryChildren,
+  getCategoryProductCount,
+  createCategory,
+  updateCategory,
+  deleteCategory,
+  reorderCategories,
+  countCategories,
+} from '@findeg/db/queries';
 
 /**
  * Admin Category Service
  *
- * Handles category CRUD operations for the admin dashboard.
+ * Handles category CRUD operations using query primitives.
  * Manages hierarchical category structure with materialized paths.
  * Logs all mutations to the audit trail.
  */
 export class AdminCategoryService implements IAdminCategoryService {
-  /** b
+  /**
    * Creates an instance of AdminCategoryService.
    *
-   * @param categoryRepository - Repository for category data management.
    * @param auditLogService - Optional service for tracking administrative changes.
    */
-  constructor(
-    private categoryRepository: ICategoryRepository,
-    private auditLogService?: IAuditLogService,
-  ) {}
+  constructor(private auditLogService?: IAuditLogService) {}
 
   /**
    * Creates a new product category.
@@ -32,7 +39,21 @@ export class AdminCategoryService implements IAdminCategoryService {
    * @returns The newly created category entity.
    */
   async create(input: CategoryInput): Promise<Category> {
-    const category = await this.categoryRepository.create(input);
+    const category = await createCategory({
+      slug: input.slug,
+      localizedName: Object.fromEntries(
+        (input.translations || []).map((t) => [t.language, t.name]),
+      ),
+      localizedDescription: Object.fromEntries(
+        (input.translations || [])
+          .filter((t) => !!t.description)
+          .map((t) => [t.language, t.description as string]),
+      ),
+      parentId: input.parentId || null,
+      icon: input.icon || null,
+      sortOrder: input.sortOrder || 0,
+      isActive: input.isActive ?? true,
+    } as any);
 
     if (this.auditLogService) {
       await this.auditLogService.logAction({
@@ -44,7 +65,7 @@ export class AdminCategoryService implements IAdminCategoryService {
       });
     }
 
-    return category;
+    return category as any as Category;
   }
 
   /**
@@ -56,12 +77,26 @@ export class AdminCategoryService implements IAdminCategoryService {
    * @throws Error if the category is not found.
    */
   async update(id: ID, input: CategoryInput): Promise<Category> {
-    const existing = await this.categoryRepository.getById(id);
+    const existing = await getCategoryById(id);
     if (!existing) {
       throw new Error(`Category with ID ${id} not found`);
     }
 
-    const updated = await this.categoryRepository.update(id, input);
+    const updated = await updateCategory(id, {
+      slug: input.slug,
+      localizedName: Object.fromEntries(
+        (input.translations || []).map((t) => [t.language, t.name]),
+      ),
+      localizedDescription: Object.fromEntries(
+        (input.translations || [])
+          .filter((t) => !!t.description)
+          .map((t) => [t.language, t.description as string]),
+      ),
+      parentId: input.parentId || null,
+      icon: input.icon || null,
+      sortOrder: input.sortOrder || 0,
+      isActive: input.isActive ?? true,
+    } as any);
 
     if (this.auditLogService) {
       await this.auditLogService.logAction({
@@ -74,7 +109,7 @@ export class AdminCategoryService implements IAdminCategoryService {
       });
     }
 
-    return updated;
+    return updated as any as Category;
   }
 
   /**
@@ -84,12 +119,12 @@ export class AdminCategoryService implements IAdminCategoryService {
    * @throws Error if the category does not exist.
    */
   async delete(id: ID): Promise<void> {
-    const existing = await this.categoryRepository.getById(id);
+    const existing = await getCategoryById(id);
     if (!existing) {
       throw new Error(`Category with ID ${id} not found`);
     }
 
-    await this.categoryRepository.delete(id);
+    await deleteCategory(id);
 
     if (this.auditLogService) {
       await this.auditLogService.logAction({
@@ -109,7 +144,8 @@ export class AdminCategoryService implements IAdminCategoryService {
    * @returns The category if found.
    */
   async getById(id: ID): Promise<Category | null> {
-    return this.categoryRepository.getById(id, 'en');
+    const result = await getCategoryById(id);
+    return result as any as Category | null;
   }
 
   /**
@@ -119,21 +155,56 @@ export class AdminCategoryService implements IAdminCategoryService {
    * @returns List of categories.
    */
   async getAll(language?: Locale): Promise<Category[]> {
-    return this.categoryRepository.getAll(language);
+    const results = await getAllCategories();
+    return results as any as Category[];
   }
 
   /**
    * Retrieves categories in a hierarchical tree structure.
    */
   async getTree(language?: Locale): Promise<Category[]> {
-    return this.categoryRepository.getTree(language);
+    // Fetch all categories and build tree in-memory
+    const allCategories = await getAllCategories();
+
+    // Get product counts for all categories
+    const productCounts = new Map<number, number>();
+    for (const cat of allCategories) {
+      const count = await getCategoryProductCount(cat.id);
+      productCounts.set(cat.id, count);
+    }
+
+    /**
+     * Recursively builds the tree from the flat list and calculates total product count.
+     */
+    const buildTree = (parentId: number | null = null): any[] => {
+      return allCategories
+        .filter((c) => (c.parentId === undefined && parentId === null) || c.parentId === parentId)
+        .map((c) => {
+          const children = buildTree(c.id);
+          const childrenProductCount = children.reduce(
+            (sum, child) => sum + (child.productCount || 0),
+            0,
+          );
+          const directProductCount = productCounts.get(c.id) || 0;
+          const totalProductCount = directProductCount + childrenProductCount;
+
+          return {
+            ...c,
+            children: children.length > 0 ? children : undefined,
+            productCount: totalProductCount,
+          };
+        })
+        .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
+    };
+
+    return buildTree(null) as any as Category[];
   }
 
   /**
    * Returns the total number of categories in the system.
    */
   async count(): Promise<number> {
-    return this.categoryRepository.count();
+    return countCategories();
   }
 
   /**
@@ -143,7 +214,7 @@ export class AdminCategoryService implements IAdminCategoryService {
    * @param excludeId - ID to exclude (useful for edit mode).
    */
   async checkSlugAvailable(slug: string, excludeId?: number): Promise<boolean> {
-    const existing = await this.categoryRepository.getBySlug(slug);
+    const existing = await getCategoryBySlug(slug);
     if (!existing) return true;
     return existing.id === excludeId;
   }
@@ -152,11 +223,10 @@ export class AdminCategoryService implements IAdminCategoryService {
    * Moves a category up among its siblings (same parent, same depth).
    */
   async moveCategoryUp(id: number): Promise<void> {
-    const category = await this.categoryRepository.getById(id);
+    const category = await getCategoryById(id);
     if (!category) throw new Error('Category not found');
 
-    const siblings = await this.categoryRepository.getChildren(category.parentId || 0);
-    // filter by same depth if repository doesn't guarantee it (materialized path usually does)
+    const siblings = await getCategoryChildren(category.parentId || 0);
     const sortedSiblings = siblings.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
 
     const currentIndex = sortedSiblings.findIndex((s) => s.id === id);
@@ -164,7 +234,7 @@ export class AdminCategoryService implements IAdminCategoryService {
 
     const prevSibling = sortedSiblings[currentIndex - 1];
 
-    await this.categoryRepository.reorder([
+    await reorderCategories([
       { id: category.id, sortOrder: prevSibling.sortOrder || 0 },
       { id: prevSibling.id, sortOrder: category.sortOrder || 0 },
     ]);
@@ -174,10 +244,10 @@ export class AdminCategoryService implements IAdminCategoryService {
    * Moves a category down among its siblings (same parent, same depth).
    */
   async moveCategoryDown(id: number): Promise<void> {
-    const category = await this.categoryRepository.getById(id);
+    const category = await getCategoryById(id);
     if (!category) throw new Error('Category not found');
 
-    const siblings = await this.categoryRepository.getChildren(category.parentId || 0);
+    const siblings = await getCategoryChildren(category.parentId || 0);
     const sortedSiblings = siblings.sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
 
     const currentIndex = sortedSiblings.findIndex((s) => s.id === id);
@@ -185,7 +255,7 @@ export class AdminCategoryService implements IAdminCategoryService {
 
     const nextSibling = sortedSiblings[currentIndex + 1];
 
-    await this.categoryRepository.reorder([
+    await reorderCategories([
       { id: category.id, sortOrder: nextSibling.sortOrder || 0 },
       { id: nextSibling.id, sortOrder: category.sortOrder || 0 },
     ]);
@@ -195,13 +265,13 @@ export class AdminCategoryService implements IAdminCategoryService {
    * Reorders multiple categories directly.
    */
   async reorderCategories(items: { id: number; sortOrder: number }[]): Promise<void> {
-    await this.categoryRepository.reorder(items);
+    await reorderCategories(items);
   }
 
   /**
    * Gets the number of products assigned to a category.
    */
   async getCategoryProductCount(categoryId: number): Promise<number> {
-    return this.categoryRepository.getProductCount(categoryId);
+    return getCategoryProductCount(categoryId);
   }
 }

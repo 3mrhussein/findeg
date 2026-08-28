@@ -3,27 +3,13 @@
   "compilerOptions": {
     "noEmit": true,
     "jsx": "react-jsx",
-    "baseUrl": ".",
     "paths": {
-      "@findeg/backend/*": [
-        "./src/*"
-      ],
-      "@findeg/db": [
-        "../db/src"
-      ],
-      "@findeg/db/*": [
-        "../db/src/*"
-      ],
-      "@findeg/env": [
-        "../packages/env/src"
-      ]
+      "@findeg/backend/*": ["./src/*"],
+      "@findeg/db": ["../db/src"],
+      "@findeg/db/*": ["../db/src/*"],
+      "@findeg/env": ["../packages/env/src"]
     }
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
 }

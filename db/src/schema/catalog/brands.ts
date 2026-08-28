@@ -14,7 +14,6 @@ import { TranslationMap } from './types';
 export const brands = catalogSchema.table('brands', {
   id: serial('id').primaryKey(),
   slug: text('slug').notNull().unique(),
-  name: text('name').notNull(),
   localizedName: jsonb('localized_name').$type<TranslationMap>().default({}).notNull(),
   localizedDescription: jsonb('localized_description').$type<TranslationMap>(),
   logoUrl: text('logo_url'),

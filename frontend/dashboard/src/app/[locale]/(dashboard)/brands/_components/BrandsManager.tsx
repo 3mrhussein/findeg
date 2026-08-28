@@ -64,7 +64,8 @@ export function BrandsManager({
     return brands
       .filter((brand) => {
         const matchesSearch =
-          brand.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          (brand.localizedName?.en || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+          (brand.localizedName?.ar || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
           brand.slug.toLowerCase().includes(searchQuery.toLowerCase());
 
         const matchesStatus =

@@ -1,4 +1,4 @@
-import * as schema from '../src/schema';
+import * as schema from '../src/schema/index.ts';
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import { prepareSeedData, ensureParents } from './helpers';
 

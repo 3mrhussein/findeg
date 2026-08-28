@@ -6,7 +6,7 @@ export * from './domain/entities';
 // ========================================
 // APPLICATION LAYER EXPORTS
 // ========================================
-export * from './application/interfaces/IUserRepository';
+export * from './application/dtos';
 export * from './application/interfaces/IPermissionService';
 export type { IAuthService } from './application/interfaces/IAuthService';
 export * from './application/interfaces/IAdminUserService';
@@ -24,6 +24,7 @@ export {
   type IJWTService,
 } from './application/services/JWTService';
 export * from './application/services/PermissionService';
+export { CurrentSessionIdentityResolver } from './application/services/CurrentSessionIdentityResolver';
 
 // Service factory
 export { createIdentityServices } from './application/services/factory';

@@ -1,8 +1,8 @@
 /**
  * Auth Service Implementation
  *
- * Handles authentication logic. Depends on:
- * - IUserRepository: to look up users and authorization
+ * Handles authentication logic. Depends on db query primitives
+ * for user lookup and authorization resolution.
  *
  * Performs password verification but does NOT create sessions.
  * Session creation is app-layer responsibility (done via CookieSessionProvider in app-layer).
@@ -11,11 +11,13 @@
  */
 
 import { IAuthService } from '../interfaces/IAuthService';
-import { IUserRepository } from '../interfaces/IUserRepository';
-import { AuthResult, RegisterInput, SessionPayload, createUserVO } from '../../../core/domain/auth';
-import { adminSession, PERMISSION_CODES } from '../../../core/domain/auth/authorization';
+import { AuthResult, SessionPayload } from '../../../core/domain/auth';
+import { adminSession } from '../../../core/domain/auth/authorization';
+import { RegisterInput } from '../dtos/RegisterInput';
 import bcrypt from 'bcryptjs';
 import { getErrorDefinition, resolveErrorMessage } from '../../../core/domain/errors';
+import { userQueries } from '@findeg/db/queries';
+import { buildCurrentSessionPayload } from './buildCurrentSessionPayload';
 
 /**
  * Authentication Service
@@ -25,12 +27,7 @@ import { getErrorDefinition, resolveErrorMessage } from '../../../core/domain/er
  * Does NOT create sessions - that's the app-layer's responsibility.
  */
 export class AuthService implements IAuthService {
-  /**
-   * Creates an instance of AuthService
-   *
-   * @param userRepository - User data access layer
-   */
-  constructor(private userRepository: IUserRepository) {}
+  constructor() { }
 
   /**
    * Authenticates a user with email and password
@@ -42,7 +39,7 @@ export class AuthService implements IAuthService {
    * @returns Authentication result with user data or error message
    */
   async login(email: string, password: string): Promise<AuthResult> {
-    const user = await this.userRepository.getByEmailWithPassword(email);
+    const user = await userQueries.getByEmailWithPassword(email);
 
     if (!user) {
       return { success: false, error: getErrorDefinition('AUTH_INVALID_CREDENTIALS').message };
@@ -57,32 +54,8 @@ export class AuthService implements IAuthService {
       return { success: false, error: getErrorDefinition('AUTH_INVALID_CREDENTIALS').message };
     }
 
-    const authorization = await this.userRepository.getAuthorizationContext(user.id);
-    const activeRoleIds = Array.from(new Set([...(authorization.activeRoleIds || [])]));
-    const permissionCodes = Array.from(
-      new Set([
-        ...(authorization.permissionCodes || []),
-        ...(user.portalRole === 'staff' || user.portalRole === 'school_staff'
-          ? [PERMISSION_CODES.ADMIN_PORTAL]
-          : []),
-      ]),
-    );
-
-    const payload: SessionPayload = {
-      userId: user.id,
-      portalRole: user.portalRole,
-      user: createUserVO({
-        email: user.email,
-        firstName: user.firstName || undefined,
-        lastName: user.lastName || undefined,
-      }),
-      subjectId: String(user.id),
-      actorType: 'user',
-      activeRoleIds,
-      permissionCodes,
-      organizationId: authorization.organizationId,
-      tokenVersion: 1,
-    };
+    const authorization = await userQueries.getAuthorizationContext(user.id);
+    const payload: SessionPayload = buildCurrentSessionPayload(user, authorization);
 
     return {
       success: true,
@@ -110,7 +83,7 @@ export class AuthService implements IAuthService {
   async register(input: RegisterInput): Promise<AuthResult> {
     try {
       // Check if user exists
-      const existing = await this.userRepository.getByEmail(input.email);
+      const existing = await userQueries.getByEmail(input.email);
       if (existing) {
         return {
           success: false,
@@ -122,16 +95,16 @@ export class AuthService implements IAuthService {
       const password = await bcrypt.hash(input.password, 10);
 
       // Create user
-      const user = await this.userRepository.create({
+      const user = await userQueries.create({
         email: input.email,
         firstName: input.firstName,
         lastName: input.lastName,
         phone: input.phone,
         portalRole: 'customer',
-      } as unknown as Record<string, unknown>);
+      });
 
       // Save password
-      await this.userRepository.upsertPasswordCredentials(user.id, {
+      await userQueries.upsertPasswordCredentials(user.id, {
         passwordHash: password,
         hashStrategy: 'bcrypt',
       });

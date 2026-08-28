@@ -1,40 +1,46 @@
 {
-    "name": "@findeg/db",
-    "version": "0.1.0",
-    "private": true,
-    "type": "module",
-    "sideEffects": true,
-    "exports": {
-        ".": "./src/index.ts",
-        "./connection": "./src/connection.ts",
-        "./schema": "./src/schema/index.ts",
-        "./queries": "./src/queries/index.ts",
-        "./types": "./src/types/index.ts"
-    },
-    "scripts": {
-        "db:generate": "drizzle-kit generate --config ./drizzle.config.ts",
-        "db:migrate": "cross-env DB_MIGRATING=true tsx --env-file=../.env ./migrate.ts",
-        "db:push": "drizzle-kit push --config ./drizzle.config.ts",
-        "db:seed": "cross-env DB_SEEDING=true tsx --env-file=../.env ./seed.ts",
-        "db:studio": "drizzle-kit studio --config ./drizzle.config.ts",
-        "type-check": "tsc --noEmit",
-        "lint": "eslint ."
-    },
-    "dependencies": {
-        "@findeg/env": "workspace:*",
-        "bcryptjs": "^2.4.3",
-        "drizzle-orm": "^0.45.2",
-        "postgres": "^3.4.5",
-        "zod": "^4.3.6"
-    },
-    "devDependencies": {
-        "@findeg/config": "workspace:*",
-        "@types/bcryptjs": "^2.4.6",
-        "@types/node": "^25.6.0",
-        "cross-env": "^7.0.3",
-        "drizzle-kit": "^0.30.1",
-        "eslint": "^9.39.4",
-        "tsx": "^4.19.2",
-        "typescript": "^5.7.3"
-    }
+  "name": "@findeg/db",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": true,
+  "exports": {
+    ".": "./src/index.ts",
+    "./connection": "./src/connection.ts",
+    "./schema": "./src/schema/index.ts",
+    "./queries": "./src/queries/index.ts",
+    "./types": "./src/types/index.ts",
+    "./types/*": "./src/types/*.ts"
+  },
+  "scripts": {
+    "db:generate": "drizzle-kit generate --config ./drizzle.config.ts",
+    "db:migrate": "cross-env DB_MIGRATING=true tsx --env-file=../.env ./migrate.ts",
+    "db:push": "drizzle-kit push --config ./drizzle.config.ts",
+    "db:seed": "cross-env DB_SEEDING=true tsx --env-file=../.env ./seed.ts",
+    "db:drop": "drizzle-kit drop --config ./drizzle.config.ts",
+    "db:studio": "drizzle-kit studio --config ./drizzle.config.ts",
+    "db:setup": "npm run db:generate && npm run db:push && npm run db:seed",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint .",
+    "clean": " rm -rf node_modules dist .turbo"
+  },
+  "dependencies": {
+    "@findeg/env": "workspace:*",
+    "bcryptjs": "^2.4.3",
+    "drizzle-orm": "^0.45.2",
+    "postgres": "^3.4.5",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@findeg/config": "workspace:*",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^25.6.0",
+    "@types/pg": "^8.20.0",
+    "cross-env": "^7.0.3",
+    "drizzle-kit": "^0.30.1",
+    "eslint": "^9.39.4",
+    "pg": "^8.20.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  }
 }

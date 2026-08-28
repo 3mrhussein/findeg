@@ -12,7 +12,7 @@ import {
 } from '@findeg/ui';
 import { CircleUser, Search } from 'lucide-react';
 import { Input } from '@findeg/ui';
-import { logoutAction } from '../../_actions/auth';
+import { logoutAction } from '@data/auth/actions';
 
 /**
  * Topbar for the user dashboard.

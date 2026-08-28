@@ -14,7 +14,7 @@ export interface UserContextType {
 
 export const UserContext = createContext<UserContextType | undefined>(undefined);
 
-import { getCurrentUserAction } from '@/app/[locale]/(storefront)/_actions/user';
+import { getCurrentUser } from '@data/user/queries';
 
 // ... (types)
 
@@ -33,7 +33,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
      */
     const fetchSession = async () => {
       try {
-        const data = await getCurrentUserAction();
+        const data = await getCurrentUser();
         if (data) {
           const session = data;
           setCurrentUser({

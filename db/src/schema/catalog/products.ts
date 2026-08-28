@@ -42,11 +42,6 @@ export const products = catalogSchema.table("products", {
   /** FK to brands */
   brandId: integer("brand_id").references(() => brands.id, { onDelete: "set null" }),
 
-  // ─── Media ──────────────────────────────────────────────────────────
-
-  /** SPU-level hero/lifestyle imagery */
-  mediaSet: jsonb("media_set").$type<ResponsiveMediaSet>().default({}),
-
   // ─── Flags ──────────────────────────────────────────────────────────
 
   /** Whether this product is visible in the store */
