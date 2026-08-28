@@ -8,8 +8,10 @@
 
 import { revalidatePath, revalidateTag } from 'next/cache';
 import { createAdministrationServices } from '@findeg/backend/features/administration';
+import { PERMISSION_CODES } from '@findeg/backend/features/core';
 import type { CategoryInput } from '@findeg/backend/features/catalog';
 import { getErrorMessage } from '@lib/type-guards';
+import { requireDashboardPermission } from '@lib/require-dashboard-permission';
 
 /**
  * Create a new category
@@ -19,6 +21,7 @@ import { getErrorMessage } from '@lib/type-guards';
  */
 export async function createCategoryAction(input: CategoryInput) {
   try {
+    await requireDashboardPermission(PERMISSION_CODES.ADMIN_CATEGORIES_WRITE);
     const { categories } = createAdministrationServices();
     const result = await categories.create(input);
 
@@ -42,6 +45,7 @@ export async function createCategoryAction(input: CategoryInput) {
  */
 export async function updateCategoryAction(id: number, input: CategoryInput) {
   try {
+    await requireDashboardPermission(PERMISSION_CODES.ADMIN_CATEGORIES_WRITE);
     const { categories } = createAdministrationServices();
     const result = await categories.update(id, input);
 
@@ -66,6 +70,7 @@ export async function updateCategoryAction(id: number, input: CategoryInput) {
  */
 export async function deleteCategoryAction(id: number) {
   try {
+    await requireDashboardPermission(PERMISSION_CODES.ADMIN_CATEGORIES_WRITE);
     const { categories } = createAdministrationServices();
     await categories.delete(id);
 
@@ -89,6 +94,7 @@ export async function deleteCategoryAction(id: number) {
  */
 export async function reorderCategoriesAction(items: { id: number; sortOrder: number }[]) {
   try {
+    await requireDashboardPermission(PERMISSION_CODES.ADMIN_CATEGORIES_WRITE);
     const { categories } = createAdministrationServices();
     await categories.reorderCategories(items);
 
@@ -108,6 +114,7 @@ export async function reorderCategoriesAction(items: { id: number; sortOrder: nu
  */
 export async function moveCategoryUpAction(id: number) {
   try {
+    await requireDashboardPermission(PERMISSION_CODES.ADMIN_CATEGORIES_WRITE);
     const { categories } = createAdministrationServices();
     await categories.moveCategoryUp(id);
     revalidateTag('categories', 'max');
@@ -119,6 +126,7 @@ export async function moveCategoryUpAction(id: number) {
 
 export async function moveCategoryDownAction(id: number) {
   try {
+    await requireDashboardPermission(PERMISSION_CODES.ADMIN_CATEGORIES_WRITE);
     const { categories } = createAdministrationServices();
     await categories.moveCategoryDown(id);
     revalidateTag('categories', 'max');
@@ -133,6 +141,7 @@ export async function moveCategoryDownAction(id: number) {
  */
 export async function checkCategorySlugAvailableAction(slug: string, excludeId?: number) {
   try {
+    await requireDashboardPermission(PERMISSION_CODES.ADMIN_CATEGORIES_READ);
     const { categories } = createAdministrationServices();
     const available = await categories.checkSlugAvailable(slug, excludeId);
     return { success: true, available };

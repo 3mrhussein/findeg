@@ -7,11 +7,13 @@
 
 import { revalidateTag } from 'next/cache';
 import { createAdministrationServices } from '@findeg/backend/features/administration';
+import { PERMISSION_CODES } from '@findeg/backend/features/core';
 import type {
   CreateProductWithVariantsInput,
   UpdateProductWithVariantsInput,
 } from '@findeg/backend/features/catalog/application/dtos';
 import { getErrorMessage } from '@lib/type-guards';
+import { requireDashboardPermission } from '@lib/require-dashboard-permission';
 
 /**
  * Create a new product
@@ -20,6 +22,7 @@ import { getErrorMessage } from '@lib/type-guards';
  */
 export async function createProduct(input: CreateProductWithVariantsInput) {
   try {
+    await requireDashboardPermission(PERMISSION_CODES.ADMIN_PRODUCTS_WRITE);
     const { products } = createAdministrationServices();
     const result = await products.createProduct(input);
 
@@ -40,6 +43,7 @@ export async function createProduct(input: CreateProductWithVariantsInput) {
  */
 export async function updateProduct(id: number, input: UpdateProductWithVariantsInput) {
   try {
+    await requireDashboardPermission(PERMISSION_CODES.ADMIN_PRODUCTS_WRITE);
     const { products } = createAdministrationServices();
     const result = await products.updateProduct(id, input);
 
@@ -59,6 +63,7 @@ export async function updateProduct(id: number, input: UpdateProductWithVariants
  */
 export async function deleteProduct(id: number) {
   try {
+    await requireDashboardPermission(PERMISSION_CODES.ADMIN_PRODUCTS_WRITE);
     const { products } = createAdministrationServices();
     await products.deleteProduct(id);
 
@@ -78,6 +83,7 @@ export async function deleteProduct(id: number) {
  */
 export async function importProducts(csvFile: any) {
   try {
+    await requireDashboardPermission(PERMISSION_CODES.ADMIN_PRODUCTS_WRITE);
     const { products } = createAdministrationServices();
     // await products.importFromCSV(csvFile);
 
@@ -95,6 +101,7 @@ export async function importProducts(csvFile: any) {
  */
 export async function setProductStatus(id: number, isActive: boolean) {
   try {
+    await requireDashboardPermission(PERMISSION_CODES.ADMIN_PRODUCTS_WRITE);
     const { products } = createAdministrationServices();
     const existingProduct = await products.getById(id);
     if (!existingProduct) return { success: false, error: 'Product not found' };
@@ -117,6 +124,7 @@ export async function generateVariants(
   defaults: any = {},
 ) {
   try {
+    await requireDashboardPermission(PERMISSION_CODES.ADMIN_PRODUCTS_WRITE);
     const { products } = createAdministrationServices();
     await products.generateVariants(productId, dimensions, defaults);
     revalidateTag('products', 'max');
@@ -132,6 +140,7 @@ export async function generateVariants(
  */
 export async function checkSkuAvailable(sku: string, excludeVariantId?: number) {
   try {
+    await requireDashboardPermission(PERMISSION_CODES.ADMIN_PRODUCTS_READ);
     const { products } = createAdministrationServices();
     const available = await products.checkSkuAvailable(sku, excludeVariantId);
     return { success: true, available };
@@ -142,6 +151,7 @@ export async function checkSkuAvailable(sku: string, excludeVariantId?: number) 
 
 export async function checkSlugAvailable(slug: string, excludeProductId?: number) {
   try {
+    await requireDashboardPermission(PERMISSION_CODES.ADMIN_PRODUCTS_READ);
     const { products } = createAdministrationServices();
     const available = await products.checkSlugAvailable(slug, excludeProductId);
     return { success: true, available };

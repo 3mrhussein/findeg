@@ -1,18 +1,42 @@
 /**
  * Dashboard Session Management (Next.js Integration)
  *
- * Lightweight session helpers using Next.js cookies() and jose library.
- * Mirrors backend's JwtSessionManager pattern but adapted for Next.js App Router.
+ * Thin Next.js adapter over the shared Current Session module.
  */
 
 import { cookies } from 'next/headers';
-import { SignJWT, jwtVerify } from 'jose';
-import type { SessionPayload } from '@findeg/backend/features/core';
-import env from '@findeg/env';
+import { cache } from 'react';
+import {
+  type ICookieStore,
+  type SessionPayload,
+} from '@findeg/backend/features/core';
+import { createDashboardCurrentSession } from '@lib/current-session';
 
-const SESSION_COOKIE_NAME = 'admin_session';
-const SESSION_DURATION = 60 * 60 * 24; // 24 hours in seconds
-const JWT_SECRET = new TextEncoder().encode(env.JWT_SECRET);
+async function nextCookiesToStore(): Promise<ICookieStore> {
+  const cookieStore = await cookies();
+  return {
+    get(name) {
+      const cookie = cookieStore.get(name);
+      return cookie ? { value: cookie.value } : undefined;
+    },
+    set(name, value, options) {
+      cookieStore.set(name, value, options);
+    },
+    delete(name) {
+      cookieStore.delete(name);
+    },
+  };
+}
+
+async function currentSession() {
+  const cookieStore = await nextCookiesToStore();
+  return createDashboardCurrentSession(cookieStore);
+}
+
+const getRequestSession = cache(async (): Promise<SessionPayload | null> => {
+  const provider = await currentSession();
+  return provider.getSession();
+});
 
 /**
  * Get current session from cookies
@@ -22,32 +46,8 @@ const JWT_SECRET = new TextEncoder().encode(env.JWT_SECRET);
  */
 export async function getSession(): Promise<SessionPayload | null> {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
-
-    if (!token) {
-      return null;
-    }
-
-    const { payload } = await jwtVerify(token, JWT_SECRET);
-
-    if (!payload.userId || !payload.portalRole || !payload.user) {
-      return null;
-    }
-
-    return {
-      userId: payload.userId as number,
-      portalRole: payload.portalRole as SessionPayload['portalRole'],
-      user: payload.user as SessionPayload['user'],
-      subjectId: payload.subjectId as string | undefined,
-      actorType: payload.actorType as SessionPayload['actorType'],
-      activeRoleIds: payload.activeRoleIds as string[] | undefined,
-      permissionCodes: payload.permissionCodes as string[] | undefined,
-      organizationId: payload.organizationId as string | undefined,
-      tokenVersion: payload.tokenVersion as number | undefined,
-    };
-  } catch (error) {
-    // Invalid or expired token
+    return await getRequestSession();
+  } catch {
     return null;
   }
 }
@@ -58,25 +58,11 @@ export async function getSession(): Promise<SessionPayload | null> {
 export const extractSession = getSession;
 
 /**
- * Create and store session in cookies
- *
- * Creates signed JWT with session payload and sets secure cookie.
+ * Establishes a Current Session from the authoritative identity.
  */
-export async function createSession(payload: SessionPayload): Promise<void> {
-  const token = await new SignJWT({ ...payload })
-    .setProtectedHeader({ alg: 'HS256' })
-    .setIssuedAt()
-    .setExpirationTime(`${SESSION_DURATION}s`)
-    .sign(JWT_SECRET);
-
-  const cookieStore = await cookies();
-  cookieStore.set(SESSION_COOKIE_NAME, token, {
-    httpOnly: true,
-    secure: env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    maxAge: SESSION_DURATION,
-    path: '/',
-  });
+export async function establishSession(userId: number): Promise<SessionPayload | null> {
+  const provider = await currentSession();
+  return provider.establishSession(userId);
 }
 
 /**
@@ -85,8 +71,8 @@ export async function createSession(payload: SessionPayload): Promise<void> {
  * Removes admin_session cookie.
  */
 export async function deleteSession(): Promise<void> {
-  const cookieStore = await cookies();
-  cookieStore.delete(SESSION_COOKIE_NAME);
+  const provider = await currentSession();
+  await provider.deleteSession();
 }
 
 /**
