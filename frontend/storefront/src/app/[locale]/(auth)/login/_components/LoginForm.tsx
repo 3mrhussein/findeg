@@ -10,10 +10,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@findeg/ui';
 import { Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-const persistSessionToken = (token: string) => {
-  /* internal handler mapped later */
-};
-
 const formSchema = z.object({
   email: z.string().email({
     message: 'Please enter a valid email address.',
@@ -25,9 +21,6 @@ const formSchema = z.object({
 
 interface LoginResponseBody {
   success?: boolean;
-  data?: {
-    token?: string;
-  };
   error?: {
     message?: string;
   };
@@ -76,9 +69,6 @@ export function LoginForm() {
         return;
       }
 
-      if (json?.data?.token) {
-        persistSessionToken(json.data.token);
-      }
       router.push('/my-account');
       router.refresh();
     } finally {

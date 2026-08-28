@@ -10,10 +10,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@findeg/ui';
 import { Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-const persistSessionToken = (token: string) => {
-  /* internal handler mapped later */
-};
-
 const formSchema = z
   .object({
     name: z.string().min(2, {
@@ -34,9 +30,6 @@ const formSchema = z
 
 interface RegisterResponseBody {
   success?: boolean;
-  data?: {
-    token?: string;
-  };
   error?: {
     message?: string;
   };
@@ -108,9 +101,6 @@ export function RegistrationForm() {
         return;
       }
 
-      if (json?.data?.token) {
-        persistSessionToken(json.data.token);
-      }
       router.push('/my-account');
       router.refresh();
     } finally {

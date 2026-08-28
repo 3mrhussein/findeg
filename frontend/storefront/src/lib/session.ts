@@ -1,6 +1,11 @@
 import type { SessionPayload } from '@findeg/backend/features/core';
-import { CookieSessionProvider, type ICookieStore } from '@findeg/backend/features/core';
+import {
+  createCurrentSessionProvider,
+  type ICookieStore,
+} from '@findeg/backend/features/core';
+import { CurrentSessionIdentityResolver } from '@findeg/backend/features/identity';
 import { cookies } from 'next/headers';
+import { cache } from 'react';
 
 /**
  * Storefront Session Helpers
@@ -8,8 +13,8 @@ import { cookies } from 'next/headers';
  * Extracts session from Next.js cookies for customer authentication.
  * Used by Storefront Server Components and Server Actions.
  *
- * CookieSessionProvider is instantiated with Next.js cookie store injected.
- * This allows backend to remain framework-agnostic while apps handle framework integration.
+ * The portal supplies only request-cookie access. The shared Current Session
+ * module owns signing, identity validation, renewal, and invalidation.
  *
  * @example
  * const session = await getSession();
@@ -37,41 +42,50 @@ async function nextCookiesToStore(): Promise<ICookieStore> {
   };
 }
 
+async function currentSession() {
+  const cookieStore = await nextCookiesToStore();
+  return createCurrentSessionProvider(cookieStore, new CurrentSessionIdentityResolver());
+}
+
+// React cache is scoped to the active server request. Unlike Next's "use cache",
+// it may read request cookies and never shares an identity between requests.
+const getRequestSession = cache(async (): Promise<SessionPayload | null> => {
+  const provider = await currentSession();
+  return provider.getSession();
+});
+
 /**
  * Extracts the current customer session from cookies.
  * Returns null if no valid session cookie exists.
  *
- * Uses injected CookieSessionProvider with Next.js cookies.
+ * Resolves the request's Current Session and invalidates malformed or inactive identities.
  *
  * @returns Session payload with customer ID, or null if not authenticated
  */
 export async function getSession(): Promise<SessionPayload | null> {
   try {
-    const cookieStore = await nextCookiesToStore();
-    const provider = new CookieSessionProvider(cookieStore);
-    return await provider.getSession();
+    return await getRequestSession();
   } catch {
     return null;
   }
 }
 
 /**
- * Creates a new customer session with the given payload
+ * Establishes a Current Session from the authoritative identity. Call this only
+ * from server-side authentication or profile flows; callers never supply grants.
  *
- * @param payload - Session data to store
+ * @param userId - Authenticated User identifier
  */
-export async function createSession(payload: SessionPayload): Promise<void> {
-  const cookieStore = await nextCookiesToStore();
-  const provider = new CookieSessionProvider(cookieStore);
-  await provider.createSession(payload);
+export async function establishSession(userId: number): Promise<SessionPayload | null> {
+  const provider = await currentSession();
+  return provider.establishSession(userId);
 }
 
 /**
  * Deletes the current customer session
  */
 export async function deleteSession(): Promise<void> {
-  const cookieStore = await nextCookiesToStore();
-  const provider = new CookieSessionProvider(cookieStore);
+  const provider = await currentSession();
   await provider.deleteSession();
 }
 
