@@ -11,12 +11,13 @@
  */
 
 import { IAuthService } from '../interfaces/IAuthService';
-import { AuthResult, SessionPayload, createUserVO } from '../../../core/domain/auth';
-import { adminSession, PERMISSION_CODES } from '../../../core/domain/auth/authorization';
+import { AuthResult, SessionPayload } from '../../../core/domain/auth';
+import { adminSession } from '../../../core/domain/auth/authorization';
 import { RegisterInput } from '../dtos/RegisterInput';
 import bcrypt from 'bcryptjs';
 import { getErrorDefinition, resolveErrorMessage } from '../../../core/domain/errors';
 import { userQueries } from '@findeg/db/queries';
+import { buildCurrentSessionPayload } from './buildCurrentSessionPayload';
 
 /**
  * Authentication Service
@@ -54,31 +55,7 @@ export class AuthService implements IAuthService {
     }
 
     const authorization = await userQueries.getAuthorizationContext(user.id);
-    const activeRoleIds = Array.from(new Set([...(authorization.activeRoleIds || [])]));
-    const permissionCodes = Array.from(
-      new Set([
-        ...(authorization.permissionCodes || []),
-        ...(user.portalRole === 'staff' || user.portalRole === 'school_staff'
-          ? [PERMISSION_CODES.ADMIN_PORTAL]
-          : []),
-      ]),
-    );
-
-    const payload: SessionPayload = {
-      userId: user.id,
-      portalRole: user.portalRole,
-      user: createUserVO({
-        email: user.email,
-        firstName: user.firstName || undefined,
-        lastName: user.lastName || undefined,
-      }),
-      subjectId: String(user.id),
-      actorType: 'user',
-      activeRoleIds,
-      permissionCodes,
-      organizationId: authorization.organizationId,
-      tokenVersion: 1,
-    };
+    const payload: SessionPayload = buildCurrentSessionPayload(user, authorization);
 
     return {
       success: true,

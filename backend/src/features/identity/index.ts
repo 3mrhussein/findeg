@@ -24,6 +24,7 @@ export {
   type IJWTService,
 } from './application/services/JWTService';
 export * from './application/services/PermissionService';
+export { CurrentSessionIdentityResolver } from './application/services/CurrentSessionIdentityResolver';
 
 // Service factory
 export { createIdentityServices } from './application/services/factory';
