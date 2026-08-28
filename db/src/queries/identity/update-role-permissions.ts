@@ -1,7 +1,8 @@
-import { eq } from 'drizzle-orm';
+import { eq, inArray } from 'drizzle-orm';
 
 import { db } from '../../connection';
-import { rolePermissions } from '../../schema';
+import { rolePermissions, userRoles, users } from '../../schema';
+import { advanceAuthorizationVersion } from './authorization-version';
 
 export async function updateRolePermissionsRaw(
   roleId: number,
@@ -17,6 +18,21 @@ export async function updateRolePermissionsRaw(
           permissionId,
         })),
       );
+    }
+
+    // Query after the permission write: a concurrent role assignment either appears
+    // here and is advanced with this mutation, or advances its User independently.
+    const affectedUsers = await tx
+      .selectDistinct({ userId: userRoles.userId })
+      .from(userRoles)
+      .where(eq(userRoles.roleId, roleId));
+
+    const affectedUserIds = affectedUsers.map((user) => user.userId);
+    if (affectedUserIds.length > 0) {
+      await tx
+        .update(users)
+        .set(advanceAuthorizationVersion())
+        .where(inArray(users.id, affectedUserIds));
     }
   });
 }

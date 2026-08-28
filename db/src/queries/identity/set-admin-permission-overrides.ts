@@ -1,7 +1,8 @@
 import { eq } from 'drizzle-orm';
 
 import { db } from '../../connection';
-import { userPermissions } from '../../schema';
+import { userPermissions, users } from '../../schema';
+import { advanceAuthorizationVersion } from './authorization-version';
 
 export interface PermissionOverrideMutationRawInput {
   permissionId: number;
@@ -26,5 +27,10 @@ export async function setAdminPermissionOverridesRaw(
         })),
       );
     }
+
+    await tx
+      .update(users)
+      .set(advanceAuthorizationVersion())
+      .where(eq(users.id, userId));
   });
 }

@@ -19,6 +19,7 @@ import {
 } from '../../schema';
 import { eq } from 'drizzle-orm';
 import { type ID } from '@findeg/db/types';
+import { advanceAuthorizationVersion } from './authorization-version';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -219,18 +220,22 @@ export interface UpdateUserInput {
     emailVerified?: Date;
     verifiedPhone?: boolean;
     isActive?: boolean;
+    portalRole?: 'customer' | 'staff' | 'school_staff';
 }
 
 /**
  * Update a user
  */
 export async function update(userId: ID, input: UpdateUserInput): Promise<UserRow> {
+    const changesAuthorization = input.isActive !== undefined || input.portalRole !== undefined;
+
     const [updated] = await db
         .update(users)
-        .set({
-            ...input,
-            updatedAt: new Date(),
-        })
+        .set(
+            changesAuthorization
+                ? advanceAuthorizationVersion(input)
+                : { ...input, updatedAt: new Date() },
+        )
         .where(eq(users.id, userId as number))
         .returning();
 
@@ -246,20 +251,30 @@ export async function upsertPasswordCredentials(
         passwordHash: string;
         hashStrategy: 'bcrypt' | 'argon2';
     },
+    options: { isInitialCredential?: boolean } = {},
 ): Promise<void> {
-    await db
-        .insert(passwordCredentials)
-        .values({
-            userId: userId as number,
-            passwordHash: payload.passwordHash,
-            hashStrategy: payload.hashStrategy,
-        })
-        .onConflictDoUpdate({
-            target: passwordCredentials.userId,
-            set: {
+    await db.transaction(async (tx) => {
+        await tx
+            .insert(passwordCredentials)
+            .values({
+                userId: userId as number,
                 passwordHash: payload.passwordHash,
                 hashStrategy: payload.hashStrategy,
-                updatedAt: new Date(),
-            },
-        });
+            })
+            .onConflictDoUpdate({
+                target: passwordCredentials.userId,
+                set: {
+                    passwordHash: payload.passwordHash,
+                    hashStrategy: payload.hashStrategy,
+                    updatedAt: new Date(),
+                },
+            });
+
+        if (!options.isInitialCredential) {
+            await tx
+                .update(users)
+                .set(advanceAuthorizationVersion())
+                .where(eq(users.id, userId as number));
+        }
+    });
 }

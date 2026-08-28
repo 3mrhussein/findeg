@@ -2,6 +2,7 @@ import { eq } from 'drizzle-orm';
 
 import { db } from '../../connection';
 import { userRoles, users } from '../../schema';
+import { advanceAuthorizationVersion } from './authorization-version';
 
 export interface UpdateAdminUserRawInput {
   firstName?: string;
@@ -15,19 +16,26 @@ export async function updateAdminUserRaw(
   input: UpdateAdminUserRawInput,
 ): Promise<void> {
   await db.transaction(async (tx) => {
+    const changesAuthorization = input.isActive !== undefined || input.roleIds !== undefined;
+
     if (
       input.firstName !== undefined ||
       input.lastName !== undefined ||
-      input.isActive !== undefined
+      input.isActive !== undefined ||
+      input.roleIds !== undefined
     ) {
-      const updates: Record<string, unknown> = { updatedAt: new Date() };
+      const updates: Record<string, unknown> = {};
       if (input.firstName !== undefined) updates.firstName = input.firstName;
       if (input.lastName !== undefined) updates.lastName = input.lastName;
       if (input.isActive !== undefined) updates.isActive = input.isActive;
 
       await tx
         .update(users)
-        .set(updates as Partial<typeof users.$inferInsert>)
+        .set(
+          changesAuthorization
+            ? advanceAuthorizationVersion(updates)
+            : ({ ...updates, updatedAt: new Date() } as Partial<typeof users.$inferInsert>),
+        )
         .where(eq(users.id, userId));
     }
 

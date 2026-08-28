@@ -100,19 +100,23 @@ describe('CurrentSessionProvider', () => {
     }
   });
 
-  it('clears a browser cookie when its User is no longer active', async () => {
-    await new CookieSessionProvider(cookieStore).createSession(versionOneSession);
-    identityResolver = { resolve: vi.fn(async () => null) };
+  it('invalidates the Current Session after a User is deactivated', async () => {
+    let currentIdentity: CurrentSessionIdentity | null = identity(1);
+    identityResolver = { resolve: vi.fn(async () => currentIdentity) };
+    await provider().establishSession(123);
+    currentIdentity = null;
 
     await expect(provider().getSession()).resolves.toBeNull();
 
     expect(cookieStore.delete).toHaveBeenCalledWith('admin_session');
   });
 
-  it('reloads authorization and renews the 24-hour Current Session after a version mismatch', async () => {
-    await new CookieSessionProvider(cookieStore).createSession(versionOneSession);
+  it('refreshes grants on the next Current Session resolution after an administrative access change', async () => {
+    let currentIdentity = identity(1);
+    identityResolver = { resolve: vi.fn(async () => currentIdentity) };
+    await provider().establishSession(123);
     const refreshedSession = { ...versionOneSession, permissionCodes: ['catalog.write'] };
-    identityResolver = { resolve: vi.fn(async () => identity(2, refreshedSession)) };
+    currentIdentity = identity(2, refreshedSession);
     cookieStore.set.mockClear();
 
     const session = await provider().getSession();
@@ -123,6 +127,7 @@ describe('CurrentSessionProvider', () => {
       expect.any(String),
       expect.objectContaining({ httpOnly: true, sameSite: 'lax', maxAge: 60 * 60 * 24, path: '/' }),
     );
+    expect(cookieStore.delete).not.toHaveBeenCalled();
   });
 
   it('memoizes resolution within one provider instance but not another request', async () => {

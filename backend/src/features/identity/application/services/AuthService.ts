@@ -107,7 +107,7 @@ export class AuthService implements IAuthService {
       await userQueries.upsertPasswordCredentials(user.id, {
         passwordHash: password,
         hashStrategy: 'bcrypt',
-      });
+      }, { isInitialCredential: true });
 
       // Log them in automatically
       return this.login(input.email, input.password);
