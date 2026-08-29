@@ -10,6 +10,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@findeg/ui';
 import { Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { loginAction } from '@data/auth/actions';
 const formSchema = z.object({
   email: z.string().email({
     message: 'Please enter a valid email address.',
@@ -18,13 +19,6 @@ const formSchema = z.object({
     message: 'Password is required.',
   }),
 });
-
-interface LoginResponseBody {
-  success?: boolean;
-  error?: {
-    message?: string;
-  };
-}
 
 /**
  *
@@ -51,20 +45,9 @@ export function LoginForm() {
       setIsLoading(true);
       setServerError(null);
 
-      const response = await fetch('/api/v1/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: values.email.trim(),
-          password: values.password,
-        }),
-      });
-
-      const json = (await response.json().catch(() => null)) as LoginResponseBody | null;
-      if (!response.ok || !json?.success) {
-        const message = json?.error?.message || t('Common.ErrorOccurred');
+      const result = await loginAction(values.email, values.password);
+      if (!result.success) {
+        const message = result.error || t('Common.ErrorOccurred');
         setServerError(message);
         return;
       }
