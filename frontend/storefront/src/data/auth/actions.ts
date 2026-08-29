@@ -5,7 +5,8 @@ import {
     createIdentityServices,
     type RegisterInput,
 } from '@findeg/backend/features/identity';
-import { deleteSession, establishSession } from '@lib/session';
+import type { ActivePortal as CoreActivePortal } from '@findeg/backend/features/core';
+import { deleteSession, establishSession, switchActivePortal } from '@lib/session';
 import { redirect } from '@i18n/navigation';
 
 export interface AuthActionResult {
@@ -69,4 +70,19 @@ export async function logout(): Promise<void> {
 
 export async function logoutAction(): Promise<void> {
     return await logout();
+}
+
+/** Server Action for explicit Active Portal selection. */
+export async function switchPortalAction(
+    activePortal: CoreActivePortal,
+): Promise<AuthActionResult> {
+    const session = await switchActivePortal(activePortal);
+    if (!session) {
+        return { success: false, error: 'Not authenticated' };
+    }
+
+    return {
+        success: session.activePortal === activePortal,
+        error: session.activePortal === activePortal ? undefined : 'Active Portal is not available',
+    };
 }

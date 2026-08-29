@@ -11,6 +11,7 @@ const backendSchema = z.object({
   RESEND_API_KEY: z.string().optional(),
   NEXT_PUBLIC_APP_URL: z.string().url(),
   NEXT_PUBLIC_SITE_URL: z.string().url(),
+  NEXT_PUBLIC_DASHBOARD_URL: z.string().url().default('http://localhost:3001'),
 });
 
 export const env = validateEnv(backendSchema);

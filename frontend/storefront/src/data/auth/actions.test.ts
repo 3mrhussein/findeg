@@ -5,6 +5,7 @@ const auth = vi.hoisted(() => ({
   register: vi.fn(),
   establishSession: vi.fn(),
   deleteSession: vi.fn(),
+  switchActivePortal: vi.fn(),
 }));
 
 vi.mock('@findeg/backend/features/identity', () => ({
@@ -31,6 +32,7 @@ vi.mock('@findeg/backend/features/identity', () => ({
 vi.mock('@lib/session', () => ({
   deleteSession: auth.deleteSession,
   establishSession: auth.establishSession,
+  switchActivePortal: auth.switchActivePortal,
 }));
 vi.mock('@i18n/navigation', () => ({ redirect: vi.fn() }));
 
@@ -96,5 +98,15 @@ describe('Storefront authentication actions', () => {
     });
 
     expect(auth.register).not.toHaveBeenCalled();
+  });
+
+  it('switches Active Portal through the server action', async () => {
+    auth.switchActivePortal.mockResolvedValue({ userId: 42, activePortal: 'dashboard' });
+    const { switchPortalAction } = await import('./actions');
+
+    await expect(switchPortalAction('dashboard')).resolves.toEqual({
+      success: true,
+    });
+    expect(auth.switchActivePortal).toHaveBeenCalledWith('dashboard');
   });
 });

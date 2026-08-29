@@ -1,7 +1,9 @@
 import createMiddleware from 'next-intl/middleware';
 import type { NextRequest, NextResponse } from 'next/server';
+import { NextResponse as NextResponseImpl } from 'next/server';
 import type { ICookieStore } from '@findeg/backend/features/core';
 import { createDashboardCurrentSession } from '@lib/current-session';
+import { DASHBOARD_PORTAL, getActivePortal, getPortalHomeUrl } from '@lib/portal-routing';
 import { routing } from './i18n/routing';
 
 const handleI18nRouting = createMiddleware(routing);
@@ -51,8 +53,15 @@ export async function proxy(request: NextRequest) {
   const { cookieStore, applyMutations } = currentSessionCookieStore(request);
   const currentSession = createDashboardCurrentSession(cookieStore);
 
-  await currentSession.getSession();
-  const response = handleI18nRouting(request);
+  const session = await currentSession.getSession();
+  const localeSegment = request.nextUrl.pathname.split('/')[1];
+  const locale = routing.locales.includes(localeSegment as (typeof routing.locales)[number])
+    ? localeSegment
+    : routing.defaultLocale;
+  const response =
+    session && getActivePortal(session) !== DASHBOARD_PORTAL
+      ? NextResponseImpl.redirect(getPortalHomeUrl(getActivePortal(session), locale))
+      : handleI18nRouting(request);
   applyMutations(response);
 
   return response;

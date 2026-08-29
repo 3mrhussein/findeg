@@ -33,6 +33,13 @@ export { PaymentMethodSchema, type PaymentMethod } from '@findeg/db';
 
 
 // ─── Identity ────────────────────────────────────────────────────────────────
-export { PortalRoleSchema, type PortalRole } from '@findeg/db';
+export {
+  ActivePortalSchema,
+  defaultActivePortalForRole,
+  eligibleActivePortalsForRole,
+  PortalRoleSchema,
+  type ActivePortal,
+  type PortalRole,
+} from '@findeg/db';
 export { ActorTypeSchema, type ActorType } from '@findeg/db';
 export { PermissionCodeSchema, RoleIdSchema, RoleScopeSchema } from '@findeg/db';

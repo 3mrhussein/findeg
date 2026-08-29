@@ -17,8 +17,8 @@
 
 import { redirect } from '@i18n/navigation';
 import { createIdentityServices } from '@findeg/backend/features/identity';
-import { adminSession } from '@findeg/backend/features/core';
-import { establishSession, deleteSession } from '@lib/session';
+import { adminSession, type ActivePortal } from '@findeg/backend/features/core';
+import { establishSession, deleteSession, switchActivePortal } from '@lib/session';
 
 /**
  * Server Action: User login
@@ -91,4 +91,17 @@ export async function logoutAction(formData?: FormData) {
     // Even if error occurs, redirect to home
     redirect({ href: '/', locale: 'en' });
   }
+}
+
+/** Server Action for explicit Active Portal selection. */
+export async function switchPortalAction(activePortal: ActivePortal) {
+  const session = await switchActivePortal(activePortal);
+  if (!session) {
+    return { success: false, error: 'Not authenticated' };
+  }
+
+  return {
+    success: session.activePortal === activePortal,
+    error: session.activePortal === activePortal ? undefined : 'Active Portal is not available',
+  };
 }
