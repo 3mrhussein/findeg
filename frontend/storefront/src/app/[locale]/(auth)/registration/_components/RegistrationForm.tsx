@@ -10,6 +10,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@findeg/ui';
 import { Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { registerAction } from '@data/auth/actions';
 const formSchema = z
   .object({
     name: z.string().min(2, {
@@ -27,13 +28,6 @@ const formSchema = z
     message: 'Passwords do not match',
     path: ['confirmPassword'],
   });
-
-interface RegisterResponseBody {
-  success?: boolean;
-  error?: {
-    message?: string;
-  };
-}
 
 /**
  * Splits a full name into first + last name parts.
@@ -81,22 +75,14 @@ export function RegistrationForm() {
       setServerError(null);
 
       const { firstName, lastName } = splitName(values.name);
-      const response = await fetch('/api/v1/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: values.email.trim(),
-          password: values.password,
-          firstName,
-          lastName,
-        }),
+      const result = await registerAction({
+        email: values.email.trim(),
+        password: values.password,
+        firstName,
+        lastName,
       });
-
-      const json = (await response.json().catch(() => null)) as RegisterResponseBody | null;
-      if (!response.ok || !json?.success) {
-        const message = json?.error?.message || t('Common.ErrorOccurred');
+      if (!result.success) {
+        const message = result.error || t('Common.ErrorOccurred');
         setServerError(message);
         return;
       }

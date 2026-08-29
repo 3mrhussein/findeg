@@ -56,6 +56,21 @@ describe('PermissionService', () => {
       expect(result).toBe(false);
     });
 
+    it('should allow a system administrator with the granted permission', async () => {
+      mockGetAuthorizationContext.mockResolvedValue({
+        activeRoleIds: ['system_admin' as RoleId],
+        permissionCodes: ['products:delete' as PermissionCode],
+        organizationId: undefined,
+      });
+
+      const result = await permissionService.hasPermission(
+        123 as ID,
+        'products:delete' as PermissionCode,
+      );
+
+      expect(result).toBe(true);
+    });
+
     it('should return false and log error on exception', async () => {
       const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => { });
       mockGetAuthorizationContext.mockRejectedValue(new Error('Database error'));

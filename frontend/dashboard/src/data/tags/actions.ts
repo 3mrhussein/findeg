@@ -3,7 +3,9 @@
 import { TagInput } from '@findeg/backend/features/catalog';
 import { revalidateTag } from 'next/cache';
 import { createAdministrationServices } from '@findeg/backend/features/administration';
+import { PERMISSION_CODES } from '@findeg/backend/features/core';
 import { getErrorMessage } from '@lib/type-guards';
+import { requireDashboardPermission } from '@lib/require-dashboard-permission';
 
 /**
  * Admin Tag Actions (Dashboard Data Layer)
@@ -11,6 +13,7 @@ import { getErrorMessage } from '@lib/type-guards';
 
 export async function createTagAction(input: TagInput) {
   try {
+    await requireDashboardPermission(PERMISSION_CODES.ADMIN_TAGS_WRITE);
     const { tags } = createAdministrationServices();
     const result = await tags.create(input);
     revalidateTag('tags', 'max');
@@ -23,6 +26,7 @@ export async function createTagAction(input: TagInput) {
 
 export async function updateTagAction(id: number, input: TagInput) {
   try {
+    await requireDashboardPermission(PERMISSION_CODES.ADMIN_TAGS_WRITE);
     const { tags } = createAdministrationServices();
     const result = await tags.update(id, input);
     revalidateTag('tags', 'max');
@@ -35,6 +39,7 @@ export async function updateTagAction(id: number, input: TagInput) {
 
 export async function deleteTagAction(id: number) {
   try {
+    await requireDashboardPermission(PERMISSION_CODES.ADMIN_TAGS_WRITE);
     const { tags } = createAdministrationServices();
     await tags.delete(id);
     revalidateTag('tags', 'max');
@@ -47,6 +52,7 @@ export async function deleteTagAction(id: number) {
 
 export async function bulkUpdateTagsStatusAction(ids: number[], isActive: boolean) {
   try {
+    await requireDashboardPermission(PERMISSION_CODES.ADMIN_TAGS_WRITE);
     const { tags } = createAdministrationServices();
     await tags.bulkUpdateStatus(ids, isActive);
     revalidateTag('tags', 'max');
@@ -59,6 +65,7 @@ export async function bulkUpdateTagsStatusAction(ids: number[], isActive: boolea
 
 export async function bulkDeleteTagsAction(ids: number[]) {
   try {
+    await requireDashboardPermission(PERMISSION_CODES.ADMIN_TAGS_WRITE);
     const { tags } = createAdministrationServices();
     await tags.bulkDelete(ids);
     revalidateTag('tags', 'max');
@@ -71,6 +78,7 @@ export async function bulkDeleteTagsAction(ids: number[]) {
 
 export async function toggleTagStatusAction(id: number) {
   try {
+    await requireDashboardPermission(PERMISSION_CODES.ADMIN_TAGS_WRITE);
     const { tags } = createAdministrationServices();
     const result = await tags.toggleTagStatus(id);
     revalidateTag('tags', 'max');
@@ -83,6 +91,7 @@ export async function toggleTagStatusAction(id: number) {
 
 export async function getTagProductCountAction(tagId: number) {
   try {
+    await requireDashboardPermission(PERMISSION_CODES.ADMIN_TAGS_READ);
     const { tags } = createAdministrationServices();
     const count = await tags.getTagProductCount(tagId);
     return { success: true, count };
@@ -94,6 +103,7 @@ export async function getTagProductCountAction(tagId: number) {
 
 export async function getDistinctTagGroupsAction() {
   try {
+    await requireDashboardPermission(PERMISSION_CODES.ADMIN_TAGS_READ);
     const { tags } = createAdministrationServices();
     const groups = await tags.getDistinctGroups();
     return { success: true, groups };

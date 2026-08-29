@@ -3,7 +3,9 @@
 import { BrandInput } from '@findeg/backend/features/catalog';
 import { revalidateTag } from 'next/cache';
 import { createAdministrationServices } from '@findeg/backend/features/administration';
+import { PERMISSION_CODES } from '@findeg/backend/features/core';
 import { getErrorMessage } from '@lib/type-guards';
+import { requireDashboardPermission } from '@lib/require-dashboard-permission';
 
 /**
  * Admin Brand Actions (Dashboard Data Layer)
@@ -11,6 +13,7 @@ import { getErrorMessage } from '@lib/type-guards';
 
 export async function createBrandAction(input: BrandInput) {
   try {
+    await requireDashboardPermission(PERMISSION_CODES.ADMIN_BRANDS_WRITE);
     const { brands } = createAdministrationServices();
     const result = await brands.create(input);
     revalidateTag('brands-admin', 'max');
@@ -23,6 +26,7 @@ export async function createBrandAction(input: BrandInput) {
 
 export async function updateBrandAction(id: number, input: BrandInput) {
   try {
+    await requireDashboardPermission(PERMISSION_CODES.ADMIN_BRANDS_WRITE);
     const { brands } = createAdministrationServices();
     const result = await brands.update(id, input);
     revalidateTag('brands-admin', 'max');
@@ -35,6 +39,7 @@ export async function updateBrandAction(id: number, input: BrandInput) {
 
 export async function deleteBrandAction(id: number) {
   try {
+    await requireDashboardPermission(PERMISSION_CODES.ADMIN_BRANDS_WRITE);
     const { brands } = createAdministrationServices();
     await brands.delete(id);
     revalidateTag('brands-admin', 'max');
@@ -47,6 +52,7 @@ export async function deleteBrandAction(id: number) {
 
 export async function toggleBrandStatusAction(id: number) {
   try {
+    await requireDashboardPermission(PERMISSION_CODES.ADMIN_BRANDS_WRITE);
     const { brands } = createAdministrationServices();
     const result = await brands.toggleBrandStatus(id);
     revalidateTag('brands-admin', 'max');

@@ -15,11 +15,10 @@
 'use server';
 
 import { redirect } from '@i18n/navigation';
-import { getSession, createSession } from '@lib/session';
+import { getSession, establishSession } from '@lib/session';
 import { createIdentityServices } from '@findeg/backend/features/identity';
 import { revalidatePath } from 'next/cache';
 import { getErrorMessage } from '@lib/type-guards';
-import type { SessionPayload } from '@findeg/backend/features/core';
 
 /**
  * Server Action: Update current user's profile
@@ -49,21 +48,8 @@ export async function updateMyProfileAction(
       lastName,
     });
 
-    // 2. Update local session in cookies
-    const fName = updatedUser.firstName || session.user.firstName;
-    const lName = updatedUser.lastName || session.user.lastName;
-
-    const newSession: SessionPayload = {
-      ...session,
-      user: {
-        ...session.user,
-        firstName: fName,
-        lastName: lName,
-        fullName: `${fName} ${lName}`.trim(),
-      },
-    };
-
-    await createSession(newSession);
+    // 2. Reissue from the authoritative identity; callers never supply a grant snapshot.
+    await establishSession(updatedUser.id);
 
     // 3. Revalidate path to update UI
     revalidatePath('/', 'layout');

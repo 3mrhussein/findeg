@@ -9,7 +9,9 @@
 
 import { revalidateTag } from 'next/cache';
 import { createAdministrationServices } from '@findeg/backend/features/administration';
+import { PERMISSION_CODES } from '@findeg/backend/features/core';
 import { getErrorMessage } from '@lib/type-guards';
+import { requireDashboardPermission } from '@lib/require-dashboard-permission';
 
 /**
  * Server Action: Update order status
@@ -19,6 +21,7 @@ import { getErrorMessage } from '@lib/type-guards';
  */
 export async function updateOrderStatusAction(orderId: number, input: any) {
   try {
+    await requireDashboardPermission(PERMISSION_CODES.ADMIN_ORDERS_WRITE);
     const { orders } = createAdministrationServices();
     await orders.updateStatus(orderId, input);
 
@@ -38,6 +41,7 @@ export async function updateOrderStatusAction(orderId: number, input: any) {
  */
 export async function updateOrderPaymentStatusAction(orderId: number, paymentStatus: any) {
   try {
+    await requireDashboardPermission(PERMISSION_CODES.ADMIN_ORDERS_WRITE);
     const { orders } = createAdministrationServices();
     await orders.updatePaymentStatus(orderId, paymentStatus);
 

@@ -3,7 +3,6 @@ import { Sidebar } from './_components/Sidebar';
 import { Topbar } from './_components/Topbar';
 import { requireAuth } from '@lib/auth-guard';
 import { adminSession } from '@findeg/backend/features/core/domain/auth/authorization';
-import { AdminAccessForbidden } from '@components/shared/AdminAccessForbidden';
 import type { Locale } from 'next-intl';
 
 /**
@@ -23,16 +22,11 @@ export default async function DashboardLayout({
   const { locale } = await params;
   const session = await requireAuth(locale as Locale);
 
-  // If the user is an admin, show the "Forbidden" UI instead of the user tools
-  if (adminSession(session)) {
-    return <AdminAccessForbidden />;
-  }
-
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
       <Sidebar />
       <div className="flex flex-col">
-        <Topbar />
+        <Topbar canSwitchToDashboard={adminSession(session)} locale={locale} />
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">{children}</main>
       </div>
     </div>

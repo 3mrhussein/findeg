@@ -8,8 +8,10 @@
 
 import { revalidateTag } from 'next/cache';
 import { createAdministrationServices } from '@findeg/backend/features/administration';
+import { PERMISSION_CODES } from '@findeg/backend/features/core';
 import type { OrderStatusUpdate } from '@findeg/backend/features/order';
 import { getErrorMessage } from '@lib/type-guards';
+import { requireDashboardPermission } from '@lib/require-dashboard-permission';
 
 /**
  * Update order status
@@ -18,6 +20,7 @@ import { getErrorMessage } from '@lib/type-guards';
  */
 export async function updateOrderStatusAction(id: number, input: OrderStatusUpdate) {
   try {
+    await requireDashboardPermission(PERMISSION_CODES.ADMIN_ORDERS_WRITE);
     const { orders } = createAdministrationServices();
     const result = await orders.updateStatus(id, input);
 
@@ -40,6 +43,7 @@ export async function updateOrderPaymentStatusAction(
   paymentStatus: 'unpaid' | 'paid' | 'refunded',
 ) {
   try {
+    await requireDashboardPermission(PERMISSION_CODES.ADMIN_ORDERS_WRITE);
     const { orders } = createAdministrationServices();
     const result = await orders.updatePaymentStatus(id, paymentStatus);
 

@@ -17,8 +17,8 @@
 
 import { redirect } from '@i18n/navigation';
 import { createIdentityServices } from '@findeg/backend/features/identity';
-import { adminSession, createUserVO, type SessionPayload } from '@findeg/backend/features/core';
-import { createSession, deleteSession } from '@lib/session';
+import { adminSession, type ActivePortal } from '@findeg/backend/features/core';
+import { establishSession, deleteSession, switchActivePortal } from '@lib/session';
 
 /**
  * Server Action: User login
@@ -41,28 +41,11 @@ export async function loginAction(formData: FormData) {
       throw new Error(result.error || 'Invalid email or password');
     }
 
-    // Construct SessionPayload mapping from AuthResult.user
-    const sessionPayload = {
-      userId: result.user.id,
-      portalRole: result.user.portalRole,
-      user: createUserVO({
-        email: result.user.email,
-        firstName: result.user.firstName,
-        lastName: result.user.lastName,
-      }),
-      subjectId: String(result.user.id),
-      actorType: result.user.actorType || 'user',
-      activeRoleIds: result.user.activeRoleIds,
-      permissionCodes: result.user.permissionCodes,
-      organizationId: result.user.organizationId,
-      tokenVersion: 1,
-    };
+    const session = await establishSession(result.user.id);
 
-    if (!adminSession(sessionPayload as SessionPayload)) {
+    if (!session || !adminSession(session)) {
       throw new Error('Forbidden: This portal is for administrators only');
     }
-
-    await createSession(sessionPayload as SessionPayload);
   } catch (error: unknown) {
     // If it's a redirect, let it bubble up (standard Next.js behavior)
     if (
@@ -108,4 +91,17 @@ export async function logoutAction(formData?: FormData) {
     // Even if error occurs, redirect to home
     redirect({ href: '/', locale: 'en' });
   }
+}
+
+/** Server Action for explicit Active Portal selection. */
+export async function switchPortalAction(activePortal: ActivePortal) {
+  const session = await switchActivePortal(activePortal);
+  if (!session) {
+    return { success: false, error: 'Not authenticated' };
+  }
+
+  return {
+    success: session.activePortal === activePortal,
+    error: session.activePortal === activePortal ? undefined : 'Active Portal is not available',
+  };
 }

@@ -3,7 +3,7 @@ import type { SessionPayload } from '@findeg/backend/features/core/domain/auth';
 import { adminSession } from '@findeg/backend/features/core/domain/auth/authorization';
 import type { ISessionManager } from '@findeg/backend/features/core/application/interfaces/ISessionManager';
 import type { ICurrentSessionCodec } from '@findeg/backend/features/core/application/interfaces/ICurrentSessionCodec';
-import type { PortalRole } from '@findeg/backend/features/core/domain/types/common';
+import type { ActivePortal, PortalRole } from '@findeg/backend/features/core/domain/types/common';
 import env from '@findeg/env';
 
 /**
@@ -41,6 +41,7 @@ export class JwtSessionManager implements ISessionManager, ICurrentSessionCodec 
       return {
         userId: payload.userId as number,
         portalRole: payload.portalRole as PortalRole,
+        activePortal: payload.activePortal as ActivePortal | undefined,
         user: payload.user as SessionPayload['user'],
         subjectId: payload.subjectId as string | undefined,
         actorType: payload.actorType as SessionPayload['actorType'],

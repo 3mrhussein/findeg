@@ -1,17 +1,25 @@
 import { getSession } from './session';
-import { getCachedSession } from '@data/auth/queries';
+import { getRequestSession } from '@data/auth/queries';
 import { redirect } from '@i18n/navigation';
 import { adminSession } from '@findeg/backend/features/core';
 import type { SessionPayload, Locale } from '@findeg/backend/features/core';
+import {
+  getActivePortal,
+  redirectToActivePortalHome,
+  STOREFRONT_PORTAL,
+} from '@lib/portal-routing';
 
 /**
  * Require any authenticated user — redirects to /login if not.
  * Use in layouts/pages that require a logged-in user.
  */
 export async function requireAuth(locale: string): Promise<SessionPayload> {
-  const session = await getCachedSession();
+  const session = await getRequestSession();
   if (!session) {
     redirect({ href: '/login', locale: locale as any });
+  }
+  if (getActivePortal(session!) !== STOREFRONT_PORTAL) {
+    redirectToActivePortalHome(session!, locale);
   }
   return session!;
 }
@@ -21,9 +29,12 @@ export async function requireAuth(locale: string): Promise<SessionPayload> {
  * Use in the (admin) protected layout.
  */
 export async function requireAdmin(locale: string): Promise<SessionPayload> {
-  const session = await getCachedSession();
-  if (!session || !adminSession(session)) {
-    redirect({ href: '/admin/login', locale: locale as any });
+  const session = await getRequestSession();
+  if (!session) {
+    redirect({ href: '/login', locale: locale as any });
+  }
+  if (getActivePortal(session!) !== 'dashboard' || !adminSession(session!)) {
+    redirectToActivePortalHome(session!, locale);
   }
   return session!;
 }
@@ -33,13 +44,9 @@ export async function requireAdmin(locale: string): Promise<SessionPayload> {
  * Admins go to /admin, regular users go to /dashboard.
  */
 export async function redirectIfAuthenticated(locale: string): Promise<void> {
-  const session = await getCachedSession();
+  const session = await getRequestSession();
   if (session) {
-    if (adminSession(session)) {
-      redirect({ href: '/admin', locale: locale as any });
-    } else {
-      redirect({ href: '/dashboard', locale: locale as any });
-    }
+    redirectToActivePortalHome(session, locale);
   }
 }
 
@@ -48,7 +55,7 @@ export async function redirectIfAuthenticated(locale: string): Promise<void> {
  * Returns null for guests. Use in public pages with auth-aware components.
  */
 export async function getOptionalSession(): Promise<SessionPayload | null> {
-  return getCachedSession();
+  return getRequestSession();
 }
 /**
  * Require specific permission — redirects to /dashboard if unauthorized.
@@ -78,7 +85,7 @@ export async function requirePermission(
   }
 
   if (!allowed) {
-    redirect({ href: '/dashboard', locale: locale as any });
+    redirect({ href: '/', locale: locale as any });
   }
 
   return session;

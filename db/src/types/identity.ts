@@ -14,11 +14,28 @@ import { actorTypeEnum, portalRoleEnum } from '../schema/enums';
 export const ActorTypeSchema = z.enum(actorTypeEnum.enumValues);
 export type ActorType = z.infer<typeof ActorTypeSchema>;
 
+/** The application portal represented by a Current Session. */
+export const ActivePortalSchema = z.enum(['storefront', 'dashboard']);
+export type ActivePortal = z.infer<typeof ActivePortalSchema>;
+
 /**
  * Legacy Portal Roles for session classification.
  */
 export const PortalRoleSchema = z.enum(portalRoleEnum.enumValues);
 export type PortalRole = z.infer<typeof PortalRoleSchema>;
+
+/** Returns the portal selected when a Current Session is first established. */
+export function defaultActivePortalForRole(portalRole: PortalRole): ActivePortal {
+  return portalRole === 'customer' ? 'storefront' : 'dashboard';
+}
+
+/**
+ * Returns the portals currently available to a User under the persisted portal-role model.
+ * Staff may use the storefront as well as the Dashboard; customers only use the storefront.
+ */
+export function eligibleActivePortalsForRole(portalRole: PortalRole): ActivePortal[] {
+  return portalRole === 'customer' ? ['storefront'] : ['storefront', 'dashboard'];
+}
 
 /**
  * Global registry of permission strings used throughout the application.
@@ -144,6 +161,8 @@ export function createUserVO(data: {
 export const SessionPayloadSchema = z.object({
   userId: z.number().int().positive(),
   portalRole: PortalRoleSchema,
+  // Optional to preserve valid version-1 cookies; the Current Session module derives it.
+  activePortal: ActivePortalSchema.optional(),
   user: UserVOSchema,
   subjectId: z.string().min(1).optional(),
   actorType: ActorTypeSchema.optional(),

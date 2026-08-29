@@ -1,6 +1,7 @@
 import type { SessionPayload } from '../../../core/domain/auth';
 import { createUserVO } from '../../../core/domain/auth';
 import { PERMISSION_CODES } from '../../../core/domain/auth/authorization';
+import { defaultActivePortalForRole, type ActivePortal } from '@findeg/db';
 
 export interface CurrentSessionUser {
   id: number;
@@ -21,6 +22,7 @@ export interface CurrentAuthorizationContext {
 export function buildCurrentSessionPayload(
   user: CurrentSessionUser,
   authorization: CurrentAuthorizationContext,
+  activePortal: ActivePortal = defaultActivePortalForRole(user.portalRole),
 ): SessionPayload {
   const activeRoleIds = Array.from(new Set(authorization.activeRoleIds));
   const permissionCodes = Array.from(
@@ -35,6 +37,7 @@ export function buildCurrentSessionPayload(
   return {
     userId: user.id,
     portalRole: user.portalRole,
+    activePortal,
     user: createUserVO({
       email: user.email,
       firstName: user.firstName ?? undefined,
