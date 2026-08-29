@@ -3,7 +3,7 @@
  *
  * Defines the contract for authentication operations.
  * The implementation handles password verification and session management
- * through injected dependencies (IUserRepository + ISessionProvider).
+ * through the identity queries and the app-layer Current Session module.
  */
 
 import { Email } from '@findeg/backend/features/core/domain/types/common';

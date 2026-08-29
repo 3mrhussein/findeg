@@ -3,6 +3,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 const proxyDependencies = vi.hoisted(() => ({
   createCurrentSessionProvider: vi.fn(),
   i18n: vi.fn(),
+  getActivePortal: vi.fn(),
+  getPortalHomeUrl: vi.fn(),
 }));
 
 vi.mock('@findeg/backend/features/core', () => ({
@@ -12,7 +14,12 @@ vi.mock('@findeg/backend/features/identity', () => ({
   CurrentSessionIdentityResolver: class CurrentSessionIdentityResolver {},
 }));
 vi.mock('next-intl/middleware', () => ({ default: () => proxyDependencies.i18n }));
-vi.mock('./i18n/routing', () => ({ routing: {} }));
+vi.mock('./i18n/routing', () => ({ routing: { locales: ['en', 'ar'], defaultLocale: 'en' } }));
+vi.mock('@lib/portal-routing', () => ({
+  DASHBOARD_PORTAL: 'dashboard',
+  getActivePortal: proxyDependencies.getActivePortal,
+  getPortalHomeUrl: proxyDependencies.getPortalHomeUrl,
+}));
 
 describe('Dashboard Current Session Proxy', () => {
   const responseCookies = { delete: vi.fn(), set: vi.fn() };
@@ -25,12 +32,15 @@ describe('Dashboard Current Session Proxy', () => {
   const request = {
     cookies: requestCookies,
     headers: new Headers({ cookie: 'admin_session=stale-token' }),
+    nextUrl: { pathname: '/en' },
   };
 
   beforeEach(() => {
     vi.resetModules();
     vi.clearAllMocks();
     proxyDependencies.i18n.mockReturnValue(response);
+    proxyDependencies.getActivePortal.mockReturnValue('dashboard');
+    proxyDependencies.getPortalHomeUrl.mockReturnValue('http://localhost:3000/en');
   });
 
   it('clears an invalid Current Session before protected rendering', async () => {
@@ -90,5 +100,18 @@ describe('Dashboard Current Session Proxy', () => {
     await proxy(request as never);
 
     expect(calls).toEqual(['session', 'i18n']);
+  });
+
+  it('redirects a valid non-Dashboard Current Session to its configured home', async () => {
+    proxyDependencies.getActivePortal.mockReturnValue('storefront');
+    proxyDependencies.createCurrentSessionProvider.mockReturnValue({
+      getSession: async () => ({ userId: 42, activePortal: 'storefront' }),
+    });
+    const { proxy } = await import('./proxy');
+
+    const result = await proxy(request as never);
+
+    expect(result.headers.get('location')).toBe('http://localhost:3000/en');
+    expect(proxyDependencies.i18n).not.toHaveBeenCalled();
   });
 });

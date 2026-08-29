@@ -7,6 +7,7 @@
 import { cookies } from 'next/headers';
 import { cache } from 'react';
 import {
+  type ActivePortal,
   type ICookieStore,
   type SessionPayload,
 } from '@findeg/backend/features/core';
@@ -28,13 +29,13 @@ async function nextCookiesToStore(): Promise<ICookieStore> {
   };
 }
 
-async function currentSession() {
+async function createCurrentSessionProvider() {
   const cookieStore = await nextCookiesToStore();
   return createDashboardCurrentSession(cookieStore);
 }
 
 const getRequestSession = cache(async (): Promise<SessionPayload | null> => {
-  const provider = await currentSession();
+  const provider = await createCurrentSessionProvider();
   return provider.getSession();
 });
 
@@ -61,8 +62,14 @@ export const extractSession = getSession;
  * Establishes a Current Session from the authoritative identity.
  */
 export async function establishSession(userId: number): Promise<SessionPayload | null> {
-  const provider = await currentSession();
+  const provider = await createCurrentSessionProvider();
   return provider.establishSession(userId);
+}
+
+/** Selects an eligible Active Portal and renews the Current Session server-side. */
+export async function switchActivePortal(activePortal: ActivePortal): Promise<SessionPayload | null> {
+  const provider = await createCurrentSessionProvider();
+  return provider.switchActivePortal(activePortal);
 }
 
 /**
@@ -71,7 +78,7 @@ export async function establishSession(userId: number): Promise<SessionPayload |
  * Removes admin_session cookie.
  */
 export async function deleteSession(): Promise<void> {
-  const provider = await currentSession();
+  const provider = await createCurrentSessionProvider();
   await provider.deleteSession();
 }
 

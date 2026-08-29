@@ -12,7 +12,7 @@ import {
 import { cn } from '@lib/utils';
 import { useRouter } from '@i18n/navigation';
 import { getAvatarColorClass, getInitials } from '@findeg/backend/lib';
-import { logoutAction as logout } from '@actions/auth-actions';
+import { logoutAction as logout, switchPortalAction } from '@actions/auth-actions';
 
 interface AdminHeaderUserClientProps {
   userEmail?: string;
@@ -32,6 +32,14 @@ export function AdminHeaderUserClient({
 
   const handleLogout = async () => {
     await logout();
+  };
+
+  const handleStorefrontSwitch = async () => {
+    const result = await switchPortalAction('storefront');
+    if (result.success) {
+      const origin = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000';
+      window.location.assign(`${origin.replace(/\/$/, '')}/${locale}`);
+    }
   };
 
   const initials = getInitials(userName, userEmail);
@@ -70,7 +78,7 @@ export function AdminHeaderUserClient({
           </DropdownMenuItem>
           <DropdownMenuItem
             className="text-[13px] text-gray-700 dark:text-gray-300 cursor-pointer focus:bg-gray-50 dark:focus:bg-slate-800"
-            onClick={() => window.open('/', '_blank')}
+            onClick={handleStorefrontSwitch}
           >
             <span className="mr-2">↗</span> Switch to Storefront
           </DropdownMenuItem>

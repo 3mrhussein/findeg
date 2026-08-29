@@ -1,6 +1,7 @@
 import type { SessionPayload } from '@findeg/backend/features/core';
 import {
-  createCurrentSessionProvider,
+  createCurrentSessionProvider as createCoreCurrentSessionProvider,
+  type ActivePortal,
   type ICookieStore,
 } from '@findeg/backend/features/core';
 import { CurrentSessionIdentityResolver } from '@findeg/backend/features/identity';
@@ -42,15 +43,15 @@ async function nextCookiesToStore(): Promise<ICookieStore> {
   };
 }
 
-async function currentSession() {
+async function createCurrentSessionProvider() {
   const cookieStore = await nextCookiesToStore();
-  return createCurrentSessionProvider(cookieStore, new CurrentSessionIdentityResolver());
+  return createCoreCurrentSessionProvider(cookieStore, new CurrentSessionIdentityResolver());
 }
 
 // React cache is scoped to the active server request. Unlike Next's "use cache",
 // it may read request cookies and never shares an identity between requests.
 const getRequestSession = cache(async (): Promise<SessionPayload | null> => {
-  const provider = await currentSession();
+  const provider = await createCurrentSessionProvider();
   return provider.getSession();
 });
 
@@ -77,15 +78,21 @@ export async function getSession(): Promise<SessionPayload | null> {
  * @param userId - Authenticated User identifier
  */
 export async function establishSession(userId: number): Promise<SessionPayload | null> {
-  const provider = await currentSession();
+  const provider = await createCurrentSessionProvider();
   return provider.establishSession(userId);
+}
+
+/** Selects an eligible Active Portal and renews the Current Session server-side. */
+export async function switchActivePortal(activePortal: ActivePortal): Promise<SessionPayload | null> {
+  const provider = await createCurrentSessionProvider();
+  return provider.switchActivePortal(activePortal);
 }
 
 /**
  * Deletes the current customer session
  */
 export async function deleteSession(): Promise<void> {
-  const provider = await currentSession();
+  const provider = await createCurrentSessionProvider();
   await provider.deleteSession();
 }
 

@@ -6,6 +6,7 @@ const action = vi.hoisted(() => ({
   deleteSession: vi.fn(),
   establishSession: vi.fn(),
   redirect: vi.fn(),
+  switchActivePortal: vi.fn(),
 }));
 
 vi.mock('@findeg/backend/features/core', () => ({
@@ -17,6 +18,7 @@ vi.mock('@findeg/backend/features/identity', () => ({
 vi.mock('@lib/session', () => ({
   deleteSession: action.deleteSession,
   establishSession: action.establishSession,
+  switchActivePortal: action.switchActivePortal,
 }));
 vi.mock('@i18n/navigation', () => ({ redirect: action.redirect }));
 
@@ -65,5 +67,13 @@ describe('Dashboard login action', () => {
     await expect(loginAction(formData)).rejects.toThrow('Forbidden');
 
     expect(action.deleteSession).not.toHaveBeenCalled();
+  });
+
+  it('switches Active Portal through the server action', async () => {
+    action.switchActivePortal.mockResolvedValue({ ...staffSession, activePortal: 'storefront' });
+    const { switchPortalAction } = await import('./auth-actions');
+
+    await expect(switchPortalAction('storefront')).resolves.toEqual({ success: true, error: undefined });
+    expect(action.switchActivePortal).toHaveBeenCalledWith('storefront');
   });
 });

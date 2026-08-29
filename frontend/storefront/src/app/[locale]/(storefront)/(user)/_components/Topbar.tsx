@@ -12,12 +12,25 @@ import {
 } from '@findeg/ui';
 import { CircleUser, Search } from 'lucide-react';
 import { Input } from '@findeg/ui';
-import { logoutAction } from '@data/auth/actions';
+import { logoutAction, switchPortalAction } from '@data/auth/actions';
+
+interface TopbarProps {
+  canSwitchToDashboard: boolean;
+  locale: string;
+}
 
 /**
  * Topbar for the user dashboard.
  */
-export function Topbar() {
+export function Topbar({ canSwitchToDashboard, locale }: TopbarProps) {
+  const handleDashboardSwitch = async () => {
+    const result = await switchPortalAction('dashboard');
+    if (result.success) {
+      const origin = process.env.NEXT_PUBLIC_DASHBOARD_URL ?? 'http://localhost:3001';
+      window.location.assign(`${origin.replace(/\/$/, '')}/${locale}`);
+    }
+  };
+
   return (
     <header className="flex h-[60px] items-center gap-4 border-b bg-muted/40 px-6 lg:h-[60px]">
       <div className="w-full flex-1">
@@ -51,6 +64,9 @@ export function Topbar() {
           <DropdownMenuSeparator />
           <DropdownMenuItem>Settings</DropdownMenuItem>
           <DropdownMenuItem>Support</DropdownMenuItem>
+          {canSwitchToDashboard && (
+            <DropdownMenuItem onClick={handleDashboardSwitch}>Switch to Dashboard</DropdownMenuItem>
+          )}
           <DropdownMenuSeparator />
           <form action={logoutAction as any}>
             <button type="submit" className="w-full text-left">

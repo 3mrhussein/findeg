@@ -29,16 +29,15 @@ export * from './application/types';
  * CurrentSessionProvider is the framework-agnostic Current Session seam. Portal
  * adapters supply request-cookie access; signing, cookie policy, and refresh rules stay here.
  *
- * CookieSessionProvider remains temporarily for portal migration compatibility.
  */
 export {
   CurrentSessionProvider,
   type CurrentSessionIdentity,
+  type ActivePortal,
   type ICookieStore,
   type ICurrentSessionIdentityResolver,
 } from './application/services/CurrentSessionProvider';
-export { createCurrentSessionProvider } from './application/services/createCurrentSessionProvider';
-export { CookieSessionProvider } from './infrastructure/auth/CookieSessionProvider';
+export { createCurrentSessionProvider } from './infrastructure/auth/createCurrentSessionProvider';
 
 // ========================================
 // INFRASTRUCTURE EXPORTS REMOVED

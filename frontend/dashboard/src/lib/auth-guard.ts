@@ -3,6 +3,11 @@ import { adminSession } from '@findeg/backend/features/core';
 import type { SessionPayload } from '@findeg/backend/features/core';
 import type { Locale } from 'next-intl';
 import { getSession } from '@lib/session';
+import {
+  DASHBOARD_PORTAL,
+  getActivePortal,
+  redirectToActivePortalHome,
+} from '@lib/portal-routing';
 
 /**
  * Require any authenticated user — redirects to /login if not.
@@ -22,8 +27,11 @@ export async function requireAuth(locale: Locale): Promise<SessionPayload> {
  */
 export async function requireAdmin(locale: Locale): Promise<SessionPayload> {
   const session = await getSession();
-  if (!session || !adminSession(session)) {
+  if (!session) {
     redirect({ href: '/login', locale });
+  }
+  if (getActivePortal(session!) !== DASHBOARD_PORTAL || !adminSession(session!)) {
+    redirectToActivePortalHome(session!, locale);
   }
   return session!;
 }
@@ -35,11 +43,7 @@ export async function requireAdmin(locale: Locale): Promise<SessionPayload> {
 export async function redirectIfAuthenticated(locale: Locale): Promise<void> {
   const session = await getSession();
   if (session) {
-    if (adminSession(session)) {
-      redirect({ href: '/', locale });
-    } else {
-      redirect({ href: '/', locale });
-    }
+    redirectToActivePortalHome(session, locale);
   }
 }
 
