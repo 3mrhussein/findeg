@@ -4,9 +4,9 @@ _Research snapshot: 2026-08-30. This is a comparison, not a provider selection._
 
 ## Question and scope
 
-This artifact answers [issue #44](https://github.com/3mrhussein/findeg/issues/44): which providers could support reliable Arabic/English transactional email and SMS for FindEg, with enough evidence to make a later provider decision?
+This artifact answers [Research transactional email and SMS providers for FindEg](https://github.com/3mrhussein/findeg/issues/44): which providers could support reliable Arabic/English transactional email and SMS for FindEg, with enough evidence to make a later provider decision?
 
-The current [phase-one map](https://github.com/3mrhussein/findeg/issues/25) has narrowed since the research ticket was written. Phase one is therefore limited here to home-delivery, cash-on-delivery (COD) notifications:
+The current [Define the FindEg system rehabilitation blueprint](https://github.com/3mrhussein/findeg/issues/25) map has narrowed since the research ticket was written. Phase one is therefore limited here to home-delivery, cash-on-delivery (COD) notifications:
 
 - Order acceptance and lifecycle/status events.
 - Delivery coordination and recording of COD payment.
