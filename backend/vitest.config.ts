@@ -6,7 +6,6 @@ export default defineConfig({
     globals: true,
     environment: "node",
     env: {
-      DATABASE_URL: "postgres://localhost/findeg_test",
       DB_USER: "postgres",
       DB_PASSWORD: "password",
       DB_NAME: "findeg_test",

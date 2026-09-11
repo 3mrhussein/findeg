@@ -1,7 +1,6 @@
 import { Suspense } from 'react';
 import { notFound } from 'next/navigation';
 import { getProductDetailPageData, getProductIdsForStaticParams } from '@/data/catalog/queries';
-
 import { setRequestLocale } from 'next-intl/server';
 import type { Locale } from 'next-intl';
 import { ProductGallery } from './_components/ProductGallery';

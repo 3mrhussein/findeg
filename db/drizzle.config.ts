@@ -15,7 +15,8 @@ export default defineConfig({
   schemaFilter: ['public', 'identity', 'catalog', 'sales', 'inventory', 'school_engine', 'system'],
   out: './migrations',
   dbCredentials: {
-    url: env.DATABASE_URL!,
+    url: `postgresql://${env.DB_USER}:${env.DB_PASSWORD}@${env.DB_HOST}:${env.DB_PORT}/${env.DB_NAME}`
+    ,
   },
   verbose: true,
   strict: true,

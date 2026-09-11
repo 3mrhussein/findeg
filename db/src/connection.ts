@@ -3,6 +3,8 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import env from "@findeg/env/database";
 import * as schema from "./schema";
 
+const DB_STRING = `postgresql://${env.DB_USER}:${env.DB_PASSWORD}@${env.DB_HOST}:${env.DB_PORT}/${env.DB_NAME}`;
+
 /**     
  * Database Connection Configuration
  * 
@@ -11,7 +13,7 @@ import * as schema from "./schema";
  * will cause build errors due to Node.js native module dependencies (net, tls).
  */
 
-export const connection = postgres(env.DATABASE_URL!, {
+export const connection = postgres(DB_STRING, {
   // Connection pool configuration
   max: env.DB_MIGRATING || env.DB_SEEDING ? 1 : undefined,
   onnotice: (notice) => {

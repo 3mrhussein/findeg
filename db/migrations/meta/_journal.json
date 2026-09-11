@@ -15,6 +15,13 @@
       "when": 1787929200000,
       "tag": "0001_current_session_authorization_version",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1787993703593,
+      "tag": "0002_workable_masque",
+      "breakpoints": true
     }
   ]
 }

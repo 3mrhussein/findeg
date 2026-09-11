@@ -5,7 +5,6 @@ loadEnv();
 
 const backendSchema = z.object({
   ...baseSchema,
-  DATABASE_URL: z.string().min(1),
   JWT_SECRET: z.string().min(32).optional(),
   JWT_REFRESH_SECRET: z.string().min(32).optional(),
   RESEND_API_KEY: z.string().optional(),
