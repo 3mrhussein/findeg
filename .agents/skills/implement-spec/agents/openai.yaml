@@ -1,0 +1,5 @@
+interface:
+  display_name: 'Implement Spec'
+  short_description: 'Deliver a spec through ticket PRs'
+policy:
+  allow_implicit_invocation: false
