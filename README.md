@@ -2,7 +2,6 @@
 
 > Historical prototype overview. The canonical phase-one target and migration constraints are in [docs/architecture/README.md](docs/architecture/README.md). This document does not govern new work.
 
-<<<<<<< HEAD
 FindEg.com is a modern, trendy e-commerce web application specializing in stationary, kids' toys, and school supplies. Built with Next.js 16, Turborepo monorepo architecture, and clean architecture principles with a focus on great UI/UX.
 
 ## 🏗️ Monorepo Architecture
@@ -118,24 +117,23 @@ For detailed development workflows, see [specs/001-separate-admin-project/quicks
 
 The database comes pre-seeded with Several test accounts representing different roles in the system. The password for all test accounts is `password`.
 
-| Actor / Role                                                                                                                                                                                          | Email                   | Description                                                        |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- | ------------------------------------------------------------------ |
-| **System Admin (New)**                                                                                                                                                                                | `admin@findeg.com`      | Use password `Admin1234!` for the new dashboard health cockpit.    |
-| **System Admin**                                                                                                                                                                                      | `superadmin@findeg.com` | Full, unrestricted access to all admin features and settings.      |
-| **Catalog Manager**                                                                                                                                                                                   | `editorial@findeg.com`  | Can manage products, categories, brands, and view analytics.       |
-| **Inventory Manager**                                                                                                                                                                                 | `inventory@findeg.com`  | Can manage stock levels, warehouses, and view orders.              |
-| **Operations Manager**                                                                                                                                                                                | `operations@findeg.com` | Broad access for managing orders, inventory, and viewing catalogs. |
-| **Customer Support**                                                                                                                                                                                  | `support@findeg.com`    | Can view orders, users, and assist with customer issues.           |
-| **School Liaison**                                                                                                                                                                                    | `liaison@findeg.com`    | Manages school supply lists and can browse products.               |
-| **B2C Customer**                                                                                                                                                                                      | `user@findeg.com`       | Standard storefront user with no admin access.                     |
-| =======                                                                                                                                                                                               |
-| Welcome to the FindEg.com monorepo. This project is a modern, hierarchical marketplace platform designed to provide a premium experience for both B2C (Public Shop) and B2B (School Lists) customers. |
-
-> > > > > > > 006-docs-restructure
+| Actor / Role           | Email                   | Description                                                        |
+| ---------------------- | ----------------------- | ------------------------------------------------------------------ |
+| **System Admin (New)** | `admin@findeg.com`      | Use password `Admin1234!` for the new dashboard health cockpit.    |
+| **System Admin**       | `superadmin@findeg.com` | Full, unrestricted access to all admin features and settings.      |
+| **Catalog Manager**    | `editorial@findeg.com`  | Can manage products, categories, brands, and view analytics.       |
+| **Inventory Manager**  | `inventory@findeg.com`  | Can manage stock levels, warehouses, and view orders.              |
+| **Operations Manager** | `operations@findeg.com` | Broad access for managing orders, inventory, and viewing catalogs. |
+| **Customer Support**   | `support@findeg.com`    | Can view orders, users, and assist with customer issues.           |
+| **School Liaison**     | `liaison@findeg.com`    | Manages school supply lists and can browse products.               |
+| **B2C Customer**       | `user@findeg.com`       | Standard storefront user with no admin access.                     |
 
 ---
 
-## 👔 Executive Summary
+## Archived Prototype Plan
+
+The following notes preserve former prototype assumptions and plans. They are not a
+current implementation or status report.
 
 ### Purpose
 
@@ -291,23 +289,17 @@ Ensure you have `Node.js 18+`, `pnpm 10`, and `Docker` installed.
 - **RTL-First CSS**: Use Tailwind's logical properties (`ps-4`, `me-2`) instead of physical ones (`pl-4`, `mr-2`) so the system elegantly maps English/Arabic alignments.
 - **ServiceResult Protocol**: All backend services do NOT throw standard JS errors; they return an `Err` or `Ok` standard `ServiceResult<T, FindEgError>`.
 
-<<<<<<< HEAD
-
-```tsx
-import { useTranslations } from "next-intl";
-import { T } from "@i18n/content";
-=======
 ### Testing Pipeline
->>>>>>> 006-docs-restructure
 
 - **Unit (Vitest)**: Every exported catalog service, checkout compute engine, and validation module is independently tested. Mocks are isolated.
 - **E2E (Cypress)**: The monorepo uses `cypress` and `cypress run --browser chrome --headless` mapped recursively as `npm run e2e:run:ci`. Do not commit brittle selector targeting; use proper `data-cy` attributes.
 
 ---
 
-## 🗺️ Master System Specs & Guide Book
+## Historical Prototype References
 
-FindEg uses a strict **3-tier documentation hierarchy** to capture deep technical constraints. This document serves as the root index. Navigate the system using the structured references below:
+The links below are retained as migration evidence. They are not an authoritative
+documentation hierarchy and may no longer resolve in the target repository.
 
 ### 1. The Core Data & API Layer (Backend)
 
@@ -364,4 +356,3 @@ Contains Global RTL logical CSS mapping, unified utility functions, and foundati
 ---
 
 &copy; 2026 FindEg.com. All rights reserved.
-```

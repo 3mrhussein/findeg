@@ -85,6 +85,24 @@ test('reports documentation drift and prohibited module dependencies', async () 
   });
 });
 
+test('reports unresolved Git merge markers in repository-owned Markdown as documentation drift', async () => {
+  const root = await createTargetRepository();
+  await writeFile(
+    join(root, 'docs/legacy-notes.md'),
+    [
+      '<<<<<<< HEAD',
+      'Historical prototype note.',
+      '=======',
+      'Alternate prototype note.',
+      '>>>>>>> legacy',
+    ].join('\n'),
+  );
+
+  assert.deepEqual(await runArchitectureCheck(root), [
+    'Documentation drift: unresolved Git merge marker: docs/legacy-notes.md',
+  ]);
+});
+
 test('reports CommonJS require forms of every prohibited dependency direction', async () => {
   const root = await createTargetRepository();
   await Promise.all([

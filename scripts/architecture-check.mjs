@@ -33,6 +33,10 @@ async function filesUnder(root, directory, { required = false } = {}) {
   return files.flat();
 }
 
+function isUnresolvedMergeMarker(contents) {
+  return /^(?:<<<<<<< .+|=======|>>>>>>> .+)$/mu.test(contents);
+}
+
 function prohibitedDependencies(relativePath, contents) {
   const imports = [
     ...contents.matchAll(
@@ -88,6 +92,21 @@ export async function runArchitectureCheck(root = process.cwd()) {
     .flat()
     .sort();
 
+  const unresolvedMergeMarkers = (
+    await Promise.all(
+      ['README.md', ...(await filesUnder(root, 'docs')).filter((path) => path.endsWith('.md'))].map(
+        async (relativePath) => {
+          const contents = await readFile(resolve(root, relativePath), 'utf8');
+          return isUnresolvedMergeMarker(contents)
+            ? [`Documentation drift: unresolved Git merge marker: ${relativePath}`]
+            : [];
+        },
+      ),
+    )
+  )
+    .flat()
+    .sort();
+
   const unreadableSourceRoots = [];
   const sourceFiles = [];
   for (const directory of sourceRoots) {
@@ -105,7 +124,13 @@ export async function runArchitectureCheck(root = process.cwd()) {
     )
   ).flat();
 
-  return [...historicalClaims, ...missingDocuments, ...unreadableSourceRoots, ...violations.sort()];
+  return [
+    ...historicalClaims,
+    ...unresolvedMergeMarkers,
+    ...missingDocuments,
+    ...unreadableSourceRoots,
+    ...violations.sort(),
+  ];
 }
 
 async function main() {
