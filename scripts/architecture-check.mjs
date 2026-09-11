@@ -1,3 +1,4 @@
+import { checkModuleBoundaries } from './module-boundaries.mjs';
 import { readFile, readdir } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -11,7 +12,14 @@ const canonicalDocuments = [
   'docs/package-guidance.md',
 ];
 
-const sourceRoots = ['backend/src/features', 'db/src', 'frontend'];
+const sourceRoots = [
+  'backend/src/features',
+  'backend/src/modules',
+  'backend/src/application',
+  'db/src',
+  'frontend',
+  'runtime/src',
+];
 const inspectableFile = /\.(?:[cm]?[jt]sx?|md)$/;
 const ignoredDirectories = new Set(['.git', '.next', 'dist', 'node_modules']);
 
@@ -124,12 +132,20 @@ export async function runArchitectureCheck(root = process.cwd()) {
     )
   ).flat();
 
+  const moduleViolations = checkModuleBoundaries(
+    root,
+    await Promise.all(
+      sourceFiles.map(async (path) => [path, await readFile(resolve(root, path), 'utf8')]),
+    ),
+  );
+
   return [
     ...historicalClaims,
     ...unresolvedMergeMarkers,
     ...missingDocuments,
     ...unreadableSourceRoots,
     ...violations.sort(),
+    ...moduleViolations,
   ];
 }
 

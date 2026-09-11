@@ -16,30 +16,30 @@ import {
   timestamp,
   uniqueIndex,
   index,
-} from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
-import { inventorySchema } from "../schemas";
-import { productVariants } from "../catalog/product-variants";
-import { users } from "../identity/users";
+} from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
+import { inventorySchema } from '../schemas.js';
+import { productVariants } from '../catalog/product-variants.js';
+import { users } from '../identity/users.js';
 
 // ─── Warehouses ──────────────────────────────────────────────────────────────
 
 /**
  * warehouses
  */
-export const warehouses = inventorySchema.table("warehouses", {
-  id: serial("id").primaryKey(),
+export const warehouses = inventorySchema.table('warehouses', {
+  id: serial('id').primaryKey(),
 
   /** Unique business code (e.g., "MAIN", "CAIRO-WH1") */
-  code: text("code").notNull().unique(),
+  code: text('code').notNull().unique(),
 
   /** Human-readable name */
-  name: text("name").notNull(),
+  name: text('name').notNull(),
 
   /** Whether this warehouse is operational */
-  isActive: boolean("is_active").default(true).notNull(),
+  isActive: boolean('is_active').default(true).notNull(),
 
-  createdAt: timestamp("created_at").defaultNow().notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
 // ─── Inventory Balances ──────────────────────────────────────────────────────
@@ -48,32 +48,32 @@ export const warehouses = inventorySchema.table("warehouses", {
  * inventory_balances
  */
 export const inventoryBalances = inventorySchema.table(
-  "inventory_balances",
+  'inventory_balances',
   {
-    id: serial("id").primaryKey(),
+    id: serial('id').primaryKey(),
 
     /** Which SKU */
-    variantId: integer("variant_id")
+    variantId: integer('variant_id')
       .notNull()
-      .references(() => productVariants.id, { onDelete: "cascade" }),
+      .references(() => productVariants.id, { onDelete: 'cascade' }),
 
     /** Which warehouse */
-    warehouseId: integer("warehouse_id")
+    warehouseId: integer('warehouse_id')
       .notNull()
-      .references(() => warehouses.id, { onDelete: "cascade" }),
+      .references(() => warehouses.id, { onDelete: 'cascade' }),
 
     /** Physical stock count */
-    onHand: integer("on_hand").default(0).notNull(),
+    onHand: integer('on_hand').default(0).notNull(),
 
     /** Stock committed to pending orders */
-    reserved: integer("reserved").default(0).notNull(),
+    reserved: integer('reserved').default(0).notNull(),
 
-    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull(),
   },
   (table) => [
     /** One balance row per variant per warehouse */
-    uniqueIndex("uq_inventory_balance").on(table.variantId, table.warehouseId),
-    index("idx_inventory_variant").on(table.variantId),
+    uniqueIndex('uq_inventory_balance').on(table.variantId, table.warehouseId),
+    index('idx_inventory_variant').on(table.variantId),
   ],
 );
 
@@ -83,41 +83,41 @@ export const inventoryBalances = inventorySchema.table(
  * stock_movements
  */
 export const stockMovements = inventorySchema.table(
-  "stock_movements",
+  'stock_movements',
   {
-    id: serial("id").primaryKey(),
+    id: serial('id').primaryKey(),
 
-    variantId: integer("variant_id")
+    variantId: integer('variant_id')
       .notNull()
-      .references(() => productVariants.id, { onDelete: "cascade" }),
+      .references(() => productVariants.id, { onDelete: 'cascade' }),
 
-    warehouseId: integer("warehouse_id")
+    warehouseId: integer('warehouse_id')
       .notNull()
-      .references(() => warehouses.id, { onDelete: "cascade" }),
+      .references(() => warehouses.id, { onDelete: 'cascade' }),
 
     /** Type of movement */
-    movementType: text("movement_type").notNull(),
+    movementType: text('movement_type').notNull(),
 
     /** Positive for inbound, negative for outbound */
-    quantity: integer("quantity").notNull(),
+    quantity: integer('quantity').notNull(),
 
     /** What triggered this movement (e.g., 'order', 'manual', 'import') */
-    referenceType: text("reference_type"),
+    referenceType: text('reference_type'),
 
     /** ID of the triggering entity (order ID, import batch ID, etc.) */
-    referenceId: text("reference_id"),
+    referenceId: text('reference_id'),
 
     /** Optional admin notes */
-    notes: text("notes"),
+    notes: text('notes'),
 
     /** Who performed the action */
-    createdBy: integer("created_by").references(() => users.id, { onDelete: "set null" }),
+    createdBy: integer('created_by').references(() => users.id, { onDelete: 'set null' }),
 
-    createdAt: timestamp("created_at").defaultNow().notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
   },
   (table) => [
-    index("idx_stock_movements_variant").on(table.variantId),
-    index("idx_stock_movements_created").on(table.createdAt),
+    index('idx_stock_movements_variant').on(table.variantId),
+    index('idx_stock_movements_created').on(table.createdAt),
   ],
 );
 

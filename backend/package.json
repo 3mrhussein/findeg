@@ -5,14 +5,15 @@
   "exports": {
     ".": "./src/index.ts",
     "./features/*": "./src/features/*",
-    "./portal-entry": "./dist/enter-portal.js"
+    "./portal-entry": "./dist/enter-portal.js",
+    "./transactions": "./dist/application/transactions.js"
   },
   "scripts": {
     "type-check": "tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest --run",
     "clean": " rm -rf node_modules dist .turbo",
-    "build": "tsc -p tsconfig.portal-entry.json"
+    "build": "tsc -p tsconfig.portal-entry.json && tsc -p tsconfig.application.json"
   },
   "dependencies": {
     "@findeg/db": "workspace:*",

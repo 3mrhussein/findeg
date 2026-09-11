@@ -3,11 +3,12 @@
   "compilerOptions": {
     "noEmit": false,
     "declaration": true,
-    "rootDir": "src/runtime",
-    "outDir": "dist/runtime",
+    "rootDir": "src",
+    "outDir": "dist",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "paths": {}
+    "paths": {},
+    "noEmitOnError": true
   },
   "include": ["src/runtime/**/*.ts"]
 }

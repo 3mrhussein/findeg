@@ -11,7 +11,18 @@
     "./queries": "./src/queries/index.ts",
     "./types": "./src/types/index.ts",
     "./types/*": "./src/types/*.ts",
-    "./migrations": "./dist/runtime/migrations.js"
+    "./migrations": "./dist/runtime/migrations.js",
+    "./transactions": "./dist/runtime/transactions.js",
+    "./module-schema": "./dist/runtime/schema.js",
+    "./modules/identity-access": "./dist/modules/identity-access/schema.js",
+    "./modules/partner-management": "./dist/modules/partner-management/schema.js",
+    "./modules/catalog": "./dist/modules/catalog/schema.js",
+    "./modules/school-supply-lists": "./dist/modules/school-supply-lists/schema.js",
+    "./modules/inventory": "./dist/modules/inventory/schema.js",
+    "./modules/commerce": "./dist/modules/commerce/schema.js",
+    "./modules/partner-rewards": "./dist/modules/partner-rewards/schema.js",
+    "./modules/partner-reports": "./dist/modules/partner-reports/schema.js",
+    "./modules/runtime": "./dist/modules/runtime/schema.js"
   },
   "scripts": {
     "db:generate": "drizzle-kit generate --config ./drizzle.config.ts",

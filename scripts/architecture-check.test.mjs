@@ -25,6 +25,9 @@ async function createTargetRepository() {
     mkdir(join(root, 'docs/operations'), { recursive: true }),
     mkdir(join(root, 'frontend/storefront/src'), { recursive: true }),
     mkdir(join(root, 'backend/src/features/catalog'), { recursive: true }),
+    mkdir(join(root, 'backend/src/modules'), { recursive: true }),
+    mkdir(join(root, 'backend/src/application'), { recursive: true }),
+    mkdir(join(root, 'runtime/src'), { recursive: true }),
     mkdir(join(root, 'db/src'), { recursive: true }),
   ]);
 
@@ -140,5 +143,160 @@ test('fails closed when a required source root is missing or unreadable', async 
     ]);
   } finally {
     await chmod(frontendRoot, 0o755);
+  }
+});
+
+async function source(root, path, contents) {
+  await mkdir(join(root, path, '..'), { recursive: true });
+  await writeFile(join(root, path), contents);
+}
+
+test('rejects cross-owner internals, database leaks, and relative import bypasses', async () => {
+  const root = await createTargetRepository();
+  await source(root, 'backend/src/modules/catalog/contracts.ts', 'export interface Product {}');
+  await source(
+    root,
+    'backend/src/modules/catalog/infrastructure/store.ts',
+    'export const store = {};',
+  );
+  await source(
+    root,
+    'backend/src/modules/commerce/public.ts',
+    `
+    import { store } from '../catalog/infrastructure/store.js';
+    import type { Product } from '../catalog/contracts.js';
+    import { users } from '../../../../db/src/schema/identity/users.js';
+    import { drizzle } from 'drizzle-orm/postgres-js';
+  `,
+  );
+  const violations = await runArchitectureCheck(root);
+  assert.ok(violations.some((message) => message.includes('catalog/infrastructure/store.js')));
+  assert.ok(violations.some((message) => message.includes('db/src/schema/identity/users.js')));
+  assert.ok(violations.some((message) => message.includes('drizzle-orm/postgres-js')));
+  assert.ok(!violations.some((message) => message.includes('catalog/contracts.js')));
+});
+
+test('rejects cycles through otherwise permitted module contracts', async () => {
+  const root = await createTargetRepository();
+  await source(
+    root,
+    'backend/src/modules/catalog/contracts.ts',
+    "export type { Order } from '../commerce/contracts.js';",
+  );
+  await source(
+    root,
+    'backend/src/modules/commerce/contracts.ts',
+    "export type { Product } from '../catalog/contracts.js';",
+  );
+  assert.ok(
+    (await runArchitectureCheck(root)).some((message) =>
+      message.includes('Module dependency cycle:'),
+    ),
+  );
+});
+
+test('permits runtime construction and same-owner persistence while rejecting another owner schema', async () => {
+  const root = await createTargetRepository();
+  await source(root, 'db/src/modules/catalog/schema.ts', 'export const products = {};');
+  await source(root, 'db/src/modules/commerce/schema.ts', 'export const orders = {};');
+  await source(
+    root,
+    'backend/src/modules/catalog/infrastructure/store.ts',
+    `
+    import { products } from '../../../../../db/src/modules/catalog/schema.js';
+    import type { TransactionDatabase } from '@findeg/db/transactions';
+    import { eq } from 'drizzle-orm';
+  `,
+  );
+  await source(
+    root,
+    'runtime/src/compose.ts',
+    "import { store } from '../../backend/src/modules/catalog/infrastructure/store.js';",
+  );
+  assert.deepEqual(await runArchitectureCheck(root), []);
+  await source(
+    root,
+    'backend/src/modules/catalog/infrastructure/foreign-store.ts',
+    "import { orders } from '../../../../../db/src/modules/commerce/schema.js';",
+  );
+  assert.ok(
+    (await runArchitectureCheck(root)).some((message) => message.includes('commerce/schema.js')),
+  );
+});
+
+test('follows configured aliases and type imports instead of allowing boundary bypasses', async () => {
+  const root = await createTargetRepository();
+  await source(
+    root,
+    'tsconfig.json',
+    JSON.stringify({
+      compilerOptions: {
+        baseUrl: '.',
+        paths: { '@storage/*': ['db/src/*'], '@modules/*': ['backend/src/modules/*'] },
+      },
+    }),
+  );
+  await source(root, 'db/src/connection.ts', 'export const db = {};');
+  await source(
+    root,
+    'backend/src/modules/catalog/infrastructure/store.ts',
+    'export const store = {};',
+  );
+  await source(
+    root,
+    'backend/src/modules/commerce/contracts.ts',
+    `
+    export { db } from '@storage/connection';
+    export { store } from '@modules/catalog/infrastructure/store';
+    export type Query = import('drizzle-orm').SQL;
+  `,
+  );
+  const violations = await runArchitectureCheck(root);
+  for (const imported of [
+    '@storage/connection',
+    '@modules/catalog/infrastructure/store',
+    'drizzle-orm',
+  ]) {
+    assert.ok(
+      violations.some((message) => message.includes(imported)),
+      imported,
+    );
+  }
+});
+
+test('fails closed on computed target dependencies and unknown module owners', async () => {
+  const root = await createTargetRepository();
+  await source(root, 'backend/src/modules/unregistered/public.ts', 'await import(modulePath);');
+  const violations = await runArchitectureCheck(root);
+  assert.ok(violations.some((message) => message.includes('Unknown module owner:')));
+  assert.ok(violations.some((message) => message.includes('Nonliteral module dependency:')));
+});
+
+test('prevents coordination and database barrels from hiding cross-owner dependencies', async () => {
+  const root = await createTargetRepository();
+  await source(root, 'backend/src/application/checkout.ts', 'export const checkout = {};');
+  await source(root, 'db/src/runtime/schema.ts', 'export const allTables = {};');
+  await source(root, 'db/src/queries/orders.ts', 'export const orders = {};');
+  await source(
+    root,
+    'backend/src/modules/catalog/public.ts',
+    "import { checkout } from '../../application/checkout.js';",
+  );
+  await source(
+    root,
+    'db/src/modules/catalog/adapter.ts',
+    "import { orders } from '../../queries/orders.js';",
+  );
+  await source(
+    root,
+    'db/src/modules/catalog/schema.ts',
+    "export { allTables } from '../../runtime/schema.js';",
+  );
+  const violations = await runArchitectureCheck(root);
+  for (const imported of ['application/checkout.js', 'queries/orders.js', 'runtime/schema.js']) {
+    assert.ok(
+      violations.some((message) => message.includes(imported)),
+      imported,
+    );
   }
 });

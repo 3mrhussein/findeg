@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Establish explicit module ownership for the retained PostgreSQL records, one
+  compiled schema assembly, and transaction contracts that roll back structured
+  business rejections as well as exceptions. Target module imports and cycles are
+  now checked; legacy mappings remain replacement evidence, not certified commerce.
+
 > Manually maintained. Do not overwrite this file with the draft changelog generator.
 
 - #52 introduces the target unified web portal shells and compiled web/worker/migration runtime, one release image with independent process restarts, and HTTP/process/real-PostgreSQL migration gates. Authenticated entry remains closed pending #54; worker delivery readiness remains unavailable pending #59. Legacy frontends are retained only as migration evidence.
