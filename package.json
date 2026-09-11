@@ -23,7 +23,7 @@
     "clean:next": "rm -rf frontend/dashboard/.next frontend/storefront/.next",
     "kill": "lsof -ti:3000,3001 | xargs kill -9 2>/dev/null || true",
     "prepare": "husky",
-    "dev:legacy": "pnpm db:run && turbo run dev",
+    "dev:legacy": "pnpm db:run && turbo run dev --filter=@findeg/storefront --filter=@findeg/dashboard",
     "runtime:compile": "turbo run build --filter=@findeg/runtime...",
     "runtime:build": "pnpm runtime:compile && pnpm --filter @findeg/web build",
     "start:web": "pnpm --filter @findeg/web start",
