@@ -1,5 +1,10 @@
 # FindEg Architecture Playbook
 
+> Historical migration evidence. The canonical phase-one target is
+> [`docs/architecture/README.md`](README.md) and its linked ADRs. This guide
+> describes the legacy multi-executable architecture and must not govern new
+> work.
+
 This playbook is the single source of truth for:
 - Clean architecture boundaries
 - Feature responsibilities and dependencies

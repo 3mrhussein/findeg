@@ -1,3 +1,7 @@
+> Historical migration evidence. The canonical phase-one target is
+> [`docs/architecture/README.md`](README.md) and its linked ADRs. Do not use
+> this document's legacy portal or package claims for new work.
+
 ## Localization In Clean Architecture
 
 ### Rule: Repositories Are Locale-Unaware

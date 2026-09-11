@@ -10,6 +10,8 @@
     "lint": "turbo run lint",
     "type-check": "turbo run type-check",
     "test": "turbo run test",
+    "architecture:check": "node scripts/architecture-check.mjs",
+    "test:architecture": "node --test scripts/architecture-check.test.mjs",
     "db:run": "docker compose up -d postgres",
     "db:reset": "docker compose down -v ",
     "db:rebuild": "pnpm db:reset && pnpm db:run && pnpm --filter @findeg/db db:setup",

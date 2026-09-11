@@ -1,5 +1,9 @@
 # Backend Pure TypeScript Migration Patterns
 
+> Historical migration evidence. The canonical phase-one target is
+> [`docs/architecture/README.md`](README.md) and its linked ADRs. This record
+> does not define the target module or deployment topology.
+
 **Purpose**: Guide for migrating framework-dependent code to pure TypeScript patterns  
 **Epic**: `002-backend-pure-typescript`  
 **Completed**: April 5, 2026

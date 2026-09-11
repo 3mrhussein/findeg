@@ -1,0 +1,21 @@
+openapi: 3.1.0
+info:
+  title: FindEg HTTP API
+  version: 1.0.0
+  description: |
+    Canonical contract for versioned JSON adapters. Routes are added only when
+    the corresponding authorized application operation exists.
+servers:
+  - url: /api/v1
+paths: {}
+components:
+  schemas:
+    Error:
+      type: object
+      required: [errorCode, message]
+      properties:
+        errorCode:
+          type: string
+        message:
+          type: string
+        details: {}
