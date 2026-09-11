@@ -300,3 +300,31 @@ test('prevents coordination and database barrels from hiding cross-owner depende
     );
   }
 });
+
+test('adapters can import the transaction type but cannot construct an independent pool', async () => {
+  const root = await createTargetRepository();
+  await source(
+    root,
+    'backend/src/modules/catalog/infrastructure/store.ts',
+    "import type { TransactionDatabase } from '@findeg/db/transactions';",
+  );
+  assert.deepEqual(await runArchitectureCheck(root), []);
+  for (const contents of [
+    "import { createTransactionDatabase } from '@findeg/db/transactions';",
+    "import * as transactions from '@findeg/db/transactions';",
+    "const transactions = require('@findeg/db/transactions');",
+    "const transactions = await import('@findeg/db/transactions');",
+    "export { createTransactionDatabase } from '@findeg/db/transactions';",
+    "import postgres from 'postgres';",
+    "import { Pool } from 'pg';",
+    "import { drizzle } from 'drizzle-orm/postgres-js';",
+  ]) {
+    await source(root, 'backend/src/modules/catalog/infrastructure/store.ts', contents);
+    assert.ok(
+      (await runArchitectureCheck(root)).some((message) =>
+        message.includes('Prohibited module dependency:'),
+      ),
+      contents,
+    );
+  }
+});

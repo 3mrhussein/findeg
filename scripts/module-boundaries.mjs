@@ -19,28 +19,68 @@ function ownerOf(path) {
 }
 
 /** Parse syntax rather than text so multiline/type-only imports and comments are unambiguous. */
+function onlyTransactionType(node) {
+  if (ts.isImportDeclaration(node)) {
+    const clause = node.importClause;
+    return (
+      !!clause &&
+      !clause.name &&
+      !!clause.namedBindings &&
+      ts.isNamedImports(clause.namedBindings) &&
+      clause.namedBindings.elements.length > 0 &&
+      clause.namedBindings.elements.every(
+        (element) =>
+          (clause.isTypeOnly || element.isTypeOnly) &&
+          (element.propertyName ?? element.name).text === 'TransactionDatabase',
+      )
+    );
+  }
+  if (ts.isExportDeclaration(node)) {
+    return (
+      !!node.exportClause &&
+      ts.isNamedExports(node.exportClause) &&
+      node.exportClause.elements.length > 0 &&
+      node.exportClause.elements.every(
+        (element) =>
+          (node.isTypeOnly || element.isTypeOnly) &&
+          (element.propertyName ?? element.name).text === 'TransactionDatabase',
+      )
+    );
+  }
+  return (
+    ts.isImportTypeNode(node) &&
+    !node.isTypeOf &&
+    !!node.qualifier &&
+    ts.isIdentifier(node.qualifier) &&
+    node.qualifier.text === 'TransactionDatabase'
+  );
+}
+
 function importsIn(path, contents) {
   const source = ts.createSourceFile(path, contents, ts.ScriptTarget.Latest, true);
   const imports = [];
-  function add(node) {
-    imports.push(node && ts.isStringLiteralLike(node) ? node.text : null);
+  function add(specifier, node) {
+    imports.push({
+      specifier: specifier && ts.isStringLiteralLike(specifier) ? specifier.text : null,
+      transactionTypeOnly: onlyTransactionType(node),
+    });
   }
   function visit(node) {
     if (ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) {
-      if (node.moduleSpecifier) add(node.moduleSpecifier);
+      if (node.moduleSpecifier) add(node.moduleSpecifier, node);
     } else if (
       ts.isImportEqualsDeclaration(node) &&
       ts.isExternalModuleReference(node.moduleReference)
     ) {
-      add(node.moduleReference.expression);
+      add(node.moduleReference.expression, node);
     } else if (ts.isImportTypeNode(node) && ts.isLiteralTypeNode(node.argument)) {
-      add(node.argument.literal);
+      add(node.argument.literal, node);
     } else if (
       ts.isCallExpression(node) &&
       (node.expression.kind === ts.SyntaxKind.ImportKeyword ||
         (ts.isIdentifier(node.expression) && node.expression.text === 'require'))
     )
-      add(node.arguments[0]);
+      add(node.arguments[0], node);
     ts.forEachChild(node, visit);
   }
   visit(source);
@@ -90,14 +130,25 @@ export function checkModuleBoundaries(root, sources) {
     const application = path.startsWith('backend/src/application/');
     const infrastructure = path.includes('/infrastructure/');
     const persistence = path.startsWith('db/src/modules/');
-    for (const imported of importsIn(path, contents)) {
+    for (const { specifier: imported, transactionTypeOnly } of importsIn(path, contents)) {
       if (imported === null) {
         if (owner || application) violations.push(`Nonliteral module dependency: ${path}`);
         continue;
       }
       const target = resolveImport(root, path, imported, configurations) ?? '';
       const targetOwner = ownerOf(target);
-      let forbidden = false;
+      // Pool/driver creation belongs to runtime, never an owner-scoped adapter.
+      let forbidden =
+        !!owner &&
+        (imported === 'postgres' ||
+          imported === 'pg' ||
+          (imported.startsWith('drizzle-orm/') && imported !== 'drizzle-orm/pg-core'));
+      if (
+        owner &&
+        (imported === '@findeg/db/transactions' || target === 'db/src/runtime/transactions.ts') &&
+        !transactionTypeOnly
+      )
+        forbidden = true;
       if (owner && targetOwner && owner !== targetOwner) {
         if (!graph.has(owner)) graph.set(owner, new Set());
         graph.get(owner).add(targetOwner);
@@ -113,6 +164,8 @@ export function checkModuleBoundaries(root, sources) {
           imported.startsWith('next/') ||
           imported.startsWith('@findeg/runtime') ||
           target.startsWith('runtime/');
+        if (infrastructure && imported === '@findeg/db/transactions' && !transactionTypeOnly)
+          forbidden = true;
         // Owner persistence factories may use only their own schema and the transaction construction type.
         if (infrastructure && (imported.startsWith('@findeg/db') || target.startsWith('db/'))) {
           forbidden ||=

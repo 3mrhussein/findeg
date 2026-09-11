@@ -1,9 +1,13 @@
 import type { TransactionRunner, TransactionOutcome } from '@findeg/backend/transactions';
-import { createTransactionDatabase, type TransactionDatabase } from '@findeg/db/transactions';
+import {
+  createTransactionDatabase,
+  type TransactionDatabase,
+  type TransactionDatabaseConfig,
+} from '@findeg/db/transactions';
 
 /** Concrete construction belongs to runtime; callers receive only the application runner. */
 export function createTransactionRuntime<Adapters>(
-  config: { url: string; ssl: boolean; max: number },
+  config: TransactionDatabaseConfig,
   bind: (database: TransactionDatabase) => Adapters,
 ): { transactions: TransactionRunner<Adapters>; close: () => Promise<void> } {
   const database = createTransactionDatabase(config);

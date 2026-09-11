@@ -6,7 +6,13 @@ export type TransactionDatabase = Parameters<
   Parameters<ReturnType<typeof drizzle>['transaction']>[0]
 >[0];
 
-export function createTransactionDatabase(config: { url: string; ssl: boolean; max: number }) {
+export interface TransactionDatabaseConfig {
+  readonly url: string;
+  readonly ssl: boolean;
+  readonly max: number;
+}
+
+export function createTransactionDatabase(config: TransactionDatabaseConfig) {
   const connection = postgres(config.url, {
     max: config.max,
     ssl: config.ssl ? 'verify-full' : false,

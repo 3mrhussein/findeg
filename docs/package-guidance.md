@@ -88,7 +88,9 @@ rules are not certified by assigning ownership.
 - Concrete adapter factories belong in `infrastructure/`. They may import their
   owner's `@findeg/db/modules/<owner>` schema, Drizzle, and the infrastructure-only
   `TransactionDatabase` type from `@findeg/db/transactions`. They must not use
-  another owner's schema or the legacy database connection/query barrels.
+  another owner's schema or the legacy database connection/query barrels. Driver
+  and pool constructors are runtime-only; the transaction import exception permits
+  only the named type, never the database constructor.
 - `@findeg/backend/transactions` exposes `TransactionRunner<Adapters>` and
   `TransactionOutcome<Value, Rejection>` without database or ORM types.
   Application orchestration receives this interface through dependency injection.
