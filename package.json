@@ -12,6 +12,8 @@
     "test": "turbo run test",
     "architecture:check": "node scripts/architecture-check.mjs",
     "test:architecture": "node --test scripts/architecture-check.test.mjs",
+    "typegen": "pnpm --filter @findeg/storefront exec next typegen && pnpm --filter @findeg/dashboard exec next typegen",
+    "quality:check": "pnpm architecture:check && pnpm test:architecture && pnpm typegen && pnpm type-check && pnpm test",
     "db:run": "docker compose up -d postgres",
     "db:reset": "docker compose down -v ",
     "db:rebuild": "pnpm db:reset && pnpm db:run && pnpm --filter @findeg/db db:setup",
@@ -19,9 +21,13 @@
     "db:studio": "pnpm db:run && pnpm --filter @findeg/db db:studio",
     "clean": "turbo run clean && rm -rf node_modules .turbo && pnpm clean:next",
     "clean:next": "rm -rf frontend/dashboard/.next frontend/storefront/.next",
-    "kill": "lsof -ti:3000,3001 | xargs kill -9 2>/dev/null || true"
+    "kill": "lsof -ti:3000,3001 | xargs kill -9 2>/dev/null || true",
+    "prepare": "husky"
   },
   "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^17.5.0",
+    "prettier": "^3.9.6",
     "turbo": "^2.9.12",
     "typescript": "^5.7.3"
   }
