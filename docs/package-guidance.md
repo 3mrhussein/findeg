@@ -26,9 +26,10 @@ Run `pnpm architecture:check` after changing imports or any canonical document.
 - `runtime` (`@findeg/runtime`) owns process configuration and concrete startup
   wiring, shared by web, worker, and migrations. It has no browser-safe exports.
   This is the runtime layer required by ADR 0001, not a generic shared library.
-- `@findeg/backend/portal-entry` is the compiled Identity & Access entry policy.
-  It permits the public Storefront and denies authenticated entry until #54.
-  The existing backend exports remain migration evidence.
+- `@findeg/backend/modules/identity-access/public` exposes Current Session,
+  sign-in/sign-out, and authorized staff-access operations. `contracts` exposes
+  database-free vocabulary; explicit infrastructure exports are runtime-only
+  construction surfaces. The old `portal-entry` export remains migration evidence.
 - `@findeg/db/migrations` is the compiled persistence construction surface for
   the existing ordered migration history; importing it neither parses environment
   variables nor opens a connection. Only the migration runtime calls it.
@@ -50,7 +51,7 @@ This split keeps the existing rule that database code never imports business cod
 
 | Owner                  | Existing persisted records / responsibility                                                                   |
 | ---------------------- | ------------------------------------------------------------------------------------------------------------- |
-| Identity & Access      | Users, credentials, authentication accounts, roles and grants, guest principals                               |
+| Identity & Access      | Users, credentials, authentication accounts, roles and grants, Current Sessions, guest principals             |
 | Partner Management     | Organizations and organization memberships (legacy names)                                                     |
 | Catalog                | Products, variants, attributes, categories, brands, collections, tags, reviews and helpful votes, search logs |
 | School Supply Lists    | Lists, items, alternatives, list access grants/requests/tokens/attempts and parent sessions                   |
@@ -117,3 +118,12 @@ new persistence adapters use only their own construction surface. Legacy schema
 foreign-key/Drizzle relation references are retained assembly details, not permitted
 cross-owner application calls. Future reporting read exceptions require explicit
 owner approval and an enforced read-only contract; none is introduced here.
+
+## Current Sessions (#54)
+
+Identity & Access owns `identity.sessions` and `identity.staff_role_grants` and
+contributes migration `0002_portal_sessions` to the shared history. The migration
+also supplies version/invalidation triggers. Snapshot 0001 is corrected to match
+its existing SQL: `authorization_version` belongs to Users, not Organizations;
+no historical SQL is rewritten. See [the Current Session runbook](operations/current-sessions.md)
+for fixed roles, runtime configuration, bootstrap boundaries, and denial behavior.

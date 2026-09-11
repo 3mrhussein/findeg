@@ -38,10 +38,14 @@ try {
     }
     if (!ready) throw new Error('Disposable PostgreSQL did not become ready');
   }
-  const child = spawn(process.execPath, ['--test', 'tests/runtime-migrations.test.mjs'], {
-    stdio: 'inherit',
-    env: { ...process.env, MIGRATION_TEST_DATABASE_URL: url },
-  });
+  const child = spawn(
+    process.execPath,
+    ['--test', 'tests/runtime-migrations.test.mjs', 'tests/identity-access.test.mjs'],
+    {
+      stdio: 'inherit',
+      env: { ...process.env, MIGRATION_TEST_DATABASE_URL: url },
+    },
+  );
   const [code] = await once(child, 'exit');
   process.exitCode = code ?? 1;
 } finally {

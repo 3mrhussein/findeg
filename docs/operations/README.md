@@ -28,6 +28,7 @@ Use Node and pnpm pinned by `.nvmrc` and `package.json`, then
 
 ```sh
 export RELEASE_REVISION="$(git rev-parse HEAD)"
+# Supply DATABASE_URL and optional DB_SSL for authenticated web requests.
 pnpm runtime:build
 pnpm start:web
 # In another terminal, export the same RELEASE_REVISION:
@@ -41,7 +42,7 @@ process environment; configuration parsing reports invalid keys without values.
 
 | Process   | Configuration                                                                                         | Signals                                                                   |
 | --------- | ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| Web       | `RELEASE_REVISION` (40-character Git SHA), optional `NODE_ENV`                                        | Port 3000, `/health/live` reports revision and liveness                   |
+| Web       | `RELEASE_REVISION` (40-character Git SHA), `DATABASE_URL`, optional `DB_SSL` and `NODE_ENV`           | Port 3000, `/health/live` reports revision and liveness                   |
 | Worker    | Same release settings, `WORKER_HOST` (default `127.0.0.1`), `WORKER_PORT` (default 3100)              | `/health/live`, `/health/ready`, SIGTERM/SIGINT shutdown                  |
 | Migration | Same release settings, `DATABASE_URL` (PostgreSQL URL), `DB_SSL` (`true` or `false`, default `false`) | Exits 0 on success, nonzero on invalid configuration or migration failure |
 
@@ -55,10 +56,12 @@ retained for this ticket; #53 owns module data and schema assembly.
 Portal entry points are `/en` and `/ar` for the Customer Storefront,
 `/{locale}/partner` for Partner Workspace, and `/{locale}/back-office` for
 FindEg Back Office. Each has a separate layout. Protected entry redirects to its
-own sign-in page and does not clear cookies. Sign-in is unavailable until #54;
-legacy cookies and client-supplied roles cannot authorize the new host. #54 must
-replace the closed entry policy with authoritative Current Sessions and authorize
-each operation; #56 adds Partner Membership and selected Workspace context.
+own sign-in page. Sign-in now uses PostgreSQL-backed Current Sessions; valid
+sessions denied authorization remain signed in. Legacy cookies and client-supplied
+roles cannot authorize the new host. See [Current Sessions](current-sessions.md)
+for the fixed staff permissions, authentication setup, and HTTP behavior. #56 adds
+Partner Membership and selected Workspace context; Partner authorization remains
+closed until that integration.
 
 The worker currently provides supervision and lifecycle entry, with no delivery
 adapter. Its readiness endpoint returns **503** (`delivery-not-configured`) in

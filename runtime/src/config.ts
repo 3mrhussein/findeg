@@ -5,7 +5,16 @@ const release = {
   RELEASE_REVISION: z.string().regex(/^[a-f0-9]{40}$/, 'must be a full Git commit SHA'),
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
 };
-const webSchema = z.object(release);
+const database = {
+  DATABASE_URL: z
+    .url()
+    .refine((value) => ['postgres:', 'postgresql:'].includes(new URL(value).protocol)),
+  DB_SSL: z
+    .enum(['true', 'false'])
+    .default('false')
+    .transform((value) => value === 'true'),
+};
+const webSchema = z.object({ ...release, ...database });
 
 function parse<T>(schema: z.ZodType<T>, environment: Environment): T {
   const result = schema.safeParse(environment);
@@ -30,13 +39,7 @@ const workerSchema = z.object({
 });
 const migrationSchema = z.object({
   ...release,
-  DATABASE_URL: z
-    .url()
-    .refine((value) => ['postgres:', 'postgresql:'].includes(new URL(value).protocol)),
-  DB_SSL: z
-    .enum(['true', 'false'])
-    .default('false')
-    .transform((value) => value === 'true'),
+  ...database,
 });
 
 export function readWorkerConfig(environment: Environment) {

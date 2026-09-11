@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import './styles.css';
+import { SessionAccount } from '../../server/session-account';
 
 export default async function LocaleLayout({
   children,
@@ -30,6 +31,7 @@ export default async function LocaleLayout({
           <Link href={arabic ? '/en' : '/ar'} lang={arabic ? 'en' : 'ar'}>
             {arabic ? 'English' : 'العربية'}
           </Link>
+          <SessionAccount locale={locale} />
         </header>
         {children}
       </body>
