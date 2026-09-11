@@ -11,6 +11,7 @@
 
 ## Review
 
+- [ ] Correct base and merge method: ticket → `develop` (squash), promotion → `main` (merge commit)
 - [ ] Linked the issue; blocking tickets are merged
 - [ ] Standards and Spec reviews completed; findings addressed
 - [ ] Relevant canonical documents updated (see `docs/architecture/README.md`)
