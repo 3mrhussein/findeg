@@ -1,0 +1,13 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": true,
+    "rootDir": "src/runtime",
+    "outDir": "dist/runtime",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "paths": {}
+  },
+  "include": ["src/runtime/**/*.ts"]
+}

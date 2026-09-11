@@ -1,0 +1,11 @@
+FROM node:24.15.0-bookworm-slim
+WORKDIR /app
+RUN npm install --global pnpm@11.24.0
+COPY . .
+ARG RELEASE_REVISION
+ENV RELEASE_REVISION=$RELEASE_REVISION HUSKY=0 NEXT_TELEMETRY_DISABLED=1
+RUN pnpm install --frozen-lockfile && pnpm runtime:build
+ENV NODE_ENV=production
+USER node
+EXPOSE 3000 3100
+CMD ["pnpm", "start:web"]
