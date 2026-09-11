@@ -1,10 +1,13 @@
-export default async function SignIn({ params }: { params: Promise<{ locale: string }> }) {
+import { SignInForm } from '../../../../server/sign-in';
+export default async function SignIn({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ failed?: string }>;
+}) {
   const { locale } = await params;
   return (
-    <p>
-      {locale === 'ar'
-        ? 'تسجيل الدخول غير متاح حاليًا. يرجى المحاولة لاحقًا.'
-        : 'Sign-in is currently unavailable. Please try again later.'}
-    </p>
+    <SignInForm locale={locale} portal="partner" failed={(await searchParams).failed === '1'} />
   );
 }

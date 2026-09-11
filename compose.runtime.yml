@@ -11,6 +11,9 @@ services:
       args:
         RELEASE_REVISION: ${RELEASE_REVISION}
     restart: unless-stopped
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-}
+      DB_SSL: ${DB_SSL:-false}
     ports:
       - '${WEB_PORT:-3000}:3000'
     healthcheck:

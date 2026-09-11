@@ -24,6 +24,7 @@ async function launch(t, command, args, port) {
       NODE_ENV: 'production',
       RELEASE_REVISION: revision,
       WORKER_PORT: String(port),
+      DATABASE_URL: 'postgres://localhost/findeg',
     },
     stdio: ['ignore', 'pipe', 'pipe'],
   });

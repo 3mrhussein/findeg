@@ -29,3 +29,18 @@ main {
 h1 {
   font-size: 2rem;
 }
+
+.sign-in {
+  display: grid;
+  gap: 1rem;
+  max-width: 24rem;
+}
+.sign-in label {
+  display: grid;
+  gap: 0.4rem;
+}
+.sign-in input,
+.sign-in button {
+  font: inherit;
+  padding: 0.6rem;
+}

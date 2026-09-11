@@ -7,9 +7,113 @@ info:
     the corresponding authorized application operation exists.
 servers:
   - url: /api/v1
-paths: {}
+paths:
+  /sessions:
+    post:
+      summary: Authenticate an active User and issue an opaque session cookie
+      description: Requires a same-origin Origin header. Replaces the browser's existing credential.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, maxLength: 255 }
+                password: { type: string, minLength: 1, description: Maximum 72 UTF-8 bytes }
+      responses:
+        '201':
+          description: Authenticated; Set-Cookie supplies the HttpOnly credential
+        '400': { description: Invalid request }
+        '401': { description: Invalid credentials or inactive User }
+        '403': { description: Origin denied }
+    delete:
+      summary: Revoke the browser credential and clear its cookie
+      description: Requires a same-origin Origin header; idempotent for absent or revoked credentials.
+      responses:
+        '204': { description: Signed out }
+        '403': { description: Origin denied }
+  /sessions/{portal}:
+    get:
+      summary: Resolve a Current Session for the requested Active Portal
+      security: [{ sessionCookie: [] }]
+      parameters:
+        - in: path
+          name: portal
+          required: true
+          schema: { type: string, enum: [storefront, back-office, partner] }
+      responses:
+        '200':
+          description: Authoritative Current Session; Cache-Control no-store
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status, session]
+                properties:
+                  status: { const: authenticated }
+                  session: { $ref: '#/components/schemas/CurrentSession' }
+        '401': { description: Invalid or missing credential; clears the cookie }
+        '403': { description: Authorization Denial; preserves the cookie }
+        '404': { description: Unknown portal }
+  /back-office/staff-access:
+    put:
+      summary: Replace an existing User's fixed staff roles and activity
+      description: Requires same-origin Origin and staff-access.manage in Back Office. Authorization and writes share a transaction.
+      security: [{ sessionCookie: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [userId, roles, isActive]
+              properties:
+                userId: { type: integer, minimum: 1 }
+                roles:
+                  type: array
+                  items: { $ref: '#/components/schemas/StaffRole' }
+                isActive: { type: boolean }
+      responses:
+        '200': { description: Updated atomically }
+        '400': { description: Invalid input or unknown role }
+        '401': { description: Authentication required }
+        '403': { description: Origin or authorization denied; preserves valid sessions }
+        '404': { description: User not found }
 components:
+  securitySchemes:
+    sessionCookie:
+      type: apiKey
+      in: cookie
+      name: findeg_session
   schemas:
+    StaffRole:
+      type: string
+      enum: [access-administrator, catalog-manager, fulfillment-operator, finance-manager]
+    CurrentSession:
+      type: object
+      required: [userId, email, activePortal, authorizationVersion, staffRoles, permissions]
+      properties:
+        userId: { type: integer }
+        email: { type: string }
+        activePortal: { type: string, enum: [storefront, back-office, partner] }
+        authorizationVersion: { type: integer }
+        staffRoles:
+          type: array
+          items: { $ref: '#/components/schemas/StaffRole' }
+        permissions:
+          type: array
+          items:
+            type: string
+            enum:
+              [
+                back-office.enter,
+                staff-access.manage,
+                catalog.manage,
+                fulfillment.manage,
+                finance.manage,
+              ]
     Error:
       type: object
       required: [errorCode, message]

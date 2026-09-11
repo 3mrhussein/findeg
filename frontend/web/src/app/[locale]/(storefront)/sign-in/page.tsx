@@ -8,6 +8,6 @@ export default async function SignIn({
 }) {
   const { locale } = await params;
   return (
-    <SignInForm locale={locale} portal="back-office" failed={(await searchParams).failed === '1'} />
+    <SignInForm locale={locale} portal="storefront" failed={(await searchParams).failed === '1'} />
   );
 }

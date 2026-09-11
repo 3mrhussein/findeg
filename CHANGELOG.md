@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Restore target PostgreSQL Current Sessions, request-specific Active Portal grants,
+  fixed additive staff roles, and authorization refresh without sign-out (#54).
+  Legacy role grants remain excluded; Partner Membership integration belongs to #56.
+  Correct migration snapshot 0001 to reflect its existing Users column before
+  adding session tables and invalidation triggers in migration 0002.
+
 - Establish explicit module ownership for the retained PostgreSQL records, one
   compiled schema assembly, and transaction contracts that roll back structured
   business rejections as well as exceptions. Target module imports and cycles are

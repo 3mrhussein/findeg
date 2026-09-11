@@ -1,6 +1,6 @@
 {
-  "id": "de0e6d50-9874-4fe2-a940-fa380e140dc3",
-  "prevId": "c555b1e8-0957-44a5-b56d-1d613eb157ec",
+  "id": "72867f17-67b4-4af2-8b92-5cb7e101ce59",
+  "prevId": "de0e6d50-9874-4fe2-a940-fa380e140dc3",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -1205,6 +1205,13 @@
           "notNull": true,
           "default": true
         },
+        "authorization_version": {
+          "name": "authorization_version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -1218,13 +1225,6 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
-        },
-        "authorization_version": {
-          "name": "authorization_version",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 1
         }
       },
       "indexes": {},
@@ -1403,135 +1403,6 @@
       "uniqueConstraints": {
         "categories_slug_unique": {
           "name": "categories_slug_unique",
-          "nullsNotDistinct": false,
-          "columns": ["slug"]
-        }
-      },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "catalog.collection_tags": {
-      "name": "collection_tags",
-      "schema": "catalog",
-      "columns": {
-        "collection_id": {
-          "name": "collection_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "tag_id": {
-          "name": "tag_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "collection_tags_collection_id_collections_id_fk": {
-          "name": "collection_tags_collection_id_collections_id_fk",
-          "tableFrom": "collection_tags",
-          "tableTo": "collections",
-          "schemaTo": "catalog",
-          "columnsFrom": ["collection_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "collection_tags_tag_id_tags_id_fk": {
-          "name": "collection_tags_tag_id_tags_id_fk",
-          "tableFrom": "collection_tags",
-          "tableTo": "tags",
-          "schemaTo": "catalog",
-          "columnsFrom": ["tag_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "collection_tags_collection_id_tag_id_pk": {
-          "name": "collection_tags_collection_id_tag_id_pk",
-          "columns": ["collection_id", "tag_id"]
-        }
-      },
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "catalog.collections": {
-      "name": "collections",
-      "schema": "catalog",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "slug": {
-          "name": "slug",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "localized_title": {
-          "name": "localized_title",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'{}'::jsonb"
-        },
-        "localized_subtitle": {
-          "name": "localized_subtitle",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "hero_image_url": {
-          "name": "hero_image_url",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "sort_order": {
-          "name": "sort_order",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 0
-        },
-        "is_active": {
-          "name": "is_active",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": true
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "collections_slug_unique": {
-          "name": "collections_slug_unique",
           "nullsNotDistinct": false,
           "columns": ["slug"]
         }
@@ -2366,64 +2237,60 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "school_engine.cart_kits": {
-      "name": "cart_kits",
-      "schema": "school_engine",
+    "catalog.collection_tags": {
+      "name": "collection_tags",
+      "schema": "catalog",
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "school_list_id": {
-          "name": "school_list_id",
+        "collection_id": {
+          "name": "collection_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
-        "localized_name": {
-          "name": "localized_name",
-          "type": "jsonb",
+        "tag_id": {
+          "name": "tag_id",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
-        },
-        "item_snapshots": {
-          "name": "item_snapshots",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "cart_kits_school_list_id_school_lists_id_fk": {
-          "name": "cart_kits_school_list_id_school_lists_id_fk",
-          "tableFrom": "cart_kits",
-          "tableTo": "school_lists",
-          "schemaTo": "school_engine",
-          "columnsFrom": ["school_list_id"],
+        "collection_tags_collection_id_collections_id_fk": {
+          "name": "collection_tags_collection_id_collections_id_fk",
+          "tableFrom": "collection_tags",
+          "tableTo": "collections",
+          "schemaTo": "catalog",
+          "columnsFrom": ["collection_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "collection_tags_tag_id_tags_id_fk": {
+          "name": "collection_tags_tag_id_tags_id_fk",
+          "tableFrom": "collection_tags",
+          "tableTo": "tags",
+          "schemaTo": "catalog",
+          "columnsFrom": ["tag_id"],
           "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
+      "compositePrimaryKeys": {
+        "collection_tags_collection_id_tag_id_pk": {
+          "name": "collection_tags_collection_id_tag_id_pk",
+          "columns": ["collection_id", "tag_id"]
+        }
+      },
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "sales.discount_rules": {
-      "name": "discount_rules",
-      "schema": "sales",
+    "catalog.collections": {
+      "name": "collections",
+      "schema": "catalog",
       "columns": {
         "id": {
           "name": "id",
@@ -2431,68 +2298,37 @@
           "primaryKey": true,
           "notNull": true
         },
-        "code": {
-          "name": "code",
+        "slug": {
+          "name": "slug",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "description": {
-          "name": "description",
+        "localized_title": {
+          "name": "localized_title",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{}'::jsonb"
+        },
+        "localized_subtitle": {
+          "name": "localized_subtitle",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "hero_image_url": {
+          "name": "hero_image_url",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "type": {
-          "name": "type",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "value": {
-          "name": "value",
-          "type": "numeric(10, 2)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "min_order_amount": {
-          "name": "min_order_amount",
-          "type": "numeric(10, 2)",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'0'"
-        },
-        "start_date": {
-          "name": "start_date",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "end_date": {
-          "name": "end_date",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "usage_limit": {
-          "name": "usage_limit",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "usage_count": {
-          "name": "usage_count",
+        "sort_order": {
+          "name": "sort_order",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "default": 0
-        },
-        "per_user_limit": {
-          "name": "per_user_limit",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false,
-          "default": 1
         },
         "is_active": {
           "name": "is_active",
@@ -2520,10 +2356,10 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "discount_rules_code_unique": {
-          "name": "discount_rules_code_unique",
+        "collections_slug_unique": {
+          "name": "collections_slug_unique",
           "nullsNotDistinct": false,
-          "columns": ["code"]
+          "columns": ["slug"]
         }
       },
       "policies": {},
@@ -2791,6 +2627,170 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "school_engine.cart_kits": {
+      "name": "cart_kits",
+      "schema": "school_engine",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "school_list_id": {
+          "name": "school_list_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "localized_name": {
+          "name": "localized_name",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "item_snapshots": {
+          "name": "item_snapshots",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "cart_kits_school_list_id_school_lists_id_fk": {
+          "name": "cart_kits_school_list_id_school_lists_id_fk",
+          "tableFrom": "cart_kits",
+          "tableTo": "school_lists",
+          "schemaTo": "school_engine",
+          "columnsFrom": ["school_list_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "sales.discount_rules": {
+      "name": "discount_rules",
+      "schema": "sales",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "code": {
+          "name": "code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "type": {
+          "name": "type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "min_order_amount": {
+          "name": "min_order_amount",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'0'"
+        },
+        "start_date": {
+          "name": "start_date",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "end_date": {
+          "name": "end_date",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "usage_limit": {
+          "name": "usage_limit",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "usage_count": {
+          "name": "usage_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "per_user_limit": {
+          "name": "per_user_limit",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 1
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "discount_rules_code_unique": {
+          "name": "discount_rules_code_unique",
+          "nullsNotDistinct": false,
+          "columns": ["code"]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -4485,6 +4485,123 @@
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "identity.sessions": {
+      "name": "sessions",
+      "schema": "identity",
+      "columns": {
+        "token_digest": {
+          "name": "token_digest",
+          "type": "varchar(64)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "authorization_version": {
+          "name": "authorization_version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "idx_sessions_user": {
+          "name": "idx_sessions_user",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "sessions_user_id_users_id_fk": {
+          "name": "sessions_user_id_users_id_fk",
+          "tableFrom": "sessions",
+          "tableTo": "users",
+          "schemaTo": "identity",
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "identity.staff_role_grants": {
+      "name": "staff_role_grants",
+      "schema": "identity",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role": {
+          "name": "role",
+          "type": "varchar(40)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "staff_role_grants_user_id_users_id_fk": {
+          "name": "staff_role_grants_user_id_users_id_fk",
+          "tableFrom": "staff_role_grants",
+          "tableTo": "users",
+          "schemaTo": "identity",
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "staff_role_grants_user_id_role_pk": {
+          "name": "staff_role_grants_user_id_role_pk",
+          "columns": ["user_id", "role"]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "staff_role_fixed": {
+          "name": "staff_role_fixed",
+          "value": "\"identity\".\"staff_role_grants\".\"role\" in ('access-administrator', 'catalog-manager', 'fulfillment-operator', 'finance-manager')"
+        }
+      },
       "isRLSEnabled": false
     }
   },
