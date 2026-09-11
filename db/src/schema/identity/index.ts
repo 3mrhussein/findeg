@@ -1,2 +1,2 @@
-export * from './identity-access';
-export * from './users';
+export * from './identity-access.js';
+export * from './users.js';

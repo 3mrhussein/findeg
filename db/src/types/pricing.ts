@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { CurrencyCodeSchema, MoneySchema } from './common';
+import { CurrencyCodeSchema, MoneySchema } from './common.js';
 
 /**
  * Logical pricing segments. Keep additive for future channels.

@@ -4,9 +4,9 @@
 
 import { serial, text, timestamp, boolean, jsonb } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
-import { catalogSchema } from '../schemas';
-import { products } from './products';
-import { TranslationMap } from './types';
+import { catalogSchema } from '../schemas.js';
+import { products } from './products.js';
+import { TranslationMap } from './types.js';
 
 /**
  * Brands Table
