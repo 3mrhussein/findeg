@@ -1,6 +1,9 @@
 # FindEg Architecture Playbook
 
-This playbook is the single source of truth for:
+> Historical migration evidence. The canonical phase-one target is [docs/architecture/README.md](README.md) and its linked ADRs; this legacy multi-executable guide must not govern new work.
+
+This playbook records:
+
 - Clean architecture boundaries
 - Feature responsibilities and dependencies
 - Layer-specific implementation standards
@@ -44,22 +47,24 @@ flowchart TB
 ```
 
 ### Core Rule
+
 Features may depend on `core`, and may depend on other features only through interfaces/contracts.  
 No feature may import another feature's infrastructure implementation directly.
 
 Authorization rule:
+
 - Permission checks must use application guard interfaces (for example `IPermissionService`), never role-string checks in delivery/UI.
 
 ---
 
 ## 2. Layer Contracts
 
-| Layer | Allowed Dependencies | Must Not Depend On | Purpose |
-| --- | --- | --- | --- |
-| `domain` | TypeScript stdlib, same-domain files | `application`, `infrastructure`, framework | Business rules and pure types |
-| `application` | `domain`, feature interfaces, core ports | concrete infra adapters | Use cases and orchestration |
-| `infrastructure` | `domain`, `application` interfaces, external SDKs | app/router UI layer | Adapter implementations (DB/storage/auth) |
-| `ui`/presentation | `application` services/actions, domain types, ui primitives | direct DB and adapter access | Rendering and interaction |
+| Layer             | Allowed Dependencies                                        | Must Not Depend On                         | Purpose                                   |
+| ----------------- | ----------------------------------------------------------- | ------------------------------------------ | ----------------------------------------- |
+| `domain`          | TypeScript stdlib, same-domain files                        | `application`, `infrastructure`, framework | Business rules and pure types             |
+| `application`     | `domain`, feature interfaces, core ports                    | concrete infra adapters                    | Use cases and orchestration               |
+| `infrastructure`  | `domain`, `application` interfaces, external SDKs           | app/router UI layer                        | Adapter implementations (DB/storage/auth) |
+| `ui`/presentation | `application` services/actions, domain types, ui primitives | direct DB and adapter access               | Rendering and interaction                 |
 
 ### Import Matrix
 
@@ -76,6 +81,7 @@ graph LR
 ```
 
 Interpretation:
+
 - `application` imports `domain`.
 - `infrastructure` implements interfaces from `application`.
 - `ui` can use `domain` and `application` contracts, but never direct infrastructure details.
@@ -95,39 +101,44 @@ Interpretation:
 #### Allowed Imports from Apps
 
 ✅ **Application Layer** (use cases, services, interfaces):
+
 ```typescript
-import { IProductRepository } from "@backend/features/catalog";
-import { ProductService } from "@backend/features/catalog";
-import { CreateProductUseCase } from "@backend/features/catalog";
+import { IProductRepository } from '@backend/features/catalog';
+import { ProductService } from '@backend/features/catalog';
+import { CreateProductUseCase } from '@backend/features/catalog';
 ```
 
 ✅ **Presentation Layer** (hooks, actions, view models):
+
 ```typescript
-import { useProducts } from "@backend/features/catalog";
-import { createProduct } from "@backend/features/catalog";  
-import type { ProductViewModel } from "@backend/features/catalog";
+import { useProducts } from '@backend/features/catalog';
+import { createProduct } from '@backend/features/catalog';
+import type { ProductViewModel } from '@backend/features/catalog';
 ```
 
 ✅ **Domain Layer** (entities, value objects, types):
+
 ```typescript
-import type { Product, Money } from "@backend/features/catalog";
-import { ProductStatus } from "@backend/features/catalog";
+import type { Product, Money } from '@backend/features/catalog';
+import { ProductStatus } from '@backend/features/catalog';
 ```
 
 #### Forbidden Imports from Apps
 
 ❌ **Infrastructure Layer** (repository implementations, database clients):
+
 ```typescript
 // BLOCKED by package.json exports - TypeScript will error
-import { DrizzleProductRepository } from "@backend/features/catalog/infrastructure";
-import { db } from "@backend/features/core/infrastructure/persistence/database";
-import { SchemaTypes } from "@backend/features/core"; // Schema types are infrastructure
+import { DrizzleProductRepository } from '@backend/features/catalog/infrastructure';
+import { db } from '@backend/features/core/infrastructure/persistence/database';
+import { SchemaTypes } from '@backend/features/core'; // Schema types are infrastructure
 ```
 
 ❌ **Direct Source Access** (bypassing package exports):
+
 ```typescript
 // BLOCKED by TypeScript path configuration
-import { something } from "@features/catalog"; // @features/* no longer resolves to backend
+import { something } from '@features/catalog'; // @features/* no longer resolves to backend
 ```
 
 ### Enforcement Mechanisms
@@ -137,7 +148,7 @@ import { something } from "@features/catalog"; // @features/* no longer resolves
    - Infrastructure paths are NOT in exports field
    - TypeScript resolves imports through package exports (not source files)
 
-2. **TypeScript Path Configuration** 
+2. **TypeScript Path Configuration**
    - Apps' tsconfig.json does NOT map `@backend/*` to source (`../backend/src/*`)
    - Apps rely on pnpm workspace + package references for resolution
    - `@features/*` in apps resolves ONLY to app-local features, not backend
@@ -149,13 +160,13 @@ import { something } from "@features/catalog"; // @features/* no longer resolves
 
 ### Import Rules Summary
 
-| Import Pattern | Status | Reason |
-|---------------|--------|--------|
-| `@backend/features/[feature]` | ✅ Allowed | Package export (application + presentation) |
-| `@backend/features/[feature]/application` | ✅ Allowed | Explicit layer export |
-| `@backend/features/[feature]/infrastructure` | ❌ Blocked | Not in package exports |
-| `@features/[backend-feature]` | ❌ Blocked | Path no longer resolves to backend |
-| Direct repository imports | ❌ Blocked | Infrastructure layer is internal-only |
+| Import Pattern                               | Status     | Reason                                      |
+| -------------------------------------------- | ---------- | ------------------------------------------- |
+| `@backend/features/[feature]`                | ✅ Allowed | Package export (application + presentation) |
+| `@backend/features/[feature]/application`    | ✅ Allowed | Explicit layer export                       |
+| `@backend/features/[feature]/infrastructure` | ❌ Blocked | Not in package exports                      |
+| `@features/[backend-feature]`                | ❌ Blocked | Path no longer resolves to backend          |
+| Direct repository imports                    | ❌ Blocked | Infrastructure layer is internal-only       |
 
 ### Verification Commands
 
@@ -212,25 +223,31 @@ When implementing any new capability:
    - Update `docs/testing/FRONTEND_TEST_MASTER_PLAN.md` when coverage scope changes.
 
 2. **Domain first**
+
 - Define/extend domain types and value objects.
 - Add runtime schemas (`zod`) for external boundaries.
 
 3. **Application contracts**
+
 - Add or update interface methods (`I*Repository`, `I*Service`) before implementations.
 
 4. **Infrastructure adapters**
+
 - Implement repository/storage/auth adapters.
 - Keep DB-specific concerns inside infrastructure.
 
 5. **API/actions**
+
 - Expose explicit contracts and keep route ownership clear.
 - During MVP, optimize for correctness and speed. Internal contract changes are allowed if all in-repo consumers are updated in the same change.
 
 6. **UI**
+
 - Bind forms/pages to contracts.
 - Keep mapping/transformation logic thin.
 
 7. **Validation**
+
 - `npm run type-check`
 - `npm run lint`
 - run migration validation (if schema changed)
@@ -241,11 +258,13 @@ When implementing any new capability:
 ## 5. Layer Standards
 
 ### Domain Standards
+
 - Define explicit primitive aliases/types (`ID`, `Price`, `UomCode`, etc.).
 - Keep domain deterministic and framework-agnostic.
 - Prefer value objects for snapshots (`VariantSnapshot`, `ShippingAddress`).
 
 ### Application Standards
+
 - Every side-effectful use case goes through a service.
 - Service interfaces are stable contracts; implementations are swappable.
 - Validate all incoming DTOs at boundaries before orchestration.
@@ -253,6 +272,7 @@ When implementing any new capability:
 - Session payload consumption must go through actor-context resolvers.
 
 ### Infrastructure Standards
+
 - Repositories map DB models to domain models in one place.
 - Keep SQL/ORM types out of UI/application contracts.
 - Use explicit migrations for schema evolution; document any breaking change in planning docs and test plan.
@@ -260,11 +280,13 @@ When implementing any new capability:
 - Payment adapters store tokenized instruments only; no raw payment secrets in domain/application layers.
 
 ### UI Standards
+
 - Forms own presentation and basic client validation only.
 - No direct DB access and no raw SQL in UI code.
 - Prefer explicit field typing over `any`.
 
 ### API Standards
+
 - Keep endpoint contracts explicit and versioned at `/api/v1`.
 - Use consistent error shape `{ errorCode, message, details }`.
 - Validate params/body/query with zod schemas.
@@ -278,15 +300,18 @@ When implementing any new capability:
 Mandatory boundaries:
 
 1. Delivery layer (middleware/routes/server actions)
+
 - parses request context
 - calls auth application services to resolve actor/session context
 - delegates authorization to permission guard service
 
 2. Application layer
+
 - defines `IAuthService`, `ISessionService`, `IPermissionService`
 - returns explicit allow/deny outcomes with typed reasons
 
 3. Infrastructure layer
+
 - implements JWT/session adapters
 - persists and resolves users, linked accounts, memberships, roles, and permissions
 
@@ -312,6 +337,7 @@ Prohibited:
 ## 8. Feature Documentation Rule
 
 Each feature README must include:
+
 - Responsibilities
 - Use-case diagram
 - Class diagram
@@ -320,6 +346,7 @@ Each feature README must include:
 - Clean architecture boundaries and anti-patterns
 
 Feature docs:
+
 - `src/features/core/README.md`
 - `src/features/catalog/README.md`
 - `src/features/cart/README.md`
