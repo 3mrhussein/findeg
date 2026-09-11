@@ -15,8 +15,13 @@ const sourceRoots = ['backend/src/features', 'db/src', 'frontend'];
 const inspectableFile = /\.(?:[cm]?[jt]sx?|md)$/;
 const ignoredDirectories = new Set(['.git', '.next', 'dist', 'node_modules']);
 
-async function filesUnder(root, directory) {
-  const entries = await readdir(resolve(root, directory), { withFileTypes: true }).catch(() => []);
+async function filesUnder(root, directory, { required = false } = {}) {
+  const entries = await readdir(resolve(root, directory), { withFileTypes: true }).catch(
+    (error) => {
+      if (required) throw error;
+      return [];
+    },
+  );
   const files = await Promise.all(
     entries.map(async (entry) => {
       const relativePath = `${directory}/${entry.name}`;
@@ -31,7 +36,7 @@ async function filesUnder(root, directory) {
 function prohibitedDependencies(relativePath, contents) {
   const imports = [
     ...contents.matchAll(
-      /(?:\b(?:import|export)\s+(?:[^"']*?\s+from\s+)?|\bimport\s*\()\s*["']([^"']+)["']/g,
+      /(?:\b(?:import|export)\s+(?:[^"']*?\s+from\s+)?|\b(?:import|require)\s*\()\s*["']([^"']+)["']/g,
     ),
   ].map((match) => match[1]);
   return imports.flatMap((imported) => {
@@ -83,9 +88,15 @@ export async function runArchitectureCheck(root = process.cwd()) {
     .flat()
     .sort();
 
-  const sourceFiles = (
-    await Promise.all(sourceRoots.map((directory) => filesUnder(root, directory)))
-  ).flat();
+  const unreadableSourceRoots = [];
+  const sourceFiles = [];
+  for (const directory of sourceRoots) {
+    try {
+      sourceFiles.push(...(await filesUnder(root, directory, { required: true })));
+    } catch {
+      unreadableSourceRoots.push(`Required source root is missing or unreadable: ${directory}`);
+    }
+  }
   const violations = (
     await Promise.all(
       sourceFiles.map(async (relativePath) =>
@@ -94,7 +105,7 @@ export async function runArchitectureCheck(root = process.cwd()) {
     )
   ).flat();
 
-  return [...historicalClaims, ...missingDocuments, ...violations.sort()];
+  return [...historicalClaims, ...missingDocuments, ...unreadableSourceRoots, ...violations.sort()];
 }
 
 async function main() {

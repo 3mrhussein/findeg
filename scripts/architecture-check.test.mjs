@@ -1,10 +1,11 @@
 import assert from 'node:assert/strict';
 import { execFile } from 'node:child_process';
-import { mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
+import { chmod, mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { promisify } from 'node:util';
 import { afterEach, test } from 'node:test';
+import { runArchitectureCheck } from './architecture-check.mjs';
 
 const temporaryRoots = [];
 const executeFile = promisify(execFile);
@@ -40,7 +41,7 @@ async function createTargetRepository() {
   return root;
 }
 
-function runArchitectureCheck(root) {
+function runArchitectureCheckCommand(root) {
   return executeFile(process.execPath, ['scripts/architecture-check.mjs', '--root', root], {
     cwd: process.cwd(),
   });
@@ -49,7 +50,7 @@ function runArchitectureCheck(root) {
 test('accepts the canonical documentation set without prohibited dependencies', async () => {
   const root = await createTargetRepository();
 
-  const result = await runArchitectureCheck(root);
+  const result = await runArchitectureCheckCommand(root);
   assert.equal(result.stderr, '');
 });
 
@@ -70,7 +71,7 @@ test('reports documentation drift and prohibited module dependencies', async () 
     writeFile(join(root, 'README.md'), 'This is the single source of truth for architecture.\n'),
   ]);
 
-  await assert.rejects(runArchitectureCheck(root), (error) => {
+  await assert.rejects(runArchitectureCheckCommand(root), (error) => {
     assert.equal(error.code, 1);
     assert.deepEqual(error.stderr.trim().split('\n'), [
       'Historical document claims canonical authority: README.md',
@@ -82,4 +83,44 @@ test('reports documentation drift and prohibited module dependencies', async () 
     ]);
     return true;
   });
+});
+
+test('reports CommonJS require forms of every prohibited dependency direction', async () => {
+  const root = await createTargetRepository();
+  await Promise.all([
+    writeFile(join(root, 'frontend/storefront/src/products.cjs'), 'require("@findeg/db");\n'),
+    writeFile(
+      join(root, 'frontend/storefront/src/catalog.cjs'),
+      'require("@findeg/backend/features/catalog/infrastructure");\n',
+    ),
+    writeFile(join(root, 'backend/src/features/catalog/cache.cjs'), 'require("next/cache");\n'),
+    writeFile(join(root, 'db/src/queries.cjs'), 'require("@findeg/backend");\n'),
+  ]);
+
+  assert.deepEqual(await runArchitectureCheck(root), [
+    'Prohibited dependency: backend/src/features/catalog/cache.cjs imports next/cache',
+    'Prohibited dependency: db/src/queries.cjs imports @findeg/backend',
+    'Prohibited dependency: frontend/storefront/src/catalog.cjs imports @findeg/backend/features/catalog/infrastructure',
+    'Prohibited dependency: frontend/storefront/src/products.cjs imports @findeg/db',
+  ]);
+});
+
+test('fails closed when a required source root is missing or unreadable', async () => {
+  const missingRoot = await createTargetRepository();
+  await rm(join(missingRoot, 'backend/src/features'), { recursive: true });
+
+  assert.deepEqual(await runArchitectureCheck(missingRoot), [
+    'Required source root is missing or unreadable: backend/src/features',
+  ]);
+
+  const unreadableRoot = await createTargetRepository();
+  const frontendRoot = join(unreadableRoot, 'frontend');
+  await chmod(frontendRoot, 0o000);
+  try {
+    assert.deepEqual(await runArchitectureCheck(unreadableRoot), [
+      'Required source root is missing or unreadable: frontend',
+    ]);
+  } finally {
+    await chmod(frontendRoot, 0o755);
+  }
 });
