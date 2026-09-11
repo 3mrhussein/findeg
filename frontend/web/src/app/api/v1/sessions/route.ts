@@ -5,7 +5,7 @@ import {
   sameOrigin,
   sessionCookie,
   sessionToken,
-  setSessionCookie,
+  signInBrowserSession,
 } from '../../../../server/session';
 
 export async function POST(request: Request) {
@@ -20,11 +20,8 @@ export async function POST(request: Request) {
     typeof input.password !== 'string'
   )
     return errorResponse('invalid-input', 400);
-  const runtime = getWebRuntime();
-  const result = await runtime.signIn(input.email, input.password);
-  if (result.status !== 'authenticated') return errorResponse('invalid-credentials', 401);
-  await runtime.signOut(await sessionToken());
-  await setSessionCookie(result.token, result.expiresAt);
+  const status = await signInBrowserSession(input.email, input.password);
+  if (status !== 'authenticated') return errorResponse('invalid-credentials', 401);
   return Response.json(
     { status: 'authenticated' },
     { status: 201, headers: { 'Cache-Control': 'no-store' } },

@@ -43,3 +43,14 @@ export function errorResponse(errorCode: string, status: number) {
     { status, headers: { 'Cache-Control': 'no-store' } },
   );
 }
+
+/** Both web transports use the same browser credential replacement sequence. */
+export async function signInBrowserSession(email: string, password: string) {
+  const runtime = getWebRuntime();
+  const result = await runtime.signIn(email, password);
+  if (result.status === 'authenticated') {
+    await runtime.signOut(await sessionToken());
+    await setSessionCookie(result.token, result.expiresAt);
+  }
+  return result.status;
+}

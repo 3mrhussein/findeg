@@ -1,7 +1,6 @@
 import 'server-only';
 import { redirect } from 'next/navigation';
-import { getWebRuntime } from './runtime';
-import { sessionToken, setSessionCookie } from './session';
+import { signInBrowserSession } from './session';
 import type { Portal } from '@findeg/runtime';
 
 export async function SignInForm({
@@ -18,12 +17,9 @@ export async function SignInForm({
     const email = form.get('email');
     const password = form.get('password');
     if (typeof email !== 'string' || typeof password !== 'string') return;
-    const runtime = getWebRuntime();
-    const result = await runtime.signIn(email, password);
+    const status = await signInBrowserSession(email, password);
     const path = portal === 'storefront' ? `/${locale}` : `/${locale}/${portal}`;
-    if (result.status !== 'authenticated') redirect(`${path}/sign-in?failed=1`);
-    await runtime.signOut(await sessionToken());
-    await setSessionCookie(result.token, result.expiresAt);
+    if (status !== 'authenticated') redirect(`${path}/sign-in?failed=1`);
     redirect(path);
   }
   return (
