@@ -8,19 +8,13 @@ commits to retain ancestry between these long-lived branches.
 
 1. Read the issue and its blockers using `docs/agents/issue-tracker.md`. Start only
    when blocking tickets are merged, not merely committed on another branch.
-2. Give each agent session a separate worktree and ticket branch from `develop`:
-
-   ```sh
-   git fetch origin
-   git worktree add ../findeg-123 -b feat/123-short-description origin/develop
-   cd ../findeg-123
-   pnpm install --frozen-lockfile
-   ```
-
+2. Start the ticket branch from current `origin/develop` and install dependencies
+   with `pnpm install --frozen-lockfile`. Follow the invoked Matt skill for session
+   and worktree behavior.
 3. Use `feat/`, `fix/`, `docs/`, or `chore/` plus the issue number. Keep research
    and prototype work on their dedicated branches. A spec lives in GitHub Issues;
    it does not need its own permanent branch.
-4. Run `/implement` with the issue in a fresh session. Agree test seams, use
+4. Run `/implement` with the issue. Agree test seams, use
    red-green slices, and run Standards and Spec reviews against the starting
    commit. Commit only the ticket's work.
 5. Open a PR with `gh pr create --base develop`, its issue link, and verification
@@ -31,12 +25,11 @@ commits to retain ancestry between these long-lived branches.
 6. Verify the PR is merged into `develop`, then record completion on the issue.
    `main` remains the GitHub default branch, so closing keywords on a PR targeting
    `develop` do not automatically close the issue. Close completed tickets explicitly.
-7. Start the next unblocked ticket from the merged `develop` in a fresh session.
+7. Start the next unblocked ticket from the merged `develop`.
 
-For parallel tickets, use separate worktrees and branches. Do not share a working
-directory between concurrent implementations. Merge dependencies before starting
-their dependents. Claim the issue before starting and record the branch/PR on it,
-so another session can see it is in progress. Use one driving session per ticket.
+Merge dependencies before starting their dependents. Claim the issue before
+starting and record the branch/PR on it, so another session can see it is in
+progress. Use one driving session per ticket.
 
 ## Promoting to main
 

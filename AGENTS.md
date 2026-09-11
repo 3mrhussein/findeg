@@ -6,7 +6,7 @@ local workflow precedence and maintenance.
 ### Git workflow
 
 Before starting a ticket, creating a worktree, or opening or merging a PR, read
-`CONTRIBUTING.md` for branch targets, session isolation, and promotion rules.
+`CONTRIBUTING.md` for branch targets and promotion rules.
 
 ### Issue tracker
 

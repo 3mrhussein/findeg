@@ -12,10 +12,6 @@ description: Set up Husky pre-commit hooks with lint-staged (Prettier), type che
 - **Prettier** config (if missing)
 - **typecheck** and **test** scripts in the pre-commit hook
 
-## Existing repository setup
-
-Read `CONTRIBUTING.md` and inspect the existing hook, package scripts, and formatter configuration first. In this repo, preserve `pnpm exec lint-staged` followed by `pnpm quality:check`; the gate also includes architecture checks and type generation. If the requested setup already exists, verify it and finish. Apply the bootstrap recipe below only to missing configuration, adapting it to the existing gate.
-
 ## Steps
 
 ### 1. Detect package manager

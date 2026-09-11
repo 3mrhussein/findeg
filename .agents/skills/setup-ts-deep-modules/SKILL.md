@@ -6,9 +6,7 @@ disable-model-invocation: true
 
 # Setup TS Deep Modules
 
-Before changing this repository, read `CONTRIBUTING.md`, `docs/architecture/README.md`, and relevant ADRs. Its existing architecture checker and declared module contracts govern. For FindEg, extend those checks at the established boundaries when requested and finish with the required gate. The bootstrap recipe below is for repositories without an established layout; it does not authorize an example package, a new packages root, or replacement of existing checks here.
-
-Make every package in a new setup a **deep module**: a lot of behaviour behind a small interface. A package's public surface is its **entry points** (the files at the package root), and everything in its subfolders is hidden. This skill installs [dependency-cruiser](https://github.com/sverweij/dependency-cruiser) and the rules that make the entry points the only way in, then proves the rules bite.
+Make every package in this repo a **deep module**: a lot of behaviour behind a small interface. A package's public surface is its **entry points** (the files at the package root), and everything in its subfolders is hidden. This skill installs [dependency-cruiser](https://github.com/sverweij/dependency-cruiser) and the rules that make the entry points the only way in, then proves the rules bite.
 
 For the vocabulary (deep module, interface, seam, depth), call the Skill tool with "codebase-design" and use its language throughout.
 

@@ -7,8 +7,6 @@ description: Build a throwaway prototype to answer a design question. Use when t
 
 A prototype is **throwaway code that answers a question**. The question decides the shape.
 
-Read root `CONTRIBUTING.md` first. Start in a separate worktree on a dedicated `prototype/<name>` branch from `origin/develop`. Validated production changes go through a separate implementation ticket PR and its required gates.
-
 ## Pick a branch
 
 Identify which question is being answered, using the user's prompt, the surrounding code, or by asking if the user is around:
@@ -25,4 +23,4 @@ The two branches produce very different artifacts, so getting this wrong wastes 
 3. **No persistence by default.** State lives in memory. Persistence is the thing the prototype is _checking_, not something it should depend on. If the question explicitly involves a database, hit a scratch DB or a local file with a clear "PROTOTYPE, wipe me" name.
 4. **Skip the polish.** No tests, no error handling beyond what makes the prototype _runnable_, no abstractions. The point is to learn something fast.
 5. **Surface the state.** After every action (logic) or on every variant switch (UI), print or render the full relevant state so the user can see what changed.
-6. **Capture it when done.** Capture the prototype as a **primary source** on its dedicated branch and leave a context pointer on the implementation issue. Record the verdict and the question it settled there. Apply the validated decision through the implementation ticket workflow in `CONTRIBUTING.md`.
+6. **Capture it when done.** Fold any validated decision into the real code, then capture the prototype itself as a **primary source**: commit it to a throwaway branch, out of main, and leave a context pointer to that branch on the implementation issue. Capture the answer too (the verdict and the question it settled) in the issue or a commit. The main branch keeps only the validated decision.

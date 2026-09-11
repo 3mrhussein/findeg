@@ -16,7 +16,7 @@ The **phase boundary** is the gap between two phases, and it is the only place t
 
 ## The tree
 
-For repository ticket work, first apply `CONTRIBUTING.md`: a new ticket starts in a fresh session and worktree. Carry the decision context through the issue or a handoff. Within an existing ticket session, work top to bottom at the boundary; the first **yes** wins.
+Work top to bottom at the boundary. The first **yes** wins.
 
 **1. Can you continue in this session?** Two things make the answer yes: the next phase needs this phase as a **primary source**, or you have enough [smart zone](https://www.aihero.dev/ai-coding-dictionary/smart-zone) left (~150k tokens) for the next phase to fit. Grilling → implementation is the standard yes: the implementation wants the reasoning verbatim, not a summary of it. Continue costs nothing and loses nothing, so rule it out before anything else.
 
