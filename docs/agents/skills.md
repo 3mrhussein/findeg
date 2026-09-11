@@ -33,8 +33,7 @@ Review upstream updates against our local edits before replacing files.
 
 Compatibility edits cover ticket implementation and orchestration, the skill
 router, ticket dependency planning, research/prototype isolation, and setup
-preservation, plus a nested Markdown fence repair in the triage reference.
-Preserve these adaptations when updating the imported skills.
+preservation. Preserve these adaptations when updating the imported skills.
 Run the checks and two-axis review required by `CONTRIBUTING.md` for updates.
 
 To inspect inheritance in a new worktree, compare its tracked
