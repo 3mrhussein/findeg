@@ -4,6 +4,8 @@
 
 > Manually maintained. Do not overwrite this file with the draft changelog generator.
 
+- #68 imports the repository skills from `99d5e7c`, adapts their delivery and setup instructions to the current workflow, and makes them available in worktrees created from merged `develop`. Unrelated work on the source branch is excluded.
+
 - #51 establishes the target-architecture and delivery-gate foundation. It deliberately rebuilds only the safe documentation, guardrail, and workflow subset after #65 was closed without merge; #65's Current Session, database/configuration, and legacy-frontend changes are not included.
 
 Auto-generated from git commit history.
