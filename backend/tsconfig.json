@@ -9,8 +9,12 @@
       "@findeg/db/*": ["../db/src/*"],
       "@findeg/env": ["../packages/env/src"],
       "@findeg/db/modules/identity-access": ["../db/dist/modules/identity-access/schema.d.ts"],
-      "@findeg/db/transactions": ["../db/dist/runtime/transactions.d.ts"],
-      "@findeg/db/modules/partner-management": ["../db/dist/modules/partner-management/schema.d.ts"]
+      "@findeg/db/modules/catalog": ["../db/dist/modules/catalog/schema.d.ts"],
+      "@findeg/db/modules/inventory": ["../db/dist/modules/inventory/schema.d.ts"],
+      "@findeg/db/modules/partner-management": [
+        "../db/dist/modules/partner-management/schema.d.ts"
+      ],
+      "@findeg/db/transactions": ["../db/dist/runtime/transactions.d.ts"]
     }
   },
   "include": ["src/**/*"],

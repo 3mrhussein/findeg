@@ -12,6 +12,9 @@ import type {
 } from '@findeg/backend/modules/identity-access/contracts';
 import { bindIdentityStore } from '@findeg/backend/modules/identity-access/infrastructure/persistence';
 import { createIdentitySecurity } from '@findeg/backend/modules/identity-access/infrastructure/security';
+import { createCatalogManagement } from '@findeg/backend/modules/catalog/public';
+import { bindCatalogStore } from '@findeg/backend/modules/catalog/infrastructure/persistence';
+import { bindInventoryStore } from '@findeg/backend/modules/inventory/infrastructure/persistence';
 import { createTransactionRuntime } from './transactions.js';
 import { readWebConfig } from './config.js';
 
@@ -19,16 +22,23 @@ export function createWebRuntime(environment: Readonly<Record<string, string | u
   const config = readWebConfig(environment);
   const persistence = createTransactionRuntime(
     { url: config.DATABASE_URL, ssl: config.DB_SSL, max: 5 },
-    (database) => ({ identity: bindIdentityStore(database), partners: bindPartnerStore(database) }),
+    (database) => ({
+      identity: bindIdentityStore(database),
+      partners: bindPartnerStore(database),
+      catalog: bindCatalogStore(database),
+      inventory: bindInventoryStore(database),
+    }),
   );
   const security = {
     ...createIdentitySecurity(),
     invitationLifetimeMs: config.PARTNER_INVITATION_DAYS * 24 * 60 * 60 * 1000,
   };
   async function run<Value>(
-    operation: (store: {
+    operation: (stores: {
       identity: ReturnType<typeof bindIdentityStore>;
       partners: ReturnType<typeof bindPartnerStore>;
+      catalog: ReturnType<typeof bindCatalogStore>;
+      inventory: ReturnType<typeof bindInventoryStore>;
     }) => Promise<Value>,
   ): Promise<Value> {
     const result = await persistence.transactions.run(async (store) => ({
@@ -106,6 +116,47 @@ export function createWebRuntime(environment: Readonly<Record<string, string | u
           isActive,
         ),
       ),
+    async createCatalogVariant(token: string | undefined, input: unknown) {
+      return run(async (stores) => {
+        const access = await createIdentityAccess(stores.identity, security).authorize(
+          token,
+          'back-office',
+          'catalog.manage',
+        );
+        return access.status === 'authenticated'
+          ? createCatalogManagement(stores.catalog, stores.inventory).createVariant(input)
+          : access;
+      });
+    },
+    async updateCatalogVariant(token: string | undefined, input: unknown) {
+      return run(async (stores) => {
+        const access = await createIdentityAccess(stores.identity, security).authorize(
+          token,
+          'back-office',
+          'catalog.manage',
+        );
+        return access.status === 'authenticated'
+          ? createCatalogManagement(stores.catalog, stores.inventory).updateVariant(input)
+          : access;
+      });
+    },
+    async adjustInventory(token: string | undefined, input: unknown) {
+      return run(async (stores) => {
+        const access = await createIdentityAccess(stores.identity, security).authorize(
+          token,
+          'back-office',
+          'catalog.manage',
+        );
+        return access.status === 'authenticated'
+          ? createCatalogManagement(stores.catalog, stores.inventory).adjustInventory({
+              ...(input as object),
+              actorId: access.session.userId,
+            })
+          : access;
+      });
+    },
+    browseCatalog: (locale: 'en' | 'ar') =>
+      run((stores) => createCatalogManagement(stores.catalog, stores.inventory).browse(locale)),
     close: persistence.close,
     health: () => ({ process: 'web', revision: config.RELEASE_REVISION, status: 'alive' }),
   };

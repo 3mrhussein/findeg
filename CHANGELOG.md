@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Manage and shop bilingual Product Variants and inventory through the Back
+  Office and Storefront (#55). Inventory adjustments preserve catalog ownership,
+  fail closed on insufficient stock under contested concurrency, and reflect
+  real-time availability across Arabic and English storefront browsing.
+
 - Add scoped Partner Memberships, verified-email single-use invitations, additive
   Partner Roles, and request-specific bilingual Workspace selection (#56).
   Access changes preserve valid authentication; provider delivery and School

@@ -45,6 +45,7 @@ try {
       'tests/runtime-migrations.test.mjs',
       'tests/identity-access.test.mjs',
       'tests/partner-memberships.test.mjs',
+      'tests/catalog-inventory.test.mjs',
     ],
     {
       stdio: 'inherit',
