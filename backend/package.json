@@ -14,6 +14,8 @@
     "./modules/catalog/contracts": "./dist/modules/catalog/contracts.js",
     "./modules/catalog/public": "./dist/modules/catalog/public.js",
     "./modules/catalog/infrastructure/persistence": "./dist/modules/catalog/infrastructure/persistence.js",
+    "./modules/commerce/contracts": "./dist/modules/commerce/contracts.js",
+    "./modules/commerce/public": "./dist/modules/commerce/public.js",
     "./modules/inventory/public": "./dist/modules/inventory/public.js",
     "./modules/inventory/infrastructure/persistence": "./dist/modules/inventory/infrastructure/persistence.js",
     "./modules/partner-management/contracts": "./dist/modules/partner-management/contracts.js",
