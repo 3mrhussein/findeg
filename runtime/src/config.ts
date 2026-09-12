@@ -14,7 +14,11 @@ const database = {
     .default('false')
     .transform((value) => value === 'true'),
 };
-const webSchema = z.object({ ...release, ...database });
+const webSchema = z.object({
+  ...release,
+  ...database,
+  PARTNER_INVITATION_DAYS: z.coerce.number().int().min(1).max(30).default(7),
+});
 
 function parse<T>(schema: z.ZodType<T>, environment: Environment): T {
   const result = schema.safeParse(environment);

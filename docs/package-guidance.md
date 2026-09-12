@@ -49,17 +49,17 @@ The target business owners are `identity-access`, `partner-management`, `catalog
 New business contracts and operations belong under `backend/src/modules/<owner>`.
 This split keeps the existing rule that database code never imports business code.
 
-| Owner                  | Existing persisted records / responsibility                                                                   |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------- |
-| Identity & Access      | Users, credentials, authentication accounts, roles and grants, Current Sessions, guest principals             |
-| Partner Management     | Organizations and organization memberships (legacy names)                                                     |
-| Catalog                | Products, variants, attributes, categories, brands, collections, tags, reviews and helpful votes, search logs |
-| School Supply Lists    | Lists, items, alternatives, list access grants/requests/tokens/attempts and parent sessions                   |
-| Inventory              | Warehouses, balances and stock movements                                                                      |
-| Commerce               | Orders/items, Cart Kits, discount rules, addresses and saved payment methods                                  |
-| Partner Rewards        | No persisted records yet; reward accounting lands in its feature ticket                                       |
-| Partner Reports        | No persisted records yet; approved read views land with reporting                                             |
-| Runtime infrastructure | Existing audit log, server logs and notifications; these are technical records, not a ninth business module   |
+| Owner                  | Existing persisted records / responsibility                                                                      |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| Identity & Access      | Users, credentials, authentication accounts, roles and grants, Current Sessions, guest principals                |
+| Partner Management     | Business Partners, Partner Invitations, Partner Memberships and access history; legacy organizations/memberships |
+| Catalog                | Products, variants, attributes, categories, brands, collections, tags, reviews and helpful votes, search logs    |
+| School Supply Lists    | Lists, items, alternatives, list access grants/requests/tokens/attempts and parent sessions                      |
+| Inventory              | Warehouses, balances and stock movements                                                                         |
+| Commerce               | Orders/items, Cart Kits, discount rules, addresses and saved payment methods                                     |
+| Partner Rewards        | No persisted records yet; reward accounting lands in its feature ticket                                          |
+| Partner Reports        | No persisted records yet; approved read views land with reporting                                                |
+| Runtime infrastructure | Existing audit log, server logs and notifications; these are technical records, not a ninth business module      |
 
 `db/src/runtime/schema.ts` assembles these fragments and the retained legacy
 mappings, validates unique ownership, and exports the flat Drizzle schema.
@@ -127,3 +127,14 @@ also supplies version/invalidation triggers. Snapshot 0001 is corrected to match
 its existing SQL: `authorization_version` belongs to Users, not Organizations;
 no historical SQL is rewritten. See [the Current Session runbook](operations/current-sessions.md)
 for fixed roles, runtime configuration, bootstrap boundaries, and denial behavior.
+
+## Partner access (#56)
+
+`partner-management/contracts` contains browser-safe membership and Workspace
+vocabulary; `public` owns invitation and membership policy. The authorized
+`@findeg/backend/partner-operations` application coordinator resolves Identity &
+Access before invoking Partner Management. Runtime binds both owners to one
+transaction. New persistence uses only the Partner Management schema surface.
+Migration `0003_partner_memberships` adds the target records alongside retained
+legacy organizations; legacy membership and role records confer no target access.
+See [Partner access](operations/partner-access.md) for administration and validation.

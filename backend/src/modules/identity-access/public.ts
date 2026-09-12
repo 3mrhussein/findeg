@@ -9,6 +9,7 @@ import type {
 export interface ActiveUser {
   readonly id: number;
   readonly email: string;
+  readonly emailVerified?: Date | null;
   readonly isActive: boolean;
   readonly authorizationVersion: number;
   readonly staffRoles: readonly StaffRole[];
@@ -54,6 +55,7 @@ export function createIdentityAccess(store: SessionStore, security: SessionSecur
     const session: CurrentSession = {
       userId: user.id,
       email: user.email,
+      emailVerified: Boolean(user.emailVerified),
       activePortal: portal,
       authorizationVersion: user.authorizationVersion,
       staffRoles,

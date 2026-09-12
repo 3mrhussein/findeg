@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react';
-import { requirePortal } from '../../../../server/session';
+import { redirect } from 'next/navigation';
+import { getWebRuntime } from '../../../../server/runtime';
+import { sessionToken } from '../../../../server/session';
 export default async function ProtectedLayout({
   children,
   params,
@@ -8,14 +10,7 @@ export default async function ProtectedLayout({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const result = await requirePortal('partner', locale);
-  if (result.status === 'authorization-denied')
-    return (
-      <p role="alert">
-        {locale === 'ar'
-          ? 'ليس لديك صلاحية الوصول إلى هذه البوابة.'
-          : 'You do not have access to this portal.'}
-      </p>
-    );
+  const identity = await getWebRuntime().currentSession(await sessionToken(), 'storefront');
+  if (identity.status === 'authentication-required') redirect(`/${locale}/partner/sign-in`);
   return children;
 }
