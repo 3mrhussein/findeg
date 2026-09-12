@@ -1,5 +1,31 @@
 # Changelog
 
+## Unreleased
+
+- Add scoped Partner Memberships, verified-email single-use invitations, additive
+  Partner Roles, and request-specific bilingual Workspace selection (#56).
+  Access changes preserve valid authentication; provider delivery and School
+  Supply List operations remain with their feature tickets.
+
+- Restore target PostgreSQL Current Sessions, request-specific Active Portal grants,
+  fixed additive staff roles, and authorization refresh without sign-out (#54).
+  Legacy role grants remain excluded; Partner Membership integration belongs to #56.
+  Correct migration snapshot 0001 to reflect its existing Users column before
+  adding session tables and invalidation triggers in migration 0002.
+
+- Establish explicit module ownership for the retained PostgreSQL records, one
+  compiled schema assembly, and transaction contracts that roll back structured
+  business rejections as well as exceptions. Target module imports and cycles are
+  now checked; legacy mappings remain replacement evidence, not certified commerce.
+
+> Manually maintained. Do not overwrite this file with the draft changelog generator.
+
+- #52 introduces the target unified web portal shells and compiled web/worker/migration runtime, one release image with independent process restarts, and HTTP/process/real-PostgreSQL migration gates. Authenticated entry remains closed pending #54; worker delivery readiness remains unavailable pending #59. Legacy frontends are retained only as migration evidence.
+
+- #68 imports the repository skills from `99d5e7c`, adapts their delivery and setup instructions to the current workflow, and makes them available in worktrees created from merged `develop`. Unrelated work on the source branch is excluded.
+
+- #51 establishes the target-architecture and delivery-gate foundation. It deliberately rebuilds only the safe documentation, guardrail, and workflow subset after #65 was closed without merge; #65's Current Session, database/configuration, and legacy-frontend changes are not included.
+
 Auto-generated from git commit history.
 
 Latest commit date: 2026-04-05

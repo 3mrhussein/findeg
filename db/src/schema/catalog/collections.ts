@@ -15,9 +15,9 @@ import {
   primaryKey,
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
-import { tags } from './tags';
-import { catalogSchema } from '../schemas';
-import { TranslationMap } from './types';
+import { tags } from './tags.js';
+import { catalogSchema } from '../schemas.js';
+import { TranslationMap } from './types.js';
 
 /**
  * Collections Table

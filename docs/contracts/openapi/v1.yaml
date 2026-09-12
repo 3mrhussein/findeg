@@ -1,0 +1,282 @@
+openapi: 3.1.0
+info:
+  title: FindEg HTTP API
+  version: 1.0.0
+  description: |
+    Canonical contract for versioned JSON adapters. Routes are added only when
+    the corresponding authorized application operation exists.
+servers:
+  - url: /api/v1
+paths:
+  /sessions:
+    post:
+      summary: Authenticate an active User and issue an opaque session cookie
+      description: Requires a same-origin Origin header. Replaces the browser's existing credential.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, maxLength: 255 }
+                password: { type: string, minLength: 1, description: Maximum 72 UTF-8 bytes }
+      responses:
+        '201':
+          description: Authenticated; Set-Cookie supplies the HttpOnly credential
+        '400': { description: Invalid request }
+        '401': { description: Invalid credentials or inactive User }
+        '403': { description: Origin denied }
+    delete:
+      summary: Revoke the browser credential and clear its cookie
+      description: Requires a same-origin Origin header; idempotent for absent or revoked credentials.
+      responses:
+        '204': { description: Signed out }
+        '403': { description: Origin denied }
+  /sessions/{portal}:
+    get:
+      summary: Resolve a Current Session for the requested Active Portal
+      security: [{ sessionCookie: [] }]
+      parameters:
+        - in: path
+          name: portal
+          required: true
+          schema: { type: string, enum: [storefront, back-office, partner] }
+        - in: query
+          name: businessPartnerId
+          description: Explicit Business Partner context for Partner Workspace; omitted only for automatic single-membership entry or selection.
+          schema: { type: integer, minimum: 1 }
+      responses:
+        '400': { description: Invalid selected Business Partner ID }
+        '409':
+          { description: Multiple eligible memberships; choose from the returned choices array }
+        '200':
+          description: Authoritative Current Session; Cache-Control no-store
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status, session]
+                properties:
+                  status: { const: authenticated }
+                  session: { $ref: '#/components/schemas/CurrentSession' }
+        '401': { description: Invalid or missing credential; clears the cookie }
+        '403': { description: Authorization Denial; preserves the cookie }
+        '404': { description: Unknown portal }
+  /back-office/staff-access:
+    put:
+      summary: Replace an existing User's fixed staff roles and activity
+      description: Requires same-origin Origin and staff-access.manage in Back Office. Authorization and writes share a transaction.
+      security: [{ sessionCookie: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [userId, roles, isActive]
+              properties:
+                userId: { type: integer, minimum: 1 }
+                roles:
+                  type: array
+                  items: { $ref: '#/components/schemas/StaffRole' }
+                isActive: { type: boolean }
+      responses:
+        '200': { description: Updated atomically }
+        '400': { description: Invalid input or unknown role }
+        '401': { description: Authentication required }
+        '403': { description: Origin or authorization denied; preserves valid sessions }
+        '404': { description: User not found }
+  /partner/{partnerId}/access:
+    parameters: &partnerPath
+      - in: path
+        name: partnerId
+        required: true
+        schema: { type: integer, minimum: 1 }
+    get: &accessRead
+      summary: Read scoped memberships, invitations, and access history
+      description: Requires a Partner Administrator in this Business Partner. No token digests are returned.
+      security: [{ sessionCookie: [] }]
+      responses:
+        '200': { description: Scoped access overview; no-store }
+        '400': { description: Invalid partner ID }
+        '401': { description: Authentication required }
+        '403': { description: Authorization denied; preserves session }
+    post: &accessWrite
+      summary: Issue or revoke invitations or update a Partner Membership
+      description: Requires same-origin Origin and Partner Administrator access in the selected Business Partner. Resending revokes any pending invitation for the normalized email.
+      security: [{ sessionCookie: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - type: object
+                  required: [action, email, roles]
+                  properties:
+                    action: { const: invite }
+                    email: { type: string, format: email, maxLength: 255 }
+                    roles: { $ref: '#/components/schemas/PartnerRoles' }
+                - type: object
+                  required: [action, invitationId]
+                  properties:
+                    action: { const: revoke }
+                    invitationId: { type: integer, minimum: 1 }
+                - type: object
+                  required: [action, membershipId, roles, status]
+                  properties:
+                    action: { const: membership }
+                    membershipId: { type: integer, minimum: 1 }
+                    roles: { $ref: '#/components/schemas/PartnerRoles' }
+                    status: { type: string, enum: [active, suspended, ended] }
+      responses:
+        '200': { description: Membership updated or invitation revoked }
+        '201':
+          description: Invitation issued; the raw token is returned once for recipient sharing
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status, token]
+                properties:
+                  status: { const: invited }
+                  token: { type: string }
+        '400': { description: Invalid input }
+        '401': { description: Authentication required }
+        '403': { description: Origin or authorization denied; preserves session }
+        '404': { description: Membership not in selected Business Partner }
+        '409':
+          { description: Last administrator, terminal lifecycle, unavailable partner or invitation }
+  /back-office/partners/{partnerId}/access:
+    parameters: *partnerPath
+    get:
+      <<: *accessRead
+      description: Requires staff-access.manage in Back Office; staff do not impersonate members.
+    post:
+      <<: *accessWrite
+      description: Requires same-origin Origin and staff-access.manage in Back Office. Supports initial onboarding invitations and equivalent audited access management.
+  /partner/invitations/accept:
+    post:
+      summary: Accept one single-use invitation as its verified email recipient
+      description: Requires same-origin Origin and an authenticated active User. Membership creation, invitation consumption, and audit commit together.
+      security: [{ sessionCookie: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token]
+              properties:
+                token: { type: string, minLength: 1, maxLength: 256 }
+      responses:
+        '200': { description: Accepted; response contains the new membership }
+        '400': { description: Invalid input }
+        '401': { description: Authentication required }
+        '403': { description: Origin denied }
+        '409': { description: Unavailable invitation or existing active/suspended membership }
+  /back-office/partners:
+    post:
+      summary: Create an onboarding Business Partner for a Partner School
+      description: Requires same-origin Origin and staff-access.manage in Back Office.
+      security: [{ sessionCookie: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [code, nameEn, nameAr]
+              properties:
+                code: { type: string, pattern: '^[a-z0-9-]{1,120}$' }
+                nameEn: { type: string, minLength: 1, maxLength: 200 }
+                nameAr: { type: string, minLength: 1, maxLength: 200 }
+      responses:
+        '201': { description: Created; response contains the Business Partner and its ID }
+        '400': { description: Invalid input }
+        '401': { description: Authentication required }
+        '403': { description: Origin or authorization denied }
+        '409': { description: Code unavailable }
+  /back-office/partners/{partnerId}/status:
+    parameters: *partnerPath
+    post:
+      summary: Change Business Partner lifecycle
+      description: Requires same-origin Origin and staff-access.manage. Activation requires an active Partner Administrator; closed is terminal.
+      security: [{ sessionCookie: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status: { type: string, enum: [active, suspended, closed] }
+      responses:
+        '200': { description: Updated }
+        '400': { description: Invalid input }
+        '401': { description: Authentication required }
+        '403': { description: Origin or authorization denied }
+        '404': { description: Business Partner not found }
+        '409': { description: Invalid transition or missing administrator }
+components:
+  securitySchemes:
+    sessionCookie:
+      type: apiKey
+      in: cookie
+      name: findeg_session
+  schemas:
+    StaffRole:
+      type: string
+      enum: [access-administrator, catalog-manager, fulfillment-operator, finance-manager]
+    CurrentSession:
+      type: object
+      required:
+        [userId, email, emailVerified, activePortal, authorizationVersion, staffRoles, permissions]
+      properties:
+        userId: { type: integer }
+        email: { type: string }
+        emailVerified: { type: boolean }
+        activePortal: { type: string, enum: [storefront, back-office, partner] }
+        authorizationVersion: { type: integer }
+        partner: { $ref: '#/components/schemas/PartnerContext' }
+        staffRoles:
+          type: array
+          items: { $ref: '#/components/schemas/StaffRole' }
+        permissions:
+          type: array
+          items:
+            type: string
+            enum:
+              [
+                back-office.enter,
+                staff-access.manage,
+                catalog.manage,
+                fulfillment.manage,
+                finance.manage,
+              ]
+    PartnerRoles:
+      type: array
+      minItems: 1
+      items:
+        type: string
+        enum: [partner-administrator, list-manager, collection-staff, report-viewer]
+    PartnerContext:
+      type: object
+      required: [businessPartnerId, membershipId, roles, authorizationVersion]
+      properties:
+        businessPartnerId: { type: integer }
+        membershipId: { type: integer }
+        roles: { $ref: '#/components/schemas/PartnerRoles' }
+        authorizationVersion: { type: integer }
+    Error:
+      type: object
+      required: [errorCode, message]
+      properties:
+        errorCode:
+          type: string
+        message:
+          type: string
+        details: {}
