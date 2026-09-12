@@ -568,6 +568,9 @@ importers:
 
   frontend/web:
     dependencies:
+      '@findeg/backend':
+        specifier: workspace:*
+        version: link:../../backend
       '@findeg/runtime':
         specifier: workspace:*
         version: link:../../runtime
@@ -593,6 +596,9 @@ importers:
       '@types/react-dom':
         specifier: ^19.2.0
         version: 19.2.5(@types/react@19.2.18)
+      cypress:
+        specifier: ^15.21.1
+        version: 15.21.1
       typescript:
         specifier: ^5.7.3
         version: 5.9.3

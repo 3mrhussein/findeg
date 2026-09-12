@@ -1,7 +1,71 @@
 import { and, eq, inArray } from 'drizzle-orm';
 import type { TransactionDatabase } from '@findeg/db/transactions';
-import { inventoryBalances, stockMovements, warehouses } from '@findeg/db/modules/inventory';
-import { InventoryVariantNotFoundError, type InventoryStore } from '../public.js';
+import {
+  inventoryBalances,
+  stockMovements,
+  warehouses,
+  orderReservations,
+} from '@findeg/db/modules/inventory';
+import {
+  InventoryVariantNotFoundError,
+  type InventoryReservations,
+  type InventoryStore,
+} from '../public.js';
+
+export function bindInventoryReservations(database: TransactionDatabase): InventoryReservations {
+  return {
+    async reserve(reference, items) {
+      for (const item of [...items].sort((left, right) => left.variantId - right.variantId)) {
+        const rows = await database
+          .select({ balance: inventoryBalances })
+          .from(inventoryBalances)
+          .innerJoin(warehouses, eq(warehouses.id, inventoryBalances.warehouseId))
+          .where(
+            and(
+              eq(inventoryBalances.variantId, item.variantId),
+              eq(warehouses.isActive, true),
+            ),
+          )
+          .orderBy(warehouses.id, inventoryBalances.id)
+          .for('update');
+        if (
+          rows.reduce(
+            (total, { balance }) => total + balance.onHand - balance.reserved,
+            0,
+          ) < item.quantity
+        ) {
+          return false;
+        }
+        let remaining = item.quantity;
+        for (const { balance } of rows) {
+          const quantity = Math.min(remaining, balance.onHand - balance.reserved);
+          if (!quantity) continue;
+          await database
+            .update(inventoryBalances)
+            .set({ reserved: balance.reserved + quantity, updatedAt: new Date() })
+            .where(eq(inventoryBalances.id, balance.id));
+          await database.insert(orderReservations).values({
+            orderReference: reference,
+            variantId: item.variantId,
+            warehouseId: balance.warehouseId,
+            quantity,
+          });
+          await database.insert(stockMovements).values({
+            variantId: item.variantId,
+            warehouseId: balance.warehouseId,
+            quantity: -quantity,
+            movementType: 'order-reservation',
+            referenceType: 'accepted-order',
+            referenceId: reference,
+          });
+          remaining -= quantity;
+          if (!remaining) break;
+        }
+      }
+      return true;
+    },
+  };
+}
 
 export function bindInventoryStore(database: TransactionDatabase): InventoryStore {
   return {

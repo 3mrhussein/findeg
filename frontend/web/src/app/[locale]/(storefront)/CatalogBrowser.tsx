@@ -12,7 +12,15 @@ interface Variant {
   available: number;
 }
 
-export function CatalogBrowser({ locale }: { locale: 'en' | 'ar' }) {
+export function CatalogBrowser({
+  locale,
+  onAdd,
+  disabled,
+}: {
+  locale: 'en' | 'ar';
+  onAdd: (variantId: number) => void;
+  disabled: boolean;
+}) {
   const [variants, setVariants] = useState<readonly Variant[] | undefined>();
   useEffect(() => {
     fetch(`/api/v1/catalog?locale=${locale}`)
@@ -34,7 +42,14 @@ export function CatalogBrowser({ locale }: { locale: 'en' | 'ar' }) {
             <li key={variant.id}>
               <strong>{variant.name}</strong> — {variant.label} ({variant.sku}) · {variant.price}{' '}
               EGP {variant.strikePrice ? <del>{variant.strikePrice} EGP</del> : null} ·{' '}
-              {arabic ? `${variant.available} متاح` : `${variant.available} available`}
+              {arabic ? `${variant.available} متاح` : `${variant.available} available`}{' '}
+              <button
+                type="button"
+                disabled={disabled || variant.available < 1}
+                onClick={() => onAdd(variant.id)}
+              >
+                {arabic ? 'أضف إلى السلة' : 'Add to Cart'}
+              </button>
             </li>
           ))}
         </ul>

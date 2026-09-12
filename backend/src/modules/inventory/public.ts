@@ -14,6 +14,13 @@ export interface InventoryStore {
   availabilityFor(variantIds: readonly number[]): Promise<ReadonlyMap<number, number>>;
 }
 
+export interface InventoryReservations {
+  reserve(
+    reference: string,
+    items: readonly { variantId: number; quantity: number }[],
+  ): Promise<boolean>;
+}
+
 export function isInventoryAdjustment(value: unknown): value is InventoryAdjustment {
   const candidate = value as Record<string, unknown>;
   return (

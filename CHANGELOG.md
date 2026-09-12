@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Add bilingual ordinary Cart and Guest Cash-on-Delivery checkout (#58), with
+  exact EGP prices, authoritative reconfirmation, atomic stock reservations and
+  replay-safe acceptance. Guest Order Access consumes an opaque-reference/code
+  pair once; notification delivery remains with #59. Cover cookie recovery,
+  competing buyers, concurrent retries, rollback and bilingual browser journeys.
+
 - Restore the 37 native Matt Pocock skills and setup templates; retire the custom per-ticket PR, session-isolation, and automatic delivery workflow. Preserve upstream skill files from repository formatting.
 
 - Manage and shop bilingual Product Variants and inventory through the Back

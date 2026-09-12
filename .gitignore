@@ -53,3 +53,7 @@ cypress/reports
 # Deprecated / old structures
 fullstack-commerce
 /internal
+
+# Target web browser test artifacts
+frontend/web/cypress/screenshots/
+frontend/web/cypress/videos/

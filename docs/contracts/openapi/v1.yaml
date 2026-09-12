@@ -342,6 +342,141 @@ paths:
         '403': { description: Origin or authorization denied }
         '404': { description: Variant or warehouse not found }
         '409': { description: Insufficient stock }
+  /commerce/cart:
+    get:
+      summary: Read and authoritatively price the ordinary guest Cart
+      description: Issues or replaces the HttpOnly findeg_guest_cart cookie. Preserve it across requests. School Supply List selections are excluded.
+      responses:
+        '200':
+          {
+            description: 'Quoted Cart with items and subtotal, or variant-unavailable or insufficient-stock',
+          }
+    put:
+      summary: Replace the ordinary Cart with currently eligible Product Variants
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [items]
+              properties:
+                items:
+                  type: array
+                  maxItems: 100
+                  description: Unique variant IDs. An empty array clears the Cart.
+                  items:
+                    type: object
+                    additionalProperties: false
+                    required: [variantId, quantity]
+                    properties:
+                      variantId: { type: integer, minimum: 1 }
+                      quantity: { type: integer, minimum: 1, maximum: 999 }
+      responses:
+        '200':
+          {
+            description: 'Quoted Cart with items and subtotal, or variant-unavailable or insufficient-stock; rejections preserve the previous Cart',
+          }
+        '400': { description: 'Invalid JSON or input' }
+  /commerce/delivery-zones:
+    get:
+      summary: List active home-delivery zones with bilingual names and exact EGP fees
+      responses:
+        '200': { description: 'Available status and zones array of id, name and fee' }
+  /commerce/checkout/quote:
+    post:
+      summary: Review current Cart prices and delivery fee before acceptance
+      description: Preserve the guest Cart cookie. Quoted responses include items, subtotal, zone, total and confirmation; money is a decimal EGP string. Any changed terms require a new confirmation.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [zoneId]
+              properties:
+                zoneId: { type: integer, minimum: 1 }
+      responses:
+        '200':
+          {
+            description: 'quoted, empty-cart, delivery-unavailable, variant-unavailable or insufficient-stock',
+          }
+        '400': { description: 'Invalid input' }
+  /commerce/checkout:
+    post:
+      summary: Atomically accept a guest Cash-on-Delivery Order
+      description: |
+        Preserve the guest Cart cookie. Generate one key per logical checkout and retry the exact
+        same body after a lost response. The key is scoped to this Cart owner; changed input conflicts.
+        Acceptance atomically commits immutable Order prices, reservations, replay outcome and outbox
+        records, then clears the Cart. Codes are never returned by checkout.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [key, confirmation, address, paymentMethod, deliveryMethod]
+              properties:
+                key: { type: string, pattern: '^[a-zA-Z0-9_-]{16,128}$' }
+                confirmation: { type: string, pattern: '^[a-f0-9]{64}$' }
+                paymentMethod: { const: cash-on-delivery }
+                deliveryMethod: { const: home-delivery }
+                address:
+                  type: object
+                  additionalProperties: false
+                  required: [name, email, phone, street, city, zoneId]
+                  properties:
+                    name: { type: string, minLength: 1, maxLength: 255 }
+                    email: { type: string, format: email, maxLength: 255 }
+                    phone: { type: string, pattern: '^(?:\+20|0)1[0125]\d{8}$' }
+                    street: { type: string, minLength: 1, maxLength: 255 }
+                    city: { type: string, minLength: 1, maxLength: 255 }
+                    zoneId: { type: integer, minimum: 1 }
+      responses:
+        '201':
+          description: Accepted or replayed original receipt
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status, reference, accessReference, total]
+                properties:
+                  status: { const: accepted }
+                  reference: { type: string }
+                  accessReference:
+                    { type: string, description: Opaque reference; save for Guest Order Access }
+                  total: { type: string, example: '20.30' }
+        '400': { description: 'Invalid JSON or input' }
+        '409':
+          {
+            description: 'reconfirmation-required, idempotency-conflict, empty-cart, delivery-unavailable, variant-unavailable or insufficient-stock',
+          }
+  /commerce/orders/access:
+    post:
+      summary: Retrieve an accepted Order using opaque reference plus one-time code
+      description: Codes expire 15 minutes after acceptance. Successful verification consumes the code atomically. Delivery is an outbox integration owned by ticket 59.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [reference, code]
+              properties:
+                reference: { type: string, pattern: '^[a-f0-9]{32,128}$' }
+                code: { type: string, pattern: '^\d{6}$' }
+      responses:
+        '200':
+          {
+            description: 'verified status and immutable Order snapshot including items, totals, payment status and delivery address',
+          }
+        '400':
+          {
+            description: 'invalid-input or not-found; missing, incorrect, expired and used credentials do not reveal the Order',
+          }
 components:
   securitySchemes:
     sessionCookie:

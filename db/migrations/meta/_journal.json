@@ -36,6 +36,13 @@
       "when": 1789174200000,
       "tag": "0004_school_supply_list_publications",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1789195200000,
+      "tag": "0005_guest_checkout",
+      "breakpoints": true
     }
   ]
 }
