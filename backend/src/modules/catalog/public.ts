@@ -11,6 +11,7 @@ export interface CatalogStore {
   createActiveVariant(input: ProductVariantInput): Promise<number | undefined>;
   updateActiveVariant(input: ProductVariantUpdate): Promise<boolean>;
   hasActiveVariant(variantId: number): Promise<boolean>;
+  isDefaultVariant(variantId: number): Promise<boolean>;
   listActiveVariants(): Promise<readonly LocalizedStorefrontVariant[]>;
   listVariants(): Promise<readonly ManageableVariant[]>;
 }
