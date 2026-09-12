@@ -16,7 +16,7 @@ async function freePort() {
   await new Promise((resolve) => server.close(resolve));
   return port;
 }
-async function launch(t, command, args, port) {
+async function launch(t, command, args, port, env = {}) {
   const child = spawn(command, args, {
     cwd: root,
     env: {
@@ -25,6 +25,7 @@ async function launch(t, command, args, port) {
       RELEASE_REVISION: revision,
       WORKER_PORT: String(port),
       DATABASE_URL: 'postgres://localhost/findeg',
+      ...env,
     },
     stdio: ['ignore', 'pipe', 'pipe'],
   });
@@ -125,7 +126,9 @@ test(
       ],
       webPort,
     );
-    const worker = await launch(t, process.execPath, ['runtime/dist/worker-main.js'], workerPort);
+    const worker = await launch(t, process.execPath, ['runtime/dist/worker-main.js'], workerPort, {
+      NODE_ENV: 'test',
+    });
     const webBefore = await (await fetch(`${web.base}/health/live`)).json();
     assert.equal(
       (await (await fetch(`${worker.base}/health/live`)).json()).revision,
@@ -139,6 +142,7 @@ test(
       process.execPath,
       ['runtime/dist/worker-main.js'],
       workerPort,
+      { NODE_ENV: 'test' },
     );
     assert.equal(
       (await (await fetch(`${restarted.base}/health/live`)).json()).revision,
@@ -168,3 +172,23 @@ test(
     }
   },
 );
+
+test('worker executable in production rejects startup without validated provider', async () => {
+  const child = spawn(process.execPath, ['runtime/dist/worker-main.js'], {
+    cwd: root,
+    env: {
+      PATH: process.env.PATH,
+      NODE_ENV: 'production',
+      RELEASE_REVISION: revision,
+      DATABASE_URL: 'postgres://localhost/findeg',
+    },
+    stdio: ['ignore', 'pipe', 'pipe'],
+  });
+  let stderr = '';
+  child.stderr.on('data', (data) => {
+    stderr += data;
+  });
+  const [code] = await once(child, 'exit');
+  assert.equal(code, 1);
+  assert.match(stderr, /DELIVERY_ADAPTER/);
+});

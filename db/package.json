@@ -22,7 +22,8 @@
     "./modules/commerce": "./dist/modules/commerce/schema.js",
     "./modules/partner-rewards": "./dist/modules/partner-rewards/schema.js",
     "./modules/partner-reports": "./dist/modules/partner-reports/schema.js",
-    "./modules/runtime": "./dist/modules/runtime/schema.js"
+    "./modules/runtime": "./dist/modules/runtime/schema.js",
+    "./outbox": "./dist/runtime/outbox.js"
   },
   "scripts": {
     "db:generate": "drizzle-kit generate --config ./drizzle.config.ts",

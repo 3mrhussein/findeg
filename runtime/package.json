@@ -6,7 +6,9 @@
   "exports": {
     ".": "./dist/index.js",
     "./config": "./dist/config.js",
-    "./transactions": "./dist/transactions.js"
+    "./transactions": "./dist/transactions.js",
+    "./outbox-delivery": "./dist/outbox-delivery.js",
+    "./worker": "./dist/worker.js"
   },
   "scripts": {
     "build": "tsc",

@@ -7,7 +7,7 @@ try {
       event: 'started',
       process: 'worker',
       revision: worker.revision,
-      delivery: 'not-configured',
+      delivery: 'configured',
     }),
   );
   let closing = false;
