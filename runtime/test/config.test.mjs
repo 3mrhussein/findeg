@@ -39,6 +39,7 @@ test('process configuration ignores settings owned by other processes', async ()
       DATABASE_URL: 'postgres://localhost/findeg',
       DB_SSL: false,
       PARTNER_INVITATION_DAYS: 7,
+      LIST_SELECTION_INACTIVITY_DAYS: 30,
     },
   );
   assert.throws(() => readWebConfig(release), /DATABASE_URL/);

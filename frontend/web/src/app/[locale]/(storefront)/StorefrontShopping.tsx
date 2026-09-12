@@ -2,6 +2,9 @@
 
 import { useEffect, useState, type FormEvent } from 'react';
 import type {
+  ListSelection,
+  ListSelectionView,
+  ListSelectionResult,
   CartItem,
   CartQuote,
   CartResult,
@@ -12,12 +15,15 @@ import type {
   CheckoutResult,
   DeliveryZone,
 } from '@findeg/backend/modules/commerce/contracts';
+import { ListSelectionEditor } from './ListSelectionEditor';
 import { CatalogBrowser } from './CatalogBrowser';
 import { GuestOrderAccess } from './GuestOrderAccess';
 
-const pendingStorageKey = 'findeg-pending-checkout';
-
-async function request<Result>(path: string, method = 'GET', input?: unknown): Promise<Result> {
+async function commerceRequest<Result>(
+  path: string,
+  method = 'GET',
+  input?: unknown,
+): Promise<Result> {
   const response = await fetch(`/api/v1/commerce/${path}`, {
     method,
     headers: { 'content-type': 'application/json' },
@@ -28,7 +34,25 @@ async function request<Result>(path: string, method = 'GET', input?: unknown): P
   return response.json();
 }
 
-export function StorefrontShopping({ locale }: { locale: 'en' | 'ar' }) {
+export function StorefrontShopping({
+  locale,
+  listCode,
+}: {
+  locale: 'en' | 'ar';
+  listCode?: string;
+}) {
+  const pendingStorageKey = listCode
+    ? `findeg-pending-list:${listCode}`
+    : 'findeg-pending-checkout';
+  const [listView, setListView] = useState<ListSelectionView>();
+  function request<Result>(path: string, method = 'GET', input?: unknown): Promise<Result> {
+    const scoped =
+      listCode && path !== 'delivery-zones'
+        ? `list-selections/${encodeURIComponent(listCode)}${path === 'cart' ? '' : path === 'checkout/quote' ? '/quote' : '/checkout'}`
+        : path;
+    return commerceRequest<Result>(scoped, method, input);
+  }
+
   const ar = locale === 'ar';
   const text = (en: string, arabic: string) => (ar ? arabic : en);
   const [cart, setCart] = useState<CartQuote>();
@@ -52,6 +76,19 @@ export function StorefrontShopping({ locale }: { locale: 'en' | 'ar' }) {
       'insufficient-stock': [
         'There is not enough stock. Reduce quantities or clear your Cart.',
         'المخزون غير كافٍ. قلل الكميات أو أفرغ السلة.',
+      ],
+      'list-unavailable': [
+        'This list is archived or replaced. It is view-only.',
+        'هذه القائمة مؤرشفة أو مستبدلة ومتاحة للعرض فقط.',
+      ],
+      'selection-unavailable': [
+        'A choice no longer matches the list. Choose an available option.',
+        'أحد الاختيارات لم يعد مطابقًا للقائمة. اختر بديلًا متاحًا.',
+      ],
+      'empty-selection': ['Choose at least one list item.', 'اختر عنصرًا واحدًا على الأقل.'],
+      'not-found': [
+        'This list could not be found. Check its code.',
+        'لم يتم العثور على القائمة. تحقق من الرمز.',
       ],
       'empty-cart': ['Your Cart is empty.', 'سلة التسوق فارغة.'],
       'delivery-unavailable': [
@@ -78,11 +115,14 @@ export function StorefrontShopping({ locale }: { locale: 'en' | 'ar' }) {
         const saved = sessionStorage.getItem(pendingStorageKey);
         if (saved) setPending(JSON.parse(saved));
         const [result, delivery] = await Promise.all([
-          request<CartResult>('cart'),
+          request<CartResult | ListSelectionResult>('cart'),
           request<{ status: 'available'; zones: readonly DeliveryZone[] }>('delivery-zones'),
         ]);
         if (!active) return;
-        if (result.status === 'quoted') setCart(result.quote);
+        if (result.status === 'found') {
+          setListView(result);
+          setCart(result.pricing);
+        } else if (result.status === 'quoted') setCart(result.quote);
         else setMessage(rejection(result.status));
         setZones(delivery.zones);
       } catch {
@@ -101,7 +141,7 @@ export function StorefrontShopping({ locale }: { locale: 'en' | 'ar' }) {
     return () => {
       active = false;
     };
-  }, [locale]);
+  }, [locale, listCode]);
 
   async function replaceCart(items: readonly CartItem[]) {
     setBusy(true);
@@ -116,6 +156,29 @@ export function StorefrontShopping({ locale }: { locale: 'en' | 'ar' }) {
         text(
           'Cart update could not be confirmed. Reload before making more changes.',
           'تعذر تأكيد تحديث السلة. أعد تحميل الصفحة قبل إجراء تغييرات أخرى.',
+        ),
+      );
+      setCart(undefined);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function replaceSelection(selection: ListSelection) {
+    setBusy(true);
+    setQuote(undefined);
+    setMessage('');
+    try {
+      const result = await request<ListSelectionResult>('cart', 'PUT', selection);
+      if (result.status === 'found') {
+        setListView(result);
+        setCart(result.pricing);
+      } else setMessage(rejection(result.status));
+    } catch {
+      setMessage(
+        text(
+          'Unable to confirm your choices. Reload before continuing.',
+          'تعذر تأكيد اختياراتك. أعد تحميل الصفحة قبل المتابعة.',
         ),
       );
       setCart(undefined);
@@ -151,6 +214,10 @@ export function StorefrontShopping({ locale }: { locale: 'en' | 'ar' }) {
       if (result.status === 'accepted') {
         setReceipt(result);
         setCart({ items: [], subtotal: '0.00' });
+        if (listCode) {
+          const fresh = await request<ListSelectionResult>('cart');
+          if (fresh.status === 'found') setListView(fresh);
+        }
       } else setMessage(rejection(result.status));
       sessionStorage.removeItem(pendingStorageKey);
       setPending(undefined);
@@ -211,72 +278,84 @@ export function StorefrontShopping({ locale }: { locale: 'en' | 'ar' }) {
 
   return (
     <div className="storefront-shopping">
-      <CatalogBrowser locale={locale} disabled={busy || !!pending || !cart} onAdd={add} />
+      {!listCode && (
+        <CatalogBrowser locale={locale} disabled={busy || !!pending || !cart} onAdd={add} />
+      )}
+      {listCode && listView && (
+        <ListSelectionEditor
+          locale={locale}
+          view={listView}
+          disabled={busy || !!pending}
+          onChange={replaceSelection}
+        />
+      )}
       <p role="status" aria-live="polite">
         {busy ? text('Please wait…', 'يرجى الانتظار…') : message}
       </p>
-      <section aria-label={text('Your Cart', 'سلة التسوق')}>
-        <h2>{text('Your Cart', 'سلة التسوق')}</h2>
-        <p>
-          {text(
-            'Ordinary shopping is separate from School Supply Lists.',
-            'التسوق العادي منفصل عن قوائم المستلزمات المدرسية.',
-          )}
-        </p>
-        {cart?.items.length === 0 && <p>{text('Your Cart is empty.', 'سلة التسوق فارغة.')}</p>}
-        <ul>
-          {cart?.items.map((item) => (
-            <li key={item.variantId}>
-              <span>
-                {item.name[locale] ?? item.sku} — {item.label[locale]} · {item.unitPrice} EGP
-              </span>
-              <label>
-                {text('Quantity', 'الكمية')}
-                <input
-                  aria-label={`${text('Quantity', 'الكمية')} ${item.name[locale] ?? item.sku}`}
-                  type="number"
-                  min="1"
-                  max="999"
-                  value={item.quantity}
-                  disabled={busy || !!pending}
-                  onChange={(event) => {
-                    const quantity = Number(event.target.value);
-                    if (Number.isSafeInteger(quantity) && quantity >= 1 && quantity <= 999)
-                      void replaceCart(
-                        cart.items.map((line) => ({
-                          variantId: line.variantId,
-                          quantity: line.variantId === item.variantId ? quantity : line.quantity,
-                        })),
-                      );
-                  }}
-                />
-              </label>
-              <span>{item.lineTotal} EGP</span>
-              <button
-                type="button"
-                disabled={busy || !!pending}
-                onClick={() =>
-                  void replaceCart(
-                    cart.items
-                      .filter((line) => line.variantId !== item.variantId)
-                      .map(({ variantId, quantity }) => ({ variantId, quantity })),
-                  )
-                }
-              >
-                {text('Remove', 'حذف')}
-              </button>
-            </li>
-          ))}
-        </ul>
-        {cart && (
+      {!listCode && (
+        <section aria-label={text('Your Cart', 'سلة التسوق')}>
+          <h2>{text('Your Cart', 'سلة التسوق')}</h2>
           <p>
-            {text('Subtotal', 'المجموع الفرعي')}: {cart.subtotal} EGP
+            {text(
+              'Ordinary shopping is separate from School Supply Lists.',
+              'التسوق العادي منفصل عن قوائم المستلزمات المدرسية.',
+            )}
           </p>
-        )}
-        <button type="button" disabled={busy || !!pending} onClick={() => void replaceCart([])}>
-          {text('Clear Cart', 'إفراغ السلة')}
-        </button>
-      </section>
+          {cart?.items.length === 0 && <p>{text('Your Cart is empty.', 'سلة التسوق فارغة.')}</p>}
+          <ul>
+            {cart?.items.map((item) => (
+              <li key={item.variantId}>
+                <span>
+                  {item.name[locale] ?? item.sku} — {item.label[locale]} · {item.unitPrice} EGP
+                </span>
+                <label>
+                  {text('Quantity', 'الكمية')}
+                  <input
+                    aria-label={`${text('Quantity', 'الكمية')} ${item.name[locale] ?? item.sku}`}
+                    type="number"
+                    min="1"
+                    max="999"
+                    value={item.quantity}
+                    disabled={busy || !!pending}
+                    onChange={(event) => {
+                      const quantity = Number(event.target.value);
+                      if (Number.isSafeInteger(quantity) && quantity >= 1 && quantity <= 999)
+                        void replaceCart(
+                          cart.items.map((line) => ({
+                            variantId: line.variantId,
+                            quantity: line.variantId === item.variantId ? quantity : line.quantity,
+                          })),
+                        );
+                    }}
+                  />
+                </label>
+                <span>{item.lineTotal} EGP</span>
+                <button
+                  type="button"
+                  disabled={busy || !!pending}
+                  onClick={() =>
+                    void replaceCart(
+                      cart.items
+                        .filter((line) => line.variantId !== item.variantId)
+                        .map(({ variantId, quantity }) => ({ variantId, quantity })),
+                    )
+                  }
+                >
+                  {text('Remove', 'حذف')}
+                </button>
+              </li>
+            ))}
+          </ul>
+          {cart && (
+            <p>
+              {text('Subtotal', 'المجموع الفرعي')}: {cart.subtotal} EGP
+            </p>
+          )}
+          <button type="button" disabled={busy || !!pending} onClick={() => void replaceCart([])}>
+            {text('Clear Cart', 'إفراغ السلة')}
+          </button>
+        </section>
+      )}
       <section aria-label={text('Cash on Delivery', 'الدفع عند الاستلام')}>
         <h2>{text('Cash on Delivery', 'الدفع عند الاستلام')}</h2>
         <p>
@@ -289,7 +368,15 @@ export function StorefrontShopping({ locale }: { locale: 'en' | 'ar' }) {
           <p>{text('No delivery zones are available yet.', 'لا توجد مناطق توصيل متاحة حاليًا.')}</p>
         )}
         <form onSubmit={checkout} onChange={() => setQuote(undefined)}>
-          <fieldset disabled={busy || !!pending || !cart?.items.length || !zones.length}>
+          <fieldset
+            disabled={
+              busy ||
+              !!pending ||
+              !cart?.items.length ||
+              !zones.length ||
+              (!!listCode && listView?.list.status !== 'published')
+            }
+          >
             <legend>{text('Delivery details', 'بيانات التوصيل')}</legend>
             <label>
               {text('Name', 'الاسم')}

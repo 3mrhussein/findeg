@@ -5,6 +5,7 @@ export interface CartItem {
 }
 
 export interface PricedItem extends CartItem {
+  readonly attribution?: ListAttribution;
   readonly sku: string;
   readonly name: { readonly en?: string; readonly ar?: string };
   readonly label: { readonly en?: string; readonly ar?: string };
@@ -98,3 +99,44 @@ export type CheckoutResult =
 export type GuestOrderResult =
   | { readonly status: 'verified'; readonly order: AcceptedOrder }
   | { readonly status: 'invalid-input' | 'not-found' };
+
+export interface ListChoice extends CartItem {
+  readonly listItemId: number;
+}
+export interface ListSelection {
+  readonly setCount: number;
+  readonly items: readonly ListChoice[];
+}
+
+export interface ListAttribution {
+  readonly listId: number;
+  readonly businessPartnerId: number;
+  readonly listItemId: number;
+  readonly specification?: import('../school-supply-lists/contracts.js').ListItemSpecification;
+  readonly defaultVariantId: number;
+  readonly alternative: boolean;
+  readonly catalogUnitPrice: string;
+  readonly offerBasisPoints: number;
+  readonly discountAmount: string;
+}
+export interface ListCompleteness {
+  readonly complete: boolean;
+  readonly required: readonly { listItemId: number; expected: number; selected: number }[];
+}
+
+export interface ListSelectionView {
+  readonly status: 'found';
+  readonly list: import('../school-supply-lists/contracts.js').SchoolSupplyList;
+  readonly selection: ListSelection;
+  readonly options: readonly {
+    listItemId: number;
+    variants: readonly import('../catalog/contracts.js').ListCatalogVariant[];
+  }[];
+  readonly offerBasisPoints: number;
+  readonly pricing?: CartQuote & { readonly completeness: ListCompleteness };
+}
+export type ListSelectionResult =
+  | ListSelectionView
+  | {
+      readonly status: 'invalid-input' | 'not-found' | 'list-unavailable' | 'selection-unavailable';
+    };

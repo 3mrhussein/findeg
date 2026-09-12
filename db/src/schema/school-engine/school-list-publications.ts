@@ -1,5 +1,15 @@
 import { relations, sql } from 'drizzle-orm';
-import { check, index, integer, serial, text, timestamp, uniqueIndex } from 'drizzle-orm/pg-core';
+import {
+  boolean,
+  jsonb,
+  check,
+  index,
+  integer,
+  serial,
+  text,
+  timestamp,
+  uniqueIndex,
+} from 'drizzle-orm/pg-core';
 import { businessPartners } from '../../modules/partner-management/schema.js';
 import { users } from '../identity/users.js';
 import { schoolEngineSchema } from '../schemas.js';
@@ -45,6 +55,11 @@ export const schoolSupplyListItems = schoolEngineSchema.table(
       .references(() => schoolSupplyLists.id, { onDelete: 'cascade' }),
     variantId: integer('variant_id').notNull(),
     quantity: integer('quantity').notNull(),
+    required: boolean('required').notNull().default(true),
+    specification: jsonb('specification').$type<{
+      categoryId: number;
+      attributes: Record<string, string>;
+    }>(),
     exactItem: integer('exact_item').notNull().default(0),
     productNameEn: text('product_name_en').notNull().default(''),
     productNameAr: text('product_name_ar').notNull().default(''),

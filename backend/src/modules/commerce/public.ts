@@ -144,3 +144,110 @@ export function validateCart(input: unknown): readonly CartItem[] | undefined {
   }
   return items.sort((left, right) => left.variantId - right.variantId);
 }
+
+export interface ListSelectionStore {
+  offer(listId: number): Promise<number>;
+  read(
+    owner: string,
+    listId: number,
+    initial: import('./contracts.js').ListSelection,
+  ): Promise<import('./contracts.js').ListSelection>;
+  replace(
+    owner: string,
+    listId: number,
+    selection: import('./contracts.js').ListSelection,
+  ): Promise<void>;
+}
+
+export function validateListSelection(
+  input: unknown,
+): import('./contracts.js').ListSelection | undefined {
+  if (!input || typeof input !== 'object') return;
+  const value = input as Record<string, unknown>;
+  if (
+    Object.keys(value).some((key) => !['setCount', 'items'].includes(key)) ||
+    !Number.isSafeInteger(value.setCount) ||
+    Number(value.setCount) < 1 ||
+    Number(value.setCount) > 999 ||
+    !Array.isArray(value.items) ||
+    value.items.length > 100
+  )
+    return;
+  const items: import('./contracts.js').ListChoice[] = [];
+  for (const item of value.items) {
+    if (
+      !item ||
+      typeof item !== 'object' ||
+      Object.keys(item).some((key) => !['listItemId', 'variantId', 'quantity'].includes(key)) ||
+      !Number.isSafeInteger(item.listItemId) ||
+      item.listItemId < 1 ||
+      !Number.isSafeInteger(item.variantId) ||
+      item.variantId < 1 ||
+      !Number.isSafeInteger(item.quantity) ||
+      item.quantity < 1 ||
+      item.quantity > 999 ||
+      items.some((previous) => previous.listItemId === item.listItemId)
+    )
+      return;
+    items.push({ listItemId: item.listItemId, variantId: item.variantId, quantity: item.quantity });
+  }
+  return {
+    setCount: Number(value.setCount),
+    items: items.sort((a, b) => a.listItemId - b.listItemId),
+  };
+}
+
+/** Prices validated choices; each discounted line is rounded once, half up, to a piaster. */
+export function priceListSelection(
+  list: {
+    id: number;
+    businessPartnerId: number;
+    items: readonly Pick<
+      import('../school-supply-lists/contracts.js').SchoolSupplyListItem,
+      'id' | 'variantId' | 'quantity' | 'required' | 'specification'
+    >[];
+  },
+  selection: import('./contracts.js').ListSelection,
+  variants: readonly LocalizedStorefrontVariant[],
+  offerBasisPoints: number,
+) {
+  const required = list.items
+    .filter((item) => item.required !== false)
+    .map((item) => ({
+      listItemId: item.id,
+      expected: item.quantity * selection.setCount,
+      selected: selection.items.find((choice) => choice.listItemId === item.id)?.quantity ?? 0,
+    }));
+  const items: PricedItem[] = selection.items.map((choice) => {
+    const source = list.items.find((item) => item.id === choice.listItemId)!;
+    const variant = variants.find((item) => item.id === choice.variantId)!;
+    const unit = egpMinor(variant.price);
+    const gross = unit * BigInt(choice.quantity);
+    const paid = (gross * BigInt(10000 - offerBasisPoints) + 5000n) / 10000n;
+    return {
+      variantId: choice.variantId,
+      quantity: choice.quantity,
+      sku: variant.sku,
+      name: variant.name,
+      label: variant.label,
+      unitPrice: formatEgp(unit),
+      lineTotal: formatEgp(paid),
+      attribution: {
+        listId: list.id,
+        businessPartnerId: list.businessPartnerId,
+        listItemId: source.id,
+        specification: source.specification,
+        defaultVariantId: source.variantId,
+        alternative: choice.variantId !== source.variantId,
+        catalogUnitPrice: formatEgp(unit),
+        offerBasisPoints,
+        discountAmount: formatEgp(gross - paid),
+      },
+    };
+  });
+  return {
+    items,
+    subtotal: formatEgp(items.reduce((total, item) => total + egpMinor(item.lineTotal), 0n)),
+    completeness: { complete: required.every((item) => item.selected >= item.expected), required },
+  };
+}
