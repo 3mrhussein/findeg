@@ -1,19 +1,21 @@
+import type { PartnerSession } from '../partner-management/contracts.js';
 import type { PartnerReportOptions, PartnerReportResult, PartnerReportRow } from './contracts.js';
 
 export type { PartnerReportOptions, PartnerReportResult, PartnerReportRow } from './contracts.js';
 
-export function sanitizePartnerReportRow<T extends PartnerReportRow>(
-  row: T,
-): Omit<T, 'customerName' | 'email' | 'phone' | 'deliveryStreet' | 'deliveryCity'> {
-  const {
-    customerName: _customerName,
-    email: _email,
-    phone: _phone,
-    deliveryStreet: _deliveryStreet,
-    deliveryCity: _deliveryCity,
-    ...rest
-  } = row;
-  return rest;
+export type PartnerReportAccessResult =
+  | { readonly status: 'authorized'; readonly report: PartnerReportResult }
+  | { readonly status: 'authorization-denied' };
+
+export function sanitizePartnerReportRow(
+  row: PartnerReportRow,
+): Pick<PartnerReportRow, 'partnerId' | 'period' | 'count' | 'totalPoints'> {
+  return {
+    partnerId: row.partnerId,
+    period: row.period,
+    count: row.count,
+    totalPoints: row.totalPoints,
+  };
 }
 
 function filterPartnerReportRows(
@@ -35,6 +37,22 @@ export function buildPartnerReports(
     rows: filtered,
     suppressed: rows.some((row) => row.count < minimumCount),
   };
+}
+
+export function buildAuthorizedPartnerReports(
+  session: PartnerSession,
+  partnerId: number,
+  rows: readonly PartnerReportRow[],
+  options: PartnerReportOptions = {},
+): PartnerReportAccessResult {
+  const authorized =
+    session.partner.businessPartnerId === partnerId &&
+    session.partner.roles.some(
+      (role) => role === 'partner-administrator' || role === 'report-viewer',
+    );
+  if (!authorized) return { status: 'authorization-denied' };
+
+  return { status: 'authorized', report: buildPartnerReports(rows, options) };
 }
 
 export function suppressLowCountBreakdowns(

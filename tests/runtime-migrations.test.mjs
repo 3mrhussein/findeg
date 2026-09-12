@@ -44,7 +44,7 @@ test(
       database = postgres(url.toString(), { max: 1 });
       const [history] =
         await database`SELECT count(*)::int AS count FROM drizzle.__drizzle_migrations`;
-      assert.equal(history.count, 8);
+      assert.equal(history.count, 9);
       const [column] =
         await database`SELECT column_default FROM information_schema.columns WHERE table_schema = 'identity' AND table_name = 'users' AND column_name = 'authorization_version'`;
       assert.equal(column.column_default, '1');

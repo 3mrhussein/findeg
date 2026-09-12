@@ -57,6 +57,13 @@
       "when": 1789228800000,
       "tag": "0007_list_selections",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1789232400000,
+      "tag": "0008_partner_reward_events",
+      "breakpoints": true
     }
   ]
 }
