@@ -12,7 +12,7 @@ import type {
 } from '@findeg/backend/modules/identity-access/contracts';
 import { bindIdentityStore } from '@findeg/backend/modules/identity-access/infrastructure/persistence';
 import { createIdentitySecurity } from '@findeg/backend/modules/identity-access/infrastructure/security';
-import { createCatalogManagement } from '@findeg/backend/modules/catalog/public';
+import { createCatalogManagement } from './catalog-inventory.js';
 import { bindCatalogStore } from '@findeg/backend/modules/catalog/infrastructure/persistence';
 import { bindInventoryStore } from '@findeg/backend/modules/inventory/infrastructure/persistence';
 import { createTransactionRuntime } from './transactions.js';

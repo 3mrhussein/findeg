@@ -1,7 +1,7 @@
 import { and, eq, inArray } from 'drizzle-orm';
 import type { TransactionDatabase } from '@findeg/db/transactions';
 import { inventoryBalances, stockMovements, warehouses } from '@findeg/db/modules/inventory';
-import type { InventoryStore } from '../../catalog/public.js';
+import type { InventoryStore } from '../public.js';
 
 export function bindInventoryStore(database: TransactionDatabase): InventoryStore {
   return {

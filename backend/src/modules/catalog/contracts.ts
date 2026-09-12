@@ -4,7 +4,6 @@ export interface LocalizedText {
   readonly en: string;
   readonly ar: string;
 }
-
 export interface ProductVariantInput {
   readonly productId: number;
   readonly sku: string;
@@ -31,10 +30,10 @@ export interface StorefrontVariant {
   readonly price: string;
 }
 
-export interface InventoryAdjustment {
-  readonly variantId: number;
-  readonly warehouseId: number;
-  readonly quantityDelta: number;
-  readonly actorId: number;
-  readonly notes?: string;
+export interface LocalizedStorefrontVariant {
+  readonly id: number;
+  readonly sku: string;
+  readonly name: { readonly en?: string; readonly ar?: string };
+  readonly label: { readonly en?: string; readonly ar?: string };
+  readonly price: string;
 }

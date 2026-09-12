@@ -3,10 +3,6 @@ import type { TransactionDatabase } from '@findeg/db/transactions';
 import { productVariants, products } from '@findeg/db/modules/catalog';
 import type { CatalogStore } from '../public.js';
 
-function localized(value: { en?: string; ar?: string }, locale: 'en' | 'ar') {
-  return value[locale] ?? value.en ?? value.ar ?? '';
-}
-
 export function bindCatalogStore(database: TransactionDatabase): CatalogStore {
   return {
     async createActiveVariant(input) {
@@ -24,7 +20,7 @@ export function bindCatalogStore(database: TransactionDatabase): CatalogStore {
           variantKey: input.variantKey.trim(),
           localizedLabel: input.label,
           basePrice: input.basePrice,
-          isActive: input.isActive,
+          isActive: true,
         })
         .returning({ id: productVariants.id });
       return variant.id;
@@ -65,7 +61,7 @@ export function bindCatalogStore(database: TransactionDatabase): CatalogStore {
         .for('update');
       return !!variant;
     },
-    async listActiveVariants(locale) {
+    async listActiveVariants() {
       const rows = await database
         .select({
           id: productVariants.id,
@@ -81,8 +77,8 @@ export function bindCatalogStore(database: TransactionDatabase): CatalogStore {
       return rows.map((row) => ({
         id: row.id,
         sku: row.sku,
-        name: localized(row.name, locale),
-        label: localized(row.label, locale),
+        name: row.name,
+        label: row.label,
         price: row.price,
       }));
     },
