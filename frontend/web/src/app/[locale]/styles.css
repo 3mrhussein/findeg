@@ -96,3 +96,46 @@ h1 {
 .partner-access a {
   overflow-wrap: anywhere;
 }
+
+.storefront-shopping {
+  display: grid;
+  gap: 1.5rem;
+}
+.storefront-shopping section {
+  padding: 1.25rem;
+  border: 1px solid #d9e3df;
+  border-radius: 0.5rem;
+  background: white;
+}
+.storefront-shopping form,
+.storefront-shopping fieldset {
+  display: grid;
+  gap: 1rem;
+  max-width: 36rem;
+}
+.storefront-shopping label {
+  display: grid;
+  gap: 0.3rem;
+}
+.storefront-shopping input,
+.storefront-shopping select,
+.storefront-shopping button {
+  font: inherit;
+  padding: 0.6rem;
+  min-width: 0;
+}
+.storefront-shopping li {
+  margin-block: 0.75rem;
+}
+.storefront-shopping li input {
+  max-width: 5rem;
+}
+.storefront-shopping button {
+  cursor: pointer;
+}
+.storefront-shopping button:disabled {
+  cursor: default;
+}
+.storefront-shopping code {
+  overflow-wrap: anywhere;
+}

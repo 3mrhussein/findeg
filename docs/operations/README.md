@@ -21,6 +21,9 @@ legacy executable already provides it.
 The implementation-level commands and provider-specific procedures belong next
 to the owning runtime adapter when that adapter is introduced.
 
+See [Guest Checkout](guest-checkout.md) for ordinary Cart operations, retry behavior,
+verification and the #59 delivery dependency.
+
 ## Executable foundation (#52)
 
 Use Node and pnpm pinned by `.nvmrc` and `package.json`, then

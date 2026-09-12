@@ -1,69 +1,3 @@
-export type PaymentMethod = 'cod' | 'card';
-
-export interface CustomerAddressInput {
-  readonly fullName: string;
-  readonly phone: string;
-  readonly city: string;
-  readonly area: string;
-  readonly street: string;
-}
-
-export interface GuestOrderItemInput {
-  readonly variantId: number;
-  readonly quantity: number;
-}
-
-export interface GuestOrderRequest {
-  readonly idempotencyKey: string;
-  readonly email: string;
-  readonly customer: CustomerAddressInput;
-  readonly shippingAddress: {
-    readonly city: string;
-    readonly area: string;
-    readonly street: string;
-  };
-  readonly items: readonly GuestOrderItemInput[];
-  readonly paymentMethod: PaymentMethod;
-}
-
-export interface GuestOrderLine {
-  readonly variantId: number;
-  readonly quantity: number;
-  readonly unitPrice: string;
-  readonly total: string;
-}
-
-export interface GuestOrderReservation {
-  readonly status: 'reserved';
-  readonly createdAt: string;
-}
-
-export interface GuestAccess {
-  readonly reference: string;
-  readonly verificationCode: string;
-  readonly used: boolean;
-}
-
-export interface GuestOrderRecord {
-  readonly id: string;
-  readonly idempotencyKey: string;
-  readonly payloadHash: string;
-  readonly email: string;
-  readonly customer: CustomerAddressInput;
-  readonly shippingAddress: {
-    readonly city: string;
-    readonly area: string;
-    readonly street: string;
-  };
-  readonly items: readonly GuestOrderLine[];
-  readonly total: string;
-  readonly reservation: GuestOrderReservation;
-  readonly paymentMethod: PaymentMethod;
-  readonly guestAccess: GuestAccess;
-  readonly createdAt: string;
-  readonly status: 'accepted' | 'pending' | 'paid' | 'fulfilled' | 'cancelled';
-}
-
 /** Browser-safe ordinary Storefront commerce; List Selection has a separate contract. */
 export interface CartItem {
   readonly variantId: number;
@@ -111,3 +45,56 @@ export interface AcceptedOrder {
   readonly address: DeliveryAddress;
   readonly guestAccess: { readonly reference: string };
 }
+
+export interface CheckoutInput {
+  readonly key: string;
+  readonly confirmation: string;
+  readonly address: DeliveryAddress;
+  readonly paymentMethod: 'cash-on-delivery';
+  readonly deliveryMethod: 'home-delivery';
+}
+
+export interface CheckoutQuote extends CartQuote {
+  readonly zone: DeliveryZone;
+  readonly total: string;
+  readonly confirmation: string;
+}
+
+export interface CheckoutReceipt {
+  readonly status: 'accepted';
+  readonly reference: string;
+  readonly accessReference: string;
+  readonly total: string;
+}
+
+export type CartResult =
+  | { readonly status: 'quoted'; readonly quote: CartQuote }
+  | { readonly status: 'invalid-input' | 'variant-unavailable' | 'insufficient-stock' };
+
+export type CheckoutQuoteResult =
+  | ({ readonly status: 'quoted' } & CheckoutQuote)
+  | {
+      readonly status:
+        | 'invalid-input'
+        | 'empty-cart'
+        | 'delivery-unavailable'
+        | 'variant-unavailable'
+        | 'insufficient-stock';
+    };
+
+export type CheckoutResult =
+  | CheckoutReceipt
+  | {
+      readonly status:
+        | 'invalid-input'
+        | 'empty-cart'
+        | 'delivery-unavailable'
+        | 'variant-unavailable'
+        | 'insufficient-stock'
+        | 'reconfirmation-required'
+        | 'idempotency-conflict';
+    };
+
+export type GuestOrderResult =
+  | { readonly status: 'verified'; readonly order: AcceptedOrder }
+  | { readonly status: 'invalid-input' | 'not-found' };

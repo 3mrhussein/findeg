@@ -1,4 +1,4 @@
-import { createHash, randomBytes } from 'node:crypto';
+import { createHash, randomBytes, randomInt } from 'node:crypto';
 import { createPartnerOperations } from '@findeg/backend/partner-operations';
 import { createStorefrontCommerce } from '@findeg/backend/checkout';
 import { bindCommerceStore } from '@findeg/backend/modules/commerce/infrastructure/persistence';
@@ -81,7 +81,7 @@ export function createWebRuntime(environment: Readonly<Record<string, string | u
     commerce: createStorefrontCommerce(persistence.transactions, {
       digest: (value) => createHash('sha256').update(value).digest('hex'),
       randomToken: () => randomBytes(32).toString('hex'),
-      verificationCode: () => String(Math.floor(100000 + Math.random() * 900000)),
+      verificationCode: () => String(randomInt(100000, 1000000)),
     }),
     currentSession,
     partners: {

@@ -42,4 +42,5 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
       - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @findeg/web exec cypress install
       - run: pnpm quality:check

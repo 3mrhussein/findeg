@@ -1,6 +1,9 @@
 import type { TransactionRunner } from './transactions.js';
-import type { CatalogCheckoutStore, CatalogStore } from '@findeg/backend/modules/catalog/public';
-import type { InventoryReservations, InventoryStore } from '@findeg/backend/modules/inventory/public';
+import type { CatalogCheckoutStore } from '@findeg/backend/modules/catalog/public';
+import type {
+  InventoryReservations,
+  InventoryStore,
+} from '@findeg/backend/modules/inventory/public';
 import {
   checkoutInput,
   egpMinor,
@@ -13,7 +16,6 @@ import type { AcceptedOrder, CartItem } from '@findeg/backend/modules/commerce/c
 
 export interface CheckoutStores {
   commerce: CommerceStore;
-  catalog: CatalogStore;
   inventory: InventoryStore;
   checkoutCatalog: CatalogCheckoutStore;
   reservations: InventoryReservations;
@@ -60,11 +62,7 @@ export function createStorefrontCommerce(
     if (!items.length) return { status: 'empty-cart' } as const;
     const zone = await stores.commerce.deliveryZone(zoneId);
     if (!zone) return { status: 'delivery-unavailable' } as const;
-    const priced = priceCart(
-      items,
-      await stores.checkoutCatalog.readEligible(items.map((item) => item.variantId)),
-      await stores.inventory.availabilityFor(items.map((item) => item.variantId)),
-    );
+    const priced = await quote(stores, items);
     if (priced.status !== 'quoted') return priced;
     const terms = {
       ...priced.quote,
@@ -89,7 +87,10 @@ export function createStorefrontCommerce(
 
   return {
     deliveryZones: () =>
-      run(async (stores) => ({ status: 'available', zones: await stores.commerce.deliveryZones() }) as const),
+      run(
+        async (stores) =>
+          ({ status: 'available', zones: await stores.commerce.deliveryZones() }) as const,
+      ),
 
     async quoteCheckout(ownerDigest: string, zoneId: number) {
       if (!/^[a-f0-9]{64}$/.test(ownerDigest) || !Number.isSafeInteger(zoneId) || zoneId <= 0) {
@@ -100,7 +101,8 @@ export function createStorefrontCommerce(
 
     async acceptCheckout(ownerDigest: string, input: unknown) {
       const value = checkoutInput(input);
-      if (!value || !/^[a-f0-9]{64}$/.test(ownerDigest)) return { status: 'invalid-input' } as const;
+      if (!value || !/^[a-f0-9]{64}$/.test(ownerDigest))
+        return { status: 'invalid-input' } as const;
       const fingerprint = security.digest(JSON.stringify(value));
       return run(async (stores) => {
         // The transaction-bound Cart row lock serializes retries for this guest across processes.
@@ -141,11 +143,15 @@ export function createStorefrontCommerce(
           reference: order.reference,
           email: order.address.email,
         });
-        await stores.outbox.enqueue(`guest-access:${order.guestAccess.reference}`, 'guest-order-code', {
-          reference: order.guestAccess.reference,
-          code: verificationCode,
-          email: order.address.email,
-        });
+        await stores.outbox.enqueue(
+          `guest-access:${order.guestAccess.reference}`,
+          'guest-order-code',
+          {
+            reference: order.guestAccess.reference,
+            code: verificationCode,
+            email: order.address.email,
+          },
+        );
         if (items.length) await stores.commerce.replaceCart(ownerDigest, []);
         return receipt(order);
       });
@@ -153,7 +159,8 @@ export function createStorefrontCommerce(
 
     async replaceCart(ownerDigest: string, input: unknown) {
       const items = validateCart(input);
-      if (!items || !/^[a-f0-9]{64}$/.test(ownerDigest)) return { status: 'invalid-input' } as const;
+      if (!items || !/^[a-f0-9]{64}$/.test(ownerDigest))
+        return { status: 'invalid-input' } as const;
       return run(async (stores) => {
         const result = await quote(stores, items);
         if (result.status === 'quoted') await stores.commerce.replaceCart(ownerDigest, items);
@@ -172,7 +179,9 @@ export function createStorefrontCommerce(
       }
       return run(async (stores) => {
         const order = await stores.commerce.verifyGuestAccess(reference, security.digest(code));
-        return order ? ({ status: 'verified', order } as const) : ({ status: 'not-found' } as const);
+        return order
+          ? ({ status: 'verified', order } as const)
+          : ({ status: 'not-found' } as const);
       });
     },
   };
