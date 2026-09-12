@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { orderStatusEnum, paymentStatusEnum, paymentMethodEnum } from '../schema/enums';
+import { orderStatusEnum, paymentStatusEnum, paymentMethodEnum } from '../schema/enums.js';
 
 /**
  * Sales & Order Primitives for Database Layer

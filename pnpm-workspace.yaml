@@ -1,14 +1,16 @@
 packages:
-  - "packages/config"
-  - "packages/env"
-  - "db"
-  - "backend"
-  - "frontend/ui"
-  - "frontend/storefront"
-  - "frontend/dashboard"
+  - 'runtime'
+  - 'frontend/web'
+  - 'packages/config'
+  - 'packages/env'
+  - 'db'
+  - 'backend'
+  - 'frontend/ui'
+  - 'frontend/storefront'
+  - 'frontend/dashboard'
 allowBuilds:
-  "@parcel/watcher": false
-  "@swc/core": false
+  '@parcel/watcher': false
+  '@swc/core': false
   cypress: false
   esbuild: false
   msw: false

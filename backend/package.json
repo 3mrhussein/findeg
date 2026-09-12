@@ -4,13 +4,24 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./features/*": "./src/features/*"
+    "./features/*": "./src/features/*",
+    "./portal-entry": "./dist/enter-portal.js",
+    "./transactions": "./dist/application/transactions.js",
+    "./modules/identity-access/contracts": "./dist/modules/identity-access/contracts.js",
+    "./modules/identity-access/public": "./dist/modules/identity-access/public.js",
+    "./modules/identity-access/infrastructure/persistence": "./dist/modules/identity-access/infrastructure/persistence.js",
+    "./modules/identity-access/infrastructure/security": "./dist/modules/identity-access/infrastructure/security.js",
+    "./modules/partner-management/contracts": "./dist/modules/partner-management/contracts.js",
+    "./modules/partner-management/public": "./dist/modules/partner-management/public.js",
+    "./modules/partner-management/infrastructure/persistence": "./dist/modules/partner-management/infrastructure/persistence.js",
+    "./partner-operations": "./dist/application/partner-operations.js"
   },
   "scripts": {
     "type-check": "tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest --run",
-    "clean": " rm -rf node_modules dist .turbo"
+    "clean": " rm -rf node_modules dist .turbo",
+    "build": "tsc -p tsconfig.portal-entry.json && tsc -p tsconfig.modules.json && tsc -p tsconfig.application.json"
   },
   "dependencies": {
     "@findeg/db": "workspace:*",

@@ -1,7 +1,6 @@
 import { z } from 'zod';
-import { EmailSchema } from './common';
-import { actorTypeEnum, portalRoleEnum } from '../schema/enums';
-
+import { EmailSchema } from './common.js';
+import { actorTypeEnum, portalRoleEnum } from '../schema/enums.js';
 
 /**
  * Identity & Authorization Primitives for Database Layer

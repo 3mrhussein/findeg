@@ -2,41 +2,41 @@
  * Notifications Database Schema
  */
 
-import { pgTable, serial, text, timestamp, boolean, integer, index } from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
-import { users } from "../identity/users";
-import { systemSchema } from "../schemas";
+import { pgTable, serial, text, timestamp, boolean, integer, index } from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
+import { users } from '../identity/users.js';
+import { systemSchema } from '../schemas.js';
 
 /**
  * Notifications Table
  */
 export const notifications = systemSchema.table(
-  "notifications",
+  'notifications',
   {
-    id: serial("id").primaryKey(),
-    userId: integer("user_id")
+    id: serial('id').primaryKey(),
+    userId: integer('user_id')
       .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
+      .references(() => users.id, { onDelete: 'cascade' }),
 
     /** Notification Titles */
-    titleEn: text("title_en").notNull(),
-    titleAr: text("title_ar").notNull(),
+    titleEn: text('title_en').notNull(),
+    titleAr: text('title_ar').notNull(),
 
     /** Notification Content */
-    bodyEn: text("body_en"),
-    bodyAr: text("body_ar"),
+    bodyEn: text('body_en'),
+    bodyAr: text('body_ar'),
 
     /** Target URL for notification action */
-    actionUrl: text("action_url"),
+    actionUrl: text('action_url'),
 
     /** Type of notification (e.g., 'order_status', 'promo', 'system') */
-    type: text("type").default("system").notNull(),
+    type: text('type').default('system').notNull(),
 
-    isRead: boolean("is_read").default(false).notNull(),
+    isRead: boolean('is_read').default(false).notNull(),
 
-    createdAt: timestamp("created_at").defaultNow().notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
   },
-  (table) => [index("notifications_user_id_idx").on(table.userId)],
+  (table) => [index('notifications_user_id_idx').on(table.userId)],
 );
 
 export const notificationsRelations = relations(notifications, ({ one }) => ({
