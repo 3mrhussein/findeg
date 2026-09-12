@@ -15,6 +15,9 @@ export function partnerResponse(result: { status: string }, success = 200) {
     'invalid-transition': 409,
     'partner-unavailable': 409,
     'code-unavailable': 409,
+    immutable: 409,
+    'variant-unavailable': 409,
+    'replacement-unavailable': 409,
   };
   const status = errors[result.status];
   return status
