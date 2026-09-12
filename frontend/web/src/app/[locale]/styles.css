@@ -45,6 +45,27 @@ h1 {
   padding: 0.6rem;
 }
 
+.catalog-manager {
+  display: grid;
+  gap: 2rem;
+}
+.catalog-manager form {
+  display: grid;
+  gap: 0.75rem;
+  max-width: 32rem;
+  padding: 1rem;
+  border: 1px solid #d9e3df;
+}
+.catalog-manager label {
+  display: grid;
+  gap: 0.25rem;
+}
+.catalog-manager input,
+.catalog-manager button {
+  font: inherit;
+  padding: 0.5rem;
+}
+
 .partner-access form,
 .partner-create {
   display: grid;

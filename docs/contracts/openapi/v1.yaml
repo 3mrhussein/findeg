@@ -221,6 +221,127 @@ paths:
         '403': { description: Origin or authorization denied }
         '404': { description: Business Partner not found }
         '409': { description: Invalid transition or missing administrator }
+  /catalog:
+    get:
+      summary: Browse active bilingual catalog variants
+      parameters:
+        - in: query
+          name: locale
+          required: true
+          schema: { type: string, enum: [en, ar] }
+      responses:
+        '200':
+          description: Active variants with available inventory
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required: [id, sku, name, label, price, available]
+                  properties:
+                    id: { type: integer }
+                    sku: { type: string }
+                    name: { type: string }
+                    label: { type: string }
+                    price: { type: string }
+                    strikePrice: { type: string }
+                    available: { type: integer }
+        '400': { description: Invalid locale }
+  /back-office/catalog/variants:
+    get:
+      summary: List Product Variants for Catalog Managers
+      description: Requires same-origin Origin and catalog.manage permission.
+      security: [{ sessionCookie: [] }]
+      responses:
+        '200':
+          description: Product Variants with bilingual labels and persisted pricing
+        '401': { description: Authentication required }
+        '403': { description: Origin or authorization denied }
+    post:
+      summary: Create an active Product Variant
+      description: Requires same-origin Origin and catalog.manage permission.
+      security: [{ sessionCookie: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [productId, sku, variantKey, label, basePrice, isActive]
+              properties:
+                productId: { type: integer, minimum: 1 }
+                sku: { type: string, minLength: 1 }
+                variantKey: { type: string, minLength: 1 }
+                label:
+                  type: object
+                  required: [en, ar]
+                  properties:
+                    en: { type: string, minLength: 1 }
+                    ar: { type: string, minLength: 1 }
+                basePrice: { type: string }
+                strikePrice: { type: string }
+                isActive: { type: boolean }
+      responses:
+        '201': { description: Created }
+        '400': { description: Invalid input }
+        '401': { description: Authentication required }
+        '403': { description: Origin or authorization denied }
+        '404': { description: Product not found }
+    put:
+      summary: Update an active Product Variant
+      description: Requires same-origin Origin and catalog.manage permission.
+      security: [{ sessionCookie: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [variantId, sku, variantKey, label, basePrice, isActive]
+              properties:
+                variantId: { type: integer, minimum: 1 }
+                sku: { type: string, minLength: 1 }
+                variantKey: { type: string, minLength: 1 }
+                label:
+                  type: object
+                  required: [en, ar]
+                  properties:
+                    en: { type: string, minLength: 1 }
+                    ar: { type: string, minLength: 1 }
+                basePrice: { type: string }
+                strikePrice: { type: string }
+                isActive: { type: boolean }
+      responses:
+        '200': { description: Updated }
+        '400': { description: Invalid input }
+        '401': { description: Authentication required }
+        '403': { description: Origin or authorization denied }
+        '404': { description: Variant not found }
+  /back-office/inventory/adjustments:
+    post:
+      summary: Adjust inventory on-hand balance
+      description: Requires same-origin Origin and catalog.manage permission. Contested decrements fail closed if stock is insufficient.
+      security: [{ sessionCookie: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [variantId, warehouseId, quantityDelta]
+              properties:
+                variantId: { type: integer, minimum: 1 }
+                warehouseId: { type: integer, minimum: 1 }
+                quantityDelta: { type: integer }
+                notes: { type: string }
+      responses:
+        '200': { description: Adjusted }
+        '400': { description: Invalid input }
+        '401': { description: Authentication required }
+        '403': { description: Origin or authorization denied }
+        '404': { description: Variant or warehouse not found }
+        '409': { description: Insufficient stock }
 components:
   securitySchemes:
     sessionCookie:
