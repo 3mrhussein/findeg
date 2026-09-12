@@ -5,6 +5,14 @@ on:
   push:
     branches: [main, develop]
   workflow_dispatch:
+    inputs:
+      certify:
+        description: Request protected production certification (does not deploy)
+        type: boolean
+        default: false
+      evidence_url:
+        description: Release record with security, migration, documentation and release evidence
+        type: string
 
 permissions:
   contents: read
@@ -44,3 +52,104 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter @findeg/web exec cypress install
       - run: pnpm quality:check
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: cypress-failures
+          path: |
+            frontend/web/cypress/screenshots
+            frontend/web/cypress/videos
+          if-no-files-found: ignore
+
+  artifact:
+    name: Release artifact gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build the shared production image
+        run: docker build -f Dockerfile.runtime --build-arg RELEASE_REVISION="$GITHUB_SHA" -t findeg:certification .
+      - name: Verify compiled runtime exports in the release image
+        run: docker run --rm --entrypoint node findeg:certification --input-type=module -e "await import('./runtime/dist/index.js'); await import('./runtime/dist/worker.js');"
+
+  security:
+    name: Security gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - run: pnpm security:check
+
+  documentation:
+    name: Documentation gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Check canonical documents and change evidence
+        env:
+          BASE_REVISION: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: node scripts/documentation-check.mjs
+
+  certification-policy:
+    if: github.event_name == 'workflow_dispatch' && inputs.certify
+    needs: [quality, security, documentation, artifact]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Require independent environment review with no bypass
+        env:
+          GH_TOKEN: ${{ secrets.CERTIFICATION_READ_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          EVIDENCE_URL: ${{ inputs.evidence_url }}
+        run: |
+          test "$GITHUB_REF" = refs/heads/develop || test "$GITHUB_REF" = refs/heads/main
+          test -n "$GH_TOKEN"
+          [[ "$EVIDENCE_URL" =~ ^https://[^[:space:]]+$ ]]
+          gh api "repos/$GH_REPO/environments/production-certification" > environment.json
+          jq -e '.can_admins_bypass == false and any(.protection_rules[]; .type == "required_reviewers" and .prevent_self_review == true and (.reviewers | length > 0))' environment.json
+
+  certification:
+    name: Target certification
+    needs: [quality, security, documentation, artifact, certification-policy]
+    if: github.event_name == 'workflow_dispatch' && inputs.certify
+    environment: production-certification
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm runtime:compile
+      - name: Validate production delivery configuration
+        env:
+          NODE_ENV: production
+          RELEASE_REVISION: ${{ github.sha }}
+          DATABASE_URL: ${{ secrets.CERTIFICATION_DATABASE_URL }}
+          DB_SSL: 'true'
+          DELIVERY_ADAPTER: ${{ vars.DELIVERY_ADAPTER }}
+        run: node --input-type=module -e "import { readWorkerConfig } from './runtime/dist/config.js'; readWorkerConfig(process.env);"
+      - name: Record approved revision
+        env:
+          EVIDENCE_URL: ${{ inputs.evidence_url }}
+        run: |
+          jq -n --arg revision "$GITHUB_SHA" --arg evidence "$EVIDENCE_URL" --arg run "$GITHUB_RUN_ID" '{revision: $revision, evidence: $evidence, run: $run}' > certification.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: certification-${{ github.sha }}
+          path: certification.json

@@ -7,7 +7,10 @@ export async function POST(request: Request) {
   try {
     input = await request.json();
   } catch {
-    return withGuestCookie(Response.json({ status: 'invalid-input' }, { status: 400 }), owner.setCookie);
+    return withGuestCookie(
+      Response.json({ status: 'invalid-input' }, { status: 400 }),
+      owner.setCookie,
+    );
   }
   const result = await getWebRuntime().commerce.acceptCheckout(owner.digest, input);
   const status = result.status === 'accepted' ? 201 : result.status === 'invalid-input' ? 400 : 409;

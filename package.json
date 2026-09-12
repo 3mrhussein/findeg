@@ -13,7 +13,7 @@
     "architecture:check": "node scripts/architecture-check.mjs",
     "test:architecture": "node --test scripts/architecture-check.test.mjs tests/openapi-contract.test.mjs tests/http-contract-boundaries.test.mjs",
     "typegen": "pnpm --filter @findeg/storefront exec next typegen && pnpm --filter @findeg/dashboard exec next typegen && pnpm --filter @findeg/web exec next typegen",
-    "quality:check": "pnpm runtime:build && pnpm architecture:check && pnpm test:architecture && pnpm typegen && pnpm type-check && pnpm test && pnpm test:runtime",
+    "quality:check": "pnpm runtime:build && pnpm lint && pnpm architecture:check && pnpm test:architecture && pnpm typegen && pnpm type-check && pnpm test && pnpm test:runtime",
     "db:run": "docker compose up -d postgres",
     "db:reset": "docker compose down -v ",
     "db:rebuild": "pnpm db:reset && pnpm db:run && pnpm --filter @findeg/db db:setup",
@@ -29,7 +29,8 @@
     "start:web": "pnpm --filter @findeg/web start",
     "start:worker": "pnpm --filter @findeg/runtime worker",
     "migrate": "pnpm --filter @findeg/runtime migrate",
-    "test:runtime": "node --test tests/runtime-processes.test.mjs && node scripts/test-runtime-migrations.mjs"
+    "test:runtime": "node --test tests/runtime-processes.test.mjs && node scripts/test-runtime-migrations.mjs",
+    "security:check": "pnpm audit --prod --audit-level high"
   },
   "devDependencies": {
     "ajv": "6.15.0",

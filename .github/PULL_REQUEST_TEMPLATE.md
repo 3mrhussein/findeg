@@ -18,6 +18,7 @@
 
 ## Testing
 
-- [ ] `pnpm quality:check` passes
+- [ ] `pnpm quality:check` and `pnpm security:check` pass
+- [ ] Documentation gate passes; production certification evidence reviewed when applicable
 
 <!-- Include focused test evidence and applicable migration/build/journey checks. -->

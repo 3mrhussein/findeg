@@ -3,5 +3,8 @@ import { guestCartOwner, withGuestCookie } from '../../../../../server/guest-car
 
 export async function GET(request: Request) {
   const owner = guestCartOwner(request);
-  return withGuestCookie(Response.json(await getWebRuntime().commerce.deliveryZones()), owner.setCookie);
+  return withGuestCookie(
+    Response.json(await getWebRuntime().commerce.deliveryZones()),
+    owner.setCookie,
+  );
 }
