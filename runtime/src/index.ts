@@ -12,6 +12,13 @@ import type {
 } from '@findeg/backend/modules/identity-access/contracts';
 import { bindIdentityStore } from '@findeg/backend/modules/identity-access/infrastructure/persistence';
 import { createIdentitySecurity } from '@findeg/backend/modules/identity-access/infrastructure/security';
+import { createCatalogManagement } from './catalog-inventory.js';
+import { bindCatalogStore } from '@findeg/backend/modules/catalog/infrastructure/persistence';
+import { InventoryVariantNotFoundError } from '@findeg/backend/modules/inventory/public';
+import { bindInventoryStore } from '@findeg/backend/modules/inventory/infrastructure/persistence';
+import { createSchoolSupplyLists } from '@findeg/backend/modules/school-supply-lists/public';
+import { bindSchoolSupplyListStore } from '@findeg/backend/modules/school-supply-lists/infrastructure/persistence';
+import { createPartnerManagement } from '@findeg/backend/modules/partner-management/public';
 import { createTransactionRuntime } from './transactions.js';
 import { readWebConfig } from './config.js';
 
@@ -19,16 +26,25 @@ export function createWebRuntime(environment: Readonly<Record<string, string | u
   const config = readWebConfig(environment);
   const persistence = createTransactionRuntime(
     { url: config.DATABASE_URL, ssl: config.DB_SSL, max: 5 },
-    (database) => ({ identity: bindIdentityStore(database), partners: bindPartnerStore(database) }),
+    (database) => ({
+      identity: bindIdentityStore(database),
+      partners: bindPartnerStore(database),
+      catalog: bindCatalogStore(database),
+      inventory: bindInventoryStore(database),
+      schoolSupplyLists: bindSchoolSupplyListStore(database),
+    }),
   );
   const security = {
     ...createIdentitySecurity(),
     invitationLifetimeMs: config.PARTNER_INVITATION_DAYS * 24 * 60 * 60 * 1000,
   };
   async function run<Value>(
-    operation: (store: {
+    operation: (stores: {
       identity: ReturnType<typeof bindIdentityStore>;
       partners: ReturnType<typeof bindPartnerStore>;
+      catalog: ReturnType<typeof bindCatalogStore>;
+      inventory: ReturnType<typeof bindInventoryStore>;
+      schoolSupplyLists: ReturnType<typeof bindSchoolSupplyListStore>;
     }) => Promise<Value>,
   ): Promise<Value> {
     const result = await persistence.transactions.run(async (store) => ({
@@ -106,6 +122,109 @@ export function createWebRuntime(environment: Readonly<Record<string, string | u
           isActive,
         ),
       ),
+    async createCatalogVariant(token: string | undefined, input: unknown) {
+      return run(async (stores) => {
+        const access = await createIdentityAccess(stores.identity, security).authorize(
+          token,
+          'back-office',
+          'catalog.manage',
+        );
+        return access.status === 'authenticated'
+          ? createCatalogManagement(stores.catalog, stores.inventory).createVariant(input)
+          : access;
+      });
+    },
+    async updateCatalogVariant(token: string | undefined, input: unknown) {
+      return run(async (stores) => {
+        const access = await createIdentityAccess(stores.identity, security).authorize(
+          token,
+          'back-office',
+          'catalog.manage',
+        );
+        return access.status === 'authenticated'
+          ? createCatalogManagement(stores.catalog, stores.inventory).updateVariant(input)
+          : access;
+      });
+    },
+    async adjustInventory(token: string | undefined, input: unknown) {
+      try {
+        return await run(async (stores) => {
+          const access = await createIdentityAccess(stores.identity, security).authorize(
+            token,
+            'back-office',
+            'catalog.manage',
+          );
+          return access.status === 'authenticated'
+            ? createCatalogManagement(stores.catalog, stores.inventory).adjustInventory({
+                ...(input as object),
+                actorId: access.session.userId,
+              })
+            : access;
+        });
+      } catch (error) {
+        if (error instanceof InventoryVariantNotFoundError)
+          return { status: 'variant-not-found' } as const;
+        throw error;
+      }
+    },
+    async listCatalogVariants(token: string | undefined) {
+      return run(async (stores) => {
+        const access = await createIdentityAccess(stores.identity, security).authorize(
+          token,
+          'back-office',
+          'catalog.manage',
+        );
+        return access.status === 'authenticated' ? stores.catalog.listVariants() : access;
+      });
+    },
+    browseCatalog: (locale: 'en' | 'ar') =>
+      run((stores) => createCatalogManagement(stores.catalog, stores.inventory).browse(locale)),
+    schoolSupplyLists: {
+      createDraft: (
+        ...args: Parameters<ReturnType<typeof createSchoolSupplyLists>['createDraft']>
+      ) =>
+        run((stores) =>
+          createSchoolSupplyLists(
+            stores.schoolSupplyLists,
+            stores.catalog,
+            createPartnerManagement(stores.partners, security),
+          ).createDraft(...args),
+        ),
+      replaceDraft: (
+        ...args: Parameters<ReturnType<typeof createSchoolSupplyLists>['replaceDraft']>
+      ) =>
+        run((stores) =>
+          createSchoolSupplyLists(
+            stores.schoolSupplyLists,
+            stores.catalog,
+            createPartnerManagement(stores.partners, security),
+          ).replaceDraft(...args),
+        ),
+      publish: (...args: Parameters<ReturnType<typeof createSchoolSupplyLists>['publish']>) =>
+        run((stores) =>
+          createSchoolSupplyLists(
+            stores.schoolSupplyLists,
+            stores.catalog,
+            createPartnerManagement(stores.partners, security),
+          ).publish(...args),
+        ),
+      clone: (...args: Parameters<ReturnType<typeof createSchoolSupplyLists>['clone']>) =>
+        run((stores) =>
+          createSchoolSupplyLists(
+            stores.schoolSupplyLists,
+            stores.catalog,
+            createPartnerManagement(stores.partners, security),
+          ).clone(...args),
+        ),
+      readUnlisted: (code: string) =>
+        run((stores) =>
+          createSchoolSupplyLists(
+            stores.schoolSupplyLists,
+            stores.catalog,
+            createPartnerManagement(stores.partners, security),
+          ).readUnlisted(code),
+        ),
+    },
     close: persistence.close,
     health: () => ({ process: 'web', revision: config.RELEASE_REVISION, status: 'alive' }),
   };

@@ -1,12 +1,11 @@
 ## Agent skills
 
-Before using or updating repository skills, read `docs/agents/skills.md` for
-local workflow precedence and maintenance.
+### Terminal safety
 
-### Git workflow
-
-Before starting a ticket, creating a worktree, or opening or merging a PR, read
-`CONTRIBUTING.md` for branch targets and promotion rules.
+- no chained slow network calls in one shell command.
+- no large JSON/verbose dumps across many issues in one run.
+- one focused command at a time; keep output tight with `--limit`, `--jq`, or `--web`.
+- if it hangs or floods the terminal, stop and split it up.
 
 ### Issue tracker
 
