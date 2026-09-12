@@ -16,7 +16,3 @@ CREATE TABLE "identity"."partner_reward_events" (
 	CONSTRAINT "partner_reward_event_type" CHECK ("identity"."partner_reward_events"."event_type" in ('accepted', 'paid', 'refund', 'cancellation', 'reversal', 'adjustment', 'settlement')),
 	CONSTRAINT "partner_reward_fulfillment" CHECK ("identity"."partner_reward_events"."fulfillment" is null or "identity"."partner_reward_events"."fulfillment" in ('delivery', 'collection'))
 );
---> statement-breakpoint
-ALTER TABLE "identity"."partner_reward_events" ADD CONSTRAINT "partner_reward_events_business_partner_id_business_partners_id_fk" FOREIGN KEY ("business_partner_id") REFERENCES "identity"."business_partners"("id") ON DELETE no action ON UPDATE no action;
---> statement-breakpoint
-CREATE INDEX "partner_reward_events_partner_order" ON "identity"."partner_reward_events" USING btree ("business_partner_id", "order_reference");

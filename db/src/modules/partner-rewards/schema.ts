@@ -10,15 +10,12 @@ import {
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { identitySchema } from '../../schema/schemas.js';
-import { businessPartners } from '../partner-management/schema.js';
 
 export const partnerRewardEvents = identitySchema.table(
   'partner_reward_events',
   {
     id: serial('id').primaryKey(),
-    businessPartnerId: integer('business_partner_id')
-      .notNull()
-      .references(() => businessPartners.id),
+    businessPartnerId: integer('business_partner_id').notNull(),
     orderReference: text('order_reference').notNull(),
     eventType: text('event_type').notNull(),
     points: integer('points').notNull(),
