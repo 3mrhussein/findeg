@@ -1,39 +1,35 @@
 ---
 name: implement-spec
-description: 'Implement a specification through dependency-ordered ticket PRs.'
+description: "Implement a specification in code."
 disable-model-invocation: true
 ---
 
-Read root `CONTRIBUTING.md` and `docs/agents/issue-tracker.md` before coordinating
-the spec's tickets. The spec lives in GitHub Issues. Delivery uses one isolated
-ticket branch and PR per ticket, targeting `develop`.
+You have been provided a spec. This spec should have tickets associated with it, describing how to implement the spec.
 
-The tickets form a **task graph**. Its **frontier** contains unclaimed tickets
-whose blockers are complete; blocking implementation tickets must be merged
-into `develop` before dependent work starts.
+The goal is a PR which implements the entire spec on a single branch.
 
-Communicate through context pointers to the spec, tickets, research notes, and
-commits. Run independent implementer subagents concurrently when useful, each
-in a separate fresh session, worktree, and ticket branch.
+The tickets are not a list of steps. They are a **task graph** with blocking relationships between them. This means there is always a **frontier** of tickets which are ready to be grabbed.
+
+Communication to and from subagents should be sparse. Communicate primarily through **context pointers**: to the spec, tickets, research notes, and previous commits. Don't duplicate information already available via pointers.
+
+**Implementer subagents** should be run in the background where possible for **maximum concurrency**.
 
 ## Steps
 
-1. Read the spec, tickets, and blockers. Identify the frontier.
-2. If exploration is needed, use a background exploration subagent. Save its
-   notes outside implementation worktrees, or on a dedicated research branch,
-   and pass the implementers a pointer.
-3. Claim each selected ticket and assign one driving implementer session to it.
-   Create its worktree from current `origin/develop` using `CONTRIBUTING.md`.
-4. Each implementer follows /implement: build its ticket, run required checks,
-   run Standards and Spec reviews against its starting commit, resolve findings,
-   and open its own issue-linked PR into `develop`.
-5. Integrate each PR only through the merge gates in `CONTRIBUTING.md`. Concurrent
-   PRs must refresh against `develop` and pass fresh checks as earlier PRs merge.
-   Record completion and explicitly close each merged ticket.
-6. Recompute the frontier after merges. Start newly unblocked tickets from the
-   merged `origin/develop` in fresh worktrees and sessions.
-7. When all tickets are merged, verify the spec's acceptance criteria against
-   `develop`. Record the results and close the completed spec issue explicitly.
-8. Remove only this effort's clean, completed worktrees after verifying their
-   work is preserved. Promotion to `main` follows its separate approval rule in
-   `CONTRIBUTING.md`.
+1. Read the spec and tickets. Read enough to understand the task graph.
+
+2. (optional) Use an **exploration subagent** to conduct any exploration required by the tickets - relevant codebase files or external documentation. Ensure the exploration subagent can save files - it should save its markdown notes in a directory outside the repo, accessible by all future subagents. This lets **implementer subagents** focus on implementation rather than exploration.
+
+3. Create a branch, and a draft PR. The PR should be marked as 'closing' the spec issue and tickets.
+
+4. Use **implementer subagents** to implement each ticket. Each implementer subagent should work in its own worktree, on its own branch.
+
+5. Once an **implementer subagent** completes, merge its work to the PR branch with a **merger subagent**.
+
+6. If this changes the **frontier** of available tickets, kick off more **implementer subagents** to work on the new tickets. This allows for maximum concurrency.
+
+7. Once all tickets are complete, run /code-review on the PR branch. Fix all issues raised by the code review in a single **implementer subagent**.
+
+8. Mark the PR as ready for review.
+
+9. Clean up all **implementer subagent** worktrees.

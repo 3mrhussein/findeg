@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Restore the 37 native Matt Pocock skills and setup templates; retire the custom per-ticket PR, session-isolation, and automatic delivery workflow. Preserve upstream skill files from repository formatting.
+
 - Manage and shop bilingual Product Variants and inventory through the Back
   Office and Storefront (#55). Inventory adjustments preserve catalog ownership,
   fail closed on insufficient stock under contested concurrency, and reflect
