@@ -2,6 +2,7 @@ import { and, asc, eq } from 'drizzle-orm';
 import type { TransactionDatabase } from '@findeg/db/transactions';
 import { schoolSupplyListItems, schoolSupplyLists } from '@findeg/db/modules/school-supply-lists';
 import type {
+  ListItemSpecification,
   SchoolSupplyList,
   SchoolSupplyListInput,
   SchoolSupplyListItemInput,
@@ -25,18 +26,21 @@ function mapList(
     sourceListId: row.sourceListId ?? undefined,
     replacesListId: row.replacesListId ?? undefined,
     replacedById: row.replacedById ?? undefined,
-    items: items.map((item) => ({
-      id: item.id,
-      variantId: item.variantId,
-      quantity: item.quantity,
-      exactItem: item.exactItem === 1,
-      required: item.required,
-      specification: item.specification ?? undefined,
-      productName: { en: item.productNameEn, ar: item.productNameAr },
-      sku: item.sku,
-      label: { en: item.labelEn, ar: item.labelAr },
-      unitPrice: item.unitPrice,
-    })),
+    items: items.map((item) => {
+      const specification = item.specification as ListItemSpecification | null | undefined;
+      return {
+        id: item.id,
+        variantId: item.variantId,
+        quantity: item.quantity,
+        exactItem: item.exactItem === 1,
+        required: item.required === true,
+        specification: specification ?? undefined,
+        productName: { en: item.productNameEn, ar: item.productNameAr },
+        sku: item.sku,
+        label: { en: item.labelEn, ar: item.labelAr },
+        unitPrice: item.unitPrice,
+      };
+    }),
   };
 }
 
