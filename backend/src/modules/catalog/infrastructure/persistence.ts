@@ -20,6 +20,7 @@ export function bindCatalogStore(database: TransactionDatabase): CatalogStore {
           variantKey: input.variantKey.trim(),
           localizedLabel: input.label,
           basePrice: input.basePrice,
+          strikePrice: input.strikePrice,
           isActive: true,
         })
         .returning({ id: productVariants.id });
@@ -40,6 +41,7 @@ export function bindCatalogStore(database: TransactionDatabase): CatalogStore {
           variantKey: input.variantKey.trim(),
           localizedLabel: input.label,
           basePrice: input.basePrice,
+          strikePrice: input.strikePrice,
           isActive: input.isActive,
           updatedAt: new Date(),
         })
@@ -69,6 +71,7 @@ export function bindCatalogStore(database: TransactionDatabase): CatalogStore {
           name: products.localizedName,
           label: productVariants.localizedLabel,
           price: productVariants.basePrice,
+          strikePrice: productVariants.strikePrice,
         })
         .from(productVariants)
         .innerJoin(products, eq(products.id, productVariants.productId))
@@ -80,6 +83,38 @@ export function bindCatalogStore(database: TransactionDatabase): CatalogStore {
         name: row.name,
         label: row.label,
         price: row.price,
+        strikePrice: row.strikePrice ?? undefined,
+      }));
+    },
+    async listVariants() {
+      const rows = await database
+        .select({
+          id: productVariants.id,
+          productId: productVariants.productId,
+          productName: products.localizedName,
+          sku: productVariants.sku,
+          variantKey: productVariants.variantKey,
+          label: productVariants.localizedLabel,
+          basePrice: productVariants.basePrice,
+          strikePrice: productVariants.strikePrice,
+          isActive: productVariants.isActive,
+        })
+        .from(productVariants)
+        .innerJoin(products, eq(products.id, productVariants.productId))
+        .where(eq(products.isActive, true))
+        .orderBy(products.id, productVariants.sortOrder, productVariants.id);
+      return rows.map((row) => ({
+        ...row,
+        productName: {
+          en: row.productName.en ?? '',
+          ar: row.productName.ar ?? '',
+        },
+        label: {
+          en: row.label.en ?? '',
+          ar: row.label.ar ?? '',
+        },
+        basePrice: row.basePrice,
+        strikePrice: row.strikePrice ?? undefined,
       }));
     },
   };

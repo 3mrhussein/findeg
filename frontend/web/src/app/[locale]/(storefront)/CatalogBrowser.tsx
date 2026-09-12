@@ -8,6 +8,7 @@ interface Variant {
   name: string;
   label: string;
   price: string;
+  strikePrice?: string;
   available: number;
 }
 
@@ -32,7 +33,8 @@ export function CatalogBrowser({ locale }: { locale: 'en' | 'ar' }) {
           {variants.map((variant) => (
             <li key={variant.id}>
               <strong>{variant.name}</strong> — {variant.label} ({variant.sku}) · {variant.price}{' '}
-              EGP · {arabic ? `${variant.available} متاح` : `${variant.available} available`}
+              EGP {variant.strikePrice ? <del>{variant.strikePrice} EGP</del> : null} ·{' '}
+              {arabic ? `${variant.available} متاح` : `${variant.available} available`}
             </li>
           ))}
         </ul>

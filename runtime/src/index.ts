@@ -14,6 +14,7 @@ import { bindIdentityStore } from '@findeg/backend/modules/identity-access/infra
 import { createIdentitySecurity } from '@findeg/backend/modules/identity-access/infrastructure/security';
 import { createCatalogManagement } from './catalog-inventory.js';
 import { bindCatalogStore } from '@findeg/backend/modules/catalog/infrastructure/persistence';
+import { InventoryVariantNotFoundError } from '@findeg/backend/modules/inventory/public';
 import { bindInventoryStore } from '@findeg/backend/modules/inventory/infrastructure/persistence';
 import { createTransactionRuntime } from './transactions.js';
 import { readWebConfig } from './config.js';
@@ -141,18 +142,34 @@ export function createWebRuntime(environment: Readonly<Record<string, string | u
       });
     },
     async adjustInventory(token: string | undefined, input: unknown) {
+      try {
+        return await run(async (stores) => {
+          const access = await createIdentityAccess(stores.identity, security).authorize(
+            token,
+            'back-office',
+            'catalog.manage',
+          );
+          return access.status === 'authenticated'
+            ? createCatalogManagement(stores.catalog, stores.inventory).adjustInventory({
+                ...(input as object),
+                actorId: access.session.userId,
+              })
+            : access;
+        });
+      } catch (error) {
+        if (error instanceof InventoryVariantNotFoundError)
+          return { status: 'variant-not-found' } as const;
+        throw error;
+      }
+    },
+    async listCatalogVariants(token: string | undefined) {
       return run(async (stores) => {
         const access = await createIdentityAccess(stores.identity, security).authorize(
           token,
           'back-office',
           'catalog.manage',
         );
-        return access.status === 'authenticated'
-          ? createCatalogManagement(stores.catalog, stores.inventory).adjustInventory({
-              ...(input as object),
-              actorId: access.session.userId,
-            })
-          : access;
+        return access.status === 'authenticated' ? stores.catalog.listVariants() : access;
       });
     },
     browseCatalog: (locale: 'en' | 'ar') =>

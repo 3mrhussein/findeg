@@ -39,12 +39,16 @@ export function createCatalogManagement(catalog: CatalogStore, inventory: Invent
         name: localized(variant.name, locale),
         label: localized(variant.label, locale),
         price: variant.price,
+        ...(variant.strikePrice ? { strikePrice: variant.strikePrice } : {}),
         available: Math.max(available.get(variant.id) ?? 0, 0),
       }));
+    },
+    async listVariants() {
+      return catalog.listVariants();
     },
   };
 }
 
 function localized(value: { readonly en?: string; readonly ar?: string }, locale: CatalogLocale) {
-  return value[locale] ?? value.en ?? value.ar ?? '';
+  return value[locale] ?? value.en ?? '';
 }

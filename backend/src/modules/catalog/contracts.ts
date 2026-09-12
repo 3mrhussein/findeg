@@ -10,6 +10,7 @@ export interface ProductVariantInput {
   readonly variantKey: string;
   readonly label: LocalizedText;
   readonly basePrice: string;
+  readonly strikePrice?: string;
   readonly isActive: boolean;
 }
 
@@ -19,6 +20,7 @@ export interface ProductVariantUpdate {
   readonly variantKey: string;
   readonly label: LocalizedText;
   readonly basePrice: string;
+  readonly strikePrice?: string;
   readonly isActive: boolean;
 }
 
@@ -28,6 +30,7 @@ export interface StorefrontVariant {
   readonly name: string;
   readonly label: string;
   readonly price: string;
+  readonly strikePrice?: string;
 }
 
 export interface LocalizedStorefrontVariant {
@@ -36,4 +39,17 @@ export interface LocalizedStorefrontVariant {
   readonly name: { readonly en?: string; readonly ar?: string };
   readonly label: { readonly en?: string; readonly ar?: string };
   readonly price: string;
+  readonly strikePrice?: string;
+}
+
+export interface ManageableVariant {
+  readonly id: number;
+  readonly productId: number;
+  readonly productName: LocalizedText;
+  readonly sku: string;
+  readonly variantKey: string;
+  readonly label: LocalizedText;
+  readonly basePrice: string;
+  readonly strikePrice?: string;
+  readonly isActive: boolean;
 }

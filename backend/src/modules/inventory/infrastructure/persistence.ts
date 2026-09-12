@@ -1,7 +1,7 @@
 import { and, eq, inArray } from 'drizzle-orm';
 import type { TransactionDatabase } from '@findeg/db/transactions';
 import { inventoryBalances, stockMovements, warehouses } from '@findeg/db/modules/inventory';
-import type { InventoryStore } from '../public.js';
+import { InventoryVariantNotFoundError, type InventoryStore } from '../public.js';
 
 export function bindInventoryStore(database: TransactionDatabase): InventoryStore {
   return {
@@ -12,15 +12,20 @@ export function bindInventoryStore(database: TransactionDatabase): InventoryStor
         .where(and(eq(warehouses.id, input.warehouseId), eq(warehouses.isActive, true)))
         .for('update');
       if (!warehouse) return 'not-found';
-      await database
-        .insert(inventoryBalances)
-        .values({
-          variantId: input.variantId,
-          warehouseId: input.warehouseId,
-          onHand: 0,
-          reserved: 0,
-        })
-        .onConflictDoNothing();
+      try {
+        await database
+          .insert(inventoryBalances)
+          .values({
+            variantId: input.variantId,
+            warehouseId: input.warehouseId,
+            onHand: 0,
+            reserved: 0,
+          })
+          .onConflictDoNothing();
+      } catch (error) {
+        if (isForeignKeyViolation(error)) throw new InventoryVariantNotFoundError();
+        throw error;
+      }
       const [balance] = await database
         .select()
         .from(inventoryBalances)
@@ -68,4 +73,8 @@ export function bindInventoryStore(database: TransactionDatabase): InventoryStor
       return totals;
     },
   };
+}
+
+function isForeignKeyViolation(error: unknown): boolean {
+  return typeof error === 'object' && error !== null && 'code' in error && error.code === '23503';
 }

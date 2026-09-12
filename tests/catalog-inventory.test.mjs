@@ -52,21 +52,53 @@ test('Catalog Managers publish bilingual variants and contested adjustments do n
         variantKey: 'a5',
         label: { en: 'A5', ar: 'أيه ٥' },
         basePrice: '25.00',
+        strikePrice: '30.00',
         isActive: true,
       }),
     });
     assert.equal(created.status, 201, output());
     const { variantId } = await created.json();
+    const managed = await fetch(`${base}/api/v1/back-office/catalog/variants`, { headers });
+    assert.equal(managed.status, 200, output());
+    assert.deepEqual((await managed.json())[0], {
+      id: variantId,
+      productId: product.id,
+      productName: { en: 'Notebook', ar: 'دفتر' },
+      sku: 'NOTE-A5',
+      variantKey: 'a5',
+      label: { en: 'A5', ar: 'أيه ٥' },
+      basePrice: '25.00',
+      strikePrice: '30.00',
+      isActive: true,
+    });
     const adjust = (quantityDelta) =>
       fetch(`${base}/api/v1/back-office/inventory/adjustments`, {
         method: 'POST',
         headers,
         body: JSON.stringify({ variantId, warehouseId: warehouse.id, quantityDelta }),
       });
+    const missingVariant = await fetch(`${base}/api/v1/back-office/inventory/adjustments`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        variantId: variantId + 999999,
+        warehouseId: warehouse.id,
+        quantityDelta: 1,
+      }),
+    });
+    assert.equal(missingVariant.status, 404, output());
     assert.equal((await adjust(5)).status, 200, output());
     const storefront = await fetch(`${base}/api/v1/catalog?locale=ar`);
     assert.deepEqual(await storefront.json(), [
-      { id: variantId, sku: 'NOTE-A5', name: 'دفتر', label: 'أيه ٥', price: '25.00', available: 5 },
+      {
+        id: variantId,
+        sku: 'NOTE-A5',
+        name: 'دفتر',
+        label: 'أيه ٥',
+        price: '25.00',
+        strikePrice: '30.00',
+        available: 5,
+      },
     ]);
     const englishStorefront = await fetch(`${base}/api/v1/catalog?locale=en`);
     assert.deepEqual(await englishStorefront.json(), [
@@ -76,6 +108,7 @@ test('Catalog Managers publish bilingual variants and contested adjustments do n
         name: 'Notebook',
         label: 'A5',
         price: '25.00',
+        strikePrice: '30.00',
         available: 5,
       },
     ]);

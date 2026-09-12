@@ -1,6 +1,7 @@
 import type {
   CatalogLocale,
   LocalizedStorefrontVariant,
+  ManageableVariant,
   ProductVariantInput,
   ProductVariantUpdate,
   StorefrontVariant,
@@ -11,6 +12,7 @@ export interface CatalogStore {
   updateActiveVariant(input: ProductVariantUpdate): Promise<boolean>;
   hasActiveVariant(variantId: number): Promise<boolean>;
   listActiveVariants(): Promise<readonly LocalizedStorefrontVariant[]>;
+  listVariants(): Promise<readonly ManageableVariant[]>;
 }
 function validText(value: unknown): value is { en: string; ar: string } {
   return (
@@ -48,6 +50,9 @@ export function isProductVariantInput(value: unknown): value is ProductVariantIn
     'basePrice' in value &&
     typeof value.basePrice === 'string' &&
     validMoney(value.basePrice) &&
+    (!('strikePrice' in value) ||
+      value.strikePrice === undefined ||
+      (typeof value.strikePrice === 'string' && validMoney(value.strikePrice))) &&
     'isActive' in value &&
     value.isActive === true
   );
@@ -56,9 +61,11 @@ export function isProductVariantInput(value: unknown): value is ProductVariantIn
 export function isProductVariantUpdate(value: unknown): value is ProductVariantUpdate {
   const candidate = value as Record<string, unknown>;
   return (
-    isProductVariantInput({ ...(candidate as object), productId: 1 }) &&
+    isProductVariantInput({ ...(candidate as object), productId: 1, isActive: true }) &&
     !!value &&
     typeof value === 'object' &&
+    'isActive' in candidate &&
+    typeof candidate.isActive === 'boolean' &&
     'variantId' in candidate &&
     Number.isSafeInteger(candidate.variantId) &&
     (candidate.variantId as number) > 0

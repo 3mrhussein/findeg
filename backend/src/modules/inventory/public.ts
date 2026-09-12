@@ -1,5 +1,12 @@
 import type { InventoryAdjustment } from './contracts.js';
 
+export class InventoryVariantNotFoundError extends Error {
+  constructor() {
+    super('Inventory variant not found');
+    this.name = 'InventoryVariantNotFoundError';
+  }
+}
+
 export interface InventoryStore {
   adjustOnHand(
     input: InventoryAdjustment,
