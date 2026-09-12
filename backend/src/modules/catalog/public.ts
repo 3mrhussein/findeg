@@ -15,6 +15,10 @@ export interface CatalogStore {
   listActiveVariants(): Promise<readonly LocalizedStorefrontVariant[]>;
   listVariants(): Promise<readonly ManageableVariant[]>;
 }
+
+export interface CatalogCheckoutStore {
+  readEligible(variantIds: readonly number[]): Promise<readonly LocalizedStorefrontVariant[]>;
+}
 function validText(value: unknown): value is { en: string; ar: string } {
   return (
     !!value &&

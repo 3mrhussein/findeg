@@ -46,6 +46,7 @@ try {
       'tests/identity-access.test.mjs',
       'tests/partner-memberships.test.mjs',
       'tests/catalog-inventory.test.mjs',
+      'tests/guest-checkout.test.mjs',
     ],
     {
       stdio: 'inherit',

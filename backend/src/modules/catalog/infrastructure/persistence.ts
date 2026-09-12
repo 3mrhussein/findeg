@@ -1,7 +1,34 @@
-import { and, eq } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm';
 import type { TransactionDatabase } from '@findeg/db/transactions';
 import { productVariants, products } from '@findeg/db/modules/catalog';
-import type { CatalogStore } from '../public.js';
+import type { CatalogStore, CatalogCheckoutStore } from '../public.js';
+
+export function bindCatalogCheckoutStore(database: TransactionDatabase): CatalogCheckoutStore {
+  return {
+    async readEligible(ids) {
+      if (!ids.length) return [];
+      return database
+        .select({
+          id: productVariants.id,
+          sku: productVariants.sku,
+          name: products.localizedName,
+          label: productVariants.localizedLabel,
+          price: productVariants.basePrice,
+        })
+        .from(productVariants)
+        .innerJoin(products, eq(products.id, productVariants.productId))
+        .where(
+          and(
+            inArray(productVariants.id, [...ids]),
+            eq(productVariants.isActive, true),
+            eq(products.isActive, true),
+          ),
+        )
+        .orderBy(products.id, productVariants.id)
+        .for('share');
+    },
+  };
+}
 
 export function bindCatalogStore(database: TransactionDatabase): CatalogStore {
   return {

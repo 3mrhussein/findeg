@@ -1,4 +1,7 @@
+import { createHash, randomBytes } from 'node:crypto';
 import { createPartnerOperations } from '@findeg/backend/partner-operations';
+import { createStorefrontCommerce } from '@findeg/backend/checkout';
+import { bindCommerceStore } from '@findeg/backend/modules/commerce/infrastructure/persistence';
 import { bindPartnerStore } from '@findeg/backend/modules/partner-management/infrastructure/persistence';
 import {
   createIdentityAccess,
@@ -13,20 +16,31 @@ import type {
 import { bindIdentityStore } from '@findeg/backend/modules/identity-access/infrastructure/persistence';
 import { createIdentitySecurity } from '@findeg/backend/modules/identity-access/infrastructure/security';
 import { createCatalogManagement } from './catalog-inventory.js';
-import { bindCatalogStore } from '@findeg/backend/modules/catalog/infrastructure/persistence';
+import {
+  bindCatalogCheckoutStore,
+  bindCatalogStore,
+} from '@findeg/backend/modules/catalog/infrastructure/persistence';
 import { InventoryVariantNotFoundError } from '@findeg/backend/modules/inventory/public';
-import { bindInventoryStore } from '@findeg/backend/modules/inventory/infrastructure/persistence';
+import {
+  bindInventoryReservations,
+  bindInventoryStore,
+} from '@findeg/backend/modules/inventory/infrastructure/persistence';
 import { createSchoolSupplyLists } from '@findeg/backend/modules/school-supply-lists/public';
 import { bindSchoolSupplyListStore } from '@findeg/backend/modules/school-supply-lists/infrastructure/persistence';
 import { createPartnerManagement } from '@findeg/backend/modules/partner-management/public';
 import { createTransactionRuntime } from './transactions.js';
 import { readWebConfig } from './config.js';
+import { bindCheckoutOutbox } from './checkout-outbox.js';
 
 export function createWebRuntime(environment: Readonly<Record<string, string | undefined>>) {
   const config = readWebConfig(environment);
   const persistence = createTransactionRuntime(
     { url: config.DATABASE_URL, ssl: config.DB_SSL, max: 5 },
     (database) => ({
+      commerce: bindCommerceStore(database),
+      checkoutCatalog: bindCatalogCheckoutStore(database),
+      reservations: bindInventoryReservations(database),
+      outbox: bindCheckoutOutbox(database),
       identity: bindIdentityStore(database),
       partners: bindPartnerStore(database),
       catalog: bindCatalogStore(database),
@@ -64,6 +78,11 @@ export function createWebRuntime(environment: Readonly<Record<string, string | u
         )
       : Promise.resolve({ status: 'authentication-required' } as const);
   return {
+    commerce: createStorefrontCommerce(persistence.transactions, {
+      digest: (value) => createHash('sha256').update(value).digest('hex'),
+      randomToken: () => randomBytes(32).toString('hex'),
+      verificationCode: () => String(Math.floor(100000 + Math.random() * 900000)),
+    }),
     currentSession,
     partners: {
       currentSession: (token: string | undefined, partnerId?: number) =>

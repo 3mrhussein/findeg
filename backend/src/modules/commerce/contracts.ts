@@ -63,3 +63,51 @@ export interface GuestOrderRecord {
   readonly createdAt: string;
   readonly status: 'accepted' | 'pending' | 'paid' | 'fulfilled' | 'cancelled';
 }
+
+/** Browser-safe ordinary Storefront commerce; List Selection has a separate contract. */
+export interface CartItem {
+  readonly variantId: number;
+  readonly quantity: number;
+}
+
+export interface PricedItem extends CartItem {
+  readonly sku: string;
+  readonly name: { readonly en?: string; readonly ar?: string };
+  readonly label: { readonly en?: string; readonly ar?: string };
+  readonly unitPrice: string;
+  readonly lineTotal: string;
+}
+
+export interface CartQuote {
+  readonly items: readonly PricedItem[];
+  readonly subtotal: string;
+}
+
+export interface DeliveryZone {
+  readonly id: number;
+  readonly name: { readonly en: string; readonly ar: string };
+  readonly fee: string;
+}
+
+export interface DeliveryAddress {
+  readonly name: string;
+  readonly email: string;
+  readonly phone: string;
+  readonly street: string;
+  readonly city: string;
+  readonly zoneId: number;
+}
+
+export interface AcceptedOrder {
+  readonly reference: string;
+  readonly status: 'accepted';
+  readonly paymentMethod: 'cash-on-delivery';
+  readonly paymentStatus: 'unpaid';
+  readonly deliveryMethod: 'home-delivery';
+  readonly items: readonly PricedItem[];
+  readonly subtotal: string;
+  readonly deliveryFee: string;
+  readonly total: string;
+  readonly address: DeliveryAddress;
+  readonly guestAccess: { readonly reference: string };
+}
