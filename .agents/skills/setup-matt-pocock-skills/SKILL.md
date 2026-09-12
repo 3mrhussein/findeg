@@ -1,6 +1,6 @@
 ---
 name: setup-matt-pocock-skills
-description: 'Configure this repo for the engineering skills: set up its issue tracker, triage label vocabulary, and domain doc layout. Run once before first use of the other engineering skills.'
+description: "Configure this repo for the engineering skills: set up its issue tracker, triage label vocabulary, and domain doc layout. Run once before first use of the other engineering skills."
 disable-model-invocation: true
 ---
 
@@ -12,7 +12,7 @@ Scaffold the per-repo configuration that the engineering skills assume:
 - **Triage labels**: the strings used for the five canonical triage roles
 - **Domain docs**: where `CONTEXT.md` and ADRs live, and the consumer rules for reading them
 
-This is a prompt-driven skill, not a deterministic script. Explore first. Preserve the existing tracker, labels, domain layout, and agent pointers; change only what the user requested. If the existing configuration already satisfies the request, report it as configured and finish. Present unresolved choices and a concrete draft before asking for any needed confirmation; reuse decisions already authorized in the session.
+This is a prompt-driven skill, not a deterministic script. Explore, present what you found, confirm with the user, then write.
 
 ## Process
 
@@ -79,7 +79,7 @@ Let them edit before writing.
 
 Never create `AGENTS.md` when `CLAUDE.md` already exists (or vice versa); always edit the one that's already there.
 
-If an `## Agent skills` block already exists, patch only the requested subsections in place. Preserve other subsections, especially the Git workflow and repository-skills pointers, and user edits both inside and outside the block. Treat the block below and seed docs as examples for missing configuration, not replacements for existing files.
+If an `## Agent skills` block already exists in the chosen file, update its contents in-place rather than appending a duplicate. Don't overwrite user edits to the surrounding sections.
 
 The block:
 

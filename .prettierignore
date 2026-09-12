@@ -24,3 +24,6 @@ yarn.lock
 # IDE
 .vscode/
 .idea/
+
+# Vendored upstream skills: preserve their original contents
+.agents/skills/
