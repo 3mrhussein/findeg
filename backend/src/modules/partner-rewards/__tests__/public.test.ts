@@ -62,6 +62,33 @@ describe('Partner rewards', () => {
     });
   });
 
+  it('requires a qualifying accepted order before points can be earned', async () => {
+    const access: PartnerRewardAccess = {
+      workspace: async (currentSession, partnerId) =>
+        partnerId === currentSession.partner.businessPartnerId
+          ? { status: 'authenticated', session: currentSession }
+          : { status: 'authorization-denied', session: currentSession },
+    };
+    const ledger: PartnerRewardEvent[] = [];
+    const rewards = createPartnerRewards(
+      {
+        ledger: async () => ledger,
+        append: async (event) => {
+          ledger.push(event);
+        },
+      },
+      access,
+    );
+
+    const result = await rewards.recordPayment(session, 12, 'missing-order', {
+      points: 15,
+      paidAt: new Date('2026-09-05T00:00:00Z'),
+    });
+
+    expect(result).toEqual({ status: 'invalid-input' });
+    expect(ledger).toEqual([]);
+  });
+
   it('authorizes partner administrators and records append-only adjustments', async () => {
     const access: PartnerRewardAccess = {
       workspace: async (currentSession, partnerId) =>

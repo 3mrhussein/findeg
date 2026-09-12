@@ -16,14 +16,21 @@ export function sanitizePartnerReportRow<T extends PartnerReportRow>(
   return rest;
 }
 
+function filterPartnerReportRows(
+  rows: readonly PartnerReportRow[],
+  minimumCount: number,
+): readonly PartnerReportRow[] {
+  return rows
+    .filter((row) => row.count >= minimumCount)
+    .map((row) => sanitizePartnerReportRow(row));
+}
+
 export function buildPartnerReports(
   rows: readonly PartnerReportRow[],
   options: PartnerReportOptions = {},
 ): PartnerReportResult {
   const minimumCount = options.minimumCount ?? 3;
-  const filtered = rows
-    .filter((row) => row.count >= minimumCount)
-    .map((row) => sanitizePartnerReportRow(row));
+  const filtered = filterPartnerReportRows(rows, minimumCount);
   return {
     rows: filtered,
     suppressed: rows.some((row) => row.count < minimumCount),
@@ -34,7 +41,5 @@ export function suppressLowCountBreakdowns(
   rows: readonly PartnerReportRow[],
   minimumCount = 3,
 ): readonly PartnerReportRow[] {
-  return rows
-    .filter((row) => row.count >= minimumCount)
-    .map((row) => sanitizePartnerReportRow(row));
+  return filterPartnerReportRows(rows, minimumCount);
 }

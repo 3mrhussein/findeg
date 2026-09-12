@@ -136,7 +136,8 @@ export function createPartnerRewards(store: PartnerRewardLedgerStore, access: Pa
         !Number.isSafeInteger(partnerId) ||
         partnerId <= 0 ||
         typeof orderReference !== 'string' ||
-        orderReference.trim().length === 0
+        orderReference.trim().length === 0 ||
+        (input.points !== undefined && (!Number.isInteger(input.points) || input.points <= 0))
       ) {
         return { status: 'invalid-input' as const };
       }
@@ -145,12 +146,23 @@ export function createPartnerRewards(store: PartnerRewardLedgerStore, access: Pa
       const prior = current.filter(
         (event) => event.partnerId === partnerId && event.orderReference === orderReference,
       );
-      const pending = prior.reduce((total, event) => {
-        if (event.eventType === 'accepted') return total + (event.pendingPoints ?? event.points);
-        if (event.eventType === 'paid') return total - (event.earnedPoints ?? event.points);
-        return total;
-      }, 0);
-      const points = input.points ?? Math.max(0, pending);
+      const accepted = prior
+        .filter((event) => event.eventType === 'accepted')
+        .reduce((total, event) => total + (event.pendingPoints ?? event.points), 0);
+      const paidPreviously = prior
+        .filter((event) => event.eventType === 'paid')
+        .reduce((total, event) => total + (event.earnedPoints ?? event.points), 0);
+      const pending = Math.max(0, accepted - paidPreviously);
+
+      if (pending <= 0) {
+        return { status: 'invalid-input' as const };
+      }
+
+      const points = input.points ?? pending;
+      if (!Number.isSafeInteger(points) || points <= 0 || points > pending) {
+        return { status: 'invalid-input' as const };
+      }
+
       const result = await record(session, partnerId, {
         orderReference,
         eventType: 'paid',
