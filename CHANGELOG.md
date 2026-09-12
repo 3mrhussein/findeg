@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Complete versioned JSON contracts for released web capabilities (#62), including
+  School Supply List management, structured rejections and checkout retry semantics.
+  Validate HTTP receipts against OpenAPI and enforce transitive browser/server
+  boundaries. Reward/report module foundations are not yet wired into the released
+  runtime and are not exposed as HTTP operations.
+
 - Shop unlisted School Supply Lists through separate resumable List Selections (#60),
   with required/optional choices, specification-matching alternatives, advisory
   completeness and repeatable List Offers. Accept dedicated Cash-on-Delivery Orders

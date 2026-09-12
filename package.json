@@ -11,7 +11,7 @@
     "type-check": "turbo run type-check",
     "test": "turbo run test",
     "architecture:check": "node scripts/architecture-check.mjs",
-    "test:architecture": "node --test scripts/architecture-check.test.mjs",
+    "test:architecture": "node --test scripts/architecture-check.test.mjs tests/openapi-contract.test.mjs tests/http-contract-boundaries.test.mjs",
     "typegen": "pnpm --filter @findeg/storefront exec next typegen && pnpm --filter @findeg/dashboard exec next typegen && pnpm --filter @findeg/web exec next typegen",
     "quality:check": "pnpm runtime:build && pnpm architecture:check && pnpm test:architecture && pnpm typegen && pnpm type-check && pnpm test && pnpm test:runtime",
     "db:run": "docker compose up -d postgres",
@@ -32,10 +32,12 @@
     "test:runtime": "node --test tests/runtime-processes.test.mjs && node scripts/test-runtime-migrations.mjs"
   },
   "devDependencies": {
+    "ajv": "6.15.0",
     "husky": "^9.1.7",
     "lint-staged": "^17.5.0",
     "prettier": "^3.9.6",
     "turbo": "^2.9.12",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "yaml": "2.9.0"
   }
 }

@@ -1,5 +1,6 @@
 import { dirname, relative, resolve } from 'node:path';
 import ts from 'typescript';
+import { isBuiltin } from 'node:module';
 
 export const businessModules = [
   'identity-access',
@@ -122,6 +123,52 @@ export function checkModuleBoundaries(root, sources) {
   const violations = [];
   const graph = new Map();
   const configurations = new Map();
+  const sourceMap = new Map(sources);
+  // Follow the complete import graph, including re-exports and type imports.
+  // A contract must remain safe even when consumed outside Next's compiler.
+  function inspectBrowser(path, entry, visited) {
+    if (visited.has(path)) return;
+    visited.add(path);
+    const contents = sourceMap.get(path);
+    if (contents === undefined) return;
+    for (const { specifier } of importsIn(path, contents)) {
+      const target = specifier && resolveImport(root, path, specifier, configurations);
+      if (
+        !specifier ||
+        isBuiltin(specifier) ||
+        databaseLibrary.test(specifier) ||
+        specifier === 'server-only' ||
+        specifier === 'next/headers' ||
+        specifier === 'next/server' ||
+        specifier.startsWith('@findeg/runtime') ||
+        (specifier.startsWith('@findeg/backend') &&
+          !/^@findeg\/backend\/modules\/[^/]+\/contracts$/.test(specifier)) ||
+        target?.startsWith('runtime/') ||
+        target?.startsWith('db/') ||
+        target?.includes('/server/') ||
+        target?.includes('/infrastructure/') ||
+        target?.startsWith('backend/src/application/')
+      ) {
+        violations.push(
+          `Browser-unsafe dependency: ${entry} reaches ${path} importing ${specifier ?? '<computed>'}`,
+        );
+      } else if (target) inspectBrowser(target, entry, visited);
+    }
+  }
+  for (const [path, contents] of sources) {
+    const parsed = ts.createSourceFile(path, contents, ts.ScriptTarget.Latest, true);
+    const client = parsed.statements.some(
+      (statement) =>
+        ts.isExpressionStatement(statement) &&
+        ts.isStringLiteral(statement.expression) &&
+        statement.expression.text === 'use client',
+    );
+    if (
+      (client && path.startsWith('frontend/web/')) ||
+      /^backend\/src\/modules\/[^/]+\/contracts\.ts$/.test(path)
+    )
+      inspectBrowser(path, path, new Set());
+  }
   for (const [path, contents] of sources) {
     if (!/\.[cm]?[jt]sx?$/.test(path)) continue;
     const owner = ownerOf(path);
