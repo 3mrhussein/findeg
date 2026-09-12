@@ -72,7 +72,7 @@ module.exports = defineConfig({
             const specification = sql.json({ categoryId: category.id, attributes: {} });
             const [required] =
               await sql`INSERT INTO school_engine.school_supply_list_items(list_id, variant_id, quantity, label_en, label_ar, specification) VALUES (${list.id}, ${variant.id}, 2, 'Required notebook', 'دفتر مطلوب', ${specification}) RETURNING id`;
-            await sql`INSERT INTO school_engine.school_supply_list_items(list_id, variant_id, quantity, label_en, label_ar, required, exact_item) VALUES (${list.id}, ${alternative.id}, 1, 'Optional notebook', 'دفتر اختياري', false, 1)`;
+            await sql`INSERT INTO school_engine.school_supply_list_items(list_id, variant_id, quantity, label_en, label_ar, required, specification) VALUES (${list.id}, ${alternative.id}, 1, 'Optional notebook', 'دفتر اختياري', false, ${specification})`;
             await sql`UPDATE school_engine.school_supply_lists SET status = 'published', public_code = ${code} WHERE id = ${list.id}`;
             await sql`INSERT INTO sales.list_offers(list_id, basis_points) VALUES (${list.id}, 2000)`;
             const [zone] =
@@ -83,8 +83,20 @@ module.exports = defineConfig({
               itemId: required.id,
               alternativeId: alternative.id,
               sku: code,
+              variantId: variant.id,
               zoneId: zone.id,
             };
+          });
+        },
+        staleListDefaults({ variantId, alternativeId }) {
+          return fixture(async (sql) => {
+            const [source] =
+              await sql`SELECT product_id FROM catalog.product_variants WHERE id = ${variantId}`;
+            const sku = randomUUID();
+            const [recovery] =
+              await sql`INSERT INTO catalog.product_variants(product_id, sku, variant_key, base_price) VALUES (${source.product_id}, ${sku}, ${sku}, '9.00') RETURNING id`;
+            await sql`UPDATE catalog.product_variants SET is_active = false WHERE id IN (${variantId}, ${alternativeId})`;
+            return recovery.id;
           });
         },
         archiveList(listId) {

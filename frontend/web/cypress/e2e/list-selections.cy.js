@@ -16,6 +16,7 @@ for (const locale of ['en', 'ar']) {
         cy.get('select').select(String(alternativeId));
         cy.get('input[type="number"]').should('not.be.disabled').clear().type('1').blur();
       });
+      cy.contains('button', text('Save choices', 'حفظ الاختيارات')).click();
       cy.contains(text('List incomplete — you can still checkout', 'القائمة غير مكتملة — يمكنك إتمام الطلب'));
       cy.contains('8.00 EGP');
       cy.reload();
@@ -63,4 +64,34 @@ for (const locale of ['en', 'ar']) {
       cy.get(`section[aria-label="${text('Your Cart', 'سلة التسوق')}"] input`).should('have.value', '1');
     });
   });
+  it(`${locale}: Customer can repair multiple stale choices and include an optional alternative without its default`, () => {
+    cy.task('listFixture').then(({ code, itemId, variantId, alternativeId }) => {
+      cy.visit(`/${locale}/lists/${code}`);
+      cy.get('[data-list-item]').last().find('input[type="checkbox"]').check();
+      cy.contains('button', text('Save choices', 'حفظ الاختيارات')).click();
+      cy.contains('button', text('Save choices', 'حفظ الاختيارات')).should('be.disabled');
+      cy.task('staleListDefaults', { variantId, alternativeId }).then(recoveryId => {
+        cy.reload();
+        cy.contains(text('Some choices are unavailable.', 'بعض الاختيارات غير متاحة.'));
+        cy.get('[data-list-item] select').each(select => cy.wrap(select).select(String(recoveryId)));
+        cy.contains('button', text('Save choices', 'حفظ الاختيارات')).click();
+        cy.contains(text('List complete', 'القائمة مكتملة'));
+        cy.get('[data-list-item]').last().find('input[type="checkbox"]').uncheck();
+        cy.contains('button', text('Save choices', 'حفظ الاختيارات')).click();
+        cy.contains('button', text('Save choices', 'حفظ الاختيارات')).should('be.disabled');
+        cy.reload();
+        cy.get('[data-list-item]').last().find('input[type="checkbox"]').should('be.disabled');
+        cy.get('[data-list-item]').last().find('select').select(String(recoveryId));
+        cy.get(`[data-list-item="${itemId}"] input[type="number"]`).clear().type('5').blur();
+        cy.get('input[name="setCount"]').focus().blur();
+        cy.get(`[data-list-item="${itemId}"] input[type="number"]`).should('have.value', '5');
+        cy.contains('button', text('Save choices', 'حفظ الاختيارات')).click();
+        cy.contains('button', text('Save choices', 'حفظ الاختيارات')).should('be.disabled');
+        cy.reload();
+        cy.get(`[data-list-item="${itemId}"] input[type="number"]`).should('have.value', '5');
+        cy.get('[data-list-item]').last().find('select').should('have.value', String(recoveryId));
+      });
+    });
+  });
+
 }

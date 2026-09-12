@@ -460,13 +460,14 @@ test('dedicated List Selections preserve list choices and accepted attribution',
   await t.test(
     'HTTP List Selection contract preserves a separate browser identity and rejects foreign origins',
     async () => {
-      const web = await launchWeb(t, environment);
+      const web = await launchWeb(t, { ...environment, LIST_SELECTION_INACTIVITY_DAYS: '60' });
       try {
         const endpoint = `${web.base}/api/v1/commerce/list-selections/${second.code}`;
         const opened = await fetch(endpoint);
         assert.equal(opened.status, 200);
         const cookie = opened.headers.get('set-cookie');
         assert.match(cookie, /findeg_list_selection=/);
+        assert.match(cookie, /Max-Age=5184000/);
         const view = await opened.json();
         assert.equal(view.selection.items[0].quantity, 2);
         const denied = await fetch(endpoint, {

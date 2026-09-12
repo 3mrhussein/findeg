@@ -19,14 +19,14 @@ ALTER TABLE school_engine.school_supply_list_items ADD COLUMN required boolean N
 ALTER TABLE school_engine.school_supply_list_items ADD COLUMN specification jsonb;
 --> statement-breakpoint
 CREATE FUNCTION school_engine.freeze_supply_list_item() RETURNS trigger LANGUAGE plpgsql AS $$
-DECLARE source_id integer;
+DECLARE source_id integer; source_status text;
 BEGIN
   source_id := CASE WHEN TG_OP = 'DELETE' THEN OLD.list_id ELSE NEW.list_id END;
-  PERFORM 1 FROM school_engine.school_supply_lists WHERE id = source_id AND status <> 'draft' FOR UPDATE;
-  IF FOUND THEN RAISE EXCEPTION 'Published School Supply List Items are immutable'; END IF;
+  SELECT status INTO source_status FROM school_engine.school_supply_lists WHERE id = source_id FOR UPDATE;
+  IF source_status <> 'draft' THEN RAISE EXCEPTION 'Published School Supply List Items are immutable'; END IF;
   IF TG_OP = 'UPDATE' AND OLD.list_id <> NEW.list_id THEN
-    PERFORM 1 FROM school_engine.school_supply_lists WHERE id = OLD.list_id AND status <> 'draft' FOR UPDATE;
-    IF FOUND THEN RAISE EXCEPTION 'Published School Supply List Items are immutable'; END IF;
+    SELECT status INTO source_status FROM school_engine.school_supply_lists WHERE id = OLD.list_id FOR UPDATE;
+    IF source_status <> 'draft' THEN RAISE EXCEPTION 'Published School Supply List Items are immutable'; END IF;
   END IF;
   IF TG_OP = 'DELETE' THEN RETURN OLD; END IF;
   RETURN NEW;

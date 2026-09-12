@@ -7,6 +7,7 @@ export { addresses } from '../../schema/identity/addresses.js';
 
 import {
   boolean,
+  check,
   integer,
   jsonb,
   numeric,
@@ -15,6 +16,8 @@ import {
   text,
   timestamp,
 } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
+import { schoolSupplyLists } from '../../schema/school-engine/school-list-publications.js';
 import { salesSchema } from '../../schema/schemas.js';
 
 export const storefrontCarts = salesSchema.table('storefront_carts', {
@@ -62,16 +65,27 @@ export const listSelections = salesSchema.table(
   'list_selections',
   {
     ownerDigest: text('owner_digest').notNull(),
-    listId: integer('list_id').notNull(),
+    listId: integer('list_id')
+      .notNull()
+      .references(() => schoolSupplyLists.id),
     selection: jsonb('selection').notNull(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow().notNull(),
   },
   (table) => [primaryKey({ columns: [table.ownerDigest, table.listId] })],
 );
 
-export const listOffers = salesSchema.table('list_offers', {
-  listId: integer('list_id').primaryKey(),
-  basisPoints: integer('basis_points').notNull().default(0),
-  startsAt: timestamp('starts_at', { withTimezone: true }).defaultNow().notNull(),
-  endsAt: timestamp('ends_at', { withTimezone: true }),
-});
+export const listOffers = salesSchema.table(
+  'list_offers',
+  {
+    listId: integer('list_id')
+      .primaryKey()
+      .references(() => schoolSupplyLists.id),
+    basisPoints: integer('basis_points').notNull().default(0),
+    startsAt: timestamp('starts_at', { withTimezone: true }).defaultNow().notNull(),
+    endsAt: timestamp('ends_at', { withTimezone: true }),
+  },
+  (table) => [
+    check('list_offers_basis_points_check', sql`${table.basisPoints} BETWEEN 0 AND 10000`),
+    check('list_offers_check', sql`${table.endsAt} IS NULL OR ${table.endsAt} > ${table.startsAt}`),
+  ],
+);

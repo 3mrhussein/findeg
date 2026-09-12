@@ -44,6 +44,7 @@ export function StorefrontShopping({
   const pendingStorageKey = listCode
     ? `findeg-pending-list:${listCode}`
     : 'findeg-pending-checkout';
+  const [listEdited, setListEdited] = useState(false);
   const [listView, setListView] = useState<ListSelectionView>();
   function request<Result>(path: string, method = 'GET', input?: unknown): Promise<Result> {
     const scoped =
@@ -171,6 +172,7 @@ export function StorefrontShopping({
     try {
       const result = await request<ListSelectionResult>('cart', 'PUT', selection);
       if (result.status === 'found') {
+        setListEdited(false);
         setListView(result);
         setCart(result.pricing);
       } else setMessage(rejection(result.status));
@@ -283,6 +285,12 @@ export function StorefrontShopping({
       )}
       {listCode && listView && (
         <ListSelectionEditor
+          key={JSON.stringify(listView)}
+          edited={listEdited}
+          onEdit={() => {
+            setListEdited(true);
+            setQuote(undefined);
+          }}
           locale={locale}
           view={listView}
           disabled={busy || !!pending}
@@ -372,6 +380,7 @@ export function StorefrontShopping({
             disabled={
               busy ||
               !!pending ||
+              listEdited ||
               !cart?.items.length ||
               !zones.length ||
               (!!listCode && listView?.list.status !== 'published')

@@ -58,7 +58,7 @@ export async function listSelectionRequest(
   if (session.status !== 'authenticated')
     response.headers.set(
       'Set-Cookie',
-      `${cookieName}=${token}; Path=/; HttpOnly; SameSite=Lax; Secure; Max-Age=2592000`,
+      `${cookieName}=${token}; Path=/; HttpOnly; SameSite=Lax; Secure; Max-Age=${runtime.listSelectionLifetimeSeconds}`,
     );
   return response;
 }

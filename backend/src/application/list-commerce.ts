@@ -1,5 +1,10 @@
 import type { TransactionRunner } from './transactions.js';
-import type { CheckoutSecurity, CheckoutStores } from './checkout.js';
+import {
+  acceptOrder,
+  reservationItems,
+  type CheckoutSecurity,
+  type CheckoutStores,
+} from './checkout.js';
 import {
   allowedAlternatives,
   type SchoolSupplyListStore,
@@ -12,11 +17,7 @@ import {
   validateListSelection,
   type ListSelectionStore,
 } from '@findeg/backend/modules/commerce/public';
-import type {
-  AcceptedOrder,
-  CartItem,
-  ListSelection,
-} from '@findeg/backend/modules/commerce/contracts';
+import type { AcceptedOrder, ListSelection } from '@findeg/backend/modules/commerce/contracts';
 import type { CatalogListStore } from '@findeg/backend/modules/catalog/public';
 
 export interface ListCommerceStores extends CheckoutStores {
@@ -86,14 +87,6 @@ export function createListCommerce(
         : undefined,
     } as const;
   }
-  function stockItems(items: readonly CartItem[]) {
-    const quantities = new Map<number, number>();
-    for (const item of items)
-      quantities.set(item.variantId, (quantities.get(item.variantId) ?? 0) + item.quantity);
-    return [...quantities]
-      .sort(([a], [b]) => a - b)
-      .map(([variantId, quantity]) => ({ variantId, quantity }));
-  }
   async function quote(stores: ListCommerceStores, owner: string, code: string, zoneId: number) {
     const loaded = await load(stores, owner, code);
     if (loaded.status !== 'found') return loaded;
@@ -103,7 +96,7 @@ export function createListCommerce(
     if (!loaded.pricing) return { status: 'selection-unavailable' } as const;
     const zone = await stores.commerce.deliveryZone(zoneId);
     if (!zone) return { status: 'delivery-unavailable' } as const;
-    const items = stockItems(loaded.selection.items);
+    const items = reservationItems(loaded.selection.items);
     const availability = await stores.inventory.availabilityFor(
       items.map((item) => item.variantId),
     );
@@ -163,44 +156,26 @@ export function createListCommerce(
         if (quoted.status !== 'quoted') return quoted;
         if (quoted.confirmation !== value.confirmation)
           return { status: 'reconfirmation-required' } as const;
-        const order: AcceptedOrder = {
-          reference: security.randomToken(),
-          status: 'accepted',
-          paymentMethod: 'cash-on-delivery',
-          paymentStatus: 'unpaid',
-          deliveryMethod: 'home-delivery',
-          items: quoted.items,
-          subtotal: quoted.subtotal,
-          deliveryFee: quoted.zone.fee,
-          total: quoted.total,
-          address: value.address,
-          guestAccess: { reference: security.randomToken() },
-        };
-        const verificationCode = security.verificationCode();
-        await stores.commerce.accept(order, scope, value.key, fingerprint, {
-          codeHash: security.digest(verificationCode),
-          expiresAt: new Date(Date.now() + 15 * 60 * 1000),
-        });
-        if (!(await stores.reservations.reserve(order.reference, stockItems(order.items))))
-          return { status: 'insufficient-stock' } as const;
-        await stores.outbox.enqueue(`order:${order.reference}`, 'order-accepted', {
-          reference: order.reference,
-          email: order.address.email,
-        });
-        await stores.outbox.enqueue(
-          `guest-access:${order.guestAccess.reference}`,
-          'guest-order-code',
+        const accepted = await acceptOrder(
+          stores,
+          security,
           {
-            reference: order.guestAccess.reference,
-            code: verificationCode,
-            email: order.address.email,
+            items: quoted.items,
+            subtotal: quoted.subtotal,
+            deliveryFee: quoted.zone.fee,
+            total: quoted.total,
+            address: value.address,
           },
+          scope,
+          value.key,
+          fingerprint,
         );
+        if (accepted.status !== 'accepted') return accepted;
         await stores.selections.replace(owner, list.id, {
           setCount: quoted.selection.setCount,
           items: [],
         });
-        return receipt(order);
+        return accepted;
       });
     },
   };

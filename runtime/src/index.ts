@@ -86,6 +86,7 @@ export function createWebRuntime(environment: Readonly<Record<string, string | u
         )
       : Promise.resolve({ status: 'authentication-required' } as const);
   return {
+    listSelectionLifetimeSeconds: config.LIST_SELECTION_INACTIVITY_DAYS * 86400,
     listCommerce: createListCommerce(persistence.transactions, {
       digest: (value) => createHash('sha256').update(value).digest('hex'),
       randomToken: () => randomBytes(32).toString('hex'),

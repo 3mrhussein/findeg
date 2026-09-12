@@ -94,7 +94,7 @@ export function GuestOrderAccess({
           </p>
           <ul>
             {order.items.map((item) => (
-              <li key={item.variantId}>
+              <li key={item.attribution?.listItemId ?? item.variantId}>
                 {item.name[locale] ?? item.sku} — {item.label[locale]} × {item.quantity} ·{' '}
                 {item.lineTotal} EGP
               </li>

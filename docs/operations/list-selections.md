@@ -8,7 +8,8 @@ links remain historically viewable and cannot be checked out.
 
 Required items begin selected at their prescribed quantities. Optional items are
 opt-in. A set count provides the completeness target; individual quantities remain
-editable. List Completeness is advisory, including when required items are omitted.
+editable. Save choices commits all staged edits together, allowing several stale
+choices to be repaired in one update; unsaved edits disable checkout. List Completeness is advisory, including when required items are omitted.
 A non-empty eligible selection may be purchased regardless of completeness.
 
 Allowed Alternatives are derived from active Catalog variants matching the frozen
@@ -38,8 +39,8 @@ does not merge the guest's choices. Each checkout always produces one Order.
 
 `LIST_SELECTION_INACTIVITY_DAYS` is parsed by the web runtime and defaults to 30.
 Expired published selections restart at required defaults. Archived selections
-reset to an empty view after expiry. The guest browser credential lasts thirty
-days and refreshes on each selection request. Uncertain checkout requests remain
+reset to an empty view after expiry. The guest browser credential uses the same configured lifetime and refreshes on
+each selection request. Uncertain checkout requests remain
 in tab session storage under a list-specific key until a definitive response.
 
 FindEg configures Commerce-owned `sales.list_offers` using restricted operational
