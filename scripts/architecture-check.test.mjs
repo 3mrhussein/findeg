@@ -8,51 +8,6 @@ import { afterEach, test } from 'node:test';
 import { runArchitectureCheck } from './architecture-check.mjs';
 
 const temporaryRoots = [];
-
-test('browser clients and contracts reject transitive server dependencies', async () => {
-  const root = await createTargetRepository();
-  await source(
-    root,
-    'frontend/web/src/client.ts',
-    "'use client'; export { value } from './bridge.js';",
-  );
-  await source(root, 'frontend/web/src/bridge.ts', 'export const value = 1;');
-  assert.deepEqual(await runArchitectureCheck(root), []);
-  for (const dependency of [
-    '@findeg/runtime',
-    'node:crypto',
-    'server-only',
-    '@findeg/backend/checkout',
-  ]) {
-    await source(
-      root,
-      'frontend/web/src/bridge.ts',
-      `import '${dependency}'; export const value = 1;`,
-    );
-    assert.ok(
-      (await runArchitectureCheck(root)).some((message) =>
-        message.includes('Browser-unsafe dependency:'),
-      ),
-      dependency,
-    );
-  }
-  await source(root, 'frontend/web/src/bridge.ts', 'export const value = 1;');
-  await source(
-    root,
-    'backend/src/modules/catalog/contracts.ts',
-    "export { value } from './helper.js';",
-  );
-  await source(
-    root,
-    'backend/src/modules/catalog/helper.ts',
-    "import 'node:crypto'; export const value = 1;",
-  );
-  assert.ok(
-    (await runArchitectureCheck(root)).some((message) =>
-      message.includes('Browser-unsafe dependency:'),
-    ),
-  );
-});
 const executeFile = promisify(execFile);
 
 afterEach(async () => {

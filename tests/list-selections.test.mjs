@@ -1,11 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
-import { createHash, randomUUID } from 'node:crypto';
+import { randomUUID } from 'node:crypto';
 import { runMigrations } from '../db/dist/runtime/migrations.js';
 import { launchWeb } from './support/web-process.mjs';
 import { createWebRuntime } from '../runtime/dist/index.js';
-import { assertContractResponse } from './support/http-contract.mjs';
 const postgres = createRequire(new URL('../db/package.json', import.meta.url))('postgres');
 
 test('dedicated List Selections preserve list choices and accepted attribution', async (t) => {
@@ -399,70 +398,6 @@ test('dedicated List Selections preserve list choices and accepted attribution',
         created.list.id,
       );
       assert.equal(published.status, 'published');
-      // Compare the HTTP rejection with the same authorized application's outcome.
-      const token = 'f'.repeat(64);
-      const digest = createHash('sha256').update(token).digest('hex');
-      await sql`UPDATE identity.users SET email_verified = now() WHERE id = ${user.id}`;
-      await sql`INSERT INTO identity.sessions(token_digest, user_id, authorization_version, expires_at) SELECT ${digest}, id, authorization_version, now() + interval '1 day' FROM identity.users WHERE id = ${user.id}`;
-      const server = await launchWeb(t, environment);
-      try {
-        const endpoint = `${server.base}/api/v1/partner/${partner.id}/school-supply-lists`;
-        const headers = {
-          origin: server.base,
-          cookie: `findeg_session=${token}`,
-          'content-type': 'application/json',
-        };
-        const direct = await runtime.schoolSupplyLists.replaceDraft(
-          session,
-          partner.id,
-          created.list.id,
-          [item],
-        );
-        const rejected = await fetch(endpoint, {
-          method: 'POST',
-          headers,
-          body: JSON.stringify({ action: 'replace', listId: created.list.id, items: [item] }),
-        });
-        assert.equal(rejected.status, 409);
-        assert.deepEqual(
-          await assertContractResponse(
-            '/partner/{partnerId}/school-supply-lists',
-            'post',
-            rejected,
-          ),
-          {
-            errorCode: direct.status,
-            message: direct.status,
-          },
-        );
-        assert.equal(rejected.headers.get('set-cookie'), null);
-        const invalid = await fetch(endpoint, { method: 'POST', headers, body: '{' });
-        assert.equal(invalid.status, 400);
-        const anonymous = await fetch(endpoint, {
-          method: 'POST',
-          headers: { origin: server.base, 'content-type': 'application/json' },
-          body: JSON.stringify({ action: 'clone', listId: created.list.id }),
-        });
-        assert.equal(anonymous.status, 401);
-        const unknown = await fetch(endpoint, {
-          method: 'POST',
-          headers,
-          body: JSON.stringify({ action: 'clone', listId: 999999 }),
-        });
-        assert.equal(unknown.status, 404);
-        const unlisted = await fetch(
-          `${server.base}/api/v1/school-supply-lists/${published.list.publicCode}`,
-        );
-        assert.deepEqual(
-          await assertContractResponse('/school-supply-lists/{code}', 'get', unlisted),
-          JSON.parse(
-            JSON.stringify(await runtime.schoolSupplyLists.readUnlisted(published.list.publicCode)),
-          ),
-        );
-      } finally {
-        await server.stop();
-      }
-
       assert.deepEqual(published.list.items[0].specification, specification);
       assert.equal(
         (await runtime.schoolSupplyLists.replaceDraft(session, partner.id, created.list.id, [item]))

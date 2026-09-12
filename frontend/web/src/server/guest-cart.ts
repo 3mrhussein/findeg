@@ -1,4 +1,3 @@
-import 'server-only';
 import { createHash, randomBytes } from 'node:crypto';
 
 const cookieName = 'findeg_guest_cart';
@@ -23,7 +22,6 @@ export function guestCartOwner(request: Request) {
 }
 
 export function withGuestCookie(response: Response, setCookie: string | undefined) {
-  response.headers.set('Cache-Control', 'no-store');
   if (setCookie) response.headers.set('Set-Cookie', setCookie);
   return response;
 }

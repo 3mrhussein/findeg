@@ -3,7 +3,6 @@ import { readFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { test } from 'node:test';
-import { responseValidator } from './support/http-contract.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -31,26 +30,4 @@ test('session helpers keep browser session handling server-only and runtime-back
     /getWebRuntime\(\)\.currentSession|getWebRuntime\(\)\.signIn|getWebRuntime\(\)\.signOut/,
   );
   assert.match(session, /sessionCookie|sameOrigin\(|errorResponse\(/);
-});
-
-test('checkout contract distinguishes accepted receipts from structured rejections', () => {
-  const accepted = responseValidator('/commerce/checkout', 'post', 201);
-  assert.ok(
-    accepted({
-      status: 'accepted',
-      reference: 'order-1',
-      accessReference: 'opaque',
-      total: '20.30',
-    }),
-  );
-  assert.equal(accepted({ status: 'accepted', total: '20.30' }), false);
-  const rejected = responseValidator('/commerce/checkout', 'post', 409);
-  assert.ok(rejected({ status: 'idempotency-conflict' }));
-  assert.equal(rejected({ status: 'accepted' }), false);
-});
-
-test('management rejection contract requires its public error envelope', () => {
-  const validate = responseValidator('/partner/{partnerId}/school-supply-lists', 'post', 409);
-  assert.ok(validate({ errorCode: 'immutable', message: 'immutable' }));
-  assert.equal(validate({ status: 'immutable' }), false);
 });

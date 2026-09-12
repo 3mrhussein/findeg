@@ -18,37 +18,6 @@ This is the canonical ownership guide for new target work.
 
 Run `pnpm architecture:check` after changing imports or any canonical document.
 
-## Versioned JSON contracts (#62)
-
-`docs/contracts/openapi/v1.yaml` describes every released `/api/v1` route and method.
-JSON adapters decode transport input, obtain opaque browser credentials, invoke the
-runtime's authorized application operations, and translate outcomes to HTTP. Keep
-commercial eligibility, authorization policy and idempotency inside those operations.
-Clients import explicit `@findeg/backend/modules/<owner>/contracts` exports; never
-send a caller-constructed Current Session as an authorization credential.
-
-OpenAPI uses `status` outcomes for commerce and `errorCode`/`message` envelopes for
-management errors. HTTP 200 Cart/quote responses can contain a business rejection;
-clients must inspect the body. Checkout returns 201 for both first acceptance and
-an identical replay; changed input under the same key returns 409. Preserve the
-owner cookie across retries. Other mutations have no general replay guarantee;
-each operation documents its retry semantics with `x-idempotency`. Cookie-authenticated
-management and List Selection writes require the same-origin Origin header.
-
-The architecture gate follows transitive imports from target `use client` modules
-and browser-safe contracts, rejecting runtime, server, infrastructure and Node-only
-dependencies. Legacy portal retirement remains with #64. `pnpm test:architecture`
-also checks route/OpenAPI coverage, references, response schemas and retry metadata.
-Real PostgreSQL tests compare HTTP outcomes with the same application operations,
-including immutable-list rejection and checkout replay/conflict. OpenAPI response
-validation uses the JSON Schema subset supported by Ajv; extend the validator when
-introducing newer schema keywords.
-
-Partner Rewards and Partner Reports currently expose module foundations without
-runtime/persistence wiring. They are not released HTTP capabilities. Their durable
-authorized runtime operations must exist before adding routes; worker notification
-delivery remains an internal process operation.
-
 ## Target runtime foundation (#52)
 
 - `frontend/web` (`@findeg/web`) is the target Next.js executable. It owns browser

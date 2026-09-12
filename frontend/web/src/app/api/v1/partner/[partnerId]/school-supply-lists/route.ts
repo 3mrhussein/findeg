@@ -24,11 +24,7 @@ export async function POST(request: Request, context: Context) {
     return partnerResponse(
       await lists.replaceDraft(access.session, selected, input.listId, input.items),
     );
-  if (
-    input.action === 'publish' &&
-    Number.isSafeInteger(input.listId) &&
-    (input.replacesListId === undefined || Number.isSafeInteger(input.replacesListId))
-  )
+  if (input.action === 'publish' && Number.isSafeInteger(input.listId))
     return partnerResponse(
       await lists.publish(access.session, selected, input.listId, input.replacesListId),
     );

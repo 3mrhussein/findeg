@@ -8,9 +8,6 @@ importers:
 
   .:
     devDependencies:
-      ajv:
-        specifier: 6.15.0
-        version: 6.15.0
       husky:
         specifier: ^9.1.7
         version: 9.1.7
@@ -26,9 +23,6 @@ importers:
       typescript:
         specifier: ^5.7.3
         version: 5.9.3
-      yaml:
-        specifier: 2.9.0
-        version: 2.9.0
 
   backend:
     dependencies:
@@ -177,7 +171,7 @@ importers:
         version: link:../ui
       '@hookform/resolvers':
         specifier: ^5.2.2
-        version: 5.9.1(@sinclair/typebox@0.27.12)(@standard-schema/spec@1.1.0)(ajv@6.15.0)(react-hook-form@7.86.0(react@19.2.8))(zod@4.4.3)
+        version: 5.9.1(@sinclair/typebox@0.27.12)(@standard-schema/spec@1.1.0)(react-hook-form@7.86.0(react@19.2.8))(zod@4.4.3)
       '@tanstack/react-table':
         specifier: ^8.21.3
         version: 8.21.3(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -316,7 +310,7 @@ importers:
         version: link:../ui
       '@hookform/resolvers':
         specifier: ^5.2.2
-        version: 5.9.1(@sinclair/typebox@0.27.12)(@standard-schema/spec@1.1.0)(ajv@6.15.0)(react-hook-form@7.86.0(react@19.2.8))(zod@4.4.3)
+        version: 5.9.1(@sinclair/typebox@0.27.12)(@standard-schema/spec@1.1.0)(react-hook-form@7.86.0(react@19.2.8))(zod@4.4.3)
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -437,7 +431,7 @@ importers:
     dependencies:
       '@hookform/resolvers':
         specifier: ^5.2.2
-        version: 5.9.1(@sinclair/typebox@0.27.12)(@standard-schema/spec@1.1.0)(ajv@6.15.0)(react-hook-form@7.86.0(react@19.2.8))(zod@4.4.3)
+        version: 5.9.1(@sinclair/typebox@0.27.12)(@standard-schema/spec@1.1.0)(react-hook-form@7.86.0(react@19.2.8))(zod@4.4.3)
       '@radix-ui/react-accordion':
         specifier: ^1.2.12
         version: 1.2.20(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -7204,14 +7198,13 @@ snapshots:
     dependencies:
       '@formatjs/fast-memoize': 3.1.7
 
-  '@hookform/resolvers@5.9.1(@sinclair/typebox@0.27.12)(@standard-schema/spec@1.1.0)(ajv@6.15.0)(react-hook-form@7.86.0(react@19.2.8))(zod@4.4.3)':
+  '@hookform/resolvers@5.9.1(@sinclair/typebox@0.27.12)(@standard-schema/spec@1.1.0)(react-hook-form@7.86.0(react@19.2.8))(zod@4.4.3)':
     dependencies:
       '@standard-schema/utils': 0.3.0
       react-hook-form: 7.86.0(react@19.2.8)
     optionalDependencies:
       '@sinclair/typebox': 0.27.12
       '@standard-schema/spec': 1.1.0
-      ajv: 6.15.0
       zod: 4.4.3
 
   '@humanfs/core@0.19.2':
@@ -12238,7 +12231,8 @@ snapshots:
 
   yallist@3.1.1: {}
 
-  yaml@2.9.0: {}
+  yaml@2.9.0:
+    optional: true
 
   yauzl@3.4.0:
     dependencies:

@@ -2,19 +2,9 @@ openapi: 3.1.0
 info:
   title: FindEg HTTP API
   version: 1.0.0
-  description: >
+  description: |
     Canonical contract for versioned JSON adapters. Routes are added only when
-
     the corresponding authorized application operation exists.
-
-
-    Only capabilities wired into the released web runtime are exposed. Partner Rewards and Partner
-    Reports currently have module foundations but no production runtime/persistence wiring and are
-    not released HTTP capabilities. Worker notification delivery is internal.
-
-    JSON bodies use status for commerce/list outcomes and errorCode/message for session and
-    management rejections. Unexpected server failures are not business rejections. Session
-    credentials are opaque cookies, never a caller-supplied Current Session.
 servers:
   - url: /api/v1
 paths:
@@ -28,268 +18,95 @@ paths:
           application/json:
             schema:
               type: object
-              required:
-                - email
-                - password
+              required: [email, password]
               properties:
-                email:
-                  type: string
-                  maxLength: 255
-                password:
-                  type: string
-                  minLength: 1
-                  description: Maximum 72 UTF-8 bytes
+                email: { type: string, maxLength: 255 }
+                password: { type: string, minLength: 1, description: Maximum 72 UTF-8 bytes }
       responses:
         '201':
           description: Authenticated; Set-Cookie supplies the HttpOnly credential
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                properties:
-                  status:
-                    type: string
-                    enum:
-                      - authenticated
-        '400':
-          description: Invalid request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '401':
-          description: Invalid credentials or inactive User
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '403':
-          description: Origin denied
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-      operationId: post_sessions
-      x-idempotency: No idempotency key or guaranteed replay. Read current state before retrying an
-        uncertain mutation.
+        '400': { description: Invalid request }
+        '401': { description: Invalid credentials or inactive User }
+        '403': { description: Origin denied }
     delete:
       summary: Revoke the browser credential and clear its cookie
       description: Requires a same-origin Origin header; idempotent for absent or revoked credentials.
       responses:
-        '204':
-          description: Signed out
-        '403':
-          description: Origin denied
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-      operationId: delete_sessions
-      x-idempotency: Repeated sign-out succeeds with 204.
+        '204': { description: Signed out }
+        '403': { description: Origin denied }
   /sessions/{portal}:
     get:
       summary: Resolve a Current Session for the requested Active Portal
-      security:
-        - sessionCookie: []
+      security: [{ sessionCookie: [] }]
       parameters:
         - in: path
           name: portal
           required: true
-          schema:
-            type: string
-            enum:
-              - storefront
-              - back-office
-              - partner
+          schema: { type: string, enum: [storefront, back-office, partner] }
         - in: query
           name: businessPartnerId
-          description:
-            Explicit Business Partner context for Partner Workspace; omitted only for automatic
-            single-membership entry or selection.
-          schema:
-            type: integer
-            minimum: 1
+          description: Explicit Business Partner context for Partner Workspace; omitted only for automatic single-membership entry or selection.
+          schema: { type: integer, minimum: 1 }
       responses:
+        '400': { description: Invalid selected Business Partner ID }
+        '409':
+          { description: Multiple eligible memberships; choose from the returned choices array }
         '200':
           description: Authoritative Current Session; Cache-Control no-store
           content:
             application/json:
               schema:
                 type: object
-                required:
-                  - status
-                  - session
+                required: [status, session]
                 properties:
-                  status:
-                    const: authenticated
-                  session:
-                    $ref: '#/components/schemas/CurrentSession'
-        '400':
-          description: Invalid selected Business Partner ID
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '401':
-          description: Invalid or missing credential; clears the cookie
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '403':
-          description: Authorization Denial; preserves the cookie
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '404':
-          description: Unknown portal
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '409':
-          description: Multiple eligible memberships; choose from the returned choices array
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                  - choices
-                properties:
-                  status:
-                    const: workspace-selection-required
-                  choices:
-                    type: array
-                    items:
-                      type: object
-                      required:
-                        - partner
-                        - membership
-                      properties:
-                        partner:
-                          $ref: '#/components/schemas/BusinessPartner'
-                        membership:
-                          $ref: '#/components/schemas/PartnerMembership'
-      operationId: get_sessions_portal_
+                  status: { const: authenticated }
+                  session: { $ref: '#/components/schemas/CurrentSession' }
+        '401': { description: Invalid or missing credential; clears the cookie }
+        '403': { description: Authorization Denial; preserves the cookie }
+        '404': { description: Unknown portal }
   /back-office/staff-access:
     put:
       summary: Replace an existing User's fixed staff roles and activity
-      description:
-        Requires same-origin Origin and staff-access.manage in Back Office. Authorization and
-        writes share a transaction.
-      security:
-        - sessionCookie: []
+      description: Requires same-origin Origin and staff-access.manage in Back Office. Authorization and writes share a transaction.
+      security: [{ sessionCookie: [] }]
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required:
-                - userId
-                - roles
-                - isActive
+              required: [userId, roles, isActive]
               properties:
-                userId:
-                  type: integer
-                  minimum: 1
+                userId: { type: integer, minimum: 1 }
                 roles:
                   type: array
-                  items:
-                    $ref: '#/components/schemas/StaffRole'
-                isActive:
-                  type: boolean
+                  items: { $ref: '#/components/schemas/StaffRole' }
+                isActive: { type: boolean }
       responses:
-        '200':
-          description: Updated atomically
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                properties:
-                  status:
-                    type: string
-                    enum:
-                      - updated
-        '400':
-          description: Invalid input or unknown role
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '401':
-          description: Authentication required
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '403':
-          description: Origin or authorization denied; preserves valid sessions
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '404':
-          description: User not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-      operationId: put_back_office_staff_access
-      x-idempotency: No idempotency key or guaranteed replay. Read current state before retrying an
-        uncertain mutation.
+        '200': { description: Updated atomically }
+        '400': { description: Invalid input or unknown role }
+        '401': { description: Authentication required }
+        '403': { description: Origin or authorization denied; preserves valid sessions }
+        '404': { description: User not found }
   /partner/{partnerId}/access:
-    parameters:
+    parameters: &partnerPath
       - in: path
         name: partnerId
         required: true
-        schema:
-          type: integer
-          minimum: 1
-    get:
+        schema: { type: integer, minimum: 1 }
+    get: &accessRead
       summary: Read scoped memberships, invitations, and access history
       description: Requires a Partner Administrator in this Business Partner. No token digests are returned.
-      security:
-        - sessionCookie: []
+      security: [{ sessionCookie: [] }]
       responses:
-        '200':
-          description: Scoped access overview; no-store
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AccessOverview'
-        '400':
-          description: Invalid partner ID
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '401':
-          description: Authentication required
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '403':
-          description: Authorization denied; preserves session
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-      operationId: get_partner_partnerId_access
-    post:
+        '200': { description: Scoped access overview; no-store }
+        '400': { description: Invalid partner ID }
+        '401': { description: Authentication required }
+        '403': { description: Authorization denied; preserves session }
+    post: &accessWrite
       summary: Issue or revoke invitations or update a Partner Membership
-      description:
-        Requires same-origin Origin and Partner Administrator access in the selected Business
-        Partner. Resending revokes any pending invitation for the normalized email.
-      security:
-        - sessionCookie: []
+      description: Requires same-origin Origin and Partner Administrator access in the selected Business Partner. Resending revokes any pending invitation for the normalized email.
+      security: [{ sessionCookie: [] }]
       requestBody:
         required: true
         content:
@@ -297,479 +114,113 @@ paths:
             schema:
               oneOf:
                 - type: object
-                  required:
-                    - action
-                    - email
-                    - roles
+                  required: [action, email, roles]
                   properties:
-                    action:
-                      const: invite
-                    email:
-                      type: string
-                      format: email
-                      maxLength: 255
-                    roles:
-                      $ref: '#/components/schemas/PartnerRoles'
+                    action: { const: invite }
+                    email: { type: string, format: email, maxLength: 255 }
+                    roles: { $ref: '#/components/schemas/PartnerRoles' }
                 - type: object
-                  required:
-                    - action
-                    - invitationId
+                  required: [action, invitationId]
                   properties:
-                    action:
-                      const: revoke
-                    invitationId:
-                      type: integer
-                      minimum: 1
+                    action: { const: revoke }
+                    invitationId: { type: integer, minimum: 1 }
                 - type: object
-                  required:
-                    - action
-                    - membershipId
-                    - roles
-                    - status
+                  required: [action, membershipId, roles, status]
                   properties:
-                    action:
-                      const: membership
-                    membershipId:
-                      type: integer
-                      minimum: 1
-                    roles:
-                      $ref: '#/components/schemas/PartnerRoles'
-                    status:
-                      type: string
-                      enum:
-                        - active
-                        - suspended
-                        - ended
+                    action: { const: membership }
+                    membershipId: { type: integer, minimum: 1 }
+                    roles: { $ref: '#/components/schemas/PartnerRoles' }
+                    status: { type: string, enum: [active, suspended, ended] }
       responses:
-        '200':
-          description: Membership updated or invitation revoked
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                properties:
-                  status:
-                    type: string
-                    enum:
-                      - updated
-                      - revoked
+        '200': { description: Membership updated or invitation revoked }
         '201':
           description: Invitation issued; the raw token is returned once for recipient sharing
           content:
             application/json:
               schema:
                 type: object
-                required:
-                  - status
-                  - token
+                required: [status, token]
                 properties:
-                  status:
-                    const: invited
-                  token:
-                    type: string
-        '400':
-          description: Invalid input
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '401':
-          description: Authentication required
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '403':
-          description: Origin or authorization denied; preserves session
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '404':
-          description: Membership not in selected Business Partner
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+                  status: { const: invited }
+                  token: { type: string }
+        '400': { description: Invalid input }
+        '401': { description: Authentication required }
+        '403': { description: Origin or authorization denied; preserves session }
+        '404': { description: Membership not in selected Business Partner }
         '409':
-          description: Last administrator, terminal lifecycle, unavailable partner or invitation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-      operationId: post_partner_partnerId_access
-      x-idempotency: No idempotency key or guaranteed replay. Read current state before retrying an
-        uncertain mutation.
+          { description: Last administrator, terminal lifecycle, unavailable partner or invitation }
   /back-office/partners/{partnerId}/access:
-    parameters:
-      - in: path
-        name: partnerId
-        required: true
-        schema:
-          type: integer
-          minimum: 1
+    parameters: *partnerPath
     get:
-      summary: Read scoped memberships, invitations, and access history
+      <<: *accessRead
       description: Requires staff-access.manage in Back Office; staff do not impersonate members.
-      security:
-        - sessionCookie: []
-      responses:
-        '200':
-          description: Scoped access overview; no-store
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AccessOverview'
-        '400':
-          description: Invalid partner ID
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '401':
-          description: Authentication required
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '403':
-          description: Authorization denied; preserves session
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-      operationId: get_back_office_partners_partnerId_access
     post:
-      summary: Issue or revoke invitations or update a Partner Membership
-      description:
-        Requires same-origin Origin and staff-access.manage in Back Office. Supports initial
-        onboarding invitations and equivalent audited access management.
-      security:
-        - sessionCookie: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              oneOf:
-                - type: object
-                  required:
-                    - action
-                    - email
-                    - roles
-                  properties:
-                    action:
-                      const: invite
-                    email:
-                      type: string
-                      format: email
-                      maxLength: 255
-                    roles:
-                      $ref: '#/components/schemas/PartnerRoles'
-                - type: object
-                  required:
-                    - action
-                    - invitationId
-                  properties:
-                    action:
-                      const: revoke
-                    invitationId:
-                      type: integer
-                      minimum: 1
-                - type: object
-                  required:
-                    - action
-                    - membershipId
-                    - roles
-                    - status
-                  properties:
-                    action:
-                      const: membership
-                    membershipId:
-                      type: integer
-                      minimum: 1
-                    roles:
-                      $ref: '#/components/schemas/PartnerRoles'
-                    status:
-                      type: string
-                      enum:
-                        - active
-                        - suspended
-                        - ended
-      responses:
-        '200':
-          description: Membership updated or invitation revoked
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                properties:
-                  status:
-                    type: string
-                    enum:
-                      - updated
-                      - revoked
-        '201':
-          description: Invitation issued; the raw token is returned once for recipient sharing
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                  - token
-                properties:
-                  status:
-                    const: invited
-                  token:
-                    type: string
-        '400':
-          description: Invalid input
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '401':
-          description: Authentication required
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '403':
-          description: Origin or authorization denied; preserves session
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '404':
-          description: Membership not in selected Business Partner
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '409':
-          description: Last administrator, terminal lifecycle, unavailable partner or invitation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-      operationId: post_back_office_partners_partnerId_access
-      x-idempotency: No idempotency key or guaranteed replay. Read current state before retrying an
-        uncertain mutation.
+      <<: *accessWrite
+      description: Requires same-origin Origin and staff-access.manage in Back Office. Supports initial onboarding invitations and equivalent audited access management.
   /partner/invitations/accept:
     post:
       summary: Accept one single-use invitation as its verified email recipient
-      description:
-        Requires same-origin Origin and an authenticated active User. Membership creation,
-        invitation consumption, and audit commit together.
-      security:
-        - sessionCookie: []
+      description: Requires same-origin Origin and an authenticated active User. Membership creation, invitation consumption, and audit commit together.
+      security: [{ sessionCookie: [] }]
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required:
-                - token
+              required: [token]
               properties:
-                token:
-                  type: string
-                  minLength: 1
-                  maxLength: 256
+                token: { type: string, minLength: 1, maxLength: 256 }
       responses:
-        '200':
-          description: Accepted; response contains the new membership
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                  - membership
-                properties:
-                  status:
-                    const: accepted
-                  membership:
-                    $ref: '#/components/schemas/PartnerMembership'
-        '400':
-          description: Invalid input
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '401':
-          description: Authentication required
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '403':
-          description: Origin denied
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '409':
-          description: Unavailable invitation or existing active/suspended membership
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-      operationId: post_partner_invitations_accept
-      x-idempotency: No idempotency key or guaranteed replay. Read current state before retrying an
-        uncertain mutation.
+        '200': { description: Accepted; response contains the new membership }
+        '400': { description: Invalid input }
+        '401': { description: Authentication required }
+        '403': { description: Origin denied }
+        '409': { description: Unavailable invitation or existing active/suspended membership }
   /back-office/partners:
     post:
       summary: Create an onboarding Business Partner for a Partner School
       description: Requires same-origin Origin and staff-access.manage in Back Office.
-      security:
-        - sessionCookie: []
+      security: [{ sessionCookie: [] }]
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required:
-                - code
-                - nameEn
-                - nameAr
+              required: [code, nameEn, nameAr]
               properties:
-                code:
-                  type: string
-                  pattern: ^[a-z0-9-]{1,120}$
-                nameEn:
-                  type: string
-                  minLength: 1
-                  maxLength: 200
-                nameAr:
-                  type: string
-                  minLength: 1
-                  maxLength: 200
+                code: { type: string, pattern: '^[a-z0-9-]{1,120}$' }
+                nameEn: { type: string, minLength: 1, maxLength: 200 }
+                nameAr: { type: string, minLength: 1, maxLength: 200 }
       responses:
-        '201':
-          description: Created; response contains the Business Partner and its ID
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                  - partner
-                properties:
-                  status:
-                    const: created
-                  partner:
-                    $ref: '#/components/schemas/BusinessPartner'
-        '400':
-          description: Invalid input
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '401':
-          description: Authentication required
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '403':
-          description: Origin or authorization denied
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '409':
-          description: Code unavailable
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-      operationId: post_back_office_partners
-      x-idempotency: No idempotency key or guaranteed replay. Read current state before retrying an
-        uncertain mutation.
+        '201': { description: Created; response contains the Business Partner and its ID }
+        '400': { description: Invalid input }
+        '401': { description: Authentication required }
+        '403': { description: Origin or authorization denied }
+        '409': { description: Code unavailable }
   /back-office/partners/{partnerId}/status:
-    parameters:
-      - in: path
-        name: partnerId
-        required: true
-        schema:
-          type: integer
-          minimum: 1
+    parameters: *partnerPath
     post:
       summary: Change Business Partner lifecycle
-      description:
-        Requires same-origin Origin and staff-access.manage. Activation requires an active
-        Partner Administrator; closed is terminal.
-      security:
-        - sessionCookie: []
+      description: Requires same-origin Origin and staff-access.manage. Activation requires an active Partner Administrator; closed is terminal.
+      security: [{ sessionCookie: [] }]
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required:
-                - status
+              required: [status]
               properties:
-                status:
-                  type: string
-                  enum:
-                    - active
-                    - suspended
-                    - closed
+                status: { type: string, enum: [active, suspended, closed] }
       responses:
-        '200':
-          description: Updated
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                properties:
-                  status:
-                    type: string
-                    enum:
-                      - updated
-        '400':
-          description: Invalid input
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '401':
-          description: Authentication required
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '403':
-          description: Origin or authorization denied
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '404':
-          description: Business Partner not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '409':
-          description: Invalid transition or missing administrator
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-      operationId: post_back_office_partners_partnerId_status
-      x-idempotency: No idempotency key or guaranteed replay. Read current state before retrying an
-        uncertain mutation.
+        '200': { description: Updated }
+        '400': { description: Invalid input }
+        '401': { description: Authentication required }
+        '403': { description: Origin or authorization denied }
+        '404': { description: Business Partner not found }
+        '409': { description: Invalid transition or missing administrator }
   /catalog:
     get:
       summary: Browse active bilingual catalog variants
@@ -777,11 +228,7 @@ paths:
         - in: query
           name: locale
           required: true
-          schema:
-            type: string
-            enum:
-              - en
-              - ar
+          schema: { type: string, enum: [en, ar] }
       responses:
         '200':
           description: Active variants with available inventory
@@ -791,346 +238,119 @@ paths:
                 type: array
                 items:
                   type: object
-                  required:
-                    - id
-                    - sku
-                    - name
-                    - label
-                    - price
-                    - available
+                  required: [id, sku, name, label, price, available]
                   properties:
-                    id:
-                      type: integer
-                    sku:
-                      type: string
-                    name:
-                      type: string
-                    label:
-                      type: string
-                    price:
-                      type: string
-                    strikePrice:
-                      type: string
-                    available:
-                      type: integer
-        '400':
-          description: Invalid locale
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-      operationId: get_catalog
+                    id: { type: integer }
+                    sku: { type: string }
+                    name: { type: string }
+                    label: { type: string }
+                    price: { type: string }
+                    strikePrice: { type: string }
+                    available: { type: integer }
+        '400': { description: Invalid locale }
   /back-office/catalog/variants:
     get:
       summary: List Product Variants for Catalog Managers
       description: Requires same-origin Origin and catalog.manage permission.
-      security:
-        - sessionCookie: []
+      security: [{ sessionCookie: [] }]
       responses:
         '200':
           description: Product Variants with bilingual labels and persisted pricing
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ManageableVariant'
-        '401':
-          description: Authentication required
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '403':
-          description: Origin or authorization denied
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-      operationId: get_back_office_catalog_variants
+        '401': { description: Authentication required }
+        '403': { description: Origin or authorization denied }
     post:
       summary: Create an active Product Variant
       description: Requires same-origin Origin and catalog.manage permission.
-      security:
-        - sessionCookie: []
+      security: [{ sessionCookie: [] }]
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required:
-                - productId
-                - sku
-                - variantKey
-                - label
-                - basePrice
-                - isActive
+              required: [productId, sku, variantKey, label, basePrice, isActive]
               properties:
-                productId:
-                  type: integer
-                  minimum: 1
-                sku:
-                  type: string
-                  minLength: 1
-                variantKey:
-                  type: string
-                  minLength: 1
+                productId: { type: integer, minimum: 1 }
+                sku: { type: string, minLength: 1 }
+                variantKey: { type: string, minLength: 1 }
                 label:
                   type: object
-                  required:
-                    - en
-                    - ar
+                  required: [en, ar]
                   properties:
-                    en:
-                      type: string
-                      minLength: 1
-                    ar:
-                      type: string
-                      minLength: 1
-                basePrice:
-                  type: string
-                strikePrice:
-                  type: string
-                isActive:
-                  type: boolean
+                    en: { type: string, minLength: 1 }
+                    ar: { type: string, minLength: 1 }
+                basePrice: { type: string }
+                strikePrice: { type: string }
+                isActive: { type: boolean }
       responses:
-        '201':
-          description: Created
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                  - variantId
-                properties:
-                  status:
-                    const: created
-                  variantId:
-                    type: integer
-        '400':
-          description: Invalid input
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '401':
-          description: Authentication required
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '403':
-          description: Origin or authorization denied
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '404':
-          description: Product not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-      operationId: post_back_office_catalog_variants
-      x-idempotency: No idempotency key or guaranteed replay. Read current state before retrying an
-        uncertain mutation.
+        '201': { description: Created }
+        '400': { description: Invalid input }
+        '401': { description: Authentication required }
+        '403': { description: Origin or authorization denied }
+        '404': { description: Product not found }
     put:
       summary: Update an active Product Variant
       description: Requires same-origin Origin and catalog.manage permission.
-      security:
-        - sessionCookie: []
+      security: [{ sessionCookie: [] }]
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required:
-                - variantId
-                - sku
-                - variantKey
-                - label
-                - basePrice
-                - isActive
+              required: [variantId, sku, variantKey, label, basePrice, isActive]
               properties:
-                variantId:
-                  type: integer
-                  minimum: 1
-                sku:
-                  type: string
-                  minLength: 1
-                variantKey:
-                  type: string
-                  minLength: 1
+                variantId: { type: integer, minimum: 1 }
+                sku: { type: string, minLength: 1 }
+                variantKey: { type: string, minLength: 1 }
                 label:
                   type: object
-                  required:
-                    - en
-                    - ar
+                  required: [en, ar]
                   properties:
-                    en:
-                      type: string
-                      minLength: 1
-                    ar:
-                      type: string
-                      minLength: 1
-                basePrice:
-                  type: string
-                strikePrice:
-                  type: string
-                isActive:
-                  type: boolean
+                    en: { type: string, minLength: 1 }
+                    ar: { type: string, minLength: 1 }
+                basePrice: { type: string }
+                strikePrice: { type: string }
+                isActive: { type: boolean }
       responses:
-        '200':
-          description: Updated
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                properties:
-                  status:
-                    type: string
-                    enum:
-                      - updated
-        '400':
-          description: Invalid input
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '401':
-          description: Authentication required
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '403':
-          description: Origin or authorization denied
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '404':
-          description: Variant not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-      operationId: put_back_office_catalog_variants
-      x-idempotency: No idempotency key or guaranteed replay. Read current state before retrying an
-        uncertain mutation.
+        '200': { description: Updated }
+        '400': { description: Invalid input }
+        '401': { description: Authentication required }
+        '403': { description: Origin or authorization denied }
+        '404': { description: Variant not found }
   /back-office/inventory/adjustments:
     post:
       summary: Adjust inventory on-hand balance
-      description:
-        Requires same-origin Origin and catalog.manage permission. Contested decrements fail
-        closed if stock is insufficient.
-      security:
-        - sessionCookie: []
+      description: Requires same-origin Origin and catalog.manage permission. Contested decrements fail closed if stock is insufficient.
+      security: [{ sessionCookie: [] }]
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required:
-                - variantId
-                - warehouseId
-                - quantityDelta
+              required: [variantId, warehouseId, quantityDelta]
               properties:
-                variantId:
-                  type: integer
-                  minimum: 1
-                warehouseId:
-                  type: integer
-                  minimum: 1
-                quantityDelta:
-                  type: integer
-                notes:
-                  type: string
+                variantId: { type: integer, minimum: 1 }
+                warehouseId: { type: integer, minimum: 1 }
+                quantityDelta: { type: integer }
+                notes: { type: string }
       responses:
-        '200':
-          description: Adjusted
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                properties:
-                  status:
-                    type: string
-                    enum:
-                      - adjusted
-        '400':
-          description: Invalid input
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '401':
-          description: Authentication required
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '403':
-          description: Origin or authorization denied
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '404':
-          description: Variant or warehouse not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '409':
-          description: Insufficient stock
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-      operationId: post_back_office_inventory_adjustments
-      x-idempotency: No idempotency key or guaranteed replay. Read current state before retrying an
-        uncertain mutation.
+        '200': { description: Adjusted }
+        '400': { description: Invalid input }
+        '401': { description: Authentication required }
+        '403': { description: Origin or authorization denied }
+        '404': { description: Variant or warehouse not found }
+        '409': { description: Insufficient stock }
   /commerce/cart:
     get:
       summary: Read and authoritatively price the ordinary guest Cart
-      description:
-        Issues or replaces the HttpOnly findeg_guest_cart cookie. Preserve it across requests.
-        School Supply List selections are excluded.
+      description: Issues or replaces the HttpOnly findeg_guest_cart cookie. Preserve it across requests. School Supply List selections are excluded.
       responses:
         '200':
-          description: Quoted Cart with items and subtotal, or variant-unavailable or insufficient-stock
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - type: object
-                    required:
-                      - status
-                      - quote
-                    properties:
-                      status:
-                        const: quoted
-                      quote:
-                        $ref: '#/components/schemas/CartQuote'
-                  - type: object
-                    required:
-                      - status
-                    properties:
-                      status:
-                        type: string
-                        enum:
-                          - variant-unavailable
-                          - insufficient-stock
-      operationId: get_commerce_cart
+          {
+            description: 'Quoted Cart with items and subtotal, or variant-unavailable or insufficient-stock',
+          }
     put:
       summary: Replace the ordinary Cart with currently eligible Product Variants
       requestBody:
@@ -1140,8 +360,7 @@ paths:
             schema:
               type: object
               additionalProperties: false
-              required:
-                - items
+              required: [items]
               properties:
                 items:
                   type: array
@@ -1150,255 +369,114 @@ paths:
                   items:
                     type: object
                     additionalProperties: false
-                    required:
-                      - variantId
-                      - quantity
+                    required: [variantId, quantity]
                     properties:
-                      variantId:
-                        type: integer
-                        minimum: 1
-                      quantity:
-                        type: integer
-                        minimum: 1
-                        maximum: 999
+                      variantId: { type: integer, minimum: 1 }
+                      quantity: { type: integer, minimum: 1, maximum: 999 }
       responses:
         '200':
-          description:
-            Quoted Cart with items and subtotal, or variant-unavailable or insufficient-stock;
-            rejections preserve the previous Cart
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - type: object
-                    required:
-                      - status
-                      - quote
-                    properties:
-                      status:
-                        const: quoted
-                      quote:
-                        $ref: '#/components/schemas/CartQuote'
-                  - type: object
-                    required:
-                      - status
-                    properties:
-                      status:
-                        type: string
-                        enum:
-                          - variant-unavailable
-                          - insufficient-stock
-        '400':
-          description: Invalid JSON or input
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                properties:
-                  status:
-                    type: string
-                    enum:
-                      - invalid-input
-      operationId: put_commerce_cart
-      x-idempotency: No idempotency key or guaranteed replay. Read current state before retrying an
-        uncertain mutation.
+          {
+            description: 'Quoted Cart with items and subtotal, or variant-unavailable or insufficient-stock; rejections preserve the previous Cart',
+          }
+        '400': { description: 'Invalid JSON or input' }
   /commerce/delivery-zones:
     get:
       summary: List active home-delivery zones with bilingual names and exact EGP fees
       responses:
-        '200':
-          description: Available status and zones array of id, name and fee
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                  - zones
-                properties:
-                  status:
-                    const: available
-                  zones:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/DeliveryZone'
-      operationId: get_commerce_delivery_zones
+        '200': { description: 'Available status and zones array of id, name and fee' }
   /commerce/checkout/quote:
     post:
       summary: Review current Cart prices and delivery fee before acceptance
-      description:
-        Preserve the guest Cart cookie. Quoted responses include items, subtotal, zone, total
-        and confirmation; money is a decimal EGP string. Any changed terms require a new
-        confirmation.
+      description: Preserve the guest Cart cookie. Quoted responses include items, subtotal, zone, total and confirmation; money is a decimal EGP string. Any changed terms require a new confirmation.
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required:
-                - zoneId
+              required: [zoneId]
               properties:
-                zoneId:
-                  type: integer
-                  minimum: 1
+                zoneId: { type: integer, minimum: 1 }
       responses:
         '200':
-          description: quoted, empty-cart, delivery-unavailable, variant-unavailable or insufficient-stock
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: '#/components/schemas/CheckoutQuote'
-                  - type: object
-                    required:
-                      - status
-                    properties:
-                      status:
-                        type: string
-                        enum:
-                          - empty-cart
-                          - delivery-unavailable
-                          - variant-unavailable
-                          - insufficient-stock
-        '400':
-          description: Invalid input
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                properties:
-                  status:
-                    type: string
-                    enum:
-                      - invalid-input
-      operationId: post_commerce_checkout_quote
-      x-idempotency: Read-only quote; retry may return changed terms and confirmation.
+          {
+            description: 'quoted, empty-cart, delivery-unavailable, variant-unavailable or insufficient-stock',
+          }
+        '400': { description: 'Invalid input' }
   /commerce/checkout:
     post:
       summary: Atomically accept a guest Cash-on-Delivery Order
-      description: >
+      description: |
         Preserve the guest Cart cookie. Generate one key per logical checkout and retry the exact
-
-        same body after a lost response. The key is scoped to this Cart owner; changed input
-        conflicts.
-
-        Acceptance atomically commits immutable Order prices, reservations, replay outcome and
-        outbox
-
+        same body after a lost response. The key is scoped to this Cart owner; changed input conflicts.
+        Acceptance atomically commits immutable Order prices, reservations, replay outcome and outbox
         records, then clears the Cart. Codes are never returned by checkout.
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CheckoutInput'
+              type: object
+              additionalProperties: false
+              required: [key, confirmation, address, paymentMethod, deliveryMethod]
+              properties:
+                key: { type: string, pattern: '^[a-zA-Z0-9_-]{16,128}$' }
+                confirmation: { type: string, pattern: '^[a-f0-9]{64}$' }
+                paymentMethod: { const: cash-on-delivery }
+                deliveryMethod: { const: home-delivery }
+                address:
+                  type: object
+                  additionalProperties: false
+                  required: [name, email, phone, street, city, zoneId]
+                  properties:
+                    name: { type: string, minLength: 1, maxLength: 255 }
+                    email: { type: string, format: email, maxLength: 255 }
+                    phone: { type: string, pattern: '^(?:\+20|0)1[0125]\d{8}$' }
+                    street: { type: string, minLength: 1, maxLength: 255 }
+                    city: { type: string, minLength: 1, maxLength: 255 }
+                    zoneId: { type: integer, minimum: 1 }
       responses:
         '201':
           description: Accepted or replayed original receipt
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CheckoutReceipt'
-        '400':
-          description: Invalid JSON or input
-          content:
-            application/json:
-              schema:
                 type: object
-                required:
-                  - status
+                required: [status, reference, accessReference, total]
                 properties:
-                  status:
-                    type: string
-                    enum:
-                      - invalid-input
+                  status: { const: accepted }
+                  reference: { type: string }
+                  accessReference:
+                    { type: string, description: Opaque reference; save for Guest Order Access }
+                  total: { type: string, example: '20.30' }
+        '400': { description: 'Invalid JSON or input' }
         '409':
-          description:
-            reconfirmation-required, idempotency-conflict, empty-cart, delivery-unavailable,
-            variant-unavailable or insufficient-stock
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                properties:
-                  status:
-                    type: string
-                    enum:
-                      - reconfirmation-required
-                      - idempotency-conflict
-                      - empty-cart
-                      - delivery-unavailable
-                      - variant-unavailable
-                      - insufficient-stock
-      operationId: post_commerce_checkout
-      x-idempotency:
-        Body key scoped to owner and operation (also list for List Selection); identical
-        request replays original 201 receipt, changed input returns 409 idempotency-conflict.
-        Preserve the owner cookie.
+          {
+            description: 'reconfirmation-required, idempotency-conflict, empty-cart, delivery-unavailable, variant-unavailable or insufficient-stock',
+          }
   /commerce/orders/access:
     post:
       summary: Retrieve an accepted Order using opaque reference plus one-time code
-      description:
-        Codes expire 15 minutes after acceptance. Successful verification consumes the code
-        atomically. Delivery is an outbox integration owned by ticket 59.
+      description: Codes expire 15 minutes after acceptance. Successful verification consumes the code atomically. Delivery is an outbox integration owned by ticket 59.
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required:
-                - reference
-                - code
+              required: [reference, code]
               properties:
-                reference:
-                  type: string
-                  pattern: ^[a-f0-9]{32,128}$
-                code:
-                  type: string
-                  pattern: ^\d{6}$
+                reference: { type: string, pattern: '^[a-f0-9]{32,128}$' }
+                code: { type: string, pattern: '^\d{6}$' }
       responses:
         '200':
-          description:
-            verified status and immutable Order snapshot including items, totals, payment status
-            and delivery address
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                  - order
-                properties:
-                  status:
-                    const: verified
-                  order:
-                    $ref: '#/components/schemas/AcceptedOrder'
+          {
+            description: 'verified status and immutable Order snapshot including items, totals, payment status and delivery address',
+          }
         '400':
-          description:
-            invalid-input or not-found; missing, incorrect, expired and used credentials do not
-            reveal the Order
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                properties:
-                  status:
-                    type: string
-                    enum:
-                      - invalid-input
-                      - not-found
-      operationId: post_commerce_orders_access
-      x-idempotency: One-time code is consumed on success; retry returns 400 not-found.
+          {
+            description: 'invalid-input or not-found; missing, incorrect, expired and used credentials do not reveal the Order',
+          }
   /commerce/list-selections/{code}:
     parameters:
       - $ref: '#/components/parameters/ListCode'
@@ -1417,35 +495,9 @@ paths:
           description: Found list and independently persisted selection; Cache-Control no-store
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/ListSelectionView'
-        '400':
-          description: Invalid code
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                properties:
-                  status:
-                    type: string
-                    enum:
-                      - invalid-input
-        '404':
-          description: Unknown code or unpublished Draft
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                properties:
-                  status:
-                    type: string
-                    enum:
-                      - not-found
-      operationId: get_commerce_list_selections_code_
+              schema: { $ref: '#/components/schemas/ListSelectionView' }
+        '400': { description: Invalid code }
+        '404': { description: Unknown code or unpublished Draft }
     put:
       summary: Save explicit item choices and quantities for one list
       description: |
@@ -1457,71 +509,13 @@ paths:
         required: true
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/ListSelection'
+            schema: { $ref: '#/components/schemas/ListSelection' }
       responses:
-        '200':
-          description: Found list, saved selection, current options and pricing
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ListSelectionView'
-        '400':
-          description: Invalid JSON, code, duplicate item, set count or quantity
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                properties:
-                  status:
-                    type: string
-                    enum:
-                      - invalid-input
-        '403':
-          description: origin-denied
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                properties:
-                  status:
-                    type: string
-                    enum:
-                      - origin-denied
-        '404':
-          description: Unknown code or unpublished Draft
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                properties:
-                  status:
-                    type: string
-                    enum:
-                      - not-found
-        '409':
-          description: list-unavailable or selection-unavailable
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                properties:
-                  status:
-                    type: string
-                    enum:
-                      - list-unavailable
-                      - selection-unavailable
-      operationId: put_commerce_list_selections_code_
-      x-idempotency: No idempotency key or guaranteed replay. Read current state before retrying an
-        uncertain mutation.
+        '200': { description: Found list, saved selection, current options and pricing }
+        '400': { description: Invalid JSON, code, duplicate item, set count or quantity }
+        '403': { description: origin-denied }
+        '404': { description: Unknown code or unpublished Draft }
+        '409': { description: list-unavailable or selection-unavailable }
   /commerce/list-selections/{code}/quote:
     parameters:
       - $ref: '#/components/parameters/ListCode'
@@ -1539,79 +533,30 @@ paths:
             schema:
               type: object
               additionalProperties: false
-              required:
-                - zoneId
+              required: [zoneId]
               properties:
-                zoneId:
-                  type: integer
-                  minimum: 1
+                zoneId: { type: integer, minimum: 1 }
       responses:
         '200':
-          description: Quoted items, subtotal, completeness, zone, total, listId, selection and confirmation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ListCheckoutQuote'
-        '400':
-          description: Invalid input
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                properties:
-                  status:
-                    type: string
-                    enum:
-                      - invalid-input
-        '403':
-          description: origin-denied
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                properties:
-                  status:
-                    type: string
-                    enum:
-                      - origin-denied
-        '404':
-          description: Unknown list
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                properties:
-                  status:
-                    type: string
-                    enum:
-                      - not-found
+          {
+            description: quoted with items,
+            subtotal,
+            completeness,
+            zone,
+            total,
+            listId,
+            selection and confirmation,
+          }
+        '400': { description: Invalid input }
+        '403': { description: origin-denied }
+        '404': { description: Unknown list }
         '409':
-          description:
-            list-unavailable, empty-selection, selection-unavailable, insufficient-stock or
-            delivery-unavailable
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                properties:
-                  status:
-                    type: string
-                    enum:
-                      - list-unavailable
-                      - empty-selection
-                      - selection-unavailable
-                      - insufficient-stock
-                      - delivery-unavailable
-      operationId: post_commerce_list_selections_code_quote
-      x-idempotency: Read-only quote; retry may return changed terms and confirmation.
+          {
+            description: list-unavailable,
+            empty-selection,
+            selection-unavailable,
+            insufficient-stock or delivery-unavailable,
+          }
   /commerce/list-selections/{code}/checkout:
     parameters:
       - $ref: '#/components/parameters/ListCode'
@@ -1628,1065 +573,153 @@ paths:
       requestBody:
         $ref: '#/paths/~1commerce~1checkout/post/requestBody'
       responses:
-        '201':
-          $ref: '#/paths/~1commerce~1checkout/post/responses/201'
-        '400':
-          description: Invalid input
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                properties:
-                  status:
-                    type: string
-                    enum:
-                      - invalid-input
-        '403':
-          description: origin-denied
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                properties:
-                  status:
-                    type: string
-                    enum:
-                      - origin-denied
-        '404':
-          description: Unknown list
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                properties:
-                  status:
-                    type: string
-                    enum:
-                      - not-found
+        '201': { $ref: '#/paths/~1commerce~1checkout/post/responses/201' }
+        '400': { description: Invalid input }
+        '403': { description: origin-denied }
+        '404': { description: Unknown list }
         '409':
-          description:
-            reconfirmation-required, idempotency-conflict, list-unavailable, empty-selection,
-            selection-unavailable, insufficient-stock or delivery-unavailable
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                properties:
-                  status:
-                    type: string
-                    enum:
-                      - reconfirmation-required
-                      - idempotency-conflict
-                      - list-unavailable
-                      - empty-selection
-                      - selection-unavailable
-                      - insufficient-stock
-                      - delivery-unavailable
-      operationId: post_commerce_list_selections_code_checkout
-      x-idempotency:
-        Body key scoped to owner and operation (also list for List Selection); identical
-        request replays original 201 receipt, changed input returns 409 idempotency-conflict.
-        Preserve the owner cookie.
-  /school-supply-lists/{code}:
-    parameters:
-      - in: path
-        name: code
-        required: true
-        schema:
-          type: string
-          minLength: 16
-    get:
-      summary: Read an unlisted published or archived School Supply List
-      description:
-        Possession of the code grants read access. Drafts are not discoverable. Archived lists
-        remain historically viewable.
-      responses:
-        '200':
-          description: Found immutable list
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                  - list
-                properties:
-                  status:
-                    const: found
-                  list:
-                    $ref: '#/components/schemas/SchoolSupplyList'
-        '404':
-          description: Unknown or unpublished list
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                properties:
-                  status:
-                    type: string
-                    enum:
-                      - not-found
-      operationId: get_school_supply_lists_code_
-  /partner/{partnerId}/school-supply-lists:
-    parameters:
-      - in: path
-        name: partnerId
-        required: true
-        schema:
-          type: integer
-          minimum: 1
-    post:
-      summary: Create, edit, publish, replace or clone a School Supply List
-      description:
-        Requires same-origin Origin and an active Partner Administrator or List Manager in the
-        selected Business Partner. The application owns publication, immutability and
-        default-variant rules.
-      security:
-        - sessionCookie: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              oneOf:
-                - type: object
-                  required:
-                    - action
-                    - input
-                  properties:
-                    action:
-                      const: create
-                    input:
-                      $ref: '#/components/schemas/SchoolSupplyListInput'
-                - type: object
-                  required:
-                    - action
-                    - listId
-                    - items
-                  properties:
-                    action:
-                      const: replace
-                    listId:
-                      type: integer
-                      minimum: 1
-                    items:
-                      type: array
-                      minItems: 1
-                      maxItems: 100
-                      items:
-                        $ref: '#/components/schemas/SchoolSupplyListItemInput'
-                - type: object
-                  required:
-                    - action
-                    - listId
-                  properties:
-                    action:
-                      const: publish
-                    listId:
-                      type: integer
-                      minimum: 1
-                    replacesListId:
-                      type: integer
-                      minimum: 1
-                - type: object
-                  required:
-                    - action
-                    - listId
-                  properties:
-                    action:
-                      const: clone
-                    listId:
-                      type: integer
-                      minimum: 1
-      responses:
-        '200':
-          description: Updated or published
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - type: object
-                    required:
-                      - status
-                    properties:
-                      status:
-                        type: string
-                        enum:
-                          - updated
-                  - type: object
-                    required:
-                      - status
-                      - list
-                    properties:
-                      status:
-                        const: published
-                      list:
-                        $ref: '#/components/schemas/SchoolSupplyList'
-        '201':
-          description: Draft created
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - status
-                  - list
-                properties:
-                  status:
-                    const: created
-                  list:
-                    $ref: '#/components/schemas/SchoolSupplyList'
-        '400':
-          description: Invalid input
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '401':
-          description: Authentication required
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '403':
-          description: Origin or authorization denied; valid session preserved
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '404':
-          description: List not found in selected Business Partner
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '409':
-          description: immutable, variant-unavailable, invalid-transition or replacement-unavailable
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-      operationId: post_partner_partnerId_school_supply_lists
-      x-idempotency: No idempotency key or guaranteed replay. Read current state before retrying an
-        uncertain mutation.
+          {
+            description: reconfirmation-required,
+            idempotency-conflict,
+            list-unavailable,
+            empty-selection,
+            selection-unavailable,
+            insufficient-stock or delivery-unavailable,
+          }
+
 components:
   parameters:
     ListCode:
       in: path
       name: code
       required: true
-      schema:
-        type: string
-        pattern: ^[a-zA-Z0-9_-]{16,128}$
+      schema: { type: string, pattern: '^[a-zA-Z0-9_-]{16,128}$' }
   securitySchemes:
     sessionCookie:
       type: apiKey
       in: cookie
       name: findeg_session
-    guestCartCookie:
-      type: apiKey
-      in: cookie
-      name: findeg_guest_cart
-      description:
-        Opaque guest owner. Issued automatically when missing; preserve it across Cart and
-        checkout retries.
-    listSelectionCookie:
-      type: apiKey
-      in: cookie
-      name: findeg_list_selection
-      description:
-        Opaque guest selection owner, issued when no Customer session is present. Preserve it
-        across List Selection retries.
   schemas:
     ListSelection:
       type: object
       additionalProperties: false
-      required:
-        - setCount
-        - items
+      required: [setCount, items]
       properties:
-        setCount:
-          type: integer
-          minimum: 1
-          maximum: 999
+        setCount: { type: integer, minimum: 1, maximum: 999 }
         items:
           type: array
           maxItems: 100
           items:
             type: object
             additionalProperties: false
-            required:
-              - listItemId
-              - variantId
-              - quantity
+            required: [listItemId, variantId, quantity]
             properties:
-              listItemId:
-                type: integer
-                minimum: 1
-              variantId:
-                type: integer
-                minimum: 1
-              quantity:
-                type: integer
-                minimum: 1
-                maximum: 999
+              listItemId: { type: integer, minimum: 1 }
+              variantId: { type: integer, minimum: 1 }
+              quantity: { type: integer, minimum: 1, maximum: 999 }
     ListSelectionView:
       type: object
-      required:
-        - status
-        - list
-        - selection
-        - options
-        - offerBasisPoints
+      required: [status, list, selection, options, offerBasisPoints]
       properties:
-        status:
-          const: found
+        status: { const: found }
         list:
-          $ref: '#/components/schemas/SchoolSupplyList'
-        selection:
-          $ref: '#/components/schemas/ListSelection'
+          {
+            type: object,
+            description: 'Immutable published list metadata and required/optional, exact-item, specification and default-variant facts; archived lists include replacedById when applicable.',
+          }
+        selection: { $ref: '#/components/schemas/ListSelection' }
         options:
-          type: array
-          items:
-            type: object
-            required:
-              - listItemId
-              - variants
-            properties:
-              listItemId:
-                type: integer
-              variants:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ListCatalogVariant'
-        offerBasisPoints:
-          type: integer
-          minimum: 0
-          maximum: 10000
+          {
+            type: array,
+            items: { type: object },
+            description: 'Per-item allowed active variants with sku, bilingual name/label/brand, price, categoryId and attributes.',
+          }
+        offerBasisPoints: { type: integer, minimum: 0, maximum: 10000 }
         pricing:
-          type: object
-          required:
-            - items
-            - subtotal
-            - completeness
-          properties:
-            items:
-              type: array
-              items:
-                $ref: '#/components/schemas/PricedItem'
-            subtotal:
-              $ref: '#/components/schemas/Money'
-            completeness:
-              $ref: '#/components/schemas/ListCompleteness'
+          {
+            type: object,
+            description: 'Items with immutable attribution, subtotal and advisory completeness; omitted when a saved choice is no longer eligible.',
+          }
     ListAttribution:
       type: object
       required:
-        - listId
-        - businessPartnerId
-        - listItemId
-        - defaultVariantId
-        - alternative
-        - catalogUnitPrice
-        - offerBasisPoints
-        - discountAmount
+        [
+          listId,
+          businessPartnerId,
+          listItemId,
+          defaultVariantId,
+          alternative,
+          catalogUnitPrice,
+          offerBasisPoints,
+          discountAmount,
+        ]
       properties:
-        listId:
-          type: integer
-        businessPartnerId:
-          type: integer
-        listItemId:
-          type: integer
+        listId: { type: integer }
+        businessPartnerId: { type: integer }
+        listItemId: { type: integer }
         specification:
-          $ref: '#/components/schemas/ListItemSpecification'
-        defaultVariantId:
-          type: integer
-        alternative:
-          type: boolean
-        catalogUnitPrice:
-          type: string
-        offerBasisPoints:
-          type: integer
+          {
+            type: object,
+            description: 'Frozen categoryId and explicitly required attribute values; absent only for historical lists without recorded specifications.',
+          }
+        defaultVariantId: { type: integer }
+        alternative: { type: boolean }
+        catalogUnitPrice: { type: string }
+        offerBasisPoints: { type: integer }
         discountAmount:
-          type: string
-          description: Exact EGP discount on this line; lineTotal records paid merchandise.
+          {
+            type: string,
+            description: 'Exact EGP discount on this line; lineTotal records paid merchandise.',
+          }
     StaffRole:
       type: string
-      enum:
-        - access-administrator
-        - catalog-manager
-        - fulfillment-operator
-        - finance-manager
+      enum: [access-administrator, catalog-manager, fulfillment-operator, finance-manager]
     CurrentSession:
       type: object
       required:
-        - userId
-        - email
-        - emailVerified
-        - activePortal
-        - authorizationVersion
-        - staffRoles
-        - permissions
+        [userId, email, emailVerified, activePortal, authorizationVersion, staffRoles, permissions]
       properties:
-        userId:
-          type: integer
-        email:
-          type: string
-        emailVerified:
-          type: boolean
-        activePortal:
-          type: string
-          enum:
-            - storefront
-            - back-office
-            - partner
-        authorizationVersion:
-          type: integer
-        partner:
-          $ref: '#/components/schemas/PartnerContext'
+        userId: { type: integer }
+        email: { type: string }
+        emailVerified: { type: boolean }
+        activePortal: { type: string, enum: [storefront, back-office, partner] }
+        authorizationVersion: { type: integer }
+        partner: { $ref: '#/components/schemas/PartnerContext' }
         staffRoles:
           type: array
-          items:
-            $ref: '#/components/schemas/StaffRole'
+          items: { $ref: '#/components/schemas/StaffRole' }
         permissions:
           type: array
           items:
             type: string
             enum:
-              - back-office.enter
-              - staff-access.manage
-              - catalog.manage
-              - fulfillment.manage
-              - finance.manage
+              [
+                back-office.enter,
+                staff-access.manage,
+                catalog.manage,
+                fulfillment.manage,
+                finance.manage,
+              ]
     PartnerRoles:
       type: array
       minItems: 1
       items:
         type: string
-        enum:
-          - partner-administrator
-          - list-manager
-          - collection-staff
-          - report-viewer
+        enum: [partner-administrator, list-manager, collection-staff, report-viewer]
     PartnerContext:
       type: object
-      required:
-        - businessPartnerId
-        - membershipId
-        - roles
-        - authorizationVersion
+      required: [businessPartnerId, membershipId, roles, authorizationVersion]
       properties:
-        businessPartnerId:
-          type: integer
-        membershipId:
-          type: integer
-        roles:
-          $ref: '#/components/schemas/PartnerRoles'
-        authorizationVersion:
-          type: integer
+        businessPartnerId: { type: integer }
+        membershipId: { type: integer }
+        roles: { $ref: '#/components/schemas/PartnerRoles' }
+        authorizationVersion: { type: integer }
     Error:
       type: object
-      required:
-        - errorCode
-        - message
+      required: [errorCode, message]
       properties:
         errorCode:
           type: string
         message:
           type: string
         details: {}
-    LocalizedText:
-      type: object
-      required:
-        - en
-        - ar
-      properties:
-        en:
-          type: string
-        ar:
-          type: string
-    LocalizedCatalogText:
-      type: object
-      required: []
-      properties:
-        en:
-          type: string
-        ar:
-          type: string
-    Money:
-      type: string
-      pattern: ^\d+\.\d{2}$
-      description: Exact EGP decimal amount; do not convert to floating point for accounting.
-    DeliveryZone:
-      type: object
-      required:
-        - id
-        - name
-        - fee
-      properties:
-        id:
-          type: integer
-        name:
-          $ref: '#/components/schemas/LocalizedText'
-        fee:
-          $ref: '#/components/schemas/Money'
-    PricedItem:
-      type: object
-      required:
-        - variantId
-        - quantity
-        - sku
-        - name
-        - label
-        - unitPrice
-        - lineTotal
-      properties:
-        variantId:
-          type: integer
-        quantity:
-          type: integer
-        sku:
-          type: string
-        name:
-          $ref: '#/components/schemas/LocalizedCatalogText'
-        label:
-          $ref: '#/components/schemas/LocalizedCatalogText'
-        unitPrice:
-          $ref: '#/components/schemas/Money'
-        lineTotal:
-          $ref: '#/components/schemas/Money'
-        attribution:
-          $ref: '#/components/schemas/ListAttribution'
-    CartQuote:
-      type: object
-      required:
-        - items
-        - subtotal
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/PricedItem'
-        subtotal:
-          $ref: '#/components/schemas/Money'
-    CheckoutQuote:
-      type: object
-      required:
-        - status
-        - items
-        - subtotal
-        - zone
-        - total
-        - confirmation
-      properties:
-        status:
-          const: quoted
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/PricedItem'
-        subtotal:
-          $ref: '#/components/schemas/Money'
-        zone:
-          $ref: '#/components/schemas/DeliveryZone'
-        total:
-          $ref: '#/components/schemas/Money'
-        confirmation:
-          type: string
-          pattern: ^[a-f0-9]{64}$
-    CheckoutReceipt:
-      type: object
-      required:
-        - status
-        - reference
-        - accessReference
-        - total
-      properties:
-        status:
-          const: accepted
-        reference:
-          type: string
-        accessReference:
-          type: string
-          description: Opaque reference; save for Guest Order Access
-        total:
-          $ref: '#/components/schemas/Money'
-    CheckoutInput:
-      type: object
-      additionalProperties: false
-      required:
-        - key
-        - confirmation
-        - address
-        - paymentMethod
-        - deliveryMethod
-      properties:
-        key:
-          type: string
-          pattern: ^[a-zA-Z0-9_-]{16,128}$
-        confirmation:
-          type: string
-          pattern: ^[a-f0-9]{64}$
-        paymentMethod:
-          const: cash-on-delivery
-        deliveryMethod:
-          const: home-delivery
-        address:
-          $ref: '#/components/schemas/DeliveryAddress'
-    DeliveryAddress:
-      type: object
-      additionalProperties: false
-      required:
-        - name
-        - email
-        - phone
-        - street
-        - city
-        - zoneId
-      properties:
-        name:
-          type: string
-          minLength: 1
-          maxLength: 255
-        email:
-          type: string
-          format: email
-          maxLength: 255
-        phone:
-          type: string
-          pattern: ^(?:\+20|0)1[0125]\d{8}$
-        street:
-          type: string
-          minLength: 1
-          maxLength: 255
-        city:
-          type: string
-          minLength: 1
-          maxLength: 255
-        zoneId:
-          type: integer
-          minimum: 1
-    AcceptedOrder:
-      type: object
-      required:
-        - reference
-        - status
-        - paymentMethod
-        - paymentStatus
-        - deliveryMethod
-        - items
-        - subtotal
-        - deliveryFee
-        - total
-        - address
-        - guestAccess
-      properties:
-        reference:
-          type: string
-        status:
-          const: accepted
-        paymentMethod:
-          const: cash-on-delivery
-        paymentStatus:
-          const: unpaid
-        deliveryMethod:
-          const: home-delivery
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/PricedItem'
-        subtotal:
-          $ref: '#/components/schemas/Money'
-        deliveryFee:
-          $ref: '#/components/schemas/Money'
-        total:
-          $ref: '#/components/schemas/Money'
-        address:
-          $ref: '#/components/schemas/DeliveryAddress'
-        guestAccess:
-          type: object
-          required:
-            - reference
-          properties:
-            reference:
-              type: string
-    ListItemSpecification:
-      type: object
-      required:
-        - categoryId
-        - attributes
-      properties:
-        categoryId:
-          type: integer
-          minimum: 1
-        attributes:
-          type: object
-          additionalProperties:
-            type: string
-    SchoolSupplyListInput:
-      type: object
-      required:
-        - academicYear
-        - schoolName
-        - grade
-        - title
-      properties:
-        academicYear:
-          type: string
-        schoolName:
-          type: string
-        grade:
-          type: string
-        title:
-          $ref: '#/components/schemas/LocalizedText'
-    SchoolSupplyListItemInput:
-      type: object
-      required:
-        - variantId
-        - quantity
-        - label
-        - exactItem
-      properties:
-        variantId:
-          type: integer
-          minimum: 1
-        quantity:
-          type: integer
-          minimum: 1
-          maximum: 999
-        label:
-          $ref: '#/components/schemas/LocalizedText'
-        exactItem:
-          type: boolean
-        required:
-          type: boolean
-        specification:
-          $ref: '#/components/schemas/ListItemSpecification'
-    SchoolSupplyListItem:
-      type: object
-      required:
-        - id
-        - variantId
-        - quantity
-        - label
-        - exactItem
-        - productName
-        - sku
-        - unitPrice
-      properties:
-        variantId:
-          type: integer
-          minimum: 1
-        quantity:
-          type: integer
-          minimum: 1
-          maximum: 999
-        label:
-          $ref: '#/components/schemas/LocalizedText'
-        exactItem:
-          type: boolean
-        required:
-          type: boolean
-        specification:
-          $ref: '#/components/schemas/ListItemSpecification'
-        id:
-          type: integer
-        productName:
-          $ref: '#/components/schemas/LocalizedText'
-        sku:
-          type: string
-        unitPrice:
-          $ref: '#/components/schemas/Money'
-    SchoolSupplyList:
-      type: object
-      required:
-        - academicYear
-        - schoolName
-        - grade
-        - title
-        - id
-        - businessPartnerId
-        - status
-        - items
-      properties:
-        academicYear:
-          type: string
-        schoolName:
-          type: string
-        grade:
-          type: string
-        title:
-          $ref: '#/components/schemas/LocalizedText'
-        id:
-          type: integer
-        businessPartnerId:
-          type: integer
-        status:
-          enum:
-            - draft
-            - published
-            - archived
-        publicCode:
-          type: string
-        sourceListId:
-          type: integer
-        replacesListId:
-          type: integer
-        replacedById:
-          type: integer
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/SchoolSupplyListItem'
-    ListCompleteness:
-      type: object
-      required:
-        - complete
-        - required
-      properties:
-        complete:
-          type: boolean
-        required:
-          type: array
-          items:
-            type: object
-            required:
-              - listItemId
-              - expected
-              - selected
-            properties:
-              listItemId:
-                type: integer
-              expected:
-                type: integer
-              selected:
-                type: integer
-    ListCatalogVariant:
-      type: object
-      required:
-        - id
-        - sku
-        - name
-        - label
-        - price
-        - categoryId
-        - brand
-        - attributes
-      properties:
-        id:
-          type: integer
-        sku:
-          type: string
-        name:
-          $ref: '#/components/schemas/LocalizedCatalogText'
-        label:
-          $ref: '#/components/schemas/LocalizedCatalogText'
-        price:
-          $ref: '#/components/schemas/Money'
-        strikePrice:
-          $ref: '#/components/schemas/Money'
-        categoryId:
-          type:
-            - integer
-            - 'null'
-        brand:
-          $ref: '#/components/schemas/LocalizedCatalogText'
-        attributes:
-          type: object
-          additionalProperties:
-            type: string
-    ListCheckoutQuote:
-      type: object
-      required:
-        - status
-        - items
-        - subtotal
-        - zone
-        - total
-        - confirmation
-        - listId
-        - selection
-        - completeness
-      properties:
-        status:
-          const: quoted
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/PricedItem'
-        subtotal:
-          $ref: '#/components/schemas/Money'
-        zone:
-          $ref: '#/components/schemas/DeliveryZone'
-        total:
-          $ref: '#/components/schemas/Money'
-        confirmation:
-          type: string
-          pattern: ^[a-f0-9]{64}$
-        listId:
-          type: integer
-        selection:
-          $ref: '#/components/schemas/ListSelection'
-        completeness:
-          $ref: '#/components/schemas/ListCompleteness'
-    BusinessPartner:
-      type: object
-      required:
-        - id
-        - code
-        - nameEn
-        - nameAr
-        - status
-        - authorizationVersion
-      properties:
-        id:
-          type: integer
-        code:
-          type: string
-        nameEn:
-          type: string
-        nameAr:
-          type: string
-        status:
-          enum:
-            - onboarding
-            - active
-            - suspended
-            - closed
-        authorizationVersion:
-          type: integer
-    PartnerMembership:
-      type: object
-      required:
-        - id
-        - businessPartnerId
-        - userId
-        - roles
-        - status
-        - authorizationVersion
-      properties:
-        id:
-          type: integer
-        businessPartnerId:
-          type: integer
-        userId:
-          type: integer
-        roles:
-          $ref: '#/components/schemas/PartnerRoles'
-        status:
-          enum:
-            - active
-            - suspended
-            - ended
-        authorizationVersion:
-          type: integer
-    PartnerInvitation:
-      type: object
-      required:
-        - id
-        - businessPartnerId
-        - email
-        - roles
-        - expiresAt
-        - status
-        - inviterId
-        - createdAt
-      properties:
-        id:
-          type: integer
-        businessPartnerId:
-          type: integer
-        email:
-          type: string
-        roles:
-          $ref: '#/components/schemas/PartnerRoles'
-        expiresAt:
-          type: string
-          format: date-time
-        status:
-          type: string
-        inviterId:
-          type: integer
-        createdAt:
-          type: string
-          format: date-time
-    AccessHistoryEntry:
-      type: object
-      required:
-        - actorId
-        - action
-        - before
-        - after
-        - createdAt
-      properties:
-        actorId:
-          type: integer
-        action:
-          type: string
-        before: {}
-        after: {}
-        createdAt:
-          type: string
-          format: date-time
-    AccessOverview:
-      type: object
-      required:
-        - status
-        - memberships
-        - invitations
-        - history
-      properties:
-        status:
-          const: allowed
-        memberships:
-          type: array
-          items:
-            $ref: '#/components/schemas/PartnerMembership'
-        invitations:
-          type: array
-          items:
-            $ref: '#/components/schemas/PartnerInvitation'
-        history:
-          type: array
-          items:
-            $ref: '#/components/schemas/AccessHistoryEntry'
-    ManageableVariant:
-      type: object
-      required:
-        - id
-        - productId
-        - productName
-        - sku
-        - variantKey
-        - label
-        - basePrice
-        - isActive
-      properties:
-        id:
-          type: integer
-        productId:
-          type: integer
-        productName:
-          $ref: '#/components/schemas/LocalizedText'
-        sku:
-          type: string
-        variantKey:
-          type: string
-        label:
-          $ref: '#/components/schemas/LocalizedText'
-        basePrice:
-          $ref: '#/components/schemas/Money'
-        strikePrice:
-          $ref: '#/components/schemas/Money'
-        isActive:
-          type: boolean
-security: []

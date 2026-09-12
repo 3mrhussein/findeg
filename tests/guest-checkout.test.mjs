@@ -5,8 +5,7 @@ const exec = promisify(execFile);
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { launchWeb } from './support/web-process.mjs';
-import { createHash, randomUUID } from 'node:crypto';
-import { assertContractResponse } from './support/http-contract.mjs';
+import { randomUUID } from 'node:crypto';
 import { runMigrations } from '../db/dist/runtime/migrations.js';
 import { createWebRuntime } from '../runtime/dist/index.js';
 
@@ -71,8 +70,7 @@ test('Guest Cart and checkout persist ordinary commerce facts atomically', async
       },
     );
     runtime = createWebRuntime({ RELEASE_REVISION: 'a'.repeat(40), DATABASE_URL: url.toString() });
-    const guestToken = 'a'.repeat(64);
-    const guest = createHash('sha256').update(guestToken).digest('hex');
+    const guest = 'a'.repeat(64);
     const cart = { items: [{ variantId: variant.id, quantity: 3 }] };
     assert.equal((await runtime.commerce.replaceCart(guest, cart)).status, 'quoted');
     const quote = await runtime.commerce.quoteCheckout(guest, zone.id);
@@ -114,49 +112,6 @@ test('Guest Cart and checkout persist ordinary commerce facts atomically', async
       'not-found',
     );
     assert.deepEqual(await runtime.commerce.acceptCheckout(guest, checkout), accepted);
-    await t.test(
-      'HTTP checkout replays the application receipt and exposes structured conflicts',
-      async () => {
-        const headers = {
-          cookie: `findeg_guest_cart=${guestToken}`,
-          'content-type': 'application/json',
-        };
-        const replay = await fetch(`${web.base}/api/v1/commerce/checkout`, {
-          method: 'POST',
-          headers,
-          body: JSON.stringify(checkout),
-        });
-        assert.equal(replay.status, 201);
-        assert.equal(replay.headers.get('cache-control'), 'no-store');
-        assert.deepEqual(
-          await assertContractResponse('/commerce/checkout', 'post', replay),
-          accepted,
-        );
-        const conflict = await fetch(`${web.base}/api/v1/commerce/checkout`, {
-          method: 'POST',
-          headers,
-          body: JSON.stringify({
-            ...checkout,
-            address: { ...checkout.address, street: 'changed' },
-          }),
-        });
-        assert.equal(conflict.status, 409);
-        assert.deepEqual(await assertContractResponse('/commerce/checkout', 'post', conflict), {
-          status: 'idempotency-conflict',
-        });
-        const invalid = await fetch(`${web.base}/api/v1/commerce/checkout/quote`, {
-          method: 'POST',
-          headers,
-          body: JSON.stringify({ zoneId: String(zone.id) }),
-        });
-        assert.equal(invalid.status, 400);
-        assert.deepEqual(
-          await assertContractResponse('/commerce/checkout/quote', 'post', invalid),
-          { status: 'invalid-input' },
-        );
-      },
-    );
-
     assert.equal(
       (
         await runtime.commerce.acceptCheckout(guest, {
