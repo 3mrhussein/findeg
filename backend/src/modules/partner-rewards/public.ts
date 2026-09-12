@@ -28,6 +28,12 @@ export interface PartnerRewardAccess {
     | { readonly status: 'authenticated'; readonly session: PartnerSession }
     | { readonly status: 'authorization-denied'; readonly session: PartnerSession }
   >;
+  readonly verifySettlement: (
+    session: PartnerSession,
+    partnerId: number,
+    bankAccountId: string,
+    settlementReference: string,
+  ) => Promise<boolean>;
 }
 
 const isPositiveInteger = (value: unknown): value is number =>
@@ -53,6 +59,7 @@ export function summarizeRewardLedger(events: readonly PartnerRewardEvent[]): Pa
         break;
       }
       case 'refund':
+      case 'cancellation':
       case 'reversal': {
         reversed += Math.abs(amount < 0 ? amount : 0);
         earned += amount;
@@ -93,8 +100,8 @@ export function createPartnerRewards(store: PartnerRewardLedgerStore, access: Pa
 
     const item: PartnerRewardEvent = {
       partnerId,
-      createdAt: event.createdAt ?? new Date(),
       ...event,
+      createdAt: event.createdAt ?? new Date(),
     };
     await store.append(item);
     return { status: 'recorded' as const, event: item };
@@ -137,6 +144,8 @@ export function createPartnerRewards(store: PartnerRewardLedgerStore, access: Pa
         partnerId <= 0 ||
         typeof orderReference !== 'string' ||
         orderReference.trim().length === 0 ||
+        !['delivery', 'collection'].includes(input.fulfillment) ||
+        input.fulfillmentCompleted !== true ||
         (input.points !== undefined && (!Number.isInteger(input.points) || input.points <= 0))
       ) {
         return { status: 'invalid-input' as const };
@@ -174,6 +183,40 @@ export function createPartnerRewards(store: PartnerRewardLedgerStore, access: Pa
         ? { status: 'earned' as const, event: result.event }
         : result;
     },
+    async recordRefund(session: PartnerSession, partnerId: number, input: PartnerAdjustmentInput) {
+      if (
+        !input ||
+        typeof input.orderReference !== 'string' ||
+        input.orderReference.trim().length === 0 ||
+        !Number.isSafeInteger(input.points) ||
+        input.points <= 0
+      ) {
+        return { status: 'invalid-input' as const };
+      }
+
+      const prior = (await store.ledger()).filter(
+        (event) => event.partnerId === partnerId && event.orderReference === input.orderReference,
+      );
+      const earned = prior
+        .filter((event) => event.eventType === 'paid' || event.eventType === 'adjustment')
+        .reduce((total, event) => total + (event.earnedPoints ?? event.points), 0);
+      const refunded = prior
+        .filter((event) => event.eventType === 'refund')
+        .reduce((total, event) => total + Math.abs(event.points), 0);
+      if (prior.every((event) => event.eventType !== 'paid') || input.points > earned - refunded) {
+        return { status: 'invalid-input' as const };
+      }
+
+      const result = await record(session, partnerId, {
+        orderReference: input.orderReference,
+        eventType: 'refund',
+        points: -input.points,
+        reason: input.reason,
+      });
+      return result.status === 'recorded'
+        ? { status: 'refunded' as const, event: result.event }
+        : result;
+    },
     async recordReversal(
       session: PartnerSession,
       partnerId: number,
@@ -188,6 +231,26 @@ export function createPartnerRewards(store: PartnerRewardLedgerStore, access: Pa
       ) {
         return { status: 'invalid-input' as const };
       }
+      const prior = (await store.ledger()).filter(
+        (event) => event.partnerId === partnerId && event.orderReference === input.orderReference,
+      );
+      const earned = prior
+        .filter((event) => event.eventType === 'paid' || event.eventType === 'adjustment')
+        .reduce((total, event) => total + (event.earnedPoints ?? event.points), 0);
+      const reversed = prior
+        .filter(
+          (event) =>
+            event.eventType === 'refund' ||
+            event.eventType === 'cancellation' ||
+            event.eventType === 'reversal',
+        )
+        .reduce((total, event) => total + Math.abs(event.points), 0);
+      if (
+        prior.every((event) => event.eventType !== 'accepted') ||
+        input.points > earned - reversed
+      ) {
+        return { status: 'invalid-input' as const };
+      }
       const result = await record(session, partnerId, {
         orderReference: input.orderReference,
         eventType: 'reversal',
@@ -196,6 +259,36 @@ export function createPartnerRewards(store: PartnerRewardLedgerStore, access: Pa
       });
       return result.status === 'recorded'
         ? { status: 'reversed' as const, event: result.event }
+        : result;
+    },
+    async recordCancellation(
+      session: PartnerSession,
+      partnerId: number,
+      input: PartnerAdjustmentInput,
+    ) {
+      if (
+        !input ||
+        typeof input.orderReference !== 'string' ||
+        input.orderReference.trim().length === 0 ||
+        !Number.isSafeInteger(input.points) ||
+        input.points <= 0
+      ) {
+        return { status: 'invalid-input' as const };
+      }
+      const prior = (await store.ledger()).filter(
+        (event) => event.partnerId === partnerId && event.orderReference === input.orderReference,
+      );
+      if (prior.every((event) => event.eventType !== 'accepted')) {
+        return { status: 'invalid-input' as const };
+      }
+      const result = await record(session, partnerId, {
+        orderReference: input.orderReference,
+        eventType: 'cancellation',
+        points: -input.points,
+        reason: input.reason,
+      });
+      return result.status === 'recorded'
+        ? { status: 'cancelled' as const, event: result.event }
         : result;
     },
     async recordAdjustment(
@@ -231,7 +324,17 @@ export function createPartnerRewards(store: PartnerRewardLedgerStore, access: Pa
         !input ||
         typeof input.orderReference !== 'string' ||
         input.orderReference.trim().length === 0 ||
-        !isPositiveInteger(input.points)
+        !isPositiveInteger(input.points) ||
+        typeof input.verifiedBankAccountId !== 'string' ||
+        input.verifiedBankAccountId.trim().length === 0 ||
+        typeof input.settlementReference !== 'string' ||
+        input.settlementReference.trim().length === 0 ||
+        !(await access.verifySettlement(
+          session,
+          partnerId,
+          input.verifiedBankAccountId,
+          input.settlementReference,
+        ))
       ) {
         return { status: 'invalid-input' as const };
       }
@@ -240,6 +343,8 @@ export function createPartnerRewards(store: PartnerRewardLedgerStore, access: Pa
         eventType: 'settlement',
         points: input.points,
         reason: input.reason,
+        verifiedBankAccountId: input.verifiedBankAccountId,
+        settlementReference: input.settlementReference,
       });
       return result.status === 'recorded'
         ? { status: 'settled' as const, event: result.event }

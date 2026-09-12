@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { buildPartnerReports, sanitizePartnerReportRow } from '../public.js';
+import {
+  buildAuthorizedPartnerReports,
+  buildPartnerReports,
+  sanitizePartnerReportRow,
+} from '../public.js';
 
 describe('Partner reports', () => {
   it('suppresses low-count breakdowns and strips customer or delivery details from partner statements', () => {
@@ -45,6 +49,36 @@ describe('Partner reports', () => {
         },
       ],
       suppressed: true,
+    });
+  });
+
+  it('limits reports to the selected partner and report-authorized roles', async () => {
+    const report = await buildAuthorizedPartnerReports(
+      {
+        userId: 7,
+        email: 'viewer@example.test',
+        emailVerified: true,
+        activePortal: 'partner',
+        authorizationVersion: 1,
+        staffRoles: [],
+        permissions: [],
+        partner: {
+          businessPartnerId: 12,
+          membershipId: 4,
+          roles: ['report-viewer'],
+          authorizationVersion: 1,
+        },
+      },
+      12,
+      [{ partnerId: 12, period: '2026-09', count: 3, totalPoints: 100 }],
+    );
+
+    expect(report).toEqual({
+      status: 'authorized',
+      report: {
+        rows: [{ partnerId: 12, period: '2026-09', count: 3, totalPoints: 100 }],
+        suppressed: false,
+      },
     });
   });
 });

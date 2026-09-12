@@ -68,6 +68,7 @@ describe('Partner rewards', () => {
         partnerId === currentSession.partner.businessPartnerId
           ? { status: 'authenticated', session: currentSession }
           : { status: 'authorization-denied', session: currentSession },
+      verifySettlement: async () => true,
     };
     const ledger: PartnerRewardEvent[] = [];
     const rewards = createPartnerRewards(
@@ -83,6 +84,8 @@ describe('Partner rewards', () => {
     const result = await rewards.recordPayment(session, 12, 'missing-order', {
       points: 15,
       paidAt: new Date('2026-09-05T00:00:00Z'),
+      fulfillment: 'delivery',
+      fulfillmentCompleted: true,
     });
 
     expect(result).toEqual({ status: 'invalid-input' });
@@ -95,6 +98,7 @@ describe('Partner rewards', () => {
         partnerId === currentSession.partner.businessPartnerId
           ? { status: 'authenticated', session: currentSession }
           : { status: 'authorization-denied', session: currentSession },
+      verifySettlement: async () => true,
     };
     const ledger: PartnerRewardEvent[] = [];
     const rewards = createPartnerRewards(
@@ -116,6 +120,8 @@ describe('Partner rewards', () => {
 
     const paid = await rewards.recordPayment(session, 12, 'ord-2', {
       paidAt: new Date('2026-09-05T00:00:00Z'),
+      fulfillment: 'delivery',
+      fulfillmentCompleted: true,
     });
     expect(paid.status).toBe('earned');
 
@@ -133,5 +139,109 @@ describe('Partner rewards', () => {
       settled: 0,
       available: 60,
     });
+  });
+
+  it('requires completed delivery or collection before earning points', async () => {
+    const ledger: PartnerRewardEvent[] = [
+      {
+        partnerId: 12,
+        orderReference: 'ord-3',
+        eventType: 'accepted',
+        points: 40,
+        pendingPoints: 40,
+        conversionRate: 1.2,
+        createdAt: new Date('2026-09-01T00:00:00Z'),
+      },
+    ];
+    const rewards = createPartnerRewards(
+      {
+        ledger: async () => ledger,
+        append: async (event) => {
+          ledger.push(event);
+        },
+      },
+      {
+        workspace: async (currentSession) => ({ status: 'authenticated', session: currentSession }),
+        verifySettlement: async () => true,
+      },
+    );
+
+    expect(
+      await rewards.recordPayment(session, 12, 'ord-3', {
+        fulfillment: 'delivery',
+        fulfillmentCompleted: false,
+      }),
+    ).toEqual({ status: 'invalid-input' });
+    expect(ledger).toHaveLength(1);
+  });
+
+  it('records refunds and requires verified bank settlements', async () => {
+    const ledger: PartnerRewardEvent[] = [
+      {
+        partnerId: 12,
+        orderReference: 'ord-4',
+        eventType: 'accepted',
+        points: 100,
+        pendingPoints: 100,
+        createdAt: new Date('2026-09-01T00:00:00Z'),
+      },
+      {
+        partnerId: 12,
+        orderReference: 'ord-4',
+        eventType: 'paid',
+        points: 100,
+        earnedPoints: 100,
+        createdAt: new Date('2026-09-02T00:00:00Z'),
+      },
+    ];
+    const rewards = createPartnerRewards(
+      {
+        ledger: async () => ledger,
+        append: async (event) => {
+          ledger.push(event);
+        },
+      },
+      {
+        workspace: async (currentSession) => ({ status: 'authenticated', session: currentSession }),
+        verifySettlement: async (_currentSession, _partnerId, bankAccountId, settlementReference) =>
+          bankAccountId === 'bank-1' && settlementReference === 'settle-1',
+      },
+    );
+
+    const refund = await rewards.recordRefund(session, 12, {
+      orderReference: 'ord-4',
+      points: 25,
+      reason: 'customer refund',
+    });
+    expect(refund.status).toBe('refunded');
+    const cancellation = await rewards.recordCancellation(session, 12, {
+      orderReference: 'ord-4',
+      points: 25,
+      reason: 'order cancelled',
+    });
+    expect(cancellation.status).toBe('cancelled');
+    expect(
+      await rewards.recordReversal(session, 12, {
+        orderReference: 'ord-4',
+        points: 51,
+        reason: 'over reversal',
+      }),
+    ).toEqual({ status: 'invalid-input' });
+    expect(
+      await rewards.recordSettlement(session, 12, {
+        orderReference: 'settlement-1',
+        points: 50,
+        reason: 'weekly settlement',
+      }),
+    ).toEqual({ status: 'invalid-input' });
+    expect(
+      await rewards.recordSettlement(session, 12, {
+        orderReference: 'settlement-1',
+        points: 50,
+        reason: 'weekly settlement',
+        verifiedBankAccountId: 'bank-1',
+        settlementReference: 'settle-1',
+      }),
+    ).toMatchObject({ status: 'settled' });
   });
 });

@@ -1,5 +1,5 @@
 export type PartnerRewardEventType =
-  'accepted' | 'paid' | 'refund' | 'reversal' | 'adjustment' | 'settlement';
+  'accepted' | 'paid' | 'refund' | 'cancellation' | 'reversal' | 'adjustment' | 'settlement';
 
 export interface PartnerRewardEvent {
   readonly partnerId: number;
@@ -9,6 +9,10 @@ export interface PartnerRewardEvent {
   readonly pendingPoints?: number;
   readonly earnedPoints?: number;
   readonly conversionRate?: number;
+  readonly fulfillment?: 'delivery' | 'collection';
+  readonly fulfillmentCompleted?: boolean;
+  readonly verifiedBankAccountId?: string;
+  readonly settlementReference?: string;
   readonly createdAt: Date;
   readonly reason?: string;
 }
@@ -30,10 +34,14 @@ export interface PartnerRewardInput {
 export interface PartnerPaymentInput {
   readonly paidAt?: Date;
   readonly points?: number;
+  readonly fulfillment: 'delivery' | 'collection';
+  readonly fulfillmentCompleted: boolean;
 }
 
 export interface PartnerAdjustmentInput {
   readonly orderReference: string;
   readonly points: number;
   readonly reason?: string;
+  readonly verifiedBankAccountId?: string;
+  readonly settlementReference?: string;
 }
