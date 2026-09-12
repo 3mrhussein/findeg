@@ -1,7 +1,14 @@
 import { and, eq, inArray } from 'drizzle-orm';
 import type { TransactionDatabase } from '@findeg/db/transactions';
-import { productVariants, products } from '@findeg/db/modules/catalog';
-import type { CatalogStore, CatalogCheckoutStore } from '../public.js';
+import {
+  productVariants,
+  products,
+  brands,
+  attributes,
+  productAttributes,
+  variantAttributes,
+} from '@findeg/db/modules/catalog';
+import type { CatalogStore, CatalogCheckoutStore, CatalogListStore } from '../public.js';
 
 export function bindCatalogCheckoutStore(database: TransactionDatabase): CatalogCheckoutStore {
   return {
@@ -150,6 +157,74 @@ export function bindCatalogStore(database: TransactionDatabase): CatalogStore {
         basePrice: row.basePrice,
         strikePrice: row.strikePrice ?? undefined,
       }));
+    },
+  };
+}
+
+export function bindCatalogListStore(database: TransactionDatabase): CatalogListStore {
+  return {
+    async readEligible() {
+      const rows = await database
+        .select({
+          id: productVariants.id,
+          productId: products.id,
+          categoryId: products.categoryId,
+          brandId: products.brandId,
+          sku: productVariants.sku,
+          name: products.localizedName,
+          label: productVariants.localizedLabel,
+          price: productVariants.basePrice,
+        })
+        .from(productVariants)
+        .innerJoin(products, eq(products.id, productVariants.productId))
+        .where(and(eq(productVariants.isActive, true), eq(products.isActive, true)))
+        .orderBy(products.id, productVariants.id)
+        .for('share');
+      if (!rows.length) return [];
+      const brandRows = await database.select().from(brands).for('share');
+      const definitions = await database.select().from(attributes).for('share');
+      const productValues = await database
+        .select()
+        .from(productAttributes)
+        .where(
+          inArray(
+            productAttributes.productId,
+            rows.map((row) => row.productId),
+          ),
+        )
+        .for('share');
+      const variantValues = await database
+        .select()
+        .from(variantAttributes)
+        .where(
+          inArray(
+            variantAttributes.variantId,
+            rows.map((row) => row.id),
+          ),
+        )
+        .for('share');
+      return rows.map((row) => {
+        const values: Record<string, string> = {};
+        const assignments = [
+          ...productValues.filter((value) => value.productId === row.productId),
+          ...variantValues.filter((value) => value.variantId === row.id),
+        ];
+        for (const definition of definitions) {
+          const specified = assignments
+            .filter((value) => value.attributeId === definition.id)
+            .map((value) => value.valueText);
+          if (
+            specified.length &&
+            specified.every((value) => value !== null && value === specified[0])
+          )
+            values[definition.key] = specified[0]!;
+        }
+        return {
+          ...row,
+          brand: brandRows.find((brand) => brand.id === row.brandId)?.localizedName ?? {},
+          attributes: values,
+        };
+      });
     },
   };
 }

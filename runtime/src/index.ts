@@ -1,7 +1,11 @@
 import { createHash, randomBytes, randomInt } from 'node:crypto';
 import { createPartnerOperations } from '@findeg/backend/partner-operations';
+import { createListCommerce } from '@findeg/backend/list-commerce';
 import { createStorefrontCommerce } from '@findeg/backend/checkout';
-import { bindCommerceStore } from '@findeg/backend/modules/commerce/infrastructure/persistence';
+import {
+  bindCommerceStore,
+  bindListSelectionStore,
+} from '@findeg/backend/modules/commerce/infrastructure/persistence';
 import { bindPartnerStore } from '@findeg/backend/modules/partner-management/infrastructure/persistence';
 import {
   createIdentityAccess,
@@ -17,6 +21,7 @@ import { bindIdentityStore } from '@findeg/backend/modules/identity-access/infra
 import { createIdentitySecurity } from '@findeg/backend/modules/identity-access/infrastructure/security';
 import { createCatalogManagement } from './catalog-inventory.js';
 import {
+  bindCatalogListStore,
   bindCatalogCheckoutStore,
   bindCatalogStore,
 } from '@findeg/backend/modules/catalog/infrastructure/persistence';
@@ -38,6 +43,8 @@ export function createWebRuntime(environment: Readonly<Record<string, string | u
     { url: config.DATABASE_URL, ssl: config.DB_SSL, max: 5 },
     (database) => ({
       commerce: bindCommerceStore(database),
+      selections: bindListSelectionStore(database, config.LIST_SELECTION_INACTIVITY_DAYS),
+      listCatalog: bindCatalogListStore(database),
       checkoutCatalog: bindCatalogCheckoutStore(database),
       reservations: bindInventoryReservations(database),
       outbox: bindCheckoutOutbox(database),
@@ -59,6 +66,7 @@ export function createWebRuntime(environment: Readonly<Record<string, string | u
       catalog: ReturnType<typeof bindCatalogStore>;
       inventory: ReturnType<typeof bindInventoryStore>;
       schoolSupplyLists: ReturnType<typeof bindSchoolSupplyListStore>;
+      listCatalog: ReturnType<typeof bindCatalogListStore>;
     }) => Promise<Value>,
   ): Promise<Value> {
     const result = await persistence.transactions.run(async (store) => ({
@@ -78,6 +86,12 @@ export function createWebRuntime(environment: Readonly<Record<string, string | u
         )
       : Promise.resolve({ status: 'authentication-required' } as const);
   return {
+    listSelectionLifetimeSeconds: config.LIST_SELECTION_INACTIVITY_DAYS * 86400,
+    listCommerce: createListCommerce(persistence.transactions, {
+      digest: (value) => createHash('sha256').update(value).digest('hex'),
+      randomToken: () => randomBytes(32).toString('hex'),
+      verificationCode: () => String(randomInt(100000, 1000000)),
+    }),
     commerce: createStorefrontCommerce(persistence.transactions, {
       digest: (value) => createHash('sha256').update(value).digest('hex'),
       randomToken: () => randomBytes(32).toString('hex'),
@@ -207,6 +221,7 @@ export function createWebRuntime(environment: Readonly<Record<string, string | u
             stores.schoolSupplyLists,
             stores.catalog,
             createPartnerManagement(stores.partners, security),
+            stores.listCatalog,
           ).createDraft(...args),
         ),
       replaceDraft: (
@@ -217,6 +232,7 @@ export function createWebRuntime(environment: Readonly<Record<string, string | u
             stores.schoolSupplyLists,
             stores.catalog,
             createPartnerManagement(stores.partners, security),
+            stores.listCatalog,
           ).replaceDraft(...args),
         ),
       publish: (...args: Parameters<ReturnType<typeof createSchoolSupplyLists>['publish']>) =>
@@ -225,6 +241,7 @@ export function createWebRuntime(environment: Readonly<Record<string, string | u
             stores.schoolSupplyLists,
             stores.catalog,
             createPartnerManagement(stores.partners, security),
+            stores.listCatalog,
           ).publish(...args),
         ),
       clone: (...args: Parameters<ReturnType<typeof createSchoolSupplyLists>['clone']>) =>
@@ -233,6 +250,7 @@ export function createWebRuntime(environment: Readonly<Record<string, string | u
             stores.schoolSupplyLists,
             stores.catalog,
             createPartnerManagement(stores.partners, security),
+            stores.listCatalog,
           ).clone(...args),
         ),
       readUnlisted: (code: string) =>
@@ -241,6 +259,7 @@ export function createWebRuntime(environment: Readonly<Record<string, string | u
             stores.schoolSupplyLists,
             stores.catalog,
             createPartnerManagement(stores.partners, security),
+            stores.listCatalog,
           ).readUnlisted(code),
         ),
     },

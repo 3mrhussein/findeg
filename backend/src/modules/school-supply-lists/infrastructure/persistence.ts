@@ -30,6 +30,8 @@ function mapList(
       variantId: item.variantId,
       quantity: item.quantity,
       exactItem: item.exactItem === 1,
+      required: item.required,
+      specification: item.specification ?? undefined,
       productName: { en: item.productNameEn, ar: item.productNameAr },
       sku: item.sku,
       label: { en: item.labelEn, ar: item.labelAr },
@@ -74,7 +76,7 @@ export function bindSchoolSupplyListStore(database: TransactionDatabase): School
         .returning();
       return mapList(row!, []);
     },
-    get: load,
+    get: (partnerId, listId) => load(listId, partnerId),
     async replaceItems(listId, items) {
       await database.delete(schoolSupplyListItems).where(eq(schoolSupplyListItems.listId, listId));
       await database.insert(schoolSupplyListItems).values(
@@ -83,6 +85,8 @@ export function bindSchoolSupplyListStore(database: TransactionDatabase): School
           variantId: item.variantId,
           quantity: item.quantity,
           exactItem: item.exactItem ? 1 : 0,
+          required: item.required ?? true,
+          specification: item.specification,
           labelEn: item.label.en.trim(),
           labelAr: item.label.ar.trim(),
         })),
@@ -164,6 +168,8 @@ export function bindSchoolSupplyListStore(database: TransactionDatabase): School
           variantId: item.variantId,
           quantity: item.quantity,
           exactItem: item.exactItem ? 1 : 0,
+          required: item.required ?? true,
+          specification: item.specification,
           productNameEn: item.productName.en,
           productNameAr: item.productName.ar,
           sku: item.sku,
@@ -178,10 +184,9 @@ export function bindSchoolSupplyListStore(database: TransactionDatabase): School
       const [row] = await database
         .select()
         .from(schoolSupplyLists)
-        .where(
-          and(eq(schoolSupplyLists.publicCode, code), eq(schoolSupplyLists.status, 'published')),
-        );
-      if (!row) return undefined;
+        .where(eq(schoolSupplyLists.publicCode, code))
+        .for('update');
+      if (!row || row.status === 'draft') return undefined;
       const items = await database
         .select()
         .from(schoolSupplyListItems)

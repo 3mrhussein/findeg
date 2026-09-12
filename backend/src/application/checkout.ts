@@ -118,42 +118,23 @@ export function createStorefrontCommerce(
         if (quoted.confirmation !== value.confirmation) {
           return { status: 'reconfirmation-required' } as const;
         }
-        const order: AcceptedOrder = {
-          reference: security.randomToken(),
-          status: 'accepted',
-          paymentMethod: 'cash-on-delivery',
-          paymentStatus: 'unpaid',
-          deliveryMethod: 'home-delivery',
-          items: quoted.items,
-          subtotal: quoted.subtotal,
-          deliveryFee: quoted.zone.fee,
-          total: quoted.total,
-          address: value.address,
-          guestAccess: { reference: security.randomToken() },
-        };
-        const verificationCode = security.verificationCode();
-        await stores.commerce.accept(order, ownerDigest, value.key, fingerprint, {
-          codeHash: security.digest(verificationCode),
-          expiresAt: new Date(Date.now() + 15 * 60 * 1000),
-        });
-        if (!(await stores.reservations.reserve(order.reference, order.items))) {
-          return { status: 'insufficient-stock' } as const;
-        }
-        await stores.outbox.enqueue(`order:${order.reference}`, 'order-accepted', {
-          reference: order.reference,
-          email: order.address.email,
-        });
-        await stores.outbox.enqueue(
-          `guest-access:${order.guestAccess.reference}`,
-          'guest-order-code',
+        const accepted = await acceptOrder(
+          stores,
+          security,
           {
-            reference: order.guestAccess.reference,
-            code: verificationCode,
-            email: order.address.email,
+            items: quoted.items,
+            subtotal: quoted.subtotal,
+            deliveryFee: quoted.zone.fee,
+            total: quoted.total,
+            address: value.address,
           },
+          ownerDigest,
+          value.key,
+          fingerprint,
         );
+        if (accepted.status !== 'accepted') return accepted;
         if (items.length) await stores.commerce.replaceCart(ownerDigest, []);
-        return receipt(order);
+        return accepted;
       });
     },
 
@@ -185,4 +166,55 @@ export function createStorefrontCommerce(
       });
     },
   };
+}
+
+/** Commits required acceptance facts through transaction-bound stores supplied by the source workflow. */
+export async function acceptOrder(
+  stores: CheckoutStores,
+  security: CheckoutSecurity,
+  terms: Pick<AcceptedOrder, 'items' | 'subtotal' | 'deliveryFee' | 'total' | 'address'>,
+  ownerDigest: string,
+  key: string,
+  fingerprint: string,
+) {
+  const order: AcceptedOrder = {
+    ...terms,
+    reference: security.randomToken(),
+    status: 'accepted',
+    paymentMethod: 'cash-on-delivery',
+    paymentStatus: 'unpaid',
+    deliveryMethod: 'home-delivery',
+    guestAccess: { reference: security.randomToken() },
+  };
+  const verificationCode = security.verificationCode();
+  await stores.commerce.accept(order, ownerDigest, key, fingerprint, {
+    codeHash: security.digest(verificationCode),
+    expiresAt: new Date(Date.now() + 15 * 60 * 1000),
+  });
+  if (!(await stores.reservations.reserve(order.reference, reservationItems(order.items))))
+    return { status: 'insufficient-stock' } as const;
+  await stores.outbox.enqueue(`order:${order.reference}`, 'order-accepted', {
+    reference: order.reference,
+    email: order.address.email,
+  });
+  await stores.outbox.enqueue(`guest-access:${order.guestAccess.reference}`, 'guest-order-code', {
+    reference: order.guestAccess.reference,
+    code: verificationCode,
+    email: order.address.email,
+  });
+  return {
+    status: 'accepted',
+    reference: order.reference,
+    accessReference: order.guestAccess.reference,
+    total: order.total,
+  } as const;
+}
+
+export function reservationItems(items: readonly CartItem[]) {
+  const quantities = new Map<number, number>();
+  for (const item of items)
+    quantities.set(item.variantId, (quantities.get(item.variantId) ?? 0) + item.quantity);
+  return [...quantities]
+    .sort(([a], [b]) => a - b)
+    .map(([variantId, quantity]) => ({ variantId, quantity }));
 }

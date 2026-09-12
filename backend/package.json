@@ -26,7 +26,8 @@
     "./modules/school-supply-lists/infrastructure/persistence": "./dist/modules/school-supply-lists/infrastructure/persistence.js",
     "./partner-operations": "./dist/application/partner-operations.js",
     "./checkout": "./dist/application/checkout.js",
-    "./modules/commerce/infrastructure/persistence": "./dist/modules/commerce/infrastructure/persistence.js"
+    "./modules/commerce/infrastructure/persistence": "./dist/modules/commerce/infrastructure/persistence.js",
+    "./list-commerce": "./dist/application/list-commerce.js"
   },
   "scripts": {
     "type-check": "tsc --noEmit",

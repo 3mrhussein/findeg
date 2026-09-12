@@ -53,3 +53,10 @@ export interface ManageableVariant {
   readonly strikePrice?: string;
   readonly isActive: boolean;
 }
+
+/** Active catalog facts used to match frozen List Item Specifications. */
+export interface ListCatalogVariant extends LocalizedStorefrontVariant {
+  readonly categoryId: number | null;
+  readonly brand: { readonly en?: string; readonly ar?: string };
+  readonly attributes: Readonly<Record<string, string>>;
+}

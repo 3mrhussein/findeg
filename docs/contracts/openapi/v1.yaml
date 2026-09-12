@@ -477,13 +477,200 @@ paths:
           {
             description: 'invalid-input or not-found; missing, incorrect, expired and used credentials do not reveal the Order',
           }
+  /commerce/list-selections/{code}:
+    parameters:
+      - $ref: '#/components/parameters/ListCode'
+    get:
+      summary: Open or resume a dedicated List Selection from an unlisted code
+      description: |
+        Uses an authenticated Customer identity or the opaque findeg_list_selection HttpOnly
+        browser cookie. Selections never merge with the Cart or another list. Reads refresh
+        inactivity; after LIST_SELECTION_INACTIVITY_DAYS (30 by default), published lists
+        start from required defaults. Archived/replaced lists remain view-only.
+        Returns list, selection, options, offerBasisPoints and optional pricing. Options
+        contain current prices, bilingual brands and attributes for explicit comparison.
+        Missing eligible choices omit pricing and prevent checkout, while edits remain possible.
+      responses:
+        '200':
+          description: Found list and independently persisted selection; Cache-Control no-store
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ListSelectionView' }
+        '400': { description: Invalid code }
+        '404': { description: Unknown code or unpublished Draft }
+    put:
+      summary: Save explicit item choices and quantities for one list
+      description: |
+        Requires same-origin Origin. Each choice must reference an item in this list and its
+        default or a matching Allowed Alternative. Exact Items cannot be substituted.
+        Required quantities multiplied by setCount define advisory completeness only.
+        Empty selections are saved but cannot checkout. Rejections preserve prior choices.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ListSelection' }
+      responses:
+        '200': { description: Found list, saved selection, current options and pricing }
+        '400': { description: Invalid JSON, code, duplicate item, set count or quantity }
+        '403': { description: origin-denied }
+        '404': { description: Unknown code or unpublished Draft }
+        '409': { description: list-unavailable or selection-unavailable }
+  /commerce/list-selections/{code}/quote:
+    parameters:
+      - $ref: '#/components/parameters/ListCode'
+    post:
+      summary: Review a dedicated List Selection checkout
+      description: |
+        Requires same-origin Origin. Revalidates list status, matching choices, offer schedule,
+        prices, stock and delivery zone. Completeness is advisory. A List Offer applies to
+        every selected item and quantity; line amounts round half up to a piaster and fees
+        are not discounted. Retain confirmation for explicit acceptance.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [zoneId]
+              properties:
+                zoneId: { type: integer, minimum: 1 }
+      responses:
+        '200':
+          {
+            description: quoted with items,
+            subtotal,
+            completeness,
+            zone,
+            total,
+            listId,
+            selection and confirmation,
+          }
+        '400': { description: Invalid input }
+        '403': { description: origin-denied }
+        '404': { description: Unknown list }
+        '409':
+          {
+            description: list-unavailable,
+            empty-selection,
+            selection-unavailable,
+            insufficient-stock or delivery-unavailable,
+          }
+  /commerce/list-selections/{code}/checkout:
+    parameters:
+      - $ref: '#/components/parameters/ListCode'
+    post:
+      summary: Accept a separate Cash-on-Delivery List Selection Order
+      description: |
+        Requires same-origin Origin and the same selection identity used to quote.
+        Request fields and receipt match ordinary checkout; keys are scoped to this owner,
+        list and operation. Retry the identical body after an uncertain response. Acceptance
+        revalidates and atomically records immutable item attribution, prices, stock reservation,
+        idempotency outcome and notification outbox, then clears only this selection.
+        Changed prices, offers or selection require reconfirmation. Archived or replaced lists
+        reject new acceptance; a saved successful outcome still replays.
+      requestBody:
+        $ref: '#/paths/~1commerce~1checkout/post/requestBody'
+      responses:
+        '201': { $ref: '#/paths/~1commerce~1checkout/post/responses/201' }
+        '400': { description: Invalid input }
+        '403': { description: origin-denied }
+        '404': { description: Unknown list }
+        '409':
+          {
+            description: reconfirmation-required,
+            idempotency-conflict,
+            list-unavailable,
+            empty-selection,
+            selection-unavailable,
+            insufficient-stock or delivery-unavailable,
+          }
+
 components:
+  parameters:
+    ListCode:
+      in: path
+      name: code
+      required: true
+      schema: { type: string, pattern: '^[a-zA-Z0-9_-]{16,128}$' }
   securitySchemes:
     sessionCookie:
       type: apiKey
       in: cookie
       name: findeg_session
   schemas:
+    ListSelection:
+      type: object
+      additionalProperties: false
+      required: [setCount, items]
+      properties:
+        setCount: { type: integer, minimum: 1, maximum: 999 }
+        items:
+          type: array
+          maxItems: 100
+          items:
+            type: object
+            additionalProperties: false
+            required: [listItemId, variantId, quantity]
+            properties:
+              listItemId: { type: integer, minimum: 1 }
+              variantId: { type: integer, minimum: 1 }
+              quantity: { type: integer, minimum: 1, maximum: 999 }
+    ListSelectionView:
+      type: object
+      required: [status, list, selection, options, offerBasisPoints]
+      properties:
+        status: { const: found }
+        list:
+          {
+            type: object,
+            description: 'Immutable published list metadata and required/optional, exact-item, specification and default-variant facts; archived lists include replacedById when applicable.',
+          }
+        selection: { $ref: '#/components/schemas/ListSelection' }
+        options:
+          {
+            type: array,
+            items: { type: object },
+            description: 'Per-item allowed active variants with sku, bilingual name/label/brand, price, categoryId and attributes.',
+          }
+        offerBasisPoints: { type: integer, minimum: 0, maximum: 10000 }
+        pricing:
+          {
+            type: object,
+            description: 'Items with immutable attribution, subtotal and advisory completeness; omitted when a saved choice is no longer eligible.',
+          }
+    ListAttribution:
+      type: object
+      required:
+        [
+          listId,
+          businessPartnerId,
+          listItemId,
+          defaultVariantId,
+          alternative,
+          catalogUnitPrice,
+          offerBasisPoints,
+          discountAmount,
+        ]
+      properties:
+        listId: { type: integer }
+        businessPartnerId: { type: integer }
+        listItemId: { type: integer }
+        specification:
+          {
+            type: object,
+            description: 'Frozen categoryId and explicitly required attribute values; absent only for historical lists without recorded specifications.',
+          }
+        defaultVariantId: { type: integer }
+        alternative: { type: boolean }
+        catalogUnitPrice: { type: string }
+        offerBasisPoints: { type: integer }
+        discountAmount:
+          {
+            type: string,
+            description: 'Exact EGP discount on this line; lineTotal records paid merchandise.',
+          }
     StaffRole:
       type: string
       enum: [access-administrator, catalog-manager, fulfillment-operator, finance-manager]

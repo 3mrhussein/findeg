@@ -17,6 +17,7 @@ const database = {
 const webSchema = z.object({
   ...release,
   ...database,
+  LIST_SELECTION_INACTIVITY_DAYS: z.coerce.number().int().min(1).max(365).default(30),
   PARTNER_INVITATION_DAYS: z.coerce.number().int().min(1).max(30).default(7),
 });
 

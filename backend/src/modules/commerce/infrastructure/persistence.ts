@@ -1,8 +1,16 @@
 import { and, eq, isNull, gt } from 'drizzle-orm';
 import type { TransactionDatabase } from '@findeg/db/transactions';
-import { acceptedOrders, checkoutOutcomes, deliveryZones, guestOrderAccess, storefrontCarts } from '@findeg/db/modules/commerce';
-import type { AcceptedOrder, CartItem, DeliveryZone } from '../contracts.js';
-import type { CommerceStore } from '../public.js';
+import {
+  listOffers,
+  listSelections,
+  acceptedOrders,
+  checkoutOutcomes,
+  deliveryZones,
+  guestOrderAccess,
+  storefrontCarts,
+} from '@findeg/db/modules/commerce';
+import type { AcceptedOrder, CartItem, DeliveryZone, ListSelection } from '../contracts.js';
+import type { CommerceStore, ListSelectionStore } from '../public.js';
 
 export function bindCommerceStore(database: TransactionDatabase): CommerceStore {
   const selectZone = () => ({
@@ -64,13 +72,27 @@ export function bindCommerceStore(database: TransactionDatabase): CommerceStore 
         .select({ order: acceptedOrders.snapshot })
         .from(guestOrderAccess)
         .innerJoin(acceptedOrders, eq(acceptedOrders.reference, guestOrderAccess.orderReference))
-        .where(and(eq(guestOrderAccess.reference, reference), eq(guestOrderAccess.codeHash, codeHash), isNull(guestOrderAccess.usedAt), gt(guestOrderAccess.expiresAt, new Date())))
+        .where(
+          and(
+            eq(guestOrderAccess.reference, reference),
+            eq(guestOrderAccess.codeHash, codeHash),
+            isNull(guestOrderAccess.usedAt),
+            gt(guestOrderAccess.expiresAt, new Date()),
+          ),
+        )
         .for('update');
       if (!access) return undefined;
       const [claimed] = await database
         .update(guestOrderAccess)
         .set({ usedAt: new Date() })
-        .where(and(eq(guestOrderAccess.reference, reference), eq(guestOrderAccess.codeHash, codeHash), isNull(guestOrderAccess.usedAt), gt(guestOrderAccess.expiresAt, new Date())))
+        .where(
+          and(
+            eq(guestOrderAccess.reference, reference),
+            eq(guestOrderAccess.codeHash, codeHash),
+            isNull(guestOrderAccess.usedAt),
+            gt(guestOrderAccess.expiresAt, new Date()),
+          ),
+        )
         .returning({ reference: guestOrderAccess.reference });
       return claimed ? (access.order as AcceptedOrder) : undefined;
     },
@@ -91,6 +113,50 @@ export function bindCommerceStore(database: TransactionDatabase): CommerceStore 
         .insert(storefrontCarts)
         .values({ ownerDigest, items })
         .onConflictDoUpdate({ target: storefrontCarts.ownerDigest, set: { items } });
+    },
+  };
+}
+
+export function bindListSelectionStore(
+  database: TransactionDatabase,
+  inactivityDays = 30,
+): ListSelectionStore {
+  return {
+    async offer(listId) {
+      await database.insert(listOffers).values({ listId }).onConflictDoNothing();
+      const [offer] = await database
+        .select()
+        .from(listOffers)
+        .where(eq(listOffers.listId, listId))
+        .for('share');
+      const now = new Date();
+      return offer.startsAt <= now && (!offer.endsAt || now < offer.endsAt) ? offer.basisPoints : 0;
+    },
+    async read(owner, listId, initial) {
+      await database
+        .insert(listSelections)
+        .values({ ownerDigest: owner, listId, selection: initial })
+        .onConflictDoNothing();
+      const [row] = await database
+        .select()
+        .from(listSelections)
+        .where(and(eq(listSelections.ownerDigest, owner), eq(listSelections.listId, listId)))
+        .for('update');
+      const selection =
+        row.updatedAt.getTime() <= Date.now() - inactivityDays * 86400000
+          ? initial
+          : (row.selection as ListSelection);
+      await database
+        .update(listSelections)
+        .set({ selection, updatedAt: new Date() })
+        .where(and(eq(listSelections.ownerDigest, owner), eq(listSelections.listId, listId)));
+      return selection;
+    },
+    async replace(owner, listId, selection) {
+      await database
+        .update(listSelections)
+        .set({ selection, updatedAt: new Date() })
+        .where(and(eq(listSelections.ownerDigest, owner), eq(listSelections.listId, listId)));
     },
   };
 }

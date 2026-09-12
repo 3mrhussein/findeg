@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Shop unlisted School Supply Lists through separate resumable List Selections (#60),
+  with required/optional choices, specification-matching alternatives, advisory
+  completeness and repeatable List Offers. Accept dedicated Cash-on-Delivery Orders
+  with immutable item attribution, retry protection and atomic reservations/outbox.
+  Archived links remain viewable; Arabic/English browser journeys cover incomplete
+  checkout. Partner Points accounting remains with #61.
+
 - Add bilingual ordinary Cart and Guest Cash-on-Delivery checkout (#58), with
   exact EGP prices, authoritative reconfirmation, atomic stock reservations and
   replay-safe acceptance. Guest Order Access consumes an opaque-reference/code

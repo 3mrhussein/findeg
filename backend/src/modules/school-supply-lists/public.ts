@@ -54,12 +54,18 @@ function validItems(items: readonly SchoolSupplyListItemInput[]) {
   return (
     Array.isArray(items) &&
     items.length > 0 &&
+    items.length <= 100 &&
     items.every(
       (item) =>
+        !!item &&
+        typeof item === 'object' &&
+        (item.required === undefined || typeof item.required === 'boolean') &&
+        (item.specification === undefined || validSpecification(item.specification)) &&
         Number.isSafeInteger(item.variantId) &&
         item.variantId > 0 &&
         Number.isSafeInteger(item.quantity) &&
         item.quantity > 0 &&
+        item.quantity <= 999 &&
         typeof item.exactItem === 'boolean' &&
         typeof item.label?.en === 'string' &&
         item.label.en.trim().length > 0 &&
@@ -73,6 +79,7 @@ export function createSchoolSupplyLists(
   store: SchoolSupplyListStore,
   catalog: CatalogStore,
   access: PartnerAccess,
+  matchingCatalog?: import('../catalog/public.js').CatalogListStore,
 ) {
   async function snapshots(items: readonly SchoolSupplyListItemInput[]) {
     const variants = await catalog.listVariants();
@@ -84,6 +91,18 @@ export function createSchoolSupplyLists(
     );
   }
 
+  async function matching(items: readonly SchoolSupplyListItemInput[]) {
+    if (!items.some((item) => item.specification)) return true;
+    if (!matchingCatalog) return false;
+    const variants = await matchingCatalog.readEligible();
+    return items.every(
+      (item) =>
+        !item.specification ||
+        allowedAlternatives({ ...item, exactItem: false }, variants).some(
+          (variant) => variant.id === item.variantId,
+        ),
+    );
+  }
   return {
     async createDraft(session: PartnerSession, partnerId: number, input: SchoolSupplyListInput) {
       if (!(await authorized(session, partnerId, access))) return denied(session);
@@ -104,7 +123,10 @@ export function createSchoolSupplyLists(
       const list = await store.get(partnerId, listId);
       if (!list) return { status: 'not-found' } as const;
       if (list.status !== 'draft') return { status: 'immutable' } as const;
-      if ((await snapshots(items)).some(({ variant, isDefault }) => !variant || !isDefault))
+      if (
+        !(await matching(items)) ||
+        (await snapshots(items)).some(({ variant, isDefault }) => !variant?.isActive || !isDefault)
+      )
         return { status: 'variant-unavailable' } as const;
       await store.replaceItems(listId, items);
       return { status: 'updated' } as const;
@@ -118,8 +140,14 @@ export function createSchoolSupplyLists(
       if (!(await authorized(session, partnerId, access))) return denied(session);
       const list = await store.get(partnerId, listId);
       if (!list) return { status: 'not-found' } as const;
-      if (list.status !== 'draft' || list.items.length === 0)
+      if (
+        list.status !== 'draft' ||
+        list.items.length === 0 ||
+        !list.items.some((item) => item.required !== false) ||
+        new Set(list.items.map((item) => item.variantId)).size !== list.items.length
+      )
         return { status: 'invalid-transition' } as const;
+      if (!(await matching(list.items))) return { status: 'variant-unavailable' } as const;
       const snapshotsWithDefaults = await snapshots(
         list.items.map((item) => ({
           variantId: item.variantId!,
@@ -128,7 +156,7 @@ export function createSchoolSupplyLists(
           exactItem: item.exactItem,
         })),
       );
-      if (snapshotsWithDefaults.some(({ variant, isDefault }) => !variant || !isDefault))
+      if (snapshotsWithDefaults.some(({ variant, isDefault }) => !variant?.isActive || !isDefault))
         return { status: 'variant-unavailable' } as const;
       const variants = snapshotsWithDefaults.map(({ variant }) => variant!);
       if (replacesListId !== undefined) {
@@ -164,4 +192,40 @@ export function createSchoolSupplyLists(
       return list ? ({ status: 'found', list } as const) : ({ status: 'not-found' } as const);
     },
   };
+}
+
+/** Missing frozen specifications fail closed: only the original default remains eligible. */
+export function allowedAlternatives(
+  item: Pick<
+    import('./contracts.js').SchoolSupplyListItem,
+    'variantId' | 'exactItem' | 'specification'
+  >,
+  variants: readonly import('../catalog/contracts.js').ListCatalogVariant[],
+) {
+  return variants.filter((variant) => {
+    if (item.exactItem || !item.specification) return variant.id === item.variantId;
+    return (
+      variant.categoryId === item.specification.categoryId &&
+      Object.entries(item.specification.attributes).every(
+        ([key, value]) => variant.attributes[key] === value,
+      )
+    );
+  });
+}
+
+function validSpecification(input: unknown): boolean {
+  if (!input || typeof input !== 'object') return false;
+  const value = input as Record<string, unknown>;
+  return (
+    Object.keys(value).every((key) => ['categoryId', 'attributes'].includes(key)) &&
+    Number.isSafeInteger(value.categoryId) &&
+    Number(value.categoryId) > 0 &&
+    !!value.attributes &&
+    typeof value.attributes === 'object' &&
+    !Array.isArray(value.attributes) &&
+    Object.entries(value.attributes).every(
+      ([key, attribute]) =>
+        key.trim().length > 0 && typeof attribute === 'string' && attribute.trim().length > 0,
+    )
+  );
 }

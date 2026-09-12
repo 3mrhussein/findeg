@@ -76,3 +76,7 @@ export function isProductVariantUpdate(value: unknown): value is ProductVariantU
     (candidate.variantId as number) > 0
   );
 }
+
+export interface CatalogListStore {
+  readEligible(): Promise<readonly import('./contracts.js').ListCatalogVariant[]>;
+}

@@ -2,7 +2,14 @@ import type { LocalizedText, ManageableVariant } from '../catalog/contracts.js';
 
 export type SchoolSupplyListStatus = 'draft' | 'published' | 'archived';
 
+export interface ListItemSpecification {
+  readonly categoryId: number;
+  readonly attributes: Readonly<Record<string, string>>;
+}
+
 export interface SchoolSupplyListItemInput {
+  readonly required?: boolean;
+  readonly specification?: ListItemSpecification;
   readonly variantId: number;
   readonly quantity: number;
   readonly label: LocalizedText;
@@ -17,6 +24,8 @@ export interface SchoolSupplyListInput {
 }
 
 export interface SchoolSupplyListItem {
+  readonly required?: boolean;
+  readonly specification?: ListItemSpecification;
   readonly id: number;
   readonly variantId: number;
   readonly quantity: number;
