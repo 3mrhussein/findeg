@@ -19,6 +19,9 @@
     "./modules/partner-management/contracts": "./dist/modules/partner-management/contracts.js",
     "./modules/partner-management/public": "./dist/modules/partner-management/public.js",
     "./modules/partner-management/infrastructure/persistence": "./dist/modules/partner-management/infrastructure/persistence.js",
+    "./modules/school-supply-lists/contracts": "./dist/modules/school-supply-lists/contracts.js",
+    "./modules/school-supply-lists/public": "./dist/modules/school-supply-lists/public.js",
+    "./modules/school-supply-lists/infrastructure/persistence": "./dist/modules/school-supply-lists/infrastructure/persistence.js",
     "./partner-operations": "./dist/application/partner-operations.js"
   },
   "scripts": {

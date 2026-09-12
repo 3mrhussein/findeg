@@ -11,3 +11,7 @@ export {
   schoolListCodeAttempts,
 } from '../../schema/school-engine/school-access.js';
 export { schoolListParentSessions } from '../../schema/school-engine/school-list-sessions.js';
+export {
+  schoolSupplyLists,
+  schoolSupplyListItems,
+} from '../../schema/school-engine/school-list-publications.js';

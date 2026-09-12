@@ -63,6 +63,13 @@ export function bindCatalogStore(database: TransactionDatabase): CatalogStore {
         .for('update');
       return !!variant;
     },
+    async isDefaultVariant(variantId) {
+      const [variant] = await database
+        .select({ id: productVariants.id })
+        .from(productVariants)
+        .where(and(eq(productVariants.id, variantId), eq(productVariants.isDefault, true)));
+      return !!variant;
+    },
     async listActiveVariants() {
       const rows = await database
         .select({
