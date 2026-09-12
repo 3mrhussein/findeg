@@ -1,3 +1,5 @@
+import { createPartnerOperations } from '@findeg/backend/partner-operations';
+import { bindPartnerStore } from '@findeg/backend/modules/partner-management/infrastructure/persistence';
 import {
   createIdentityAccess,
   createSessionLifecycle,
@@ -17,11 +19,17 @@ export function createWebRuntime(environment: Readonly<Record<string, string | u
   const config = readWebConfig(environment);
   const persistence = createTransactionRuntime(
     { url: config.DATABASE_URL, ssl: config.DB_SSL, max: 5 },
-    bindIdentityStore,
+    (database) => ({ identity: bindIdentityStore(database), partners: bindPartnerStore(database) }),
   );
-  const security = createIdentitySecurity();
+  const security = {
+    ...createIdentitySecurity(),
+    invitationLifetimeMs: config.PARTNER_INVITATION_DAYS * 24 * 60 * 60 * 1000,
+  };
   async function run<Value>(
-    operation: (store: ReturnType<typeof bindIdentityStore>) => Promise<Value>,
+    operation: (store: {
+      identity: ReturnType<typeof bindIdentityStore>;
+      partners: ReturnType<typeof bindPartnerStore>;
+    }) => Promise<Value>,
   ): Promise<Value> {
     const result = await persistence.transactions.run(async (store) => ({
       ok: true,
@@ -30,19 +38,53 @@ export function createWebRuntime(environment: Readonly<Record<string, string | u
     if (!result.ok) throw new Error('Unexpected transaction rejection');
     return result.value;
   }
-  const currentSession = (token: string | undefined, portal: Portal) =>
+  const currentSession = (token: string | undefined, portal: Portal, partnerId?: number) =>
     // Public anonymous requests require no database connection.
     token
-      ? run((store) => createIdentityAccess(store, security).currentSession(token, portal))
+      ? run(async (store) =>
+          portal === 'partner'
+            ? createPartnerOperations(store, security).currentSession(token, partnerId)
+            : createIdentityAccess(store.identity, security).currentSession(token, portal),
+        )
       : Promise.resolve({ status: 'authentication-required' } as const);
   return {
     currentSession,
+    partners: {
+      currentSession: (token: string | undefined, partnerId?: number) =>
+        token
+          ? run((store) =>
+              createPartnerOperations(store, security).currentSession(token, partnerId),
+            )
+          : Promise.resolve({ status: 'authentication-required' } as const),
+      accessOverview: (
+        ...args: Parameters<ReturnType<typeof createPartnerOperations>['accessOverview']>
+      ) => run((store) => createPartnerOperations(store, security).accessOverview(...args)),
+      revokeInvitation: (
+        ...args: Parameters<ReturnType<typeof createPartnerOperations>['revokeInvitation']>
+      ) => run((store) => createPartnerOperations(store, security).revokeInvitation(...args)),
+      updateMembership: (
+        ...args: Parameters<ReturnType<typeof createPartnerOperations>['updateMembership']>
+      ) => run((store) => createPartnerOperations(store, security).updateMembership(...args)),
+      createPartner: (
+        ...args: Parameters<ReturnType<typeof createPartnerOperations>['createPartner']>
+      ) => run((store) => createPartnerOperations(store, security).createPartner(...args)),
+      changePartnerStatus: (
+        ...args: Parameters<ReturnType<typeof createPartnerOperations>['changePartnerStatus']>
+      ) => run((store) => createPartnerOperations(store, security).changePartnerStatus(...args)),
+      invite: (...args: Parameters<ReturnType<typeof createPartnerOperations>['invite']>) =>
+        run((store) => createPartnerOperations(store, security).invite(...args)),
+      acceptInvitation: (
+        ...args: Parameters<ReturnType<typeof createPartnerOperations>['acceptInvitation']>
+      ) => run((store) => createPartnerOperations(store, security).acceptInvitation(...args)),
+    },
     authorize: (token: string | undefined, portal: Portal, permission: StaffPermission) =>
-      run((store) => createIdentityAccess(store, security).authorize(token, portal, permission)),
+      run((store) =>
+        createIdentityAccess(store.identity, security).authorize(token, portal, permission),
+      ),
     signIn: (email: string, password: string) =>
-      run((store) => createSessionLifecycle(store, security).signIn(email, password)),
+      run((store) => createSessionLifecycle(store.identity, security).signIn(email, password)),
     signOut: (token: string | undefined) =>
-      run((store) => createSessionLifecycle(store, security).signOut(token)),
+      run((store) => createSessionLifecycle(store.identity, security).signOut(token)),
     async enterPortal(portal: Portal, token?: string) {
       if (portal === 'storefront') return 'allowed' as const;
       const result = await currentSession(token, portal);
@@ -56,7 +98,7 @@ export function createWebRuntime(environment: Readonly<Record<string, string | u
       isActive: boolean,
     ) =>
       run((store) =>
-        createStaffAccess(store, security).updateStaffAccess(
+        createStaffAccess(store.identity, security).updateStaffAccess(
           token,
           portal,
           userId,
@@ -71,3 +113,5 @@ export function createWebRuntime(environment: Readonly<Record<string, string | u
 
 export type { Portal } from '@findeg/backend/modules/identity-access/contracts';
 export { isStaffRole } from '@findeg/backend/modules/identity-access/public';
+
+export { isPartnerRole } from '@findeg/backend/modules/partner-management/public';

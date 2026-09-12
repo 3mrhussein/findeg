@@ -23,6 +23,7 @@ test('process configuration ignores settings owned by other processes', async ()
       NODE_ENV: 'development',
       DATABASE_URL: 'postgres://localhost/findeg',
       DB_SSL: false,
+      PARTNER_INVITATION_DAYS: 7,
     },
   );
   assert.throws(() => readWebConfig(release), /DATABASE_URL/);
@@ -50,5 +51,21 @@ test('process configuration ignores settings owned by other processes', async ()
         DB_SSL: 'no',
       }),
     /DB_SSL/,
+  );
+});
+
+test('Partner Invitation lifetime is bounded and configurable for the web process', () => {
+  const environment = {
+    RELEASE_REVISION: 'a'.repeat(40),
+    DATABASE_URL: 'postgres://localhost/findeg',
+  };
+  assert.equal(readWebConfig(environment).PARTNER_INVITATION_DAYS, 7);
+  assert.equal(
+    readWebConfig({ ...environment, PARTNER_INVITATION_DAYS: '3' }).PARTNER_INVITATION_DAYS,
+    3,
+  );
+  assert.throws(
+    () => readWebConfig({ ...environment, PARTNER_INVITATION_DAYS: '0' }),
+    /PARTNER_INVITATION_DAYS/,
   );
 });

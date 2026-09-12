@@ -59,9 +59,8 @@ FindEg Back Office. Each has a separate layout. Protected entry redirects to its
 own sign-in page. Sign-in now uses PostgreSQL-backed Current Sessions; valid
 sessions denied authorization remain signed in. Legacy cookies and client-supplied
 roles cannot authorize the new host. See [Current Sessions](current-sessions.md)
-for the fixed staff permissions, authentication setup, and HTTP behavior. #56 adds
-Partner Membership and selected Workspace context; Partner authorization remains
-closed until that integration.
+for the fixed staff permissions, authentication setup, and HTTP behavior. See [Partner access](partner-access.md) for Partner Membership, invitations,
+and selected Workspace context.
 
 The worker currently provides supervision and lifecycle entry, with no delivery
 adapter. Its readiness endpoint returns **503** (`delivery-not-configured`) in

@@ -40,7 +40,12 @@ try {
   }
   const child = spawn(
     process.execPath,
-    ['--test', 'tests/runtime-migrations.test.mjs', 'tests/identity-access.test.mjs'],
+    [
+      '--test',
+      'tests/runtime-migrations.test.mjs',
+      'tests/identity-access.test.mjs',
+      'tests/partner-memberships.test.mjs',
+    ],
     {
       stdio: 'inherit',
       env: { ...process.env, MIGRATION_TEST_DATABASE_URL: url },

@@ -5,9 +5,9 @@ use the same opaque `findeg_session` credential. Active Portal is resolved from
 the requested route on every operation, never stored in the cookie or database
 session. Opening Back Office in another tab therefore does not give Storefront
 requests staff grants. An authenticated User may use the public Storefront;
-Back Office requires at least one fixed staff role. Partner entry currently
-returns an Authorization Denial: #56 supplies verified Partner Membership and
-selected Workspace authorization. Staff status never implies Partner access.
+Back Office requires at least one fixed staff role. Partner entry requires a verified email and an active Partner Membership in an
+active Business Partner. See [Partner access](partner-access.md) for request-specific
+Workspace selection and membership administration. Staff status never implies Partner access.
 
 The runtime requires `RELEASE_REVISION`, `DATABASE_URL`, and optional `DB_SSL`
 (default `false`). Its PostgreSQL pool is limited to five connections per web
@@ -75,4 +75,4 @@ Authenticated reads are dynamic and return `Cache-Control: no-store`.
 The quality gate exercises application policy, real PostgreSQL persistence,
 restart, grant refresh and session invalidation, and production HTTP portal and
 mutation behavior. These checks do not certify the remaining production gates
-in #63, or the Partner Membership journey in #56.
+in #63, or the remaining commerce journeys.

@@ -11,6 +11,7 @@ export type StaffPermission =
 export interface CurrentSession {
   readonly userId: number;
   readonly email: string;
+  readonly emailVerified: boolean;
   readonly activePortal: Portal;
   readonly authorizationVersion: number;
   readonly staffRoles: readonly StaffRole[];

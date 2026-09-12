@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Add scoped Partner Memberships, verified-email single-use invitations, additive
+  Partner Roles, and request-specific bilingual Workspace selection (#56).
+  Access changes preserve valid authentication; provider delivery and School
+  Supply List operations remain with their feature tickets.
+
 - Restore target PostgreSQL Current Sessions, request-specific Active Portal grants,
   fixed additive staff roles, and authorization refresh without sign-out (#54).
   Legacy role grants remain excluded; Partner Membership integration belongs to #56.
