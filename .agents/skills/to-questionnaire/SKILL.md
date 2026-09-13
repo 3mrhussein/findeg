@@ -44,7 +44,6 @@ One `##` section per theme. Under each, its questions, most-important-first. Eve
 _Why this matters: it decides whether we provision for burst traffic now or defer it._
 
 >
-
 </question-example>
 
 ## Anything else?
