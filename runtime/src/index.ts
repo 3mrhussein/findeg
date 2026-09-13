@@ -1,3 +1,5 @@
+import { createRewardRateOperations } from '@findeg/backend/reward-rates';
+import { bindPartnerRewardStore } from '@findeg/backend/modules/partner-rewards/infrastructure/persistence';
 import { createHash, randomBytes, randomInt } from 'node:crypto';
 import { createPartnerOperations } from '@findeg/backend/partner-operations';
 import { createListCommerce } from '@findeg/backend/list-commerce';
@@ -42,6 +44,7 @@ export function createWebRuntime(environment: Readonly<Record<string, string | u
   const persistence = createTransactionRuntime(
     { url: config.DATABASE_URL, ssl: config.DB_SSL, max: 5 },
     (database) => ({
+      rewards: bindPartnerRewardStore(database),
       commerce: bindCommerceStore(database),
       selections: bindListSelectionStore(database, config.LIST_SELECTION_INACTIVITY_DAYS),
       listCatalog: bindCatalogListStore(database),
@@ -61,6 +64,7 @@ export function createWebRuntime(environment: Readonly<Record<string, string | u
   };
   async function run<Value>(
     operation: (stores: {
+      rewards: ReturnType<typeof bindPartnerRewardStore>;
       identity: ReturnType<typeof bindIdentityStore>;
       partners: ReturnType<typeof bindPartnerStore>;
       catalog: ReturnType<typeof bindCatalogStore>;
@@ -86,6 +90,11 @@ export function createWebRuntime(environment: Readonly<Record<string, string | u
         )
       : Promise.resolve({ status: 'authentication-required' } as const);
   return {
+    rewardRates: {
+      configure: (
+        ...args: Parameters<ReturnType<typeof createRewardRateOperations>['configure']>
+      ) => run((stores) => createRewardRateOperations(stores, security).configure(...args)),
+    },
     listSelectionLifetimeSeconds: config.LIST_SELECTION_INACTIVITY_DAYS * 86400,
     listCommerce: createListCommerce(persistence.transactions, {
       digest: (value) => createHash('sha256').update(value).digest('hex'),

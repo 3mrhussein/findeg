@@ -48,6 +48,7 @@ try {
       'tests/catalog-inventory.test.mjs',
       'tests/guest-checkout.test.mjs',
       'tests/list-selections.test.mjs',
+      'tests/reward-acceptance.test.mjs',
       'tests/outbox-delivery.test.mjs',
     ],
     {

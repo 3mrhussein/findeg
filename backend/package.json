@@ -31,7 +31,9 @@
     "./partner-operations": "./dist/application/partner-operations.js",
     "./checkout": "./dist/application/checkout.js",
     "./modules/commerce/infrastructure/persistence": "./dist/modules/commerce/infrastructure/persistence.js",
-    "./list-commerce": "./dist/application/list-commerce.js"
+    "./list-commerce": "./dist/application/list-commerce.js",
+    "./reward-rates": "./dist/application/reward-rates.js",
+    "./modules/partner-rewards/infrastructure/persistence": "./dist/modules/partner-rewards/infrastructure/persistence.js"
   },
   "scripts": {
     "type-check": "tsc --noEmit",

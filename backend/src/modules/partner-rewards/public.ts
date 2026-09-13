@@ -339,3 +339,34 @@ export function createPartnerRewards(store: PartnerRewardLedgerStore, access: Pa
     },
   };
 }
+
+export { rewardRateInput, valueRewardLine } from './valuation.js';
+export type {
+  PartnerRewardRate,
+  RewardSnapshot,
+  PendingRewardLine,
+  RewardEntitlement,
+  RewardRateInput,
+} from './contracts.js';
+
+/** Infrastructure binds these purpose-specific writes to the workflow transaction. */
+export interface DurablePartnerRewardStore {
+  rateForPartner(
+    partnerId: number,
+  ): Promise<import('./contracts.js').PartnerRewardRate | undefined>;
+  configureRate(
+    partnerId: number,
+    actorId: number,
+    input: import('./contracts.js').RewardRateInput,
+  ): Promise<
+    | { readonly status: 'configured'; readonly rate: import('./contracts.js').PartnerRewardRate }
+    | { readonly status: 'idempotency-conflict' }
+  >;
+  recordPending(
+    orderReference: string,
+    lines: readonly import('./contracts.js').PendingRewardLine[],
+  ): Promise<void>;
+  entitlementsForOrder(
+    orderReference: string,
+  ): Promise<readonly import('./contracts.js').RewardEntitlement[]>;
+}

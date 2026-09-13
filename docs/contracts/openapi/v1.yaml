@@ -8,9 +8,9 @@ info:
     the corresponding authorized application operation exists.
 
 
-    Only capabilities wired into the released web runtime are exposed. Partner Rewards and Partner
-    Reports currently have module foundations but no production runtime/persistence wiring and are
-    not released HTTP capabilities. Worker notification delivery is internal.
+    Only capabilities wired into the released web runtime are exposed. Partner Reward rates and
+    acceptance entitlements are durable. Partner Reports remain module foundations without runtime
+    wiring. Worker notification delivery is internal.
 
     JSON bodies use status for commerce/list outcomes and errorCode/message for session and
     management rejections. Unexpected server failures are not business rejections. Session
@@ -18,6 +18,85 @@ info:
 servers:
   - url: /api/v1
 paths:
+  /back-office/partners/{partnerId}/reward-rates:
+    parameters:
+      - in: path
+        name: partnerId
+        required: true
+        schema:
+          type: integer
+          minimum: 1
+    post:
+      operationId: post_back_office_partner_reward_rates
+      summary: Configure an explicit Partner Points Rate and conversion rate
+      description: Requires same-origin Origin and fresh finance.manage access. Rates are immutable historical business policy; missing configuration prevents list checkout. Points floor per discounted item subtotal excluding delivery, and reward value rounds half up to piasters.
+      security:
+        - sessionCookie: []
+      x-idempotency: Caller and key identify a durable outcome. Identical canonical rates and partner replay; changed input conflicts. Authorization is checked before replay.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [key, pointsPerEgp, egpPerPoint]
+              properties:
+                key:
+                  type: string
+                  pattern: '^[a-zA-Z0-9_-]{1,128}$'
+                pointsPerEgp:
+                  type: string
+                  description: Positive points per EGP; at most 10 integer digits and 6 decimals.
+                egpPerPoint:
+                  type: string
+                  description: Positive EGP per point; at most 8 integer digits and 4 decimals.
+      responses:
+        '201':
+          description: Configured rate, including identical replay
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status, rate]
+                properties:
+                  status:
+                    const: configured
+                  rate:
+                    type: object
+                    required: [id, businessPartnerId, pointsPerEgp, egpPerPoint]
+                    properties:
+                      id:
+                        type: integer
+                      businessPartnerId:
+                        type: integer
+                      pointsPerEgp:
+                        type: string
+                      egpPerPoint:
+                        type: string
+        '400':
+          description: invalid-input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: authentication-required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: origin-denied or authorization-denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: partner-unavailable or idempotency-conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /sessions:
     post:
       summary: Authenticate an active User and issue an opaque session cookie
@@ -1610,6 +1689,7 @@ paths:
                       - selection-unavailable
                       - insufficient-stock
                       - delivery-unavailable
+                      - reward-rate-unavailable
       operationId: post_commerce_list_selections_code_quote
       x-idempotency: Read-only quote; retry may return changed terms and confirmation.
   /commerce/list-selections/{code}/checkout:
@@ -1690,6 +1770,7 @@ paths:
                       - selection-unavailable
                       - insufficient-stock
                       - delivery-unavailable
+                      - reward-rate-unavailable
       operationId: post_commerce_list_selections_code_checkout
       x-idempotency:
         Body key scoped to owner and operation (also list for List Selection); identical
@@ -2139,6 +2220,24 @@ components:
           $ref: '#/components/schemas/LocalizedText'
         fee:
           $ref: '#/components/schemas/Money'
+    RewardSnapshot:
+      type: object
+      required: [rateId, pointsPerEgp, egpPerPoint, points, rewardValue]
+      properties:
+        rateId:
+          type: integer
+        pointsPerEgp:
+          type: string
+          pattern: '^\d+\.\d{6}$'
+        egpPerPoint:
+          type: string
+          pattern: '^\d+\.\d{4}$'
+        points:
+          type: integer
+          minimum: 0
+          maximum: 2147483647
+        rewardValue:
+          $ref: '#/components/schemas/Money'
     PricedItem:
       type: object
       required:
@@ -2164,6 +2263,8 @@ components:
           $ref: '#/components/schemas/Money'
         lineTotal:
           $ref: '#/components/schemas/Money'
+        reward:
+          $ref: '#/components/schemas/RewardSnapshot'
         attribution:
           $ref: '#/components/schemas/ListAttribution'
     CartQuote:
