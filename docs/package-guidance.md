@@ -73,6 +73,12 @@ and controlled release phase.
 
 ## Retained compatibility evidence (#64)
 
+Package-local entry guides are available for [backend](../backend/README.md),
+[database](../db/README.md), and [environment compatibility](../packages/env/README.md).
+The backend and database root barrels are compatibility exports, not recommended
+target imports. In particular, database schema/type exports are not browser-safe
+entry points: ADR 0001 prohibits all browser imports from `@findeg/db`.
+
 The following surfaces remain for comparison and migration continuity. They are
 not supported application entry points, and new behavior belongs in the target
 modules and runtime. Their historical READMEs describe the prototype only.
@@ -90,6 +96,14 @@ modules and runtime. Their historical READMEs describe the prototype only.
 The existing compatibility tests remain part of `pnpm test` while their subjects
 are retained. The restored portal tests are preserved as migration evidence outside the active workspace. `frontend/web/cypress/e2e` journeys and the HTTP/process/PostgreSQL suites in `tests`, run by `pnpm quality:check`, verify selected target flows, not complete frontend parity. Passing these development gates does not certify a production
 release; #89 owns that separate evidence and approval.
+
+Historical architecture guides, the monorepo migration plan, component-placement
+and logging guides, legacy schema/feature READMEs, and the root infrastructure
+analysis are retained documentation evidence. Their banners identify historical
+claims; they do not govern target development. Retire each with its referenced
+compatibility surface after carrying forward useful decisions into owner or
+canonical documentation. Preserve frontend documentation under the separate
+page/theme migration boundary above.
 
 ## Module data and transactions (#53)
 
