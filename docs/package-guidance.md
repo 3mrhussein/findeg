@@ -45,9 +45,12 @@ validation uses the JSON Schema subset supported by Ajv; extend the validator wh
 introducing newer schema keywords.
 
 Partner Rewards and Partner Reports currently expose module foundations without
-runtime/persistence wiring. They are not released HTTP capabilities. Their durable
-authorized runtime operations must exist before adding routes; worker notification
-delivery remains an internal process operation.
+runtime/persistence wiring. The Partner Reward event schema already exists, but
+accepted Orders do not yet write it. Review remediation is tracked in #91–#95:
+authorized boundaries, accounting corrections, atomic acceptance rewards, COD
+completion, and scoped reporting. These modules are not released HTTP capabilities
+until their durable authorized runtime operations and adapters are implemented.
+Worker notification delivery remains an internal process operation.
 
 ## Target runtime foundation (#52)
 
@@ -122,7 +125,7 @@ This split keeps the existing rule that database code never imports business cod
 | School Supply Lists    | Lists, items, alternatives, list access grants/requests/tokens/attempts and parent sessions                      |
 | Inventory              | Warehouses, balances and stock movements                                                                         |
 | Commerce               | Orders/items, Cart Kits, discount rules, addresses and saved payment methods                                     |
-| Partner Rewards        | No persisted records yet; reward accounting lands in its feature ticket                                          |
+| Partner Rewards        | Partner Reward event schema; durable acceptance/runtime integration tracked in #93                               |
 | Partner Reports        | No persisted records yet; approved read views land with reporting                                                |
 | Runtime infrastructure | Existing audit log, server logs and notifications; these are technical records, not a ninth business module      |
 
