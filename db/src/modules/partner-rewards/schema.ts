@@ -20,7 +20,7 @@ export const partnerRewardEvents = identitySchema.table(
     businessPartnerId: integer('business_partner_id').notNull(),
     orderReference: text('order_reference').notNull(),
     eventType: text('event_type').notNull(),
-    actorId: integer('actor_id').references(() => users.id),
+    actorId: integer('actor_id'),
     entitlementId: integer('entitlement_id').references(() => partnerRewardEntitlements.id),
     points: integer('points').notNull(),
     pendingPoints: integer('pending_points'),
