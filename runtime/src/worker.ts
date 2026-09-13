@@ -111,7 +111,9 @@ export async function startWorker(
       if (activeDelivery) {
         try {
           await activeDelivery;
-        } catch {}
+        } catch {
+          // Delivery failure is retained in the outbox; shutdown must still close resources.
+        }
       }
       await new Promise<void>((resolve, reject) => {
         server.close((error) => (error ? reject(error) : resolve()));

@@ -65,12 +65,14 @@ roles cannot authorize the new host. See [Current Sessions](current-sessions.md)
 for the fixed staff permissions, authentication setup, and HTTP behavior. See [Partner access](partner-access.md) for Partner Membership, invitations,
 and selected Workspace context.
 
-The worker currently provides supervision and lifecycle entry, with no delivery
-adapter. Its readiness endpoint returns **503** (`delivery-not-configured`) in
-every environment. It never reports successful delivery, consumes outbox records,
-or sends notifications. #59 owns durable delivery and provider configuration.
-Web liveness likewise does not certify database or business-operation readiness.
-These foundations are not production certification; #63 owns that gate.
+The worker delivers committed outbox notifications, retries failures, and exposes
+queue counts and exhaustion through `/health/ready`. See
+[outbox delivery](outbox-delivery.md) for configuration and recovery. Production
+startup rejects all currently available delivery adapters until a real provider
+is validated. Web liveness does not certify database or business readiness.
+
+See [production readiness](production-readiness.md) for blocking certification,
+release, recovery, monitoring, connection budgets and cleanup procedures.
 
 ### One release image, independent processes
 
@@ -88,8 +90,7 @@ revision. Web, worker, and migrations use that identical image. The revision is
 baked into the image environment. Do not rebuild an existing deployed tag or
 override the revision at runtime. Retain the previous image for compatible
 application rollback; schema corrections use forward migrations. Compose
-supervises web and worker independently. Health checks use liveness; delivery
-readiness remains unavailable until #59. Worker health is internal to the container.
+supervises web and worker independently. Health checks use liveness; readiness must be checked separately from liveness. Worker health is internal to the container.
 
 ### Verification
 

@@ -32,6 +32,8 @@ services:
     command: ['node', 'runtime/dist/worker-main.js']
     environment:
       WORKER_HOST: '0.0.0.0'
+      DATABASE_URL: ${DATABASE_URL:-}
+      DB_SSL: ${DB_SSL:-false}
     restart: unless-stopped
     healthcheck:
       test:

@@ -26,15 +26,16 @@ The same command runs in GitHub Actions on every PR, with no path filter:
 architecture checks and their tests, Next.js type generation, workspace type
 checking, and the existing test suites.
 
-This is the initial implementation gate. It does not certify production readiness:
-lint cleanup, broader real-database integration tests, deployment image certification, and
-bilingual Cypress journeys need reliable gates as the target implementation lands.
-The replaced workflows referenced obsolete packages and tool versions. Do not
-treat the initial gate as evidence that their intended coverage has been achieved.
+The gate includes lint, real-PostgreSQL workflows, contracts, and Arabic/English
+Cypress Customer and operator journeys. `pnpm security:check` is a separate
+blocking dependency audit; the Documentation gate requires canonical updates for
+implementation changes. Production certification additionally requires independent
+security, migration, documentation and release review and validated delivery.
+See [production readiness](docs/operations/production-readiness.md).
 
 ## Pull requests
 
-Pull requests must pass the `Quality gate` and resolve review conversations
+Pull requests must pass `Quality gate`, `Security gate`, and `Documentation gate` and resolve review conversations
 before merge. The existing `main` and `develop` branches remain protected
 against force pushes and deletion.
 

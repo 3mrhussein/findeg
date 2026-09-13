@@ -24,6 +24,7 @@ module.exports = defineConfig({
           await sql.end();
         }
       }
+      require('../../tests/support/operator-journeys.cjs')(on, fixture);
       on('task', {
         checkoutFixture() {
           return fixture(async (sql) => {

@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Add production readiness gates and operational procedures (#63): required lint,
+  dependency security and documentation checks, bilingual operator journeys,
+  protected revision-specific certification, release/recovery guidance, connection
+  budgets and delivered-only outbox cleanup. Production certification remains
+  blocked until a notification provider is validated.
+
 - Complete versioned JSON contracts for released web capabilities (#62), including
   School Supply List management, structured rejections and checkout retry semantics.
   Validate HTTP receipts against OpenAPI and enforce transitive browser/server
