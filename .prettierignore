@@ -33,6 +33,7 @@ yarn.lock
 **/.github/
 **/AGENTS.md
 **/CLAUDE.md
+**/CONTRIBUTING.md
 **/CONTEXT.md
 **/CONTEXT-MAP.md
 docs/agents/
@@ -42,6 +43,7 @@ skills-lock.json
 **/.*
 **/*.config.*
 **/tsconfig*.json
+**/turbo*.json
 **/package.json
 pnpm-workspace.yaml
 **/Dockerfile*
