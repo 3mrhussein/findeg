@@ -22,7 +22,170 @@ const session = {
   },
 } as const;
 
+function fixture() {
+  const ledger: PartnerRewardEvent[] = [];
+  const rewards = createPartnerRewards(
+    {
+      ledger: async () => ledger,
+      append: async (event) => {
+        ledger.push(event);
+      },
+    },
+    {
+      workspace: async (currentSession) => ({ status: 'authenticated', session: currentSession }),
+      verifySettlement: async () => true,
+    },
+  );
+  return { ledger, rewards };
+}
+
 describe('Partner rewards', () => {
+  it('caps cancellation at the remaining pending and earned entitlement after partial payment', async () => {
+    const { ledger, rewards } = fixture();
+    await rewards.recordOrder(session, 12, { orderReference: 'order', points: 100 });
+    await rewards.recordPayment(session, 12, 'order', {
+      points: 60,
+      fulfillment: 'delivery',
+      fulfillmentCompleted: true,
+    });
+    expect(
+      await rewards.recordCancellation(session, 12, { orderReference: 'order', points: 101 }),
+    ).toEqual({ status: 'invalid-input' });
+    expect(
+      await rewards.recordCancellation(session, 12, { orderReference: 'order', points: 70 }),
+    ).toMatchObject({ status: 'cancelled' });
+    expect(summarizeRewardLedger(ledger)).toEqual({
+      pending: 0,
+      earned: 30,
+      reversed: 70,
+      settled: 0,
+      available: 30,
+    });
+    expect(
+      await rewards.recordCancellation(session, 12, { orderReference: 'order', points: 31 }),
+    ).toEqual({ status: 'invalid-input' });
+    expect(
+      await rewards.recordRefund(session, 12, { orderReference: 'order', points: 30 }),
+    ).toMatchObject({ status: 'refunded' });
+    expect(
+      await rewards.recordCancellation(session, 12, { orderReference: 'order', points: 1 }),
+    ).toEqual({ status: 'invalid-input' });
+    expect(summarizeRewardLedger(ledger)).toEqual({
+      pending: 0,
+      earned: 0,
+      reversed: 100,
+      settled: 0,
+      available: 0,
+    });
+  });
+
+  it.each([
+    ['recordReversal', 'recordRefund', 'recordCancellation'],
+    ['recordRefund', 'recordCancellation', 'recordReversal'],
+    ['recordCancellation', 'recordReversal', 'recordRefund'],
+  ] as const)('caps combined corrections across %s, %s and %s', async (first, second, third) => {
+    const { ledger, rewards } = fixture();
+    await rewards.recordOrder(session, 12, { orderReference: 'order', points: 100 });
+    await rewards.recordPayment(session, 12, 'order', {
+      fulfillment: 'delivery',
+      fulfillmentCompleted: true,
+    });
+    await rewards[first](session, 12, { orderReference: 'order', points: 60 });
+    expect(await rewards[second](session, 12, { orderReference: 'order', points: 41 })).toEqual({
+      status: 'invalid-input',
+    });
+    await rewards[second](session, 12, { orderReference: 'order', points: 25 });
+    expect(await rewards[third](session, 12, { orderReference: 'order', points: 16 })).toEqual({
+      status: 'invalid-input',
+    });
+    await rewards[third](session, 12, { orderReference: 'order', points: 15 });
+    expect(summarizeRewardLedger(ledger)).toEqual({
+      pending: 0,
+      earned: 0,
+      reversed: 100,
+      settled: 0,
+      available: 0,
+    });
+  });
+
+  it.each([-1000, 101, Number.MAX_SAFE_INTEGER + 1])(
+    'rejects reversal amount %s without changing the statement',
+    async (points) => {
+      const { ledger, rewards } = fixture();
+      await rewards.recordOrder(session, 12, { orderReference: 'order', points: 100 });
+      await rewards.recordPayment(session, 12, 'order', {
+        fulfillment: 'delivery',
+        fulfillmentCompleted: true,
+      });
+      expect(
+        await rewards.recordReversal(session, 12, { orderReference: 'order', points }),
+      ).toEqual({ status: 'invalid-input' });
+      expect(summarizeRewardLedger(ledger)).toEqual({
+        pending: 0,
+        earned: 100,
+        reversed: 0,
+        settled: 0,
+        available: 100,
+      });
+    },
+  );
+
+  it('cancels only the selected order pending entitlement and cannot subsequently earn it', async () => {
+    const { ledger, rewards } = fixture();
+    await rewards.recordOrder(session, 12, { orderReference: 'cancelled', points: 100 });
+    await rewards.recordOrder(session, 12, { orderReference: 'other', points: 40 });
+    expect(
+      await rewards.recordCancellation(session, 12, { orderReference: 'cancelled', points: 100 }),
+    ).toMatchObject({ status: 'cancelled' });
+    expect(summarizeRewardLedger(ledger)).toEqual({
+      pending: 40,
+      earned: 0,
+      reversed: 100,
+      settled: 0,
+      available: 0,
+    });
+    expect(
+      await rewards.recordPayment(session, 12, 'cancelled', {
+        fulfillment: 'delivery',
+        fulfillmentCompleted: true,
+      }),
+    ).toEqual({ status: 'invalid-input' });
+    expect(
+      await rewards.recordPayment(session, 12, 'other', {
+        fulfillment: 'delivery',
+        fulfillmentCompleted: true,
+      }),
+    ).toMatchObject({ status: 'earned' });
+    expect(summarizeRewardLedger(ledger)).toEqual({
+      pending: 0,
+      earned: 40,
+      reversed: 100,
+      settled: 0,
+      available: 40,
+    });
+  });
+
+  it('deducts a completed settlement once from earned points', () => {
+    expect(
+      summarizeRewardLedger([
+        {
+          partnerId: 12,
+          orderReference: 'order',
+          eventType: 'paid',
+          points: 100,
+          createdAt: new Date(),
+        },
+        {
+          partnerId: 12,
+          orderReference: 'settlement',
+          eventType: 'settlement',
+          points: 40,
+          createdAt: new Date(),
+        },
+      ]),
+    ).toEqual({ pending: 0, earned: 100, reversed: 0, settled: 40, available: 60 });
+  });
+
   it('keeps pending and earned points separate until a qualifying paid order is confirmed', () => {
     const events: PartnerRewardEvent[] = [
       {

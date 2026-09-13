@@ -52,7 +52,8 @@ export function buildAuthorizedPartnerReports(
     );
   if (!authorized) return { status: 'authorization-denied' };
 
-  return { status: 'authorized', report: buildPartnerReports(rows, options) };
+  const partnerRows = rows.filter((row) => row.partnerId === partnerId);
+  return { status: 'authorized', report: buildPartnerReports(partnerRows, options) };
 }
 
 export function suppressLowCountBreakdowns(
