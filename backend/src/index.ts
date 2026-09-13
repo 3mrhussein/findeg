@@ -1,4 +1,6 @@
-// Backend package main entry point - re-exports all public interfaces and services
+// Legacy service barrel retained for compatibility callers, not target development.
+// Target callers use explicit module/application exports composed by runtime.
+// See backend/README.md and the retirement boundaries in docs/package-guidance.md.
 import { createIdentityServices } from './features/identity/application/services/factory';
 import { createOrderServices } from './features/order/application/services/factory';
 import { UpdateAdminInput } from './features/identity/application/interfaces/IUserService';
@@ -23,7 +25,10 @@ import {
 } from './features/identity/application/services/JWTService';
 export { JWTService, type TokenPair, type JWTPayload, type TokenType, type IJWTService };
 
-export async function login(email: string | { email: string; password?: string }, password?: string) {
+export async function login(
+  email: string | { email: string; password?: string },
+  password?: string,
+) {
   const { auth } = createIdentityServices();
   // Handle both (email, password) and ({ email, password }) signatures
   if (typeof email === 'object' && !password) {
@@ -35,7 +40,6 @@ export async function login(email: string | { email: string; password?: string }
 export async function logout() {
   return { success: true };
 }
-
 
 export async function updateMyProfile(userId: number, input: UpdateAdminInput) {
   const { userService } = createIdentityServices();

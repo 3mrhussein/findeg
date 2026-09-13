@@ -1,5 +1,12 @@
 # Backend Infrastructure Layer Analysis: Business Logic Leakage
 
+> Historical prototype analysis, retained as migration evidence. Its findings and
+> proposed feature layout describe the prototype, not the supported target.
+> Follow the [target architecture](docs/architecture/README.md) and
+> [compatibility retirement boundaries](docs/package-guidance.md#retained-compatibility-evidence-64).
+> Retire this analysis when the referenced legacy features have been replaced and
+> their useful findings are covered by owner documentation and target gates.
+
 **Date**: May 11, 2026  
 **Scope**: Repositories & persistence layer across all features  
 **Objective**: Identify where business logic inappropriately resides in infrastructure vs. application/domain layers
@@ -15,7 +22,7 @@ The backend infrastructure layer contains **significant business logic leakage**
 - **Infrastructure**: Persistence adapters, database queries, external service calls
 
 **Current State**: 🔴 Repositories are doing application-layer work  
-**Critical Issues**: 6 patterns identified with concrete examples  
+**Critical Issues**: 6 patterns identified with concrete examples
 
 ---
 
@@ -31,7 +38,7 @@ The backend infrastructure layer contains **significant business logic leakage**
 // ❌ BAD: Repository does all the hydration
 async getById(id: number, language?: Locale): Promise<Product | null> {
   const lang = parse(language);
-  
+
   // Query 1: Get product with brand & category
   const results = await this.db.select({ product: products, brand: brands, category: categories })
     .from(products)
@@ -41,13 +48,13 @@ async getById(id: number, language?: Locale): Promise<Product | null> {
     .limit(1);
 
   if (results.length === 0) return null;
-  
+
   // Query 2: Get variants (calls private helper with separate query)
   const variants = await this.getHydratedVariants([id], lang);
-  
+
   // Query 3: Get tags (separate query)
   const tagsData = await this.getProductTags(id, lang);
-  
+
   // Query 4: Get attributes (separate query)
   const attrs = await this.getProductAttributes(id, lang);
 
@@ -68,13 +75,13 @@ class ProductService {
     // Service coordinates the queries
     const product = await this.repo.getById(id);
     if (!product) return null;
-    
+
     const [variants, tags, attrs] = await Promise.all([
       this.variantRepo.getByProductId(id),
       this.tagRepo.getByProductId(id),
       this.attributeRepo.getByProductId(id),
     ]);
-    
+
     // Orchestrate assembly
     return this.assembleProduct(product, variants, tags, attrs, locale);
   }
@@ -82,6 +89,7 @@ class ProductService {
 ```
 
 **Why It's Wrong**:
+
 - Repository method `getById()` executes 4 separate database queries internally
 - Callers can't choose to fetch just the product without variants (coupling)
 - Testing the repository requires mocking 4 different data access paths
@@ -99,7 +107,7 @@ async getAll(language?: Locale): Promise<Product[]> {
     .leftJoin(categories, eq(categories.id, products.categoryId));
 
   if (results.length === 0) return [];
-  
+
   const productIds = results.map((r) => r.product.id);
   const variantsMap = await this.getHydratedVariants(productIds, lang); // Separate query for ALL variants
 
@@ -120,6 +128,7 @@ async getAll(language?: Locale): Promise<Product[]> {
 ```
 
 **Why It's Wrong**:
+
 - Fetches variants for ALL products in a single query, then filters in-memory
 - At scale (1000s of products), this loads unnecessary data
 - No pagination support
@@ -131,7 +140,7 @@ async getAll(language?: Locale): Promise<Product[]> {
 // ❌ BAD: Repository fetches items for EACH order separately
 async getAllFiltered(filters: OrderFilters): Promise<{ orders: Order[]; total: number }> {
   // ... build WHERE clause ...
-  
+
   const data = await db.select().from(orders).leftJoin(users, ...).limit(50);
 
   return {
@@ -152,6 +161,7 @@ async getAllFiltered(filters: OrderFilters): Promise<{ orders: Order[]; total: n
 ```
 
 **Issues**:
+
 - **N+1 query pattern**: Fetches 50 orders, then executes 50 separate queries for items
 - **Complex domain mapping** (customerName fallback logic) belongs in service/domain
 - **Repository method is async generator** but doesn't optimize batch loading
@@ -172,7 +182,7 @@ async matchVariants(matchRules: MatchRulesDraft): Promise<Variant[]> {
   // Category matching rule
   if (matchRules.categoryId) {
     conditions.push(
-      sql`EXISTS (SELECT 1 FROM products WHERE products.id = ${productVariants.productId} 
+      sql`EXISTS (SELECT 1 FROM products WHERE products.id = ${productVariants.productId}
           AND products.category_id = ${matchRules.categoryId})`
     );
   }
@@ -180,7 +190,7 @@ async matchVariants(matchRules: MatchRulesDraft): Promise<Variant[]> {
   // Brand matching rule
   if (matchRules.brandIds && matchRules.brandIds.length > 0) {
     conditions.push(
-      sql`EXISTS (SELECT 1 FROM products WHERE products.id = ${productVariants.productId} 
+      sql`EXISTS (SELECT 1 FROM products WHERE products.id = ${productVariants.productId}
           AND products.brand_id IN ${matchRules.brandIds})`
     );
   }
@@ -196,8 +206,8 @@ async matchVariants(matchRules: MatchRulesDraft): Promise<Variant[]> {
   if (matchRules.attributes) {
     for (const [key, value] of Object.entries(matchRules.attributes)) {
       conditions.push(
-        sql`EXISTS (SELECT 1 FROM variant_attributes 
-            WHERE ... AND attribute_definitions.key = ${key} 
+        sql`EXISTS (SELECT 1 FROM variant_attributes
+            WHERE ... AND attribute_definitions.key = ${key}
             AND variant_attributes.value_text = ${String(value)})`
       );
     }
@@ -209,17 +219,19 @@ async matchVariants(matchRules: MatchRulesDraft): Promise<Variant[]> {
 ```
 
 **Why It's Wrong**:
+
 - **Business rule**: "Match variants by category, brand, tags, AND attributes" is domain logic
 - **Repository responsibility**: Persist and query variants, not interpret matching rules
 - **Testability**: Can't test matching logic without a database
 - **Reusability**: Business rule is buried in persistence layer
 
 **Where It Should Be**:
+
 ```typescript
 // In domain/value-objects or application service
 class VariantMatcher {
   match(variants: Variant[], rules: MatchRulesDraft): Variant[] {
-    return variants.filter(v => 
+    return variants.filter(v =>
       (!rules.categoryId || v.product.categoryId === rules.categoryId) &&
       (!rules.brandIds?.length || rules.brandIds.includes(v.product.brandId)) &&
       (!rules.tags?.length || v.tags.some(t => rules.tags.includes(t.name))) &&
@@ -232,10 +244,10 @@ class VariantMatcher {
 async getMatchedVariants(rules: MatchRulesDraft): Promise<Variant[]> {
   // Repository just returns the candidates
   const candidates = await this.variantRepo.getByCategoryAndBrands(
-    rules.categoryId, 
+    rules.categoryId,
     rules.brandIds
   );
-  
+
   // Service/domain does the matching
   return this.matcher.match(candidates, rules);
 }
@@ -273,6 +285,7 @@ async reserveStock(
 ```
 
 **Assessment**:
+
 - ✅ **Correct**: Wraps state change in transaction
 - ✅ **Correct**: Uses pessimistic locking (.for('update'))
 - ❌ **Leakage**: Business rule "available = onHand - reserved" & validation should be in service/domain
@@ -285,13 +298,14 @@ async reserveStock(
 ### Issue: Repositories Creating Other Repositories Directly
 
 **Files Affected**:
+
 - [backend/src/features/catalog/infrastructure/persistence/DrizzleSchoolListRepository.ts](backend/src/features/catalog/infrastructure/persistence/DrizzleSchoolListRepository.ts#L28)
 - [backend/src/features/catalog/infrastructure/persistence/DrizzleInventoryRepository.ts](backend/src/features/catalog/infrastructure/persistence/DrizzleInventoryRepository.ts#L19)
 
 ```typescript
 // ❌ BAD: Repository instantiates another repository
 export class DrizzleSchoolListRepository implements ISchoolListRepository {
-  private variantRepo = new DrizzleVariantRepository();  // ← Direct instantiation!
+  private variantRepo = new DrizzleVariantRepository(); // ← Direct instantiation!
 
   async getItemsWithAlternatives(listId: ID): Promise<SchoolListItemResult[]> {
     // ...
@@ -304,7 +318,7 @@ export class DrizzleSchoolListRepository implements ISchoolListRepository {
 ```typescript
 // ❌ BAD: Same pattern in inventory
 export class DrizzleInventoryRepository implements IInventoryRepository {
-  private variantRepo = new DrizzleVariantRepository();  // ← Direct instantiation!
+  private variantRepo = new DrizzleVariantRepository(); // ← Direct instantiation!
 
   async getLowStock(threshold?: number): Promise<LowStockResult[]> {
     // ...
@@ -313,6 +327,7 @@ export class DrizzleInventoryRepository implements IInventoryRepository {
 ```
 
 **Why It's Wrong**:
+
 - **Breaks Dependency Injection**: Repository couples itself to concrete implementation
 - **Violates Liskov Substitution Principle**: Can't swap variant repo implementation for testing
 - **Unmaintainable**: Changes to `DrizzleVariantRepository` constructor affect all callers
@@ -389,6 +404,7 @@ private mapToDomain(
 ```
 
 **Issues**:
+
 - ❌ Repository contains JSON parsing error handling
 - ❌ Repository implements locale fallback strategy
 - ❌ Repository has knowledge of translation maps
@@ -404,7 +420,7 @@ class LocalizationService {
       try {
         return JSON.parse(raw);
       } catch {
-        return { en: '' };  // Safe default
+        return { en: '' }; // Safe default
       }
     }
     return raw || { en: '' };
@@ -431,7 +447,7 @@ class CategoryMapper {
       id: dbRow.id,
       name: this.localization.selectByLocale(
         this.localization.parseTranslations(dbRow.localizedName),
-        locale
+        locale,
       ),
       // ...
     };
@@ -483,7 +499,7 @@ class AdminProductMutationService {
   async createProduct(input: CreateProductWithVariantsInput): Promise<{ productId: number }> {
     // Calls db/queries directly (bypassing repository!)
     const productId = await createProductWithVariantsInDb(input);
-    
+
     await this.auditLogService?.logAction({
       entityType: 'product',
       action: 'create',
@@ -496,23 +512,26 @@ class AdminProductMutationService {
 ```
 
 **Issues**:
+
 - ❌ Repository's `create()` re-fetches the entire product after insert (inefficient)
 - ❌ AdminProductMutationService bypasses repository entirely, calls `@findeg/db/queries` directly
 - ❌ Transformation logic (`localizedName = Object.fromEntries(...)`) duplicated
 - ❌ No validation in repository (but admin service might validate elsewhere)
 
 **Current Architecture**:
+
 ```
 Frontend → Dashboard → AdminProductMutationService → db/queries
                                                ↑
                                     Bypasses repositories!
-                                    
+
 ProductService → DrizzleProductRepository → db
                 ↓
              create() & getById()
 ```
 
 **Why It's Wrong**:
+
 - Repository and direct query functions maintain separate state
 - No single path for audit logging
 - Hard to ensure transactionality
@@ -532,7 +551,7 @@ private async getHydratedVariants(
   _language: Locale,
 ): Promise<Record<number, Variant[]>> {
   if (productIds.length === 0) return {};
-  
+
   const rows = await this.db
     .select({ variant: productVariants })
     .from(productVariants)
@@ -542,7 +561,7 @@ private async getHydratedVariants(
   for (const row of rows) {
     const pid = row.variant.productId;
     if (!map[pid]) map[pid] = [];
-    
+
     // More transformation
     const labelMap = (row.variant.localizedLabel as TranslationMap) || { en: '', ar: '' };
     map[pid].push({
@@ -574,6 +593,7 @@ private async getProductAttributes(
 ```
 
 **Why It's Wrong**:
+
 - ❌ Each method calls the database independently (bad for performance)
 - ❌ Private methods hide internal query patterns from testing
 - ❌ Other services/repositories can't reuse these queries
@@ -646,6 +666,7 @@ backend/src/features/catalog/
 3. **AdminProductMutationService** (admin application) → calls `db/queries` directly (again!)
 
 **Inconsistency**:
+
 - No single source of truth for queries
 - Hard to refactor query patterns (where do you change it?)
 - Some services know about db/queries, others don't
@@ -655,15 +676,15 @@ backend/src/features/catalog/
 
 ## Summary Table: Business Logic Leakage by Severity
 
-| Pattern | Severity | Location | Issue | Impact |
-|---------|----------|----------|-------|--------|
-| **N+1 Queries** | 🔴 CRITICAL | Product, Order repos | Multiple internal queries per method | Performance at scale, untestable |
-| **Complex Matching Logic** | 🔴 CRITICAL | SchoolListRepository.matchVariants() | Business rules in persistence | Can't test without DB, hard to reuse |
-| **Repo-to-Repo Coupling** | 🔴 CRITICAL | SchoolList, Inventory repos | Direct instantiation (no DI) | Can't mock, unmaintainable |
-| **Data Transformation** | 🟠 HIGH | All repositories | JSON parsing, locale logic in mapToDomain | Testability, maintainability |
-| **Private Helpers** | 🟠 HIGH | Product repo | Hidden sub-queries | Performance, testability |
-| **Query Layer Inconsistency** | 🟠 HIGH | Across all features | Some use repo, some use db/queries | Confusion, maintenance overhead |
-| **Mutation Logic Bypass** | 🟡 MEDIUM | AdminProductMutation | Calls db/queries, bypasses repo | Inconsistent patterns |
+| Pattern                       | Severity    | Location                             | Issue                                     | Impact                               |
+| ----------------------------- | ----------- | ------------------------------------ | ----------------------------------------- | ------------------------------------ |
+| **N+1 Queries**               | 🔴 CRITICAL | Product, Order repos                 | Multiple internal queries per method      | Performance at scale, untestable     |
+| **Complex Matching Logic**    | 🔴 CRITICAL | SchoolListRepository.matchVariants() | Business rules in persistence             | Can't test without DB, hard to reuse |
+| **Repo-to-Repo Coupling**     | 🔴 CRITICAL | SchoolList, Inventory repos          | Direct instantiation (no DI)              | Can't mock, unmaintainable           |
+| **Data Transformation**       | 🟠 HIGH     | All repositories                     | JSON parsing, locale logic in mapToDomain | Testability, maintainability         |
+| **Private Helpers**           | 🟠 HIGH     | Product repo                         | Hidden sub-queries                        | Performance, testability             |
+| **Query Layer Inconsistency** | 🟠 HIGH     | Across all features                  | Some use repo, some use db/queries        | Confusion, maintenance overhead      |
+| **Mutation Logic Bypass**     | 🟡 MEDIUM   | AdminProductMutation                 | Calls db/queries, bypasses repo           | Inconsistent patterns                |
 
 ---
 
@@ -729,7 +750,7 @@ class ProductAssembler {
     return {
       id: dbProduct.id,
       name: this.localization.selectByLocale(dbProduct.localizedName, 'en'),
-      variants: variants.map(v => this.assembleVariant(v)),
+      variants: variants.map((v) => this.assembleVariant(v)),
       // ...
     };
   }
@@ -756,15 +777,13 @@ class ProductService {
 
   async getAll(): Promise<Product[]> {
     const products = await this.queries.getAll();
-    
+
     const [variantsMap, tagsMap] = await Promise.all([
-      this.queries.getVariantsByProductIds(products.map(p => p.id)),
-      this.queries.getTagsByProductIds(products.map(p => p.id)),
+      this.queries.getVariantsByProductIds(products.map((p) => p.id)),
+      this.queries.getTagsByProductIds(products.map((p) => p.id)),
     ]);
 
-    return products.map(p => 
-      this.assembler.assemble(p, variantsMap[p.id], tagsMap[p.id])
-    );
+    return products.map((p) => this.assembler.assemble(p, variantsMap[p.id], tagsMap[p.id]));
   }
 }
 ```
