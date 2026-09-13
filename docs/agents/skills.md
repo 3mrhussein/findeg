@@ -1,41 +1,28 @@
 # Repository skills
 
-The skills under `.agents/skills/` and `skills-lock.json` are tracked in Git.
-They were imported from commit `99d5e7cf711df425c3377df0cb9588d0b37e375f`
-(mattpocock/skills), with local compatibility edits. New worktrees created from
-`origin/develop` after this integration inherit these files automatically.
-Skill installation is separate from the dependency installation required by
-`CONTRIBUTING.md`; no per-worktree skill reinstall or symlink is needed.
+The 37 skills under `.agents/skills/` are unmodified copies from
+[mattpocock/skills at `3cca18b368ae95cdbdebbff572ccafa662551015`](https://github.com/mattpocock/skills/tree/3cca18b368ae95cdbdebbff572ccafa662551015).
+Their 100 files also match the original local import commit
+`99d5e7cf711df425c3377df0cb9588d0b37e375f` byte for byte.
+`skills-lock.json` records the source paths and original source hashes.
 
-## Using skills here
+## Setup
 
-`AGENTS.md`, `CONTRIBUTING.md`, the configured `docs/agents/` documents, and
-accepted ADRs govern repository work. Apply them when a generic skill recipe
-suggests a different branch, tracker, architecture, or delivery process.
-Read `CONTRIBUTING.md` before a skill starts ticket work, creates worktrees,
-or opens or merges PRs, including research and prototype sessions.
+The native `setup-matt-pocock-skills` configuration uses GitHub Issues, the
+default triage labels, and one root `CONTEXT.md` with `docs/adr/`. Its tracker,
+label, and domain templates live in `docs/agents/` and are linked by `AGENTS.md`.
 
-The existing setup is GitHub Issues, the five canonical triage state labels,
-and one domain context at the root. Package count does not change that choice.
-Setup skills should preserve these decisions and existing checks, making only
-the configuration changes requested by the user.
+Choose a workflow through [ask-matt](../../.agents/skills/ask-matt/SKILL.md).
+The upstream skills define their own scope and completion criteria. Repository
+build checks remain documented in [CONTRIBUTING.md](../../CONTRIBUTING.md).
 
-Skills that mention the Skill tool mean reading and following the named
-`SKILL.md` through the current agent's available skill mechanism. Slash names
-refer to the same files. User-invoked skills retain their invocation metadata;
-router skills guide the user to them.
+## Maintenance
 
-## Maintaining the import
+The skill files are tracked in Git and excluded from repository formatting so
+the upstream contents stay intact. Update from upstream as a deliberate source
+update, including its provenance; keep repository configuration in the setup
+documents rather than editing the installed skills.
 
-The lockfile retains the source paths and hashes from the imported setup as
-upstream provenance; it is not a checksum of the locally adapted files.
-Review upstream updates against our local edits before replacing files.
-
-Compatibility edits cover ticket implementation and orchestration, the skill
-router, ticket dependency planning, research/prototype isolation, and setup
-preservation. Preserve these adaptations when updating the imported skills.
-Run the checks and two-axis review required by `CONTRIBUTING.md` for updates.
-
-To inspect inheritance in a new worktree, compare its tracked
-`.agents/skills/` files and `skills-lock.json` with the merged `origin/develop`.
-Existing worktrees stay at their own revisions until they integrate that branch.
+Each worktree has the skill version at its own checked-out revision. Updating
+one checkout does not update another checkout or a skill body already loaded
+in an agent session. An absolute skill path selects that particular checkout.
