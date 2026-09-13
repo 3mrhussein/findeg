@@ -351,6 +351,7 @@ export type {
 
 /** Infrastructure binds these purpose-specific writes to the workflow transaction. */
 export interface DurablePartnerRewardStore {
+  earnDeliveredOrder(orderReference: string, actorId: number): Promise<void>;
   rateForPartner(
     partnerId: number,
   ): Promise<import('./contracts.js').PartnerRewardRate | undefined>;

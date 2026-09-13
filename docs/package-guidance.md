@@ -76,6 +76,30 @@ outcome commit or roll back together. `entitlementsForOrder` exposes accepted fa
 for the subsequent qualifying-payment workflow without repricing. Reports must read
 this same ledger rather than introducing a second accounting history.
 
+### COD delivery and payment (#94)
+
+`order-lifecycle` coordinates Identity, Commerce, Inventory and Partner Rewards
+through one transaction. Back Office users can load an Order by reference and use
+the bilingual delivery/payment controls. The same operations are exposed through
+`GET/POST /api/v1/back-office/orders/{reference}`. Delivery requires
+`fulfillment.manage`; recording the full accepted COD amount requires `finance.manage`
+and previously successful delivery. Credentials are freshly resolved before replay.
+
+Migration `0010_cod_lifecycle` adds append-only Commerce delivery/payment events
+with actor/time and exact payment amount, durable caller/action/key outcomes, and
+Inventory finalization markers. The transaction locks the accepted Order, consumes
+its reserved and on-hand quantities once, and preserves the original reservations
+and stock history. Payment appends each entitlement's paid event once using its
+accepted points/conversion, with no current-rate repricing or caller-supplied points.
+Required-write failures roll back lifecycle, inventory, rewards and replay outcomes.
+
+Repeated input under the same key returns the original outcome; changed reference
+or payment amount conflicts. Different keys return `already-delivered`/`already-paid`
+and cannot repeat effects. Guest Order verification includes `currentState`, separate
+from the immutable accepted snapshot; guest presentation uses that current lifecycle
+state. Finance corrections and partner statements continue to use the same ledger.
+No online payment, school collection or external notification channel is introduced.
+
 ### Partner Reward statement semantics (#92)
 
 The Partner Rewards module folds events in append order. `pending` is the sum of

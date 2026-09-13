@@ -20,6 +20,31 @@ export function bindPartnerRewardStore(database: TransactionDatabase): DurablePa
   const lockRate = (partnerId: number) =>
     database.execute(sql`SELECT pg_advisory_xact_lock(93001, ${partnerId})`);
   return {
+    async earnDeliveredOrder(orderReference, actorId) {
+      const rows = await database
+        .select({ entitlement: partnerRewardEntitlements, rate: partnerRewardRates })
+        .from(partnerRewardEntitlements)
+        .innerJoin(partnerRewardRates, eq(partnerRewardRates.id, partnerRewardEntitlements.rateId))
+        .where(eq(partnerRewardEntitlements.orderReference, orderReference))
+        .orderBy(partnerRewardEntitlements.id);
+      for (const { entitlement, rate } of rows) {
+        await database
+          .insert(partnerRewardEvents)
+          .values({
+            entitlementId: entitlement.id,
+            businessPartnerId: entitlement.businessPartnerId,
+            orderReference,
+            eventType: 'paid',
+            actorId,
+            points: entitlement.points,
+            earnedPoints: entitlement.points,
+            conversionRate: rate.egpPerPoint,
+            fulfillment: 'delivery',
+            fulfillmentCompleted: true,
+          })
+          .onConflictDoNothing();
+      }
+    },
     async rateForPartner(partnerId) {
       await lockRate(partnerId);
       const [rate] = await database

@@ -22,6 +22,34 @@ for (const locale of ['en', 'ar']) {
     });
   });
 
+  it(`${locale}: staff deliver a list Order before recording its COD payment`, () => {
+    cy.task('operatorFixture').then(({email,password}) => {
+      cy.task('listFixture').then(({code,zoneId}) => {
+        cy.visit(`/${locale}`);
+        cy.request({method:'POST',url:`/api/v1/commerce/list-selections/${code}/quote`,headers:{origin:Cypress.config('baseUrl')},body:{zoneId}}).then(({body:quote}) => {
+          cy.request({method:'POST',url:`/api/v1/commerce/list-selections/${code}/checkout`,headers:{origin:Cypress.config('baseUrl')},body:{
+            key:crypto.randomUUID(),confirmation:quote.confirmation,
+            address:{name:'Journey Customer',email:'journey@example.test',phone:'01012345678',street:'10 Test Street',city:'Cairo',zoneId},
+            paymentMethod:'cash-on-delivery',deliveryMethod:'home-delivery',
+          }}).then(({body:receipt}) => {
+            cy.visit(`/${locale}/back-office/sign-in`);
+            cy.get('input[name="email"]').type(email);
+            cy.get('input[name="password"]').type(password);
+            cy.get('button[type="submit"]').click();
+            cy.get('input[name="orderReference"]').type(receipt.reference);
+            cy.contains('button',text('Load Order','عرض الطلب')).click();
+            cy.contains('button',text('Record cash received','تسجيل استلام النقد')).should('be.disabled');
+            cy.contains('button',text('Confirm delivery','تأكيد التسليم')).click();
+            cy.get('[data-testid="order-lifecycle-status"]').should('contain',text('Delivered','تم التسليم'));
+            cy.contains('button',text('Record cash received','تسجيل استلام النقد')).click();
+            cy.get('[data-testid="order-lifecycle-status"]').should('contain',text('Paid','مدفوع'));
+            cy.contains('button',text('Record cash received','تسجيل استلام النقد')).should('be.disabled');
+          });
+        });
+      });
+    });
+  });
+
   it(`${locale}: an operator observes exhausted delivery and recovery through worker readiness`, () => {
     cy.visit(`/${locale}`);
     cy.task('failedWorkerFixture').then(({ base }) => {

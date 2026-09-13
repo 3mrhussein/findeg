@@ -22,7 +22,7 @@ module.exports = function registerOperatorJourneys(on, fixture) {
         const [user] =
           await sql`INSERT INTO identity.users(email, email_verified) VALUES (${email}, now()) RETURNING id`;
         await sql`INSERT INTO identity.password_credentials(user_id, password_hash) VALUES (${user.id}, ${await bcrypt.hash(password, 4)})`;
-        await sql`INSERT INTO identity.staff_role_grants(user_id, role) VALUES (${user.id}, 'finance-manager')`;
+        await sql`INSERT INTO identity.staff_role_grants(user_id, role) VALUES (${user.id}, 'finance-manager'), (${user.id}, 'fulfillment-operator')`;
         const [partner] =
           await sql`INSERT INTO identity.business_partners(code, name_en, name_ar, status) VALUES (${randomUUID()}, 'Journey Partner', 'شريك التجربة', 'active') RETURNING id`;
         const [other] =

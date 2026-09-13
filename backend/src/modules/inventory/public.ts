@@ -43,3 +43,7 @@ export function isInventoryAdjustment(value: unknown): value is InventoryAdjustm
 }
 
 export type { InventoryAdjustment } from './contracts.js';
+
+export interface InventoryFulfillment {
+  deliver(reference: string, actorId: number): Promise<boolean>;
+}

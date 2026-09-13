@@ -192,6 +192,158 @@ test('accepted list rewards use exact configured snapshots and share the accepta
     ).length,
     0,
   );
+  // Fulfillment and payment use staff credentials, accepted totals and snapshotted rewards.
+  assert.equal(
+    (
+      await runtime.orderLifecycle.pay(token, accepted.reference, {
+        key: 'pay-before-delivery',
+        amount: '30.00',
+      })
+    ).status,
+    'delivery-required',
+  );
+  assert.equal(
+    (await runtime.orderLifecycle.deliver(token, accepted.reference, { key: 'delivery' })).status,
+    'authorization-denied',
+  );
+  await sql`INSERT INTO identity.staff_role_grants(user_id,role) VALUES (${user.id},'fulfillment-operator')`;
+  const delivered = await runtime.orderLifecycle.deliver(token, accepted.reference, {
+    key: 'delivery',
+  });
+  assert.equal(delivered.status, 'delivered');
+  assert.deepEqual(
+    await runtime.orderLifecycle.deliver(token, accepted.reference, { key: 'delivery' }),
+    delivered,
+  );
+  assert.equal(
+    (await runtime.orderLifecycle.deliver(token, accepted.reference, { key: 'other-delivery' }))
+      .status,
+    'already-delivered',
+  );
+  assert.equal(
+    (
+      await runtime.orderLifecycle.pay(token, accepted.reference, {
+        key: 'payment',
+        amount: '29.99',
+      })
+    ).status,
+    'amount-mismatch',
+  );
+  const [paid, paidReplay] = await Promise.all([
+    runtime.orderLifecycle.pay(token, accepted.reference, { key: 'payment', amount: '30.00' }),
+    runtime.orderLifecycle.pay(token, accepted.reference, { key: 'payment', amount: '30.00' }),
+  ]);
+  assert.equal(paid.status, 'paid');
+  assert.deepEqual(paidReplay, paid);
+  assert.equal(
+    (
+      await runtime.orderLifecycle.pay(token, accepted.reference, {
+        key: 'payment',
+        amount: '31.00',
+      })
+    ).status,
+    'idempotency-conflict',
+  );
+  assert.equal(
+    (
+      await runtime.orderLifecycle.pay(token, accepted.reference, {
+        key: 'other-payment',
+        amount: '30.00',
+      })
+    ).status,
+    'already-paid',
+  );
+  const earned =
+    await sql`SELECT * FROM identity.partner_reward_events WHERE order_reference=${accepted.reference} AND event_type='paid'`;
+  assert.equal(earned.length, 1);
+  assert.equal(earned[0].earned_points, 20);
+  assert.equal(earned[0].conversion_rate, '0.0125');
+  assert.equal(earned[0].actor_id, user.id);
+  const [balance] =
+    await sql`SELECT on_hand,reserved FROM inventory.inventory_balances WHERE variant_id=${variant.id}`;
+  assert.equal(balance.on_hand, 99);
+  assert.equal(balance.reserved, 2);
+  assert.equal(
+    (
+      await sql`SELECT * FROM inventory.order_fulfillments WHERE order_reference=${accepted.reference}`
+    ).length,
+    1,
+  );
+  assert.equal(
+    (await runtime.orderLifecycle.read(token, accepted.reference)).state.paymentStatus,
+    'paid',
+  );
+  const [unchanged] =
+    await sql`SELECT snapshot FROM sales.accepted_orders WHERE reference=${accepted.reference}`;
+  assert.deepEqual(unchanged.snapshot, stored.snapshot);
+  const recovered = await runtime.listCommerce.acceptCheckout(owner, code, failureInput);
+  await sql`CREATE FUNCTION sales.fail_lifecycle_insert() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RAISE EXCEPTION 'lifecycle write failed'; END $$`;
+  await sql`CREATE TRIGGER fail_lifecycle BEFORE INSERT ON sales.order_lifecycle_events FOR EACH ROW EXECUTE FUNCTION sales.fail_lifecycle_insert()`;
+  const [stockBefore] =
+    await sql`SELECT on_hand,reserved FROM inventory.inventory_balances WHERE variant_id=${variant.id}`;
+  await assert.rejects(
+    runtime.orderLifecycle.deliver(token, recovered.reference, { key: 'recover-delivery' }),
+    (error) => error.cause?.message === 'lifecycle write failed',
+  );
+  assert.deepEqual(
+    (
+      await sql`SELECT on_hand,reserved FROM inventory.inventory_balances WHERE variant_id=${variant.id}`
+    )[0],
+    stockBefore,
+  );
+  assert.equal(
+    (
+      await sql`SELECT * FROM inventory.order_fulfillments WHERE order_reference=${recovered.reference}`
+    ).length,
+    0,
+  );
+  await sql`DROP TRIGGER fail_lifecycle ON sales.order_lifecycle_events`;
+  await runtime.orderLifecycle.deliver(token, recovered.reference, { key: 'recover-delivery' });
+  await sql`CREATE TRIGGER fail_reward BEFORE INSERT ON identity.partner_reward_events FOR EACH ROW EXECUTE FUNCTION identity.fail_reward_insert()`;
+  await assert.rejects(
+    runtime.orderLifecycle.pay(token, recovered.reference, {
+      key: 'recover-payment',
+      amount: '30.00',
+    }),
+    (error) => error.cause?.message === 'reward write failed',
+  );
+  assert.equal(
+    (await runtime.orderLifecycle.read(token, recovered.reference)).state.paymentStatus,
+    'unpaid',
+  );
+  assert.equal(
+    (await sql`SELECT * FROM sales.order_lifecycle_outcomes WHERE key='recover-payment'`).length,
+    0,
+  );
+  await sql`DROP TRIGGER fail_reward ON identity.partner_reward_events`;
+  const competing = await Promise.all([
+    runtime.orderLifecycle.pay(token, recovered.reference, {
+      key: 'recover-payment',
+      amount: '30.00',
+    }),
+    runtime.orderLifecycle.pay(token, recovered.reference, {
+      key: 'competing-payment',
+      amount: '30.00',
+    }),
+  ]);
+  assert.deepEqual(competing.map((result) => result.status).sort(), ['already-paid', 'paid']);
+  await assert.rejects(
+    sql`UPDATE sales.order_lifecycle_events SET amount=1 WHERE order_reference=${accepted.reference}`,
+    /append-only/,
+  );
+  assert.equal(
+    (await runtime.orderLifecycle.deliver(token, ordinary.reference, { key: 'delivery' })).status,
+    'idempotency-conflict',
+  );
   await sql`DELETE FROM identity.staff_role_grants WHERE user_id=${user.id}`;
   assert.equal((await configure('initial')).status, 'authorization-denied');
+  assert.equal(
+    (
+      await runtime.orderLifecycle.pay(token, accepted.reference, {
+        key: 'payment',
+        amount: '30.00',
+      })
+    ).status,
+    'authorization-denied',
+  );
 });

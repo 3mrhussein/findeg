@@ -97,6 +97,125 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /back-office/orders/{reference}:
+    parameters:
+      - in: path
+        name: reference
+        required: true
+        schema:
+          type: string
+          pattern: '^[a-f0-9]{64}$'
+    get:
+      operationId: get_back_office_order_state
+      summary: Read current delivery and payment state
+      description: Requires fresh fulfillment.manage or finance.manage access. Accepted snapshots remain historical; this result is the current lifecycle projection.
+      security:
+        - sessionCookie: []
+      x-idempotency: Read only; safe to retry.
+      responses:
+        '200':
+          description: Current Order state
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status, state]
+                properties:
+                  status:
+                    const: found
+                  state:
+                    $ref: '#/components/schemas/OrderState'
+        '400':
+          description: invalid-input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: authentication-required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: authorization-denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: not-found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      operationId: post_back_office_order_lifecycle
+      summary: Confirm home delivery or record the full COD payment
+      description: Requires same-origin Origin. Deliver requires fulfillment.manage; pay requires finance.manage. Payment follows successful delivery and amount must exactly equal the accepted total. No online payment or collection workflow.
+      security:
+        - sessionCookie: []
+      x-idempotency: Caller, action and key identify a durable outcome. Identical reference and amount replay after fresh authorization; changed input conflicts. Different keys cannot repeat delivery, stock finalization, payment or earning.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [action, key]
+              properties:
+                action:
+                  type: string
+                  enum: [deliver, pay]
+                key:
+                  type: string
+                  pattern: '^[a-zA-Z0-9_-]{1,128}$'
+                amount:
+                  $ref: '#/components/schemas/Money'
+      responses:
+        '200':
+          description: Delivery or payment recorded, including identical replay
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status, state]
+                properties:
+                  status:
+                    type: string
+                    enum: [delivered, paid]
+                  state:
+                    $ref: '#/components/schemas/OrderState'
+        '400':
+          description: invalid-input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: authentication-required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: authorization-denied or origin-denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: not-found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: delivery-required, amount-mismatch, already-delivered, already-paid, reservation-unavailable or idempotency-conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /sessions:
     post:
       summary: Authenticate an active User and issue an opaque session cookie
@@ -2220,6 +2339,24 @@ components:
           $ref: '#/components/schemas/LocalizedText'
         fee:
           $ref: '#/components/schemas/Money'
+    OrderState:
+      type: object
+      required: [reference, fulfillmentStatus, paymentStatus, total]
+      properties:
+        reference:
+          type: string
+        fulfillmentStatus:
+          type: string
+          enum: [accepted, delivered]
+        paymentStatus:
+          type: string
+          enum: [unpaid, paid]
+        total:
+          $ref: '#/components/schemas/Money'
+        deliveredAt:
+          type: string
+        paidAt:
+          type: string
     RewardSnapshot:
       type: object
       required: [rateId, pointsPerEgp, egpPerPoint, points, rewardValue]
@@ -2391,6 +2528,8 @@ components:
         - address
         - guestAccess
       properties:
+        currentState:
+          $ref: '#/components/schemas/OrderState'
         reference:
           type: string
         status:

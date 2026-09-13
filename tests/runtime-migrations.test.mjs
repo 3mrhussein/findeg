@@ -44,7 +44,7 @@ test(
       database = postgres(url.toString(), { max: 1 });
       const [history] =
         await database`SELECT count(*)::int AS count FROM drizzle.__drizzle_migrations`;
-      assert.equal(history.count, 10);
+      assert.equal(history.count, 11);
       assert.equal(schemaOwnership['identity.partner_reward_rates'], 'partner-rewards');
       assert.equal(schemaOwnership['identity.partner_reward_entitlements'], 'partner-rewards');
       const [column] =
