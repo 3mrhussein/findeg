@@ -31,3 +31,17 @@ yarn.lock
 # Preserved frontend migration references: keep baseline source formatting
 frontend/storefront/
 frontend/dashboard/
+# AI instructions, skills, and their supporting documentation
+**/.agent/
+**/.agents/
+**/.claude/
+**/.codex/
+**/.github/
+**/AGENTS.md
+**/CLAUDE.md
+**/CONTRIBUTING.md
+**/CONTEXT.md
+**/CONTEXT-MAP.md
+docs/agents/
+skills-lock.json
+
