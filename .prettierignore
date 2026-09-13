@@ -27,3 +27,7 @@ yarn.lock
 
 # Vendored upstream skills: preserve their original contents
 .agents/skills/
+
+# Preserved frontend migration references: keep baseline source formatting
+frontend/storefront/
+frontend/dashboard/

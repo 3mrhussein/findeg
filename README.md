@@ -10,7 +10,7 @@ FindEg is a bilingual Egyptian stationery marketplace with one target web applic
 - `runtime` owns process configuration and web, worker, and migration composition.
 - `frontend/ui` retains prototype presentation components for possible reuse; the target web application does not currently depend on it.
 
-The retired Storefront and Dashboard applications, their dedicated tests, and obsolete database setup entry points are no longer workspace packages. Historical architecture documents are context only; the canonical target is documented in [docs/architecture/README.md](docs/architecture/README.md).
+The original Storefront and Dashboard sources, pages, themes, assets, and tests are preserved in `frontend/storefront` and `frontend/dashboard` as migration references, outside the active workspace. Their full experience has not yet been migrated. Follow the [frontend preservation and migration map](docs/frontend-migration.md) before changing or removing them. The supported runtime is `frontend/web`; obsolete database setup entry points remain removed.
 
 ## Development
 

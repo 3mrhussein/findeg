@@ -2,10 +2,12 @@
 
 ## Unreleased
 
-- Retire the prototype Storefront and Dashboard executables, their dedicated tests,
-  and obsolete database setup paths (#64). Document retained compatibility code,
-  schema history, and retirement conditions; make the unified runtime the supported
-  development path. Production certification and controlled release remain with #89.
+- Preserve the original Storefront and Dashboard pages, themes, assets, translations,
+  and tests as migration references outside the active workspace (#64). Restore their
+  premature deletion and record a page-by-page migration map: target development
+  gates do not establish full feature or visual parity. Keep the unified runtime as
+  the supported development path and obsolete database setup paths removed.
+  Production certification and controlled release remain with #89.
 
 - Add production readiness gates and operational procedures (#63): required lint,
   dependency security and documentation checks, bilingual operator journeys,
