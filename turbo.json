@@ -58,17 +58,6 @@
       "cache": false,
       "outputs": ["db/migrations/**"]
     },
-    "db:migrate": {
-      "dependsOn": ["db:generate"],
-      "cache": false
-    },
-    "db:push": {
-      "cache": false
-    },
-    "db:seed": {
-      "dependsOn": ["db:push"],
-      "cache": false
-    },
     "db:studio": {
       "cache": false,
       "persistent": true

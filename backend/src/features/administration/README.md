@@ -1,5 +1,7 @@
 # Administration Feature
 
+> Historical prototype compatibility evidence; this guide does not govern target development. See [supported ownership and retirement boundaries](../../../../docs/package-guidance.md#retained-compatibility-evidence-64).
+
 The **Administration Feature** is the command-and-control backing layer for dashboard operations. It handles staff assignment matrices, strict operational auditing, and global configuration flags.
 
 ## 🎯 Core Responsibilities

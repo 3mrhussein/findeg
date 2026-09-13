@@ -1,5 +1,7 @@
 # Hybrid Taxonomy Guide
 
+> Historical prototype compatibility evidence; this guide does not govern target development. See [supported ownership and retirement boundaries](../../docs/package-guidance.md#retained-compatibility-evidence-64).
+
 This document explains the Hybrid Taxonomy system used for product classification, discovery, and filtering.
 
 ## Overview

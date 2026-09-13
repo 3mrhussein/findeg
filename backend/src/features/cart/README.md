@@ -1,5 +1,7 @@
 # Cart Feature
 
+> Historical prototype compatibility evidence; this guide does not govern target development. See [supported ownership and retirement boundaries](../../../../docs/package-guidance.md#retained-compatibility-evidence-64).
+
 The **Cart Feature** manages the transient, ephemeral state of user selections before finalizing into an order. It heavily supports real-time multi-unit math and session-based guest transitions.
 
 ## 🎯 Core Responsibilities

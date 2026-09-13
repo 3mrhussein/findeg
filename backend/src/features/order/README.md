@@ -1,5 +1,7 @@
 # Order Feature
 
+> Historical prototype compatibility evidence; this guide does not govern target development. See [supported ownership and retirement boundaries](../../../../docs/package-guidance.md#retained-compatibility-evidence-64).
+
 The **Order Feature** handles the critical path of transforming shopping carts into transactional, immutable historical records. It orchestrates checkout validation, fulfillment tracking, and pricing snapshots.
 
 ## 🎯 Core Responsibilities

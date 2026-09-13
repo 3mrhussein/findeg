@@ -1,5 +1,7 @@
 # Catalog Feature
 
+> Historical prototype compatibility evidence; this guide does not govern target development. See [supported ownership and retirement boundaries](../../../../docs/package-guidance.md#retained-compatibility-evidence-64).
+
 The **Catalog Feature** is the core operational heart of the FindEg backend. It manages the strict lifecycles of products, categories, hierarchical collections, tags, and **School Lists**.
 
 ## 🎯 Responsibilities & True Capabilities

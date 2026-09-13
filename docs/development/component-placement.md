@@ -1,5 +1,7 @@
 # Component Placement (Strict)
 
+> Historical prototype compatibility evidence; this guide does not govern target development. See [supported ownership and retirement boundaries](../package-guidance.md#retained-compatibility-evidence-64).
+
 This project enforces a strict rule: **React components (JSX) do not live inside feature presentation**.
 
 The allowed locations for components are intentionally limited to keep the architecture predictable and prevent “UI leaking” into feature layers.

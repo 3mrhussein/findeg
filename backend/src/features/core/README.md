@@ -1,5 +1,7 @@
 # Core Feature (Shared Kernel)
 
+> Historical prototype compatibility evidence; this guide does not govern target development. See [supported ownership and retirement boundaries](../../../../docs/package-guidance.md#retained-compatibility-evidence-64).
+
 The **Core Feature** is the untouchable shared boundary of the FindEg monorepo. Every other functional domain (Catalog, Order, Identity) structurally loops dependencies back into `core`.
 
 ## 🎯 Core Utility Domains

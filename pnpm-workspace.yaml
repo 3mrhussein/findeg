@@ -6,8 +6,6 @@ packages:
   - 'db'
   - 'backend'
   - 'frontend/ui'
-  - 'frontend/storefront'
-  - 'frontend/dashboard'
 allowBuilds:
   '@parcel/watcher': false
   '@swc/core': false

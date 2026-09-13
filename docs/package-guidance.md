@@ -37,7 +37,7 @@ management and List Selection writes require the same-origin Origin header.
 
 The architecture gate follows transitive imports from target `use client` modules
 and browser-safe contracts, rejecting runtime, server, infrastructure and Node-only
-dependencies. Legacy portal retirement remains with #64. `pnpm test:architecture`
+dependencies. Legacy portal retirement is completed by #64. `pnpm test:architecture`
 also checks route/OpenAPI coverage, references, response schemas and retry metadata.
 Real PostgreSQL tests compare HTTP outcomes with the same application operations,
 including immutable-list rejection and checkout replay/conflict. OpenAPI response
@@ -67,9 +67,30 @@ delivery remains an internal process operation.
 - Target server entry points import emitted JavaScript through explicit exports.
   Their builds precede dependent type checks. Business owners never import runtime.
 
-Legacy `frontend/storefront` and `frontend/dashboard` remain available through
-`pnpm dev:legacy` for migration evidence. New behavior belongs in the target host;
-#64 owns their retirement after replacement journeys are certified.
+The retired Storefront and Dashboard executables are no longer workspace packages.
+New behavior belongs in `frontend/web`; #89 owns the later production certification
+and controlled release phase.
+
+## Retained compatibility evidence (#64)
+
+The following surfaces remain for comparison and migration continuity. They are
+not supported application entry points, and new behavior belongs in the target
+modules and runtime. Their historical READMEs describe the prototype only.
+
+| Retained surface                                                                                      | Replacement and retirement boundary                                                                                                                                                                                                                                                                                                                                                                  |
+| ----------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `backend/src/features`, its tests, the root and `features/*` exports, and `portal-entry` export/build | Target `backend/src/modules`, application operations, and `runtime` replace these services. Retire a feature together with its old exports and tests when its remaining imports are removed and the corresponding target behavioral, HTTP, and PostgreSQL gates cover the behavior being retained. Unreleased prototype capabilities are not promised target features.                               |
+| Legacy `backend/src/lib`, `backend/src/types`, and their tests                                        | Remove a helper when neither a retained feature nor a target module imports it; preserve target-used helpers until an owner-scoped replacement passes the same behavior checks.                                                                                                                                                                                                                      |
+| `db/src/connection.ts`, query/type barrels, `db/seed.ts`, `db/seeds`, `db:seed`, and `packages/env`   | Compatibility tools for disposable prototype fixtures only; the seed runner truncates data and does not provision target access. Target runtime configuration, injected persistence adapters, and test-owned fixtures replace them. Retire them and their exports/dependencies after their last compatibility caller is removed and target migration/replay and application tests pass without them. |
+| `db/src/schema` mappings re-exported by owner schemas                                                 | Still required by the target schema assembly. Move definitions into their owners before removing these mappings; verify identical schema ownership and migration/replay results. Do not drop persisted records as code cleanup.                                                                                                                                                                      |
+| `db/migrations`, including the original prototype migrations and snapshots                            | Required immutable history for fresh databases and replay, not an alternative schema setup path. Keep it for the lifetime of this migration chain. Retirement requires a separately approved baseline/data transition with fresh-install, upgrade, and replay evidence.                                                                                                                              |
+| `frontend/ui`                                                                                         | Retained prototype presentation components; `frontend/web` does not currently depend on them. Adopt individual components with target type/RTL checks, or remove the unused package after checking that no consumers remain.                                                                                                                                                                         |
+
+The existing compatibility tests remain part of `pnpm test` while their subjects
+are retained. The removed portal tests are replaced by `frontend/web/cypress/e2e`
+journeys and the HTTP/process/PostgreSQL suites in `tests`, run by
+`pnpm quality:check`. Passing these development gates does not certify a production
+release; #89 owns that separate evidence and approval.
 
 ## Module data and transactions (#53)
 
@@ -106,9 +127,8 @@ ownership register and verify replay. New tables belong in their owner's schema
 fragment and must be exported through the assembly. Add an ordered migration and
 update replay expectations when changing the physical schema. This ticket changes
 ownership/construction, so it adds no SQL migration or replacement business tables.
-The two existing migrations and retained schema mappings remain compatibility
-evidence until their feature replacements and #64 retirement; their commercial
-rules are not certified by assigning ownership.
+The original migrations and retained schema mappings follow the compatibility
+boundaries above; their commercial rules are not certified by assigning ownership.
 
 ### Application and construction boundaries
 
