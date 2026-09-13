@@ -1,3 +1,4 @@
+import { createOrderLifecycle } from '@findeg/backend/order-lifecycle';
 import { createRewardRateOperations } from '@findeg/backend/reward-rates';
 import { bindPartnerRewardStore } from '@findeg/backend/modules/partner-rewards/infrastructure/persistence';
 import { createHash, randomBytes, randomInt } from 'node:crypto';
@@ -5,6 +6,7 @@ import { createPartnerOperations } from '@findeg/backend/partner-operations';
 import { createListCommerce } from '@findeg/backend/list-commerce';
 import { createStorefrontCommerce } from '@findeg/backend/checkout';
 import {
+  bindOrderLifecycleStore,
   bindCommerceStore,
   bindListSelectionStore,
 } from '@findeg/backend/modules/commerce/infrastructure/persistence';
@@ -29,6 +31,7 @@ import {
 } from '@findeg/backend/modules/catalog/infrastructure/persistence';
 import { InventoryVariantNotFoundError } from '@findeg/backend/modules/inventory/public';
 import {
+  bindInventoryFulfillment,
   bindInventoryReservations,
   bindInventoryStore,
 } from '@findeg/backend/modules/inventory/infrastructure/persistence';
@@ -44,6 +47,8 @@ export function createWebRuntime(environment: Readonly<Record<string, string | u
   const persistence = createTransactionRuntime(
     { url: config.DATABASE_URL, ssl: config.DB_SSL, max: 5 },
     (database) => ({
+      orderLifecycle: bindOrderLifecycleStore(database),
+      fulfillment: bindInventoryFulfillment(database),
       rewards: bindPartnerRewardStore(database),
       commerce: bindCommerceStore(database),
       selections: bindListSelectionStore(database, config.LIST_SELECTION_INACTIVITY_DAYS),
@@ -90,6 +95,7 @@ export function createWebRuntime(environment: Readonly<Record<string, string | u
         )
       : Promise.resolve({ status: 'authentication-required' } as const);
   return {
+    orderLifecycle: createOrderLifecycle(persistence.transactions, security),
     rewardRates: {
       configure: (
         ...args: Parameters<ReturnType<typeof createRewardRateOperations>['configure']>

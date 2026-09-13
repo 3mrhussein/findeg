@@ -5,6 +5,7 @@ import {
   stockMovements,
   warehouses,
   orderReservations,
+  orderFulfillments,
 } from '@findeg/db/modules/inventory';
 import {
   InventoryVariantNotFoundError,
@@ -21,18 +22,13 @@ export function bindInventoryReservations(database: TransactionDatabase): Invent
           .from(inventoryBalances)
           .innerJoin(warehouses, eq(warehouses.id, inventoryBalances.warehouseId))
           .where(
-            and(
-              eq(inventoryBalances.variantId, item.variantId),
-              eq(warehouses.isActive, true),
-            ),
+            and(eq(inventoryBalances.variantId, item.variantId), eq(warehouses.isActive, true)),
           )
           .orderBy(warehouses.id, inventoryBalances.id)
           .for('update');
         if (
-          rows.reduce(
-            (total, { balance }) => total + balance.onHand - balance.reserved,
-            0,
-          ) < item.quantity
+          rows.reduce((total, { balance }) => total + balance.onHand - balance.reserved, 0) <
+          item.quantity
         ) {
           return false;
         }
@@ -141,4 +137,61 @@ export function bindInventoryStore(database: TransactionDatabase): InventoryStor
 
 function isForeignKeyViolation(error: unknown): boolean {
   return typeof error === 'object' && error !== null && 'code' in error && error.code === '23503';
+}
+
+export function bindInventoryFulfillment(
+  database: TransactionDatabase,
+): import('../public.js').InventoryFulfillment {
+  return {
+    async deliver(reference, actorId) {
+      const [marker] = await database
+        .insert(orderFulfillments)
+        .values({ orderReference: reference, actorId })
+        .onConflictDoNothing()
+        .returning();
+      if (!marker) return true;
+      const reservations = await database
+        .select()
+        .from(orderReservations)
+        .where(eq(orderReservations.orderReference, reference))
+        .orderBy(orderReservations.variantId, orderReservations.warehouseId);
+      if (!reservations.length) return false;
+      for (const reservation of reservations) {
+        const [balance] = await database
+          .select()
+          .from(inventoryBalances)
+          .where(
+            and(
+              eq(inventoryBalances.variantId, reservation.variantId),
+              eq(inventoryBalances.warehouseId, reservation.warehouseId),
+            ),
+          )
+          .for('update');
+        if (
+          !balance ||
+          balance.reserved < reservation.quantity ||
+          balance.onHand < reservation.quantity
+        )
+          return false;
+        await database
+          .update(inventoryBalances)
+          .set({
+            onHand: balance.onHand - reservation.quantity,
+            reserved: balance.reserved - reservation.quantity,
+            updatedAt: new Date(),
+          })
+          .where(eq(inventoryBalances.id, balance.id));
+        await database.insert(stockMovements).values({
+          variantId: reservation.variantId,
+          warehouseId: reservation.warehouseId,
+          quantity: -reservation.quantity,
+          movementType: 'order-delivery',
+          referenceType: 'accepted-order',
+          referenceId: reference,
+          createdBy: actorId,
+        });
+      }
+      return true;
+    },
+  };
 }

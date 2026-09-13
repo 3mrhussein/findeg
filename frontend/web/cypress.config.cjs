@@ -48,6 +48,7 @@ module.exports = defineConfig({
               await sql`INSERT INTO identity.users(email) VALUES (${code + '@example.test'}) RETURNING id`;
             const [partner] =
               await sql`INSERT INTO identity.business_partners(code, name_en, name_ar, status) VALUES (${code}, 'Journey School', 'مدرسة التجربة', 'active') RETURNING id`;
+            await sql`INSERT INTO identity.partner_reward_rates(business_partner_id,points_per_egp,egp_per_point,actor_id,request_key) VALUES (${partner.id},'1.000000','0.0100',${user.id},${code})`;
             const [category] =
               await sql`INSERT INTO catalog.categories(slug) VALUES (${code}) RETURNING id`;
             const [brand] =

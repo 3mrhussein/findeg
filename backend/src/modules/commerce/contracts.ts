@@ -35,6 +35,7 @@ export interface DeliveryAddress {
 }
 
 export interface AcceptedOrder {
+  readonly currentState?: OrderState;
   readonly reference: string;
   readonly status: 'accepted';
   readonly paymentMethod: 'cash-on-delivery';
@@ -141,3 +142,17 @@ export type ListSelectionResult =
   | {
       readonly status: 'invalid-input' | 'not-found' | 'list-unavailable' | 'selection-unavailable';
     };
+
+/** Current lifecycle projection; the original AcceptedOrder remains an immutable snapshot. */
+export interface OrderState {
+  readonly reference: string;
+  readonly fulfillmentStatus: 'accepted' | 'delivered';
+  readonly paymentStatus: 'unpaid' | 'paid';
+  readonly total: string;
+  readonly deliveredAt?: string;
+  readonly paidAt?: string;
+}
+export interface OrderLifecycleReceipt {
+  readonly status: 'delivered' | 'paid';
+  readonly state: OrderState;
+}
