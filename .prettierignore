@@ -25,5 +25,30 @@ yarn.lock
 .vscode/
 .idea/
 
-# Vendored upstream skills: preserve their original contents
-.agents/skills/
+# AI instructions, skills, and their supporting documentation
+**/.agent/
+**/.agents/
+**/.claude/
+**/.codex/
+**/.github/
+**/AGENTS.md
+**/CLAUDE.md
+**/CONTRIBUTING.md
+**/CONTEXT.md
+**/CONTEXT-MAP.md
+docs/agents/
+skills-lock.json
+
+# Repository and tool configuration (including package-local configuration)
+**/.*
+**/*.config.*
+**/tsconfig*.json
+**/turbo*.json
+**/package.json
+pnpm-workspace.yaml
+**/Dockerfile*
+**/docker-compose*.yml
+**/docker-compose*.yaml
+**/compose*.yml
+**/compose*.yaml
+packages/config/
