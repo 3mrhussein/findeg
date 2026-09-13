@@ -33,7 +33,9 @@
     "./modules/commerce/infrastructure/persistence": "./dist/modules/commerce/infrastructure/persistence.js",
     "./list-commerce": "./dist/application/list-commerce.js",
     "./school-supply-lists": "./dist/application/school-supply-lists.js",
-    "./catalog-inventory": "./dist/application/catalog-inventory.js"
+    "./catalog-inventory": "./dist/application/catalog-inventory.js",
+    "./reward-rates": "./dist/application/reward-rates.js",
+    "./modules/partner-rewards/infrastructure/persistence": "./dist/modules/partner-rewards/infrastructure/persistence.js"
   },
   "scripts": {
     "type-check": "tsc --noEmit",

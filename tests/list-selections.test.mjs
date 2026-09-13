@@ -29,6 +29,7 @@ test('dedicated List Selections preserve list choices and accepted attribution',
     await sql`INSERT INTO identity.users(email) VALUES ('list@example.test') RETURNING id`;
   const [partner] =
     await sql`INSERT INTO identity.business_partners(code, name_en, name_ar, status) VALUES ('school', 'School', 'مدرسة', 'active') RETURNING id`;
+  await sql`INSERT INTO identity.partner_reward_rates(business_partner_id,points_per_egp,egp_per_point,actor_id,request_key) VALUES (${partner.id},'1.000000','0.0100',${user.id},'list-fixture')`;
   const [product] =
     await sql`INSERT INTO catalog.products(localized_name, localized_description, localized_long_description) VALUES ('{"en":"Notebook","ar":"دفتر"}', '{}', '{}') RETURNING id`;
   const [variant] =

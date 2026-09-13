@@ -45,3 +45,33 @@ export interface PartnerAdjustmentInput {
   readonly verifiedBankAccountId?: string;
   readonly settlementReference?: string;
 }
+
+/** Exact business policy: six decimal points per EGP, four decimal EGP per point. */
+export interface PartnerRewardRate {
+  readonly id: number;
+  readonly businessPartnerId: number;
+  readonly pointsPerEgp: string;
+  readonly egpPerPoint: string;
+}
+export interface RewardSnapshot {
+  readonly rateId: number;
+  readonly pointsPerEgp: string;
+  readonly egpPerPoint: string;
+  readonly points: number;
+  readonly rewardValue: string;
+}
+export interface PendingRewardLine {
+  readonly lineIndex: number;
+  readonly businessPartnerId: number;
+  readonly eligibleSubtotal: string;
+  readonly reward: RewardSnapshot;
+}
+export interface RewardEntitlement extends PendingRewardLine {
+  readonly id: number;
+  readonly orderReference: string;
+}
+export interface RewardRateInput {
+  readonly key: string;
+  readonly pointsPerEgp: string;
+  readonly egpPerPoint: string;
+}

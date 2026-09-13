@@ -44,13 +44,37 @@ including immutable-list rejection and checkout replay/conflict. OpenAPI respons
 validation uses the JSON Schema subset supported by Ajv; extend the validator when
 introducing newer schema keywords.
 
-Partner Rewards and Partner Reports currently expose module foundations without
-runtime/persistence wiring. The Partner Reward event schema already exists, but
-accepted Orders do not yet write it. Review remediation is tracked in #91–#95:
-authorized boundaries, accounting corrections, atomic acceptance rewards, COD
-completion, and scoped reporting. These modules are not released HTTP capabilities
-until their durable authorized runtime operations and adapters are implemented.
-Worker notification delivery remains an internal process operation.
+Partner Rewards now persists explicit rate history and accepted line entitlements through
+its transaction-bound construction contract. `reward-rates` authorizes Finance
+credentials inside the application operation. Partner Reports still needs its durable
+query/runtime integration before adding routes.
+
+### Accepted Partner Rewards (#93)
+
+Finance configures rates with `POST /api/v1/back-office/partners/{partnerId}/reward-rates`:
+`key` is a caller-scoped idempotency key, `pointsPerEgp` is a positive decimal string
+with at most ten integer digits and six decimals, and `egpPerPoint` has at most eight
+integer digits and four decimals. No defaults exist. Missing or unrepresentable
+rates return `reward-rate-unavailable` from list checkout with bilingual feedback.
+Points use the discounted line subtotal excluding delivery: floor to whole points
+per line. Conversion uses those whole points and rounds half up once to EGP piasters.
+All arithmetic uses scaled integers; public money/rates remain decimal strings.
+Points cannot exceed 2,147,483,647 per line; value fits numeric(18,2).
+
+Quotes include the complete rate/version and value snapshot before confirmation
+hashing. A transaction-scoped partner rate lock serializes configuration with quoting
+and acceptance, including when the first rate has not yet been configured. Changed
+rates require reconfirmation. Historical identical checkout retries return the original
+outcome before reading new rates. Ordinary Cart Orders remain unattributed.
+
+Migration `0009_reward_entitlements` adds immutable rate history and per-line
+entitlements, extends the existing reward ledger with optional entitlement references,
+and protects all reward history against updates/deletes. Accepted/paid events are
+unique per entitlement; corrections may repeat. No historical rates are invented for
+old events. Order snapshots, reservation, outbox, pending entitlement/event and replay
+outcome commit or roll back together. `entitlementsForOrder` exposes accepted facts
+for the subsequent qualifying-payment workflow without repricing. Reports must read
+this same ledger rather than introducing a second accounting history.
 
 ### Partner Reward statement semantics (#92)
 
@@ -167,7 +191,7 @@ This split keeps the existing rule that database code never imports business cod
 | School Supply Lists    | Lists, items, alternatives, list access grants/requests/tokens/attempts and parent sessions                      |
 | Inventory              | Warehouses, balances and stock movements                                                                         |
 | Commerce               | Orders/items, Cart Kits, discount rules, addresses and saved payment methods                                     |
-| Partner Rewards        | Partner Reward event schema; durable acceptance/runtime integration tracked in #93                               |
+| Partner Rewards        | Immutable rate history, per-line accepted entitlements and append-only reward events                             |
 | Partner Reports        | No persisted records yet; approved read views land with reporting                                                |
 | Runtime infrastructure | Existing audit log, server logs and notifications; these are technical records, not a ninth business module      |
 

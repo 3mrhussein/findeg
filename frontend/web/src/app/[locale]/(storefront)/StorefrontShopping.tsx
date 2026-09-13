@@ -92,6 +92,10 @@ export function StorefrontShopping({
         'لم يتم العثور على القائمة. تحقق من الرمز.',
       ],
       'empty-cart': ['Your Cart is empty.', 'سلة التسوق فارغة.'],
+      'reward-rate-unavailable': [
+        'Checkout for this school list is temporarily unavailable. Please try again later.',
+        'إتمام الطلب لهذه القائمة المدرسية غير متاح مؤقتًا. يرجى المحاولة لاحقًا.',
+      ],
       'delivery-unavailable': [
         'This delivery zone is unavailable. Choose another zone.',
         'منطقة التوصيل غير متاحة. اختر منطقة أخرى.',
