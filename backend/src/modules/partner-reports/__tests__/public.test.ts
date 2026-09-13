@@ -70,7 +70,11 @@ describe('Partner reports', () => {
         },
       },
       12,
-      [{ partnerId: 12, period: '2026-09', count: 3, totalPoints: 100 }],
+      [
+        { partnerId: 12, period: '2026-09', count: 3, totalPoints: 100 },
+        { partnerId: 13, period: '2026-09', count: 5, totalPoints: 900 },
+        { partnerId: 13, period: '2026-08', count: 1, totalPoints: 90 },
+      ],
     );
 
     expect(report).toEqual({

@@ -40,26 +40,34 @@ const isPositiveInteger = (value: unknown): value is number =>
   typeof value === 'number' && Number.isFinite(value) && value >= 0 && Number.isInteger(value);
 
 export function summarizeRewardLedger(events: readonly PartnerRewardEvent[]): PartnerRewardSummary {
-  let pending = 0;
+  const pendingByOrder = new Map<string, number>();
   let earned = 0;
   let reversed = 0;
   let settled = 0;
 
   for (const event of events) {
     const amount = Number.isFinite(event.points) ? event.points : 0;
+    const orderKey = JSON.stringify([event.partnerId, event.orderReference]);
+    const pending = pendingByOrder.get(orderKey) ?? 0;
     switch (event.eventType) {
       case 'accepted': {
-        pending += event.pendingPoints ?? amount;
+        pendingByOrder.set(orderKey, pending + (event.pendingPoints ?? amount));
         break;
       }
       case 'paid': {
         const value = event.earnedPoints ?? amount;
         earned += value;
-        pending = Math.max(0, pending - value);
+        pendingByOrder.set(orderKey, Math.max(0, pending - value));
+        break;
+      }
+      case 'cancellation': {
+        const cancelledPending = Math.min(pending, Math.max(0, -amount));
+        pendingByOrder.set(orderKey, pending - cancelledPending);
+        reversed += Math.max(0, -amount);
+        earned += amount + cancelledPending;
         break;
       }
       case 'refund':
-      case 'cancellation':
       case 'reversal': {
         reversed += Math.abs(amount < 0 ? amount : 0);
         earned += amount;
@@ -71,7 +79,6 @@ export function summarizeRewardLedger(events: readonly PartnerRewardEvent[]): Pa
       }
       case 'settlement': {
         settled += Math.max(0, amount);
-        earned = Math.max(0, earned - Math.max(0, amount));
         break;
       }
       default:
@@ -80,7 +87,7 @@ export function summarizeRewardLedger(events: readonly PartnerRewardEvent[]): Pa
   }
 
   return {
-    pending: Math.max(0, pending),
+    pending: [...pendingByOrder.values()].reduce((total, value) => total + value, 0),
     earned: Math.max(0, earned),
     reversed: Math.max(0, reversed),
     settled: Math.max(0, settled),
@@ -155,13 +162,7 @@ export function createPartnerRewards(store: PartnerRewardLedgerStore, access: Pa
       const prior = current.filter(
         (event) => event.partnerId === partnerId && event.orderReference === orderReference,
       );
-      const accepted = prior
-        .filter((event) => event.eventType === 'accepted')
-        .reduce((total, event) => total + (event.pendingPoints ?? event.points), 0);
-      const paidPreviously = prior
-        .filter((event) => event.eventType === 'paid')
-        .reduce((total, event) => total + (event.earnedPoints ?? event.points), 0);
-      const pending = Math.max(0, accepted - paidPreviously);
+      const { pending } = summarizeRewardLedger(prior);
 
       if (pending <= 0) {
         return { status: 'invalid-input' as const };
@@ -197,13 +198,8 @@ export function createPartnerRewards(store: PartnerRewardLedgerStore, access: Pa
       const prior = (await store.ledger()).filter(
         (event) => event.partnerId === partnerId && event.orderReference === input.orderReference,
       );
-      const earned = prior
-        .filter((event) => event.eventType === 'paid' || event.eventType === 'adjustment')
-        .reduce((total, event) => total + (event.earnedPoints ?? event.points), 0);
-      const refunded = prior
-        .filter((event) => event.eventType === 'refund')
-        .reduce((total, event) => total + Math.abs(event.points), 0);
-      if (prior.every((event) => event.eventType !== 'paid') || input.points > earned - refunded) {
+      const { earned } = summarizeRewardLedger(prior);
+      if (prior.every((event) => event.eventType !== 'paid') || input.points > earned) {
         return { status: 'invalid-input' as const };
       }
 
@@ -226,35 +222,22 @@ export function createPartnerRewards(store: PartnerRewardLedgerStore, access: Pa
         !input ||
         typeof input.orderReference !== 'string' ||
         input.orderReference.trim().length === 0 ||
-        !Number.isInteger(input.points) ||
-        input.points === 0
+        !Number.isSafeInteger(input.points) ||
+        input.points <= 0
       ) {
         return { status: 'invalid-input' as const };
       }
       const prior = (await store.ledger()).filter(
         (event) => event.partnerId === partnerId && event.orderReference === input.orderReference,
       );
-      const earned = prior
-        .filter((event) => event.eventType === 'paid' || event.eventType === 'adjustment')
-        .reduce((total, event) => total + (event.earnedPoints ?? event.points), 0);
-      const reversed = prior
-        .filter(
-          (event) =>
-            event.eventType === 'refund' ||
-            event.eventType === 'cancellation' ||
-            event.eventType === 'reversal',
-        )
-        .reduce((total, event) => total + Math.abs(event.points), 0);
-      if (
-        prior.every((event) => event.eventType !== 'accepted') ||
-        input.points > earned - reversed
-      ) {
+      const { earned } = summarizeRewardLedger(prior);
+      if (prior.every((event) => event.eventType !== 'accepted') || input.points > earned) {
         return { status: 'invalid-input' as const };
       }
       const result = await record(session, partnerId, {
         orderReference: input.orderReference,
         eventType: 'reversal',
-        points: -Math.abs(input.points),
+        points: -input.points,
         reason: input.reason,
       });
       return result.status === 'recorded'
@@ -278,7 +261,11 @@ export function createPartnerRewards(store: PartnerRewardLedgerStore, access: Pa
       const prior = (await store.ledger()).filter(
         (event) => event.partnerId === partnerId && event.orderReference === input.orderReference,
       );
-      if (prior.every((event) => event.eventType !== 'accepted')) {
+      const { pending, earned } = summarizeRewardLedger(prior);
+      if (
+        prior.every((event) => event.eventType !== 'accepted') ||
+        input.points > pending + earned
+      ) {
         return { status: 'invalid-input' as const };
       }
       const result = await record(session, partnerId, {

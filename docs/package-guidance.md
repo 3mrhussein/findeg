@@ -52,6 +52,33 @@ completion, and scoped reporting. These modules are not released HTTP capabiliti
 until their durable authorized runtime operations and adapters are implemented.
 Worker notification delivery remains an internal process operation.
 
+### Partner Reward statement semantics (#92)
+
+The Partner Rewards module folds events in append order. `pending` is the sum of
+unearned entitlements tracked separately for each Business Partner and Order.
+Payment transfers only that Order's remaining pending points into earnings.
+Cancellation consumes that Order's pending entitlement first, then its remaining
+earnings; it cannot cancel more than the combined remainder or create points that
+can be earned later. Refunds and reversals debit remaining earnings only. All three
+corrections share the same statement calculation, including earlier corrections
+and signed manual adjustments, so event ordering cannot debit an entitlement twice.
+Correction inputs are positive safe integers; the ledger records their negative
+sign. Original events remain unchanged.
+
+`earned` reports earnings after refunds, reversals, earned-point cancellations and
+manual adjustments, before settlements, with a zero display floor. `reversed`
+reports the total points removed by refunds, reversals and cancellations (including
+cancelled pending points). `settled` is the cumulative completed payout amount.
+`available` is net earnings less settlements, deducted once, with a zero floor:
+100 earned and 40 settled means 100 earned, 40 settled and 60 available. Later
+corrections retain the original settlement history rather than rewriting it.
+
+Authorized Partner Reports filter rows to the selected Business Partner before
+privacy suppression and sanitization. Another partner's rows affect neither the
+returned rows nor the suppression flag. These module contracts remain foundations;
+durable transaction serialization and authorized runtime integration belong to the
+commerce and reporting integration tickets.
+
 ## Target runtime foundation (#52)
 
 - `frontend/web` (`@findeg/web`) is the target Next.js executable. It owns browser
