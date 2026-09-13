@@ -71,6 +71,21 @@ The Storefront and Dashboard sources are preserved as migration references outsi
 New behavior belongs in `frontend/web`; #89 owns the later production certification
 and controlled release phase.
 
+## Catalog and School Supply List application boundaries (#91)
+
+`@findeg/backend/catalog-inventory` coordinates Catalog, Inventory and Identity
+through an injected transaction runner. Catalog authorization, active-variant
+eligibility, localized browsing and stock-adjustment policy belong here; runtime
+only binds owner adapters and exposes the resulting operations. Inventory errors
+are translated after rollback.
+
+`@findeg/backend/school-supply-lists` is the authorized List application surface.
+It resolves opaque credentials and current Partner Membership within the same
+transaction as each mutation. The owner's module operation receives only that
+coordinator's authoritative session. HTTP adapters call this surface directly
+through runtime; they cannot turn an earlier session read into a mutation
+credential. See [List access and validation](operations/list-selections.md).
+
 ## Retained compatibility evidence (#64)
 
 Package-local entry guides are available for [backend](../backend/README.md),

@@ -11,28 +11,25 @@ export async function POST(request: Request, context: Context) {
   if (!selected || !input || typeof input !== 'object' || typeof input.action !== 'string')
     return errorResponse('invalid-input', 400);
   const runtime = getWebRuntime();
-  const access = await runtime.partners.currentSession(await sessionToken(), selected);
-  if (access.status !== 'authenticated') return partnerResponse(access);
+  const token = await sessionToken();
   const lists = runtime.schoolSupplyLists;
   if (input.action === 'create' && input.input)
-    return partnerResponse(await lists.createDraft(access.session, selected, input.input), 201);
+    return partnerResponse(await lists.createDraft(token, selected, input.input), 201);
   if (
     input.action === 'replace' &&
     Number.isSafeInteger(input.listId) &&
     Array.isArray(input.items)
   )
-    return partnerResponse(
-      await lists.replaceDraft(access.session, selected, input.listId, input.items),
-    );
+    return partnerResponse(await lists.replaceDraft(token, selected, input.listId, input.items));
   if (
     input.action === 'publish' &&
     Number.isSafeInteger(input.listId) &&
     (input.replacesListId === undefined || Number.isSafeInteger(input.replacesListId))
   )
     return partnerResponse(
-      await lists.publish(access.session, selected, input.listId, input.replacesListId),
+      await lists.publish(token, selected, input.listId, input.replacesListId),
     );
   if (input.action === 'clone' && Number.isSafeInteger(input.listId))
-    return partnerResponse(await lists.clone(access.session, selected, input.listId), 201);
+    return partnerResponse(await lists.clone(token, selected, input.listId), 201);
   return errorResponse('invalid-input', 400);
 }

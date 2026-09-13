@@ -31,7 +31,9 @@
     "./partner-operations": "./dist/application/partner-operations.js",
     "./checkout": "./dist/application/checkout.js",
     "./modules/commerce/infrastructure/persistence": "./dist/modules/commerce/infrastructure/persistence.js",
-    "./list-commerce": "./dist/application/list-commerce.js"
+    "./list-commerce": "./dist/application/list-commerce.js",
+    "./school-supply-lists": "./dist/application/school-supply-lists.js",
+    "./catalog-inventory": "./dist/application/catalog-inventory.js"
   },
   "scripts": {
     "type-check": "tsc --noEmit",
