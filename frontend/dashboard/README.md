@@ -1,3 +1,5 @@
+> **Preserved migration reference.** This application is outside the active workspace. Its pages, themes, assets, translations, and tests must remain available until their enhanced target equivalents are verified. Commands and architecture claims below describe the original application, not the supported development path. See [the frontend migration map](../../docs/frontend-migration.md).
+
 # @findeg/dashboard
 
 The **FindEg Dashboard** is the administrative control plane used by staff to manage the marketplace. It is a strictly governed Next.js 16 application that consumes `@findeg/backend` services directly within Server Components and Server Actions.

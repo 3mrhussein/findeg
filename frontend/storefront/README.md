@@ -1,3 +1,5 @@
+> **Preserved migration reference.** This application is outside the active workspace. Its pages, themes, assets, translations, and tests must remain available until their enhanced target equivalents are verified. Commands and architecture claims below describe the original application, not the supported development path. See [the frontend migration map](../../docs/frontend-migration.md).
+
 # @findeg/storefront
 
 The **FindEg Storefront** is the flagship B2C and B2B customer-facing application. Built strictly strictly on the Next.js 16 App Router, it heavily utilizes React Server Components (RSC) to bypass client-side fetching overhead and optimize for SEO and performance boundaries.

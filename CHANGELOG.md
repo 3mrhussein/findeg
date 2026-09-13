@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- Consolidate #64 compatibility guidance at backend, database, and environment
+  entry points; correct the legacy database barrel's browser-import claim and
+  mark the remaining infrastructure analysis as historical evidence. Retain
+  frontend references, migration history, and production release configuration.
+
+- Preserve the original Storefront and Dashboard pages, themes, assets, translations,
+  and tests as migration references outside the active workspace (#64). Restore their
+  premature deletion and record a page-by-page migration map: target development
+  gates do not establish full feature or visual parity. Keep the unified runtime as
+  the supported development path and obsolete database setup paths removed.
+  Production certification and controlled release remain with #89.
+
 - Add production readiness gates and operational procedures (#63): required lint,
   dependency security and documentation checks, bilingual operator journeys,
   protected revision-specific certification, release/recovery guidance, connection

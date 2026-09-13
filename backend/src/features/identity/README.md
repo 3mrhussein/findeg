@@ -1,5 +1,7 @@
 # Identity Feature
 
+> Historical prototype compatibility evidence; this guide does not govern target development. See [supported ownership and retirement boundaries](../../../../docs/package-guidance.md#retained-compatibility-evidence-64).
+
 The **Identity Feature** oversees the central authentication and authorization mechanics across the FindEg monorepo. It strictly manages `User` context, security credentials, and token-based RBAC enforcement for Next.js applications boundaries.
 
 ## 🎯 Core Responsibilities

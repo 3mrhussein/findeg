@@ -68,7 +68,7 @@ async function createTargetRepository() {
     mkdir(join(root, 'docs/adr'), { recursive: true }),
     mkdir(join(root, 'docs/contracts/openapi'), { recursive: true }),
     mkdir(join(root, 'docs/operations'), { recursive: true }),
-    mkdir(join(root, 'frontend/storefront/src'), { recursive: true }),
+    mkdir(join(root, 'frontend/web/src'), { recursive: true }),
     mkdir(join(root, 'backend/src/features/catalog'), { recursive: true }),
     mkdir(join(root, 'backend/src/modules'), { recursive: true }),
     mkdir(join(root, 'backend/src/application'), { recursive: true }),
@@ -106,9 +106,9 @@ test('reports documentation drift and prohibited module dependencies', async () 
   const root = await createTargetRepository();
   await Promise.all([
     rm(join(root, 'docs/contracts/openapi/v1.yaml')),
-    writeFile(join(root, 'frontend/storefront/src/products.ts'), 'import "@findeg/db";\n'),
+    writeFile(join(root, 'frontend/web/src/products.ts'), 'import "@findeg/db";\n'),
     writeFile(
-      join(root, 'frontend/storefront/src/catalog.ts'),
+      join(root, 'frontend/web/src/catalog.ts'),
       'import { repository } from "@findeg/backend/features/catalog/infrastructure";\n',
     ),
     writeFile(
@@ -126,8 +126,8 @@ test('reports documentation drift and prohibited module dependencies', async () 
       'Missing canonical documentation: docs/contracts/openapi/v1.yaml',
       'Prohibited dependency: backend/src/features/catalog/cache.ts imports next/cache',
       'Prohibited dependency: db/src/queries.ts imports @findeg/backend',
-      'Prohibited dependency: frontend/storefront/src/catalog.ts imports @findeg/backend/features/catalog/infrastructure',
-      'Prohibited dependency: frontend/storefront/src/products.ts imports @findeg/db',
+      'Prohibited dependency: frontend/web/src/catalog.ts imports @findeg/backend/features/catalog/infrastructure',
+      'Prohibited dependency: frontend/web/src/products.ts imports @findeg/db',
     ]);
     return true;
   });
@@ -154,9 +154,9 @@ test('reports unresolved Git merge markers in repository-owned Markdown as docum
 test('reports CommonJS require forms of every prohibited dependency direction', async () => {
   const root = await createTargetRepository();
   await Promise.all([
-    writeFile(join(root, 'frontend/storefront/src/products.cjs'), 'require("@findeg/db");\n'),
+    writeFile(join(root, 'frontend/web/src/products.cjs'), 'require("@findeg/db");\n'),
     writeFile(
-      join(root, 'frontend/storefront/src/catalog.cjs'),
+      join(root, 'frontend/web/src/catalog.cjs'),
       'require("@findeg/backend/features/catalog/infrastructure");\n',
     ),
     writeFile(join(root, 'backend/src/features/catalog/cache.cjs'), 'require("next/cache");\n'),
@@ -166,8 +166,8 @@ test('reports CommonJS require forms of every prohibited dependency direction', 
   assert.deepEqual(await runArchitectureCheck(root), [
     'Prohibited dependency: backend/src/features/catalog/cache.cjs imports next/cache',
     'Prohibited dependency: db/src/queries.cjs imports @findeg/backend',
-    'Prohibited dependency: frontend/storefront/src/catalog.cjs imports @findeg/backend/features/catalog/infrastructure',
-    'Prohibited dependency: frontend/storefront/src/products.cjs imports @findeg/db',
+    'Prohibited dependency: frontend/web/src/catalog.cjs imports @findeg/backend/features/catalog/infrastructure',
+    'Prohibited dependency: frontend/web/src/products.cjs imports @findeg/db',
   ]);
 });
 

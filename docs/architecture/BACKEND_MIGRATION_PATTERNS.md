@@ -1,5 +1,7 @@
 # Backend Pure TypeScript Migration Patterns
 
+> Historical prototype compatibility evidence; this guide does not govern target development. See [supported ownership and retirement boundaries](../package-guidance.md#retained-compatibility-evidence-64).
+
 **Purpose**: Guide for migrating framework-dependent code to pure TypeScript patterns  
 **Epic**: `002-backend-pure-typescript`  
 **Completed**: April 5, 2026
@@ -25,13 +27,13 @@ import { revalidatePath, revalidateTag } from 'next/cache';
 
 export async function createProduct(input: ProductInput) {
   const product = await db.product.create(input);
-  
+
   // Framework coupling - backend calling Next.js API
   revalidatePath('/admin/products');
   revalidatePath(`/admin/products/${product.id}`);
   revalidateTag('products');
   revalidateTag('shop');
-  
+
   return { success: true, productId: product.id };
 }
 ```
@@ -42,15 +44,17 @@ export async function createProduct(input: ProductInput) {
 // ✅ Backend service returns data + cache metadata
 import type { ServiceResult } from '@features/core/application/types';
 
-export async function createProduct(input: ProductInput): Promise<ServiceResult<{ productId: number }>> {
+export async function createProduct(
+  input: ProductInput,
+): Promise<ServiceResult<{ productId: number }>> {
   const product = await db.product.create(input);
-  
+
   // Pure function - returns cache metadata for app-layer to handle
   return {
     success: true,
     data: { productId: product.id },
     cachePaths: ['/admin/products', `/admin/products/${product.id}`],
-    cacheTags: ['products', 'shop']
+    cacheTags: ['products', 'shop'],
   };
 }
 ```
@@ -73,6 +77,7 @@ export async function createProductAction(input: ProductInput) {
 ```
 
 **Key Benefits**:
+
 - Backend remains pure and testable without Next.js
 - App-layer controls cache strategy
 - Cache invalidation centralized in helpers
@@ -93,16 +98,16 @@ import { cookies } from 'next/headers';
 export async function getDashboardData(locale: string) {
   const cookieStore = cookies();
   const session = await getSession(cookieStore);
-  
+
   if (!session?.userId) {
     redirect('/login'); // Framework coupling
   }
-  
+
   const user = await db.user.getById(session.userId);
   if (!user) {
     notFound(); // Framework coupling
   }
-  
+
   return { user };
 }
 ```
@@ -115,17 +120,17 @@ import { NotAuthenticatedError, ResourceNotFoundError } from '@features/core/dom
 
 export async function getDashboardData(
   locale: string,
-  userId: number | null
+  userId: number | null,
 ): Promise<DashboardData> {
   if (!userId) {
     throw new NotAuthenticatedError('Session required to access dashboard');
   }
-  
+
   const user = await db.user.getById(userId);
   if (!user) {
     throw new ResourceNotFoundError('User account not found');
   }
-  
+
   return { user };
 }
 ```
@@ -138,7 +143,7 @@ import { getSession } from '@lib/session';
 
 export default async function DashboardPage() {
   const session = await getSession();
-  
+
   try {
     const data = await getDashboardData('en', session?.userId);
     return <Dashboard data={data} />;
@@ -155,6 +160,7 @@ export default async function DashboardPage() {
 ```
 
 **Key Benefits**:
+
 - Backend throws semantic errors (testable)
 - App-layer decides routing behavior
 - Error handling centralized in error catalog
@@ -177,7 +183,7 @@ export class CookieSessionProvider {
     const sessionCookie = cookieStore.get('session');
     // ...
   }
-  
+
   async createSession(payload: SessionPayload): Promise<void> {
     const cookieStore = cookies(); // Framework coupling
     const token = this.jwtManager.sign(payload);
@@ -198,12 +204,12 @@ export interface ICookieStore {
 
 export class CookieSessionProvider {
   constructor(private cookieStore: ICookieStore) {} // Dependency injection
-  
+
   async getSession(): Promise<SessionPayload | null> {
     const sessionCookie = this.cookieStore.get('session');
     // Pure logic - works with any ICookieStore implementation
   }
-  
+
   async createSession(payload: SessionPayload): Promise<void> {
     const token = this.jwtManager.sign(payload);
     this.cookieStore.set('session', token, { httpOnly: true });
@@ -221,7 +227,7 @@ async function nextCookiesToStore(): Promise<ICookieStore> {
   return {
     get: (name) => cookieStore.get(name),
     set: (name, value, options) => cookieStore.set(name, value, options),
-    delete: (name) => cookieStore.delete(name)
+    delete: (name) => cookieStore.delete(name),
   };
 }
 
@@ -233,6 +239,7 @@ export async function getSession() {
 ```
 
 **Key Benefits**:
+
 - Backend testable with mock cookie store
 - Multiple implementations possible (Next.js, Express, etc.)
 - Framework-agnostic design
@@ -253,7 +260,7 @@ export async function getShopPageData(locale: string) {
   'use cache'; // Framework coupling
   cacheTag('shop'); // Framework coupling
   cacheLife('minutes'); // Framework coupling
-  
+
   const products = await db.product.getAll(locale);
   return { products };
 }
@@ -282,14 +289,15 @@ import { cacheTag, cacheLife } from 'next/cache';
 
 export async function getShopPageCached(locale: string) {
   'use cache';
-  SHOP_PAGE_CACHE_CONFIG.tags.forEach(tag => cacheTag(tag));
+  SHOP_PAGE_CACHE_CONFIG.tags.forEach((tag) => cacheTag(tag));
   cacheLife('minutes');
-  
+
   return getShopPageData(locale);
 }
 ```
 
 **Key Benefits**:
+
 - Backend query is pure function
 - Cache configuration exportable and reusable
 - App-layer controls caching strategy
@@ -329,6 +337,7 @@ export function useSchoolListLookup() {
 ```
 
 **Key Benefits**:
+
 - Backend has no presentation layer
 - Clean Architecture restored
 - React hooks belong in app-layer, not backend
@@ -342,14 +351,14 @@ All backend services throw typed domain errors:
 ```typescript
 // Core domain errors
 import {
-  DomainError,              // Base class
-  NotAuthenticatedError,    // 401 - session required
-  NotAuthorizedError,       // 403 - insufficient permissions
-  ResourceNotFoundError,    // 404 - entity not found
-  ValidationError,          // 400 - single field validation
-  ValidationErrors,         // 400 - multiple field validation
-  ConflictError,           // 409 - duplicate/conflict
-  BusinessRuleViolationError // 422 - business logic failure
+  DomainError, // Base class
+  NotAuthenticatedError, // 401 - session required
+  NotAuthorizedError, // 403 - insufficient permissions
+  ResourceNotFoundError, // 404 - entity not found
+  ValidationError, // 400 - single field validation
+  ValidationErrors, // 400 - multiple field validation
+  ConflictError, // 409 - duplicate/conflict
+  BusinessRuleViolationError, // 422 - business logic failure
 } from '@backend/features/core/domain/errors';
 ```
 
@@ -387,13 +396,13 @@ import { createProduct } from '../product';
 describe('Product Actions', () => {
   it('returns ServiceResult with cache metadata', async () => {
     const result = await createProduct({ name: 'Test', price: 99.99 });
-    
+
     expect(result.success).toBe(true);
     expect(result.data.productId).toBeDefined();
     expect(result.cachePaths).toContain('/admin/products');
     expect(result.cacheTags).toContain('products');
   });
-  
+
   it('throws ValidationError for invalid input', async () => {
     await expect(createProduct(null as any)).rejects.toThrow(ValidationError);
   });
@@ -409,18 +418,18 @@ import { CookieSessionProvider, ICookieStore } from '../CookieSessionProvider';
 const mockCookieStore: ICookieStore = {
   get: vi.fn(),
   set: vi.fn(),
-  delete: vi.fn()
+  delete: vi.fn(),
 };
 
 describe('CookieSessionProvider', () => {
   it('creates session with injected cookie store', async () => {
     const provider = new CookieSessionProvider(mockCookieStore);
     await provider.createSession({ userId: 1, email: 'test@example.com' });
-    
+
     expect(mockCookieStore.set).toHaveBeenCalledWith(
       'session',
       expect.any(String),
-      expect.objectContaining({ httpOnly: true })
+      expect.objectContaining({ httpOnly: true }),
     );
   });
 });
@@ -447,6 +456,7 @@ When migrating a backend file:
 ## Success Metrics
 
 **Achieved**:
+
 - ✅ Zero Next.js imports in `packages/backend/src` (21 violations eliminated)
 - ✅ Zero framework dependencies in `package.json`
 - ✅ All tests run in pure Node.js (188/188 passing, 13.15 seconds)
@@ -454,6 +464,7 @@ When migrating a backend file:
 - ✅ Backend builds without Next.js runtime
 
 **Validation Commands**:
+
 ```bash
 # Verify zero framework imports
 grep -r "from ['\"]next/" packages/backend/src

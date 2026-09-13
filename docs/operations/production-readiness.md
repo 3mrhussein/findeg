@@ -20,8 +20,11 @@ advisories and fails if the advisory service is unavailable.
 Configure branch protection on `develop` and `main` to require **Quality gate**,
 **Security gate**, **Documentation gate** and **Release artifact gate**, disallow bypass, and require review.
 An administrator must verify those settings; repository YAML cannot enforce
-branch protection by itself. Do not retire the target's predecessors under #64
-until the certification run and all evidence below are approved.
+branch protection by itself. Under #64, predecessor frontend sources remain
+preserved outside the active workspace until the page and theme migration in
+[the frontend migration map](../frontend-migration.md) is verified.
+Production certification and controlled release are tracked separately under
+standalone issue #89 and are not prerequisites for this codebase cleanup.
 
 To request certification, dispatch Quality on the exact candidate revision with
 `certify=true`. The workflow first checks that the `production-certification`

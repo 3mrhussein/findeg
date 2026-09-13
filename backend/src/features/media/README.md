@@ -1,5 +1,7 @@
 # Media Feature
 
+> Historical prototype compatibility evidence; this guide does not govern target development. See [supported ownership and retirement boundaries](../../../../docs/package-guidance.md#retained-compatibility-evidence-64).
+
 The **Media Feature** strictly isolates file physical storage physics from the rest of the generic FindEg marketplace domain logic.
 
 ## 🎯 Core Responsibilities
