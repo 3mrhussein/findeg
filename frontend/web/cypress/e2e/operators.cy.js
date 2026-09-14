@@ -13,6 +13,9 @@ for (const locale of ['en', 'ar']) {
         cy.visit(`/${locale}/partner/${partnerId}`);
         cy.contains('h2', `${text('Business Partner', 'الشريك')} #${partnerId}`);
         cy.contains(text('Report Viewer', 'عارض التقارير'));
+        cy.contains('button', text('Load statement', 'عرض الكشف')).click();
+        cy.contains(text('Low-count breakdowns are hidden for privacy.', 'تم إخفاء التفاصيل قليلة العدد لحماية الخصوصية.'));
+        cy.get('table').first().should('contain', text('Pending', 'قيد الانتظار'));
         cy.visit(`/${locale}/partner/${otherPartnerId}`);
         cy.location('pathname').should('equal', `/${locale}`);
         cy.getCookie('findeg_session').its('value').should('equal', session.value);
