@@ -504,6 +504,193 @@ test('accepted list rewards use exact configured snapshots and share the accepta
     verified_bank_account_id: 'bank-1',
     settlement_reference: 'settlement-1',
   });
+  await t.test('corrections and settlements retain exact historical EGP balances', async () => {
+    const result = await runtime.partnerReports.read(token, partner.id, period);
+    assert.deepEqual(result.report.statement.value, {
+      pending: '0.00',
+      earned: '0.96',
+      reversed: '0.06',
+      settled: '0.06',
+      available: '0.90',
+    });
+  });
+  await t.test('payment earns only the entitlement remaining after cancellation', async () => {
+    await runtime.listCommerce.replace(owner, code, selection);
+    const quoted = await runtime.listCommerce.quoteCheckout(owner, code, zone.id);
+    const order = await runtime.listCommerce.acceptCheckout(owner, code, {
+      ...input,
+      key: randomUUID(),
+      confirmation: quoted.confirmation,
+    });
+    assert.equal(
+      (
+        await runtime.partnerRewards.correct(token, partner.id, {
+          key: 'cancel-before-payment',
+          action: 'cancellation',
+          orderReference: order.reference,
+          points: 10,
+        })
+      ).status,
+      'cancelled',
+    );
+    await runtime.orderLifecycle.deliver(token, order.reference, { key: 'cancelled-delivery' });
+    assert.equal(
+      (
+        await runtime.orderLifecycle.pay(token, order.reference, {
+          key: 'cancelled-payment',
+          amount: '30.00',
+        })
+      ).status,
+      'paid',
+    );
+    const result = await runtime.partnerReports.read(token, partner.id, period);
+    assert.deepEqual(result.report.statement.points, {
+      pending: '0',
+      earned: '96',
+      reversed: '15',
+      settled: '5',
+      available: '91',
+    });
+    assert.deepEqual(result.report.statement.value, {
+      pending: '0.00',
+      earned: '1.21',
+      reversed: '0.19',
+      settled: '0.06',
+      available: '1.15',
+    });
+    // Changing today's rate must not revalue the accepted Order or its corrections.
+    await runtime.rewardRates.configure(token, partner.id, {
+      key: 'different-conversion',
+      pointsPerEgp: '3',
+      egpPerPoint: '99',
+    });
+    assert.equal(
+      (
+        await runtime.partnerRewards.correct(token, partner.id, {
+          key: 'partial-refund',
+          action: 'refund',
+          orderReference: order.reference,
+          points: 5,
+        })
+      ).status,
+      'refunded',
+    );
+    const reversal = {
+      key: 'remaining-reversal',
+      action: 'reversal',
+      orderReference: order.reference,
+      points: 15,
+    };
+    const [first, replay] = await Promise.all([
+      runtime.partnerRewards.correct(token, partner.id, reversal),
+      runtime.partnerRewards.correct(token, partner.id, reversal),
+    ]);
+    assert.equal(first.status, 'reversed');
+    assert.deepEqual(replay, first);
+    assert.equal(
+      (
+        await runtime.partnerRewards.correct(token, partner.id, {
+          ...reversal,
+          key: 'over-reversal',
+          points: 1,
+        })
+      ).status,
+      'reward-unavailable',
+    );
+    const corrected = await runtime.partnerReports.read(token, partner.id, period);
+    assert.deepEqual(corrected.report.statement.value, {
+      pending: '0.00',
+      earned: '0.96',
+      reversed: '0.44',
+      settled: '0.06',
+      available: '0.90',
+    });
+    await configure('restore-conversion', '3');
+  });
+  await t.test('full cancellation and concurrent payment cannot restore rewards', async () => {
+    const before = (await runtime.partnerReports.read(token, partner.id, period)).report.statement;
+    await runtime.listCommerce.replace(owner, code, selection);
+    const quoted = await runtime.listCommerce.quoteCheckout(owner, code, zone.id);
+    const order = await runtime.listCommerce.acceptCheckout(owner, code, {
+      ...input,
+      key: randomUUID(),
+      confirmation: quoted.confirmation,
+    });
+    await runtime.orderLifecycle.deliver(token, order.reference, { key: 'race-delivery' });
+    const [cancelled, paid] = await Promise.all([
+      runtime.partnerRewards.correct(token, partner.id, {
+        key: 'race-cancellation',
+        action: 'cancellation',
+        orderReference: order.reference,
+        points: 30,
+      }),
+      runtime.orderLifecycle.pay(token, order.reference, { key: 'race-payment', amount: '30.00' }),
+    ]);
+    assert.equal(cancelled.status, 'cancelled');
+    assert.equal(paid.status, 'paid');
+    const after = (await runtime.partnerReports.read(token, partner.id, period)).report.statement;
+    assert.equal(after.points.pending, '0');
+    assert.equal(after.points.earned, before.points.earned);
+    assert.equal(after.points.available, before.points.available);
+    assert.equal(after.value.pending, '0.00');
+    assert.equal(after.value.earned, before.value.earned);
+    assert.equal(after.value.available, before.value.available);
+  });
+  await t.test(
+    'settlements reconcile mixed historical conversion rates and the final piaster',
+    async () => {
+      await runtime.rewardRates.configure(token, partner.id, {
+        key: 'second-conversion',
+        pointsPerEgp: '3',
+        egpPerPoint: '0.0200',
+      });
+      await runtime.listCommerce.replace(owner, code, selection);
+      const quoted = await runtime.listCommerce.quoteCheckout(owner, code, zone.id);
+      const order = await runtime.listCommerce.acceptCheckout(owner, code, {
+        ...input,
+        key: randomUUID(),
+        confirmation: quoted.confirmation,
+      });
+      await runtime.orderLifecycle.deliver(token, order.reference, { key: 'mixed-delivery' });
+      await runtime.orderLifecycle.pay(token, order.reference, {
+        key: 'mixed-payment',
+        amount: '30.00',
+      });
+      await runtime.rewardRates.configure(token, partner.id, {
+        key: 'later-conversion',
+        pointsPerEgp: '3',
+        egpPerPoint: '99',
+      });
+      const before = (await runtime.partnerReports.read(token, partner.id, period)).report
+        .statement;
+      assert.equal(before.points.available, '101');
+      assert.equal(before.value.available, '1.50');
+      const payout = (key, points) =>
+        runtime.partnerRewards.correct(token, partner.id, {
+          key,
+          action: 'settlement',
+          orderReference: order.reference,
+          points,
+          verifiedBankAccountId: 'bank-1',
+          settlementReference: key,
+        });
+      assert.equal((await payout('mixed-partial', 50)).status, 'settled');
+      const partial = (await runtime.partnerReports.read(token, partner.id, period)).report
+        .statement;
+      assert.equal(partial.value.available, '0.76');
+      assert.equal((await payout('mixed-remainder', 51)).status, 'settled');
+      const final = (await runtime.partnerReports.read(token, partner.id, period)).report.statement;
+      assert.deepEqual(final.value, {
+        pending: '0.00',
+        earned: '1.56',
+        reversed: '0.82',
+        settled: '1.56',
+        available: '0.00',
+      });
+      assert.equal(final.points.available, '0');
+      assert.equal((await payout('mixed-overpayment', 1)).status, 'reward-unavailable');
+    },
+  );
   await sql`UPDATE identity.partner_memberships SET status='ended' WHERE id=${membership.id}`;
   assert.equal(
     (await runtime.partnerReports.read(token, partner.id, period)).status,

@@ -47,6 +47,7 @@ const isPositiveInteger = (value: unknown): value is number =>
 
 export { summarizeRewardLedger, summarizeRewardStatement } from './accounting.js';
 import { summarizeRewardLedger } from './accounting.js';
+import { canCorrectReward } from './corrections.js';
 
 export function createPartnerRewards(store: PartnerRewardLedgerStore, access: PartnerRewardAccess) {
   const record = async (
@@ -151,8 +152,7 @@ export function createPartnerRewards(store: PartnerRewardLedgerStore, access: Pa
       const prior = (await store.ledger()).filter(
         (event) => event.partnerId === partnerId && event.orderReference === input.orderReference,
       );
-      const { earned } = summarizeRewardLedger(prior);
-      if (prior.every((event) => event.eventType !== 'paid') || input.points > earned) {
+      if (!canCorrectReward(prior, 'refund', input.points)) {
         return { status: 'invalid-input' as const };
       }
 
@@ -183,8 +183,7 @@ export function createPartnerRewards(store: PartnerRewardLedgerStore, access: Pa
       const prior = (await store.ledger()).filter(
         (event) => event.partnerId === partnerId && event.orderReference === input.orderReference,
       );
-      const { earned } = summarizeRewardLedger(prior);
-      if (prior.every((event) => event.eventType !== 'accepted') || input.points > earned) {
+      if (!canCorrectReward(prior, 'reversal', input.points)) {
         return { status: 'invalid-input' as const };
       }
       const result = await record(session, partnerId, {
@@ -214,11 +213,7 @@ export function createPartnerRewards(store: PartnerRewardLedgerStore, access: Pa
       const prior = (await store.ledger()).filter(
         (event) => event.partnerId === partnerId && event.orderReference === input.orderReference,
       );
-      const { pending, earned } = summarizeRewardLedger(prior);
-      if (
-        prior.every((event) => event.eventType !== 'accepted') ||
-        input.points > pending + earned
-      ) {
+      if (!canCorrectReward(prior, 'cancellation', input.points)) {
         return { status: 'invalid-input' as const };
       }
       const result = await record(session, partnerId, {
@@ -240,8 +235,7 @@ export function createPartnerRewards(store: PartnerRewardLedgerStore, access: Pa
         !input ||
         typeof input.orderReference !== 'string' ||
         input.orderReference.trim().length === 0 ||
-        !Number.isInteger(input.points) ||
-        input.points === 0
+        !canCorrectReward([], 'adjustment', input.points)
       ) {
         return { status: 'invalid-input' as const };
       }
@@ -278,6 +272,9 @@ export function createPartnerRewards(store: PartnerRewardLedgerStore, access: Pa
       ) {
         return { status: 'invalid-input' as const };
       }
+      const prior = (await store.ledger()).filter((event) => event.partnerId === partnerId);
+      if (!canCorrectReward(prior, 'settlement', input.points))
+        return { status: 'invalid-input' as const };
       const result = await record(session, partnerId, {
         orderReference: input.orderReference,
         eventType: 'settlement',
@@ -338,3 +335,10 @@ export interface DurablePartnerRewardStore {
     correction: import('./contracts.js').PartnerRewardCorrectionInput;
   }): Promise<import('./contracts.js').PartnerRewardCorrectionResult>;
 }
+
+export {
+  canCorrectReward,
+  correctionValue,
+  allocateRewardValue,
+  type ValuedRewardEvent,
+} from './corrections.js';

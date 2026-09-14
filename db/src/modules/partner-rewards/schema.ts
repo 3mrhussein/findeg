@@ -25,6 +25,7 @@ export const partnerRewardEvents = identitySchema.table(
     actorId: integer('actor_id'),
     entitlementId: integer('entitlement_id').references(() => partnerRewardEntitlements.id),
     points: integer('points').notNull(),
+    value: decimal('value', { precision: 30, scale: 2 }),
     pendingPoints: integer('pending_points'),
     earnedPoints: integer('earned_points'),
     conversionRate: decimal('conversion_rate', { precision: 12, scale: 4 }),

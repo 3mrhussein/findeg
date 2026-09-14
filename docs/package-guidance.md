@@ -54,6 +54,29 @@ adapter. Finance verifies an opaque bank-account identifier for one active Busin
 Partner before a settlement can reference it; the adapter rechecks that durable
 approval and appends the settlement instead of trusting a request field.
 
+### Reward correction valuation and payment serialization
+
+Migration `0013_reward_event_values` adds an optional exact EGP value to immutable
+reward events. New accepted, paid, correction and settlement entries record their
+value; the reporting view prefers that value. It retains the prior valuation
+fallback for historical entries without modifying them. A correction whose source
+history has no auditable value returns `reward-unavailable` rather than guessing.
+
+Payment and corrections acquire the same Business Partner ledger lock. Payment
+earns only the Order's remaining pending entitlement after cancellations, including
+zero after full cancellation. Its per-line paid values sum to the remaining
+recorded pending value, so partial cancellation cannot restore points or money.
+
+Partial refunds and reversals allocate from the Order's remaining earned points
+and EGP value. Cancellation allocates pending first, then earned. Positive or
+negative manual adjustments use the named Order's accepted points and total
+snapshotted value; an Order without a positive accepted entitlement cannot supply
+that valuation. Settlements allocate from the Business Partner's available points
+and recorded available EGP value, including balances accepted under different
+rates. All allocations use integer piasters and round half up; consuming the final
+remaining balance consumes its exact remaining value. Original entries, prior
+settlements and previously configured rates remain unchanged.
+
 ### Accepted Partner Rewards (#93)
 
 Finance configures rates with `POST /api/v1/back-office/partners/{partnerId}/reward-rates`:

@@ -7,7 +7,14 @@ import {
   partnerRewardOutcomes,
   partnerRewardVerifiedBankAccounts,
 } from '@findeg/db/modules/partner-rewards';
-import { summarizeRewardLedger, type DurablePartnerRewardStore } from '../public.js';
+import {
+  summarizeRewardStatement,
+  canCorrectReward,
+  correctionValue,
+  allocateRewardValue,
+  type ValuedRewardEvent,
+  type DurablePartnerRewardStore,
+} from '../public.js';
 import type { PartnerRewardEvent } from '../contracts.js';
 
 function rateSnapshot(rate: typeof partnerRewardRates.$inferSelect) {
@@ -62,8 +69,18 @@ export function bindPartnerRewardStore(database: TransactionDatabase): DurablePa
     });
   const events = async (partnerId: number, orderReference?: string) => {
     const rows = await database
-      .select()
+      .select({
+        event: partnerRewardEvents,
+        value: sql<string | null>`coalesce(${partnerRewardEvents.value},
+          CASE WHEN ${partnerRewardEvents.entitlementId} IS NOT NULL AND ${partnerRewardEvents.eventType} IN ('accepted','paid') THEN ${partnerRewardEntitlements.rewardValue}
+          WHEN ${partnerRewardEvents.conversionRate} IS NOT NULL THEN round(${partnerRewardEvents.points} * ${partnerRewardEvents.conversionRate}, 2)
+          ELSE NULL END)`,
+      })
       .from(partnerRewardEvents)
+      .leftJoin(
+        partnerRewardEntitlements,
+        eq(partnerRewardEntitlements.id, partnerRewardEvents.entitlementId),
+      )
       .where(
         orderReference === undefined
           ? eq(partnerRewardEvents.businessPartnerId, partnerId)
@@ -72,9 +89,9 @@ export function bindPartnerRewardStore(database: TransactionDatabase): DurablePa
               eq(partnerRewardEvents.orderReference, orderReference),
             ),
       )
-      .orderBy(asc(partnerRewardEvents.id))
-      .for('update');
-    return rows.map((row): PartnerRewardEvent => ({
+      .orderBy(asc(partnerRewardEvents.id));
+    return rows.map(({ event: row, value }): ValuedRewardEvent => ({
+      value,
       partnerId: row.businessPartnerId,
       orderReference: row.orderReference,
       eventType: row.eventType as PartnerRewardEvent['eventType'],
@@ -104,7 +121,31 @@ export function bindPartnerRewardStore(database: TransactionDatabase): DurablePa
         .innerJoin(partnerRewardRates, eq(partnerRewardRates.id, partnerRewardEntitlements.rateId))
         .where(eq(partnerRewardEntitlements.orderReference, orderReference))
         .orderBy(partnerRewardEntitlements.id);
+      const remaining = new Map<number, { points: bigint; value: string | null }>();
+      for (const partnerId of [
+        ...new Set(rows.map(({ entitlement }) => entitlement.businessPartnerId)),
+      ].sort((a, b) => a - b)) {
+        await lockPartnerLedger(partnerId);
+        const statement = summarizeRewardStatement(await events(partnerId, orderReference));
+        remaining.set(partnerId, {
+          points: BigInt(statement.points.pending),
+          value: statement.value?.pending ?? null,
+        });
+      }
       for (const { entitlement, rate } of rows) {
+        const balance = remaining.get(entitlement.businessPartnerId)!;
+        const points = Number(
+          balance.points < BigInt(entitlement.points) ? balance.points : BigInt(entitlement.points),
+        );
+        const value =
+          balance.value === null
+            ? null
+            : allocateRewardValue(balance.value, BigInt(points), balance.points);
+        if (value !== null && balance.value !== null) {
+          const remainder = BigInt(balance.value.replace('.', '')) - BigInt(value.replace('.', ''));
+          balance.value = `${remainder / 100n}.${String(remainder % 100n).padStart(2, '0')}`;
+        }
+        balance.points -= BigInt(points);
         await database
           .insert(partnerRewardEvents)
           .values({
@@ -113,8 +154,9 @@ export function bindPartnerRewardStore(database: TransactionDatabase): DurablePa
             orderReference,
             eventType: 'paid',
             actorId,
-            points: entitlement.points,
-            earnedPoints: entitlement.points,
+            points,
+            earnedPoints: points,
+            value,
             conversionRate: rate.egpPerPoint,
             fulfillment: 'delivery',
             fulfillmentCompleted: true,
@@ -185,6 +227,7 @@ export function bindPartnerRewardStore(database: TransactionDatabase): DurablePa
           eventType: 'accepted',
           points: line.reward.points,
           pendingPoints: line.reward.points,
+          value: line.reward.rewardValue,
           conversionRate: line.reward.egpPerPoint,
         });
       }
@@ -251,7 +294,6 @@ export function bindPartnerRewardStore(database: TransactionDatabase): DurablePa
         partnerId,
         correction.action === 'settlement' ? undefined : correction.orderReference,
       );
-      const summary = summarizeRewardLedger(prior);
       let result: import('../contracts.js').PartnerRewardCorrectionResult;
       if (correction.action === 'settlement') {
         const [bank] = await database
@@ -269,22 +311,10 @@ export function bindPartnerRewardStore(database: TransactionDatabase): DurablePa
           .for('share');
         result = !bank
           ? { status: 'bank-account-unverified' }
-          : correction.points > summary.available
+          : !canCorrectReward(prior, 'settlement', correction.points)
             ? { status: 'reward-unavailable' }
             : { status: 'settled' };
-      } else if (
-        correction.action === 'adjustment' ||
-        (correction.action === 'cancellation' &&
-          prior.some((event) => event.eventType === 'accepted') &&
-          correction.points <= summary.pending + summary.earned) ||
-        ((correction.action === 'refund' || correction.action === 'reversal') &&
-          summary.earned >= correction.points &&
-          prior.some((event) =>
-            correction.action === 'refund'
-              ? event.eventType === 'paid'
-              : event.eventType === 'accepted',
-          ))
-      ) {
+      } else if (canCorrectReward(prior, correction.action, correction.points)) {
         result = {
           status:
             correction.action === 'refund'
@@ -300,7 +330,10 @@ export function bindPartnerRewardStore(database: TransactionDatabase): DurablePa
       }
       if (result.status === 'bank-account-unverified' || result.status === 'reward-unavailable')
         return result;
+      const value = correctionValue(prior, correction);
+      if (value === undefined) return { status: 'reward-unavailable' };
       await database.insert(partnerRewardEvents).values({
+        value,
         businessPartnerId: partnerId,
         orderReference: correction.orderReference,
         eventType: correction.action,

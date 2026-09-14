@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Correct Partner Reward payment after cancellation and preserve exact EGP values
+  through refunds, reversals, adjustments and settlements. New ledger values are
+  append-only; unvalued historical entries remain explicit rather than being
+  backfilled with current rates.
+
 - Consolidate #64 compatibility guidance at backend, database, and environment
   entry points; correct the legacy database barrel's browser-import claim and
   mark the remaining infrastructure analysis as historical evidence. Retain
