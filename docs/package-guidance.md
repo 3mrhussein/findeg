@@ -49,6 +49,11 @@ its transaction-bound construction contract. `reward-rates` authorizes Finance
 credentials inside the application operation. Partner Reports use explicitly approved,
 read-only projections; source owners retain all write access.
 
+Partner Reward corrections and settlements use the same transaction-bound ledger
+adapter. Finance verifies an opaque bank-account identifier for one active Business
+Partner before a settlement can reference it; the adapter rechecks that durable
+approval and appends the settlement instead of trusting a request field.
+
 ### Accepted Partner Rewards (#93)
 
 Finance configures rates with `POST /api/v1/back-office/partners/{partnerId}/reward-rates`:

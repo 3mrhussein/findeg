@@ -9,6 +9,8 @@ import {
   index,
   unique,
   uniqueIndex,
+  primaryKey,
+  jsonb,
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 import { identitySchema } from '../../schema/schemas.js';
@@ -97,4 +99,35 @@ export const partnerRewardEntitlements = identitySchema.table(
     check('partner_reward_entitlements_points_check', sql`${table.points} >= 0`),
     check('partner_reward_entitlements_reward_value_check', sql`${table.rewardValue} >= 0`),
   ],
+);
+
+/** Finance-approved opaque bank-account identifiers. Account details remain outside FindEg. */
+export const partnerRewardVerifiedBankAccounts = identitySchema.table(
+  'partner_reward_verified_bank_accounts',
+  {
+    id: serial('id').primaryKey(),
+    businessPartnerId: integer('business_partner_id').notNull(),
+    bankAccountId: text('bank_account_id').notNull(),
+    verifiedBy: integer('verified_by').notNull(),
+    verifiedAt: timestamp('verified_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    unique('partner_reward_verified_bank_accounts_partner_account_key').on(
+      table.businessPartnerId,
+      table.bankAccountId,
+    ),
+  ],
+);
+
+/** Immutable finance mutation outcomes make retries safe without mutating the ledger. */
+export const partnerRewardOutcomes = identitySchema.table(
+  'partner_reward_outcomes',
+  {
+    actorId: integer('actor_id').notNull(),
+    operation: text('operation').notNull(),
+    key: text('key').notNull(),
+    fingerprint: text('fingerprint').notNull(),
+    outcome: jsonb('outcome').notNull(),
+  },
+  (table) => [primaryKey({ columns: [table.actorId, table.operation, table.key] })],
 );

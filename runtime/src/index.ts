@@ -2,6 +2,7 @@ import { createPartnerReportOperations } from '@findeg/backend/partner-reports';
 import { bindPartnerReportStore } from '@findeg/backend/modules/partner-reports/infrastructure/persistence';
 import { createOrderLifecycle } from '@findeg/backend/order-lifecycle';
 import { createRewardRateOperations } from '@findeg/backend/reward-rates';
+import { createPartnerRewardOperations } from '@findeg/backend/partner-rewards';
 import { bindPartnerRewardStore } from '@findeg/backend/modules/partner-rewards/infrastructure/persistence';
 import { createHash, randomBytes, randomInt } from 'node:crypto';
 import { createPartnerOperations } from '@findeg/backend/partner-operations';
@@ -94,6 +95,7 @@ export function createWebRuntime(environment: Readonly<Record<string, string | u
         )
       : Promise.resolve({ status: 'authentication-required' } as const);
   return {
+    partnerRewards: createPartnerRewardOperations(persistence.transactions, security),
     orderLifecycle: createOrderLifecycle(persistence.transactions, security),
     partnerReports: {
       read: (...args: Parameters<ReturnType<typeof createPartnerReportOperations>['read']>) =>
