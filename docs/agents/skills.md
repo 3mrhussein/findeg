@@ -18,8 +18,11 @@ build checks remain documented in [CONTRIBUTING.md](../../CONTRIBUTING.md).
 
 ## Maintenance
 
-The skill files are tracked in Git and excluded from repository formatting so
-the upstream contents stay intact. Update from upstream as a deliberate source
+AI instructions, skills, supporting agent documents, and tool configuration are
+excluded from automatic Prettier formatting through the root `.prettierignore`.
+The pre-commit formatter and ESLint Prettier rule both use that file, including
+when lint runs from a workspace package. Application source remains formatted.
+The skill files are tracked in Git so the upstream contents stay intact. Update from upstream as a deliberate source
 update, including its provenance; keep repository configuration in the setup
 documents rather than editing the installed skills.
 

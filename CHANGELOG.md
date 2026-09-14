@@ -7,6 +7,16 @@
   spec references to their preserved Git revision. Frontend page/theme migration,
   legacy runtime retirement, and production certification remain separate work.
 
+- Preserve optional School Supply List class/section context through creation,
+  publication, cloning and replacement (#97), with an additive nullable column
+  and versioned HTTP contract. Frontend migration and production certification
+  remain outside this delivery.
+
+- Correct Partner Reward payment after cancellation and preserve exact EGP values
+  through refunds, reversals, adjustments and settlements. New ledger values are
+  append-only; unvalued historical entries remain explicit rather than being
+  backfilled with current rates.
+
 - Consolidate #64 compatibility guidance at backend, database, and environment
   entry points; correct the legacy database barrel's browser-import claim and
   mark the remaining infrastructure analysis as historical evidence. Retain

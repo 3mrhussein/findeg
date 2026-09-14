@@ -5,6 +5,9 @@ import type {
   PartnerRewardEvent,
   PartnerRewardInput,
   PartnerRewardSummary,
+  PartnerRewardCorrectionInput,
+  PartnerRewardCorrectionResult,
+  VerifiedBankAccountInput,
 } from './contracts.js';
 
 export type {
@@ -13,6 +16,9 @@ export type {
   PartnerRewardEvent,
   PartnerRewardInput,
   PartnerRewardSummary,
+  PartnerRewardCorrectionInput,
+  PartnerRewardCorrectionResult,
+  VerifiedBankAccountInput,
 } from './contracts.js';
 
 export interface PartnerRewardLedgerStore {
@@ -39,54 +45,9 @@ export interface PartnerRewardAccess {
 const isPositiveInteger = (value: unknown): value is number =>
   typeof value === 'number' && Number.isFinite(value) && value >= 0 && Number.isInteger(value);
 
-export function summarizeRewardLedger(events: readonly PartnerRewardEvent[]): PartnerRewardSummary {
-  let pending = 0;
-  let earned = 0;
-  let reversed = 0;
-  let settled = 0;
-
-  for (const event of events) {
-    const amount = Number.isFinite(event.points) ? event.points : 0;
-    switch (event.eventType) {
-      case 'accepted': {
-        pending += event.pendingPoints ?? amount;
-        break;
-      }
-      case 'paid': {
-        const value = event.earnedPoints ?? amount;
-        earned += value;
-        pending = Math.max(0, pending - value);
-        break;
-      }
-      case 'refund':
-      case 'cancellation':
-      case 'reversal': {
-        reversed += Math.abs(amount < 0 ? amount : 0);
-        earned += amount;
-        break;
-      }
-      case 'adjustment': {
-        earned += amount;
-        break;
-      }
-      case 'settlement': {
-        settled += Math.max(0, amount);
-        earned = Math.max(0, earned - Math.max(0, amount));
-        break;
-      }
-      default:
-        break;
-    }
-  }
-
-  return {
-    pending: Math.max(0, pending),
-    earned: Math.max(0, earned),
-    reversed: Math.max(0, reversed),
-    settled: Math.max(0, settled),
-    available: Math.max(0, earned - settled),
-  };
-}
+export { summarizeRewardLedger, summarizeRewardStatement } from './accounting.js';
+import { summarizeRewardLedger } from './accounting.js';
+import { canCorrectReward } from './corrections.js';
 
 export function createPartnerRewards(store: PartnerRewardLedgerStore, access: PartnerRewardAccess) {
   const record = async (
@@ -155,13 +116,7 @@ export function createPartnerRewards(store: PartnerRewardLedgerStore, access: Pa
       const prior = current.filter(
         (event) => event.partnerId === partnerId && event.orderReference === orderReference,
       );
-      const accepted = prior
-        .filter((event) => event.eventType === 'accepted')
-        .reduce((total, event) => total + (event.pendingPoints ?? event.points), 0);
-      const paidPreviously = prior
-        .filter((event) => event.eventType === 'paid')
-        .reduce((total, event) => total + (event.earnedPoints ?? event.points), 0);
-      const pending = Math.max(0, accepted - paidPreviously);
+      const { pending } = summarizeRewardLedger(prior);
 
       if (pending <= 0) {
         return { status: 'invalid-input' as const };
@@ -197,13 +152,7 @@ export function createPartnerRewards(store: PartnerRewardLedgerStore, access: Pa
       const prior = (await store.ledger()).filter(
         (event) => event.partnerId === partnerId && event.orderReference === input.orderReference,
       );
-      const earned = prior
-        .filter((event) => event.eventType === 'paid' || event.eventType === 'adjustment')
-        .reduce((total, event) => total + (event.earnedPoints ?? event.points), 0);
-      const refunded = prior
-        .filter((event) => event.eventType === 'refund')
-        .reduce((total, event) => total + Math.abs(event.points), 0);
-      if (prior.every((event) => event.eventType !== 'paid') || input.points > earned - refunded) {
+      if (!canCorrectReward(prior, 'refund', input.points)) {
         return { status: 'invalid-input' as const };
       }
 
@@ -226,35 +175,21 @@ export function createPartnerRewards(store: PartnerRewardLedgerStore, access: Pa
         !input ||
         typeof input.orderReference !== 'string' ||
         input.orderReference.trim().length === 0 ||
-        !Number.isInteger(input.points) ||
-        input.points === 0
+        !Number.isSafeInteger(input.points) ||
+        input.points <= 0
       ) {
         return { status: 'invalid-input' as const };
       }
       const prior = (await store.ledger()).filter(
         (event) => event.partnerId === partnerId && event.orderReference === input.orderReference,
       );
-      const earned = prior
-        .filter((event) => event.eventType === 'paid' || event.eventType === 'adjustment')
-        .reduce((total, event) => total + (event.earnedPoints ?? event.points), 0);
-      const reversed = prior
-        .filter(
-          (event) =>
-            event.eventType === 'refund' ||
-            event.eventType === 'cancellation' ||
-            event.eventType === 'reversal',
-        )
-        .reduce((total, event) => total + Math.abs(event.points), 0);
-      if (
-        prior.every((event) => event.eventType !== 'accepted') ||
-        input.points > earned - reversed
-      ) {
+      if (!canCorrectReward(prior, 'reversal', input.points)) {
         return { status: 'invalid-input' as const };
       }
       const result = await record(session, partnerId, {
         orderReference: input.orderReference,
         eventType: 'reversal',
-        points: -Math.abs(input.points),
+        points: -input.points,
         reason: input.reason,
       });
       return result.status === 'recorded'
@@ -278,7 +213,7 @@ export function createPartnerRewards(store: PartnerRewardLedgerStore, access: Pa
       const prior = (await store.ledger()).filter(
         (event) => event.partnerId === partnerId && event.orderReference === input.orderReference,
       );
-      if (prior.every((event) => event.eventType !== 'accepted')) {
+      if (!canCorrectReward(prior, 'cancellation', input.points)) {
         return { status: 'invalid-input' as const };
       }
       const result = await record(session, partnerId, {
@@ -300,8 +235,7 @@ export function createPartnerRewards(store: PartnerRewardLedgerStore, access: Pa
         !input ||
         typeof input.orderReference !== 'string' ||
         input.orderReference.trim().length === 0 ||
-        !Number.isInteger(input.points) ||
-        input.points === 0
+        !canCorrectReward([], 'adjustment', input.points)
       ) {
         return { status: 'invalid-input' as const };
       }
@@ -338,6 +272,9 @@ export function createPartnerRewards(store: PartnerRewardLedgerStore, access: Pa
       ) {
         return { status: 'invalid-input' as const };
       }
+      const prior = (await store.ledger()).filter((event) => event.partnerId === partnerId);
+      if (!canCorrectReward(prior, 'settlement', input.points))
+        return { status: 'invalid-input' as const };
       const result = await record(session, partnerId, {
         orderReference: input.orderReference,
         eventType: 'settlement',
@@ -352,3 +289,56 @@ export function createPartnerRewards(store: PartnerRewardLedgerStore, access: Pa
     },
   };
 }
+
+export { rewardRateInput, valueRewardLine } from './valuation.js';
+export type {
+  PartnerRewardRate,
+  RewardSnapshot,
+  PendingRewardLine,
+  RewardEntitlement,
+  RewardRateInput,
+} from './contracts.js';
+
+/** Infrastructure binds these purpose-specific writes to the workflow transaction. */
+export interface DurablePartnerRewardStore {
+  earnDeliveredOrder(orderReference: string, actorId: number): Promise<void>;
+  rateForPartner(
+    partnerId: number,
+  ): Promise<import('./contracts.js').PartnerRewardRate | undefined>;
+  configureRate(
+    partnerId: number,
+    actorId: number,
+    input: import('./contracts.js').RewardRateInput,
+  ): Promise<
+    | { readonly status: 'configured'; readonly rate: import('./contracts.js').PartnerRewardRate }
+    | { readonly status: 'idempotency-conflict' }
+  >;
+  recordPending(
+    orderReference: string,
+    lines: readonly import('./contracts.js').PendingRewardLine[],
+  ): Promise<void>;
+  entitlementsForOrder(
+    orderReference: string,
+  ): Promise<readonly import('./contracts.js').RewardEntitlement[]>;
+  verifyBankAccount(input: {
+    partnerId: number;
+    actorId: number;
+    fingerprint: string;
+    verification: import('./contracts.js').VerifiedBankAccountInput;
+  }): Promise<
+    { readonly status: 'bank-account-verified' } | { readonly status: 'idempotency-conflict' }
+  >;
+  recordCorrection(input: {
+    partnerId: number;
+    actorId: number;
+    fingerprint: string;
+    correction: import('./contracts.js').PartnerRewardCorrectionInput;
+  }): Promise<import('./contracts.js').PartnerRewardCorrectionResult>;
+}
+
+export {
+  canCorrectReward,
+  correctionValue,
+  allocateRewardValue,
+  type ValuedRewardEvent,
+} from './corrections.js';

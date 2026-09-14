@@ -1,3 +1,4 @@
+import { summarizeRewardStatement } from '../partner-rewards/public.js';
 import type { PartnerSession } from '../partner-management/contracts.js';
 import type { PartnerReportOptions, PartnerReportResult, PartnerReportRow } from './contracts.js';
 
@@ -52,7 +53,8 @@ export function buildAuthorizedPartnerReports(
     );
   if (!authorized) return { status: 'authorization-denied' };
 
-  return { status: 'authorized', report: buildPartnerReports(rows, options) };
+  const partnerRows = rows.filter((row) => row.partnerId === partnerId);
+  return { status: 'authorized', report: buildPartnerReports(partnerRows, options) };
 }
 
 export function suppressLowCountBreakdowns(
@@ -60,4 +62,40 @@ export function suppressLowCountBreakdowns(
   minimumCount = 3,
 ): readonly PartnerReportRow[] {
   return filterPartnerReportRows(rows, minimumCount);
+}
+
+export interface PartnerReportStore {
+  eventsThrough(
+    partnerId: number,
+    before: Date,
+  ): Promise<
+    readonly (import('../partner-rewards/contracts.js').PartnerRewardEvent & {
+      readonly value: string | null;
+    })[]
+  >;
+  salesDuring(
+    partnerId: number,
+    start: string,
+    end: string,
+  ): Promise<readonly import('./contracts.js').AttributedSalesBreakdown[]>;
+}
+
+export async function readPartnerStatement(
+  store: PartnerReportStore,
+  partnerId: number,
+  period: string,
+): Promise<import('./contracts.js').PartnerStatementReport> {
+  const start = `${period}-01`;
+  const endDate = new Date(`${start}T00:00:00.000Z`);
+  endDate.setUTCMonth(endDate.getUTCMonth() + 1);
+  const end = endDate.toISOString().slice(0, 10);
+  const events = await store.eventsThrough(partnerId, endDate);
+  const sales = await store.salesDuring(partnerId, start, end);
+  return {
+    partnerId,
+    period,
+    statement: summarizeRewardStatement(events.filter((event) => event.partnerId === partnerId)),
+    sales: sales.filter((row) => row.count >= 3),
+    suppressed: sales.some((row) => row.count < 3),
+  };
 }

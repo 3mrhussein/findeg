@@ -90,7 +90,13 @@ export function GuestOrderAccess({
             <code>{order.reference}</code>
           </p>
           <p>
-            {text('Accepted · Cash on Delivery · Unpaid', 'مقبول · الدفع عند الاستلام · غير مدفوع')}
+            {order.currentState?.fulfillmentStatus === 'delivered'
+              ? text('Delivered', 'تم التسليم')
+              : text('Accepted', 'مقبول')}{' '}
+            · {text('Cash on Delivery', 'الدفع عند الاستلام')} ·{' '}
+            {order.currentState?.paymentStatus === 'paid'
+              ? text('Paid', 'مدفوع')
+              : text('Unpaid', 'غير مدفوع')}
           </p>
           <ul>
             {order.items.map((item) => (

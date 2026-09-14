@@ -51,11 +51,35 @@ There are no quantity, completeness, Customer or repeat-purchase limits. The
 current target has no other promotion engine, so no promotions are stacked.
 This slice adds no Partner-controlled offer endpoint. Delivery fees stay unchanged.
 
+List management uses `@findeg/backend/school-supply-lists` for both direct runtime
+calls and the versioned Partner HTTP route. Mutations accept an opaque Current
+Session token, never a caller-constructed session. The application coordinator
+resolves Identity and locks the selected Business Partner before checking its
+current Partner Membership and List role in the mutation transaction. This
+serializes List writes with session revocation, User invalidation, Partner status
+changes and membership administration. Missing, fabricated, expired and revoked
+credentials require authentication. Authorization Denial preserves a valid
+Current Session. Failed domain mutations roll back their List writes.
+
 Partner list draft item input now accepts `required` (defaults to true) and
 `specification: { categoryId, attributes }`. Publication validates a supplied
 specification against the active default. DB triggers freeze published content;
 corrections require a cloned Draft and replacement. Historical missing
 specifications permit the default only and cannot enable substitutes.
+
+School Supply List creation accepts optional `classSection`, a single class or
+section label alongside `academicYear`, `schoolName` and `grade`. Supplied labels
+must be nonblank strings and are trimmed; omit the field when it does not apply.
+The authorized application operations and `/api/v1` contracts preserve it in
+creation results, unlisted reads, published lists and cloned Drafts. A replacement
+must match the previous list's class/section as well as its school, academic year
+and grade. Published and archived content remains immutable.
+
+Additive migration `0014_school_supply_list_class_section` stores the label in
+nullable `school_engine.school_supply_lists.class_section`. Existing rows retain
+SQL `NULL`, represented as an omitted optional field over HTTP; no historical
+context is inferred or backfilled. Apply the migration before running the new
+runtime. This change adds no frontend migration or production certification scope.
 
 ## Validation
 

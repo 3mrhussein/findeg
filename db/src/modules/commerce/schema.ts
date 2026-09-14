@@ -89,3 +89,39 @@ export const listOffers = salesSchema.table(
     check('list_offers_check', sql`${table.endsAt} IS NULL OR ${table.endsAt} > ${table.startsAt}`),
   ],
 );
+
+export const orderLifecycleEvents = salesSchema.table(
+  'order_lifecycle_events',
+  {
+    orderReference: text('order_reference')
+      .notNull()
+      .references(() => acceptedOrders.reference),
+    eventType: text('event_type').notNull(),
+    actorId: integer('actor_id').notNull(),
+    amount: numeric('amount', { precision: 18, scale: 2 }),
+    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    primaryKey({ columns: [table.orderReference, table.eventType] }),
+    check('order_lifecycle_event_type', sql`${table.eventType} IN ('delivered', 'paid')`),
+    check(
+      'order_lifecycle_amount',
+      sql`(${table.eventType} = 'delivered' AND ${table.amount} IS NULL) OR (${table.eventType} = 'paid' AND ${table.amount} >= 0)`,
+    ),
+  ],
+);
+
+export const orderLifecycleOutcomes = salesSchema.table(
+  'order_lifecycle_outcomes',
+  {
+    actorId: integer('actor_id').notNull(),
+    operation: text('operation').notNull(),
+    key: text('key').notNull(),
+    fingerprint: text('fingerprint').notNull(),
+    orderReference: text('order_reference')
+      .notNull()
+      .references(() => acceptedOrders.reference),
+    outcome: jsonb('outcome').notNull(),
+  },
+  (table) => [primaryKey({ columns: [table.actorId, table.operation, table.key] })],
+);

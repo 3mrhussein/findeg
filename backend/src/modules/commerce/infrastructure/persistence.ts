@@ -1,6 +1,8 @@
-import { and, eq, isNull, gt } from 'drizzle-orm';
+import { and, eq, isNull, gt, sql } from 'drizzle-orm';
 import type { TransactionDatabase } from '@findeg/db/transactions';
 import {
+  orderLifecycleEvents,
+  orderLifecycleOutcomes,
   listOffers,
   listSelections,
   acceptedOrders,
@@ -94,7 +96,9 @@ export function bindCommerceStore(database: TransactionDatabase): CommerceStore 
           ),
         )
         .returning({ reference: guestOrderAccess.reference });
-      return claimed ? (access.order as AcceptedOrder) : undefined;
+      if (!claimed) return undefined;
+      const order = access.order as AcceptedOrder;
+      return { ...order, currentState: await readOrderState(database, order) };
     },
     async readCart(ownerDigest) {
       await database
@@ -158,5 +162,79 @@ export function bindListSelectionStore(
         .set({ selection, updatedAt: new Date() })
         .where(and(eq(listSelections.ownerDigest, owner), eq(listSelections.listId, listId)));
     },
+  };
+}
+
+export function bindOrderLifecycleStore(
+  database: TransactionDatabase,
+): import('../public.js').OrderLifecycleStore {
+  return {
+    async lockOrder(reference) {
+      const [row] = await database
+        .select()
+        .from(acceptedOrders)
+        .where(eq(acceptedOrders.reference, reference))
+        .for('update');
+      return row?.snapshot as AcceptedOrder | undefined;
+    },
+    async state(order) {
+      return readOrderState(database, order);
+    },
+    async outcome(actorId, operation, key) {
+      await database.execute(
+        sql`SELECT pg_advisory_xact_lock(94001, hashtext(${`${actorId}:${operation}:${key}`}))`,
+      );
+      const [row] = await database
+        .select()
+        .from(orderLifecycleOutcomes)
+        .where(
+          and(
+            eq(orderLifecycleOutcomes.actorId, actorId),
+            eq(orderLifecycleOutcomes.operation, operation),
+            eq(orderLifecycleOutcomes.key, key),
+          ),
+        );
+      return row
+        ? {
+            fingerprint: row.fingerprint,
+            result: row.outcome as import('../contracts.js').OrderLifecycleReceipt,
+          }
+        : undefined;
+    },
+    async recordEvent(orderReference, eventType, actorId, amount) {
+      await database
+        .insert(orderLifecycleEvents)
+        .values({ orderReference, eventType, actorId, amount });
+    },
+    async saveOutcome(actorId, operation, key, fingerprint, result) {
+      await database.insert(orderLifecycleOutcomes).values({
+        actorId,
+        operation,
+        key,
+        fingerprint,
+        orderReference: result.state.reference,
+        outcome: result,
+      });
+    },
+  };
+}
+
+async function readOrderState(
+  database: TransactionDatabase,
+  order: AcceptedOrder,
+): Promise<import('../contracts.js').OrderState> {
+  const events = await database
+    .select()
+    .from(orderLifecycleEvents)
+    .where(eq(orderLifecycleEvents.orderReference, order.reference));
+  const delivered = events.find((event) => event.eventType === 'delivered');
+  const paid = events.find((event) => event.eventType === 'paid');
+  return {
+    reference: order.reference,
+    total: order.total,
+    fulfillmentStatus: delivered ? 'delivered' : 'accepted',
+    paymentStatus: paid ? 'paid' : 'unpaid',
+    ...(delivered ? { deliveredAt: delivered.createdAt.toISOString() } : {}),
+    ...(paid ? { paidAt: paid.createdAt.toISOString() } : {}),
   };
 }

@@ -21,6 +21,7 @@ function mapList(
     academicYear: row.academicYear,
     schoolName: row.schoolName,
     grade: row.grade,
+    classSection: row.classSection ?? undefined,
     title: { en: row.titleEn, ar: row.titleAr },
     publicCode: row.publicCode ?? undefined,
     sourceListId: row.sourceListId ?? undefined,
@@ -74,6 +75,7 @@ export function bindSchoolSupplyListStore(database: TransactionDatabase): School
           academicYear: input.academicYear.trim(),
           schoolName: input.schoolName.trim(),
           grade: input.grade.trim(),
+          classSection: input.classSection?.trim(),
           titleEn: input.title.en.trim(),
           titleAr: input.title.ar.trim(),
         })
@@ -162,6 +164,7 @@ export function bindSchoolSupplyListStore(database: TransactionDatabase): School
           academicYear: source.academicYear,
           schoolName: source.schoolName,
           grade: source.grade,
+          classSection: source.classSection,
           titleEn: source.title.en,
           titleAr: source.title.ar,
         })
