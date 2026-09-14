@@ -4,6 +4,8 @@ import { createRequire } from 'node:module';
 import { createHash, randomUUID } from 'node:crypto';
 import { runMigrations } from '../db/dist/runtime/migrations.js';
 import { createWebRuntime } from '../runtime/dist/index.js';
+import { assertContractResponse } from './support/http-contract.mjs';
+import { launchWeb } from './support/web-process.mjs';
 const postgres = createRequire(new URL('../db/package.json', import.meta.url))('postgres');
 
 test('accepted list rewards use exact configured snapshots and share the acceptance transaction', async (t) => {
@@ -397,6 +399,20 @@ test('accepted list rewards use exact configured snapshots and share the accepta
     'subtotal',
     'variantId',
   ]);
+  const web = await launchWeb(t, environment);
+  try {
+    const endpoint = `${web.base}/api/v1/partner/${partner.id}/reports?period=${period}`;
+    const response = await fetch(endpoint, { headers: { cookie: `findeg_session=${token}` } });
+    assert.deepEqual(
+      await assertContractResponse('/partner/{partnerId}/reports', 'get', response),
+      visible,
+    );
+    const anonymous = await fetch(endpoint);
+    assert.equal(anonymous.status, 401);
+    await assertContractResponse('/partner/{partnerId}/reports', 'get', anonymous);
+  } finally {
+    await web.stop();
+  }
   await sql`UPDATE identity.partner_memberships SET status='ended' WHERE id=${membership.id}`;
   assert.equal(
     (await runtime.partnerReports.read(token, partner.id, period)).status,
