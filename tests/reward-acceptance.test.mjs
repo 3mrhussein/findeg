@@ -335,6 +335,78 @@ test('accepted list rewards use exact configured snapshots and share the accepta
     (await runtime.orderLifecycle.deliver(token, ordinary.reference, { key: 'delivery' })).status,
     'idempotency-conflict',
   );
+  // Reports resolve the current Workspace and read only scoped commercial facts.
+  await sql`UPDATE identity.users SET email_verified=now() WHERE id=${user.id}`;
+  const [invitation] =
+    await sql`INSERT INTO identity.partner_invitations(business_partner_id,email,roles,token_digest,inviter_id,expires_at,status) VALUES (${partner.id},'finance@example.test',ARRAY['report-viewer'],${randomUUID()},${user.id},now()+interval '1 day','accepted') RETURNING id`;
+  const [membership] =
+    await sql`INSERT INTO identity.partner_memberships(business_partner_id,user_id,invitation_id,roles) VALUES (${partner.id},${user.id},${invitation.id},ARRAY['report-viewer']) RETURNING id`;
+  const [otherPartner] =
+    await sql`INSERT INTO identity.business_partners(code,name_en,name_ar,status) VALUES ('other','Other','آخر','active') RETURNING id`;
+  await sql`INSERT INTO identity.partner_reward_events(business_partner_id,order_reference,event_type,points,pending_points,conversion_rate) VALUES (${otherPartner.id},'private-other-order','accepted',999,999,1)`;
+  const period = new Date().toISOString().slice(0, 7);
+  const report = await runtime.partnerReports.read(token, partner.id, period);
+  assert.equal(report.status, 'found');
+  assert.deepEqual(report.report.statement, {
+    points: { pending: '0', earned: '50', reversed: '0', settled: '0', available: '50' },
+    value: {
+      pending: '0.00',
+      earned: '0.63',
+      reversed: '0.00',
+      settled: '0.00',
+      available: '0.63',
+    },
+  });
+  assert.deepEqual(report.report.sales, []);
+  assert.equal(report.report.suppressed, true);
+  assert.equal(
+    (await runtime.partnerReports.read(token, otherPartner.id, period)).status,
+    'authorization-denied',
+  );
+  assert.equal(
+    (await runtime.partnerReports.read(undefined, partner.id, period)).status,
+    'authentication-required',
+  );
+  assert.equal(JSON.stringify(report).includes('customer@example.test'), false);
+  assert.equal(JSON.stringify(report).includes(accepted.reference), false);
+  await runtime.listCommerce.replace(owner, code, selection);
+  const thirdQuote = await runtime.listCommerce.quoteCheckout(owner, code, zone.id);
+  const third = await runtime.listCommerce.acceptCheckout(owner, code, {
+    ...input,
+    key: randomUUID(),
+    confirmation: thirdQuote.confirmation,
+  });
+  await runtime.orderLifecycle.deliver(token, third.reference, { key: 'third-delivery' });
+  await runtime.orderLifecycle.pay(token, third.reference, {
+    key: 'third-payment',
+    amount: '30.00',
+  });
+  const visible = await runtime.partnerReports.read(token, partner.id, period);
+  assert.equal(visible.report.statement.points.earned, '80');
+  assert.equal(visible.report.statement.value.earned, '1.01');
+  assert.equal(visible.report.sales.length, 1);
+  assert.equal(visible.report.sales[0].count, 3);
+  assert.equal(visible.report.sales[0].subtotal, '30.00');
+  assert.equal(visible.report.sales[0].listId, list.id);
+  assert.equal(visible.report.suppressed, false);
+  assert.deepEqual(Object.keys(visible.report.sales[0]).sort(), [
+    'count',
+    'day',
+    'listId',
+    'listItemId',
+    'subtotal',
+    'variantId',
+  ]);
+  await sql`UPDATE identity.partner_memberships SET status='ended' WHERE id=${membership.id}`;
+  assert.equal(
+    (await runtime.partnerReports.read(token, partner.id, period)).status,
+    'authorization-denied',
+  );
+  await sql`UPDATE identity.partner_memberships SET status='active',roles=ARRAY['list-manager'] WHERE id=${membership.id}`;
+  assert.equal(
+    (await runtime.partnerReports.read(token, partner.id, period)).status,
+    'authorization-denied',
+  );
   await sql`DELETE FROM identity.staff_role_grants WHERE user_id=${user.id}`;
   assert.equal((await configure('initial')).status, 'authorization-denied');
   assert.equal(

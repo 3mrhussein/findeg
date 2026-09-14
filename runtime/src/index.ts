@@ -1,3 +1,5 @@
+import { createPartnerReportOperations } from '@findeg/backend/partner-reports';
+import { bindPartnerReportStore } from '@findeg/backend/modules/partner-reports/infrastructure/persistence';
 import { createOrderLifecycle } from '@findeg/backend/order-lifecycle';
 import { createRewardRateOperations } from '@findeg/backend/reward-rates';
 import { bindPartnerRewardStore } from '@findeg/backend/modules/partner-rewards/infrastructure/persistence';
@@ -47,6 +49,7 @@ export function createWebRuntime(environment: Readonly<Record<string, string | u
     (database) => ({
       orderLifecycle: bindOrderLifecycleStore(database),
       fulfillment: bindInventoryFulfillment(database),
+      reports: bindPartnerReportStore(database),
       rewards: bindPartnerRewardStore(database),
       commerce: bindCommerceStore(database),
       selections: bindListSelectionStore(database, config.LIST_SELECTION_INACTIVITY_DAYS),
@@ -68,6 +71,7 @@ export function createWebRuntime(environment: Readonly<Record<string, string | u
   const catalog = createCatalogOperations(persistence.transactions, security);
   async function run<Value>(
     operation: (stores: {
+      reports: ReturnType<typeof bindPartnerReportStore>;
       rewards: ReturnType<typeof bindPartnerRewardStore>;
       identity: ReturnType<typeof bindIdentityStore>;
       partners: ReturnType<typeof bindPartnerStore>;
@@ -91,6 +95,10 @@ export function createWebRuntime(environment: Readonly<Record<string, string | u
       : Promise.resolve({ status: 'authentication-required' } as const);
   return {
     orderLifecycle: createOrderLifecycle(persistence.transactions, security),
+    partnerReports: {
+      read: (...args: Parameters<ReturnType<typeof createPartnerReportOperations>['read']>) =>
+        run((stores) => createPartnerReportOperations(stores, security).read(...args)),
+    },
     rewardRates: {
       configure: (
         ...args: Parameters<ReturnType<typeof createRewardRateOperations>['configure']>

@@ -44,10 +44,10 @@ including immutable-list rejection and checkout replay/conflict. OpenAPI respons
 validation uses the JSON Schema subset supported by Ajv; extend the validator when
 introducing newer schema keywords.
 
-Partner Rewards now persists explicit rate history and accepted line entitlements through
+Partner Rewards persists explicit rate history and accepted line entitlements through
 its transaction-bound construction contract. `reward-rates` authorizes Finance
-credentials inside the application operation. Partner Reports still needs its durable
-query/runtime integration before adding routes.
+credentials inside the application operation. Partner Reports use explicitly approved,
+read-only projections; source owners retain all write access.
 
 ### Accepted Partner Rewards (#93)
 
@@ -99,6 +99,27 @@ and cannot repeat effects. Guest Order verification includes `currentState`, sep
 from the immutable accepted snapshot; guest presentation uses that current lifecycle
 state. Finance corrections and partner statements continue to use the same ledger.
 No online payment, school collection or external notification channel is introduced.
+
+### Partner Reports (#95)
+
+`GET /api/v1/partner/{partnerId}/reports?period=YYYY-MM` resolves an opaque Current
+Session and active Partner Workspace inside the application operation. Only an active
+Partner Administrator or Report Viewer for the selected Business Partner can read it.
+Authorization Denial leaves a valid Current Session intact.
+
+Migration `0011_partner_report_views` defines non-updatable views over the append-only
+Partner Reward ledger and paid Attributed Sales. The report adapter reads only the
+selected partner's rows; it never receives Customer names, email addresses, phones,
+delivery addresses or raw Order snapshots. It returns cumulative pending, earned,
+reversed, settled and available points through the selected UTC month, plus matching
+EGP valuation when every included entry has an auditable value. Historical entries
+without a value make that monetary column `null`, rather than inventing a rate.
+
+Daily/list-item/Product Variant breakdowns are returned only where three or more
+distinct paid Orders share the group. Lower-count rows are omitted and the response
+sets `suppressed: true`. The bilingual Partner Workspace statement uses the same
+versioned adapter. Direct views are live, so their reporting lag is below fifteen
+minutes; they remain a documented read-only cross-owner exception.
 
 ### Partner Reward statement semantics (#92)
 
