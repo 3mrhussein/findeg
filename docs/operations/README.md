@@ -24,6 +24,21 @@ to the owning runtime adapter when that adapter is introduced.
 See [Guest Checkout](guest-checkout.md) for ordinary Cart operations, retry behavior,
 verification and the #59 delivery dependency.
 
+## Local test prerequisites
+
+`pnpm docker:ensure` checks the Docker engine and starts Docker Desktop on macOS.
+If `/Applications/Docker.app` is missing, it downloads the architecture-matched
+installer from Docker, verifies the app signature, copies it to Applications, and
+removes the temporary installer. The account must be able to write Applications.
+First-run license/setup prompts remain in Docker Desktop. The bundled CLI is added
+to the runner’s PATH; existing shell configuration is unchanged.
+
+The local migration-test runner performs the same setup automatically before
+creating its disposable PostgreSQL container. `MIGRATION_TEST_DATABASE_URL` bypasses
+Docker entirely. CI never installs or starts Docker automatically; other operating
+systems must provision a running engine. Existing Docker installations are not
+upgraded, and a running engine is reused without changing its context.
+
 ## Executable foundation (#52)
 
 Use Node and pnpm pinned by `.nvmrc` and `package.json`, then

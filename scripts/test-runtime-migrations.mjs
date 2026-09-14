@@ -2,6 +2,7 @@ import { execFile, spawn } from 'node:child_process';
 import { promisify } from 'node:util';
 import { once } from 'node:events';
 import { randomUUID } from 'node:crypto';
+import { ensureDocker } from './ensure-docker.mjs';
 import { setTimeout as delay } from 'node:timers/promises';
 
 const exec = promisify(execFile);
@@ -10,6 +11,7 @@ let created = false;
 try {
   let url = process.env.MIGRATION_TEST_DATABASE_URL;
   if (!url) {
+    await ensureDocker();
     await exec('docker', [
       'run',
       '--detach',

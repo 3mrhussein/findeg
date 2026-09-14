@@ -17,7 +17,11 @@ runtime (for local work: `export RELEASE_REVISION="$(git rev-parse HEAD)"`).
 The complete gate builds the unified web application and compiled server adapters,
 then exercises portal HTTP entry, independent worker restart, and real PostgreSQL
 migrations. Local migration checks start and remove a disposable Docker container;
-start Docker Desktop first. CI supplies `MIGRATION_TEST_DATABASE_URL` from its
+the runner checks Docker first and, on macOS, installs missing Docker Desktop
+from the official download and starts it. Complete any first-run setup in its
+window. Run `pnpm docker:ensure` to prepare it separately. Other operating systems
+and CI require pre-provisioned Docker; supplying the test database URL skips
+Docker setup entirely. CI supplies `MIGRATION_TEST_DATABASE_URL` from its
 PostgreSQL service instead. That URL must name a test server whose user may create
 and drop temporary databases.
 
