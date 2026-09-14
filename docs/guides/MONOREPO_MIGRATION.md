@@ -2,7 +2,11 @@
 
 > **Historical migration evidence:** This archived prototype plan is retained for
 > context only and must not govern new work. Follow the target architecture
-> documentation for current decisions.
+> [documentation](../architecture/README.md) for current decisions. See the
+> [retained-evidence policy](../package-guidance.md#retained-compatibility-evidence-64)
+> for retirement conditions. Frontend pages and themes retain their separate
+> [migration boundary](../frontend-migration.md); this plan does not establish
+> completed legacy runtime retirement or [production certification](../operations/production-readiness.md).
 
 **Feature**: 001-separate-admin-project  
 **Date**: April 2026  
@@ -400,11 +404,14 @@ findeg.stationary/
 
 ## References
 
-- **Spec**: [specs/001-separate-admin-project/spec.md](../../specs/001-separate-admin-project/spec.md)
-- **Plan**: [specs/001-separate-admin-project/plan.md](../../specs/001-separate-admin-project/plan.md)
-- **Research**: [specs/001-separate-admin-project/research.md](../../specs/001-separate-admin-project/research.md)
-- **Tasks**: [specs/001-separate-admin-project/tasks.md](../../specs/001-separate-admin-project/tasks.md)
-- **Quickstart**: [specs/001-separate-admin-project/quickstart.md](../../specs/001-separate-admin-project/quickstart.md)
+These historical specs were removed from the working tree. Links below point to
+the last revision before their removal, preserving the original planning evidence.
+
+- **Spec**: [specs/001-separate-admin-project/spec.md](https://github.com/3mrhussein/findeg/blob/e4c0ad51db0e9798ef0f03cb5de410c08f4bf789/specs/001-separate-admin-project/spec.md)
+- **Plan**: [specs/001-separate-admin-project/plan.md](https://github.com/3mrhussein/findeg/blob/e4c0ad51db0e9798ef0f03cb5de410c08f4bf789/specs/001-separate-admin-project/plan.md)
+- **Research**: [specs/001-separate-admin-project/research.md](https://github.com/3mrhussein/findeg/blob/e4c0ad51db0e9798ef0f03cb5de410c08f4bf789/specs/001-separate-admin-project/research.md)
+- **Tasks**: [specs/001-separate-admin-project/tasks.md](https://github.com/3mrhussein/findeg/blob/e4c0ad51db0e9798ef0f03cb5de410c08f4bf789/specs/001-separate-admin-project/tasks.md)
+- **Quickstart**: [specs/001-separate-admin-project/quickstart.md](https://github.com/3mrhussein/findeg/blob/e4c0ad51db0e9798ef0f03cb5de410c08f4bf789/specs/001-separate-admin-project/quickstart.md)
 
 ---
 

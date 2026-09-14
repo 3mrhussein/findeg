@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Reconcile historical guide retention (#98): keep the logging and monorepo
+  migration guides, link them from the canonical inventory, and point archived
+  spec references to their preserved Git revision. Frontend page/theme migration,
+  legacy runtime retirement, and production certification remain separate work.
+
 - Consolidate #64 compatibility guidance at backend, database, and environment
   entry points; correct the legacy database barrel's browser-import claim and
   mark the remaining infrastructure analysis as historical evidence. Retain
