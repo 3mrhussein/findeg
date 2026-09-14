@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Reconcile historical guide retention (#98): keep the logging and monorepo
+  migration guides, link them from the canonical inventory, and point archived
+  spec references to their preserved Git revision. Frontend page/theme migration,
+  legacy runtime retirement, and production certification remain separate work.
+
 - Preserve optional School Supply List class/section context through creation,
   publication, cloning and replacement (#97), with an additive nullable column
   and versioned HTTP contract. Frontend migration and production certification
