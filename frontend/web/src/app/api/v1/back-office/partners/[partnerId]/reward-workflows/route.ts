@@ -9,7 +9,9 @@ export async function POST(request: Request, context: { params: Promise<{ partne
   if (!selected || !input || typeof input !== 'object') return errorResponse('invalid-input', 400);
   const token = await sessionToken();
   if (input.action === 'verify-bank-account') {
-    const { action: _action, ...verification } = input;
+    const verification = Object.fromEntries(
+      Object.entries(input).filter(([field]) => field !== 'action'),
+    );
     return partnerResponse(
       await getWebRuntime().partnerRewards.verifyBankAccount(token, selected, verification),
       201,
