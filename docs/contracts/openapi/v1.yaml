@@ -97,6 +97,83 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /back-office/partners/{partnerId}/reward-workflows:
+    parameters:
+      - in: path
+        name: partnerId
+        required: true
+        schema:
+          type: integer
+          minimum: 1
+    post:
+      operationId: post_back_office_partner_reward_workflow
+      summary: Verify a settlement account or record a Partner Reward correction
+      description: Requires same-origin Origin and fresh finance.manage access. The selected Business Partner must be active. `verify-bank-account` records Finance approval of an opaque partner-bound account identifier. A settlement accepts only that durable approval; corrections and settlements append immutable ledger events.
+      security:
+        - sessionCookie: []
+      x-idempotency: Caller, action and key identify a durable outcome. Authorization is checked before an identical replay; changed input conflicts.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [action, key]
+              properties:
+                action:
+                  type: string
+                  enum: [verify-bank-account, refund, cancellation, reversal, adjustment, settlement]
+                key:
+                  type: string
+                  pattern: '^[a-zA-Z0-9_-]{1,128}$'
+                bankAccountId:
+                  type: string
+                orderReference:
+                  type: string
+                points:
+                  type: integer
+                reason:
+                  type: string
+                verifiedBankAccountId:
+                  type: string
+                settlementReference:
+                  type: string
+      responses:
+        '201':
+          description: Durable approval, correction, settlement, or identical replay
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status]
+                properties:
+                  status:
+                    type: string
+                    enum: [bank-account-verified, refunded, cancelled, reversed, recorded, settled]
+        '400':
+          description: invalid-input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: authentication-required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: origin-denied or authorization-denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: partner-unavailable, bank-account-unverified, reward-unavailable, or idempotency-conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /back-office/orders/{reference}:
     parameters:
       - in: path

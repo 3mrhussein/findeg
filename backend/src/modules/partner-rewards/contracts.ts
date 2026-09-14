@@ -46,6 +46,39 @@ export interface PartnerAdjustmentInput {
   readonly settlementReference?: string;
 }
 
+export type PartnerRewardCorrectionAction =
+  | 'refund'
+  | 'cancellation'
+  | 'reversal'
+  | 'adjustment'
+  | 'settlement';
+
+/** Finance supplies a durable key for each correction or completed settlement. */
+export interface PartnerRewardCorrectionInput {
+  readonly key: string;
+  readonly action: PartnerRewardCorrectionAction;
+  readonly orderReference: string;
+  readonly points: number;
+  readonly reason?: string;
+  readonly verifiedBankAccountId?: string;
+  readonly settlementReference?: string;
+}
+
+export interface VerifiedBankAccountInput {
+  readonly key: string;
+  readonly bankAccountId: string;
+}
+
+export type PartnerRewardCorrectionResult =
+  | { readonly status: 'refunded' }
+  | { readonly status: 'cancelled' }
+  | { readonly status: 'reversed' }
+  | { readonly status: 'recorded' }
+  | { readonly status: 'settled' }
+  | { readonly status: 'bank-account-unverified' }
+  | { readonly status: 'reward-unavailable' }
+  | { readonly status: 'idempotency-conflict' };
+
 /** Exact business policy: six decimal points per EGP, four decimal EGP per point. */
 export interface PartnerRewardRate {
   readonly id: number;

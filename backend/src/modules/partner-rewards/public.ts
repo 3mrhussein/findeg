@@ -5,6 +5,9 @@ import type {
   PartnerRewardEvent,
   PartnerRewardInput,
   PartnerRewardSummary,
+  PartnerRewardCorrectionInput,
+  PartnerRewardCorrectionResult,
+  VerifiedBankAccountInput,
 } from './contracts.js';
 
 export type {
@@ -13,6 +16,9 @@ export type {
   PartnerRewardEvent,
   PartnerRewardInput,
   PartnerRewardSummary,
+  PartnerRewardCorrectionInput,
+  PartnerRewardCorrectionResult,
+  VerifiedBankAccountInput,
 } from './contracts.js';
 
 export interface PartnerRewardLedgerStore {
@@ -317,4 +323,19 @@ export interface DurablePartnerRewardStore {
   entitlementsForOrder(
     orderReference: string,
   ): Promise<readonly import('./contracts.js').RewardEntitlement[]>;
+  verifyBankAccount(input: {
+    partnerId: number;
+    actorId: number;
+    fingerprint: string;
+    verification: import('./contracts.js').VerifiedBankAccountInput;
+  }): Promise<
+    | { readonly status: 'bank-account-verified' }
+    | { readonly status: 'idempotency-conflict' }
+  >;
+  recordCorrection(input: {
+    partnerId: number;
+    actorId: number;
+    fingerprint: string;
+    correction: import('./contracts.js').PartnerRewardCorrectionInput;
+  }): Promise<import('./contracts.js').PartnerRewardCorrectionResult>;
 }

@@ -85,6 +85,13 @@
       "when": 1789423200000,
       "tag": "0011_partner_report_views",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1789426800000,
+      "tag": "0012_partner_reward_workflows",
+      "breakpoints": true
     }
   ]
 }

@@ -35,6 +35,7 @@
     "./school-supply-lists": "./dist/application/school-supply-lists.js",
     "./catalog-inventory": "./dist/application/catalog-inventory.js",
     "./reward-rates": "./dist/application/reward-rates.js",
+    "./partner-rewards": "./dist/application/partner-rewards.js",
     "./modules/partner-rewards/infrastructure/persistence": "./dist/modules/partner-rewards/infrastructure/persistence.js",
     "./order-lifecycle": "./dist/application/order-lifecycle.js",
     "./partner-reports": "./dist/application/partner-reports.js",
