@@ -31,6 +31,7 @@ export const schoolSupplyLists = schoolEngineSchema.table(
     academicYear: text('academic_year').notNull(),
     schoolName: text('school_name').notNull(),
     grade: text('grade').notNull(),
+    classSection: text('class_section'),
     titleEn: text('title_en').notNull(),
     titleAr: text('title_ar').notNull(),
     publicCode: text('public_code'),

@@ -99,6 +99,13 @@
       "when": 1789430400000,
       "tag": "0013_reward_event_values",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1789434000000,
+      "tag": "0014_school_supply_list_class_section",
+      "breakpoints": true
     }
   ]
 }

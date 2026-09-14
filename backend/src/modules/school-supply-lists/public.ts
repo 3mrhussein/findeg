@@ -44,6 +44,8 @@ async function authorized(session: PartnerSession, partnerId: number, access: Pa
 function validInput(input: SchoolSupplyListInput) {
   return (
     !!input &&
+    (input.classSection === undefined ||
+      (typeof input.classSection === 'string' && input.classSection.trim().length > 0)) &&
     [input.academicYear, input.schoolName, input.grade, input.title?.en, input.title?.ar].every(
       (value) => typeof value === 'string' && value.trim().length > 0,
     )
@@ -166,7 +168,8 @@ export function createSchoolSupplyLists(
           previous.status !== 'published' ||
           previous.academicYear !== list.academicYear ||
           previous.schoolName !== list.schoolName ||
-          previous.grade !== list.grade
+          previous.grade !== list.grade ||
+          previous.classSection !== list.classSection
         )
           return { status: 'replacement-unavailable' } as const;
       }

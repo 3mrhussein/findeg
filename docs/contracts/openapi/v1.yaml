@@ -2772,6 +2772,11 @@ components:
           type: string
         grade:
           type: string
+        classSection:
+          type: string
+          minLength: 1
+          pattern: '\S'
+          description: Optional class or section label; surrounding whitespace is trimmed. Omit when not applicable.
         title:
           $ref: '#/components/schemas/LocalizedText'
     SchoolSupplyListItemInput:
@@ -2850,6 +2855,11 @@ components:
           type: string
         grade:
           type: string
+        classSection:
+          type: string
+          minLength: 1
+          pattern: '\S'
+          description: Optional class or section label; surrounding whitespace is trimmed. Omit when not applicable.
         title:
           $ref: '#/components/schemas/LocalizedText'
         id:

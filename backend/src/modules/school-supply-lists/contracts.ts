@@ -17,6 +17,7 @@ export interface SchoolSupplyListItemInput {
 }
 
 export interface SchoolSupplyListInput {
+  readonly classSection?: string;
   readonly academicYear: string;
   readonly schoolName: string;
   readonly grade: string;
@@ -37,6 +38,7 @@ export interface SchoolSupplyListItem {
 }
 
 export interface SchoolSupplyList {
+  readonly classSection?: string;
   readonly id: number;
   readonly businessPartnerId: number;
   readonly status: SchoolSupplyListStatus;

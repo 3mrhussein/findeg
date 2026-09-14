@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Preserve optional School Supply List class/section context through creation,
+  publication, cloning and replacement (#97), with an additive nullable column
+  and versioned HTTP contract. Frontend migration and production certification
+  remain outside this delivery.
+
 - Correct Partner Reward payment after cancellation and preserve exact EGP values
   through refunds, reversals, adjustments and settlements. New ledger values are
   append-only; unvalued historical entries remain explicit rather than being

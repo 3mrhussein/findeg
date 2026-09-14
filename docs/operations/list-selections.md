@@ -67,6 +67,20 @@ specification against the active default. DB triggers freeze published content;
 corrections require a cloned Draft and replacement. Historical missing
 specifications permit the default only and cannot enable substitutes.
 
+School Supply List creation accepts optional `classSection`, a single class or
+section label alongside `academicYear`, `schoolName` and `grade`. Supplied labels
+must be nonblank strings and are trimmed; omit the field when it does not apply.
+The authorized application operations and `/api/v1` contracts preserve it in
+creation results, unlisted reads, published lists and cloned Drafts. A replacement
+must match the previous list's class/section as well as its school, academic year
+and grade. Published and archived content remains immutable.
+
+Additive migration `0014_school_supply_list_class_section` stores the label in
+nullable `school_engine.school_supply_lists.class_section`. Existing rows retain
+SQL `NULL`, represented as an omitted optional field over HTTP; no historical
+context is inferred or backfilled. Apply the migration before running the new
+runtime. This change adds no frontend migration or production certification scope.
+
 ## Validation
 
 `tests/list-selections.test.mjs` exercises real PostgreSQL application operations

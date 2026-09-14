@@ -2,11 +2,20 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { createHash, randomUUID } from 'node:crypto';
+import { cp, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { runMigrations } from '../db/dist/runtime/migrations.js';
 import { launchWeb } from './support/web-process.mjs';
 import { createWebRuntime } from '../runtime/dist/index.js';
 import { assertContractResponse } from './support/http-contract.mjs';
 const postgres = createRequire(new URL('../db/package.json', import.meta.url))('postgres');
+const { drizzle } = createRequire(new URL('../db/package.json', import.meta.url))(
+  'drizzle-orm/postgres-js',
+);
+const { migrate } = createRequire(new URL('../db/package.json', import.meta.url))(
+  'drizzle-orm/postgres-js/migrator',
+);
 
 test('dedicated List Selections preserve list choices and accepted attribution', async (t) => {
   const admin = postgres(process.env.MIGRATION_TEST_DATABASE_URL, { max: 1 });
@@ -21,7 +30,20 @@ test('dedicated List Selections preserve list choices and accepted attribution',
     await admin`DROP DATABASE ${admin(name)}`;
     await admin.end();
   });
-  await runMigrations({ url: url.toString(), ssl: false });
+  // Seed real publications on the pre-class/section schema to exercise an additive upgrade.
+  const migrationsFolder = await mkdtemp(join(tmpdir(), 'findeg-list-upgrade-'));
+  t.after(() => rm(migrationsFolder, { recursive: true, force: true }));
+  await cp(new URL('../db/migrations/', import.meta.url), migrationsFolder, { recursive: true });
+  const journalPath = join(migrationsFolder, 'meta/_journal.json');
+  const journal = JSON.parse(await readFile(journalPath, 'utf8'));
+  journal.entries = journal.entries.filter((entry) => entry.idx < 14);
+  await writeFile(journalPath, JSON.stringify(journal));
+  const migrationConnection = postgres(url.toString(), { max: 1, onnotice: () => {} });
+  try {
+    await migrate(drizzle(migrationConnection), { migrationsFolder });
+  } finally {
+    await migrationConnection.end();
+  }
   sql = postgres(url.toString(), { max: 2 });
   const environment = { RELEASE_REVISION: 'a'.repeat(40), DATABASE_URL: url.toString() };
   runtime = createWebRuntime(environment);
@@ -49,6 +71,10 @@ test('dedicated List Selections preserve list choices and accepted attribution',
   }
   const first = await list('a'.repeat(32));
   const second = await list('b'.repeat(32));
+  await runMigrations({ url: url.toString(), ssl: false });
+  const historical = await runtime.schoolSupplyLists.readUnlisted(first.code);
+  assert.equal(historical.status, 'found');
+  assert.equal(historical.list.classSection, undefined);
   const owner = 'a'.repeat(64);
   await t.test(
     'required defaults resume across runtimes independently of the Cart and other lists',
@@ -352,7 +378,7 @@ test('dedicated List Selections preserve list choices and accepted attribution',
 
   await t.test(
     'Partner List mutations authenticate current credentials, enforce scope and freeze published specifications',
-    async () => {
+    async (t) => {
       const [invitation] =
         await sql`INSERT INTO identity.partner_invitations(business_partner_id, email, roles, token_digest, inviter_id, expires_at, status) VALUES (${partner.id}, 'list@example.test', ARRAY['list-manager'], ${'9'.repeat(64)}, ${user.id}, now() + interval '1 day', 'accepted') RETURNING id`;
       await sql`INSERT INTO identity.partner_memberships(business_partner_id, user_id, invitation_id, roles) VALUES (${partner.id}, ${user.id}, ${invitation.id}, ARRAY['list-manager'])`;
@@ -387,13 +413,18 @@ test('dedicated List Selections preserve list choices and accepted attribution',
       const digest = createHash('sha256').update(token).digest('hex');
       await sql`UPDATE identity.users SET email_verified = now() WHERE id = ${user.id}`;
       await sql`INSERT INTO identity.sessions(token_digest, user_id, authorization_version, expires_at) SELECT ${digest}, id, authorization_version, now() + interval '1 day' FROM identity.users WHERE id = ${user.id}`;
+      const historicalClone = await runtime.schoolSupplyLists.clone(token, partner.id, second.id);
+      assert.equal(historicalClone.status, 'created');
+      assert.equal(historicalClone.list.classSection, undefined);
       const created = await runtime.schoolSupplyLists.createDraft(token, partner.id, {
         academicYear: '2026',
         schoolName: 'School',
         grade: '6',
+        classSection: '  6 أ  ',
         title: { en: 'Published list', ar: 'قائمة منشورة' },
       });
       assert.equal(created.status, 'created');
+      assert.equal(created.list.classSection, '6 أ');
       const [category] =
         await sql`SELECT category_id FROM catalog.products WHERE id = ${product.id}`;
       const specification = { categoryId: category.category_id, attributes: { ruling: 'lined' } };
@@ -412,6 +443,11 @@ test('dedicated List Selections preserve list choices and accepted attribution',
       );
       const published = await runtime.schoolSupplyLists.publish(token, partner.id, created.list.id);
       assert.equal(published.status, 'published');
+      assert.equal(published.list.classSection, '6 أ');
+      assert.equal(
+        (await runtime.schoolSupplyLists.readUnlisted(published.list.publicCode)).list.classSection,
+        '6 أ',
+      );
       // Compare the HTTP rejection with the same authorized application's outcome.
       const server = await launchWeb(t, environment);
       try {
@@ -421,6 +457,127 @@ test('dedicated List Selections preserve list choices and accepted attribution',
           cookie: `findeg_session=${token}`,
           'content-type': 'application/json',
         };
+        async function mutate(body, expectedStatus = 200) {
+          const response = await fetch(endpoint, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(body),
+          });
+          assert.equal(response.status, expectedStatus);
+          return assertContractResponse(
+            '/partner/{partnerId}/school-supply-lists',
+            'post',
+            response,
+          );
+        }
+        await t.test(
+          'class/section rejects blank and non-string input at application and HTTP seams',
+          async () => {
+            for (const classSection of ['', '  \t ', null, 6, true, {}, []]) {
+              const input = {
+                academicYear: '2026',
+                schoolName: 'School',
+                grade: '6',
+                classSection,
+                title: { en: 'Invalid section', ar: 'فصل غير صالح' },
+              };
+              assert.equal(
+                (await runtime.schoolSupplyLists.createDraft(token, partner.id, input)).status,
+                'invalid-input',
+              );
+              assert.equal(
+                (await mutate({ action: 'create', input }, 400)).errorCode,
+                'invalid-input',
+              );
+            }
+          },
+        );
+        await t.test(
+          'HTTP preserves optional class/section through publication and replacement',
+          async () => {
+            for (const classSection of ['  6 ب  ', undefined]) {
+              const draft = await mutate(
+                {
+                  action: 'create',
+                  input: {
+                    academicYear: '2026',
+                    schoolName: 'School',
+                    grade: '6',
+                    classSection,
+                    title: { en: 'Section list', ar: 'قائمة الفصل' },
+                  },
+                },
+                201,
+              );
+              const expectedSection = classSection === undefined ? undefined : '6 ب';
+              assert.equal(draft.list.classSection, expectedSection);
+              assert.equal(Object.hasOwn(draft.list, 'classSection'), classSection !== undefined);
+              await mutate({ action: 'replace', listId: draft.list.id, items: [item] });
+              // A different section (including no section) cannot replace this publication.
+              assert.equal(
+                (
+                  await runtime.schoolSupplyLists.publish(
+                    token,
+                    partner.id,
+                    draft.list.id,
+                    published.list.id,
+                  )
+                ).status,
+                'replacement-unavailable',
+              );
+              const mismatch = await mutate(
+                {
+                  action: 'publish',
+                  listId: draft.list.id,
+                  replacesListId: published.list.id,
+                },
+                409,
+              );
+              assert.equal(mismatch.errorCode, 'replacement-unavailable');
+              const publication = await mutate({ action: 'publish', listId: draft.list.id });
+              assert.equal(publication.list.classSection, expectedSection);
+              const clone = await mutate({ action: 'clone', listId: draft.list.id }, 201);
+              assert.equal(clone.list.classSection, expectedSection);
+              assert.equal(clone.list.sourceListId, draft.list.id);
+              const replacement = await mutate({
+                action: 'publish',
+                listId: clone.list.id,
+                replacesListId: draft.list.id,
+              });
+              assert.equal(replacement.list.classSection, expectedSection);
+              assert.equal(replacement.list.replacesListId, draft.list.id);
+              for (const [list, status] of [
+                [publication.list, 'archived'],
+                [replacement.list, 'published'],
+              ]) {
+                const response = await fetch(
+                  `${server.base}/api/v1/school-supply-lists/${list.publicCode}`,
+                );
+                const read = await assertContractResponse(
+                  '/school-supply-lists/{code}',
+                  'get',
+                  response,
+                );
+                assert.equal(read.list.classSection, expectedSection);
+                assert.equal(Object.hasOwn(read.list, 'classSection'), classSection !== undefined);
+                assert.equal(read.list.status, status);
+                await assert.rejects(
+                  sql`UPDATE school_engine.school_supply_lists SET class_section = 'changed' WHERE id = ${list.id}`,
+                  /immutable/,
+                );
+                assert.equal(
+                  (await mutate({ action: 'replace', listId: list.id, items: [item] }, 409))
+                    .errorCode,
+                  'immutable',
+                );
+              }
+            }
+            assert.equal(
+              (await runtime.schoolSupplyLists.readUnlisted(published.list.publicCode)).list.status,
+              'published',
+            );
+          },
+        );
         const direct = await runtime.schoolSupplyLists.replaceDraft(
           token,
           partner.id,
@@ -467,6 +624,7 @@ test('dedicated List Selections preserve list choices and accepted attribution',
               academicYear: '2026',
               schoolName: 'School',
               grade: '7',
+              classSection: '7 أ',
               title: { en: 'List', ar: 'قائمة' },
             },
           },
@@ -565,6 +723,7 @@ test('dedicated List Selections preserve list choices and accepted attribution',
       );
       const cloned = await runtime.schoolSupplyLists.clone(token, partner.id, created.list.id);
       assert.equal(cloned.status, 'created');
+      assert.equal(cloned.list.classSection, '6 أ');
       assert.deepEqual(cloned.list.items[0].specification, specification);
       const replacement = await runtime.schoolSupplyLists.publish(
         token,
@@ -573,10 +732,15 @@ test('dedicated List Selections preserve list choices and accepted attribution',
         created.list.id,
       );
       assert.equal(replacement.status, 'published');
+      assert.equal(replacement.list.classSection, '6 أ');
       assert.notEqual(replacement.list.publicCode, published.list.publicCode);
       assert.equal(
         (await runtime.schoolSupplyLists.readUnlisted(published.list.publicCode)).list.status,
         'archived',
+      );
+      assert.equal(
+        (await runtime.schoolSupplyLists.readUnlisted(published.list.publicCode)).list.classSection,
+        '6 أ',
       );
     },
   );
