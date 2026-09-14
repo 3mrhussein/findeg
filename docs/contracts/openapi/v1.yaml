@@ -122,7 +122,8 @@ paths:
               properties:
                 action:
                   type: string
-                  enum: [verify-bank-account, refund, cancellation, reversal, adjustment, settlement]
+                  enum:
+                    [verify-bank-account, refund, cancellation, reversal, adjustment, settlement]
                 key:
                   type: string
                   pattern: '^[a-zA-Z0-9_-]{1,128}$'

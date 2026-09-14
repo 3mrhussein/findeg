@@ -48,18 +48,25 @@ function correction(value: unknown): PartnerRewardCorrectionInput | undefined {
       input.action as string,
     ) ||
     !reference(input.orderReference) ||
+    typeof input.points !== 'number' ||
     !Number.isSafeInteger(input.points) ||
     input.points === 0 ||
     !reason(input.reason)
   )
     return undefined;
   const settlement = input.action === 'settlement';
+  const bankAccountId = account(input.verifiedBankAccountId)
+    ? input.verifiedBankAccountId
+    : undefined;
+  const settlementReference = reference(input.settlementReference)
+    ? input.settlementReference
+    : undefined;
   if (
     (settlement &&
       (!Number.isSafeInteger(input.points) ||
         input.points <= 0 ||
-        !account(input.verifiedBankAccountId) ||
-        !reference(input.settlementReference))) ||
+        !bankAccountId ||
+        !reference(settlementReference))) ||
     (!settlement &&
       (input.verifiedBankAccountId !== undefined ||
         input.settlementReference !== undefined ||
@@ -72,12 +79,8 @@ function correction(value: unknown): PartnerRewardCorrectionInput | undefined {
     orderReference: input.orderReference,
     points: input.points,
     ...(input.reason === undefined ? {} : { reason: input.reason.trim() }),
-    ...(input.verifiedBankAccountId === undefined
-      ? {}
-      : { verifiedBankAccountId: input.verifiedBankAccountId }),
-    ...(input.settlementReference === undefined
-      ? {}
-      : { settlementReference: input.settlementReference }),
+    ...(bankAccountId === undefined ? {} : { verifiedBankAccountId: bankAccountId }),
+    ...(settlementReference === undefined ? {} : { settlementReference }),
   };
 }
 
@@ -100,17 +103,22 @@ export function createPartnerRewardOperations(
   ): Promise<T> {
     const outcome = await transactions.run<T, T>(async (stores) => {
       const value = await operation(stores);
-      return ['bank-account-verified', 'refunded', 'cancelled', 'reversed', 'recorded', 'settled', 'authentication-required', 'authorization-denied'].includes(value.status)
+      return [
+        'bank-account-verified',
+        'refunded',
+        'cancelled',
+        'reversed',
+        'recorded',
+        'settled',
+        'authentication-required',
+        'authorization-denied',
+      ].includes(value.status)
         ? { ok: true, value }
         : { ok: false, error: value };
     });
     return outcome.ok ? outcome.value : outcome.error;
   }
-  async function authorize(
-    stores: RewardStores,
-    token: string | undefined,
-    partnerId: number,
-  ) {
+  async function authorize(stores: RewardStores, token: string | undefined, partnerId: number) {
     const access = await createIdentityAccess(stores.identity, security).authorize(
       token,
       'back-office',
@@ -133,7 +141,9 @@ export function createPartnerRewardOperations(
         return stores.rewards.verifyBankAccount({
           partnerId,
           actorId: access.actorId,
-          fingerprint: security.digest(JSON.stringify({ partnerId, bankAccountId: parsed.bankAccountId })),
+          fingerprint: security.digest(
+            JSON.stringify({ partnerId, bankAccountId: parsed.bankAccountId }),
+          ),
           verification: parsed,
         });
       });

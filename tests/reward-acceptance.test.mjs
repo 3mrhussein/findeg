@@ -410,9 +410,100 @@ test('accepted list rewards use exact configured snapshots and share the accepta
     const anonymous = await fetch(endpoint);
     assert.equal(anonymous.status, 401);
     await assertContractResponse('/partner/{partnerId}/reports', 'get', anonymous);
+    const adjustment = await fetch(
+      `${web.base}/api/v1/back-office/partners/${partner.id}/reward-workflows`,
+      {
+        method: 'POST',
+        headers: {
+          origin: web.base,
+          cookie: `findeg_session=${token}`,
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          key: 'http-adjustment',
+          action: 'adjustment',
+          orderReference: accepted.reference,
+          points: 1,
+          reason: 'Finance correction',
+        }),
+      },
+    );
+    assert.deepEqual(
+      await assertContractResponse(
+        '/back-office/partners/{partnerId}/reward-workflows',
+        'post',
+        adjustment,
+      ),
+      { status: 'recorded' },
+    );
   } finally {
     await web.stop();
   }
+  assert.equal(
+    (
+      await runtime.partnerRewards.correct(token, partner.id, {
+        key: 'unverified-settlement',
+        action: 'settlement',
+        orderReference: accepted.reference,
+        points: 5,
+        verifiedBankAccountId: 'bank-1',
+        settlementReference: 'settlement-1',
+      })
+    ).status,
+    'bank-account-unverified',
+  );
+  const verifiedBank = await runtime.partnerRewards.verifyBankAccount(token, partner.id, {
+    key: 'bank-approval',
+    bankAccountId: 'bank-1',
+  });
+  assert.equal(verifiedBank.status, 'bank-account-verified');
+  assert.deepEqual(
+    await runtime.partnerRewards.verifyBankAccount(token, partner.id, {
+      key: 'bank-approval',
+      bankAccountId: 'bank-1',
+    }),
+    verifiedBank,
+  );
+  const settlement = await runtime.partnerRewards.correct(token, partner.id, {
+    key: 'settlement',
+    action: 'settlement',
+    orderReference: accepted.reference,
+    points: 5,
+    verifiedBankAccountId: 'bank-1',
+    settlementReference: 'settlement-1',
+  });
+  assert.equal(settlement.status, 'settled');
+  assert.deepEqual(
+    await runtime.partnerRewards.correct(token, partner.id, {
+      key: 'settlement',
+      action: 'settlement',
+      orderReference: accepted.reference,
+      points: 5,
+      verifiedBankAccountId: 'bank-1',
+      settlementReference: 'settlement-1',
+    }),
+    settlement,
+  );
+  assert.equal(
+    (
+      await runtime.partnerRewards.correct(token, partner.id, {
+        key: 'refund',
+        action: 'refund',
+        orderReference: accepted.reference,
+        points: 5,
+        reason: 'Returned item',
+      })
+    ).status,
+    'refunded',
+  );
+  const [correction] =
+    await sql`SELECT event_type, points, verified_bank_account_id, settlement_reference FROM identity.partner_reward_events WHERE order_reference = ${accepted.reference} AND event_type = 'settlement'`;
+  assert.deepEqual(correction, {
+    event_type: 'settlement',
+    points: 5,
+    verified_bank_account_id: 'bank-1',
+    settlement_reference: 'settlement-1',
+  });
   await sql`UPDATE identity.partner_memberships SET status='ended' WHERE id=${membership.id}`;
   assert.equal(
     (await runtime.partnerReports.read(token, partner.id, period)).status,

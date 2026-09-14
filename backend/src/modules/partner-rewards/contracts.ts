@@ -47,11 +47,7 @@ export interface PartnerAdjustmentInput {
 }
 
 export type PartnerRewardCorrectionAction =
-  | 'refund'
-  | 'cancellation'
-  | 'reversal'
-  | 'adjustment'
-  | 'settlement';
+  'refund' | 'cancellation' | 'reversal' | 'adjustment' | 'settlement';
 
 /** Finance supplies a durable key for each correction or completed settlement. */
 export interface PartnerRewardCorrectionInput {

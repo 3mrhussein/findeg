@@ -74,33 +74,27 @@ export function bindPartnerRewardStore(database: TransactionDatabase): DurablePa
       )
       .orderBy(asc(partnerRewardEvents.id))
       .for('update');
-    return rows.map(
-      (row): PartnerRewardEvent => ({
-        partnerId: row.businessPartnerId,
-        orderReference: row.orderReference,
-        eventType: row.eventType as PartnerRewardEvent['eventType'],
-        points: row.points,
-        ...(row.pendingPoints === null ? {} : { pendingPoints: row.pendingPoints }),
-        ...(row.earnedPoints === null ? {} : { earnedPoints: row.earnedPoints }),
-        ...(row.conversionRate === null
-          ? {}
-          : { conversionRate: Number(row.conversionRate) }),
-        ...(row.fulfillment === null
-          ? {}
-          : { fulfillment: row.fulfillment as 'delivery' | 'collection' }),
-        ...(row.fulfillmentCompleted === null
-          ? {}
-          : { fulfillmentCompleted: row.fulfillmentCompleted }),
-        ...(row.verifiedBankAccountId === null
-          ? {}
-          : { verifiedBankAccountId: row.verifiedBankAccountId }),
-        ...(row.settlementReference === null
-          ? {}
-          : { settlementReference: row.settlementReference }),
-        ...(row.reason === null ? {} : { reason: row.reason }),
-        createdAt: row.createdAt,
-      }),
-    );
+    return rows.map((row): PartnerRewardEvent => ({
+      partnerId: row.businessPartnerId,
+      orderReference: row.orderReference,
+      eventType: row.eventType as PartnerRewardEvent['eventType'],
+      points: row.points,
+      ...(row.pendingPoints === null ? {} : { pendingPoints: row.pendingPoints }),
+      ...(row.earnedPoints === null ? {} : { earnedPoints: row.earnedPoints }),
+      ...(row.conversionRate === null ? {} : { conversionRate: Number(row.conversionRate) }),
+      ...(row.fulfillment === null
+        ? {}
+        : { fulfillment: row.fulfillment as 'delivery' | 'collection' }),
+      ...(row.fulfillmentCompleted === null
+        ? {}
+        : { fulfillmentCompleted: row.fulfillmentCompleted }),
+      ...(row.verifiedBankAccountId === null
+        ? {}
+        : { verifiedBankAccountId: row.verifiedBankAccountId }),
+      ...(row.settlementReference === null ? {} : { settlementReference: row.settlementReference }),
+      ...(row.reason === null ? {} : { reason: row.reason }),
+      createdAt: row.createdAt,
+    }));
   };
   return {
     async earnDeliveredOrder(orderReference, actorId) {

@@ -329,8 +329,7 @@ export interface DurablePartnerRewardStore {
     fingerprint: string;
     verification: import('./contracts.js').VerifiedBankAccountInput;
   }): Promise<
-    | { readonly status: 'bank-account-verified' }
-    | { readonly status: 'idempotency-conflict' }
+    { readonly status: 'bank-account-verified' } | { readonly status: 'idempotency-conflict' }
   >;
   recordCorrection(input: {
     partnerId: number;
