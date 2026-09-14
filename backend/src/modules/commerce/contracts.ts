@@ -5,7 +5,13 @@ export interface CartItem {
 }
 
 export interface PricedItem extends CartItem {
-  readonly reward?: import('../partner-rewards/contracts.js').RewardSnapshot;
+  readonly reward?: {
+    readonly rateId: number;
+    readonly pointsPerEgp: string;
+    readonly egpPerPoint: string;
+    readonly points: number;
+    readonly rewardValue: string;
+  };
   readonly attribution?: ListAttribution;
   readonly sku: string;
   readonly name: { readonly en?: string; readonly ar?: string };

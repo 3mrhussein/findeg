@@ -1,3 +1,4 @@
+import { PartnerReport } from '../../../../../components/partner-report';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getWebRuntime } from '../../../../../server/runtime';
@@ -37,6 +38,9 @@ export default async function Workspace({
         ))}
       </ul>
       <Link href={`/${locale}/partner`}>{locale === 'ar' ? 'تبديل الشريك' : 'Switch partner'}</Link>
+      {context.roles.some(
+        (role) => role === 'partner-administrator' || role === 'report-viewer',
+      ) && <PartnerReport locale={locale} partnerId={context.businessPartnerId} />}
       {context.roles.includes('partner-administrator') && (
         <PartnerAccess
           locale={locale}

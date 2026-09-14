@@ -39,61 +39,8 @@ export interface PartnerRewardAccess {
 const isPositiveInteger = (value: unknown): value is number =>
   typeof value === 'number' && Number.isFinite(value) && value >= 0 && Number.isInteger(value);
 
-export function summarizeRewardLedger(events: readonly PartnerRewardEvent[]): PartnerRewardSummary {
-  const pendingByOrder = new Map<string, number>();
-  let earned = 0;
-  let reversed = 0;
-  let settled = 0;
-
-  for (const event of events) {
-    const amount = Number.isFinite(event.points) ? event.points : 0;
-    const orderKey = JSON.stringify([event.partnerId, event.orderReference]);
-    const pending = pendingByOrder.get(orderKey) ?? 0;
-    switch (event.eventType) {
-      case 'accepted': {
-        pendingByOrder.set(orderKey, pending + (event.pendingPoints ?? amount));
-        break;
-      }
-      case 'paid': {
-        const value = event.earnedPoints ?? amount;
-        earned += value;
-        pendingByOrder.set(orderKey, Math.max(0, pending - value));
-        break;
-      }
-      case 'cancellation': {
-        const cancelledPending = Math.min(pending, Math.max(0, -amount));
-        pendingByOrder.set(orderKey, pending - cancelledPending);
-        reversed += Math.max(0, -amount);
-        earned += amount + cancelledPending;
-        break;
-      }
-      case 'refund':
-      case 'reversal': {
-        reversed += Math.abs(amount < 0 ? amount : 0);
-        earned += amount;
-        break;
-      }
-      case 'adjustment': {
-        earned += amount;
-        break;
-      }
-      case 'settlement': {
-        settled += Math.max(0, amount);
-        break;
-      }
-      default:
-        break;
-    }
-  }
-
-  return {
-    pending: [...pendingByOrder.values()].reduce((total, value) => total + value, 0),
-    earned: Math.max(0, earned),
-    reversed: Math.max(0, reversed),
-    settled: Math.max(0, settled),
-    available: Math.max(0, earned - settled),
-  };
-}
+export { summarizeRewardLedger, summarizeRewardStatement } from './accounting.js';
+import { summarizeRewardLedger } from './accounting.js';
 
 export function createPartnerRewards(store: PartnerRewardLedgerStore, access: PartnerRewardAccess) {
   const record = async (

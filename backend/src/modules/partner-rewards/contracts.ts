@@ -75,3 +75,17 @@ export interface RewardRateInput {
   readonly pointsPerEgp: string;
   readonly egpPerPoint: string;
 }
+
+/** Decimal strings preserve exact totals beyond JavaScript's safe integer range. */
+export interface RewardStatementBalances {
+  readonly pending: string;
+  readonly earned: string;
+  readonly reversed: string;
+  readonly settled: string;
+  readonly available: string;
+}
+export interface RewardStatement {
+  readonly points: RewardStatementBalances;
+  /** Null when historical ledger entries have no recorded valuation. Never invent a rate. */
+  readonly value: RewardStatementBalances | null;
+}

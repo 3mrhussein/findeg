@@ -9,12 +9,8 @@ import {
   index,
   unique,
   uniqueIndex,
-  foreignKey,
 } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
-import { businessPartners } from '../partner-management/schema.js';
-import { acceptedOrders } from '../commerce/schema.js';
-import { users } from '../../schema/identity/users.js';
 import { identitySchema } from '../../schema/schemas.js';
 
 export const partnerRewardEvents = identitySchema.table(
@@ -24,7 +20,7 @@ export const partnerRewardEvents = identitySchema.table(
     businessPartnerId: integer('business_partner_id').notNull(),
     orderReference: text('order_reference').notNull(),
     eventType: text('event_type').notNull(),
-    actorId: integer('actor_id').references(() => users.id),
+    actorId: integer('actor_id'),
     entitlementId: integer('entitlement_id').references(() => partnerRewardEntitlements.id),
     points: integer('points').notNull(),
     pendingPoints: integer('pending_points'),
@@ -59,14 +55,10 @@ export const partnerRewardRates = identitySchema.table(
   'partner_reward_rates',
   {
     id: serial('id').primaryKey(),
-    businessPartnerId: integer('business_partner_id')
-      .notNull()
-      .references(() => businessPartners.id),
+    businessPartnerId: integer('business_partner_id').notNull(),
     pointsPerEgp: decimal('points_per_egp', { precision: 16, scale: 6 }).notNull(),
     egpPerPoint: decimal('egp_per_point', { precision: 12, scale: 4 }).notNull(),
-    actorId: integer('actor_id')
-      .notNull()
-      .references(() => users.id),
+    actorId: integer('actor_id').notNull(),
     requestKey: text('request_key').notNull(),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
@@ -83,12 +75,8 @@ export const partnerRewardEntitlements = identitySchema.table(
   'partner_reward_entitlements',
   {
     id: serial('id').primaryKey(),
-    businessPartnerId: integer('business_partner_id')
-      .notNull()
-      .references(() => businessPartners.id),
-    orderReference: text('order_reference')
-      .notNull()
-      .references(() => acceptedOrders.reference),
+    businessPartnerId: integer('business_partner_id').notNull(),
+    orderReference: text('order_reference').notNull(),
     lineIndex: integer('line_index').notNull(),
     rateId: integer('rate_id').notNull(),
     eligibleSubtotal: decimal('eligible_subtotal', { precision: 18, scale: 2 }).notNull(),
@@ -97,10 +85,6 @@ export const partnerRewardEntitlements = identitySchema.table(
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
   },
   (table) => [
-    foreignKey({
-      columns: [table.rateId, table.businessPartnerId],
-      foreignColumns: [partnerRewardRates.id, partnerRewardRates.businessPartnerId],
-    }),
     unique('partner_reward_entitlements_order_reference_line_index_key').on(
       table.orderReference,
       table.lineIndex,
