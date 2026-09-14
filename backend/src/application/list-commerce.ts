@@ -1,3 +1,8 @@
+import {
+  valueRewardLine,
+  type DurablePartnerRewardStore,
+} from '@findeg/backend/modules/partner-rewards/public';
+import type { PricedItem } from '@findeg/backend/modules/commerce/contracts';
 import type { TransactionRunner } from './transactions.js';
 import {
   acceptOrder,
@@ -21,6 +26,7 @@ import type { AcceptedOrder, ListSelection } from '@findeg/backend/modules/comme
 import type { CatalogListStore } from '@findeg/backend/modules/catalog/public';
 
 export interface ListCommerceStores extends CheckoutStores {
+  rewards: DurablePartnerRewardStore;
   schoolSupplyLists: SchoolSupplyListStore;
   selections: ListSelectionStore;
   listCatalog: CatalogListStore;
@@ -102,8 +108,17 @@ export function createListCommerce(
     );
     if (items.some((item) => (availability.get(item.variantId) ?? 0) < item.quantity))
       return { status: 'insufficient-stock' } as const;
+    const rate = await stores.rewards.rateForPartner(loaded.list.businessPartnerId);
+    if (!rate) return { status: 'reward-rate-unavailable' } as const;
+    const rewardedItems: (PricedItem & { reward: NonNullable<PricedItem['reward']> })[] = [];
+    for (const item of loaded.pricing.items) {
+      const reward = valueRewardLine(rate, item.lineTotal);
+      if (!reward) return { status: 'reward-rate-unavailable' } as const;
+      rewardedItems.push({ ...item, reward });
+    }
     const terms = {
       ...loaded.pricing,
+      items: rewardedItems,
       zone,
       total: formatEgp(egpMinor(loaded.pricing.subtotal) + egpMinor(zone.fee)),
       listId: loaded.list.id,
@@ -171,6 +186,15 @@ export function createListCommerce(
           fingerprint,
         );
         if (accepted.status !== 'accepted') return accepted;
+        await stores.rewards.recordPending(
+          accepted.reference,
+          quoted.items.map((item, lineIndex) => ({
+            lineIndex,
+            businessPartnerId: list.businessPartnerId,
+            eligibleSubtotal: item.lineTotal,
+            reward: item.reward,
+          })),
+        );
         await stores.selections.replace(owner, list.id, {
           setCount: quoted.selection.setCount,
           items: [],

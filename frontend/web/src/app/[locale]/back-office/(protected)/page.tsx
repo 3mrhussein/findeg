@@ -1,3 +1,4 @@
+import { OrderLifecycle } from './OrderLifecycle';
 import Link from 'next/link';
 import { CatalogManager } from './CatalogManager';
 import { requirePortal } from '../../../../server/session';
@@ -15,6 +16,15 @@ export default async function PortalHome({ params }: { params: Promise<{ locale:
           {locale === 'ar' ? 'إدارة الشركاء' : 'Manage partners'}
         </Link>
       </nav>
+      {session.status === 'authenticated' &&
+        (session.session.permissions.includes('fulfillment.manage') ||
+          session.session.permissions.includes('finance.manage')) && (
+          <OrderLifecycle
+            locale={locale === 'ar' ? 'ar' : 'en'}
+            canDeliver={session.session.permissions.includes('fulfillment.manage')}
+            canPay={session.session.permissions.includes('finance.manage')}
+          />
+        )}
       {canManageCatalog ? (
         <CatalogManager locale={locale === 'ar' ? 'ar' : 'en'} />
       ) : (

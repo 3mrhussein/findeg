@@ -1,8 +1,15 @@
+import { createPartnerReportOperations } from '@findeg/backend/partner-reports';
+import { bindPartnerReportStore } from '@findeg/backend/modules/partner-reports/infrastructure/persistence';
+import { createOrderLifecycle } from '@findeg/backend/order-lifecycle';
+import { createRewardRateOperations } from '@findeg/backend/reward-rates';
+import { createPartnerRewardOperations } from '@findeg/backend/partner-rewards';
+import { bindPartnerRewardStore } from '@findeg/backend/modules/partner-rewards/infrastructure/persistence';
 import { createHash, randomBytes, randomInt } from 'node:crypto';
 import { createPartnerOperations } from '@findeg/backend/partner-operations';
 import { createListCommerce } from '@findeg/backend/list-commerce';
 import { createStorefrontCommerce } from '@findeg/backend/checkout';
 import {
+  bindOrderLifecycleStore,
   bindCommerceStore,
   bindListSelectionStore,
 } from '@findeg/backend/modules/commerce/infrastructure/persistence';
@@ -19,20 +26,19 @@ import type {
 } from '@findeg/backend/modules/identity-access/contracts';
 import { bindIdentityStore } from '@findeg/backend/modules/identity-access/infrastructure/persistence';
 import { createIdentitySecurity } from '@findeg/backend/modules/identity-access/infrastructure/security';
-import { createCatalogManagement } from './catalog-inventory.js';
+import { createCatalogOperations } from '@findeg/backend/catalog-inventory';
+import { createSchoolSupplyListOperations } from '@findeg/backend/school-supply-lists';
 import {
   bindCatalogListStore,
   bindCatalogCheckoutStore,
   bindCatalogStore,
 } from '@findeg/backend/modules/catalog/infrastructure/persistence';
-import { InventoryVariantNotFoundError } from '@findeg/backend/modules/inventory/public';
 import {
+  bindInventoryFulfillment,
   bindInventoryReservations,
   bindInventoryStore,
 } from '@findeg/backend/modules/inventory/infrastructure/persistence';
-import { createSchoolSupplyLists } from '@findeg/backend/modules/school-supply-lists/public';
 import { bindSchoolSupplyListStore } from '@findeg/backend/modules/school-supply-lists/infrastructure/persistence';
-import { createPartnerManagement } from '@findeg/backend/modules/partner-management/public';
 import { createTransactionRuntime } from './transactions.js';
 import { readWebConfig } from './config.js';
 import { bindCheckoutOutbox } from './checkout-outbox.js';
@@ -42,6 +48,10 @@ export function createWebRuntime(environment: Readonly<Record<string, string | u
   const persistence = createTransactionRuntime(
     { url: config.DATABASE_URL, ssl: config.DB_SSL, max: 5 },
     (database) => ({
+      orderLifecycle: bindOrderLifecycleStore(database),
+      fulfillment: bindInventoryFulfillment(database),
+      reports: bindPartnerReportStore(database),
+      rewards: bindPartnerRewardStore(database),
       commerce: bindCommerceStore(database),
       selections: bindListSelectionStore(database, config.LIST_SELECTION_INACTIVITY_DAYS),
       listCatalog: bindCatalogListStore(database),
@@ -59,14 +69,13 @@ export function createWebRuntime(environment: Readonly<Record<string, string | u
     ...createIdentitySecurity(),
     invitationLifetimeMs: config.PARTNER_INVITATION_DAYS * 24 * 60 * 60 * 1000,
   };
+  const catalog = createCatalogOperations(persistence.transactions, security);
   async function run<Value>(
     operation: (stores: {
+      reports: ReturnType<typeof bindPartnerReportStore>;
+      rewards: ReturnType<typeof bindPartnerRewardStore>;
       identity: ReturnType<typeof bindIdentityStore>;
       partners: ReturnType<typeof bindPartnerStore>;
-      catalog: ReturnType<typeof bindCatalogStore>;
-      inventory: ReturnType<typeof bindInventoryStore>;
-      schoolSupplyLists: ReturnType<typeof bindSchoolSupplyListStore>;
-      listCatalog: ReturnType<typeof bindCatalogListStore>;
     }) => Promise<Value>,
   ): Promise<Value> {
     const result = await persistence.transactions.run(async (store) => ({
@@ -86,6 +95,17 @@ export function createWebRuntime(environment: Readonly<Record<string, string | u
         )
       : Promise.resolve({ status: 'authentication-required' } as const);
   return {
+    partnerRewards: createPartnerRewardOperations(persistence.transactions, security),
+    orderLifecycle: createOrderLifecycle(persistence.transactions, security),
+    partnerReports: {
+      read: (...args: Parameters<ReturnType<typeof createPartnerReportOperations>['read']>) =>
+        run((stores) => createPartnerReportOperations(stores, security).read(...args)),
+    },
+    rewardRates: {
+      configure: (
+        ...args: Parameters<ReturnType<typeof createRewardRateOperations>['configure']>
+      ) => run((stores) => createRewardRateOperations(stores, security).configure(...args)),
+    },
     listSelectionLifetimeSeconds: config.LIST_SELECTION_INACTIVITY_DAYS * 86400,
     listCommerce: createListCommerce(persistence.transactions, {
       digest: (value) => createHash('sha256').update(value).digest('hex'),
@@ -155,114 +175,12 @@ export function createWebRuntime(environment: Readonly<Record<string, string | u
           isActive,
         ),
       ),
-    async createCatalogVariant(token: string | undefined, input: unknown) {
-      return run(async (stores) => {
-        const access = await createIdentityAccess(stores.identity, security).authorize(
-          token,
-          'back-office',
-          'catalog.manage',
-        );
-        return access.status === 'authenticated'
-          ? createCatalogManagement(stores.catalog, stores.inventory).createVariant(input)
-          : access;
-      });
-    },
-    async updateCatalogVariant(token: string | undefined, input: unknown) {
-      return run(async (stores) => {
-        const access = await createIdentityAccess(stores.identity, security).authorize(
-          token,
-          'back-office',
-          'catalog.manage',
-        );
-        return access.status === 'authenticated'
-          ? createCatalogManagement(stores.catalog, stores.inventory).updateVariant(input)
-          : access;
-      });
-    },
-    async adjustInventory(token: string | undefined, input: unknown) {
-      try {
-        return await run(async (stores) => {
-          const access = await createIdentityAccess(stores.identity, security).authorize(
-            token,
-            'back-office',
-            'catalog.manage',
-          );
-          return access.status === 'authenticated'
-            ? createCatalogManagement(stores.catalog, stores.inventory).adjustInventory({
-                ...(input as object),
-                actorId: access.session.userId,
-              })
-            : access;
-        });
-      } catch (error) {
-        if (error instanceof InventoryVariantNotFoundError)
-          return { status: 'variant-not-found' } as const;
-        throw error;
-      }
-    },
-    async listCatalogVariants(token: string | undefined) {
-      return run(async (stores) => {
-        const access = await createIdentityAccess(stores.identity, security).authorize(
-          token,
-          'back-office',
-          'catalog.manage',
-        );
-        return access.status === 'authenticated' ? stores.catalog.listVariants() : access;
-      });
-    },
-    browseCatalog: (locale: 'en' | 'ar') =>
-      run((stores) => createCatalogManagement(stores.catalog, stores.inventory).browse(locale)),
-    schoolSupplyLists: {
-      createDraft: (
-        ...args: Parameters<ReturnType<typeof createSchoolSupplyLists>['createDraft']>
-      ) =>
-        run((stores) =>
-          createSchoolSupplyLists(
-            stores.schoolSupplyLists,
-            stores.catalog,
-            createPartnerManagement(stores.partners, security),
-            stores.listCatalog,
-          ).createDraft(...args),
-        ),
-      replaceDraft: (
-        ...args: Parameters<ReturnType<typeof createSchoolSupplyLists>['replaceDraft']>
-      ) =>
-        run((stores) =>
-          createSchoolSupplyLists(
-            stores.schoolSupplyLists,
-            stores.catalog,
-            createPartnerManagement(stores.partners, security),
-            stores.listCatalog,
-          ).replaceDraft(...args),
-        ),
-      publish: (...args: Parameters<ReturnType<typeof createSchoolSupplyLists>['publish']>) =>
-        run((stores) =>
-          createSchoolSupplyLists(
-            stores.schoolSupplyLists,
-            stores.catalog,
-            createPartnerManagement(stores.partners, security),
-            stores.listCatalog,
-          ).publish(...args),
-        ),
-      clone: (...args: Parameters<ReturnType<typeof createSchoolSupplyLists>['clone']>) =>
-        run((stores) =>
-          createSchoolSupplyLists(
-            stores.schoolSupplyLists,
-            stores.catalog,
-            createPartnerManagement(stores.partners, security),
-            stores.listCatalog,
-          ).clone(...args),
-        ),
-      readUnlisted: (code: string) =>
-        run((stores) =>
-          createSchoolSupplyLists(
-            stores.schoolSupplyLists,
-            stores.catalog,
-            createPartnerManagement(stores.partners, security),
-            stores.listCatalog,
-          ).readUnlisted(code),
-        ),
-    },
+    createCatalogVariant: catalog.createVariant,
+    updateCatalogVariant: catalog.updateVariant,
+    adjustInventory: catalog.adjustInventory,
+    listCatalogVariants: catalog.listVariants,
+    browseCatalog: catalog.browse,
+    schoolSupplyLists: createSchoolSupplyListOperations(persistence.transactions, security),
     close: persistence.close,
     health: () => ({ process: 'web', revision: config.RELEASE_REVISION, status: 'alive' }),
   };

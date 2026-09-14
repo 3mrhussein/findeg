@@ -8,9 +8,9 @@ info:
     the corresponding authorized application operation exists.
 
 
-    Only capabilities wired into the released web runtime are exposed. Partner Rewards and Partner
-    Reports currently have module foundations but no production runtime/persistence wiring and are
-    not released HTTP capabilities. Worker notification delivery is internal.
+    Only capabilities wired into the released web runtime are exposed. Partner Reward rates,
+    acceptance entitlements, and privacy-limited Partner Reports are durable. Worker notification
+    delivery is internal.
 
     JSON bodies use status for commerce/list outcomes and errorCode/message for session and
     management rejections. Unexpected server failures are not business rejections. Session
@@ -18,6 +18,282 @@ info:
 servers:
   - url: /api/v1
 paths:
+  /back-office/partners/{partnerId}/reward-rates:
+    parameters:
+      - in: path
+        name: partnerId
+        required: true
+        schema:
+          type: integer
+          minimum: 1
+    post:
+      operationId: post_back_office_partner_reward_rates
+      summary: Configure an explicit Partner Points Rate and conversion rate
+      description: Requires same-origin Origin and fresh finance.manage access. Rates are immutable historical business policy; missing configuration prevents list checkout. Points floor per discounted item subtotal excluding delivery, and reward value rounds half up to piasters.
+      security:
+        - sessionCookie: []
+      x-idempotency: Caller and key identify a durable outcome. Identical canonical rates and partner replay; changed input conflicts. Authorization is checked before replay.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [key, pointsPerEgp, egpPerPoint]
+              properties:
+                key:
+                  type: string
+                  pattern: '^[a-zA-Z0-9_-]{1,128}$'
+                pointsPerEgp:
+                  type: string
+                  description: Positive points per EGP; at most 10 integer digits and 6 decimals.
+                egpPerPoint:
+                  type: string
+                  description: Positive EGP per point; at most 8 integer digits and 4 decimals.
+      responses:
+        '201':
+          description: Configured rate, including identical replay
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status, rate]
+                properties:
+                  status:
+                    const: configured
+                  rate:
+                    type: object
+                    required: [id, businessPartnerId, pointsPerEgp, egpPerPoint]
+                    properties:
+                      id:
+                        type: integer
+                      businessPartnerId:
+                        type: integer
+                      pointsPerEgp:
+                        type: string
+                      egpPerPoint:
+                        type: string
+        '400':
+          description: invalid-input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: authentication-required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: origin-denied or authorization-denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: partner-unavailable or idempotency-conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /back-office/partners/{partnerId}/reward-workflows:
+    parameters:
+      - in: path
+        name: partnerId
+        required: true
+        schema:
+          type: integer
+          minimum: 1
+    post:
+      operationId: post_back_office_partner_reward_workflow
+      summary: Verify a settlement account or record a Partner Reward correction
+      description: Requires same-origin Origin and fresh finance.manage access. The selected Business Partner must be active. `verify-bank-account` records Finance approval of an opaque partner-bound account identifier. A settlement accepts only that durable approval; corrections and settlements append immutable ledger events.
+      security:
+        - sessionCookie: []
+      x-idempotency: Caller, action and key identify a durable outcome. Authorization is checked before an identical replay; changed input conflicts.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [action, key]
+              properties:
+                action:
+                  type: string
+                  enum:
+                    [verify-bank-account, refund, cancellation, reversal, adjustment, settlement]
+                key:
+                  type: string
+                  pattern: '^[a-zA-Z0-9_-]{1,128}$'
+                bankAccountId:
+                  type: string
+                orderReference:
+                  type: string
+                points:
+                  type: integer
+                reason:
+                  type: string
+                verifiedBankAccountId:
+                  type: string
+                settlementReference:
+                  type: string
+      responses:
+        '201':
+          description: Durable approval, correction, settlement, or identical replay
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status]
+                properties:
+                  status:
+                    type: string
+                    enum: [bank-account-verified, refunded, cancelled, reversed, recorded, settled]
+        '400':
+          description: invalid-input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: authentication-required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: origin-denied or authorization-denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: partner-unavailable, bank-account-unverified, reward-unavailable, or idempotency-conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /back-office/orders/{reference}:
+    parameters:
+      - in: path
+        name: reference
+        required: true
+        schema:
+          type: string
+          pattern: '^[a-f0-9]{64}$'
+    get:
+      operationId: get_back_office_order_state
+      summary: Read current delivery and payment state
+      description: Requires fresh fulfillment.manage or finance.manage access. Accepted snapshots remain historical; this result is the current lifecycle projection.
+      security:
+        - sessionCookie: []
+      x-idempotency: Read only; safe to retry.
+      responses:
+        '200':
+          description: Current Order state
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status, state]
+                properties:
+                  status:
+                    const: found
+                  state:
+                    $ref: '#/components/schemas/OrderState'
+        '400':
+          description: invalid-input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: authentication-required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: authorization-denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: not-found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      operationId: post_back_office_order_lifecycle
+      summary: Confirm home delivery or record the full COD payment
+      description: Requires same-origin Origin. Deliver requires fulfillment.manage; pay requires finance.manage. Payment follows successful delivery and amount must exactly equal the accepted total. No online payment or collection workflow.
+      security:
+        - sessionCookie: []
+      x-idempotency: Caller, action and key identify a durable outcome. Identical reference and amount replay after fresh authorization; changed input conflicts. Different keys cannot repeat delivery, stock finalization, payment or earning.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [action, key]
+              properties:
+                action:
+                  type: string
+                  enum: [deliver, pay]
+                key:
+                  type: string
+                  pattern: '^[a-zA-Z0-9_-]{1,128}$'
+                amount:
+                  $ref: '#/components/schemas/Money'
+      responses:
+        '200':
+          description: Delivery or payment recorded, including identical replay
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status, state]
+                properties:
+                  status:
+                    type: string
+                    enum: [delivered, paid]
+                  state:
+                    $ref: '#/components/schemas/OrderState'
+        '400':
+          description: invalid-input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: authentication-required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: authorization-denied or origin-denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: not-found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: delivery-required, amount-mismatch, already-delivered, already-paid, reservation-unavailable or idempotency-conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /sessions:
     post:
       summary: Authenticate an active User and issue an opaque session cookie
@@ -1610,6 +1886,7 @@ paths:
                       - selection-unavailable
                       - insufficient-stock
                       - delivery-unavailable
+                      - reward-rate-unavailable
       operationId: post_commerce_list_selections_code_quote
       x-idempotency: Read-only quote; retry may return changed terms and confirmation.
   /commerce/list-selections/{code}/checkout:
@@ -1690,6 +1967,7 @@ paths:
                       - selection-unavailable
                       - insufficient-stock
                       - delivery-unavailable
+                      - reward-rate-unavailable
       operationId: post_commerce_list_selections_code_checkout
       x-idempotency:
         Body key scoped to owner and operation (also list for List Selection); identical
@@ -1737,6 +2015,100 @@ paths:
                     enum:
                       - not-found
       operationId: get_school_supply_lists_code_
+  /partner/{partnerId}/reports:
+    parameters:
+      - in: path
+        name: partnerId
+        required: true
+        schema:
+          type: integer
+          minimum: 1
+      - in: query
+        name: period
+        required: true
+        schema:
+          type: string
+          pattern: '^20[0-9]{2}-(0[1-9]|1[0-2])$'
+    get:
+      operationId: get_partner_report
+      summary: Read a privacy-limited Partner Reward Statement
+      description: >
+        Requires a current active Partner Administrator or Report Viewer membership in the selected
+        Business Partner. Balances are cumulative through the selected UTC month; sales rows only
+        include paid Attributed Sales groups with at least three distinct Orders. Customer identity,
+        contact and delivery data are never returned.
+      security:
+        - sessionCookie: []
+      x-idempotency: Read only; safe to retry.
+      responses:
+        '200':
+          description: Scoped Partner Reward Statement and privacy-limited sales breakdowns
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status, report]
+                properties:
+                  status:
+                    const: found
+                  report:
+                    type: object
+                    required: [partnerId, period, statement, sales, suppressed]
+                    properties:
+                      partnerId:
+                        type: integer
+                      period:
+                        type: string
+                        pattern: '^20[0-9]{2}-(0[1-9]|1[0-2])$'
+                      statement:
+                        type: object
+                        required: [points, value]
+                        properties:
+                          points:
+                            $ref: '#/components/schemas/RewardStatementBalances'
+                          value:
+                            anyOf:
+                              - $ref: '#/components/schemas/RewardStatementBalances'
+                              - type: 'null'
+                      sales:
+                        type: array
+                        items:
+                          type: object
+                          required: [day, listId, listItemId, variantId, count, subtotal]
+                          properties:
+                            day:
+                              type: string
+                            listId:
+                              type: integer
+                            listItemId:
+                              type: integer
+                            variantId:
+                              type: integer
+                            count:
+                              type: integer
+                              minimum: 3
+                            subtotal:
+                              type: string
+                      suppressed:
+                        type: boolean
+        '400':
+          description: invalid-input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: authentication-required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: authorization-denied while preserving a valid Current Session
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /partner/{partnerId}/school-supply-lists:
     parameters:
       - in: path
@@ -2139,6 +2511,56 @@ components:
           $ref: '#/components/schemas/LocalizedText'
         fee:
           $ref: '#/components/schemas/Money'
+    OrderState:
+      type: object
+      required: [reference, fulfillmentStatus, paymentStatus, total]
+      properties:
+        reference:
+          type: string
+        fulfillmentStatus:
+          type: string
+          enum: [accepted, delivered]
+        paymentStatus:
+          type: string
+          enum: [unpaid, paid]
+        total:
+          $ref: '#/components/schemas/Money'
+        deliveredAt:
+          type: string
+        paidAt:
+          type: string
+    RewardSnapshot:
+      type: object
+      required: [rateId, pointsPerEgp, egpPerPoint, points, rewardValue]
+      properties:
+        rateId:
+          type: integer
+        pointsPerEgp:
+          type: string
+          pattern: '^\d+\.\d{6}$'
+        egpPerPoint:
+          type: string
+          pattern: '^\d+\.\d{4}$'
+        points:
+          type: integer
+          minimum: 0
+          maximum: 2147483647
+        rewardValue:
+          $ref: '#/components/schemas/Money'
+    RewardStatementBalances:
+      type: object
+      required: [pending, earned, reversed, settled, available]
+      properties:
+        pending:
+          type: string
+        earned:
+          type: string
+        reversed:
+          type: string
+        settled:
+          type: string
+        available:
+          type: string
     PricedItem:
       type: object
       required:
@@ -2164,6 +2586,8 @@ components:
           $ref: '#/components/schemas/Money'
         lineTotal:
           $ref: '#/components/schemas/Money'
+        reward:
+          $ref: '#/components/schemas/RewardSnapshot'
         attribution:
           $ref: '#/components/schemas/ListAttribution'
     CartQuote:
@@ -2290,6 +2714,8 @@ components:
         - address
         - guestAccess
       properties:
+        currentState:
+          $ref: '#/components/schemas/OrderState'
         reference:
           type: string
         status:

@@ -51,6 +51,16 @@ There are no quantity, completeness, Customer or repeat-purchase limits. The
 current target has no other promotion engine, so no promotions are stacked.
 This slice adds no Partner-controlled offer endpoint. Delivery fees stay unchanged.
 
+List management uses `@findeg/backend/school-supply-lists` for both direct runtime
+calls and the versioned Partner HTTP route. Mutations accept an opaque Current
+Session token, never a caller-constructed session. The application coordinator
+resolves Identity and locks the selected Business Partner before checking its
+current Partner Membership and List role in the mutation transaction. This
+serializes List writes with session revocation, User invalidation, Partner status
+changes and membership administration. Missing, fabricated, expired and revoked
+credentials require authentication. Authorization Denial preserves a valid
+Current Session. Failed domain mutations roll back their List writes.
+
 Partner list draft item input now accepts `required` (defaults to true) and
 `specification: { categoryId, attributes }`. Publication validates a supplied
 specification against the active default. DB triggers freeze published content;

@@ -29,6 +29,7 @@ test('dedicated List Selections preserve list choices and accepted attribution',
     await sql`INSERT INTO identity.users(email) VALUES ('list@example.test') RETURNING id`;
   const [partner] =
     await sql`INSERT INTO identity.business_partners(code, name_en, name_ar, status) VALUES ('school', 'School', 'مدرسة', 'active') RETURNING id`;
+  await sql`INSERT INTO identity.partner_reward_rates(business_partner_id,points_per_egp,egp_per_point,actor_id,request_key) VALUES (${partner.id},'1.000000','0.0100',${user.id},'list-fixture')`;
   const [product] =
     await sql`INSERT INTO catalog.products(localized_name, localized_description, localized_long_description) VALUES ('{"en":"Notebook","ar":"دفتر"}', '{}', '{}') RETURNING id`;
   const [variant] =
@@ -350,7 +351,7 @@ test('dedicated List Selections preserve list choices and accepted attribution',
   );
 
   await t.test(
-    'Partner publication freezes specification and cloning preserves it while replacement archives the old link',
+    'Partner List mutations authenticate current credentials, enforce scope and freeze published specifications',
     async () => {
       const [invitation] =
         await sql`INSERT INTO identity.partner_invitations(business_partner_id, email, roles, token_digest, inviter_id, expires_at, status) VALUES (${partner.id}, 'list@example.test', ARRAY['list-manager'], ${'9'.repeat(64)}, ${user.id}, now() + interval '1 day', 'accepted') RETURNING id`;
@@ -370,7 +371,23 @@ test('dedicated List Selections preserve list choices and accepted attribution',
           authorizationVersion: 1,
         },
       };
-      const created = await runtime.schoolSupplyLists.createDraft(session, partner.id, {
+      assert.equal(
+        (
+          await runtime.schoolSupplyLists.createDraft(session, partner.id, {
+            academicYear: '2026',
+            schoolName: 'School',
+            grade: '6',
+            title: { en: 'Forged list', ar: 'قائمة مزورة' },
+          })
+        ).status,
+        'authentication-required',
+        'caller-constructed Current Sessions cannot authorize a mutation',
+      );
+      const token = 'f'.repeat(64);
+      const digest = createHash('sha256').update(token).digest('hex');
+      await sql`UPDATE identity.users SET email_verified = now() WHERE id = ${user.id}`;
+      await sql`INSERT INTO identity.sessions(token_digest, user_id, authorization_version, expires_at) SELECT ${digest}, id, authorization_version, now() + interval '1 day' FROM identity.users WHERE id = ${user.id}`;
+      const created = await runtime.schoolSupplyLists.createDraft(token, partner.id, {
         academicYear: '2026',
         schoolName: 'School',
         grade: '6',
@@ -389,21 +406,13 @@ test('dedicated List Selections preserve list choices and accepted attribution',
         specification,
       };
       assert.equal(
-        (await runtime.schoolSupplyLists.replaceDraft(session, partner.id, created.list.id, [item]))
+        (await runtime.schoolSupplyLists.replaceDraft(token, partner.id, created.list.id, [item]))
           .status,
         'updated',
       );
-      const published = await runtime.schoolSupplyLists.publish(
-        session,
-        partner.id,
-        created.list.id,
-      );
+      const published = await runtime.schoolSupplyLists.publish(token, partner.id, created.list.id);
       assert.equal(published.status, 'published');
       // Compare the HTTP rejection with the same authorized application's outcome.
-      const token = 'f'.repeat(64);
-      const digest = createHash('sha256').update(token).digest('hex');
-      await sql`UPDATE identity.users SET email_verified = now() WHERE id = ${user.id}`;
-      await sql`INSERT INTO identity.sessions(token_digest, user_id, authorization_version, expires_at) SELECT ${digest}, id, authorization_version, now() + interval '1 day' FROM identity.users WHERE id = ${user.id}`;
       const server = await launchWeb(t, environment);
       try {
         const endpoint = `${server.base}/api/v1/partner/${partner.id}/school-supply-lists`;
@@ -413,7 +422,7 @@ test('dedicated List Selections preserve list choices and accepted attribution',
           'content-type': 'application/json',
         };
         const direct = await runtime.schoolSupplyLists.replaceDraft(
-          session,
+          token,
           partner.id,
           created.list.id,
           [item],
@@ -450,6 +459,91 @@ test('dedicated List Selections preserve list choices and accepted attribution',
           body: JSON.stringify({ action: 'clone', listId: 999999 }),
         });
         assert.equal(unknown.status, 404);
+        // All mutation entry points resolve credentials in the same transaction as the write.
+        const mutations = [
+          {
+            action: 'create',
+            input: {
+              academicYear: '2026',
+              schoolName: 'School',
+              grade: '7',
+              title: { en: 'List', ar: 'قائمة' },
+            },
+          },
+          { action: 'replace', listId: created.list.id, items: [item] },
+          { action: 'publish', listId: created.list.id },
+          { action: 'clone', listId: created.list.id },
+        ];
+        const directMutation = (credential, selected, mutation) => {
+          if (mutation.action === 'create')
+            return runtime.schoolSupplyLists.createDraft(credential, selected, mutation.input);
+          if (mutation.action === 'replace')
+            return runtime.schoolSupplyLists.replaceDraft(
+              credential,
+              selected,
+              mutation.listId,
+              mutation.items,
+            );
+          if (mutation.action === 'publish')
+            return runtime.schoolSupplyLists.publish(credential, selected, mutation.listId);
+          return runtime.schoolSupplyLists.clone(credential, selected, mutation.listId);
+        };
+        async function rejectedMutations(credential, selected, expected, httpStatus) {
+          for (const mutation of mutations) {
+            assert.equal((await directMutation(credential, selected, mutation)).status, expected);
+            const response = await fetch(
+              `${server.base}/api/v1/partner/${selected}/school-supply-lists`,
+              {
+                method: 'POST',
+                headers: { ...headers, cookie: `findeg_session=${credential}` },
+                body: JSON.stringify(mutation),
+              },
+            );
+            assert.equal(response.status, httpStatus);
+            assert.deepEqual(
+              await assertContractResponse(
+                '/partner/{partnerId}/school-supply-lists',
+                'post',
+                response,
+              ),
+              {
+                errorCode: expected,
+                message: expected,
+              },
+            );
+            if (expected === 'authorization-denied')
+              assert.equal(response.headers.get('set-cookie'), null);
+          }
+        }
+        await rejectedMutations(token, partner.id + 1000, 'authorization-denied', 403);
+        await sql`UPDATE identity.partner_memberships SET roles = ARRAY['report-viewer'] WHERE user_id = ${user.id}`;
+        await rejectedMutations(token, partner.id, 'authorization-denied', 403);
+        assert.equal((await runtime.currentSession(token, 'storefront')).status, 'authenticated');
+        await sql`UPDATE identity.partner_memberships SET roles = ARRAY['list-manager'] WHERE user_id = ${user.id}`;
+        await sql`UPDATE identity.partner_memberships SET status = 'suspended' WHERE user_id = ${user.id}`;
+        await rejectedMutations(token, partner.id, 'authorization-denied', 403);
+        assert.equal((await runtime.currentSession(token, 'storefront')).status, 'authenticated');
+        await sql`UPDATE identity.partner_memberships SET status = 'active' WHERE user_id = ${user.id}`;
+        await rejectedMutations('unknown-credential', partner.id, 'authentication-required', 401);
+        const expiredToken = '1'.repeat(64);
+        const expiredDigest = createHash('sha256').update(expiredToken).digest('hex');
+        await sql`INSERT INTO identity.sessions(token_digest, user_id, authorization_version, expires_at) SELECT ${expiredDigest}, id, authorization_version, now() - interval '1 day' FROM identity.users WHERE id = ${user.id}`;
+        await rejectedMutations(expiredToken, partner.id, 'authentication-required', 401);
+        const revokedToken = '2'.repeat(64);
+        const revokedDigest = createHash('sha256').update(revokedToken).digest('hex');
+        await sql`INSERT INTO identity.sessions(token_digest, user_id, authorization_version, expires_at) SELECT ${revokedDigest}, id, authorization_version, now() + interval '1 day' FROM identity.users WHERE id = ${user.id}`;
+        assert.equal(
+          (await runtime.currentSession(revokedToken, 'storefront')).status,
+          'authenticated',
+        );
+        await runtime.signOut(revokedToken);
+        await rejectedMutations(revokedToken, partner.id, 'authentication-required', 401);
+        await sql`UPDATE identity.users SET is_active = false WHERE id = ${user.id}`;
+        await rejectedMutations(token, partner.id, 'authentication-required', 401);
+        await sql`UPDATE identity.users SET is_active = true WHERE id = ${user.id}`;
+        // Reactivation cannot resurrect the invalidated Current Session.
+        await rejectedMutations(token, partner.id, 'authentication-required', 401);
+        await sql`INSERT INTO identity.sessions(token_digest, user_id, authorization_version, expires_at) SELECT ${digest}, id, authorization_version, now() + interval '1 day' FROM identity.users WHERE id = ${user.id}`;
         const unlisted = await fetch(
           `${server.base}/api/v1/school-supply-lists/${published.list.publicCode}`,
         );
@@ -465,15 +559,15 @@ test('dedicated List Selections preserve list choices and accepted attribution',
 
       assert.deepEqual(published.list.items[0].specification, specification);
       assert.equal(
-        (await runtime.schoolSupplyLists.replaceDraft(session, partner.id, created.list.id, [item]))
+        (await runtime.schoolSupplyLists.replaceDraft(token, partner.id, created.list.id, [item]))
           .status,
         'immutable',
       );
-      const cloned = await runtime.schoolSupplyLists.clone(session, partner.id, created.list.id);
+      const cloned = await runtime.schoolSupplyLists.clone(token, partner.id, created.list.id);
       assert.equal(cloned.status, 'created');
       assert.deepEqual(cloned.list.items[0].specification, specification);
       const replacement = await runtime.schoolSupplyLists.publish(
-        session,
+        token,
         partner.id,
         cloned.list.id,
         created.list.id,

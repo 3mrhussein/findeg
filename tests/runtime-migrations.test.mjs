@@ -44,7 +44,13 @@ test(
       database = postgres(url.toString(), { max: 1 });
       const [history] =
         await database`SELECT count(*)::int AS count FROM drizzle.__drizzle_migrations`;
-      assert.equal(history.count, 9);
+      assert.equal(history.count, 13);
+      const views =
+        await database`SELECT table_name,is_updatable FROM information_schema.views WHERE table_schema='identity' AND table_name LIKE 'partner_report_%'`;
+      assert.equal(views.length, 2);
+      assert.ok(views.every((view) => view.is_updatable === 'NO'));
+      assert.equal(schemaOwnership['identity.partner_reward_rates'], 'partner-rewards');
+      assert.equal(schemaOwnership['identity.partner_reward_entitlements'], 'partner-rewards');
       const [column] =
         await database`SELECT column_default FROM information_schema.columns WHERE table_schema = 'identity' AND table_name = 'users' AND column_name = 'authorization_version'`;
       assert.equal(column.column_default, '1');

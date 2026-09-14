@@ -251,3 +251,28 @@ export function priceListSelection(
     completeness: { complete: required.every((item) => item.selected >= item.expected), required },
   };
 }
+
+export interface OrderLifecycleStore {
+  lockOrder(reference: string): Promise<AcceptedOrder | undefined>;
+  state(order: AcceptedOrder): Promise<import('./contracts.js').OrderState>;
+  outcome(
+    actorId: number,
+    operation: 'delivery' | 'payment',
+    key: string,
+  ): Promise<
+    { fingerprint: string; result: import('./contracts.js').OrderLifecycleReceipt } | undefined
+  >;
+  recordEvent(
+    reference: string,
+    event: 'delivered' | 'paid',
+    actorId: number,
+    amount?: string,
+  ): Promise<void>;
+  saveOutcome(
+    actorId: number,
+    operation: 'delivery' | 'payment',
+    key: string,
+    fingerprint: string,
+    result: import('./contracts.js').OrderLifecycleReceipt,
+  ): Promise<void>;
+}

@@ -44,10 +44,114 @@ including immutable-list rejection and checkout replay/conflict. OpenAPI respons
 validation uses the JSON Schema subset supported by Ajv; extend the validator when
 introducing newer schema keywords.
 
-Partner Rewards and Partner Reports currently expose module foundations without
-runtime/persistence wiring. They are not released HTTP capabilities. Their durable
-authorized runtime operations must exist before adding routes; worker notification
-delivery remains an internal process operation.
+Partner Rewards persists explicit rate history and accepted line entitlements through
+its transaction-bound construction contract. `reward-rates` authorizes Finance
+credentials inside the application operation. Partner Reports use explicitly approved,
+read-only projections; source owners retain all write access.
+
+Partner Reward corrections and settlements use the same transaction-bound ledger
+adapter. Finance verifies an opaque bank-account identifier for one active Business
+Partner before a settlement can reference it; the adapter rechecks that durable
+approval and appends the settlement instead of trusting a request field.
+
+### Accepted Partner Rewards (#93)
+
+Finance configures rates with `POST /api/v1/back-office/partners/{partnerId}/reward-rates`:
+`key` is a caller-scoped idempotency key, `pointsPerEgp` is a positive decimal string
+with at most ten integer digits and six decimals, and `egpPerPoint` has at most eight
+integer digits and four decimals. No defaults exist. Missing or unrepresentable
+rates return `reward-rate-unavailable` from list checkout with bilingual feedback.
+Points use the discounted line subtotal excluding delivery: floor to whole points
+per line. Conversion uses those whole points and rounds half up once to EGP piasters.
+All arithmetic uses scaled integers; public money/rates remain decimal strings.
+Points cannot exceed 2,147,483,647 per line; value fits numeric(18,2).
+
+Quotes include the complete rate/version and value snapshot before confirmation
+hashing. A transaction-scoped partner rate lock serializes configuration with quoting
+and acceptance, including when the first rate has not yet been configured. Changed
+rates require reconfirmation. Historical identical checkout retries return the original
+outcome before reading new rates. Ordinary Cart Orders remain unattributed.
+
+Migration `0009_reward_entitlements` adds immutable rate history and per-line
+entitlements, extends the existing reward ledger with optional entitlement references,
+and protects all reward history against updates/deletes. Accepted/paid events are
+unique per entitlement; corrections may repeat. No historical rates are invented for
+old events. Order snapshots, reservation, outbox, pending entitlement/event and replay
+outcome commit or roll back together. `entitlementsForOrder` exposes accepted facts
+for the subsequent qualifying-payment workflow without repricing. Reports must read
+this same ledger rather than introducing a second accounting history.
+
+### COD delivery and payment (#94)
+
+`order-lifecycle` coordinates Identity, Commerce, Inventory and Partner Rewards
+through one transaction. Back Office users can load an Order by reference and use
+the bilingual delivery/payment controls. The same operations are exposed through
+`GET/POST /api/v1/back-office/orders/{reference}`. Delivery requires
+`fulfillment.manage`; recording the full accepted COD amount requires `finance.manage`
+and previously successful delivery. Credentials are freshly resolved before replay.
+
+Migration `0010_cod_lifecycle` adds append-only Commerce delivery/payment events
+with actor/time and exact payment amount, durable caller/action/key outcomes, and
+Inventory finalization markers. The transaction locks the accepted Order, consumes
+its reserved and on-hand quantities once, and preserves the original reservations
+and stock history. Payment appends each entitlement's paid event once using its
+accepted points/conversion, with no current-rate repricing or caller-supplied points.
+Required-write failures roll back lifecycle, inventory, rewards and replay outcomes.
+
+Repeated input under the same key returns the original outcome; changed reference
+or payment amount conflicts. Different keys return `already-delivered`/`already-paid`
+and cannot repeat effects. Guest Order verification includes `currentState`, separate
+from the immutable accepted snapshot; guest presentation uses that current lifecycle
+state. Finance corrections and partner statements continue to use the same ledger.
+No online payment, school collection or external notification channel is introduced.
+
+### Partner Reports (#95)
+
+`GET /api/v1/partner/{partnerId}/reports?period=YYYY-MM` resolves an opaque Current
+Session and active Partner Workspace inside the application operation. Only an active
+Partner Administrator or Report Viewer for the selected Business Partner can read it.
+Authorization Denial leaves a valid Current Session intact.
+
+Migration `0011_partner_report_views` defines non-updatable views over the append-only
+Partner Reward ledger and paid Attributed Sales. The report adapter reads only the
+selected partner's rows; it never receives Customer names, email addresses, phones,
+delivery addresses or raw Order snapshots. It returns cumulative pending, earned,
+reversed, settled and available points through the selected UTC month, plus matching
+EGP valuation when every included entry has an auditable value. Historical entries
+without a value make that monetary column `null`, rather than inventing a rate.
+
+Daily/list-item/Product Variant breakdowns are returned only where three or more
+distinct paid Orders share the group. Lower-count rows are omitted and the response
+sets `suppressed: true`. The bilingual Partner Workspace statement uses the same
+versioned adapter. Direct views are live, so their reporting lag is below fifteen
+minutes; they remain a documented read-only cross-owner exception.
+
+### Partner Reward statement semantics (#92)
+
+The Partner Rewards module folds events in append order. `pending` is the sum of
+unearned entitlements tracked separately for each Business Partner and Order.
+Payment transfers only that Order's remaining pending points into earnings.
+Cancellation consumes that Order's pending entitlement first, then its remaining
+earnings; it cannot cancel more than the combined remainder or create points that
+can be earned later. Refunds and reversals debit remaining earnings only. All three
+corrections share the same statement calculation, including earlier corrections
+and signed manual adjustments, so event ordering cannot debit an entitlement twice.
+Correction inputs are positive safe integers; the ledger records their negative
+sign. Original events remain unchanged.
+
+`earned` reports earnings after refunds, reversals, earned-point cancellations and
+manual adjustments, before settlements, with a zero display floor. `reversed`
+reports the total points removed by refunds, reversals and cancellations (including
+cancelled pending points). `settled` is the cumulative completed payout amount.
+`available` is net earnings less settlements, deducted once, with a zero floor:
+100 earned and 40 settled means 100 earned, 40 settled and 60 available. Later
+corrections retain the original settlement history rather than rewriting it.
+
+Authorized Partner Reports filter rows to the selected Business Partner before
+privacy suppression and sanitization. Another partner's rows affect neither the
+returned rows nor the suppression flag. These module contracts remain foundations;
+durable transaction serialization and authorized runtime integration belong to the
+commerce and reporting integration tickets.
 
 ## Target runtime foundation (#52)
 
@@ -70,6 +174,21 @@ delivery remains an internal process operation.
 The Storefront and Dashboard sources are preserved as migration references outside the active workspace. Their page and theme migration is not complete.
 New behavior belongs in `frontend/web`; #89 owns the later production certification
 and controlled release phase.
+
+## Catalog and School Supply List application boundaries (#91)
+
+`@findeg/backend/catalog-inventory` coordinates Catalog, Inventory and Identity
+through an injected transaction runner. Catalog authorization, active-variant
+eligibility, localized browsing and stock-adjustment policy belong here; runtime
+only binds owner adapters and exposes the resulting operations. Inventory errors
+are translated after rollback.
+
+`@findeg/backend/school-supply-lists` is the authorized List application surface.
+It resolves opaque credentials and current Partner Membership within the same
+transaction as each mutation. The owner's module operation receives only that
+coordinator's authoritative session. HTTP adapters call this surface directly
+through runtime; they cannot turn an earlier session read into a mutation
+credential. See [List access and validation](operations/list-selections.md).
 
 ## Retained compatibility evidence (#64)
 
@@ -122,7 +241,7 @@ This split keeps the existing rule that database code never imports business cod
 | School Supply Lists    | Lists, items, alternatives, list access grants/requests/tokens/attempts and parent sessions                      |
 | Inventory              | Warehouses, balances and stock movements                                                                         |
 | Commerce               | Orders/items, Cart Kits, discount rules, addresses and saved payment methods                                     |
-| Partner Rewards        | No persisted records yet; reward accounting lands in its feature ticket                                          |
+| Partner Rewards        | Immutable rate history, per-line accepted entitlements and append-only reward events                             |
 | Partner Reports        | No persisted records yet; approved read views land with reporting                                                |
 | Runtime infrastructure | Existing audit log, server logs and notifications; these are technical records, not a ninth business module      |
 

@@ -22,7 +22,7 @@ module.exports = function registerOperatorJourneys(on, fixture) {
         const [user] =
           await sql`INSERT INTO identity.users(email, email_verified) VALUES (${email}, now()) RETURNING id`;
         await sql`INSERT INTO identity.password_credentials(user_id, password_hash) VALUES (${user.id}, ${await bcrypt.hash(password, 4)})`;
-        await sql`INSERT INTO identity.staff_role_grants(user_id, role) VALUES (${user.id}, 'finance-manager')`;
+        await sql`INSERT INTO identity.staff_role_grants(user_id, role) VALUES (${user.id}, 'finance-manager'), (${user.id}, 'fulfillment-operator')`;
         const [partner] =
           await sql`INSERT INTO identity.business_partners(code, name_en, name_ar, status) VALUES (${randomUUID()}, 'Journey Partner', 'شريك التجربة', 'active') RETURNING id`;
         const [other] =
@@ -30,6 +30,14 @@ module.exports = function registerOperatorJourneys(on, fixture) {
         const [invitation] =
           await sql`INSERT INTO identity.partner_invitations(business_partner_id, email, roles, token_digest, inviter_id, expires_at, status) VALUES (${partner.id}, ${email}, ARRAY['report-viewer'], ${randomUUID()}, ${user.id}, now() + interval '1 day', 'accepted') RETURNING id`;
         await sql`INSERT INTO identity.partner_memberships(business_partner_id, user_id, invitation_id, roles) VALUES (${partner.id}, ${user.id}, ${invitation.id}, ARRAY['report-viewer'])`;
+        const reference = randomUUID();
+        const [rate] =
+          await sql`INSERT INTO identity.partner_reward_rates(business_partner_id, points_per_egp, egp_per_point, actor_id, request_key) VALUES (${partner.id}, '1.000000', '0.0100', ${user.id}, ${randomUUID()}) RETURNING id`;
+        await sql`INSERT INTO sales.accepted_orders(reference, snapshot) VALUES (${reference}, ${sql.json({ items: [{ variantId: 1, attribution: { listId: 1, listItemId: 1 } }] })})`;
+        const [entitlement] =
+          await sql`INSERT INTO identity.partner_reward_entitlements(business_partner_id, order_reference, line_index, rate_id, eligible_subtotal, points, reward_value) VALUES (${partner.id}, ${reference}, 0, ${rate.id}, '12.50', 12, '0.12') RETURNING id`;
+        await sql`INSERT INTO identity.partner_reward_events(entitlement_id, business_partner_id, order_reference, event_type, points, pending_points, conversion_rate) VALUES (${entitlement.id}, ${partner.id}, ${reference}, 'accepted', 12, 12, '0.0100')`;
+        await sql`INSERT INTO sales.order_lifecycle_events(order_reference, event_type, actor_id, amount) VALUES (${reference}, 'paid', ${user.id}, '12.50')`;
         return { email, password, partnerId: partner.id, otherPartnerId: other.id };
       });
     },

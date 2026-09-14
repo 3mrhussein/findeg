@@ -5,6 +5,14 @@ export interface CartItem {
 }
 
 export interface PricedItem extends CartItem {
+  /** Optional immutable Partner Reward valuation attached by attributed list checkout. */
+  readonly reward?: {
+    readonly rateId: number;
+    readonly pointsPerEgp: string;
+    readonly egpPerPoint: string;
+    readonly points: number;
+    readonly rewardValue: string;
+  };
   readonly attribution?: ListAttribution;
   readonly sku: string;
   readonly name: { readonly en?: string; readonly ar?: string };
@@ -34,6 +42,7 @@ export interface DeliveryAddress {
 }
 
 export interface AcceptedOrder {
+  readonly currentState?: OrderState;
   readonly reference: string;
   readonly status: 'accepted';
   readonly paymentMethod: 'cash-on-delivery';
@@ -140,3 +149,17 @@ export type ListSelectionResult =
   | {
       readonly status: 'invalid-input' | 'not-found' | 'list-unavailable' | 'selection-unavailable';
     };
+
+/** Current lifecycle projection; the original AcceptedOrder remains an immutable snapshot. */
+export interface OrderState {
+  readonly reference: string;
+  readonly fulfillmentStatus: 'accepted' | 'delivered';
+  readonly paymentStatus: 'unpaid' | 'paid';
+  readonly total: string;
+  readonly deliveredAt?: string;
+  readonly paidAt?: string;
+}
+export interface OrderLifecycleReceipt {
+  readonly status: 'delivered' | 'paid';
+  readonly state: OrderState;
+}
