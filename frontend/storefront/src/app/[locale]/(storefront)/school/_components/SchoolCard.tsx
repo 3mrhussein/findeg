@@ -6,7 +6,7 @@ import { Card, CardContent, CardFooter } from '@findeg/ui';
 import { Badge } from '@findeg/ui';
 import { Button } from '@findeg/ui';
 import { Link } from '@i18n/navigation';
-import { SchoolSearchResult } from '@findeg/backend/features/school/application/interfaces/ISchoolDirectoryService';
+import type { SchoolSearchResult } from '@findeg/backend/features/school';
 
 interface SchoolCardProps {
   school: SchoolSearchResult;

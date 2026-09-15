@@ -4,6 +4,8 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./features/school": "./src/features/school/index.ts",
+    "./features/school/*": null,
     "./features/*": "./src/features/*"
   },
   "scripts": {
