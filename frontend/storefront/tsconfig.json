@@ -17,8 +17,9 @@
       // (unlike backend/package.json's exports field, which this alias
       // otherwise bypasses entirely) doesn't fall back to it once a feature
       // has its own entry.
-      "@findeg/backend/features/notifications": ["../../backend/src/features/notifications/index.ts"],
       "@findeg/backend/features/administration": ["../../backend/src/features/administration/index.ts"],
+      "@findeg/backend/features/media": ["../../backend/src/features/media/index.ts"],
+      "@findeg/backend/features/notifications": ["../../backend/src/features/notifications/index.ts"],
       "@findeg/backend/features/order": ["../../backend/src/features/order/index.ts"],
       "@findeg/backend/*": ["../../backend/src/*"],
       "@findeg/env": ["../../packages/env/src"]
