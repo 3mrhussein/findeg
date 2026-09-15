@@ -4,7 +4,9 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./features/*": "./src/features/*"
+    "./features/*": "./src/features/*",
+    "./features/core": "./src/features/core/index.ts",
+    "./features/core/*": null
   },
   "scripts": {
     "type-check": "tsc --noEmit",

@@ -6,7 +6,7 @@ import {
   type ICookieStore,
   type ICurrentSessionIdentityResolver,
 } from '../CurrentSessionProvider';
-import { CookieSessionProvider } from '../../../infrastructure/auth/CookieSessionProvider';
+import { createCookieSessionProvider } from '../factory';
 import { JwtSessionManager } from '../../../infrastructure/auth/JwtSessionManager';
 
 class MemoryCookieStore implements ICookieStore {
@@ -56,7 +56,7 @@ describe('CurrentSessionProvider', () => {
   }
 
   it('accepts a valid version-1 browser cookie without renewing it', async () => {
-    const issuer = new CookieSessionProvider(cookieStore);
+    const issuer = createCookieSessionProvider(cookieStore);
     await issuer.createSession(versionOneSession);
     cookieStore.set.mockClear();
 
@@ -89,7 +89,7 @@ describe('CurrentSessionProvider', () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2026-01-01T00:00:00Z'));
     try {
-      await new CookieSessionProvider(cookieStore).createSession(versionOneSession);
+      await createCookieSessionProvider(cookieStore).createSession(versionOneSession);
       vi.setSystemTime(new Date('2026-01-02T00:00:01Z'));
 
       await expect(provider().getSession()).resolves.toBeNull();
@@ -131,7 +131,7 @@ describe('CurrentSessionProvider', () => {
   });
 
   it('memoizes resolution within one provider instance but not another request', async () => {
-    await new CookieSessionProvider(cookieStore).createSession(versionOneSession);
+    await createCookieSessionProvider(cookieStore).createSession(versionOneSession);
     const request = provider();
 
     await request.getSession();
