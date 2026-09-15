@@ -6,6 +6,8 @@
     ".": "./src/index.ts",
     "./features/school": "./src/features/school/index.ts",
     "./features/school/*": null,
+    "./features/order": "./src/features/order/index.ts",
+    "./features/order/*": null,
     "./features/*": "./src/features/*"
   },
   "scripts": {
