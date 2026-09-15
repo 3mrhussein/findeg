@@ -1,8 +1,9 @@
 import { useState, useMemo } from 'react';
 import {
-  ProductEntity,
+  isNewProduct,
+  getProductDisplayPrice,
   type Product,
-} from '@findeg/backend/features/catalog/domain/entities/Product';
+} from '@findeg/backend/features/catalog';
 import type { SortOption } from '@lib/types';
 
 /**
@@ -21,17 +22,17 @@ export const useProducts = (initialProducts: Product[]) => {
       case 'newest':
         sortable.sort(
           (a, b) =>
-            (new ProductEntity(b).isNew() ? 1 : -1) - (new ProductEntity(a).isNew() ? 1 : -1),
+            (isNewProduct(b) ? 1 : -1) - (isNewProduct(a) ? 1 : -1),
         );
         break;
       case 'price-asc':
         sortable.sort(
-          (a, b) => new ProductEntity(a).getDisplayPrice() - new ProductEntity(b).getDisplayPrice(),
+          (a, b) => getProductDisplayPrice(a) - getProductDisplayPrice(b),
         );
         break;
       case 'price-desc':
         sortable.sort(
-          (a, b) => new ProductEntity(b).getDisplayPrice() - new ProductEntity(a).getDisplayPrice(),
+          (a, b) => getProductDisplayPrice(b) - getProductDisplayPrice(a),
         );
         break;
       case 'featured':

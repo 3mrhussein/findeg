@@ -1,5 +1,5 @@
 import { ID } from '@findeg/backend/features/core/domain/types/common';
-import { type ProductFilters } from '../interfaces/IProductRepository';
+import { type ProductFilters } from '../interfaces/ProductFilters';
 import { type IProductService } from '../interfaces/IProductService';
 import { type Product } from '@findeg/backend/features/catalog/domain/entities/Product';
 import { type Variant } from '@findeg/backend/features/catalog/domain/entities/Variant';

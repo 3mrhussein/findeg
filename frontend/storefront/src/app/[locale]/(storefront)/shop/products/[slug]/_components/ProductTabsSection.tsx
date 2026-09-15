@@ -3,8 +3,7 @@
 import { FileText, Package, Ruler, Star } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@findeg/ui';
-import type { Product } from '@findeg/backend/features/catalog/domain/entities/Product';
-import type { Variant } from '@findeg/backend/features/catalog/domain/entities/Variant';
+import type { Product, Variant } from '@findeg/backend/features/catalog';
 import type { ProductReviewSummary, Review } from '@findeg/backend/features/review';
 import { sanitizeHtml } from '@findeg/backend/lib';
 import { ReviewsSection } from './ReviewsSection';

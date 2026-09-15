@@ -5,9 +5,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   CollectionInputSchema,
   type CollectionInput,
-} from '@findeg/backend/features/catalog/application/dtos/CollectionInput';
-import { Collection } from '@findeg/backend/features/catalog/domain';
-import { Tag } from '@findeg/backend/features/catalog/domain';
+  Collection,
+  Tag,
+} from '@findeg/backend/features/catalog';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@i18n/navigation';
 import { useToast } from '@hooks/use-toast';

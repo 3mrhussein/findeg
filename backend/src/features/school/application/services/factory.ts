@@ -7,7 +7,7 @@ import { ParentListService } from './ParentListService';
 import type { ISchoolDirectoryService } from '../interfaces/ISchoolDirectoryService';
 import type { ISchoolAccessService } from '../interfaces/ISchoolAccessService';
 import type { IParentListService } from '../interfaces/IParentListService';
-import { type ISchoolListService, SchoolListService } from '@findeg/backend/features/catalog';
+import { createCatalogServices, type ISchoolListService } from '@findeg/backend/features/catalog';
 
 export function createSchoolServices(): {
   schoolDirectory: ISchoolDirectoryService;
@@ -15,7 +15,7 @@ export function createSchoolServices(): {
   parentList: IParentListService;
   schoolLists: ISchoolListService;
 } {
-  const schoolLists = new SchoolListService();
+  const { schoolLists } = createCatalogServices();
   const schoolDirectory = new SchoolDirectoryService();
   const schoolAccess = new SchoolAccessService(schoolLists);
   const parentList = new ParentListService(schoolDirectory, schoolAccess);
