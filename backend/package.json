@@ -4,6 +4,8 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./features/review": "./src/features/review/index.ts",
+    "./features/review/*": null,
     "./features/*": "./src/features/*"
   },
   "scripts": {

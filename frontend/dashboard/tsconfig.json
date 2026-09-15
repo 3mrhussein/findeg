@@ -14,6 +14,7 @@
       "@app/*": ["./src/app/*"],
       "@actions/*": ["./src/actions/*"],
       "@queries/*": ["./src/queries/*"],
+      "@findeg/backend/features/review": ["../../backend/src/features/review/index.ts"],
       "@findeg/backend/*": ["../../backend/src/*"],
       "@findeg/env": ["../../packages/env/src"]
     }
