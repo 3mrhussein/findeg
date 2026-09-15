@@ -8,7 +8,7 @@ import { Icon } from '@findeg/ui';
 import { OrderTable } from './OrderTable';
 import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
 import type { Product } from '@findeg/backend/features/catalog';
-import type { Order } from '@findeg/backend/features/order/domain/entities/Order';
+import type { Order } from '@findeg/backend/features/order';
 
 interface OverviewProps {
   products: Product[];

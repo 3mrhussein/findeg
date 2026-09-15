@@ -5,7 +5,7 @@ import { ListAccessCard } from '@app/[locale]/(storefront)/school/_components/Li
 import { CodeEntryDialog } from '@app/[locale]/(storefront)/school/_components/CodeEntryDialog';
 import { AccessRequestDialog } from '@app/[locale]/(storefront)/school/_components/AccessRequestDialog';
 import { useRouter } from '@i18n/navigation';
-import { AccessState } from '@findeg/backend/features/school/application/interfaces/ISchoolAccessService';
+import type { AccessState } from '@findeg/backend/features/school';
 
 interface SchoolProfileClientProps {
   schoolName: string;

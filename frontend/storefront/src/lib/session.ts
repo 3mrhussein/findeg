@@ -1,5 +1,5 @@
 import type { SessionPayload } from '@findeg/backend/features/core';
-import { CookieSessionProvider, type ICookieStore } from '@findeg/backend/features/core';
+import { createCookieSessionProvider, type ICookieStore } from '@findeg/backend/features/core';
 import { cookies } from 'next/headers';
 
 /**
@@ -8,7 +8,7 @@ import { cookies } from 'next/headers';
  * Extracts session from Next.js cookies for customer authentication.
  * Used by Storefront Server Components and Server Actions.
  *
- * CookieSessionProvider is instantiated with Next.js cookie store injected.
+ * The session provider is created with Next.js cookie store injected.
  * This allows backend to remain framework-agnostic while apps handle framework integration.
  *
  * @example
@@ -41,14 +41,14 @@ async function nextCookiesToStore(): Promise<ICookieStore> {
  * Extracts the current customer session from cookies.
  * Returns null if no valid session cookie exists.
  *
- * Uses injected CookieSessionProvider with Next.js cookies.
+ * Uses a session provider with Next.js cookies.
  *
  * @returns Session payload with customer ID, or null if not authenticated
  */
 export async function getSession(): Promise<SessionPayload | null> {
   try {
     const cookieStore = await nextCookiesToStore();
-    const provider = new CookieSessionProvider(cookieStore);
+    const provider = createCookieSessionProvider(cookieStore);
     return await provider.getSession();
   } catch {
     return null;
@@ -62,7 +62,7 @@ export async function getSession(): Promise<SessionPayload | null> {
  */
 export async function createSession(payload: SessionPayload): Promise<void> {
   const cookieStore = await nextCookiesToStore();
-  const provider = new CookieSessionProvider(cookieStore);
+  const provider = createCookieSessionProvider(cookieStore);
   await provider.createSession(payload);
 }
 
@@ -71,7 +71,7 @@ export async function createSession(payload: SessionPayload): Promise<void> {
  */
 export async function deleteSession(): Promise<void> {
   const cookieStore = await nextCookiesToStore();
-  const provider = new CookieSessionProvider(cookieStore);
+  const provider = createCookieSessionProvider(cookieStore);
   await provider.deleteSession();
 }
 

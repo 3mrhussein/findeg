@@ -1,6 +1,6 @@
 import { Resend } from 'resend';
 import React from 'react';
-import { Order } from '@findeg/backend/features/order/domain/entities/Order';
+import type { Order } from '@findeg/backend/features/order';
 import {
   AccessRequest,
   EmailSchoolList,

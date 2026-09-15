@@ -15,7 +15,7 @@ import { ProductsClient } from './ProductsClient';
 import { getProducts } from '@data/products/queries';
 import { getAllCategories } from '@data/resources/queries';
 import { getAllBrands } from '@data/resources/queries';
-import { ProductListFilters } from '@findeg/backend/features/administration/application/interfaces/IAdminProductService';
+import type { ProductListFilters } from '@findeg/backend/features/administration';
 
 interface ProductsContentProps {
   locale: string;
