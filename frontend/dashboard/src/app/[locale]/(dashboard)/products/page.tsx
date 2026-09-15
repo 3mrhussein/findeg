@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { ProductListSkeleton } from '@components/skeletons';
-import type { ProductListFilters } from '@findeg/backend/features/administration/application/interfaces/IAdminProductService';
+import type { ProductListFilters } from '@findeg/backend/features/administration';
 import { ProductsContent } from './_components/ProductsContent';
 import { routing } from '@i18n/routing';
 

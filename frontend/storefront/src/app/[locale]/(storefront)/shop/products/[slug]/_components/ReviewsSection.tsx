@@ -8,8 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@findeg/ui';
 import { Textarea } from '@findeg/ui';
 import { Badge } from '@findeg/ui';
 import { IconTooltip } from '@findeg/ui';
-import type { ProductReviewSummary } from '@findeg/backend/features/review/application/interfaces/IReviewRepository';
-import type { Review } from '@findeg/backend/features/review/domain/entities/Review';
+import type { ProductReviewSummary, Review } from '@findeg/backend/features/review';
 import { cn } from '@lib/utils';
 
 type ReviewFilter = 'all' | '5' | '4' | 'verified';
