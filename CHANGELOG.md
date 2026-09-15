@@ -1,5 +1,90 @@
 # Changelog
 
+## Unreleased
+
+- Reconcile historical guide retention (#98): keep the logging and monorepo
+  migration guides, link them from the canonical inventory, and point archived
+  spec references to their preserved Git revision. Frontend page/theme migration,
+  legacy runtime retirement, and production certification remain separate work.
+
+- Preserve optional School Supply List class/section context through creation,
+  publication, cloning and replacement (#97), with an additive nullable column
+  and versioned HTTP contract. Frontend migration and production certification
+  remain outside this delivery.
+
+- Correct Partner Reward payment after cancellation and preserve exact EGP values
+  through refunds, reversals, adjustments and settlements. New ledger values are
+  append-only; unvalued historical entries remain explicit rather than being
+  backfilled with current rates.
+
+- Consolidate #64 compatibility guidance at backend, database, and environment
+  entry points; correct the legacy database barrel's browser-import claim and
+  mark the remaining infrastructure analysis as historical evidence. Retain
+  frontend references, migration history, and production release configuration.
+
+- Preserve the original Storefront and Dashboard pages, themes, assets, translations,
+  and tests as migration references outside the active workspace (#64). Restore their
+  premature deletion and record a page-by-page migration map: target development
+  gates do not establish full feature or visual parity. Keep the unified runtime as
+  the supported development path and obsolete database setup paths removed.
+  Production certification and controlled release remain with #89.
+
+- Add production readiness gates and operational procedures (#63): required lint,
+  dependency security and documentation checks, bilingual operator journeys,
+  protected revision-specific certification, release/recovery guidance, connection
+  budgets and delivered-only outbox cleanup. Production certification remains
+  blocked until a notification provider is validated.
+
+- Complete versioned JSON contracts for released web capabilities (#62), including
+  School Supply List management, structured rejections and checkout retry semantics.
+  Validate HTTP receipts against OpenAPI and enforce transitive browser/server
+  boundaries. Reward/report module foundations are not yet wired into the released
+  runtime and are not exposed as HTTP operations.
+
+- Shop unlisted School Supply Lists through separate resumable List Selections (#60),
+  with required/optional choices, specification-matching alternatives, advisory
+  completeness and repeatable List Offers. Accept dedicated Cash-on-Delivery Orders
+  with immutable item attribution, retry protection and atomic reservations/outbox.
+  Archived links remain viewable; Arabic/English browser journeys cover incomplete
+  checkout. Partner Points accounting remains with #61.
+
+- Add bilingual ordinary Cart and Guest Cash-on-Delivery checkout (#58), with
+  exact EGP prices, authoritative reconfirmation, atomic stock reservations and
+  replay-safe acceptance. Guest Order Access consumes an opaque-reference/code
+  pair once; notification delivery remains with #59. Cover cookie recovery,
+  competing buyers, concurrent retries, rollback and bilingual browser journeys.
+
+- Restore the 37 native Matt Pocock skills and setup templates; retire the custom per-ticket PR, session-isolation, and automatic delivery workflow. Preserve upstream skill files from repository formatting.
+
+- Manage and shop bilingual Product Variants and inventory through the Back
+  Office and Storefront (#55). Inventory adjustments preserve catalog ownership,
+  fail closed on insufficient stock under contested concurrency, and reflect
+  real-time availability across Arabic and English storefront browsing.
+
+- Add scoped Partner Memberships, verified-email single-use invitations, additive
+  Partner Roles, and request-specific bilingual Workspace selection (#56).
+  Access changes preserve valid authentication; provider delivery and School
+  Supply List operations remain with their feature tickets.
+
+- Restore target PostgreSQL Current Sessions, request-specific Active Portal grants,
+  fixed additive staff roles, and authorization refresh without sign-out (#54).
+  Legacy role grants remain excluded; Partner Membership integration belongs to #56.
+  Correct migration snapshot 0001 to reflect its existing Users column before
+  adding session tables and invalidation triggers in migration 0002.
+
+- Establish explicit module ownership for the retained PostgreSQL records, one
+  compiled schema assembly, and transaction contracts that roll back structured
+  business rejections as well as exceptions. Target module imports and cycles are
+  now checked; legacy mappings remain replacement evidence, not certified commerce.
+
+> Manually maintained. Do not overwrite this file with the draft changelog generator.
+
+- #52 introduces the target unified web portal shells and compiled web/worker/migration runtime, one release image with independent process restarts, and HTTP/process/real-PostgreSQL migration gates. Authenticated entry remains closed pending #54; worker delivery readiness remains unavailable pending #59. Legacy frontends are retained only as migration evidence.
+
+- #68 imports the repository skills from `99d5e7c`, adapts their delivery and setup instructions to the current workflow, and makes them available in worktrees created from merged `develop`. Unrelated work on the source branch is excluded.
+
+- #51 establishes the target-architecture and delivery-gate foundation. It deliberately rebuilds only the safe documentation, guardrail, and workflow subset after #65 was closed without merge; #65's Current Session, database/configuration, and legacy-frontend changes are not included.
+
 Auto-generated from git commit history.
 
 Latest commit date: 2026-04-05

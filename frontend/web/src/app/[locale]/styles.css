@@ -1,0 +1,141 @@
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  color: #192d2a;
+  background: #f8faf9;
+}
+header {
+  display: flex;
+  gap: 2rem;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #d9e3df;
+  flex-wrap: wrap;
+}
+nav {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+a {
+  color: #14604d;
+}
+main {
+  max-width: 64rem;
+  margin: 3rem auto;
+  padding: 0 1.5rem;
+}
+h1 {
+  font-size: 2rem;
+}
+
+.sign-in {
+  display: grid;
+  gap: 1rem;
+  max-width: 24rem;
+}
+.sign-in label {
+  display: grid;
+  gap: 0.4rem;
+}
+.sign-in input,
+.sign-in button {
+  font: inherit;
+  padding: 0.6rem;
+}
+
+.catalog-manager {
+  display: grid;
+  gap: 2rem;
+}
+.catalog-manager form {
+  display: grid;
+  gap: 0.75rem;
+  max-width: 32rem;
+  padding: 1rem;
+  border: 1px solid #d9e3df;
+}
+.catalog-manager label {
+  display: grid;
+  gap: 0.25rem;
+}
+.catalog-manager input,
+.catalog-manager button {
+  font: inherit;
+  padding: 0.5rem;
+}
+
+.partner-access form,
+.partner-create {
+  display: grid;
+  gap: 1rem;
+  max-width: 40rem;
+  margin-block: 1.5rem;
+  padding: 1.25rem;
+  border: 1px solid #d9e3df;
+  border-radius: 0.5rem;
+  background: white;
+}
+.partner-access label {
+  display: grid;
+  gap: 0.4rem;
+}
+.partner-access fieldset label {
+  display: flex;
+  align-items: center;
+  margin-block: 0.5rem;
+}
+.partner-access input,
+.partner-access select,
+.partner-access button {
+  font: inherit;
+  padding: 0.6rem;
+  min-width: 0;
+}
+.partner-access a {
+  overflow-wrap: anywhere;
+}
+
+.storefront-shopping {
+  display: grid;
+  gap: 1.5rem;
+}
+.storefront-shopping section {
+  padding: 1.25rem;
+  border: 1px solid #d9e3df;
+  border-radius: 0.5rem;
+  background: white;
+}
+.storefront-shopping form,
+.storefront-shopping fieldset {
+  display: grid;
+  gap: 1rem;
+  max-width: 36rem;
+}
+.storefront-shopping label {
+  display: grid;
+  gap: 0.3rem;
+}
+.storefront-shopping input,
+.storefront-shopping select,
+.storefront-shopping button {
+  font: inherit;
+  padding: 0.6rem;
+  min-width: 0;
+}
+.storefront-shopping li {
+  margin-block: 0.75rem;
+}
+.storefront-shopping li input {
+  max-width: 5rem;
+}
+.storefront-shopping button {
+  cursor: pointer;
+}
+.storefront-shopping button:disabled {
+  cursor: default;
+}
+.storefront-shopping code {
+  overflow-wrap: anywhere;
+}

@@ -37,3 +37,12 @@ docs/
 specs/
 README.md
 CHANGELOG.md
+
+# Workspace artifacts and local worktrees
+**/node_modules
+**/.next
+**/dist
+**/.turbo
+.worktrees
+.agents
+.codex

@@ -1,5 +1,13 @@
 # FindEg Monorepo Migration Strategy
 
+> **Historical migration evidence:** This archived prototype plan is retained for
+> context only and must not govern new work. Follow the target architecture
+> [documentation](../architecture/README.md) for current decisions. See the
+> [retained-evidence policy](../package-guidance.md#retained-compatibility-evidence-64)
+> for retirement conditions. Frontend pages and themes retain their separate
+> [migration boundary](../frontend-migration.md); this plan does not establish
+> completed legacy runtime retirement or [production certification](../operations/production-readiness.md).
+
 **Feature**: 001-separate-admin-project  
 **Date**: April 2026  
 **Status**: In Progress  
@@ -28,14 +36,14 @@ This document outlines the strategy for migrating the FindEg.com monolithic Next
 
 ### Expected Improvements
 
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| Dashboard build time | 4+ min | <2 min | 50%+ faster |
-| Storefront build time | 4+ min | <2.5 min | 37.5%+ faster |
-| TypeScript compilation | 2-3 min | <30 sec/pkg | 75%+ faster |
-| HMR speed | ~5-10 sec | ~2-5 sec | 50% faster |
-| Dashboard bundle | ~1.2 MB | <500 KB | 58% smaller |
-| Storefront bundle | ~1.5 MB | <800 KB | 47% smaller |
+| Metric                 | Before    | After       | Improvement   |
+| ---------------------- | --------- | ----------- | ------------- |
+| Dashboard build time   | 4+ min    | <2 min      | 50%+ faster   |
+| Storefront build time  | 4+ min    | <2.5 min    | 37.5%+ faster |
+| TypeScript compilation | 2-3 min   | <30 sec/pkg | 75%+ faster   |
+| HMR speed              | ~5-10 sec | ~2-5 sec    | 50% faster    |
+| Dashboard bundle       | ~1.2 MB   | <500 KB     | 58% smaller   |
+| Storefront bundle      | ~1.5 MB   | <800 KB     | 47% smaller   |
 
 ## Architecture Overview
 
@@ -75,6 +83,7 @@ findeg.stationary/
 **Decision**: Backend package is a library imported directly by frontend packages, not a deployed service.
 
 **Rationale**:
+
 - Simplifies deployment (2 apps vs 3 services)
 - Zero network overhead (direct function calls, not HTTP)
 - Type safety across package boundaries
@@ -88,12 +97,14 @@ findeg.stationary/
 **Decision**: All database schema, migrations, and ORM configuration reside in `packages/backend`.
 
 **Rationale**:
+
 - Single Responsibility Principle at package level
 - Clean Architecture compliance (backend = infrastructure, frontends = UI)
 - Prevents migration conflicts
 - Frontend packages import repository interfaces, not ORM directly
 
 **Implementation**:
+
 - Drizzle schema: `packages/backend/src/features/core/infrastructure/persistence/schema/`
 - Migrations: `packages/backend/scripts/migrations/` (or root `scripts/migrations/`)
 - Frontend access: `import { IProductRepository } from '@backend/features/catalog'`
@@ -103,12 +114,14 @@ findeg.stationary/
 **Decision**: Backend package exports JWT token generation/verification; frontend apps consume these utilities.
 
 **Rationale**:
+
 - Stateless design enables independent deployment
 - Works across different domains (`admin.findeg.com`, `shop.findeg.com`)
 - No shared session store (Redis) required
 - Centralized auth logic (DRY principle)
 
 **Security Model**:
+
 - Access tokens: 15-minute expiry
 - Refresh tokens: 7-day expiry with rotation
 - HTTP-only cookies for XSS protection
@@ -119,6 +132,7 @@ findeg.stationary/
 **Decision**: shadcn/ui components duplicated in both frontend packages initially.
 
 **Rationale**:
+
 - Dashboard and storefront can customize independently
 - No shared UI library versioning complexity
 - Simpler initial implementation
@@ -129,6 +143,7 @@ findeg.stationary/
 #### 5. Test Migration: Per-Package Ownership
 
 **Test Distribution**:
+
 - Admin E2E tests → `packages/dashboard/cypress/`
 - Storefront E2E tests → `packages/storefront/cypress/`
 - Backend unit tests → `packages/backend/src/features/*/tests/`
@@ -143,6 +158,7 @@ findeg.stationary/
 **Objective**: Initialize monorepo infrastructure with verified build pipeline.
 
 **Key Tasks**:
+
 1. Install Turborepo globally
 2. Create `turbo.json` with build/dev/lint/test task configuration
 3. Create `pnpm-workspace.yaml` defining three packages
@@ -151,6 +167,7 @@ findeg.stationary/
 6. Verify build caching and HMR in dev mode
 
 **Exit Criteria**:
+
 - ✅ `turbo run build` completes successfully for all packages
 - ✅ Dashboard accessible at `localhost:3001`
 - ✅ Storefront accessible at `localhost:3000`
@@ -161,6 +178,7 @@ findeg.stationary/
 **Objective**: Migrate core features, database layer, and shared utilities to backend package.
 
 **Key Tasks**:
+
 1. Move `src/features/core/`, `src/features/identity/`, `src/features/media/` to `packages/backend/`
 2. Move Drizzle schema files and update `drizzle.config.ts`
 3. Implement repository interfaces (`IUserRepository`, `IProductRepository`, etc.)
@@ -170,6 +188,7 @@ findeg.stationary/
 7. Write unit tests for backend services and repositories
 
 **Exit Criteria**:
+
 - ✅ Backend package exports all repository interfaces
 - ✅ Authentication service functional (JWT token generation/verification)
 - ✅ Backend unit tests pass (>80% coverage)
@@ -182,12 +201,14 @@ findeg.stationary/
 **Objective**: Verify shared code propagation through backend package.
 
 **Key Tasks** (integrated with Phase 1):
+
 1. Test shared code update workflow (modify backend → frontend rebuilds)
 2. Test type safety (backend interface change → frontend compile error)
 3. Document shared code workflow in `quickstart.md`
 4. Add pre-commit hook validating backend exports
 
 **Exit Criteria**:
+
 - ✅ Backend changes trigger frontend rebuilds via Turborepo dependency graph
 - ✅ TypeScript enforces compile-time type safety across packages
 - ✅ Documentation complete for shared code update workflow
@@ -197,6 +218,7 @@ findeg.stationary/
 **Objective**: Migrate admin dashboard to independent package.
 
 **Key Tasks**:
+
 1. Move `src/app/[locale]/admin/` to `packages/dashboard/src/app/[locale]/admin/`
 2. Move `src/features/administration/` to `packages/dashboard/`
 3. Update all imports to use `@backend` instead of relative paths
@@ -206,6 +228,7 @@ findeg.stationary/
 7. Configure dashboard-specific environment variables
 
 **Exit Criteria**:
+
 - ✅ Dashboard builds in <2 minutes
 - ✅ All admin E2E tests pass (zero regression)
 - ✅ Dashboard bundle <500KB gzipped (no storefront code)
@@ -218,6 +241,7 @@ findeg.stationary/
 **Objective**: Migrate customer-facing storefront to independent package.
 
 **Key Tasks**:
+
 1. Move `src/app/[locale]/(storefront)/`, `(auth)/`, `(school-list)/` to `packages/storefront/`
 2. Move `src/features/cart/`, `catalog/`, `order/`, `review/`, `school/`, `notifications/` to storefront
 3. Update imports to use `@backend`
@@ -227,6 +251,7 @@ findeg.stationary/
 7. Configure storefront environment variables
 
 **Exit Criteria**:
+
 - ✅ Storefront builds in <2.5 minutes
 - ✅ All storefront E2E tests pass (zero regression)
 - ✅ Storefront bundle <800KB gzipped (no admin code)
@@ -239,6 +264,7 @@ findeg.stationary/
 **Objective**: Enable independent deployment pipelines for dashboard and storefront.
 
 **Key Tasks**:
+
 1. Create `.github/workflows/dashboard-deploy.yml`
 2. Create `.github/workflows/storefront-deploy.yml`
 3. Configure separate Vercel projects (or hosting platform)
@@ -248,6 +274,7 @@ findeg.stationary/
 7. Set up monitoring (error tracking, performance)
 
 **Exit Criteria**:
+
 - ✅ Dashboard and storefront have separate CI/CD workflows
 - ✅ Deployments can run independently without affecting each other
 - ✅ Deployments can run in parallel without conflicts
@@ -258,6 +285,7 @@ findeg.stationary/
 **Objective**: Final cleanup, performance validation, and documentation updates.
 
 **Key Tasks**:
+
 1. Remove old `src/` directory after final verification
 2. Update root `package.json`, `tsconfig.json`, `.gitignore`
 3. Remove old Cypress configuration
@@ -268,6 +296,7 @@ findeg.stationary/
 8. Create production deployment plan and rollback script
 
 **Exit Criteria**:
+
 - ✅ All old monolith code removed
 - ✅ All performance targets met
 - ✅ 100% E2E test pass rate
@@ -290,14 +319,14 @@ findeg.stationary/
 
 ### High-Risk Tasks
 
-| Task | Risk | Mitigation |
-|------|------|------------|
-| T031: Database migration | Schema conflicts | Thorough testing in dev environment before production |
-| T073: Admin route imports | 400+ imports to update | Automated refactoring with test verification |
-| T105: Storefront route imports | 500+ imports to update | Automated refactoring with test verification |
-| T096: Dashboard E2E suite | Regression risk | Run tests after every 10-15 tasks |
-| T133: Storefront E2E suite | Regression risk | Run tests incrementally during migration |
-| T156: Old src/ removal | Point of no return | Full E2E test pass before deletion |
+| Task                           | Risk                   | Mitigation                                            |
+| ------------------------------ | ---------------------- | ----------------------------------------------------- |
+| T031: Database migration       | Schema conflicts       | Thorough testing in dev environment before production |
+| T073: Admin route imports      | 400+ imports to update | Automated refactoring with test verification          |
+| T105: Storefront route imports | 500+ imports to update | Automated refactoring with test verification          |
+| T096: Dashboard E2E suite      | Regression risk        | Run tests after every 10-15 tasks                     |
+| T133: Storefront E2E suite     | Regression risk        | Run tests incrementally during migration              |
+| T156: Old src/ removal         | Point of no return     | Full E2E test pass before deletion                    |
 
 ### Testing Strategy
 
@@ -352,15 +381,15 @@ findeg.stationary/
 
 **Total Estimated Duration**: 15-20 days with feature freeze
 
-| Phase | Duration | Can Parallelize |
-|-------|----------|-----------------|
-| Phase 0: Setup | 2-3 days | High |
-| Phase 1: Backend | 3-5 days | Medium |
-| Phase 2: US3 Verification | Integrated | N/A |
-| Phase 3: Dashboard | 4-6 days | ✅ After Phase 1 |
-| Phase 4: Storefront | 4-6 days | ✅ After Phase 1 |
-| Phase 5: Deployment | 2-3 days | Medium |
-| Phase 6: Polish | 2-3 days | Low |
+| Phase                     | Duration   | Can Parallelize  |
+| ------------------------- | ---------- | ---------------- |
+| Phase 0: Setup            | 2-3 days   | High             |
+| Phase 1: Backend          | 3-5 days   | Medium           |
+| Phase 2: US3 Verification | Integrated | N/A              |
+| Phase 3: Dashboard        | 4-6 days   | ✅ After Phase 1 |
+| Phase 4: Storefront       | 4-6 days   | ✅ After Phase 1 |
+| Phase 5: Deployment       | 2-3 days   | Medium           |
+| Phase 6: Polish           | 2-3 days   | Low              |
 
 **Critical Path**: Phase 0 → Phase 1 → (Phase 3 || Phase 4) → Phase 5 → Phase 6
 
@@ -375,11 +404,14 @@ findeg.stationary/
 
 ## References
 
-- **Spec**: [specs/001-separate-admin-project/spec.md](../../specs/001-separate-admin-project/spec.md)
-- **Plan**: [specs/001-separate-admin-project/plan.md](../../specs/001-separate-admin-project/plan.md)
-- **Research**: [specs/001-separate-admin-project/research.md](../../specs/001-separate-admin-project/research.md)
-- **Tasks**: [specs/001-separate-admin-project/tasks.md](../../specs/001-separate-admin-project/tasks.md)
-- **Quickstart**: [specs/001-separate-admin-project/quickstart.md](../../specs/001-separate-admin-project/quickstart.md)
+These historical specs were removed from the working tree. Links below point to
+the last revision before their removal, preserving the original planning evidence.
+
+- **Spec**: [specs/001-separate-admin-project/spec.md](https://github.com/3mrhussein/findeg/blob/e4c0ad51db0e9798ef0f03cb5de410c08f4bf789/specs/001-separate-admin-project/spec.md)
+- **Plan**: [specs/001-separate-admin-project/plan.md](https://github.com/3mrhussein/findeg/blob/e4c0ad51db0e9798ef0f03cb5de410c08f4bf789/specs/001-separate-admin-project/plan.md)
+- **Research**: [specs/001-separate-admin-project/research.md](https://github.com/3mrhussein/findeg/blob/e4c0ad51db0e9798ef0f03cb5de410c08f4bf789/specs/001-separate-admin-project/research.md)
+- **Tasks**: [specs/001-separate-admin-project/tasks.md](https://github.com/3mrhussein/findeg/blob/e4c0ad51db0e9798ef0f03cb5de410c08f4bf789/specs/001-separate-admin-project/tasks.md)
+- **Quickstart**: [specs/001-separate-admin-project/quickstart.md](https://github.com/3mrhussein/findeg/blob/e4c0ad51db0e9798ef0f03cb5de410c08f4bf789/specs/001-separate-admin-project/quickstart.md)
 
 ---
 

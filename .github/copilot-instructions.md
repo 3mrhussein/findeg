@@ -1,0 +1,5 @@
+- no loops/crashes; avoid commands that can hang or flood the terminal.
+- no chained slow network calls in one shell command (`gh issue view`, `gh pr view`, etc.).
+- no large JSON/verbose dumps across many issues in one run; serial calls stall the shell and freeze VS Code.
+- one focused command at a time; prefer `--limit`, `--jq`, or `--web` and keep output tight.
+- if a command is slow/blocking, stop and split it into smaller commands.

@@ -9,18 +9,16 @@
 - [ ] Refactoring
 - [ ] Documentation
 
-## Core Architectural Review Checklist 🏗️
+## Review
 
-_Please verify all architectural boundaries are respected before submitting._
-
-- [ ] **Infrastructure Boundaries:** The apps (`@dashboard`, `@storefront`) **do not** contain any `infrastructure/` imports.
-- [ ] **Duplication Check:** There are no duplicated repository implementations or schema definitions in the frontend apps.
-- [ ] **Package Imports:** All imports from the backend use the structured `@backend/features/[feature]` pattern rather than deep folder traversal.
-- [ ] **Next 16 Caching Compliance:** No `export const dynamic = "force-dynamic"` usage in `cacheComponents` routes. Dynamic accesses (`params`, `searchParams`, `cookies()`) are correctly wrapped in `<Suspense>` boundaries.
-- [ ] **Pure TypeScript Backend:** The `@backend` package contains zero Next.js/React framework dependencies.
+- [ ] Correct base and merge method: ticket → `develop` (squash), promotion → `main` (merge commit)
+- [ ] Linked the issue; blocking tickets are merged
+- [ ] Standards and Spec reviews completed; findings addressed
+- [ ] Relevant canonical documents updated (see `docs/architecture/README.md`)
 
 ## Testing
 
-- [ ] Unit Tests pass (`npm run test`)
-- [ ] Build & Type-check pass (`npm run type-check && pnpm build`)
-- [ ] E2E Tests pass
+- [ ] `pnpm quality:check` and `pnpm security:check` pass
+- [ ] Documentation gate passes; production certification evidence reviewed when applicable
+
+<!-- Include focused test evidence and applicable migration/build/journey checks. -->

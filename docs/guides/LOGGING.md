@@ -1,5 +1,7 @@
 # Logging Guide
 
+> Historical prototype compatibility evidence; this guide does not govern target development. See [supported ownership and retirement boundaries](../package-guidance.md#retained-compatibility-evidence-64).
+
 ## Overview
 
 FindEg uses dual logging:
@@ -23,10 +25,10 @@ FindEg uses dual logging:
 ## Usage
 
 ```ts
-import { getServices } from "@server/getServices";
+import { getServices } from '@server/getServices';
 
 const { logger } = getServices();
-logger.info("Processing order", { orderId: 123 });
+logger.info('Processing order', { orderId: 123 });
 ```
 
 ## Operational Checks

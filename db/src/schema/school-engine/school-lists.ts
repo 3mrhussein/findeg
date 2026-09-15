@@ -15,12 +15,12 @@ import {
   jsonb,
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
-import { schoolEngineSchema } from '../schemas';
-import { categories } from '../catalog/categories';
-import { productVariants } from '../catalog/product-variants';
-import { TranslationMap } from '../catalog/types';
+import { schoolEngineSchema } from '../schemas.js';
+import { categories } from '../catalog/categories.js';
+import { productVariants } from '../catalog/product-variants.js';
+import { TranslationMap } from '../catalog/types.js';
 
-import { type MatchRulesDraft } from '../../types';
+import { type MatchRulesDraft } from '../../types/index.js';
 
 /**
  * school_lists Table

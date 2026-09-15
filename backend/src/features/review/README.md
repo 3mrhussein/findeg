@@ -1,5 +1,7 @@
 # Review Feature
 
+> Historical prototype compatibility evidence; this guide does not govern target development. See [supported ownership and retirement boundaries](../../../../docs/package-guidance.md#retained-compatibility-evidence-64).
+
 The **Review Feature** enables customers to generate Trust signals via verified feedback and ratings. It encapsulates moderation workflows, shielding the public storefront from spam.
 
 ## 🎯 Core Responsibilities

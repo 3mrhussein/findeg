@@ -15,6 +15,97 @@
       "when": 1787929200000,
       "tag": "0001_current_session_authorization_version",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1789153628758,
+      "tag": "0002_portal_sessions",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1789170619066,
+      "tag": "0003_partner_memberships",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1789174200000,
+      "tag": "0004_school_supply_list_publications",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1789195200000,
+      "tag": "0005_guest_checkout",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1789210800000,
+      "tag": "0006_outbox_delivery",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1789228800000,
+      "tag": "0007_list_selections",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1789232400000,
+      "tag": "0008_partner_reward_events",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1789416000000,
+      "tag": "0009_reward_entitlements",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1789419600000,
+      "tag": "0010_cod_lifecycle",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1789423200000,
+      "tag": "0011_partner_report_views",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1789426800000,
+      "tag": "0012_partner_reward_workflows",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1789430400000,
+      "tag": "0013_reward_event_values",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1789434000000,
+      "tag": "0014_school_supply_list_class_section",
+      "breakpoints": true
     }
   ]
 }

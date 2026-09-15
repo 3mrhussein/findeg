@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url';
 import jsdoc from 'eslint-plugin-jsdoc';
 import prettier from 'eslint-plugin-prettier';
 import prettierConfig from 'eslint-config-prettier';
@@ -23,7 +24,15 @@ export const shared = [
       'jsdoc/check-syntax': 'warn',
       'jsdoc/no-undefined-types': 'warn',
 
-      'prettier/prettier': 'error',
+      'prettier/prettier': [
+        'error',
+        {},
+        {
+          fileInfoOptions: {
+            ignorePath: fileURLToPath(new URL('../../../.prettierignore', import.meta.url)),
+          },
+        },
+      ],
     },
   },
 ];

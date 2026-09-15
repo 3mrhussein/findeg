@@ -1,5 +1,13 @@
 ## Agent skills
 
+Before using or updating repository skills, read `docs/agents/skills.md` for
+local workflow precedence and maintenance.
+
+### Git workflow
+
+Before starting a ticket, creating a worktree, or opening or merging a PR, read
+`CONTRIBUTING.md` for branch targets, session isolation, and promotion rules.
+
 ### Issue tracker
 
 Issues and specs live in GitHub Issues for this repository. See `docs/agents/issue-tracker.md`.

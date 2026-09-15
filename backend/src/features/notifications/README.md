@@ -1,5 +1,7 @@
 # Notifications Feature
 
+> Historical prototype compatibility evidence; this guide does not govern target development. See [supported ownership and retirement boundaries](../../../../docs/package-guidance.md#retained-compatibility-evidence-64).
+
 The **Notifications Feature** controls all outbound transactional communication. Rather than letting every module (like `order` or `identity`) natively handle SMTP keys, this module centralizes the message bus.
 
 ## 🎯 Core Responsibilities

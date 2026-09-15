@@ -1,5 +1,7 @@
 # School Feature
 
+> Historical prototype compatibility evidence; this guide does not govern target development. See [supported ownership and retirement boundaries](../../../../docs/package-guidance.md#retained-compatibility-evidence-64).
+
 The **School Feature** manages the highly governed B2B segment of FindEg. It orchestrates secure Access Tokens linking physical users to curated supply lists mapped directly from the Catalog.
 
 ## 🎯 Core Responsibilities

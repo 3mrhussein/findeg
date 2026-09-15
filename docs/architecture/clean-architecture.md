@@ -1,5 +1,7 @@
 ## Localization In Clean Architecture
 
+> Historical prototype compatibility evidence; this guide does not govern target development. See [supported ownership and retirement boundaries](../package-guidance.md#retained-compatibility-evidence-64).
+
 ### Rule: Repositories Are Locale-Unaware
 
 Repositories return raw domain objects with all JSONB localized
@@ -93,10 +95,10 @@ Instead, apps import directly via the package name to enforce context boundaries
 
 ```typescript
 // ✅ Allowed (resolves through package.json exports)
-import { createStorefrontServices } from "@backend/features/catalog";
+import { createStorefrontServices } from '@backend/features/catalog';
 
 // ❌ Forbidden (TypeScript and Node will throw configuration errors)
-import { DrizzleProductRepository } from "@backend/features/catalog/infrastructure/...";
+import { DrizzleProductRepository } from '@backend/features/catalog/infrastructure/...';
 ```
 
 ### 3. Bundling Optimization: `serverExternalPackages`

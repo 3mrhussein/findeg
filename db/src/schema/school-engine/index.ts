@@ -1,3 +1,3 @@
-export * from './school-lists';
-export * from './school-list-sessions';
-export * from './school-access';
+export * from './school-lists.js';
+export * from './school-list-sessions.js';
+export * from './school-access.js';
