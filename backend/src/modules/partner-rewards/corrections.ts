@@ -1,4 +1,4 @@
-import { summarizeRewardLedger, summarizeRewardStatement } from './accounting.js';
+import { summarizeRewardLedger, summarizeRewardStatement, minor, format } from './accounting.js';
 import type { PartnerRewardEvent, PartnerRewardCorrectionInput } from './contracts.js';
 
 /** Shared correction eligibility for domain callers and transaction-bound persistence. */
@@ -28,11 +28,6 @@ export function canCorrectReward(
 }
 
 export type ValuedRewardEvent = PartnerRewardEvent & { readonly value: string | null };
-const minor = (value: string) => BigInt(value.replace('.', ''));
-const format = (value: bigint) => {
-  const absolute = value < 0n ? -value : value;
-  return `${value < 0n ? '-' : ''}${absolute / 100n}.${String(absolute % 100n).padStart(2, '0')}`;
-};
 
 /** Allocate recorded piasters, rounding half up; the final portion receives the exact remainder. */
 export function allocateRewardValue(value: string, points: bigint, totalPoints: bigint): string {

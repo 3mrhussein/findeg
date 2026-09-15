@@ -45,7 +45,13 @@ export interface PartnerRewardAccess {
 const isPositiveInteger = (value: unknown): value is number =>
   typeof value === 'number' && Number.isFinite(value) && value >= 0 && Number.isInteger(value);
 
-export { summarizeRewardLedger, summarizeRewardStatement } from './accounting.js';
+export {
+  summarizeRewardLedger,
+  summarizeRewardStatement,
+  toValuedRewardEvent,
+  minor,
+  format,
+} from './accounting.js';
 import { summarizeRewardLedger } from './accounting.js';
 import { canCorrectReward } from './corrections.js';
 

@@ -24,6 +24,17 @@ to the owning runtime adapter when that adapter is introduced.
 See [Guest Checkout](guest-checkout.md) for ordinary Cart operations, retry behavior,
 verification and the #59 delivery dependency.
 
+## Local development convenience script
+
+`pnpm local:up` (`scripts/local-up.mjs`) wraps the manual steps below for a
+developer's own machine: it generates `.env.local` with disposable local
+credentials if none exists, ensures Docker and Postgres are up, installs
+dependencies, compiles the runtime, migrates, and starts `pnpm dev` — with
+colorized step-by-step output and actionable error messages. It is not part
+of the executable foundation or CI path below; it exists to remove manual
+setup friction for local iteration. Run `pnpm local:up --help` for its
+`--reset`, `--skip-install`, and `--no-dev` options.
+
 ## Local test prerequisites
 
 `pnpm docker:ensure` checks the Docker engine and starts Docker Desktop on macOS.

@@ -14,6 +14,22 @@ The original Storefront and Dashboard sources, pages, themes, assets, and tests 
 
 ## Development
 
+### Quick start
+
+```sh
+pnpm local:up
+```
+
+This generates `.env.local` with local dev credentials (skipped if one already
+exists), starts Docker and Postgres, installs dependencies, compiles the
+runtime, runs migrations, and starts the web app on port 3000 — in that order,
+with colorized progress and clear errors. It's safe to rerun on any machine.
+Run `pnpm local:up --help` for options (`--reset` for a fresh database,
+`--skip-install`, `--no-dev` to provision without starting the server). See
+[scripts/local-up.mjs](scripts/local-up.mjs).
+
+### Manual steps
+
 Use the Node version in `.nvmrc` and pnpm `11.24.0` from `package.json`.
 Supply `DATABASE_URL` and optional `DB_SSL` in the process environment. To use
 local PostgreSQL, set `DB_USER`, `DB_PASSWORD`, `DB_NAME`, and `DB_PORT` for

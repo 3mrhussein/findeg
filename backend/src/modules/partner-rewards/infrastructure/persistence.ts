@@ -12,10 +12,12 @@ import {
   canCorrectReward,
   correctionValue,
   allocateRewardValue,
+  toValuedRewardEvent,
+  minor,
+  format,
   type ValuedRewardEvent,
   type DurablePartnerRewardStore,
 } from '../public.js';
-import type { PartnerRewardEvent } from '../contracts.js';
 
 function rateSnapshot(rate: typeof partnerRewardRates.$inferSelect) {
   return {
@@ -91,13 +93,7 @@ export function bindPartnerRewardStore(database: TransactionDatabase): DurablePa
       )
       .orderBy(asc(partnerRewardEvents.id));
     return rows.map(({ event: row, value }): ValuedRewardEvent => ({
-      value,
-      partnerId: row.businessPartnerId,
-      orderReference: row.orderReference,
-      eventType: row.eventType as PartnerRewardEvent['eventType'],
-      points: row.points,
-      ...(row.pendingPoints === null ? {} : { pendingPoints: row.pendingPoints }),
-      ...(row.earnedPoints === null ? {} : { earnedPoints: row.earnedPoints }),
+      ...toValuedRewardEvent({ ...row, value }),
       ...(row.conversionRate === null ? {} : { conversionRate: Number(row.conversionRate) }),
       ...(row.fulfillment === null
         ? {}
@@ -110,7 +106,6 @@ export function bindPartnerRewardStore(database: TransactionDatabase): DurablePa
         : { verifiedBankAccountId: row.verifiedBankAccountId }),
       ...(row.settlementReference === null ? {} : { settlementReference: row.settlementReference }),
       ...(row.reason === null ? {} : { reason: row.reason }),
-      createdAt: row.createdAt,
     }));
   };
   return {
@@ -142,8 +137,7 @@ export function bindPartnerRewardStore(database: TransactionDatabase): DurablePa
             ? null
             : allocateRewardValue(balance.value, BigInt(points), balance.points);
         if (value !== null && balance.value !== null) {
-          const remainder = BigInt(balance.value.replace('.', '')) - BigInt(value.replace('.', ''));
-          balance.value = `${remainder / 100n}.${String(remainder % 100n).padStart(2, '0')}`;
+          balance.value = format(minor(balance.value) - minor(value));
         }
         balance.points -= BigInt(points);
         await database

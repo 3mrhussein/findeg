@@ -15,6 +15,7 @@
     "typegen": "pnpm --filter @findeg/web exec next typegen",
     "quality:check": "pnpm runtime:build && pnpm lint && pnpm architecture:check && pnpm test:architecture && pnpm typegen && pnpm type-check && pnpm test && pnpm test:runtime",
     "docker:ensure": "node scripts/ensure-docker.mjs",
+    "local:up": "node scripts/local-up.mjs",
     "db:run": "docker compose up -d postgres",
     "db:reset": "docker compose down -v",
     "clean": "turbo run clean && rm -rf node_modules .turbo",

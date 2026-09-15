@@ -2,7 +2,7 @@ import { and, eq, lt, gte } from 'drizzle-orm';
 import type { TransactionDatabase } from '@findeg/db/transactions';
 import { partnerReportEvents, partnerReportSales } from '@findeg/db/modules/partner-reports';
 import type { PartnerReportStore } from '../public.js';
-import type { PartnerRewardEvent } from '../../partner-rewards/contracts.js';
+import { toValuedRewardEvent } from '../../partner-rewards/public.js';
 
 export function bindPartnerReportStore(database: TransactionDatabase): PartnerReportStore {
   return {
@@ -17,16 +17,7 @@ export function bindPartnerReportStore(database: TransactionDatabase): PartnerRe
           ),
         )
         .orderBy(partnerReportEvents.id);
-      return rows.map((row) => ({
-        partnerId: row.businessPartnerId,
-        orderReference: row.orderReference,
-        eventType: row.eventType as PartnerRewardEvent['eventType'],
-        points: row.points,
-        pendingPoints: row.pendingPoints ?? undefined,
-        earnedPoints: row.earnedPoints ?? undefined,
-        createdAt: row.createdAt,
-        value: row.value,
-      }));
+      return rows.map(toValuedRewardEvent);
     },
     async salesDuring(partnerId, start, end) {
       return database

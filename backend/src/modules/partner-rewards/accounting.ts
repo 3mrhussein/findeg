@@ -1,4 +1,32 @@
-import type { PartnerRewardEvent, PartnerRewardSummary, RewardStatement } from './contracts.js';
+import type {
+  PartnerRewardEvent,
+  PartnerRewardEventType,
+  PartnerRewardSummary,
+  RewardStatement,
+} from './contracts.js';
+
+/** Shared row shape read by both partner-rewards and partner-reports persistence. */
+export function toValuedRewardEvent(row: {
+  readonly businessPartnerId: number;
+  readonly orderReference: string;
+  readonly eventType: string;
+  readonly points: number;
+  readonly pendingPoints: number | null;
+  readonly earnedPoints: number | null;
+  readonly createdAt: Date;
+  readonly value: string | null;
+}): PartnerRewardEvent & { readonly value: string | null } {
+  return {
+    partnerId: row.businessPartnerId,
+    orderReference: row.orderReference,
+    eventType: row.eventType as PartnerRewardEventType,
+    points: row.points,
+    ...(row.pendingPoints === null ? {} : { pendingPoints: row.pendingPoints }),
+    ...(row.earnedPoints === null ? {} : { earnedPoints: row.earnedPoints }),
+    createdAt: row.createdAt,
+    value: row.value,
+  };
+}
 
 type AmountEvent = Pick<PartnerRewardEvent, 'partnerId' | 'orderReference' | 'eventType'> & {
   amount: bigint;
@@ -72,7 +100,11 @@ export function summarizeRewardLedger(events: readonly PartnerRewardEvent[]): Pa
     available: Number(totals.available),
   };
 }
-const egp = (value: bigint) => `${value / 100n}.${String(value % 100n).padStart(2, '0')}`;
+export const minor = (value: string) => BigInt(value.replace('.', ''));
+export const format = (value: bigint) => {
+  const absolute = value < 0n ? -value : value;
+  return `${value < 0n ? '-' : ''}${absolute / 100n}.${String(absolute % 100n).padStart(2, '0')}`;
+};
 function display(totals: ReturnType<typeof summarize>, format: (value: bigint) => string) {
   return {
     pending: format(totals.pending),
@@ -90,7 +122,7 @@ export function summarizeRewardStatement(
     return { points, value: null };
   const values = events.map((event) => ({
     ...event,
-    amount: BigInt(event.value!.replace('.', '')),
+    amount: minor(event.value!),
   }));
-  return { points, value: display(summarize(values), egp) };
+  return { points, value: display(summarize(values), format) };
 }
