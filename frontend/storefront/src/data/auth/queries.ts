@@ -1,25 +1,8 @@
-"use cache";
-
-import { cacheLife, cacheTag } from "next/cache";
-import { getSession } from "@lib/session";
-import type { SessionPayload } from "@findeg/backend/features/core";
+import { cache } from 'react';
+import { getSession } from '@lib/session';
 
 /**
- * Cached session query for server components
- *
- * Uses Next.js 16 Cache Components to avoid uncached data access
- * during prerendering/build phase. Critical for auth-dependent pages.
- *
- * @returns Session payload or null if not authenticated
+ * Deduplicate session reads within one server render. Session cookies belong
+ * to the current request and must never enter the shared Next.js data cache.
  */
-export async function getCachedSession(): Promise<SessionPayload | null> {
-    cacheLife("hours");
-    cacheTag("session");
-
-    try {
-        return await getSession();
-    } catch (error) {
-        console.error("[Auth] Failed to get cached session:", error);
-        return null;
-    }
-}
+export const getCachedSession = cache(getSession);
