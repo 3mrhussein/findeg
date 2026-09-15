@@ -2,8 +2,8 @@
 import {
   ISchoolDirectoryService,
   SchoolProfile,
-} from '@findeg/backend/features/school/application/interfaces/ISchoolDirectoryService';
-import { ISchoolAccessService } from '@findeg/backend/features/school/application/interfaces/ISchoolAccessService';
+} from '../interfaces/ISchoolDirectoryService';
+import { ISchoolAccessService } from '../interfaces/ISchoolAccessService';
 import { IParentListService, SchoolListPageData, SessionState, SessionSummary } from '../interfaces/IParentListService';
 import { sessionQueries } from '@findeg/db/queries';
 
