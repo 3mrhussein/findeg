@@ -1,3 +1,4 @@
+import globals from 'globals';
 import { base } from './base.js';
 import { shared } from './shared.js';
 
@@ -6,6 +7,11 @@ export const db = [
   ...shared,
 
   {
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+    },
     rules: {
       'no-restricted-imports': [
         'warn', // IMPORTANT: migration phase
