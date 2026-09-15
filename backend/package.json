@@ -4,6 +4,8 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./features/administration": "./src/features/administration/index.ts",
+    "./features/administration/*": null,
     "./features/order": "./src/features/order/index.ts",
     "./features/order/*": null,
     "./features/*": "./src/features/*"
