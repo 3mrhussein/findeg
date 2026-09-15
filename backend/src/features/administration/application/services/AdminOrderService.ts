@@ -1,7 +1,7 @@
 import { DashboardStats, IAdminOrderService } from '../interfaces/IAdminOrderService';
 import { IAuditLogService } from '../interfaces/IAuditLogService';
 import { IEmailService } from '../../../notifications/application/services/IEmailService';
-import { OrderStatusUpdate } from '@findeg/backend/features/order/application/dtos/OrderStatusUpdate';
+import type { OrderStatusUpdate } from '@findeg/backend/features/order';
 import { PaymentStatus, OrderStatus } from '../../../core/domain/types/common';
 import {
   canTransitionOrderStatus,
