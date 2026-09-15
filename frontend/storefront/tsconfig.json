@@ -12,6 +12,7 @@
       "@features/*": ["./src/features/*"],
       "@data/*": ["./src/data/*"],
       "@app/*": ["./src/app/*"],
+      "@findeg/backend/features/cart": ["../../backend/src/features/cart/index.ts"],
       "@findeg/backend/*": ["../../backend/src/*"],
       "@findeg/env": ["../../packages/env/src"]
     }
