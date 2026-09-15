@@ -1,4 +1,3 @@
-export * from './domain/entities/Cart';
-export * from './application/interfaces/ICartService';
-export * from './application/services/CartService';
-export * from './application/services/factory';
+export type { CartItem } from './domain/entities/Cart';
+export type { ICartService } from './application/interfaces/ICartService';
+export { createCartServices } from './application/services/factory';

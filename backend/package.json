@@ -4,11 +4,22 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./features/*": "./src/features/*",
+    "./features/administration": "./src/features/administration/index.ts",
+    "./features/administration/*": null,
+    "./features/cart": "./src/features/cart/index.ts",
+    "./features/cart/*": null,
     "./features/core": "./src/features/core/index.ts",
-    "./features/core/*": null
+    "./features/core/*": null,
+    "./features/identity": "./src/features/identity/index.ts",
+    "./features/media": "./src/features/media/index.ts",
+    "./features/media/*": null,
+    "./features/notifications": "./src/features/notifications/index.ts",
     "./features/order": "./src/features/order/index.ts",
     "./features/order/*": null,
+    "./features/review": "./src/features/review/index.ts",
+    "./features/review/*": null,
+    "./features/school": "./src/features/school/index.ts",
+    "./features/school/*": null,
     "./features/*": "./src/features/*"
   },
   "scripts": {
