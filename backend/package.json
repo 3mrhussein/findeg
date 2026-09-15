@@ -4,6 +4,7 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./features/identity": "./src/features/identity/index.ts",
     "./features/*": "./src/features/*"
   },
   "scripts": {
