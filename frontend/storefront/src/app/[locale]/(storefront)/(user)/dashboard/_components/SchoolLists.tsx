@@ -4,7 +4,7 @@ import React from 'react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@findeg/ui';
 import { Icon } from '@findeg/ui';
-import type { SchoolListResult } from '@findeg/backend/features/catalog/application/interfaces/ISchoolListRepository';
+import type { SchoolListResult } from '@findeg/backend/features/catalog';
 
 interface SchoolListsProps {
   schoolLists: SchoolListResult[];

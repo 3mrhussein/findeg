@@ -192,3 +192,15 @@ export class ProductEntity {
     return this.product;
   }
 }
+
+// ─── Plain-function accessors for consumers outside the backend package ──────
+// ProductEntity stays internal (ADR-0001: barrels never export concrete
+// classes); these wrap the handful of methods frontend call sites need.
+
+export function isNewProduct(product: Product): boolean {
+  return new ProductEntity(product).isNew();
+}
+
+export function getProductDisplayPrice(product: Product): number {
+  return new ProductEntity(product).getDisplayPrice();
+}

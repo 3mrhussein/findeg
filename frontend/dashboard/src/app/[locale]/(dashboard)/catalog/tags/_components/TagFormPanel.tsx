@@ -22,12 +22,8 @@ import { Label } from '@findeg/ui';
 import { RadioGroup, RadioGroupItem } from '@findeg/ui';
 import { Badge } from '@findeg/ui';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@findeg/ui';
-import {
-  TagInputSchema,
-  type TagInput,
-} from '@findeg/backend/features/catalog/application/dtos/TagInput';
+import { TagInputSchema, type TagInput, Tag } from '@findeg/backend/features/catalog';
 import { slugify } from '@findeg/backend/lib';
-import { Tag } from '@findeg/backend/features/catalog';
 import { cn } from '@lib/utils';
 import { useDebounce } from '@hooks/use-debounce';
 import { useToast } from '@hooks/use-toast';

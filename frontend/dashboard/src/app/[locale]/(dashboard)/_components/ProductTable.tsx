@@ -11,7 +11,7 @@ import { Button } from '@findeg/ui';
 import { IconTooltip } from '@findeg/ui';
 import { MoreHorizontal, Pencil, Trash2, Eye } from 'lucide-react';
 import type { Product } from '@findeg/backend/features/catalog';
-import { ProductEntity } from '@findeg/backend/features/catalog';
+import { isNewProduct } from '@findeg/backend/features/catalog';
 import Image from 'next/image';
 import { Badge } from '@findeg/ui';
 
@@ -78,7 +78,7 @@ export function ProductTable({ products }: ProductTableProps) {
                 <TableCell className="font-medium">
                   <div className="flex flex-col">
                     <span>{product.name}</span>
-                    {new ProductEntity(product).isNew() && (
+                    {isNewProduct(product) && (
                       <Badge variant="secondary" className="w-fit text-[10px] px-1 py-0 h-4 mt-1">
                         NEW
                       </Badge>
