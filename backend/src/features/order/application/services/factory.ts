@@ -9,6 +9,7 @@
  */
 
 import { OrderService } from './OrderService';
+import type { IOrderService } from '../interfaces/IOrderService';
 
 /**
  * Create order services with all dependencies wired
@@ -30,7 +31,7 @@ import { OrderService } from './OrderService';
  * }
  * ```
  */
-export function createOrderServices() {
+export function createOrderServices(): OrderServices {
   // Create services (no arguments - they use query primitives directly)
   return {
     orders: new OrderService(),
@@ -40,4 +41,6 @@ export function createOrderServices() {
 /**
  * Type helper for order services
  */
-export type OrderServices = ReturnType<typeof createOrderServices>;
+export interface OrderServices {
+  orders: IOrderService;
+}
