@@ -1,12 +1,14 @@
-// ========================================
-// DOMAIN LAYER EXPORTS
-// ========================================
-export * from './domain/entities/Review';
-
-// ========================================
-// APPLICATION LAYER EXPORTS
-// ========================================
-export * from './application/interfaces/IReviewRepository';
-export * from './application/interfaces/IReviewService';
-export * from './application/services/ReviewService';
-export * from './application/services/factory';
+export type { Review } from './domain/entities/Review';
+export type {
+  IReviewRepository,
+  ProductReviewFilters,
+  ProductReviewSummary,
+} from './application/interfaces/IReviewRepository';
+export type {
+  IReviewService,
+  ProductReviewQuery,
+  ProductReviewListResult,
+  ReviewEligibility,
+  CreateReviewInput,
+} from './application/interfaces/IReviewService';
+export { createReviewServices } from './application/services/factory';
