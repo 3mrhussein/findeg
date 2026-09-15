@@ -16,6 +16,4 @@ export type {
   SchoolListPageData,
   IParentListService,
 } from './application/interfaces/IParentListService';
-export type { IParentSessionRepository } from './application/interfaces/IParentSessionRepository';
-export type { ISchoolAccessRepository } from './application/interfaces/ISchoolAccessRepository';
 export { createSchoolServices } from './application/services/factory';
