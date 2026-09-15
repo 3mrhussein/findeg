@@ -30,7 +30,7 @@ import type { Product } from '@findeg/backend/features/catalog/domain/entities/P
 import type { Order } from '@findeg/backend/features/order';
 import type { SchoolListResult } from '@findeg/backend/features/catalog/application/interfaces/ISchoolListRepository';
 import { usePermissions } from '@providers/PermissionsProvider';
-import { PERMISSION_CODES } from '@findeg/backend/features/core/domain/auth';
+import { PERMISSION_CODES } from '@findeg/backend/features/core';
 
 interface DashboardContentProps {
   products: Product[];

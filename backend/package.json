@@ -8,6 +8,8 @@
     "./features/administration/*": null,
     "./features/cart": "./src/features/cart/index.ts",
     "./features/cart/*": null,
+    "./features/core": "./src/features/core/index.ts",
+    "./features/core/*": null,
     "./features/identity": "./src/features/identity/index.ts",
     "./features/media": "./src/features/media/index.ts",
     "./features/media/*": null,
