@@ -12,6 +12,12 @@
       "@features/*": ["./src/features/*"],
       "@data/*": ["./src/data/*"],
       "@app/*": ["./src/app/*"],
+      // Feature barrels migrated per docs/architecture/BACKEND_BARREL_MIGRATION_PLAN.md
+      // must be listed here ahead of the wildcard below — TS path mapping
+      // (unlike backend/package.json's exports field, which this alias
+      // otherwise bypasses entirely) doesn't fall back to it once a feature
+      // has its own entry.
+      "@findeg/backend/features/media": ["../../backend/src/features/media/index.ts"],
       "@findeg/backend/*": ["../../backend/src/*"],
       "@findeg/env": ["../../packages/env/src"]
     }
