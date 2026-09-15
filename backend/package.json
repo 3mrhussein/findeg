@@ -7,6 +7,9 @@
     "./features/*": "./src/features/*",
     "./features/core": "./src/features/core/index.ts",
     "./features/core/*": null
+    "./features/order": "./src/features/order/index.ts",
+    "./features/order/*": null,
+    "./features/*": "./src/features/*"
   },
   "scripts": {
     "type-check": "tsc --noEmit",

@@ -5,7 +5,7 @@ import { shared } from './shared.js';
 // is the only sanctioned import path. Add a feature here as its PR in the
 // barrel migration (docs/architecture/BACKEND_BARREL_MIGRATION_PLAN.md)
 // lands. See docs/adr/0001-backend-feature-barrels.md.
-const BARRELED_BACKEND_FEATURES = ['core'];
+const BARRELED_BACKEND_FEATURES = ['core','order'];
 
 export const next = [
   ...base,

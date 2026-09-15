@@ -12,7 +12,7 @@ import {
   CatalogHealthStats,
   CategoryProductDistribution,
 } from '@findeg/backend/features/catalog/application/dtos';
-import { Order } from '@findeg/backend/features/order/domain/entities/Order';
+import type { Order } from '@findeg/backend/features/order';
 
 export interface IAdminDashboardService {
   /**
