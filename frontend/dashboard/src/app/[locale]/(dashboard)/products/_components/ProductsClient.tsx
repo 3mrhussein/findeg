@@ -14,10 +14,10 @@ import {
   bulkDeactivateAction,
   bulkDeleteAction,
 } from '../actions';
-import {
+import type {
   ProductListFilters,
   ProductListResult,
-} from '@findeg/backend/features/administration/application/interfaces/IAdminProductService';
+} from '@findeg/backend/features/administration';
 
 interface ProductsClientProps {
   initialData: ProductListResult;
