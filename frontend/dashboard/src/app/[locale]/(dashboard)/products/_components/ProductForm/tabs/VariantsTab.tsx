@@ -54,7 +54,6 @@ export function VariantsTab() {
         attributes: [],
       } as any);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const addVariant = () => {
