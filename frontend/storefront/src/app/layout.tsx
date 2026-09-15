@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { Suspense, type ReactNode } from 'react';
 import { Inter, Cairo } from 'next/font/google';
 import { cn } from '@lib/utils';
 import { getLocale } from 'next-intl/server';
@@ -15,7 +15,21 @@ const cairo = Cairo({
   variable: '--font-cairo',
 });
 
-export default async function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
+  return (
+    <Suspense
+      fallback={
+        <html lang="en">
+          <body />
+        </html>
+      }
+    >
+      <LocalizedDocument>{children}</LocalizedDocument>
+    </Suspense>
+  );
+}
+
+async function LocalizedDocument({ children }: { children: ReactNode }) {
   const locale = await getLocale();
   const direction = locale === 'ar' ? 'rtl' : 'ltr';
 
