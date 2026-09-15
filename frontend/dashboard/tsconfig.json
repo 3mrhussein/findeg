@@ -20,6 +20,7 @@
       // otherwise bypasses entirely) doesn't fall back to it once a feature
       // has its own entry.
       "@findeg/backend/features/administration": ["../../backend/src/features/administration/index.ts"],
+      "@findeg/backend/features/cart": ["../../backend/src/features/cart/index.ts"],
       "@findeg/backend/features/identity": ["../../backend/src/features/identity/index.ts"],
       "@findeg/backend/features/media": ["../../backend/src/features/media/index.ts"],
       "@findeg/backend/features/notifications": ["../../backend/src/features/notifications/index.ts"],
