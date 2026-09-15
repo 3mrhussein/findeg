@@ -27,7 +27,7 @@ import { DashboardToast } from './DashboardToast';
 import { DashboardSidebar, type DashboardView } from './DashboardSidebar';
 import { DashboardHeader } from './DashboardHeader';
 import type { Product } from '@findeg/backend/features/catalog/domain/entities/Product';
-import type { Order } from '@findeg/backend/features/order/domain/entities/Order';
+import type { Order } from '@findeg/backend/features/order';
 import type { SchoolListResult } from '@findeg/backend/features/catalog/application/interfaces/ISchoolListRepository';
 import { usePermissions } from '@providers/PermissionsProvider';
 import { PERMISSION_CODES } from '@findeg/backend/features/core/domain/auth';
