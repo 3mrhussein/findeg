@@ -7,6 +7,17 @@
  * Architecture: Backend exports pure TS factories → Apps create data layer with actions
  */
 
+import type { IAdminProductService } from '../interfaces/IAdminProductService';
+import type { IAdminCategoryService } from '../interfaces/IAdminCategoryService';
+import type { IAdminBrandService } from '../interfaces/IAdminBrandService';
+import type { IAdminTagService } from '../interfaces/IAdminTagService';
+import type { IAdminCollectionService } from '../interfaces/IAdminCollectionService';
+import type { IAdminInventoryService } from '../interfaces/IAdminInventoryService';
+import type { IAdminOrderService } from '../interfaces/IAdminOrderService';
+import type { IAdminDashboardService } from '../interfaces/IAdminDashboardService';
+import type { IAuditLogService } from '../interfaces/IAuditLogService';
+import type { IProductImportService } from '../interfaces/IProductImportService';
+
 // Admin services
 import { AdminProductService } from './AdminProductService';
 import { AdminCategoryService } from './AdminCategoryService';
@@ -41,7 +52,7 @@ import { IEmailService } from '@findeg/backend/features/notifications';
  * }
  * ```
  */
-export function createAdministrationServices() {
+export function createAdministrationServices(): AdministrationServices {
   // Create audit log service (used by many admin services)
   const auditLogService = new AuditLogService();
 
@@ -58,18 +69,15 @@ export function createAdministrationServices() {
     tags: new AdminTagService(auditLogService),
     collections: new AdminCollectionService(auditLogService),
     inventory: new AdminInventoryService(auditLogService),
-    orders: new AdminOrderService(
-      auditLogService,
-      {
-        // No-op email service - apps can override with real implementation
-        sendOrderConfirmation: async () => { },
-        sendOrderStatusUpdate: async () => { },
-        sendPasswordReset: async () => { },
-        sendSchoolListAccessApproved: async () => { },
-        sendSchoolListAccessRequest: async () => { },
-        sendAdminInvitation: async () => { },
-      } as IEmailService,
-    ),
+    orders: new AdminOrderService(auditLogService, {
+      // No-op email service - apps can override with real implementation
+      sendOrderConfirmation: async () => {},
+      sendOrderStatusUpdate: async () => {},
+      sendPasswordReset: async () => {},
+      sendSchoolListAccessApproved: async () => {},
+      sendSchoolListAccessRequest: async () => {},
+      sendAdminInvitation: async () => {},
+    } as IEmailService),
     dashboard: new AdminDashboardService(),
     auditLog: auditLogService,
     productImport: new ProductImportService(adminProductService),
@@ -79,4 +87,15 @@ export function createAdministrationServices() {
 /**
  * Type helper for administration services
  */
-export type AdministrationServices = ReturnType<typeof createAdministrationServices>;
+export interface AdministrationServices {
+  products: IAdminProductService;
+  categories: IAdminCategoryService;
+  brands: IAdminBrandService;
+  tags: IAdminTagService;
+  collections: IAdminCollectionService;
+  inventory: IAdminInventoryService;
+  orders: IAdminOrderService;
+  dashboard: IAdminDashboardService;
+  auditLog: IAuditLogService;
+  productImport: IProductImportService;
+}

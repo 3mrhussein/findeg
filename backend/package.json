@@ -4,7 +4,10 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./features/administration": "./src/features/administration/index.ts",
+    "./features/administration/*": null,
     "./features/media": "./src/features/media/index.ts",
+    "./features/media/*": null,
     "./features/order": "./src/features/order/index.ts",
     "./features/order/*": null,
     "./features/*": "./src/features/*"
