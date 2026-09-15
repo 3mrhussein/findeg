@@ -13,7 +13,7 @@ import {
 import { Card, CardContent } from '@findeg/ui';
 import { Badge } from '@findeg/ui';
 import { Button } from '@findeg/ui';
-import { AccessState } from '@findeg/backend/features/school/application/interfaces/ISchoolAccessService';
+import type { AccessState } from '@findeg/backend/features/school';
 
 interface ListAccessCardProps {
   list: any; // Type from schoolLists table

@@ -26,6 +26,7 @@
       "@findeg/backend/features/notifications": ["../../backend/src/features/notifications/index.ts"],
       "@findeg/backend/features/order": ["../../backend/src/features/order/index.ts"],
       "@findeg/backend/features/review": ["../../backend/src/features/review/index.ts"],
+      "@findeg/backend/features/school": ["../../backend/src/features/school/index.ts"],
       "@findeg/backend/*": ["../../backend/src/*"],
       "@findeg/env": ["../../packages/env/src"]
     }

@@ -16,6 +16,8 @@
     "./features/order/*": null,
     "./features/review": "./src/features/review/index.ts",
     "./features/review/*": null,
+    "./features/school": "./src/features/school/index.ts",
+    "./features/school/*": null,
     "./features/*": "./src/features/*"
   },
   "scripts": {
