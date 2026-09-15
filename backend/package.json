@@ -6,6 +6,8 @@
     ".": "./src/index.ts",
     "./features/review": "./src/features/review/index.ts",
     "./features/review/*": null,
+    "./features/order": "./src/features/order/index.ts",
+    "./features/order/*": null,
     "./features/*": "./src/features/*"
   },
   "scripts": {

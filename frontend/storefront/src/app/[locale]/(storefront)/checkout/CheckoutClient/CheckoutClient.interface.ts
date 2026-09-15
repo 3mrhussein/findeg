@@ -2,7 +2,7 @@
  * CheckoutClient — shared types & interfaces
  */
 
-import { type CheckoutPrefillData } from '@findeg/backend/features/order/application/services/OrderService';
+import { type CheckoutPrefillData } from '@findeg/backend/features/order';
 
 export interface CheckoutTotals {
   subtotal: number;
