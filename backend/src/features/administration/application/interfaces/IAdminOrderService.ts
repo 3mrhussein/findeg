@@ -1,6 +1,4 @@
-import { Order } from '@findeg/backend/features/order/domain/entities/Order';
-import { OrderStatusUpdate } from '@findeg/backend/features/order/application/dtos';
-import { OrderFilters } from '@findeg/backend/features/order/application/interfaces/IOrderRepository';
+import type { Order, OrderStatusUpdate, OrderFilters } from '@findeg/backend/features/order';
 import { PaymentStatus, OrderStatus } from '@findeg/backend/features/core/domain/types/common';
 
 export interface DashboardStats {

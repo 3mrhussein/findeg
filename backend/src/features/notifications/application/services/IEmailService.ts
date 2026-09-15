@@ -1,4 +1,4 @@
-import { Order } from '@findeg/backend/features/order/domain/entities/Order';
+import type { Order } from '@findeg/backend/features/order';
 
 /**
  * Minimal DTOs for emails related to types not yet fully modeled in the domain.
