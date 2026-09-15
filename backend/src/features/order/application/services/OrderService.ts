@@ -2,19 +2,7 @@ import { type ID } from '@findeg/backend/features/core/domain/types/common';
 import { type Order } from '../../domain/entities/Order';
 import { orderQueries, type OrderRow, type OrderItemRow } from '@findeg/db/queries';
 import { ShippingAddress } from '../../domain/value-objects';
-
-export interface CheckoutPrefillData {
-  fullName: string;
-  guestEmail: string;
-  phone: string;
-  city: string;
-  area: string;
-  street: string;
-  building: string;
-  floor: string;
-  apartment: string;
-  notes: string;
-}
+import type { IOrderService } from '../interfaces/IOrderService';
 
 /**
  * Order Service - Pure TypeScript
@@ -22,7 +10,7 @@ export interface CheckoutPrefillData {
  * Provides order query and retrieval functionality.
  * For admin operations (status updates), use AdminOrderService from administration feature.
  */
-export class OrderService {
+export class OrderService implements IOrderService {
   constructor() { }
 
   private mapToDomain(

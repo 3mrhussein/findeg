@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@findeg/ui';
 import { Checkbox } from '@findeg/ui';
 import { ProductRow } from './ProductRow';
-import { ProductListItem } from '@findeg/backend/features/administration/application/interfaces/IAdminProductService';
+import type { ProductListItem } from '@findeg/backend/features/administration';
 
 interface ProductsTableProps {
   products: ProductListItem[];
