@@ -15,7 +15,7 @@ import { useRouter } from '@i18n/navigation';
 import { useTranslations, useLocale } from 'next-intl';
 import { Logo } from '@findeg/ui';
 import { Icon } from '@findeg/ui';
-import { PERMISSION_CODES } from '@findeg/backend/features/core/domain/auth';
+import { PERMISSION_CODES } from '@findeg/backend/features/core';
 import { usePermissions } from '@providers/PermissionsProvider';
 import {
   Sidebar,
