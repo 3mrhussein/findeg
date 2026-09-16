@@ -49,7 +49,7 @@ export function handleDomainError(error: unknown, context?: string): Response | 
   // Route by error type
   switch (domainError.code) {
     case 'NOT_AUTHENTICATED':
-      redirect({ href: '/login', locale: 'en' });
+      return redirect({ href: '/login', locale: 'en' });
 
     case 'NOT_AUTHORIZED':
       return new Response(JSON.stringify({ error: 'Not authorized' }), {
