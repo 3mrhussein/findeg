@@ -5,7 +5,7 @@ import { Link } from '@i18n/navigation';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@findeg/ui';
 import ToggleLanguage from './ToggleLanguage';
 import { ToggleTheme } from '@findeg/ui';
-import { Menu, User, LayoutDashboard } from 'lucide-react';
+import { Menu, User } from 'lucide-react';
 import { useUser } from '@hooks/useUser';
 import { useTranslations } from 'next-intl';
 
@@ -14,7 +14,7 @@ import { useTranslations } from 'next-intl';
  */
 export function HeaderNavClient() {
   const [open, setOpen] = useState(false);
-  const { isLoggedIn, currentUser, isLoading } = useUser();
+  const { isLoggedIn, currentUser } = useUser();
   const t = useTranslations('Nav');
 
   return (

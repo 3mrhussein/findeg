@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { setRequestLocale } from 'next-intl/server';
 import { BrandsContent } from './_components/BrandsContent';
 import { routing } from '@i18n/routing';
 

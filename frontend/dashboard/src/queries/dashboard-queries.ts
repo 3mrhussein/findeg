@@ -15,7 +15,7 @@ import { cacheLife, cacheTag } from 'next/cache';
 /**
  * Get dashboard data for authenticated user
  */
-export async function getDashboardDataQuery(locale: string) {
+export async function getDashboardDataQuery(_locale: string) {
   cacheLife('minutes');
   cacheTag('dashboard');
 
@@ -40,7 +40,7 @@ export async function getMyAccountDataQuery(userId: number) {
 /**
  * Get order detail for authenticated user
  */
-export async function getMyOrderDetailQuery(orderId: number, locale: string) {
+export async function getMyOrderDetailQuery(orderId: number, _locale: string) {
   cacheLife('minutes');
   cacheTag(`order-${orderId}`);
 

@@ -39,7 +39,6 @@ import { CategoryFormPanel } from './CategoryFormPanel';
 import { CategoryDrawer } from './CategoryDrawer';
 import { EmptyState } from '@findeg/ui';
 import {
-  checkCategorySlugAvailableAction as checkSlugAvailableAction,
   moveCategoryUpAction as moveCategoryUp,
   moveCategoryDownAction as moveCategoryDown,
 } from '@data/categories/actions';

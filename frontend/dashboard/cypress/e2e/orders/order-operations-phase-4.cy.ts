@@ -123,12 +123,6 @@ describe('Order Operations - Phase 4 Cache Revalidation', () => {
       // Navigate to orders
       cy.visit('/admin/orders');
 
-      // Record initial order count
-      let initialCount = 0;
-      cy.get('table tbody tr').then(($rows) => {
-        initialCount = $rows.length;
-      });
-
       // Open first order and update status
       cy.get('table tbody tr').first().click();
       cy.url().should('match', /\/admin\/orders\/\d+$/);
@@ -152,17 +146,12 @@ describe('Order Operations - Phase 4 Cache Revalidation', () => {
     it('should revalidate individual order detail page after update', () => {
       // Get first order ID from URL after opening it
       cy.visit('/admin/orders');
-      let orderId: string;
 
       cy.get('table tbody tr')
         .first()
         .within(($row) => {
           cy.wrap($row).click();
         });
-
-      cy.url().then((url) => {
-        orderId = url.split('/').pop() || '1';
-      });
 
       // Update order status
       cy.get("select, [role='combobox']").first().click();

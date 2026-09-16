@@ -13,7 +13,7 @@ interface AdminHeaderNotificationsProps {
 }
 
 export function AdminHeaderNotifications({
-  locale = 'en',
+  locale: _locale = 'en',
   initialCount = 0,
 }: AdminHeaderNotificationsProps) {
   const [isOpen, setIsOpen] = React.useState(false);

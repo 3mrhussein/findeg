@@ -8,8 +8,6 @@
 import { getTranslations } from 'next-intl/server';
 import { type Locale } from '@findeg/backend/features/core';
 import {
-  getDashboardData,
-  getRecentOrders,
   getCatalogHealthStats,
   getCategoryProductDistribution,
   getRecentActivity,

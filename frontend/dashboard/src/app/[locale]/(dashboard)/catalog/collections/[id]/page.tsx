@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: CollectionEditPageProps): Pro
  *
  */
 export default async function CollectionEditPage({ params }: CollectionEditPageProps) {
-  const { id } = await params;
+  await params;
 
   // TODO: Replace with data layer queries from @data/collections/queries
   const collection: any = null; // Stubbed - will trigger notFound()

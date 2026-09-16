@@ -5,12 +5,6 @@ import { Badge } from '@findeg/ui';
 import { ScrollArea, ScrollBar } from '@findeg/ui';
 import { Button } from '@findeg/ui';
 
-/**
- * OrderStatus type (local definition)
- */
-type OrderStatus =
-  'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled' | 'refunded';
-
 interface OrderStatusPillsProps {
   statusCounts: Record<string, number>;
   activeStatus: string;

@@ -24,7 +24,7 @@ export function AdminSidebarUserClient({
   userEmail,
   userName,
   userRole,
-  locale = 'en',
+  locale: _locale = 'en',
 }: AdminSidebarUserClientProps) {
   const { isCollapsed } = useSidebar();
 

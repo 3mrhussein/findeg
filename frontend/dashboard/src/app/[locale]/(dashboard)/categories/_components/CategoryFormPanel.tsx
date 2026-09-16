@@ -18,7 +18,7 @@
 'use client';
 
 import * as React from 'react';
-import { useForm, FormProvider, Controller } from 'react-hook-form';
+import { useForm, FormProvider } from 'react-hook-form';
 import { Input } from '@findeg/ui';
 import { Label } from '@findeg/ui';
 import { Switch } from '@findeg/ui';
@@ -92,7 +92,6 @@ export function CategoryFormPanel({
     setValue,
     handleSubmit,
     reset,
-    control,
     formState: { errors },
   } = methods;
 

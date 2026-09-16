@@ -25,7 +25,7 @@ export function ProductRow({
   isSelected,
   onSelectChange,
   onDuplicate,
-  onDelete,
+  onDelete: _onDelete,
 }: ProductRowProps) {
   const t = useTranslations('Administration.Catalog.Products');
 

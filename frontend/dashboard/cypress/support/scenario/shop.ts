@@ -3,7 +3,6 @@ import {
   goToNextPage,
   openHeaderCartDrawer,
   readResultsSummary,
-  visitCategoryPage,
   visitSearchWithQuery,
   visitShopWithQuery,
 } from '../actions/shop.actions';
