@@ -1,3 +1,4 @@
+import globals from 'globals';
 import { base } from './base.js';
 import { shared } from './shared.js';
 
@@ -12,26 +13,14 @@ export const next = [
   ...shared,
 
   {
-    // `files` here isn't scoped to "just this rule": once any config object
-    // matches a .ts/.tsx file, every rule from `base`/`shared` above that
-    // has no `files` restriction of its own (no-undef, no-unused-vars, etc.)
-    // starts applying to that file too. None of them are actually
-    // configured correctly for this codebase yet (missing browser/React
-    // globals, duplicate unused-vars rule, ~1600 pre-existing findings as
-    // of 2026-09 — tracked in issue #101), so they're explicitly turned
-    // off here to keep this rule's rollout isolated. Remove these
-    // overrides once that underlying config gap is fixed.
     files: ['**/*.{js,jsx,ts,tsx,mjs,cjs,mts,cts}'],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+    },
     rules: {
-      'no-undef': 'off',
-      'no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-vars': 'off',
-      '@typescript-eslint/no-explicit-any': 'off',
-      'prettier/prettier': 'off',
-      'no-useless-escape': 'off',
-      'no-redeclare': 'off',
-      'no-fallthrough': 'off',
-
       'no-restricted-imports': [
         'error',
         {
@@ -44,6 +33,21 @@ export const next = [
           ],
         },
       ],
+    },
+  },
+
+  {
+    // Cypress isn't one of the `globals` package's presets; `cy`/`Cypress`
+    // come from the runner itself, `expect` from its bundled chai, and
+    // describe/it/before(Each) from its bundled mocha.
+    files: ['cypress/**/*.{js,ts}', 'cypress.config.ts'],
+    languageOptions: {
+      globals: {
+        ...globals.mocha,
+        ...globals.chai,
+        cy: 'readonly',
+        Cypress: 'readonly',
+      },
     },
   },
 ];
