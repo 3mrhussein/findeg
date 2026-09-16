@@ -17,7 +17,7 @@ interface ListPageClientProps {
 /**
  *
  */
-export function ListPageClient({ list, initialSessionState, sessionUser }: ListPageClientProps) {
+export function ListPageClient({ list, initialSessionState }: ListPageClientProps) {
   const t = useTranslations('School.ParentExperience.List');
   const [sessionState, setSessionState] = useState(initialSessionState);
   const [isSummaryOpen, setIsSummaryOpen] = useState(false);

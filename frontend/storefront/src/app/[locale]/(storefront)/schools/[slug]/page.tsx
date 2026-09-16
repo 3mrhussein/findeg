@@ -3,7 +3,7 @@ import { getOptionalSession } from '@lib/auth-guard';
 import { SchoolAuthWall } from '@app/[locale]/(storefront)/school/_components/SchoolAuthWall';
 import { SchoolProfileClient } from './SchoolProfileClient';
 import { notFound } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@findeg/ui';
+import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
 import { Badge } from '@findeg/ui';
 import { School, MapPin, GraduationCap, Calendar, Clock, Info, ShieldCheck } from 'lucide-react';
 

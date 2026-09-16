@@ -1,7 +1,7 @@
 import { Locale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@i18n/navigation';
-import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
+import { Card, CardContent } from '@findeg/ui';
 import { getMyAccountData } from '@findeg/backend';
 import { requireAuth } from '@lib/auth-guard';
 import { SectionStateEmpty } from '@components/shared/state/SectionStateEmpty';

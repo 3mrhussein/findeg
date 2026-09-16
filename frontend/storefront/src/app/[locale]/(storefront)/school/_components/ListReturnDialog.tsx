@@ -18,13 +18,7 @@ interface ListReturnDialogProps {
 /**
  * Dialog shown to returning visitors to choose between their saved session or the school default.
  */
-export function ListReturnDialog({
-  state,
-  list,
-  user,
-  onReset,
-  onContinue,
-}: ListReturnDialogProps) {
+export function ListReturnDialog({ state, user, onReset, onContinue }: ListReturnDialogProps) {
   const t = useTranslations('School.ParentExperience.ReturnDialog');
 
   if (state === 'first_visit') return null;

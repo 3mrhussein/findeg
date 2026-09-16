@@ -4,7 +4,7 @@ import type { Locale } from 'next-intl';
 import Image from 'next/image';
 import { getCollectionsPage } from '@/data/catalog/queries';
 import { Link } from '@i18n/navigation';
-import { ImageOff, ArrowRight, Sparkles } from 'lucide-react';
+import { ImageOff, Sparkles } from 'lucide-react';
 import { PageShell } from '../_components/PageShell';
 import { Button } from '@findeg/ui';
 

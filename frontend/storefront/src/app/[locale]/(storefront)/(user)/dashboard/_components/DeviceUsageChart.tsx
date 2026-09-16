@@ -23,7 +23,6 @@ export const DeviceUsageChartUI: React.FC<DeviceUsageChartUIProps> = ({ data, ti
   const circumference = 2 * Math.PI * radius;
 
   const total = data.reduce((sum, item) => sum + item.value, 0);
-  let cumulativePercentage = 0;
 
   return (
     <div className="bg-card p-6 rounded-lg border border-border shadow-sm h-full">

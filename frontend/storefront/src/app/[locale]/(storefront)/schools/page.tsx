@@ -2,11 +2,10 @@ import { SchoolCard } from '@app/[locale]/(storefront)/school/_components/School
 import { searchSchools, getSchoolFilterOptions } from '@/data/school/queries';
 import type { SchoolSearchParams } from '@findeg/backend/features/school';
 import { Badge } from '@findeg/ui';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@findeg/ui';
+import { Card, CardContent } from '@findeg/ui';
 import { Input } from '@findeg/ui';
 import { Button } from '@findeg/ui';
 import { Search, SlidersHorizontal, PlusCircle } from 'lucide-react';
-import { useTranslations } from 'next-intl';
 import { Link } from '@i18n/navigation';
 
 interface PageProps {
@@ -27,7 +26,7 @@ interface PageProps {
  * The main school directory page.
  * Features search, filters, and a grid of schools.
  */
-export default async function SchoolsPage({ params, searchParams }: PageProps) {
+export default async function SchoolsPage({ searchParams }: PageProps) {
   const searchParams_Parsed: SchoolSearchParams = {
     query: searchParams.q,
     governorate: searchParams.gov,

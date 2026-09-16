@@ -1,9 +1,9 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { Lock, UserCircle, LogIn, UserPlus } from 'lucide-react';
+import { Lock, LogIn, UserPlus } from 'lucide-react';
 import { Button } from '@findeg/ui';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@findeg/ui';
+import { Card, CardContent, CardTitle, CardDescription } from '@findeg/ui';
 import { Link } from '@i18n/navigation';
 import { usePathname } from '@i18n/navigation';
 import { useSearchParams } from 'next/navigation';

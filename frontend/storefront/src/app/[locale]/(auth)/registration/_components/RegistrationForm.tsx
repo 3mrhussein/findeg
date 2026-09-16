@@ -10,7 +10,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@findeg/ui';
 import { Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
-const persistSessionToken = (token: string) => {
+const persistSessionToken = (_token: string) => {
   /* internal handler mapped later */
 };
 

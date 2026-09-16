@@ -71,7 +71,7 @@ export function AccessRequestDialog({
       } else {
         toast({ variant: 'destructive', title: result.error || t('errorToast') });
       }
-    } catch (error) {
+    } catch {
       toast({ variant: 'destructive', title: t('connectionError') });
     } finally {
       setIsSubmitting(false);

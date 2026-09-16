@@ -22,7 +22,6 @@ export interface CheckoutFormValues {
 }
 
 export function useCheckoutForm({
-  cartItemsCount,
   initialValues,
 }: {
   cartItemsCount?: number;
