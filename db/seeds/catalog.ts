@@ -1,54 +1,52 @@
-import * as schema from "../src/schema/index.ts";
-import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
-import { prepareSeedData, ensureParents } from "./helpers";
+import * as schema from '../src/schema/index.ts';
+import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
+import { prepareSeedData, ensureParents } from './helpers';
 
-import brandsData from "./data/brands.json";
-import categoriesData from "./data/categories.json";
-import productsData from "./data/products.json";
-import productVariantsData from "./data/product_variants.json";
-import variantImagesData from "./data/variant_images.json";
-import variantAttributesData from "./data/variant_attributes.json";
-import tagsData from "./data/tags.json";
-import collectionsData from "./data/collections.json";
-import productTagsData from "./data/product_tags.json";
-import collectionTagsData from "./data/collection_tags.json";
-import attributesData from "./data/attributes.json";
-import productAttributesData from "./data/product_attributes.json";
-import reviewsData from "./data/reviews.json";
-import reviewHelpfulVotesData from "./data/review_helpful_votes.json";
+import brandsData from './data/brands.json';
+import categoriesData from './data/categories.json';
+import productsData from './data/products.json';
+import productVariantsData from './data/product_variants.json';
+import variantImagesData from './data/variant_images.json';
+import variantAttributesData from './data/variant_attributes.json';
+import tagsData from './data/tags.json';
+import collectionsData from './data/collections.json';
+import productTagsData from './data/product_tags.json';
+import collectionTagsData from './data/collection_tags.json';
+import attributesData from './data/attributes.json';
+import productAttributesData from './data/product_attributes.json';
+import reviewsData from './data/reviews.json';
+import reviewHelpfulVotesData from './data/review_helpful_votes.json';
 
 export async function seedCatalog(db: PostgresJsDatabase<typeof schema>) {
-  console.log("🌱 Seeding Catalog Domain...");
+  console.log('🌱 Seeding Catalog Domain...');
 
   // Level 1: Independent Tables
   if (brandsData.length > 0) {
-    console.log("  - Seeding Brands...");
+    console.log('  - Seeding Brands...');
     await db.insert(schema.brands).values(prepareSeedData(schema.brands, brandsData));
   }
   if (categoriesData.length > 0) {
-    console.log("  - Seeding Categories...");
+    console.log('  - Seeding Categories...');
     await db.insert(schema.categories).values(prepareSeedData(schema.categories, categoriesData));
   }
   if (tagsData.length > 0) {
-    console.log("  - Seeding Tags...");
+    console.log('  - Seeding Tags...');
     await db.insert(schema.tags).values(prepareSeedData(schema.tags, tagsData));
   }
   if (collectionsData.length > 0) {
-    console.log("  - Seeding Collections...");
+    console.log('  - Seeding Collections...');
     await db
       .insert(schema.collections)
       .values(prepareSeedData(schema.collections, collectionsData));
   }
   if (attributesData.length > 0) {
-    console.log("  - Seeding Attributes...");
-    await db
-      .insert(schema.attributes)
-      .values(prepareSeedData(schema.attributes, attributesData));
+    console.log('  - Seeding Attributes...');
+    await db.insert(schema.attributes).values(prepareSeedData(schema.attributes, attributesData));
   }
 
   // Level 2: Products (depends on brands, categories)
   if (productsData.length > 0) {
-    console.log("  - Seeding Products...");
+    console.log('  - Seeding Products...');
     await ensureParents(db, [
       { table: schema.brands, name: '"catalog"."brands"' },
       { table: schema.categories, name: '"catalog"."categories"' },
@@ -58,7 +56,7 @@ export async function seedCatalog(db: PostgresJsDatabase<typeof schema>) {
 
   // Level 3: Variants & Associations
   if (productVariantsData.length > 0) {
-    console.log("  - Seeding Product Variants...");
+    console.log('  - Seeding Product Variants...');
     await ensureParents(db, [{ table: schema.products, name: '"catalog"."products"' }]);
     await db
       .insert(schema.productVariants)
@@ -66,7 +64,7 @@ export async function seedCatalog(db: PostgresJsDatabase<typeof schema>) {
   }
 
   if (variantImagesData.length > 0) {
-    console.log("  - Seeding Variant Images...");
+    console.log('  - Seeding Variant Images...');
     await ensureParents(db, [
       { table: schema.productVariants, name: '"catalog"."product_variants"' },
     ]);
@@ -76,7 +74,7 @@ export async function seedCatalog(db: PostgresJsDatabase<typeof schema>) {
   }
 
   if (variantAttributesData.length > 0) {
-    console.log("  - Seeding Variant Attributes...");
+    console.log('  - Seeding Variant Attributes...');
     await ensureParents(db, [
       { table: schema.productVariants, name: '"catalog"."product_variants"' },
       { table: schema.attributes, name: '"catalog"."attributes"' },
@@ -86,9 +84,8 @@ export async function seedCatalog(db: PostgresJsDatabase<typeof schema>) {
       .values(prepareSeedData(schema.variantAttributes, variantAttributesData));
   }
 
-
   if (productTagsData.length > 0) {
-    console.log("  - Seeding Product Tags...");
+    console.log('  - Seeding Product Tags...');
     await ensureParents(db, [
       { table: schema.products, name: '"catalog"."products"' },
       { table: schema.tags, name: '"catalog"."tags"' },
@@ -99,7 +96,7 @@ export async function seedCatalog(db: PostgresJsDatabase<typeof schema>) {
   }
 
   if (collectionTagsData.length > 0) {
-    console.log("  - Seeding Collection Tags...");
+    console.log('  - Seeding Collection Tags...');
     await ensureParents(db, [
       { table: schema.collections, name: '"catalog"."collections"' },
       { table: schema.tags, name: '"catalog"."tags"' },
@@ -110,7 +107,7 @@ export async function seedCatalog(db: PostgresJsDatabase<typeof schema>) {
   }
 
   if (productAttributesData.length > 0) {
-    console.log("  - Seeding Product Attributes...");
+    console.log('  - Seeding Product Attributes...');
     await ensureParents(db, [
       { table: schema.products, name: '"catalog"."products"' },
       { table: schema.attributes, name: '"catalog"."attributes"' },
@@ -121,13 +118,13 @@ export async function seedCatalog(db: PostgresJsDatabase<typeof schema>) {
   }
 
   if (reviewsData.length > 0) {
-    console.log("  - Seeding Reviews...");
+    console.log('  - Seeding Reviews...');
     await ensureParents(db, [{ table: schema.products, name: '"catalog"."products"' }]);
     await db.insert(schema.reviews).values(prepareSeedData(schema.reviews, reviewsData));
   }
 
   if (reviewHelpfulVotesData.length > 0) {
-    console.log("  - Seeding Review Helpful Votes...");
+    console.log('  - Seeding Review Helpful Votes...');
     await ensureParents(db, [{ table: schema.reviews, name: '"catalog"."reviews"' }]);
     await db
       .insert(schema.reviewHelpfulVotes)

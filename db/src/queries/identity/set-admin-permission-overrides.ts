@@ -28,9 +28,6 @@ export async function setAdminPermissionOverridesRaw(
       );
     }
 
-    await tx
-      .update(users)
-      .set(advanceAuthorizationVersion())
-      .where(eq(users.id, userId));
+    await tx.update(users).set(advanceAuthorizationVersion()).where(eq(users.id, userId));
   });
 }

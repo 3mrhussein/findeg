@@ -13,7 +13,12 @@ import {
   countBrands,
   countProductsByBrandId,
 } from '@findeg/db/queries';
-import { DEFAULT_LOCALE, asTranslationMap, type Locale, pick } from '../../../core/domain/value-objects';
+import {
+  DEFAULT_LOCALE,
+  asTranslationMap,
+  type Locale,
+  pick,
+} from '../../../core/domain/value-objects';
 
 /**
  * Admin Brand Service
@@ -51,7 +56,7 @@ export class AdminBrandService implements IAdminBrandService {
    *
    * @param auditLogService - Service for tracking changes to brand records.
    */
-  constructor(private auditLogService?: IAuditLogService) { }
+  constructor(private auditLogService?: IAuditLogService) {}
 
   /**
    * Retrieves all brands.

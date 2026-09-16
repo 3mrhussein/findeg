@@ -82,9 +82,7 @@ export function ProductTabsSection({
                     className="border-b last:border-b-0"
                   >
                     <td className="w-1/3 bg-muted/30 px-4 py-3 font-medium">{attribute.key}</td>
-                    <td className="px-4 py-3">
-                      {attribute.valueText || '-'}
-                    </td>
+                    <td className="px-4 py-3">{attribute.valueText || '-'}</td>
                   </tr>
                 ))}
               </tbody>

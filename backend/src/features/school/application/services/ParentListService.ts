@@ -1,10 +1,11 @@
-
-import {
-  ISchoolDirectoryService,
-  SchoolProfile,
-} from '../interfaces/ISchoolDirectoryService';
+import { ISchoolDirectoryService, SchoolProfile } from '../interfaces/ISchoolDirectoryService';
 import { ISchoolAccessService } from '../interfaces/ISchoolAccessService';
-import { IParentListService, SchoolListPageData, SessionState, SessionSummary } from '../interfaces/IParentListService';
+import {
+  IParentListService,
+  SchoolListPageData,
+  SessionState,
+  SessionSummary,
+} from '../interfaces/IParentListService';
 import { sessionQueries } from '@findeg/db/queries';
 
 /**
@@ -17,7 +18,7 @@ export class ParentListService implements IParentListService {
   constructor(
     private schoolListService: ISchoolDirectoryService,
     private accessService: ISchoolAccessService,
-  ) { }
+  ) {}
 
   /**
    *

@@ -5,15 +5,15 @@
  * Purchasable details (price, stock, images) live on product_variants (SKUs).
  */
 
-import { serial, text, integer, jsonb, boolean, timestamp, decimal } from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
-import { catalogSchema } from "../schemas";
-import { categories } from "./categories";
-import { brands } from "./brands";
-import { productTags } from "./tags";
-import { productAttributes } from "./product-attributes";
-import { productVariants } from "./product-variants";
-import { TranslationMap, ResponsiveMediaSet } from "../../types";
+import { serial, text, integer, jsonb, boolean, timestamp, decimal } from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
+import { catalogSchema } from '../schemas';
+import { categories } from './categories';
+import { brands } from './brands';
+import { productTags } from './tags';
+import { productAttributes } from './product-attributes';
+import { productVariants } from './product-variants';
+import { TranslationMap, ResponsiveMediaSet } from '../../types';
 
 /**
  * Products Table (SPU)
@@ -21,41 +21,37 @@ import { TranslationMap, ResponsiveMediaSet } from "../../types";
  * Stores the conceptual product — brand, category, localized content, flags.
  * All pricing, inventory, and images are on product_variants.
  */
-export const products = catalogSchema.table("products", {
-  id: serial("id").primaryKey(),
+export const products = catalogSchema.table('products', {
+  id: serial('id').primaryKey(),
 
   // ─── Localized Content ──────────────────────────────────────────────
 
-  slug: text("slug").unique(),
-  localizedName: jsonb("localized_name").$type<TranslationMap>().notNull(),
-  localizedDescription: jsonb("localized_description")
-    .$type<TranslationMap>()
-    .notNull(),
-  localizedLongDescription: jsonb("localized_long_description")
-    .$type<TranslationMap>()
-    .notNull(),
+  slug: text('slug').unique(),
+  localizedName: jsonb('localized_name').$type<TranslationMap>().notNull(),
+  localizedDescription: jsonb('localized_description').$type<TranslationMap>().notNull(),
+  localizedLongDescription: jsonb('localized_long_description').$type<TranslationMap>().notNull(),
 
   // ─── Relationships ──────────────────────────────────────────────────
 
   /** FK to categories — primary navigation category */
-  categoryId: integer("category_id").references(() => categories.id, { onDelete: "set null" }),
+  categoryId: integer('category_id').references(() => categories.id, { onDelete: 'set null' }),
   /** FK to brands */
-  brandId: integer("brand_id").references(() => brands.id, { onDelete: "set null" }),
+  brandId: integer('brand_id').references(() => brands.id, { onDelete: 'set null' }),
 
   // ─── Flags ──────────────────────────────────────────────────────────
 
   /** Whether this product is visible in the store */
-  isActive: boolean("is_active").default(true).notNull(),
+  isActive: boolean('is_active').default(true).notNull(),
 
   // ─── Aggregate Ratings ──────────────────────────────────────────────
 
-  rating: decimal("rating", { precision: 3, scale: 2 }).default("0"),
-  reviewsCount: integer("reviews_count").default(0),
+  rating: decimal('rating', { precision: 3, scale: 2 }).default('0'),
+  reviewsCount: integer('reviews_count').default(0),
 
   // ─── Timestamps ─────────────────────────────────────────────────────
 
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
 
 // ─── Relations ───────────────────────────────────────────────────────────────

@@ -15,7 +15,12 @@ import {
   type Locale,
 } from '../../../core/domain/types/common';
 import type { CurrencyCode, Money } from '../../../core/domain/value-objects';
-import { DEFAULT_CURRENCY, toMoney, pick, ResponsiveMediaSetSchema } from '../../../core/domain/value-objects';
+import {
+  DEFAULT_CURRENCY,
+  toMoney,
+  pick,
+  ResponsiveMediaSetSchema,
+} from '../../../core/domain/value-objects';
 
 // ─── Variant Image ───────────────────────────────────────────────────────────
 
@@ -27,7 +32,6 @@ export const VariantImageSchema = z.object({
   displayOrder: z.number().default(0),
 });
 export type VariantImage = z.infer<typeof VariantImageSchema>;
-
 
 // ─── Inventory Balance ───────────────────────────────────────────────────────
 
@@ -116,7 +120,6 @@ export class VariantEntity {
     if (!strikePrice || strikePrice <= basePrice) return 0;
     return Math.round(((strikePrice - basePrice) / strikePrice) * 100);
   }
-
 
   getAvailableStock(): number {
     if (!this.variant.inventory || this.variant.inventory.length === 0) return 0;

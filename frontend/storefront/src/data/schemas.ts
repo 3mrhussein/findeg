@@ -28,7 +28,11 @@ export type UpdateProfileInput = z.infer<typeof UpdateProfileInputSchema>;
 export const AddToCartInputSchema = z.object({
   productId: z.number().int().positive('Product ID must be positive'),
   variantId: z.number().int().positive('Variant ID must be positive'),
-  quantity: z.number().int().min(1, 'Quantity must be at least 1').max(999, 'Quantity must be at most 999'),
+  quantity: z
+    .number()
+    .int()
+    .min(1, 'Quantity must be at least 1')
+    .max(999, 'Quantity must be at most 999'),
   locale: z.enum(['en', 'ar']).optional(),
 });
 
@@ -36,7 +40,11 @@ export type AddToCartInput = z.infer<typeof AddToCartInputSchema>;
 
 export const UpdateQuantityInputSchema = z.object({
   variantId: z.number().int().positive('Variant ID must be positive'),
-  quantity: z.number().int().min(1, 'Quantity must be at least 1').max(999, 'Quantity must be at most 999'),
+  quantity: z
+    .number()
+    .int()
+    .min(1, 'Quantity must be at least 1')
+    .max(999, 'Quantity must be at most 999'),
 });
 
 export type UpdateQuantityInput = z.infer<typeof UpdateQuantityInputSchema>;

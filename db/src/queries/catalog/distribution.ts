@@ -1,7 +1,7 @@
-import { sql, desc, eq } from "drizzle-orm";
-import { z } from "zod";
-import { db } from "../../connection";
-import { products, categories } from "../../schema/catalog";
+import { sql, desc, eq } from 'drizzle-orm';
+import { z } from 'zod';
+import { db } from '../../connection';
+import { products, categories } from '../../schema/catalog';
 
 /**
  * Category product distribution query
@@ -22,7 +22,9 @@ export type CategoryDistributionRaw = z.infer<typeof CategoryDistributionRawSche
  * Raw query for category product distribution.
  * Joins categories and products with grouping and ordering.
  */
-export async function getCategoryDistributionRaw(limit: number = 6): Promise<CategoryDistributionRaw> {
+export async function getCategoryDistributionRaw(
+  limit: number = 6,
+): Promise<CategoryDistributionRaw> {
   const results = await db
     .select({
       categoryId: categories.id,

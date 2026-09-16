@@ -130,7 +130,6 @@ export function InfoTab() {
           />
         </CardContent>
       </Card>
-
     </div>
   );
 }

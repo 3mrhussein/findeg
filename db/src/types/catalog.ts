@@ -4,7 +4,6 @@ import { z } from 'zod';
  * Catalog Primitives for Database Layer
  */
 
-
 export type MatchRulesDraft = {
   categoryId?: number;
   brandIds?: number[];

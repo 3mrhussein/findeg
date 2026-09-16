@@ -21,11 +21,7 @@ import { IconTooltip } from '@findeg/ui';
 import { useCart } from '@hooks/useCart';
 import { useUser } from '@hooks/useUser';
 import { cn } from '@lib/utils';
-import type {
-  Product,
-  Variant,
-  ProductPdpViewModel,
-} from '@/data/catalog/types';
+import type { Product, Variant, ProductPdpViewModel } from '@/data/catalog/types';
 import { ImageGallery } from './ImageGallery';
 import { ProductTabsSection } from './ProductTabsSection';
 import { RelatedProductsRail } from './RelatedProductsRail';
@@ -74,7 +70,6 @@ function isCssColorCandidate(value: string): boolean {
   );
 }
 
-
 function resolveVariantStock(product: Product, variant?: Variant) {
   if (!variant) {
     return {
@@ -103,7 +98,6 @@ function resolveVariantStock(product: Product, variant?: Variant) {
     availableUnits,
   };
 }
-
 
 /**
  * Interactive PDP content.
@@ -144,7 +138,6 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
 
   // We update selectedAttributes when variant changes via selection events
 
-
   const [priceState, setPriceState] = useState<PriceState>({
     unitPrice: Number(selectedVariant?.basePrice || 0),
     currency: 'EGP',
@@ -158,7 +151,6 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
       currency: 'EGP',
     });
   }, [selectedVariant]);
-
 
   const stockSnapshot = resolveVariantStock(vm.product, selectedVariant);
   const maxQuantity = stockSnapshot.inStock ? Math.max(stockSnapshot.availableUnits, 1) : 1;
@@ -281,13 +273,7 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
         return filtered;
       });
     });
-  }, [
-    vm.product.id,
-    vm.product.name,
-    vm.canonicalSlug,
-    selectedVariant,
-    priceState.unitPrice,
-  ]);
+  }, [vm.product.id, vm.product.name, vm.canonicalSlug, selectedVariant, priceState.unitPrice]);
 
   const attributeValueMap = useMemo(() => {
     const map = new Map<string, string[]>();
@@ -384,9 +370,7 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
 
           <div className="rounded-2xl border bg-card p-4">
             <div className="flex flex-wrap items-center gap-2">
-              <span
-                className="text-3xl font-black text-primary"
-              >
+              <span className="text-3xl font-black text-primary">
                 {egpFormatter.format(priceState.unitPrice || 0)}
               </span>
 
@@ -400,8 +384,6 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
                 <Badge className="bg-amber-500 text-white">{badge.text}</Badge>
               ) : null}
             </div>
-
-
           </div>
 
           {allAttributeKeys.length > 0 ? (

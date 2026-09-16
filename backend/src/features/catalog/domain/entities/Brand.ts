@@ -8,12 +8,12 @@ export const BrandSchema = z.object({
   localizedName: TranslationMapSchema,
   localizedDescription: TranslationMapSchema.optional(),
   isActive: z.boolean().default(true),
-  
+
   // Resolved Content (for specific locale)
   name: z.string().optional(),
   description: z.string().optional(),
   locale: z.string().optional(),
-  
+
   logoUrl: z.string().nullable().optional(),
   productCount: z.number().optional(),
   createdAt: z.date(),

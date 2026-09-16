@@ -1,7 +1,12 @@
 import { brandQueries } from '@findeg/db/queries';
 import { ID, Slug } from '@findeg/backend/features/core/domain/types/common';
 import { Brand } from '@findeg/backend/features/catalog/domain/entities/Brand';
-import { DEFAULT_LOCALE, asTranslationMap, type Locale, pick } from '@findeg/backend/features/core/domain/value-objects';
+import {
+  DEFAULT_LOCALE,
+  asTranslationMap,
+  type Locale,
+  pick,
+} from '@findeg/backend/features/core/domain/value-objects';
 import { BrandCreateInput, BrandUpdateInput } from '../interfaces/IBrandRepository';
 import { IBrandService } from '../interfaces/IBrandService';
 
@@ -9,7 +14,10 @@ export class BrandService implements IBrandService {
   /**
    * Map database row to domain entity with i18n support
    */
-  private mapToDomain(dbBrand: brandQueries.BrandRow & { productCount?: number }, language: Locale = DEFAULT_LOCALE): Brand {
+  private mapToDomain(
+    dbBrand: brandQueries.BrandRow & { productCount?: number },
+    language: Locale = DEFAULT_LOCALE,
+  ): Brand {
     const localizedName = asTranslationMap(dbBrand.localizedName);
     const localizedDescription = asTranslationMap(dbBrand.localizedDescription || {});
 

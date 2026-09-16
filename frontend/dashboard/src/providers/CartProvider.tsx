@@ -8,11 +8,7 @@ export interface CartContextType {
   cartItems: CartItem[];
   isCartOpen: boolean;
   setIsCartOpen: (open: boolean) => void;
-  addToCart: (
-    productId: number,
-    quantity: number,
-    options: { variantId: number },
-  ) => void;
+  addToCart: (productId: number, quantity: number, options: { variantId: number }) => void;
   removeFromCart: (variantId: number) => void;
   updateQuantity: (variantId: number, quantity: number) => void;
   clearCart: () => void;
@@ -117,11 +113,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   /**
    *
    */
-  const addToCart = (
-    productId: number,
-    quantity: number,
-    options: { variantId: number },
-  ) => {
+  const addToCart = (productId: number, quantity: number, options: { variantId: number }) => {
     const guestId = getGuestId();
     const payload = {
       productId,

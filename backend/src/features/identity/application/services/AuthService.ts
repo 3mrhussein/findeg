@@ -27,7 +27,7 @@ import { buildCurrentSessionPayload } from './buildCurrentSessionPayload';
  * Does NOT create sessions - that's the app-layer's responsibility.
  */
 export class AuthService implements IAuthService {
-  constructor() { }
+  constructor() {}
 
   /**
    * Authenticates a user with email and password
@@ -104,10 +104,14 @@ export class AuthService implements IAuthService {
       });
 
       // Save password
-      await userQueries.upsertPasswordCredentials(user.id, {
-        passwordHash: password,
-        hashStrategy: 'bcrypt',
-      }, { isInitialCredential: true });
+      await userQueries.upsertPasswordCredentials(
+        user.id,
+        {
+          passwordHash: password,
+          hashStrategy: 'bcrypt',
+        },
+        { isInitialCredential: true },
+      );
 
       // Log them in automatically
       return this.login(input.email, input.password);

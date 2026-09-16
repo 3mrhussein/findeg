@@ -25,8 +25,7 @@ export function ProductCard({ product, layout = 'grid' }: ProductCardProps) {
   const defaultVariant = variants.find((v) => v.isDefault) || variants[0];
   const displayPrice = Number(defaultVariant?.basePrice ?? 0);
   const imageUrl =
-    defaultVariant?.images?.[0]?.url ||
-    `https://picsum.photos/seed/${product.id}/600/600`;
+    defaultVariant?.images?.[0]?.url || `https://picsum.photos/seed/${product.id}/600/600`;
 
   const isNew = !!product.isNew;
   const href = `/shop/products/${product.slug}`;

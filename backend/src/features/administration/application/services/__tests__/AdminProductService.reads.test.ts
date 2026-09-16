@@ -1,8 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import {
-  getAdminProductForEditRaw,
-  getAdminProductsListRaw,
-} from '@findeg/db/queries';
+import { getAdminProductForEditRaw, getAdminProductsListRaw } from '@findeg/db/queries';
 import { AdminProductService } from '../AdminProductService';
 
 vi.mock('@findeg/db/queries', () => ({
@@ -12,7 +9,7 @@ vi.mock('@findeg/db/queries', () => ({
 
 vi.mock('@findeg/db/connection', () => ({
   db: {},
-  Db: class { },
+  Db: class {},
 }));
 
 vi.mock('@findeg/db/schema', () => ({

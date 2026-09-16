@@ -7,12 +7,12 @@
  * Location: src/components/shared/ (cross-cutting)
  */
 
-"use client";
+'use client';
 
-import * as React from "react";
-import * as LucideIcons from "lucide-react";
-import { Button } from "../ui/button";
-import { cn } from "../lib/utils";
+import * as React from 'react';
+import * as LucideIcons from 'lucide-react';
+import { Button } from '../ui/button';
+import { cn } from '../lib/utils';
 
 export interface EmptyStateProps {
   /** Lucide icon name (e.g., "Package", "ShoppingCart") */
@@ -25,7 +25,7 @@ export interface EmptyStateProps {
   action?: {
     label: string;
     onClick: () => void;
-    variant?: "default" | "outline" | "secondary";
+    variant?: 'default' | 'outline' | 'secondary';
   };
   /** Additional CSS classes */
   className?: string;
@@ -46,7 +46,7 @@ export interface EmptyStateProps {
  * />
  */
 export function EmptyState({
-  icon = "FileQuestion",
+  icon = 'FileQuestion',
   title,
   description,
   action,
@@ -56,7 +56,7 @@ export function EmptyState({
 
   return (
     <div
-      className={cn("flex flex-col items-center justify-center py-12 px-4 text-center", className)}
+      className={cn('flex flex-col items-center justify-center py-12 px-4 text-center', className)}
     >
       {IconComponent && (
         <IconComponent
@@ -68,7 +68,7 @@ export function EmptyState({
       <h3 className="mb-2 text-lg font-semibold text-foreground">{title}</h3>
       {description && <p className="mb-6 max-w-md text-sm text-muted-foreground">{description}</p>}
       {action && (
-        <Button onClick={action.onClick} variant={action.variant || "default"}>
+        <Button onClick={action.onClick} variant={action.variant || 'default'}>
           {action.label}
         </Button>
       )}

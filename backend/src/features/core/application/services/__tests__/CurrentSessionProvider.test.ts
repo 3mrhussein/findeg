@@ -10,9 +10,11 @@ import { createCookieSessionProvider } from '../factory';
 import { JwtSessionManager } from '../../../infrastructure/auth/JwtSessionManager';
 
 class MemoryCookieStore implements ICookieStore {
-  readonly set = vi.fn((name: string, value: string, options?: Parameters<ICookieStore['set']>[2]) => {
-    this.cookies.set(name, { value, options });
-  });
+  readonly set = vi.fn(
+    (name: string, value: string, options?: Parameters<ICookieStore['set']>[2]) => {
+      this.cookies.set(name, { value, options });
+    },
+  );
   readonly delete = vi.fn((name: string) => {
     this.cookies.delete(name);
   });

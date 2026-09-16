@@ -37,9 +37,7 @@ export async function listAdminUserIdsRaw(): Promise<number[]> {
   return rows.map((row) => row.userId);
 }
 
-export async function getAdminUsersSnapshotRaw(
-  userIds: number[],
-): Promise<AdminUsersSnapshotRaw> {
+export async function getAdminUsersSnapshotRaw(userIds: number[]): Promise<AdminUsersSnapshotRaw> {
   if (userIds.length === 0) {
     return {
       users: [],

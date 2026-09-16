@@ -3,11 +3,7 @@
  */
 
 import { ID } from '@findeg/backend/features/core/domain/types/common';
-import {
-  Attribute,
-  CreateAttribute,
-  ProductAttributeValue,
-} from '../../domain/entities/Attribute';
+import { Attribute, CreateAttribute, ProductAttributeValue } from '../../domain/entities/Attribute';
 
 export interface AttributeFilter {
   attributeKey: string;

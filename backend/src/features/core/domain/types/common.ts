@@ -31,7 +31,6 @@ export { OrderStatusSchema, type OrderStatus } from '@findeg/db';
 export { PaymentStatusSchema, type PaymentStatus } from '@findeg/db';
 export { PaymentMethodSchema, type PaymentMethod } from '@findeg/db';
 
-
 // ─── Identity ────────────────────────────────────────────────────────────────
 export { PortalRoleSchema, type PortalRole } from '@findeg/db';
 export { ActorTypeSchema, type ActorType } from '@findeg/db';

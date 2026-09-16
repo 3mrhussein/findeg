@@ -88,7 +88,8 @@ export function buildGeneratedProductVariants(
       variantKey,
       localizedLabel: defaults.localizedLabel ?? { en: '', ar: '' },
       sortOrder: index,
-      isDefault: index === 0 && defaults.isDefault === undefined ? true : (defaults.isDefault ?? false),
+      isDefault:
+        index === 0 && defaults.isDefault === undefined ? true : (defaults.isDefault ?? false),
       isActive: defaults.isActive ?? true,
       basePrice: defaults.basePrice ?? 0,
       strikePrice: defaults.strikePrice ?? null,

@@ -20,7 +20,6 @@ export async function generateStaticParams() {
  * 2. CategoriesContent is streamed as it becomes available
  */
 
-
 export default async function CategoriesPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
@@ -33,4 +32,3 @@ export default async function CategoriesPage({ params }: { params: Promise<{ loc
     </div>
   );
 }
-

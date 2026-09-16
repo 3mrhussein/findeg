@@ -3,7 +3,7 @@
  *
  * Pure database queries for school listing and variant matching.
  * No ORM abstraction - direct Drizzle SQL operations.
- * 
+ *
  * Note: Returns raw database rows. Domain mapping and variant hydration handled by SchoolListService.
  */
 

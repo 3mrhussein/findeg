@@ -46,17 +46,13 @@ async function LocalizedDocument({ children }: { children: ReactNode }) {
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
         />
       </head>
-      <body
-        suppressHydrationWarning
-        className="min-h-screen bg-background font-sans antialiased"
-      >
+      <body suppressHydrationWarning className="min-h-screen bg-background font-sans antialiased">
         <div
           className={cn(
             'flex min-h-screen flex-col',
             locale === 'ar' ? 'font-arabic' : 'font-inter',
           )}
         >
-
           {children}
         </div>
       </body>

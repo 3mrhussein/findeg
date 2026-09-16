@@ -104,14 +104,9 @@ export function CartDrawer() {
                         quantity={item.quantity}
                         imageUrl={item.imageUrl}
                         cartKitId={item.cartKitId}
-                        onIncrease={() =>
-                          updateQuantity(item.variantId, item.quantity + 1)
-                        }
+                        onIncrease={() => updateQuantity(item.variantId, item.quantity + 1)}
                         onDecrease={() =>
-                          updateQuantity(
-                            item.variantId,
-                            Math.max(1, item.quantity - 1),
-                          )
+                          updateQuantity(item.variantId, Math.max(1, item.quantity - 1))
                         }
                         onRemove={() => removeFromCart(item.variantId)}
                       />

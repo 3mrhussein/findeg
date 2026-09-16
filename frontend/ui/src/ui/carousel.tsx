@@ -1,30 +1,30 @@
-"use client";
+'use client';
 
-import type { ComponentProps, HTMLAttributes } from "react";
-import { Button } from "./button";
-import { IconTooltip } from "./IconTooltip";
-import { cn } from "../lib/utils";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import type { ComponentProps, HTMLAttributes } from 'react';
+import { Button } from './button';
+import { IconTooltip } from './IconTooltip';
+import { cn } from '../lib/utils';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 /**
  *
  */
 function Carousel({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("relative", className)} {...props} />;
+  return <div className={cn('relative', className)} {...props} />;
 }
 
 /**
  *
  */
 function CarouselContent({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("flex overflow-x-auto gap-4 snap-x", className)} {...props} />;
+  return <div className={cn('flex overflow-x-auto gap-4 snap-x', className)} {...props} />;
 }
 
 /**
  *
  */
 function CarouselItem({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn("min-w-full snap-start", className)} {...props} />;
+  return <div className={cn('min-w-full snap-start', className)} {...props} />;
 }
 
 /**
@@ -37,7 +37,7 @@ function CarouselPrevious({ className, ...props }: ComponentProps<typeof Button>
         type="button"
         variant="outline"
         size="icon"
-        className={cn("absolute top-1/2 -translate-y-1/2", className)}
+        className={cn('absolute top-1/2 -translate-y-1/2', className)}
         aria-label="Previous slide"
         {...props}
       >
@@ -58,7 +58,7 @@ function CarouselNext({ className, ...props }: ComponentProps<typeof Button>) {
         type="button"
         variant="outline"
         size="icon"
-        className={cn("absolute top-1/2 -translate-y-1/2", className)}
+        className={cn('absolute top-1/2 -translate-y-1/2', className)}
         aria-label="Next slide"
         {...props}
       >

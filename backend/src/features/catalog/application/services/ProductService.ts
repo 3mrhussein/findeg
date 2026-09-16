@@ -60,7 +60,9 @@ export class ProductService implements IProductService {
     };
   }
 
-  private mapVariantToDomain(dbVariant: Awaited<ReturnType<typeof productQueries.getVariantsByProductIds>>[number][number]): Variant {
+  private mapVariantToDomain(
+    dbVariant: Awaited<ReturnType<typeof productQueries.getVariantsByProductIds>>[number][number],
+  ): Variant {
     const labelMap = (dbVariant.localizedLabel as TranslationMap) || { en: '', ar: '' };
     return {
       id: dbVariant.id,
@@ -82,7 +84,9 @@ export class ProductService implements IProductService {
     };
   }
 
-  private mapTagToDomain(dbTag: Awaited<ReturnType<typeof productQueries.getProductTags>>[number]): Tag {
+  private mapTagToDomain(
+    dbTag: Awaited<ReturnType<typeof productQueries.getProductTags>>[number],
+  ): Tag {
     return {
       id: dbTag.id,
       key: dbTag.key,
@@ -91,7 +95,9 @@ export class ProductService implements IProductService {
       icon: dbTag.icon || undefined,
       color: dbTag.color || undefined,
       isActive: dbTag.isActive,
-      scope: (dbTag.scope as 'catalog' | 'school' | 'campaign' | 'system' | 'search' | 'editorial') || 'catalog',
+      scope:
+        (dbTag.scope as 'catalog' | 'school' | 'campaign' | 'system' | 'search' | 'editorial') ||
+        'catalog',
       createdAt: dbTag.createdAt,
       updatedAt: dbTag.updatedAt,
     };
@@ -108,11 +114,17 @@ export class ProductService implements IProductService {
 
     const products: Product[] = [];
     for (const row of results) {
-      const productVariantsList = (variantsMap[row.product.id] || []).map((v) => this.mapVariantToDomain(v));
+      const productVariantsList = (variantsMap[row.product.id] || []).map((v) =>
+        this.mapVariantToDomain(v),
+      );
       const defaultVariant = productVariantsList.find((v) => v.isDefault) || productVariantsList[0];
 
-      const catName = row.category ? pick(asTranslationMap(row.category.localizedName ?? { en: '' }), lang) : undefined;
-      const brandNameStr = row.brand ? pick(asTranslationMap(row.brand.localizedName ?? {}), lang) : undefined;
+      const catName = row.category
+        ? pick(asTranslationMap(row.category.localizedName ?? { en: '' }), lang)
+        : undefined;
+      const brandNameStr = row.brand
+        ? pick(asTranslationMap(row.brand.localizedName ?? {}), lang)
+        : undefined;
 
       const domain = await this.mapToDomain(
         row.product,
@@ -141,11 +153,17 @@ export class ProductService implements IProductService {
     const tagsData = await productQueries.getProductTags(id as number);
     const attrs = await productQueries.getProductAttributes(id as number);
 
-    const productVariantsList = (variants[id as number] || []).map((v) => this.mapVariantToDomain(v));
+    const productVariantsList = (variants[id as number] || []).map((v) =>
+      this.mapVariantToDomain(v),
+    );
     const defaultVariant = productVariantsList.find((v) => v.isDefault) || productVariantsList[0];
 
-    const catName = result.category ? pick(asTranslationMap(result.category.localizedName ?? { en: '' }), lang) : undefined;
-    const brandNameStr = result.brand ? pick(asTranslationMap(result.brand.localizedName ?? {}), lang) : undefined;
+    const catName = result.category
+      ? pick(asTranslationMap(result.category.localizedName ?? { en: '' }), lang)
+      : undefined;
+    const brandNameStr = result.brand
+      ? pick(asTranslationMap(result.brand.localizedName ?? {}), lang)
+      : undefined;
     const tags = tagsData.map((t) => this.mapTagToDomain(t));
 
     return this.mapToDomain(
@@ -302,4 +320,3 @@ export class ProductService implements IProductService {
     await productQueries.deleteProduct(id as number);
   }
 }
-

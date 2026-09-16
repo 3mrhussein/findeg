@@ -156,7 +156,10 @@ export async function getAdminProductsListRaw(
     .limit(pageSize)
     .offset(offset);
 
-  const [{ total }] = await db.select({ total: count(products.id) }).from(products).where(where);
+  const [{ total }] = await db
+    .select({ total: count(products.id) })
+    .from(products)
+    .where(where);
 
   return {
     rows: mainRows.map((row) => ({
@@ -168,8 +171,7 @@ export async function getAdminProductsListRaw(
       brandName: row.brandName ?? null,
       isActive: row.isActive,
       updatedAt: row.updatedAt,
-      defaultVariantPrice:
-        row.defaultVariantPrice != null ? Number(row.defaultVariantPrice) : null,
+      defaultVariantPrice: row.defaultVariantPrice != null ? Number(row.defaultVariantPrice) : null,
       variantCount: Number(row.variantCount),
       totalStock: Number(row.totalStock),
       hasImages: row.hasImages,

@@ -1,5 +1,3 @@
-
-
 import { SchoolList } from '../../domain/types';
 
 export interface SchoolFilterOptions {

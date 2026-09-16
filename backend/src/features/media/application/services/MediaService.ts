@@ -82,13 +82,11 @@ export class MediaService {
     const grouped = await Promise.all(
       folders.map(async (folder) => {
         const files = await this.getFiles(folder);
-        return files.map(
-          (file): MediaAsset => ({
-            url: file.url,
-            name: file.name,
-            folder: folder || 'general',
-          }),
-        );
+        return files.map((file): MediaAsset => ({
+          url: file.url,
+          name: file.name,
+          folder: folder || 'general',
+        }));
       }),
     );
 

@@ -93,7 +93,6 @@ export default async function RootLayout({
       <LocaleSync />
       <BoundaryProvider>
         <Providers>
-
           <Suspense fallback={null}>{children}</Suspense>
           {/* <BoundaryToggle /> */}
           <WebMCPInitializer />

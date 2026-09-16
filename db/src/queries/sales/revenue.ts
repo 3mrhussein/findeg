@@ -1,7 +1,7 @@
-import { sql, and, gte, lte } from "drizzle-orm";
-import { z } from "zod";
-import { db } from "../../connection";
-import { orders } from "../../schema/sales";
+import { sql, and, gte, lte } from 'drizzle-orm';
+import { z } from 'zod';
+import { db } from '../../connection';
+import { orders } from '../../schema/sales';
 
 /**
  * Revenue by period query
@@ -30,10 +30,11 @@ export async function getRevenueByPeriodRaw(
 
   const intervalLiteral = sql.raw(`'${interval}'`);
 
-  const results = await db.select({
-    period: sql<string>`to_char(date_trunc(${intervalLiteral}, ${orders.createdAt}), 'YYYY-MM-DD')`,
-    revenue: sql<number>`cast(sum(${orders.totalAmount}) as float)`,
-  })
+  const results = await db
+    .select({
+      period: sql<string>`to_char(date_trunc(${intervalLiteral}, ${orders.createdAt}), 'YYYY-MM-DD')`,
+      revenue: sql<number>`cast(sum(${orders.totalAmount}) as float)`,
+    })
     .from(orders)
     .where(and(gte(orders.createdAt, startDate), lte(orders.createdAt, endDate)))
     .groupBy(sql`date_trunc(${intervalLiteral}, ${orders.createdAt})`)

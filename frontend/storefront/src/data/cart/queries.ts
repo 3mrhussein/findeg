@@ -8,7 +8,7 @@ import { createCartServices } from '@findeg/backend/features/cart';
 
 /**
  * Retrieves the current cart for a session (cached per guest).
- * 
+ *
  * @param cartId - Guest or user cart identifier
  * @returns Cart with items and subtotal, or empty cart on error
  */

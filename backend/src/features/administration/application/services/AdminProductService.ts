@@ -192,7 +192,6 @@ export class AdminProductService implements IAdminProductService {
     return this.variantService.checkSkuAvailable(sku, excludeVariantId);
   }
 
-
   /**
    *
    */
@@ -222,5 +221,4 @@ export class AdminProductService implements IAdminProductService {
   async checkSlugAvailable(slug: string, excludeProductId?: number): Promise<boolean> {
     return this.variantService.checkSlugAvailable(slug, excludeProductId);
   }
-
 }

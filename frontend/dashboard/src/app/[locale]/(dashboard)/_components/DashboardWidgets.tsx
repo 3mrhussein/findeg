@@ -43,9 +43,7 @@ export async function FastDashboardSection({ locale }: DashboardWidgetProps) {
   const now = new Date();
   const hour = now.getHours();
   const greetingKey = (hour < 12 ? 'GoodMorning' : hour < 18 ? 'GoodAfternoon' : 'GoodEvening') as
-    | 'GoodMorning'
-    | 'GoodAfternoon'
-    | 'GoodEvening';
+    'GoodMorning' | 'GoodAfternoon' | 'GoodEvening';
   const dateFormatted = now.toLocaleDateString(locale === 'ar' ? 'ar-EG' : 'en-US', {
     weekday: 'long',
     year: 'numeric',

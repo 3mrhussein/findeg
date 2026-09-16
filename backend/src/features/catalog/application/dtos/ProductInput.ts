@@ -1,9 +1,5 @@
 import { z } from 'zod';
-import {
-  IdSchema,
-  PriceSchema,
-  TranslationMapSchema,
-} from '../../../core/domain/types/common';
+import { IdSchema, PriceSchema, TranslationMapSchema } from '../../../core/domain/types/common';
 import { LocaleSchema } from '../../../core/domain/value-objects';
 
 const ProductTranslationSchema = z.object({

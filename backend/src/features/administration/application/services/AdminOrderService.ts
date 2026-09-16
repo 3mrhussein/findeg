@@ -33,12 +33,9 @@ export class AdminOrderService implements IAdminOrderService {
   constructor(
     private auditLogService: IAuditLogService,
     private emailService: IEmailService,
-  ) { }
+  ) {}
 
-  private mapToDomain(
-    dbOrder: any,
-    items: any[],
-  ): Order {
+  private mapToDomain(dbOrder: any, items: any[]): Order {
     return {
       id: dbOrder.id,
       userId: dbOrder.userId || undefined,
@@ -64,9 +61,7 @@ export class AdminOrderService implements IAdminOrderService {
         variantId: ((item as Record<string, unknown>).variantId as number) || undefined,
         quantity: item.quantity,
         uomCode: ((item as Record<string, unknown>).uomCode as string) || undefined,
-        unitPriceSnapshot: item.unitPriceSnapshot
-          ? Number(item.unitPriceSnapshot)
-          : undefined,
+        unitPriceSnapshot: item.unitPriceSnapshot ? Number(item.unitPriceSnapshot) : undefined,
         totalPrice: item.totalPrice ? Number(item.totalPrice) : undefined,
         productNameSnapshot: item.productNameSnapshot || undefined,
         productSkuSnapshot: item.productSkuSnapshot || undefined,

@@ -1,6 +1,9 @@
 import { IAdminDashboardService } from '../interfaces/IAdminDashboardService';
 import { DashboardStats } from '../dtos';
-import { CatalogHealthStats, CategoryProductDistribution } from '@findeg/backend/features/catalog/application/dtos';
+import {
+  CatalogHealthStats,
+  CategoryProductDistribution,
+} from '@findeg/backend/features/catalog/application/dtos';
 import { Order } from '../../../order/domain/entities/Order';
 import {
   getCatalogHealthRaw,
@@ -29,12 +32,9 @@ export class AdminDashboardService implements IAdminDashboardService {
   /**
    * Creates an instance of AdminDashboardService.
    */
-  constructor() { }
+  constructor() {}
 
-  private mapToDomain(
-    dbOrder: any,
-    items: any[],
-  ): Order {
+  private mapToDomain(dbOrder: any, items: any[]): Order {
     return {
       id: dbOrder.id,
       userId: dbOrder.userId || undefined,
@@ -60,9 +60,7 @@ export class AdminDashboardService implements IAdminDashboardService {
         variantId: ((item as Record<string, unknown>).variantId as number) || undefined,
         quantity: item.quantity,
         uomCode: ((item as Record<string, unknown>).uomCode as string) || undefined,
-        unitPriceSnapshot: item.unitPriceSnapshot
-          ? Number(item.unitPriceSnapshot)
-          : undefined,
+        unitPriceSnapshot: item.unitPriceSnapshot ? Number(item.unitPriceSnapshot) : undefined,
         totalPrice: item.totalPrice ? Number(item.totalPrice) : undefined,
         productNameSnapshot: item.productNameSnapshot || undefined,
         productSkuSnapshot: item.productSkuSnapshot || undefined,
@@ -85,7 +83,16 @@ export class AdminDashboardService implements IAdminDashboardService {
       const thirtyDaysAgo = subDays(now, 30);
 
       // Orchestrate primitives in parallel
-      const [productCount, categoryCount, brandCount, totalStats, todayStats, lowStockCount, topProducts, revenueByPeriod] = await Promise.all([
+      const [
+        productCount,
+        categoryCount,
+        brandCount,
+        totalStats,
+        todayStats,
+        lowStockCount,
+        topProducts,
+        revenueByPeriod,
+      ] = await Promise.all([
         getProductCountRaw(),
         getCategoryCountRaw(),
         getBrandCountRaw(),
@@ -133,7 +140,7 @@ export class AdminDashboardService implements IAdminDashboardService {
   }
 
   /**
-    * Retrieves specific catalog health completion metrics.
+   * Retrieves specific catalog health completion metrics.
    */
   async getCatalogHealthStats(): Promise<CatalogHealthStats> {
     try {
@@ -147,7 +154,7 @@ export class AdminDashboardService implements IAdminDashboardService {
   }
 
   /**
-    * Evaluates catalog coverage distributed across top categories.
+   * Evaluates catalog coverage distributed across top categories.
    */
   async getCategoryProductDistribution(): Promise<CategoryProductDistribution[]> {
     try {

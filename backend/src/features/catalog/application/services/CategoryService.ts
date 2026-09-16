@@ -2,7 +2,11 @@ import { categoryQueries } from '@findeg/db/queries';
 import { ID, Slug } from '@findeg/backend/features/core/domain/types/common';
 import type { ICategoryService } from '@findeg/backend/features/catalog/application/interfaces/ICategoryService';
 import type { Category } from '@findeg/backend/features/catalog/domain/entities/Category';
-import { DEFAULT_LOCALE, asTranslationMap, type Locale } from '@findeg/backend/features/core/domain/value-objects';
+import {
+  DEFAULT_LOCALE,
+  asTranslationMap,
+  type Locale,
+} from '@findeg/backend/features/core/domain/value-objects';
 import type { CategoryInput } from '../dtos/CategoryInput';
 
 export class CategoryService implements ICategoryService {
@@ -102,8 +106,7 @@ export class CategoryService implements ICategoryService {
           // Calculate product count (direct products + all products in descendants)
           const childrenProductCount = children.reduce(
             (sum, child) =>
-              sum +
-              (((child as unknown as Record<string, unknown>).productCount as number) || 0),
+              sum + (((child as unknown as Record<string, unknown>).productCount as number) || 0),
             0,
           );
           const directProductCount = directCounts.get(c.id) || 0;

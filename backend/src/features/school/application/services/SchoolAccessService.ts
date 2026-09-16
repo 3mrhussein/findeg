@@ -22,9 +22,7 @@ export class SchoolAccessService implements ISchoolAccessService {
   /**
    *
    */
-  constructor(
-    private schoolListService: ISchoolListService,
-  ) { }
+  constructor(private schoolListService: ISchoolListService) {}
 
   /**
    *

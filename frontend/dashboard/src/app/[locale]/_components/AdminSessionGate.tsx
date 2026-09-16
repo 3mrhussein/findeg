@@ -17,9 +17,7 @@ export async function AdminSessionGate({ children, locale }: AdminSessionGatePro
 
   return (
     <SessionProvider session={session}>
-      <PermissionsProvider session={session}>
-        {children}
-      </PermissionsProvider>
+      <PermissionsProvider session={session}>{children}</PermissionsProvider>
     </SessionProvider>
   );
 }

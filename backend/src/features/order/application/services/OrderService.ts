@@ -11,12 +11,9 @@ import type { IOrderService } from '../interfaces/IOrderService';
  * For admin operations (status updates), use AdminOrderService from administration feature.
  */
 export class OrderService implements IOrderService {
-  constructor() { }
+  constructor() {}
 
-  private mapToDomain(
-    dbOrder: OrderRow,
-    items: OrderItemRow[],
-  ): Order {
+  private mapToDomain(dbOrder: OrderRow, items: OrderItemRow[]): Order {
     return {
       id: dbOrder.id,
       userId: dbOrder.userId || undefined,
@@ -42,9 +39,7 @@ export class OrderService implements IOrderService {
         variantId: ((item as Record<string, unknown>).variantId as number) || undefined,
         quantity: item.quantity,
         uomCode: ((item as Record<string, unknown>).uomCode as string) || undefined,
-        unitPriceSnapshot: item.unitPriceSnapshot
-          ? Number(item.unitPriceSnapshot)
-          : undefined,
+        unitPriceSnapshot: item.unitPriceSnapshot ? Number(item.unitPriceSnapshot) : undefined,
         totalPrice: item.totalPrice ? Number(item.totalPrice) : undefined,
         productNameSnapshot: item.productNameSnapshot || undefined,
         productSkuSnapshot: item.productSkuSnapshot || undefined,

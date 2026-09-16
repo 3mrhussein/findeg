@@ -23,10 +23,7 @@ export interface AdminShellProps {
  * Refactored to support PPR by decoupling dynamic session data into slots.
  * Wraps itself in default providers to allow static pre-rendering of nav items.
  */
-export function AdminShell({
-  children,
-  locale = 'en',
-}: AdminShellProps) {
+export function AdminShell({ children, locale = 'en' }: AdminShellProps) {
   return (
     <SessionProvider session={null}>
       <PermissionsProvider session={null}>
@@ -36,31 +33,35 @@ export function AdminShell({
             <AdminSidebar
               locale={locale}
               navSlot={
-                <Suspense fallback={
-                  <div className="flex-1 p-4 space-y-4">
-                    <Skeleton className="h-4 w-3/4" />
-                    <Skeleton className="h-4 w-1/2" />
-                    <Skeleton className="h-4 w-2/3" />
-                    <Skeleton className="h-4 w-1/3" />
-                  </div>
-                }>
+                <Suspense
+                  fallback={
+                    <div className="flex-1 p-4 space-y-4">
+                      <Skeleton className="h-4 w-3/4" />
+                      <Skeleton className="h-4 w-1/2" />
+                      <Skeleton className="h-4 w-2/3" />
+                      <Skeleton className="h-4 w-1/3" />
+                    </div>
+                  }
+                >
                   <AdminSessionGate locale={locale}>
                     <AdminSidebarNav locale={locale} />
                   </AdminSessionGate>
                 </Suspense>
               }
               userSlot={
-                <Suspense fallback={
-                  <div className="mt-auto border-t border-gray-200 dark:border-slate-800 p-[12px] flex flex-col shrink-0">
-                    <div className="flex items-center gap-3 mb-3">
-                      <Skeleton className="h-[32px] w-[32px] rounded-full" />
-                      <div className="flex flex-col gap-2 flex-1">
-                        <Skeleton className="h-3 w-20" />
-                        <Skeleton className="h-2 w-24" />
+                <Suspense
+                  fallback={
+                    <div className="mt-auto border-t border-gray-200 dark:border-slate-800 p-[12px] flex flex-col shrink-0">
+                      <div className="flex items-center gap-3 mb-3">
+                        <Skeleton className="h-[32px] w-[32px] rounded-full" />
+                        <div className="flex flex-col gap-2 flex-1">
+                          <Skeleton className="h-3 w-20" />
+                          <Skeleton className="h-2 w-24" />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                }>
+                  }
+                >
                   <AdminSidebarUser locale={locale} />
                 </Suspense>
               }
@@ -69,14 +70,16 @@ export function AdminShell({
             {/* Right Main Content Area */}
             <div className="flex flex-1 flex-col overflow-hidden relative">
               {/* Header - Static Structure */}
-              <AdminHeader 
-                locale={locale} 
+              <AdminHeader
+                locale={locale}
                 userSlot={
-                  <Suspense fallback={
-                    <div className="flex items-center gap-2">
-                      <Skeleton className="h-[32px] w-[32px] rounded-full" />
-                    </div>
-                  }>
+                  <Suspense
+                    fallback={
+                      <div className="flex items-center gap-2">
+                        <Skeleton className="h-[32px] w-[32px] rounded-full" />
+                      </div>
+                    }
+                  >
                     <AdminHeaderUser locale={locale} />
                   </Suspense>
                 }

@@ -13,9 +13,7 @@ export class ProductImportService implements IProductImportService {
   /**
    *
    */
-  constructor(
-    private adminProductService: IAdminProductService,
-  ) {}
+  constructor(private adminProductService: IAdminProductService) {}
 
   /**
    *

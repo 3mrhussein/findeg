@@ -39,9 +39,7 @@ export async function listRoleIdsRaw(): Promise<number[]> {
   return rows.map((row) => row.id);
 }
 
-export async function getAdminRolesSnapshotRaw(
-  roleIds: number[],
-): Promise<AdminRolesSnapshotRaw> {
+export async function getAdminRolesSnapshotRaw(roleIds: number[]): Promise<AdminRolesSnapshotRaw> {
   if (roleIds.length === 0) {
     return {
       roles: [],

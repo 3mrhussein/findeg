@@ -8,8 +8,7 @@
  * Domain entities (Product, Category, User, etc.) live in src/domain/entities/.
  */
 
-
-export type Locale = "en" | "ar";
+export type Locale = 'en' | 'ar';
 
 // Navigation Types
 export interface NavigationSubLink {
@@ -39,12 +38,12 @@ export interface NavigationItem {
 }
 
 // Global State Types
-export type Theme = "light" | "dark";
+export type Theme = 'light' | 'dark';
 export type Language = Locale;
 
 // Shop Page Types
-export type SortOption = "featured" | "newest" | "price-asc" | "price-desc";
-export type ViewMode = "grid" | "list";
+export type SortOption = 'featured' | 'newest' | 'price-asc' | 'price-desc';
+export type ViewMode = 'grid' | 'list';
 
 // Client-side User (used by UserProvider / RegistrationContent)
 // This is NOT the domain User entity — it's a lightweight

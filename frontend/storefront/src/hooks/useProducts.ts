@@ -20,20 +20,13 @@ export const useProducts = (initialProducts: Product[]) => {
     let sortable = [...filteredProducts];
     switch (sortOption) {
       case 'newest':
-        sortable.sort(
-          (a, b) =>
-            (isNewProduct(b) ? 1 : -1) - (isNewProduct(a) ? 1 : -1),
-        );
+        sortable.sort((a, b) => (isNewProduct(b) ? 1 : -1) - (isNewProduct(a) ? 1 : -1));
         break;
       case 'price-asc':
-        sortable.sort(
-          (a, b) => getProductDisplayPrice(a) - getProductDisplayPrice(b),
-        );
+        sortable.sort((a, b) => getProductDisplayPrice(a) - getProductDisplayPrice(b));
         break;
       case 'price-desc':
-        sortable.sort(
-          (a, b) => getProductDisplayPrice(b) - getProductDisplayPrice(a),
-        );
+        sortable.sort((a, b) => getProductDisplayPrice(b) - getProductDisplayPrice(a));
         break;
       case 'featured':
       default:

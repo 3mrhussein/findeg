@@ -67,10 +67,7 @@ export interface IUserService {
   ): Promise<void>;
 
   /** Updates the signed-in user's profile fields */
-  updateProfile(
-    userId: number,
-    input: { firstName?: string; lastName?: string },
-  ): Promise<void>;
+  updateProfile(userId: number, input: { firstName?: string; lastName?: string }): Promise<void>;
 
   /**
    * Retrieves profile and order summary for the "My Account" page.

@@ -1,4 +1,4 @@
-import { Locale } from "@findeg/db";
+import { Locale } from '@findeg/db';
 
 /**
  * Format currency value with proper locale formatting

@@ -21,11 +21,9 @@ export function AdminHeaderNotifications({
 
   const session = useSession();
 
-  const { data, mutate } = useSWR(
-    session ? '/api/v1/notifications/unread-count' : null,
-    fetcher,
-    { refreshInterval: 30000 }
-  );
+  const { data, mutate } = useSWR(session ? '/api/v1/notifications/unread-count' : null, fetcher, {
+    refreshInterval: 30000,
+  });
 
   const unreadCount = data?.count !== undefined ? data.count : initialCount;
 
@@ -65,7 +63,9 @@ export function AdminHeaderNotifications({
       {isOpen && (
         <div className="absolute inset-e-0 top-full mt-1 w-[320px] rounded-lg border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl z-50 overflow-hidden flex flex-col max-h-[420px]">
           <div className="sticky top-0 flex items-center justify-between border-b border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 py-3 z-10">
-            <span className="text-[14px] font-semibold text-gray-800 dark:text-gray-200">Notifications</span>
+            <span className="text-[14px] font-semibold text-gray-800 dark:text-gray-200">
+              Notifications
+            </span>
             <button
               onClick={handleMarkAllRead}
               className="text-[12px] text-indigo-600 hover:text-indigo-800 font-medium"
