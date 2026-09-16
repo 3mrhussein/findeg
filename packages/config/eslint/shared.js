@@ -31,17 +31,28 @@ export const shared = [
       // downgraded to 'warn' rather than 'off' so they stay visible without
       // failing CI. Clearing them is tracked as separate follow-up work;
       // once clear, these should go back to 'error'.
-      'no-undef': 'warn',
+      'no-undef': 'error',
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/no-explicit-any': 'warn',
-      'prettier/prettier': 'warn',
-      'no-useless-escape': 'warn',
-      'no-redeclare': 'warn',
-      'no-fallthrough': 'warn',
+      'prettier/prettier': 'error',
+      'no-useless-escape': 'error',
+      'no-redeclare': 'error',
+      'no-fallthrough': 'error',
 
       'jsdoc/check-alignment': 'warn',
       'jsdoc/check-syntax': 'warn',
       'jsdoc/no-undefined-types': 'warn',
+    },
+  },
+  {
+    // TypeScript's compiler already catches undefined references, and
+    // `no-undef` false-positives on ambient/global types (React, NodeJS,
+    // JQuery) used only in type position (see issue #125). Matches
+    // typescript-eslint's standard guidance to disable this rule for
+    // TS/TSX files.
+    files: ['**/*.{ts,tsx,mts,cts}'],
+    rules: {
+      'no-undef': 'off',
     },
   },
 ];

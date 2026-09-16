@@ -146,7 +146,7 @@ export const shouldShowSearchResultsForKeywordWithCorrectCounts = () => {
     const products = response.body.products as Array<{ name: string }>;
 
     visitSearchWithQuery(query);
-    cy.contains(`${SHOP_MESSAGES.searchPrefix} \"${query}\"`).shouldBeVisible(true);
+    cy.contains(`${SHOP_MESSAGES.searchPrefix} "${query}"`).shouldBeVisible(true);
 
     readResultsSummary().then((summary) => {
       expectSummaryToEqual(summary, {

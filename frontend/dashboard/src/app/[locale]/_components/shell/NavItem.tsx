@@ -7,11 +7,11 @@ import { ChevronRight } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@findeg/ui';
 import { cn } from '@lib/utils';
 import { usePathname } from '@/i18n/navigation';
-import type { NavItem } from '@/interfaces';
+import type { NavItem as NavItemData } from '@/interfaces';
 import { useAdminPermissions } from '@/hooks/useAdminPermissions';
 
 export interface NavItemProps {
-  item: NavItem;
+  item: NavItemData;
   collapsed?: boolean;
   locale?: string;
   depth?: number;
