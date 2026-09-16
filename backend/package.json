@@ -9,6 +9,7 @@
     "./features/cart": "./src/features/cart/index.ts",
     "./features/cart/*": null,
     "./features/catalog": "./src/features/catalog/index.ts",
+    "./features/catalog/schemas": "./src/features/catalog/schemas.ts",
     "./features/catalog/*": null,
     "./features/core": "./src/features/core/index.ts",
     "./features/core/*": null,

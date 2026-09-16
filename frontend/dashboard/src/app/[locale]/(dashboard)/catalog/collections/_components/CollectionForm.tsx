@@ -2,12 +2,8 @@
 
 import { useForm, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  CollectionInputSchema,
-  type CollectionInput,
-  Collection,
-  Tag,
-} from '@findeg/backend/features/catalog';
+import { CollectionInputSchema, type CollectionInput } from '@findeg/backend/features/catalog/schemas';
+import { Collection, Tag } from '@findeg/backend/features/catalog';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@i18n/navigation';
 import { useToast } from '@hooks/use-toast';
