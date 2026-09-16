@@ -3,10 +3,7 @@
  */
 
 import { z } from 'zod';
-import {
-  IdSchema,
-  QuantitySchema,
-} from '@findeg/backend/features/core/domain/types/common';
+import { IdSchema, QuantitySchema } from '@findeg/backend/features/core/domain/types/common';
 import { VariantSnapshotSchema } from '@findeg/backend/features/order';
 
 export const AddCartItemSchema = z.object({

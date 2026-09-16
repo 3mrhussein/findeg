@@ -50,8 +50,7 @@ export function NavItem({ item, collapsed = false, locale = 'en', depth = 0 }: N
   }
 
   const IconComponent = LucideIcons[item.icon as keyof typeof LucideIcons] as
-    | LucideIcons.LucideIcon
-    | undefined;
+    LucideIcons.LucideIcon | undefined;
   const hasChildren = item.children && item.children.length > 0;
 
   // Render the row

@@ -12,7 +12,7 @@ export class AuditLogService implements IAuditLogService {
   /**
    * Creates an instance of AuditLogService.
    */
-  constructor() { }
+  constructor() {}
 
   /**
    * Records an administrative action in the audit trail.
@@ -54,7 +54,7 @@ export class AuditLogService implements IAuditLogService {
     });
 
     return {
-      data: result.logs.map(log => ({
+      data: result.logs.map((log) => ({
         id: log.id,
         adminUserId: log.adminUserId || undefined,
         entityType: log.entityType,
@@ -72,8 +72,11 @@ export class AuditLogService implements IAuditLogService {
    * Retrieves recent activity across the system, optionally filtered by entity types.
    */
   async getRecentActivity(opts: { limit: number; entityTypes?: string[] }) {
-    const logs = await auditLogQueries.getRecent(opts.limit * (opts.entityTypes ? 3 : 1), opts.entityTypes);
-    return logs.slice(0, opts.limit).map(log => ({
+    const logs = await auditLogQueries.getRecent(
+      opts.limit * (opts.entityTypes ? 3 : 1),
+      opts.entityTypes,
+    );
+    return logs.slice(0, opts.limit).map((log) => ({
       id: log.id,
       adminUserId: log.adminUserId || undefined,
       entityType: log.entityType,
@@ -94,7 +97,7 @@ export class AuditLogService implements IAuditLogService {
    */
   async getEntityLogs(entityType: string, entityId: string) {
     const logs = await auditLogQueries.getByEntity(entityType, entityId);
-    return logs.map(log => ({
+    return logs.map((log) => ({
       id: log.id,
       adminUserId: log.adminUserId || undefined,
       entityType: log.entityType,

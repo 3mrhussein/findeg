@@ -5,7 +5,7 @@ import type { InsertProductVariantInput } from './insert-product-variant-in-tx';
 import { insertProductVariantInTx } from './insert-product-variant-in-tx';
 
 type LocalizedRecord = Record<string, string>;
-type ProductVariantMediaSet = typeof productVariants.$inferInsert['mediaSet'];
+type ProductVariantMediaSet = (typeof productVariants.$inferInsert)['mediaSet'];
 
 interface UpdateVariantMutationInput {
   id: number;
@@ -56,7 +56,8 @@ export async function updateProductWithVariantsInDb(
   await db.transaction(async (tx) => {
     const spuUpdate: Record<string, unknown> = {};
     if (input.localizedName !== undefined) spuUpdate.localizedName = input.localizedName;
-    if (input.localizedDescription !== undefined) spuUpdate.localizedDescription = input.localizedDescription;
+    if (input.localizedDescription !== undefined)
+      spuUpdate.localizedDescription = input.localizedDescription;
     if (input.localizedLongDescription !== undefined) {
       spuUpdate.localizedLongDescription = input.localizedLongDescription;
     }
@@ -98,7 +99,8 @@ export async function updateProductWithVariantsInDb(
             isDefault: variant.isDefault,
             mediaSet: variant.mediaSet,
             basePrice: variant.basePrice !== undefined ? String(variant.basePrice) : undefined,
-            strikePrice: variant.strikePrice !== undefined ? String(variant.strikePrice) : undefined,
+            strikePrice:
+              variant.strikePrice !== undefined ? String(variant.strikePrice) : undefined,
             costPrice: variant.costPrice !== undefined ? String(variant.costPrice) : undefined,
             weightGrams: variant.weightGrams ?? null,
             barcode: variant.barcode ?? null,

@@ -1,8 +1,8 @@
-import bcrypt from "bcryptjs";
-import { z } from "zod";
+import bcrypt from 'bcryptjs';
+import { z } from 'zod';
 
-import { sql, type Table, type InferInsertModel } from "drizzle-orm";
-import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import { sql, type Table, type InferInsertModel } from 'drizzle-orm';
+import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 
 export async function hashPassword(plain: string): Promise<string> {
   return await bcrypt.hash(plain, 12);
@@ -27,7 +27,7 @@ export async function ensureParents(
 
 export type ProcessedSeed<T> = {
   [K in keyof T]: T[K] extends string
-    ? K extends `${string}At` | "emailVerified" | "expires"
+    ? K extends `${string}At` | 'emailVerified' | 'expires'
       ? Date | null
       : T[K]
     : T[K];
@@ -45,7 +45,7 @@ export function prepareSeedData<TTable extends Table>(
       if (!result.success) {
         const firstError = result.error.issues[0];
         throw new Error(
-          `❌ Seed Validation Error at index ${index}: [${firstError.path.join(".")}] ${firstError.message}`,
+          `❌ Seed Validation Error at index ${index}: [${firstError.path.join('.')}] ${firstError.message}`,
         );
       }
     }
@@ -55,25 +55,25 @@ export function prepareSeedData<TTable extends Table>(
       const val = newItem[key];
       // Convert date strings
       if (
-        (key.endsWith("At") ||
-          key.endsWith("Date") ||
-          key === "emailVerified" ||
-          key === "expires") &&
-        typeof val === "string"
+        (key.endsWith('At') ||
+          key.endsWith('Date') ||
+          key === 'emailVerified' ||
+          key === 'expires') &&
+        typeof val === 'string'
       ) {
         newItem[key] = new Date(val);
       }
       // Convert numbers to strings for Drizzle Decimal/Numeric types
       if (
-        typeof val === "number" &&
-        (key.endsWith("Price") ||
-          key.endsWith("Amount") ||
-          key.endsWith("Cost") ||
-          key.endsWith("Rate") ||
-          key.endsWith("factorToBase") ||
-          key === "rating" ||
-          key === "totalPrice" ||
-          key === "valueNum")
+        typeof val === 'number' &&
+        (key.endsWith('Price') ||
+          key.endsWith('Amount') ||
+          key.endsWith('Cost') ||
+          key.endsWith('Rate') ||
+          key.endsWith('factorToBase') ||
+          key === 'rating' ||
+          key === 'totalPrice' ||
+          key === 'valueNum')
       ) {
         newItem[key] = val.toString();
       }
@@ -83,9 +83,9 @@ export function prepareSeedData<TTable extends Table>(
 }
 
 export async function truncateTables(db: PostgresJsDatabase<any>) {
-  console.log("🧹 Truncating tables securely across all schemas...");
+  console.log('🧹 Truncating tables securely across all schemas...');
 
-  const schemas = ["identity", "catalog", "sales", "inventory", "school_engine", "system"];
+  const schemas = ['identity', 'catalog', 'sales', 'inventory', 'school_engine', 'system'];
 
   for (const schemaName of schemas) {
     try {
@@ -98,7 +98,7 @@ export async function truncateTables(db: PostgresJsDatabase<any>) {
       )) as { tablename: string }[];
 
       if (tables.length > 0) {
-        const tableNames = tables.map((t) => `"${schemaName}"."${t.tablename}"`).join(", ");
+        const tableNames = tables.map((t) => `"${schemaName}"."${t.tablename}"`).join(', ');
         console.log(`  - Truncating ${tables.length} tables in schema "${schemaName}"...`);
         await db.execute(sql.raw(`TRUNCATE TABLE ${tableNames} RESTART IDENTITY CASCADE;`));
       }
@@ -107,5 +107,5 @@ export async function truncateTables(db: PostgresJsDatabase<any>) {
     }
   }
 
-  console.log("✅ All tables truncated.");
+  console.log('✅ All tables truncated.');
 }

@@ -36,11 +36,7 @@ interface ActiveChip {
 }
 
 type SortOptionMessageKey =
-  | 'SortPopular'
-  | 'SortNewest'
-  | 'SortPriceLowHigh'
-  | 'SortPriceHighLow'
-  | 'SortRating';
+  'SortPopular' | 'SortNewest' | 'SortPriceLowHigh' | 'SortPriceHighLow' | 'SortRating';
 
 const SORT_OPTIONS: Array<{ value: ShopPlpSort; key: SortOptionMessageKey }> = [
   { value: 'popular', key: 'SortPopular' },

@@ -1,7 +1,4 @@
-import {
-  CreateNotificationInput,
-  Notification,
-} from '../../domain/types/Notification';
+import { CreateNotificationInput, Notification } from '../../domain/types/Notification';
 
 /**
  * Data Access Interface for Notifications

@@ -1,26 +1,18 @@
-import {
-    getCategoryById,
-    getBrandById,
-    getProductById,
-} from '@findeg/db/queries';
+import { getCategoryById, getBrandById, getProductById } from '@findeg/db/queries';
 import type { ID } from '../../../../core/domain/types/common';
 
-export async function ensureCategoryExists(
-    categoryId?: number | null,
-): Promise<void> {
-    if (!categoryId) return;
+export async function ensureCategoryExists(categoryId?: number | null): Promise<void> {
+  if (!categoryId) return;
 
-    const category = await getCategoryById(categoryId);
-    if (!category) throw new Error(`Category ${categoryId} not found`);
+  const category = await getCategoryById(categoryId);
+  if (!category) throw new Error(`Category ${categoryId} not found`);
 }
 
-export async function ensureBrandExists(
-    brandId?: number | null,
-): Promise<void> {
-    if (!brandId) return;
+export async function ensureBrandExists(brandId?: number | null): Promise<void> {
+  if (!brandId) return;
 
-    const brand = await getBrandById(brandId);
-    if (!brand) throw new Error(`Brand ${brandId} not found`);
+  const brand = await getBrandById(brandId);
+  if (!brand) throw new Error(`Brand ${brandId} not found`);
 }
 
 /**
@@ -30,8 +22,8 @@ export async function ensureBrandExists(
  * @throws Error if product not found
  */
 export async function getExistingProductOrThrow(id: ID) {
-    const existing = await getProductById(id as number);
-    if (!existing) throw new Error(`Product ${id} not found`);
+  const existing = await getProductById(id as number);
+  if (!existing) throw new Error(`Product ${id} not found`);
 
-    return existing;
+  return existing;
 }

@@ -66,21 +66,17 @@ export class LoggerService implements ILoggerService {
 
   /**
    * Specialized method for server request logging.
-   * 
+   *
    * Logs to file immediately for reliability.
    * Database persistence is handled at the app layer via server actions with "use cache".
-   * 
+   *
    * To persist to database, create a separate app-level data layer action:
    *   @/data/logs/actions.ts → logRequest(metadata) → "use server" + updateTag('logs')
    */
   async logRequest(metadata: LogMetadata): Promise<void> {
     try {
       // Log to file for fast, reliable logging
-      this.fileLogger.log(
-        'info',
-        `Request: ${metadata.method} ${metadata.path}`,
-        metadata
-      );
+      this.fileLogger.log('info', `Request: ${metadata.method} ${metadata.path}`, metadata);
 
       // Log to console in development
       if (env.NODE_ENV !== 'production') {

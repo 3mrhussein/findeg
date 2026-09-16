@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from 'react';
 
-import { useBoundaryMode } from "./BoundaryProvider";
-import { cn } from "../../lib/utils";
+import { useBoundaryMode } from './BoundaryProvider';
+import { cn } from '../../lib/utils';
 
-type RenderingType = "static" | "dynamic" | "hybrid";
-type HydrationType = "server" | "client" | "hybrid";
+type RenderingType = 'static' | 'dynamic' | 'hybrid';
+type HydrationType = 'server' | 'client' | 'hybrid';
 
 type Props = {
   children: React.ReactNode;
@@ -18,15 +18,15 @@ type Props = {
 };
 
 const renderingColors = {
-  dynamic: "border-blue-500 bg-blue-50 dark:bg-blue-950/20",
-  hybrid: "border-purple-500 bg-purple-50 dark:bg-purple-950/20",
-  static: "border-red-500 bg-red-50 dark:bg-red-950/20",
+  dynamic: 'border-blue-500 bg-blue-50 dark:bg-blue-950/20',
+  hybrid: 'border-purple-500 bg-purple-50 dark:bg-purple-950/20',
+  static: 'border-red-500 bg-red-50 dark:bg-red-950/20',
 } as const;
 
 const componentColors = {
-  client: "border-blue-500 bg-blue-50 dark:bg-blue-950/20",
-  hybrid: "border-purple-500 bg-purple-50 dark:bg-purple-950/20",
-  server: "border-red-500 bg-red-50 dark:bg-red-950/20",
+  client: 'border-blue-500 bg-blue-50 dark:bg-blue-950/20',
+  hybrid: 'border-purple-500 bg-purple-50 dark:bg-purple-950/20',
+  server: 'border-red-500 bg-red-50 dark:bg-red-950/20',
 } as const;
 
 /**
@@ -66,62 +66,62 @@ export default function Boundary({
     };
   }, []);
 
-  if (mode === "off") {
+  if (mode === 'off') {
     return <>{children}</>;
   }
 
-  const showRendering = mode === "rendering" && rendering;
-  const showComponent = mode === "hydration" && hydration;
+  const showRendering = mode === 'rendering' && rendering;
+  const showComponent = mode === 'hydration' && hydration;
 
   if (!showRendering && !showComponent) {
     return <>{children}</>;
   }
 
-  let colorClasses = "";
-  let labelText = "";
-  let labelColor = "";
+  let colorClasses = '';
+  let labelText = '';
+  let labelColor = '';
 
   if (showRendering) {
     colorClasses = renderingColors[rendering!];
     if (showLabel) {
       labelText = label || `${rendering} rendering`;
       labelColor =
-        rendering === "dynamic"
-          ? "text-blue-700 dark:text-blue-300"
-          : rendering === "hybrid"
-            ? "text-purple-700 dark:text-purple-300"
-            : "text-red-700 dark:text-red-300";
+        rendering === 'dynamic'
+          ? 'text-blue-700 dark:text-blue-300'
+          : rendering === 'hybrid'
+            ? 'text-purple-700 dark:text-purple-300'
+            : 'text-red-700 dark:text-red-300';
     }
   } else if (showComponent) {
     colorClasses = componentColors[hydration!];
     if (showLabel) {
       labelText = label || `${hydration} component`;
       labelColor =
-        hydration === "client"
-          ? "text-blue-700 dark:text-blue-300"
-          : hydration === "hybrid"
-            ? "text-purple-700 dark:text-purple-300"
-            : "text-red-700 dark:text-red-300";
+        hydration === 'client'
+          ? 'text-blue-700 dark:text-blue-300'
+          : hydration === 'hybrid'
+            ? 'text-purple-700 dark:text-purple-300'
+            : 'text-red-700 dark:text-red-300';
     }
   }
 
   if (isSmall) {
-    let circleColorClasses = "";
+    let circleColorClasses = '';
 
     if (showRendering) {
       circleColorClasses =
-        rendering === "dynamic"
-          ? "border-blue-500"
-          : rendering === "hybrid"
-            ? "border-purple-500"
-            : "border-red-500";
+        rendering === 'dynamic'
+          ? 'border-blue-500'
+          : rendering === 'hybrid'
+            ? 'border-purple-500'
+            : 'border-red-500';
     } else if (showComponent) {
       circleColorClasses =
-        hydration === "client"
-          ? "border-blue-500"
-          : hydration === "hybrid"
-            ? "border-purple-500"
-            : "border-red-500";
+        hydration === 'client'
+          ? 'border-blue-500'
+          : hydration === 'hybrid'
+            ? 'border-purple-500'
+            : 'border-red-500';
     }
 
     return (
@@ -129,10 +129,10 @@ export default function Boundary({
         <div ref={containerRef}>{children}</div>
         <div
           className={cn(
-            "absolute -top-1 -right-1 h-3 w-3 rounded-full border-2 border-dashed",
+            'absolute -top-1 -right-1 h-3 w-3 rounded-full border-2 border-dashed',
             circleColorClasses,
           )}
-          title={labelText || "Boundary indicator"}
+          title={labelText || 'Boundary indicator'}
         />
       </div>
     );
@@ -141,19 +141,19 @@ export default function Boundary({
   return (
     <div
       ref={containerRef}
-      className={cn("relative rounded-md border-2 border-dashed", colorClasses)}
+      className={cn('relative rounded-md border-2 border-dashed', colorClasses)}
     >
       {showLabel && labelText && (
         <div className="absolute -top-2 left-2 z-10 flex gap-2">
           <div
             className={cn(
-              "rounded border bg-white px-2 py-0.5 font-mono text-xs font-normal lowercase shadow-sm dark:bg-black",
+              'rounded border bg-white px-2 py-0.5 font-mono text-xs font-normal lowercase shadow-sm dark:bg-black',
               labelColor,
             )}
           >
             {labelText}
           </div>
-          {cached && mode === "rendering" && (
+          {cached && mode === 'rendering' && (
             <div className="rounded border border-green-500 bg-green-50 px-2 py-0.5 font-mono text-xs font-normal text-green-700 lowercase shadow-sm dark:bg-green-950/20 dark:text-green-300">
               cached
             </div>

@@ -8,13 +8,7 @@ import { Tabs, TabsList, TabsTrigger } from '@findeg/ui';
  * OrderStatus type (local definition)
  */
 type OrderStatus =
-  | 'pending'
-  | 'confirmed'
-  | 'processing'
-  | 'shipped'
-  | 'delivered'
-  | 'cancelled'
-  | 'refunded';
+  'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled' | 'refunded';
 
 interface OrderStatusTabsProps {
   counts: {

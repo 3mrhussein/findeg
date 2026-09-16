@@ -2,11 +2,7 @@
  * Cart Service Interface
  */
 
-import {
-  ID,
-  Quantity,
-  Price,
-} from '@findeg/backend/features/core/domain/types/common';
+import { ID, Quantity, Price } from '@findeg/backend/features/core/domain/types/common';
 import { CartItem } from '../../domain/entities/Cart';
 
 export interface ICartService {
@@ -23,11 +19,7 @@ export interface ICartService {
   /**
    * Updates the quantity of a specific item.
    */
-  updateQuantity(
-    items: CartItem[],
-    variantId: ID,
-    quantity: Quantity,
-  ): CartItem[];
+  updateQuantity(items: CartItem[], variantId: ID, quantity: Quantity): CartItem[];
 
   getTotals(items: CartItem[]): { totalItems: Quantity; totalPrice: Price };
 

@@ -21,7 +21,7 @@ export interface IParentListService {
   /**
    * Get the full list with all items, alternatives, and variant data.
    */
-  getListWithDetails(slug: string): Promise<SchoolProfile | null>; 
+  getListWithDetails(slug: string): Promise<SchoolProfile | null>;
 
   /**
    * Determine the current session state for a user/guest.

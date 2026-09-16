@@ -15,4 +15,3 @@ export {
   ResponsiveMediaSetSchema,
   type ResponsiveMediaSet,
 };
-

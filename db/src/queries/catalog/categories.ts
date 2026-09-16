@@ -4,7 +4,7 @@
  * Pure database queries for hierarchical category management.
  * Uses materialized path pattern for efficient tree queries.
  * No ORM abstraction - direct Drizzle SQL operations.
- * 
+ *
  * Note: Returns raw database rows. Domain mapping (i18n, tree building) handled by CategoryService.
  */
 

@@ -12,7 +12,11 @@ export type DbCategory = typeof categories.$inferSelect;
  * Get category by ID
  */
 export async function getCategoryById(id: ID) {
-  const result = await db.select().from(categories).where(eq(categories.id, id as number)).limit(1);
+  const result = await db
+    .select()
+    .from(categories)
+    .where(eq(categories.id, id as number))
+    .limit(1);
   return result[0] || null;
 }
 

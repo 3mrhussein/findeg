@@ -1,7 +1,7 @@
-import { sql, and, eq } from "drizzle-orm";
-import { z } from "zod";
-import { db } from "../../connection";
-import { products, categories, productVariants, variantImages, brands } from "../../schema/catalog";
+import { sql, and, eq } from 'drizzle-orm';
+import { z } from 'zod';
+import { db } from '../../connection';
+import { products, categories, productVariants, variantImages, brands } from '../../schema/catalog';
 
 /**
  * Catalog health statistics and data quality checks

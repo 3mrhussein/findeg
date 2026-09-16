@@ -15,26 +15,26 @@ import { useEffect } from 'react';
  * the gap by updating HTML attributes from the client side after hydration.
  */
 export function LocaleSync() {
-    const locale = useLocale();
-    const { theme, systemTheme, resolvedTheme } = useTheme();
+  const locale = useLocale();
+  const { theme, systemTheme, resolvedTheme } = useTheme();
 
-    useEffect(() => {
-        // Update the root HTML element attributes whenever locale or theme changes
-        const html = document.documentElement;
+  useEffect(() => {
+    // Update the root HTML element attributes whenever locale or theme changes
+    const html = document.documentElement;
 
-        // Sync locale attributes
-        html.lang = locale;
-        html.dir = locale === 'ar' ? 'rtl' : 'ltr';
+    // Sync locale attributes
+    html.lang = locale;
+    html.dir = locale === 'ar' ? 'rtl' : 'ltr';
 
-        // Sync theme class (next-themes uses class attribute for Tailwind)
-        // resolvedTheme is the actual theme (light or dark, accounting for system preference)
-        const effectiveTheme = resolvedTheme || (theme === 'system' ? systemTheme : theme);
-        if (effectiveTheme === 'dark') {
-            html.classList.add('dark');
-        } else {
-            html.classList.remove('dark');
-        }
-    }, [locale, theme, systemTheme, resolvedTheme]);
+    // Sync theme class (next-themes uses class attribute for Tailwind)
+    // resolvedTheme is the actual theme (light or dark, accounting for system preference)
+    const effectiveTheme = resolvedTheme || (theme === 'system' ? systemTheme : theme);
+    if (effectiveTheme === 'dark') {
+      html.classList.add('dark');
+    } else {
+      html.classList.remove('dark');
+    }
+  }, [locale, theme, systemTheme, resolvedTheme]);
 
-    return null;
+  return null;
 }

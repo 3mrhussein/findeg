@@ -1,11 +1,11 @@
-import { pgTable, serial, text, timestamp, boolean, varchar, integer } from "drizzle-orm/pg-core";
-import { portalRoleEnum } from "../enums";
-import { relations } from "drizzle-orm";
-import { identitySchema } from "../schemas";
-import { orders } from "../sales/orders";
-import { reviews } from "../sales/reviews";
-import { addresses } from "./addresses";
-import { auditLog } from "../system/audit-log";
+import { pgTable, serial, text, timestamp, boolean, varchar, integer } from 'drizzle-orm/pg-core';
+import { portalRoleEnum } from '../enums';
+import { relations } from 'drizzle-orm';
+import { identitySchema } from '../schemas';
+import { orders } from '../sales/orders';
+import { reviews } from '../sales/reviews';
+import { addresses } from './addresses';
+import { auditLog } from '../system/audit-log';
 
 /**
  * Users Table
@@ -17,25 +17,25 @@ import { auditLog } from "../system/audit-log";
  * - `role` — "user" or "admin"
  * - `isActive` — Account status toggle
  */
-export const users = identitySchema.table("users", {
-  id: serial("id").primaryKey(),
-  email: varchar("email", { length: 255 }).notNull().unique(),
+export const users = identitySchema.table('users', {
+  id: serial('id').primaryKey(),
+  email: varchar('email', { length: 255 }).notNull().unique(),
   /** First name for personalization and address forms */
-  firstName: text("first_name"),
+  firstName: text('first_name'),
   /** Last name */
-  lastName: text("last_name"),
+  lastName: text('last_name'),
   /** Egyptian phone number (e.g., "+201234567890") */
-  phone: varchar("phone", { length: 20 }),
-  verifiedPhone: boolean("verified_phone").default(false).notNull(),
+  phone: varchar('phone', { length: 20 }),
+  verifiedPhone: boolean('verified_phone').default(false).notNull(),
   /** Portal routing gate: "customer" | "staff" | "school_staff" */
-  portalRole: portalRoleEnum("portal_role").default("customer").notNull(),
-  emailVerified: timestamp("email_verified"),
-  image: text("image"),
-  isActive: boolean("is_active").default(true).notNull(),
+  portalRole: portalRoleEnum('portal_role').default('customer').notNull(),
+  emailVerified: timestamp('email_verified'),
+  image: text('image'),
+  isActive: boolean('is_active').default(true).notNull(),
   /** Advances only when access-affecting facts change. */
-  authorizationVersion: integer("authorization_version").default(1).notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  authorizationVersion: integer('authorization_version').default(1).notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
 
 /**
@@ -51,7 +51,7 @@ export const usersRelations = relations(users, ({ many }) => ({
   orders: many(orders),
   reviews: many(reviews),
   addresses: many(addresses),
-  auditLogs: many(auditLog, { relationName: "user_audit_logs" }),
+  auditLogs: many(auditLog, { relationName: 'user_audit_logs' }),
 }));
 
 /**

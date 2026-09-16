@@ -48,11 +48,7 @@ export class CartService implements ICartService {
   /**
    * Updates the exact quantity of an item in the cart.
    */
-  updateQuantity(
-    items: CartItem[],
-    variantId: number,
-    quantity: number,
-  ): CartItem[] {
+  updateQuantity(items: CartItem[], variantId: number, quantity: number): CartItem[] {
     const cart = new CartEntity(items);
     return cart.updateItemQuantity(variantId, quantity);
   }
@@ -95,9 +91,7 @@ export class CartService implements ICartService {
     input: CartItem,
   ): Promise<{ items: CartItem[]; subtotal: number; itemCount: number }> {
     const items = this.carts.get(cartId) || [];
-    const existing = items.find(
-      (i) => i.variantId === input.variantId,
-    );
+    const existing = items.find((i) => i.variantId === input.variantId);
     if (existing) {
       existing.quantity += input.quantity;
       existing.unitPrice = input.unitPrice;

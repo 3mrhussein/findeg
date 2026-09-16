@@ -21,7 +21,7 @@ import {
  * No repository dependency - uses direct database queries.
  */
 export class AdminCollectionService implements IAdminCollectionService {
-  constructor(private auditLogService: IAuditLogService) { }
+  constructor(private auditLogService: IAuditLogService) {}
 
   /**
    * Retrieves all collections.

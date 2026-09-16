@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
-export type BoundaryMode = "off" | "hydration" | "rendering";
+export type BoundaryMode = 'off' | 'hydration' | 'rendering';
 
 type BoundaryContextType = {
   mode: BoundaryMode;
@@ -12,17 +12,17 @@ type BoundaryContextType = {
 
 const BoundaryContext = createContext<BoundaryContextType | null>(null);
 
-const BOUNDARY_MODE_KEY = "boundaryMode";
+const BOUNDARY_MODE_KEY = 'boundaryMode';
 
 /**
  *
  */
 export function BoundaryProvider({ children }: { children: React.ReactNode }) {
-  const [mode, setMode] = useState<BoundaryMode>("off");
+  const [mode, setMode] = useState<BoundaryMode>('off');
 
   useEffect(() => {
     const savedMode = localStorage.getItem(BOUNDARY_MODE_KEY) as BoundaryMode;
-    if (savedMode && ["off", "rendering", "hydration"].includes(savedMode)) {
+    if (savedMode && ['off', 'rendering', 'hydration'].includes(savedMode)) {
       setMode(savedMode);
     }
   }, []);
@@ -32,7 +32,7 @@ export function BoundaryProvider({ children }: { children: React.ReactNode }) {
    */
   const toggleMode = () => {
     setMode((prev) => {
-      const newMode = prev === "off" ? "hydration" : "off";
+      const newMode = prev === 'off' ? 'hydration' : 'off';
       localStorage.setItem(BOUNDARY_MODE_KEY, newMode);
       return newMode;
     });
@@ -59,7 +59,7 @@ export function BoundaryProvider({ children }: { children: React.ReactNode }) {
 export function useBoundaryMode() {
   const context = useContext(BoundaryContext);
   if (!context) {
-    throw new Error("useBoundaryMode must be used within a BoundaryProvider");
+    throw new Error('useBoundaryMode must be used within a BoundaryProvider');
   }
   return context;
 }

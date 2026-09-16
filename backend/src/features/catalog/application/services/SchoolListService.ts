@@ -81,13 +81,15 @@ export class SchoolListService implements ISchoolListService {
 
     // Hydrate the items and alternatives for the public view
     const itemsWithAlts = await schoolListQueries.getItemsWithAlternatives(list.id);
-    
+
     // Hydrate variants for alternatives
     const allVariantIds = Array.from(
       new Set(itemsWithAlts.flatMap((i) => i.alternatives.map((a) => a.variantId))),
     );
     const variants = await productQueries.getVariantsByIds(allVariantIds);
-    const variantMap = new Map(variants.map((variant) => [variant.id, this.mapVariantToDomain(variant)]));
+    const variantMap = new Map(
+      variants.map((variant) => [variant.id, this.mapVariantToDomain(variant)]),
+    );
 
     const items: SchoolListItemResult[] = itemsWithAlts.map((item) => ({
       ...item,

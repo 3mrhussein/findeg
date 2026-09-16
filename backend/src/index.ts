@@ -23,7 +23,10 @@ import {
 } from './features/identity/application/services/JWTService';
 export { JWTService, type TokenPair, type JWTPayload, type TokenType, type IJWTService };
 
-export async function login(email: string | { email: string; password?: string }, password?: string) {
+export async function login(
+  email: string | { email: string; password?: string },
+  password?: string,
+) {
   const { auth } = createIdentityServices();
   // Handle both (email, password) and ({ email, password }) signatures
   if (typeof email === 'object' && !password) {
@@ -35,7 +38,6 @@ export async function login(email: string | { email: string; password?: string }
 export async function logout() {
   return { success: true };
 }
-
 
 export async function updateMyProfile(userId: number, input: UpdateAdminInput) {
   const { userService } = createIdentityServices();

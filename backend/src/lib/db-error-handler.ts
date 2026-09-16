@@ -24,7 +24,7 @@ interface PostgresError {
 
 /**
  * Handles Database specific errors (Postgres/Drizzle) and maps them to Application Errors.
- * 
+ *
  * @param error - The raw error from the database driver or Drizzle
  * @param resourceName - Optional name of the resource being operated on for better error messages
  * @returns An AppError or DomainError instance
@@ -52,7 +52,10 @@ export function handleDBError(error: unknown, resourceName: string = 'Resource')
 
   // 2. Foreign Key Violation (23503)
   if (code === PG_ERROR_CODES.FOREIGN_KEY_VIOLATION) {
-    return new ValidationError('id', `Referenced ${resourceName.toLowerCase()} does not exist or is still in use.`);
+    return new ValidationError(
+      'id',
+      `Referenced ${resourceName.toLowerCase()} does not exist or is still in use.`,
+    );
   }
 
   // 3. Not Null Violation (23502)
@@ -63,7 +66,10 @@ export function handleDBError(error: unknown, resourceName: string = 'Resource')
 
   // 4. Check Violation (23514)
   if (code === PG_ERROR_CODES.CHECK_VIOLATION) {
-    return new ValidationError('unknown', `Value violates database constraints for ${resourceName.toLowerCase()}.`);
+    return new ValidationError(
+      'unknown',
+      `Value violates database constraints for ${resourceName.toLowerCase()}.`,
+    );
   }
 
   // Fallback to a generic database error or rethrow

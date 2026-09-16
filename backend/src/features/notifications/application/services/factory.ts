@@ -12,7 +12,6 @@ import { ResendEmailService } from '../../infrastructure/ResendEmailService';
  * @returns Object containing all notification service instances
  */
 export function createNotificationServices() {
-  
   const emailService = new ResendEmailService();
   const notifications = new NotificationService();
 

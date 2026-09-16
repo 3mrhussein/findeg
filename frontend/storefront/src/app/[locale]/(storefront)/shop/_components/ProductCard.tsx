@@ -28,7 +28,6 @@ interface ProductCardProps {
   brand?: ProductCardBrand;
 }
 
-
 export function ProductCard({ product, view, brand }: ProductCardProps) {
   const locale = useLocale();
   const t = useTranslations('Pages.ProductCard');
@@ -92,15 +91,13 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
     return Math.round((diff / strike) * 100);
   }, [primaryVariant]);
 
-
   const currentPrice = primaryVariant?.basePrice || 0;
   const originalPrice = primaryVariant?.strikePrice;
   const [imageLoaded, setImageLoaded] = useState(false);
   const isWishlisted = Boolean(currentUser?.wishlist.includes(product.id));
 
   const imageUrl =
-    primaryVariant?.images?.[0]?.url ||
-    `https://picsum.photos/seed/${product.id}/600/600`;
+    primaryVariant?.images?.[0]?.url || `https://picsum.photos/seed/${product.id}/600/600`;
 
   const badge = useMemo(() => {
     if (discountPercentage > 0) {
@@ -226,7 +223,9 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
             className="size-5 rounded-sm object-contain"
           />
         ) : null}
-        <span className="truncate">{(brand as any)?.name || product.brandName || t('UnknownBrand')}</span>
+        <span className="truncate">
+          {(brand as any)?.name || product.brandName || t('UnknownBrand')}
+        </span>
       </div>
 
       <div className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
@@ -245,7 +244,6 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
           </span>
         ) : null}
       </div>
-
 
       <div className={cn('mt-2 text-xs font-medium', stockClassName)}>{stockLabel}</div>
 

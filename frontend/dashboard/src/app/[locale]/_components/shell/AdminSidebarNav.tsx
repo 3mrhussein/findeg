@@ -20,12 +20,7 @@ export function AdminSidebarNav({ locale }: AdminSidebarNavProps) {
   return (
     <ScrollArea className="flex-1 overflow-y-auto w-full py-4">
       {ADMIN_NAV.map((group, index) => (
-        <NavGroup 
-          key={index} 
-          group={group} 
-          collapsed={isCollapsed} 
-          locale={locale} 
-        />
+        <NavGroup key={index} group={group} collapsed={isCollapsed} locale={locale} />
       ))}
     </ScrollArea>
   );

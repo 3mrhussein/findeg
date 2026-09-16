@@ -31,7 +31,7 @@ import { User } from '../../domain/entities/User';
 import { Order } from '../../../order/domain/entities/Order';
 
 export class UserService implements IUserService {
-  constructor() { }
+  constructor() {}
 
   /**
    * Returns all users who have at least one admin role assigned.

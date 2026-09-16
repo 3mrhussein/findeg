@@ -18,9 +18,7 @@ export class AdminInventoryService implements IAdminInventoryService {
   /**
    * Creates an instance of AdminInventoryService.
    */
-  constructor(
-    private auditLogService: IAuditLogService,
-  ) { }
+  constructor(private auditLogService: IAuditLogService) {}
 
   /**
    * Retrieves a paginated list of products and their current inventory status.

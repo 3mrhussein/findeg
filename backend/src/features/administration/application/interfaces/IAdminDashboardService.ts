@@ -5,9 +5,7 @@
  * It interacts with multiple repositories to provide a unified view of the system's status.
  */
 
-import {
-  DashboardStats,
-} from '../dtos';
+import { DashboardStats } from '../dtos';
 import {
   CatalogHealthStats,
   CategoryProductDistribution,

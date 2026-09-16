@@ -16,13 +16,7 @@ import { useRouter } from '@i18n/navigation';
  * Local type definitions
  */
 type OrderStatus =
-  | 'pending'
-  | 'confirmed'
-  | 'processing'
-  | 'shipped'
-  | 'delivered'
-  | 'cancelled'
-  | 'refunded';
+  'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled' | 'refunded';
 type PaymentStatus = 'pending' | 'paid' | 'failed' | 'refunded';
 
 /**

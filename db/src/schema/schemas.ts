@@ -1,4 +1,4 @@
-import { pgSchema } from "drizzle-orm/pg-core";
+import { pgSchema } from 'drizzle-orm/pg-core';
 
 /**
  * Database Schemas
@@ -7,9 +7,9 @@ import { pgSchema } from "drizzle-orm/pg-core";
  * during Drizzle initialization.
  */
 
-export const identitySchema = pgSchema("identity");
-export const catalogSchema = pgSchema("catalog");
-export const salesSchema = pgSchema("sales");
-export const inventorySchema = pgSchema("inventory");
-export const schoolEngineSchema = pgSchema("school_engine");
-export const systemSchema = pgSchema("system");
+export const identitySchema = pgSchema('identity');
+export const catalogSchema = pgSchema('catalog');
+export const salesSchema = pgSchema('sales');
+export const inventorySchema = pgSchema('inventory');
+export const schoolEngineSchema = pgSchema('school_engine');
+export const systemSchema = pgSchema('system');

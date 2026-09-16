@@ -99,7 +99,9 @@ export const productVariants = catalogSchema.table(
     /** Each variant_key is unique within a product */
     uniqueIndex('uq_variant_product_key').on(table.productId, table.variantKey),
     /** Ensure exactly one default variant per product */
-    uniqueIndex('idx_variant_product_default').on(table.productId).where(sql`is_default = true`),
+    uniqueIndex('idx_variant_product_default')
+      .on(table.productId)
+      .where(sql`is_default = true`),
     /** Fast lookup for "all variants of a product" */
     index('idx_variant_product').on(table.productId),
     /** SKU lookup */

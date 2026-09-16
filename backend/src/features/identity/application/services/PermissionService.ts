@@ -12,7 +12,6 @@ import { IPermissionService } from '../interfaces/IPermissionService';
 import { userQueries } from '@findeg/db/queries';
 
 export class PermissionService implements IPermissionService {
-
   /**
    * Check if user has specific permission
    */

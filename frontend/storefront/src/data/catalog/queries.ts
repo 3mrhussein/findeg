@@ -107,7 +107,9 @@ export async function getShopPlpViewModel(
       filters: {
         minPrice: Number(query.minPrice) || 0,
         maxPrice: Number(query.maxPrice) || 1000,
-        brandIds: query.brandIds ? String(query.brandIds).split(',').map(Number).filter(Boolean) : [],
+        brandIds: query.brandIds
+          ? String(query.brandIds).split(',').map(Number).filter(Boolean)
+          : [],
         inStockOnly: query.inStock === 'true',
         discounts: [],
       },
@@ -255,7 +257,7 @@ export async function getTopProductSlugsForStaticParams(limit: number = 100) {
   }
 }
 
-/** 
+/**
  * Full PDP View Model query — session-sensitive caching.
  */
 export async function getProductPdp(
@@ -279,7 +281,9 @@ export async function getProductPdp(
       ? await brandService.getById(product.brandId, resolvedLocale)
       : null;
     const categories = product.categoryId
-      ? ([await categoryService.getById(product.categoryId, resolvedLocale)].filter(Boolean) as any[])
+      ? ([await categoryService.getById(product.categoryId, resolvedLocale)].filter(
+          Boolean,
+        ) as any[])
       : [];
     const related = await productService.getRelatedProducts(product, 4, resolvedLocale);
 
@@ -288,7 +292,9 @@ export async function getProductPdp(
 
     return {
       product: mappedProduct,
-      selectedVariant: (mappedProduct.variants?.find((v: any) => v.isDefault) || mappedProduct.variants?.[0]) as Variant || null,
+      selectedVariant:
+        ((mappedProduct.variants?.find((v: any) => v.isDefault) ||
+          mappedProduct.variants?.[0]) as Variant) || null,
       canonicalSlug: slug,
       brand,
       categories,
@@ -355,7 +361,10 @@ export async function getProductDetailPageData(
       reviewTotal: product.reviewsCount || 0,
     };
   } catch (error) {
-    console.error(`Failed to get product detail page for product ${productId}, language ${language}:`, error);
+    console.error(
+      `Failed to get product detail page for product ${productId}, language ${language}:`,
+      error,
+    );
     return null;
   }
 }
@@ -564,14 +573,11 @@ export async function getCategoryTree(locale: string = 'en') {
 
 /**
  * Get real-time pricing for a specific product variant (cached per minute).
- * 
+ *
  * @param payload - Product and variant identifiers
  * @returns Pricing data or error response
  */
-export async function getProductPricing(payload: {
-  productId: number;
-  variantId: number;
-}) {
+export async function getProductPricing(payload: { productId: number; variantId: number }) {
   cacheTag('products');
   cacheLife('minutes');
 
@@ -594,7 +600,7 @@ export async function getProductPricing(payload: {
   } catch (error) {
     console.error(
       `Failed to get pricing for product ${payload.productId}, variant ${payload.variantId}:`,
-      error
+      error,
     );
     return { success: false, error: 'Failed to fetch pricing' };
   }

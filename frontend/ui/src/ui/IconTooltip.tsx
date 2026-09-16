@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import type { LucideIcon } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip";
-import { cn } from "../lib/utils";
+import * as React from 'react';
+import type { LucideIcon } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipTrigger } from './tooltip';
+import { cn } from '../lib/utils';
 
 interface IconTooltipProps {
   icon?: LucideIcon;
@@ -13,7 +13,7 @@ interface IconTooltipProps {
   children?: React.ReactNode;
   asChild?: boolean;
   /** Tooltip side (default: "bottom") */
-  side?: "top" | "right" | "bottom" | "left";
+  side?: 'top' | 'right' | 'bottom' | 'left';
   /** Icon size in px (default: 20) */
   size?: number;
 }
@@ -29,7 +29,7 @@ export function IconTooltip({
   iconClassName,
   children,
   asChild = false,
-  side = "bottom",
+  side = 'bottom',
   size = 20,
 }: IconTooltipProps) {
   const trigger =
@@ -39,7 +39,7 @@ export function IconTooltip({
       <span
         aria-label={label}
         className={cn(
-          "inline-flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity",
+          'inline-flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity',
           className,
         )}
       >

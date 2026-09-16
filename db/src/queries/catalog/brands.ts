@@ -3,7 +3,7 @@
  *
  * Pure database queries for brand management.
  * No ORM abstraction - direct Drizzle SQL operations.
- * 
+ *
  * Note: Returns raw database rows. Domain mapping (i18n) handled by BrandService.
  */
 

@@ -24,7 +24,6 @@ export {
   type ResolvedPricing,
 };
 
-
 interface ResolvePricingOptions {
   now?: Date;
 }

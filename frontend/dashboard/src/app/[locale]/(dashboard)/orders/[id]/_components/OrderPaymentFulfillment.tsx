@@ -19,13 +19,7 @@ import { useToast } from '@hooks/use-toast';
  * OrderStatus type (local definition)
  */
 type OrderStatus =
-  | 'pending'
-  | 'confirmed'
-  | 'processing'
-  | 'shipped'
-  | 'delivered'
-  | 'cancelled'
-  | 'refunded';
+  'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled' | 'refunded';
 
 interface OrderPaymentFulfillmentProps {
   order: any;

@@ -10,7 +10,10 @@ export async function duplicateProductWithVariants(id: number): Promise<{ newId:
     throw new Error(`Product ${id} not found`);
   }
 
-  const allVariants = await db.select().from(productVariants).where(eq(productVariants.productId, id));
+  const allVariants = await db
+    .select()
+    .from(productVariants)
+    .where(eq(productVariants.productId, id));
 
   return db.transaction(async (tx) => {
     const localizedName = product.localizedName as Record<'en' | 'ar', string>;
@@ -51,7 +54,10 @@ export async function duplicateProductWithVariants(id: number): Promise<{ newId:
         })
         .returning({ id: productVariants.id });
 
-      const images = await tx.select().from(variantImages).where(eq(variantImages.variantId, variant.id));
+      const images = await tx
+        .select()
+        .from(variantImages)
+        .where(eq(variantImages.variantId, variant.id));
       if (images.length) {
         await tx.insert(variantImages).values(
           images.map((image) => ({

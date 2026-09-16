@@ -1,6 +1,9 @@
 import type { ID } from '../../../core/domain/types/common';
 import type { IAuditLogService } from '../interfaces/IAuditLogService';
-import type { CreateProductWithVariantsInput, UpdateProductWithVariantsInput } from '@findeg/backend/features/catalog/application/dtos/VariantInput';
+import type {
+  CreateProductWithVariantsInput,
+  UpdateProductWithVariantsInput,
+} from '@findeg/backend/features/catalog/application/dtos/VariantInput';
 import {
   bulkActivateProducts,
   bulkDeactivateProducts,
@@ -9,11 +12,7 @@ import {
   duplicateProductWithVariants,
   updateProductWithVariantsInDb,
 } from '@findeg/db/queries';
-import {
-  ensureBrandExists,
-  ensureCategoryExists,
-  getExistingProductOrThrow,
-} from './helpers';
+import { ensureBrandExists, ensureCategoryExists, getExistingProductOrThrow } from './helpers';
 
 interface AdminProductMutationDependencies {
   auditLogService?: IAuditLogService;
@@ -27,7 +26,7 @@ interface AdminProductMutationDependencies {
  * Tracks all mutations through audit logging.
  */
 export class AdminProductMutationService {
-  constructor(private dependencies: AdminProductMutationDependencies) { }
+  constructor(private dependencies: AdminProductMutationDependencies) {}
 
   async createProduct(
     input: CreateProductWithVariantsInput,

@@ -1,11 +1,16 @@
-"use server";
+'use server';
 
 import { createCartServices } from '@findeg/backend/features/cart';
 import { createCatalogServices } from '@findeg/backend/features/catalog';
 import { updateTag } from 'next/cache';
 import type { Variant } from '@findeg/backend/features/catalog';
 import { getCart } from './queries';
-import { AddToCartInputSchema, CartIdSchema, UpdateQuantityInputSchema, validateInput } from '../schemas';
+import {
+  AddToCartInputSchema,
+  CartIdSchema,
+  UpdateQuantityInputSchema,
+  validateInput,
+} from '../schemas';
 
 /**
  * Get the current cart through the cached query layer.
@@ -111,7 +116,11 @@ export async function updateQuantity(
   const validatedPayload = validateInput(UpdateQuantityInputSchema, payload);
 
   const { cart } = createCartServices();
-  const result = await cart.updateItemQuantity(guestId, validatedPayload.variantId, validatedPayload.quantity);
+  const result = await cart.updateItemQuantity(
+    guestId,
+    validatedPayload.variantId,
+    validatedPayload.quantity,
+  );
   updateTag(`cart-${guestId}`);
 
   return result;

@@ -33,10 +33,7 @@ export const ProductListItemUI: React.FC<ProductListItemUIProps> = ({
     >
       <div className="sm:w-1/3">
         <Image
-          src={
-            product.variants?.[0]?.images?.[0]?.url ||
-            '/placeholder.png'
-          }
+          src={product.variants?.[0]?.images?.[0]?.url || '/placeholder.png'}
           alt={product.name}
           width={400}
           height={300}

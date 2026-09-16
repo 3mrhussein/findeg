@@ -72,7 +72,9 @@ export function AdminSidebarUserClient({
             <TooltipTrigger asChild>
               <div className="flex justify-center w-full">
                 <Avatar className="h-[32px] w-[32px] cursor-pointer">
-                  <AvatarFallback className={cn('text-[11px] font-semibold text-white', avatarBgClass)}>
+                  <AvatarFallback
+                    className={cn('text-[11px] font-semibold text-white', avatarBgClass)}
+                  >
                     {initials}
                   </AvatarFallback>
                 </Avatar>

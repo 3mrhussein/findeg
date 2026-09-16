@@ -1,8 +1,8 @@
-import { sql, desc, eq } from "drizzle-orm";
-import { z } from "zod";
-import { db } from "../../connection";
-import { products, productVariants } from "../../schema/catalog";
-import { orderItems } from "../../schema/sales";
+import { sql, desc, eq } from 'drizzle-orm';
+import { z } from 'zod';
+import { db } from '../../connection';
+import { products, productVariants } from '../../schema/catalog';
+import { orderItems } from '../../schema/sales';
 
 /**
  * Top selling products query
@@ -10,7 +10,10 @@ import { orderItems } from "../../schema/sales";
 
 export const TopProductRawSchema = z.object({
   id: z.number(),
-  name: z.string().nullable().transform(val => val ?? "Unknown Product"),
+  name: z
+    .string()
+    .nullable()
+    .transform((val) => val ?? 'Unknown Product'),
   sold: z.number(),
   revenue: z.number(),
 });

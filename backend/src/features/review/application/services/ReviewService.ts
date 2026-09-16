@@ -16,7 +16,7 @@ export class ReviewService implements IReviewService {
   /**
    * Creates a review service instance.
    */
-  constructor() { }
+  constructor() {}
 
   /**
    * Returns paginated product reviews with aggregate summary.
@@ -39,7 +39,7 @@ export class ReviewService implements IReviewService {
     ]);
 
     return {
-      reviews: result.reviews.map(r => ({
+      reviews: result.reviews.map((r) => ({
         ...r,
         rating: Number(r.rating),
       })) as Review[],
@@ -121,7 +121,9 @@ export class ReviewService implements IReviewService {
   /**
    * Guarantees complete histogram buckets in API responses.
    */
-  private normalizeSummary(summary: reviewQueries.ProductReviewSummary): reviewQueries.ProductReviewSummary {
+  private normalizeSummary(
+    summary: reviewQueries.ProductReviewSummary,
+  ): reviewQueries.ProductReviewSummary {
     const histogram: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
     for (let i = 1; i <= 5; i += 1) {
       histogram[i] = summary.histogram[i] || 0;

@@ -1,6 +1,6 @@
-import { Button } from "../ui/button";
-import { IconTooltip } from "../ui/IconTooltip";
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
+import { Button } from '../ui/button';
+import { IconTooltip } from '../ui/IconTooltip';
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 
 interface PaginationProps {
   currentPage: number;
@@ -16,7 +16,7 @@ export function Pagination({
   currentPage,
   totalPages,
   onPageChange,
-  className = "",
+  className = '',
 }: PaginationProps) {
   // Generate array of page numbers to show
   /**
@@ -94,7 +94,7 @@ export function Pagination({
         ) : (
           <Button
             key={page}
-            variant={currentPage === page ? "default" : "outline"}
+            variant={currentPage === page ? 'default' : 'outline'}
             size="sm"
             onClick={() => onPageChange(page)}
             className="w-9"

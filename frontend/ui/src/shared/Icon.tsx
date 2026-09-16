@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 
 /**
  *
@@ -9,7 +9,7 @@ export function Icon({
   ...props
 }: { name: string; className?: string } & React.HTMLAttributes<HTMLSpanElement>) {
   return (
-    <span className={`material-symbols-outlined ${className || ""}`} {...props}>
+    <span className={`material-symbols-outlined ${className || ''}`} {...props}>
       {name}
     </span>
   );

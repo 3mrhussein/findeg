@@ -15,7 +15,6 @@ export interface CheckoutPrefillData {
   notes: string;
 }
 
-
 export interface IOrderService {
   getAll(filters?: OrderFilters): Promise<{ orders: Order[]; total: number }>;
   getById(id: ID | string): Promise<Order | null>;

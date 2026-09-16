@@ -1,4 +1,4 @@
-"use server";
+'use server';
 
 import { getUnreadNotificationCount } from './queries';
 
@@ -11,7 +11,7 @@ export async function getUnreadNotificationCountAction() {
 
 /**
  * Log a client-side action on the server.
- * 
+ *
  * Validates payload before logging to prevent garbage data.
  */
 export async function logAction(payload: any): Promise<void> {

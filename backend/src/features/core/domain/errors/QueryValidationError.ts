@@ -43,7 +43,11 @@ export class QueryValidationError extends DomainError {
   /** The schema/query name that failed validation */
   public readonly schemaName: string;
 
-  constructor(schemaName: string, issues: QueryValidationIssue[], metadata?: Record<string, unknown>) {
+  constructor(
+    schemaName: string,
+    issues: QueryValidationIssue[],
+    metadata?: Record<string, unknown>,
+  ) {
     const fieldSummary = issues.map((i) => `${i.path}: ${i.message}`).join('; ');
     super(
       'QUERY_VALIDATION_ERROR',
@@ -74,15 +78,13 @@ export class QueryValidationError extends DomainError {
    */
   static fromZodError(error: unknown, schemaName: string): QueryValidationError {
     if (error instanceof ZodError) {
-      const issues = error.issues.map(
-        (issue: ZodIssue): QueryValidationIssue => ({
-          path: issue.path.join('.') || '(root)',
-          message: issue.message,
-          code: issue.code,
-          received: 'received' in issue ? issue.received : undefined,
-          expected: 'expected' in issue ? issue.expected : undefined,
-        }),
-      );
+      const issues = error.issues.map((issue: ZodIssue): QueryValidationIssue => ({
+        path: issue.path.join('.') || '(root)',
+        message: issue.message,
+        code: issue.code,
+        received: 'received' in issue ? issue.received : undefined,
+        expected: 'expected' in issue ? issue.expected : undefined,
+      }));
       return new QueryValidationError(schemaName, issues);
     }
     // Not a ZodError — caller should handle or re-throw

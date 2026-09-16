@@ -137,7 +137,6 @@ export interface IAdminProductService {
   /** Checks whether a variant SKU is available (not taken by another variant). */
   checkSkuAvailable(sku: string, excludeVariantId?: number): Promise<boolean>;
 
-
   /** Replaces image list for a variant. */
   upsertVariantImages(variantId: number, images: ImageInput[], adminUserId?: number): Promise<void>;
 

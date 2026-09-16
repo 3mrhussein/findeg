@@ -243,27 +243,26 @@ describe('AdminProductService writes', () => {
       isActive: true,
     };
 
-    await expect(service.generateVariants(99, dimensions, defaults, 31)).resolves.toEqual([201, 202]);
+    await expect(service.generateVariants(99, dimensions, defaults, 31)).resolves.toEqual([
+      201, 202,
+    ]);
 
-    expect(insertGeneratedProductVariants).toHaveBeenCalledWith(
-      99,
-      [
-        expect.objectContaining({
-          sku: 'PEN',
-          sortOrder: 0,
-          isDefault: true,
-          basePrice: 5,
-          attributes: [{ attributeKey: 'color', value: 'blue' }],
-        }),
-        expect.objectContaining({
-          sku: 'PEN',
-          sortOrder: 1,
-          isDefault: false,
-          basePrice: 5,
-          attributes: [{ attributeKey: 'color', value: 'red' }],
-        }),
-      ],
-    );
+    expect(insertGeneratedProductVariants).toHaveBeenCalledWith(99, [
+      expect.objectContaining({
+        sku: 'PEN',
+        sortOrder: 0,
+        isDefault: true,
+        basePrice: 5,
+        attributes: [{ attributeKey: 'color', value: 'blue' }],
+      }),
+      expect.objectContaining({
+        sku: 'PEN',
+        sortOrder: 1,
+        isDefault: false,
+        basePrice: 5,
+        attributes: [{ attributeKey: 'color', value: 'red' }],
+      }),
+    ]);
     expect(auditLogService.logAction).toHaveBeenCalledWith(
       expect.objectContaining({
         entityType: 'product',

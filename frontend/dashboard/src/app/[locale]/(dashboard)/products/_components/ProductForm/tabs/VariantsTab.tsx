@@ -3,13 +3,7 @@
 import React, { useEffect } from 'react';
 import { useFormContext, useFieldArray } from 'react-hook-form';
 import { useTranslations } from 'next-intl';
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@findeg/ui';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@findeg/ui';
 import { Input } from '@findeg/ui';
 import { Button } from '@findeg/ui';
 import { Card, CardContent } from '@findeg/ui';
@@ -105,7 +99,7 @@ export function VariantsTab() {
               className={cn(
                 'overflow-hidden transition-all',
                 isExpanded ? 'ring-1 ring-primary/20' : 'hover:bg-muted/30',
-                variant.isDefault && 'border-primary/50 bg-primary/5'
+                variant.isDefault && 'border-primary/50 bg-primary/5',
               )}
             >
               {/* Collapsed Header / Summary */}
@@ -130,7 +124,10 @@ export function VariantsTab() {
                           {variant.sku || 'New Variant'}
                         </span>
                         {variant.isDefault && (
-                          <Badge variant="secondary" className="px-1 py-0 h-4 text-[10px] bg-primary/10 text-primary border-primary/20">
+                          <Badge
+                            variant="secondary"
+                            className="px-1 py-0 h-4 text-[10px] bg-primary/10 text-primary border-primary/20"
+                          >
                             <Star className="h-2 w-2 mr-1 fill-current" />
                             Default
                           </Badge>

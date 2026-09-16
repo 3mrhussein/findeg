@@ -5,10 +5,7 @@
  * Cart items now reference specific variants (SKUs) with resolved pricing.
  */
 
-import {
-  type Price,
-  type Quantity,
-} from '@findeg/backend/features/core/domain/types/common';
+import { type Price, type Quantity } from '@findeg/backend/features/core/domain/types/common';
 
 /**
  * A single item in the cart, referencing a specific variant (SKU).
@@ -65,9 +62,7 @@ export class CartEntity {
    * Matches by variantId.
    */
   addItem(item: CartItem): CartItem[] {
-    const existingIndex = this.items.findIndex(
-      (existing) => existing.variantId === item.variantId,
-    );
+    const existingIndex = this.items.findIndex((existing) => existing.variantId === item.variantId);
 
     if (existingIndex >= 0) {
       const updatedItems = [...this.items];
@@ -97,9 +92,7 @@ export class CartEntity {
       return this.removeItem(variantId);
     }
 
-    return this.items.map((item) =>
-      item.variantId === variantId ? { ...item, quantity } : item,
-    );
+    return this.items.map((item) => (item.variantId === variantId ? { ...item, quantity } : item));
   }
 
   /**

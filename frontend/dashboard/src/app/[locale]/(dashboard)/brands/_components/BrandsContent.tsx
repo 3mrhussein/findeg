@@ -19,7 +19,7 @@ interface BrandsContentProps {
  */
 export async function BrandsContent({ locale }: BrandsContentProps) {
   const t = await getTranslations('Administration.Catalog.Brands');
-  
+
   // TODO: Replace with proper data layer query from @data/brands/queries
   // const brands = await getBrands(locale);
   const brands: any[] = []; // Stubbed - empty brand list
@@ -29,10 +29,8 @@ export async function BrandsContent({ locale }: BrandsContentProps) {
    */
   async function handleSave(data: BrandInput, id?: number) {
     'use server';
-    const result = id 
-      ? await updateBrandAction(id, data) 
-      : await createBrandAction(data);
-    
+    const result = id ? await updateBrandAction(id, data) : await createBrandAction(data);
+
     if (result.success) {
       revalidatePath(`/${locale}/brands`);
     }

@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { Moon, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
+import * as React from 'react';
+import { Moon, Sun } from 'lucide-react';
+import { useTheme } from 'next-themes';
 
-import { Button } from "../ui/button";
-import { IconTooltip } from "../ui/IconTooltip";
+import { Button } from '../ui/button';
+import { IconTooltip } from '../ui/IconTooltip';
 
 /**
  * A theme toggle component that switches between light and dark modes.
@@ -19,12 +19,12 @@ export const ToggleTheme = () => {
     setMounted(true);
   }, []);
 
-  const nextTheme = resolvedTheme === "dark" ? "light" : "dark";
+  const nextTheme = resolvedTheme === 'dark' ? 'light' : 'dark';
   const label = !mounted
-    ? "Toggle theme"
-    : nextTheme === "dark"
-      ? "Switch to dark theme"
-      : "Switch to light theme";
+    ? 'Toggle theme'
+    : nextTheme === 'dark'
+      ? 'Switch to dark theme'
+      : 'Switch to light theme';
 
   return (
     <IconTooltip label={label} asChild>

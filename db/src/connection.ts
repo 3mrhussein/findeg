@@ -1,13 +1,13 @@
-import postgres from "postgres";
-import { drizzle } from "drizzle-orm/postgres-js";
-import env from "@findeg/env/database";
-import * as schema from "./schema";
+import postgres from 'postgres';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import env from '@findeg/env/database';
+import * as schema from './schema';
 
-/**     
+/**
  * Database Connection Configuration
- * 
- * This file should ONLY be imported in server-side code (Server Components, 
- * API Routes, or Backend Services). Importing this in Client Components 
+ *
+ * This file should ONLY be imported in server-side code (Server Components,
+ * API Routes, or Backend Services). Importing this in Client Components
  * will cause build errors due to Node.js native module dependencies (net, tls).
  */
 
