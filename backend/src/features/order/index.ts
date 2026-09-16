@@ -1,9 +1,23 @@
+// Public barrel for the order feature. Client Components needing only
+// ShippingAddressSchema/VariantSnapshotSchema/OrderStatusUpdateSchema should
+// import from './schemas' instead, which has no import path to
+// './application/services/factory' or 'db/src/connection.ts'. See
+// docs/adr/0001-backend-feature-barrels.md.
 export type { Order, OrderItem } from './domain/entities/Order';
-export { ShippingAddressSchema, type ShippingAddress } from './domain/value-objects/ShippingAddress';
-export { VariantSnapshotSchema, type VariantSnapshot } from './domain/value-objects/VariantSnapshot';
+export {
+  ShippingAddressSchema,
+  type ShippingAddress,
+} from './domain/value-objects/ShippingAddress';
+export {
+  VariantSnapshotSchema,
+  type VariantSnapshot,
+} from './domain/value-objects/VariantSnapshot';
 export type { IOrderRepository, OrderFilters } from './application/interfaces/IOrderRepository';
 export type { IOrderService, CheckoutPrefillData } from './application/interfaces/IOrderService';
-export { OrderStatusUpdateSchema, type OrderStatusUpdate } from './application/dtos/OrderStatusUpdate';
+export {
+  OrderStatusUpdateSchema,
+  type OrderStatusUpdate,
+} from './application/dtos/OrderStatusUpdate';
 export { createOrderServices, type OrderServices } from './application/services/factory';
 export {
   ORDER_STATUS_OPTIONS,
