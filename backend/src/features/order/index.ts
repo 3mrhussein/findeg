@@ -1,3 +1,8 @@
+// Public barrel for the order feature. Client Components needing only
+// ShippingAddressSchema/VariantSnapshotSchema/OrderStatusUpdateSchema should
+// import from './schemas' instead, which has no import path to
+// './application/services/factory' or 'db/src/connection.ts'. See
+// docs/adr/0001-backend-feature-barrels.md.
 export type { Order, OrderItem } from './domain/entities/Order';
 export {
   ShippingAddressSchema,
