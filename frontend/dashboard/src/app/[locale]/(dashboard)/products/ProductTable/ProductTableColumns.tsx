@@ -18,7 +18,6 @@ import type { Product } from '@findeg/backend/features/catalog';
 import Image from 'next/image';
 import { Checkbox } from '@findeg/ui';
 import { Copy, Archive } from 'lucide-react';
-import { VariantEntity } from '@findeg/backend/features/catalog';
 
 /**
  * Column definitions for the ProductTable.

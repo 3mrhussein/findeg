@@ -3,7 +3,7 @@
 import { ShoppingCart } from 'lucide-react';
 import { Button } from '@findeg/ui';
 import { useCart } from '@hooks/useCart';
-import { Product } from '@findeg/backend/features/catalog/domain/entities/Product';
+import { Product } from '@findeg/backend/features/catalog';
 import { useTranslations } from 'next-intl';
 
 interface AddToCartButtonProps {

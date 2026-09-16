@@ -137,3 +137,11 @@ export class VariantEntity {
     return this.variant;
   }
 }
+
+// ─── Plain-function accessors for consumers outside the backend package ──────
+// VariantEntity stays internal (ADR-0001: barrels never export concrete
+// classes); this wraps the one method frontend call sites need.
+
+export function getVariantAvailableStock(variant: Variant): number {
+  return new VariantEntity(variant).getAvailableStock();
+}

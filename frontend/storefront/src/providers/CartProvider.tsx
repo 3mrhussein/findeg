@@ -2,7 +2,7 @@
 
 import React, { createContext, useEffect, useMemo, useState } from 'react';
 import type { CartItem } from '@findeg/backend/features/cart';
-import type { Product } from '@findeg/backend/features/catalog/domain/entities/Product';
+import type { Product } from '@findeg/backend/features/catalog';
 
 export interface CartContextType {
   cartItems: CartItem[];

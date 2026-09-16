@@ -16,12 +16,12 @@ interface ProductCompactProps {
 
 import { TableCell } from '@findeg/ui';
 import { cn } from '@lib/utils';
-import { VariantEntity } from '@findeg/backend/features/catalog';
+import { getVariantAvailableStock } from '@findeg/backend/features/catalog';
 
 export function ProductCompact({ product }: ProductCompactProps) {
   // Calculate total stock from all variants
   const totalStock =
-    product.variants?.reduce((sum, v) => sum + new VariantEntity(v).getAvailableStock(), 0) || 0;
+    product.variants?.reduce((sum, v) => sum + getVariantAvailableStock(v), 0) || 0;
   const hasVariants = (product.variants?.length || 0) > 1;
   const lowStockThreshold = 10;
   const isLowStock = totalStock > 0 && totalStock <= lowStockThreshold;

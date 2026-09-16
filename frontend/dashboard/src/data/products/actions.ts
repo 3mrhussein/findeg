@@ -10,7 +10,7 @@ import { createAdministrationServices } from '@findeg/backend/features/administr
 import type {
   CreateProductWithVariantsInput,
   UpdateProductWithVariantsInput,
-} from '@findeg/backend/features/catalog/application/dtos';
+} from '@findeg/backend/features/catalog';
 import { getErrorMessage } from '@lib/type-guards';
 
 /**

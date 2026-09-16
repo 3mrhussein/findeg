@@ -12,15 +12,11 @@ import { Label } from '@findeg/ui';
 import { RadioGroup, RadioGroupItem } from '@findeg/ui';
 import { Badge } from '@findeg/ui';
 import { slugify } from '@findeg/backend/lib';
-import { Brand } from '@findeg/backend/features/catalog';
+import { Brand, BrandInputSchema, type BrandInput } from '@findeg/backend/features/catalog';
 import { cn } from '@lib/utils';
 import Image from 'next/image';
 import { useDebounce } from '@hooks/use-debounce';
 import { useToast } from '@hooks/use-toast';
-import {
-  BrandInputSchema,
-  type BrandInput,
-} from '@findeg/backend/features/catalog/application/dtos/BrandInput';
 
 interface BrandFormPanelProps {
   brand: Brand | null;
