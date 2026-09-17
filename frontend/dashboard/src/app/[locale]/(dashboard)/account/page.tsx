@@ -79,4 +79,3 @@ export default async function MyAccountPage({ params }: MyAccountPageProps) {
     </div>
   );
 }
-

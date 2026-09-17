@@ -3,15 +3,7 @@
 import { SlideOver } from '@/app/[locale]/_components/shared/SlideOver';
 import { StatusBadge } from '@components/shared/StatusBadge';
 import { OrderTimeline } from './OrderTimeline';
-import {
-  Package,
-  User,
-  CreditCard,
-  MapPin,
-  FileText,
-  Truck,
-  Calendar,
-} from 'lucide-react';
+import { Package, User, CreditCard, MapPin, FileText, Truck, Calendar } from 'lucide-react';
 import { format } from 'date-fns';
 import type { Order } from '@findeg/backend/features/order';
 
