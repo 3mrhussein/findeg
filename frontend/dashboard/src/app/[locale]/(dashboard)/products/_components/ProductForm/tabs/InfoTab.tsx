@@ -3,13 +3,7 @@
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useTranslations } from 'next-intl';
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@findeg/ui';
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@findeg/ui';
 import { Input } from '@findeg/ui';
 import { Textarea } from '@findeg/ui';
 import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
