@@ -37,7 +37,7 @@ export async function getAllBrands(activeOnly: boolean = false, locale: Locale =
   const allBrands = await brands.getAll?.();
 
   if (activeOnly && allBrands) {
-    return allBrands.filter((b: any) => b.isActive);
+    return allBrands.filter((b) => b.isActive);
   }
 
   return allBrands || [];
@@ -61,7 +61,9 @@ export async function getAllTags(locale: Locale = 'en') {
  *
  * Cache: Tagged with 'tags-admin', revalidated on tag mutations
  */
-export async function getAllTagsGrouped(locale: Locale = 'en'): Promise<Record<string, any[]>> {
+export async function getAllTagsGrouped(
+  locale: Locale = 'en',
+): Promise<Record<string, import('@findeg/backend/features/catalog').Tag[]>> {
   cacheTag('tags-admin', `tags-admin-${locale}`);
   cacheLife('hours');
 

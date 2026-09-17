@@ -22,7 +22,16 @@ export function visitWithGuest(path: string, guestId: string): void {
   });
 }
 
-export function getGuestCart(guestId: string): Cypress.Chainable<any> {
+export function getGuestCart(guestId: string): Cypress.Chainable<{
+  items: {
+    id: number;
+    productId: number;
+    quantity: number;
+    variantKey?: string;
+    uomCode?: string;
+    customerGroup?: string;
+  }[];
+}> {
   return cy
     .request({
       method: 'GET',
@@ -32,7 +41,7 @@ export function getGuestCart(guestId: string): Cypress.Chainable<any> {
     .then((response) => response.body?.data?.cart);
 }
 
-export function clearGuestCart(guestId: string): Cypress.Chainable<void> {
+export function clearGuestCart(guestId: string) {
   return getGuestCart(guestId)
     .then((cart) => {
       const items = (cart?.items || []) as Array<{
@@ -86,7 +95,7 @@ export function addProductToGuestCartRequest(
   productId: number,
   quantity = 1,
   failOnStatusCode = true,
-): Cypress.Chainable<Cypress.Response<any>> {
+): Cypress.Chainable<Cypress.Response<unknown>> {
   return cy.request({
     method: 'POST',
     url: API_ROUTES.cartItems,

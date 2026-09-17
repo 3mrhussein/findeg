@@ -13,7 +13,15 @@ export function ShippingForm({
   toFieldErrorMessage,
   getFieldError,
   t,
-}: any) {
+}: Pick<
+  ReturnType<typeof import('../CheckoutClient/useCheckoutForm').useCheckoutForm>,
+  'formValues' | 'setField' | 'touchField' | 'getFieldError'
+> & {
+  t: ReturnType<typeof import('next-intl').useTranslations>;
+  toFieldErrorMessage: (
+    error: import('../CheckoutClient/useCheckoutForm').CheckoutValidationError | null,
+  ) => string | null;
+}) {
   return (
     <div className="space-y-6">
       <div className="space-y-2">

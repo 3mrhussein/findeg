@@ -7,7 +7,7 @@ import { MediaLibrary } from './_components/media-library';
  */
 export default async function MediaPage() {
   // TODO: Replace with data layer query from @data/media/queries
-  const assets: any[] = []; // Stubbed - empty media library
+  const assets: React.ComponentProps<typeof MediaLibrary>['initialAssets'] = []; // Stubbed - empty media library
 
   return (
     <div className="space-y-6">

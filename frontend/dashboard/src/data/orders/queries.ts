@@ -14,12 +14,14 @@ import { createAdministrationServices } from '@findeg/backend/features/administr
  *
  * Cache: Shorter TTL (minutes) since orders change frequently
  */
-export async function getOrders(filters?: any) {
+export async function getOrders(
+  filters?: Parameters<ReturnType<typeof createAdministrationServices>['orders']['getAll']>[0],
+) {
   cacheTag('orders');
   cacheLife('minutes');
 
   const { orders } = createAdministrationServices();
-  return await orders.getAll(filters);
+  return await orders.getAll(filters || {});
 }
 
 /**

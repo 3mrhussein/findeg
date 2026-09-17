@@ -52,8 +52,8 @@ export function AdminUserDialog({
     if (!open) return;
 
     Promise.all([getSystemRoles(), getAllPermissions()]).then(([roleData, permData]) => {
-      setRoles(roleData as any);
-      setPermissions(permData as any);
+      setRoles(roleData);
+      setPermissions(permData);
     });
 
     if (user) {

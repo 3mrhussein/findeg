@@ -52,7 +52,7 @@ export function Topbar() {
           <DropdownMenuItem>Settings</DropdownMenuItem>
           <DropdownMenuItem>Support</DropdownMenuItem>
           <DropdownMenuSeparator />
-          <form action={logoutAction as any}>
+          <form action={logoutAction}>
             <button type="submit" className="w-full text-left">
               <DropdownMenuItem asChild>
                 <span>Logout</span>

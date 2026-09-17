@@ -20,8 +20,8 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
   if (isNaN(orderId)) notFound();
 
   // TODO: Replace with data layer queries from @data/orders/queries
-  const order: any = null; // Stubbed - will trigger notFound()
-  const logs: any[] = []; // Stubbed
+  const order = null as import('@findeg/backend/features/order').Order | null; // Stubbed - will trigger notFound()
+  const logs: React.ComponentProps<typeof OrderActivityLog>['logs'] = []; // Stubbed
 
   if (!order) notFound();
 

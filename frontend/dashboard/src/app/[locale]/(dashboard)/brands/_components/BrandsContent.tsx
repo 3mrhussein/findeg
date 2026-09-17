@@ -22,7 +22,7 @@ export async function BrandsContent({ locale }: BrandsContentProps) {
 
   // TODO: Replace with proper data layer query from @data/brands/queries
   // const brands = await getBrands(locale);
-  const brands: any[] = []; // Stubbed - empty brand list
+  const brands: import('@findeg/backend/features/catalog').Brand[] = []; // Stubbed - empty brand list
 
   /**
    * Wrapper for Save (Create/Update)

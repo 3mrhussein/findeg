@@ -156,8 +156,8 @@ export interface CreateAuditLogInput {
   entityType: string;
   entityId: string;
   action: string;
-  oldValues?: Record<string, any>;
-  newValues?: Record<string, any>;
+  oldValues?: Record<string, unknown>;
+  newValues?: Record<string, unknown>;
 }
 
 /**

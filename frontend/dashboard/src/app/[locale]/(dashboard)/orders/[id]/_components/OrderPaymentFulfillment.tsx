@@ -19,7 +19,7 @@ type OrderStatus =
   'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled' | 'refunded';
 
 interface OrderPaymentFulfillmentProps {
-  order: any;
+  order: import('@findeg/backend/features/order').Order;
 }
 
 const STATUS_FLOW: { label: string; value: OrderStatus }[] = [

@@ -28,7 +28,7 @@ interface SeedUser {
   id: number;
   email: string;
   password?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export async function seedIdentity(db: PostgresJsDatabase<typeof schema>) {
@@ -173,7 +173,7 @@ export async function seedIdentity(db: PostgresJsDatabase<typeof schema>) {
           return {
             userId: foundUser.id,
             roleId: foundRole.id,
-            scope: ur.scope as any,
+            scope: ur.scope as typeof schema.userRoles.$inferInsert.scope,
             organizationId: ur.organizationId,
             createdAt: ur.createdAt ? new Date(ur.createdAt) : new Date(),
           };

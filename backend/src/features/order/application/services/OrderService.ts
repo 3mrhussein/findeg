@@ -48,7 +48,9 @@ export class OrderService implements IOrderService {
     };
   }
 
-  async getAll(filters?: any): Promise<{ orders: Order[]; total: number }> {
+  async getAll(
+    filters?: orderQueries.OrderFiltersInput,
+  ): Promise<{ orders: Order[]; total: number }> {
     const result = await orderQueries.getFiltered(filters || {});
     return {
       orders: result.orders.map((row) => this.mapToDomain(row.order, row.items)),
@@ -72,7 +74,7 @@ export class OrderService implements IOrderService {
     return results.map((row) => this.mapToDomain(row.order, row.items));
   }
 
-  async count(filters?: any): Promise<number> {
+  async count(filters?: Parameters<typeof orderQueries.count>[0]): Promise<number> {
     return orderQueries.count(filters);
   }
 

@@ -22,7 +22,7 @@ import { ShopPlpViewModel } from '../catalog/types';
 export async function getCategoryPageViewModel(
   slug: string,
   locale: string,
-  query: any,
+  query: Record<string, string | string[] | undefined>,
 ): Promise<ShopPlpViewModel | null> {
   const resolvedLocale = parse(locale);
   cacheTag('categories', `category-${resolvedLocale}-${slug}`);
@@ -39,7 +39,7 @@ export async function getCategoryPageViewModel(
   const mappedProducts = products.map((p) => mapProduct(p, resolvedLocale));
 
   return {
-    category: category as any,
+    category: category,
     products: mappedProducts,
     categoryOptions: mapCategoryOptions(
       await categoryService.getTree(resolvedLocale),
@@ -65,7 +65,7 @@ export async function getCategoryPageViewModel(
     from: 1,
     to: mappedProducts.length,
     locale: resolvedLocale,
-    query: query?.q || '',
+    query: String(query?.q || ''),
     categorySlugPath: [],
     filters: {
       minPrice: 0,
@@ -81,7 +81,9 @@ export async function getCategoryPageViewModel(
 /**
  * Categories List Data (with counts)
  */
-export async function getCategoriesPageData(language: string): Promise<any[]> {
+export async function getCategoriesPageData(
+  language: string,
+): Promise<(import('@findeg/backend/features/catalog').Category & { productsCount?: number })[]> {
   const resolvedLocale = parse(language);
   cacheTag('categories', `categories-${resolvedLocale}`);
   cacheLife('days');

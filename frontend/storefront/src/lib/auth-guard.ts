@@ -10,7 +10,7 @@ import type { SessionPayload } from '@findeg/backend/features/core';
 export async function requireAuth(locale: string): Promise<SessionPayload> {
   const session = await getCachedSession();
   if (!session) {
-    redirect({ href: '/login', locale: locale as any });
+    redirect({ href: '/login', locale: locale });
   }
   return session!;
 }
@@ -22,7 +22,7 @@ export async function requireAuth(locale: string): Promise<SessionPayload> {
 export async function requireAdmin(locale: string): Promise<SessionPayload> {
   const session = await getCachedSession();
   if (!session || !adminSession(session)) {
-    redirect({ href: '/admin/login', locale: locale as any });
+    redirect({ href: '/admin/login', locale: locale });
   }
   return session!;
 }
@@ -35,9 +35,9 @@ export async function redirectIfAuthenticated(locale: string): Promise<void> {
   const session = await getCachedSession();
   if (session) {
     if (adminSession(session)) {
-      redirect({ href: '/admin', locale: locale as any });
+      redirect({ href: '/admin', locale: locale });
     } else {
-      redirect({ href: '/dashboard', locale: locale as any });
+      redirect({ href: '/dashboard', locale: locale });
     }
   }
 }
@@ -77,7 +77,7 @@ export async function requirePermission(
   }
 
   if (!allowed) {
-    redirect({ href: '/dashboard', locale: locale as any });
+    redirect({ href: '/dashboard', locale: locale });
   }
 
   return session;

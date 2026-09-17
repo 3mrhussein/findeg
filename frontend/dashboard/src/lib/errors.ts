@@ -120,8 +120,8 @@ export function domainError(error: unknown): error is DomainError {
  * @returns Safe message for client
  */
 export function getErrorMessage(error: DomainError): string {
-  if (typeof (error as any).getClientMessage === 'function') {
-    return (error as any).getClientMessage();
+  if (typeof error.getClientMessage === 'function') {
+    return error.getClientMessage();
   }
   return error.message;
 }

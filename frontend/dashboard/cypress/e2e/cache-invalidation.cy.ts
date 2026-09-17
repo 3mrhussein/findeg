@@ -161,7 +161,9 @@ describe('Cache Invalidation E2E (Phase 5.3)', () => {
           q: testProduct.sku,
         }),
       }).then((response) => {
-        const found = (response.body?.products || []).some((p: any) => p.sku === testProduct.sku);
+        const found = (response.body?.products || []).some(
+          (p: { sku: string }) => p.sku === testProduct.sku,
+        );
         expect(found, 'product should appear immediately after creation via updateTag()').to.eq(
           true,
         );
@@ -207,13 +209,19 @@ describe('Cache Invalidation E2E (Phase 5.3)', () => {
 declare global {
   namespace Cypress {
     interface Chainable {
-      createAdminProductApi(product: any, categoryName: string): Chainable<void>;
-      createAdminCategoryApi(category: any): Chainable<void>;
+      createAdminProductApi(
+        product: ReturnType<typeof buildTestProduct>,
+        categoryName: string,
+      ): Chainable<void>;
+      createAdminCategoryApi(category: ReturnType<typeof buildTestCategory>): Chainable<void>;
       deleteCategoryBySlug(slug: string): Chainable<void>;
       cleanupProductBySky(sku: string): Chainable<void>;
       loginAsAdminSession(): Chainable<void>;
       visitAdminNewProductForm(): Chainable<void>;
-      createAdminProductUi(product: any, categoryName: string): Chainable<void>;
+      createAdminProductUi(
+        product: ReturnType<typeof buildTestProduct>,
+        categoryName: string,
+      ): Chainable<void>;
     }
   }
 }

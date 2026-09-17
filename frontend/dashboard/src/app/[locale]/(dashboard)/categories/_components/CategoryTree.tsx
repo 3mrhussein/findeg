@@ -59,7 +59,10 @@ import { cn } from '@lib/utils';
 interface CategoryTreeProps {
   categories: Category[];
   onReorder?: (reorderedCategories: Category[]) => Promise<void>;
-  onSave?: (data: any, categoryId?: number) => Promise<void>;
+  onSave?: (
+    data: import('./CategoryFormPanel').CategoryFormValues,
+    categoryId?: number,
+  ) => Promise<void>;
   onDelete?: (categoryId: number) => Promise<void>;
 }
 
@@ -213,7 +216,7 @@ export function CategoryTree({ categories, onReorder, onSave, onDelete }: Catego
   };
 
   // ── Form submit ───────────────────────────────────────────────────────────
-  const handleFormSubmit = async (data: any) => {
+  const handleFormSubmit = async (data: import('./CategoryFormPanel').CategoryFormValues) => {
     if (onSave) {
       await onSave(
         { ...data, parentId: data.parentId === 0 ? null : data.parentId },

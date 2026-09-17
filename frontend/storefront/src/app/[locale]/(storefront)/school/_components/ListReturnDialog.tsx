@@ -9,8 +9,8 @@ import { ShoppingBag } from 'lucide-react';
 
 interface ListReturnDialogProps {
   state: SessionState;
-  list: any;
-  user?: any;
+  list: import('@findeg/backend/features/catalog').SchoolListResult;
+  user?: { firstName?: string | null };
   onReset: () => void;
   onContinue: () => void;
 }

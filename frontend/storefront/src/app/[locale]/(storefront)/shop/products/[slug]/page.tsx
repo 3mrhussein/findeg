@@ -77,8 +77,8 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
   }
 
   const imageUrls = (vm.selectedVariant?.images || [])
-    .map((image: any) => image.url)
-    .filter((url: any): url is string => Boolean(url));
+    .map((image) => image.url)
+    .filter((url): url is string => Boolean(url));
   const siteUrl = env.NEXT_PUBLIC_SITE_URL;
 
   const productSchema = {
@@ -110,7 +110,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
   return (
     <PageShell>
       <nav className="mb-4 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-        {vm.breadcrumbs.map((item: any, index: number) => {
+        {vm.breadcrumbs.map((item, index: number) => {
           const isLast = index === vm.breadcrumbs.length - 1;
           return (
             <div key={`${item.label}-${index}`} className="inline-flex items-center gap-2">

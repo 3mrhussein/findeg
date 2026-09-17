@@ -6,7 +6,10 @@ import type { OrderTableFiltersData } from './OrderTable.interface';
 
 interface OrderTableFiltersProps {
   filters: OrderTableFiltersData;
-  onFilterChange: (key: keyof OrderTableFiltersData, value: any) => void;
+  onFilterChange: (
+    key: keyof OrderTableFiltersData,
+    value: OrderTableFiltersData[keyof OrderTableFiltersData],
+  ) => void;
   onClear: () => void;
   isPending: boolean;
   total: number;

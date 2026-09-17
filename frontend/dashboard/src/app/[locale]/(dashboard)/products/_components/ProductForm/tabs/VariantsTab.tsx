@@ -46,7 +46,7 @@ export function VariantsTab() {
         sortOrder: 0,
         images: [],
         attributes: [],
-      } as any);
+      });
     }
   }, []);
 
@@ -62,7 +62,7 @@ export function VariantsTab() {
       barcode: '',
       images: [],
       attributes: [],
-    } as any);
+    });
   };
 
   const setAsDefault = (index: number) => {

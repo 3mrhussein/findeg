@@ -189,7 +189,7 @@ export function ProductFormSidebar({
                     <SelectItem value="none">{t('noBrand')}</SelectItem>
                     {brands.map((brand) => (
                       <SelectItem key={brand.id} value={brand.id.toString()}>
-                        {(brand as any).localizedName?.en || brand.name || 'Unnamed Brand'}
+                        {brand.localizedName?.en || brand.name || 'Unnamed Brand'}
                       </SelectItem>
                     ))}
                   </SelectContent>

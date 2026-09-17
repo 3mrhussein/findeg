@@ -1,7 +1,7 @@
 /**
  * WebMCP Initialization Utility
  */
-import { registerAllTools } from './webmcp-tools';
+import { registerAllTools, type WebMCPNavigator } from './webmcp-tools';
 
 let isInitialized = false;
 
@@ -10,7 +10,8 @@ export function initWebMCP() {
   if (isInitialized) return { isAvailable: true };
 
   const isAvailable = !!(
-    (navigator as any).modelContext && (navigator as any).modelContext.registerTool
+    (navigator as WebMCPNavigator).modelContext &&
+    (navigator as WebMCPNavigator).modelContext?.registerTool
   );
 
   if (isAvailable) {

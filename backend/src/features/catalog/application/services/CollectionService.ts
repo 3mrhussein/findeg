@@ -8,8 +8,6 @@ export class CollectionService implements ICollectionService {
   }
 
   async getCollectionBySlug(slug: string): Promise<Collection | null> {
-    return collectionQueries.getCollectionBySlugWithTags(slug) as Promise<
-      (Collection & { tags: any[] }) | null
-    >;
+    return collectionQueries.getCollectionBySlugWithTags(slug) as Promise<Collection | null>;
   }
 }

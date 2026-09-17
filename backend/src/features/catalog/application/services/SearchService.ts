@@ -112,11 +112,11 @@ export class SearchService implements ISearchService {
       const result = await getFilteredProducts({
         limit,
         offset,
-        sort: sort === 'relevance' ? undefined : (sort as any),
+        sort: sort === 'relevance' ? undefined : sort,
       });
       this.logSearch(query, locale, result.total, undefined, undefined).catch(() => {});
       return {
-        items: result.products as any,
+        items: result.products as unknown as SearchResult['items'],
         total: result.total,
       };
     }
@@ -181,7 +181,7 @@ export class SearchService implements ISearchService {
     const finalItems = hydratedProducts;
     if (sort === 'relevance') {
       const orderMap = new Map(pagedIds.map((id, index) => [id, index]));
-      finalItems.sort((a: any, b: any) => {
+      finalItems.sort((a, b) => {
         const indexA = orderMap.get(a.id as number) ?? 999;
         const indexB = orderMap.get(b.id as number) ?? 999;
         return indexA - indexB;
@@ -195,7 +195,7 @@ export class SearchService implements ISearchService {
     this.logSearch(query, locale, total, undefined, undefined).catch(() => {});
 
     return {
-      items: finalItems as any,
+      items: finalItems as unknown as SearchResult['items'],
       total,
     };
   }

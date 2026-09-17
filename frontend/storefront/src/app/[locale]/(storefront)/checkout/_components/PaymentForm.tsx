@@ -5,7 +5,14 @@ import { CreditCard, Banknote } from 'lucide-react';
 /**
  *
  */
-export function PaymentForm({ paymentMethod, setPaymentMethod, t }: any) {
+export function PaymentForm({
+  paymentMethod,
+  setPaymentMethod,
+  t,
+}: Pick<
+  ReturnType<typeof import('../CheckoutClient/useCheckoutForm').useCheckoutForm>,
+  'paymentMethod' | 'setPaymentMethod'
+> & { t: ReturnType<typeof import('next-intl').useTranslations> }) {
   return (
     <fieldset className="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <legend className="sr-only">{t('Pages.Checkout.PaymentMethod')}</legend>

@@ -34,7 +34,19 @@ function getGuestId() {
 /**
  *
  */
-function toCartItems(rawItems: any[]): CartItem[] {
+function toCartItems(
+  rawItems: (Partial<CartItem> & {
+    productId: number;
+    variantId: number;
+    quantity: number;
+    sku: string;
+    name?: string;
+    variantKey?: string;
+    images?: { url: string }[];
+    unitPriceSnapshot?: number;
+    price?: number;
+  })[],
+): CartItem[] {
   return rawItems.map((item) => ({
     productId: item.productId,
     variantId: item.variantId,
@@ -77,7 +89,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const guestId = getGuestId();
-    getCartAction(guestId).then((cart: any) => {
+    getCartAction(guestId).then((cart) => {
       const items = cart?.items || [];
       setCartItems(toCartItems(items));
     });

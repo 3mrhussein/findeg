@@ -36,8 +36,8 @@ interface ProductsFilterBarProps {
     }>,
     options?: Options,
   ) => Promise<URLSearchParams>;
-  categories: any[];
-  brands: any[];
+  categories: import('@findeg/backend/features/catalog').Category[];
+  brands: import('@findeg/backend/features/catalog').Brand[];
 }
 
 export function ProductsFilterBar({
@@ -67,7 +67,9 @@ export function ProductsFilterBar({
   };
 
   /** Resolve display name for a category, preferring localizedContent.name.en */
-  const getCategoryDisplayName = (cat: any): string => {
+  const getCategoryDisplayName = (
+    cat: import('@findeg/backend/features/catalog').Category,
+  ): string => {
     return cat.localizedContent?.name?.en ?? cat.name ?? cat.slug ?? '—';
   };
 
@@ -241,7 +243,9 @@ export function ProductsFilterBar({
                 onCheckedChange={() => setFilters({ completeness: opt, page: 1 })}
               >
                 {t(
-                  `Completeness.${opt.charAt(0).toUpperCase() + opt.slice(1).replace('-c', 'C').replace('-i', 'I').replace('-p', 'P')}` as any,
+                  `Completeness.${opt.charAt(0).toUpperCase() + opt.slice(1).replace('-c', 'C').replace('-i', 'I').replace('-p', 'P')}` as Parameters<
+                    typeof t
+                  >[0],
                 )}
               </DropdownMenuCheckboxItem>
             ))}

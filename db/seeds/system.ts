@@ -11,7 +11,7 @@ export async function seedSystem(db: PostgresJsDatabase<typeof schema>) {
   // Level 1: Audit Logs (Depends on Identity Users)
   if (auditLogData.length > 0) {
     console.log('  - Seeding Audit Logs...');
-    if (auditLogData.some((l: any) => l.adminUserId)) {
+    if (auditLogData.some((l) => l.adminUserId)) {
       await ensureParents(db, [{ table: schema.users, name: '"identity"."users"' }]);
     }
     await db.insert(schema.auditLog).values(prepareSeedData(schema.auditLog, auditLogData));

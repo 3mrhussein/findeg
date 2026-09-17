@@ -194,7 +194,7 @@ export function createProductFromUi(
 export function createProductViaApi(
   input: TestProductInput,
   categoryName: string = SHOP_MESSAGES.keychainsLabel,
-): Cypress.Chainable<any> {
+) {
   return fetchAdminToken().then((token) => {
     // We need to find the category ID by name/label
     cy.request({

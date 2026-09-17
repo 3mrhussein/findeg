@@ -45,8 +45,10 @@ async function CollectionPageContent({ params, searchParams }: CollectionPagePro
   if (!vm) notFound();
 
   const { collection } = vm;
-  const title = (collection.localizedTitle as any)?.[locale] || collection.slug;
-  const subtitle = (collection.localizedSubtitle as any)?.[locale];
+  const title =
+    collection.localizedTitle?.[locale as keyof typeof collection.localizedTitle] ||
+    collection.slug;
+  const subtitle = collection.localizedSubtitle?.[locale as 'en' | 'ar'];
 
   return (
     <PageShell>

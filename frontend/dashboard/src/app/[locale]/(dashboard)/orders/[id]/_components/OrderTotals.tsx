@@ -3,7 +3,10 @@
 import { Separator } from '@findeg/ui';
 
 interface OrderTotalsProps {
-  order: any;
+  order: import('@findeg/backend/features/order').Order & {
+    shippingTotal?: number;
+    discountTotal?: number;
+  };
 }
 
 /**

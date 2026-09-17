@@ -14,9 +14,12 @@ import { EmptyState } from '@findeg/ui';
 
 interface BrandsManagerProps {
   initialBrands: Brand[];
-  onSave: (data: any, id?: number) => Promise<any>;
-  onDelete: (id: number) => Promise<any>;
-  onToggleStatus: (id: number) => Promise<any>;
+  onSave: (
+    data: import('@findeg/backend/features/catalog').BrandInput,
+    id?: number,
+  ) => Promise<{ success: boolean; error?: string }>;
+  onDelete: (id: number) => Promise<{ success: boolean; error?: string }>;
+  onToggleStatus: (id: number) => Promise<{ success: boolean; error?: string }>;
 }
 
 export function BrandsManager({
@@ -25,7 +28,7 @@ export function BrandsManager({
   onDelete,
   onToggleStatus,
 }: BrandsManagerProps) {
-  const t = (useTranslations as any)('Administration.Catalog.Brands');
+  const t = useTranslations('Administration.Catalog.Brands');
   const [brands, setBrands] = useState<Brand[]>(initialBrands);
   const [prevInitialBrands, setPrevInitialBrands] = useState<Brand[]>(initialBrands);
 
@@ -84,7 +87,7 @@ export function BrandsManager({
     setSelectedBrand(null);
   };
 
-  const handleFormSubmit = async (data: any) => {
+  const handleFormSubmit = async (data: import('@findeg/backend/features/catalog').BrandInput) => {
     const result = await onSave(data, selectedBrand?.id);
     if (result.success) {
       handleClosePanel();
@@ -197,7 +200,7 @@ export function BrandsManager({
         {isPanelOpen && (
           <BrandFormPanel
             brand={selectedBrand}
-            productCount={selectedBrand ? (selectedBrand as any)._count?.products || 0 : 0}
+            productCount={selectedBrand ? selectedBrand.productCount || 0 : 0}
             onSubmit={handleFormSubmit}
             onClose={handleClosePanel}
           />
@@ -209,7 +212,7 @@ export function BrandsManager({
         open={isPanelOpen && !isLargeScreen}
         onClose={handleClosePanel}
         brand={selectedBrand}
-        productCount={selectedBrand ? (selectedBrand as any)._count?.products || 0 : 0}
+        productCount={selectedBrand ? selectedBrand.productCount || 0 : 0}
         onSubmit={handleFormSubmit}
       />
     </div>

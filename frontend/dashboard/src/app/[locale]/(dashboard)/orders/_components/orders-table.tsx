@@ -17,7 +17,7 @@ import { useRouter } from '@i18n/navigation';
  */
 type OrderStatus =
   'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled' | 'refunded';
-type PaymentStatus = 'pending' | 'paid' | 'failed' | 'refunded';
+type PaymentStatus = import('@findeg/backend/features/core').PaymentStatus;
 
 /**
  * Stub helper functions (to be reimplemented)
@@ -30,7 +30,7 @@ const ORDER_STATUS_OPTIONS: { value: OrderStatus; label: string }[] = [];
 const getAllowedPaymentStatusTransitions = (_status: PaymentStatus): PaymentStatus[] => [];
 const getPaymentStatusLabel = (status: PaymentStatus): string => status;
 const normalizePaymentStatus = (status: string | undefined): PaymentStatus =>
-  (status as PaymentStatus) || 'pending';
+  (status as PaymentStatus) || 'unpaid';
 const PAYMENT_STATUS_OPTIONS: { value: PaymentStatus; label: string }[] = [];
 
 interface OrdersTableProps {

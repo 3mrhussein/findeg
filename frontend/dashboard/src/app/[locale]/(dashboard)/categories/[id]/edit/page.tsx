@@ -32,19 +32,24 @@ export default async function EditCategoryPage({
 
   // Construct initial data object that matches what CategoryForm expects
   const initialData = {
+    ...category,
     id: category.id,
     slug: category.slug,
     parentId: category.parentId,
     icon: category.image, // mapping image to icon for now
-    translations: (category as any).translations || [
+    translations: (
+      category as typeof category & {
+        translations?: import('@findeg/backend/features/catalog').CategoryInput['translations'];
+      }
+    ).translations || [
       { language: 'en', name: category.name || '', description: category.description || '' },
       { language: 'ar', name: '', description: '' },
     ],
   };
 
   const categoryOptions = allCategories
-    .filter((c: any) => c.id !== categoryId) // Prevent selecting self as parent
-    .map((c: any) => ({
+    .filter((c) => c.id !== categoryId) // Prevent selecting self as parent
+    .map((c) => ({
       id: c.id,
       slug: c.slug,
       name: c.name,

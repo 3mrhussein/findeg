@@ -110,7 +110,7 @@ export async function getCategoryProductCount(categoryId: ID): Promise<number> {
 /**
  * Create a new category with materialized path calculation
  */
-export async function createCategory(input: any) {
+export async function createCategory(input: typeof categories.$inferInsert) {
   return await db.transaction(async (tx) => {
     // Determine path and depth based on parentId
     let path = '/';
@@ -158,7 +158,7 @@ export async function createCategory(input: any) {
 /**
  * Update a category (including path recalculation if parentId changes)
  */
-export async function updateCategory(id: ID, input: any) {
+export async function updateCategory(id: ID, input: Partial<typeof categories.$inferInsert>) {
   return await db.transaction(async (tx) => {
     const existing = await tx
       .select()

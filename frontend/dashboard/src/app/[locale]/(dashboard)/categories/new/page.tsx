@@ -18,7 +18,7 @@ export default async function CreateCategoryPage({
   const allCategories = await getCategories(resolvedLocale);
 
   // Transform for select
-  const categoryOptions = allCategories.map((c: any) => ({
+  const categoryOptions = allCategories.map((c) => ({
     id: c.id,
     slug: c.slug,
     name: c.name,

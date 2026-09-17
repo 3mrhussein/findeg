@@ -333,7 +333,7 @@ export async function getByIdWithBrandAndCategory(
     .where(eq(products.id, id))
     .limit(1);
 
-  return results.length === 0 ? null : (results[0] as any);
+  return results.length === 0 ? null : results[0];
 }
 
 /**

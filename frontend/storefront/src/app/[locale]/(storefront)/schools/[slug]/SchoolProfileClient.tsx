@@ -8,7 +8,7 @@ import { useRouter } from '@i18n/navigation';
 
 interface SchoolProfileClientProps {
   schoolName: string;
-  initialLists: any[];
+  initialLists: import('@findeg/backend/features/catalog').SchoolListResult[];
 }
 
 /**
@@ -20,13 +20,18 @@ interface SchoolProfileClientProps {
 export function SchoolProfileClient({ schoolName, initialLists }: SchoolProfileClientProps) {
   const router = useRouter();
   const [lists] = useState(initialLists);
-  const [activeList, setActiveList] = useState<any | null>(null);
+  const [activeList, setActiveList] = useState<
+    import('@findeg/backend/features/catalog').SchoolListResult | null
+  >(null);
   const [activeDialog, setActiveDialog] = useState<'code' | 'request' | null>(null);
 
   /**
    *
    */
-  const handleAction = (list: any, action: 'enter_code' | 'request_access' | 'view_list') => {
+  const handleAction = (
+    list: import('@findeg/backend/features/catalog').SchoolListResult,
+    action: 'enter_code' | 'request_access' | 'view_list',
+  ) => {
     if (action === 'view_list') {
       router.push(`/lists/${list.slug}`);
       return;
@@ -54,7 +59,11 @@ export function SchoolProfileClient({ schoolName, initialLists }: SchoolProfileC
           <ListAccessCard
             key={list.id}
             list={list}
-            accessState={list.accessState}
+            accessState={
+              'accessState' in list
+                ? (list.accessState as import('@findeg/backend/features/school').AccessState)
+                : undefined
+            }
             onAction={(action) => handleAction(list, action)}
           />
         ))}

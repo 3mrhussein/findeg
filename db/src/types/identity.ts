@@ -174,13 +174,13 @@ export function systemAdmin(session: SessionPayload): boolean {
 export function adminSession(session: SessionPayload): boolean {
   if (session.portalRole === 'staff' || session.portalRole === 'school_staff') return true;
   if (session.activeRoleIds?.some((roleId) => ADMIN_ROLE_IDS.includes(roleId))) return true;
-  if (session.permissionCodes?.includes(PERMISSION_CODES.ADMIN_PORTAL as any)) return true;
+  if (session.permissionCodes?.includes(PERMISSION_CODES.ADMIN_PORTAL)) return true;
   return false;
 }
 
 export function hasPermission(session: SessionPayload, requiredPermission: string): boolean {
   if (systemAdmin(session)) return true;
-  return session.permissionCodes?.includes(requiredPermission as any) === true;
+  return session.permissionCodes?.some((permission) => permission === requiredPermission) === true;
 }
 
 export function hasAnyPermission(session: SessionPayload, requiredPermissions: string[]): boolean {

@@ -16,8 +16,8 @@ import { Button } from '@findeg/ui';
 import type { AccessState } from '@findeg/backend/features/school';
 
 interface ListAccessCardProps {
-  list: any; // Type from schoolLists table
-  accessState: AccessState;
+  list: import('@findeg/backend/features/catalog').SchoolListResult; // Type from schoolLists table
+  accessState?: AccessState;
   onAction: (action: 'enter_code' | 'request_access' | 'view_list') => void;
 }
 

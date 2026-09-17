@@ -40,7 +40,7 @@ export async function generateStaticParams() {
 export default async function AdminDashboardPage({ params }: AdminDashboardPageProps) {
   const { locale } = await params;
   setRequestLocale(locale);
-  await requireAdmin(locale as any);
+  await requireAdmin(locale);
 
   return (
     <div className="space-y-6">

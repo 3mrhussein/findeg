@@ -1,10 +1,10 @@
-import { Product, CategoryFilterOption, FilterOption } from '../catalog/types';
+import { Product, Category, Brand, CategoryFilterOption, FilterOption } from '../catalog/types';
 
 /**
  * Helpers for filter options
  */
 export function mapCategoryOptions(
-  categories: any[],
+  categories: (Category & { localizedName?: Record<string, string> })[],
   categoryCounts: Record<string, number>,
   locale: string,
 ): CategoryFilterOption[] {
@@ -19,12 +19,12 @@ export function mapCategoryOptions(
 }
 
 export function mapBrandOptions(
-  brands: any[],
+  brands: Brand[],
   brandCounts: Record<string, number>,
 ): FilterOption[] {
   return brands.map((b) => ({
     id: String(b.id),
-    label: b.name,
+    label: b.name || b.slug,
     count: brandCounts[b.id] || 0,
   }));
 }
@@ -32,11 +32,11 @@ export function mapBrandOptions(
 /**
  * Helper to map backend product to storefront product
  */
-export function mapProduct(p: any, _locale: string): Product {
+export function mapProduct(p: Product, _locale: string): Product {
   return {
     ...p,
     slug: p.slug || '',
-    variants: (p.variants || []).map((v: any) => ({
+    variants: (p.variants || []).map((v) => ({
       ...v,
       inventory: v.inventory || [],
     })),

@@ -56,7 +56,7 @@ export default async function MyOrderDetailPage({ params }: MyOrderDetailPagePro
           <CardTitle>{t('Pages.MyAccount.Orders')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          {order.items?.map((item: any, index: number) => (
+          {order.items?.map((item, index: number) => (
             <div key={`${item.productId}-${index}`} className="rounded-md border p-3">
               <div className="flex items-center justify-between">
                 <p className="font-medium">{item.productNameSnapshot || item.productName || '-'}</p>

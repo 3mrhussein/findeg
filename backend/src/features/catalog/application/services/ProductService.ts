@@ -76,7 +76,7 @@ export class ProductService implements IProductService {
       isActive: dbVariant.isActive,
       sortOrder: dbVariant.sortOrder,
       isDefault: dbVariant.isDefault,
-      mediaSet: dbVariant.mediaSet as any,
+      mediaSet: dbVariant.mediaSet as Variant['mediaSet'],
       barcode: dbVariant.barcode || undefined,
       weightGrams: dbVariant.weightGrams || undefined,
       images: [],

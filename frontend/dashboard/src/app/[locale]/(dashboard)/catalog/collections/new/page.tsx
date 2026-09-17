@@ -10,7 +10,7 @@ export const metadata: Metadata = {
  */
 export default async function NewCollectionPage() {
   // TODO: Replace with data layer query from @data/tags/queries
-  const availableTags: any[] = []; // Stubbed - empty tags list
+  const availableTags: import('@findeg/backend/features/catalog').Tag[] = []; // Stubbed - empty tags list
 
   return (
     <div className="flex-1 space-y-4 p-8 pt-6">

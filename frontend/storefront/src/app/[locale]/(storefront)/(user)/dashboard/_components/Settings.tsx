@@ -26,7 +26,6 @@ export type RoleWithPermissions = {
   name: string;
   userCount: number;
   permissions: Permission[];
-  [key: string]: any;
 };
 import { RoleCard } from './settings/RoleCard';
 import { PermissionMatrixDialog } from './settings/PermissionMatrixDialog';
@@ -150,7 +149,7 @@ export function SettingsView() {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {roles.map((role: any) => (
+          {roles.map((role) => (
             <RoleCard
               key={role.id}
               role={role}

@@ -69,7 +69,7 @@ export class AdminTagService implements IAdminTagService {
    * Creates a new tag and logs the action.
    */
   async create(input: TagInput, adminUserId?: number): Promise<Tag> {
-    const tag = await createTag(input as any);
+    const tag = await createTag(input);
 
     await this.auditLogService.logAction({
       adminUserId,
@@ -87,7 +87,7 @@ export class AdminTagService implements IAdminTagService {
    */
   async update(id: ID, input: Partial<TagInput>, adminUserId?: number): Promise<Tag> {
     const oldTag = await getTagById(id);
-    const tag = await updateTag(id, input as any);
+    const tag = await updateTag(id, input);
 
     await this.auditLogService.logAction({
       adminUserId,

@@ -63,7 +63,7 @@ export async function getProductForEdit(id: number): Promise<ProductEditData | n
  *
  * Cache: Tagged with search scope, shorter cache lifetime for freshness
  */
-export async function searchProducts(query: string, locale: string, _filters?: any) {
+export async function searchProducts(query: string, locale: string, _filters?: unknown) {
   cacheTag('products', `search-${locale}`);
   cacheLife('hours');
 

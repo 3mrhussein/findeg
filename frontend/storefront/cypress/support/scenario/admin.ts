@@ -71,7 +71,7 @@ function waitForStorefrontProductNameBySku(
   sku: string,
   expectedName: string,
   attempts = 12,
-): Cypress.Chainable<any> {
+): Cypress.Chainable<null> {
   return cy
     .request(
       buildApiUrl(API_ROUTES.products, {
@@ -84,20 +84,20 @@ function waitForStorefrontProductNameBySku(
       const products = (response.body?.products || []) as ApiProductSnapshot[];
       const matched = products.find((product) => product.sku === sku);
 
-      if (matched?.name === expectedName) return;
+      if (matched?.name === expectedName) return cy.wrap(null, { log: false });
 
       if (attempts <= 1) {
         expect(
           matched?.name,
           `expected storefront API name for sku ${sku} to converge to "${expectedName}"`,
         ).to.eq(expectedName);
-        return;
+        return cy.wrap(null, { log: false });
       }
 
       cy.wait(500, { log: false });
       return waitForStorefrontProductNameBySku(sku, expectedName, attempts - 1);
     })
-    .then(() => undefined);
+    .then(() => cy.wrap(null, { log: false }));
 }
 
 /**
@@ -107,7 +107,7 @@ function waitForStorefrontProductStockBySku(
   sku: string,
   expectedStockQuantity: number,
   attempts = 12,
-): Cypress.Chainable<any> {
+): Cypress.Chainable<null> {
   return cy
     .request(
       buildApiUrl(API_ROUTES.products, {
@@ -120,26 +120,26 @@ function waitForStorefrontProductStockBySku(
       const products = (response.body?.products || []) as ApiProductSnapshot[];
       const matched = products.find((product) => product.sku === sku);
 
-      if (matched?.stockQuantity === expectedStockQuantity) return;
+      if (matched?.stockQuantity === expectedStockQuantity) return cy.wrap(null, { log: false });
 
       if (attempts <= 1) {
         expect(
           matched?.stockQuantity,
           `expected storefront API stock for sku ${sku} to converge to ${expectedStockQuantity}`,
         ).to.eq(expectedStockQuantity);
-        return;
+        return cy.wrap(null, { log: false });
       }
 
       cy.wait(500, { log: false });
       return waitForStorefrontProductStockBySku(sku, expectedStockQuantity, attempts - 1);
     })
-    .then(() => undefined);
+    .then(() => cy.wrap(null, { log: false }));
 }
 
 /**
  * Polls admin categories API until a slug becomes visible and returns its ID.
  */
-function waitForAdminCategoryIdBySlug(slug: string, attempts = 12): Cypress.Chainable<any> {
+function waitForAdminCategoryIdBySlug(slug: string, attempts = 12): Cypress.Chainable<number> {
   return cy
     .request({
       method: 'GET',
@@ -152,7 +152,7 @@ function waitForAdminCategoryIdBySlug(slug: string, attempts = 12): Cypress.Chai
 
       if (attempts <= 1) {
         expect(category?.id, `admin category id for slug ${slug}`).to.be.a('number');
-        return undefined;
+        throw new Error(`Record with slug ${slug} was not found`);
       }
 
       cy.wait(400, { log: false });
@@ -163,7 +163,7 @@ function waitForAdminCategoryIdBySlug(slug: string, attempts = 12): Cypress.Chai
 /**
  * Polls admin brands API until a slug becomes visible and returns its ID.
  */
-function waitForAdminBrandIdBySlug(slug: string, attempts = 12): Cypress.Chainable<any> {
+function waitForAdminBrandIdBySlug(slug: string, attempts = 12): Cypress.Chainable<number> {
   return cy
     .request({
       method: 'GET',
@@ -176,7 +176,7 @@ function waitForAdminBrandIdBySlug(slug: string, attempts = 12): Cypress.Chainab
 
       if (attempts <= 1) {
         expect(brand?.id, `admin brand id for slug ${slug}`).to.be.a('number');
-        return undefined;
+        throw new Error(`Record with slug ${slug} was not found`);
       }
 
       cy.wait(400, { log: false });

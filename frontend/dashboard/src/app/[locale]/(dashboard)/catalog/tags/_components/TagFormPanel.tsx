@@ -33,7 +33,7 @@ import * as Icons from 'lucide-react';
 interface TagFormPanelProps {
   tag: Tag | null;
   productCount?: number;
-  onSubmit: (data: TagInput) => Promise<any>;
+  onSubmit: (data: TagInput) => Promise<{ success: boolean; error?: string }>;
   onClose: () => void;
 }
 
@@ -396,7 +396,9 @@ export function TagFormPanel({ tag, productCount = 0, onSubmit, onClose }: TagFo
           </Label>
           <RadioGroup
             defaultValue={watch('scope')}
-            onValueChange={(val) => setValue('scope', val as any, { shouldDirty: true })}
+            onValueChange={(val) =>
+              setValue('scope', val as TagInput['scope'], { shouldDirty: true })
+            }
             className="grid grid-cols-2 gap-3"
           >
             <Label

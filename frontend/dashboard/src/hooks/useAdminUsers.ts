@@ -67,7 +67,7 @@ export function useAdminUsers(): UseAdminUsersReturn {
     setError(null);
     try {
       const result = await getAdminUsers();
-      setAdmins(result as any);
+      setAdmins(result);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unexpected error');
     } finally {

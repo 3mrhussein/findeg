@@ -31,11 +31,17 @@ export default async function SearchAnalyticsPage({
   }
 
   // TODO: Replace with data layer queries from @data/search-analytics/queries
-  const metrics: any = {}; // Stubbed
-  const topSearches: any[] = []; // Stubbed
-  const zeroResults: any[] = []; // Stubbed
-  const lowCTR: any[] = []; // Stubbed
-  const languageBreakdown: any[] = []; // Stubbed
+  const metrics = {} as React.ComponentProps<typeof SearchAnalyticsView>['initialData']['metrics']; // Stubbed
+  const topSearches: React.ComponentProps<
+    typeof SearchAnalyticsView
+  >['initialData']['topSearches'] = []; // Stubbed
+  const zeroResults: React.ComponentProps<
+    typeof SearchAnalyticsView
+  >['initialData']['zeroResults'] = []; // Stubbed
+  const lowCTR: React.ComponentProps<typeof SearchAnalyticsView>['initialData']['lowCTR'] = []; // Stubbed
+  const languageBreakdown: React.ComponentProps<
+    typeof SearchAnalyticsView
+  >['initialData']['languageBreakdown'] = []; // Stubbed
 
   return (
     <SearchAnalyticsView

@@ -45,7 +45,7 @@ export class AdminCollectionService implements IAdminCollectionService {
   async create(input: CollectionInput, adminUserId?: number): Promise<Collection> {
     const { tagIds, ...collectionData } = input;
 
-    const collection = await createCollection(collectionData as any);
+    const collection = await createCollection(collectionData);
 
     if (tagIds && tagIds.length > 0) {
       await setCollectionTags(collection.id, tagIds);
@@ -70,7 +70,7 @@ export class AdminCollectionService implements IAdminCollectionService {
 
     const { tagIds, ...collectionData } = input;
 
-    const collection = await updateCollection(id, collectionData as any);
+    const collection = await updateCollection(id, collectionData);
 
     if (tagIds !== undefined) {
       await setCollectionTags(id, tagIds);

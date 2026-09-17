@@ -55,7 +55,13 @@ export default async function Page({ params, searchParams }: Props) {
             <CardTitle>{t('Pages.MyAccount.Profile')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <form action={updateProfileAction as any} className="space-y-2">
+            <form
+              action={async (formData) => {
+                'use server';
+                await updateProfileAction(formData);
+              }}
+              className="space-y-2"
+            >
               <label className="text-sm font-medium" htmlFor="name">
                 {t('Pages.MyAccount.NameLabel')}
               </label>
@@ -66,7 +72,7 @@ export default async function Page({ params, searchParams }: Props) {
               <span className="font-medium">{t('Pages.MyAccount.EmailLabel')}: </span>
               {user.email}
             </div>
-            <form action={logoutAction as any}>
+            <form action={logoutAction}>
               <Button variant="destructive" type="submit">
                 {t('Pages.MyAccount.Logout')}
               </Button>
@@ -86,7 +92,7 @@ export default async function Page({ params, searchParams }: Props) {
               />
             ) : (
               <div className="space-y-3">
-                {orders.slice(0, 8).map((order: any) => (
+                {orders.slice(0, 8).map((order) => (
                   <Link
                     key={String(order.id)}
                     href={`/my-account/orders/${order.id}`}

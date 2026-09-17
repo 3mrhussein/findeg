@@ -37,8 +37,8 @@ export interface AdminUser {
   portalRole?: string;
   roles: AdminUserRole[];
   permissionOverrides: PermissionOverride[];
-  createdAt: string;
-  updatedAt?: string;
+  createdAt: string | Date;
+  updatedAt?: string | Date;
 }
 
 export interface CreateAdminInput {
@@ -93,7 +93,7 @@ export function useAdminUsers(): UseAdminUsersReturn {
     setError(null);
     try {
       const result = await getAdminUsers();
-      setAdmins(result as any);
+      setAdmins(result);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unexpected error');
     } finally {

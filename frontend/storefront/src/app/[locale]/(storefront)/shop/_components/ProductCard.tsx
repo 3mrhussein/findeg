@@ -204,7 +204,7 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
       <Tooltip>
         <TooltipTrigger asChild>
           <Link
-            href={`/shop/products/${(product as any).slug}`}
+            href={`/shop/products/${product.slug}`}
             className="line-clamp-2 text-sm font-semibold leading-5 text-foreground hover:text-primary"
           >
             {product.name}
@@ -223,9 +223,7 @@ export function ProductCard({ product, view, brand }: ProductCardProps) {
             className="size-5 rounded-sm object-contain"
           />
         ) : null}
-        <span className="truncate">
-          {(brand as any)?.name || product.brandName || t('UnknownBrand')}
-        </span>
+        <span className="truncate">{brand?.name || product.brandName || t('UnknownBrand')}</span>
       </div>
 
       <div className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">

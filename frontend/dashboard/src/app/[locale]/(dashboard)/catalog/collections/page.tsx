@@ -11,7 +11,7 @@ export const metadata: Metadata = {
  */
 export default async function CollectionsPage() {
   // TODO: Replace with data layer query from @data/collections/queries
-  const collections: any[] = []; // Stubbed - empty collections list
+  const collections: import('@findeg/backend/features/catalog').Collection[] = []; // Stubbed - empty collections list
   const sortedCollections = [...collections].sort((a, b) => a.sortOrder - b.sortOrder);
 
   return <CollectionsPageClient collections={sortedCollections} />;

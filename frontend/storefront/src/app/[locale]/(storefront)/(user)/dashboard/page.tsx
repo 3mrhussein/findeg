@@ -22,7 +22,7 @@ export default async function Page({ params }: Props) {
   const data = await getDashboardData(locale, session.userId);
 
   return (
-    <PermissionsProvider session={data.session as any}>
+    <PermissionsProvider session={session}>
       <DashboardContent
         products={data.products}
         orders={data.orders}

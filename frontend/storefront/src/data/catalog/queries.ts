@@ -36,7 +36,7 @@ import { mapBrandOptions, mapCategoryOptions, mapProduct } from '../helpers/mapp
 export async function getShopPlpViewModel(
   locale: string,
   slug: string[],
-  query: any,
+  query: Record<string, string | string[] | undefined>,
 ): Promise<ShopPlpViewModel | null> {
   const resolvedLocale = parse(locale);
   cacheTag('products', 'categories', `plp-${resolvedLocale}-${slug.join('-')}`);
@@ -100,7 +100,7 @@ export async function getShopPlpViewModel(
       from: 1,
       to: Math.min(result.total, 20),
       locale: resolvedLocale,
-      query: query.q || '',
+      query: String(query.q || '') || '',
       categorySlugPath: slug,
       filters: {
         minPrice: Number(query.minPrice) || 0,
@@ -125,7 +125,7 @@ export async function getShopPlpViewModel(
 export async function getSearchPageViewModel(
   locale: string,
   rawQuery: string,
-  _query: any,
+  _query: Record<string, string | string[] | undefined>,
 ): Promise<SearchPageViewModel> {
   const resolvedLocale = parse(locale);
   cacheTag('products', 'categories', `search-${resolvedLocale}-${rawQuery}`);
@@ -246,7 +246,7 @@ export async function getTopProductSlugsForStaticParams(limit: number = 100) {
   try {
     const products = createProductService();
     const allProducts = await products.getAll('en');
-    return allProducts.slice(0, limit).map((p: any) => p.slug || String(p.id));
+    return allProducts.slice(0, limit).map((p) => p.slug || String(p.id));
   } catch (error) {
     console.error(`Failed to get top product slugs (limit ${limit}):`, error);
     return [];
@@ -259,7 +259,7 @@ export async function getTopProductSlugsForStaticParams(limit: number = 100) {
 export async function getProductPdp(
   locale: string,
   slug: string,
-  _session: any | null = null,
+  _session: import('@findeg/backend/features/core').SessionPayload | null = null,
 ): Promise<ProductPdpViewModel | null> {
   const resolvedLocale = parse(locale);
 
@@ -275,9 +275,9 @@ export async function getProductPdp(
       ? await brandService.getById(product.brandId, resolvedLocale)
       : null;
     const categories = product.categoryId
-      ? ([await categoryService.getById(product.categoryId, resolvedLocale)].filter(
-          Boolean,
-        ) as any[])
+      ? [await categoryService.getById(product.categoryId, resolvedLocale)].filter(
+          (category): category is Category => category !== null,
+        )
       : [];
     const related = await productService.getRelatedProducts(product, 4, resolvedLocale);
 
@@ -287,7 +287,7 @@ export async function getProductPdp(
     return {
       product: mappedProduct,
       selectedVariant:
-        ((mappedProduct.variants?.find((v: any) => v.isDefault) ||
+        ((mappedProduct.variants?.find((v) => v.isDefault) ||
           mappedProduct.variants?.[0]) as Variant) || null,
       canonicalSlug: slug,
       brand,
@@ -400,7 +400,7 @@ export async function getHomePageData(language: string): Promise<HomePageData> {
       featuredProducts: mappedProducts.slice(0, 8),
       heroProducts: mappedProducts.slice(0, 3),
       categories: categories.filter((c) => c.parentId === null) as Category[],
-      collections: collections as any, // Cast for now
+      collections: collections, // Cast for now
     };
   } catch (error) {
     console.error(`Failed to load home page data for language ${language}:`, error);
@@ -477,7 +477,7 @@ export async function getCollectionsPage(language: string): Promise<CollectionsP
 export async function getCollectionPageViewModel(
   slug: string,
   locale: string,
-  _query: any,
+  _query: Record<string, string | string[] | undefined>,
 ): Promise<CollectionPageViewModel | null> {
   const resolvedLocale = parse(locale);
   cacheTag('products', 'collections', `collection-${resolvedLocale}-${slug}`);
@@ -495,7 +495,7 @@ export async function getCollectionPageViewModel(
     const mappedProducts = products.map((p) => mapProduct(p, resolvedLocale));
 
     return {
-      collection: collection as any,
+      collection: collection,
       products: mappedProducts,
       categoryOptions: mapCategoryOptions(
         await categoryService.getTree(resolvedLocale),
@@ -579,7 +579,7 @@ export async function getProductPricing(payload: { productId: number; variantId:
 
     if (!product) return { success: false, error: 'Product not found' };
 
-    const variant = product.variants?.find((v: any) => v.id === payload.variantId);
+    const variant = product.variants?.find((v) => v.id === payload.variantId);
     if (!variant) return { success: false, error: 'Variant not found' };
 
     return {

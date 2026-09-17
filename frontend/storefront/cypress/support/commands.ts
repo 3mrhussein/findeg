@@ -15,7 +15,10 @@ declare global {
       loginAsAdminSession(): Chainable<void>;
       visitAdminNewProductForm(): Chainable<void>;
       createAdminProductUi(input: TestProductInput, categoryName?: string): Chainable<void>;
-      createAdminProductApi(input: TestProductInput, categoryName?: string): Chainable<any>;
+      createAdminProductApi(
+        input: TestProductInput,
+        categoryName?: string,
+      ): ReturnType<typeof import('./actions/admin-product.actions').createProductViaApi>;
       cleanupProductBySku(sku: string): Chainable<void>;
       disableAnimations(): Chainable<void>;
       shouldBeVisible(visible: boolean): Chainable<JQuery<HTMLElement>>;

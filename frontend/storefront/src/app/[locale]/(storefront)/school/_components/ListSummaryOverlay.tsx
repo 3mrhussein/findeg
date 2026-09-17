@@ -10,8 +10,8 @@ import { ScrollArea } from '@findeg/ui';
 interface ListSummaryOverlayProps {
   isOpen: boolean;
   onClose: () => void;
-  list: any;
-  items?: any[];
+  list: import('@findeg/backend/features/catalog').SchoolListResult;
+  items?: unknown[];
 }
 
 /**

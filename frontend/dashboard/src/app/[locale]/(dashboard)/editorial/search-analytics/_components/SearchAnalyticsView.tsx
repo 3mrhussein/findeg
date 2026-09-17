@@ -326,9 +326,10 @@ export function SearchAnalyticsView({ initialData }: Props) {
                     outerRadius={120}
                     fill="#8884d8"
                     dataKey="count"
-                    label={({ locale, percentage }: any) =>
-                      `${locale.toUpperCase()}: ${percentage.toFixed(1)}%`
-                    }
+                    label={({ index }) => {
+                      const entry = initialData.languageBreakdown[index];
+                      return `${entry.locale.toUpperCase()}: ${entry.percentage.toFixed(1)}%`;
+                    }}
                   >
                     {initialData.languageBreakdown.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
