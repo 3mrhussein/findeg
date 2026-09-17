@@ -7,7 +7,11 @@
 'use cache';
 
 import { cacheTag, cacheLife } from 'next/cache';
-import { createCatalogServices } from '@findeg/backend/features/catalog';
+import {
+  createCategoryService,
+  createProductService,
+  createBrandService,
+} from '@findeg/backend/features/catalog';
 import { parse } from '@findeg/backend/features/core';
 import { mapProduct, mapCategoryOptions, mapBrandOptions } from '../helpers/mappers';
 import { ShopPlpViewModel } from '../catalog/types';
@@ -24,11 +28,9 @@ export async function getCategoryPageViewModel(
   cacheTag('categories', `category-${resolvedLocale}-${slug}`);
   cacheLife('hours');
 
-  const {
-    categories: categoryService,
-    products: productService,
-    brands: brandService,
-  } = createCatalogServices();
+  const categoryService = createCategoryService();
+  const productService = createProductService();
+  const brandService = createBrandService();
 
   const category = await categoryService.getBySlug(slug, resolvedLocale);
   if (!category) return null;
@@ -84,7 +86,7 @@ export async function getCategoriesPageData(language: string): Promise<any[]> {
   cacheTag('categories', `categories-${resolvedLocale}`);
   cacheLife('days');
 
-  const { categories: categoryService } = createCatalogServices();
+  const categoryService = createCategoryService();
   return await categoryService.getAll(resolvedLocale);
 }
 
@@ -93,7 +95,7 @@ export async function getCategoriesPageData(language: string): Promise<any[]> {
  */
 export async function getNavCategories(language: string) {
   const locale = parse(language);
-  const { categories } = createCatalogServices();
+  const categories = createCategoryService();
 
   cacheTag('categories', `nav-categories-${locale}`);
   cacheLife('days');

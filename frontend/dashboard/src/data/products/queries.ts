@@ -13,7 +13,7 @@ import {
   type ProductListFilters,
   type ProductListResult,
 } from '@findeg/backend/features/administration';
-import { createCatalogServices } from '@findeg/backend/features/catalog';
+import { createProductService } from '@findeg/backend/features/catalog';
 import { type Locale } from '@findeg/backend/features/core';
 
 /**
@@ -41,7 +41,7 @@ export async function getProductById(id: number, locale: string) {
   cacheTag('products', `product-${id}`, `product-${id}-${locale}`);
   cacheLife('hours');
 
-  const { products } = createCatalogServices();
+  const products = createProductService();
   return await products.getById(id, locale as Locale);
 }
 
@@ -67,6 +67,6 @@ export async function searchProducts(query: string, locale: string, _filters?: a
   cacheTag('products', `search-${locale}`);
   cacheLife('hours');
 
-  const { products } = createCatalogServices();
+  const products = createProductService();
   return await products.searchProducts(query, locale as Locale);
 }

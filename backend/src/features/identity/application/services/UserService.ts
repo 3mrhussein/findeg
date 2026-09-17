@@ -17,7 +17,7 @@ import { userQueries } from '@findeg/db/queries';
 
 import { ResourceNotFoundError } from '../../../core/domain/errors';
 import { parse } from '../../../core/domain/value-objects';
-import { createCatalogServices } from '../../../catalog';
+import { createProductService, createSchoolListService } from '../../../catalog';
 import { createOrderServices } from '../../../order';
 import {
   AdminUser,
@@ -132,7 +132,8 @@ export class UserService implements IUserService {
    */
   async getDashboardData(locale: string, userId: number): Promise<DashboardData> {
     const resolvedLocale = parse(locale);
-    const { products, schoolLists } = createCatalogServices();
+    const products = createProductService();
+    const schoolLists = createSchoolListService();
     const { orders } = createOrderServices();
     const [allProducts, userOrders, allSchoolLists, user] = await Promise.all([
       products.getAll(resolvedLocale),

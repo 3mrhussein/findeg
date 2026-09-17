@@ -1,5 +1,5 @@
 // Public barrel for the catalog feature. Only types/DTOs, service interfaces,
-// plain-function domain accessors, and the service factory are exported here
+// plain-function domain accessors, and service factories are exported here
 // — concrete service classes (ProductService, CategoryService, etc.) and
 // domain entity classes (ProductEntity, VariantEntity) stay internal to the
 // backend package. See docs/adr/0001-backend-feature-barrels.md.
@@ -46,6 +46,16 @@ export type {
   LanguageBreakdown,
 } from './application/interfaces/IAdminSearchAnalyticsRepository';
 
-// ─── Service factory ────────────────────────────────────────────────────────
-export { createCatalogServices } from './application/services/factory';
-export type { CatalogServices } from './application/services/factory';
+// ─── Service factories ────────────────────────────────────────────────────────
+export {
+  createProductService,
+  createCategoryService,
+  createVariantService,
+  createTagService,
+  createCollectionService,
+  createSearchService,
+  createInventoryService,
+  createSchoolListService,
+  createBrandService,
+  createAdminSearchAnalyticsService,
+} from './application/services/factory';

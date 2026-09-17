@@ -1,7 +1,7 @@
 'use server';
 
 import { createCartServices } from '@findeg/backend/features/cart';
-import { createCatalogServices } from '@findeg/backend/features/catalog';
+import { createProductService } from '@findeg/backend/features/catalog';
 import { updateTag } from 'next/cache';
 import type { Variant } from '@findeg/backend/features/catalog';
 import { getCart } from './queries';
@@ -36,7 +36,7 @@ export async function addToCart(
   const validatedPayload = validateInput(AddToCartInputSchema, payload);
 
   const { cart } = createCartServices();
-  const { products } = createCatalogServices();
+  const products = createProductService();
 
   const locale = validatedPayload.locale === 'ar' ? 'ar' : 'en';
 
