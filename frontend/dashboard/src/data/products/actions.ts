@@ -76,9 +76,9 @@ export async function deleteProduct(id: number) {
  *
  * Invalidates: All product caches
  */
-export async function importProducts(csvFile: any) {
+export async function importProducts(_csvFile: any) {
   try {
-    const { products } = createAdministrationServices();
+    createAdministrationServices();
     // await products.importFromCSV(csvFile);
 
     revalidateTag('products', 'max');

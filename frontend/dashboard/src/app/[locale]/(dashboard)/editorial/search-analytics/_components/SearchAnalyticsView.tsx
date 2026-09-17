@@ -4,11 +4,9 @@ import { useState } from 'react';
 import { useRouter, usePathname } from '@i18n/navigation';
 import {
   Search,
-  TrendingUp,
   AlertCircle,
   Percent,
   BarChart3,
-  Languages,
   Download,
   Plus,
 } from 'lucide-react';
@@ -348,7 +346,7 @@ export function SearchAnalyticsView({ initialData }: Props) {
                 </PieChart>
               </ResponsiveContainer>
               <div className="mt-4 grid grid-cols-2 gap-8 text-center sm:grid-cols-3 md:grid-cols-4">
-                {initialData.languageBreakdown.map((entry, index) => (
+                {initialData.languageBreakdown.map((entry) => (
                   <div key={entry.locale} className="space-y-1">
                     <div className="text-sm font-medium uppercase">{entry.locale}</div>
                     <div className="text-2xl font-bold">{entry.count.toLocaleString()}</div>

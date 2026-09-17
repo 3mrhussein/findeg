@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useState } from 'react';
 import { Link } from '@i18n/navigation';
 import { useTranslations } from 'next-intl';
-import { MapPin, User, Heart, ShoppingCart, Menu, Flame, Sparkles } from 'lucide-react';
+import { MapPin, User, Heart, Menu, Flame, Sparkles } from 'lucide-react';
 import { useUser } from '@hooks/useUser';
 
 import ToggleLanguage from '@components/shared/ToggleLanguage';
@@ -33,7 +33,7 @@ export function Navbar() {
   const t = useTranslations('Nav');
   const locale = useLocale();
   const { categories, isLoading } = useCategories(locale, 'tree');
-  const { isLoggedIn, currentUser } = useUser();
+  const { isLoggedIn } = useUser();
   const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
   const [activeCategorySlug, setActiveCategorySlug] = useState<string | null>(null);
   const closeTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);

@@ -14,7 +14,6 @@
 
 'use server';
 
-import { redirect } from '@i18n/navigation';
 import { getSession, createSession } from '@lib/session';
 import { createIdentityServices } from '@findeg/backend/features/identity';
 import { revalidatePath } from 'next/cache';

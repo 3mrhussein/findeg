@@ -3,7 +3,6 @@
 import { getSession } from '@lib/session';
 import { updateTag } from 'next/cache';
 import { revalidatePath } from 'next/cache';
-import { createIdentityServices } from '@findeg/backend/features/identity';
 import { UpdateProfileInputSchema, validateInput } from '../schemas';
 
 /**
@@ -18,10 +17,8 @@ export async function updateProfile(formData: FormData) {
   const name = formData.get('name') as string;
 
   // Validate input
-  const { name: validatedName } = validateInput(UpdateProfileInputSchema, { name });
+  validateInput(UpdateProfileInputSchema, { name });
 
-  // Parse name into first and last name
-  const [firstName, ...lastNameParts] = validatedName.split(' ');
   // Invalidate user cache so next query fetches fresh data
   updateTag('user');
 

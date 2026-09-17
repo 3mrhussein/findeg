@@ -28,7 +28,7 @@ function UserIconNav() {
 /**
  *
  */
-export function SchoolListLayout({ children, locale }: SchoolListLayoutProps) {
+export function SchoolListLayout({ children }: SchoolListLayoutProps) {
   const t = useTranslations('School.ParentExperience.Layout');
 
   return (

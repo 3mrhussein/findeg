@@ -3,7 +3,6 @@ import type { Order } from '@findeg/backend/features/order';
 /**
  * Local type definitions
  */
-import type { OrderStatus, PaymentStatus } from '@findeg/backend/features/core';
 
 export interface OrderTableFiltersData {
   search?: string;

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useTranslations } from 'next-intl';
 import { Container } from '@findeg/ui';
 import { Button } from '@findeg/ui';

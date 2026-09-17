@@ -15,11 +15,7 @@ import {
   visitEditProductForm,
   deleteProductFromListById,
 } from '../support/actions/admin-product.actions';
-import {
-  visitAdminCategoriesList,
-  createCategoryFromUi,
-  deleteCategoryFromListById,
-} from '../support/actions/admin-category.actions';
+import { visitAdminCategoriesList } from '../support/actions/admin-category.actions';
 import { adminSelectors } from '../support/selectors/admin.selectors';
 import { UI_ROUTES, API_ROUTES } from '../support/constants/routes';
 import { API_QUERY_DEFAULTS, buildApiUrl } from '../support/constants/api-query';

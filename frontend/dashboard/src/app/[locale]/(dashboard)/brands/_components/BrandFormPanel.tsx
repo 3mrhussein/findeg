@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useForm, type Resolver } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -96,7 +96,7 @@ export function BrandFormPanel({
   const nameEn = watch('nameEn');
   const slug = watch('slug');
   const logoUrl = watch('logoUrl');
-  const [debouncedSlug, setDebouncedSlug] = useState(slug);
+  const [, setDebouncedSlug] = useState(slug);
   const debouncedValue = useDebounce(slug, 500);
 
   useEffect(() => {

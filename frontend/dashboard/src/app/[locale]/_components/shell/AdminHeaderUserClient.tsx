@@ -26,7 +26,7 @@ interface AdminHeaderUserClientProps {
 export function AdminHeaderUserClient({
   userEmail,
   userName,
-  locale = 'en',
+  locale: _locale = 'en',
 }: AdminHeaderUserClientProps) {
   const router = useRouter();
 

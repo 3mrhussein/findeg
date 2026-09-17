@@ -66,7 +66,7 @@ export function AdminBreadcrumb({ locale = 'en' }: AdminBreadcrumbProps) {
         </Link>
 
         {/* Dynamic Breadcrumbs */}
-        {breadcrumbs.map((crumb, index) => (
+        {breadcrumbs.map((crumb) => (
           <React.Fragment key={crumb.href}>
             <ChevronRight className="h-[14px] w-[14px] text-gray-300 dark:text-slate-600 mx-1 rtl:rotate-180" />
             {crumb.isLast ? (

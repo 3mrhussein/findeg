@@ -13,7 +13,7 @@
 'use client';
 
 import * as React from 'react';
-import { ChevronRight, ChevronDown, Plus, Minus, Check } from 'lucide-react';
+import { Plus, Minus, Check } from 'lucide-react';
 import { cn } from '@lib/utils';
 import type { Category } from '@findeg/backend/features/catalog';
 import { Button } from '@findeg/ui';

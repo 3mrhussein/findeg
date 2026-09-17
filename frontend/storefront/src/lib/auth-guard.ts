@@ -1,8 +1,7 @@
-import { getSession } from './session';
 import { getCachedSession } from '@data/auth/queries';
 import { redirect } from '@i18n/navigation';
 import { adminSession } from '@findeg/backend/features/core';
-import type { SessionPayload, Locale } from '@findeg/backend/features/core';
+import type { SessionPayload } from '@findeg/backend/features/core';
 
 /**
  * Require any authenticated user — redirects to /login if not.

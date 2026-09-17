@@ -5,7 +5,6 @@ import { HeaderNavClient } from './HeaderNavClient';
 import ToggleLanguage from './ToggleLanguage';
 import { ToggleTheme } from '@findeg/ui';
 import { SearchOverlay } from './SearchOverlay';
-import { cacheLife } from 'next/cache';
 
 interface HeaderProps {
   locale: Locale;

@@ -10,7 +10,6 @@ import {
   Loader2,
   Globe,
   Tag as TagIcon,
-  AlertCircle,
   Palette,
   Hash,
   Zap,

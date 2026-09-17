@@ -12,7 +12,6 @@
 import * as React from 'react';
 import { X } from 'lucide-react';
 import { Button } from '@findeg/ui';
-import { cn } from '@lib/utils';
 
 export interface BulkAction {
   /** Unique action key */

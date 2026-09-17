@@ -70,12 +70,7 @@ describe('Architectural Boundary Enforcement - Build Validation', () => {
           .map((s) => s.innerHTML)
           .join('');
 
-        const hasFs =
-          scriptContents.includes('require("fs")') ||
-          scriptContents.includes("'fs'") ||
-          scriptContents.includes('"fs"');
-
-        // Some false positives are okay, but Node.js fs should not be bundled
+        expect(scriptContents.includes('require("fs")')).to.be.false;
         cy.log('Verified Node.js fs module not in client bundle');
       });
     });

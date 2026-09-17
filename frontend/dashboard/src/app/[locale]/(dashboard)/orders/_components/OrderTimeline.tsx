@@ -20,8 +20,6 @@ const TIMELINE_STEPS = [
   { status: 'delivered', label: 'Delivered' },
 ] as const;
 
-const CANCELLED_STATUS = { status: 'cancelled', label: 'Cancelled' };
-
 export function OrderTimeline({ currentStatus, className }: OrderTimelineProps) {
   // If order is cancelled, show special timeline
   if (currentStatus === 'cancelled') {

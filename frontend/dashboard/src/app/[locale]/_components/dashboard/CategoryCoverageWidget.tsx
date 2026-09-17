@@ -14,7 +14,6 @@ interface CategoryCoverageWidgetProps {
 
 export function CategoryCoverageWidget({ distributions }: CategoryCoverageWidgetProps) {
   const t = useTranslations('Administration.Dashboard.Widgets.CategoryCoverage');
-  const tCommon = useTranslations('Administration.Dashboard');
 
   return (
     <Card className="h-full border-slate-200 dark:border-slate-800 flex flex-col shadow-sm bg-white dark:bg-slate-900">

@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { useFormContext, useFieldArray } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 import { useTranslations } from 'next-intl';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@findeg/ui';
 import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';

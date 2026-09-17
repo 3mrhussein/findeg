@@ -19,7 +19,11 @@ export interface AdminHeaderProps {
  * AdminHeader - Static shell for the admin header.
  * Decouples dynamic session data (user, notifications) into slots to support PPR.
  */
-export function AdminHeader({ locale = 'en', userSlot, notificationSlot }: AdminHeaderProps) {
+export function AdminHeader({
+  locale: _locale = 'en',
+  userSlot,
+  notificationSlot,
+}: AdminHeaderProps) {
   const { toggleSidebar } = useSidebar();
 
   // Search Palette State

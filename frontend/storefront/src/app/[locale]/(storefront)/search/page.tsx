@@ -42,7 +42,7 @@ async function SearchPageContent({ params, searchParams }: SearchPageProps) {
   const rawQuery = typeof queryParams.q === 'string' ? queryParams.q : '';
 
   const vm = await getSearchPageViewModel(locale, rawQuery, queryParams);
-  const { query, mode, exactCount } = vm;
+  const { query, mode } = vm;
 
   if (!query) {
     return (

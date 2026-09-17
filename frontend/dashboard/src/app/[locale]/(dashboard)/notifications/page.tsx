@@ -3,10 +3,8 @@
 import { useState, useEffect } from 'react';
 import { Bell, Check, ExternalLink, Loader2, Filter, MoreVertical, Trash } from 'lucide-react';
 import { useTranslations, useLocale } from 'next-intl';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@findeg/ui';
+import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
 import { Button } from '@findeg/ui';
-import { Badge } from '@findeg/ui';
-import { ScrollArea } from '@findeg/ui';
 import {
   DropdownMenu,
   DropdownMenuContent,

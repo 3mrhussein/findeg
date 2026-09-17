@@ -2,7 +2,6 @@
 
 import React, { createContext, useEffect, useMemo, useState } from 'react';
 import type { CartItem } from '@findeg/backend/features/cart';
-import type { Product } from '@findeg/backend/features/catalog';
 
 export interface CartContextType {
   cartItems: CartItem[];
@@ -19,10 +18,6 @@ export interface CartContextType {
 
 export const CartContext = createContext<CartContextType | undefined>(undefined);
 
-interface CartSelectors {
-  variantKey?: string;
-}
-
 /**
  *
  */
@@ -34,23 +29,6 @@ function getGuestId() {
   const generated = `guest_${crypto.randomUUID()}`;
   window.localStorage.setItem(storageKey, generated);
   return generated;
-}
-
-/**
- *
- */
-function parseVariantId(variantId?: string): CartSelectors {
-  if (!variantId) return {};
-
-  try {
-    const parsed = JSON.parse(variantId) as CartSelectors;
-    return {
-      variantKey: parsed.variantKey,
-    };
-  } catch {
-    // Legacy/simple variant ids are plain keys (e.g. "default"), not JSON blobs.
-    return { variantKey: variantId };
-  }
 }
 
 /**

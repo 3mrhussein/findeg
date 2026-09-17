@@ -24,7 +24,6 @@ interface WeightInputProps {
 export function WeightInput({ name, label = 'Weight', className }: WeightInputProps) {
   const [unit, setUnit] = React.useState<'g' | 'kg'>('g');
   const {
-    register,
     setValue,
     watch,
     formState: { errors },

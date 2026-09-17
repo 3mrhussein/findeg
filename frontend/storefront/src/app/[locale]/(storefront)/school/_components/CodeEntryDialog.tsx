@@ -73,7 +73,7 @@ export function CodeEntryDialog({
         }
         toast({ variant: 'destructive', title: result.error || t('errorToast') });
       }
-    } catch (err) {
+    } catch {
       setError(t('connectionError'));
       toast({ variant: 'destructive', title: t('connectionError') });
     } finally {

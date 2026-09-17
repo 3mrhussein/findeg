@@ -10,7 +10,6 @@
 import { getTranslations } from 'next-intl/server';
 import { type Locale } from '@findeg/backend/features/core';
 import {
-  getDashboardData,
   getCatalogHealthStats,
   getCategoryProductDistribution,
   getRecentActivity,
@@ -115,7 +114,7 @@ export async function FastDashboardSection({ locale }: DashboardWidgetProps) {
  * Medium Section: Catalog Completion Board
  * Renders after ~500ms (aggregation query)
  */
-export async function MediumDashboardSection({ locale }: DashboardWidgetProps) {
+export async function MediumDashboardSection({ locale: _locale }: DashboardWidgetProps) {
   const catalogStats = await getCatalogHealthStats();
 
   return (
@@ -130,11 +129,6 @@ export async function MediumDashboardSection({ locale }: DashboardWidgetProps) {
  * Renders after ~1000ms (heavy queries with joins)
  */
 export async function SlowDashboardSection({ locale }: DashboardWidgetProps) {
-  const t = await getTranslations({
-    locale: locale as Locale,
-    namespace: 'Administration.Dashboard',
-  });
-
   // Heavy queries - parallel loading
   const [categoryDist, recentActivity] = await Promise.all([
     getCategoryProductDistribution(),

@@ -1,7 +1,6 @@
-import { Suspense } from 'react';
 import { getTranslations } from 'next-intl/server';
 import { getCategories } from '@data/categories/queries';
-import { parse, type Locale } from '@findeg/backend/features/core';
+import { parse } from '@findeg/backend/features/core';
 import { CategoryTree } from './CategoryTree';
 import {
   createCategoryAction,

@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { Star } from 'lucide-react';
 import { Button } from '@findeg/ui';
 import { Card, CardContent } from '@findeg/ui';
