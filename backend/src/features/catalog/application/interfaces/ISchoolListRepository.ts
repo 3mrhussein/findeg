@@ -8,7 +8,7 @@
 import { type ID } from '@findeg/backend/features/core/domain/types/common';
 import type { Variant } from '../../domain/entities/Variant';
 import { type MatchRulesDraft } from '@findeg/db';
-import { Locale, TranslationMap } from '@findeg/db/types';
+import { TranslationMap } from '@findeg/db/types';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 

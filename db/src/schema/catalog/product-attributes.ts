@@ -3,15 +3,12 @@
  */
 
 import {
-  pgTable,
   serial,
   text,
   integer,
   boolean,
   timestamp,
-  uniqueIndex,
   jsonb,
-  decimal,
   primaryKey,
   index,
 } from 'drizzle-orm/pg-core';

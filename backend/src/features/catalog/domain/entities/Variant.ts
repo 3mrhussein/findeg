@@ -8,12 +8,7 @@
  */
 
 import { z } from 'zod';
-import {
-  IdSchema,
-  PriceSchema,
-  TranslationMapSchema,
-  type Locale,
-} from '../../../core/domain/types/common';
+import { IdSchema, TranslationMapSchema, type Locale } from '../../../core/domain/types/common';
 import type { CurrencyCode, Money } from '../../../core/domain/value-objects';
 import {
   DEFAULT_CURRENCY,

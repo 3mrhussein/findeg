@@ -1,7 +1,7 @@
 import { sql, desc, eq } from 'drizzle-orm';
 import { z } from 'zod';
 import { db } from '../../connection';
-import { products, productVariants } from '../../schema/catalog';
+import { products } from '../../schema/catalog';
 import { orderItems } from '../../schema/sales';
 
 /**

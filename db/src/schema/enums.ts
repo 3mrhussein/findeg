@@ -1,4 +1,3 @@
-import { pgEnum } from 'drizzle-orm/pg-core';
 import { identitySchema, salesSchema } from './schemas';
 
 /**

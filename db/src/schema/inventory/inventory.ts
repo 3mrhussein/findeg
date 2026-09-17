@@ -7,16 +7,7 @@
  * - stock_movements: Immutable audit ledger of all stock changes
  */
 
-import {
-  pgTable,
-  serial,
-  text,
-  integer,
-  boolean,
-  timestamp,
-  uniqueIndex,
-  index,
-} from 'drizzle-orm/pg-core';
+import { serial, text, integer, boolean, timestamp, uniqueIndex, index } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 import { inventorySchema } from '../schemas';
 import { productVariants } from '../catalog/product-variants';

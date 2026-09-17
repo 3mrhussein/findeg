@@ -12,7 +12,7 @@ import { z } from 'zod';
 import { TagSchema } from './Tag';
 import { ProductAttributeValueSchema } from './Attribute';
 import { VariantSchema, type Variant, VariantEntity } from './Variant';
-import { ResponsiveMediaSetSchema, pick } from '../../../core/domain/value-objects';
+import { pick } from '../../../core/domain/value-objects';
 import { ID, IdSchema, Locale, RatingSchema, TranslationMapSchema } from '@findeg/db/types';
 export const ProductLocalizedContentSchema = z.object({
   name: TranslationMapSchema,
