@@ -1,6 +1,5 @@
 import { OrdersTable } from './OrdersTable';
 import { PageHeader } from '@/app/[locale]/_components/shared/PageHeader';
-import { parse } from '@findeg/backend/features/core';
 
 interface OrdersContentProps {
   locale: string;
@@ -19,9 +18,8 @@ interface OrdersContentProps {
  * OrdersContent - Handles order data fetching and display.
  * Separated to allow streaming with Suspense.
  */
-export async function OrdersContent({ locale, filters }: OrdersContentProps) {
-  const { page, limit, search, status, paymentStatus, startDate, endDate } = filters;
-  const offset = (page - 1) * limit;
+export async function OrdersContent({ locale: _locale, filters }: OrdersContentProps) {
+  const { page, limit, status } = filters;
 
   // TODO: Replace with data layer query from @data/orders/queries
   // const { orders, total } = await getOrders({ limit, offset, search, status, paymentStatus, startDate, endDate });

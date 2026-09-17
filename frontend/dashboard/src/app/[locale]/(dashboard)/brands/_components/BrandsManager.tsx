@@ -2,18 +2,9 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
-import { Search, Plus, Filter, LayoutGrid, List } from 'lucide-react';
+import { Search, Plus } from 'lucide-react';
 import { Input } from '@findeg/ui';
 import { Button } from '@findeg/ui';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuSeparator,
-  DropdownMenuLabel,
-} from '@findeg/ui';
-import { Badge } from '@findeg/ui';
 import { cn } from '@lib/utils';
 import { Brand } from '@findeg/backend/features/catalog';
 import { BrandCard } from './BrandCard';

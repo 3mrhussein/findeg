@@ -10,7 +10,7 @@
 'use client';
 
 import * as React from 'react';
-import { Plus, X, GripVertical } from 'lucide-react';
+import { Plus, X } from 'lucide-react';
 import { Input } from '@findeg/ui';
 import { Button } from '@findeg/ui';
 import { Label } from '@findeg/ui';

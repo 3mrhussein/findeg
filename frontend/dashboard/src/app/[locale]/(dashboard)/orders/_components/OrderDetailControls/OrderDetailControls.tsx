@@ -21,12 +21,12 @@ type PaymentStatus = 'pending' | 'paid' | 'failed' | 'refunded';
 /**
  * Stub helper functions (to be reimplemented)
  */
-const getAllowedOrderStatusTransitions = (status: OrderStatus): OrderStatus[] => [];
+const getAllowedOrderStatusTransitions = (_status: OrderStatus): OrderStatus[] => [];
 const getOrderStatusLabel = (status: OrderStatus): string => status;
 const normalizeOrderStatus = (status: string | undefined): OrderStatus =>
   (status as OrderStatus) || 'pending';
 const ORDER_STATUS_OPTIONS: { value: OrderStatus; label: string }[] = [];
-const getAllowedPaymentStatusTransitions = (status: PaymentStatus): PaymentStatus[] => [];
+const getAllowedPaymentStatusTransitions = (_status: PaymentStatus): PaymentStatus[] => [];
 const getPaymentStatusLabel = (status: PaymentStatus): string => status;
 const normalizePaymentStatus = (status: string | undefined): PaymentStatus =>
   (status as PaymentStatus) || 'pending';

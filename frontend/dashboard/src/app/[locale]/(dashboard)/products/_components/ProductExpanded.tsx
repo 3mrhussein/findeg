@@ -1,10 +1,9 @@
 import type { Product } from '@findeg/backend/features/catalog';
 import { Link } from '@i18n/navigation';
-import { ExternalLink, Edit, Eye } from 'lucide-react';
+import { ExternalLink, Edit } from 'lucide-react';
 import { TagChips } from '@components/shared/TagChips';
 import { StockHealthBar } from '@/app/[locale]/_components/shared/StockHealthBar';
 import { Badge } from '@findeg/ui';
-import { format } from 'date-fns';
 
 // Helper to calculate available stock from inventory
 function getVariantStock(variant: any): number {
@@ -45,9 +44,6 @@ export function ProductExpanded({ product }: ProductExpandedProps) {
     return stock > 0 && stock <= 5;
   }).length;
   const healthyVariants = inStockVariants - lowStockVariants;
-
-  const createdDate = product.createdAt ? format(product.createdAt, 'PPP') : '—';
-  const updatedDate = product.updatedAt ? format(product.updatedAt, 'PPP') : '—';
 
   return (
     <div className="space-y-4 py-4 px-2 bg-muted/30 rounded-md">

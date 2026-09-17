@@ -14,9 +14,8 @@
  */
 
 import { Suspense } from 'react';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { setRequestLocale } from 'next-intl/server';
 import { requireAdmin } from '@lib/auth-guard';
-import { DashboardStatsSkeleton } from '@components/skeletons';
 import {
   FastDashboardSection,
   MediumDashboardSection,
@@ -41,7 +40,7 @@ export async function generateStaticParams() {
 export default async function AdminDashboardPage({ params }: AdminDashboardPageProps) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const session = await requireAdmin(locale as any);
+  await requireAdmin(locale as any);
 
   return (
     <div className="space-y-6">

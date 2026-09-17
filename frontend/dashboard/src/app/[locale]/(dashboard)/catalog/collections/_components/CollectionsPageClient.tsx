@@ -5,7 +5,7 @@ import { Collection } from '@findeg/backend/features/catalog';
 import { CollectionGrid } from './CollectionGrid';
 import { Button } from '@findeg/ui';
 import { Input } from '@findeg/ui';
-import { Plus, Search, Trash, AlertTriangle } from 'lucide-react';
+import { Plus, Search, AlertTriangle } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@i18n/navigation';
 import { useLocale } from 'next-intl';

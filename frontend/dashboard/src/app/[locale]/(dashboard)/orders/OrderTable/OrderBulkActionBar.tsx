@@ -16,7 +16,7 @@ interface OrderBulkActionBarProps {
 export function OrderBulkActionBar({ table }: OrderBulkActionBarProps) {
   const selectedRows = table.getFilteredSelectedRowModel().rows;
   const count = selectedRows.length;
-  const [isPending, startTransition] = useTransition();
+  const [isPending] = useTransition();
 
   if (count === 0) return null;
 

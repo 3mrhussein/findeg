@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import { NavItem } from './NavItem';
-import { useAdminPermissions } from '../../../../hooks/useAdminPermissions';
 import type { NavGroup as NavGroupType } from '@/interfaces';
 
 export interface NavGroupProps {

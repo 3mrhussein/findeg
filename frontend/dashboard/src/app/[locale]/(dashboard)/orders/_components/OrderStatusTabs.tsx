@@ -4,12 +4,6 @@ import { useRouter, usePathname } from '@i18n/navigation';
 import { useSearchParams } from 'next/navigation';
 import { Tabs, TabsList, TabsTrigger } from '@findeg/ui';
 
-/**
- * OrderStatus type (local definition)
- */
-type OrderStatus =
-  'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled' | 'refunded';
-
 interface OrderStatusTabsProps {
   counts: {
     all: number;

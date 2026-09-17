@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import { useFormContext } from 'react-hook-form';
 import { useDropzone } from 'react-dropzone';
@@ -22,8 +22,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@findeg/ui';
-import { Button } from '@findeg/ui';
-import { Image as ImageIcon, X, GripVertical, UploadCloud } from 'lucide-react';
+import { X, GripVertical, UploadCloud } from 'lucide-react';
 
 /**
  * Sortable Image Item Component

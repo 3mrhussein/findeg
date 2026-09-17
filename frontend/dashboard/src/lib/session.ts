@@ -46,7 +46,7 @@ export async function getSession(): Promise<SessionPayload | null> {
       organizationId: payload.organizationId as string | undefined,
       tokenVersion: payload.tokenVersion as number | undefined,
     };
-  } catch (error) {
+  } catch {
     // Invalid or expired token
     return null;
   }

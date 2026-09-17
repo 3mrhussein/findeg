@@ -7,7 +7,6 @@ import {
   type CollectionInput,
 } from '@findeg/backend/features/catalog/schemas';
 import { Collection, Tag } from '@findeg/backend/features/catalog';
-import { useTranslations } from 'next-intl';
 import { useRouter } from '@i18n/navigation';
 import { useToast } from '@hooks/use-toast';
 import { useState, useEffect } from 'react';
@@ -26,7 +25,7 @@ import { Switch } from '@findeg/ui';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@findeg/ui';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@findeg/ui';
 import { Badge } from '@findeg/ui';
-import { ChevronLeft, Save, Loader2, Image as ImageIcon, Tag as TagIcon } from 'lucide-react';
+import { ChevronLeft, Save, Loader2, Image as ImageIcon } from 'lucide-react';
 
 import { Checkbox } from '@findeg/ui';
 import Image from 'next/image';
@@ -41,8 +40,6 @@ interface CollectionFormProps {
  *
  */
 export function CollectionForm({ collection, availableTags }: CollectionFormProps) {
-  const t = useTranslations('Pages.Dashboard.Collections.Form');
-  const commonT = useTranslations('Common');
   const { toast } = useToast();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -89,7 +86,7 @@ export function CollectionForm({ collection, availableTags }: CollectionFormProp
       } else {
         toast({ variant: 'destructive', title: 'Error', description: result.error });
       }
-    } catch (error) {
+    } catch {
       toast({ variant: 'destructive', title: 'Error', description: 'Something went wrong' });
     } finally {
       setIsSubmitting(false);

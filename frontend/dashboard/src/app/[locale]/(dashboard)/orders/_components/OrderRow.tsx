@@ -5,7 +5,6 @@ import { EnrichedTableRow } from '@/app/[locale]/_components/table/EnrichedTable
 import { StatusBadge } from '@components/shared/StatusBadge';
 import { Package, User, CreditCard, MapPin, FileText } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import { cn } from '@lib/utils';
 import { OrderTimeline } from './OrderTimeline';
 import type { Order } from '@findeg/backend/features/order';
 

@@ -10,7 +10,6 @@ import {
 } from '@tanstack/react-table';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@findeg/ui';
 import { Button } from '@findeg/ui';
-import { IconTooltip } from '@findeg/ui';
 import { Input } from '@findeg/ui';
 import { useState } from 'react';
 import { Category } from '@findeg/backend/features/catalog';

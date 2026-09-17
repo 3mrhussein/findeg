@@ -16,7 +16,11 @@ interface ProductQuickActionsProps {
   sku?: string;
 }
 
-export function ProductQuickActions({ productId, productName, sku }: ProductQuickActionsProps) {
+export function ProductQuickActions({
+  productId,
+  productName: _productName,
+  sku,
+}: ProductQuickActionsProps) {
   const { toast } = useToast();
 
   const handleCopySKU = () => {

@@ -4,9 +4,7 @@
  */
 
 import type { Product } from '@findeg/backend/features/catalog';
-import { Badge } from '@findeg/ui';
 import { StatusBadge } from '@components/shared/StatusBadge';
-import { AlertCircle } from 'lucide-react';
 import Image from 'next/image';
 import { formatDistanceToNow } from 'date-fns';
 
@@ -22,7 +20,6 @@ export function ProductCompact({ product }: ProductCompactProps) {
   // Calculate total stock from all variants
   const totalStock =
     product.variants?.reduce((sum, v) => sum + getVariantAvailableStock(v), 0) || 0;
-  const hasVariants = (product.variants?.length || 0) > 1;
   const lowStockThreshold = 10;
   const isLowStock = totalStock > 0 && totalStock <= lowStockThreshold;
 

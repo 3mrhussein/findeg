@@ -80,27 +80,3 @@ export default async function MyAccountPage({ params }: MyAccountPageProps) {
   );
 }
 
-function OrdersList({ orders }: { orders: any[] }) {
-  if (!orders || orders.length === 0) {
-    return <p className="text-gray-500">No orders yet</p>;
-  }
-
-  return (
-    <div className="space-y-4">
-      {orders.map((order: any) => (
-        <div key={order.id} className="flex justify-between border-b pb-4">
-          <div>
-            <p className="font-medium">Order #{order.id}</p>
-            <p className="text-sm text-gray-500">
-              {new Date(order.createdAt).toLocaleDateString()}
-            </p>
-          </div>
-          <div className="text-right">
-            <p className="font-medium">${Number(order.total || 0).toFixed(2)}</p>
-            <p className="text-sm text-gray-500">{order.status}</p>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}

@@ -21,9 +21,9 @@ interface OrdersTableProps {
 export function OrdersTable({
   orders,
   totalCount,
-  currentPage,
-  pageSize,
-  statusFilter,
+  currentPage: _currentPage,
+  pageSize: _pageSize,
+  statusFilter: _statusFilter,
 }: OrdersTableProps) {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [detailOrder, setDetailOrder] = useState<Order | null>(null);

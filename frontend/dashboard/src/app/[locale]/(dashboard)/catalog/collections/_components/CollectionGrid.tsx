@@ -18,11 +18,7 @@ import {
 } from '@dnd-kit/sortable';
 import { Collection } from '@findeg/backend/features/catalog';
 import { CollectionCard } from './CollectionCard';
-import {
-  createCollectionAction as createCollection,
-  updateCollectionAction as updateCollection,
-  reorderCollectionsAction as reorderCollections,
-} from '@data/collections/actions';
+import { reorderCollectionsAction as reorderCollections } from '@data/collections/actions';
 
 import { useToast } from '@hooks/use-toast';
 import { useRouter } from '@i18n/navigation';

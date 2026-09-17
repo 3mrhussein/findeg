@@ -31,7 +31,13 @@ interface ProductFormProps {
 /**
  * Unified Product Create/Edit Form
  */
-export function ProductForm({ initialData, categories, brands, tags, locale }: ProductFormProps) {
+export function ProductForm({
+  initialData,
+  categories,
+  brands,
+  tags,
+  locale: _locale,
+}: ProductFormProps) {
   const t = useTranslations('Administration.Catalog.Products.Form');
   const router = useRouter();
   const [isPending, startTransition] = useTransition();

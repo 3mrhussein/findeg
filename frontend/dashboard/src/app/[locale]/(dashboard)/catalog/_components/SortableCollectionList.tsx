@@ -19,7 +19,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Collection } from '@findeg/backend/features/catalog';
-import { GripVertical, Eye, EyeOff } from 'lucide-react';
+import { GripVertical, EyeOff } from 'lucide-react';
 import { cn } from '@lib/utils';
 import { Badge } from '@findeg/ui';
 

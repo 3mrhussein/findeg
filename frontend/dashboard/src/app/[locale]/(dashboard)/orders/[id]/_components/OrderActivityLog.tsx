@@ -1,7 +1,7 @@
 'use client';
 
 import { formatDistanceToNow } from 'date-fns';
-import { CircleDot, History, Package, CreditCard, User, Settings, AlertCircle } from 'lucide-react';
+import { History, Package, CreditCard, User, Settings } from 'lucide-react';
 
 interface AuditLogEntry {
   id: number;
@@ -14,7 +14,7 @@ interface AuditLogEntry {
 }
 
 interface OrderActivityLogProps {
-  logs: any[];
+  logs: AuditLogEntry[];
 }
 
 /**

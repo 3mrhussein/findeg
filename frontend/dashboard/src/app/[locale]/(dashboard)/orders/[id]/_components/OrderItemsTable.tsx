@@ -1,20 +1,6 @@
 'use client';
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@findeg/ui';
-import { Badge } from '@findeg/ui';
-import { AlertCircle } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@findeg/ui';
-
-interface OrderItem {
-  productId: number;
-  productName: string;
-  quantity: number;
-  unitPrice: number;
-  totalPrice: number;
-  sku?: string;
-  variantName?: string;
-  currentUnitPrice?: number; // Optional: to show price changes since order
-}
 
 interface OrderItemsTableProps {
   items: any[]; // Using any because OrderItem entity structure might vary slightly but we'll map

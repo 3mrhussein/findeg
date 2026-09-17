@@ -4,7 +4,6 @@ import React from 'react';
 import Image from 'next/image';
 import { useFormContext, useFieldArray } from 'react-hook-form';
 import { useTranslations } from 'next-intl';
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@findeg/ui';
 import { Input } from '@findeg/ui';
 import { Button } from '@findeg/ui';
 import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
@@ -16,7 +15,7 @@ import { type ProductFormValues } from '@/interfaces';
  */
 export function MediaTab() {
   const t = useTranslations('Administration.Catalog.Products.Form.Tabs.Media');
-  const { control, watch } = useFormContext<ProductFormValues>();
+  const { control } = useFormContext<ProductFormValues>();
 
   const {
     fields: images,
