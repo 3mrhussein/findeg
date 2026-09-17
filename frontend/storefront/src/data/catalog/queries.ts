@@ -7,7 +7,13 @@
 'use cache';
 
 import { cacheTag, cacheLife } from 'next/cache';
-import { createCatalogServices } from '@findeg/backend/features/catalog';
+import {
+  createProductService,
+  createCategoryService,
+  createBrandService,
+  createSearchService,
+  createCollectionService,
+} from '@findeg/backend/features/catalog';
 import { parse } from '@findeg/backend/features/core';
 import type {
   ShopPlpViewModel,
@@ -37,11 +43,9 @@ export async function getShopPlpViewModel(
   cacheLife('hours');
 
   try {
-    const {
-      products: productService,
-      categories: categoryService,
-      brands: brandService,
-    } = createCatalogServices();
+    const productService = createProductService();
+    const categoryService = createCategoryService();
+    const brandService = createBrandService();
 
     let category = null;
     let currentCategoryName = '';
@@ -128,11 +132,9 @@ export async function getSearchPageViewModel(
   cacheLife('hours');
 
   try {
-    const {
-      search: searchService,
-      categories: categoryService,
-      brands: brandService,
-    } = createCatalogServices();
+    const searchService = createSearchService();
+    const categoryService = createCategoryService();
+    const brandService = createBrandService();
     const result = await searchService.search({
       query: rawQuery,
       locale: resolvedLocale,
@@ -224,7 +226,7 @@ export async function getProductBySlugOrIdForMetadata(locale: string, slug: stri
   const resolvedLocale = parse(locale);
 
   try {
-    const { products } = createCatalogServices();
+    const products = createProductService();
 
     // Try by ID first if numeric, then by slug
     if (/^\d+$/.test(slug)) {
@@ -242,7 +244,7 @@ export async function getProductBySlugOrIdForMetadata(locale: string, slug: stri
  */
 export async function getTopProductSlugsForStaticParams(limit: number = 100) {
   try {
-    const { products } = createCatalogServices();
+    const products = createProductService();
     const allProducts = await products.getAll('en');
     return allProducts.slice(0, limit).map((p: any) => p.slug || String(p.id));
   } catch (error) {
@@ -262,11 +264,9 @@ export async function getProductPdp(
   const resolvedLocale = parse(locale);
 
   try {
-    const {
-      products: productService,
-      brands: brandService,
-      categories: categoryService,
-    } = createCatalogServices();
+    const productService = createProductService();
+    const brandService = createBrandService();
+    const categoryService = createCategoryService();
 
     const product = await productService.getBySlug(slug, resolvedLocale);
     if (!product) return null;
@@ -335,7 +335,7 @@ export async function getProductDetailPageData(
   cacheLife('hours');
 
   try {
-    const { products: productService } = createCatalogServices();
+    const productService = createProductService();
     const product = await productService.getById(productId, locale);
     if (!product) return null;
 
@@ -368,7 +368,7 @@ export async function getProductDetailPageData(
  */
 export async function getProductIdsForStaticParams(): Promise<number[]> {
   try {
-    const { products } = createCatalogServices();
+    const products = createProductService();
     const all = await products.getAll('en');
     return all.map((p) => p.id);
   } catch (error) {
@@ -386,11 +386,9 @@ export async function getHomePageData(language: string): Promise<HomePageData> {
   cacheLife('hours');
 
   try {
-    const {
-      products: productService,
-      categories: categoryService,
-      collections: collectionService,
-    } = createCatalogServices();
+    const productService = createProductService();
+    const categoryService = createCategoryService();
+    const collectionService = createCollectionService();
 
     const products = await productService.getAll(locale);
     const categories = await categoryService.getAll(locale);
@@ -424,7 +422,8 @@ export async function getShopPageData(language: string): Promise<ShopPageData> {
   cacheLife('hours');
 
   try {
-    const { products: productService, categories: categoryService } = createCatalogServices();
+    const productService = createProductService();
+    const categoryService = createCategoryService();
     const products = await productService.getAll(locale);
     const categories = await categoryService.getAll(locale);
 
@@ -454,7 +453,8 @@ export async function getCollectionsPage(language: string): Promise<CollectionsP
   cacheLife('days');
 
   try {
-    const { collections: collectionService, categories: categoryService } = createCatalogServices();
+    const collectionService = createCollectionService();
+    const categoryService = createCategoryService();
     const collections = await collectionService.getAllCollections();
     const categories = await categoryService.getAll(locale);
 
@@ -484,12 +484,10 @@ export async function getCollectionPageViewModel(
   cacheLife('hours');
 
   try {
-    const {
-      collections: collectionService,
-      products: productService,
-      categories: categoryService,
-      brands: brandService,
-    } = createCatalogServices();
+    const collectionService = createCollectionService();
+    const productService = createProductService();
+    const categoryService = createCategoryService();
+    const brandService = createBrandService();
     const collection = await collectionService.getCollectionBySlug(slug);
     if (!collection) return null;
 
@@ -548,7 +546,7 @@ export async function getCategoryTree(locale: string = 'en') {
   cacheLife('hours');
 
   try {
-    const { categories } = createCatalogServices();
+    const categories = createCategoryService();
     const tree = await categories.getTree(resolvedLocale);
 
     return tree.map((c) => ({
@@ -576,7 +574,7 @@ export async function getProductPricing(payload: { productId: number; variantId:
   cacheLife('minutes');
 
   try {
-    const { products } = createCatalogServices();
+    const products = createProductService();
     const product = await products.getById(payload.productId);
 
     if (!product) return { success: false, error: 'Product not found' };

@@ -3,7 +3,7 @@ import { IAuditLogService } from '../interfaces/IAuditLogService';
 import { Product } from '../../../catalog/domain/entities/Product';
 import { InventoryUpdate } from '@findeg/backend/features/catalog/application/dtos/InventoryUpdate';
 import { getBalance, adjustStock, getLowStock, productQueries } from '@findeg/db/queries';
-import { createCatalogServices } from '../../../catalog';
+import { createProductService } from '../../../catalog';
 
 /**
  * Admin Inventory Service
@@ -13,7 +13,7 @@ import { createCatalogServices } from '../../../catalog';
  * Logs all stock changes to the audit trail.
  */
 export class AdminInventoryService implements IAdminInventoryService {
-  private readonly productService = createCatalogServices().products;
+  private readonly productService = createProductService();
 
   /**
    * Creates an instance of AdminInventoryService.

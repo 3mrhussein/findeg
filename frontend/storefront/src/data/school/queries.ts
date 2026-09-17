@@ -4,7 +4,7 @@
 'use cache';
 
 import { cacheTag, cacheLife } from 'next/cache';
-import { createCatalogServices } from '@findeg/backend/features/catalog';
+import { createSchoolListService, createProductService } from '@findeg/backend/features/catalog';
 import { parse } from '@findeg/backend/features/core';
 import type { Product } from '../catalog/types';
 
@@ -33,7 +33,8 @@ export async function getSchoolListData(locale: string, code: string) {
   cacheTag(`school-list-${code}`);
   cacheLife('hours');
 
-  const { schoolLists, products: productService } = createCatalogServices();
+  const schoolLists = createSchoolListService();
+  const productService = createProductService();
   const list = await schoolLists.getListBySlug(code);
 
   if (!list) {
@@ -78,7 +79,7 @@ export async function searchSchools(params: any) {
   cacheTag('schools', `school-search-${JSON.stringify(params)}`);
   cacheLife('hours');
 
-  const { schoolLists } = createCatalogServices();
+  const schoolLists = createSchoolListService();
   const all = await schoolLists.getActiveLists();
 
   const filtered = all.filter(
@@ -134,7 +135,7 @@ export async function getSchoolProfile(slug: string, _userId: number | null = nu
   cacheTag(`school-${slug}`);
   cacheLife('hours');
 
-  const { schoolLists } = createCatalogServices();
+  const schoolLists = createSchoolListService();
   const allActive = await schoolLists.getActiveLists();
 
   // Find all lists for this school (grouped by schoolName)
@@ -170,7 +171,7 @@ export async function getSchoolListPageData(slug: string, userId: number | null)
   cacheTag(`school-list-${slug}`);
   cacheLife('hours');
 
-  const { schoolLists } = createCatalogServices();
+  const schoolLists = createSchoolListService();
   const list = await schoolLists.getListBySlug(slug);
 
   if (!list) return null;

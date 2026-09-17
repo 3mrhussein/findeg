@@ -7,7 +7,7 @@
 'use cache';
 
 import { cacheLife, cacheTag } from 'next/cache';
-import { createCatalogServices } from '@findeg/backend/features/catalog';
+import { createCategoryService, createTagService } from '@findeg/backend/features/catalog';
 import { createAdministrationServices } from '@findeg/backend/features/administration';
 import type { Locale } from '@findeg/backend/features/core';
 
@@ -20,7 +20,7 @@ export async function getAllCategories(locale: Locale = 'en') {
   cacheTag('categories-admin', `categories-admin-${locale}`);
   cacheLife('hours');
 
-  const { categories } = createCatalogServices();
+  const categories = createCategoryService();
   return await categories.getAll(locale);
 }
 
@@ -52,7 +52,7 @@ export async function getAllTags(locale: Locale = 'en') {
   cacheTag('tags-admin', `tags-admin-${locale}`);
   cacheLife('hours');
 
-  const { tags } = createCatalogServices();
+  const tags = createTagService();
   return await tags.getAllTags();
 }
 
@@ -65,6 +65,6 @@ export async function getAllTagsGrouped(locale: Locale = 'en'): Promise<Record<s
   cacheTag('tags-admin', `tags-admin-${locale}`);
   cacheLife('hours');
 
-  const { tags } = createCatalogServices();
+  const tags = createTagService();
   return await tags.getGroupedTags();
 }
