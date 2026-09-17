@@ -11,11 +11,7 @@ export interface AdminSidebarProps {
   navSlot?: React.ReactNode;
 }
 
-export function AdminSidebar({
-  locale: _locale = 'en',
-  userSlot,
-  navSlot,
-}: AdminSidebarProps) {
+export function AdminSidebar({ locale: _locale = 'en', userSlot, navSlot }: AdminSidebarProps) {
   const { isCollapsed, toggleSidebar } = useSidebar();
 
   return (

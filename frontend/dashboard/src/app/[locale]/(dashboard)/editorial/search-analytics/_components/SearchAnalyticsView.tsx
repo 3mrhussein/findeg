@@ -2,14 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter, usePathname } from '@i18n/navigation';
-import {
-  Search,
-  AlertCircle,
-  Percent,
-  BarChart3,
-  Download,
-  Plus,
-} from 'lucide-react';
+import { Search, AlertCircle, Percent, BarChart3, Download, Plus } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@findeg/ui';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@findeg/ui';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@findeg/ui';
