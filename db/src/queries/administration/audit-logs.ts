@@ -10,7 +10,6 @@
 import { db } from '../../connection';
 import { auditLog } from '../../schema';
 import { eq, and, desc, count, gte, lte } from 'drizzle-orm';
-import { type ID } from '@findeg/db/types';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 

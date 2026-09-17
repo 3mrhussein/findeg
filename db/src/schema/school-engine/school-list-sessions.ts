@@ -2,7 +2,7 @@
  * School List Sessions Database Schema
  */
 
-import { pgTable, serial, text, timestamp, integer, jsonb } from 'drizzle-orm/pg-core';
+import { serial, text, timestamp, integer, jsonb } from 'drizzle-orm/pg-core';
 import { schoolEngineSchema } from '../schemas';
 import { schoolLists } from './school-lists';
 import { users } from '../identity/users';

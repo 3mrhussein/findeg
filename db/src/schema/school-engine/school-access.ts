@@ -2,7 +2,7 @@
  * School Access Database Schema
  */
 
-import { pgTable, serial, text, varchar, timestamp, integer } from 'drizzle-orm/pg-core';
+import { serial, text, varchar, timestamp, integer } from 'drizzle-orm/pg-core';
 import { schoolEngineSchema } from '../schemas';
 import { schoolLists } from './school-lists';
 import { users } from '../identity/users';

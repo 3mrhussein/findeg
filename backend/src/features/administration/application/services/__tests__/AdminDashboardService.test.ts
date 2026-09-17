@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi, type Mocked } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   getCatalogHealthRaw,
   getCategoryDistributionRaw,

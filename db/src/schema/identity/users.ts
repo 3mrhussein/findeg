@@ -1,4 +1,4 @@
-import { pgTable, serial, text, timestamp, boolean, varchar, integer } from 'drizzle-orm/pg-core';
+import { serial, text, timestamp, boolean, varchar, integer } from 'drizzle-orm/pg-core';
 import { portalRoleEnum } from '../enums';
 import { relations } from 'drizzle-orm';
 import { identitySchema } from '../schemas';

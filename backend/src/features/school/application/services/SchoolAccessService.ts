@@ -105,7 +105,7 @@ export class SchoolAccessService implements ISchoolAccessService {
   /**
    *
    */
-  async cancelRequest(requestId: ID, userId: ID): Promise<void> {
+  async cancelRequest(requestId: ID, _userId: ID): Promise<void> {
     await accessQueries.deleteRequest(requestId);
   }
 
