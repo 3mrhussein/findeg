@@ -76,7 +76,13 @@ function SortableImageItem({
 /**
  * Media Uploader Component to handle dropzone and sortable list
  */
-function MediaUploader({ field, sensors }: { field: any; sensors: any }) {
+function MediaUploader({
+  field,
+  sensors,
+}: {
+  field: { value?: string; onChange: (value: string) => void };
+  sensors: ReturnType<typeof useSensors>;
+}) {
   const images = field.value
     ? (field.value as string)
         .split(',')

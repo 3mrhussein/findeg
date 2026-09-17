@@ -8,8 +8,8 @@ import { cn } from '@lib/utils';
 import { Button } from '@findeg/ui';
 
 interface ListItemRowProps {
-  item: any;
-  selection?: any;
+  item: { name: string; description?: string; defaultImage?: string };
+  selection?: { isExcluded?: boolean; variantId?: number; image?: string; productName?: string };
   onSwap?: () => void;
   onToggle?: (included: boolean) => void;
   isOptional?: boolean;

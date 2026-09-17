@@ -280,7 +280,7 @@ export async function create(data: {
   totalAmount: string;
   currency?: string;
   paymentMethod?: string;
-  shippingAddressSnapshot?: Record<string, unknown>;
+  shippingAddressSnapshot?: typeof orders.$inferInsert.shippingAddressSnapshot;
   items?: Array<{
     productId: number;
     variantId?: number;
@@ -306,7 +306,7 @@ export async function create(data: {
       totalAmount: orderData.totalAmount,
       currency: orderData.currency || 'EGP',
       paymentMethod: (orderData.paymentMethod as 'cod' | 'card') || null,
-      shippingAddressSnapshot: (orderData.shippingAddressSnapshot || null) as any,
+      shippingAddressSnapshot: orderData.shippingAddressSnapshot || null,
     };
 
     const [newOrder] = await tx.insert(orders).values(dbOrderData).returning();

@@ -17,6 +17,11 @@ import {
   countCategories,
 } from '@findeg/db/queries';
 
+type CategoryTreeRow = Awaited<ReturnType<typeof getAllCategories>>[number] & {
+  children?: CategoryTreeRow[];
+  productCount: number;
+};
+
 /**
  * Admin Category Service
  *
@@ -53,7 +58,7 @@ export class AdminCategoryService implements IAdminCategoryService {
       icon: input.icon || null,
       sortOrder: input.sortOrder || 0,
       isActive: input.isActive ?? true,
-    } as any);
+    });
 
     if (this.auditLogService) {
       await this.auditLogService.logAction({
@@ -65,7 +70,7 @@ export class AdminCategoryService implements IAdminCategoryService {
       });
     }
 
-    return category as any as Category;
+    return category as unknown as Category;
   }
 
   /**
@@ -96,7 +101,7 @@ export class AdminCategoryService implements IAdminCategoryService {
       icon: input.icon || null,
       sortOrder: input.sortOrder || 0,
       isActive: input.isActive ?? true,
-    } as any);
+    });
 
     if (this.auditLogService) {
       await this.auditLogService.logAction({
@@ -109,7 +114,7 @@ export class AdminCategoryService implements IAdminCategoryService {
       });
     }
 
-    return updated as any as Category;
+    return updated as unknown as Category;
   }
 
   /**
@@ -145,7 +150,7 @@ export class AdminCategoryService implements IAdminCategoryService {
    */
   async getById(id: ID): Promise<Category | null> {
     const result = await getCategoryById(id);
-    return result as any as Category | null;
+    return result as unknown as Category | null;
   }
 
   /**
@@ -154,15 +159,15 @@ export class AdminCategoryService implements IAdminCategoryService {
    * @param language - Optional localization preference.
    * @returns List of categories.
    */
-  async getAll(language?: Locale): Promise<Category[]> {
+  async getAll(_language?: Locale): Promise<Category[]> {
     const results = await getAllCategories();
-    return results as any as Category[];
+    return results as unknown as Category[];
   }
 
   /**
    * Retrieves categories in a hierarchical tree structure.
    */
-  async getTree(language?: Locale): Promise<Category[]> {
+  async getTree(_language?: Locale): Promise<Category[]> {
     // Fetch all categories and build tree in-memory
     const allCategories = await getAllCategories();
 
@@ -176,7 +181,7 @@ export class AdminCategoryService implements IAdminCategoryService {
     /**
      * Recursively builds the tree from the flat list and calculates total product count.
      */
-    const buildTree = (parentId: number | null = null): any[] => {
+    const buildTree = (parentId: number | null = null): CategoryTreeRow[] => {
       return allCategories
         .filter((c) => (c.parentId === undefined && parentId === null) || c.parentId === parentId)
         .map((c) => {
@@ -197,7 +202,7 @@ export class AdminCategoryService implements IAdminCategoryService {
         .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
     };
 
-    return buildTree(null) as any as Category[];
+    return buildTree(null) as unknown as Category[];
   }
 
   /**

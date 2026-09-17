@@ -11,11 +11,14 @@ import type { Product } from '../catalog/types';
 /**
  * Helper to map backend product to storefront product
  */
-function mapProduct(p: any, locale: string): Product {
+function mapProduct(
+  p: Product & { localizedSlug?: Record<string, string> },
+  locale: string,
+): Product {
   return {
     ...p,
     slug: p.localizedSlug?.[locale] || p.localizedSlug?.en || p.slug || '',
-    variants: (p.variants || []).map((v: any) => ({
+    variants: (p.variants || []).map((v) => ({
       ...v,
       inventory: v.inventory || [],
     })),
@@ -75,7 +78,13 @@ export async function getSchoolListData(locale: string, code: string) {
 /**
  * Search schools in the directory.
  */
-export async function searchSchools(params: any) {
+export async function searchSchools(params: {
+  query?: string;
+  governorate?: string;
+  schoolType?: string;
+  page?: number;
+  limit?: number;
+}) {
   cacheTag('schools', `school-search-${JSON.stringify(params)}`);
   cacheLife('hours');
 
@@ -87,7 +96,18 @@ export async function searchSchools(params: any) {
   );
 
   // Group by school name to form SchoolSearchResult shape
-  const groups = new Map<string, any>();
+  const groups = new Map<
+    string,
+    {
+      schoolName: string;
+      schoolType: string;
+      academicSystem: string;
+      area: string;
+      governorate: string;
+      gradeCount: number;
+      hasCurrentLists: boolean;
+    }
+  >();
   for (const list of filtered) {
     if (!groups.has(list.schoolName)) {
       groups.set(list.schoolName, {
@@ -100,7 +120,7 @@ export async function searchSchools(params: any) {
         hasCurrentLists: false,
       });
     }
-    const group = groups.get(list.schoolName);
+    const group = groups.get(list.schoolName)!;
     group.gradeCount++;
     if (list.academicYear?.includes('2024') || list.academicYear?.includes('2025')) {
       group.hasCurrentLists = true;

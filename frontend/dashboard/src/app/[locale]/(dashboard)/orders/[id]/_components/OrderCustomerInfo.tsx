@@ -4,14 +4,21 @@ import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
 import { User, Phone, Mail, MapPin } from 'lucide-react';
 
 interface OrderCustomerInfoProps {
-  order: any;
+  order: import('@findeg/backend/features/order').Order;
 }
 
 /**
  *
  */
 export function OrderCustomerInfo({ order }: OrderCustomerInfoProps) {
-  const address = order.shippingAddressSnapshot as any;
+  const address = order.shippingAddressSnapshot as typeof order.shippingAddressSnapshot & {
+    email?: string;
+    streetName?: string;
+    buildingNumber?: string;
+    apartmentNumber?: string;
+    districtName?: string;
+    cityName?: string;
+  };
   const fullName = order.customerName || address?.fullName || 'Guest Customer';
   const email = order.customerEmail || address?.email || '-';
   const phone = address?.phone || '-';

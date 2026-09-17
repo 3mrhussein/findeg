@@ -77,7 +77,9 @@ export function AdminHeader({
       const nav = navigator as Navigator & { userAgentData?: { platform: string } };
       const isMac =
         nav?.platform?.toLowerCase().includes('mac') ||
-        (nav as any)?.userAgentData?.platform?.toLowerCase().includes('mac');
+        (nav as Navigator & { userAgentData?: { platform?: string } })?.userAgentData?.platform
+          ?.toLowerCase()
+          .includes('mac');
       setPlatformLabel(isMac ? '⌘K' : 'Ctrl+K');
     }
   }, []);

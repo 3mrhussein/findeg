@@ -7,8 +7,8 @@ interface OrdersContentProps {
     page: number;
     limit: number;
     search: string;
-    status?: any;
-    paymentStatus?: any;
+    status?: string;
+    paymentStatus?: string;
     startDate?: Date;
     endDate?: Date;
   };
@@ -23,7 +23,7 @@ export async function OrdersContent({ locale: _locale, filters }: OrdersContentP
 
   // TODO: Replace with data layer query from @data/orders/queries
   // const { orders, total } = await getOrders({ limit, offset, search, status, paymentStatus, startDate, endDate });
-  const orders: any[] = []; // Stubbed - empty orders list
+  const orders: React.ComponentProps<typeof OrdersTable>['orders'] = []; // Stubbed - empty orders list
   const total = 0;
 
   return (

@@ -108,8 +108,8 @@ export function CategoryForm({ initialData, categories }: CategoryFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <CategoryBasicFields form={form as any} />
-        <CategoryMetaFields form={form as any} categories={categories} />
+        <CategoryBasicFields form={form} />
+        <CategoryMetaFields form={form} categories={categories} />
         <div className="flex justify-end gap-4">
           <Button variant="outline" type="button" onClick={() => router.back()}>
             Cancel

@@ -21,6 +21,6 @@ export const categoryFormSchema = z.object({
 export type CategoryFormValues = z.infer<typeof categoryFormSchema>;
 
 export interface CategoryFormProps {
-  initialData?: any;
+  initialData?: import('@findeg/backend/features/catalog').Category;
   categories: { id: number; slug: string; name: string }[];
 }

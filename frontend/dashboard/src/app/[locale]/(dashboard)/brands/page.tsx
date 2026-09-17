@@ -15,7 +15,7 @@ export async function generateStaticParams() {
  */
 export default async function BrandsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  setRequestLocale(locale as any);
+  setRequestLocale(locale);
 
   return (
     <div className="space-y-6">

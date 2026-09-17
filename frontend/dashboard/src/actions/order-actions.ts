@@ -17,7 +17,10 @@ import { getErrorMessage } from '@lib/type-guards';
  * @param orderId - The order ID to update
  * @param input - The new order status and tracking info
  */
-export async function updateOrderStatusAction(orderId: number, input: any) {
+export async function updateOrderStatusAction(
+  orderId: number,
+  input: import('@findeg/backend/features/order').OrderStatusUpdate,
+) {
   try {
     const { orders } = createAdministrationServices();
     await orders.updateStatus(orderId, input);
@@ -36,7 +39,10 @@ export async function updateOrderStatusAction(orderId: number, input: any) {
  * @param orderId - The order ID to update
  * @param paymentStatus - The new payment status
  */
-export async function updateOrderPaymentStatusAction(orderId: number, paymentStatus: any) {
+export async function updateOrderPaymentStatusAction(
+  orderId: number,
+  paymentStatus: import('@findeg/backend/features/core').PaymentStatus,
+) {
   try {
     const { orders } = createAdministrationServices();
     await orders.updatePaymentStatus(orderId, paymentStatus);

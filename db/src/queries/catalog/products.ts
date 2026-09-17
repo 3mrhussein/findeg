@@ -18,7 +18,7 @@ import {
   attributes as attributeTable,
   variantAttributes,
 } from '../../schema';
-import { eq, and, inArray, or, count, ilike, sql, asc, desc } from 'drizzle-orm';
+import { eq, and, inArray, count, sql, asc, desc } from 'drizzle-orm';
 import { TranslationMap, type ID } from '@findeg/db/types';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -333,7 +333,7 @@ export async function getByIdWithBrandAndCategory(
     .where(eq(products.id, id))
     .limit(1);
 
-  return results.length === 0 ? null : (results[0] as any);
+  return results.length === 0 ? null : results[0];
 }
 
 /**

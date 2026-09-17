@@ -89,7 +89,9 @@ export function IconPicker({ value, onChange, placeholder = 'Select icon...' }: 
     icon.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
-  const SelectedIcon = value ? (LucideIcons as any)[value] : null;
+  const SelectedIcon = value
+    ? (LucideIcons as unknown as Record<string, LucideIcons.LucideIcon>)[value]
+    : null;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -124,7 +126,9 @@ export function IconPicker({ value, onChange, placeholder = 'Select icon...' }: 
         <ScrollArea className="h-[300px] p-2">
           <div className="grid grid-cols-4 gap-1">
             {filteredIcons.map((iconName) => {
-              const Icon = (LucideIcons as any)[iconName];
+              const Icon = (LucideIcons as unknown as Record<string, LucideIcons.LucideIcon>)[
+                iconName
+              ];
               return (
                 <Button
                   key={iconName}

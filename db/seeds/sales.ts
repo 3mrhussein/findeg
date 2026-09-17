@@ -21,7 +21,7 @@ export async function seedSales(db: PostgresJsDatabase<typeof schema>) {
   // Level 2: Addresses (Depends on Identity Users)
   if (addressesData.length > 0) {
     console.log('  - Seeding Addresses...');
-    if (addressesData.some((a: any) => a.userId)) {
+    if (addressesData.some((a) => a.userId)) {
       await ensureParents(db, [{ table: schema.users, name: '"identity"."users"' }]);
     }
     await db.insert(schema.addresses).values(prepareSeedData(schema.addresses, addressesData));

@@ -2,7 +2,7 @@
  * School List Sessions Database Schema
  */
 
-import { pgTable, serial, text, timestamp, integer, jsonb } from 'drizzle-orm/pg-core';
+import { serial, text, timestamp, integer, jsonb } from 'drizzle-orm/pg-core';
 import { schoolEngineSchema } from '../schemas';
 import { schoolLists } from './school-lists';
 import { users } from '../identity/users';
@@ -25,7 +25,7 @@ export const schoolListParentSessions = schoolEngineSchema.table('school_list_pa
   sessionToken: text('session_token'),
 
   /** JSON snapshot of user's current picks */
-  itemSelections: jsonb('item_selections').$type<Record<string, any>>().default({}).notNull(),
+  itemSelections: jsonb('item_selections').$type<Record<string, unknown>>().default({}).notNull(),
 
   /** IDs of optional items the user HAS included/excluded */
   optionalInclusions: integer('optional_inclusions').array().default([]).notNull(),

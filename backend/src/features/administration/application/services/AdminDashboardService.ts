@@ -34,7 +34,7 @@ export class AdminDashboardService implements IAdminDashboardService {
    */
   constructor() {}
 
-  private mapToDomain(dbOrder: any, items: any[]): Order {
+  private mapToDomain(dbOrder: orderQueries.OrderRow, items: orderQueries.OrderItemRow[]): Order {
     return {
       id: dbOrder.id,
       userId: dbOrder.userId || undefined,

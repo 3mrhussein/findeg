@@ -28,7 +28,7 @@ export function ProductCompact({ product }: ProductCompactProps) {
   let primaryImage = '/placeholder-product.png';
 
   if (firstVariantImage && typeof firstVariantImage === 'object' && 'url' in firstVariantImage) {
-    primaryImage = (firstVariantImage as any).url;
+    primaryImage = firstVariantImage.url;
   }
 
   const updatedText = product.updatedAt

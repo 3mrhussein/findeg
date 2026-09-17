@@ -83,10 +83,10 @@ export function TeamView() {
     const q = search.trim().toLowerCase();
     if (!q) return admins;
     return admins.filter(
-      (a: any) =>
+      (a) =>
         a.email.toLowerCase().includes(q) ||
         [a.firstName, a.lastName].filter(Boolean).join(' ').toLowerCase().includes(q) ||
-        a.roles.some((r: any) => r.name.toLowerCase().includes(q)),
+        a.roles.some((r) => r.name.toLowerCase().includes(q)),
     );
   }, [admins, search]);
 
@@ -222,7 +222,7 @@ export function TeamView() {
             <p className="text-sm">{search ? t('NoSearchResults') : t('TeamEmpty')}</p>
           </div>
         ) : (
-          filteredAdmins.map((admin: any, i: number) => (
+          filteredAdmins.map((admin, i: number) => (
             <div
               key={admin.id}
               className="rounded-lg border bg-card p-4 transition-shadow hover:shadow-sm"
@@ -253,7 +253,7 @@ export function TeamView() {
                   </p>
                   <p className="text-xs text-muted-foreground truncate">{admin.email}</p>
                   <div className="flex flex-wrap gap-1 mt-2">
-                    {admin.roles.map((role: any) => (
+                    {admin.roles.map((role) => (
                       <Badge key={role.id} variant="outline" className="text-xs">
                         {role.name}
                       </Badge>
@@ -340,7 +340,7 @@ export function TeamView() {
                 </TableCell>
               </TableRow>
             ) : (
-              filteredAdmins.map((admin: any, i: number) => (
+              filteredAdmins.map((admin, i: number) => (
                 <AdminUserRow
                   key={admin.id}
                   user={admin}
@@ -374,7 +374,7 @@ export function TeamView() {
 
       <AdminUserDialog
         open={dialogOpen}
-        user={editingUser as any}
+        user={editingUser}
         defaultTab={dialogDefaultTab}
         onClose={handleDialogClose}
       />

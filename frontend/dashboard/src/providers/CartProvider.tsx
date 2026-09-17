@@ -34,7 +34,19 @@ function getGuestId() {
 /**
  *
  */
-function toCartItems(rawItems: any[]): CartItem[] {
+function toCartItems(
+  rawItems: (Partial<CartItem> & {
+    productId: number;
+    variantId: number;
+    quantity: number;
+    sku: string;
+    name?: string;
+    variantKey?: string;
+    images?: { url: string }[];
+    unitPriceSnapshot?: number;
+    price?: number;
+  })[],
+): CartItem[] {
   return rawItems.map((item) => ({
     productId: item.productId,
     variantId: item.variantId,

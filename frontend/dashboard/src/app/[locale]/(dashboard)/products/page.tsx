@@ -31,10 +31,16 @@ export default async function ProductsPage({
     brandIds:
       typeof query.brandIds === 'string' ? query.brandIds.split(',').map(Number) : undefined,
     status: query.status === 'active' || query.status === 'inactive' ? query.status : undefined,
-    completeness: typeof query.completeness === 'string' ? (query.completeness as any) : undefined,
+    completeness:
+      typeof query.completeness === 'string'
+        ? (query.completeness as import('@findeg/backend/features/administration').ProductListFilters['completeness'])
+        : undefined,
     page: query.page ? Number(query.page) : 1,
     pageSize: query.pageSize ? Number(query.pageSize) : 20,
-    sortBy: typeof query.sortBy === 'string' ? (query.sortBy as any) : 'updatedAt',
+    sortBy:
+      typeof query.sortBy === 'string'
+        ? (query.sortBy as import('@findeg/backend/features/administration').ProductListFilters['sortBy'])
+        : 'updatedAt',
     sortDir: query.sortDir === 'asc' ? 'asc' : 'desc',
   };
 

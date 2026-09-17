@@ -3,14 +3,18 @@
  * Chrome 146 navigator.modelContext.registerTool() implementation
  */
 
+export type WebMCPNavigator = Navigator & {
+  modelContext?: { registerTool: (tool: WebMCPTool) => unknown };
+};
+
 export interface WebMCPTool {
   name: string;
   description: string;
-  inputSchema: any;
-  execute: (params: any) => Promise<any>;
+  inputSchema: Record<string, unknown>;
+  execute: (params: Record<string, unknown>) => Promise<unknown>;
 }
 
-const callToolApi = async (tool: string, params: any) => {
+const callToolApi = async (tool: string, params: Record<string, unknown>) => {
   const response = await fetch('/api/v1/webmcp', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -32,6 +36,7 @@ export const TOOLS: WebMCPTool[] = [
       required: ['path'],
     },
     execute: async ({ path }) => {
+      if (typeof path !== 'string') throw new TypeError('Navigation path must be a string');
       window.location.href = path;
       return { success: true };
     },
@@ -213,11 +218,13 @@ export const TOOLS: WebMCPTool[] = [
 let toolsRegistered = false;
 
 export function registerAllTools() {
-  const nav = navigator as any;
+  const nav = navigator as WebMCPNavigator;
   if (!nav.modelContext || !nav.modelContext.registerTool) {
     console.warn('WebMCP is not supported in this browser.');
     return false;
   }
+
+  const modelContext = nav.modelContext;
 
   if (toolsRegistered) {
     console.log('[WebMCP]: Tools already registered, skipping.');
@@ -226,7 +233,7 @@ export function registerAllTools() {
 
   try {
     TOOLS.forEach((tool) => {
-      nav.modelContext.registerTool({
+      modelContext.registerTool({
         name: tool.name,
         description: tool.description,
         inputSchema: tool.inputSchema,

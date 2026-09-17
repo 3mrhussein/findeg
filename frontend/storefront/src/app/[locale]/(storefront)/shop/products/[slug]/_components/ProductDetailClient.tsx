@@ -27,7 +27,14 @@ import { ProductTabsSection } from './ProductTabsSection';
 import { RelatedProductsRail } from './RelatedProductsRail';
 import { RecentlyViewedRail, type RecentlyViewedItem } from './RecentlyViewedRail';
 
-function getProductStatusBadge({ variant, lowStock }: any) {
+function getProductStatusBadge({
+  variant,
+  lowStock,
+}: {
+  variant: Variant;
+  lowStock: boolean;
+  product: Product;
+}) {
   if (lowStock) return { kind: 'low-stock' as const };
   const strike = Number(variant.strikePrice);
   const base = Number(variant.basePrice);
@@ -121,14 +128,14 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
     vm.selectedVariant?.id,
   );
   const variants = useMemo(
-    () => (vm.product.variants || []).filter((variant: any) => variant.isActive !== false),
+    () => (vm.product.variants || []).filter((variant) => variant.isActive !== false),
     [vm.product.variants],
   );
 
   const selectedVariant =
-    variants.find((variant: any) => variant.id === selectedVariantId) ||
-    variants.find((variant: any) => variant.isDefault) ||
-    variants.find((variant: any) => variant.variantKey === 'default') ||
+    variants.find((variant) => variant.id === selectedVariantId) ||
+    variants.find((variant) => variant.isDefault) ||
+    variants.find((variant) => variant.variantKey === 'default') ||
     variants[0];
 
   const [selectedAttributes, setSelectedAttributes] = useState<Record<string, string>>(() =>
@@ -189,7 +196,7 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
 
   const galleryImages = useMemo(
     () =>
-      (selectedVariant?.images || []).map((image: any) => ({
+      (selectedVariant?.images || []).map((image) => ({
         url: image.url,
         alt: image.alt,
       })),
@@ -292,7 +299,7 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
   const handleSelectAttribute = (key: string, value: string) => {
     const nextAttributes = { ...selectedAttributes, [key]: value };
 
-    const matched = variants.find((variant: any) => {
+    const matched = variants.find((variant) => {
       const variantMap = getAttributeMap(variant);
       return Object.entries(nextAttributes).every(
         ([attributeKey, selectedValue]) =>
@@ -396,7 +403,7 @@ export function ProductDetailClient({ vm }: { vm: ProductPdpViewModel }) {
                     <div className="flex flex-wrap gap-2">
                       {values.map((value) => {
                         const isSelected = selectedAttributes[key] === value;
-                        const isAvailable = variants.some((variant: any) => {
+                        const isAvailable = variants.some((variant) => {
                           const variantMap = getAttributeMap(variant);
                           if (variantMap[key] !== value) return false;
 

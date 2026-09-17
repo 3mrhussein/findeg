@@ -36,7 +36,7 @@ export default async function OrdersPage({ params }: Props) {
             />
           ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {orders.map((order: any) => (
+              {orders.map((order) => (
                 <Link
                   key={String(order.id)}
                   href={`/my-account/orders/${order.id}`}

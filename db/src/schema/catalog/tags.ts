@@ -4,16 +4,7 @@
  * Tags are many-to-many labels for products.
  */
 
-import {
-  pgTable,
-  serial,
-  text,
-  integer,
-  jsonb,
-  timestamp,
-  boolean,
-  uniqueIndex,
-} from 'drizzle-orm/pg-core';
+import { serial, text, integer, timestamp, boolean, uniqueIndex } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 import { catalogSchema } from '../schemas';
 import { products } from './products';

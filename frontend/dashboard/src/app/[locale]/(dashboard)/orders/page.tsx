@@ -29,7 +29,7 @@ export default async function OrdersPage({
   }>;
 }) {
   const { locale } = await params;
-  setRequestLocale(locale as any);
+  setRequestLocale(locale);
   const query = await searchParams;
 
   const filters = {
@@ -45,7 +45,7 @@ export default async function OrdersPage({
   return (
     <div className="flex-1 space-y-6">
       <Suspense fallback={<div className="animate-pulse bg-gray-50 h-96 rounded-lg" />}>
-        <OrdersContent locale={locale} filters={filters as any} />
+        <OrdersContent locale={locale} filters={filters} />
       </Suspense>
     </div>
   );

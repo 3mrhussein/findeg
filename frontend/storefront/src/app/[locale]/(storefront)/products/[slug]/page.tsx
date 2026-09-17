@@ -88,9 +88,7 @@ async function ProductPageContent({ locale, productId }: ProductContentProps) {
           {/* Gallery Column */}
           <div className="sticky top-24">
             <div className="rounded-3xl bg-white dark:bg-surface-dark border border-slate-100 dark:border-slate-800 p-4 lg:p-8 shadow-sm">
-              <ProductGallery
-                images={product.variants?.[0]?.images?.map((img: any) => img.url) ?? []}
-              />
+              <ProductGallery images={product.variants?.[0]?.images?.map((img) => img.url) ?? []} />
             </div>
           </div>
 

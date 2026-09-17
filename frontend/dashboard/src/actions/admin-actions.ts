@@ -123,6 +123,6 @@ export { logoutAction as logout };
 /**
  * Log request action - stubbed implementation
  */
-export async function logRequestAction(data: any) {
+export async function logRequestAction(data: unknown) {
   console.log('[dashboard] logRequestAction (stubbed):', data);
 }

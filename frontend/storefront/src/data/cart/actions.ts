@@ -62,7 +62,7 @@ export async function addToCart(
     currency: 'EGP',
   };
 
-  const result = await cart.addItem(guestId, cartItem as any);
+  const result = await cart.addItem(guestId, cartItem);
   updateTag(`cart-${guestId}`);
 
   return result;

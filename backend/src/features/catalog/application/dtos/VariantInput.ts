@@ -24,7 +24,7 @@ export interface CreateVariantInput {
   costPrice?: number | null;
   weightGrams?: number | null;
   barcode?: string | null;
-  mediaSet?: any;
+  mediaSet?: import('@findeg/db/types').ResponsiveMediaSet;
   images: ImageInput[];
   attributes: VariantAttributeInput[];
 }

@@ -71,7 +71,7 @@ export class SchoolListService implements ISchoolListService {
 
     // Return without items hydration (used by SchoolAccessService for access checks)
     return {
-      ...(list as any),
+      ...list,
     } as SchoolListResult;
   }
 
@@ -102,7 +102,7 @@ export class SchoolListService implements ISchoolListService {
     })) as unknown as SchoolListItemResult[];
 
     return {
-      ...(list as any),
+      ...list,
       items,
     } as SchoolListResult;
   }

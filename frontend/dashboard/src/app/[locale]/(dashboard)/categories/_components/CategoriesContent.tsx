@@ -26,7 +26,10 @@ export async function CategoriesContent({ locale }: CategoriesContentProps) {
   const categories = await getCategories(resolvedLocale);
 
   // Server action for creating/updating categories
-  async function handleSaveCategory(data: any, categoryId?: number) {
+  async function handleSaveCategory(
+    data: import('./CategoryFormPanel').CategoryFormValues,
+    categoryId?: number,
+  ) {
     'use server';
 
     const input = {
@@ -39,17 +42,18 @@ export async function CategoriesContent({ locale }: CategoriesContentProps) {
           .replace(/[^a-z0-9]+/g, '-')
           .replace(/^-+|-+$/g, ''),
       description: data.localizedDescription,
-      parentId: data.parentId || null,
+      parentId: data.parentId || undefined,
       icon: data.icon,
+      sortOrder: data.sortOrder,
       isActive: data.isActive !== undefined ? data.isActive : true,
       translations: [
         {
-          language: 'en',
+          language: 'en' as const,
           name: data.localizedName?.en || 'Untitled',
           description: data.localizedDescription?.en || '',
         },
         {
-          language: 'ar',
+          language: 'ar' as const,
           name: data.localizedName?.ar || '',
           description: data.localizedDescription?.ar || '',
         },
@@ -58,14 +62,14 @@ export async function CategoriesContent({ locale }: CategoriesContentProps) {
 
     if (categoryId) {
       // Update existing category
-      const result = await updateCategoryAction(categoryId, input as any);
+      const result = await updateCategoryAction(categoryId, input);
       if (!result.success) {
         console.error('Update failed:', result.error);
         return;
       }
     } else {
       // Create new category
-      const result = await createCategoryAction(input as any);
+      const result = await createCategoryAction(input);
       if (!result.success) {
         console.error('Create failed:', result.error);
         return;
@@ -89,7 +93,9 @@ export async function CategoriesContent({ locale }: CategoriesContentProps) {
   }
 
   // Server action for reordering categories
-  async function handleReorderCategories(reorderedCategories: any[]) {
+  async function handleReorderCategories(
+    reorderedCategories: import('@findeg/backend/features/catalog').Category[],
+  ) {
     'use server';
 
     // Call the dedicated transaction route

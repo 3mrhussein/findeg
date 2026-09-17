@@ -35,7 +35,7 @@ export class AdminOrderService implements IAdminOrderService {
     private emailService: IEmailService,
   ) {}
 
-  private mapToDomain(dbOrder: any, items: any[]): Order {
+  private mapToDomain(dbOrder: orderQueries.OrderRow, items: orderQueries.OrderItemRow[]): Order {
     return {
       id: dbOrder.id,
       userId: dbOrder.userId || undefined,
@@ -76,12 +76,12 @@ export class AdminOrderService implements IAdminOrderService {
    * @param filters - Selection criteria (status, date range, customer).
    * @returns List of orders and the total count.
    */
-  async getAll(filters: any): Promise<{ orders: Order[]; total: number }> {
+  async getAll(
+    filters: orderQueries.OrderFiltersInput,
+  ): Promise<{ orders: Order[]; total: number }> {
     const result = await orderQueries.getFiltered(filters || {});
     return {
-      orders: result.orders.map((row: { order: unknown; items: unknown[] }) =>
-        this.mapToDomain(row.order, row.items),
-      ),
+      orders: result.orders.map((row) => this.mapToDomain(row.order, row.items)),
       total: result.total,
     };
   }

@@ -14,7 +14,7 @@ export async function getUnreadNotificationCountAction() {
  *
  * Validates payload before logging to prevent garbage data.
  */
-export async function logAction(payload: any): Promise<void> {
+export async function logAction(payload: unknown): Promise<void> {
   if (!payload || typeof payload !== 'object') {
     console.warn('Invalid log payload received:', payload);
     return;

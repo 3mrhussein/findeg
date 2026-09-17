@@ -9,9 +9,9 @@ import { StickyActionBar } from '@app/[locale]/(storefront)/school/_components/S
 import { ListSummaryOverlay } from '@app/[locale]/(storefront)/school/_components/ListSummaryOverlay';
 
 interface ListPageClientProps {
-  list: any;
+  list: import('@findeg/backend/features/catalog').SchoolListResult;
   initialSessionState: SessionState;
-  sessionUser: any;
+  sessionUser: unknown;
 }
 
 /**

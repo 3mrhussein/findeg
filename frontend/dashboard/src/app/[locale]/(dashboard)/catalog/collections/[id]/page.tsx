@@ -23,8 +23,8 @@ export default async function CollectionEditPage({ params }: CollectionEditPageP
   await params;
 
   // TODO: Replace with data layer queries from @data/collections/queries
-  const collection: any = null; // Stubbed - will trigger notFound()
-  const availableTags: any[] = []; // Stubbed
+  const collection = null as React.ComponentProps<typeof CollectionForm>['collection'] | null; // Stubbed - will trigger notFound()
+  const availableTags: import('@findeg/backend/features/catalog').Tag[] = []; // Stubbed
 
   if (!collection) {
     notFound();

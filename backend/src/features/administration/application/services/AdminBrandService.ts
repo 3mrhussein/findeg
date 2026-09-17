@@ -10,7 +10,6 @@ import {
   createBrand,
   updateBrand,
   deleteBrand,
-  countBrands,
   countProductsByBrandId,
 } from '@findeg/db/queries';
 import {
@@ -31,7 +30,10 @@ export class AdminBrandService implements IAdminBrandService {
   /**
    * Maps raw database brand to domain entity.
    */
-  private mapToDomain(dbBrand: any, language: Locale = DEFAULT_LOCALE): Brand {
+  private mapToDomain(
+    dbBrand: NonNullable<Awaited<ReturnType<typeof getBrandById>>> & { productCount?: number },
+    language: Locale = DEFAULT_LOCALE,
+  ): Brand {
     const localizedName = asTranslationMap(dbBrand.localizedName);
     const localizedDescription = asTranslationMap(dbBrand.localizedDescription || {});
 
@@ -45,7 +47,7 @@ export class AdminBrandService implements IAdminBrandService {
       locale: language,
       logoUrl: dbBrand.logoUrl,
       isActive: dbBrand.isActive,
-      productCount: (dbBrand as any).productCount as number | undefined,
+      productCount: dbBrand.productCount,
       createdAt: dbBrand.createdAt,
       updatedAt: dbBrand.updatedAt,
     };
@@ -64,7 +66,7 @@ export class AdminBrandService implements IAdminBrandService {
    * @param activeOnly - If true, filtering for only active brands.
    * @returns List of brands.
    */
-  async getAll(activeOnly: boolean = false): Promise<Brand[]> {
+  async getAll(_activeOnly: boolean = false): Promise<Brand[]> {
     const brands = await getAllBrands();
     return brands.map((b) => this.mapToDomain(b));
   }

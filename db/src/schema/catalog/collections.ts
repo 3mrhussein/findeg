@@ -4,16 +4,7 @@
  * Supports manually curated collections (e.g., "Back to School", "Office Essentials").
  */
 
-import {
-  pgTable,
-  serial,
-  text,
-  integer,
-  boolean,
-  timestamp,
-  jsonb,
-  primaryKey,
-} from 'drizzle-orm/pg-core';
+import { serial, text, integer, boolean, timestamp, jsonb, primaryKey } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 import { tags } from './tags';
 import { catalogSchema } from '../schemas';

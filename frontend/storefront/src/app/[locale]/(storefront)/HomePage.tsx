@@ -27,7 +27,7 @@ export default async function HomePage({ language = 'en' }: HomePageProps) {
     <div className="flex min-h-screen w-full flex-col overflow-x-hidden bg-background">
       {/* Pure static — no data, renders at build time */}
       {/* <Boundary rendering="static" hydration="server" label="Hero"> */}
-      <HeroSection locale={language as any} />
+      <HeroSection locale={language} />
       {/* </Boundary> */}
 
       {/* Pure static — no data, renders at build time */}

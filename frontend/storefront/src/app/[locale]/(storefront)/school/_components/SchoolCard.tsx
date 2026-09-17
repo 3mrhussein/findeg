@@ -9,7 +9,9 @@ import { Link } from '@i18n/navigation';
 import type { SchoolSearchResult } from '@findeg/backend/features/school';
 
 interface SchoolCardProps {
-  school: SchoolSearchResult;
+  school: Omit<SchoolSearchResult, 'activeListCount' | 'hasLastYearLists'> & {
+    hasLastYearLists?: boolean;
+  };
 }
 
 /**

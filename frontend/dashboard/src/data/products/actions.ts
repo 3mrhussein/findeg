@@ -76,7 +76,7 @@ export async function deleteProduct(id: number) {
  *
  * Invalidates: All product caches
  */
-export async function importProducts(_csvFile: any) {
+export async function importProducts(_csvFile: File) {
   try {
     createAdministrationServices();
     // await products.importFromCSV(csvFile);
@@ -99,7 +99,7 @@ export async function setProductStatus(id: number, isActive: boolean) {
     const existingProduct = await products.getById(id);
     if (!existingProduct) return { success: false, error: 'Product not found' };
 
-    await products.updateProduct(id, { ...existingProduct, isActive } as any);
+    await products.updateProduct(id, { isActive });
     revalidateTag('products', 'max');
     return { success: true };
   } catch (error: unknown) {
@@ -113,8 +113,12 @@ export async function setProductStatus(id: number, isActive: boolean) {
  */
 export async function generateVariants(
   productId: number,
-  dimensions: any[] = [],
-  defaults: any = {},
+  dimensions: Parameters<
+    ReturnType<typeof createAdministrationServices>['products']['generateVariants']
+  >[1] = [],
+  defaults: Parameters<
+    ReturnType<typeof createAdministrationServices>['products']['generateVariants']
+  >[2] = {},
 ) {
   try {
     const { products } = createAdministrationServices();

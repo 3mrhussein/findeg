@@ -122,7 +122,7 @@ export function AdminUserRow({
           {user.roles.length === 0 ? (
             <span className="text-xs text-muted-foreground italic">{t('NoRoles')}</span>
           ) : (
-            user.roles.map((role: any) => (
+            user.roles.map((role) => (
               <Badge
                 key={role.id}
                 variant="outline"
@@ -163,7 +163,7 @@ export function AdminUserRow({
           <AdminActionsMenu
             userId={user.id}
             userName={getFullName(user)}
-            isActive={!!(user as any).isActive}
+            isActive={!!user.isActive}
             isPending={isPending}
             canWrite={canWrite}
             onEdit={() => onEdit(user)}

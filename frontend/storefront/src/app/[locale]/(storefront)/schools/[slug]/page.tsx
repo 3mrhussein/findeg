@@ -87,7 +87,7 @@ export default async function SchoolProfilePage({ params }: PageProps) {
             <h2 className="text-3xl font-black flex items-center gap-3">
               Grade Supply Lists
               <Badge variant="secondary" className="rounded-full">
-                {school.lists.filter((l: any) => l.isActive).length} Active
+                {school.lists.filter((l) => l.isActive).length} Active
               </Badge>
             </h2>
           </div>

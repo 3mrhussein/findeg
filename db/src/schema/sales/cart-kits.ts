@@ -2,7 +2,7 @@
  * Cart Kits Database Schema
  */
 
-import { pgTable, serial, text, integer, timestamp, jsonb } from 'drizzle-orm/pg-core';
+import { serial, integer, timestamp, jsonb } from 'drizzle-orm/pg-core';
 import { schoolEngineSchema } from '../schemas';
 import { schoolLists } from '../school-engine/school-lists';
 

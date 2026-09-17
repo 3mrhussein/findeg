@@ -2,15 +2,15 @@ import bcrypt from 'bcryptjs';
 import { z } from 'zod';
 
 import { sql, type Table, type InferInsertModel } from 'drizzle-orm';
-import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
+import type { Db } from '../../src/connection';
 
 export async function hashPassword(plain: string): Promise<string> {
   return await bcrypt.hash(plain, 12);
 }
 
 export async function ensureParents(
-  db: PostgresJsDatabase<any>,
-  parents: { name: string; table?: any }[],
+  db: Db,
+  parents: { name: string; table?: Table }[],
 ): Promise<void> {
   for (const parent of parents) {
     const result = (await db.execute(sql.raw(`SELECT count(*) as count FROM ${parent.name}`))) as {
@@ -35,8 +35,8 @@ export type ProcessedSeed<T> = {
 
 export function prepareSeedData<TTable extends Table>(
   table: TTable,
-  data: any[],
-  schema?: z.ZodSchema<any>,
+  data: Record<string, unknown>[],
+  schema?: z.ZodSchema,
 ): InferInsertModel<TTable>[] {
   return data.map((item, index) => {
     // Optional schema validation
@@ -82,7 +82,7 @@ export function prepareSeedData<TTable extends Table>(
   });
 }
 
-export async function truncateTables(db: PostgresJsDatabase<any>) {
+export async function truncateTables(db: Db) {
   console.log('🧹 Truncating tables securely across all schemas...');
 
   const schemas = ['identity', 'catalog', 'sales', 'inventory', 'school_engine', 'system'];

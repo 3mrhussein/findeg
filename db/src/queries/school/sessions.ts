@@ -19,7 +19,7 @@ export interface UpsertSessionInput {
   listId: number;
   userId?: number;
   sessionToken?: string;
-  itemSelections?: Record<string, any>;
+  itemSelections?: Record<string, unknown>;
   optionalInclusions?: number[];
   optionalExclusions?: number[];
 }

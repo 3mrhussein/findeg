@@ -58,7 +58,7 @@ export async function listDistinctTagGroups(): Promise<string[]> {
 /**
  * Create a new tag
  */
-export async function createTag(input: any) {
+export async function createTag(input: typeof tags.$inferInsert) {
   const [result] = await db.insert(tags).values(input).returning();
   return result;
 }
@@ -66,7 +66,7 @@ export async function createTag(input: any) {
 /**
  * Update a tag
  */
-export async function updateTag(id: ID, input: any) {
+export async function updateTag(id: ID, input: Partial<typeof tags.$inferInsert>) {
   const [result] = await db
     .update(tags)
     .set({ ...input, updatedAt: new Date() })

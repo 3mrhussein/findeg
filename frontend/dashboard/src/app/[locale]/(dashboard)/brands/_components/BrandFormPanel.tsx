@@ -22,7 +22,7 @@ import { useToast } from '@hooks/use-toast';
 interface BrandFormPanelProps {
   brand: Brand | null;
   productCount?: number;
-  onSubmit: (data: BrandInput) => Promise<any>;
+  onSubmit: (data: BrandInput) => Promise<{ success: boolean; error?: string }>;
   onClose: () => void;
 }
 

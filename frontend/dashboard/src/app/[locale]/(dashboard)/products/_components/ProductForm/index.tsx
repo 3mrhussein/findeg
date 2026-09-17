@@ -21,8 +21,8 @@ import { ProductFormSchema, ProductFormValues } from '@/interfaces';
 import { createProduct, updateProduct } from '@data/products/actions';
 
 interface ProductFormProps {
-  initialData?: any; // TODO: Use ProductEditData type after repository-based refactoring
-  categories: any[];
+  initialData?: import('@findeg/backend/features/catalog').Product;
+  categories: import('@findeg/backend/features/catalog').Category[];
   brands: Brand[];
   tags: Tag[];
   locale: string;
@@ -44,8 +44,10 @@ export function ProductForm({
   const [activeTab, setActiveTab] = useState('info');
 
   const form = useForm<ProductFormValues>({
-    resolver: zodResolver(ProductFormSchema) as any,
-    defaultValues: (initialData
+    resolver: zodResolver(
+      ProductFormSchema,
+    ) as import('react-hook-form').Resolver<ProductFormValues>,
+    defaultValues: initialData
       ? {
           localizedName: initialData.localizedContent?.name || { en: '', ar: '' },
           localizedDescription: initialData.localizedContent?.description || { en: '', ar: '' },
@@ -53,12 +55,16 @@ export function ProductForm({
             en: '',
             ar: '',
           },
-          localizedSlug: initialData.localizedContent?.slug || { en: '', ar: '' },
+          localizedSlug: (
+            initialData.localizedContent as typeof initialData.localizedContent & {
+              slug?: { en: string; ar?: string };
+            }
+          )?.slug || { en: '', ar: '' },
           categoryId: initialData.categoryId,
           brandId: initialData.brandId,
-          tagIds: initialData.tags?.map((t: any) => t.id) || [],
+          tagIds: initialData.tags?.map((t) => t.id) || [],
           isActive: initialData.isActive,
-          variants: (initialData.variants || []).map((v: any) => ({
+          variants: (initialData.variants || []).map((v) => ({
             id: v.id,
             sku: v.sku,
             basePrice: Number(v.basePrice),
@@ -69,12 +75,12 @@ export function ProductForm({
             isDefault: v.isDefault,
             sortOrder: v.sortOrder,
             localizedLabel: v.localizedLabel || { en: '', ar: '' },
-            images: (v.images || []).map((img: any) => ({
+            images: (v.images || []).map((img) => ({
               url: img.url,
               alt: img.alt || '',
               displayOrder: img.displayOrder,
             })),
-            attributes: (v.attributes || []).map((attr: any) => ({
+            attributes: (v.attributes || []).map((attr) => ({
               attributeKey: attr.key,
               value: attr.valueText || '',
             })),
@@ -103,20 +109,40 @@ export function ProductForm({
             },
           ],
           tagIds: [],
-        }) as any,
+        },
     mode: 'onChange',
   });
 
   const onSubmit = async (values: ProductFormValues) => {
     startTransition(async () => {
       const result = initialData
-        ? await updateProduct(initialData.id, values as any)
-        : await createProduct(values as any);
+        ? await updateProduct(initialData.id, {
+            ...values,
+            pricingMode: 'per-variant',
+            variants: values.variants.map((variant) => ({
+              ...variant,
+              localizedLabel: {
+                en: variant.localizedLabel.en,
+                ar: variant.localizedLabel.ar || '',
+              },
+            })),
+          })
+        : await createProduct({
+            ...values,
+            pricingMode: 'per-variant',
+            variants: values.variants.map((variant) => ({
+              ...variant,
+              localizedLabel: {
+                en: variant.localizedLabel.en,
+                ar: variant.localizedLabel.ar || '',
+              },
+            })),
+          });
 
       if (result.success) {
         toast.success(initialData ? t('updated') : t('created'));
-        if (!initialData && (result as any).productId) {
-          router.push(`/products/${(result as any).productId}/edit`);
+        if (!initialData && result.data?.productId) {
+          router.push(`/products/${result.data?.productId}/edit`);
         }
       } else {
         toast.error(result.error || 'Save failed');

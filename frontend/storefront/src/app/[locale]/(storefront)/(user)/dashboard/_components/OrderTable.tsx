@@ -24,7 +24,7 @@ const OrderStatusBadge: React.FC<{ status: Order['status'] }> = ({ status }) => 
 
 interface OrderTableUIProps {
   orders: Order[];
-  t: (key: any) => string;
+  t: ReturnType<typeof import('next-intl').useTranslations<'Dashboard'>>;
 }
 
 /**

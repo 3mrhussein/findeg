@@ -2,16 +2,7 @@
  * Discount Rules Database Schema
  */
 
-import {
-  pgTable,
-  serial,
-  text,
-  decimal,
-  timestamp,
-  boolean,
-  integer,
-  jsonb,
-} from 'drizzle-orm/pg-core';
+import { serial, text, decimal, timestamp, boolean, integer } from 'drizzle-orm/pg-core';
 import { salesSchema } from '../schemas';
 
 /**

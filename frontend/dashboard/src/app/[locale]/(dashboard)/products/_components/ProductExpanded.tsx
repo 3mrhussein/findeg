@@ -6,9 +6,13 @@ import { StockHealthBar } from '@/app/[locale]/_components/shared/StockHealthBar
 import { Badge } from '@findeg/ui';
 
 // Helper to calculate available stock from inventory
-function getVariantStock(variant: any): number {
+function getVariantStock(
+  variant: NonNullable<Product['variants']>[number] & {
+    inventory?: { onHand: number; reserved: number }[];
+  },
+): number {
   if (!variant.inventory || variant.inventory.length === 0) return 0;
-  return variant.inventory.reduce((sum: number, bal: any) => sum + (bal.onHand - bal.reserved), 0);
+  return variant.inventory.reduce((sum: number, bal) => sum + (bal.onHand - bal.reserved), 0);
 }
 
 interface ProductExpandedProps {

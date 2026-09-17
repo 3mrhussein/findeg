@@ -3,7 +3,19 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@findeg/ui';
 
 interface OrderItemsTableProps {
-  items: any[]; // Using any because OrderItem entity structure might vary slightly but we'll map
+  items: {
+    productNameSnapshot?: string;
+    productName?: string;
+    unitPriceSnapshot?: number;
+    unitPrice?: number;
+    totalPriceSnapshot?: number;
+    totalPrice?: number;
+    quantity: number;
+    skuSnapshot?: string;
+    sku?: string;
+    variantNameSnapshot?: string;
+    variantName?: string;
+  }[];
   currency: string;
 }
 

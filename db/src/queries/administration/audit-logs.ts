@@ -10,7 +10,6 @@
 import { db } from '../../connection';
 import { auditLog } from '../../schema';
 import { eq, and, desc, count, gte, lte } from 'drizzle-orm';
-import { type ID } from '@findeg/db/types';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -157,8 +156,8 @@ export interface CreateAuditLogInput {
   entityType: string;
   entityId: string;
   action: string;
-  oldValues?: Record<string, any>;
-  newValues?: Record<string, any>;
+  oldValues?: Record<string, unknown>;
+  newValues?: Record<string, unknown>;
 }
 
 /**

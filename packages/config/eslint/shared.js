@@ -27,13 +27,10 @@ export const shared = [
     },
 
     rules: {
-      // Legacy findings across the codebase (~1600 as of issue #101) are
-      // downgraded to 'warn' rather than 'off' so they stay visible without
-      // failing CI. Clearing them is tracked as separate follow-up work;
-      // once clear, these should go back to 'error'.
+      // Keep the warning cleanup from issue #125 enforced for every consumer.
       'no-undef': 'error',
-      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-explicit-any': 'error',
       'prettier/prettier': 'error',
       'no-useless-escape': 'error',
       'no-redeclare': 'error',

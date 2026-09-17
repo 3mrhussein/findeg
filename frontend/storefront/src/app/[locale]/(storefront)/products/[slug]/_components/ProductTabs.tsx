@@ -4,8 +4,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@findeg/ui';
 import { ProductReviews } from './ProductReviews';
 
 interface ProductTabsProps {
-  product: any;
-  reviews: any[];
+  product: import('@findeg/backend/features/catalog').Product & { sku?: string };
+  reviews: React.ComponentProps<typeof ProductReviews>['reviews'];
 }
 
 /**

@@ -71,12 +71,12 @@ export function useAdminRoles(): UseAdminRolesReturn {
 
   const fetchRoles = useCallback(async () => {
     const roles = await getSystemRoles();
-    setRoles(roles as any);
+    setRoles(roles);
   }, []);
 
   const fetchPermissions = useCallback(async () => {
     const permissions = await getAllPermissions();
-    setPermissions(permissions as any);
+    setPermissions(permissions);
   }, []);
 
   const fetchAll = useCallback(async () => {

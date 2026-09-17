@@ -107,9 +107,9 @@ export default function AdminNotificationsPage() {
     const key = type
       .split(/[._]/)
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join('') as any;
+      .join('');
     try {
-      return t(`Types.${key}` as any);
+      return t(`Types.${key}` as Parameters<typeof t>[0]);
     } catch {
       return type;
     }

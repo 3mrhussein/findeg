@@ -40,7 +40,7 @@ export async function ProductDetailContent({ productId, locale }: ProductDetailC
       </div>
       <div className="max-w-2xl">
         <ProductForm
-          initialData={product as any}
+          initialData={product}
           categories={categories}
           brands={brands}
           tags={[]}

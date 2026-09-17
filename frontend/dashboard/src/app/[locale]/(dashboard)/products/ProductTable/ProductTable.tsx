@@ -110,7 +110,7 @@ export function ProductTable({
     state: { sorting, rowSelection },
   });
 
-  const selectedIds = table.getSelectedRowModel().flatRows.map((r: any) => r.original.id);
+  const selectedIds = table.getSelectedRowModel().flatRows.map((r) => r.original.id);
 
   return (
     <div className="space-y-4">
@@ -133,9 +133,9 @@ export function ProductTable({
         )}
         <Table>
           <TableHeader>
-            {table.getHeaderGroups().map((headerGroup: any) => (
+            {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header: any) => (
+                {headerGroup.headers.map((header) => (
                   <TableHead key={header.id}>
                     {header.isPlaceholder
                       ? null
@@ -147,13 +147,13 @@ export function ProductTable({
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row: any) => (
+              table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
                   data-testid={`admin-product-row-${row.original.id}`}
                 >
-                  {row.getVisibleCells().map((cell: any) => (
+                  {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>

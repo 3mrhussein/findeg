@@ -73,7 +73,7 @@ export async function getCollectionBySlug(slug: string) {
 /**
  * Create a new collection
  */
-export async function createCollection(input: any) {
+export async function createCollection(input: typeof collections.$inferInsert) {
   const [result] = await db.insert(collections).values(input).returning();
   return result;
 }
@@ -81,7 +81,7 @@ export async function createCollection(input: any) {
 /**
  * Update a collection
  */
-export async function updateCollection(id: ID, input: any) {
+export async function updateCollection(id: ID, input: Partial<typeof collections.$inferInsert>) {
   const [result] = await db
     .update(collections)
     .set({ ...input, updatedAt: new Date() })

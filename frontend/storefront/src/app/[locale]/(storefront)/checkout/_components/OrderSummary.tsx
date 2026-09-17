@@ -8,7 +8,7 @@ interface OrderSummaryProps {
     currency: string;
   };
   cartItemsCount: number;
-  t: any;
+  t: ReturnType<typeof import('next-intl').useTranslations>;
 }
 
 /**

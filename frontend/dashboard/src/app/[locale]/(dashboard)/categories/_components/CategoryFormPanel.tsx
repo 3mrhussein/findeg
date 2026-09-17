@@ -32,7 +32,7 @@ import { checkCategorySlugAvailableAction as checkSlugAvailableAction } from '@d
 
 import { cn } from '@lib/utils';
 
-interface CategoryFormValues {
+export interface CategoryFormValues {
   localizedName: { en: string; ar: string };
   localizedDescription: { en?: string; ar?: string };
   slug: string;
