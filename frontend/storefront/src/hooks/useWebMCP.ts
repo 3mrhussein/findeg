@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { initWebMCP, getWebMCPStatus } from '@lib/webmcp/webmcp-init';
+import { useState } from 'react';
+import { getWebMCPStatus } from '@lib/webmcp/webmcp-init';
 import { TOOLS } from '@lib/webmcp/webmcp-tools';
 
 /**

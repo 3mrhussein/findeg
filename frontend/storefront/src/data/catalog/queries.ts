@@ -16,17 +16,11 @@ import type {
   ProductPdpViewModel,
   HomePageData,
   ShopPageData,
-  Product,
   Variant,
   Category,
-  Brand,
-  Collection,
-  Review,
   ProductDetailPageData,
   CollectionsPageData,
   ShopPlpSort,
-  FilterOption,
-  CategoryFilterOption,
 } from './types';
 import { mapBrandOptions, mapCategoryOptions, mapProduct } from '../helpers/mappers';
 
@@ -127,7 +121,7 @@ export async function getShopPlpViewModel(
 export async function getSearchPageViewModel(
   locale: string,
   rawQuery: string,
-  query: any,
+  _query: any,
 ): Promise<SearchPageViewModel> {
   const resolvedLocale = parse(locale);
   cacheTag('products', 'categories', `search-${resolvedLocale}-${rawQuery}`);
@@ -263,7 +257,7 @@ export async function getTopProductSlugsForStaticParams(limit: number = 100) {
 export async function getProductPdp(
   locale: string,
   slug: string,
-  session: any | null = null,
+  _session: any | null = null,
 ): Promise<ProductPdpViewModel | null> {
   const resolvedLocale = parse(locale);
 
@@ -483,7 +477,7 @@ export async function getCollectionsPage(language: string): Promise<CollectionsP
 export async function getCollectionPageViewModel(
   slug: string,
   locale: string,
-  query: any,
+  _query: any,
 ): Promise<CollectionPageViewModel | null> {
   const resolvedLocale = parse(locale);
   cacheTag('products', 'collections', `collection-${resolvedLocale}-${slug}`);

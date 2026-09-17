@@ -2,8 +2,6 @@ import { getTranslations } from 'next-intl/server';
 import type { Locale } from 'next-intl';
 import { Link } from '@i18n/navigation';
 
-const CURRENT_YEAR = 2025;
-
 interface FooterProps {
   locale: Locale;
 }

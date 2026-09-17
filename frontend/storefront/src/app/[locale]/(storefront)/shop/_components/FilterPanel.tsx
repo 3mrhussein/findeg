@@ -12,7 +12,6 @@ import {
   Star,
   Tag,
   Wallet,
-  Check,
   RotateCcw,
   SlidersHorizontal,
 } from 'lucide-react';

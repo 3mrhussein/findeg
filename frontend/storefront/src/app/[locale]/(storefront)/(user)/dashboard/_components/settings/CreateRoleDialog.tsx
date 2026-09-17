@@ -53,7 +53,7 @@ export function CreateRoleDialog({
     try {
       await onCreate(newCode, newName, Array.from(newPermIds));
       onOpenChange(false);
-    } catch (err) {
+    } catch {
       // Error is handled by parent (toast)
     } finally {
       setCreating(false);

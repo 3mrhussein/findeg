@@ -8,7 +8,6 @@
  * Domain entities (Product, Category, User, etc.) live in src/domain/entities/.
  */
 
-import React from 'react';
 import type { Locale } from '@findeg/backend/features/core';
 
 // Navigation Types

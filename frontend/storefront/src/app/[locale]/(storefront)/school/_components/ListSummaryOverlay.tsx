@@ -1,14 +1,7 @@
 'use client';
 
 import React from 'react';
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-  SheetFooter,
-} from '@findeg/ui';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@findeg/ui';
 import { Button } from '@findeg/ui';
 import { useTranslations } from 'next-intl';
 import { ShoppingCart, CheckCircle, Package, ArrowRight } from 'lucide-react';
@@ -24,7 +17,7 @@ interface ListSummaryOverlayProps {
 /**
  *
  */
-export function ListSummaryOverlay({ isOpen, onClose, list, items = [] }: ListSummaryOverlayProps) {
+export function ListSummaryOverlay({ isOpen, onClose, list }: ListSummaryOverlayProps) {
   const t = useTranslations('School.ParentExperience.Summary');
 
   return (

@@ -1,4 +1,3 @@
-import { ReactNode } from 'react';
 import { FilterSidebar } from './FilterSidebar';
 import { ShopSortSelect } from './ShopSortSelect';
 import { ShopViewSwitcher } from './ShopViewSwitcher';

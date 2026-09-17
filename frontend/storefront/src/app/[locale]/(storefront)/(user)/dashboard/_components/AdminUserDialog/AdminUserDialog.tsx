@@ -7,7 +7,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@findeg/ui';
 import { Icon } from '@findeg/ui';
 import type {
-  AdminUser,
   AdminUserDialogProps,
   OverrideAction,
   Role,

@@ -5,7 +5,6 @@ import { ListAccessCard } from '@app/[locale]/(storefront)/school/_components/Li
 import { CodeEntryDialog } from '@app/[locale]/(storefront)/school/_components/CodeEntryDialog';
 import { AccessRequestDialog } from '@app/[locale]/(storefront)/school/_components/AccessRequestDialog';
 import { useRouter } from '@i18n/navigation';
-import type { AccessState } from '@findeg/backend/features/school';
 
 interface SchoolProfileClientProps {
   schoolName: string;
@@ -20,7 +19,7 @@ interface SchoolProfileClientProps {
  */
 export function SchoolProfileClient({ schoolName, initialLists }: SchoolProfileClientProps) {
   const router = useRouter();
-  const [lists, setLists] = useState(initialLists);
+  const [lists] = useState(initialLists);
   const [activeList, setActiveList] = useState<any | null>(null);
   const [activeDialog, setActiveDialog] = useState<'code' | 'request' | null>(null);
 

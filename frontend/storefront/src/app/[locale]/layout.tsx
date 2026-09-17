@@ -7,10 +7,8 @@ import { getMessages, setRequestLocale } from 'next-intl/server';
 import Providers from '@providers/Providers';
 import { Suspense } from 'react';
 import { BoundaryProvider } from '@lib/internal/BoundaryProvider';
-import BoundaryToggle from '@lib/internal/BoundaryToggle';
 import { WebMCPInitializer } from '@components/shared/WebMCPInitializer';
 import { LocaleSync } from '@components/shared/LocaleSync';
-import { cn } from '@lib/utils';
 
 export const metadata: Metadata = {
   title: {

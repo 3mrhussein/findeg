@@ -32,7 +32,7 @@ export function mapBrandOptions(
 /**
  * Helper to map backend product to storefront product
  */
-export function mapProduct(p: any, locale: string): Product {
+export function mapProduct(p: any, _locale: string): Product {
   return {
     ...p,
     slug: p.slug || '',

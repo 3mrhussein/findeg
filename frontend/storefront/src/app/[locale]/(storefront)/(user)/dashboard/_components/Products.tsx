@@ -1,4 +1,3 @@
-import { useTranslations } from 'next-intl';
 import { usePagination } from '@hooks/usePagination';
 import { Pagination } from '@findeg/ui';
 import { Button } from '@findeg/ui';
@@ -16,7 +15,6 @@ interface ProductsProps {
  * Products Dashboard Page
  */
 export const Products: React.FC<ProductsProps> = ({ products }) => {
-  const t = useTranslations();
   const { currentPage, totalPages, currentPageData, setCurrentPage } = usePagination(products, 10);
 
   return (

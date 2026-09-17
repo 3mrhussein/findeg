@@ -6,7 +6,7 @@
 import { cacheTag, cacheLife } from 'next/cache';
 import { createCatalogServices } from '@findeg/backend/features/catalog';
 import { parse } from '@findeg/backend/features/core';
-import type { Product, Category } from '../catalog/types';
+import type { Product } from '../catalog/types';
 
 /**
  * Helper to map backend product to storefront product
@@ -130,7 +130,7 @@ export async function getSchoolFilterOptions() {
 /**
  * Get school profile by slug.
  */
-export async function getSchoolProfile(slug: string, userId: number | null = null) {
+export async function getSchoolProfile(slug: string, _userId: number | null = null) {
   cacheTag(`school-${slug}`);
   cacheLife('hours');
 
