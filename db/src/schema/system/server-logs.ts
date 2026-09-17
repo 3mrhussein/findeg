@@ -2,7 +2,7 @@
  * Server Logs Database Schema
  */
 
-import { pgTable, serial, text, varchar, timestamp, jsonb, integer } from 'drizzle-orm/pg-core';
+import { serial, text, varchar, timestamp, jsonb, integer } from 'drizzle-orm/pg-core';
 import { systemSchema } from '../schemas';
 
 /**

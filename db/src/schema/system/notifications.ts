@@ -2,7 +2,7 @@
  * Notifications Database Schema
  */
 
-import { pgTable, serial, text, timestamp, boolean, integer, index } from 'drizzle-orm/pg-core';
+import { serial, text, timestamp, boolean, integer, index } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 import { users } from '../identity/users';
 import { systemSchema } from '../schemas';

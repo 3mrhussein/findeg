@@ -2,7 +2,7 @@
  * Search Logs Database Schema
  */
 
-import { pgTable, serial, text, integer, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { text, integer, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 import { users } from '../identity/users';
 import { systemSchema } from '../schemas';

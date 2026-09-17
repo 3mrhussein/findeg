@@ -10,7 +10,6 @@ import {
   createBrand,
   updateBrand,
   deleteBrand,
-  countBrands,
   countProductsByBrandId,
 } from '@findeg/db/queries';
 import {
@@ -64,7 +63,7 @@ export class AdminBrandService implements IAdminBrandService {
    * @param activeOnly - If true, filtering for only active brands.
    * @returns List of brands.
    */
-  async getAll(activeOnly: boolean = false): Promise<Brand[]> {
+  async getAll(_activeOnly: boolean = false): Promise<Brand[]> {
     const brands = await getAllBrands();
     return brands.map((b) => this.mapToDomain(b));
   }

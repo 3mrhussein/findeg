@@ -27,12 +27,13 @@ export const shared = [
     },
 
     rules: {
-      // Legacy findings across the codebase (~1600 as of issue #101) are
-      // downgraded to 'warn' rather than 'off' so they stay visible without
-      // failing CI. Clearing them is tracked as separate follow-up work;
-      // once clear, these should go back to 'error'.
+      // Legacy findings across the codebase (~2900 as of issue #125) were
+      // downgraded to 'warn' rather than 'off' so they stayed visible
+      // without failing CI. Clearing each is tracked in #125; once clear,
+      // it goes back to 'error'. `no-explicit-any` is the only one left
+      // (needs real type work rather than a mechanical fix).
       'no-undef': 'error',
-      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       '@typescript-eslint/no-explicit-any': 'warn',
       'prettier/prettier': 'error',
       'no-useless-escape': 'error',

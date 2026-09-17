@@ -154,7 +154,7 @@ export class AdminCategoryService implements IAdminCategoryService {
    * @param language - Optional localization preference.
    * @returns List of categories.
    */
-  async getAll(language?: Locale): Promise<Category[]> {
+  async getAll(_language?: Locale): Promise<Category[]> {
     const results = await getAllCategories();
     return results as any as Category[];
   }
@@ -162,7 +162,7 @@ export class AdminCategoryService implements IAdminCategoryService {
   /**
    * Retrieves categories in a hierarchical tree structure.
    */
-  async getTree(language?: Locale): Promise<Category[]> {
+  async getTree(_language?: Locale): Promise<Category[]> {
     // Fetch all categories and build tree in-memory
     const allCategories = await getAllCategories();
 

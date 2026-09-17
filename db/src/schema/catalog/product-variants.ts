@@ -13,7 +13,6 @@
  */
 
 import {
-  pgTable,
   serial,
   text,
   integer,
