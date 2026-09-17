@@ -1,5 +1,4 @@
 import { sql } from 'drizzle-orm';
-
 import { db } from '../../connection';
 import { products, categories, brands } from '../../schema/catalog';
 
