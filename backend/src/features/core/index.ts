@@ -11,7 +11,6 @@ export {
   PERMISSION_CODES,
   systemAdmin,
   staffRole,
-  schoolRole,
   customerRole,
   adminSession,
   hasPermission,

@@ -9,11 +9,7 @@ import { identitySchema, salesSchema } from './schemas';
 
 // --- Identity Domain ---
 
-export const portalRoleEnum = identitySchema.enum('portal_role', [
-  'customer',
-  'staff',
-  'school_staff',
-]);
+export const portalRoleEnum = identitySchema.enum('portal_role', ['customer', 'staff']);
 
 export const actorTypeEnum = identitySchema.enum('actor_type', ['guest', 'user', 'service']);
 

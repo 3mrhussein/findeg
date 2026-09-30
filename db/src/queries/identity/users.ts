@@ -192,7 +192,7 @@ export interface CreateUserInput {
   lastName?: string;
   phone?: string;
   image?: string;
-  portalRole?: 'customer' | 'staff' | 'school_staff';
+  portalRole?: UserRow['portalRole'];
 }
 
 /**
@@ -224,7 +224,7 @@ export interface UpdateUserInput {
   emailVerified?: Date;
   verifiedPhone?: boolean;
   isActive?: boolean;
-  portalRole?: 'customer' | 'staff' | 'school_staff';
+  portalRole?: UserRow['portalRole'];
 }
 
 /**

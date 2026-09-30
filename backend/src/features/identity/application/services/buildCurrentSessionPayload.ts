@@ -26,9 +26,7 @@ export function buildCurrentSessionPayload(
   const permissionCodes = Array.from(
     new Set([
       ...authorization.permissionCodes,
-      ...(user.portalRole === 'staff' || user.portalRole === 'school_staff'
-        ? [PERMISSION_CODES.ADMIN_PORTAL]
-        : []),
+      ...(user.portalRole === 'staff' ? [PERMISSION_CODES.ADMIN_PORTAL] : []),
     ]),
   );
 

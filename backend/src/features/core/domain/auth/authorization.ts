@@ -1,7 +1,6 @@
 import {
   PERMISSION_CODES,
   staffRole,
-  schoolRole,
   customerRole,
   systemAdmin,
   adminSession,
@@ -21,7 +20,6 @@ export { PERMISSION_CODES };
  */
 export {
   staffRole,
-  schoolRole,
   customerRole,
   systemAdmin,
   adminSession,

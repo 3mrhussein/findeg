@@ -159,10 +159,6 @@ export function staffRole(portalRole?: string | null): boolean {
   return portalRole === 'staff';
 }
 
-export function schoolRole(portalRole?: string | null): boolean {
-  return portalRole === 'school_staff';
-}
-
 export function customerRole(portalRole?: string | null): boolean {
   return portalRole === 'customer';
 }
@@ -172,7 +168,7 @@ export function systemAdmin(session: SessionPayload): boolean {
 }
 
 export function adminSession(session: SessionPayload): boolean {
-  if (session.portalRole === 'staff' || session.portalRole === 'school_staff') return true;
+  if (session.portalRole === 'staff') return true;
   if (session.activeRoleIds?.some((roleId) => ADMIN_ROLE_IDS.includes(roleId))) return true;
   if (session.permissionCodes?.includes(PERMISSION_CODES.ADMIN_PORTAL)) return true;
   return false;
