@@ -68,6 +68,28 @@ _Avoid_: Request id, nonce
 The short, public, human-readable identifier of an Order, used by Customers, couriers, and support.
 _Avoid_: Order number, order id, tracking code
 
+### Partner Rewards
+
+**Partner Points**:
+The reward a Partner School earns on orders placed from its School Supply Lists.
+_Avoid_: Credits, commission, loyalty points
+
+**Reward Rate**:
+A Business Partner's configured conversion between money charged and Partner Points, and between Partner Points and EGP value.
+_Avoid_: Commission rate, multiplier
+
+**Reward Entitlement**:
+The Partner Points (and their EGP value) fixed for one attributed order line at Order Acceptance.
+_Avoid_: Reward, accrual
+
+**Reward Event**:
+An immutable ledger entry that moves an Entitlement's points between pending, earned, and reversed.
+_Avoid_: Transaction, reward log
+
+**Reward Statement**:
+A Business Partner's pending, earned, and reversed Partner Points and EGP value, derived from its Reward Events.
+_Avoid_: Balance, wallet
+
 ### Inventory
 
 **Stock Reservation**:
