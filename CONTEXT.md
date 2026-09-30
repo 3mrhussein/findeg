@@ -1,8 +1,10 @@
-# Findeg
+# FindEg
 
-An e-commerce platform connecting Customers to Partner Schools' supply lists, plus general storefront shopping.
+FindEg is an Egyptian school-supplies store: Customers buy ordinary catalog items or fill a Partner School's School Supply List, paying cash on delivery.
 
 ## Language
+
+### Customers and School Supply Lists
 
 **Customer**:
 A person who shops on the storefront, whether browsing generally or fulfilling a School Supply List.
@@ -43,3 +45,31 @@ _Avoid_: Active/inactive (conflates status with visibility)
 **List Selection**:
 A Customer's in-progress choices against a specific School Supply List's items, kept independent of and never merged into their ordinary Cart.
 _Avoid_: Cart, list cart, cart kit
+
+### Checkout
+
+**Quote**:
+The server's authoritative pricing of a set of lines (unit prices, discounts, shipping, total) at a moment in time, carrying a Confirmation.
+_Avoid_: Estimate, cart total
+
+**Confirmation**:
+A digest of a Quote's terms that the Customer agrees to; an Order is accepted only if a fresh Quote still produces the same Confirmation.
+_Avoid_: Price token, checksum
+
+**Order Acceptance**:
+The single atomic moment an Order comes into existence: re-quoted, stock reserved, attribution snapshotted. Not an order status.
+_Avoid_: Order placement, order creation, confirmed order
+
+**Idempotency Key**:
+A client-chosen key that makes retrying an Order Acceptance return the original result instead of a second Order.
+_Avoid_: Request id, nonce
+
+**Order Reference**:
+The short, public, human-readable identifier of an Order, used by Customers, couriers, and support.
+_Avoid_: Order number, order id, tracking code
+
+### Inventory
+
+**Stock Reservation**:
+Units held for an accepted Order at a specific warehouse, from Order Acceptance until they are consumed at delivery or released on cancellation.
+_Avoid_: Allocation, hold
