@@ -6,7 +6,7 @@ status: proposed
 
 Main's `school_lists` feature predates issue #50's School Supply List domain and diverges from it structurally, not just terminologically: there is no draft/publish/replace lifecycle (only `isActive`/`publishedAt`), substitution is an admin-curated join table rather than a computed eligibility rule, and "School" is denormalized free text on each list row (`school_lists.schoolName`/`governorate`/`area`/`schoolType`/`academicSystem` — `db/src/schema/school-engine/school-lists.ts:28-66`) rather than a referenced entity. `develop` (mined as reference only, per the parent map) solved the same problem with a different, incompatible mechanism in each case. We decide here how main adopts develop's concepts, translated into main's own feature-barrel/Drizzle conventions, and do the vocabulary rename in the same change as the behavior it belongs to.
 
-This ADR depends on ADR-0003 (Partner Membership Model, not yet merged): the `businessPartnerId` FK below references the `businessPartners` table ADR-0003 introduces. This ticket cannot land before ADR-0003 does.
+This ADR depends on ADR-0003 (Partner Membership Model): the `businessPartnerId` FK below references the `businessPartners` table ADR-0003 introduces, so this work cannot be implemented before that table exists.
 
 ## Decisions
 
