@@ -116,19 +116,20 @@ For detailed development workflows, see [specs/001-separate-admin-project/quicks
 
 The database comes pre-seeded with Several test accounts representing different roles in the system. The password for all test accounts is `password`.
 
-| Actor / Role           | Email                   | Description                                                        |
-| ---------------------- | ----------------------- | ------------------------------------------------------------------ |
-| **System Admin (New)** | `admin@findeg.com`      | Use password `Admin1234!` for the new dashboard health cockpit.    |
-| **System Admin**       | `superadmin@findeg.com` | Full, unrestricted access to all admin features and settings.      |
-| **Catalog Manager**    | `editorial@findeg.com`  | Can manage products, categories, brands, and view analytics.       |
-| **Inventory Manager**  | `inventory@findeg.com`  | Can manage stock levels, warehouses, and view orders.              |
-| **Operations Manager** | `operations@findeg.com` | Broad access for managing orders, inventory, and viewing catalogs. |
-| **Customer Support**   | `support@findeg.com`    | Can view orders, users, and assist with customer issues.           |
-| **School Liaison**     | `liaison@findeg.com`    | Manages school supply lists and can browse products.               |
-| **B2C Customer**       | `user@findeg.com`       | Standard storefront user with no admin access.                     |
-=======
-Welcome to the FindEg.com monorepo. This project is a modern, hierarchical marketplace platform designed to provide a premium experience for both B2C (Public Shop) and B2B (School Lists) customers.
->>>>>>> 006-docs-restructure
+| Actor / Role                                                                                                                                                                                          | Email                   | Description                                                        |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- | ------------------------------------------------------------------ |
+| **System Admin (New)**                                                                                                                                                                                | `admin@findeg.com`      | Use password `Admin1234!` for the new dashboard health cockpit.    |
+| **System Admin**                                                                                                                                                                                      | `superadmin@findeg.com` | Full, unrestricted access to all admin features and settings.      |
+| **Catalog Manager**                                                                                                                                                                                   | `editorial@findeg.com`  | Can manage products, categories, brands, and view analytics.       |
+| **Inventory Manager**                                                                                                                                                                                 | `inventory@findeg.com`  | Can manage stock levels, warehouses, and view orders.              |
+| **Operations Manager**                                                                                                                                                                                | `operations@findeg.com` | Broad access for managing orders, inventory, and viewing catalogs. |
+| **Customer Support**                                                                                                                                                                                  | `support@findeg.com`    | Can view orders, users, and assist with customer issues.           |
+| **School Liaison**                                                                                                                                                                                    | `liaison@findeg.com`    | Manages school supply lists and can browse products.               |
+| **B2C Customer**                                                                                                                                                                                      | `user@findeg.com`       | Standard storefront user with no admin access.                     |
+| =======                                                                                                                                                                                               |
+| Welcome to the FindEg.com monorepo. This project is a modern, hierarchical marketplace platform designed to provide a premium experience for both B2C (Public Shop) and B2B (School Lists) customers. |
+
+> > > > > > > 006-docs-restructure
 
 ---
 
@@ -289,7 +290,8 @@ Ensure you have `Node.js 18+`, `pnpm 10`, and `Docker` installed.
 - **ServiceResult Protocol**: All backend services do NOT throw standard JS errors; they return an `Err` or `Ok` standard `ServiceResult<T, FindEgError>`.
 
 <<<<<<< HEAD
-```tsx
+
+````tsx
 import { useTranslations } from "next-intl";
 import { T } from "@i18n/content";
 =======
@@ -297,7 +299,19 @@ import { T } from "@i18n/content";
 >>>>>>> 006-docs-restructure
 
 - **Unit (Vitest)**: Every exported catalog service, checkout compute engine, and validation module is independently tested. Mocks are isolated.
+- **Integration (Vitest + Postgres 16)**: `backend/src/**/*.integration.test.ts` run against a real database, for behaviour mocks can't reproduce (row locks, unique indexes, races). See [Running integration tests](#running-integration-tests).
 - **E2E (Cypress)**: The monorepo uses `cypress` and `cypress run --browser chrome --headless` mapped recursively as `npm run e2e:run:ci`. Do not commit brittle selector targeting; use proper `data-cy` attributes.
+
+### Running integration tests
+
+```bash
+pnpm db:run            # start the docker-compose Postgres (uses DB_* from .env)
+pnpm test:integration  # backend integration tests only; `pnpm test` still runs unit tests only
+````
+
+Each run creates a fresh `findeg_it_<timestamp>_<id>` database on that server, applies every migration in `db/migrations`, and drops it when the run ends, so runs never share state and your dev data is untouched. To target another server, set `INTEGRATION_DATABASE_URL` (a URL to any database on it whose user can `CREATE DATABASE`); CI does this with a Postgres 16 service container.
+
+Write tests as `*.integration.test.ts` under `backend/src` and use the helpers in `backend/src/testing/postgres`: `connectToTestDatabase()` for a Drizzle/postgres.js handle, `runConcurrently()` to run two operations on separate connections, and `waitForLockWait()` to hold a lock until the other transaction is provably blocked on it.
 
 ---
 
