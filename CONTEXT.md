@@ -14,6 +14,14 @@ _Avoid_: Estimate, cart total
 A digest of a Quote's terms that the Customer agrees to; an Order is accepted only if a fresh Quote still produces the same Confirmation.
 _Avoid_: Price token, checksum
 
+**List Selection**:
+A Customer's in-progress choices against one published School Supply List (a variant and quantity per list item), kept apart from the Cart and from every other list, and checked out as its own Order.
+_Avoid_: List cart, cart kit, list session
+
+**List Completeness**:
+Whether a List Selection covers every required list item at its prescribed quantity, with any eligible substitute counting. It is advisory and never blocks checkout.
+_Avoid_: List validation, list progress
+
 **List Offer**:
 A percentage discount on one School Supply List, active for a time window, applied to every line of that list's selections.
 _Avoid_: List discount, coupon, promotion
