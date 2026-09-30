@@ -39,4 +39,4 @@ Depends on ADR-0003 (`business_partners`), ADR-0004 (Partner School on lists), a
 ## Consequences
 
 - Partial refunds don't exist on main, so develop's proportional correction allocation is not built; adding partial refunds later must add it.
-- The price source for List lines (ADR-0004's frozen publish price vs live catalog price) directly changes points; it is decided with List Offer pricing.
+- The price source for List lines directly changes points. ADR-0007 settles it: List lines are charged at the live catalog price, minus any List Offer.

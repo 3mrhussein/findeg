@@ -56,6 +56,10 @@ _Avoid_: Estimate, cart total
 A digest of a Quote's terms that the Customer agrees to; an Order is accepted only if a fresh Quote still produces the same Confirmation.
 _Avoid_: Price token, checksum
 
+**List Offer**:
+A percentage discount on one School Supply List, active for a time window, applied to every line of that list's selections.
+_Avoid_: List discount, coupon, promotion
+
 **Order Acceptance**:
 The single atomic moment an Order comes into existence: re-quoted, stock reserved, attribution snapshotted. Not an order status.
 _Avoid_: Order placement, order creation, confirmed order
