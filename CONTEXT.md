@@ -99,8 +99,12 @@ An immutable ledger entry that moves an Entitlement's points between pending, ea
 _Avoid_: Transaction, reward log
 
 **Reward Statement**:
-A Business Partner's pending, earned, reversed, and settled Partner Points and EGP value, and its Available Balance, derived from its Reward Events and Reward Settlements.
+A Business Partner's pending, earned, reversed, and settled Partner Points and EGP value, and its Available Balance, derived from its Reward Events and Reward Settlements. For a month, it runs from an opening to a closing Available Balance through that month's earned, reversed, adjusted, and settled movements.
 _Avoid_: Balance, wallet
+
+**Partner Report**:
+What a Business Partner's members see of its rewards: the monthly Reward Statement, its Reward Settlements, and the sales from its School Supply Lists in aggregate. It never identifies a Customer or an Order.
+_Avoid_: Dashboard, analytics
 
 **Reward Settlement**:
 A FindEg Staff record of an EGP payout already made to a Business Partner outside FindEg, or the void of a mistaken one.
