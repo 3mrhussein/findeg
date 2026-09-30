@@ -43,8 +43,12 @@ A School Supply List's lifecycle state. Draft is freely editable. Published free
 _Avoid_: Active/inactive (conflates status with visibility)
 
 **List Selection**:
-A Customer's in-progress choices against a specific School Supply List's items, kept independent of and never merged into their ordinary Cart.
-_Avoid_: Cart, list cart, cart kit
+A Customer's in-progress choices against one published School Supply List (a variant and quantity per list item), kept apart from the Cart and from every other list, and checked out as its own Order.
+_Avoid_: Cart, list cart, cart kit, list session
+
+**List Completeness**:
+Whether a List Selection covers every required list item at its prescribed quantity, with any eligible substitute counting. It is advisory and never blocks checkout.
+_Avoid_: List validation, list progress
 
 ### Checkout
 
