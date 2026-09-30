@@ -68,6 +68,14 @@ _Avoid_: Order placement, order creation, confirmed order
 A client-chosen key that makes retrying an Order Acceptance return the original result instead of a second Order.
 _Avoid_: Request id, nonce
 
+**Guest Order Access**:
+How a Customer without an account views their Order: they give its Order Reference and email, and prove it with a one-time code sent to that email on request.
+_Avoid_: Order tracking, guest login
+
+**Outbox**:
+The durable record of messages that must be sent because something was committed, written in the same transaction and delivered afterwards, at least once.
+_Avoid_: Queue, notification log, email jobs
+
 **Order Reference**:
 The short, public, human-readable identifier of an Order, used by Customers, couriers, and support.
 _Avoid_: Order number, order id, tracking code
