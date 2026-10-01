@@ -67,7 +67,12 @@ function requireConfig(agent) {
 }
 
 function originRepository() {
-  const url = execFileSync('git', ['remote', 'get-url', 'origin'], { encoding: 'utf8' }).trim();
+  // Disable agent routing in case `git` resolves to our wrapper. This avoids
+  // recursion for hand-written configs that intentionally omit `repository`.
+  const url = execFileSync('git', ['remote', 'get-url', 'origin'], {
+    encoding: 'utf8',
+    env: { ...process.env, FINDEG_AGENT: 'none' },
+  }).trim();
   const match = url.match(/github\.com[:/](.+?\/.+?)(?:\.git)?$/);
   if (!match) fail(`can't read owner/name from origin remote "${url}"; set "repository"`);
   return match[1];

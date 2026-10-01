@@ -6,6 +6,27 @@ Claude Code and Codex each act on GitHub as their own GitHub App bot. That cover
 - the cross-agent review workflows can tell who opened a PR (`.github/workflows/claude-review.yml`, `codex-review-trigger.yml`);
 - each agent's access is limited to this repo and revocable on its own.
 
+## Request reviews on a human PR
+
+Amr can request either reviewer, or both, with a PR comment:
+
+```text
+@codex review
+```
+
+```text
+@claude review this PR following the Code Review Rules in AGENTS.md
+```
+
+```text
+@codex review
+@claude review this PR following the Code Review Rules in AGENTS.md
+```
+
+Only comments from the repository owner start the Claude workflow. Automatic
+cross-review workflows listen only for a PR being opened or deliberately
+labeled, not for review comments, so review results do not create a loop.
+
 ## How it works
 
 `scripts/agent-identity/install.sh` puts `gh` and `git` wrappers in `~/.local/bin`, ahead of the real ones. A wrapper switches to a bot only when both of these hold:
@@ -19,6 +40,9 @@ In agent mode:
 
 - **`gh`** gets `GH_TOKEN`, a 1-hour GitHub App installation token minted by `token.mjs`. Tokens are cached until 5 minutes before expiry, in `~/.cache` or in the temp directory when a sandbox blocks `~/.cache`.
 - **`git`** commits as the bot (`<slug>[bot] <id>+<slug>[bot]@users.noreply.github.com`) and authenticates to github.com with the bot's token. Your own credential helpers (keychain, `store`) are bypassed, so an agent can't fall back to your credentials or save its token into them.
+
+If an agent is detected in a findeg checkout but its configuration is missing
+or invalid, both wrappers fail closed instead of using the human identity.
 
 `FINDEG_AGENT=none` forces plain `gh`/`git`, e.g. `FINDEG_AGENT=none gh secret set …` from a Claude `!` prompt, since the bots can't manage secrets.
 
@@ -42,6 +66,14 @@ On another machine, copy `~/.config/findeg/agents/` across rather than creating 
 ```bash
 gh variable set CLAUDE_PR_AUTHORS --body 'findeg-claude[bot]'
 gh variable set CODEX_PR_AUTHORS --body 'findeg-codex[bot],chatgpt-codex-connector[bot]'
+```
+
+The Codex trigger also needs a fine-grained PAT belonging to an account that
+has Codex access. Give it access only to `findeg`, with Pull requests read/write,
+then save it without printing it:
+
+```bash
+gh secret set CODEX_TRIGGER_TOKEN
 ```
 
 ### 3. Install the wrappers (each machine)

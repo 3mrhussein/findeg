@@ -10,6 +10,7 @@ import { fileURLToPath } from 'node:url';
 import { appJwt, credentialResponse, identityLines } from './token.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
+const ghWrapper = join(here, 'bin/gh');
 const gitWrapper = join(here, 'bin/git');
 
 test("appJwt is an RS256 JWT the app's public key verifies", () => {
@@ -114,4 +115,17 @@ test('the git wrapper is plain git outside a findeg checkout', () => {
     env: testerEnv({ FINDEG_AGENT: 'tester' }),
   });
   assert.doesNotMatch(ident, /tester\[bot\]/);
+});
+
+test('the git wrapper fails closed when agent configuration is missing', () => {
+  const env = testerEnv({ FINDEG_AGENT: 'missing' });
+  assert.throws(() => runGit(['var', 'GIT_AUTHOR_IDENT'], env), /Command failed/);
+});
+
+test('the gh wrapper fails closed when agent configuration is missing', () => {
+  const env = testerEnv({ FINDEG_AGENT: 'missing' });
+  assert.throws(
+    () => execFileSync(ghWrapper, ['--version'], { cwd: here, encoding: 'utf8', env }),
+    /Command failed/,
+  );
 });
