@@ -1,0 +1,33 @@
+# Asks Codex (cloud code review) to review PRs that Claude Code opened.
+# Claude authenticates as its own GitHub App (docs/agents/agent-identity.md),
+# so its PRs are authored by one of the logins in the CLAUDE_PR_AUTHORS repo
+# variable (comma-separated). Adding the `agent:claude` label re-requests a
+# review by hand.
+#
+# The comment is posted with CODEX_TRIGGER_TOKEN, a fine-grained PAT of a user
+# who has Codex access (Pull requests: read & write on this repo), so Codex sees
+# it as a request from that user rather than from a bot.
+name: Codex review (Claude PRs)
+
+on:
+  pull_request:
+    types: [opened, labeled]
+
+permissions:
+  contents: read
+
+jobs:
+  request-review:
+    if: >-
+      (github.event.action == 'opened' &&
+        contains(format(',{0},', vars.CLAUDE_PR_AUTHORS), format(',{0},', github.event.pull_request.user.login))) ||
+      (github.event.action == 'labeled' && github.event.label.name == 'agent:claude')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Comment @codex review
+        env:
+          GH_TOKEN: ${{ secrets.CODEX_TRIGGER_TOKEN }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          gh pr comment "$PR" --repo "$GITHUB_REPOSITORY" --body \
+            "@codex review this PR following the \`## Code Review Rules\` in AGENTS.md (two axes: Standards and Spec; the spec is the issue this PR closes)."

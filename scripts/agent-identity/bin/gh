@@ -1,0 +1,29 @@
+#!/bin/sh
+# Global gh wrapper, installed into ~/.local/bin by scripts/agent-identity/install.sh.
+# Inside a findeg checkout, when a coding agent is running it ($FINDEG_AGENT, or
+# CLAUDECODE=1 for Claude Code), gh acts as that agent's GitHub App. Everywhere
+# else, and for humans, it is plain gh. FINDEG_AGENT=none forces plain gh (e.g.
+# for `gh secret set`, which the bots aren't allowed to do).
+# See docs/agents/agent-identity.md.
+name=gh
+case $0 in */*) me=$0 ;; *) me=$(command -v -- "$0") ;; esac
+real=
+old_ifs=$IFS
+IFS=:
+for dir in $PATH; do
+  [ -x "$dir/$name" ] && ! [ "$dir/$name" -ef "$me" ] && { real=$dir/$name; break; }
+done
+IFS=$old_ifs
+[ -n "$real" ] || { echo "agent-identity: no real $name on PATH" >&2; exit 127; }
+
+agent=${FINDEG_AGENT:-}
+[ -z "$agent" ] && [ "${CLAUDECODE:-}" = 1 ] && agent=claude
+
+if [ -n "$agent" ] && [ "$agent" != none ] &&
+  top=$(FINDEG_AGENT=none git rev-parse --show-toplevel 2>/dev/null) &&
+  [ -f "$top/scripts/agent-identity/token.mjs" ]; then
+  # Fail rather than silently fall back to the human's own gh login.
+  GH_TOKEN=$(node "$top/scripts/agent-identity/token.mjs" "$agent" token) || exit 1
+  export GH_TOKEN
+fi
+exec "$real" "$@"
