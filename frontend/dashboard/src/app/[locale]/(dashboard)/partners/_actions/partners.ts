@@ -22,11 +22,12 @@ const ERROR_MESSAGES: Record<string, string> = {
 
 /** Create (`partnerId` null) or update a Business Partner from the form. */
 export async function savePartnerAction(
+  locale: Locale,
   partnerId: number | null,
   _previous: PartnerFormState,
   formData: FormData,
 ): Promise<PartnerFormState> {
-  const actor = toStaffActor(await requireAdmin('en' as Locale));
+  const actor = toStaffActor(await requireAdmin(locale));
   const { partners } = createPartnerMembershipServices();
   const fields = {
     code: String(formData.get('code') ?? '').trim(),

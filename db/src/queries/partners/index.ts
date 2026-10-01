@@ -28,7 +28,8 @@ const BUSINESS_PARTNER_CODE_CONSTRAINT = 'business_partners_code_unique';
 
 /** True when `error` is the unique-violation on `business_partners.code`. */
 export function isPartnerCodeTakenError(error: unknown): boolean {
-  for (let current = error; current && typeof current === 'object';) {
+  let current = error;
+  while (current && typeof current === 'object') {
     const { code, constraint_name, cause } = current as {
       code?: string;
       constraint_name?: string;

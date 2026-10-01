@@ -2,6 +2,7 @@
 
 import { useActionState, useEffect } from 'react';
 import { Button, Input, Label } from '@findeg/ui';
+import { useLocale } from 'next-intl';
 import { useRouter } from '@i18n/navigation';
 import { savePartnerAction, type PartnerFormState } from '../_actions/partners';
 
@@ -17,8 +18,9 @@ const initialState: PartnerFormState = { status: 'idle' };
  */
 export function PartnerForm({ partner }: PartnerFormProps) {
   const router = useRouter();
+  const locale = useLocale();
   const [state, formAction, isPending] = useActionState(
-    savePartnerAction.bind(null, partner?.id ?? null),
+    savePartnerAction.bind(null, locale, partner?.id ?? null),
     initialState,
   );
   const codeLocked = partner !== undefined && partner.status !== 'onboarding';
