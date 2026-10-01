@@ -27,7 +27,7 @@ export const users = identitySchema.table('users', {
   /** Egyptian phone number (e.g., "+201234567890") */
   phone: varchar('phone', { length: 20 }),
   verifiedPhone: boolean('verified_phone').default(false).notNull(),
-  /** Portal routing gate: "customer" | "staff" | "school_staff" */
+  /** Portal routing gate: "customer" | "staff" */
   portalRole: portalRoleEnum('portal_role').default('customer').notNull(),
   emailVerified: timestamp('email_verified'),
   image: text('image'),

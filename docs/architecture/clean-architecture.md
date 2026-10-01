@@ -62,7 +62,7 @@ Authentication secrets (password hashes, tokens, MFA seeds) are **never** stored
 
 ### Rule: Portal Roles are Routing Gates
 
-The `users.portalRole` column is a strict application-level gate (`customer`, `staff`, `school_staff`).
+The `users.portalRole` column is a strict application-level gate (`customer`, `staff`).
 
 - **Authentication**: `portalRole` is burned into the JWT.
 - **Authorization**: Top-level route guards (e.g., `/admin/**`) check `portalRole`.
@@ -93,10 +93,10 @@ Instead, apps import directly via the package name to enforce context boundaries
 
 ```typescript
 // ✅ Allowed (resolves through package.json exports)
-import { createStorefrontServices } from "@backend/features/catalog";
+import { createStorefrontServices } from '@backend/features/catalog';
 
 // ❌ Forbidden (TypeScript and Node will throw configuration errors)
-import { DrizzleProductRepository } from "@backend/features/catalog/infrastructure/...";
+import { DrizzleProductRepository } from '@backend/features/catalog/infrastructure/...';
 ```
 
 ### 3. Bundling Optimization: `serverExternalPackages`

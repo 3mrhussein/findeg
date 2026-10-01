@@ -3,7 +3,7 @@ import type { SessionPayload } from '@findeg/backend/features/core/domain/auth';
 import { adminSession } from '@findeg/backend/features/core/domain/auth/authorization';
 import type { ISessionManager } from '@findeg/backend/features/core/application/interfaces/ISessionManager';
 import type { ICurrentSessionCodec } from '@findeg/backend/features/core/application/interfaces/ICurrentSessionCodec';
-import type { PortalRole } from '@findeg/backend/features/core/domain/types/common';
+import { PortalRoleSchema } from '@findeg/backend/features/core/domain/types/common';
 import env from '@findeg/env';
 
 /**
@@ -34,13 +34,17 @@ export class JwtSessionManager implements ISessionManager, ICurrentSessionCodec 
 
       const { payload } = await jwtVerify(token, this.JWT_SECRET);
 
-      if (!payload.userId || !payload.portalRole || !payload.user) {
+      if (!payload.userId || !payload.user) {
         return null;
       }
 
+      // Rejects sessions signed with a retired portal role (e.g. school_staff).
+      const portalRole = PortalRoleSchema.safeParse(payload.portalRole);
+      if (!portalRole.success) return null;
+
       return {
         userId: payload.userId as number,
-        portalRole: payload.portalRole as PortalRole,
+        portalRole: portalRole.data,
         user: payload.user as SessionPayload['user'],
         subjectId: payload.subjectId as string | undefined,
         actorType: payload.actorType as SessionPayload['actorType'],

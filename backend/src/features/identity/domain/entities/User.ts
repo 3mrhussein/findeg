@@ -39,7 +39,7 @@ export interface User {
   /** Phone verification status */
   verifiedPhone: boolean;
 
-  /** Portal routing gate (customer, staff, school_staff) */
+  /** Portal routing gate (customer, staff) */
   portalRole: PortalRole;
 
   /** Email verification date */
