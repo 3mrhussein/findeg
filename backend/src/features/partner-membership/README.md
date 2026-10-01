@@ -20,6 +20,12 @@ All operations return typed results (`{ success: true, data } | { success: false
 actors without `partners.manage` (`forbidden`). Each change commits together with its
 `partner_access_history` row.
 
+## Adding write paths
+
+Any later operation that changes a Business Partner (status changes, memberships, invitations) must
+lock the partner row first (`lockBusinessPartnerById`) and write its `partner_access_history` row in
+the same transaction. `code` may only change while `onboarding`; that rule lives in `updatePartner`.
+
 ## Tests
 
 Integration tests run against real Postgres through the harness in `src/testing/postgres`:

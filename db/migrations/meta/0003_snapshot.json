@@ -1,5 +1,5 @@
 {
-  "id": "f82411d6-9a3a-45f9-be1a-37ee9aca763f",
+  "id": "fe7a4ba4-e478-4d63-b9f1-91618f82d767",
   "prevId": "7c3f26ca-d32e-4733-878a-3d63f8733e22",
   "version": "7",
   "dialect": "postgresql",
@@ -1259,13 +1259,13 @@
         },
         "name_en": {
           "name": "name_en",
-          "type": "text",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         },
         "name_ar": {
           "name": "name_ar",
-          "type": "text",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         },
@@ -1313,6 +1313,10 @@
         "ck_business_partners_status": {
           "name": "ck_business_partners_status",
           "value": "\"identity\".\"business_partners\".\"status\" in ('onboarding', 'active', 'suspended', 'closed')"
+        },
+        "ck_business_partners_code_format": {
+          "name": "ck_business_partners_code_format",
+          "value": "\"identity\".\"business_partners\".\"code\" ~ '^[a-z0-9]+(-[a-z0-9]+)*$'"
         }
       },
       "isRLSEnabled": false

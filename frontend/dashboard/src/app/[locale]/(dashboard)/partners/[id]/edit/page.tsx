@@ -20,8 +20,8 @@ export default async function EditPartnerPage({
     permission: PERMISSION_CODES.PARTNERS_MANAGE,
   });
 
+  if (!/^\d+$/.test(id)) notFound();
   const partnerId = Number(id);
-  if (!Number.isInteger(partnerId)) notFound();
 
   const { partners } = createPartnerMembershipServices();
   const result = await partners.getPartner(toStaffActor(session), partnerId);

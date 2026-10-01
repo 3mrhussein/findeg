@@ -1,14 +1,15 @@
 CREATE TABLE "identity"."business_partners" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"code" varchar(120) NOT NULL,
-	"name_en" text NOT NULL,
-	"name_ar" text NOT NULL,
+	"name_en" varchar(255) NOT NULL,
+	"name_ar" varchar(255) NOT NULL,
 	"status" varchar(20) DEFAULT 'onboarding' NOT NULL,
 	"authorization_version" integer DEFAULT 1 NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
 	CONSTRAINT "business_partners_code_unique" UNIQUE("code"),
-	CONSTRAINT "ck_business_partners_status" CHECK ("identity"."business_partners"."status" in ('onboarding', 'active', 'suspended', 'closed'))
+	CONSTRAINT "ck_business_partners_status" CHECK ("identity"."business_partners"."status" in ('onboarding', 'active', 'suspended', 'closed')),
+	CONSTRAINT "ck_business_partners_code_format" CHECK ("identity"."business_partners"."code" ~ '^[a-z0-9]+(-[a-z0-9]+)*$')
 );
 --> statement-breakpoint
 CREATE TABLE "identity"."partner_access_history" (
@@ -28,7 +29,8 @@ CREATE TABLE "identity"."partner_access_history" (
 --> statement-breakpoint
 ALTER TABLE "identity"."partner_access_history" ADD CONSTRAINT "partner_access_history_business_partner_id_business_partners_id_fk" FOREIGN KEY ("business_partner_id") REFERENCES "identity"."business_partners"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "identity"."partner_access_history" ADD CONSTRAINT "partner_access_history_actor_user_id_users_id_fk" FOREIGN KEY ("actor_user_id") REFERENCES "identity"."users"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
-CREATE INDEX "idx_partner_access_history_partner" ON "identity"."partner_access_history" USING btree ("business_partner_id","created_at");--> statement-breakpoint
+CREATE INDEX "idx_partner_access_history_partner" ON "identity"."partner_access_history" USING btree ("business_partner_id","created_at");
+--> statement-breakpoint
 CREATE FUNCTION "identity"."reject_partner_access_history_change"() RETURNS trigger AS $$
 BEGIN
   RAISE EXCEPTION 'identity.partner_access_history is append-only';

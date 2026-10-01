@@ -47,8 +47,8 @@ export const businessPartners = identitySchema.table(
   {
     id: serial('id').primaryKey(),
     code: varchar('code', { length: 120 }).notNull().unique(),
-    nameEn: text('name_en').notNull(),
-    nameAr: text('name_ar').notNull(),
+    nameEn: varchar('name_en', { length: 255 }).notNull(),
+    nameAr: varchar('name_ar', { length: 255 }).notNull(),
     status: varchar('status', { length: 20 })
       .$type<PartnerStatus>()
       .notNull()
@@ -59,6 +59,7 @@ export const businessPartners = identitySchema.table(
   },
   (table) => [
     check('ck_business_partners_status', sql`${table.status} in (${inList(PARTNER_STATUSES)})`),
+    check('ck_business_partners_code_format', sql`${table.code} ~ '^[a-z0-9]+(-[a-z0-9]+)*$'`),
   ],
 );
 
