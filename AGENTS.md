@@ -20,9 +20,9 @@ Single-context layout (root `CONTEXT.md` + `docs/adr/`) when those files exist. 
 
 Conventional Commits, enforced by commitlint on `commit-msg` and by `.github/workflows/branch-and-pr-naming.yml` on PR title. Branches follow `<type>/<kebab-case-slug>` (e.g. `feat/backend-feature-barrels`), enforced by `scripts/validate-branch-name.mjs` on `pre-push` and by the same workflow for the PR's head branch. Types: `feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert`. See `docs/adr/0002-conventional-branch-and-commit-naming.md`.
 
-### PR authorship label
+### Agent GitHub identity
 
-When you open a pull request, label it with the agent that wrote it: `gh pr create --label agent:claude` from Claude Code, `--label agent:codex` from Codex. The label drives cross-agent review: `.github/workflows/codex-review-trigger.yml` asks Codex to review `agent:claude` PRs, and `.github/workflows/claude-review.yml` has Claude review `agent:codex` PRs.
+Claude Code and Codex act on GitHub as their own GitHub App bots (`$FINDEG_AGENT` is set, and `gh`/`git` resolve to `scripts/agent-identity/bin/`). PRs they open are then reviewed by the other agent: `.github/workflows/codex-review-trigger.yml` asks Codex to review Claude's PRs, and `.github/workflows/claude-review.yml` has Claude review Codex's. If `$FINDEG_AGENT` is unset, your PRs show as the human's, so add `--label agent:claude` or `--label agent:codex` to `gh pr create` to get the cross-review. See `docs/agents/agent-identity.md`.
 
 ## Code Review Rules
 

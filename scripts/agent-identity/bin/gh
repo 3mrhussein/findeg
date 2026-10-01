@@ -1,0 +1,9 @@
+#!/bin/sh
+# gh, authenticated as the current agent's GitHub App ($FINDEG_AGENT).
+# Put on PATH by `token.mjs <agent> env`; see docs/agents/agent-identity.md.
+here=$(cd "$(dirname "$0")" && pwd)
+PATH=$(printf '%s' "$PATH" | tr ':' '\n' | grep -vxF "$here" | paste -sd: -)
+export PATH
+GH_TOKEN=$(node "$here/../token.mjs" "${FINDEG_AGENT:?FINDEG_AGENT is not set}" token) || exit 1
+export GH_TOKEN
+exec gh "$@"
