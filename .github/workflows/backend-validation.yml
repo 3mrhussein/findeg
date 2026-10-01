@@ -5,6 +5,7 @@ on:
     paths:
       - 'backend/**'
       - 'pnpm-lock.yaml'
+      - '.github/workflows/backend-validation.yml'
   push:
     branches:
       - main
