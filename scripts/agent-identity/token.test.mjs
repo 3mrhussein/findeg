@@ -1,4 +1,4 @@
-// Run with: node --test scripts/agent-identity/
+// Run with: node --test scripts/agent-identity/token.test.mjs
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createVerify, generateKeyPairSync } from 'node:crypto';
