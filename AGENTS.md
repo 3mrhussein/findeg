@@ -22,7 +22,7 @@ Conventional Commits, enforced by commitlint on `commit-msg` and by `.github/wor
 
 ### Agent GitHub identity
 
-Claude Code and Codex act on GitHub as their own GitHub App bots (`$FINDEG_AGENT` is set, and `gh`/`git` resolve to `scripts/agent-identity/bin/`). PRs they open are then reviewed by the other agent: `.github/workflows/codex-review-trigger.yml` asks Codex to review Claude's PRs, and `.github/workflows/claude-review.yml` has Claude review Codex's. If `$FINDEG_AGENT` is unset, your PRs show as the human's, so add `--label agent:claude` or `--label agent:codex` to `gh pr create` to get the cross-review. See `docs/agents/agent-identity.md`.
+On machines set up per `docs/agents/agent-identity.md`, Claude Code and Codex act on GitHub as their own GitHub App bots: the user-level `gh`/`git` wrappers switch automatically. PRs they open are then reviewed by the other agent: `.github/workflows/codex-review-trigger.yml` asks Codex to review Claude's PRs, and `.github/workflows/claude-review.yml` has Claude review Codex's. If `git var GIT_AUTHOR_IDENT` doesn't show your bot, your PRs show as the human's, so add `--label agent:claude` or `--label agent:codex` to `gh pr create` to get the cross-review.
 
 ## Code Review Rules
 

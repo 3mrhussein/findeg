@@ -5,41 +5,46 @@
 //
 // Usage: token.mjs <agent> [command]
 //   token                 print an installation token (default)
-//   env [--optional]      print `export` lines that switch a shell to the agent
-//                         (git author/committer + the gh/git shims on PATH);
-//                         with --optional, print nothing if the agent isn't set up
+//   identity              print `export` lines making the bot git author/committer
 //   whoami                print the agent's bot login and git identity
 //   git-credential <op>   git credential-helper protocol (used by bin/git)
 //
-// Per-machine config, never committed:
+// Per-machine config, never committed, written by setup-app.mjs:
 //   ~/.config/findeg/agents/<agent>.json
-//   { "appId": 123456, "privateKeyPath": "~/.config/findeg/agents/<agent>.pem" }
-//   Optional: "repository": "owner/name" (defaults to the `origin` remote).
+//   { "appId": 123456, "privateKeyPath": "~/.config/findeg/agents/<agent>.pem",
+//     "repository": "owner/name", "login": "<slug>[bot]",
+//     "email": "<id>+<slug>[bot]@users.noreply.github.com" }
+//   "repository" defaults to the `origin` remote; "login"/"email" are looked up when missing.
 import { createSign } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { chmodSync, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { homedir } from 'node:os';
-import { dirname, join, resolve } from 'node:path';
+import { homedir, tmpdir, userInfo } from 'node:os';
+import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const API = 'https://api.github.com';
 const REFRESH_MARGIN_MS = 5 * 60 * 1000;
-const here = dirname(fileURLToPath(import.meta.url));
 
 const expandHome = (path) => path.replace(/^~(?=\/|$)/, homedir());
-const configDir = () =>
+export const configDir = () =>
   process.env.FINDEG_AGENT_CONFIG_DIR ??
   join(process.env.XDG_CONFIG_HOME ?? join(homedir(), '.config'), 'findeg/agents');
-const cacheDir = () =>
-  process.env.FINDEG_AGENT_CACHE_DIR ??
-  join(process.env.XDG_CACHE_HOME ?? join(homedir(), '.cache'), 'findeg/agents');
+// Sandboxes (e.g. Codex workspace-write) may not allow writing ~/.cache, so the
+// temp directory is a fallback; if neither is writable, every call mints anew.
+const cacheDirs = () =>
+  process.env.FINDEG_AGENT_CACHE_DIR
+    ? [process.env.FINDEG_AGENT_CACHE_DIR]
+    : [
+        join(process.env.XDG_CACHE_HOME ?? join(homedir(), '.cache'), 'findeg/agents'),
+        join(tmpdir(), `findeg-agents-${userInfo().uid}`),
+      ];
 
 function fail(message) {
   console.error(`agent-identity: ${message}`);
   process.exit(1);
 }
 
-function loadConfig(agent) {
+export function loadConfig(agent) {
   const path = join(configDir(), `${agent}.json`);
   if (!existsSync(path)) return null;
   const config = JSON.parse(readFileSync(path, 'utf8'));
@@ -50,7 +55,15 @@ function loadConfig(agent) {
     appId: String(config.appId),
     privateKey: readFileSync(expandHome(config.privateKeyPath), 'utf8'),
     repository: config.repository ?? originRepository(),
+    login: config.login,
+    email: config.email,
   };
+}
+
+function requireConfig(agent) {
+  const config = loadConfig(agent);
+  if (!config) fail(`${agent} isn't set up: no ${join(configDir(), `${agent}.json`)}`);
+  return config;
 }
 
 function originRepository() {
@@ -87,12 +100,12 @@ async function github(path, { token, scheme = 'Bearer', method = 'GET', body } =
 }
 
 /** Token + identity, cached until 5 minutes before the token expires. */
-async function session(agent) {
-  const config = loadConfig(agent);
-  if (!config) fail(`${agent} isn't set up: no ${join(configDir(), `${agent}.json`)}`);
+export async function session(agent) {
+  const config = requireConfig(agent);
 
-  const cachePath = join(cacheDir(), `${agent}.json`);
-  if (existsSync(cachePath)) {
+  for (const dir of cacheDirs()) {
+    const cachePath = join(dir, `${agent}.json`);
+    if (!existsSync(cachePath)) continue;
     const cached = JSON.parse(readFileSync(cachePath, 'utf8'));
     const fresh = Date.parse(cached.expiresAt) - Date.now() > REFRESH_MARGIN_MS;
     if (fresh && cached.appId === config.appId && cached.repository === config.repository) {
@@ -122,27 +135,28 @@ async function session(agent) {
     token,
     expiresAt,
   };
-  try {
-    mkdirSync(cacheDir(), { recursive: true, mode: 0o700 });
-    writeFileSync(cachePath, JSON.stringify(result), { mode: 0o600 });
-    chmodSync(cachePath, 0o600);
-  } catch {
-    // Sandboxes (e.g. Codex workspace-write) may forbid writing the cache;
-    // the token still works, the next call just mints a fresh one.
+  for (const dir of cacheDirs()) {
+    try {
+      mkdirSync(dir, { recursive: true, mode: 0o700 });
+      const cachePath = join(dir, `${agent}.json`);
+      writeFileSync(cachePath, JSON.stringify(result), { mode: 0o600 });
+      chmodSync(cachePath, 0o600);
+      break;
+    } catch {
+      // Not writable here; try the next directory.
+    }
   }
   return result;
 }
 
 const shellQuote = (value) => `'${String(value).replaceAll("'", `'\\''`)}'`;
 
-export function envLines(agent, { login, email }, binDir = resolve(here, 'bin')) {
+export function identityLines({ login, email }) {
   return [
-    `export FINDEG_AGENT=${shellQuote(agent)}`,
     `export GIT_AUTHOR_NAME=${shellQuote(login)}`,
     `export GIT_AUTHOR_EMAIL=${shellQuote(email)}`,
     `export GIT_COMMITTER_NAME=${shellQuote(login)}`,
     `export GIT_COMMITTER_EMAIL=${shellQuote(email)}`,
-    `export PATH=${shellQuote(binDir)}:"$PATH"`,
   ].join('\n');
 }
 
@@ -160,16 +174,18 @@ export function credentialResponse(request, token) {
 
 async function main([agent, command = 'token', ...rest]) {
   if (!agent || !/^[a-z0-9-]+$/.test(agent))
-    fail('usage: token.mjs <agent> [token|env|whoami|git-credential <op>]');
+    fail('usage: token.mjs <agent> [token|identity|whoami|git-credential <op>]');
 
   switch (command) {
     case 'token':
       console.log((await session(agent)).token);
       return;
-    case 'env':
-      if (rest.includes('--optional') && !loadConfig(agent)) return;
-      console.log(envLines(agent, await session(agent)));
+    case 'identity': {
+      // setup-app.mjs stores login/email, so this normally needs no network.
+      const config = requireConfig(agent);
+      console.log(identityLines(config.login && config.email ? config : await session(agent)));
       return;
+    }
     case 'whoami': {
       const { login, email, repository, expiresAt } = await session(agent);
       console.log(`${login} <${email}> on ${repository} (token valid until ${expiresAt})`);

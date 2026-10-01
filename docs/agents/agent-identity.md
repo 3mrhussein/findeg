@@ -6,86 +6,58 @@ Claude Code and Codex each act on GitHub as their own GitHub App bot. That cover
 - the cross-agent review workflows can tell who opened a PR (`.github/workflows/claude-review.yml`, `codex-review-trigger.yml`);
 - each agent's access is limited to this repo and revocable on its own.
 
-`scripts/agent-identity/token.mjs` mints short-lived installation tokens (1 hour, cached until 5 minutes before expiry). The `gh` and `git` wrappers in `scripts/agent-identity/bin/` call it on every use, so long sessions never hold an expired token. The wrappers bypass your own git credential helpers (keychain, `store`), so an agent can't fall back to your credentials or save its token into them.
+## How it works
 
-## One-time setup (per repo owner)
+`scripts/agent-identity/install.sh` puts `gh` and `git` wrappers in `~/.local/bin`, ahead of the real ones. A wrapper switches to a bot only when both of these hold:
 
-1. Create two GitHub Apps under **Settings → Developer settings → GitHub Apps → New GitHub App**, one per agent, e.g. `findeg-claude` and `findeg-codex`:
-   - **Webhook:** uncheck _Active_.
-   - **Repository permissions:**
-     - Contents: Read and write
-     - Pull requests: Read and write
-     - Issues: Read and write
-     - Workflows: Read and write (only if agents may edit `.github/workflows`)
-     - Metadata: Read-only (always required)
-   - **Where can this app be installed:** _Only on this account_.
-2. On each app's page, **Install App** → only select `findeg`.
-3. Set the repo variables the review workflows match PR authors against:
+- **an agent is running it.** Codex sets `FINDEG_AGENT=codex` through `~/.codex/config.toml`. Claude Code sets `CLAUDECODE=1` in every shell it starts, which counts as `claude`.
+- **it runs inside a findeg checkout** that has `scripts/agent-identity/token.mjs`, and the agent is configured on this machine.
 
-   ```bash
-   gh variable set CLAUDE_PR_AUTHORS --body 'findeg-claude[bot]'
-   gh variable set CODEX_PR_AUTHORS --body 'findeg-codex[bot],chatgpt-codex-connector[bot]'
-   ```
+Because the switch keys on the agent's environment rather than on how it was started, it works the same from the CLI, the desktop apps, and the IDE extensions. Everywhere else, including your own terminal, the wrappers are plain `gh` and `git`.
 
-## Per-machine setup
+In agent mode:
 
-1. On each app's page, **Generate a private key** and move it into place:
+- **`gh`** gets `GH_TOKEN`, a 1-hour GitHub App installation token minted by `token.mjs`. Tokens are cached until 5 minutes before expiry, in `~/.cache` or in the temp directory when a sandbox blocks `~/.cache`.
+- **`git`** commits as the bot (`<slug>[bot] <id>+<slug>[bot]@users.noreply.github.com`) and authenticates to github.com with the bot's token. Your own credential helpers (keychain, `store`) are bypassed, so an agent can't fall back to your credentials or save its token into them.
 
-   ```bash
-   mkdir -p ~/.config/findeg/agents && chmod 700 ~/.config/findeg/agents
-   mv ~/Downloads/findeg-claude.*.private-key.pem ~/.config/findeg/agents/claude.pem
-   mv ~/Downloads/findeg-codex.*.private-key.pem ~/.config/findeg/agents/codex.pem
-   chmod 600 ~/.config/findeg/agents/*.pem
-   ```
+`FINDEG_AGENT=none` forces plain `gh`/`git`, e.g. `FINDEG_AGENT=none gh secret set …` from a Claude `!` prompt, since the bots can't manage secrets.
 
-2. Write `~/.config/findeg/agents/claude.json` and `codex.json`, using the **App ID** from each app's page:
+## Setup
 
-   ```json
-   { "appId": 123456, "privateKeyPath": "~/.config/findeg/agents/claude.pem" }
-   ```
+### 1. Create and install each app (repo owner, once)
 
-3. Check that each one works:
-
-   ```bash
-   node scripts/agent-identity/token.mjs claude whoami
-   node scripts/agent-identity/token.mjs codex whoami
-   ```
-
-### Claude Code
-
-Add this SessionStart hook to `.claude/settings.json`, or to `.claude/settings.local.json` to keep it to your machine:
-
-```json
-{
-  "hooks": {
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/scripts/agent-identity/claude-session-start.sh"
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-
-The hook writes the identity exports to `$CLAUDE_ENV_FILE`, so every Bash command in the session uses the Claude bot. On a machine without `claude.json`, it does nothing.
-
-### Codex CLI
-
-Codex's hooks and `config.toml` can't change `PATH` for shell commands, so start Codex through the launcher:
+From a findeg checkout:
 
 ```bash
-alias codex-findeg='scripts/agent-identity/with-agent.sh codex codex'
+node scripts/agent-identity/setup-app.mjs claude
+node scripts/agent-identity/setup-app.mjs codex
 ```
 
-The `gh` and `git` wrappers need network access to reach `api.github.com`, just like `gh` does already.
+Each run opens GitHub with a pre-filled app manifest: private app, no webhook, and Contents, Pull requests, Issues and Workflows read/write. Click **Create GitHub App**, then **Install** on `findeg` only. The script saves the private key and `~/.config/findeg/agents/<agent>.json` (including the bot's git identity).
 
-## How to tell it's working
+On another machine, copy `~/.config/findeg/agents/` across rather than creating new apps.
 
-In an agent's shell, `command -v gh` should point at `scripts/agent-identity/bin/gh`, and `echo $GIT_AUTHOR_NAME` should print the bot login. A pushed commit and an opened PR should show the bot as author.
+### 2. Repo variables the review workflows match PR authors against (once)
+
+```bash
+gh variable set CLAUDE_PR_AUTHORS --body 'findeg-claude[bot]'
+gh variable set CODEX_PR_AUTHORS --body 'findeg-codex[bot],chatgpt-codex-connector[bot]'
+```
+
+### 3. Install the wrappers (each machine)
+
+```bash
+sh scripts/agent-identity/install.sh
+```
+
+It warns if a login shell would still find another `gh`/`git` first.
+
+### 4. Check
+
+```bash
+node scripts/agent-identity/token.mjs claude whoami
+node scripts/agent-identity/token.mjs codex whoami
+FINDEG_AGENT=codex git var GIT_AUTHOR_IDENT   # findeg-codex[bot] <…>
+```
 
 Tests: `node --test scripts/agent-identity/token.test.mjs`.
