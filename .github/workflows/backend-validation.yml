@@ -16,12 +16,12 @@ jobs:
   validate-backend:
     name: Validate Backend Package
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Full history for version comparison
+          fetch-depth: 0 # Full history for version comparison
 
       - name: Install pnpm
         uses: pnpm/action-setup@v2
@@ -48,7 +48,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run backend tests
-        run: pnpm --filter @findeg/backend test --run
+        run: pnpm --filter @findeg/backend test
 
       - name: Type check backend
         run: pnpm --filter @findeg/backend type-check
@@ -65,7 +65,7 @@ jobs:
         if: github.event_name == 'pull_request'
         run: |
           echo "🔍 Checking for breaking changes in backend package exports..."
-          
+
           # Get the backend package version
           CURRENT_VERSION=$(node -p "require('./backend/package.json').version")
           echo "Current backend version: $CURRENT_VERSION"
