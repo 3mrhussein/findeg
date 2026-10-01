@@ -18,9 +18,8 @@ IFS=$old_ifs
 
 agent=${FINDEG_AGENT:-}
 [ -z "$agent" ] && [ "${CLAUDECODE:-}" = 1 ] && agent=claude
-config_dir=${FINDEG_AGENT_CONFIG_DIR:-${XDG_CONFIG_HOME:-$HOME/.config}/findeg/agents}
 
-if [ -n "$agent" ] && [ "$agent" != none ] && [ -f "$config_dir/$agent.json" ] &&
+if [ -n "$agent" ] && [ "$agent" != none ] &&
   top=$(FINDEG_AGENT=none git rev-parse --show-toplevel 2>/dev/null) &&
   [ -f "$top/scripts/agent-identity/token.mjs" ]; then
   # Fail rather than silently fall back to the human's own gh login.

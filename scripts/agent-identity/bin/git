@@ -17,17 +17,15 @@ IFS=$old_ifs
 
 agent=${FINDEG_AGENT:-}
 [ -z "$agent" ] && [ "${CLAUDECODE:-}" = 1 ] && agent=claude
-config_dir=${FINDEG_AGENT_CONFIG_DIR:-${XDG_CONFIG_HOME:-$HOME/.config}/findeg/agents}
 
-if [ -n "$agent" ] && [ "$agent" != none ] && [ -f "$config_dir/$agent.json" ] &&
+if [ -n "$agent" ] && [ "$agent" != none ] &&
   top=$("$real" rev-parse --show-toplevel 2>/dev/null) &&
   [ -f "$top/scripts/agent-identity/token.mjs" ]; then
   script="$top/scripts/agent-identity/token.mjs"
-  if identity=$(node "$script" "$agent" identity); then
-    eval "$identity"
-  else
-    echo "agent-identity: couldn't load the $agent bot identity; committing as yourself" >&2
-  fi
+  # Fail closed: an agent must never fall back to the human's commit identity
+  # or credentials merely because its own configuration is missing or broken.
+  identity=$(node "$script" "$agent" identity) || exit 1
+  eval "$identity"
   # The empty helper clears the user's own helpers (keychain, store) so they
   # neither answer for the agent nor save its tokens.
   exec "$real" \
