@@ -1,0 +1,36 @@
+#!/bin/sh
+# Global git wrapper, installed into ~/.local/bin by scripts/agent-identity/install.sh.
+# Inside a findeg checkout, when a coding agent is running it ($FINDEG_AGENT, or
+# CLAUDECODE=1 for Claude Code), git authenticates to github.com as that agent's
+# GitHub App and commits as its bot. Everywhere else, and for humans, it is
+# plain git. FINDEG_AGENT=none forces plain git. See docs/agents/agent-identity.md.
+name=git
+case $0 in */*) me=$0 ;; *) me=$(command -v -- "$0") ;; esac
+real=
+old_ifs=$IFS
+IFS=:
+for dir in $PATH; do
+  [ -x "$dir/$name" ] && ! [ "$dir/$name" -ef "$me" ] && { real=$dir/$name; break; }
+done
+IFS=$old_ifs
+[ -n "$real" ] || { echo "agent-identity: no real $name on PATH" >&2; exit 127; }
+
+agent=${FINDEG_AGENT:-}
+[ -z "$agent" ] && [ "${CLAUDECODE:-}" = 1 ] && agent=claude
+
+if [ -n "$agent" ] && [ "$agent" != none ] &&
+  top=$("$real" rev-parse --show-toplevel 2>/dev/null) &&
+  [ -f "$top/scripts/agent-identity/token.mjs" ]; then
+  script="$top/scripts/agent-identity/token.mjs"
+  # Fail closed: an agent must never fall back to the human's commit identity
+  # or credentials merely because its own configuration is missing or broken.
+  identity=$(node "$script" "$agent" identity) || exit 1
+  eval "$identity"
+  # The empty helper clears the user's own helpers (keychain, store) so they
+  # neither answer for the agent nor save its tokens.
+  exec "$real" \
+    -c credential.helper= \
+    -c "credential.helper=!node '$script' '$agent' git-credential" \
+    "$@"
+fi
+exec "$real" "$@"
