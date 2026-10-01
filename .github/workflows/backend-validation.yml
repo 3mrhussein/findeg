@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - 'backend/**'
+      - 'db/**'
+      - 'packages/env/**'
       - 'pnpm-lock.yaml'
       - '.github/workflows/backend-validation.yml'
   push:
@@ -12,6 +14,8 @@ on:
       - 001-separate-admin-project
     paths:
       - 'backend/**'
+      - 'db/**'
+      - 'packages/env/**'
 
 jobs:
   validate-backend:
@@ -96,3 +100,56 @@ jobs:
           echo "- Dashboard can import backend exports"
           echo "- Storefront can import backend exports"
           echo "- No TypeScript errors in cross-package imports"
+
+  integration-tests:
+    name: Backend Integration Tests
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: findeg
+          POSTGRES_PASSWORD: findeg
+          POSTGRES_DB: findeg
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U findeg -d findeg"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      INTEGRATION_DATABASE_URL: postgres://findeg:findeg@localhost:5432/findeg
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run backend integration tests
+        run: pnpm test:integration

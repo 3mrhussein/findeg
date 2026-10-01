@@ -32,7 +32,8 @@ Orchestrators defining _use cases_.
 ### 3. Infrastructure Layer (`src/features/*/infrastructure`)
 
 <<<<<<< HEAD
-```typescript
+
+````typescript
 import type { ServiceResult } from '@backend/features/core';
 =======
 The dirty boundaries talking to the outside world.
@@ -56,14 +57,14 @@ import { revalidatePath, revalidateTag } from 'next/cache';
 
 The `@findeg/backend` owns the entire truth of the data.
 
-**Database ER Diagram & Deep Schema Docs**:  
+**Database ER Diagram & Deep Schema Docs**:
 👉 [Read the detailed SCHEMA.md & Global ER Diagram](docs/database/SCHEMA.md)
 
 <<<<<<< HEAD
 ```typescript
-import { 
-  NotAuthenticatedError, 
-  NotAuthorizedError, 
+import {
+  NotAuthenticatedError,
+  NotAuthorizedError,
   ResourceNotFoundError,
   ValidationError,
   ConflictError,
@@ -75,15 +76,15 @@ export async function getMyAccountData(userId: number | null) {
   if (!userId) {
     throw new NotAuthenticatedError('Session required');
   }
-  
+
   const user = await db.user.getById(userId);
   if (!user) {
     throw new ResourceNotFoundError('User account not found');
   }
-  
+
   return user;
 }
-```
+````
 
 ```typescript
 // App-layer catches and translates errors
@@ -118,7 +119,7 @@ export interface ICookieStore {
 // Backend service uses interface
 export class CookieSessionProvider {
   constructor(private cookieStore: ICookieStore) {}
-  
+
   async getSession(): Promise<SessionPayload | null> {
     const cookie = this.cookieStore.get('session');
     // ...
@@ -136,7 +137,7 @@ async function nextCookiesToStore(): Promise<ICookieStore> {
   return {
     get: (name) => cookieStore.get(name),
     set: (name, value, options) => cookieStore.set(name, value, options),
-    delete: (name) => cookieStore.delete(name)
+    delete: (name) => cookieStore.delete(name),
   };
 }
 
@@ -149,7 +150,7 @@ const provider = new CookieSessionProvider(store);
 
 All backend tests run in Vitest without Next.js runtime:
 
-```bash
+````bash
 # Backend tests (pure Node.js, ~13 seconds)
 pnpm --filter @backend test
 =======
@@ -165,7 +166,7 @@ pnpm db:push
 
 # Spin up local introspection UI
 pnpm db:studio
-```
+````
 
 ---
 
@@ -209,7 +210,13 @@ export async function getProduct(slug: string): Promise<ServiceResult<Product, C
 
 ## 🧪 Testing Pipeline
 
-The backend guarantees soundness via **Vitest**. E2E is avoided entirely in this layer; it is purely logic/unit.
+The backend guarantees soundness via **Vitest**. E2E is avoided entirely in this layer; tests are logic/unit, plus `*.integration.test.ts` files that run against a real Postgres 16 for locking, constraint, and race behaviour:
+
+```bash
+pnpm db:run && pnpm test:integration   # from the repo root; fresh migrated DB per run
+```
+
+Helpers live in `src/testing/postgres`. See [Running integration tests](../README.md#running-integration-tests) for details.
 
 ```bash
 <<<<<<< HEAD
@@ -229,6 +236,7 @@ pnpm type-check
 ---
 
 <<<<<<< HEAD
+
 ```bash
 # Build TypeScript
 pnpm --filter @backend build
@@ -269,11 +277,11 @@ openssl rand -base64 32
 
 ```typescript
 // Server Actions
-import { JWTService, IUserRepository } from "@backend";
-import { CreateUserSchema } from "@backend/types";
+import { JWTService, IUserRepository } from '@backend';
+import { CreateUserSchema } from '@backend/types';
 
 export async function createUser(formData: FormData) {
-  "use server";
+  'use server';
 
   const data = CreateUserSchema.parse(Object.fromEntries(formData));
   const userRepo = getUserRepository();
@@ -314,54 +322,54 @@ import {
   IProductRepository,
   ICategoryRepository,
   IOrderRepository,
-} from "@backend/features/core";
+} from '@backend/features/core';
 ```
 
 ### Authentication
 
 ```typescript
-import { JWTService, TokenPair, JWTPayload } from "@backend/features/identity";
+import { JWTService, TokenPair, JWTPayload } from '@backend/features/identity';
 
 const jwtService = new JWTService(accessSecret, refreshSecret);
 const tokens = jwtService.generateTokens(userId, email, roles);
-const payload = jwtService.verifyToken(tokens.accessToken, "access");
+const payload = jwtService.verifyToken(tokens.accessToken, 'access');
 ```
 
 ### Validation
 
 ```typescript
-import { CreateUserSchema, CreateProductSchema, CreateOrderSchema } from "@backend/types";
+import { CreateUserSchema, CreateProductSchema, CreateOrderSchema } from '@backend/types';
 
 const result = CreateUserSchema.safeParse(data);
 if (!result.success) {
-  throw new ValidationError("Invalid input", result.error.flatten().fieldErrors);
+  throw new ValidationError('Invalid input', result.error.flatten().fieldErrors);
 }
 ```
 
 ### Error Handling
 
 ```typescript
-import { AppError, UnauthorizedError, NotFoundError, ValidationError } from "@backend/lib";
+import { AppError, UnauthorizedError, NotFoundError, ValidationError } from '@backend/lib';
 
 if (!user) {
-  throw new NotFoundError("User not found");
+  throw new NotFoundError('User not found');
 }
 
 if (!hasPermission) {
-  throw new ForbiddenError("Insufficient permissions");
+  throw new ForbiddenError('Insufficient permissions');
 }
 ```
 
 ### i18n Utilities
 
 ```typescript
-import { formatCurrency, formatDate, formatRelativeTime } from "@backend/lib";
+import { formatCurrency, formatDate, formatRelativeTime } from '@backend/lib';
 
-formatCurrency(99.99, "en", "EGP"); // "EGP 99.99"
-formatCurrency(99.99, "ar", "EGP"); // "٩٩٫٩٩ ج.م"
+formatCurrency(99.99, 'en', 'EGP'); // "EGP 99.99"
+formatCurrency(99.99, 'ar', 'EGP'); // "٩٩٫٩٩ ج.م"
 
-formatDate(new Date(), "en"); // "March 15, 2024"
-formatRelativeTime(pastDate, "en"); // "2 days ago"
+formatDate(new Date(), 'en'); // "March 15, 2024"
+formatRelativeTime(pastDate, 'en'); // "2 days ago"
 ```
 
 ## Package Exports
@@ -402,8 +410,8 @@ Test coverage goals:
 All exports are fully typed with TypeScript. Import types:
 
 ```typescript
-import type { User, Product, Order } from "@backend";
-import type { CreateUserInput, UpdateProductInput } from "@backend/types";
+import type { User, Product, Order } from '@backend';
+import type { CreateUserInput, UpdateProductInput } from '@backend/types';
 ```
 
 ## Contributing
@@ -418,5 +426,7 @@ import type { CreateUserInput, UpdateProductInput } from "@backend/types";
 
 Private - FindEg E-commerce Platform
 =======
+
 &copy; 2026 FindEg.com. All rights reserved.
->>>>>>> 006-docs-restructure
+
+> > > > > > > 006-docs-restructure
