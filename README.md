@@ -309,9 +309,9 @@ pnpm db:run            # start the docker-compose Postgres (uses DB_* from .env)
 pnpm test:integration  # backend integration tests only; `pnpm test` still runs unit tests only
 ````
 
-Each run creates a fresh `findeg_it_<timestamp>_<id>` database on that server, applies every migration in `db/migrations`, and drops it when the run ends, so runs never share state and your dev data is untouched. To target another server, set `INTEGRATION_DATABASE_URL` (a URL to any database on it whose user can `CREATE DATABASE`); CI does this with a Postgres 16 service container.
+Each run creates a fresh `findeg_it_<timestamp>_<id>` database on that server, applies `db/init-db.sql` and every migration in `db/migrations`, and drops it when the run ends, so runs never share state and your dev data is untouched. Databases left behind by killed runs are dropped by the next run once they're over 6 hours old. Test files within a run share the database and run one at a time, so use unique data per test. To target another server, set `INTEGRATION_DATABASE_URL` (a URL to any database on it whose user can `CREATE DATABASE`); CI does this with a Postgres 16 service container.
 
-Write tests as `*.integration.test.ts` under `backend/src` and use the helpers in `backend/src/testing/postgres`: `connectToTestDatabase()` for a Drizzle/postgres.js handle, `runConcurrently()` to run two operations on separate connections, and `waitForLockWait()` to hold a lock until the other transaction is provably blocked on it.
+Write tests as `*.integration.test.ts` under `backend/src` and use the helpers in `backend/src/testing/postgres`: `connectToTestDatabase()` for a Drizzle/postgres.js handle, `runConcurrently()` to run two operations on separate connections (each is given its peer's backend pid), and `waitUntilBlocked(sql, peer.pid)` to hold a lock until the peer is provably blocked on it.
 
 ---
 

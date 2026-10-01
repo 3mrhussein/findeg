@@ -5,13 +5,17 @@ on:
     paths:
       - 'backend/**'
       - 'db/**'
+      - 'packages/env/**'
       - 'pnpm-lock.yaml'
+      - '.github/workflows/backend-validation.yml'
   push:
     branches:
       - main
       - 001-separate-admin-project
     paths:
       - 'backend/**'
+      - 'db/**'
+      - 'packages/env/**'
 
 jobs:
   validate-backend:

@@ -1,12 +1,22 @@
 import { resolve } from 'node:path';
 import { loadEnvFile } from 'node:process';
+import type postgres from 'postgres';
 
 const repoRoot = resolve(import.meta.dirname, '../../../..');
 
 export const migrationsFolder = resolve(repoRoot, 'db/migrations');
 
+/** Run by the docker-compose Postgres on first boot; applied to test databases for parity. */
+export const initScript = resolve(repoRoot, 'db/init-db.sql');
+
 /** Prefix of every database the harness creates, so leftovers are easy to spot. */
 export const testDatabasePrefix = 'findeg_it_';
+
+/** Mirrors the options in `db/src/connection.ts` that change query behaviour. */
+export const connectionOptions = {
+  onnotice: () => {},
+  transform: { undefined: null },
+} satisfies postgres.Options<Record<string, never>>;
 
 /**
  * URL of the Postgres server (and a maintenance database on it) that the

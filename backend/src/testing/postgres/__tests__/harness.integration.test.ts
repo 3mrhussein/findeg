@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { eq } from 'drizzle-orm';
 import { brands } from '@findeg/db/schema';
-import { connectToTestDatabase, runConcurrently, waitForLockWait, type TestDatabase } from '..';
+import { connectToTestDatabase, runConcurrently, waitUntilBlocked, type TestDatabase } from '..';
 
 describe('Postgres integration harness', () => {
   let testDb: TestDatabase;
@@ -41,19 +41,22 @@ describe('Postgres integration harness', () => {
       .returning();
 
     const events: string[] = [];
+    let firstLocked!: () => void;
+    const whenFirstLocked = new Promise<void>((resolve) => (firstLocked = resolve));
 
     await runConcurrently(
-      async (sql) => {
+      async (sql, peer) => {
         await sql.begin(async (tx) => {
           await tx`select id from catalog.brands where id = ${brand.id} for update`;
           events.push('first locked');
+          firstLocked();
           // Hold the lock until the second transaction is provably waiting on it.
-          await waitForLockWait(testDb.sql);
+          await waitUntilBlocked(testDb.sql, peer.pid);
           events.push('first committing');
         });
       },
       async (sql) => {
-        await waitFor(() => events.includes('first locked'));
+        await whenFirstLocked;
         await sql.begin(async (tx) => {
           await tx`select id from catalog.brands where id = ${brand.id} for update`;
           events.push('second locked');
@@ -64,9 +67,3 @@ describe('Postgres integration harness', () => {
     expect(events).toEqual(['first locked', 'first committing', 'second locked']);
   });
 });
-
-async function waitFor(condition: () => boolean): Promise<void> {
-  while (!condition()) {
-    await new Promise((resolve) => setTimeout(resolve, 5));
-  }
-}
