@@ -159,5 +159,12 @@
     "name": "Write Discount Rules",
     "createdAt": "2026-02-19 10:00:00",
     "updatedAt": "2026-02-19 10:00:00"
+  },
+  {
+    "id": 24,
+    "code": "partners.manage",
+    "name": "Manage Business Partners",
+    "createdAt": "2026-02-19 10:00:00",
+    "updatedAt": "2026-02-19 10:00:00"
   }
 ]

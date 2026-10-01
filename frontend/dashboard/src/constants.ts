@@ -106,6 +106,13 @@ export const ADMIN_NAV: NavGroup[] = [
     labelAr: 'النظام',
     items: [
       {
+        label: 'Business Partners',
+        labelAr: 'شركاء الأعمال',
+        href: '/partners',
+        icon: 'Building2',
+        permission: 'partners.manage',
+      },
+      {
         label: 'Audit Log',
         labelAr: 'سجل التدقيق',
         href: '/audit-log',

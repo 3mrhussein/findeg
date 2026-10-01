@@ -9,6 +9,7 @@
     "./connection": "./src/connection.ts",
     "./schema": "./src/schema/index.ts",
     "./queries": "./src/queries/index.ts",
+    "./queries/partners": "./src/queries/partners/index.ts",
     "./types": "./src/types/index.ts",
     "./types/*": "./src/types/*.ts"
   },

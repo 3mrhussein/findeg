@@ -1,5 +1,5 @@
 ---
-status: proposed
+status: accepted
 ---
 
 # Model Partner Workspace membership as a parallel `PartnerMembership` concept, not unified RBAC
@@ -20,6 +20,17 @@ We adopt develop's shape as a parallel `PartnerMembership` concept, not a unific
 - **Invitation/acceptance, final-administrator protection, concurrency safety**: adopt develop's mechanisms as-is — token-digest storage for invitations, explicit final-administrator guards on membership update and partner status change, `SELECT ... FOR UPDATE` row locking plus the two unique constraints above for concurrent-replay safety. These are proven and tested in develop; there's no reason to redesign a correctness-critical mechanism that already works.
 - **`authorizationVersion`**: carried over on `partner_memberships` as a per-membership counter, bumped on role/status change. This mirrors main's existing pattern — `users.authorizationVersion` is already baked into the session token (`buildCurrentSessionPayload.ts`) to invalidate stale sessions — but stays scoped to the membership, so bumping it revokes only that partner's stale role grant, not the user's whole session.
 - **Active Business Partner selection**: a route-segment param in `frontend/storefront` (`/partner/[partnerId]/...`), not a request header/cookie or server-side session state. The backend validates on every request that the authenticated user has an active `PartnerMembership` for that `partnerId`. This keeps the "active partner" context stateless and bookmarkable/shareable, and avoids building the fuller multi-portal-session model this map's Not-yet-specified section already flagged as premature.
+
+## Amendment: decisions from the Partner Membership spec (#175)
+
+Settling the gaps left open above changes the decision as follows. Where this section and the text above disagree, this section wins.
+
+- **Five tables, not four.** `partner_invitation_tokens` (`invitation_id`, unique `token_digest`, `created_at`) holds the token digests, replacing the single `tokenDigest` column on `partner_invitations`. An invitation can have several valid digests, because every email carrying a secret gets a fresh one (ADR-0008). A token is valid only while its invitation is pending and unexpired. Only digests are stored.
+- **`authorizationVersion` is a stale-edit guard, not a session mechanism.** Membership edit forms carry the version they loaded; a mismatch returns `stale-membership`, and every change bumps it. It does not invalidate sessions, because partner access is resolved from the database on every request. The comparison with `users.authorizationVersion` above no longer applies.
+- **`code` is the URL segment.** The Partner Workspace lives at `/partner/[code]`, not `/partner/[partnerId]`. `business_partners.code` is unique and can only change while the Business Partner is `onboarding`, so bookmarked links never break after go-live.
+- **`school_staff` is removed.** The legacy global portal role granted the Staff admin portal and locked its holder out of the Customer account area. The `portal_role` enum is recreated without it. Partner access comes only from Partner Membership.
+- **`ON DELETE RESTRICT` on the membership's user.** Deleting a user can never silently remove a Partner Administrator.
+- **`partner_access_history` is append-only and also records Business Partner changes.** A trigger rejects UPDATE and DELETE. Besides invitation and membership actions it records `partner.created`, `partner.status_changed` and `partner.updated` (a change to names or code).
 
 ## Considered options
 

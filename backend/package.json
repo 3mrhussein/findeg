@@ -18,6 +18,8 @@
     "./features/media": "./src/features/media/index.ts",
     "./features/media/*": null,
     "./features/notifications": "./src/features/notifications/index.ts",
+    "./features/partner-membership": "./src/features/partner-membership/index.ts",
+    "./features/partner-membership/*": null,
     "./features/order": "./src/features/order/index.ts",
     "./features/order/schemas": "./src/features/order/schemas.ts",
     "./features/order/*": null,

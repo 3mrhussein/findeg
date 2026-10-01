@@ -50,6 +50,28 @@ _Avoid_: Cart, list cart, cart kit, list session
 Whether a List Selection covers every required list item at its prescribed quantity, with any eligible substitute counting. It is advisory and never blocks checkout.
 _Avoid_: List validation, list progress
 
+### Partner Membership
+
+**Partner Membership**:
+A person's standing inside one Business Partner: which Partner Roles they hold and whether it is active, suspended or ended. It is per Business Partner and never changes the person's account-wide portal role, so the same person can be a Customer and a Partner Administrator. It is separate from Staff access control.
+_Avoid_: Partner account, partner login, organization membership
+
+**Partner Role**:
+One of four fixed responsibilities a Partner Membership can hold, several at once: `partner-administrator`, `list-manager`, `collection-staff`, `report-viewer`.
+_Avoid_: Permission, Staff Role
+
+**Partner Administrator**:
+A member holding the `partner-administrator` Partner Role: the only role that manages invitations and memberships. Every Business Partner that is not closed always keeps at least one active Partner Administrator.
+_Avoid_: Partner admin, owner
+
+**Partner Invitation**:
+An emailed, 7-day offer to join a Business Partner with specific Partner Roles. Opening its link never accepts it: the invitee signs in with the invited email and explicitly accepts.
+_Avoid_: Partner invite link, signup link
+
+**Partner Workspace**:
+The storefront area at `/[locale]/partner/[code]` where members work on behalf of their Business Partner. Non-members see it as not found.
+_Avoid_: Partner portal, partner dashboard
+
 ### Checkout
 
 **Quote**:

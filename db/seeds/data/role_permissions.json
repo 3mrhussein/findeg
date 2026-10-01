@@ -333,5 +333,10 @@
     "roleId": 8,
     "permissionId": 4,
     "createdAt": "2026-02-19 10:00:00"
+  },
+  {
+    "roleId": 1,
+    "permissionId": 24,
+    "createdAt": "2026-02-19 10:00:00"
   }
 ]
