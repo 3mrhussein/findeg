@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitest/config';
+import { configDefaults, defineConfig } from 'vitest/config';
 import { resolve } from 'path';
 
 export default defineConfig({
@@ -27,6 +27,8 @@ export default defineConfig({
       ],
     },
     include: ['src/**/*.{test,spec}.{js,ts}'],
+    // Need a real Postgres; run with `pnpm test:integration` (vitest.integration.config.ts).
+    exclude: [...configDefaults.exclude, 'src/**/*.integration.test.ts'],
   },
   resolve: {
     alias: {
