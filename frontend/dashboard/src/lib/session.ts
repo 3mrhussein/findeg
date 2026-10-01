@@ -7,7 +7,7 @@
 
 import { cookies } from 'next/headers';
 import { SignJWT, jwtVerify } from 'jose';
-import type { SessionPayload } from '@findeg/backend/features/core';
+import { PortalRoleSchema, type SessionPayload } from '@findeg/backend/features/core';
 import env from '@findeg/env';
 
 const SESSION_COOKIE_NAME = 'admin_session';
@@ -31,13 +31,17 @@ export async function getSession(): Promise<SessionPayload | null> {
 
     const { payload } = await jwtVerify(token, JWT_SECRET);
 
-    if (!payload.userId || !payload.portalRole || !payload.user) {
+    if (!payload.userId || !payload.user) {
       return null;
     }
 
+    // Rejects sessions signed with a retired portal role (e.g. school_staff).
+    const portalRole = PortalRoleSchema.safeParse(payload.portalRole);
+    if (!portalRole.success) return null;
+
     return {
       userId: payload.userId as number,
-      portalRole: payload.portalRole as SessionPayload['portalRole'],
+      portalRole: portalRole.data,
       user: payload.user as SessionPayload['user'],
       subjectId: payload.subjectId as string | undefined,
       actorType: payload.actorType as SessionPayload['actorType'],
