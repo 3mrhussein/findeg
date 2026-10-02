@@ -22,7 +22,7 @@ Conventional Commits, enforced by commitlint on `commit-msg` and by `.github/wor
 
 ### Implement PR mode
 
-The per-user, untracked preference is `~/.config/findeg/implement-pr-mode`. When the user asks to enable or disable auto PR, write `auto` or `ask` there. The `implement` skill reads it after committing; a missing or invalid value means `ask`, and an explicit instruction in the current request overrides the saved preference.
+The per-user, untracked preference lives in `~/.config/findeg/implement-pr-mode`, accessed only via `node scripts/implement-pr-mode.mjs` (no arg prints `auto` or `ask`; a missing or invalid value reads as `ask`). When the user asks to enable or disable auto PR, run `node scripts/implement-pr-mode.mjs auto` or `... ask`. The `implement` skill reads it after committing, and an explicit instruction in the current request overrides it.
 
 ### Agent GitHub identity
 
