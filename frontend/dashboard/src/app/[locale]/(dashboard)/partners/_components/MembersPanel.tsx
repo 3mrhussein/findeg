@@ -6,14 +6,7 @@ import { useLocale } from 'next-intl';
 import type { Locale } from 'next-intl';
 import { updateMembershipAction, type MembershipActionState } from '../_actions/memberships';
 
-const PARTNER_ROLES = [
-  { value: 'partner-administrator', label: 'Partner Administrator' },
-  { value: 'list-manager', label: 'List manager' },
-  { value: 'collection-staff', label: 'Collection staff' },
-  { value: 'report-viewer', label: 'Report viewer' },
-] as const;
-
-type RoleValue = (typeof PARTNER_ROLES)[number]['value'];
+import { PARTNER_ROLES, type PartnerRoleValue as RoleValue } from '../_lib/partnerRoles';
 
 export interface MemberRow {
   id: number;
