@@ -56,11 +56,11 @@ jobs:
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             PR_NUM="${{ github.event.inputs.pr_number }}"
             BASE=$(gh pr view "$PR_NUM" --json baseRefName -q .baseRefName)
-            echo "prompt=Review PR #$PR_NUM against base origin/$BASE. Provide a clear, concise code review focusing on bugs, logic errors, and breaking changes. If ready to merge, approve with a brief note." >> $GITHUB_OUTPUT
+            echo "prompt=Review PR #$PR_NUM against base origin/$BASE following .agents/skills/bot-pr-review/SKILL.md." >> $GITHUB_OUTPUT
           elif [ "${{ github.event_name }}" = "pull_request" ]; then
             PR_NUM="${{ github.event.pull_request.number }}"
             BASE="${{ github.base_ref }}"
-            echo "prompt=Review PR #$PR_NUM against base origin/$BASE. Provide a clear, concise code review focusing on bugs, logic errors, and breaking changes. If ready to merge, approve with a brief note." >> $GITHUB_OUTPUT
+            echo "prompt=Review PR #$PR_NUM against base origin/$BASE following .agents/skills/bot-pr-review/SKILL.md." >> $GITHUB_OUTPUT
           else
             echo "prompt=" >> $GITHUB_OUTPUT
           fi
