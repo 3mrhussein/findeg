@@ -14,7 +14,7 @@ import {
   getPublishedSupplyListInSlot,
   getSupplyList,
   getSupplyListDefaults,
-  getSupplyListDefaultStock,
+  getAvailableQuantities,
   getSupplyListItems,
   insertSupplyListDraft,
   insertSupplyListItem,
@@ -213,12 +213,7 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
 
         const incumbent = await getPublishedSupplyListInSlot(tx, list);
         if (incumbent && incumbent.id !== list.sourceListId) return fail('slot-taken');
-        const stock = new Map(
-          (await getSupplyListDefaultStock(tx, variantIds)).map((row) => [
-            row.variantId,
-            row.available,
-          ]),
-        );
+        const stock = await getAvailableQuantities(tx, variantIds);
         const warnings: PublishedSupplyList['warnings'] = items
           .filter((item) => (stock.get(item.variantId) ?? 0) < 1)
           .map((item) => ({

@@ -23,7 +23,24 @@ export type {
   EligibilityItem,
   ItemSpecification,
 } from './domain/eligibleVariants';
-export { createSchoolSupplyListService } from './application/services/supply-list-factory';
+export {
+  createSchoolSupplyListReader,
+  createSchoolSupplyListService,
+} from './application/services/supply-list-factory';
+export type {
+  ISchoolSupplyListReader,
+  PublicSupplyList,
+  PublicSupplyListEligibleVariant,
+  PublicSupplyListItem,
+  PublicSupplyListResult,
+  PublicSupplyListStatus,
+  PublicSupplyListVariant,
+} from './application/interfaces/ISchoolSupplyListReader';
+export type {
+  ListCheckoutError,
+  ListCheckoutLine,
+  ListCheckoutRequest,
+} from './domain/listCheckoutContract';
 export type { SchoolSupplyListDependencies } from './application/services/supply-list-factory';
 export type {
   CreateSupplyListDraftInput,
