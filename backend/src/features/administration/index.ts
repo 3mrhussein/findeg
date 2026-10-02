@@ -15,11 +15,6 @@ export type {
 } from './application/interfaces/IAdminProductService';
 export type { IAdminTagService } from './application/interfaces/IAdminTagService';
 export type {
-  IAdminSchoolSupplyListService,
-  SpecificationOption,
-  SpecificationVariantCandidate,
-} from './application/interfaces/IAdminSchoolSupplyListService';
-export type {
   AuditLogCreateInput,
   AuditLogFilters,
   IAuditLogRepository,
