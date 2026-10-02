@@ -192,7 +192,12 @@ describe('list selection', () => {
     });
 
     it('resets an Exact Item to its default instead of flagging it', () => {
-      const exact = list([item(1, { exactItem: true, eligibleVariants: [] })]);
+      const exact = list([
+        item(1, {
+          exactItem: true,
+          eligibleVariants: [{ ...variant(10), differingAttributes: {} }],
+        }),
+      ]);
       saveSelection(
         exact.publicCode,
         { v: 1, lines: [{ listItemId: 1, variantId: 999, quantity: 3 }] },
@@ -250,6 +255,14 @@ describe('listCompleteness', () => {
   it('counts any eligible substitute toward the item', () => {
     const result = complete([item(1)], [{ listItemId: 1, variantId: 11, quantity: 3 }]);
     expect(result.completed).toBe(1);
+  });
+
+  it('does not count a default that dropped out of the server eligibility', () => {
+    const result = complete(
+      [item(1, { eligibleVariants: [{ ...variant(11), differingAttributes: {} }] })],
+      [{ listItemId: 1, variantId: 10, quantity: 3 }],
+    );
+    expect(result.completed).toBe(0);
   });
 
   it('counts a quantity above the prescription as complete', () => {

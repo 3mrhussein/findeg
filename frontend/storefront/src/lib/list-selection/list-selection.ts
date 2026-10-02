@@ -38,9 +38,8 @@ const clampQuantity = (quantity: number) => {
 const normalizeQuantity = (quantity: number, required: boolean) =>
   quantity === 0 && !required ? 0 : clampQuantity(quantity);
 
-/** Reads the server's eligibility result: the default or one of the item's eligible variants. */
+/** The server's eligibility result is the only authority; a default that dropped out of it is not eligible. */
 const isEligibleChoice = (item: PublicSupplyListItem, variantId: number) =>
-  variantId === item.defaultVariant.variantId ||
   item.eligibleVariants.some((variant) => variant.variantId === variantId);
 
 export const selectionKey = (publicCode: string) => `${KEY_PREFIX}${publicCode}`;
