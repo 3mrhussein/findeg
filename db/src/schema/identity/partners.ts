@@ -76,7 +76,9 @@ export const partnerAccessHistory = identitySchema.table(
     businessPartnerId: integer('business_partner_id')
       .notNull()
       .references(() => businessPartners.id, { onDelete: 'restrict' }),
-    membershipId: integer('membership_id'),
+    membershipId: integer('membership_id').references(() => partnerMemberships.id, {
+      onDelete: 'restrict',
+    }),
     invitationId: integer('invitation_id').references(() => partnerInvitations.id, {
       onDelete: 'restrict',
     }),
@@ -165,3 +167,48 @@ export const partnerInvitationTokens = identitySchema.table('partner_invitation_
   tokenDigest: varchar('token_digest', { length: 64 }).notNull().unique(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
+
+export const PARTNER_MEMBERSHIP_STATUSES = ['active', 'suspended', 'ended'] as const;
+export type PartnerMembershipStatus = (typeof PARTNER_MEMBERSHIP_STATUSES)[number];
+
+/**
+ * A user's access to one Business Partner. Ended memberships remain as history;
+ * a later invitation always creates a new membership row.
+ */
+export const partnerMemberships = identitySchema.table(
+  'partner_memberships',
+  {
+    id: serial('id').primaryKey(),
+    businessPartnerId: integer('business_partner_id')
+      .notNull()
+      .references(() => businessPartners.id, { onDelete: 'restrict' }),
+    userId: integer('user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'restrict' }),
+    invitationId: integer('invitation_id')
+      .notNull()
+      .unique()
+      .references(() => partnerInvitations.id, { onDelete: 'restrict' }),
+    roles: text('roles').array().$type<PartnerRole[]>().notNull(),
+    status: varchar('status', { length: 20 })
+      .$type<PartnerMembershipStatus>()
+      .notNull()
+      .default('active'),
+    authorizationVersion: integer('authorization_version').notNull().default(1),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  },
+  (table) => [
+    check(
+      'ck_partner_memberships_status',
+      sql`${table.status} in (${inList(PARTNER_MEMBERSHIP_STATUSES)})`,
+    ),
+    check(
+      'ck_partner_memberships_roles',
+      sql`cardinality(${table.roles}) > 0 and ${table.roles} <@ array[${inList(PARTNER_ROLES)}]::text[]`,
+    ),
+    uniqueIndex('uq_partner_memberships_current')
+      .on(table.businessPartnerId, table.userId)
+      .where(sql`${table.status} <> 'ended'`),
+  ],
+);

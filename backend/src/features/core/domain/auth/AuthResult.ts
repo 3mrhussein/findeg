@@ -9,6 +9,8 @@ import type { SessionPayload } from './SessionPayload';
 export interface AuthResult {
   success: boolean;
   error?: string;
+  /** Signed into the app layer's cookie after successful authentication. */
+  session?: SessionPayload;
   user?: {
     id: number;
     email: string;

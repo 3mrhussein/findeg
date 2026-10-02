@@ -59,6 +59,7 @@ export class AuthService implements IAuthService {
 
     return {
       success: true,
+      session: payload,
       user: {
         id: user.id,
         email: user.email,

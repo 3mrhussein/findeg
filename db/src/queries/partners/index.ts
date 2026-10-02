@@ -1,4 +1,4 @@
-import { and, asc, eq } from 'drizzle-orm';
+import { and, asc, eq, isNull, ne } from 'drizzle-orm';
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import * as schema from '../../schema';
 
@@ -14,8 +14,14 @@ export type PartnerDatabase = PostgresJsDatabase<typeof schema>;
 export type PartnerTransaction = Parameters<Parameters<PartnerDatabase['transaction']>[0]>[0];
 export type PartnerExecutor = PartnerDatabase | PartnerTransaction;
 
-const { businessPartners, partnerAccessHistory, partnerInvitations, partnerInvitationTokens } =
-  schema;
+const {
+  businessPartners,
+  partnerAccessHistory,
+  partnerInvitations,
+  partnerInvitationTokens,
+  partnerMemberships,
+  users,
+} = schema;
 
 export type BusinessPartnerRow = typeof businessPartners.$inferSelect;
 export type NewBusinessPartnerRow = Pick<
@@ -51,6 +57,17 @@ export async function getBusinessPartnerById(
   id: number,
 ): Promise<BusinessPartnerRow | undefined> {
   const [row] = await executor.select().from(businessPartners).where(eq(businessPartners.id, id));
+  return row;
+}
+
+export async function getBusinessPartnerByCode(
+  executor: PartnerExecutor,
+  code: string,
+): Promise<BusinessPartnerRow | undefined> {
+  const [row] = await executor
+    .select()
+    .from(businessPartners)
+    .where(eq(businessPartners.code, code));
   return row;
 }
 
@@ -199,4 +216,58 @@ export async function getPartnerInvitationByTokenDigest(
     .innerJoin(partnerInvitations, eq(partnerInvitations.id, partnerInvitationTokens.invitationId))
     .where(eq(partnerInvitationTokens.tokenDigest, tokenDigest));
   return row?.invitation;
+}
+
+export type PartnerMembershipRow = typeof partnerMemberships.$inferSelect;
+export type NewPartnerMembershipRow = Pick<
+  typeof partnerMemberships.$inferInsert,
+  'businessPartnerId' | 'userId' | 'invitationId' | 'roles'
+>;
+
+export async function getCurrentPartnerMembership(
+  executor: PartnerExecutor,
+  businessPartnerId: number,
+  userId: number,
+): Promise<PartnerMembershipRow | undefined> {
+  const [row] = await executor
+    .select()
+    .from(partnerMemberships)
+    .where(
+      and(
+        eq(partnerMemberships.businessPartnerId, businessPartnerId),
+        eq(partnerMemberships.userId, userId),
+        ne(partnerMemberships.status, 'ended'),
+      ),
+    );
+  return row;
+}
+
+export async function insertPartnerMembership(
+  executor: PartnerTransaction,
+  values: NewPartnerMembershipRow,
+): Promise<PartnerMembershipRow> {
+  const [row] = await executor.insert(partnerMemberships).values(values).returning();
+  return row;
+}
+
+export async function verifyUserEmailIfUnset(
+  executor: PartnerTransaction,
+  userId: number,
+  verifiedAt: Date,
+): Promise<void> {
+  await executor
+    .update(users)
+    .set({ emailVerified: verifiedAt, updatedAt: verifiedAt })
+    .where(and(eq(users.id, userId), isNull(users.emailVerified)));
+}
+
+export async function getPartnerUserById(
+  executor: PartnerExecutor,
+  userId: number,
+): Promise<{ id: number; email: string } | undefined> {
+  const [row] = await executor
+    .select({ id: users.id, email: users.email })
+    .from(users)
+    .where(eq(users.id, userId));
+  return row;
 }

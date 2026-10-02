@@ -36,7 +36,16 @@ interface LoginResponseBody {
 /**
  *
  */
-export function LoginForm() {
+interface LoginFormProps {
+  initialEmail?: string;
+  emailLocked?: boolean;
+  returnTo?: string;
+}
+
+const safeReturnTarget = (value?: string) =>
+  value?.startsWith('/') && !value.startsWith('//') ? value : '/my-account';
+
+export function LoginForm({ initialEmail = '', emailLocked = false, returnTo }: LoginFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const t = useTranslations();
@@ -45,7 +54,7 @@ export function LoginForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
+      email: initialEmail,
       password: '',
     },
   });
@@ -79,7 +88,7 @@ export function LoginForm() {
       if (json?.data?.token) {
         persistSessionToken(json.data.token);
       }
-      router.push('/my-account');
+      router.push(safeReturnTarget(returnTo));
       router.refresh();
     } finally {
       setIsLoading(false);
@@ -96,7 +105,13 @@ export function LoginForm() {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="m@example.com" data-testid="login-email-input" {...field} />
+                <Input
+                  placeholder="m@example.com"
+                  data-testid="login-email-input"
+                  readOnly={emailLocked}
+                  aria-readonly={emailLocked}
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
