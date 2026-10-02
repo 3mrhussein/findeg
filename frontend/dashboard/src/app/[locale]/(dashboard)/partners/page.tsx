@@ -60,6 +60,9 @@ export default async function PartnersPage({ params }: { params: Promise<{ local
                   <Badge variant="outline">{partner.status}</Badge>
                 </td>
                 <td className="px-6 py-4 text-right">
+                  <Link href={`/partners/${partner.id}`} className="text-sm underline mr-4">
+                    Invitations
+                  </Link>
                   <Link href={`/partners/${partner.id}/edit`} className="text-sm underline">
                     Edit
                   </Link>

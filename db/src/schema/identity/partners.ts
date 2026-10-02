@@ -1,5 +1,15 @@
 import { sql } from 'drizzle-orm';
-import { check, index, integer, jsonb, serial, timestamp, varchar } from 'drizzle-orm/pg-core';
+import {
+  check,
+  index,
+  integer,
+  jsonb,
+  serial,
+  text,
+  timestamp,
+  uniqueIndex,
+  varchar,
+} from 'drizzle-orm/pg-core';
 import { identitySchema } from '../schemas';
 import { users } from './users';
 
@@ -57,7 +67,7 @@ export const businessPartners = identitySchema.table(
 /**
  * Append-only audit trail of Partner Membership changes. A trigger (see the
  * migration) rejects UPDATE and DELETE.
- * `membershipId` / `invitationId` become foreign keys when those tables exist.
+ * `membershipId` becomes a foreign key when memberships exist.
  */
 export const partnerAccessHistory = identitySchema.table(
   'partner_access_history',
@@ -67,7 +77,9 @@ export const partnerAccessHistory = identitySchema.table(
       .notNull()
       .references(() => businessPartners.id, { onDelete: 'restrict' }),
     membershipId: integer('membership_id'),
-    invitationId: integer('invitation_id'),
+    invitationId: integer('invitation_id').references(() => partnerInvitations.id, {
+      onDelete: 'restrict',
+    }),
     actorUserId: integer('actor_user_id')
       .notNull()
       .references(() => users.id, { onDelete: 'restrict' }),
@@ -89,3 +101,67 @@ export const partnerAccessHistory = identitySchema.table(
     ),
   ],
 );
+
+export const PARTNER_ROLES = [
+  'partner-administrator',
+  'list-manager',
+  'collection-staff',
+  'report-viewer',
+] as const;
+export type PartnerRole = (typeof PARTNER_ROLES)[number];
+
+export const PARTNER_INVITATION_STATUSES = ['pending', 'accepted', 'revoked'] as const;
+export type PartnerInvitationStatus = (typeof PARTNER_INVITATION_STATUSES)[number];
+
+/**
+ * A Partner Invitation: an email invited to a Business Partner with one or more
+ * Partner Roles. `email` is stored trimmed and lowercased. Only one invitation
+ * per (partner, email) may be pending at a time.
+ */
+export const partnerInvitations = identitySchema.table(
+  'partner_invitations',
+  {
+    id: serial('id').primaryKey(),
+    businessPartnerId: integer('business_partner_id')
+      .notNull()
+      .references(() => businessPartners.id, { onDelete: 'restrict' }),
+    email: varchar('email', { length: 255 }).notNull(),
+    roles: text('roles').array().$type<PartnerRole[]>().notNull(),
+    status: varchar('status', { length: 20 })
+      .$type<PartnerInvitationStatus>()
+      .notNull()
+      .default('pending'),
+    invitedByUserId: integer('invited_by_user_id')
+      .notNull()
+      .references(() => users.id, { onDelete: 'restrict' }),
+    expiresAt: timestamp('expires_at').notNull(),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+  },
+  (table) => [
+    check(
+      'ck_partner_invitations_status',
+      sql`${table.status} in (${inList(PARTNER_INVITATION_STATUSES)})`,
+    ),
+    check(
+      'ck_partner_invitations_roles',
+      sql`cardinality(${table.roles}) > 0 and ${table.roles} <@ array[${inList(PARTNER_ROLES)}]::text[]`,
+    ),
+    uniqueIndex('uq_partner_invitations_pending')
+      .on(table.businessPartnerId, table.email)
+      .where(sql`${table.status} = 'pending'`),
+  ],
+);
+
+/**
+ * Digests of the secrets sent for an invitation (ADR-0008: every send carries a
+ * fresh secret). Raw tokens are never stored. A token is valid only while its
+ * invitation is pending and unexpired.
+ */
+export const partnerInvitationTokens = identitySchema.table('partner_invitation_tokens', {
+  id: serial('id').primaryKey(),
+  invitationId: integer('invitation_id')
+    .notNull()
+    .references(() => partnerInvitations.id, { onDelete: 'cascade' }),
+  tokenDigest: varchar('token_digest', { length: 64 }).notNull().unique(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
