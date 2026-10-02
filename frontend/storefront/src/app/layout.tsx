@@ -1,18 +1,32 @@
 import { Suspense, type ReactNode } from 'react';
-import { Inter, Cairo } from 'next/font/google';
+import localFont from 'next/font/local';
 import { cn } from '@lib/utils';
 import { getLocale } from 'next-intl/server';
 
-const inter = Inter({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700', '900'],
+const inter = localFont({
+  src: [
+    {
+      path: './fonts/inter-latin.woff2',
+      style: 'normal',
+    },
+  ],
   variable: '--font-inter',
+  display: 'swap',
 });
 
-const cairo = Cairo({
-  subsets: ['arabic'],
-  weight: ['300', '400', '500', '600', '700', '900'],
+const cairo = localFont({
+  src: [
+    {
+      path: './fonts/cairo-arabic.woff2',
+      style: 'normal',
+    },
+    {
+      path: './fonts/cairo-latin.woff2',
+      style: 'normal',
+    },
+  ],
   variable: '--font-cairo',
+  display: 'swap',
 });
 
 export default function RootLayout({ children }: { children: ReactNode }) {
