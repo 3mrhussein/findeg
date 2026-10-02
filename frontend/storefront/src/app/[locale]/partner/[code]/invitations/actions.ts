@@ -11,7 +11,7 @@ import {
   type RevokeError,
 } from '@findeg/backend/features/partner-membership';
 import { actionError, type ActionState } from '../_lib/action-state';
-import { resolvePartnerAccess, type PartnerAccess } from '../_lib/access';
+import { resolvePartnerAccess } from '../_lib/access';
 
 type InvitationError = InviteError | ResendError | RevokeError;
 
@@ -41,25 +41,6 @@ const refresh = () => revalidatePath('/[locale]/partner/[code]/invitations', 'pa
 const resolveAdministrator = (code: string) =>
   resolvePartnerAccess(code, { roles: [PARTNER_ADMINISTRATOR], action: 'membership-change' });
 
-// The service authorizes against the invitation's own partner, so tie the id to the workspace
-// `code` the administrator is acting in: an administrator of two partners cannot act on one
-// partner's invitation from the other's page. Another partner's invitation reads as not pending.
-async function isPendingInvitationOf(access: PartnerAccess, invitationId: number) {
-  const pending = await createPartnerMembershipServices().invitations.listPendingInvitations(
-    access.actor,
-    access.context.partner.id,
-  );
-  return pending.success && pending.data.some((invitation) => invitation.id === invitationId);
-}
-
-// Resolves the administrator and checks the invitation belongs to this workspace's partner.
-async function authorizeInvitation(code: string, invitationId: number) {
-  const access = await resolveAdministrator(code);
-  if (!access) return fail('forbidden');
-  if (!(await isPendingInvitationOf(access, invitationId))) return fail('invitation-not-pending');
-  return access;
-}
-
 export async function inviteAction(
   locale: string,
   code: string,
@@ -86,11 +67,12 @@ export async function resendInvitationAction(
   code: string,
   invitationId: number,
 ): Promise<ActionState> {
-  const access = await authorizeInvitation(code, invitationId);
-  if ('status' in access) return access;
+  const access = await resolveAdministrator(code);
+  if (!access) return fail('forbidden');
   const result = await createPartnerMembershipServices().invitations.resendInvitation(
     access.actor,
     invitationId,
+    access.context.partner.id,
   );
   if (!result.success) return fail(result.error);
   refresh();
@@ -101,11 +83,12 @@ export async function revokeInvitationAction(
   code: string,
   invitationId: number,
 ): Promise<ActionState> {
-  const access = await authorizeInvitation(code, invitationId);
-  if ('status' in access) return access;
+  const access = await resolveAdministrator(code);
+  if (!access) return fail('forbidden');
   const result = await createPartnerMembershipServices().invitations.revokeInvitation(
     access.actor,
     invitationId,
+    access.context.partner.id,
   );
   if (!result.success) return fail(result.error);
   refresh();

@@ -164,6 +164,37 @@ describe('Partner Invitations by a Partner Administrator', () => {
     expect(await services.invitations.revokeInvitation(admin.actor, 0)).toEqual(forbidden);
   });
 
+  it('scopes resend and revoke to the given partner, so another partner’s invitation reads as missing', async () => {
+    const home = await newPartner();
+    const other = await newPartner();
+    const admin = await addMember(home.id, ['partner-administrator']);
+    const otherAdmin = await addMember(other.id, ['partner-administrator']);
+    const foreign = await services.invitations.invite(otherAdmin.actor, other.id, {
+      email: 'foreign@findeg.test',
+      roles: ['report-viewer'],
+    });
+    if (!foreign.success) throw new Error(foreign.error);
+    const foreignId = foreign.data.invitation.id;
+    const forbidden = { success: false, error: 'forbidden' };
+
+    // Acting in `home`, `other`'s invitation is out of scope whoever asks.
+    expect(await services.invitations.resendInvitation(admin.actor, foreignId, home.id)).toEqual(
+      forbidden,
+    );
+    expect(await services.invitations.revokeInvitation(admin.actor, foreignId, home.id)).toEqual(
+      forbidden,
+    );
+    expect(await services.invitations.revokeInvitation(staff, foreignId, home.id)).toEqual({
+      success: false,
+      error: 'not-found',
+    });
+
+    // Scoped to its own partner the same invitation works.
+    expect(
+      await services.invitations.revokeInvitation(otherAdmin.actor, foreignId, other.id),
+    ).toMatchObject({ success: true, data: { id: foreignId, status: 'revoked' } });
+  });
+
   it('returns already-member for an email with an active or suspended membership, whoever invites', async () => {
     const partner = await newPartner();
     const admin = await addMember(partner.id, ['partner-administrator']);

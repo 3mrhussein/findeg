@@ -112,10 +112,10 @@ export class InvitationService implements IInvitationService {
     });
   }
 
-  async resendInvitation(actor: InvitationActor, invitationId: number) {
+  async resendInvitation(actor: InvitationActor, invitationId: number, partnerId?: number) {
     const db = await this.getDb();
     return db.transaction(async (tx): Promise<PartnerResult<IssuedInvitation, ResendError>> => {
-      const locked = await this.lockPending(tx, actor, invitationId);
+      const locked = await this.lockPending(tx, actor, invitationId, partnerId);
       if (!locked.success) return locked;
       const { invitation } = locked.data;
 
@@ -137,10 +137,10 @@ export class InvitationService implements IInvitationService {
     });
   }
 
-  async revokeInvitation(actor: InvitationActor, invitationId: number) {
+  async revokeInvitation(actor: InvitationActor, invitationId: number, partnerId?: number) {
     const db = await this.getDb();
     return db.transaction(async (tx): Promise<PartnerResult<PartnerInvitation, RevokeError>> => {
-      const locked = await this.lockPending(tx, actor, invitationId);
+      const locked = await this.lockPending(tx, actor, invitationId, partnerId);
       if (!locked.success) return locked;
       const { invitation } = locked.data;
 
@@ -189,8 +189,14 @@ export class InvitationService implements IInvitationService {
     tx: PartnerTransaction,
     actor: InvitationActor,
     invitationId: number,
+    partnerId?: number,
   ): Promise<PartnerResult<{ invitation: PartnerInvitationRow }, ResendError>> {
-    const unlocked = await getPartnerInvitationById(tx, invitationId);
+    const found = await getPartnerInvitationById(tx, invitationId);
+    // An invitation of another partner than the caller scoped to reads as missing.
+    const unlocked =
+      found && (partnerId === undefined || found.businessPartnerId === partnerId)
+        ? found
+        : undefined;
     const partner = unlocked && (await lockBusinessPartnerById(tx, unlocked.businessPartnerId));
     const denied = await this.authorize(tx, actor, partner || undefined);
     if (denied) return fail(denied);

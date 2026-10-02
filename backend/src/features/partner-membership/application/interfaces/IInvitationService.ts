@@ -68,13 +68,20 @@ export interface IInvitationService {
     partnerId: number,
     input: InviteInput,
   ): Promise<PartnerResult<IssuedInvitation, InviteError>>;
+  /**
+   * `partnerId`, when given, scopes the call to that Business Partner: an invitation of another
+   * partner reads as missing (`forbidden` for a partner actor, `not-found` for Staff), so a caller
+   * acting inside one workspace cannot touch another's invitations.
+   */
   resendInvitation(
     actor: InvitationActor,
     invitationId: number,
+    partnerId?: number,
   ): Promise<PartnerResult<IssuedInvitation, ResendError>>;
   revokeInvitation(
     actor: InvitationActor,
     invitationId: number,
+    partnerId?: number,
   ): Promise<PartnerResult<PartnerInvitation, RevokeError>>;
   listPendingInvitations(
     actor: InvitationActor,
