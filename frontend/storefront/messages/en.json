@@ -552,7 +552,10 @@
       "listStatus": "Status",
       "publishedLists": "Published lists",
       "listsPublished": "Lists published",
-      "noListYet": "No list published yet"
+      "noListYet": "No list published yet",
+      "verifiedSchool": "Verified School",
+      "publishedListsCount": "{count} published lists",
+      "supplyListsHeading": "School Supply Lists"
     },
     "SupplyList": {
       "Layout": {

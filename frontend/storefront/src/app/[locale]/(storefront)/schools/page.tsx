@@ -53,6 +53,18 @@ async function SchoolsContent(props: PageProps) {
   };
 
   const { items, totalCount } = await searchSchools(searchParams_Parsed);
+  const page = searchParams_Parsed.page ?? 1;
+  const pageSize = searchParams_Parsed.pageSize ?? 12;
+  const totalPages = Math.max(Math.ceil(totalCount / pageSize), 1);
+  const pageHref = (target: number) => {
+    const qs = new URLSearchParams();
+    for (const [key, value] of Object.entries(searchParams)) {
+      if (value && key !== 'page') qs.set(key, value);
+    }
+    if (target > 1) qs.set('page', String(target));
+    const str = qs.toString();
+    return str ? `/schools?${str}` : '/schools';
+  };
   const filterOptions = await getSchoolFilterOptions();
 
   return (
@@ -174,6 +186,32 @@ async function SchoolsContent(props: PageProps) {
               <Link href="/schools">Clear all filters</Link>
             </Button>
           </div>
+        )}
+
+        {totalPages > 1 && (
+          <nav aria-label="Pagination" className="flex items-center justify-center gap-4">
+            {page > 1 ? (
+              <Button asChild variant="outline">
+                <Link href={pageHref(page - 1)}>Previous</Link>
+              </Button>
+            ) : (
+              <Button variant="outline" disabled>
+                Previous
+              </Button>
+            )}
+            <span className="text-sm text-muted-foreground">
+              Page {page} of {totalPages}
+            </span>
+            {page < totalPages ? (
+              <Button asChild variant="outline">
+                <Link href={pageHref(page + 1)}>Next</Link>
+              </Button>
+            ) : (
+              <Button variant="outline" disabled>
+                Next
+              </Button>
+            )}
+          </nav>
         )}
       </div>
     </div>

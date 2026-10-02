@@ -2,7 +2,7 @@ import { getSchoolProfile } from '@/data/school/queries';
 import { SchoolProfileLists } from './SchoolProfileLists';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
-import { getLocale } from 'next-intl/server';
+import { getLocale, getTranslations } from 'next-intl/server';
 import { Badge } from '@findeg/ui';
 import { School, MapPin, GraduationCap, ShieldCheck } from 'lucide-react';
 
@@ -32,7 +32,11 @@ export default function SchoolProfilePage({ params }: PageProps) {
 
 async function SchoolProfileContent({ params }: PageProps) {
   const { slug } = await params;
-  const [school, locale] = await Promise.all([getSchoolProfile(slug), getLocale()]);
+  const [school, locale, t] = await Promise.all([
+    getSchoolProfile(slug),
+    getLocale(),
+    getTranslations('School.Directory'),
+  ]);
 
   if (!school) {
     notFound();
@@ -67,7 +71,7 @@ async function SchoolProfileContent({ params }: PageProps) {
                 )}
                 <Badge className="bg-emerald-100 text-emerald-800 border-emerald-200 hover:bg-emerald-100 flex gap-1">
                   <ShieldCheck className="w-3 h-3" />
-                  Verified School
+                  {t('verifiedSchool')}
                 </Badge>
               </div>
               <h1 className="text-3xl md:text-5xl font-black tracking-tight uppercase">{name}</h1>
@@ -82,7 +86,7 @@ async function SchoolProfileContent({ params }: PageProps) {
             <div className="flex flex-wrap gap-6 pt-2">
               <div className="flex items-center gap-2 text-sm font-medium">
                 <GraduationCap className="w-5 h-5 text-primary/60" />
-                {school.lists.length} published lists
+                {t('publishedListsCount', { count: school.lists.length })}
               </div>
             </div>
           </div>
@@ -93,7 +97,7 @@ async function SchoolProfileContent({ params }: PageProps) {
         <div className="space-y-8">
           <div className="flex items-center justify-between pb-4 border-b">
             <h2 className="text-3xl font-black flex items-center gap-3">
-              School Supply Lists
+              {t('supplyListsHeading')}
               <Badge variant="secondary" className="rounded-full">
                 {school.lists.length}
               </Badge>

@@ -552,7 +552,10 @@
       "listStatus": "الحالة",
       "publishedLists": "القوائم المنشورة",
       "listsPublished": "قوائم منشورة",
-      "noListYet": "لا توجد قائمة منشورة بعد"
+      "noListYet": "لا توجد قائمة منشورة بعد",
+      "verifiedSchool": "مدرسة موثقة",
+      "publishedListsCount": "{count} قوائم منشورة",
+      "supplyListsHeading": "قوائم مستلزمات المدرسة"
     },
     "SupplyList": {
       "Layout": {

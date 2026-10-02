@@ -6,7 +6,7 @@ import { Badge } from '@findeg/ui';
 import { BookOpen, GraduationCap } from 'lucide-react';
 
 /**
- * SchoolBanner — Homepage CTA section for school lists.
+ * SchoolBanner — Homepage CTA section for School Supply Lists.
  * Uses a rich blue gradient that works in both light and dark mode.
  */
 export async function SchoolBanner({ locale }: { locale: string }) {
@@ -71,7 +71,7 @@ export async function SchoolBanner({ locale }: { locale: string }) {
               </div>
             </div>
 
-            {/* ── Right: Decorative School List Card ──────────────────────── */}
+            {/* ── Right: Decorative School Supply List Card ──────────────────────── */}
             <div className="relative lg:h-[400px] w-full flex items-center justify-center">
               <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-2xl shadow-2xl p-6 border border-white/20 dark:border-slate-700 transform rotate-2 hover:rotate-0 transition-transform duration-500">
                 {/* Card header */}

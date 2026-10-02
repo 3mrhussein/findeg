@@ -11,7 +11,7 @@ interface SchoolListLookupFormProps {
 }
 
 /**
- * School list lookup form that syncs to URL query state.
+ * School Supply List lookup form that syncs to URL query state.
  */
 export function SchoolListLookupForm({ initialCode = '' }: SchoolListLookupFormProps) {
   const t = useTranslations();

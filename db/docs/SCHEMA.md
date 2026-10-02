@@ -23,9 +23,6 @@ erDiagram
     ORDERS ||--o{ ORDER_ITEMS : contains
     ORDER_ITEMS }|--|| PRODUCT_VARIANTS : snapshots
 
-    SCHOOLS ||--o{ SCHOOL_LISTS : owns
-    SCHOOL_LISTS ||--o{ SCHOOL_LIST_ITEMS : contains
-    SCHOOL_LIST_ITEMS }|--|| PRODUCTS : references
 ```
 
 ---
