@@ -7,7 +7,14 @@ import {
   type PartnerRole,
   type PartnerStatus,
 } from '@findeg/db/schema';
-import { connectToTestDatabase, type TestDatabase } from '../../../testing/postgres';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import * as schema from '@findeg/db/schema';
+import {
+  connectToTestDatabase,
+  runConcurrently,
+  waitUntilBlocked,
+  type TestDatabase,
+} from '../../../testing/postgres';
 import { createPartnerMembershipServices, type PartnerServices, type StaffActor } from '..';
 
 describe('Business Partner status changes', () => {
@@ -133,7 +140,7 @@ describe('Business Partner status changes', () => {
       const partner = await createPartner();
       expect(await services.partners.changePartnerStatus(staff, partner.id, 'active')).toEqual({
         success: false,
-        error: 'last-administrator',
+        error: 'no-active-administrator',
       });
       expect(await history(partner.id)).toHaveLength(1);
     });
@@ -143,7 +150,7 @@ describe('Business Partner status changes', () => {
       await addMember(partner.id, ['list-manager']);
       expect(await services.partners.changePartnerStatus(staff, partner.id, 'active')).toEqual({
         success: false,
-        error: 'last-administrator',
+        error: 'no-active-administrator',
       });
     });
 
@@ -157,7 +164,7 @@ describe('Business Partner status changes', () => {
           .where(eq(partnerMemberships.id, membershipId));
         expect(await services.partners.changePartnerStatus(staff, partner.id, 'active')).toEqual({
           success: false,
-          error: 'last-administrator',
+          error: 'no-active-administrator',
         });
       }
     });
@@ -170,7 +177,7 @@ describe('Business Partner status changes', () => {
         .where(eq(partnerMemberships.businessPartnerId, partner.id));
       expect(await services.partners.changePartnerStatus(staff, partner.id, 'active')).toEqual({
         success: false,
-        error: 'last-administrator',
+        error: 'no-active-administrator',
       });
     });
 
@@ -202,6 +209,38 @@ describe('Business Partner status changes', () => {
     expect(await services.partners.changePartnerStatus(staff, 999_999_999, 'active')).toEqual({
       success: false,
       error: 'not-found',
+    });
+  });
+  describe('concurrency', () => {
+    // Membership removal/demotion does not exist yet. Any such write path must lock the
+    // partner row first (README "Adding write paths"), so it is modelled here as a
+    // transaction that locks the partner row, ends the only administrator, then commits.
+    it('activation queued behind removal of the last administrator is refused', async () => {
+      const partner = await createPartner();
+      const membershipId = await addMember(partner.id, ['partner-administrator']);
+      let locked!: () => void;
+      const whenLocked = new Promise<void>((resolve) => (locked = resolve));
+
+      const [, activation] = await runConcurrently(
+        async (sql, peer) => {
+          await sql.begin(async (tx) => {
+            await tx`select id from identity.business_partners where id = ${partner.id} for update`;
+            locked();
+            await waitUntilBlocked(testDb.sql, peer.pid);
+            await tx`update identity.partner_memberships set status = 'ended' where id = ${membershipId}`;
+          });
+        },
+        async (sql) => {
+          await whenLocked;
+          return createPartnerMembershipServices({
+            db: drizzle(sql, { schema }),
+          }).partners.changePartnerStatus(staff, partner.id, 'active');
+        },
+      );
+
+      expect(activation).toEqual({ success: false, error: 'no-active-administrator' });
+      const current = await services.partners.getPartner(staff, partner.id);
+      expect(current).toMatchObject({ success: true, data: { status: 'onboarding' } });
     });
   });
 });

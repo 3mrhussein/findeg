@@ -9,17 +9,8 @@ import {
   createPartnerMembershipServices,
 } from '@findeg/backend/features/partner-membership';
 import { InvitationsPanel } from '../_components/InvitationsPanel';
-import { StatusActions, type StatusActionOption } from '../_components/StatusActions';
+import { StatusActions } from '../_components/StatusActions';
 import { toStaffActor } from '../_lib/toStaffActor';
-
-const STATUS_ACTIONS: Record<StatusActionOption['target'], Omit<StatusActionOption, 'target'>> = {
-  active: { label: 'Activate' },
-  suspended: { label: 'Suspend' },
-  closed: {
-    label: 'Close',
-    confirm: 'Closing a Business Partner is permanent and cannot be undone. Continue?',
-  },
-};
 
 export const metadata = {
   title: 'Business Partner - FindEg Admins',
@@ -60,15 +51,8 @@ export default async function PartnerDetailPage({
       </div>
       <StatusActions
         partnerId={partnerId}
-        options={ALLOWED_PARTNER_TRANSITIONS[partner.data.status].map((target) => {
-          const option = target as StatusActionOption['target'];
-          const action = STATUS_ACTIONS[option];
-          const label =
-            partner.data.status === 'suspended' && option === 'active'
-              ? 'Reactivate'
-              : action.label;
-          return { target: option, ...action, label };
-        })}
+        current={partner.data.status}
+        targets={ALLOWED_PARTNER_TRANSITIONS[partner.data.status]}
       />
       <InvitationsPanel
         partnerId={partnerId}

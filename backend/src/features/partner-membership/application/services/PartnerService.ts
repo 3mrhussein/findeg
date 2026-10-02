@@ -146,7 +146,7 @@ export class PartnerService implements IPartnerService {
           return fail('invalid-transition');
         }
         if (status === 'active' && !(await hasActivePartnerAdministrator(tx, partnerId))) {
-          return fail('last-administrator');
+          return fail('no-active-administrator');
         }
 
         const updated = await setBusinessPartnerStatus(tx, partnerId, status);

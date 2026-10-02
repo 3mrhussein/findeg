@@ -45,7 +45,7 @@ export type UpdatePartnerError =
 export type ReadPartnerError = 'forbidden' | 'not-found';
 
 export type ChangePartnerStatusError =
-  'forbidden' | 'not-found' | 'invalid-transition' | 'last-administrator';
+  'forbidden' | 'not-found' | 'invalid-transition' | 'no-active-administrator';
 
 /** The statuses a Business Partner may move to from `status`. `closed` is final. */
 export const ALLOWED_PARTNER_TRANSITIONS: Readonly<
@@ -70,7 +70,7 @@ export interface IPartnerService {
   /**
    * Moves a partner to `status` (onboarding→active, active→suspended,
    * suspended→active, any non-closed→closed). Moving to `active` needs an active
-   * Partner Administrator, else `last-administrator`.
+   * Partner Administrator, else `no-active-administrator`.
    */
   changePartnerStatus(
     actor: StaffActor,

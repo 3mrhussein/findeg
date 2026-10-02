@@ -3,48 +3,55 @@
 import { useState, useTransition } from 'react';
 import { Button } from '@findeg/ui';
 import { useLocale } from 'next-intl';
+import type { BusinessPartner } from '@findeg/backend/features/partner-membership';
 import { changePartnerStatusAction, type StatusActionState } from '../_actions/status';
 
-export interface StatusActionOption {
-  target: 'active' | 'suspended' | 'closed';
-  label: string;
-  /** Closing is permanent, so it asks for confirmation. */
-  confirm?: string;
+type Status = BusinessPartner['status'];
+
+const CLOSE_CONFIRMATION =
+  'Closing a Business Partner is permanent and cannot be undone. Continue?';
+
+function labelFor(current: Status, target: Status): string {
+  if (target === 'active') return current === 'suspended' ? 'Reactivate' : 'Activate';
+  if (target === 'suspended') return 'Suspend';
+  return 'Close';
 }
 
-/** Status changes allowed from the Business Partner's current status. */
+/** Status changes the server allows from `current`; the page passes them in as `targets`. */
 export function StatusActions({
   partnerId,
-  options,
+  current,
+  targets,
 }: {
   partnerId: number;
-  options: StatusActionOption[];
+  current: Status;
+  targets: readonly Status[];
 }) {
   const locale = useLocale();
   const [state, setState] = useState<StatusActionState>({ status: 'idle' });
   const [busy, startTransition] = useTransition();
 
-  if (options.length === 0) {
+  if (targets.length === 0) {
     return <p className="text-sm text-muted-foreground">This Business Partner is closed.</p>;
   }
 
   return (
     <div className="space-y-2" data-testid="status-actions">
       <div className="flex flex-wrap gap-2">
-        {options.map((option) => (
+        {targets.map((target) => (
           <Button
-            key={option.target}
+            key={target}
             type="button"
-            variant={option.target === 'closed' ? 'destructive' : 'outline'}
+            variant={target === 'closed' ? 'destructive' : 'outline'}
             disabled={busy}
             onClick={() => {
-              if (option.confirm && !window.confirm(option.confirm)) return;
+              if (target === 'closed' && !window.confirm(CLOSE_CONFIRMATION)) return;
               startTransition(async () =>
-                setState(await changePartnerStatusAction(locale, partnerId, option.target)),
+                setState(await changePartnerStatusAction(locale, partnerId, target)),
               );
             }}
           >
-            {option.label}
+            {labelFor(current, target)}
           </Button>
         ))}
       </div>
