@@ -1,32 +1,47 @@
 import { createHash } from 'node:crypto';
+import { z } from 'zod';
 import {
+  countOtherActivePartnerAdministrators,
   getBusinessPartnerByCode,
   getCurrentPartnerMembership,
   getPartnerInvitationByTokenDigest,
+  getPartnerMembershipById,
   getPartnerUserById,
   insertPartnerAccessHistory,
   insertPartnerMembership,
   listActivePartnerMembershipsForUser,
+  listCurrentPartnerMembers,
   lockBusinessPartnerById,
   setPartnerInvitationStatus,
+  updatePartnerMembership,
   verifyUserEmailIfUnset,
   type PartnerDatabase,
   type PartnerMembershipRow,
+  type PartnerTransaction,
 } from '@findeg/db/queries/partners';
 import type { BusinessPartnerRow } from '@findeg/db/queries/partners';
-import type { PartnerRole } from '@findeg/db/schema';
+import { PARTNER_MEMBERSHIP_STATUSES, PARTNER_ROLES, type PartnerRole } from '@findeg/db/schema';
 import type {
   AcceptInvitationError,
   IMembershipService,
+  LeaveError,
   PartnerAction,
   PartnerContext,
   PartnerContextError,
+  PartnerMember,
   PartnerMembership,
   PartnerSession,
+  UpdateMembershipError,
+  UpdateMembershipInput,
 } from '../interfaces/IMembershipService';
-import type { PartnerResult } from '../interfaces/IPartnerService';
+import type { PartnerActor, PartnerResult } from '../interfaces/IPartnerService';
 import { requirePartnerRole } from './requirePartnerRole';
-import { fail, ok } from './shared';
+import { fail, isActiveAdministrator, isActivePartnerAdministrator, ok } from './shared';
+
+const updateSchema = z.object({
+  roles: z.array(z.enum(PARTNER_ROLES)).min(1).optional(),
+  status: z.enum(PARTNER_MEMBERSHIP_STATUSES).optional(),
+});
 
 const digestToken = (token: string) => createHash('sha256').update(token).digest('hex');
 const normalizeEmail = (email: string) => email.trim().toLowerCase();
@@ -60,7 +75,49 @@ function toContext(partner: BusinessPartnerRow, membership: PartnerMembershipRow
   };
 }
 
-/** Invitation acceptance and request-time Partner Workspace access resolution. */
+type MembershipAuditAction =
+  | 'membership.roles_changed'
+  | 'membership.suspended'
+  | 'membership.reactivated'
+  | 'membership.ended'
+  | 'membership.left';
+
+type MembershipPatch = { roles?: PartnerRole[]; status?: PartnerMembershipRow['status'] };
+
+const sameRoles = (a: readonly string[], b: readonly string[]) =>
+  a.length === b.length && a.every((role) => b.includes(role));
+
+/** The fields of `input` that actually differ from the membership, deduplicated. */
+function toPatch(current: PartnerMembershipRow, input: UpdateMembershipInput): MembershipPatch {
+  const roles = input.roles && [...new Set(input.roles)];
+  return {
+    roles: roles && !sameRoles(roles, current.roles) ? roles : undefined,
+    status: input.status && input.status !== current.status ? input.status : undefined,
+  };
+}
+
+function updateAuditActions(
+  current: PartnerMembershipRow,
+  patch: MembershipPatch,
+): MembershipAuditAction[] {
+  const actions: MembershipAuditAction[] = [];
+  if (patch.roles) actions.push('membership.roles_changed');
+  if (patch.status === 'ended') actions.push('membership.ended');
+  else if (patch.status === 'suspended') actions.push('membership.suspended');
+  else if (patch.status === 'active' && current.status === 'suspended') {
+    actions.push('membership.reactivated');
+  }
+  return actions;
+}
+
+const snapshot = (row: PartnerMembershipRow) => ({
+  userId: row.userId,
+  roles: row.roles,
+  status: row.status,
+  authorizationVersion: row.authorizationVersion,
+});
+
+/** Invitation acceptance, membership changes and request-time Partner Workspace access resolution. */
 export class MembershipService implements IMembershipService {
   constructor(
     private readonly getDb: () => Promise<PartnerDatabase>,
@@ -117,16 +174,125 @@ export class MembershipService implements IMembershipService {
         actorKind: 'self',
         action: 'membership.accepted',
         before: null,
-        after: {
-          userId: membership.userId,
-          roles: membership.roles,
-          status: membership.status,
-          authorizationVersion: membership.authorizationVersion,
-        },
+        after: snapshot(membership),
       });
 
       return ok(toContext(partner, membership));
     });
+  }
+
+  async updateMembership(
+    actor: PartnerActor,
+    membershipId: number,
+    input: UpdateMembershipInput,
+    expectedVersion: number,
+  ): Promise<PartnerResult<PartnerMembership, UpdateMembershipError>> {
+    if (!updateSchema.safeParse(input).success) return fail('invalid-input');
+    const db = await this.getDb();
+    return db.transaction(async (tx) => {
+      const locked = await this.lockMembership(tx, membershipId);
+      if (!locked) return fail('forbidden');
+      const { partner, current } = locked;
+      if (!(await isActivePartnerAdministrator(tx, partner.id, actor.userId))) {
+        return fail('forbidden');
+      }
+      if (!isOpen(partner)) return fail('partner-not-open');
+      if (current.status === 'ended') return fail('membership-ended');
+      if (expectedVersion !== current.authorizationVersion) return fail('stale-membership');
+
+      const patch = toPatch(current, input);
+      if (!patch.roles && !patch.status) return ok(toMembership(current));
+      return this.commitChange(
+        tx,
+        actor,
+        partner,
+        current,
+        patch,
+        updateAuditActions(current, patch),
+      );
+    });
+  }
+
+  async leave(
+    actor: PartnerActor,
+    membershipId: number,
+  ): Promise<PartnerResult<PartnerMembership, LeaveError>> {
+    const db = await this.getDb();
+    return db.transaction(async (tx) => {
+      const locked = await this.lockMembership(tx, membershipId);
+      if (!locked || locked.current.userId !== actor.userId) return fail('forbidden');
+      const { partner, current } = locked;
+      if (!isOpen(partner)) return fail('partner-not-open');
+      if (current.status === 'ended') return fail('membership-ended');
+      return this.commitChange(tx, actor, partner, current, { status: 'ended' }, [
+        'membership.left',
+      ]);
+    });
+  }
+
+  async listMembers(
+    actor: PartnerActor,
+    partnerId: number,
+  ): Promise<PartnerResult<PartnerMember[], 'forbidden'>> {
+    const db = await this.getDb();
+    if (!(await isActivePartnerAdministrator(db, partnerId, actor.userId))) {
+      return fail('forbidden');
+    }
+    const rows = await listCurrentPartnerMembers(db, partnerId);
+    return ok(
+      rows.map((row) => ({
+        ...toMembership(row),
+        email: row.email,
+        firstName: row.firstName,
+        lastName: row.lastName,
+      })),
+    );
+  }
+
+  /**
+   * Locks the membership's Business Partner row, then re-reads the membership,
+   * so two members changing each other at once run one after the other and the
+   * second sees the first's outcome. Callers authorize under this lock.
+   */
+  private async lockMembership(tx: PartnerTransaction, membershipId: number) {
+    const unlocked = await getPartnerMembershipById(tx, membershipId);
+    const partner = unlocked && (await lockBusinessPartnerById(tx, unlocked.businessPartnerId));
+    const current = partner ? await getPartnerMembershipById(tx, membershipId) : undefined;
+    return partner && current ? { partner, current } : null;
+  }
+
+  /**
+   * Applies a patch under the partner lock: refuses it when it would leave the
+   * partner without an active Partner Administrator, then writes the update and
+   * one audit row per action in the same transaction.
+   */
+  private async commitChange(
+    tx: PartnerTransaction,
+    actor: PartnerActor,
+    partner: BusinessPartnerRow,
+    current: PartnerMembershipRow,
+    patch: MembershipPatch,
+    actions: readonly MembershipAuditAction[],
+  ) {
+    const next = { roles: patch.roles ?? current.roles, status: patch.status ?? current.status };
+    if (isActiveAdministrator(current) && !isActiveAdministrator(next)) {
+      const others = await countOtherActivePartnerAdministrators(tx, partner.id, current.id);
+      if (others === 0) return fail('last-administrator');
+    }
+
+    const updated = await updatePartnerMembership(tx, current.id, patch, this.clock());
+    for (const action of actions) {
+      await insertPartnerAccessHistory(tx, {
+        businessPartnerId: partner.id,
+        membershipId: updated.id,
+        actorUserId: actor.userId,
+        actorKind: action === 'membership.left' ? 'self' : 'partner',
+        action,
+        before: snapshot(current),
+        after: snapshot(updated),
+      });
+    }
+    return ok(toMembership(updated));
   }
 
   async resolvePartnerContext(

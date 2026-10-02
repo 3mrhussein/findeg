@@ -1,5 +1,5 @@
 import type { PartnerMembershipStatus, PartnerRole } from '@findeg/db/schema';
-import type { PartnerResult } from './IPartnerService';
+import type { PartnerActor, PartnerResult } from './IPartnerService';
 
 export interface PartnerSession {
   userId: number;
@@ -47,7 +47,52 @@ export type PartnerAction = 'read' | 'reports' | 'membership-change' | 'business
 
 export type RequirePartnerRoleError = 'role-not-held' | 'partner-status-not-allowed';
 
+/** A member as the Partner Administrators' members page lists them. */
+export interface PartnerMember extends PartnerMembership {
+  email: string;
+  firstName: string | null;
+  lastName: string | null;
+}
+
+/** Omitted fields are left unchanged. Setting `status: 'ended'` removes the member for good. */
+export interface UpdateMembershipInput {
+  roles?: readonly PartnerRole[];
+  status?: PartnerMembershipStatus;
+}
+
+export type UpdateMembershipError =
+  | 'forbidden'
+  | 'invalid-input'
+  | 'partner-not-open'
+  | 'membership-ended'
+  | 'stale-membership'
+  | 'last-administrator';
+
+export type LeaveError = Exclude<UpdateMembershipError, 'invalid-input' | 'stale-membership'>;
+
 export interface IMembershipService {
+  /**
+   * Changes roles and/or status of a membership. The actor must be an active
+   * Partner Administrator of its Business Partner, which must be onboarding or
+   * active. `expectedVersion` is the membership's `authorizationVersion` the
+   * caller loaded; any change bumps it, so a stale edit gets `stale-membership`.
+   */
+  updateMembership(
+    actor: PartnerActor,
+    membershipId: number,
+    input: UpdateMembershipInput,
+    expectedVersion: number,
+  ): Promise<PartnerResult<PartnerMembership, UpdateMembershipError>>;
+  /** A member ends their own membership. */
+  leave(
+    actor: PartnerActor,
+    membershipId: number,
+  ): Promise<PartnerResult<PartnerMembership, LeaveError>>;
+  /** Current (non-ended) members of a Business Partner, for its Partner Administrators. */
+  listMembers(
+    actor: PartnerActor,
+    partnerId: number,
+  ): Promise<PartnerResult<PartnerMember[], 'forbidden'>>;
   acceptInvitation(
     token: string,
     session: PartnerSession | null,

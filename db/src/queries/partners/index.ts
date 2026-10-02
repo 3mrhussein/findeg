@@ -14,6 +14,7 @@ export type PartnerDatabase = PostgresJsDatabase<typeof schema>;
 export type PartnerTransaction = Parameters<Parameters<PartnerDatabase['transaction']>[0]>[0];
 export type PartnerExecutor = PartnerDatabase | PartnerTransaction;
 
+const { PARTNER_ADMINISTRATOR } = schema;
 const {
   businessPartners,
   partnerAccessHistory,
@@ -130,7 +131,7 @@ export async function hasActivePartnerAdministrator(
       and(
         eq(partnerMemberships.businessPartnerId, businessPartnerId),
         eq(partnerMemberships.status, 'active'),
-        sql`'partner-administrator' = any(${partnerMemberships.roles})`,
+        sql`${PARTNER_ADMINISTRATOR} = any(${partnerMemberships.roles})`,
       ),
     )
     .limit(1);
@@ -327,4 +328,86 @@ export async function listActivePartnerMembershipsForUser(
     .innerJoin(businessPartners, eq(businessPartners.id, partnerMemberships.businessPartnerId))
     .where(and(eq(partnerMemberships.userId, userId), eq(partnerMemberships.status, 'active')))
     .orderBy(asc(businessPartners.code));
+}
+
+export async function getPartnerMembershipById(
+  executor: PartnerExecutor,
+  id: number,
+): Promise<PartnerMembershipRow | undefined> {
+  const [row] = await executor
+    .select()
+    .from(partnerMemberships)
+    .where(eq(partnerMemberships.id, id));
+  return row;
+}
+
+export type PartnerMemberRow = PartnerMembershipRow & {
+  email: string;
+  firstName: string | null;
+  lastName: string | null;
+};
+
+/** Non-ended memberships of the partner with the member's identity, oldest first. */
+export async function listCurrentPartnerMembers(
+  executor: PartnerExecutor,
+  businessPartnerId: number,
+): Promise<PartnerMemberRow[]> {
+  const rows = await executor
+    .select({ membership: partnerMemberships, user: users })
+    .from(partnerMemberships)
+    .innerJoin(users, eq(users.id, partnerMemberships.userId))
+    .where(
+      and(
+        eq(partnerMemberships.businessPartnerId, businessPartnerId),
+        ne(partnerMemberships.status, 'ended'),
+      ),
+    )
+    .orderBy(asc(partnerMemberships.createdAt), asc(partnerMemberships.id));
+  return rows.map(({ membership, user }) => ({
+    ...membership,
+    email: user.email,
+    firstName: user.firstName,
+    lastName: user.lastName,
+  }));
+}
+
+/** Count of active `partner-administrator` memberships other than `excludingMembershipId`. */
+export async function countOtherActivePartnerAdministrators(
+  executor: PartnerTransaction,
+  businessPartnerId: number,
+  excludingMembershipId: number,
+): Promise<number> {
+  const rows = await executor
+    .select({ id: partnerMemberships.id })
+    .from(partnerMemberships)
+    .where(
+      and(
+        eq(partnerMemberships.businessPartnerId, businessPartnerId),
+        eq(partnerMemberships.status, 'active'),
+        ne(partnerMemberships.id, excludingMembershipId),
+        sql`${PARTNER_ADMINISTRATOR} = any(${partnerMemberships.roles})`,
+      ),
+    );
+  return rows.length;
+}
+
+export type PartnerMembershipPatch = Partial<Pick<PartnerMembershipRow, 'roles' | 'status'>>;
+
+/** Applies the patch and bumps `authorization_version` (the stale-edit guard). */
+export async function updatePartnerMembership(
+  executor: PartnerTransaction,
+  id: number,
+  patch: PartnerMembershipPatch,
+  updatedAt: Date,
+): Promise<PartnerMembershipRow> {
+  const [row] = await executor
+    .update(partnerMemberships)
+    .set({
+      ...patch,
+      authorizationVersion: sql`${partnerMemberships.authorizationVersion} + 1`,
+      updatedAt,
+    })
+    .where(eq(partnerMemberships.id, id))
+    .returning();
+  return row;
 }
