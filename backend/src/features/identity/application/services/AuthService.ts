@@ -50,7 +50,7 @@ export class AuthService implements IAuthService {
     }
 
     const isValid = await bcrypt.compare(password, user.password);
-    if (!isValid) {
+    if (!isValid || !user.isActive) {
       return { success: false, error: getErrorDefinition('AUTH_INVALID_CREDENTIALS').message };
     }
 
@@ -59,6 +59,7 @@ export class AuthService implements IAuthService {
 
     return {
       success: true,
+      session: payload,
       user: {
         id: user.id,
         email: user.email,

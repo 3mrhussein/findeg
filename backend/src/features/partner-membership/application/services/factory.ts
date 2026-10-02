@@ -2,11 +2,14 @@ import type { PartnerDatabase } from '@findeg/db/queries/partners';
 import type { EnqueueInvitation, IInvitationService } from '../interfaces/IInvitationService';
 import type { IPartnerService } from '../interfaces/IPartnerService';
 import { InvitationService } from './InvitationService';
+import type { IMembershipService } from '../interfaces/IMembershipService';
+import { MembershipService } from './MembershipService';
 import { PartnerService } from './PartnerService';
 
 export interface PartnerServices {
   partners: IPartnerService;
   invitations: IInvitationService;
+  memberships: IMembershipService;
 }
 
 export interface PartnerMembershipDependencies {
@@ -33,5 +36,6 @@ export function createPartnerMembershipServices(
   return {
     partners: new PartnerService(getDb),
     invitations: new InvitationService(getDb, clock, enqueue),
+    memberships: new MembershipService(getDb, clock),
   };
 }

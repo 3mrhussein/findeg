@@ -13,7 +13,17 @@ import { Logo } from '@findeg/ui';
 /**
  * Registration view content component.
  */
-export const RegistrationContent: React.FC = () => {
+interface RegistrationContentProps {
+  initialEmail?: string;
+  emailLocked?: boolean;
+  returnTo?: string;
+}
+
+export const RegistrationContent: React.FC<RegistrationContentProps> = ({
+  initialEmail,
+  emailLocked,
+  returnTo,
+}) => {
   const t = useTranslations();
 
   return (
@@ -29,13 +39,23 @@ export const RegistrationContent: React.FC = () => {
             </CardTitle>
             <CardDescription>
               {t('Pages.Auth.HaveAccount')}{' '}
-              <Link href="/login" className="text-primary hover:underline font-medium ml-1">
+              <Link
+                href={{
+                  pathname: '/login',
+                  query: { email: initialEmail, locked: emailLocked ? '1' : undefined, returnTo },
+                }}
+                className="text-primary hover:underline font-medium ml-1"
+              >
                 {t('Pages.Auth.SigninLink')}
               </Link>
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <RegistrationForm />
+            <RegistrationForm
+              initialEmail={initialEmail}
+              emailLocked={emailLocked}
+              returnTo={returnTo}
+            />
 
             <div className="relative my-8">
               <div className="absolute inset-0 flex items-center">

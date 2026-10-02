@@ -63,7 +63,20 @@ function splitName(name: string): { firstName?: string; lastName?: string } {
 /**
  *
  */
-export function RegistrationForm() {
+interface RegistrationFormProps {
+  initialEmail?: string;
+  emailLocked?: boolean;
+  returnTo?: string;
+}
+
+const safeReturnTarget = (value?: string) =>
+  value?.startsWith('/') && !value.startsWith('//') ? value : '/my-account';
+
+export function RegistrationForm({
+  initialEmail = '',
+  emailLocked = false,
+  returnTo,
+}: RegistrationFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const t = useTranslations();
@@ -73,7 +86,7 @@ export function RegistrationForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
-      email: '',
+      email: initialEmail,
       password: '',
       confirmPassword: '',
     },
@@ -111,7 +124,7 @@ export function RegistrationForm() {
       if (json?.data?.token) {
         persistSessionToken(json.data.token);
       }
-      router.push('/my-account');
+      router.push(safeReturnTarget(returnTo));
       router.refresh();
     } finally {
       setIsLoading(false);
@@ -144,6 +157,8 @@ export function RegistrationForm() {
                 <Input
                   placeholder="m@example.com"
                   data-testid="registration-email-input"
+                  readOnly={emailLocked}
+                  aria-readonly={emailLocked}
                   {...field}
                 />
               </FormControl>

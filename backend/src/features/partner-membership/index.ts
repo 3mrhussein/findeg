@@ -25,6 +25,13 @@ export type {
   UpdatePartnerError,
   UpdatePartnerInput,
 } from './application/interfaces/IPartnerService';
+export type {
+  AcceptInvitationError,
+  IMembershipService,
+  PartnerContext,
+  PartnerMembership,
+  PartnerSession,
+} from './application/interfaces/IMembershipService';
 export { createPartnerMembershipServices } from './application/services/factory';
 export type {
   PartnerMembershipDependencies,

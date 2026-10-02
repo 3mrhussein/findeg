@@ -36,6 +36,13 @@
       "when": 1790902889803,
       "tag": "0004_partner_invitations",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1790905083336,
+      "tag": "0005_tranquil_snowbird",
+      "breakpoints": true
     }
   ]
 }
