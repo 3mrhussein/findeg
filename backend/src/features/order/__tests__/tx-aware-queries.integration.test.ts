@@ -159,6 +159,18 @@ describe('tx-aware order and inventory queries on real Postgres', () => {
       expect(await balance(variantId, warehouseId)).toMatchObject({ reserved: 2 });
     });
 
+    it('reports insufficient stock inside the caller transaction without writing', async () => {
+      const { variantId, warehouseId } = await stockedVariant(1);
+
+      const reserved = await testDb.db.transaction((tx) =>
+        inventoryQueries.reserveStock(variantId, warehouseId, 2, 'order-3', tx),
+      );
+
+      expect(reserved).toBe(false);
+      expect(await balance(variantId, warehouseId)).toMatchObject({ onHand: 1, reserved: 0 });
+      expect(await movements(variantId)).toHaveLength(0);
+    });
+
     it('rolls back every write when the caller aborts its transaction', async () => {
       const { productId, variantId, warehouseId } = await stockedVariant();
       let orderId = 0;
