@@ -1,8 +1,12 @@
+import { Button } from '@findeg/ui';
+import { PARTNER_ADMINISTRATOR } from '@findeg/backend/features/partner-membership';
+import { Link } from '@i18n/navigation';
 import {
   PartnerNotice,
   PartnerSuspense,
   requireWorkspaceAccess,
 } from '../_components/PartnerShell';
+import { LeaveButton } from './LeaveButton';
 
 export default async function PartnerWorkspacePage({
   params,
@@ -31,6 +35,14 @@ async function PartnerWorkspace({ code }: { code: string }) {
           <li key={role}>{role}</li>
         ))}
       </ul>
+      <div className="mt-6 flex flex-wrap items-start gap-3">
+        {membership.roles.includes(PARTNER_ADMINISTRATOR) && (
+          <Button asChild variant="outline">
+            <Link href={`/partner/${code}/members`}>Members</Link>
+          </Button>
+        )}
+        <LeaveButton code={code} />
+      </div>
     </PartnerNotice>
   );
 }

@@ -12,7 +12,6 @@ import {
   lockBusinessPartnerById,
   setPartnerInvitationExpiry,
   setPartnerInvitationStatus,
-  type BusinessPartnerRow,
   type PartnerDatabase,
   type PartnerInvitationRow,
   type PartnerTransaction,
@@ -29,7 +28,7 @@ import type {
   ResendError,
   RevokeError,
 } from '../interfaces/IInvitationService';
-import { canManagePartners, fail, ok } from './shared';
+import { canManagePartners, fail, isOpen, ok } from './shared';
 
 const INVITATION_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
@@ -37,10 +36,6 @@ const inviteSchema = z.object({
   email: z.string().trim().toLowerCase().pipe(z.email().max(255)),
   roles: z.array(z.enum(PARTNER_ROLES)).min(1),
 });
-
-/** Invitations may only change while the Business Partner is not suspended or closed. */
-const isOpen = (partner: BusinessPartnerRow) =>
-  partner.status === 'onboarding' || partner.status === 'active';
 
 const digestToken = (token: string) => createHash('sha256').update(token).digest('hex');
 
