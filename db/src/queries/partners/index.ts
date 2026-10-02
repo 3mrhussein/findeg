@@ -259,6 +259,8 @@ export type NewPartnerMembershipRow = Pick<
   'businessPartnerId' | 'userId' | 'invitationId' | 'roles'
 >;
 
+const isCurrentMembership = ne(partnerMemberships.status, 'ended');
+
 export async function getCurrentPartnerMembership(
   executor: PartnerExecutor,
   businessPartnerId: number,
@@ -271,7 +273,7 @@ export async function getCurrentPartnerMembership(
       and(
         eq(partnerMemberships.businessPartnerId, businessPartnerId),
         eq(partnerMemberships.userId, userId),
-        ne(partnerMemberships.status, 'ended'),
+        isCurrentMembership,
       ),
     );
   return row;
@@ -332,6 +334,30 @@ export async function listActivePartnerMembershipsForUser(
     .orderBy(asc(businessPartners.code));
 }
 
+/**
+ * A non-ended membership of the partner held by the user with this (lowercased) email.
+ * `users.email` is stored as entered and its unique index is case-sensitive, so the match
+ * lowercases the column.
+ */
+export async function getCurrentPartnerMembershipByEmail(
+  executor: PartnerExecutor,
+  businessPartnerId: number,
+  email: string,
+): Promise<PartnerMembershipRow | undefined> {
+  const [row] = await executor
+    .select({ membership: partnerMemberships })
+    .from(partnerMemberships)
+    .innerJoin(users, eq(users.id, partnerMemberships.userId))
+    .where(
+      and(
+        eq(partnerMemberships.businessPartnerId, businessPartnerId),
+        isCurrentMembership,
+        sql`lower(${users.email}) = ${email}`,
+      ),
+    );
+  return row?.membership;
+}
+
 export async function getPartnerMembershipById(
   executor: PartnerExecutor,
   id: number,
@@ -358,12 +384,7 @@ export async function listCurrentPartnerMembers(
     .select({ membership: partnerMemberships, user: users })
     .from(partnerMemberships)
     .innerJoin(users, eq(users.id, partnerMemberships.userId))
-    .where(
-      and(
-        eq(partnerMemberships.businessPartnerId, businessPartnerId),
-        ne(partnerMemberships.status, 'ended'),
-      ),
-    )
+    .where(and(eq(partnerMemberships.businessPartnerId, businessPartnerId), isCurrentMembership))
     .orderBy(asc(partnerMemberships.createdAt), asc(partnerMemberships.id));
   return rows.map(({ membership, user }) => ({
     ...membership,

@@ -1,6 +1,6 @@
 import type { PartnerTransaction } from '@findeg/db/queries/partners';
 import type { PartnerInvitationStatus, PartnerRole } from '@findeg/db/schema';
-import type { PartnerResult, StaffActor } from './IPartnerService';
+import type { PartnerActor, PartnerResult, StaffActor } from './IPartnerService';
 
 export type { PartnerRole };
 
@@ -35,7 +35,11 @@ export interface InvitationView {
   state: 'pending' | 'expired' | 'accepted' | 'revoked';
 }
 
-export type InviteError = 'forbidden' | 'invalid-input' | 'not-found' | 'partner-not-open';
+/** Staff (`partners.manage`) or a Partner Administrator of the Business Partner. */
+export type InvitationActor = StaffActor | PartnerActor;
+
+export type InviteError =
+  'forbidden' | 'invalid-input' | 'not-found' | 'partner-not-open' | 'already-member';
 export type ResendError = 'forbidden' | 'not-found' | 'partner-not-open' | 'invitation-not-pending';
 export type RevokeError = ResendError;
 
@@ -60,20 +64,27 @@ export type EnqueueInvitation = (
 
 export interface IInvitationService {
   invite(
-    actor: StaffActor,
+    actor: InvitationActor,
     partnerId: number,
     input: InviteInput,
   ): Promise<PartnerResult<IssuedInvitation, InviteError>>;
+  /**
+   * `partnerId`, when given, scopes the call to that Business Partner: an invitation of another
+   * partner reads as missing (`forbidden` for a partner actor, `not-found` for Staff), so a caller
+   * acting inside one workspace cannot touch another's invitations.
+   */
   resendInvitation(
-    actor: StaffActor,
+    actor: InvitationActor,
     invitationId: number,
+    partnerId?: number,
   ): Promise<PartnerResult<IssuedInvitation, ResendError>>;
   revokeInvitation(
-    actor: StaffActor,
+    actor: InvitationActor,
     invitationId: number,
+    partnerId?: number,
   ): Promise<PartnerResult<PartnerInvitation, RevokeError>>;
   listPendingInvitations(
-    actor: StaffActor,
+    actor: InvitationActor,
     partnerId: number,
   ): Promise<PartnerResult<PartnerInvitation[], 'forbidden'>>;
   getInvitation(token: string): Promise<PartnerResult<InvitationView, 'not-found'>>;

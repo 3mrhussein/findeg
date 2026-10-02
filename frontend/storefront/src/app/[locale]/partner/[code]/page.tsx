@@ -37,9 +37,14 @@ async function PartnerWorkspace({ code }: { code: string }) {
       </ul>
       <div className="mt-6 flex flex-wrap items-start gap-3">
         {membership.roles.includes(PARTNER_ADMINISTRATOR) && (
-          <Button asChild variant="outline">
-            <Link href={`/partner/${code}/members`}>Members</Link>
-          </Button>
+          <>
+            <Button asChild variant="outline">
+              <Link href={`/partner/${code}/members`}>Members</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href={`/partner/${code}/invitations`}>Invitations</Link>
+            </Button>
+          </>
         )}
         <LeaveButton code={code} />
       </div>

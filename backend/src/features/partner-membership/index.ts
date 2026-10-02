@@ -4,6 +4,7 @@
 export type {
   EnqueueInvitation,
   IInvitationService,
+  InvitationActor,
   InvitationView,
   InviteError,
   InviteInput,

@@ -4,6 +4,8 @@ export interface ActionState {
   message?: string;
   /** The edit lost to a newer one; the caller should reload the row. */
   stale?: boolean;
+  /** Invitation link to copy, present after invite and resend. Shown once; the token is not stored. */
+  link?: string;
 }
 
 /** An error state whose message is looked up in a map typed by the service's error union. */
