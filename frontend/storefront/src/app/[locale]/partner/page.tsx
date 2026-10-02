@@ -1,8 +1,8 @@
-import { Suspense } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@findeg/ui';
-import { getCachedActivePartnerMemberships } from '@data/partner/queries';
-import { requireAuth } from '@lib/auth-guard';
 import { Link, redirect } from '@i18n/navigation';
+import { getCachedActivePartnerMemberships } from '@data/partner/queries';
+import { partnerIndexDestination } from '@data/partner/access';
+import { requireAuth } from '@lib/auth-guard';
+import { PartnerNotice, PartnerSuspense } from './_components/PartnerShell';
 
 export default async function PartnerIndexPage({
   params,
@@ -10,50 +10,44 @@ export default async function PartnerIndexPage({
   params: Promise<{ locale: string }>;
 }) {
   return (
-    <Suspense fallback={<main className="mx-auto max-w-3xl p-8">Loading workspaces…</main>}>
+    <PartnerSuspense label="Loading workspaces…">
       <PartnerIndex params={params} />
-    </Suspense>
+    </PartnerSuspense>
   );
 }
 
 async function PartnerIndex({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   await requireAuth(locale);
-  const memberships = await getCachedActivePartnerMemberships();
+  const destination = partnerIndexDestination(await getCachedActivePartnerMemberships());
 
-  if (memberships.length === 1) {
-    redirect({ href: `/partner/${memberships[0].partner.code}`, locale });
+  if ('redirectTo' in destination) {
+    return redirect({ href: destination.redirectTo, locale });
   }
+  const memberships = destination.list;
 
   return (
-    <main className="mx-auto min-h-[70vh] max-w-3xl p-6 py-12">
-      <Card>
-        <CardHeader>
-          <CardTitle>Your Partner Workspaces</CardTitle>
-          <CardDescription>Choose the Business Partner you want to work in.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {memberships.length === 0 ? (
-            <p className="text-muted-foreground">
-              You are not an active member of any Business Partner.
-            </p>
-          ) : (
-            <ul className="divide-y">
-              {memberships.map(({ partner }) => (
-                <li key={partner.code}>
-                  <Link
-                    href={`/partner/${partner.code}`}
-                    className="flex flex-col py-3 hover:text-primary"
-                  >
-                    <span className="font-medium">{partner.nameEn}</span>
-                    <span className="text-sm text-muted-foreground">{partner.nameAr}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          )}
-        </CardContent>
-      </Card>
-    </main>
+    <PartnerNotice
+      title="Your Partner Workspaces"
+      description="Choose the Business Partner you want to work in."
+    >
+      {memberships.length === 0 ? (
+        <p>You are not an active member of any Business Partner.</p>
+      ) : (
+        <ul className="divide-y">
+          {memberships.map(({ partner }) => (
+            <li key={partner.code}>
+              <Link
+                href={`/partner/${partner.code}`}
+                className="flex flex-col py-3 hover:text-primary"
+              >
+                <span className="font-medium text-foreground">{partner.nameEn}</span>
+                <span className="text-sm">{partner.nameAr}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
+    </PartnerNotice>
   );
 }

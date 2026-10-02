@@ -222,6 +222,18 @@ describe('Partner access check', () => {
       }
     });
 
+    it("accepts every Partner Role when roles is 'any', still applying the status table", async () => {
+      const { partner, session } = await member(['report-viewer'], 'suspended', 'active');
+      const context = await services.memberships.resolvePartnerContext(session, partner.code);
+      if (!context.success) throw new Error(context.error);
+
+      expect(requirePartnerRole(context.data, 'any', 'read').success).toBe(true);
+      expect(requirePartnerRole(context.data, 'any', 'business')).toEqual({
+        success: false,
+        error: 'partner-status-not-allowed',
+      });
+    });
+
     it('accepts any one of several required roles', async () => {
       const { partner, session } = await member(
         ['collection-staff', 'report-viewer'],

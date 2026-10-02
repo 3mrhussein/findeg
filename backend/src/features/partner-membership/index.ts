@@ -36,7 +36,6 @@ export type {
   RequirePartnerRoleError,
 } from './application/interfaces/IMembershipService';
 export { requirePartnerRole } from './application/services/requirePartnerRole';
-export { PARTNER_ROLES } from '@findeg/db/schema';
 export { createPartnerMembershipServices } from './application/services/factory';
 export type {
   PartnerMembershipDependencies,
