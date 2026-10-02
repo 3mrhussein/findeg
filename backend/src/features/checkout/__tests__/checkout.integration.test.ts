@@ -572,7 +572,7 @@ describe('Checkout feature integration tests on real Postgres', () => {
       ).rejects.toThrow(/Orders cannot be deleted/);
     });
 
-    it('allows ON DELETE SET NULL on user_id and variant_id without trigger failure', async () => {
+    it('allows ON DELETE SET NULL on user_id only through the FK action, not direct updates', async () => {
       sequence += 1;
       const [testUser] = await testDb.db
         .insert(users)
@@ -615,17 +615,17 @@ describe('Checkout feature integration tests on real Postgres', () => {
       expect(orderAfterUserDelete.userId).toBeNull();
       expect(orderAfterUserDelete.totalAmount).toBe('65.00');
 
-      // Updating product_id or variant_id to NULL on order_items (allowed for ON DELETE SET NULL cascade)
-      await testDb.sql`update sales.order_items set variant_id = null where order_id = ${orderId}`;
-      await testDb.sql`update sales.order_items set product_id = null where order_id = ${orderId}`;
+      // Direct UPDATEs of identity/catalog links are rejected; only FK actions may null them
+      await expect(
+        testDb.sql`update sales.order_items set variant_id = null where order_id = ${orderId}`,
+      ).rejects.toThrow(/Order items are frozen/);
 
-      const [itemAfterNulls] = await testDb.db
+      const [itemAfterUserDelete] = await testDb.db
         .select()
         .from(orderItems)
         .where(eq(orderItems.orderId, orderId));
-      expect(itemAfterNulls.variantId).toBeNull();
-      expect(itemAfterNulls.productId).toBeNull();
-      expect(itemAfterNulls.unitPriceSnapshot).toBe('15.00');
+      expect(itemAfterUserDelete.variantId).toBe(item.variantId);
+      expect(itemAfterUserDelete.unitPriceSnapshot).toBe('15.00');
 
       // Attempting to change variant_id to a new non-null ID is blocked
       await expect(
