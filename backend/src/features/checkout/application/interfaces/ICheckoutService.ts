@@ -38,6 +38,7 @@ export interface CheckoutAcceptFailure {
     code:
       | 'reconfirmation-required'
       | 'insufficient-stock'
+      | 'unavailable-variant'
       | 'unsupported-payment-method'
       | 'validation-error'
       | string;

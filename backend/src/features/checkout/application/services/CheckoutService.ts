@@ -236,6 +236,16 @@ export class CheckoutService implements ICheckoutService {
           },
         };
       }
+      if (err instanceof UnavailableVariantError) {
+        return {
+          success: false,
+          status: 400,
+          error: {
+            code: 'unavailable-variant',
+            message: err.message,
+          },
+        };
+      }
       throw err;
     }
   }

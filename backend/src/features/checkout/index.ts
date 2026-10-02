@@ -27,20 +27,3 @@ export type {
   CheckoutAcceptedOrder,
   ShippingAddress,
 } from './schemas';
-
-export {
-  generateOrderReference,
-  isValidOrderReference,
-  ORDER_REFERENCE_REGEX,
-  CROCKFORD_BASE32_ALPHABET,
-} from './domain/order-reference';
-
-export { computeConfirmation } from './domain/confirmation';
-export type {
-  QuoteConfirmationTerms,
-  QuoteConfirmationLine,
-  QuoteConfirmationDiscount,
-} from './domain/confirmation';
-
-export { onOrderAcceptedRewardsHook } from './domain/rewards-hook';
-export type { RewardsHookOrder, RewardsHookOrderItem } from './domain/rewards-hook';

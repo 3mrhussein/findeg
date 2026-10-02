@@ -11,7 +11,8 @@ import {
   users,
   warehouses,
 } from '@findeg/db/schema';
-import { createCheckoutService, isValidOrderReference } from '../index';
+import { createCheckoutService } from '../index';
+import { isValidOrderReference } from '../domain/order-reference';
 import { orderQueries } from '@findeg/db/queries';
 import { connectToTestDatabase, type TestDatabase } from '../../../testing/postgres';
 
@@ -449,6 +450,35 @@ describe('Checkout feature integration tests on real Postgres', () => {
       if (acceptResult.success) return;
       expect(acceptResult.status).toBe(400);
       expect(acceptResult.error.code).toBe('unsupported-payment-method');
+    });
+
+    it('rejects unavailable or inactive variants during acceptance with 400 unavailable-variant', async () => {
+      const item = await createVariantWithStock({ price: '20.00', onHand: 5 });
+      const quote = await checkoutService.validate({
+        source: 'cart',
+        lines: [{ variantId: item.variantId, quantity: 1 }],
+      });
+      if (!quote.success) return;
+
+      // Deactivate variant after validation to simulate catalog race condition
+      await testDb.db
+        .update(productVariants)
+        .set({ isActive: false })
+        .where(eq(productVariants.id, item.variantId));
+
+      const acceptResult = await checkoutService.accept({
+        source: 'cart',
+        lines: [{ variantId: item.variantId, quantity: 1 }],
+        confirmation: quote.data.confirmation,
+        paymentMethod: 'cod',
+        address: validAddress,
+        guestEmail: 'guest@example.com',
+      });
+
+      expect(acceptResult.success).toBe(false);
+      if (acceptResult.success) return;
+      expect(acceptResult.status).toBe(400);
+      expect(acceptResult.error.code).toBe('unavailable-variant');
     });
 
     it('enforces trigger freeze on order snapshot columns while allowing status updates', async () => {

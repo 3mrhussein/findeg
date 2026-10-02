@@ -194,6 +194,7 @@ export async function getFiltered(filters: OrderFiltersInput): Promise<{
     } else {
       conditions.push(
         or(
+          ilike(orders.orderReference, `%${filters.search}%`),
           ilike(orders.guestEmail, `%${filters.search}%`),
           ilike(orders.trackingNumber, `%${filters.search}%`),
         ),

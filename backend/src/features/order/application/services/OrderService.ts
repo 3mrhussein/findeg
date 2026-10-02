@@ -16,6 +16,7 @@ export class OrderService implements IOrderService {
   private mapToDomain(dbOrder: OrderRow, items: OrderItemRow[]): Order {
     return {
       id: dbOrder.id,
+      orderReference: dbOrder.orderReference || undefined,
       userId: dbOrder.userId || undefined,
       guestEmail: dbOrder.guestEmail || undefined,
       status: dbOrder.status,
@@ -39,6 +40,7 @@ export class OrderService implements IOrderService {
         variantId: ((item as Record<string, unknown>).variantId as number) || undefined,
         quantity: item.quantity,
         uomCode: ((item as Record<string, unknown>).uomCode as string) || undefined,
+        unitPrice: item.unitPriceSnapshot ? Number(item.unitPriceSnapshot) : undefined,
         unitPriceSnapshot: item.unitPriceSnapshot ? Number(item.unitPriceSnapshot) : undefined,
         totalPrice: item.totalPrice ? Number(item.totalPrice) : undefined,
         productNameSnapshot: item.productNameSnapshot || undefined,
