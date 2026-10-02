@@ -68,10 +68,7 @@ export type UpdateMembershipError =
   | 'stale-membership'
   | 'last-administrator';
 
-export type LeaveError = Exclude<
-  UpdateMembershipError,
-  'invalid-input' | 'stale-membership' | 'partner-not-open'
->;
+export type LeaveError = Exclude<UpdateMembershipError, 'invalid-input' | 'stale-membership'>;
 
 export interface IMembershipService {
   /**
@@ -87,7 +84,7 @@ export interface IMembershipService {
     input: UpdateMembershipInput,
     expectedVersion: number,
   ): Promise<PartnerResult<PartnerMembership, UpdateMembershipError>>;
-  /** A member ends their own membership, whatever the Business Partner's status. */
+  /** A member ends their own membership, while the Business Partner is `onboarding` or `active`. */
   leave(
     actor: PartnerActor,
     membershipId: number,
