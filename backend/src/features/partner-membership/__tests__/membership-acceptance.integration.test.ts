@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { eq } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/postgres-js';
@@ -7,6 +8,7 @@ import {
   businessPartners,
   partnerAccessHistory,
   partnerInvitations,
+  partnerInvitationTokens,
   partnerMemberships,
   users,
 } from '@findeg/db/schema';
@@ -200,12 +202,22 @@ describe('Partner Invitation acceptance', () => {
   it('rejects an existing non-ended membership', async () => {
     const item = await fixture();
     await services.memberships.acceptInvitation(item.token, item.session);
-    const second = await services.invitations.invite(staff, item.partner.id, {
-      email: item.user.email,
-      roles: ['report-viewer'],
+    // `invite` refuses current members, so the second invitation is written directly.
+    const second = await testDb.db
+      .insert(partnerInvitations)
+      .values({
+        businessPartnerId: item.partner.id,
+        email: item.user.email,
+        roles: ['report-viewer'],
+        invitedByUserId: staff.userId,
+        expiresAt: new Date(now.getTime() + DAY),
+      })
+      .returning();
+    await testDb.db.insert(partnerInvitationTokens).values({
+      invitationId: second[0].id,
+      tokenDigest: createHash('sha256').update('second').digest('hex'),
     });
-    if (!second.success) throw new Error(second.error);
-    expect(await services.memberships.acceptInvitation(second.data.token, item.session)).toEqual({
+    expect(await services.memberships.acceptInvitation('second', item.session)).toEqual({
       success: false,
       error: 'already-member',
     });

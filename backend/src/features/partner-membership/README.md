@@ -13,7 +13,11 @@ Partner access is a parallel model next to Staff RBAC: this feature never depend
 (ADR-0008) and defaults to a no-op until the Outbox exists. `invite` and `resendInvitation` return the
 raw `token` so Staff can copy the link; only its SHA-256 digest is stored.
 
-`invitations` (Staff, `partners.manage`; allowed while the partner is `onboarding` or `active`):
+`invitations` (Staff with `partners.manage`, or a partner actor `{ kind: 'partner', userId }` who is an
+active Partner Administrator of that partner; allowed while the partner is `onboarding` or `active`).
+`invite` returns `already-member` for an email with an active or suspended membership. A partner actor
+cannot tell a missing partner or invitation from one it may not touch (`forbidden`); audit rows carry
+`actor_kind = partner`:
 `invite` (replaces a pending invitation for the same email), `resendInvitation` (same invitation,
 expiry reset to 7 days, new token, older tokens stay valid), `revokeInvitation`,
 `listPendingInvitations`, and the read-only `getInvitation(token)`.

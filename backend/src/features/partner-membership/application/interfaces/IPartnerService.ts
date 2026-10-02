@@ -11,6 +11,16 @@ export interface StaffActor {
   activeRoleIds?: readonly string[];
 }
 
+/**
+ * A signed-in member acting inside their own Partner Workspace. Services do not
+ * trust the claim: they confirm in the database, under the Business Partner
+ * lock, that the user holds an active `partner-administrator` membership.
+ */
+export interface PartnerActor {
+  kind: 'partner';
+  userId: number;
+}
+
 export interface BusinessPartner {
   id: number;
   code: string;

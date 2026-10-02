@@ -328,3 +328,23 @@ export async function listActivePartnerMembershipsForUser(
     .where(and(eq(partnerMemberships.userId, userId), eq(partnerMemberships.status, 'active')))
     .orderBy(asc(businessPartners.code));
 }
+
+/** A non-ended membership of the partner held by the user with this (lowercased) email. */
+export async function getCurrentPartnerMembershipByEmail(
+  executor: PartnerExecutor,
+  businessPartnerId: number,
+  email: string,
+): Promise<PartnerMembershipRow | undefined> {
+  const [row] = await executor
+    .select({ membership: partnerMemberships })
+    .from(partnerMemberships)
+    .innerJoin(users, eq(users.id, partnerMemberships.userId))
+    .where(
+      and(
+        eq(partnerMemberships.businessPartnerId, businessPartnerId),
+        ne(partnerMemberships.status, 'ended'),
+        sql`lower(${users.email}) = ${email}`,
+      ),
+    );
+  return row?.membership;
+}

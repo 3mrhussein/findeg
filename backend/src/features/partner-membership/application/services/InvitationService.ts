@@ -2,6 +2,7 @@ import { createHash, randomBytes } from 'node:crypto';
 import { z } from 'zod';
 import {
   getBusinessPartnerById,
+  getCurrentPartnerMembershipByEmail,
   getPartnerInvitationById,
   getPartnerInvitationByTokenDigest,
   getPendingPartnerInvitationByEmail,
@@ -14,22 +15,25 @@ import {
   setPartnerInvitationStatus,
   type BusinessPartnerRow,
   type PartnerDatabase,
+  type PartnerExecutor,
   type PartnerInvitationRow,
   type PartnerTransaction,
 } from '@findeg/db/queries/partners';
 import { PARTNER_ROLES } from '@findeg/db/schema';
-import type { PartnerResult, StaffActor } from '../interfaces/IPartnerService';
+import type { PartnerResult } from '../interfaces/IPartnerService';
 import type {
   EnqueueInvitation,
   IInvitationService,
+  InvitationActor,
   InvitationView,
+  InviteError,
   InviteInput,
   IssuedInvitation,
   PartnerInvitation,
   ResendError,
   RevokeError,
 } from '../interfaces/IInvitationService';
-import { canManagePartners, fail, ok } from './shared';
+import { canManagePartners, fail, isActivePartnerAdministrator, ok } from './shared';
 
 const INVITATION_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 
@@ -64,9 +68,12 @@ const snapshot = (row: PartnerInvitationRow) => ({
 });
 
 /**
- * Partner Invitations for FindEg Staff. Each operation locks its Business
- * Partner row first, so changes to one partner run one at a time, and commits
- * its audit row (and delivery enqueue) in the same transaction.
+ * Partner Invitations for FindEg Staff and for Partner Administrators of the
+ * Business Partner. Each operation locks its Business Partner row first, so
+ * changes to one partner run one at a time, authorizes the actor under that
+ * lock, and commits its audit row (and delivery enqueue) in the same
+ * transaction. A partner actor cannot tell a missing record from one it may
+ * not touch.
  */
 export class InvitationService implements IInvitationService {
   constructor(
@@ -75,45 +82,45 @@ export class InvitationService implements IInvitationService {
     private readonly enqueue: EnqueueInvitation,
   ) {}
 
-  async invite(actor: StaffActor, partnerId: number, input: InviteInput) {
-    if (!canManagePartners(actor)) return fail('forbidden');
+  async invite(actor: InvitationActor, partnerId: number, input: InviteInput) {
     const parsed = inviteSchema.safeParse(input);
     if (!parsed.success) return fail('invalid-input');
     const { email, roles } = parsed.data;
     const uniqueRoles = [...new Set(roles)];
 
     const db = await this.getDb();
-    return db.transaction(
-      async (tx): Promise<PartnerResult<IssuedInvitation, 'not-found' | 'partner-not-open'>> => {
-        const partner = await lockBusinessPartnerById(tx, partnerId);
-        if (!partner) return fail('not-found');
-        if (!isOpen(partner)) return fail('partner-not-open');
+    return db.transaction(async (tx): Promise<PartnerResult<IssuedInvitation, InviteError>> => {
+      const partner = await lockBusinessPartnerById(tx, partnerId);
+      const denied = await this.authorize(tx, actor, partner);
+      if (denied) return fail(denied);
+      if (!partner || !isOpen(partner)) return fail('partner-not-open');
 
-        const replaced = await getPendingPartnerInvitationByEmail(tx, partnerId, email);
-        if (replaced) {
-          const revoked = await setPartnerInvitationStatus(tx, replaced.id, 'revoked');
-          await this.audit(tx, actor, partnerId, 'invitation.revoked', replaced, revoked);
-        }
+      if (await getCurrentPartnerMembershipByEmail(tx, partnerId, email)) {
+        return fail('already-member');
+      }
+      const replaced = await getPendingPartnerInvitationByEmail(tx, partnerId, email);
+      if (replaced) {
+        const revoked = await setPartnerInvitationStatus(tx, replaced.id, 'revoked');
+        await this.audit(tx, actor, partnerId, 'invitation.revoked', replaced, revoked);
+      }
 
-        const created = await insertPartnerInvitation(tx, {
-          businessPartnerId: partnerId,
-          email,
-          roles: uniqueRoles,
-          invitedByUserId: actor.userId,
-          expiresAt: new Date(this.clock().getTime() + INVITATION_TTL_MS),
-        });
-        await this.audit(tx, actor, partnerId, 'invitation.issued', null, created);
-        const token = await this.mintAndEnqueue(tx, created.id);
-        return ok({ invitation: toInvitation(created), token });
-      },
-    );
+      const created = await insertPartnerInvitation(tx, {
+        businessPartnerId: partnerId,
+        email,
+        roles: uniqueRoles,
+        invitedByUserId: actor.userId,
+        expiresAt: new Date(this.clock().getTime() + INVITATION_TTL_MS),
+      });
+      await this.audit(tx, actor, partnerId, 'invitation.issued', null, created);
+      const token = await this.mintAndEnqueue(tx, created.id);
+      return ok({ invitation: toInvitation(created), token });
+    });
   }
 
-  async resendInvitation(actor: StaffActor, invitationId: number) {
-    if (!canManagePartners(actor)) return fail('forbidden');
+  async resendInvitation(actor: InvitationActor, invitationId: number) {
     const db = await this.getDb();
     return db.transaction(async (tx): Promise<PartnerResult<IssuedInvitation, ResendError>> => {
-      const locked = await this.lockPending(tx, invitationId);
+      const locked = await this.lockPending(tx, actor, invitationId);
       if (!locked.success) return locked;
       const { invitation } = locked.data;
 
@@ -135,11 +142,10 @@ export class InvitationService implements IInvitationService {
     });
   }
 
-  async revokeInvitation(actor: StaffActor, invitationId: number) {
-    if (!canManagePartners(actor)) return fail('forbidden');
+  async revokeInvitation(actor: InvitationActor, invitationId: number) {
     const db = await this.getDb();
     return db.transaction(async (tx): Promise<PartnerResult<PartnerInvitation, RevokeError>> => {
-      const locked = await this.lockPending(tx, invitationId);
+      const locked = await this.lockPending(tx, actor, invitationId);
       if (!locked.success) return locked;
       const { invitation } = locked.data;
 
@@ -156,9 +162,10 @@ export class InvitationService implements IInvitationService {
     });
   }
 
-  async listPendingInvitations(actor: StaffActor, partnerId: number) {
-    if (!canManagePartners(actor)) return fail('forbidden');
-    const rows = await listPendingPartnerInvitations(await this.getDb(), partnerId);
+  async listPendingInvitations(actor: InvitationActor, partnerId: number) {
+    const db = await this.getDb();
+    if (await this.authorize(db, actor, { id: partnerId })) return fail('forbidden');
+    const rows = await listPendingPartnerInvitations(db, partnerId);
     return ok(rows.map(toInvitation));
   }
 
@@ -185,13 +192,14 @@ export class InvitationService implements IInvitationService {
    */
   private async lockPending(
     tx: PartnerTransaction,
+    actor: InvitationActor,
     invitationId: number,
   ): Promise<PartnerResult<{ invitation: PartnerInvitationRow }, ResendError>> {
     const unlocked = await getPartnerInvitationById(tx, invitationId);
-    if (!unlocked) return fail('not-found');
-    const partner = await lockBusinessPartnerById(tx, unlocked.businessPartnerId);
-    if (!partner) return fail('not-found');
-    if (!isOpen(partner)) return fail('partner-not-open');
+    const partner = unlocked && (await lockBusinessPartnerById(tx, unlocked.businessPartnerId));
+    const denied = await this.authorize(tx, actor, partner || undefined);
+    if (denied) return fail(denied);
+    if (!partner || !isOpen(partner)) return fail('partner-not-open');
 
     const invitation = await getPartnerInvitationById(tx, invitationId);
     if (!invitation || invitation.status !== 'pending') return fail('invitation-not-pending');
@@ -205,9 +213,28 @@ export class InvitationService implements IInvitationService {
     return token;
   }
 
+  /**
+   * The one actor check, run under the partner lock. Staff need `partners.manage`
+   * and learn when the partner is missing; a partner actor must be an active
+   * Partner Administrator of it and otherwise only learns `forbidden`.
+   */
+  private async authorize(
+    executor: PartnerExecutor,
+    actor: InvitationActor,
+    partner: { id: number } | undefined,
+  ): Promise<'forbidden' | 'not-found' | null> {
+    if (actor.kind === 'staff') {
+      if (!canManagePartners(actor)) return 'forbidden';
+      return partner ? null : 'not-found';
+    }
+    const allowed =
+      partner && (await isActivePartnerAdministrator(executor, partner.id, actor.userId));
+    return allowed ? null : 'forbidden';
+  }
+
   private audit(
     tx: PartnerTransaction,
-    actor: StaffActor,
+    actor: InvitationActor,
     businessPartnerId: number,
     action: 'invitation.issued' | 'invitation.resent' | 'invitation.revoked',
     before: PartnerInvitationRow | null,
@@ -217,7 +244,7 @@ export class InvitationService implements IInvitationService {
       businessPartnerId,
       invitationId: after.id,
       actorUserId: actor.userId,
-      actorKind: 'staff',
+      actorKind: actor.kind,
       action,
       before: before && snapshot(before),
       after: snapshot(after),

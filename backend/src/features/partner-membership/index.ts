@@ -4,6 +4,7 @@
 export type {
   EnqueueInvitation,
   IInvitationService,
+  InvitationActor,
   InvitationView,
   InviteError,
   InviteInput,
@@ -20,6 +21,7 @@ export type {
   CreatePartnerError,
   CreatePartnerInput,
   IPartnerService,
+  PartnerActor,
   PartnerResult,
   ReadPartnerError,
   StaffActor,

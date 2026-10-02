@@ -1,8 +1,11 @@
+import { Button } from '@findeg/ui';
+import { Link } from '@i18n/navigation';
 import {
   PartnerNotice,
   PartnerSuspense,
   requireWorkspaceAccess,
 } from '../_components/PartnerShell';
+import { PARTNER_ADMINISTRATOR } from './_lib/access';
 
 export default async function PartnerWorkspacePage({
   params,
@@ -31,6 +34,13 @@ async function PartnerWorkspace({ code }: { code: string }) {
           <li key={role}>{role}</li>
         ))}
       </ul>
+      {membership.roles.includes(PARTNER_ADMINISTRATOR) && (
+        <nav className="mt-6 flex gap-3">
+          <Button asChild variant="outline">
+            <Link href={`/partner/${code}/invitations`}>Invitations</Link>
+          </Button>
+        </nav>
+      )}
     </PartnerNotice>
   );
 }
