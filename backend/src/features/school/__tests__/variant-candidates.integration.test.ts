@@ -1,4 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { eq } from 'drizzle-orm';
 import {
   attributes,
   categories,
@@ -9,7 +10,7 @@ import {
 import {
   findVariantCandidates,
   listAttributeValuesForCategory,
-} from '@findeg/db/queries/school-lists';
+} from '@findeg/db/queries/school-supply-lists';
 import { connectToTestDatabase, type TestDatabase } from '../../../testing/postgres';
 import { eligibleVariants } from '../domain/eligibleVariants';
 
@@ -151,6 +152,28 @@ describe('School Supply List catalog queries', () => {
     });
   });
 
+  it('keeps a `__proto__` attribute key as data so it still matches eligibility', async () => {
+    const cat = await category();
+    const odd = await attribute('odd');
+    await testDb.db.update(attributes).set({ key: '__proto__' }).where(eq(attributes.id, odd.id));
+    const matching = await variant(cat, [{ attribute: odd, value: 'x' }]);
+
+    const candidates = await findVariantCandidates(testDb.db, { categoryId: cat });
+    const result = eligibleVariants(
+      {
+        variantId: matching,
+        exactItem: false,
+        specification: {
+          categoryId: cat,
+          attributes: Object.fromEntries([['__proto__', 'x']]),
+        },
+      },
+      candidates,
+    );
+
+    expect(result.map((c) => c.variantId)).toEqual([matching]);
+  });
+
   describe('listAttributeValuesForCategory', () => {
     it('returns the distinct values in use, sorted, from active variants only', async () => {
       const cat = await category();
@@ -173,6 +196,14 @@ describe('School Supply List catalog queries', () => {
       expect(await listAttributeValuesForCategory(testDb.db, cat)).toEqual([
         { attributeKey: size.key, values: ['A3', 'A4', 'A5'] },
       ]);
+    });
+
+    it('honors an explicitly empty enum instead of falling back to values in use', async () => {
+      const cat = await category();
+      const size = await attribute('size', []);
+      await variant(cat, [{ attribute: size, value: 'A4' }]);
+
+      expect(await listAttributeValuesForCategory(testDb.db, cat)).toEqual([]);
     });
 
     it('is scoped to the category and empty when nothing is in use', async () => {

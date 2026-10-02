@@ -10,7 +10,7 @@
     "./schema": "./src/schema/index.ts",
     "./queries": "./src/queries/index.ts",
     "./queries/partners": "./src/queries/partners/index.ts",
-    "./queries/school-lists": "./src/queries/school-lists/index.ts",
+    "./queries/school-supply-lists": "./src/queries/school-supply-lists/index.ts",
     "./types": "./src/types/index.ts",
     "./types/*": "./src/types/*.ts"
   },

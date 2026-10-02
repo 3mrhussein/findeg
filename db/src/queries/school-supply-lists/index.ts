@@ -10,9 +10,11 @@ import * as schema from '../../schema';
  * executor (a database or an open transaction).
  */
 
-export type SchoolListDatabase = PostgresJsDatabase<typeof schema>;
-export type SchoolListTransaction = Parameters<Parameters<SchoolListDatabase['transaction']>[0]>[0];
-export type SchoolListExecutor = SchoolListDatabase | SchoolListTransaction;
+export type SchoolSupplyListDatabase = PostgresJsDatabase<typeof schema>;
+export type SchoolSupplyListTransaction = Parameters<
+  Parameters<SchoolSupplyListDatabase['transaction']>[0]
+>[0];
+export type SchoolSupplyListExecutor = SchoolSupplyListDatabase | SchoolSupplyListTransaction;
 
 const { attributes, productVariants, products, variantAttributes } = schema;
 
@@ -35,7 +37,7 @@ export interface VariantCandidateFilter {
  * There is deliberately no row limit.
  */
 export async function findVariantCandidates(
-  executor: SchoolListExecutor,
+  executor: SchoolSupplyListExecutor,
   filter: VariantCandidateFilter = {},
 ): Promise<VariantCandidateRow[]> {
   if (filter.variantIds?.length === 0) return [];
@@ -61,18 +63,24 @@ export async function findVariantCandidates(
     )
     .orderBy(asc(productVariants.id));
 
-  const byVariant = new Map<number, VariantCandidateRow>();
+  // Entries are collected in Maps and turned into records with Object.fromEntries,
+  // which defines own properties, so a key such as `__proto__` is kept as data.
+  const byVariant = new Map<number, { categoryId: number | null; entries: [string, string][] }>();
   for (const row of rows) {
     let candidate = byVariant.get(row.variantId);
     if (!candidate) {
-      candidate = { variantId: row.variantId, categoryId: row.categoryId, attributes: {} };
+      candidate = { categoryId: row.categoryId, entries: [] };
       byVariant.set(row.variantId, candidate);
     }
     if (row.attributeKey !== null && row.value !== null) {
-      candidate.attributes[row.attributeKey] = row.value;
+      candidate.entries.push([row.attributeKey, row.value]);
     }
   }
-  return [...byVariant.values()];
+  return [...byVariant.entries()].map(([variantId, { categoryId, entries }]) => ({
+    variantId,
+    categoryId,
+    attributes: Object.fromEntries(entries),
+  }));
 }
 
 export interface AttributeValues {
@@ -82,12 +90,12 @@ export interface AttributeValues {
 
 /**
  * The distinct values to offer per attribute for a category. An attribute's
- * enumerated values win when it has any; otherwise the values in use by active
+ * enumerated values win whenever they are set (even an empty list, which offers nothing); otherwise the values in use by active
  * variants of active products in that category. Attributes with no values are
  * left out. Sorted by attribute key, values sorted.
  */
 export async function listAttributeValuesForCategory(
-  executor: SchoolListExecutor,
+  executor: SchoolSupplyListExecutor,
   categoryId: number,
 ): Promise<AttributeValues[]> {
   const inUse = await executor
@@ -109,7 +117,7 @@ export async function listAttributeValuesForCategory(
       ),
     );
 
-  const byKey = new Map<string, { enumValues: string[]; used: Set<string> }>();
+  const byKey = new Map<string, { enumValues: string[] | null; used: Set<string> }>();
   for (const row of inUse) {
     let entry = byKey.get(row.attributeKey);
     if (!entry) {
@@ -122,12 +130,13 @@ export async function listAttributeValuesForCategory(
   return [...byKey.entries()]
     .map(([attributeKey, { enumValues, used }]) => ({
       attributeKey,
-      values: (enumValues.length > 0 ? [...new Set(enumValues)] : [...used]).sort(),
+      values: [...new Set(enumValues ?? used)].sort(),
     }))
     .filter((entry) => entry.values.length > 0)
     .sort((a, b) => a.attributeKey.localeCompare(b.attributeKey));
 }
 
-function toStringArray(value: unknown): string[] {
-  return Array.isArray(value) ? value.filter((v): v is string => typeof v === 'string') : [];
+/** An explicitly configured enum (even an empty one) is kept; unset (null/non-array) is `null`. */
+function toStringArray(value: unknown): string[] | null {
+  return Array.isArray(value) ? value.filter((v): v is string => typeof v === 'string') : null;
 }
