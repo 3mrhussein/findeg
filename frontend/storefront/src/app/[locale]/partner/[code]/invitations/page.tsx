@@ -1,8 +1,11 @@
 import { notFound } from 'next/navigation';
-import { createPartnerMembershipServices } from '@findeg/backend/features/partner-membership';
+import {
+  createPartnerMembershipServices,
+  PARTNER_ADMINISTRATOR,
+} from '@findeg/backend/features/partner-membership';
 import { Link } from '@i18n/navigation';
 import { PartnerSuspense, requireWorkspaceAccess } from '../../_components/PartnerShell';
-import { PARTNER_ADMINISTRATOR, partnerActor } from '../_lib/access';
+import { partnerActor } from '../_lib/access';
 import { InvitationsPanel } from './InvitationsPanel';
 
 export default async function PartnerInvitationsPage({

@@ -4,14 +4,14 @@ import { revalidatePath } from 'next/cache';
 import env from '@findeg/env';
 import {
   createPartnerMembershipServices,
+  PARTNER_ADMINISTRATOR,
   type InviteError,
   type PartnerRole,
   type ResendError,
   type RevokeError,
 } from '@findeg/backend/features/partner-membership';
-import { failure, normalizeLocale } from '../_lib/actions';
-import { PARTNER_ADMINISTRATOR, resolvePartnerAccess, type PartnerAccess } from '../_lib/access';
-import type { ActionState } from '../_lib/roles';
+import { actionError, normalizeLocale, type ActionState } from '../_lib/action-state';
+import { resolvePartnerAccess, type PartnerAccess } from '../_lib/access';
 
 type InvitationError = InviteError | ResendError | RevokeError;
 
@@ -25,7 +25,7 @@ const ERROR_MESSAGES: Record<InvitationError, string> = {
   'already-member': 'This person is already a member of this Business Partner.',
 };
 
-const fail = (error: InvitationError) => failure(ERROR_MESSAGES, error);
+const fail = (error: InvitationError) => actionError(ERROR_MESSAGES, error);
 
 // Until the Outbox delivers invitation emails, Partner Administrators share the link themselves.
 function linkFor(locale: string, token: string): string {
@@ -36,7 +36,7 @@ function linkFor(locale: string, token: string): string {
 const refresh = () => revalidatePath('/[locale]/partner/[code]/invitations', 'page');
 
 const resolveAdministrator = (code: string) =>
-  resolvePartnerAccess(code, [PARTNER_ADMINISTRATOR], 'membership-change');
+  resolvePartnerAccess(code, { roles: [PARTNER_ADMINISTRATOR], action: 'membership-change' });
 
 // The service authorizes against the invitation's own partner, so tie the id to the workspace
 // `code` the administrator is acting in: an administrator of two partners cannot act on one

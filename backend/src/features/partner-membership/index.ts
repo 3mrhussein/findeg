@@ -31,14 +31,18 @@ export type {
 export type {
   AcceptInvitationError,
   IMembershipService,
+  LeaveError,
   PartnerAction,
   PartnerContext,
   PartnerContextError,
+  PartnerMember,
   PartnerMembership,
   PartnerSession,
   RequirePartnerRoleError,
+  UpdateMembershipError,
+  UpdateMembershipInput,
 } from './application/interfaces/IMembershipService';
-export { PARTNER_ADMINISTRATOR } from './application/services/shared';
+export { PARTNER_ADMINISTRATOR } from '@findeg/db/schema';
 export { createPartnerMembershipServices } from './application/services/factory';
 export type {
   PartnerMembershipDependencies,

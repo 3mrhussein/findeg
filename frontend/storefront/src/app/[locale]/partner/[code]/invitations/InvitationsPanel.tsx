@@ -1,14 +1,16 @@
 'use client';
 
 import { useActionState, useState, useTransition } from 'react';
+import type { PartnerRole } from '@findeg/backend/features/partner-membership';
 import { Button, Input, Label } from '@findeg/ui';
-import { PARTNER_ROLES, roleLabel, type ActionState } from '../_lib/roles';
+import type { ActionState } from '../_lib/action-state';
+import { PARTNER_ROLES, ROLE_LABELS } from '../_lib/roles';
 import { inviteAction, resendInvitationAction, revokeInvitationAction } from './actions';
 
 export interface PendingInvitation {
   id: number;
   email: string;
-  roles: string[];
+  roles: PartnerRole[];
   expiresAt: string;
 }
 
@@ -64,9 +66,9 @@ export function InvitationsPanel({
         <fieldset className="space-y-2">
           <legend className="text-sm font-medium">Roles</legend>
           {PARTNER_ROLES.map((role) => (
-            <label key={role.value} className="flex items-center gap-2 text-sm">
-              <input type="checkbox" name="roles" value={role.value} />
-              {role.label}
+            <label key={role} className="flex items-center gap-2 text-sm">
+              <input type="checkbox" name="roles" value={role} />
+              {ROLE_LABELS[role]}
             </label>
           ))}
         </fieldset>
@@ -92,7 +94,7 @@ export function InvitationsPanel({
                     {invitation.email}
                   </div>
                   <div className="text-sm text-muted-foreground">
-                    {invitation.roles.map(roleLabel).join(', ')} · expires{' '}
+                    {invitation.roles.map((role) => ROLE_LABELS[role]).join(', ')} · expires{' '}
                     {new Date(invitation.expiresAt).toLocaleDateString('en-GB', {
                       timeZone: 'UTC',
                     })}

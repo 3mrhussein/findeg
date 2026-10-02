@@ -4,7 +4,11 @@ import {
   getPartnerUserById,
   type PartnerExecutor,
 } from '@findeg/db/queries/partners';
-import type { PartnerMembershipStatus, PartnerRole } from '@findeg/db/schema';
+import {
+  PARTNER_ADMINISTRATOR,
+  type PartnerMembershipStatus,
+  type PartnerRole,
+} from '@findeg/db/schema';
 import type { StaffActor } from '../interfaces/IPartnerService';
 
 const SYSTEM_ADMIN_ROLE = 'system_admin';
@@ -14,13 +18,18 @@ export function canManagePartners(actor: StaffActor): boolean {
   return actor.permissionCodes?.includes(PERMISSION_CODES.PARTNERS_MANAGE) === true;
 }
 
-export const PARTNER_ADMINISTRATOR: PartnerRole = 'partner-administrator';
+/** Whether the Business Partner is onboarding or active, the only statuses that allow member and invitation changes. */
+export function isOpen(partner: { status: string }): boolean {
+  return partner.status === 'onboarding' || partner.status === 'active';
+}
 
-/** Whether a membership is active and holds the `partner-administrator` role. */
-export const isActiveAdministrator = (membership: {
+/** Whether a membership is an active `partner-administrator`; the one definition of that state. */
+export function isActiveAdministrator(membership: {
   roles: readonly PartnerRole[];
   status: PartnerMembershipStatus;
-}) => membership.status === 'active' && membership.roles.includes(PARTNER_ADMINISTRATOR);
+}): boolean {
+  return membership.status === 'active' && membership.roles.includes(PARTNER_ADMINISTRATOR);
+}
 
 /**
  * Whether the user is an active account holding an active `partner-administrator`

@@ -111,6 +111,8 @@ export const PARTNER_ROLES = [
   'report-viewer',
 ] as const;
 export type PartnerRole = (typeof PARTNER_ROLES)[number];
+/** The role that manages a Business Partner's members; every partner must keep one active. */
+export const PARTNER_ADMINISTRATOR = 'partner-administrator' satisfies PartnerRole;
 
 export const PARTNER_INVITATION_STATUSES = ['pending', 'accepted', 'revoked'] as const;
 export type PartnerInvitationStatus = (typeof PARTNER_INVITATION_STATUSES)[number];
