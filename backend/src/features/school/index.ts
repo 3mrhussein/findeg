@@ -17,3 +17,9 @@ export type {
   IParentListService,
 } from './application/interfaces/IParentListService';
 export { createSchoolServices } from './application/services/factory';
+export { eligibleVariants } from './domain/eligibleVariants';
+export type {
+  EligibilityCandidate,
+  EligibilityItem,
+  ItemSpecification,
+} from './domain/eligibleVariants';
