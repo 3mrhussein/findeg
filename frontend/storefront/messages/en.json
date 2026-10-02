@@ -680,7 +680,11 @@
         "VariantUnknown": "Unavailable",
         "Change": "Change",
         "QuantityLabel": "Quantity",
-        "Prescribed": "School asks for {count}"
+        "Prescribed": "School asks for {count}",
+        "Progress": "{completed} of {total} required items covered",
+        "ProgressLabel": "List Completeness",
+        "MissingItems": "Still needed",
+        "ProgressAdvisory": "This is a guide only and never blocks checkout."
       }
     }
   },

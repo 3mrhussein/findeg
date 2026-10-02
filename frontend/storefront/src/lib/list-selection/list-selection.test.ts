@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import type { PublicSupplyList, PublicSupplyListItem } from '@findeg/backend/features/school';
 import {
   chooseVariant,
+  listCompleteness,
   linesForPost,
   loadSelection,
   resetSelection,
@@ -10,6 +11,7 @@ import {
   selectionKey,
   setEnabled,
   setQuantity,
+  type SelectionLine,
 } from './list-selection';
 
 const variant = (variantId: number) => ({
@@ -190,7 +192,12 @@ describe('list selection', () => {
     });
 
     it('resets an Exact Item to its default instead of flagging it', () => {
-      const exact = list([item(1, { exactItem: true, eligibleVariants: [] })]);
+      const exact = list([
+        item(1, {
+          exactItem: true,
+          eligibleVariants: [{ ...variant(10), differingAttributes: {} }],
+        }),
+      ]);
       saveSelection(
         exact.publicCode,
         { v: 1, lines: [{ listItemId: 1, variantId: 999, quantity: 3 }] },
@@ -233,5 +240,61 @@ describe('list selection', () => {
         { listItemId: 1, variantId: 10, quantity: 3 },
       ]);
     });
+  });
+});
+
+describe('listCompleteness', () => {
+  const complete = (items: PublicSupplyListItem[], lines: SelectionLine[]) =>
+    listCompleteness(list(items), { v: 1, lines });
+
+  it('counts a required item at its default and prescribed quantity', () => {
+    const result = complete([item(1)], [{ listItemId: 1, variantId: 10, quantity: 3 }]);
+    expect(result).toEqual({ total: 1, completed: 1, missing: [] });
+  });
+
+  it('counts any eligible substitute toward the item', () => {
+    const result = complete([item(1)], [{ listItemId: 1, variantId: 11, quantity: 3 }]);
+    expect(result.completed).toBe(1);
+  });
+
+  it('does not count a default that dropped out of the server eligibility', () => {
+    const result = complete(
+      [item(1, { eligibleVariants: [{ ...variant(11), differingAttributes: {} }] })],
+      [{ listItemId: 1, variantId: 10, quantity: 3 }],
+    );
+    expect(result.completed).toBe(0);
+  });
+
+  it('counts a quantity above the prescription as complete', () => {
+    const result = complete([item(1)], [{ listItemId: 1, variantId: 10, quantity: 6 }]);
+    expect(result.completed).toBe(1);
+  });
+
+  it('lists a required item below its prescribed quantity as missing', () => {
+    const a = item(1);
+    const result = complete([a], [{ listItemId: 1, variantId: 10, quantity: 2 }]);
+    expect(result).toEqual({ total: 1, completed: 0, missing: [a] });
+  });
+
+  it('does not count a variant that is no longer eligible', () => {
+    const result = complete([item(1)], [{ listItemId: 1, variantId: 99, quantity: 3 }]);
+    expect(result.completed).toBe(0);
+    expect(result.missing).toHaveLength(1);
+  });
+
+  it('never counts optional items, on or off', () => {
+    const optional = item(2, { required: false });
+    const result = complete(
+      [item(1), optional],
+      [
+        { listItemId: 1, variantId: 10, quantity: 3 },
+        { listItemId: 2, variantId: 20, quantity: 3 },
+      ],
+    );
+    expect(result).toEqual({ total: 1, completed: 1, missing: [] });
+  });
+
+  it('treats an item with no line as missing', () => {
+    expect(complete([item(1)], []).missing).toHaveLength(1);
   });
 });

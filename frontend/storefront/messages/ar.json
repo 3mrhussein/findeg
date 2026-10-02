@@ -680,7 +680,11 @@
         "VariantUnknown": "غير متاح",
         "Change": "تغيير",
         "QuantityLabel": "الكمية",
-        "Prescribed": "المدرسة تطلب {count}"
+        "Prescribed": "المدرسة تطلب {count}",
+        "Progress": "تم تغطية {completed} من {total} من العناصر المطلوبة",
+        "ProgressLabel": "تقدم القائمة",
+        "MissingItems": "لا يزال مطلوبًا",
+        "ProgressAdvisory": "هذا للإرشاد فقط ولا يمنع إتمام الطلب."
       }
     }
   },

@@ -10,6 +10,7 @@ import type {
 import { Link } from '@/i18n/navigation';
 import {
   chooseVariant,
+  listCompleteness,
   loadSelection,
   saveSelection,
   seedSelection,
@@ -67,6 +68,8 @@ export function SupplyListView({ list, locale }: { list: PublicSupplyList; local
     selection.lines.some((line) => line.listItemId === id && line.quantity > 0),
   );
 
+  const completeness = listCompleteness(list, selection);
+
   const variantName = (variant: PublicSupplyListVariant) =>
     [pick(variant.name, locale), pick(variant.variantLabel, locale)].filter(Boolean).join(' – ');
 
@@ -101,6 +104,28 @@ export function SupplyListView({ list, locale }: { list: PublicSupplyList; local
           {schoolName} &middot; {list.grade} &middot; {list.academicYear}
         </p>
       </header>
+
+      {!archived && completeness.total > 0 && (
+        <section className="space-y-2 rounded-xl border bg-white p-4">
+          <p className="font-semibold">
+            {t('Progress', { completed: completeness.completed, total: completeness.total })}
+          </p>
+          <progress
+            className="w-full"
+            value={completeness.completed}
+            max={completeness.total}
+            aria-label={t('ProgressLabel')}
+          />
+          {completeness.missing.length > 0 && (
+            <ul aria-label={t('MissingItems')} className="list-disc ps-5 text-sm">
+              {completeness.missing.map((item) => (
+                <li key={item.id}>{pick(item.label, locale)}</li>
+              ))}
+            </ul>
+          )}
+          <p className="text-sm text-muted-foreground">{t('ProgressAdvisory')}</p>
+        </section>
+      )}
 
       <ul className="space-y-4">
         {list.items.map((item) => {

@@ -1,4 +1,4 @@
-import type { PublicSupplyList } from '@findeg/backend/features/school';
+import type { PublicSupplyList, PublicSupplyListItem } from '@findeg/backend/features/school';
 
 /**
  * A Customer's List Selection: held in the browser per `publicCode`, never
@@ -37,6 +37,10 @@ const clampQuantity = (quantity: number) => {
 /** Enabled lines are clamped to 1–999; a required line can never be 0, an optional one may be off. */
 const normalizeQuantity = (quantity: number, required: boolean) =>
   quantity === 0 && !required ? 0 : clampQuantity(quantity);
+
+/** The server's eligibility result is the only authority; a default that dropped out of it is not eligible. */
+const isEligibleChoice = (item: PublicSupplyListItem, variantId: number) =>
+  item.eligibleVariants.some((variant) => variant.variantId === variantId);
 
 export const selectionKey = (publicCode: string) => `${KEY_PREFIX}${publicCode}`;
 
@@ -106,10 +110,7 @@ export function loadSelection(
       variantId: item.exactItem ? item.defaultVariant.variantId : stored.variantId,
       quantity: normalizeQuantity(stored.quantity, item.required),
     };
-    const eligible =
-      line.variantId === item.defaultVariant.variantId ||
-      item.eligibleVariants.some((variant) => variant.variantId === line.variantId);
-    if (!eligible) flaggedItemIds.push(item.id);
+    if (!isEligibleChoice(item, line.variantId)) flaggedItemIds.push(item.id);
     return line;
   });
 
@@ -191,4 +192,30 @@ export function chooseVariant(
 /** The lines that would be posted: switched-off (quantity 0) lines are stripped. */
 export function linesForPost(selection: ListSelection): SelectionLine[] {
   return selection.lines.filter((line) => line.quantity > 0);
+}
+
+export interface ListCompleteness {
+  /** Required items on the list. */
+  total: number;
+  completed: number;
+  missing: PublicSupplyListItem[];
+}
+
+/**
+ * Advisory List Completeness (ADR-0011): a required item is complete when its
+ * chosen variant is eligible and its quantity reaches the prescription. Optional
+ * items never count. Computed on the client only and never stored.
+ */
+export function listCompleteness(
+  list: PublicSupplyList,
+  selection: ListSelection,
+): ListCompleteness {
+  const lineByItem = new Map(selection.lines.map((line) => [line.listItemId, line]));
+  const required = list.items.filter((item) => item.required);
+  const missing = required.filter((item) => {
+    const line = lineByItem.get(item.id);
+    if (!line || line.quantity < item.quantity) return true;
+    return !isEligibleChoice(item, line.variantId);
+  });
+  return { total: required.length, completed: required.length - missing.length, missing };
 }
