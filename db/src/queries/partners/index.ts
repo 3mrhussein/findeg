@@ -259,6 +259,8 @@ export type NewPartnerMembershipRow = Pick<
   'businessPartnerId' | 'userId' | 'invitationId' | 'roles'
 >;
 
+const isCurrentMembership = ne(partnerMemberships.status, 'ended');
+
 export async function getCurrentPartnerMembership(
   executor: PartnerExecutor,
   businessPartnerId: number,
@@ -331,8 +333,6 @@ export async function listActivePartnerMembershipsForUser(
     .where(and(eq(partnerMemberships.userId, userId), eq(partnerMemberships.status, 'active')))
     .orderBy(asc(businessPartners.code));
 }
-
-const isCurrentMembership = ne(partnerMemberships.status, 'ended');
 
 /**
  * A non-ended membership of the partner held by the user with this (lowercased) email.

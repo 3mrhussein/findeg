@@ -12,6 +12,3 @@ export interface ActionState {
 export function actionError<E extends string>(messages: Record<E, string>, error: E): ActionState {
   return { status: 'error', message: messages[error] };
 }
-
-/** `en` or `ar`: anything else falls back to `en`, so a crafted locale never reaches a path. */
-export const normalizeLocale = (locale: string) => (locale === 'ar' ? 'ar' : 'en');
