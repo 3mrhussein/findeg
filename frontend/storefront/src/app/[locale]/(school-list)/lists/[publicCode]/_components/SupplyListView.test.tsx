@@ -149,6 +149,44 @@ describe('SupplyListView', () => {
     expect(screen.getByText('colour: red')).toBeInTheDocument();
   });
 
+  it('writes the Cart-drawer index entry on the first change, not on visiting', () => {
+    const l = list({ items: [{ ...list().items[0], required: false, exactItem: false }] });
+    render(<SupplyListView list={l} locale="en" />);
+    expect(window.localStorage.getItem('findeg:list-selection-index')).toBeNull();
+
+    fireEvent.click(screen.getByRole('checkbox'));
+    const index = JSON.parse(window.localStorage.getItem('findeg:list-selection-index') ?? '{}');
+    expect(index[l.publicCode]).toMatchObject({
+      title: 'Grade 1 supplies',
+      schoolName: 'Nile School',
+    });
+    expect(typeof index[l.publicCode].updatedAt).toBe('string');
+
+    fireEvent.click(screen.getByRole('checkbox'));
+    expect(JSON.parse(window.localStorage.getItem('findeg:list-selection-index') ?? '{}')).toEqual(
+      {},
+    );
+  });
+
+  it('discards the stored selection and drawer entry of an archived list', () => {
+    const l = list({ status: 'archived' });
+    window.localStorage.setItem(
+      `findeg:list-selection:${l.publicCode}`,
+      JSON.stringify({ v: 1, lines: [{ listItemId: 7, variantId: 1, quantity: 5 }] }),
+    );
+    window.localStorage.setItem(
+      'findeg:list-selection-index',
+      JSON.stringify({
+        [l.publicCode]: { title: 'Old', schoolName: 'Nile School', updatedAt: '2026-10-02' },
+      }),
+    );
+    render(<SupplyListView list={l} locale="en" />);
+    expect(window.localStorage.getItem(`findeg:list-selection:${l.publicCode}`)).toBeNull();
+    expect(JSON.parse(window.localStorage.getItem('findeg:list-selection-index') ?? '{}')).toEqual(
+      {},
+    );
+  });
+
   it('uses Arabic names when the locale is ar', () => {
     render(<SupplyListView list={list()} locale="ar" />);
     expect(screen.getByText('قلم أزرق')).toBeInTheDocument();

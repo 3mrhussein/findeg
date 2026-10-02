@@ -40,9 +40,6 @@ export type CartItem = {
 
   /** Currency code */
   currency: string;
-
-  /** Optional ID grouping items from the same school list kit */
-  cartKitId?: string;
 };
 
 /**

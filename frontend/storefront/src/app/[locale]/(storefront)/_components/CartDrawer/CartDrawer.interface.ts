@@ -10,5 +10,4 @@ export interface CartDrawerItemType {
   unitPrice: number;
   quantity: number;
   imageUrl?: string;
-  cartKitId?: string;
 }

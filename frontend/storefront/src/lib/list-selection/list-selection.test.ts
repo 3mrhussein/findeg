@@ -2,14 +2,18 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import type { PublicSupplyList, PublicSupplyListItem } from '@findeg/backend/features/school';
 import {
   chooseVariant,
+  isDefaultSelection,
   listCompleteness,
   linesForPost,
   loadSelection,
+  readSelectionIndex,
   resetSelection,
   saveSelection,
   seedSelection,
+  selectionIndexKey,
   selectionKey,
   setEnabled,
+  syncSelectionIndex,
   setQuantity,
   type SelectionLine,
 } from './list-selection';
@@ -231,6 +235,63 @@ describe('list selection', () => {
 
     it('does not turn required items off', () => {
       expect(setEnabled(seedSelection(l), l, 1, false).lines[0].quantity).toBe(3);
+    });
+  });
+
+  describe('cart-drawer index', () => {
+    const meta = { title: 'Grade 4', schoolName: 'Nile School' };
+    const now = new Date('2026-10-02T10:00:00.000Z');
+    const edit = (selection = seedSelection(l)) => setQuantity(selection, 1, 5);
+
+    it('is not written when the list is only seeded or visited', () => {
+      loadSelection(l, storage);
+      syncSelectionIndex(l.publicCode, seedSelection(l), l, meta, storage, now);
+      expect(storage.getItem(selectionIndexKey)).toBeNull();
+      expect(readSelectionIndex(storage)).toEqual([]);
+    });
+
+    it('is written on the first change from the defaults', () => {
+      syncSelectionIndex(l.publicCode, edit(), l, meta, storage, now);
+      expect(readSelectionIndex(storage)).toEqual([
+        { publicCode: l.publicCode, ...meta, updatedAt: now.toISOString() },
+      ]);
+    });
+
+    it('refreshes the updated time on later changes without duplicating the entry', () => {
+      syncSelectionIndex(l.publicCode, edit(), l, meta, storage, now);
+      const later = new Date('2026-10-03T10:00:00.000Z');
+      syncSelectionIndex(l.publicCode, setQuantity(edit(), 1, 6), l, meta, storage, later);
+      expect(readSelectionIndex(storage)).toEqual([
+        { publicCode: l.publicCode, ...meta, updatedAt: later.toISOString() },
+      ]);
+    });
+
+    it('is removed when the selection returns to the defaults', () => {
+      syncSelectionIndex(l.publicCode, edit(), l, meta, storage, now);
+      syncSelectionIndex(l.publicCode, seedSelection(l), l, meta, storage, now);
+      expect(readSelectionIndex(storage)).toEqual([]);
+    });
+
+    it('is removed by reset and leaves other lists alone', () => {
+      const other = list(l.items, { publicCode: 'b'.repeat(32) });
+      syncSelectionIndex(l.publicCode, edit(), l, meta, storage, now);
+      syncSelectionIndex(other.publicCode, edit(seedSelection(other)), other, meta, storage, now);
+      resetSelection(l.publicCode, storage);
+      expect(readSelectionIndex(storage).map((entry) => entry.publicCode)).toEqual([
+        other.publicCode,
+      ]);
+    });
+
+    it('ignores a corrupt index', () => {
+      storage.setItem(selectionIndexKey, '{not json');
+      expect(readSelectionIndex(storage)).toEqual([]);
+      storage.setItem(selectionIndexKey, JSON.stringify({ x: { title: 1 } }));
+      expect(readSelectionIndex(storage)).toEqual([]);
+    });
+
+    it('detects the default selection', () => {
+      expect(isDefaultSelection(seedSelection(l), l)).toBe(true);
+      expect(isDefaultSelection(chooseVariant(seedSelection(l), 1, 11), l)).toBe(false);
     });
   });
 

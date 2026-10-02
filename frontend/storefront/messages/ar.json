@@ -330,7 +330,8 @@
       "Checkout": "الانتقال إلى الدفع",
       "RemoveItem": "إزالة المنتج",
       "IncreaseQuantity": "زيادة الكمية",
-      "DecreaseQuantity": "تقليل الكمية"
+      "DecreaseQuantity": "تقليل الكمية",
+      "YourSchoolLists": "قوائمي المدرسية"
     },
     "Checkout": {
       "Title": "الدفع",
@@ -409,7 +410,7 @@
       "BundleTitle": "حزمة المستلزمات المطلوبة",
       "ItemsCount": "{count} عناصر",
       "EstimatedCost": "التكلفة التقديرية",
-      "AddBundleToCart": "إضافة الحزمة إلى السلة",
+      "ViewSchoolLists": "عرض القوائم المدرسية",
       "BackToShop": "متابعة التسوق",
       "SecondaryCtaTitle": "تشتري من قائمة مدرسية؟",
       "SecondaryCtaDescription": "استخدم أداة القوائم المدرسية الاختيارية لتعبئة المنتجات أولاً ثم أكمل التسوق بشكل طبيعي."

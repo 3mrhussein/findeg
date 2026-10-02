@@ -57,7 +57,6 @@ function toCartItems(
     quantity: item.quantity,
     unitPrice: item.unitPrice ?? item.unitPriceSnapshot ?? item.price ?? 0,
     currency: item.currency || 'EGP',
-    cartKitId: item.cartKitId,
   }));
 }
 

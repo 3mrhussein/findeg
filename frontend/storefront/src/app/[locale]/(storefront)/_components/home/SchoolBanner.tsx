@@ -50,7 +50,7 @@ export async function SchoolBanner({ locale }: { locale: string }) {
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="size-1.5 rounded-full bg-white/60 shrink-0" />
-                  Add all items to cart with one tap
+                  Choose your exact items before you check out
                 </li>
               </ul>
 
@@ -136,7 +136,7 @@ export async function SchoolBanner({ locale }: { locale: string }) {
                     asChild
                     className="w-full mt-4 rounded-xl font-bold bg-primary hover:bg-primary/90 text-white"
                   >
-                    <Link href="/school-lists">{t('Pages.SchoolLists.AddBundleToCart')}</Link>
+                    <Link href="/school-lists">{t('Pages.SchoolLists.ViewSchoolLists')}</Link>
                   </Button>
                 </div>
               </div>

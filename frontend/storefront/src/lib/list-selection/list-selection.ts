@@ -27,7 +27,7 @@ export const MIN_QUANTITY = 1;
 export const MAX_QUANTITY = 999;
 
 const KEY_PREFIX = 'findeg:list-selection:';
-const INDEX_KEY = 'findeg:list-selection-index';
+export const selectionIndexKey = 'findeg:list-selection-index';
 
 const clampQuantity = (quantity: number) => {
   const whole = Number.isFinite(quantity) ? Math.trunc(quantity) : MIN_QUANTITY;
@@ -133,13 +133,13 @@ export function saveSelection(
 export function resetSelection(publicCode: string, storage: SelectionStorage): void {
   try {
     storage.removeItem(selectionKey(publicCode));
-    const raw = storage.getItem(INDEX_KEY);
+    const raw = storage.getItem(selectionIndexKey);
     if (!raw) return;
     const index: unknown = JSON.parse(raw);
     if (typeof index !== 'object' || index === null || !(publicCode in index)) return;
     const rest = { ...(index as Record<string, unknown>) };
     delete rest[publicCode];
-    storage.setItem(INDEX_KEY, JSON.stringify(rest));
+    storage.setItem(selectionIndexKey, JSON.stringify(rest));
   } catch {
     // Nothing more to clear if storage is unavailable.
   }
@@ -192,6 +192,88 @@ export function chooseVariant(
 /** The lines that would be posted: switched-off (quantity 0) lines are stripped. */
 export function linesForPost(selection: ListSelection): SelectionLine[] {
   return selection.lines.filter((line) => line.quantity > 0);
+}
+
+/** What the Cart drawer needs to link to an in-progress list without a network call. */
+export interface SelectionIndexEntry {
+  publicCode: string;
+  title: string;
+  schoolName: string;
+  /** ISO timestamp of the last change. */
+  updatedAt: string;
+}
+
+type StoredIndexEntry = Omit<SelectionIndexEntry, 'publicCode'>;
+
+const isStoredEntry = (value: unknown): value is StoredIndexEntry => {
+  if (typeof value !== 'object' || value === null) return false;
+  const entry = value as Record<string, unknown>;
+  return (
+    typeof entry.title === 'string' &&
+    typeof entry.schoolName === 'string' &&
+    typeof entry.updatedAt === 'string'
+  );
+};
+
+function readIndexRecord(storage: SelectionStorage): Record<string, StoredIndexEntry> {
+  try {
+    const raw = storage.getItem(selectionIndexKey);
+    const parsed: unknown = raw ? JSON.parse(raw) : null;
+    if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) return {};
+    return Object.fromEntries(Object.entries(parsed).filter(([, entry]) => isStoredEntry(entry)));
+  } catch {
+    return {};
+  }
+}
+
+/** The in-progress lists, most recently changed first. */
+export function readSelectionIndex(storage: SelectionStorage): SelectionIndexEntry[] {
+  return Object.entries(readIndexRecord(storage))
+    .map(([publicCode, entry]) => ({ publicCode, ...entry }))
+    .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+}
+
+/** True when every line is exactly what seeding would produce. */
+export function isDefaultSelection(selection: ListSelection, list: PublicSupplyList): boolean {
+  const seeded = seedSelection(list);
+  return (
+    selection.lines.length === seeded.lines.length &&
+    seeded.lines.every((line, index) => {
+      const current = selection.lines[index];
+      return (
+        current.listItemId === line.listItemId &&
+        current.variantId === line.variantId &&
+        current.quantity === line.quantity
+      );
+    })
+  );
+}
+
+/**
+ * Keeps the Cart-drawer index in step with an edit: the entry appears on the
+ * first change from the defaults and goes away when the defaults return.
+ * Seeding alone never writes it.
+ */
+export function syncSelectionIndex(
+  publicCode: string,
+  selection: ListSelection,
+  list: PublicSupplyList,
+  meta: { title: string; schoolName: string },
+  storage: SelectionStorage,
+  now: Date = new Date(),
+): void {
+  try {
+    const index = readIndexRecord(storage);
+    if (isDefaultSelection(selection, list)) {
+      if (!(publicCode in index)) return;
+      delete index[publicCode];
+    } else {
+      index[publicCode] = { ...meta, updatedAt: now.toISOString() };
+    }
+    storage.setItem(selectionIndexKey, JSON.stringify(index));
+  } catch {
+    // The drawer link is a convenience; the selection itself is unaffected.
+  }
 }
 
 export interface ListCompleteness {

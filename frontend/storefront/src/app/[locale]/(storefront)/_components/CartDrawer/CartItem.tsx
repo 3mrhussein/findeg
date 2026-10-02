@@ -5,7 +5,6 @@ import { Plus, Minus } from 'lucide-react';
 import { Button } from '@findeg/ui';
 import { IconTooltip } from '@findeg/ui';
 import { useTranslations } from 'next-intl';
-import { cn } from '@lib/utils';
 
 interface CartItemProps {
   variantId: number;
@@ -14,7 +13,6 @@ interface CartItemProps {
   unitPrice: number;
   quantity: number;
   imageUrl?: string;
-  cartKitId?: string;
   onIncrease: () => void;
   onDecrease: () => void;
   onRemove: () => void;
@@ -32,7 +30,6 @@ export function CartItem({
   unitPrice,
   quantity,
   imageUrl,
-  cartKitId,
   onIncrease,
   onDecrease,
   onRemove,
@@ -66,19 +63,14 @@ export function CartItem({
         </div>
 
         <div className="flex items-center justify-between mt-auto pt-4">
-          <div
-            className={cn(
-              'flex items-center bg-slate-50 dark:bg-slate-800/50 rounded-full border border-slate-200 dark:border-slate-700/50 p-0.5',
-              cartKitId && 'opacity-50 pointer-events-none',
-            )}
-          >
+          <div className="flex items-center bg-slate-50 dark:bg-slate-800/50 rounded-full border border-slate-200 dark:border-slate-700/50 p-0.5">
             <IconTooltip label={t('Pages.Cart.DecreaseQuantity')} asChild>
               <Button
                 variant="ghost"
                 size="icon"
                 className="h-7 w-7 rounded-full text-slate-500 hover:bg-white dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition-colors"
                 onClick={onDecrease}
-                disabled={quantity <= 1 || !!cartKitId}
+                disabled={quantity <= 1}
                 aria-label={t('Pages.Cart.DecreaseQuantity')}
                 data-testid={`cart-decrease-${variantId}`}
               >
@@ -98,7 +90,6 @@ export function CartItem({
                 size="icon"
                 className="h-7 w-7 rounded-full text-slate-500 hover:bg-white dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition-colors"
                 onClick={onIncrease}
-                disabled={!!cartKitId}
                 aria-label={t('Pages.Cart.IncreaseQuantity')}
                 data-testid={`cart-increase-${variantId}`}
               >
@@ -109,24 +100,12 @@ export function CartItem({
 
           <Button
             variant="ghost"
-            className={cn(
-              'h-auto p-0 text-xs font-semibold hover:bg-transparent transition-colors uppercase tracking-wider',
-              cartKitId
-                ? 'text-primary hover:text-primary/80'
-                : 'text-slate-400 hover:text-destructive dark:hover:text-red-400',
-            )}
-            onClick={() => {
-              if (cartKitId) {
-                // Navigate to edit list or show kit removal?
-                console.log('Edit kit', cartKitId);
-              } else {
-                onRemove();
-              }
-            }}
-            aria-label={cartKitId ? 'Edit Kit' : t('Pages.Cart.RemoveItem')}
+            className="h-auto p-0 text-xs font-semibold hover:bg-transparent transition-colors uppercase tracking-wider text-slate-400 hover:text-destructive dark:hover:text-red-400"
+            onClick={onRemove}
+            aria-label={t('Pages.Cart.RemoveItem')}
             data-testid={`cart-action-${variantId}`}
           >
-            {cartKitId ? 'Edit List' : 'Remove'}
+            {t('Pages.Cart.RemoveItem')}
           </Button>
         </div>
       </div>
