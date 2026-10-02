@@ -257,6 +257,17 @@ describe('Partner Membership management', () => {
       expect((await reload(target.membership.id)).status).toBe('active');
     });
 
+    it('reports partner-not-open, not last-administrator, for the last administrator of a closed partner', async () => {
+      const partner = await newPartner();
+      const admin = await addMember(partner.id);
+      await setPartnerStatus(partner.id, 'closed');
+
+      expect(await services.memberships.leave(admin.actor, admin.membership.id)).toEqual({
+        success: false,
+        error: 'partner-not-open',
+      });
+    });
+
     it.each(['suspended', 'closed'] as const)(
       'is refused while the Business Partner is %s',
       async (status) => {
