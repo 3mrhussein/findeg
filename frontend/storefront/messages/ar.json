@@ -674,7 +674,13 @@
         "PriceNote": "الأسعار استرشادية؛ عرض السعر عند الدفع هو النهائي.",
         "Checkout": "إتمام الشراء",
         "CheckoutSoon": "إتمام شراء القائمة سيتوفر قريباً.",
-        "CheckoutArchived": "إتمام الشراء غير متاح لقائمة مؤرشفة."
+        "CheckoutArchived": "إتمام الشراء غير متاح لقائمة مؤرشفة.",
+        "UnavailableChooseAgain": "غير متاح، اختر مرة أخرى",
+        "CheckoutBlockedByUnavailable": "اختر خياراً متاحاً للعناصر المعلّمة لإتمام الشراء.",
+        "VariantUnknown": "غير متاح",
+        "Change": "تغيير",
+        "QuantityLabel": "الكمية",
+        "Prescribed": "المدرسة تطلب {count}"
       }
     }
   },
