@@ -69,10 +69,11 @@ const snapshot = (row: PartnerInvitationRow) => ({
 
 /**
  * Partner Invitations for FindEg Staff and for Partner Administrators of the
- * Business Partner. Each operation locks its Business Partner row first, so
+ * Business Partner. Each write locks its Business Partner row first, so
  * changes to one partner run one at a time, authorizes the actor under that
  * lock, and commits its audit row (and delivery enqueue) in the same
- * transaction. A partner actor cannot tell a missing record from one it may
+ * transaction. `listPendingInvitations` is a read: it authorizes the actor but takes no lock, so
+ * a membership changed concurrently can still see one stale list. A partner actor cannot tell a missing record from one it may
  * not touch.
  */
 export class InvitationService implements IInvitationService {
@@ -83,16 +84,15 @@ export class InvitationService implements IInvitationService {
   ) {}
 
   async invite(actor: InvitationActor, partnerId: number, input: InviteInput) {
-    const parsed = inviteSchema.safeParse(input);
-    if (!parsed.success) return fail('invalid-input');
-    const { email, roles } = parsed.data;
-    const uniqueRoles = [...new Set(roles)];
-
     const db = await this.getDb();
     return db.transaction(async (tx): Promise<PartnerResult<IssuedInvitation, InviteError>> => {
       const partner = await lockBusinessPartnerById(tx, partnerId);
       const denied = await this.authorize(tx, actor, partner);
       if (denied) return fail(denied);
+      const parsed = inviteSchema.safeParse(input);
+      if (!parsed.success) return fail('invalid-input');
+      const { email, roles } = parsed.data;
+      const uniqueRoles = [...new Set(roles)];
       if (!partner || !isOpen(partner)) return fail('partner-not-open');
 
       if (await getCurrentPartnerMembershipByEmail(tx, partnerId, email)) {
@@ -214,7 +214,7 @@ export class InvitationService implements IInvitationService {
   }
 
   /**
-   * The one actor check, run under the partner lock. Staff need `partners.manage`
+   * The one actor check. Writes run it under the partner lock; the list read does not. Staff need `partners.manage`
    * and learn when the partner is missing; a partner actor must be an active
    * Partner Administrator of it and otherwise only learns `forbidden`.
    */

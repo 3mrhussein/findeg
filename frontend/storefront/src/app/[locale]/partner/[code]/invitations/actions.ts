@@ -1,6 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import env from '@findeg/env';
 import {
   createPartnerMembershipServices,
   type InviteError,
@@ -9,7 +10,7 @@ import {
   type RevokeError,
 } from '@findeg/backend/features/partner-membership';
 import { failure, normalizeLocale } from '../_lib/actions';
-import { PARTNER_ADMINISTRATOR, resolvePartnerAccess } from '../_lib/access';
+import { PARTNER_ADMINISTRATOR, resolvePartnerAccess, type PartnerAccess } from '../_lib/access';
 import type { ActionState } from '../_lib/roles';
 
 type InvitationError = InviteError | ResendError | RevokeError;
@@ -28,7 +29,7 @@ const fail = (error: InvitationError) => failure(ERROR_MESSAGES, error);
 
 // Until the Outbox delivers invitation emails, Partner Administrators share the link themselves.
 function linkFor(locale: string, token: string): string {
-  const base = (process.env.NEXT_PUBLIC_SITE_URL ?? '').replace(/\/$/, '');
+  const base = env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, '');
   return `${base}/${normalizeLocale(locale)}/partner/invitations/${encodeURIComponent(token)}`;
 }
 
@@ -36,6 +37,17 @@ const refresh = () => revalidatePath('/[locale]/partner/[code]/invitations', 'pa
 
 const resolveAdministrator = (code: string) =>
   resolvePartnerAccess(code, [PARTNER_ADMINISTRATOR], 'membership-change');
+
+// The service authorizes against the invitation's own partner, so tie the id to the workspace
+// `code` the administrator is acting in: an administrator of two partners cannot act on one
+// partner's invitation from the other's page. Another partner's invitation reads as not pending.
+async function isPendingInvitationOf(access: PartnerAccess, invitationId: number) {
+  const pending = await createPartnerMembershipServices().invitations.listPendingInvitations(
+    access.actor,
+    access.context.partner.id,
+  );
+  return pending.success && pending.data.some((invitation) => invitation.id === invitationId);
+}
 
 export async function inviteAction(
   locale: string,
@@ -65,6 +77,7 @@ export async function resendInvitationAction(
 ): Promise<ActionState> {
   const access = await resolveAdministrator(code);
   if (!access) return fail('forbidden');
+  if (!(await isPendingInvitationOf(access, invitationId))) return fail('invitation-not-pending');
   const result = await createPartnerMembershipServices().invitations.resendInvitation(
     access.actor,
     invitationId,
@@ -80,6 +93,7 @@ export async function revokeInvitationAction(
 ): Promise<ActionState> {
   const access = await resolveAdministrator(code);
   if (!access) return fail('forbidden');
+  if (!(await isPendingInvitationOf(access, invitationId))) return fail('invitation-not-pending');
   const result = await createPartnerMembershipServices().invitations.revokeInvitation(
     access.actor,
     invitationId,

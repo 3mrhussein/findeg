@@ -268,7 +268,7 @@ export async function getCurrentPartnerMembership(
       and(
         eq(partnerMemberships.businessPartnerId, businessPartnerId),
         eq(partnerMemberships.userId, userId),
-        ne(partnerMemberships.status, 'ended'),
+        isCurrentMembership,
       ),
     );
   return row;
@@ -329,7 +329,13 @@ export async function listActivePartnerMembershipsForUser(
     .orderBy(asc(businessPartners.code));
 }
 
-/** A non-ended membership of the partner held by the user with this (lowercased) email. */
+const isCurrentMembership = ne(partnerMemberships.status, 'ended');
+
+/**
+ * A non-ended membership of the partner held by the user with this (lowercased) email.
+ * `users.email` is stored as entered and its unique index is case-sensitive, so the match
+ * lowercases the column.
+ */
 export async function getCurrentPartnerMembershipByEmail(
   executor: PartnerExecutor,
   businessPartnerId: number,
@@ -342,7 +348,7 @@ export async function getCurrentPartnerMembershipByEmail(
     .where(
       and(
         eq(partnerMemberships.businessPartnerId, businessPartnerId),
-        ne(partnerMemberships.status, 'ended'),
+        isCurrentMembership,
         sql`lower(${users.email}) = ${email}`,
       ),
     );

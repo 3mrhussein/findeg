@@ -1,4 +1,7 @@
-import { createPartnerMembershipServices } from '@findeg/backend/features/partner-membership';
+import {
+  createPartnerMembershipServices,
+  PARTNER_ADMINISTRATOR,
+} from '@findeg/backend/features/partner-membership';
 import type {
   PartnerAction,
   PartnerActor,
@@ -7,7 +10,7 @@ import type {
 } from '@findeg/backend/features/partner-membership';
 import { getCachedPartnerContext } from '@data/partner/queries';
 
-export const PARTNER_ADMINISTRATOR: PartnerRole = 'partner-administrator';
+export { PARTNER_ADMINISTRATOR };
 
 export interface PartnerAccess {
   context: PartnerContext;

@@ -213,6 +213,22 @@ describe('Partner Invitations by a Partner Administrator', () => {
     ).toEqual({ success: false, error: 'invalid-input' });
   });
 
+  it('authorizes before validating or revealing the Business Partner status', async () => {
+    const partner = await newPartner();
+    const viewer = await addMember(partner.id, ['report-viewer']);
+    await setStatus(partner.id, 'suspended');
+
+    expect(
+      await services.invitations.invite(viewer.actor, partner.id, { email: 'bad', roles: [] }),
+    ).toEqual({ success: false, error: 'forbidden' });
+    expect(
+      await services.invitations.invite(viewer.actor, partner.id, {
+        email: 'ok@findeg.test',
+        roles: ['report-viewer'],
+      }),
+    ).toEqual({ success: false, error: 'forbidden' });
+  });
+
   it.each(['suspended', 'closed'] as const)(
     'refuses invite, resend and revoke while the Business Partner is %s',
     async (status) => {

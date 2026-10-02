@@ -38,6 +38,7 @@ export type {
   PartnerSession,
   RequirePartnerRoleError,
 } from './application/interfaces/IMembershipService';
+export { PARTNER_ADMINISTRATOR } from './application/services/shared';
 export { createPartnerMembershipServices } from './application/services/factory';
 export type {
   PartnerMembershipDependencies,

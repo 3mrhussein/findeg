@@ -4,7 +4,7 @@ import {
   getPartnerUserById,
   type PartnerExecutor,
 } from '@findeg/db/queries/partners';
-import type { PartnerRole } from '@findeg/db/schema';
+import type { PartnerMembershipStatus, PartnerRole } from '@findeg/db/schema';
 import type { StaffActor } from '../interfaces/IPartnerService';
 
 const SYSTEM_ADMIN_ROLE = 'system_admin';
@@ -17,8 +17,10 @@ export function canManagePartners(actor: StaffActor): boolean {
 export const PARTNER_ADMINISTRATOR: PartnerRole = 'partner-administrator';
 
 /** Whether a membership is active and holds the `partner-administrator` role. */
-export const isActiveAdministrator = (membership: { roles: readonly string[]; status: string }) =>
-  membership.status === 'active' && membership.roles.includes(PARTNER_ADMINISTRATOR);
+export const isActiveAdministrator = (membership: {
+  roles: readonly PartnerRole[];
+  status: PartnerMembershipStatus;
+}) => membership.status === 'active' && membership.roles.includes(PARTNER_ADMINISTRATOR);
 
 /**
  * Whether the user is an active account holding an active `partner-administrator`
