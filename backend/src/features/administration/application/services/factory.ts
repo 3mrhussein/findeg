@@ -17,6 +17,7 @@ import type { IAdminOrderService } from '../interfaces/IAdminOrderService';
 import type { IAdminDashboardService } from '../interfaces/IAdminDashboardService';
 import type { IAuditLogService } from '../interfaces/IAuditLogService';
 import type { IProductImportService } from '../interfaces/IProductImportService';
+import type { IAdminSchoolSupplyListService } from '../interfaces/IAdminSchoolSupplyListService';
 
 // Admin services
 import { AdminProductService } from './AdminProductService';
@@ -29,6 +30,16 @@ import { AdminOrderService } from './AdminOrderService';
 import { AdminDashboardService } from './AdminDashboardService';
 import { AuditLogService } from './AuditLogService';
 import { ProductImportService } from './ProductImportService';
+import { AdminSchoolSupplyListService } from './AdminSchoolSupplyListService';
+import { createSchoolSupplyListService } from '../../../school';
+import {
+  findVariantCandidates,
+  listAttributeValuesForCategory,
+} from '@findeg/db/queries/school-supply-lists';
+
+async function loadDb() {
+  return (await import('@findeg/db/connection')).db;
+}
 
 import { IEmailService } from '@findeg/backend/features/notifications';
 
@@ -58,6 +69,12 @@ export function createAdministrationServices(): AdministrationServices {
 
   // Create admin product service (uses query primitives - no repositories needed)
   const adminProductService = new AdminProductService(auditLogService);
+  const schoolSupplyListLifecycle = createSchoolSupplyListService();
+  const adminSchoolSupplyListService = new AdminSchoolSupplyListService(
+    schoolSupplyListLifecycle,
+    async (categoryId) => listAttributeValuesForCategory(await loadDb(), categoryId),
+    async (categoryId) => findVariantCandidates(await loadDb(), { categoryId }),
+  );
 
   // Create admin services (inject repository dependencies)
   // Note: Some services have optional dependencies (emailService)
@@ -81,6 +98,7 @@ export function createAdministrationServices(): AdministrationServices {
     dashboard: new AdminDashboardService(),
     auditLog: auditLogService,
     productImport: new ProductImportService(adminProductService),
+    schoolSupplyLists: adminSchoolSupplyListService,
   };
 }
 
@@ -98,4 +116,5 @@ export interface AdministrationServices {
   dashboard: IAdminDashboardService;
   auditLog: IAuditLogService;
   productImport: IProductImportService;
+  schoolSupplyLists: IAdminSchoolSupplyListService;
 }
