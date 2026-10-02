@@ -168,6 +168,25 @@ describe('SupplyListView', () => {
     );
   });
 
+  it('discards the stored selection and drawer entry of an archived list', () => {
+    const l = list({ status: 'archived' });
+    window.localStorage.setItem(
+      `findeg:list-selection:${l.publicCode}`,
+      JSON.stringify({ v: 1, lines: [{ listItemId: 7, variantId: 1, quantity: 5 }] }),
+    );
+    window.localStorage.setItem(
+      'findeg:list-selection-index',
+      JSON.stringify({
+        [l.publicCode]: { title: 'Old', schoolName: 'Nile School', updatedAt: '2026-10-02' },
+      }),
+    );
+    render(<SupplyListView list={l} locale="en" />);
+    expect(window.localStorage.getItem(`findeg:list-selection:${l.publicCode}`)).toBeNull();
+    expect(JSON.parse(window.localStorage.getItem('findeg:list-selection-index') ?? '{}')).toEqual(
+      {},
+    );
+  });
+
   it('uses Arabic names when the locale is ar', () => {
     render(<SupplyListView list={list()} locale="ar" />);
     expect(screen.getByText('قلم أزرق')).toBeInTheDocument();
