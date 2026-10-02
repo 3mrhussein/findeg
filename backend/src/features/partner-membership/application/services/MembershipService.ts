@@ -252,11 +252,11 @@ export class MembershipService implements IMembershipService {
   }
 
   /** Staff need `partners.manage`; Partner actors must be an active Partner Administrator of the partner. */
-  private mayManageMembers(
+  private async mayManageMembers(
     executor: PartnerExecutor,
     actor: PartnerActor | StaffActor,
     partnerId: number,
-  ): Promise<boolean> | boolean {
+  ): Promise<boolean> {
     return actor.kind === 'staff'
       ? canManagePartners(actor)
       : isActivePartnerAdministrator(executor, partnerId, actor.userId);

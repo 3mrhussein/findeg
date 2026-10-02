@@ -35,7 +35,10 @@ export async function updateMembershipAction(
   const { memberships } = createPartnerMembershipServices();
   const result = await memberships.updateMembership(actor, membershipId, input, expectedVersion);
   if (!result.success) {
-    return { status: 'error', message: ERROR_MESSAGES[result.error] ?? result.error };
+    return {
+      status: 'error',
+      message: ERROR_MESSAGES[result.error] ?? 'Something went wrong. Try again.',
+    };
   }
   revalidatePath('/[locale]/partners/[id]', 'page');
   return { status: 'done' };

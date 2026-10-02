@@ -9,7 +9,6 @@ import {
   revokeInvitationAction,
   type InvitationActionState,
 } from '../_actions/invitations';
-
 import { PARTNER_ROLES } from '../_lib/partnerRoles';
 
 export interface PendingInvitation {

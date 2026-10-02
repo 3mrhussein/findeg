@@ -5,14 +5,13 @@ import { Badge, Button } from '@findeg/ui';
 import { useLocale } from 'next-intl';
 import type { Locale } from 'next-intl';
 import { updateMembershipAction, type MembershipActionState } from '../_actions/memberships';
-
-import { PARTNER_ROLES, type PartnerRoleValue as RoleValue } from '../_lib/partnerRoles';
+import { PARTNER_ROLES, type PartnerRoleValue } from '../_lib/partnerRoles';
 
 export interface MemberRow {
   id: number;
   email: string;
   name: string;
-  roles: RoleValue[];
+  roles: PartnerRoleValue[];
   status: 'active' | 'suspended' | 'ended';
   authorizationVersion: number;
 }
@@ -26,7 +25,7 @@ interface MembersPanelProps {
 /** Members of one Business Partner, with change roles, suspend, reactivate and end. */
 export function MembersPanel({ canChange, members }: MembersPanelProps) {
   const locale = useLocale() as Locale;
-  const [editing, setEditing] = useState<{ id: number; roles: RoleValue[] }>();
+  const [editing, setEditing] = useState<{ id: number; roles: PartnerRoleValue[] }>();
   const [rowState, setRowState] = useState<{ id: number; state: MembershipActionState }>();
   const [busy, startTransition] = useTransition();
 

@@ -33,6 +33,7 @@ export default async function PartnerDetailPage({
   if (!partner.success) notFound();
   const members = await memberships.listMembers(actor, partnerId);
   const pending = await invitations.listPendingInvitations(actor, partnerId);
+  const canChange = partner.data.status === 'onboarding' || partner.data.status === 'active';
 
   return (
     <div className="space-y-6">
@@ -53,20 +54,26 @@ export default async function PartnerDetailPage({
         current={partner.data.status}
         targets={partners.allowedStatusChanges(partner.data.status)}
       />
-      <MembersPanel
-        canChange={partner.data.status === 'onboarding' || partner.data.status === 'active'}
-        members={(members.success ? members.data : []).map((member) => ({
-          id: member.id,
-          email: member.email,
-          name: [member.firstName, member.lastName].filter(Boolean).join(' '),
-          roles: member.roles,
-          status: member.status,
-          authorizationVersion: member.authorizationVersion,
-        }))}
-      />
+      {members.success ? (
+        <MembersPanel
+          canChange={canChange}
+          members={members.data.map((member) => ({
+            id: member.id,
+            email: member.email,
+            name: [member.firstName, member.lastName].filter(Boolean).join(' '),
+            roles: member.roles,
+            status: member.status,
+            authorizationVersion: member.authorizationVersion,
+          }))}
+        />
+      ) : (
+        <p role="alert" className="text-destructive text-sm">
+          Members could not be loaded. You may not have permission to manage this Business Partner.
+        </p>
+      )}
       <InvitationsPanel
         partnerId={partnerId}
-        canChange={partner.data.status === 'onboarding' || partner.data.status === 'active'}
+        canChange={canChange}
         invitations={(pending.success ? pending.data : []).map((invitation) => ({
           id: invitation.id,
           email: invitation.email,
