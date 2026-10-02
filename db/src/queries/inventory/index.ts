@@ -6,4 +6,4 @@ export {
   InsufficientStockError,
   StockReservationStateError,
 } from './stock-reservations';
-export type { ReservationLine, StockAllocation, StockShortfall } from './stock-reservations';
+export type { ReservationLine, ReservedStock, StockShortfall } from './stock-reservations';

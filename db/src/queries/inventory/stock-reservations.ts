@@ -16,7 +16,7 @@ export interface ReservationLine {
   quantity: number;
 }
 
-export interface StockAllocation {
+export interface ReservedStock {
   variantId: number;
   warehouseId: number;
   quantity: number;
@@ -74,7 +74,7 @@ export async function reserveOrderStock(
   orderId: number,
   lines: ReservationLine[],
   tx?: DbTransaction,
-): Promise<StockAllocation[]> {
+): Promise<ReservedStock[]> {
   const wanted = aggregate(lines);
   if (wanted.length === 0) return [];
 
@@ -104,7 +104,7 @@ export async function reserveOrderStock(
       .orderBy(asc(inventoryBalances.variantId), asc(inventoryBalances.warehouseId))
       .for('update');
 
-    const allocations: StockAllocation[] = [];
+    const reservedLines: ReservedStock[] = [];
     const shortfalls: StockShortfall[] = [];
     for (const { variantId, quantity } of wanted) {
       let remaining = quantity;
@@ -114,7 +114,7 @@ export async function reserveOrderStock(
         available += free;
         const take = Math.min(free, remaining);
         if (take > 0) {
-          allocations.push({ variantId, warehouseId: balance.warehouseId, quantity: take });
+          reservedLines.push({ variantId, warehouseId: balance.warehouseId, quantity: take });
           remaining -= take;
         }
       }
@@ -122,8 +122,8 @@ export async function reserveOrderStock(
     }
     if (shortfalls.length > 0) throw new InsufficientStockError(shortfalls);
 
-    await tx.insert(stockReservations).values(allocations.map((a) => ({ orderId, ...a })));
-    for (const a of allocations) {
+    await tx.insert(stockReservations).values(reservedLines.map((a) => ({ orderId, ...a })));
+    for (const a of reservedLines) {
       await tx
         .update(inventoryBalances)
         .set({ reserved: sql`${inventoryBalances.reserved} + ${a.quantity}` })
@@ -135,7 +135,7 @@ export async function reserveOrderStock(
         );
     }
     await tx.insert(stockMovements).values(
-      allocations.map((a) => ({
+      reservedLines.map((a) => ({
         variantId: a.variantId,
         warehouseId: a.warehouseId,
         movementType: 'reserve',
@@ -145,14 +145,14 @@ export async function reserveOrderStock(
         notes: `Reservation for order ${orderId}`,
       })),
     );
-    return allocations;
+    return reservedLines;
   });
 }
 
 type Settlement = 'consume' | 'release';
 
 /**
- * Settles every allocation of an order's reservation. Returns false when this
+ * Settles every reserved line of an order's reservation. Returns false when this
  * settlement was already applied (idempotent), true when it ran now.
  */
 async function settleOrderStock(
@@ -236,12 +236,12 @@ async function settleOrderStock(
   });
 }
 
-/** Delivery: `on_hand -= n`, `reserved -= n` for each allocation. Idempotent per order. */
+/** Delivery: `on_hand -= n`, `reserved -= n` for each reserved line. Idempotent per order. */
 export function consumeOrderStock(orderId: number, tx?: DbTransaction): Promise<boolean> {
   return settleOrderStock(orderId, 'consume', tx);
 }
 
-/** Cancellation: `reserved -= n` for each allocation. Idempotent per order. */
+/** Cancellation: `reserved -= n` for each reserved line. Idempotent per order. */
 export function releaseOrderStock(orderId: number, tx?: DbTransaction): Promise<boolean> {
   return settleOrderStock(orderId, 'release', tx);
 }
