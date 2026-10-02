@@ -7,7 +7,8 @@ interface SchoolProfileClientProps {
 /**
  * SchoolProfileClient
  *
- * Displays a school's grade lists. Opening a list is by its public code only.
+ * Displays a Partner School's supply lists. A School Supply List is opened by its
+ * publicCode only.
  */
 export function SchoolProfileClient({ lists }: SchoolProfileClientProps) {
   return (

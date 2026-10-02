@@ -1,11 +1,12 @@
 import { getSchoolProfile } from '@/data/school/queries';
 import { SchoolProfileClient } from './SchoolProfileClient';
 import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
 import { Badge } from '@findeg/ui';
 import { School, MapPin, GraduationCap, Calendar, ShieldCheck } from 'lucide-react';
 
 interface PageProps {
-  params: { locale: string; slug: string };
+  params: Promise<{ locale: string; slug: string }>;
 }
 
 /**
@@ -14,8 +15,23 @@ interface PageProps {
  * School Profile Page.
  * Displays all grade lists for a specific school.
  */
-export default async function SchoolProfilePage({ params }: PageProps) {
-  const school = await getSchoolProfile(params.slug);
+export default function SchoolProfilePage({ params }: PageProps) {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen justify-center py-16">
+          <div className="size-10 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+        </div>
+      }
+    >
+      <SchoolProfileContent params={params} />
+    </Suspense>
+  );
+}
+
+async function SchoolProfileContent({ params }: PageProps) {
+  const { slug } = await params;
+  const school = await getSchoolProfile(slug);
 
   if (!school) {
     notFound();
