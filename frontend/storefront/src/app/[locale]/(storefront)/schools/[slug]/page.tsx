@@ -1,9 +1,10 @@
 import { getSchoolProfile } from '@/data/school/queries';
-import { SchoolProfileClient } from './SchoolProfileClient';
+import { SchoolProfileLists } from './SchoolProfileLists';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
+import { getLocale, getTranslations } from 'next-intl/server';
 import { Badge } from '@findeg/ui';
-import { School, MapPin, GraduationCap, Calendar, ShieldCheck } from 'lucide-react';
+import { School, MapPin, GraduationCap, ShieldCheck } from 'lucide-react';
 
 interface PageProps {
   params: Promise<{ locale: string; slug: string }>;
@@ -12,8 +13,8 @@ interface PageProps {
 /**
  * /schools/[slug]
  *
- * School Profile Page.
- * Displays all grade lists for a specific school.
+ * Partner School profile. `slug` is the school's Business Partner code. Shows
+ * its published School Supply Lists, each linking to `/lists/<publicCode>`.
  */
 export default function SchoolProfilePage({ params }: PageProps) {
   return (
@@ -31,11 +32,18 @@ export default function SchoolProfilePage({ params }: PageProps) {
 
 async function SchoolProfileContent({ params }: PageProps) {
   const { slug } = await params;
-  const school = await getSchoolProfile(slug);
+  const [school, locale, t] = await Promise.all([
+    getSchoolProfile(slug),
+    getLocale(),
+    getTranslations('School.Directory'),
+  ]);
 
   if (!school) {
     notFound();
   }
+
+  const name = locale === 'ar' ? school.nameAr : school.nameEn;
+  const location = [school.area, school.governorate].filter(Boolean).join(', ');
 
   return (
     <div className="container mx-auto py-12 px-4 space-y-12">
@@ -51,36 +59,34 @@ async function SchoolProfileContent({ params }: PageProps) {
           <div className="grow space-y-4">
             <div className="space-y-1">
               <div className="flex flex-wrap items-center gap-2">
-                <Badge variant="outline" className="text-primary font-bold">
-                  {school.schoolType}
-                </Badge>
-                <Badge variant="secondary" className="font-semibold">
-                  {school.academicSystem}
-                </Badge>
+                {school.schoolType && (
+                  <Badge variant="outline" className="text-primary font-bold">
+                    {school.schoolType}
+                  </Badge>
+                )}
+                {school.academicSystem && (
+                  <Badge variant="secondary" className="font-semibold">
+                    {school.academicSystem}
+                  </Badge>
+                )}
                 <Badge className="bg-emerald-100 text-emerald-800 border-emerald-200 hover:bg-emerald-100 flex gap-1">
                   <ShieldCheck className="w-3 h-3" />
-                  Verified School
+                  {t('verifiedSchool')}
                 </Badge>
               </div>
-              <h1 className="text-3xl md:text-5xl font-black tracking-tight uppercase">
-                {school.name}
-              </h1>
-              <div className="flex items-center gap-2 text-muted-foreground text-lg">
-                <MapPin className="w-5 h-5" />
-                <span>
-                  {school.area}, {school.governorate}
-                </span>
-              </div>
+              <h1 className="text-3xl md:text-5xl font-black tracking-tight uppercase">{name}</h1>
+              {location && (
+                <div className="flex items-center gap-2 text-muted-foreground text-lg">
+                  <MapPin className="w-5 h-5" />
+                  <span>{location}</span>
+                </div>
+              )}
             </div>
 
             <div className="flex flex-wrap gap-6 pt-2">
               <div className="flex items-center gap-2 text-sm font-medium">
                 <GraduationCap className="w-5 h-5 text-primary/60" />
-                {school.lists.length} grade levels listed
-              </div>
-              <div className="flex items-center gap-2 text-sm font-medium">
-                <Calendar className="w-5 h-5 text-primary/60" />
-                Updated for 2024/2025
+                {t('publishedListsCount', { count: school.lists.length })}
               </div>
             </div>
           </div>
@@ -88,18 +94,17 @@ async function SchoolProfileContent({ params }: PageProps) {
       </div>
 
       <div className="space-y-12">
-        {/* Main Content: Grade Lists */}
         <div className="space-y-8">
           <div className="flex items-center justify-between pb-4 border-b">
             <h2 className="text-3xl font-black flex items-center gap-3">
-              Grade Supply Lists
+              {t('supplyListsHeading')}
               <Badge variant="secondary" className="rounded-full">
-                {school.lists.filter((l) => l.isActive).length} Active
+                {school.lists.length}
               </Badge>
             </h2>
           </div>
 
-          <SchoolProfileClient lists={school.lists} />
+          <SchoolProfileLists lists={school.lists} locale={locale} />
         </div>
       </div>
     </div>

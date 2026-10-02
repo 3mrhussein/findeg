@@ -11,11 +11,11 @@ interface SchoolListLookupFormProps {
 }
 
 /**
- * School list lookup form that syncs to URL query state.
+ * School Supply List lookup form that syncs to URL query state.
  */
 export function SchoolListLookupForm({ initialCode = '' }: SchoolListLookupFormProps) {
   const t = useTranslations();
-  const { code, setCode, submit } = useSchoolListLookup({ initialCode });
+  const { code, setCode, invalid, submit } = useSchoolListLookup({ initialCode });
 
   /**
    *
@@ -42,7 +42,12 @@ export function SchoolListLookupForm({ initialCode = '' }: SchoolListLookupFormP
           <Button type="submit">{t('Pages.SchoolLists.Submit')}</Button>
         </div>
       </div>
-      <p className="text-xs text-muted-foreground">{t('Pages.SchoolLists.CodeHint')}</p>
+      <p
+        className={invalid ? 'text-xs text-destructive' : 'text-xs text-muted-foreground'}
+        role={invalid ? 'alert' : undefined}
+      >
+        {t('Pages.SchoolLists.CodeHint')}
+      </p>
     </form>
   );
 }

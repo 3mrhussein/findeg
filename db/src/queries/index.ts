@@ -10,7 +10,6 @@ export * as categoryQueries from './catalog/categories';
 export * as brandQueries from './catalog/brands';
 export * as collectionQueries from './catalog/collections';
 export * as inventoryQueries from './catalog/inventory';
-export * as schoolListQueries from './catalog/school-lists';
 export * as tagQueries from './catalog/tags';
 export * as adminSearchAnalyticsQueries from './catalog/admin-search-analytics';
 export * as orderQueries from './sales/orders';
@@ -18,9 +17,7 @@ export * as reviewQueries from './review/reviews';
 export * as auditLogQueries from './administration/audit-logs';
 export * as notificationQueries from './notifications/notifications';
 export * as userQueries from './identity/users';
-export * as sessionQueries from './school/sessions';
 
-// Feature-specific queries (admin operations, school directory, etc.)
+// Feature-specific queries (admin operations, etc.)
 export * from './products';
 export * from './identity';
-export * from './school';

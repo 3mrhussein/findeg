@@ -1,16 +1,11 @@
 export type {
+  ISchoolDirectory,
   SchoolFilterOptions,
   SchoolProfile,
-  SchoolSearchResult,
+  SchoolProfileList,
   SchoolSearchParams,
-  ISchoolDirectoryService,
-} from './application/interfaces/ISchoolDirectoryService';
-export type {
-  SessionState,
-  SessionSummary,
-  IParentListService,
-} from './application/interfaces/IParentListService';
-export { createSchoolServices } from './application/services/factory';
+  SchoolSearchResult,
+} from './application/interfaces/ISchoolDirectory';
 export { eligibleVariants } from './domain/eligibleVariants';
 export { canReadSupplyLists, canWriteSupplyLists } from './domain/supplyListPermissions';
 export type {
@@ -19,6 +14,7 @@ export type {
   ItemSpecification,
 } from './domain/eligibleVariants';
 export {
+  createSchoolDirectory,
   createSchoolSupplyListReader,
   createSchoolSupplyListService,
 } from './application/services/supply-list-factory';

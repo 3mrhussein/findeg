@@ -29,7 +29,7 @@ function UserIconNav() {
  *
  */
 export function SchoolListLayout({ children }: SchoolListLayoutProps) {
-  const t = useTranslations('School.ParentExperience.Layout');
+  const t = useTranslations('School.SupplyList.Layout');
 
   return (
     <div className="min-h-screen bg-slate-50/50 flex flex-col">

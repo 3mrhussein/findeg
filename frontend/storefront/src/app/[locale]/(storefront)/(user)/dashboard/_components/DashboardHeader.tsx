@@ -33,7 +33,6 @@ export function DashboardHeader({ activeView }: DashboardHeaderProps) {
     inventory: t('Inventory'),
     orders: t('Orders'),
     customers: t('Customers'),
-    school_lists: t('SchoolLists'),
     media: t('Media'),
     team: t('Team'),
     settings: t('Settings'),

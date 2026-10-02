@@ -1,184 +1,35 @@
 /**
  * School Data Layer (Storefront)
+ *
+ * The directory reads Partner Schools and their published School Supply Lists.
+ * A list itself is opened live by its public code and is never cached here.
+ * Filter options are cached; search and the profile are not, because they embed
+ * list status (publish/archive/replace) that must show immediately.
  */
-'use cache';
-
 import { cacheTag, cacheLife } from 'next/cache';
-import { createSchoolListService, createProductService } from '@findeg/backend/features/catalog';
-import { parse } from '@findeg/backend/features/core';
-import type { Product } from '../catalog/types';
+import { createSchoolDirectory, type SchoolSearchParams } from '@findeg/backend/features/school';
 
 /**
- * Helper to map backend product to storefront product
+ * Search the Partner School directory. Uncached: rows carry published-list counts.
  */
-function mapProduct(
-  p: Product & { localizedSlug?: Record<string, string> },
-  locale: string,
-): Product {
-  return {
-    ...p,
-    slug: p.localizedSlug?.[locale] || p.localizedSlug?.en || p.slug || '',
-    variants: (p.variants || []).map((v) => ({
-      ...v,
-      inventory: v.inventory || [],
-    })),
-    isNew: p.createdAt
-      ? new Date(p.createdAt).getTime() > Date.now() - 30 * 24 * 60 * 60 * 1000
-      : false,
-  };
+export async function searchSchools(params: SchoolSearchParams) {
+  return createSchoolDirectory().searchSchools(params);
 }
 
 /**
- * Retrieves a school list by code and hydrates products.
- */
-export async function getSchoolListData(locale: string, code: string) {
-  const resLocale = parse(locale);
-  cacheTag(`school-list-${code}`);
-  cacheLife('hours');
-
-  const schoolLists = createSchoolListService();
-  const productService = createProductService();
-  const list = await schoolLists.getListBySlug(code);
-
-  if (!list) {
-    return {
-      products: [],
-      productIds: [],
-      totalEstimatedCost: 0,
-    };
-  }
-
-  // Aggregate products from the default alternatives
-  const products = [];
-  const productIds = [];
-  let totalEstimatedCost = 0;
-
-  if (list.items) {
-    for (const item of list.items) {
-      const defaultAlt = item.alternatives?.find((alt) => alt.isDefault) || item.alternatives?.[0];
-      if (defaultAlt) {
-        // In a real app we'd batch fetch, but for now we follow the service interface
-        const product = await productService.getById(defaultAlt.variant?.productId || 0, resLocale);
-        if (product) {
-          products.push(mapProduct(product, resLocale));
-          productIds.push(product.id);
-          totalEstimatedCost += Number(defaultAlt.variant?.basePrice || 0) * item.quantityRequired;
-        }
-      }
-    }
-  }
-
-  return {
-    products,
-    productIds,
-    totalEstimatedCost,
-  };
-}
-
-/**
- * Search schools in the directory.
- */
-export async function searchSchools(params: {
-  query?: string;
-  governorate?: string;
-  schoolType?: string;
-  page?: number;
-  limit?: number;
-}) {
-  cacheTag('schools', `school-search-${JSON.stringify(params)}`);
-  cacheLife('hours');
-
-  const schoolLists = createSchoolListService();
-  const all = await schoolLists.getActiveLists();
-
-  const filtered = all.filter(
-    (s) => !params.query || s.schoolName.toLowerCase().includes(params.query.toLowerCase()),
-  );
-
-  // Group by school name to form SchoolSearchResult shape
-  const groups = new Map<
-    string,
-    {
-      schoolName: string;
-      schoolType: string;
-      academicSystem: string;
-      area: string;
-      governorate: string;
-      gradeCount: number;
-      hasCurrentLists: boolean;
-    }
-  >();
-  for (const list of filtered) {
-    if (!groups.has(list.schoolName)) {
-      groups.set(list.schoolName, {
-        schoolName: list.schoolName,
-        schoolType: list.schoolType || 'General',
-        academicSystem: list.academicSystem || 'Mixed',
-        area: list.area || 'Unknown',
-        governorate: list.governorate || 'Egypt',
-        gradeCount: 0,
-        hasCurrentLists: false,
-      });
-    }
-    const group = groups.get(list.schoolName)!;
-    group.gradeCount++;
-    if (list.academicYear?.includes('2024') || list.academicYear?.includes('2025')) {
-      group.hasCurrentLists = true;
-    }
-  }
-
-  const items = Array.from(groups.values());
-
-  return {
-    items,
-    totalCount: items.length,
-  };
-}
-
-/**
- * Get filter options for schools.
+ * Get filter options for the directory.
  */
 export async function getSchoolFilterOptions() {
+  'use cache';
   cacheTag('school-filters');
-  cacheLife('days');
+  cacheLife('hours');
 
-  return {
-    governorates: ['Cairo', 'Giza', 'Alexandria', 'Qaliubiya'],
-    schoolTypes: ['National', 'International', 'Language', 'IGCSE', 'American'],
-  };
+  return createSchoolDirectory().getFilterOptions();
 }
 
 /**
- * Get school profile by slug.
+ * Get a Partner School profile by its code, with its published lists. Uncached.
  */
-export async function getSchoolProfile(slug: string) {
-  cacheTag(`school-${slug}`);
-  cacheLife('hours');
-
-  const schoolLists = createSchoolListService();
-  const allActive = await schoolLists.getActiveLists();
-
-  // Find all lists for this school (grouped by schoolName)
-  // In a real app we might have a separate school entity, but for now we group by common properties
-  const schoolNameFromSlug = slug.replace(/-/g, ' ');
-  const schoolListsForProfile = allActive.filter(
-    (s) =>
-      s.schoolName.toLowerCase() === schoolNameFromSlug.toLowerCase() || s.slug.startsWith(slug),
-  );
-
-  if (schoolListsForProfile.length === 0) return null;
-
-  const main = schoolListsForProfile[0];
-
-  return {
-    name: main.schoolName,
-    schoolType: main.schoolType || 'General',
-    academicSystem: main.academicSystem || 'Mixed',
-    area: main.area || 'Unknown',
-    governorate: main.governorate || 'Egypt',
-    lists: schoolListsForProfile.map((l) => ({
-      ...l,
-      name: `${l.grade} - ${l.academicYear}`,
-    })),
-  };
+export async function getSchoolProfile(code: string) {
+  return createSchoolDirectory().getByCode(code);
 }

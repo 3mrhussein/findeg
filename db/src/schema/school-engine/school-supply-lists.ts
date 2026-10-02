@@ -36,7 +36,7 @@ export const partnerSchoolProfiles = schoolEngineSchema.table('partner_school_pr
   logoUrl: text('logo_url'),
 });
 
-/** New lifecycle tables coexist with the legacy tables until #217 contracts them. */
+/** A School Supply List owned by a Partner School, moving through draft, published and archived. */
 export const schoolSupplyLists = schoolEngineSchema.table(
   'school_supply_lists',
   {

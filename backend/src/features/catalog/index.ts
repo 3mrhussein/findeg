@@ -36,8 +36,6 @@ export type {
 
 // ─── Interface-adjacent types ───────────────────────────────────────────────
 export type { ProductFilters } from './application/interfaces/ProductFilters';
-export type { SchoolListResult } from './application/interfaces/ISchoolListRepository';
-export type { ISchoolListService } from './application/services/SchoolListService';
 export type {
   SearchAnalyticsMetrics,
   TopSearchQuery,
@@ -55,7 +53,6 @@ export {
   createCollectionService,
   createSearchService,
   createInventoryService,
-  createSchoolListService,
   createBrandService,
   createAdminSearchAnalyticsService,
 } from './application/services/factory';

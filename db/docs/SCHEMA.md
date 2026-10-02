@@ -23,9 +23,6 @@ erDiagram
     ORDERS ||--o{ ORDER_ITEMS : contains
     ORDER_ITEMS }|--|| PRODUCT_VARIANTS : snapshots
 
-    SCHOOLS ||--o{ SCHOOL_LISTS : owns
-    SCHOOL_LISTS ||--o{ SCHOOL_LIST_ITEMS : contains
-    SCHOOL_LIST_ITEMS }|--|| PRODUCTS : references
 ```
 
 ---
@@ -53,8 +50,8 @@ erDiagram
 
 ### 4. School
 
-- `schools`, `school_lists`: Grade-scoped academic lists.
-- `school_access_tokens`: Secure temporary entrance links mapped to sessions.
+- `partner_school_profiles`: A Partner School's governorate, area, school type, academic system and logo.
+- `school_supply_lists`, `school_supply_list_items`: A Partner School's School Supply Lists (draft, published, archived) and their items.
 
 ---
 

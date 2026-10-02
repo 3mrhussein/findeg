@@ -161,7 +161,7 @@ describe('Staff School Supply List lifecycle on real Postgres', () => {
     return { list, item, defaultVariant };
   }
 
-  it('creates the new tables alongside legacy tables, with a school profile and draft defaults', async () => {
+  it('creates a draft with a school profile and draft defaults', async () => {
     const list = await draft();
     expect(list).toMatchObject({
       status: 'draft',
@@ -179,10 +179,18 @@ describe('Staff School Supply List lifecycle on real Postgres', () => {
       schoolType: 'private',
       academicSystem: 'national',
     });
-    const [legacy] =
-      await testDb.sql`select to_regclass('school_engine.school_lists') as lists, to_regclass('school_engine.school_list_items') as items`;
-    expect(legacy.lists).not.toBeNull();
-    expect(legacy.items).not.toBeNull();
+  });
+
+  it('has dropped every legacy school list table and the order item kit column', async () => {
+    const tables = await testDb.sql`
+      select table_name from information_schema.tables
+      where table_schema = 'school_engine'
+        and table_name in ('school_lists', 'school_list_items', 'school_list_item_alternatives', 'school_list_parent_sessions', 'cart_kits')`;
+    const columns = await testDb.sql`
+      select column_name from information_schema.columns
+      where table_schema = 'sales' and table_name = 'order_items' and column_name = 'cart_kit_id'`;
+    expect(tables).toHaveLength(0);
+    expect(columns).toHaveLength(0);
   });
 
   it('requires Staff write authorization on every mutation, and read authorization on reads', async () => {

@@ -7,7 +7,6 @@ import { TagService } from './TagService';
 import { CollectionService } from './CollectionService';
 import { SearchService } from './SearchService';
 import { InventoryService } from './InventoryService';
-import { SchoolListService } from './SchoolListService';
 import { BrandService } from './BrandService';
 import { AdminSearchAnalyticsService } from './AdminSearchAnalyticsService';
 
@@ -37,10 +36,6 @@ export function createSearchService() {
 
 export function createInventoryService() {
   return new InventoryService();
-}
-
-export function createSchoolListService() {
-  return new SchoolListService();
 }
 
 export function createBrandService() {

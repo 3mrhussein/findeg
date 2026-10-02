@@ -1,38 +1,36 @@
 'use client';
 
 import { useState } from 'react';
-import { usePathname, useRouter } from '@i18n/navigation';
+import { useRouter } from '@i18n/navigation';
 
 interface UseSchoolListLookupParams {
   initialCode?: string;
 }
 
+/** The 32-character public code, whether pasted alone or inside a share link. */
+const PUBLIC_CODE = /[0-9a-f]{32}/i;
+
 /**
- * Encapsulates school list lookup input and URL submit behavior.
+ * Encapsulates School Supply List lookup input and navigation to `/lists/<publicCode>`.
  */
 export function useSchoolListLookup({ initialCode = '' }: UseSchoolListLookupParams = {}) {
   const router = useRouter();
-  const pathname = usePathname();
   const [code, setCode] = useState(initialCode);
+  const [invalid, setInvalid] = useState(false);
 
   /**
-   * Navigates to the same route with updated code query.
+   * Opens the list for the pasted code or link, or flags the input as invalid.
    */
   function submit() {
-    const value = code.trim();
-    if (!value) {
-      router.push(pathname);
-      return;
-    }
-
-    const params = new URLSearchParams();
-    params.set('code', value);
-    router.push(`${pathname}?${params.toString()}`);
+    const match = PUBLIC_CODE.exec(code.trim());
+    setInvalid(!match);
+    if (match) router.push(`/lists/${match[0].toLowerCase()}`);
   }
 
   return {
     code,
     setCode,
+    invalid,
     submit,
   };
 }

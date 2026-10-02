@@ -135,7 +135,7 @@ async function CollectionsPageContent({ params }: { params: Promise<{ locale: st
         </div>
       </section>
 
-      {/* Smart School List CTA */}
+      {/* Smart School Supply List CTA */}
       <section className="relative overflow-hidden rounded-3xl bg-slate-900 dark:bg-slate-800/80 dark:border dark:border-slate-700/50 p-8 lg:p-14">
         <div className="absolute inset-0 bg-linear-to-br from-primary/20 via-transparent to-blue-600/10 pointer-events-none" />
         <div className="relative z-10 flex flex-col lg:flex-row items-center gap-8 lg:gap-12">

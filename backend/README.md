@@ -17,7 +17,7 @@ graph TD
 
 The nucleus of the business. Absolutely no external dependencies (no Drizzle, no Next.js).
 
-- **Entities**: Pure business objects (e.g., `Product`, `Order`, `SchoolList`).
+- **Entities**: Pure business objects (e.g., `Product`, `Order`, `SchoolSupplyList`).
 - **Value Objects**: Shared foundational types (`Money`, `LocalizedString`, `ActorContext`).
 - **Zod Schemas**: Strict parsing boundaries validating inputs before crossing into the Service layer.
 - **Domain Errors**: Extends `Error` into bounded, semantic failures (`InsufficientStockError`, `UnauthorizedError`).
@@ -174,18 +174,18 @@ pnpm db:studio
 
 The backend is composed of 10 rigidly bounded context modules:
 
-| Feature Module                                              | Business Purpose                                       | Key Domain Entities                           |
-| ----------------------------------------------------------- | ------------------------------------------------------ | --------------------------------------------- |
-| [**Catalog**](src/features/catalog/README.md)               | Central PIM handling all discoverability.              | `Product`, `Category`, `Variant`, `Brand`     |
-| [**Cart**](src/features/cart/README.md)                     | Ephemeral shopping session state.                      | `CartHeader`, `CartItem`                      |
-| [**Order**](src/features/order/README.md)                   | Checkout, fulfillment, and post-purchase ledger.       | `Order`, `OrderItem`, `Transaction`           |
-| [**Identity**](src/features/identity/README.md)             | Hardened auth, RBAC permissions, token vending.        | `User`, `Role`, `PasswordCredentials`         |
-| [**Administration**](src/features/administration/README.md) | Operations auditing and back-office metrics.           | `AuditLog`, `DashboardMetric`                 |
-| [**School**](src/features/school/README.md)                 | B2B2C School Supply Lists (secure gateways).           | `SchoolList`, `SchoolListItem`, `AccessToken` |
-| [**Review**](src/features/review/README.md)                 | UGC (User Generated Content), scoring, and moderation. | `Review`, `HelpfulVote`                       |
-| [**Media**](src/features/media/README.md)                   | Media delivery, S3 uploads, image compression.         | `MediaAsset`, `FileLink`                      |
-| [**Core**](src/features/core/README.md)                     | System-wide building blocks.                           | `ServiceResult`, `Pagination`                 |
-| [**Notifications**](src/features/notifications/README.md)   | Broadcasts, transactional emails, Bell-alerts.         | `Notification`, `EmailTemplate`               |
+| Feature Module                                              | Business Purpose                                       | Key Domain Entities                       |
+| ----------------------------------------------------------- | ------------------------------------------------------ | ----------------------------------------- |
+| [**Catalog**](src/features/catalog/README.md)               | Central PIM handling all discoverability.              | `Product`, `Category`, `Variant`, `Brand` |
+| [**Cart**](src/features/cart/README.md)                     | Ephemeral shopping session state.                      | `CartHeader`, `CartItem`                  |
+| [**Order**](src/features/order/README.md)                   | Checkout, fulfillment, and post-purchase ledger.       | `Order`, `OrderItem`, `Transaction`       |
+| [**Identity**](src/features/identity/README.md)             | Hardened auth, RBAC permissions, token vending.        | `User`, `Role`, `PasswordCredentials`     |
+| [**Administration**](src/features/administration/README.md) | Operations auditing and back-office metrics.           | `AuditLog`, `DashboardMetric`             |
+| [**School**](src/features/school/README.md)                 | B2B2C School Supply Lists (secure gateways).           | `SchoolSupplyList`, `PartnerSchool`       |
+| [**Review**](src/features/review/README.md)                 | UGC (User Generated Content), scoring, and moderation. | `Review`, `HelpfulVote`                   |
+| [**Media**](src/features/media/README.md)                   | Media delivery, S3 uploads, image compression.         | `MediaAsset`, `FileLink`                  |
+| [**Core**](src/features/core/README.md)                     | System-wide building blocks.                           | `ServiceResult`, `Pagination`             |
+| [**Notifications**](src/features/notifications/README.md)   | Broadcasts, transactional emails, Bell-alerts.         | `Notification`, `EmailTemplate`           |
 
 ---
 
