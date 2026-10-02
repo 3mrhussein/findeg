@@ -187,6 +187,11 @@ describe('SupplyListView', () => {
       expect(screen.queryByText('CheckoutBlockedByUnavailable')).not.toBeInTheDocument();
     });
 
+    it('is not shown on an archived, view-only list', () => {
+      render(<SupplyListView list={{ ...twoItems(), status: 'archived' }} locale="en" />);
+      expect(screen.queryByText(/^Progress:/)).not.toBeInTheDocument();
+    });
+
     it('is not shown when the list has no required items', () => {
       const l = list({ items: [{ ...list().items[0], required: false }] });
       render(<SupplyListView list={l} locale="en" />);

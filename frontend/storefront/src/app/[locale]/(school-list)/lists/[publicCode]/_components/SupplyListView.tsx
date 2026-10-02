@@ -105,7 +105,7 @@ export function SupplyListView({ list, locale }: { list: PublicSupplyList; local
         </p>
       </header>
 
-      {completeness.total > 0 && (
+      {!archived && completeness.total > 0 && (
         <section className="space-y-2 rounded-xl border bg-white p-4">
           <p className="font-semibold">
             {t('Progress', { completed: completeness.completed, total: completeness.total })}

@@ -38,6 +38,11 @@ const clampQuantity = (quantity: number) => {
 const normalizeQuantity = (quantity: number, required: boolean) =>
   quantity === 0 && !required ? 0 : clampQuantity(quantity);
 
+/** Reads the server's eligibility result: the default or one of the item's eligible variants. */
+const isEligibleChoice = (item: PublicSupplyListItem, variantId: number) =>
+  variantId === item.defaultVariant.variantId ||
+  item.eligibleVariants.some((variant) => variant.variantId === variantId);
+
 export const selectionKey = (publicCode: string) => `${KEY_PREFIX}${publicCode}`;
 
 export function seedSelection(list: PublicSupplyList): ListSelection {
@@ -106,10 +111,7 @@ export function loadSelection(
       variantId: item.exactItem ? item.defaultVariant.variantId : stored.variantId,
       quantity: normalizeQuantity(stored.quantity, item.required),
     };
-    const eligible =
-      line.variantId === item.defaultVariant.variantId ||
-      item.eligibleVariants.some((variant) => variant.variantId === line.variantId);
-    if (!eligible) flaggedItemIds.push(item.id);
+    if (!isEligibleChoice(item, line.variantId)) flaggedItemIds.push(item.id);
     return line;
   });
 
@@ -214,10 +216,7 @@ export function listCompleteness(
   const missing = required.filter((item) => {
     const line = lineByItem.get(item.id);
     if (!line || line.quantity < item.quantity) return true;
-    const eligible =
-      line.variantId === item.defaultVariant.variantId ||
-      item.eligibleVariants.some((variant) => variant.variantId === line.variantId);
-    return !eligible;
+    return !isEligibleChoice(item, line.variantId);
   });
   return { total: required.length, completed: required.length - missing.length, missing };
 }
