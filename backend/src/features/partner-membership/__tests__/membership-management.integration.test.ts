@@ -500,17 +500,19 @@ describe('Partner Membership management', () => {
       });
     });
 
-    it('is refused while the Business Partner is not open', async () => {
-      const partner = await newPartner();
-      await addMember(partner.id);
-      const member = await addMember(partner.id, ['report-viewer']);
-      await setPartnerStatus(partner.id, 'suspended');
+    it.each(['suspended', 'closed'] as const)(
+      'is allowed while the Business Partner is %s',
+      async (status) => {
+        const partner = await newPartner();
+        await addMember(partner.id);
+        const member = await addMember(partner.id, ['report-viewer']);
+        await setPartnerStatus(partner.id, status);
 
-      expect(await services.memberships.leave(member.actor, member.membership.id)).toEqual({
-        success: false,
-        error: 'partner-not-open',
-      });
-    });
+        expect(await services.memberships.leave(member.actor, member.membership.id)).toMatchObject({
+          success: true,
+        });
+      },
+    );
   });
 
   describe('listMembers', () => {

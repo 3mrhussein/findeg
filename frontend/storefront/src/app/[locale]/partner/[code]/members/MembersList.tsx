@@ -33,6 +33,13 @@ function MemberItem({
 }) {
   const router = useRouter();
   const [roles, setRoles] = useState<PartnerRole[]>(member.roles);
+  // After a refresh delivers a newer version, drop the local edits so the checkboxes show the
+  // saved roles. The error message stays, so the user still sees why the save failed.
+  const [seenVersion, setSeenVersion] = useState(member.authorizationVersion);
+  if (seenVersion !== member.authorizationVersion) {
+    setSeenVersion(member.authorizationVersion);
+    setRoles(member.roles);
+  }
   const [state, setState] = useState<ActionState>({ status: 'idle' });
   const [busy, startTransition] = useTransition();
 

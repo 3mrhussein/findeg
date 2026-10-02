@@ -18,6 +18,11 @@ export function canManagePartners(actor: StaffActor): boolean {
   return actor.permissionCodes?.includes(PERMISSION_CODES.PARTNERS_MANAGE) === true;
 }
 
+/** Whether the Business Partner is onboarding or active, the only statuses that allow member and invitation changes. */
+export function isOpen(partner: { status: string }): boolean {
+  return partner.status === 'onboarding' || partner.status === 'active';
+}
+
 /** Whether a membership is an active `partner-administrator`; the one definition of that state. */
 export function isActiveAdministrator(membership: {
   roles: readonly PartnerRole[];

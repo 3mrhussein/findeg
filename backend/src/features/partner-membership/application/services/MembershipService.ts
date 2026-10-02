@@ -36,7 +36,7 @@ import type {
 } from '../interfaces/IMembershipService';
 import type { PartnerActor, PartnerResult } from '../interfaces/IPartnerService';
 import { requirePartnerRole } from './requirePartnerRole';
-import { fail, isActiveAdministrator, isActivePartnerAdministrator, ok } from './shared';
+import { fail, isActiveAdministrator, isActivePartnerAdministrator, isOpen, ok } from './shared';
 
 const updateSchema = z.object({
   roles: z.array(z.enum(PARTNER_ROLES)).min(1).optional(),
@@ -45,8 +45,6 @@ const updateSchema = z.object({
 
 const digestToken = (token: string) => createHash('sha256').update(token).digest('hex');
 const normalizeEmail = (email: string) => email.trim().toLowerCase();
-const isOpen = (partner: BusinessPartnerRow) =>
-  partner.status === 'onboarding' || partner.status === 'active';
 
 function toMembership(row: PartnerMembershipRow): PartnerMembership {
   return {
@@ -222,7 +220,7 @@ export class MembershipService implements IMembershipService {
       const locked = await this.lockMembership(tx, membershipId);
       if (!locked || locked.current.userId !== actor.userId) return fail('forbidden');
       const { partner, current } = locked;
-      if (!isOpen(partner)) return fail('partner-not-open');
+      // Leaving is open to every member whatever the partner's status (#183).
       if (current.status === 'ended') return fail('membership-ended');
       return this.commitChange(tx, actor, partner, current, { status: 'ended' }, [
         'membership.left',

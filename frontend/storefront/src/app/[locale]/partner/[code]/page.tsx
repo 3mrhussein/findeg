@@ -6,7 +6,6 @@ import {
   PartnerSuspense,
   requireWorkspaceAccess,
 } from '../_components/PartnerShell';
-import { canChangeMembers } from './_lib/access';
 import { LeaveButton } from './LeaveButton';
 
 export default async function PartnerWorkspacePage({
@@ -42,7 +41,7 @@ async function PartnerWorkspace({ code }: { code: string }) {
             <Link href={`/partner/${code}/members`}>Members</Link>
           </Button>
         )}
-        {canChangeMembers(access.context) && <LeaveButton code={code} />}
+        <LeaveButton code={code} />
       </div>
     </PartnerNotice>
   );

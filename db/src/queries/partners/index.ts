@@ -24,6 +24,12 @@ const {
   users,
 } = schema;
 
+/** An active membership holding `partner-administrator`; the one definition in this layer. */
+const isActiveAdministratorRow = and(
+  eq(partnerMemberships.status, 'active'),
+  sql`${PARTNER_ADMINISTRATOR} = any(${partnerMemberships.roles})`,
+);
+
 export type BusinessPartnerRow = typeof businessPartners.$inferSelect;
 export type NewBusinessPartnerRow = Pick<
   typeof businessPartners.$inferInsert,
@@ -128,11 +134,7 @@ export async function hasActivePartnerAdministrator(
     .select({ id: partnerMemberships.id })
     .from(partnerMemberships)
     .where(
-      and(
-        eq(partnerMemberships.businessPartnerId, businessPartnerId),
-        eq(partnerMemberships.status, 'active'),
-        sql`${PARTNER_ADMINISTRATOR} = any(${partnerMemberships.roles})`,
-      ),
+      and(eq(partnerMemberships.businessPartnerId, businessPartnerId), isActiveAdministratorRow),
     )
     .limit(1);
   return row !== undefined;
@@ -383,9 +385,8 @@ export async function countOtherActivePartnerAdministrators(
     .where(
       and(
         eq(partnerMemberships.businessPartnerId, businessPartnerId),
-        eq(partnerMemberships.status, 'active'),
         ne(partnerMemberships.id, excludingMembershipId),
-        sql`${PARTNER_ADMINISTRATOR} = any(${partnerMemberships.roles})`,
+        isActiveAdministratorRow,
       ),
     );
   return rows.length;
