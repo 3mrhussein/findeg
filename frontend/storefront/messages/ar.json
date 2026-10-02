@@ -330,7 +330,8 @@
       "Checkout": "الانتقال إلى الدفع",
       "RemoveItem": "إزالة المنتج",
       "IncreaseQuantity": "زيادة الكمية",
-      "DecreaseQuantity": "تقليل الكمية"
+      "DecreaseQuantity": "تقليل الكمية",
+      "YourSchoolLists": "قوائمي المدرسية"
     },
     "Checkout": {
       "Title": "الدفع",

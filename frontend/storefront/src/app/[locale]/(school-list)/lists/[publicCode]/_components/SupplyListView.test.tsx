@@ -149,6 +149,25 @@ describe('SupplyListView', () => {
     expect(screen.getByText('colour: red')).toBeInTheDocument();
   });
 
+  it('writes the Cart-drawer index entry on the first change, not on visiting', () => {
+    const l = list({ items: [{ ...list().items[0], required: false, exactItem: false }] });
+    render(<SupplyListView list={l} locale="en" />);
+    expect(window.localStorage.getItem('findeg:list-selection-index')).toBeNull();
+
+    fireEvent.click(screen.getByRole('checkbox'));
+    const index = JSON.parse(window.localStorage.getItem('findeg:list-selection-index') ?? '{}');
+    expect(index[l.publicCode]).toMatchObject({
+      title: 'Grade 1 supplies',
+      schoolName: 'Nile School',
+    });
+    expect(typeof index[l.publicCode].updatedAt).toBe('string');
+
+    fireEvent.click(screen.getByRole('checkbox'));
+    expect(JSON.parse(window.localStorage.getItem('findeg:list-selection-index') ?? '{}')).toEqual(
+      {},
+    );
+  });
+
   it('uses Arabic names when the locale is ar', () => {
     render(<SupplyListView list={list()} locale="ar" />);
     expect(screen.getByText('قلم أزرق')).toBeInTheDocument();

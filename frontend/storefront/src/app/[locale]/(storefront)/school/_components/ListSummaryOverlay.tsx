@@ -2,9 +2,8 @@
 
 import React from 'react';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from '@findeg/ui';
-import { Button } from '@findeg/ui';
 import { useTranslations } from 'next-intl';
-import { ShoppingCart, CheckCircle, Package, ArrowRight } from 'lucide-react';
+import { CheckCircle, Package } from 'lucide-react';
 import { ScrollArea } from '@findeg/ui';
 
 interface ListSummaryOverlayProps {
@@ -96,15 +95,6 @@ export function ListSummaryOverlay({ isOpen, onClose, list }: ListSummaryOverlay
         </ScrollArea>
 
         <div className="p-8 pb-12 bg-white border-t space-y-4">
-          <Button
-            className="w-full h-16 text-xl font-black rounded-2xl shadow-xl shadow-primary/20 gap-3 animate-in zoom-in-95 duration-300"
-            size="lg"
-            onClick={() => {}}
-          >
-            <ShoppingCart className="w-6 h-6" />
-            {t('AddToCart')}
-            <ArrowRight className="ml-2 w-5 h-5" />
-          </Button>
           <p className="text-center text-xs text-muted-foreground flex items-center justify-center gap-2">
             <CheckCircle className="w-3 h-3 text-emerald-500" />
             {t('Satisfaction')}

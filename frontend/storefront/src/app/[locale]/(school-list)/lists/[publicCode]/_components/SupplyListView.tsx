@@ -15,6 +15,7 @@ import {
   seedSelection,
   setEnabled,
   setQuantity,
+  syncSelectionIndex,
   MAX_QUANTITY,
   MIN_QUANTITY,
   type ListSelection,
@@ -60,6 +61,13 @@ export function SupplyListView({ list, locale }: { list: PublicSupplyList; local
   const update = (next: ListSelection) => {
     setSelection(next);
     saveSelection(list.publicCode, next, window.localStorage);
+    syncSelectionIndex(
+      list.publicCode,
+      next,
+      list,
+      { title: pick(list.title, locale), schoolName },
+      window.localStorage,
+    );
   };
 
   // A switched-off optional line was never chosen, so it only blocks checkout once turned on.

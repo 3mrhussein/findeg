@@ -330,7 +330,8 @@
       "Checkout": "Proceed to Checkout",
       "RemoveItem": "Remove item",
       "IncreaseQuantity": "Increase quantity",
-      "DecreaseQuantity": "Decrease quantity"
+      "DecreaseQuantity": "Decrease quantity",
+      "YourSchoolLists": "Your school lists"
     },
     "Checkout": {
       "Title": "Checkout",

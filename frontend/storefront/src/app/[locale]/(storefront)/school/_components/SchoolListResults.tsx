@@ -1,10 +1,8 @@
 'use client';
 
-import { useCart } from '@hooks/useCart';
 import type { Product } from '@/data/catalog/types';
 import { useTranslations } from 'next-intl';
 import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
-import { Button } from '@findeg/ui';
 import { Price } from '@findeg/ui';
 
 interface SchoolListResultsProps {
@@ -13,24 +11,10 @@ interface SchoolListResultsProps {
 }
 
 /**
- * Renders school-list products and supports add-item/add-bundle cart actions.
+ * Renders the products of a school list. A list never enters the Cart (ADR-0011).
  */
 export function SchoolListResults({ products, totalEstimatedCost }: SchoolListResultsProps) {
   const t = useTranslations();
-  const { addToCart } = useCart();
-
-  /**
-   *
-   */
-  function addBundleToCart() {
-    products.forEach((product) => {
-      const variants = product.variants || [];
-      const defaultVariant = variants.find((v) => v.variantKey === 'default') || variants[0];
-      if (defaultVariant) {
-        addToCart(product.id, 1, { variantId: defaultVariant.id });
-      }
-    });
-  }
 
   return (
     <Card className="border-primary/20">
@@ -67,27 +51,9 @@ export function SchoolListResults({ products, totalEstimatedCost }: SchoolListRe
                     : undefined
                 }
               />
-              <Button
-                variant="outline"
-                onClick={() => {
-                  const variants = product.variants || [];
-                  const defaultVariant =
-                    variants.find((v) => v.variantKey === 'default') || variants[0];
-                  if (defaultVariant) {
-                    addToCart(product.id, 1, { variantId: defaultVariant.id });
-                  }
-                }}
-              >
-                {t('Pages.ProductCard.AddToCart')}
-              </Button>
             </div>
           </div>
         ))}
-        <div className="pt-2">
-          <Button size="lg" className="w-full md:w-auto" onClick={addBundleToCart}>
-            {t('Pages.SchoolLists.AddBundleToCart')}
-          </Button>
-        </div>
       </CardContent>
     </Card>
   );
