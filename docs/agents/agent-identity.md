@@ -3,7 +3,7 @@
 Claude Code and Codex each act on GitHub as their own GitHub App bot. That covers `gh` calls, `git push`, and commit authorship. PRs written by an agent are therefore authored by `findeg-claude[bot]` or `findeg-codex[bot]` rather than by you. This means:
 
 - you can approve agent PRs (GitHub won't let you approve your own);
-- the cross-agent review workflows can tell who opened a PR (`.github/workflows/claude-review.yml`, `.github/workflows/codex-review.yml`);
+- the cross-agent review workflows can tell who opened a PR (`.github/workflows/claude.yml`, `.github/workflows/codex.yml`);
 - each agent's access is limited to this repo and revocable on its own.
 
 ## Request reviews on a human PR
@@ -77,10 +77,10 @@ gh variable set CLAUDE_PR_AUTHORS --body 'findeg-claude[bot]'
 gh variable set CODEX_PR_AUTHORS --body 'findeg-codex[bot],chatgpt-codex-connector[bot]'
 ```
 
-Both agent review workflows need their respective API secrets configured in the repository:
+Both agent workflows need their respective API secrets configured in the repository:
 
-- `CLAUDE_CODE_OAUTH_TOKEN` for Claude Code (`claude.yml`, `claude-review.yml`).
-- `OPENAI_API_KEY` for Codex Action (`codex.yml`, `codex-review.yml`).
+- `CLAUDE_CODE_OAUTH_TOKEN` for Claude Code (`claude.yml`).
+- `OPENAI_API_KEY` for Codex Action (`codex.yml`).
 
 ```bash
 gh secret set OPENAI_API_KEY
