@@ -250,7 +250,7 @@ describe('Partner Invitation acceptance', () => {
     });
   });
 
-  it('resolves active membership context and otherwise returns not-found', async () => {
+  it('resolves active membership context, suspended for suspended members, otherwise not-found', async () => {
     const item = await fixture();
     expect(
       await services.memberships.resolvePartnerContext(item.session, item.partner.code),
@@ -278,7 +278,7 @@ describe('Partner Invitation acceptance', () => {
       await services.memberships.resolvePartnerContext(item.session, item.partner.code),
     ).toEqual({
       success: false,
-      error: 'not-found',
+      error: 'suspended',
     });
   });
 

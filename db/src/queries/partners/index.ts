@@ -278,3 +278,21 @@ export async function getPartnerUserById(
     .where(eq(users.id, userId));
   return row;
 }
+
+export type ActivePartnerMembershipRow = {
+  membership: PartnerMembershipRow;
+  partner: BusinessPartnerRow;
+};
+
+/** A user's active memberships with their Business Partners, ordered by partner code. */
+export async function listActivePartnerMembershipsForUser(
+  executor: PartnerExecutor,
+  userId: number,
+): Promise<ActivePartnerMembershipRow[]> {
+  return executor
+    .select({ membership: partnerMemberships, partner: businessPartners })
+    .from(partnerMemberships)
+    .innerJoin(businessPartners, eq(businessPartners.id, partnerMemberships.businessPartnerId))
+    .where(and(eq(partnerMemberships.userId, userId), eq(partnerMemberships.status, 'active')))
+    .orderBy(asc(businessPartners.code));
+}

@@ -13,11 +13,12 @@ import {
 import { CircleUser, Search } from 'lucide-react';
 import { Input } from '@findeg/ui';
 import { logoutAction } from '@data/auth/actions';
+import { Link } from '@i18n/navigation';
 
 /**
  * Topbar for the user dashboard.
  */
-export function Topbar() {
+export function Topbar({ hasPartnerWorkspace = false }: { hasPartnerWorkspace?: boolean }) {
   return (
     <header className="flex h-[60px] items-center gap-4 border-b bg-muted/40 px-6 lg:h-[60px]">
       <div className="w-full flex-1">
@@ -51,6 +52,11 @@ export function Topbar() {
           <DropdownMenuSeparator />
           <DropdownMenuItem>Settings</DropdownMenuItem>
           <DropdownMenuItem>Support</DropdownMenuItem>
+          {hasPartnerWorkspace ? (
+            <DropdownMenuItem asChild>
+              <Link href="/partner">Partner Workspace</Link>
+            </DropdownMenuItem>
+          ) : null}
           <DropdownMenuSeparator />
           <form action={logoutAction}>
             <button type="submit" className="w-full text-left">
