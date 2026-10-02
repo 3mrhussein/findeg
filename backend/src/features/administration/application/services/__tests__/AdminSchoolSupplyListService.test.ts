@@ -1,13 +1,31 @@
-import { beforeEach, describe, expect, it, vi, type Mock } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PERMISSION_CODES } from '@findeg/db';
 import type {
   ISchoolSupplyListService,
   SupplyListItemInput,
   SupplyListStaffActor,
-} from '../../../../school/application/interfaces/ISchoolSupplyListService';
-import type { SpecificationOption } from '../../interfaces/IAdminSchoolSupplyListService';
-import { AdminSchoolSupplyListService } from '../AdminSchoolSupplyListService';
-import { createAdministrationServices } from '../factory';
+} from '../../../../school';
+import { createAdministrationServices } from '../../..';
+
+const mocks = vi.hoisted(() => ({
+  db: {},
+  lifecycle: {} as ISchoolSupplyListService,
+  listSpecificationOptions: vi.fn(),
+  listVariantCandidates: vi.fn(),
+}));
+
+vi.mock('../../../../school', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('../../../../school')>()),
+  createSchoolSupplyListService: vi.fn(() => mocks.lifecycle),
+}));
+
+vi.mock('@findeg/db/queries/school-supply-lists', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@findeg/db/queries/school-supply-lists')>()),
+  findVariantCandidates: mocks.listVariantCandidates,
+  listAttributeValuesForCategory: mocks.listSpecificationOptions,
+}));
+
+vi.mock('@findeg/db/connection', () => ({ db: mocks.db }));
 
 const writer: SupplyListStaffActor = {
   kind: 'staff',
@@ -17,17 +35,17 @@ const writer: SupplyListStaffActor = {
 
 describe('AdminSchoolSupplyListService', () => {
   let lifecycle: ISchoolSupplyListService;
-  let listSpecificationOptions: Mock<[number], Promise<SpecificationOption[]>>;
-  let service: AdminSchoolSupplyListService;
+  let service: ReturnType<typeof createAdministrationServices>['schoolSupplyLists'];
 
   beforeEach(() => {
-    lifecycle = {} as ISchoolSupplyListService;
-    listSpecificationOptions = vi.fn();
-    service = new AdminSchoolSupplyListService(lifecycle, listSpecificationOptions);
+    vi.clearAllMocks();
+    mocks.lifecycle = {} as ISchoolSupplyListService;
+    lifecycle = mocks.lifecycle;
+    service = createAdministrationServices().schoolSupplyLists;
   });
 
   it('returns catalog-backed specification options to authorized Staff', async () => {
-    listSpecificationOptions.mockResolvedValue([
+    mocks.listSpecificationOptions.mockResolvedValue([
       { attributeKey: 'color', values: ['blue', 'red'] },
     ]);
 
@@ -43,7 +61,7 @@ describe('AdminSchoolSupplyListService', () => {
       ReturnType<ISchoolSupplyListService['addItem']>
     >();
     lifecycle.addItem = addItem;
-    listSpecificationOptions.mockResolvedValue([
+    mocks.listSpecificationOptions.mockResolvedValue([
       { attributeKey: 'color', values: ['blue', 'red'] },
     ]);
     const input: SupplyListItemInput = {
@@ -66,7 +84,7 @@ describe('AdminSchoolSupplyListService', () => {
       ReturnType<ISchoolSupplyListService['updateItem']>
     >();
     lifecycle.updateItem = updateItem;
-    listSpecificationOptions.mockResolvedValue([
+    mocks.listSpecificationOptions.mockResolvedValue([
       { attributeKey: 'color', values: ['blue', 'red'] },
     ]);
 
@@ -87,7 +105,7 @@ describe('AdminSchoolSupplyListService', () => {
         specification: { categoryId: 7, attributes: null },
       } as unknown as SupplyListItemInput),
     ).resolves.toEqual({ success: false, error: 'invalid-input' });
-    expect(listSpecificationOptions).not.toHaveBeenCalled();
+    expect(mocks.listSpecificationOptions).not.toHaveBeenCalled();
   });
 
   it('accepts a specification made entirely from catalog options', async () => {
@@ -98,7 +116,7 @@ describe('AdminSchoolSupplyListService', () => {
       >()
       .mockResolvedValue({ success: false, error: 'item-not-found' });
     lifecycle.addItem = addItem;
-    listSpecificationOptions.mockResolvedValue([
+    mocks.listSpecificationOptions.mockResolvedValue([
       { attributeKey: 'color', values: ['blue', 'red'] },
       { attributeKey: 'size', values: ['A4', 'A5'] },
     ]);
@@ -148,16 +166,41 @@ describe('AdminSchoolSupplyListService', () => {
     );
   });
 
-  it('is available from the public administration service factory', () => {
-    expect(createAdministrationServices().schoolSupplyLists).toBeInstanceOf(
-      AdminSchoolSupplyListService,
-    );
+  it('returns catalog candidate variants to authorized Staff', async () => {
+    mocks.listVariantCandidates.mockResolvedValue([
+      { variantId: 12, categoryId: 7, attributes: { color: 'blue' } },
+    ]);
+
+    await expect(service.listVariantCandidates(writer, 7)).resolves.toEqual({
+      success: true,
+      data: [{ variantId: 12, categoryId: 7, attributes: { color: 'blue' } }],
+    });
+  });
+
+  it('rejects a non-null specification submitted for an Exact Item', async () => {
+    const addItem = vi
+      .fn<
+        Parameters<ISchoolSupplyListService['addItem']>,
+        ReturnType<ISchoolSupplyListService['addItem']>
+      >()
+      .mockResolvedValue({ success: false, error: 'item-not-found' });
+    lifecycle.addItem = addItem;
+
+    await expect(
+      service.addItem(writer, 3, {
+        exactItem: true,
+        specification: { categoryId: 7, attributes: { color: 'chartreuse' } },
+        localizedLabel: { en: 'Notebook' },
+      }),
+    ).resolves.toEqual({ success: false, error: 'invalid-input' });
+    expect(addItem).not.toHaveBeenCalled();
   });
 
   it('refuses every operation when the caller is not authorized as Staff', async () => {
     const outsider = { kind: 'partner', userId: 99 } as unknown as SupplyListStaffActor;
     const results = await Promise.all([
       service.listSpecificationOptions(outsider, 7),
+      service.listVariantCandidates(outsider, 7),
       service.createDraft(outsider, {
         businessPartnerId: 2,
         grade: 'Grade 1',
@@ -176,8 +219,9 @@ describe('AdminSchoolSupplyListService', () => {
     ]);
 
     expect(results).toEqual(
-      Array.from({ length: 11 }, () => ({ success: false, error: 'forbidden' })),
+      Array.from({ length: 12 }, () => ({ success: false, error: 'forbidden' })),
     );
-    expect(listSpecificationOptions).not.toHaveBeenCalled();
+    expect(mocks.listSpecificationOptions).not.toHaveBeenCalled();
+    expect(mocks.listVariantCandidates).not.toHaveBeenCalled();
   });
 });

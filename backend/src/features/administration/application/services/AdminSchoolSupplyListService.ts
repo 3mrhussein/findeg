@@ -10,13 +10,15 @@ import type {
   SupplyListItemInput,
   SupplyListStaffActor,
   UpdateSupplyListDraftInput,
-} from '../../../school/application/interfaces/ISchoolSupplyListService';
+} from '../../../school';
 import type {
   IAdminSchoolSupplyListService,
   SpecificationOption,
+  SpecificationVariantCandidate,
 } from '../interfaces/IAdminSchoolSupplyListService';
 
 type SpecificationOptionsQuery = (categoryId: number) => Promise<SpecificationOption[]>;
+type VariantCandidatesQuery = (categoryId: number) => Promise<SpecificationVariantCandidate[]>;
 
 function canWrite(actor: SupplyListStaffActor): boolean {
   return (
@@ -40,6 +42,7 @@ export class AdminSchoolSupplyListService implements IAdminSchoolSupplyListServi
   constructor(
     private readonly lifecycle: ISchoolSupplyListService,
     private readonly querySpecificationOptions: SpecificationOptionsQuery,
+    private readonly queryVariantCandidates: VariantCandidatesQuery,
   ) {}
 
   async listSpecificationOptions(actor: SupplyListStaffActor, categoryId: number) {
@@ -47,6 +50,13 @@ export class AdminSchoolSupplyListService implements IAdminSchoolSupplyListServi
     const parsed = SupplyListIdSchema.safeParse(categoryId);
     if (!parsed.success) return { success: false as const, error: 'invalid-input' as const };
     return { success: true as const, data: await this.querySpecificationOptions(parsed.data) };
+  }
+
+  async listVariantCandidates(actor: SupplyListStaffActor, categoryId: number) {
+    if (!canWrite(actor)) return { success: false as const, error: 'forbidden' as const };
+    const parsed = SupplyListIdSchema.safeParse(categoryId);
+    if (!parsed.success) return { success: false as const, error: 'invalid-input' as const };
+    return { success: true as const, data: await this.queryVariantCandidates(parsed.data) };
   }
 
   async createDraft(actor: SupplyListStaffActor, input: CreateSupplyListDraftInput) {
@@ -123,7 +133,8 @@ export class AdminSchoolSupplyListService implements IAdminSchoolSupplyListServi
   private async specificationExists(
     input: Pick<SupplyListItemInput, 'exactItem' | 'specification'>,
   ) {
-    if (input.exactItem || !input.specification) return true;
+    if (input.exactItem && input.specification) return false;
+    if (!input.specification) return true;
     const options = new Map(
       (await this.querySpecificationOptions(input.specification.categoryId)).map((option) => [
         option.attributeKey,

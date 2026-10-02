@@ -32,7 +32,10 @@ import { AuditLogService } from './AuditLogService';
 import { ProductImportService } from './ProductImportService';
 import { AdminSchoolSupplyListService } from './AdminSchoolSupplyListService';
 import { createSchoolSupplyListService } from '../../../school';
-import { listAttributeValuesForCategory } from '@findeg/db/queries/school-supply-lists';
+import {
+  findVariantCandidates,
+  listAttributeValuesForCategory,
+} from '@findeg/db/queries/school-supply-lists';
 
 import { IEmailService } from '@findeg/backend/features/notifications';
 
@@ -68,6 +71,10 @@ export function createAdministrationServices(): AdministrationServices {
     async (categoryId) => {
       const { db } = await import('@findeg/db/connection');
       return listAttributeValuesForCategory(db, categoryId);
+    },
+    async (categoryId) => {
+      const { db } = await import('@findeg/db/connection');
+      return findVariantCandidates(db, { categoryId });
     },
   );
 
