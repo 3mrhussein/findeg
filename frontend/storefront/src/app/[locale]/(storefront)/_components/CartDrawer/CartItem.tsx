@@ -105,7 +105,7 @@ export function CartItem({
             aria-label={t('Pages.Cart.RemoveItem')}
             data-testid={`cart-action-${variantId}`}
           >
-            Remove
+            {t('Pages.Cart.RemoveItem')}
           </Button>
         </div>
       </div>

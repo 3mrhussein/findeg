@@ -136,7 +136,7 @@ export async function SchoolBanner({ locale }: { locale: string }) {
                     asChild
                     className="w-full mt-4 rounded-xl font-bold bg-primary hover:bg-primary/90 text-white"
                   >
-                    <Link href="/school-lists">{t('Pages.SchoolLists.AddBundleToCart')}</Link>
+                    <Link href="/school-lists">{t('Pages.SchoolLists.ViewSchoolLists')}</Link>
                   </Button>
                 </div>
               </div>
