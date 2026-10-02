@@ -674,7 +674,13 @@
         "PriceNote": "Prices are informational; the checkout quote is final.",
         "Checkout": "Checkout",
         "CheckoutSoon": "List checkout is coming soon.",
-        "CheckoutArchived": "Checkout is unavailable for an archived list."
+        "CheckoutArchived": "Checkout is unavailable for an archived list.",
+        "UnavailableChooseAgain": "Unavailable, choose again",
+        "CheckoutBlockedByUnavailable": "Choose an available option for the flagged items to check out.",
+        "VariantUnknown": "Unavailable",
+        "Change": "Change",
+        "QuantityLabel": "Quantity",
+        "Prescribed": "School asks for {count}"
       }
     }
   },
