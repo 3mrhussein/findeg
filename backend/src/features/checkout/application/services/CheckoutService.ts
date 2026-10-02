@@ -145,7 +145,7 @@ export class CheckoutService implements ICheckoutService {
         const { order, items } = await orderQueries.create(
           {
             userId: effectiveUserId,
-            guestEmail,
+            guestEmail: effectiveUserId ? undefined : guestEmail,
             status: 'pending',
             paymentStatus: 'unpaid',
             subtotal: freshQuote.subtotal.toFixed(2),

@@ -317,6 +317,7 @@ describe('Checkout feature integration tests on real Postgres', () => {
           confirmation: quote.data.confirmation,
           paymentMethod: 'cod',
           address: validAddress,
+          guestEmail: 'should-be-ignored@example.com',
         },
         { userId: user.id },
       );
