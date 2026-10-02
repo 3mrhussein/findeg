@@ -23,11 +23,7 @@ export default async function Page({ params }: Props) {
 
   return (
     <PermissionsProvider session={session}>
-      <DashboardContent
-        products={data.products}
-        orders={data.orders}
-        schoolLists={data.schoolLists}
-      />
+      <DashboardContent products={data.products} orders={data.orders} />
     </PermissionsProvider>
   );
 }

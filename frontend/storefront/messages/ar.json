@@ -16,7 +16,7 @@
     "Search": "بحث",
     "Categories": "الفئات",
     "Collections": "المجموعات",
-    "SchoolLists": "قوائم المدرسة",
+    "SchoolLists": "قوائم مستلزمات المدرسة",
     "About": "من نحن",
     "MyAccount": "حسابي",
     "Dashboard": "لوحة التحكم",
@@ -70,7 +70,7 @@
       "Shop": "تسوق",
       "Search": "بحث",
       "Categories": "الفئات",
-      "SchoolLists": "قوائم المدرسة",
+      "SchoolLists": "قوائم مستلزمات المدرسة",
       "AiGenerator": "مولد الصور",
       "About": "حولنا",
       "MyAccount": "حسابي",
@@ -114,12 +114,12 @@
         "Subtitle": "متجرك الشامل للأدوات المكتبية عالية الجودة وألعاب الأطفال الجذابة واللوازم المدرسية الأساسية. أطلق العنان للإبداع واجعل التعلم ممتعًا!",
         "ButtonShop": "تسوق الآن",
         "ButtonExplore": "استكشف الفئات",
-        "ButtonSchoolList": "ابحث عن قائمة مدرسية",
+        "ButtonSchoolList": "ابحث عن قائمة مستلزمات مدرسية",
         "Badge": "العودة للمدرسة 2024",
         "TitleSmart": "قوائم ذكية.",
         "TitleStationery": "قرطاسية جميلة.",
         "ButtonSchools": "للمدارس",
-        "CardListLabel": "قائمة مدرسية",
+        "CardListLabel": "قائمة مستلزمات مدرسية",
         "CardGradeLabel": "قائمة مستلزمات الصف الثالث",
         "CardReadyLabel": "١٤ عنصراً جاهزاً"
       },
@@ -331,7 +331,7 @@
       "RemoveItem": "إزالة المنتج",
       "IncreaseQuantity": "زيادة الكمية",
       "DecreaseQuantity": "تقليل الكمية",
-      "YourSchoolLists": "قوائمي المدرسية"
+      "YourSchoolLists": "قوائم مستلزماتي المدرسية"
     },
     "Checkout": {
       "Title": "الدفع",
@@ -397,23 +397,16 @@
       "ProductsCount": "{count} منتج"
     },
     "SchoolLists": {
-      "Title": "البحث في القوائم المدرسية",
-      "Subtitle": "أدوات المدرسة اختيارية لتسريع الشراء. أدخل رمز القائمة أو رابط المشاركة لبدء التسوق.",
+      "Title": "افتح قائمة مستلزمات مدرسية",
+      "Subtitle": "أدخل رمز القائمة الذي أعطتك إياه المدرسة أو ألصق رابط المشاركة.",
       "FormTitle": "ابحث عن قائمتك",
-      "Placeholder": "ألصق رمز القائمة المدرسية أو رابط المشاركة",
-      "Submit": "بحث",
-      "CodeHint": "استخدم رابط المدرسة أو معرفات منتجات رقمية (مثال: 12,44,108).",
-      "InvalidCodeTitle": "رمز القائمة المدرسية غير صالح",
-      "InvalidCodeDescription": "تنسيق الرمز غير صحيح. اطلب من المدرسة رابطاً أو رمز قائمة صالحاً.",
-      "NoResultsTitle": "لا توجد منتجات لهذه القائمة",
-      "NoResultsDescription": "الرمز صالح ولكن لا توجد منتجات متاحة حالياً.",
-      "BundleTitle": "حزمة المستلزمات المطلوبة",
-      "ItemsCount": "{count} عناصر",
-      "EstimatedCost": "التكلفة التقديرية",
-      "ViewSchoolLists": "عرض القوائم المدرسية",
+      "Placeholder": "ألصق رمز قائمة المستلزمات المدرسية أو رابط المشاركة",
+      "Submit": "افتح القائمة",
+      "CodeHint": "الرمز هو الجزء المكوّن من 32 حرفاً في الرابط بعد /lists/.",
+      "ViewSchoolLists": "عرض قوائم المستلزمات المدرسية",
       "BackToShop": "متابعة التسوق",
-      "SecondaryCtaTitle": "تشتري من قائمة مدرسية؟",
-      "SecondaryCtaDescription": "استخدم أداة القوائم المدرسية الاختيارية لتعبئة المنتجات أولاً ثم أكمل التسوق بشكل طبيعي."
+      "SecondaryCtaTitle": "تشتري من قائمة مستلزمات مدرسية؟",
+      "SecondaryCtaDescription": "استخدم أداة قوائم المستلزمات المدرسية الاختيارية لتعبئة المنتجات أولاً ثم أكمل التسوق بشكل طبيعي."
     },
     "Schools": {
       "Directory": {
@@ -546,8 +539,8 @@
       "Keywords": "تفاصيل المنتج,منتجات مكتبية,منتجات مدرسية"
     },
     "SchoolLists": {
-      "Title": "القوائم المدرسية",
-      "Description": "أداة اختيارية للبحث في القوائم المدرسية لتعبئة المنتجات مع الحفاظ على تجربة المتجر الأساسية."
+      "Title": "قوائم المستلزمات المدرسية",
+      "Description": "أداة اختيارية للبحث في قوائم المستلزمات المدرسية لتعبئة المنتجات مع الحفاظ على تجربة المتجر الأساسية."
     }
   },
   "School": {
@@ -556,10 +549,12 @@
       "subtitle": "اكتشف قوائم موثقة لصفوف أطفالك الدراسية وتسوق كل شيء في مكان واحد.",
       "searchPlaceholder": "ابحث باسم المدرسة...",
       "viewSchool": "عرض قوائم الصفوف",
-      "gradeCount": "صفوف",
       "listStatus": "الحالة",
-      "currentYear": "2024/2025",
-      "lastYear": "تحديث قيد الانتظار"
+      "publishedLists": "القوائم المنشورة",
+      "listsPublished": "قوائم منشورة",
+      "noListYet": "لا توجد قائمة منشورة بعد",
+      "noListPublished": "لا توجد قائمة منشورة بعد",
+      "publishedListsHeading": "قوائم المستلزمات المدرسية المنشورة"
     },
     "ParentExperience": {
       "Layout": {
@@ -567,47 +562,6 @@
         "FindAnotherSchool": "البحث عن مدرسة أخرى",
         "AllRightsReserved": "جميع الحقوق محفوظة",
         "Home": "الرئيسية"
-      },
-      "List": {
-        "RequiredItems": "المستلزمات المطلوبة",
-        "OptionalItems": "مستلزمات اختيارية",
-        "MyListSummary": "ملخص قائمتي",
-        "ReviewAndCheckout": "المراجعة والدفع",
-        "Progress": "تمت مراجعة {percent}%",
-        "ItemsReviewed": "تمت مراجعة {current} من {total} عناصر",
-        "ChangeBrand": "تغيير العلامة",
-        "ResetToDefault": "إعادة للوضع الافتراضي",
-        "Swapped": "تم التبديل",
-        "BrandRequired": "العلامة مطلوبة",
-        "OptionalSelected": "تم اختيار اختياري",
-        "TotalItems": "{count} عنصر(عناصر)",
-        "ReviewList": "مراجعة القائمة"
-      },
-      "ReturnDialog": {
-        "WelcomeBack": "مرحباً بعودتك، {name}!",
-        "OrderCompleted": "لقد قمت بالفعل بإتمام طلب لهذه القائمة.",
-        "TrackOrder": "تتبع طلبي",
-        "StartNew": "بدء قائمة جديدة",
-        "ResumeSession": "لديك جلسة محفوظة مع عناصر اخترتها.",
-        "SavedChanges": "لقد قمت بتبديل {swapped} عناصر · وإزالة {removed} عناصر اختيارية",
-        "UseMyVersion": "✅ استخدام نسختي",
-        "UseSchoolDefaults": "🏫 استخدام افتراضيات المدرسة",
-        "Reassurance": "يمكنك دائماً إعادة الضبط لاحقاً",
-        "ViewOnly": "عرض القائمة فقط"
-      },
-      "Summary": {
-        "Title": "ملخص الطلب",
-        "ItemsInKit": "عناصر في حقيبتك",
-        "Subtotal": "المجموع الفرعي",
-        "OptionalItemsSelected": "عناصر اختيارية مختارة",
-        "Total": "المجموع",
-        "TaxIncluded": "شامل الضريبة",
-        "AddToCart": "أضف إلى السلة",
-        "Satisfaction": "ضمان رضا فايند إيج"
-      },
-      "Alternatives": {
-        "Title": "اختر العلامة",
-        "Selected": "تم الاختيار"
       },
       "PublicList": {
         "Archived": "هذه القائمة لم تعد حالية وهي للعرض فقط.",

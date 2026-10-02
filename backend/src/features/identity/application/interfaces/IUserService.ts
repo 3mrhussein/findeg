@@ -8,7 +8,6 @@
 import type { User } from '../../domain/entities/User';
 import type { Order } from '../../../order/domain/entities/Order';
 import type { Product } from '../../../catalog/domain/entities/Product';
-import type { SchoolListResult } from '../../../catalog/application/interfaces/ISchoolListRepository';
 
 export interface AdminUser {
   id: number;
@@ -44,7 +43,6 @@ export interface PermissionOverrideInput {
 export interface DashboardData {
   products: Product[];
   orders: Order[];
-  schoolLists: SchoolListResult[];
   session: AdminUser | null;
 }
 

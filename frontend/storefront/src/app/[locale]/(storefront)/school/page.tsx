@@ -4,14 +4,10 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Suspense } from 'react';
 import type { Locale } from 'next-intl';
 import { SchoolListLookupForm } from './_components/SchoolListLookupForm';
-import { getSchoolListData } from '@/data/school/queries';
 import { Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
-import { SchoolListResults } from './_components/SchoolListResults';
-import { SectionStateEmpty } from '@components/shared/state/SectionStateEmpty';
 
 interface SchoolPageProps {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ code?: string }>;
 }
 
 /** Wraps the async inner page in a Suspense boundary for PPR compliance. */
@@ -29,10 +25,9 @@ export default function SchoolPage(props: SchoolPageProps) {
   );
 }
 
-/** Async inner page that reads params/searchParams. */
-async function SchoolPageInner({ params, searchParams }: SchoolPageProps) {
+/** Async inner page: opens a School Supply List from its code or share link. */
+async function SchoolPageInner({ params }: SchoolPageProps) {
   const { locale } = await params;
-  const { code = '' } = await searchParams;
   const resLocale = locale as Locale;
   setRequestLocale(resLocale);
   const t = await getTranslations({ locale: resLocale });
@@ -53,46 +48,11 @@ async function SchoolPageInner({ params, searchParams }: SchoolPageProps) {
               <CardTitle>{t('Pages.SchoolLists.FormTitle')}</CardTitle>
             </CardHeader>
             <CardContent>
-              <SchoolListLookupForm initialCode={code} />
+              <SchoolListLookupForm />
             </CardContent>
           </Card>
-
-          <SchoolListContent locale={locale} code={code} />
         </div>
       </Container>
     </div>
-  );
-}
-
-/**
- * Data-fetching component that handles the cached data access.
- */
-async function SchoolListContent({ locale, code }: { locale: string; code: string }) {
-  const t = await getTranslations({ locale: locale as Locale });
-  const viewModel = await getSchoolListData(locale, code);
-
-  return (
-    <>
-      {code && viewModel.productIds.length === 0 ? (
-        <SectionStateEmpty
-          title={t('Pages.SchoolLists.InvalidCodeTitle')}
-          description={t('Pages.SchoolLists.InvalidCodeDescription')}
-        />
-      ) : null}
-
-      {code && viewModel.productIds.length > 0 && viewModel.products.length === 0 ? (
-        <SectionStateEmpty
-          title={t('Pages.SchoolLists.NoResultsTitle')}
-          description={t('Pages.SchoolLists.NoResultsDescription')}
-        />
-      ) : null}
-
-      {viewModel.products.length > 0 ? (
-        <SchoolListResults
-          products={viewModel.products}
-          totalEstimatedCost={viewModel.totalEstimatedCost}
-        />
-      ) : null}
-    </>
   );
 }

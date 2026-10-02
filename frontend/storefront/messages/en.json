@@ -16,7 +16,7 @@
     "Search": "Search",
     "Categories": "Categories",
     "Collections": "Collections",
-    "SchoolLists": "School Lists",
+    "SchoolLists": "School Supply Lists",
     "About": "About Us",
     "MyAccount": "My Account",
     "Dashboard": "Dashboard",
@@ -48,7 +48,7 @@
       "Themed": "Themed",
       "Lunchboxes": "Lunchboxes",
       "SmartTool": "Smart Tool",
-      "CreateList": "Create your smart school list",
+      "CreateList": "Create your smart school supply list",
       "Description": "Don't waste time searching for each item. Upload your school or class list, and our smart catalog will find the right products for you.",
       "TryFree": "Try for free",
       "LearnMore": "Learn more"
@@ -70,7 +70,7 @@
       "Shop": "Shop",
       "Search": "Search",
       "Categories": "Categories",
-      "SchoolLists": "School Lists",
+      "SchoolLists": "School Supply Lists",
       "AiGenerator": "AI Generator",
       "About": "About",
       "MyAccount": "My Account",
@@ -114,12 +114,12 @@
         "Subtitle": "Your one-stop shop for high-quality stationary, engaging kids' toys, and essential school supplies. Spark creativity and make learning fun!",
         "ButtonShop": "Shop Now",
         "ButtonExplore": "Explore Categories",
-        "ButtonSchoolList": "Find School List",
+        "ButtonSchoolList": "Find School Supply List",
         "Badge": "Back to School 2024",
         "TitleSmart": "Smart lists.",
         "TitleStationery": "Beautiful stationery.",
         "ButtonSchools": "For schools",
-        "CardListLabel": "School List",
+        "CardListLabel": "School Supply List",
         "CardGradeLabel": "Grade 3 Supply List",
         "CardReadyLabel": "14 items ready"
       },
@@ -331,7 +331,7 @@
       "RemoveItem": "Remove item",
       "IncreaseQuantity": "Increase quantity",
       "DecreaseQuantity": "Decrease quantity",
-      "YourSchoolLists": "Your school lists"
+      "YourSchoolLists": "Your school supply lists"
     },
     "Checkout": {
       "Title": "Checkout",
@@ -397,23 +397,16 @@
       "ProductsCount": "{count} products"
     },
     "SchoolLists": {
-      "Title": "School List Lookup",
-      "Subtitle": "School tools are optional helpers for faster shopping. Enter a list code or link to prefill your journey.",
+      "Title": "Open a School Supply List",
+      "Subtitle": "Enter the list code your school gave you, or paste its share link.",
       "FormTitle": "Find your list",
-      "Placeholder": "Paste school list code or share link",
-      "Submit": "Find list",
-      "CodeHint": "Use a school link or numeric product IDs (example: 12,44,108).",
-      "InvalidCodeTitle": "Invalid school list code",
-      "InvalidCodeDescription": "The code format is not valid. Ask your school for a valid link or list code.",
-      "NoResultsTitle": "No products found for this list",
-      "NoResultsDescription": "This code is valid but none of the products are available right now.",
-      "BundleTitle": "Required Supplies Bundle",
-      "ItemsCount": "{count} items",
-      "EstimatedCost": "Estimated cost",
-      "ViewSchoolLists": "View school lists",
+      "Placeholder": "Paste school supply list code or share link",
+      "Submit": "Open list",
+      "CodeHint": "The code is the 32-character part of the link, after /lists/.",
+      "ViewSchoolLists": "View school supply lists",
       "BackToShop": "Continue shopping",
-      "SecondaryCtaTitle": "Buying from a school list?",
-      "SecondaryCtaDescription": "Use the optional school list tool to prefill items, then continue shopping normally."
+      "SecondaryCtaTitle": "Buying from a school supply list?",
+      "SecondaryCtaDescription": "Use the optional school supply list tool to prefill items, then continue shopping normally."
     },
     "Schools": {
       "Directory": {
@@ -546,8 +539,8 @@
       "Keywords": "product details,stationery product,school supply product"
     },
     "SchoolLists": {
-      "Title": "School Lists",
-      "Description": "Optional school-list lookup to prefill your shopping flow while keeping the main storefront experience."
+      "Title": "School Supply Lists",
+      "Description": "Optional school supply list lookup to prefill your shopping flow while keeping the main storefront experience."
     }
   },
   "School": {
@@ -556,10 +549,12 @@
       "subtitle": "Discover verified lists for your child's grade level and shop everything in one place.",
       "searchPlaceholder": "Search by school name...",
       "viewSchool": "View Grade Lists",
-      "gradeCount": "Grades",
       "listStatus": "Status",
-      "currentYear": "2024/2025",
-      "lastYear": "Update Pending"
+      "publishedLists": "Published lists",
+      "listsPublished": "Lists published",
+      "noListYet": "No list published yet",
+      "noListPublished": "No list published yet",
+      "publishedListsHeading": "Published School Supply Lists"
     },
     "ParentExperience": {
       "Layout": {
@@ -567,47 +562,6 @@
         "FindAnotherSchool": "Find Another School",
         "AllRightsReserved": "All rights reserved",
         "Home": "FindEg Home"
-      },
-      "List": {
-        "RequiredItems": "Required Items",
-        "OptionalItems": "Optional Items",
-        "MyListSummary": "My List Summary",
-        "ReviewAndCheckout": "Review & Checkout",
-        "Progress": "{percent}% Reviewed",
-        "ItemsReviewed": "{current} of {total} items reviewed",
-        "ChangeBrand": "Change Brand",
-        "ResetToDefault": "Reset to Default",
-        "Swapped": "Swapped",
-        "BrandRequired": "Brand Required",
-        "OptionalSelected": "Optional Selected",
-        "TotalItems": "{count} Item(s)",
-        "ReviewList": "Review List"
-      },
-      "ReturnDialog": {
-        "WelcomeBack": "Welcome back, {name}!",
-        "OrderCompleted": "You've already completed an order for this list.",
-        "TrackOrder": "Track My Order",
-        "StartNew": "Start a New List",
-        "ResumeSession": "You have a saved session with items chosen.",
-        "SavedChanges": "You swapped {swapped} items · Removed {removed} optional items",
-        "UseMyVersion": "✅ Use My Version",
-        "UseSchoolDefaults": "🏫 Use School Defaults",
-        "Reassurance": "You can always reset later",
-        "ViewOnly": "Just view the list"
-      },
-      "Summary": {
-        "Title": "Order Summary",
-        "ItemsInKit": "Items in your kit",
-        "Subtotal": "Subtotal",
-        "OptionalItemsSelected": "Optional items selected",
-        "Total": "Total",
-        "TaxIncluded": "Tax included",
-        "AddToCart": "Add to Cart",
-        "Satisfaction": "FindEg Satisfaction Guarantee"
-      },
-      "Alternatives": {
-        "Title": "Choose Brand",
-        "Selected": "Selected"
       },
       "PublicList": {
         "Archived": "This list is no longer current and is view-only.",

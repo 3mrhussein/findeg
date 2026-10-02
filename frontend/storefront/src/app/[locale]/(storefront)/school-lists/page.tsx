@@ -16,7 +16,7 @@ export default async function SchoolListsAliasPage({
   const { code } = await searchParams;
 
   if (code) {
-    redirect({ href: `/school?code=${encodeURIComponent(code)}`, locale });
+    redirect({ href: `/lists/${encodeURIComponent(code)}`, locale });
   }
 
   redirect({ href: '/school', locale });

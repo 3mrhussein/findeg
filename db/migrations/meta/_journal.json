@@ -57,6 +57,13 @@
       "when": 1790940769705,
       "tag": "0007_drop_school_list_access_apparatus",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1790944471993,
+      "tag": "0008_drop_legacy_school_lists",
+      "breakpoints": true
     }
   ]
 }

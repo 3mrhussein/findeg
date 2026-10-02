@@ -7,17 +7,17 @@ import { Input } from '@findeg/ui';
 import { Button } from '@findeg/ui';
 import { Search, SlidersHorizontal, PlusCircle } from 'lucide-react';
 import { Link } from '@i18n/navigation';
+import { Suspense } from 'react';
 
 interface PageProps {
-  params: { locale: string };
-  searchParams: {
+  searchParams: Promise<{
     q?: string;
     gov?: string;
     type?: string;
     sys?: string;
-    active?: string;
+    listed?: string;
     page?: string;
-  };
+  }>;
 }
 
 /**
@@ -26,14 +26,29 @@ interface PageProps {
  * The main school directory page.
  * Features search, filters, and a grid of schools.
  */
-export default async function SchoolsPage({ searchParams }: PageProps) {
+export default function SchoolsPage(props: PageProps) {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen justify-center py-16">
+          <div className="size-10 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+        </div>
+      }
+    >
+      <SchoolsContent {...props} />
+    </Suspense>
+  );
+}
+
+async function SchoolsContent(props: PageProps) {
+  const searchParams = await props.searchParams;
   const searchParams_Parsed: SchoolSearchParams = {
     query: searchParams.q,
     governorate: searchParams.gov,
     schoolType: searchParams.type,
     academicSystem: searchParams.sys,
-    activeOnly: searchParams.active === 'true',
-    page: parseInt(searchParams.page || '1'),
+    withPublishedLists: searchParams.listed === 'true',
+    page: Math.max(parseInt(searchParams.page || '1') || 1, 1),
     pageSize: 12,
   };
 
@@ -140,7 +155,7 @@ export default async function SchoolsPage({ searchParams }: PageProps) {
         {items.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 animate-in fade-in duration-700 slide-in-from-bottom-2">
             {items.map((school) => (
-              <SchoolCard key={school.schoolName} school={school} />
+              <SchoolCard key={school.code} school={school} />
             ))}
           </div>
         ) : (

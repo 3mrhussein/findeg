@@ -8,19 +8,10 @@ export type {
   StockMovementInput,
   LowStockResult,
 } from './IInventoryRepository';
-export type {
-  ISchoolListRepository,
-  SchoolListResult,
-  SchoolListItemResult,
-  SchoolListAlternativeResult,
-  SchoolListInput,
-  SchoolListItemInput,
-} from './ISchoolListRepository';
 export type { IProductService } from './IProductService';
 export type { IVariantService } from './IVariantService';
 export type { ICategoryService } from './ICategoryService';
 export type { ISearchService } from './ISearchService';
-export type { ISchoolListService } from '../services/SchoolListService';
 export type { ICategoryRepository } from './ICategoryRepository';
 export type { IBrandRepository, BrandCreateInput, BrandUpdateInput } from './IBrandRepository';
 export type {

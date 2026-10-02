@@ -49,26 +49,32 @@ flag (available quantity across active warehouses is at least 1, from one batch
 query). `offer` is reserved and always `null` until the List Offer spec.
 `ListCheckoutRequest` records the list-checkout contract for the checkout spec.
 
-## Migration and remaining slices
+## Partner School directory (#217)
 
-Migration `0006_school_supply_list_lifecycle.sql` adds the new tables beside
-the legacy tables. Apply the migration history, rather than only `db:push`,
-to install the freeze triggers. No development data is copied or removed.
-The legacy directory and Parent List interfaces still serve their existing
-callers during this transition. They are replaced by #217 (Partner School
-directory and legacy table removal); the new lifecycle never writes those
-legacy tables. The access/approval apparatus is gone (#216): possession of the
-`publicCode` is the only gate to a list.
+`createSchoolDirectory()` backs `/schools`. It reads active Business Partners
+that have a `partner_school_profiles` row (onboarding, suspended and closed
+partners and non-school partners are hidden). `searchSchools` matches the
+English or Arabic name, filters by governorate, school type and academic
+system, optionally only schools with a published list, and pages by English
+name. `getByCode(code)` returns the school profile with its published lists
+only, each carrying the `publicCode` behind `/lists/<publicCode>`; drafts and
+archived lists never appear, and a school with none returns an empty `lists`.
+`getFilterOptions` returns the distinct profile values of active schools.
 
-The legacy `school_lists`/`school_list_items` rows contain denormalized school
-profiles and curated alternatives. Their parent-session scaffolding belongs to
-the older interfaces; Parent List operations remain unfinished stubs. These are retained dependencies
-of the old callers, rather than behavior provided by the new lifecycle.
+## Migration
+
+Migration `0006_school_supply_list_lifecycle.sql` adds the lifecycle tables.
+Apply the migration history, rather than only `db:push`, to install the freeze
+triggers. Migration `0008_drop_legacy_school_lists.sql` is the contract step:
+it drops `school_lists`, `school_list_items`, `school_list_item_alternatives`,
+`school_list_parent_sessions`, `cart_kits` and `order_items.cart_kit_id`. No
+production data existed for them (ADR-0004), so nothing is copied. The access
+and approval apparatus went in #216: possession of the `publicCode` is the only
+gate to a list.
 
 The shared pure `eligibleVariants` function and catalog candidate/attribute
 queries from #208 serve this lifecycle and the later read/checkout paths.
-Customer routes, selection, checkout, List Offers and authoring UI are outside
-#210.
+Checkout, List Offers and authoring UI are outside the lifecycle (#210).
 
 ## Verification
 

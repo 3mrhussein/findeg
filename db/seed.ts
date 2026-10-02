@@ -19,7 +19,6 @@ async function main() {
     // Domains
     await seeds.seedIdentity(db);
     await seeds.seedCatalog(db);
-    await seeds.seedSchoolEngine(db);
     await seeds.seedSales(db);
     await seeds.seedInventory(db);
     await seeds.seedSystem(db);

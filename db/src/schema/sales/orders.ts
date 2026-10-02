@@ -13,7 +13,6 @@ import { salesSchema } from '../schemas';
 import { users } from '../identity/users';
 import { products } from '../catalog/products';
 import { productVariants } from '../catalog/product-variants';
-import { cartKits } from './cart-kits';
 import { orderStatusEnum, paymentStatusEnum, paymentMethodEnum } from '../enums';
 import { CurrencyCode, ShippingAddress, VariantSnapshot } from '@findeg/db/types';
 
@@ -69,9 +68,6 @@ export const orderItems = salesSchema.table('order_items', {
     .references(() => orders.id, { onDelete: 'cascade' }),
   productId: integer('product_id').references(() => products.id, { onDelete: 'set null' }),
 
-  /** Optional link to a school list kit */
-  cartKitId: integer('cart_kit_id').references(() => cartKits.id, { onDelete: 'set null' }),
-
   /** FK to the specific variant (SKU) that was purchased */
   variantId: integer('variant_id').references(() => productVariants.id, { onDelete: 'set null' }),
 
@@ -120,10 +116,6 @@ export const orderItemsRelations = relations(orderItems, ({ one }) => ({
   variant: one(productVariants, {
     fields: [orderItems.variantId],
     references: [productVariants.id],
-  }),
-  cartKit: one(cartKits, {
-    fields: [orderItems.cartKitId],
-    references: [cartKits.id],
   }),
 }));
 

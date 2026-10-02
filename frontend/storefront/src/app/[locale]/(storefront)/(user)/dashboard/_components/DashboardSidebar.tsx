@@ -35,15 +35,7 @@ import { ToggleTheme } from '@findeg/ui';
 import ToggleLanguage from '@components/shared/ToggleLanguage';
 
 type DashboardView =
-  | 'overview'
-  | 'products'
-  | 'orders'
-  | 'customers'
-  | 'school_lists'
-  | 'inventory'
-  | 'media'
-  | 'team'
-  | 'settings';
+  'overview' | 'products' | 'orders' | 'customers' | 'inventory' | 'media' | 'team' | 'settings';
 
 interface NavItem {
   id: DashboardView;
@@ -122,12 +114,6 @@ export function DashboardSidebar({ activeView, onNavigate }: DashboardSidebarPro
       permission: PERMISSION_CODES.ADMIN_USERS_READ,
       label: t('Customers'),
       icon: 'group',
-    },
-    {
-      id: 'school_lists',
-      permission: PERMISSION_CODES.ADMIN_SCHOOL_LISTS_READ,
-      label: t('SchoolLists'),
-      icon: 'menu_book',
     },
     {
       id: 'media',
