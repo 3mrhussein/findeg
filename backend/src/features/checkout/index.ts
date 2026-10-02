@@ -21,6 +21,7 @@ export type {
   CheckoutLine,
   CheckoutValidateInput,
   CheckoutOrderInput,
+  CheckoutOrderContext,
   CheckoutQuote,
   CheckoutQuoteLine,
   CheckoutAcceptedOrder,

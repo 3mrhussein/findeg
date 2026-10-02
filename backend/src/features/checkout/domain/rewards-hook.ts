@@ -26,7 +26,6 @@ export async function onOrderAcceptedRewardsHook(
   _tx: DbTransaction,
   _order: RewardsHookOrder,
   _items: RewardsHookOrderItem[],
-  _attribution?: Record<string, unknown> | null,
 ): Promise<void> {
   // Named no-op hook for Partner Rewards spec.
 }

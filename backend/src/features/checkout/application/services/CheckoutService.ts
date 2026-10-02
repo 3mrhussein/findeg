@@ -8,6 +8,7 @@ import {
   CheckoutOrderSchema,
   CheckoutValidateSchema,
   type CheckoutOrderInput,
+  type CheckoutOrderContext,
   type CheckoutQuote,
   type CheckoutQuoteLine,
   type CheckoutValidateInput,
@@ -49,7 +50,7 @@ export class CheckoutService implements ICheckoutService {
     }
 
     try {
-      const quote = await this.calculateQuote(parsed.data.lines);
+      const { quote } = await this.calculateQuote(parsed.data.lines);
       return { success: true, data: quote };
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Failed to quote checkout';
@@ -64,7 +65,21 @@ export class CheckoutService implements ICheckoutService {
     }
   }
 
-  async accept(input: CheckoutOrderInput): Promise<CheckoutAcceptResult> {
+  async accept(
+    input: CheckoutOrderInput,
+    context?: CheckoutOrderContext,
+  ): Promise<CheckoutAcceptResult> {
+    if (!input || typeof input !== 'object') {
+      return {
+        success: false,
+        status: 400,
+        error: {
+          code: 'validation-error',
+          message: 'Invalid checkout order input',
+        },
+      };
+    }
+
     // Check payment method before parsing to return specific error if not COD
     if (input.paymentMethod !== 'cod') {
       return {
@@ -89,12 +104,26 @@ export class CheckoutService implements ICheckoutService {
       };
     }
 
-    const { lines, confirmation, address, guestEmail, userId } = parsed.data;
+    const effectiveUserId = context?.userId;
+    const guestEmail = parsed.data.guestEmail?.trim()?.toLowerCase();
+
+    if (!effectiveUserId && !guestEmail) {
+      return {
+        success: false,
+        status: 400,
+        error: {
+          code: 'validation-error',
+          message: 'Either a signed-in session or guestEmail must be provided',
+        },
+      };
+    }
+
+    const { lines, confirmation, address } = parsed.data;
 
     try {
       return await db.transaction(async (tx) => {
-        // 1. Re-quote authoritatively under FOR SHARE locks
-        const freshQuote = await this.calculateQuote(lines, tx);
+        // 1. Re-quote authoritatively under FOR SHARE locks (ordered by variant ID to prevent deadlocks)
+        const { quote: freshQuote, variantMap } = await this.calculateQuote(lines, tx);
 
         // 2. Price confirmation check
         if (freshQuote.confirmation !== confirmation) {
@@ -109,27 +138,11 @@ export class CheckoutService implements ICheckoutService {
           };
         }
 
-        // Fetch catalog metadata for order item snapshots
-        const variantIds = lines.map((l) => l.variantId);
-        const variants = await tx
-          .select({
-            id: productVariants.id,
-            productId: productVariants.productId,
-            sku: productVariants.sku,
-            localizedLabel: productVariants.localizedLabel,
-            productName: products.localizedName,
-          })
-          .from(productVariants)
-          .innerJoin(products, eq(productVariants.productId, products.id))
-          .where(inArray(productVariants.id, variantIds));
-
-        const variantMap = new Map(variants.map((v) => [v.id, v]));
-
-        // 3. Create the Order and Order Items
+        // 3. Create the Order and Order Items (reuses variantMap without redundant second query)
         const { order, items } = await orderQueries.create(
           {
-            userId,
-            guestEmail: guestEmail?.trim()?.toLowerCase(),
+            userId: effectiveUserId,
+            guestEmail,
             status: 'pending',
             paymentStatus: 'unpaid',
             subtotal: freshQuote.subtotal.toFixed(2),
@@ -140,20 +153,25 @@ export class CheckoutService implements ICheckoutService {
             shippingAddressSnapshot: address,
             items: freshQuote.lines.map((line) => {
               const meta = variantMap.get(line.variantId);
+              if (!meta || !meta.productId || !meta.sku) {
+                throw new Error(
+                  `Catalog metadata missing or incomplete for variant ${line.variantId}`,
+                );
+              }
               const productName =
-                (meta?.productName as Record<string, string>)?.en ||
-                (meta?.productName as Record<string, string>)?.ar ||
+                (meta.productName as Record<string, string>)?.en ||
+                (meta.productName as Record<string, string>)?.ar ||
                 '';
               return {
-                productId: meta?.productId ?? 0,
+                productId: meta.productId,
                 variantId: line.variantId,
                 quantity: line.quantity,
                 unitPriceSnapshot: line.unitPrice.toFixed(2),
                 totalPrice: line.lineTotal.toFixed(2),
                 productNameSnapshot: productName,
-                productSkuSnapshot: meta?.sku ?? '',
-                variantSkuSnapshot: meta?.sku ?? '',
-                variantSnapshot: (meta?.localizedLabel as Record<string, unknown>) ?? {},
+                productSkuSnapshot: meta.sku,
+                variantSkuSnapshot: meta.sku,
+                variantSnapshot: (meta.localizedLabel as Record<string, unknown>) ?? {},
               };
             }),
           },
@@ -185,7 +203,6 @@ export class CheckoutService implements ICheckoutService {
             quantity: item.quantity,
             lineTotal: item.totalPrice,
           })),
-          null,
         );
 
         return {
@@ -222,11 +239,24 @@ export class CheckoutService implements ICheckoutService {
 
   /**
    * Re-quotes lines authoritatively from the catalog, optionally locking variants FOR SHARE.
+   * Orders variants by variant ID for deterministic lock acquisition.
    */
   private async calculateQuote(
     lines: Array<{ variantId: number; quantity: number }>,
     tx?: Parameters<Parameters<typeof db.transaction>[0]>[0],
-  ): Promise<CheckoutQuote> {
+  ): Promise<{
+    quote: CheckoutQuote;
+    variantMap: Map<
+      number,
+      {
+        id: number;
+        productId: number;
+        sku: string;
+        localizedLabel: unknown;
+        productName: unknown;
+      }
+    >;
+  }> {
     const executor = tx ?? db;
 
     // Aggregate duplicate variant lines
@@ -237,12 +267,16 @@ export class CheckoutService implements ICheckoutService {
         (quantitiesByVariant.get(line.variantId) ?? 0) + line.quantity,
       );
     }
+
     const variantIds = [...quantitiesByVariant.keys()];
 
     let query = executor
       .select({
         id: productVariants.id,
         productId: productVariants.productId,
+        sku: productVariants.sku,
+        localizedLabel: productVariants.localizedLabel,
+        productName: products.localizedName,
         basePrice: productVariants.basePrice,
         isActive: productVariants.isActive,
         productIsActive: products.isActive,
@@ -255,7 +289,8 @@ export class CheckoutService implements ICheckoutService {
           eq(productVariants.isActive, true),
           eq(products.isActive, true),
         ),
-      );
+      )
+      .orderBy(productVariants.id);
 
     const availableVariants = tx ? await query.for('share') : await query;
     if (availableVariants.length !== variantIds.length) {
@@ -263,6 +298,7 @@ export class CheckoutService implements ICheckoutService {
     }
 
     const priceMap = new Map(availableVariants.map((v) => [v.id, Number(v.basePrice)]));
+    const variantMap = new Map(availableVariants.map((v) => [v.id, v]));
 
     const quoteLines: CheckoutQuoteLine[] = variantIds.map((variantId) => {
       const quantity = quantitiesByVariant.get(variantId)!;
@@ -293,12 +329,15 @@ export class CheckoutService implements ICheckoutService {
     });
 
     return {
-      lines: quoteLines,
-      shipping,
-      subtotal,
-      total,
-      currency,
-      confirmation,
+      quote: {
+        lines: quoteLines,
+        shipping,
+        subtotal,
+        total,
+        currency,
+        confirmation,
+      },
+      variantMap,
     };
   }
 }

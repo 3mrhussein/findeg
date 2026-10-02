@@ -12,6 +12,7 @@ import {
   warehouses,
 } from '@findeg/db/schema';
 import { createCheckoutService, isValidOrderReference } from '../index';
+import { orderQueries } from '@findeg/db/queries';
 import { connectToTestDatabase, type TestDatabase } from '../../../testing/postgres';
 
 describe('Checkout feature integration tests on real Postgres', () => {
@@ -309,14 +310,16 @@ describe('Checkout feature integration tests on real Postgres', () => {
       });
       if (!quote.success) return;
 
-      const acceptResult = await checkoutService.accept({
-        source: 'cart',
-        lines: [{ variantId: item.variantId, quantity: 1 }],
-        confirmation: quote.data.confirmation,
-        paymentMethod: 'cod',
-        address: validAddress,
-        userId: user.id,
-      });
+      const acceptResult = await checkoutService.accept(
+        {
+          source: 'cart',
+          lines: [{ variantId: item.variantId, quantity: 1 }],
+          confirmation: quote.data.confirmation,
+          paymentMethod: 'cod',
+          address: validAddress,
+        },
+        { userId: user.id },
+      );
 
       expect(acceptResult.success).toBe(true);
       if (!acceptResult.success) return;
@@ -327,6 +330,28 @@ describe('Checkout feature integration tests on real Postgres', () => {
         .where(eq(orders.id, acceptResult.data.order.id));
       expect(orderRow.userId).toBe(user.id);
       expect(orderRow.guestEmail).toBeNull();
+    });
+
+    it('requires guestEmail when no session context is provided', async () => {
+      const item = await createVariantWithStock({ price: '20.00', onHand: 5 });
+      const quote = await checkoutService.validate({
+        source: 'cart',
+        lines: [{ variantId: item.variantId, quantity: 1 }],
+      });
+      if (!quote.success) return;
+
+      const acceptResult = await checkoutService.accept({
+        source: 'cart',
+        lines: [{ variantId: item.variantId, quantity: 1 }],
+        confirmation: quote.data.confirmation,
+        paymentMethod: 'cod',
+        address: validAddress,
+      });
+
+      expect(acceptResult.success).toBe(false);
+      if (acceptResult.success) return;
+      expect(acceptResult.status).toBe(400);
+      expect(acceptResult.error.code).toBe('validation-error');
     });
 
     it('returns 409 reconfirmation-required when catalog price changes between quote and accept', async () => {
@@ -456,6 +481,29 @@ describe('Checkout feature integration tests on real Postgres', () => {
       expect(updated.status).toBe('confirmed');
       expect(updated.paymentStatus).toBe('paid');
 
+      // Service-level check throws on frozen columns
+      expect(() => orderQueries.assertMutableOrderColumns({ subtotal: '999.00' })).toThrow(
+        /Cannot update frozen order snapshot column: subtotal/,
+      );
+
+      await expect(orderQueries.updateOrder(orderId, { subtotal: '999.00' })).rejects.toThrow(
+        /Cannot update frozen order snapshot column: subtotal/,
+      );
+
+      // Service-level check allows mutable columns
+      await orderQueries.updateOrder(orderId, {
+        status: 'shipped',
+        trackingNumber: 'TRACK-12345',
+        adminNotes: 'Packaged with care',
+      });
+      const [afterServiceUpdate] = await testDb.db
+        .select()
+        .from(orders)
+        .where(eq(orders.id, orderId));
+      expect(afterServiceUpdate.status).toBe('shipped');
+      expect(afterServiceUpdate.trackingNumber).toBe('TRACK-12345');
+      expect(afterServiceUpdate.adminNotes).toBe('Packaged with care');
+
       // Attempting to update frozen snapshot columns (e.g. subtotal) triggers database trigger
       await expect(
         testDb.sql`update sales.orders set subtotal = '999.00' where id = ${orderId}`,
@@ -475,6 +523,67 @@ describe('Checkout feature integration tests on real Postgres', () => {
       await expect(
         testDb.sql`delete from sales.order_items where order_id = ${orderId}`,
       ).rejects.toThrow(/Order items cannot be deleted/);
+    });
+
+    it('allows ON DELETE SET NULL on user_id and variant_id without trigger failure', async () => {
+      sequence += 1;
+      const [testUser] = await testDb.db
+        .insert(users)
+        .values({
+          email: `anon-${sequence}@example.com`,
+          firstName: 'Anonymize',
+          lastName: 'Me',
+        })
+        .returning();
+
+      const item = await createVariantWithStock({ price: '15.00', onHand: 5 });
+      const quote = await checkoutService.validate({
+        source: 'cart',
+        lines: [{ variantId: item.variantId, quantity: 1 }],
+      });
+      if (!quote.success) return;
+
+      const acceptResult = await checkoutService.accept(
+        {
+          source: 'cart',
+          lines: [{ variantId: item.variantId, quantity: 1 }],
+          confirmation: quote.data.confirmation,
+          paymentMethod: 'cod',
+          address: validAddress,
+        },
+        { userId: testUser.id },
+      );
+      expect(acceptResult.success).toBe(true);
+      if (!acceptResult.success) return;
+
+      const orderId = acceptResult.data.order.id;
+
+      // Deleting the user triggers ON DELETE SET NULL on orders.user_id
+      await testDb.db.delete(users).where(eq(users.id, testUser.id));
+
+      const [orderAfterUserDelete] = await testDb.db
+        .select()
+        .from(orders)
+        .where(eq(orders.id, orderId));
+      expect(orderAfterUserDelete.userId).toBeNull();
+      expect(orderAfterUserDelete.totalAmount).toBe('65.00');
+
+      // Updating product_id or variant_id to NULL on order_items (allowed for ON DELETE SET NULL cascade)
+      await testDb.sql`update sales.order_items set variant_id = null where order_id = ${orderId}`;
+      await testDb.sql`update sales.order_items set product_id = null where order_id = ${orderId}`;
+
+      const [itemAfterNulls] = await testDb.db
+        .select()
+        .from(orderItems)
+        .where(eq(orderItems.orderId, orderId));
+      expect(itemAfterNulls.variantId).toBeNull();
+      expect(itemAfterNulls.productId).toBeNull();
+      expect(itemAfterNulls.unitPriceSnapshot).toBe('15.00');
+
+      // Attempting to change variant_id to a new non-null ID is blocked
+      await expect(
+        testDb.sql`update sales.order_items set variant_id = 999 where order_id = ${orderId}`,
+      ).rejects.toThrow(/Order items are frozen/);
     });
 
     it('verifies Order Reference format and uniqueness constraint', async () => {

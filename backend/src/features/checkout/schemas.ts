@@ -20,22 +20,20 @@ export const CheckoutValidateSchema = z.object({
 
 export type CheckoutValidateInput = z.infer<typeof CheckoutValidateSchema>;
 
-export const CheckoutOrderSchema = z
-  .object({
-    source: z.literal('cart'),
-    lines: z.array(CheckoutLineSchema).min(1, 'At least one line is required'),
-    confirmation: z.string().min(1, 'Confirmation digest is required'),
-    paymentMethod: z.literal('cod'),
-    address: ShippingAddressSchema,
-    guestEmail: z.string().email().optional(),
-    userId: z.number().int().positive().optional(),
-  })
-  .refine((data) => Boolean(data.userId || data.guestEmail), {
-    message: 'Either userId or guestEmail must be provided',
-    path: ['guestEmail'],
-  });
+export const CheckoutOrderSchema = z.object({
+  source: z.literal('cart'),
+  lines: z.array(CheckoutLineSchema).min(1, 'At least one line is required'),
+  confirmation: z.string().min(1, 'Confirmation digest is required'),
+  paymentMethod: z.literal('cod'),
+  address: ShippingAddressSchema,
+  guestEmail: z.string().email().optional(),
+});
 
 export type CheckoutOrderInput = z.infer<typeof CheckoutOrderSchema>;
+
+export interface CheckoutOrderContext {
+  userId?: number;
+}
 
 export interface CheckoutQuoteLine {
   variantId: number;

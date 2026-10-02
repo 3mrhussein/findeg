@@ -9,12 +9,18 @@ interface OrderConfirmationProps {
   result: PlaceOrderResult;
   continueLabel: string;
   confirmTitle: string;
+  orderReferenceLabel?: string;
 }
 
 /**
  * Order success screen — shown after a successful checkout.
  */
-export function OrderConfirmation({ result, continueLabel, confirmTitle }: OrderConfirmationProps) {
+export function OrderConfirmation({
+  result,
+  continueLabel,
+  confirmTitle,
+  orderReferenceLabel = 'Order Reference:',
+}: OrderConfirmationProps) {
   const router = useRouter();
 
   return (
@@ -30,7 +36,7 @@ export function OrderConfirmation({ result, continueLabel, confirmTitle }: Order
       </p>
       {result.orderReference ? (
         <div className="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800 rounded-lg px-4 py-2 text-slate-900 dark:text-white font-mono font-medium mb-10">
-          <span className="text-slate-500 font-sans text-sm">Order Reference:</span>{' '}
+          <span className="text-slate-500 font-sans text-sm">{orderReferenceLabel}</span>{' '}
           {result.orderReference}
         </div>
       ) : result.orderId ? (

@@ -40,19 +40,6 @@ const nextConfig: NextConfig = {
     // Set root to monorepo root to resolve cross-package dependencies
     root: path.join(__dirname, '../..'),
   },
-
-  async rewrites() {
-    return [
-      {
-        source: '/checkout/validate',
-        destination: '/api/v1/checkout/validate',
-      },
-      {
-        source: '/checkout/order',
-        destination: '/api/v1/checkout/order',
-      },
-    ];
-  },
 };
 
 export default withNextIntl(nextConfig);

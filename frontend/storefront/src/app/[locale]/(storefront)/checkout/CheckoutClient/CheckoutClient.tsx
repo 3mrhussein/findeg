@@ -193,6 +193,7 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
             result={orderResult}
             continueLabel={t('Pages.Checkout.ContinueShopping')}
             confirmTitle={t('Pages.Checkout.OrderConfirmed')}
+            orderReferenceLabel={t('Pages.Checkout.OrderReference')}
           />
         ) : cartItems.length > 0 ? (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-12">

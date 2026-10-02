@@ -7,12 +7,12 @@
  * Note: Returns raw database rows. Domain mapping handled by OrderService.
  */
 
-import { randomBytes } from 'node:crypto';
 import { db } from '../../connection';
 import {
   orders,
   orderItems,
   users,
+  generateOrderReference,
   type Order as DbOrder,
   type OrderItem as DbOrderItem,
 } from '../../schema';
@@ -53,32 +53,19 @@ export interface OrderCountByStatus {
 
 // ─── Order Reference & Freeze Guards ──────────────────────────────────────────
 
-const CROCKFORD_BASE32 = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
+export { generateOrderReference };
 
-export function generateOrderReference(): string {
-  const bytes = randomBytes(6);
-  let code = '';
-  for (let i = 0; i < 6; i++) {
-    code += CROCKFORD_BASE32[bytes[i] % 32];
-  }
-  return `FE-${code}`;
-}
-
-const FROZEN_ORDER_COLUMNS = new Set([
-  'orderReference',
-  'userId',
-  'guestEmail',
-  'subtotal',
-  'shippingCost',
-  'totalAmount',
-  'currency',
-  'paymentMethod',
-  'shippingAddressSnapshot',
+const ALLOWED_MUTABLE_ORDER_COLUMNS = new Set([
+  'status',
+  'paymentStatus',
+  'trackingNumber',
+  'adminNotes',
+  'updatedAt',
 ]);
 
 export function assertMutableOrderColumns(update: Record<string, unknown>): void {
   for (const key of Object.keys(update)) {
-    if (FROZEN_ORDER_COLUMNS.has(key)) {
+    if (!ALLOWED_MUTABLE_ORDER_COLUMNS.has(key)) {
       throw new Error(`Cannot update frozen order snapshot column: ${key}`);
     }
   }
@@ -427,6 +414,21 @@ export async function updateStatus(
 }
 
 /**
+ * Update order fields with service-level snapshot immutability check
+ */
+export async function updateOrder(
+  id: ID | string,
+  data: Partial<typeof orders.$inferInsert>,
+  tx?: DbTransaction,
+): Promise<void> {
+  assertMutableOrderColumns(data as Record<string, unknown>);
+  await (tx ?? db)
+    .update(orders)
+    .set({ ...data, updatedAt: new Date() })
+    .where(eq(orders.id, Number(id)));
+}
+
+/**
  * Update order status with tracking info
  */
 export async function updateStatusWithTracking(
@@ -446,6 +448,8 @@ export async function updateStatusWithTracking(
   if (data.trackingNumber) updateData.trackingNumber = data.trackingNumber;
   if (data.adminNotes) updateData.adminNotes = data.adminNotes;
 
+  assertMutableOrderColumns(updateData as Record<string, unknown>);
+
   await (tx ?? db)
     .update(orders)
     .set(updateData)
@@ -460,6 +464,7 @@ export async function updatePaymentStatus(
   status: PaymentStatus,
   tx?: DbTransaction,
 ): Promise<void> {
+  assertMutableOrderColumns({ paymentStatus: status });
   await (tx ?? db)
     .update(orders)
     .set({ paymentStatus: status, updatedAt: new Date() })

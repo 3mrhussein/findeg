@@ -13,11 +13,10 @@ export async function POST(request: Request) {
   const session = await getSession();
   const userId = session?.userId ? Number(session.userId) : undefined;
 
+  delete body.userId;
+
   const checkoutService = createCheckoutService();
-  const result = await checkoutService.accept({
-    ...body,
-    userId: userId ?? body.userId,
-  });
+  const result = await checkoutService.accept(body, { userId });
 
   if (!result.success) {
     return Response.json({ success: false, error: result.error }, { status: result.status });

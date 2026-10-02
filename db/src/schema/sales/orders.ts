@@ -27,9 +27,9 @@ import { productVariants } from '../catalog/product-variants';
 import { orderStatusEnum, paymentStatusEnum, paymentMethodEnum } from '../enums';
 import { CurrencyCode, ShippingAddress, VariantSnapshot } from '@findeg/db/types';
 
-const CROCKFORD_BASE32 = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
+export const CROCKFORD_BASE32 = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
 
-function generateOrderReference(): string {
+export function generateOrderReference(): string {
   const bytes = randomBytes(6);
   let code = '';
   for (let i = 0; i < 6; i++) {

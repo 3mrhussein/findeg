@@ -341,6 +341,7 @@
       "FailedToPlaceOrder": "تعذر إتمام الطلب.",
       "OrderConfirmed": "تم تأكيد الطلب",
       "OrderId": "رقم الطلب: #{id}",
+      "OrderReference": "الرقم المرجعي للطلب:",
       "ContinueShopping": "متابعة التسوق",
       "ShippingInformation": "1. معلومات الشحن",
       "FullName": "الاسم الكامل",

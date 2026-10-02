@@ -1,6 +1,7 @@
 import type {
   CheckoutValidateInput,
   CheckoutOrderInput,
+  CheckoutOrderContext,
   CheckoutQuote,
   CheckoutAcceptedOrder,
 } from '../../schemas';
@@ -50,5 +51,5 @@ export type CheckoutAcceptResult = CheckoutAcceptSuccess | CheckoutAcceptFailure
 
 export interface ICheckoutService {
   validate(input: CheckoutValidateInput): Promise<CheckoutValidateResult>;
-  accept(input: CheckoutOrderInput): Promise<CheckoutAcceptResult>;
+  accept(input: CheckoutOrderInput, context?: CheckoutOrderContext): Promise<CheckoutAcceptResult>;
 }
