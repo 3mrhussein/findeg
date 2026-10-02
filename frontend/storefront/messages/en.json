@@ -550,48 +550,6 @@
     }
   },
   "School": {
-    "AuthWall": {
-      "title": "Sign in to view",
-      "description": "Please sign in or create an account to view this school's information and supply lists.",
-      "listContext": "Viewing list for {list}",
-      "loginRequired": "Authentication Required",
-      "benefitTitle": "Why Join FindEg?",
-      "benefit1": "Instant access to verified school supply lists",
-      "benefit2": "One-click shopping for exact required items",
-      "benefit3": "Exclusive student discounts and bundles",
-      "signIn": "Sign In",
-      "createAccount": "Create Free Account",
-      "whyLogin": "We need this to save your progress and handle your orders."
-    },
-    "CodeEntry": {
-      "title": "Enter Access Code",
-      "description": "Please enter the 6-character code provided by your school for the {list} list.",
-      "placeholder": "Enter code",
-      "verifyButton": "Verify Code",
-      "verifying": "Verifying...",
-      "wrongCode": "Invalid code. Please try again.",
-      "lockedUntil": "Too many attempts. Locked until {time}.",
-      "cancel": "Cancel",
-      "successToast": "Access granted! Happy shopping.",
-      "errorToast": "Could not verify code.",
-      "connectionError": "Network error. Please try again.",
-      "requestLink": "Don't have a code? Request access from the school"
-    },
-    "AccessRequest": {
-      "title": "Request List Access",
-      "description": "Send a request to {school} for the {list} list.",
-      "childNameLabel": "Child's Name",
-      "childNamePlaceholder": "e.g., Omar Ahmed",
-      "noteLabel": "Optional Note to School",
-      "notePlaceholder": "e.g., I'm a parent of a new student in Grade 3.",
-      "noteHint": "Individual requests are reviewed by school administrators.",
-      "submitButton": "Send Request",
-      "sending": "Sending...",
-      "cancel": "Cancel",
-      "successToast": "Your request has been sent successfully!",
-      "errorToast": "Failed to send request. Please try again.",
-      "connectionError": "Connection error. Please check your internet."
-    },
     "Directory": {
       "title": "Find Your School's Supply List",
       "subtitle": "Discover verified lists for your child's grade level and shop everything in one place.",
@@ -601,17 +559,6 @@
       "listStatus": "Status",
       "currentYear": "2024/2025",
       "lastYear": "Update Pending"
-    },
-    "AccessCard": {
-      "publicAccess": "Public Access",
-      "codeRequired": "Code Required",
-      "privateList": "Private List",
-      "accessGranted": "Access Granted",
-      "accessPending": "Request Pending",
-      "viewList": "Open List",
-      "enterCode": "Enter Code",
-      "requestAccess": "Request Access",
-      "checkStatus": "Pending Approval"
     },
     "ParentExperience": {
       "Layout": {
@@ -701,11 +648,8 @@
       "OrderDelivered": "Order Delivered",
       "PaymentFailed": "Payment Failed",
       "ReviewApproved": "Review Approved",
-      "AccessApproved": "Access Approved",
-      "AccessRejected": "Access Rejected",
       "LowStock": "Low Stock Alert",
-      "NewReview": "New Review Submitted",
-      "NewAccessRequest": "New Access Request"
+      "NewReview": "New Review Submitted"
     }
   }
 }

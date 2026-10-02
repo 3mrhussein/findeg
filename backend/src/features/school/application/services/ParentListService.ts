@@ -1,11 +1,5 @@
 import { ISchoolDirectoryService, SchoolProfile } from '../interfaces/ISchoolDirectoryService';
-import { ISchoolAccessService } from '../interfaces/ISchoolAccessService';
-import {
-  IParentListService,
-  SchoolListPageData,
-  SessionState,
-  SessionSummary,
-} from '../interfaces/IParentListService';
+import { IParentListService, SessionState, SessionSummary } from '../interfaces/IParentListService';
 import { sessionQueries } from '@findeg/db/queries';
 
 /**
@@ -15,10 +9,7 @@ export class ParentListService implements IParentListService {
   /**
    *
    */
-  constructor(
-    private schoolListService: ISchoolDirectoryService,
-    private accessService: ISchoolAccessService,
-  ) {}
+  constructor(private schoolListService: ISchoolDirectoryService) {}
 
   /**
    *
@@ -95,26 +86,5 @@ export class ParentListService implements IParentListService {
     // 1. Fetch list items + session overrides
     // 2. Create cart_kit record
     // 3. Add items to cart with cart_kit_id
-  }
-
-  /**
-   * Orchestrates the retrieval of all data required for the school list page.
-   */
-  async getSchoolListPageData(slug: string, userId?: number): Promise<SchoolListPageData | null> {
-    const list = await this.schoolListService.getBySlug(slug);
-    if (!list) return null;
-
-    const [accessState, sessionState, fullList] = await Promise.all([
-      this.accessService.getAccessState(list.id, userId || null),
-      this.getSessionState(list.id, userId),
-      this.getListWithDetails(slug),
-    ]);
-
-    return {
-      list,
-      accessState,
-      sessionState,
-      fullList: fullList as SchoolProfile,
-    };
   }
 }

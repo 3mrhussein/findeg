@@ -18,7 +18,6 @@ export * as reviewQueries from './review/reviews';
 export * as auditLogQueries from './administration/audit-logs';
 export * as notificationQueries from './notifications/notifications';
 export * as userQueries from './identity/users';
-export * as accessQueries from './school/access';
 export * as sessionQueries from './school/sessions';
 
 // Feature-specific queries (admin operations, school directory, etc.)

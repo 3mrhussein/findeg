@@ -91,8 +91,6 @@ export function createAdministrationServices(): AdministrationServices {
       sendOrderConfirmation: async () => {},
       sendOrderStatusUpdate: async () => {},
       sendPasswordReset: async () => {},
-      sendSchoolListAccessApproved: async () => {},
-      sendSchoolListAccessRequest: async () => {},
       sendAdminInvitation: async () => {},
     } as IEmailService),
     dashboard: new AdminDashboardService(),

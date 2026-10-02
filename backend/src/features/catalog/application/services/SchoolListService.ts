@@ -69,7 +69,7 @@ export class SchoolListService implements ISchoolListService {
     const list = await schoolListQueries.getById(id);
     if (!list) return null;
 
-    // Return without items hydration (used by SchoolAccessService for access checks)
+    // Return without items hydration
     return {
       ...list,
     } as SchoolListResult;
