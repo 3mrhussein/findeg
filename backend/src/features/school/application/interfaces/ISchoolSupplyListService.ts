@@ -1,8 +1,14 @@
+import type { SchoolSupplyListItemRow, SchoolSupplyListRow } from '@findeg/db/schema';
 import type {
-  SchoolSupplyListItemRow,
-  SchoolSupplyListRow,
-  SupplyListSpecification,
-} from '@findeg/db/schema';
+  CreateSupplyListDraftInput,
+  UpdateSupplyListDraftInput,
+  SupplyListItemInput,
+} from '@findeg/db/types';
+export type {
+  CreateSupplyListDraftInput,
+  UpdateSupplyListDraftInput,
+  SupplyListItemInput,
+} from '@findeg/db/types';
 import type { ServiceResult } from '../../../core';
 
 /** A resolved Staff session; Partner membership never grants lifecycle access. */
@@ -11,31 +17,6 @@ export interface SupplyListStaffActor {
   userId: number;
   activeRoleIds?: readonly string[];
   permissionCodes?: readonly string[];
-}
-
-export interface CreateSupplyListDraftInput {
-  businessPartnerId: number;
-  grade: string;
-  academicYear: string;
-  localizedTitle: { en?: string; ar?: string };
-  localizedDescription?: { en?: string; ar?: string } | null;
-  heroImageUrl?: string | null;
-}
-
-export type UpdateSupplyListDraftInput = Partial<
-  Omit<CreateSupplyListDraftInput, 'businessPartnerId'>
->;
-
-export interface SupplyListItemInput {
-  /** Nullable while Staff prepare a draft; required before publication. */
-  variantId?: number | null;
-  exactItem?: boolean;
-  specification?: SupplyListSpecification | null;
-  required?: boolean;
-  quantity?: number;
-  localizedLabel: { en?: string; ar?: string };
-  localizedNote?: { en?: string; ar?: string } | null;
-  sortOrder?: number;
 }
 
 export interface SchoolSupplyList extends SchoolSupplyListRow {

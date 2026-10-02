@@ -1,6 +1,12 @@
 import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
-import { PERMISSION_CODES } from '@findeg/db';
+import { PERMISSION_CODES, systemAdmin } from '@findeg/db';
+import {
+  CreateSupplyListDraftSchema as createSchema,
+  UpdateSupplyListDraftSchema as draftPatchSchema,
+  SupplyListItemSchema as itemSchema,
+  SupplyListIdSchema as idSchema,
+} from '@findeg/db/types';
 import {
   archiveSupplyList,
   deleteSupplyListItem,
@@ -22,7 +28,7 @@ import {
   type SchoolSupplyListDatabase,
   type SchoolSupplyListTransaction,
 } from '@findeg/db/queries/school-supply-lists';
-import type { SchoolSupplyListRow } from '@findeg/db/schema';
+import type { SchoolSupplyListRow, SchoolSupplyListItemRow } from '@findeg/db/schema';
 import { eligibleVariants } from '../../domain/eligibleVariants';
 import type {
   CreateSupplyListDraftInput,
@@ -35,42 +41,6 @@ import type {
   SupplyListStaffActor,
   UpdateSupplyListDraftInput,
 } from '../interfaces/ISchoolSupplyListService';
-
-const idSchema = z.number().int().positive();
-const translationSchema = z
-  .object({ en: z.string().optional(), ar: z.string().optional() })
-  .strict();
-const labelSchema = translationSchema.refine((value) =>
-  Boolean(value.en?.trim() || value.ar?.trim()),
-);
-const draftFields = {
-  grade: z.string().trim().min(1).max(255),
-  academicYear: z.string().trim().min(1).max(255),
-  localizedTitle: labelSchema,
-  localizedDescription: translationSchema.nullable().optional(),
-  heroImageUrl: z.string().nullable().optional(),
-};
-const createSchema = z.object({ businessPartnerId: idSchema, ...draftFields }).strict();
-const draftPatchSchema = z.object(draftFields).partial().strict();
-const itemSchema = z
-  .object({
-    variantId: idSchema.nullable().optional(),
-    exactItem: z.boolean().optional(),
-    specification: z
-      .object({
-        categoryId: idSchema,
-        attributes: z.record(z.string(), z.string()),
-      })
-      .strict()
-      .nullable()
-      .optional(),
-    required: z.boolean().optional(),
-    quantity: z.number().int().min(1).max(999).optional(),
-    localizedLabel: labelSchema,
-    localizedNote: translationSchema.nullable().optional(),
-    sortOrder: z.number().int().nonnegative().optional(),
-  })
-  .strict();
 
 function ok<T>(data: T): SupplyListResult<T> {
   return { success: true, data };
@@ -85,7 +55,7 @@ function isStaff(actor: SupplyListStaffActor): boolean {
 function canWrite(actor: SupplyListStaffActor): boolean {
   return (
     isStaff(actor) &&
-    (actor.activeRoleIds?.includes('system_admin') === true ||
+    (systemAdmin(actor) ||
       actor.permissionCodes?.includes(PERMISSION_CODES.ADMIN_SCHOOL_LISTS_WRITE) === true)
   );
 }
@@ -237,29 +207,9 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
     try {
       return await this.withDraft(listId, async (tx, list) => {
         const items = await getSupplyListItems(tx, list.id);
-        if (items.length === 0) return fail('empty-list');
-        if (items.some((item) => item.variantId === null)) return fail('default-unavailable');
-        const variantIds = [...new Set(items.map((item) => item.variantId!))];
-        const defaults = new Map(
-          (await getSupplyListDefaults(tx, variantIds)).map((row) => [row.variantId, row]),
-        );
-        if (
-          variantIds.some(
-            (id) => !defaults.get(id)?.variantActive || !defaults.get(id)?.productActive,
-          )
-        ) {
-          return fail('default-unavailable');
-        }
-        const candidates = await findVariantCandidates(tx, { variantIds });
-        if (
-          items.some(
-            (item) =>
-              !eligibleVariants({ ...item, variantId: item.variantId! }, candidates).some(
-                (candidate) => candidate.variantId === item.variantId,
-              ),
-          )
-        )
-          return fail('default-ineligible');
+        const validation = await this.validateDefaults(tx, items);
+        if (!validation.success) return validation;
+        const { variantIds, defaults } = validation.data;
 
         const incumbent = await getPublishedSupplyListInSlot(tx, list);
         if (incumbent && incumbent.id !== list.sourceListId) return fail('slot-taken');
@@ -315,6 +265,40 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
   async getById(actor: SupplyListStaffActor, listId: number) {
     if (!canRead(actor)) return fail('forbidden');
     return this.withList(listId, async (tx, list) => ok(await aggregate(tx, list)));
+  }
+
+  /** Validate catalog facts before any publication or replacement writes. */
+  private async validateDefaults(
+    tx: SchoolSupplyListTransaction,
+    items: SchoolSupplyListItemRow[],
+  ): Promise<
+    SupplyListResult<{
+      variantIds: number[];
+      defaults: Map<number, Awaited<ReturnType<typeof getSupplyListDefaults>>[number]>;
+    }>
+  > {
+    if (items.length === 0) return fail('empty-list');
+    if (items.some((item) => item.variantId === null)) return fail('default-unavailable');
+    const variantIds = [...new Set(items.map((item) => item.variantId!))];
+    const defaults = new Map(
+      (await getSupplyListDefaults(tx, variantIds)).map((row) => [row.variantId, row]),
+    );
+    if (
+      variantIds.some((id) => !defaults.get(id)?.variantActive || !defaults.get(id)?.productActive)
+    ) {
+      return fail('default-unavailable');
+    }
+    const candidates = await findVariantCandidates(tx, { variantIds });
+    if (
+      items.some(
+        (item) =>
+          !eligibleVariants({ ...item, variantId: item.variantId! }, candidates).some(
+            (candidate) => candidate.variantId === item.variantId,
+          ),
+      )
+    )
+      return fail('default-ineligible');
+    return ok({ variantIds, defaults });
   }
 
   private async withDraft<T>(

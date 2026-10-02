@@ -12,28 +12,15 @@ import {
   type SchoolSupplyListRow,
 } from '../../schema';
 import type { SchoolSupplyListExecutor, SchoolSupplyListTransaction } from './index';
+import type {
+  CreateSupplyListDraftInput,
+  UpdateSupplyListDraftInput,
+  SupplyListItemInput,
+} from '../../types/school-supply-lists';
 
-export type SupplyListDraftInput = Pick<
-  typeof schoolSupplyLists.$inferInsert,
-  | 'businessPartnerId'
-  | 'grade'
-  | 'academicYear'
-  | 'localizedTitle'
-  | 'localizedDescription'
-  | 'heroImageUrl'
->;
-export type SupplyListDraftPatch = Partial<Omit<SupplyListDraftInput, 'businessPartnerId'>>;
-export type SupplyListItemInput = Pick<
-  typeof schoolSupplyListItems.$inferInsert,
-  | 'variantId'
-  | 'exactItem'
-  | 'specification'
-  | 'required'
-  | 'quantity'
-  | 'localizedLabel'
-  | 'localizedNote'
-  | 'sortOrder'
->;
+export type SupplyListDraftInput = CreateSupplyListDraftInput;
+export type SupplyListDraftPatch = UpdateSupplyListDraftInput;
+export type { SupplyListItemInput } from '../../types/school-supply-lists';
 
 /** Serialize one school's lifecycle, always before taking list locks. */
 export async function lockSupplyListPartner(tx: SchoolSupplyListTransaction, id: number) {

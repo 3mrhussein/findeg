@@ -26,6 +26,7 @@ import {
   type ISchoolSupplyListService,
   type SupplyListResult,
   type SupplyListStaffActor,
+  type UpdateSupplyListDraftInput,
 } from '../index';
 
 const staff: SupplyListStaffActor = { kind: 'staff', userId: 1, activeRoleIds: ['system_admin'] };
@@ -501,15 +502,18 @@ describe('Staff School Supply List lifecycle on real Postgres', () => {
     expect(await service.publish(staff, clone.id)).toEqual({ success: false, error: 'not-draft' });
   });
 
-  it('clones for a new grade or year without retiring the source slot', async () => {
-    const { list } = await readyDraft();
-    data(await service.publish(staff, list.id));
-    const nextYear = data(
-      await service.cloneToDraft(staff, list.id, { academicYear: '2027/2028' }),
-    );
-    expect(data(await service.publish(staff, nextYear.id)).list.replacesListId).toBeNull();
-    expect(data(await service.getById(staff, list.id)).status).toBe('published');
-  });
+  it.each<UpdateSupplyListDraftInput>([{ grade: 'Grade 2' }, { academicYear: '2027/2028' }])(
+    'a clone edited into another slot preserves its source: %j',
+    async (target) => {
+      const { list } = await readyDraft();
+      data(await service.publish(staff, list.id));
+      const clone = data(await service.cloneToDraft(staff, list.id));
+      data(await service.updateDraft(staff, clone.id, target));
+      const published = data(await service.publish(staff, clone.id)).list;
+      expect(published).toMatchObject({ sourceListId: list.id, replacesListId: null, ...target });
+      expect(data(await service.getById(staff, list.id)).status).toBe('published');
+    },
+  );
 
   it('archives without a replacement, never un-archives, and can clone an archived version with a new code', async () => {
     const { list } = await readyDraft();
