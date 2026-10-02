@@ -8,6 +8,7 @@
 import { db } from '@findeg/db/connection';
 import { inventoryBalances, stockMovements, warehouses, productVariants } from '@findeg/db/schema';
 import { eq, and, sql, desc } from 'drizzle-orm';
+import { withTransaction, type DbTransaction } from '../transaction';
 
 export type InventoryBalanceRow = typeof inventoryBalances.$inferSelect;
 export type StockMovementRow = typeof stockMovements.$inferSelect;
@@ -126,15 +127,16 @@ export async function adjustStock(
 }
 
 /**
- * Reserve stock in an atomic transaction with lock
+ * Reserve stock in an atomic transaction with lock (joins `tx` when given)
  */
 export async function reserveStock(
   variantId: number,
   warehouseId: number,
   quantity: number,
   orderId: string,
+  tx?: DbTransaction,
 ): Promise<boolean> {
-  return await db.transaction(async (tx) => {
+  return await withTransaction(tx, async (tx) => {
     // Check available with row lock
     const [balance] = await tx
       .select()
@@ -182,15 +184,16 @@ export async function reserveStock(
 }
 
 /**
- * Release a stock reservation in an atomic transaction
+ * Release a stock reservation in an atomic transaction (joins `tx` when given)
  */
 export async function releaseReservation(
   variantId: number,
   warehouseId: number,
   quantity: number,
   orderId: string,
+  tx?: DbTransaction,
 ): Promise<void> {
-  await db.transaction(async (tx) => {
+  await withTransaction(tx, async (tx) => {
     await tx
       .update(inventoryBalances)
       .set({
