@@ -7,11 +7,21 @@
  * - stock_movements: Immutable audit ledger of all stock changes
  */
 
-import { serial, text, integer, boolean, timestamp, uniqueIndex, index } from 'drizzle-orm/pg-core';
-import { relations } from 'drizzle-orm';
+import {
+  serial,
+  text,
+  integer,
+  boolean,
+  timestamp,
+  uniqueIndex,
+  index,
+  check,
+} from 'drizzle-orm/pg-core';
+import { relations, sql } from 'drizzle-orm';
 import { inventorySchema } from '../schemas';
 import { productVariants } from '../catalog/product-variants';
 import { users } from '../identity/users';
+import { orders } from '../sales/orders';
 
 // ─── Warehouses ──────────────────────────────────────────────────────────────
 
@@ -65,6 +75,11 @@ export const inventoryBalances = inventorySchema.table(
     /** One balance row per variant per warehouse */
     uniqueIndex('uq_inventory_balance').on(table.variantId, table.warehouseId),
     index('idx_inventory_variant').on(table.variantId),
+    /** Oversell backstop (ADR-0005): reserved stays within [0, on_hand] */
+    check(
+      'ck_inventory_balance_reserved',
+      sql`${table.onHand} >= ${table.reserved} AND ${table.reserved} >= 0`,
+    ),
   ],
 );
 
@@ -109,6 +124,52 @@ export const stockMovements = inventorySchema.table(
   (table) => [
     index('idx_stock_movements_variant').on(table.variantId),
     index('idx_stock_movements_created').on(table.createdAt),
+    /** An order's consume/release applies once per balance, however often the caller retries */
+    uniqueIndex('uq_stock_movements_order_settlement')
+      .on(table.referenceId, table.movementType, table.variantId, table.warehouseId)
+      .where(
+        sql`${table.referenceType} = 'order' AND ${table.movementType} IN ('consume', 'release')`,
+      ),
+  ],
+);
+
+// ─── Stock Reservations ──────────────────────────────────────────────────────
+
+/**
+ * stock_reservations
+ *
+ * Immutable record of the units one order holds at one warehouse (ADR-0005).
+ * Consumption and release never edit it; they append stock movements.
+ */
+export const stockReservations = inventorySchema.table(
+  'stock_reservations',
+  {
+    id: serial('id').primaryKey(),
+
+    orderId: integer('order_id')
+      .notNull()
+      .references(() => orders.id, { onDelete: 'restrict' }),
+
+    variantId: integer('variant_id')
+      .notNull()
+      .references(() => productVariants.id, { onDelete: 'restrict' }),
+
+    warehouseId: integer('warehouse_id')
+      .notNull()
+      .references(() => warehouses.id, { onDelete: 'restrict' }),
+
+    quantity: integer('quantity').notNull(),
+
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+  },
+  (table) => [
+    uniqueIndex('uq_stock_reservation_allocation').on(
+      table.orderId,
+      table.variantId,
+      table.warehouseId,
+    ),
+    index('idx_stock_reservations_balance').on(table.variantId, table.warehouseId),
+    check('ck_stock_reservation_quantity', sql`${table.quantity} > 0`),
   ],
 );
 
@@ -126,6 +187,18 @@ export const inventoryBalancesRelations = relations(inventoryBalances, ({ one })
   }),
   warehouse: one(warehouses, {
     fields: [inventoryBalances.warehouseId],
+    references: [warehouses.id],
+  }),
+}));
+
+export const stockReservationsRelations = relations(stockReservations, ({ one }) => ({
+  order: one(orders, { fields: [stockReservations.orderId], references: [orders.id] }),
+  variant: one(productVariants, {
+    fields: [stockReservations.variantId],
+    references: [productVariants.id],
+  }),
+  warehouse: one(warehouses, {
+    fields: [stockReservations.warehouseId],
     references: [warehouses.id],
   }),
 }));
@@ -153,3 +226,5 @@ export type InventoryBalance = typeof inventoryBalances.$inferSelect;
 export type NewInventoryBalance = typeof inventoryBalances.$inferInsert;
 export type StockMovement = typeof stockMovements.$inferSelect;
 export type NewStockMovement = typeof stockMovements.$inferInsert;
+export type StockReservation = typeof stockReservations.$inferSelect;
+export type NewStockReservation = typeof stockReservations.$inferInsert;

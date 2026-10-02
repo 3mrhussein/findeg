@@ -152,21 +152,16 @@ export async function reserveStock(
     const available = (balance?.onHand || 0) - (balance?.reserved || 0);
     if (available < quantity) return false;
 
-    // Update reservation
+    // Update reservation (the row exists: available > 0 was read from it)
     await tx
-      .insert(inventoryBalances)
-      .values({
-        variantId,
-        warehouseId,
-        onHand: 0,
-        reserved: quantity,
-      })
-      .onConflictDoUpdate({
-        target: [inventoryBalances.variantId, inventoryBalances.warehouseId],
-        set: {
-          reserved: sql`${inventoryBalances.reserved} + ${quantity}`,
-        },
-      });
+      .update(inventoryBalances)
+      .set({ reserved: sql`${inventoryBalances.reserved} + ${quantity}` })
+      .where(
+        and(
+          eq(inventoryBalances.variantId, variantId),
+          eq(inventoryBalances.warehouseId, warehouseId),
+        ),
+      );
 
     // Record movement
     await tx.insert(stockMovements).values({
