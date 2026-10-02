@@ -8,7 +8,17 @@ Partner access is a parallel model next to Staff RBAC: this feature never depend
 
 ## Public interface (barrel)
 
-`createPartnerMembershipServices({ db? })` returns `{ partners }`:
+`createPartnerMembershipServices({ db?, clock?, enqueue? })` returns `{ partners, invitations }`.
+`clock` (default: system time) makes expiry testable; `enqueue` is the invitation delivery seam
+(ADR-0008) and defaults to a no-op until the Outbox exists. `invite` and `resendInvitation` return the
+raw `token` so Staff can copy the link; only its SHA-256 digest is stored.
+
+`invitations` (Staff, `partners.manage`; allowed while the partner is `onboarding` or `active`):
+`invite` (replaces a pending invitation for the same email), `resendInvitation` (same invitation,
+expiry reset to 7 days, new token, older tokens stay valid), `revokeInvitation`,
+`listPendingInvitations`, and the read-only `getInvitation(token)`.
+
+`partners`:
 
 | Operation                       | Notes                                                                                               |
 | ------------------------------- | --------------------------------------------------------------------------------------------------- |

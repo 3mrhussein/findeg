@@ -11,7 +11,6 @@ import {
   type BusinessPartnerRow,
   type PartnerDatabase,
 } from '@findeg/db/queries/partners';
-import { PERMISSION_CODES } from '@findeg/db';
 import type {
   BusinessPartner,
   CreatePartnerInput,
@@ -20,6 +19,7 @@ import type {
   StaffActor,
   UpdatePartnerInput,
 } from '../interfaces/IPartnerService';
+import { canManagePartners, fail, ok } from './shared';
 
 const codeSchema = z
   .string()
@@ -34,13 +34,6 @@ const updateSchema = z.object({
   nameEn: nameSchema.optional(),
   nameAr: nameSchema.optional(),
 });
-
-const SYSTEM_ADMIN_ROLE = 'system_admin';
-
-function canManagePartners(actor: StaffActor): boolean {
-  if (actor.activeRoleIds?.includes(SYSTEM_ADMIN_ROLE)) return true;
-  return actor.permissionCodes?.includes(PERMISSION_CODES.PARTNERS_MANAGE) === true;
-}
 
 function toPartner(row: BusinessPartnerRow): BusinessPartner {
   return {
@@ -147,11 +140,3 @@ export class PartnerService implements IPartnerService {
 }
 
 type UpdateError = 'not-found' | 'code-locked';
-
-function ok<T>(data: T): { success: true; data: T } {
-  return { success: true, data };
-}
-
-function fail<E extends string>(error: E): { success: false; error: E } {
-  return { success: false, error };
-}

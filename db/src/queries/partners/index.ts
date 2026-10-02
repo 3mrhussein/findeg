@@ -1,4 +1,4 @@
-import { asc, eq } from 'drizzle-orm';
+import { and, asc, eq } from 'drizzle-orm';
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import * as schema from '../../schema';
 
@@ -14,7 +14,8 @@ export type PartnerDatabase = PostgresJsDatabase<typeof schema>;
 export type PartnerTransaction = Parameters<Parameters<PartnerDatabase['transaction']>[0]>[0];
 export type PartnerExecutor = PartnerDatabase | PartnerTransaction;
 
-const { businessPartners, partnerAccessHistory } = schema;
+const { businessPartners, partnerAccessHistory, partnerInvitations, partnerInvitationTokens } =
+  schema;
 
 export type BusinessPartnerRow = typeof businessPartners.$inferSelect;
 export type NewBusinessPartnerRow = Pick<
@@ -92,4 +93,110 @@ export async function insertPartnerAccessHistory(
   row: NewPartnerAccessHistoryRow,
 ): Promise<void> {
   await executor.insert(partnerAccessHistory).values(row);
+}
+
+export type PartnerInvitationRow = typeof partnerInvitations.$inferSelect;
+export type NewPartnerInvitationRow = Pick<
+  typeof partnerInvitations.$inferInsert,
+  'businessPartnerId' | 'email' | 'roles' | 'invitedByUserId' | 'expiresAt'
+>;
+
+export async function getPartnerInvitationById(
+  executor: PartnerExecutor,
+  id: number,
+): Promise<PartnerInvitationRow | undefined> {
+  const [row] = await executor
+    .select()
+    .from(partnerInvitations)
+    .where(eq(partnerInvitations.id, id));
+  return row;
+}
+
+export async function listPendingPartnerInvitations(
+  executor: PartnerExecutor,
+  businessPartnerId: number,
+): Promise<PartnerInvitationRow[]> {
+  return executor
+    .select()
+    .from(partnerInvitations)
+    .where(
+      and(
+        eq(partnerInvitations.businessPartnerId, businessPartnerId),
+        eq(partnerInvitations.status, 'pending'),
+      ),
+    )
+    .orderBy(asc(partnerInvitations.createdAt), asc(partnerInvitations.id));
+}
+
+export async function getPendingPartnerInvitationByEmail(
+  executor: PartnerTransaction,
+  businessPartnerId: number,
+  email: string,
+): Promise<PartnerInvitationRow | undefined> {
+  const [row] = await executor
+    .select()
+    .from(partnerInvitations)
+    .where(
+      and(
+        eq(partnerInvitations.businessPartnerId, businessPartnerId),
+        eq(partnerInvitations.email, email),
+        eq(partnerInvitations.status, 'pending'),
+      ),
+    );
+  return row;
+}
+
+export async function insertPartnerInvitation(
+  executor: PartnerTransaction,
+  values: NewPartnerInvitationRow,
+): Promise<PartnerInvitationRow> {
+  const [row] = await executor.insert(partnerInvitations).values(values).returning();
+  return row;
+}
+
+export async function setPartnerInvitationStatus(
+  executor: PartnerTransaction,
+  id: number,
+  status: PartnerInvitationRow['status'],
+): Promise<PartnerInvitationRow> {
+  const [row] = await executor
+    .update(partnerInvitations)
+    .set({ status })
+    .where(eq(partnerInvitations.id, id))
+    .returning();
+  return row;
+}
+
+export async function setPartnerInvitationExpiry(
+  executor: PartnerTransaction,
+  id: number,
+  expiresAt: Date,
+): Promise<PartnerInvitationRow> {
+  const [row] = await executor
+    .update(partnerInvitations)
+    .set({ expiresAt })
+    .where(eq(partnerInvitations.id, id))
+    .returning();
+  return row;
+}
+
+export async function insertPartnerInvitationToken(
+  executor: PartnerTransaction,
+  invitationId: number,
+  tokenDigest: string,
+): Promise<void> {
+  await executor.insert(partnerInvitationTokens).values({ invitationId, tokenDigest });
+}
+
+/** The invitation a token digest belongs to, whatever its state. */
+export async function getPartnerInvitationByTokenDigest(
+  executor: PartnerExecutor,
+  tokenDigest: string,
+): Promise<PartnerInvitationRow | undefined> {
+  const [row] = await executor
+    .select({ invitation: partnerInvitations })
+    .from(partnerInvitationTokens)
+    .innerJoin(partnerInvitations, eq(partnerInvitations.id, partnerInvitationTokens.invitationId))
+    .where(eq(partnerInvitationTokens.tokenDigest, tokenDigest));
+  return row?.invitation;
 }
