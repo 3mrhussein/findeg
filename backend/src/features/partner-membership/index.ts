@@ -4,6 +4,7 @@
 export type {
   EnqueueInvitation,
   IInvitationService,
+  InvitationActor,
   InvitationView,
   InviteError,
   InviteInput,
@@ -19,6 +20,7 @@ export type {
   CreatePartnerError,
   CreatePartnerInput,
   IPartnerService,
+  PartnerActor,
   PartnerResult,
   ReadPartnerError,
   StaffActor,
@@ -28,9 +30,13 @@ export type {
 export type {
   AcceptInvitationError,
   IMembershipService,
+  LeaveError,
   PartnerContext,
+  PartnerMember,
   PartnerMembership,
   PartnerSession,
+  UpdateMembershipError,
+  UpdateMembershipInput,
 } from './application/interfaces/IMembershipService';
 export { createPartnerMembershipServices } from './application/services/factory';
 export type {
