@@ -1,9 +1,9 @@
-# Has Claude Code review PRs that Codex opened, using the repo's code-review skill.
+# Has Codex review PRs that Claude Code opened, using the repo's code-review skill.
 # Triggered manually via:
 #  - "Run workflow" button in Actions tab (workflow_dispatch)
-#  - Adding label `agent:codex` to the PR
+#  - Adding label `agent:claude` to the PR
 #  - Automatically on PR open when repo variable AUTO_AGENT_REVIEW is 'true'
-name: Claude review (Codex PRs)
+name: Codex review (Claude PRs)
 
 on:
   pull_request:
@@ -23,17 +23,16 @@ permissions:
   contents: read
   pull-requests: write
   issues: read
-  id-token: write
 
 jobs:
   review:
     if: >-
       github.event_name == 'workflow_dispatch' ||
-      (github.event.action == 'labeled' && github.event.label.name == 'agent:codex') ||
+      (github.event.action == 'labeled' && github.event.label.name == 'agent:claude') ||
       (vars.AUTO_AGENT_REVIEW == 'true' &&
         (github.event.action == 'opened' || github.event.action == 'ready_for_review') &&
         !github.event.pull_request.draft &&
-        contains(format(',{0},', vars.CODEX_PR_AUTHORS), format(',{0},', github.event.pull_request.user.login)))
+        contains(format(',{0},', vars.CLAUDE_PR_AUTHORS), format(',{0},', github.event.pull_request.user.login)))
     runs-on: ubuntu-latest
     steps:
       - name: Resolve PR details
@@ -55,24 +54,28 @@ jobs:
         with:
           fetch-depth: 0 # the skill diffs against the merge-base
 
-      - uses: anthropics/claude-code-action@v1
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Run Codex Review
+        id: run_codex
+        uses: openai/codex-action@v1
         with:
-          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          allowed_bots: ${{ vars.CODEX_PR_AUTHORS }}
-          claude_args: >-
-            --allowedTools "Read,Grep,Glob,Skill,Bash(git diff:*),Bash(git log:*),Bash(git rev-parse:*),Bash(gh issue view:*),Bash(gh pr view:*),Bash(gh pr comment:*)"
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
           prompt: |
             Review PR #${{ steps.pr_info.outputs.pr_number }} in ${{ github.repository }} by following
-            .agents/skills/code-review/SKILL.md exactly.
+            .agents/skills/code-review/SKILL.md and ## Code Review Rules in AGENTS.md exactly.
 
             - Fixed point: origin/${{ steps.pr_info.outputs.base_ref }}.
             - Spec: the issue(s) this PR closes. Find them with
               `gh pr view ${{ steps.pr_info.outputs.pr_number }} --json closingIssuesReferences`,
               then read each one with `gh issue view`. If none, skip the Spec axis and say "no spec available".
-            - Do both axes yourself in this session: do not spawn sub-agents (this overrides the
-              skill's "spawn both sub-agents" step; run the Standards pass, then the Spec pass).
-            - This run is non-interactive: never ask questions, and never edit files or push.
-            - Post the final report (## Standards, ## Spec, one-line summary) as a single comment with
-              `gh pr comment ${{ steps.pr_info.outputs.pr_number }} --body-file -`.
+            - Do both axes yourself in this session: run the Standards pass, then the Spec pass.
+            - This run is non-interactive: never edit files or push.
+            - Post the final report (## Standards, ## Spec, one-line summary) as a single comment.
+
+      - name: Post Review Comment
+        if: steps.run_codex.outputs.final-message != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ steps.pr_info.outputs.pr_number }}
+          MESSAGE: ${{ steps.run_codex.outputs.final-message }}
+        run: |
+          gh pr comment "$PR_NUMBER" --body "$MESSAGE"
