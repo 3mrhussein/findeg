@@ -14,10 +14,7 @@ import {
   type PartnerDatabase,
 } from '@findeg/db/queries/partners';
 import type { PartnerStatus } from '@findeg/db/schema';
-import {
-  ALLOWED_PARTNER_TRANSITIONS,
-  type ChangePartnerStatusError,
-} from '../interfaces/IPartnerService';
+import type { ChangePartnerStatusError } from '../interfaces/IPartnerService';
 import type {
   BusinessPartner,
   CreatePartnerInput,
@@ -60,12 +57,24 @@ function snapshot(row: BusinessPartnerRow) {
   return { code: row.code, nameEn: row.nameEn, nameAr: row.nameAr, status: row.status };
 }
 
+/** Status change policy. `closed` is final. */
+const ALLOWED_PARTNER_TRANSITIONS: Readonly<Record<PartnerStatus, readonly PartnerStatus[]>> = {
+  onboarding: ['active', 'closed'],
+  active: ['suspended', 'closed'],
+  suspended: ['active', 'closed'],
+  closed: [],
+};
+
 /**
  * Business Partner operations for FindEg Staff. Every change and its audit row
  * commit in one transaction; an audit row exists if and only if the change did.
  */
 export class PartnerService implements IPartnerService {
   constructor(private readonly getDb: () => Promise<PartnerDatabase>) {}
+
+  allowedStatusChanges(status: PartnerStatus): readonly PartnerStatus[] {
+    return ALLOWED_PARTNER_TRANSITIONS[status];
+  }
 
   async createPartner(actor: StaffActor, input: CreatePartnerInput) {
     if (!canManagePartners(actor)) return fail('forbidden');
@@ -146,7 +155,7 @@ export class PartnerService implements IPartnerService {
           return fail('invalid-transition');
         }
         if (status === 'active' && !(await hasActivePartnerAdministrator(tx, partnerId))) {
-          return fail('no-active-administrator');
+          return fail('last-administrator');
         }
 
         const updated = await setBusinessPartnerStatus(tx, partnerId, status);

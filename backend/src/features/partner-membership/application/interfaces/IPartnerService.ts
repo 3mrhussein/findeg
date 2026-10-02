@@ -45,19 +45,11 @@ export type UpdatePartnerError =
 export type ReadPartnerError = 'forbidden' | 'not-found';
 
 export type ChangePartnerStatusError =
-  'forbidden' | 'not-found' | 'invalid-transition' | 'no-active-administrator';
-
-/** The statuses a Business Partner may move to from `status`. `closed` is final. */
-export const ALLOWED_PARTNER_TRANSITIONS: Readonly<
-  Record<PartnerStatus, readonly PartnerStatus[]>
-> = {
-  onboarding: ['active', 'closed'],
-  active: ['suspended', 'closed'],
-  suspended: ['active', 'closed'],
-  closed: [],
-};
+  'forbidden' | 'not-found' | 'invalid-transition' | 'last-administrator';
 
 export interface IPartnerService {
+  /** The statuses a Business Partner may move to from `status` (empty once `closed`). */
+  allowedStatusChanges(status: PartnerStatus): readonly PartnerStatus[];
   createPartner(
     actor: StaffActor,
     input: CreatePartnerInput,
@@ -70,7 +62,7 @@ export interface IPartnerService {
   /**
    * Moves a partner to `status` (onboarding→active, active→suspended,
    * suspended→active, any non-closed→closed). Moving to `active` needs an active
-   * Partner Administrator, else `no-active-administrator`.
+   * Partner Administrator, else `last-administrator`.
    */
   changePartnerStatus(
     actor: StaffActor,

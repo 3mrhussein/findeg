@@ -17,7 +17,7 @@ const ERROR_MESSAGES: Record<ChangePartnerStatusError, string> = {
   'not-found': 'This Business Partner no longer exists.',
   'invalid-transition':
     'This status change is not allowed from the current status. Reload the page and try again.',
-  'no-active-administrator':
+  'last-administrator':
     'A Business Partner can only be activated once it has an active Partner Administrator. Invite one and wait for them to accept.',
 };
 

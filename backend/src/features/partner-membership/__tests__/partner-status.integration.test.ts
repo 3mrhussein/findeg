@@ -135,12 +135,19 @@ describe('Business Partner status changes', () => {
     },
   );
 
+  it('exposes exactly the allowed targets through allowedStatusChanges', () => {
+    for (const from of ALL) {
+      const expected = ALLOWED.filter(([a]) => a === from).map(([, to]) => to);
+      expect([...services.partners.allowedStatusChanges(from)].sort()).toEqual(expected.sort());
+    }
+  });
+
   describe('activation guard', () => {
     it('refuses activation without any membership', async () => {
       const partner = await createPartner();
       expect(await services.partners.changePartnerStatus(staff, partner.id, 'active')).toEqual({
         success: false,
-        error: 'no-active-administrator',
+        error: 'last-administrator',
       });
       expect(await history(partner.id)).toHaveLength(1);
     });
@@ -150,7 +157,7 @@ describe('Business Partner status changes', () => {
       await addMember(partner.id, ['list-manager']);
       expect(await services.partners.changePartnerStatus(staff, partner.id, 'active')).toEqual({
         success: false,
-        error: 'no-active-administrator',
+        error: 'last-administrator',
       });
     });
 
@@ -164,7 +171,7 @@ describe('Business Partner status changes', () => {
           .where(eq(partnerMemberships.id, membershipId));
         expect(await services.partners.changePartnerStatus(staff, partner.id, 'active')).toEqual({
           success: false,
-          error: 'no-active-administrator',
+          error: 'last-administrator',
         });
       }
     });
@@ -177,7 +184,7 @@ describe('Business Partner status changes', () => {
         .where(eq(partnerMemberships.businessPartnerId, partner.id));
       expect(await services.partners.changePartnerStatus(staff, partner.id, 'active')).toEqual({
         success: false,
-        error: 'no-active-administrator',
+        error: 'last-administrator',
       });
     });
 
@@ -211,6 +218,7 @@ describe('Business Partner status changes', () => {
       error: 'not-found',
     });
   });
+
   describe('concurrency', () => {
     // Membership removal/demotion does not exist yet. Any such write path must lock the
     // partner row first (README "Adding write paths"), so it is modelled here as a
@@ -238,7 +246,7 @@ describe('Business Partner status changes', () => {
         },
       );
 
-      expect(activation).toEqual({ success: false, error: 'no-active-administrator' });
+      expect(activation).toEqual({ success: false, error: 'last-administrator' });
       const current = await services.partners.getPartner(staff, partner.id);
       expect(current).toMatchObject({ success: true, data: { status: 'onboarding' } });
     });

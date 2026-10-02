@@ -4,10 +4,7 @@ import { Badge } from '@findeg/ui';
 import type { Locale } from 'next-intl';
 import { requirePermission } from '@lib/auth-guard';
 import { PERMISSION_CODES } from '@findeg/backend/features/core';
-import {
-  ALLOWED_PARTNER_TRANSITIONS,
-  createPartnerMembershipServices,
-} from '@findeg/backend/features/partner-membership';
+import { createPartnerMembershipServices } from '@findeg/backend/features/partner-membership';
 import { InvitationsPanel } from '../_components/InvitationsPanel';
 import { StatusActions } from '../_components/StatusActions';
 import { toStaffActor } from '../_lib/toStaffActor';
@@ -52,7 +49,7 @@ export default async function PartnerDetailPage({
       <StatusActions
         partnerId={partnerId}
         current={partner.data.status}
-        targets={ALLOWED_PARTNER_TRANSITIONS[partner.data.status]}
+        targets={partners.allowedStatusChanges(partner.data.status)}
       />
       <InvitationsPanel
         partnerId={partnerId}
