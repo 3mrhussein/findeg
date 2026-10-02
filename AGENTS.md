@@ -20,6 +20,10 @@ Single-context layout (root `CONTEXT.md` + `docs/adr/`) when those files exist. 
 
 Conventional Commits, enforced by commitlint on `commit-msg` and by `.github/workflows/branch-and-pr-naming.yml` on PR title. Branches follow `<type>/<kebab-case-slug>` (e.g. `feat/backend-feature-barrels`), enforced by `scripts/validate-branch-name.mjs` on `pre-push` and by the same workflow for the PR's head branch. Types: `feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert`. See `docs/adr/0002-conventional-branch-and-commit-naming.md`.
 
+### Implement PR mode
+
+The per-user, untracked preference lives in `~/.config/findeg/implement-pr-mode`, accessed only via `node scripts/implement-pr-mode.mjs` (no arg prints `auto` or `ask`; a missing or invalid value reads as `ask`). When the user asks to enable or disable auto PR, run `node scripts/implement-pr-mode.mjs auto` or `... ask`. The `implement` skill reads it after committing, and an explicit instruction in the current request overrides it.
+
 ### Agent GitHub identity
 
 On machines set up per `docs/agents/agent-identity.md`, Claude Code and Codex act on GitHub as their own GitHub App bots: the user-level `gh`/`git` wrappers switch automatically. PRs they open are then reviewed by the other agent: `.github/workflows/codex-review-trigger.yml` asks Codex to review Claude's PRs, and `.github/workflows/claude-review.yml` has Claude review Codex's. If `git var GIT_AUTHOR_IDENT` doesn't show your bot, your PRs show as the human's, so add `--label agent:claude` or `--label agent:codex` to `gh pr create` to get the cross-review.
