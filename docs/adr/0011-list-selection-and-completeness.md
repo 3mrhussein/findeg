@@ -1,5 +1,5 @@
 ---
-status: proposed
+status: accepted
 ---
 
 # List Selection and List Completeness
@@ -10,7 +10,7 @@ Depends on ADR-0004 (lifecycle, `publicCode`, `exactItem` + `specification`), AD
 
 ## Decisions
 
-**A List Selection is held on the client.** It lives in localStorage under `findeg:list-selection:<publicCode>` as `{ v: 1, lines: [{ listItemId, variantId, quantity }] }`, with one line per list item. It is seeded from the server's defaults on first visit: required items at their default variant and prescribed quantity, optional items off. Guests and signed-in Customers behave identically. Nothing is synced to the account, and nothing is cleared on sign-in or sign-out. It resets to the defaults after a successful Order Acceptance, and unreadable or wrong-version data is reseeded. ADR-0004's `list_selections` table is not built.
+**A List Selection is held on the client.** It lives in localStorage under `findeg:list-selection:<publicCode>` as `{ v: 1, lines: [{ listItemId, variantId, quantity }] }`, with one line per list item. It is seeded from the server's defaults on first visit: required items at their default variant and prescribed quantity, optional items off, stored as a line at quantity 0 (an off optional item is never absent from `lines`). Checkout posts only lines with quantity of at least 1. Guests and signed-in Customers behave identically. Nothing is synced to the account, and nothing is cleared on sign-in or sign-out. It resets to the defaults after a successful Order Acceptance, and unreadable or wrong-version data is reseeded. ADR-0004's `list_selections` table is not built.
 
 **Guests can use lists.** The page-level login requirement (`SchoolAuthWall`) is removed. Possession of the `publicCode` is the only gate. Deleting the ACL tables stays in its own cleanup ticket.
 

@@ -1,5 +1,5 @@
 ---
-status: proposed
+status: accepted
 ---
 
 # School Supply List: vocabulary rename, lifecycle, and substitution model
