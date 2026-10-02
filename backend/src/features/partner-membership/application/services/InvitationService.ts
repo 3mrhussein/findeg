@@ -27,6 +27,7 @@ import type {
   IssuedInvitation,
   PartnerInvitation,
   ResendError,
+  RevokeError,
 } from '../interfaces/IInvitationService';
 import { canManagePartners, fail, ok } from './shared';
 
@@ -82,28 +83,30 @@ export class InvitationService implements IInvitationService {
     const uniqueRoles = [...new Set(roles)];
 
     const db = await this.getDb();
-    return db.transaction(async (tx): Promise<PartnerResult<IssuedInvitation, InviteErr>> => {
-      const partner = await lockBusinessPartnerById(tx, partnerId);
-      if (!partner) return fail('not-found');
-      if (!isOpen(partner)) return fail('partner-not-open');
+    return db.transaction(
+      async (tx): Promise<PartnerResult<IssuedInvitation, 'not-found' | 'partner-not-open'>> => {
+        const partner = await lockBusinessPartnerById(tx, partnerId);
+        if (!partner) return fail('not-found');
+        if (!isOpen(partner)) return fail('partner-not-open');
 
-      const replaced = await getPendingPartnerInvitationByEmail(tx, partnerId, email);
-      if (replaced) {
-        const revoked = await setPartnerInvitationStatus(tx, replaced.id, 'revoked');
-        await this.audit(tx, actor, partnerId, 'invitation.revoked', replaced, revoked);
-      }
+        const replaced = await getPendingPartnerInvitationByEmail(tx, partnerId, email);
+        if (replaced) {
+          const revoked = await setPartnerInvitationStatus(tx, replaced.id, 'revoked');
+          await this.audit(tx, actor, partnerId, 'invitation.revoked', replaced, revoked);
+        }
 
-      const created = await insertPartnerInvitation(tx, {
-        businessPartnerId: partnerId,
-        email,
-        roles: uniqueRoles,
-        invitedByUserId: actor.userId,
-        expiresAt: new Date(this.clock().getTime() + INVITATION_TTL_MS),
-      });
-      await this.audit(tx, actor, partnerId, 'invitation.issued', null, created);
-      const token = await this.mintAndEnqueue(tx, created.id);
-      return ok({ invitation: toInvitation(created), token });
-    });
+        const created = await insertPartnerInvitation(tx, {
+          businessPartnerId: partnerId,
+          email,
+          roles: uniqueRoles,
+          invitedByUserId: actor.userId,
+          expiresAt: new Date(this.clock().getTime() + INVITATION_TTL_MS),
+        });
+        await this.audit(tx, actor, partnerId, 'invitation.issued', null, created);
+        const token = await this.mintAndEnqueue(tx, created.id);
+        return ok({ invitation: toInvitation(created), token });
+      },
+    );
   }
 
   async resendInvitation(actor: StaffActor, invitationId: number) {
@@ -135,7 +138,7 @@ export class InvitationService implements IInvitationService {
   async revokeInvitation(actor: StaffActor, invitationId: number) {
     if (!canManagePartners(actor)) return fail('forbidden');
     const db = await this.getDb();
-    return db.transaction(async (tx): Promise<PartnerResult<PartnerInvitation, ResendError>> => {
+    return db.transaction(async (tx): Promise<PartnerResult<PartnerInvitation, RevokeError>> => {
       const locked = await this.lockPending(tx, invitationId);
       if (!locked.success) return locked;
       const { invitation } = locked.data;
@@ -221,5 +224,3 @@ export class InvitationService implements IInvitationService {
     });
   }
 }
-
-type InviteErr = 'not-found' | 'partner-not-open';
