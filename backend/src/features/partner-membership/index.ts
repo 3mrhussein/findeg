@@ -16,6 +16,7 @@ export type {
 } from './application/interfaces/IInvitationService';
 export type {
   BusinessPartner,
+  ChangePartnerStatusError,
   CreatePartnerError,
   CreatePartnerInput,
   IPartnerService,

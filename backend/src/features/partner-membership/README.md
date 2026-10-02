@@ -20,11 +20,13 @@ expiry reset to 7 days, new token, older tokens stay valid), `revokeInvitation`,
 
 `partners`:
 
-| Operation                       | Notes                                                                                               |
-| ------------------------------- | --------------------------------------------------------------------------------------------------- |
-| `createPartner(actor, input)`   | New partners start `onboarding`. `code-taken` on a duplicate code.                                  |
-| `updatePartner(actor, id, ...)` | Names any time; `code` only while `onboarding` (`code-locked`). A no-op change writes no audit row. |
-| `listPartners` / `getPartner`   | Staff reads.                                                                                        |
+| Operation                                | Notes                                                                                                                                                                                          |
+| ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `createPartner(actor, input)`            | New partners start `onboarding`. `code-taken` on a duplicate code.                                                                                                                             |
+| `updatePartner(actor, id, ...)`          | Names any time; `code` only while `onboarding` (`code-locked`). A no-op change writes no audit row.                                                                                            |
+| `changePartnerStatus(actor, id, status)` | onboarding→active, active→suspended, suspended→active, non-closed→closed; else `invalid-transition`. `active` needs an active Partner Administrator (`last-administrator`). `closed` is final. |
+| `allowedStatusChanges(status)`           | The targets `changePartnerStatus` accepts from `status`; the dashboard renders its actions from this.                                                                                          |
+| `listPartners` / `getPartner`            | Staff reads.                                                                                                                                                                                   |
 
 All operations return typed results (`{ success: true, data } | { success: false, error }`) and refuse
 actors without `partners.manage` (`forbidden`). Each change commits together with its
