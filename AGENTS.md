@@ -26,9 +26,13 @@ The per-user, untracked preference lives in `~/.config/findeg/implement-pr-mode`
 
 ### Agent GitHub identity
 
-On machines set up per `docs/agents/agent-identity.md`, Claude Code and Codex act on GitHub as their own GitHub App bots: the user-level `gh`/`git` wrappers switch automatically. PRs they open are then reviewed by the other agent: `.github/workflows/codex-review-trigger.yml` asks Codex to review Claude's PRs, and `.github/workflows/claude-review.yml` has Claude review Codex's. If `git var GIT_AUTHOR_IDENT` doesn't show your bot, your PRs show as the human's, so add `--label agent:claude` or `--label agent:codex` to `gh pr create` to get the cross-review.
+On machines set up per `docs/agents/agent-identity.md`, Claude Code and Codex act on GitHub as their own GitHub App bots: the user-level `gh`/`git` wrappers switch automatically. Reviews can be triggered manually at any time via:
 
-For a human-authored PR, request a review with `@codex review`, `@claude review this PR following the Code Review Rules in AGENTS.md`, or both lines in one comment. Only the repository owner can start the Claude comment workflow.
+- Commenting `@claude review` or `@codex review` on the PR;
+- Adding the label `agent:claude` or `agent:codex` in the PR sidebar;
+- Clicking the **Run workflow** button in GitHub Actions under the review workflows (`workflow_dispatch`).
+
+Automatic review on PR open is controlled by the repo variable `AUTO_AGENT_REVIEW` (default: `false` / off). Toggle it anytime with `node scripts/auto-review-mode.mjs on|off`.
 
 ## Code Review Rules
 
