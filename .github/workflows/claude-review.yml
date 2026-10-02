@@ -64,15 +64,13 @@ jobs:
           claude_args: >-
             --allowedTools "Read,Grep,Glob,Skill,Bash(git diff:*),Bash(git log:*),Bash(git rev-parse:*),Bash(gh issue view:*),Bash(gh pr view:*),Bash(gh pr comment:*)"
           prompt: |
-            Review PR #${{ steps.pr_info.outputs.pr_number }} in ${{ github.repository }} by following
-            .agents/skills/code-review/SKILL.md exactly.
+            Review PR #${{ steps.pr_info.outputs.pr_number }} against base origin/${{ steps.pr_info.outputs.base_ref }}.
 
-            - Fixed point: origin/${{ steps.pr_info.outputs.base_ref }}.
-            - Spec: the issue(s) this PR closes. Find them with
-              `gh pr view ${{ steps.pr_info.outputs.pr_number }} --json closingIssuesReferences`,
-              then read each one with `gh issue view`. If none, skip the Spec axis and say "no spec available".
-            - Do both axes yourself in this session: do not spawn sub-agents (this overrides the
-              skill's "spawn both sub-agents" step; run the Standards pass, then the Spec pass).
-            - This run is non-interactive: never ask questions, and never edit files or push.
-            - Post the final report (## Standards, ## Spec, one-line summary) as a single comment with
-              `gh pr comment ${{ steps.pr_info.outputs.pr_number }} --body-file -`.
+            Provide a clear, concise code review. Focus on:
+            - Logic errors, potential bugs, edge cases, and race conditions
+            - Breaking database or API contract changes
+
+            If the code looks good and ready to merge, approve with a brief note.
+            Keep feedback actionable and concise without unnecessary boilerplate.
+            This run is non-interactive: never edit files or push.
+            Post your review comment with `gh pr comment ${{ steps.pr_info.outputs.pr_number }} --body-file -`.

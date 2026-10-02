@@ -50,7 +50,6 @@ jobs:
             echo "" >> codex-prompt.txt
             echo "Context: Pull Request #$TARGET_ID." >> codex-prompt.txt
             echo "Base branch: origin/${{ github.base_ref || 'main' }}." >> codex-prompt.txt
-            echo "If asked to review, follow .agents/skills/code-review/SKILL.md and AGENTS.md (Standards and Spec)." >> codex-prompt.txt
           fi
 
           echo "" >> codex-prompt.txt

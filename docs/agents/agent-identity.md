@@ -8,19 +8,19 @@ Claude Code and Codex each act on GitHub as their own GitHub App bot. That cover
 
 ## Request reviews on a human PR
 
-Amr can request either reviewer, or both, with a PR comment:
+Amr can request either reviewer, or both, with a simple PR comment:
+
+```text
+@claude review
+```
 
 ```text
 @codex review
 ```
 
 ```text
-@claude review this PR following the Code Review Rules in AGENTS.md
-```
-
-```text
 @codex review
-@claude review this PR following the Code Review Rules in AGENTS.md
+@claude review
 ```
 
 Both agents run in GitHub Actions with live progress in the PR Checks tab. Reviews can be triggered manually in 3 ways:
