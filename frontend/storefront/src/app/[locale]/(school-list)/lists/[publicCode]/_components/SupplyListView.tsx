@@ -45,7 +45,7 @@ function priceDifference(price: string, defaultPrice: string): string {
  * variant among the eligible ones, toggles optional items and sets quantities.
  */
 export function SupplyListView({ list, locale }: { list: PublicSupplyList; locale: string }) {
-  const t = useTranslations('School.ParentExperience.PublicList');
+  const t = useTranslations('School.SupplyList.PublicList');
   const archived = list.status === 'archived';
   const schoolName = locale === 'ar' ? list.school.nameAr : list.school.nameEn;
 

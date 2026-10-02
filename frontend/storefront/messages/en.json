@@ -552,11 +552,9 @@
       "listStatus": "Status",
       "publishedLists": "Published lists",
       "listsPublished": "Lists published",
-      "noListYet": "No list published yet",
-      "noListPublished": "No list published yet",
-      "publishedListsHeading": "Published School Supply Lists"
+      "noListYet": "No list published yet"
     },
-    "ParentExperience": {
+    "SupplyList": {
       "Layout": {
         "PoweredBy": "Powered by FindEg",
         "FindAnotherSchool": "Find Another School",

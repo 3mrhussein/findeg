@@ -552,11 +552,9 @@
       "listStatus": "الحالة",
       "publishedLists": "القوائم المنشورة",
       "listsPublished": "قوائم منشورة",
-      "noListYet": "لا توجد قائمة منشورة بعد",
-      "noListPublished": "لا توجد قائمة منشورة بعد",
-      "publishedListsHeading": "قوائم المستلزمات المدرسية المنشورة"
+      "noListYet": "لا توجد قائمة منشورة بعد"
     },
-    "ParentExperience": {
+    "SupplyList": {
       "Layout": {
         "PoweredBy": "بدعم من فايند إيج",
         "FindAnotherSchool": "البحث عن مدرسة أخرى",

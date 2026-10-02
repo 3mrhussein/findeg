@@ -2,6 +2,9 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import type { SchoolProfileList } from '@findeg/backend/features/school';
 
+vi.mock('next-intl', () => ({
+  useTranslations: () => (key: string) => ({ noListYet: 'No list published yet' })[key] ?? key,
+}));
 vi.mock('@/i18n/navigation', () => ({
   Link: ({ href, children }: { href: string; children: React.ReactNode }) => (
     <a href={href}>{children}</a>

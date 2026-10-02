@@ -1,4 +1,5 @@
 import { Badge, Card, CardContent, CardHeader, CardTitle } from '@findeg/ui';
+import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import type { SchoolProfileList } from '@findeg/backend/features/school';
 
@@ -14,8 +15,10 @@ interface SchoolProfileListsProps {
  * code only; a school with none shows an empty state.
  */
 export function SchoolProfileLists({ lists, locale }: SchoolProfileListsProps) {
+  const t = useTranslations('School.Directory');
+
   if (lists.length === 0) {
-    return <p className="text-muted-foreground">No list published yet</p>;
+    return <p className="text-muted-foreground">{t('noListYet')}</p>;
   }
 
   return (
