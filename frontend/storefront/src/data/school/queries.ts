@@ -3,9 +3,9 @@
  *
  * The directory reads Partner Schools and their published School Supply Lists.
  * A list itself is opened live by its public code and is never cached here.
+ * Search and filter reads are cached; the profile is not, because it embeds
+ * list status (publish/archive/replace) that must show immediately.
  */
-'use cache';
-
 import { cacheTag, cacheLife } from 'next/cache';
 import { createSchoolDirectory, type SchoolSearchParams } from '@findeg/backend/features/school';
 
@@ -13,6 +13,7 @@ import { createSchoolDirectory, type SchoolSearchParams } from '@findeg/backend/
  * Search the Partner School directory.
  */
 export async function searchSchools(params: SchoolSearchParams) {
+  'use cache';
   cacheTag('schools', `school-search-${JSON.stringify(params)}`);
   cacheLife('hours');
 
@@ -23,6 +24,7 @@ export async function searchSchools(params: SchoolSearchParams) {
  * Get filter options for the directory.
  */
 export async function getSchoolFilterOptions() {
+  'use cache';
   cacheTag('school-filters');
   cacheLife('hours');
 
@@ -30,11 +32,8 @@ export async function getSchoolFilterOptions() {
 }
 
 /**
- * Get a Partner School profile by its code, with its published lists.
+ * Get a Partner School profile by its code, with its published lists. Uncached.
  */
 export async function getSchoolProfile(code: string) {
-  cacheTag(`school-${code}`);
-  cacheLife('hours');
-
   return createSchoolDirectory().getByCode(code);
 }

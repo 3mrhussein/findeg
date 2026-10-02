@@ -1,9 +1,10 @@
 # Storefront School Data
 
-Cached reads for the Partner School directory (`/schools`, `/schools/[slug]`), backed by
+Reads for the Partner School directory (`/schools`, `/schools/[slug]`), backed by
 `createSchoolDirectory()` from `@findeg/backend/features/school`.
 
-- `searchSchools`, `getSchoolFilterOptions` and `getSchoolProfile` read active Partner Schools and
+- `searchSchools` and `getSchoolFilterOptions` are cached; `getSchoolProfile` is not, so list status
+  changes (publish, archive, replace) show immediately. They read active Partner Schools and
   their profiles. The profile `slug` is the school's Business Partner code.
 - A profile lists the school's **published** School Supply Lists only, each linking to
   `/lists/<publicCode>`. Archived and draft lists never appear.
