@@ -21,3 +21,10 @@ export class UnsupportedPaymentMethodError extends Error {
     this.name = 'UnsupportedPaymentMethodError';
   }
 }
+
+export class UnavailableVariantError extends Error {
+  constructor(message = 'One or more requested variants are inactive or unavailable') {
+    super(message);
+    this.name = 'UnavailableVariantError';
+  }
+}

@@ -6,7 +6,7 @@ import { generateOrderReference, CROCKFORD_BASE32 } from '@findeg/db/schema';
  */
 export const CROCKFORD_BASE32_ALPHABET = CROCKFORD_BASE32;
 
-export const ORDER_REFERENCE_REGEX = /^FE-[0123456789ABCDEFGHJKMNPQRSTVWXYZ]{6}$/;
+export const ORDER_REFERENCE_REGEX = new RegExp(`^FE-[${CROCKFORD_BASE32}]{6}$`);
 
 export { generateOrderReference };
 

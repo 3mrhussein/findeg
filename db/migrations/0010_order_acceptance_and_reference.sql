@@ -11,6 +11,10 @@ DECLARE
   v_old jsonb;
   v_new jsonb;
 BEGIN
+  IF TG_OP = 'DELETE' THEN
+    RAISE EXCEPTION 'Orders cannot be deleted' USING ERRCODE = '23514';
+  END IF;
+
   v_old := to_jsonb(OLD) - ARRAY['status', 'payment_status', 'tracking_number', 'admin_notes', 'updated_at'];
   v_new := to_jsonb(NEW) - ARRAY['status', 'payment_status', 'tracking_number', 'admin_notes', 'updated_at'];
 
@@ -26,7 +30,7 @@ BEGIN
   RETURN NEW;
 END;
 $$;--> statement-breakpoint
-CREATE TRIGGER "freeze_order_snapshots" BEFORE UPDATE ON "sales"."orders"
+CREATE TRIGGER "freeze_order_snapshots" BEFORE UPDATE OR DELETE ON "sales"."orders"
 FOR EACH ROW EXECUTE FUNCTION "sales"."freeze_order_snapshots"();--> statement-breakpoint
 CREATE OR REPLACE FUNCTION "sales"."freeze_order_items"() RETURNS trigger
 LANGUAGE plpgsql AS $$

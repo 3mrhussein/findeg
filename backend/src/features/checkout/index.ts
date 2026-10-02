@@ -44,9 +44,3 @@ export type {
 
 export { onOrderAcceptedRewardsHook } from './domain/rewards-hook';
 export type { RewardsHookOrder, RewardsHookOrderItem } from './domain/rewards-hook';
-
-export {
-  ReconfirmationRequiredError,
-  InsufficientStockCheckoutError,
-  UnsupportedPaymentMethodError,
-} from './domain/errors';

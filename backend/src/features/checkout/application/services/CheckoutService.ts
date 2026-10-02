@@ -4,6 +4,7 @@ import { products, productVariants } from '@findeg/db/schema';
 import { orderQueries, reserveOrderStock, InsufficientStockError } from '@findeg/db/queries';
 import { computeConfirmation } from '../../domain/confirmation';
 import { onOrderAcceptedRewardsHook } from '../../domain/rewards-hook';
+import { UnavailableVariantError } from '../../domain/errors';
 import {
   CheckoutOrderSchema,
   CheckoutValidateSchema,
@@ -53,15 +54,17 @@ export class CheckoutService implements ICheckoutService {
       const { quote } = await this.calculateQuote(parsed.data.lines);
       return { success: true, data: quote };
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Failed to quote checkout';
-      return {
-        success: false,
-        status: 400,
-        error: {
-          code: 'quote-failed',
-          message,
-        },
-      };
+      if (err instanceof UnavailableVariantError) {
+        return {
+          success: false,
+          status: 400,
+          error: {
+            code: 'unavailable-variant',
+            message: err.message,
+          },
+        };
+      }
+      throw err;
     }
   }
 
@@ -270,7 +273,7 @@ export class CheckoutService implements ICheckoutService {
 
     const variantIds = [...quantitiesByVariant.keys()];
 
-    let query = executor
+    const query = executor
       .select({
         id: productVariants.id,
         productId: productVariants.productId,
@@ -294,7 +297,7 @@ export class CheckoutService implements ICheckoutService {
 
     const availableVariants = tx ? await query.for('share') : await query;
     if (availableVariants.length !== variantIds.length) {
-      throw new Error('One or more requested variants are inactive or unavailable');
+      throw new UnavailableVariantError();
     }
 
     const priceMap = new Map(availableVariants.map((v) => [v.id, Number(v.basePrice)]));

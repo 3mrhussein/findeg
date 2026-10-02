@@ -204,7 +204,7 @@ describe('Checkout feature integration tests on real Postgres', () => {
 
       expect(result.success).toBe(false);
       if (result.success) return;
-      expect(result.error.code).toBe('quote-failed');
+      expect(result.error.code).toBe('unavailable-variant');
     });
 
     it('rejects empty lines array', async () => {
@@ -523,6 +523,22 @@ describe('Checkout feature integration tests on real Postgres', () => {
       await expect(
         testDb.sql`delete from sales.order_items where order_id = ${orderId}`,
       ).rejects.toThrow(/Order items cannot be deleted/);
+
+      // Attempting to delete order with items triggers error directly at order level
+      await expect(testDb.sql`delete from sales.orders where id = ${orderId}`).rejects.toThrow(
+        /Orders cannot be deleted/,
+      );
+
+      // Attempting to delete an itemless order also triggers error directly at order level
+      const itemlessOrder = await orderQueries.create({
+        guestEmail: 'itemless@example.com',
+        subtotal: '0.00',
+        shippingCost: '0.00',
+        totalAmount: '0.00',
+      });
+      await expect(
+        testDb.sql`delete from sales.orders where id = ${itemlessOrder.order.id}`,
+      ).rejects.toThrow(/Orders cannot be deleted/);
     });
 
     it('allows ON DELETE SET NULL on user_id and variant_id without trigger failure', async () => {
