@@ -7,8 +7,19 @@
  * - Guest checkout support via guestEmail
  */
 
-import { serial, text, integer, decimal, timestamp, varchar, jsonb } from 'drizzle-orm/pg-core';
-import { relations } from 'drizzle-orm';
+import { randomBytes } from 'node:crypto';
+import {
+  serial,
+  text,
+  integer,
+  decimal,
+  timestamp,
+  varchar,
+  jsonb,
+  uniqueIndex,
+  check,
+} from 'drizzle-orm/pg-core';
+import { relations, sql } from 'drizzle-orm';
 import { salesSchema } from '../schemas';
 import { users } from '../identity/users';
 import { products } from '../catalog/products';
@@ -16,47 +27,74 @@ import { productVariants } from '../catalog/product-variants';
 import { orderStatusEnum, paymentStatusEnum, paymentMethodEnum } from '../enums';
 import { CurrencyCode, ShippingAddress, VariantSnapshot } from '@findeg/db/types';
 
+export const CROCKFORD_BASE32 = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
+
+export function generateOrderReference(): string {
+  const bytes = randomBytes(6);
+  let code = '';
+  for (let i = 0; i < 6; i++) {
+    code += CROCKFORD_BASE32[bytes[i] % 32];
+  }
+  return `FE-${code}`;
+}
+
 /**
  * Orders Table
  */
-export const orders = salesSchema.table('orders', {
-  id: serial('id').primaryKey(),
-  userId: integer('user_id').references(() => users.id, { onDelete: 'set null' }),
+export const orders = salesSchema.table(
+  'orders',
+  {
+    id: serial('id').primaryKey(),
 
-  /** Email for guest checkout (no userId) */
-  guestEmail: varchar('guest_email', { length: 255 }),
+    /** Public human-readable order reference (FE- + 6 Crockford base32 characters) */
+    orderReference: text('order_reference')
+      .$defaultFn(() => generateOrderReference())
+      .notNull(),
 
-  // Status
-  /** Order lifecycle: pending → confirmed → processing → shipped → delivered / cancelled / refunded */
-  status: orderStatusEnum('status').default('pending').notNull(),
-  /** Payment status: unpaid → paid → refunded */
-  paymentStatus: paymentStatusEnum('payment_status').default('unpaid').notNull(),
+    userId: integer('user_id').references(() => users.id, { onDelete: 'set null' }),
 
-  // Totals
-  /** Sum of all item prices before shipping */
-  subtotal: decimal('subtotal', { precision: 10, scale: 2 }).notNull().default('0'),
-  /** Shipping fee */
-  shippingCost: decimal('shipping_cost', { precision: 10, scale: 2 }).default('0'),
-  /** Final amount: subtotal + shippingCost */
-  totalAmount: decimal('total_amount', { precision: 10, scale: 2 }).notNull(),
-  currency: varchar('currency', { length: 3 }).$type<CurrencyCode>().default('EGP').notNull(),
+    /** Email for guest checkout (no userId) */
+    guestEmail: varchar('guest_email', { length: 255 }),
 
-  // Payment
-  /** Payment method identifier (e.g., "cod", "paymob_card", "fawry") */
-  paymentMethod: paymentMethodEnum('payment_method'),
+    // Status
+    /** Order lifecycle: pending → confirmed → processing → shipped → delivered / cancelled / refunded */
+    status: orderStatusEnum('status').default('pending').notNull(),
+    /** Payment status: unpaid → paid → refunded */
+    paymentStatus: paymentStatusEnum('payment_status').default('unpaid').notNull(),
 
-  // Shipping
-  /** Frozen address snapshot at time of order */
-  shippingAddressSnapshot: jsonb('shipping_address_snapshot').$type<ShippingAddress>(),
-  /** Carrier tracking number */
-  trackingNumber: text('tracking_number'),
+    // Totals
+    /** Sum of all item prices before shipping */
+    subtotal: decimal('subtotal', { precision: 10, scale: 2 }).notNull().default('0'),
+    /** Shipping fee */
+    shippingCost: decimal('shipping_cost', { precision: 10, scale: 2 }).default('0'),
+    /** Final amount: subtotal + shippingCost */
+    totalAmount: decimal('total_amount', { precision: 10, scale: 2 }).notNull(),
+    currency: varchar('currency', { length: 3 }).$type<CurrencyCode>().default('EGP').notNull(),
 
-  /** Internal admin-only notes */
-  adminNotes: text('admin_notes'),
+    // Payment
+    /** Payment method identifier (e.g., "cod", "paymob_card", "fawry") */
+    paymentMethod: paymentMethodEnum('payment_method'),
 
-  createdAt: timestamp('created_at').defaultNow().notNull(),
-  updatedAt: timestamp('updated_at').defaultNow().notNull(),
-});
+    // Shipping
+    /** Frozen address snapshot at time of order */
+    shippingAddressSnapshot: jsonb('shipping_address_snapshot').$type<ShippingAddress>(),
+    /** Carrier tracking number */
+    trackingNumber: text('tracking_number'),
+
+    /** Internal admin-only notes */
+    adminNotes: text('admin_notes'),
+
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  },
+  (table) => [
+    uniqueIndex('uq_orders_order_reference').on(table.orderReference),
+    check(
+      'ck_orders_order_reference',
+      sql`${table.orderReference} ~ '^FE-[0123456789ABCDEFGHJKMNPQRSTVWXYZ]{6}$'`,
+    ),
+  ],
+);
 
 /**
  * Order Items Table

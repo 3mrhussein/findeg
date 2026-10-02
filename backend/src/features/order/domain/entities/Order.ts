@@ -48,8 +48,10 @@ export interface OrderItem {
  * paymentStatus: unpaid → paid → refunded
  */
 export interface Order {
-  /** Unique Order ID or Reference */
+  /** Unique Order ID */
   id: ID | string;
+  /** Public human-readable Order Reference (FE- + 6 Crockford base32 characters) */
+  orderReference?: string;
   /** ID of the registered user (optional for guest checkout) */
   userId?: ID;
   /** Email used for guest checkout */

@@ -42,4 +42,6 @@ This ADR fixes the **Order Acceptance seam** that the Partner Rewards design (ne
 
 - `reserveStock` and `orderQueries.create` change signature to accept a transaction; existing callers (none today) are unaffected.
 - `AdminOrderService` status updates must be rerouted through `transitionOrderStatus`, or they will bypass stock release/consumption.
+- `sales.orders` and `sales.order_items` freeze triggers permit foreign key `ON DELETE SET NULL` transitions (`user_id -> NULL` on user account deletion, `product_id/variant_id -> NULL` on catalog item purge), while strictly freezing all snapshot and price data. Orders and order items are permanent append-only records; deletion of orders (with or without child items) and order items is strictly forbidden at the table level by `freeze_order_snapshots` and `freeze_order_items`.
+- Idempotency tracking via `Idempotency-Key` header and replay verification is deferred to and tracked in issue #239 ("Idempotent Order Acceptance").
 - List Offer pricing, delivery zones, the transactional outbox, and guest order access are left open; each adds an input to the Quote or a row to the acceptance transaction without changing this seam.

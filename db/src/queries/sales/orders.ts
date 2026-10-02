@@ -12,6 +12,7 @@ import {
   orders,
   orderItems,
   users,
+  generateOrderReference,
   type Order as DbOrder,
   type OrderItem as DbOrderItem,
 } from '../../schema';
@@ -48,6 +49,26 @@ export interface RevenueDataPoint {
 export interface OrderCountByStatus {
   status: OrderStatus;
   count: number;
+}
+
+// ─── Order Reference & Freeze Guards ──────────────────────────────────────────
+
+export { generateOrderReference };
+
+const ALLOWED_MUTABLE_ORDER_COLUMNS = new Set([
+  'status',
+  'paymentStatus',
+  'trackingNumber',
+  'adminNotes',
+  'updatedAt',
+]);
+
+export function assertMutableOrderColumns(update: Record<string, unknown>): void {
+  for (const key of Object.keys(update)) {
+    if (!ALLOWED_MUTABLE_ORDER_COLUMNS.has(key)) {
+      throw new Error(`Cannot update frozen order snapshot column: ${key}`);
+    }
+  }
 }
 
 // ─── Order Retrieval ─────────────────────────────────────────────────────────
@@ -173,6 +194,7 @@ export async function getFiltered(filters: OrderFiltersInput): Promise<{
     } else {
       conditions.push(
         or(
+          ilike(orders.orderReference, `%${filters.search}%`),
           ilike(orders.guestEmail, `%${filters.search}%`),
           ilike(orders.trackingNumber, `%${filters.search}%`),
         ),
@@ -273,6 +295,7 @@ export async function count(filters?: OrderFiltersInput): Promise<number> {
  */
 export async function create(
   data: {
+    orderReference?: string;
     userId?: number;
     guestEmail?: string;
     status?: OrderStatus;
@@ -292,6 +315,7 @@ export async function create(
       totalPrice?: string;
       productNameSnapshot?: string;
       productSkuSnapshot?: string;
+      variantSkuSnapshot?: string;
       variantSnapshot?: Record<string, unknown>;
     }>;
   },
@@ -300,20 +324,52 @@ export async function create(
   const { items, ...orderData } = data;
 
   return await withTransaction(tx, async (tx) => {
-    const dbOrderData: typeof orders.$inferInsert = {
-      userId: orderData.userId,
-      guestEmail: orderData.guestEmail,
-      status: orderData.status || 'pending',
-      paymentStatus: orderData.paymentStatus || 'unpaid',
-      subtotal: orderData.subtotal,
-      shippingCost: orderData.shippingCost,
-      totalAmount: orderData.totalAmount,
-      currency: orderData.currency || 'EGP',
-      paymentMethod: (orderData.paymentMethod as 'cod' | 'card') || null,
-      shippingAddressSnapshot: orderData.shippingAddressSnapshot || null,
-    };
+    let newOrder: DbOrder | null = null;
+    let attempts = 0;
+    const maxAttempts = 5;
 
-    const [newOrder] = await tx.insert(orders).values(dbOrderData).returning();
+    while (!newOrder && attempts < maxAttempts) {
+      attempts++;
+      const candidateReference = data.orderReference ?? generateOrderReference();
+
+      try {
+        newOrder = await tx.transaction(async (sp) => {
+          const [inserted] = await sp
+            .insert(orders)
+            .values({
+              orderReference: candidateReference,
+              userId: orderData.userId,
+              guestEmail: orderData.guestEmail,
+              status: orderData.status || 'pending',
+              paymentStatus: orderData.paymentStatus || 'unpaid',
+              subtotal: orderData.subtotal,
+              shippingCost: orderData.shippingCost,
+              totalAmount: orderData.totalAmount,
+              currency: orderData.currency || 'EGP',
+              paymentMethod: (orderData.paymentMethod as 'cod' | 'card') || null,
+              shippingAddressSnapshot: orderData.shippingAddressSnapshot || null,
+            })
+            .returning();
+          return inserted;
+        });
+      } catch (err: unknown) {
+        const error = err as { code?: string; constraint?: string; message?: string };
+        if (
+          error?.code === '23505' &&
+          (error?.constraint === 'uq_orders_order_reference' ||
+            String(error?.message).includes('order_reference')) &&
+          !data.orderReference &&
+          attempts < maxAttempts
+        ) {
+          continue;
+        }
+        throw err;
+      }
+    }
+
+    if (!newOrder) {
+      throw new Error('Failed to create order: reference collision retry limit reached');
+    }
 
     let newItems: OrderItemRow[] = [];
     if (items && items.length > 0) {
@@ -321,7 +377,7 @@ export async function create(
         .insert(orderItems)
         .values(
           items.map((item) => ({
-            orderId: newOrder.id,
+            orderId: newOrder!.id,
             productId: item.productId,
             variantId: item.variantId,
             quantity: item.quantity,
@@ -330,6 +386,7 @@ export async function create(
             totalPrice: item.totalPrice,
             productNameSnapshot: item.productNameSnapshot,
             productSkuSnapshot: item.productSkuSnapshot,
+            variantSkuSnapshot: item.variantSkuSnapshot,
             variantSnapshot: item.variantSnapshot,
           })),
         )
@@ -358,6 +415,21 @@ export async function updateStatus(
 }
 
 /**
+ * Update order fields with service-level snapshot immutability check
+ */
+export async function updateOrder(
+  id: ID | string,
+  data: Partial<typeof orders.$inferInsert>,
+  tx?: DbTransaction,
+): Promise<void> {
+  assertMutableOrderColumns(data as Record<string, unknown>);
+  await (tx ?? db)
+    .update(orders)
+    .set({ ...data, updatedAt: new Date() })
+    .where(eq(orders.id, Number(id)));
+}
+
+/**
  * Update order status with tracking info
  */
 export async function updateStatusWithTracking(
@@ -377,6 +449,8 @@ export async function updateStatusWithTracking(
   if (data.trackingNumber) updateData.trackingNumber = data.trackingNumber;
   if (data.adminNotes) updateData.adminNotes = data.adminNotes;
 
+  assertMutableOrderColumns(updateData as Record<string, unknown>);
+
   await (tx ?? db)
     .update(orders)
     .set(updateData)
@@ -391,6 +465,7 @@ export async function updatePaymentStatus(
   status: PaymentStatus,
   tx?: DbTransaction,
 ): Promise<void> {
+  assertMutableOrderColumns({ paymentStatus: status });
   await (tx ?? db)
     .update(orders)
     .set({ paymentStatus: status, updatedAt: new Date() })

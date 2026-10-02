@@ -341,6 +341,7 @@
       "FailedToPlaceOrder": "Failed to place order.",
       "OrderConfirmed": "Order Confirmed",
       "OrderId": "Order ID: #{id}",
+      "OrderReference": "Order Reference:",
       "ContinueShopping": "Continue Shopping",
       "ShippingInformation": "1. Shipping Information",
       "FullName": "Full Name",
