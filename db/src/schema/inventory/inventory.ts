@@ -163,11 +163,7 @@ export const stockReservations = inventorySchema.table(
     createdAt: timestamp('created_at').defaultNow().notNull(),
   },
   (table) => [
-    uniqueIndex('uq_stock_reservation_allocation').on(
-      table.orderId,
-      table.variantId,
-      table.warehouseId,
-    ),
+    uniqueIndex('uq_stock_reservation_line').on(table.orderId, table.variantId, table.warehouseId),
     index('idx_stock_reservations_balance').on(table.variantId, table.warehouseId),
     check('ck_stock_reservation_quantity', sql`${table.quantity} > 0`),
   ],

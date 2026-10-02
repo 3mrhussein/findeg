@@ -107,18 +107,18 @@ describe('Stock Reservation primitives on real Postgres', () => {
       .map((m) => m.movementType)
       .sort();
 
-  it('reserves greedily across warehouses, recording a reservation and movement per allocation', async () => {
+  it('reserves greedily across warehouses, recording a reservation and movement per reserved line', async () => {
     const { variantId } = await variant();
     const [first, second] = [await warehouse(), await warehouse()];
     await stock(variantId, first, 3);
     await stock(variantId, second, 5);
     const orderId = await order();
 
-    const allocations = await testDb.db.transaction((tx) =>
+    const reserved = await testDb.db.transaction((tx) =>
       reserveOrderStock(orderId, [{ variantId, quantity: 6 }], tx),
     );
 
-    expect(allocations).toEqual([
+    expect(reserved).toEqual([
       { variantId, warehouseId: first, quantity: 3 },
       { variantId, warehouseId: second, quantity: 3 },
     ]);
@@ -139,9 +139,9 @@ describe('Stock Reservation primitives on real Postgres', () => {
     await stock(variantId, inactive, 9);
     await stock(variantId, active, 2);
 
-    const allocations = await reserveOrderStock(await order(), [{ variantId, quantity: 2 }]);
+    const reserved = await reserveOrderStock(await order(), [{ variantId, quantity: 2 }]);
 
-    expect(allocations).toEqual([{ variantId, warehouseId: active, quantity: 2 }]);
+    expect(reserved).toEqual([{ variantId, warehouseId: active, quantity: 2 }]);
   });
 
   it('aggregates duplicate variants before reserving', async () => {

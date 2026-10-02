@@ -3759,8 +3759,8 @@
         }
       },
       "indexes": {
-        "uq_stock_reservation_allocation": {
-          "name": "uq_stock_reservation_allocation",
+        "uq_stock_reservation_line": {
+          "name": "uq_stock_reservation_line",
           "columns": [
             {
               "expression": "order_id",
