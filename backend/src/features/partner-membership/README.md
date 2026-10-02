@@ -8,12 +8,23 @@ Partner access is a parallel model next to Staff RBAC: this feature never depend
 
 ## Public interface (barrel)
 
-`createPartnerMembershipServices({ db?, clock?, enqueue? })` returns `{ partners, invitations }`.
+`createPartnerMembershipServices({ db?, clock?, enqueue? })` returns `{ partners, invitations, memberships }`.
 `clock` (default: system time) makes expiry testable; `enqueue` is the invitation delivery seam
 (ADR-0008) and defaults to a no-op until the Outbox exists. `invite` and `resendInvitation` return the
 raw `token` so Staff can copy the link; only its SHA-256 digest is stored.
 
-`invitations` (Staff, `partners.manage`; allowed while the partner is `onboarding` or `active`):
+`memberships` (partner actor `{ kind: 'partner', userId }`; allowed while the partner is `onboarding` or `active`):
+`updateMembership(actor, id, { roles?, status? }, expectedVersion)` (role change, suspend, reactivate, end;
+actor must be an active Partner Administrator; `stale-membership` on a version mismatch; `ended` is final),
+`leave(actor, id)` (a member ends their own membership), `listMembers`, plus `acceptInvitation` and
+`resolvePartnerContext`. Every change bumps `authorization_version` and writes its `membership.*` audit row.
+Any change that would leave the partner without an active Partner Administrator returns
+`last-administrator`, checked under the partner row lock.
+
+`invitations` (Staff with `partners.manage`, or a partner actor who is an active Partner Administrator of
+that partner; allowed while the partner is `onboarding` or `active`). `invite` returns `already-member`
+for an email with an active or suspended membership. A partner actor cannot tell a missing partner or
+invitation from one it may not touch (`forbidden`):
 `invite` (replaces a pending invitation for the same email), `resendInvitation` (same invitation,
 expiry reset to 7 days, new token, older tokens stay valid), `revokeInvitation`,
 `listPendingInvitations`, and the read-only `getInvitation(token)`.
