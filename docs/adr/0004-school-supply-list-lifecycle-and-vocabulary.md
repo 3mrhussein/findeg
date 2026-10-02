@@ -1,5 +1,5 @@
 ---
-status: proposed
+status: accepted
 ---
 
 # School Supply List: vocabulary rename, lifecycle, and substitution model
@@ -16,7 +16,7 @@ This ADR depends on ADR-0003 (Partner Membership Model): the `businessPartnerId`
 
 **Substitution is computed, not curated.** Each `school_supply_list_item` gets `exactItem: boolean` and `specification: jsonb<{categoryId, attributes}>`; eligible variants are computed at selection time against the frozen specification, not pre-selected by an admin. `schoolListItemAlternatives` and `matchRules` are dropped entirely — no authoring-aid role retained, since keeping the table would mean two sources of truth for eligibility with no defined sync rule. `isOptional`/`quantityRequired` collapse into a single `required: boolean`.
 
-**List Offer is deferred, not built** (since decided in ADR-0007). `sales.list_offers` remains unmodeled here; it graduates into the parent map's "Not yet specified" once the checkout/COD design ticket exists to inform how a per-list discount interacts with cart totals and other discounts.
+**List Offer is deferred, not built** (since decided in ADR-0007). `sales.list_offers` remains unmodeled here; ADR-0007 specifies it.
 
 **Unlisted access: only the `publicCode` column lands here.** Publish generates a unique, high-entropy `publicCode` (mirroring develop's `crypto.randomUUID().replaceAll('-', '')`) on `school_supply_lists`, since publish is what needs to produce it. Removing main's existing four-table ACL/approval/lockout apparatus (`school_list_access_grants`/`_requests`/`_tokens`/`_code_attempts`, including the unfinished `SchoolAccessService.verifyCode()` stub) is a separate decision with its own blast radius and gets its own ticket, not bundled here.
 
@@ -33,4 +33,4 @@ This ADR depends on ADR-0003 (Partner Membership Model): the `businessPartnerId`
 
 - This ADR cannot be implemented before ADR-0003's `businessPartners` table lands.
 - A follow-up ticket ("Remove School List ACL/approval apparatus in favor of publicCode possession-based access") is needed to actually delete `school_list_access_grants`/`_requests`/`_tokens`/`_code_attempts`; until it lands, both mechanisms exist side by side, with the ACL path dead but not deleted.
-- List Offer stays unspecified until the checkout/COD design ticket exists; any UI or copy referencing "list offers" before then has nothing to bind to.
+- List Offer is not built by this ADR; it is specified in ADR-0007, which owns its shape, application, confirmation and snapshot.
