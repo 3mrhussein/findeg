@@ -4,9 +4,22 @@ import { Badge } from '@findeg/ui';
 import type { Locale } from 'next-intl';
 import { requirePermission } from '@lib/auth-guard';
 import { PERMISSION_CODES } from '@findeg/backend/features/core';
-import { createPartnerMembershipServices } from '@findeg/backend/features/partner-membership';
+import {
+  ALLOWED_PARTNER_TRANSITIONS,
+  createPartnerMembershipServices,
+} from '@findeg/backend/features/partner-membership';
 import { InvitationsPanel } from '../_components/InvitationsPanel';
+import { StatusActions, type StatusActionOption } from '../_components/StatusActions';
 import { toStaffActor } from '../_lib/toStaffActor';
+
+const STATUS_ACTIONS: Record<StatusActionOption['target'], Omit<StatusActionOption, 'target'>> = {
+  active: { label: 'Activate' },
+  suspended: { label: 'Suspend' },
+  closed: {
+    label: 'Close',
+    confirm: 'Closing a Business Partner is permanent and cannot be undone. Continue?',
+  },
+};
 
 export const metadata = {
   title: 'Business Partner - FindEg Admins',
@@ -45,6 +58,18 @@ export default async function PartnerDetailPage({
           Edit
         </Link>
       </div>
+      <StatusActions
+        partnerId={partnerId}
+        options={ALLOWED_PARTNER_TRANSITIONS[partner.data.status].map((target) => {
+          const option = target as StatusActionOption['target'];
+          const action = STATUS_ACTIONS[option];
+          const label =
+            partner.data.status === 'suspended' && option === 'active'
+              ? 'Reactivate'
+              : action.label;
+          return { target: option, ...action, label };
+        })}
+      />
       <InvitationsPanel
         partnerId={partnerId}
         canChange={partner.data.status === 'onboarding' || partner.data.status === 'active'}

@@ -1,16 +1,23 @@
 import { z } from 'zod';
 import {
   getBusinessPartnerById,
+  hasActivePartnerAdministrator,
   insertBusinessPartner,
   insertPartnerAccessHistory,
   isPartnerCodeTakenError,
   listBusinessPartners,
   lockBusinessPartnerById,
+  setBusinessPartnerStatus,
   updateBusinessPartner,
   type BusinessPartnerPatch,
   type BusinessPartnerRow,
   type PartnerDatabase,
 } from '@findeg/db/queries/partners';
+import type { PartnerStatus } from '@findeg/db/schema';
+import {
+  ALLOWED_PARTNER_TRANSITIONS,
+  type ChangePartnerStatusError,
+} from '../interfaces/IPartnerService';
 import type {
   BusinessPartner,
   CreatePartnerInput,
@@ -125,6 +132,35 @@ export class PartnerService implements IPartnerService {
       if (isPartnerCodeTakenError(error)) return fail('code-taken');
       throw error;
     }
+  }
+
+  async changePartnerStatus(actor: StaffActor, partnerId: number, status: PartnerStatus) {
+    if (!canManagePartners(actor)) return fail('forbidden');
+
+    const db = await this.getDb();
+    return db.transaction(
+      async (tx): Promise<PartnerResult<BusinessPartner, ChangePartnerStatusError>> => {
+        const current = await lockBusinessPartnerById(tx, partnerId);
+        if (!current) return fail('not-found');
+        if (!ALLOWED_PARTNER_TRANSITIONS[current.status].includes(status)) {
+          return fail('invalid-transition');
+        }
+        if (status === 'active' && !(await hasActivePartnerAdministrator(tx, partnerId))) {
+          return fail('last-administrator');
+        }
+
+        const updated = await setBusinessPartnerStatus(tx, partnerId, status);
+        await insertPartnerAccessHistory(tx, {
+          businessPartnerId: partnerId,
+          actorUserId: actor.userId,
+          actorKind: 'staff',
+          action: 'partner.status_changed',
+          before: { status: current.status },
+          after: { status: updated.status },
+        });
+        return ok(toPartner(updated));
+      },
+    );
   }
 
   async listPartners(actor: StaffActor) {

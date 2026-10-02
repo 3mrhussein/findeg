@@ -16,6 +16,7 @@ export type {
 } from './application/interfaces/IInvitationService';
 export type {
   BusinessPartner,
+  ChangePartnerStatusError,
   CreatePartnerError,
   CreatePartnerInput,
   IPartnerService,
@@ -32,6 +33,7 @@ export type {
   PartnerMembership,
   PartnerSession,
 } from './application/interfaces/IMembershipService';
+export { ALLOWED_PARTNER_TRANSITIONS } from './application/interfaces/IPartnerService';
 export { createPartnerMembershipServices } from './application/services/factory';
 export type {
   PartnerMembershipDependencies,
