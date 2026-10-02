@@ -29,6 +29,13 @@
       "when": 1790833980694,
       "tag": "0003_business_partners",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1790902889803,
+      "tag": "0004_partner_invitations",
+      "breakpoints": true
     }
   ]
 }

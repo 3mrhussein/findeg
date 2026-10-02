@@ -2,6 +2,19 @@
 // factory and its consumed DTOs/types/interfaces are exported; PartnerService is
 // an implementation class and stays internal to the backend package.
 export type {
+  EnqueueInvitation,
+  IInvitationService,
+  InvitationView,
+  InviteError,
+  InviteInput,
+  IssuedInvitation,
+  PartnerInvitation,
+  PartnerInvitationMessage,
+  PartnerRole,
+  ResendError,
+  RevokeError,
+} from './application/interfaces/IInvitationService';
+export type {
   BusinessPartner,
   CreatePartnerError,
   CreatePartnerInput,
