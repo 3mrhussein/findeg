@@ -64,6 +64,13 @@
       "when": 1790944471993,
       "tag": "0008_drop_legacy_school_lists",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1790952442498,
+      "tag": "0009_stock_reservations",
+      "breakpoints": true
     }
   ]
 }
