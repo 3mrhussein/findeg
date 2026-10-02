@@ -66,6 +66,7 @@ export interface ISchoolSupplyListService {
     listId: number,
     input: SupplyListItemInput,
   ): Promise<SupplyListResult<SchoolSupplyListItemRow>>;
+  /** Drafts may have no default yet; Exact mode clears any substitution specification. */
   updateItem(
     actor: SupplyListStaffActor,
     listId: number,

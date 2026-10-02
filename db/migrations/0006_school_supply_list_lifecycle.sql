@@ -67,6 +67,9 @@ LANGUAGE plpgsql AS $$
 BEGIN
   IF OLD.status = 'draft' THEN
     IF TG_OP = 'DELETE' THEN RETURN OLD; END IF;
+    IF NEW.status NOT IN ('draft', 'published') THEN
+      RAISE EXCEPTION 'A draft School Supply List must be published before archival' USING ERRCODE = '23514';
+    END IF;
     RETURN NEW;
   END IF;
   IF TG_OP = 'DELETE' THEN

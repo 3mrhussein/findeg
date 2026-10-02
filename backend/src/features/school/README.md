@@ -48,6 +48,12 @@ existing callers during this transition. They are replaced by #212 (public
 code read), #216 (ACL removal) and #217 (Partner School directory and legacy
 table removal); the new lifecycle never writes those legacy tables.
 
+The legacy `school_lists`/`school_list_items` rows contain denormalized school
+profiles and curated alternatives. Their access grants, requests, tokens and
+parent-session scaffolding belong to the older interfaces; `verifyCode` and
+Parent List operations remain unfinished stubs. These are retained dependencies
+of the old callers, rather than behavior provided by the new lifecycle.
+
 The shared pure `eligibleVariants` function and catalog candidate/attribute
 queries from #208 serve this lifecycle and the later read/checkout paths.
 Customer routes, selection, checkout, List Offers and authoring UI are outside

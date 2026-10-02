@@ -2,10 +2,10 @@ import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
 import { PERMISSION_CODES, systemAdmin } from '@findeg/db';
 import {
-  CreateSupplyListDraftSchema as createSchema,
-  UpdateSupplyListDraftSchema as draftPatchSchema,
-  SupplyListItemSchema as itemSchema,
-  SupplyListIdSchema as idSchema,
+  CreateSupplyListDraftSchema,
+  UpdateSupplyListDraftSchema,
+  SupplyListItemSchema,
+  SupplyListIdSchema,
 } from '@findeg/db/types';
 import {
   archiveSupplyList,
@@ -42,6 +42,11 @@ import type {
   UpdateSupplyListDraftInput,
 } from '../interfaces/ISchoolSupplyListService';
 
+type ValidatedSupplyListItem = SchoolSupplyListItemRow & {
+  variantId: number;
+  catalogDefault: Awaited<ReturnType<typeof getSupplyListDefaults>>[number];
+};
+
 function ok<T>(data: T): SupplyListResult<T> {
   return { success: true, data };
 }
@@ -50,7 +55,7 @@ function fail(error: SupplyListError): { success: false; error: SupplyListError 
 }
 
 function isStaff(actor: SupplyListStaffActor): boolean {
-  return actor?.kind === 'staff' && idSchema.safeParse(actor.userId).success;
+  return actor?.kind === 'staff' && SupplyListIdSchema.safeParse(actor.userId).success;
 }
 function canWrite(actor: SupplyListStaffActor): boolean {
   return (
@@ -87,7 +92,7 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
 
   async createDraft(actor: SupplyListStaffActor, input: CreateSupplyListDraftInput) {
     if (!canWrite(actor)) return fail('forbidden');
-    const parsed = createSchema.safeParse(input);
+    const parsed = CreateSupplyListDraftSchema.safeParse(input);
     if (!parsed.success) return fail('invalid-input');
     const db = await this.getDb();
     return db.transaction(async (tx): Promise<SupplyListResult<SchoolSupplyList>> => {
@@ -103,34 +108,18 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
     input: UpdateSupplyListDraftInput = {},
   ) {
     if (!canWrite(actor)) return fail('forbidden');
-    const parsed = draftPatchSchema.safeParse(input);
+    const parsed = UpdateSupplyListDraftSchema.safeParse(input);
     if (!parsed.success) return fail('invalid-input');
     return this.withList(sourceListId, async (tx, source) => {
       if (source.status === 'draft') return fail('invalid-transition');
       const draft = await insertSupplyListDraft(
         tx,
-        {
-          businessPartnerId: source.businessPartnerId,
-          grade: source.grade,
-          academicYear: source.academicYear,
-          localizedTitle: source.localizedTitle,
-          localizedDescription: source.localizedDescription,
-          heroImageUrl: source.heroImageUrl,
-          ...parsed.data,
-        },
+        CreateSupplyListDraftSchema.strip().parse({ ...source, ...parsed.data }),
         source.id,
       );
       for (const item of await getSupplyListItems(tx, source.id)) {
-        await insertSupplyListItem(tx, draft.id, {
-          variantId: item.variantId,
-          exactItem: item.exactItem,
-          specification: item.specification,
-          required: item.required,
-          quantity: item.quantity,
-          localizedLabel: item.localizedLabel,
-          localizedNote: item.localizedNote,
-          sortOrder: item.sortOrder,
-        });
+        // Project only authoring fields; never copy identities, snapshots or timestamps.
+        await insertSupplyListItem(tx, draft.id, SupplyListItemSchema.strip().parse(item));
       }
       return ok(await aggregate(tx, draft));
     });
@@ -142,7 +131,7 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
     input: UpdateSupplyListDraftInput,
   ) {
     if (!canWrite(actor)) return fail('forbidden');
-    const parsed = draftPatchSchema.safeParse(input);
+    const parsed = UpdateSupplyListDraftSchema.safeParse(input);
     if (!parsed.success) return fail('invalid-input');
     return this.withDraft(listId, async (tx) =>
       ok(await aggregate(tx, await updateSupplyListDraft(tx, listId, parsed.data))),
@@ -151,10 +140,16 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
 
   async addItem(actor: SupplyListStaffActor, listId: number, input: SupplyListItemInput) {
     if (!canWrite(actor)) return fail('forbidden');
-    const parsed = itemSchema.safeParse(input);
+    const parsed = SupplyListItemSchema.safeParse(input);
     if (!parsed.success) return fail('invalid-input');
     return this.withDraft(listId, async (tx) =>
-      ok(await insertSupplyListItem(tx, listId, parsed.data)),
+      ok(
+        await insertSupplyListItem(
+          tx,
+          listId,
+          parsed.data.exactItem ? { ...parsed.data, specification: null } : parsed.data,
+        ),
+      ),
     );
   }
 
@@ -165,17 +160,23 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
     input: Partial<SupplyListItemInput>,
   ) {
     if (!canWrite(actor)) return fail('forbidden');
-    const parsed = itemSchema.partial().safeParse(input);
-    if (!parsed.success || !idSchema.safeParse(itemId).success) return fail('invalid-input');
+    const parsed = SupplyListItemSchema.partial().safeParse(input);
+    if (!parsed.success || !SupplyListIdSchema.safeParse(itemId).success)
+      return fail('invalid-input');
     return this.withDraft(listId, async (tx) => {
-      const item = await updateSupplyListItem(tx, listId, itemId, parsed.data);
-      return item ? ok(item) : fail('item-not-found');
+      const current = (await getSupplyListItems(tx, listId)).find((item) => item.id === itemId);
+      if (!current) return fail('item-not-found');
+      const patch =
+        (parsed.data.exactItem ?? current.exactItem)
+          ? { ...parsed.data, specification: null }
+          : parsed.data;
+      return ok(await updateSupplyListItem(tx, listId, itemId, patch));
     });
   }
 
   async removeItem(actor: SupplyListStaffActor, listId: number, itemId: number) {
     if (!canWrite(actor)) return fail('forbidden');
-    if (!idSchema.safeParse(itemId).success) return fail('invalid-input');
+    if (!SupplyListIdSchema.safeParse(itemId).success) return fail('invalid-input');
     return this.withDraft(listId, async (tx) => {
       const item = await deleteSupplyListItem(tx, listId, itemId);
       return item ? ok(undefined) : fail('item-not-found');
@@ -184,7 +185,7 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
 
   async reorderItems(actor: SupplyListStaffActor, listId: number, itemIds: number[]) {
     if (!canWrite(actor)) return fail('forbidden');
-    const parsed = z.array(idSchema).safeParse(itemIds);
+    const parsed = z.array(SupplyListIdSchema).safeParse(itemIds);
     if (!parsed.success || new Set(parsed.data).size !== parsed.data.length)
       return fail('invalid-input');
     return this.withDraft(listId, async (tx, list) => {
@@ -206,10 +207,9 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
     if (!canWrite(actor)) return fail('forbidden');
     try {
       return await this.withDraft(listId, async (tx, list) => {
-        const items = await getSupplyListItems(tx, list.id);
-        const validation = await this.validateDefaults(tx, items);
+        const validation = await this.validateDefaults(tx, await getSupplyListItems(tx, list.id));
         if (!validation.success) return validation;
-        const { variantIds, defaults } = validation.data;
+        const { variantIds, items } = validation.data;
 
         const incumbent = await getPublishedSupplyListInSlot(tx, list);
         if (incumbent && incumbent.id !== list.sourceListId) return fail('slot-taken');
@@ -220,17 +220,17 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
           ]),
         );
         const warnings: PublishedSupplyList['warnings'] = items
-          .filter((item) => (stock.get(item.variantId!) ?? 0) < 1)
+          .filter((item) => (stock.get(item.variantId) ?? 0) < 1)
           .map((item) => ({
             code: 'default-out-of-stock',
             listItemId: item.id,
-            variantId: item.variantId!,
+            variantId: item.variantId,
           }));
 
         // All business rejections happen before writes. Technical failure rolls
         // back snapshots, archival and publication together.
         for (const item of items) {
-          const variant = defaults.get(item.variantId!)!;
+          const variant = item.catalogDefault;
           await snapshotSupplyListItem(tx, item.id, {
             productNameEnSnapshot: variant.localizedName.en ?? null,
             productNameArSnapshot: variant.localizedName.ar ?? null,
@@ -267,38 +267,38 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
     return this.withList(listId, async (tx, list) => ok(await aggregate(tx, list)));
   }
 
-  /** Validate catalog facts before any publication or replacement writes. */
+  /** Validate and narrow catalog facts before any publication or replacement writes. */
   private async validateDefaults(
     tx: SchoolSupplyListTransaction,
     items: SchoolSupplyListItemRow[],
-  ): Promise<
-    SupplyListResult<{
-      variantIds: number[];
-      defaults: Map<number, Awaited<ReturnType<typeof getSupplyListDefaults>>[number]>;
-    }>
-  > {
+  ): Promise<SupplyListResult<{ variantIds: number[]; items: ValidatedSupplyListItem[] }>> {
     if (items.length === 0) return fail('empty-list');
-    if (items.some((item) => item.variantId === null)) return fail('default-unavailable');
-    const variantIds = [...new Set(items.map((item) => item.variantId!))];
+    const selected = items.flatMap((item) =>
+      item.variantId === null ? [] : [{ ...item, variantId: item.variantId }],
+    );
+    if (selected.length !== items.length) return fail('default-unavailable');
+    const variantIds = [...new Set(selected.map((item) => item.variantId))];
     const defaults = new Map(
       (await getSupplyListDefaults(tx, variantIds)).map((row) => [row.variantId, row]),
     );
-    if (
-      variantIds.some((id) => !defaults.get(id)?.variantActive || !defaults.get(id)?.productActive)
-    ) {
-      return fail('default-unavailable');
+    const validated: ValidatedSupplyListItem[] = [];
+    for (const item of selected) {
+      const catalogDefault = defaults.get(item.variantId);
+      if (!catalogDefault?.variantActive || !catalogDefault.productActive)
+        return fail('default-unavailable');
+      validated.push({ ...item, catalogDefault });
     }
     const candidates = await findVariantCandidates(tx, { variantIds });
     if (
-      items.some(
+      validated.some(
         (item) =>
-          !eligibleVariants({ ...item, variantId: item.variantId! }, candidates).some(
+          !eligibleVariants(item, candidates).some(
             (candidate) => candidate.variantId === item.variantId,
           ),
       )
     )
       return fail('default-ineligible');
-    return ok({ variantIds, defaults });
+    return ok({ variantIds, items: validated });
   }
 
   private async withDraft<T>(
@@ -320,7 +320,7 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
       list: SchoolSupplyListRow,
     ) => Promise<SupplyListResult<T>>,
   ): Promise<SupplyListResult<T>> {
-    if (!idSchema.safeParse(listId).success) return fail('invalid-input');
+    if (!SupplyListIdSchema.safeParse(listId).success) return fail('invalid-input');
     const db = await this.getDb();
     return db.transaction(async (tx) => {
       const initial = await getSupplyList(tx, listId);

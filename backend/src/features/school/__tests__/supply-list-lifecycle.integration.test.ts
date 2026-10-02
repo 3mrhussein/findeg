@@ -350,6 +350,45 @@ describe('Staff School Supply List lifecycle on real Postgres', () => {
     ).rejects.toMatchObject({ code: '23514' });
   });
 
+  it('Exact mode clears substitution specifications while incomplete drafts remain editable', async () => {
+    const { list, item, defaultVariant } = await readyDraft();
+    const specification = { categoryId: defaultVariant.categoryId, attributes: {} };
+    const exact = data(
+      await service.addItem(staff, list.id, {
+        variantId: defaultVariant.id,
+        exactItem: true,
+        specification,
+        localizedLabel: { en: 'Exact pen' },
+      }),
+    );
+    expect(exact.specification).toBeNull();
+    data(await service.updateItem(staff, list.id, item.id, { exactItem: false, specification }));
+    expect(
+      data(await service.updateItem(staff, list.id, item.id, { exactItem: true })).specification,
+    ).toBeNull();
+    expect(
+      data(await service.updateItem(staff, list.id, item.id, { specification })).specification,
+    ).toBeNull();
+    const incomplete = data(await service.updateItem(staff, list.id, item.id, { variantId: null }));
+    expect(incomplete.variantId).toBeNull();
+    expect(await service.publish(staff, list.id)).toEqual({
+      success: false,
+      error: 'default-unavailable',
+    });
+  });
+
+  it('direct SQL cannot skip publication by archiving a draft', async () => {
+    const list = await draft();
+    await expect(
+      testDb.sql`update school_engine.school_supply_lists set status = 'archived', public_code = 'cccccccccccccccccccccccccccccccc', published_at = now(), archived_at = now() where id = ${list.id}`,
+    ).rejects.toMatchObject({ code: '23514' });
+    expect(data(await service.getById(staff, list.id))).toMatchObject({
+      status: 'draft',
+      publicCode: null,
+      archivedAt: null,
+    });
+  });
+
   it('refuses publication of an empty list or a missing default without changing the draft', async () => {
     const list = await draft();
     expect(await service.publish(staff, list.id)).toEqual({ success: false, error: 'empty-list' });
