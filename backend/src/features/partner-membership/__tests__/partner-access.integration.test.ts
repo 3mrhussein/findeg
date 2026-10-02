@@ -10,7 +10,6 @@ import {
 import { connectToTestDatabase, type TestDatabase } from '../../../testing/postgres';
 import {
   createPartnerMembershipServices,
-  requirePartnerRole,
   type PartnerAction,
   type PartnerRole,
   type PartnerServices,
@@ -191,7 +190,7 @@ describe('Partner access check', () => {
     });
   });
 
-  describe('requirePartnerRole', () => {
+  describe('requireRole', () => {
     for (const partnerStatus of PARTNER_STATUSES) {
       for (const action of ACTIONS) {
         const allowed = ACTION_ALLOWED[action].includes(partnerStatus);
@@ -200,7 +199,7 @@ describe('Partner access check', () => {
           const context = await services.memberships.resolvePartnerContext(session, partner.code);
           if (!context.success) throw new Error(context.error);
 
-          expect(requirePartnerRole(context.data, ['list-manager'], action)).toEqual(
+          expect(services.memberships.requireRole(context.data, ['list-manager'], action)).toEqual(
             allowed
               ? { success: true, data: context.data }
               : { success: false, error: 'partner-status-not-allowed' },
@@ -215,7 +214,9 @@ describe('Partner access check', () => {
       if (!context.success) throw new Error(context.error);
 
       for (const action of ACTIONS) {
-        expect(requirePartnerRole(context.data, ['partner-administrator'], action)).toEqual({
+        expect(
+          services.memberships.requireRole(context.data, ['partner-administrator'], action),
+        ).toEqual({
           success: false,
           error: 'role-not-held',
         });
@@ -227,8 +228,8 @@ describe('Partner access check', () => {
       const context = await services.memberships.resolvePartnerContext(session, partner.code);
       if (!context.success) throw new Error(context.error);
 
-      expect(requirePartnerRole(context.data, 'any', 'read').success).toBe(true);
-      expect(requirePartnerRole(context.data, 'any', 'business')).toEqual({
+      expect(services.memberships.requireRole(context.data, 'any', 'read').success).toBe(true);
+      expect(services.memberships.requireRole(context.data, 'any', 'business')).toEqual({
         success: false,
         error: 'partner-status-not-allowed',
       });
@@ -244,8 +245,11 @@ describe('Partner access check', () => {
       if (!context.success) throw new Error(context.error);
 
       expect(
-        requirePartnerRole(context.data, ['partner-administrator', 'report-viewer'], 'business')
-          .success,
+        services.memberships.requireRole(
+          context.data,
+          ['partner-administrator', 'report-viewer'],
+          'business',
+        ).success,
       ).toBe(true);
     });
   });

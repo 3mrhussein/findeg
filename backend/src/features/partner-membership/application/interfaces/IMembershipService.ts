@@ -56,6 +56,15 @@ export interface IMembershipService {
     session: PartnerSession | null,
     code: string,
   ): Promise<PartnerResult<PartnerContext, PartnerContextError>>;
+  /**
+   * Role and Business Partner status check for one action class (ADR-0003 table).
+   * `context` must come from `resolvePartnerContext` in the same request.
+   */
+  requireRole(
+    context: PartnerContext,
+    roles: readonly PartnerRole[] | 'any',
+    action: PartnerAction,
+  ): PartnerResult<PartnerContext, RequirePartnerRoleError>;
   /** The user's active memberships, for the `/partner` index and the account menu. */
   listActiveMemberships(session: PartnerSession | null): Promise<PartnerContext[]>;
 }

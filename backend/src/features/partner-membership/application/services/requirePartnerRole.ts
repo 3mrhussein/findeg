@@ -22,9 +22,11 @@ const ALLOWED_STATUSES: Record<PartnerAction, readonly PartnerStatus[]> = {
 
 /**
  * The one partner access check: the member must hold one of `roles` and the
- * Business Partner's status must allow `action` (`'any'` accepts every Partner Role). Pure; it never consults the
- * Staff permission service. `context` must come from `resolvePartnerContext`
- * in the same request, so a status or role change applies on the next request.
+ * Business Partner's status must allow `action`. `'any'` accepts every Partner Role.
+ *
+ * Pure; it never consults the Staff permission service. `context` must come
+ * from `resolvePartnerContext` in the same request, so a status or role change
+ * applies on the next request. Reached through `memberships.requireRole`.
  */
 export function requirePartnerRole(
   context: PartnerContext,

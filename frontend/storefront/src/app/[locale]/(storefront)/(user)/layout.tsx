@@ -29,13 +29,17 @@ export default async function DashboardLayout({
     return <AdminAccessForbidden />;
   }
 
-  const partnerMemberships = await getCachedActivePartnerMemberships();
+  // The Partner Workspace link is a convenience: a failure here must not break the account area.
+  const hasPartnerWorkspace = await getCachedActivePartnerMemberships().then(
+    (memberships) => memberships.length > 0,
+    () => false,
+  );
 
   return (
     <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
       <Sidebar />
       <div className="flex flex-col">
-        <Topbar hasPartnerWorkspace={partnerMemberships.length > 0} />
+        <Topbar hasPartnerWorkspace={hasPartnerWorkspace} />
         <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">{children}</main>
       </div>
     </div>

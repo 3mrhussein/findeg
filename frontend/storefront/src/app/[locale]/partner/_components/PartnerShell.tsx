@@ -10,9 +10,15 @@ import { getCachedPartnerContext } from '@data/partner/queries';
 import { decidePartnerPageAccess } from '@data/partner/access';
 
 /** Suspense boundary every Partner page needs because it reads the session. */
-export function PartnerSuspense({ label, children }: { label: string; children: React.ReactNode }) {
+export function PartnerSuspense({
+  label,
+  children,
+}: {
+  label?: string;
+  children: React.ReactNode;
+}) {
   return (
-    <Suspense fallback={<main className="mx-auto max-w-3xl p-8">{label}</main>}>
+    <Suspense fallback={label ? <main className="mx-auto max-w-3xl p-8">{label}</main> : null}>
       {children}
     </Suspense>
   );
@@ -66,7 +72,7 @@ export type WorkspaceAccess =
 
 /**
  * The access check every Partner Workspace page calls first: resolves the
- * context for this request, applies `requirePartnerRole`, and returns either the
+ * context for this request, applies `memberships.requireRole`, and returns either the
  * context or the notice the page must render. Unknown and ended members get the
  * normal not-found page.
  */

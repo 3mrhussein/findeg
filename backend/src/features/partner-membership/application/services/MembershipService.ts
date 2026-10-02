@@ -14,15 +14,18 @@ import {
   type PartnerMembershipRow,
 } from '@findeg/db/queries/partners';
 import type { BusinessPartnerRow } from '@findeg/db/queries/partners';
+import type { PartnerRole } from '@findeg/db/schema';
 import type {
   AcceptInvitationError,
   IMembershipService,
+  PartnerAction,
   PartnerContext,
   PartnerContextError,
   PartnerMembership,
   PartnerSession,
 } from '../interfaces/IMembershipService';
 import type { PartnerResult } from '../interfaces/IPartnerService';
+import { requirePartnerRole } from './requirePartnerRole';
 import { fail, ok } from './shared';
 
 const digestToken = (token: string) => createHash('sha256').update(token).digest('hex');
@@ -137,9 +140,27 @@ export class MembershipService implements IMembershipService {
     if (!partner) return fail('not-found');
     const membership = await getCurrentPartnerMembership(db, partner.id, userId);
     if (!membership) return fail('not-found');
-    if (membership.status === 'suspended') return fail('suspended');
-    if (membership.status !== 'active') return fail('not-found');
-    return ok(toContext(partner, membership));
+    switch (membership.status) {
+      case 'active':
+        return ok(toContext(partner, membership));
+      case 'suspended':
+        return fail('suspended');
+      case 'ended':
+        return fail('not-found');
+      default: {
+        // Adding a membership status must be a compile error here, not a silent not-found.
+        const unhandled: never = membership.status;
+        throw new Error(`Unhandled membership status: ${String(unhandled)}`);
+      }
+    }
+  }
+
+  requireRole(
+    context: PartnerContext,
+    roles: readonly PartnerRole[] | 'any',
+    action: PartnerAction,
+  ) {
+    return requirePartnerRole(context, roles, action);
   }
 
   async listActiveMemberships(session: PartnerSession | null): Promise<PartnerContext[]> {

@@ -38,7 +38,7 @@ membership or an ended one. It reads the database on every call, so role and sta
 the member's next request; callers may cache it only per request. `memberships.listActiveMemberships`
 backs the `/partner` index and the account menu.
 
-`requirePartnerRole(context, roles, action)` is pure. Action classes: `read` (not when closed),
+`memberships.requireRole(context, roles, action)` is pure. Action classes: `read` (not when closed),
 `reports` (any status), `membership-change` (onboarding, active) and `business` (active only).
 It never uses the Staff permission service.
 

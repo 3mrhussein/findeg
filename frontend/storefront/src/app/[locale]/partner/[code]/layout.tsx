@@ -6,7 +6,7 @@ import { getCachedPartnerContext } from '@data/partner/queries';
  * do not re-render on client navigation, and the router renders route segments
  * regardless of what a layout returns. Every page below it must itself call
  * `requireWorkspaceAccess(code, roles, action)` (see `_components/PartnerShell`),
- * which resolves the context for the request and applies `requirePartnerRole`.
+ * which resolves the context for the request and applies `memberships.requireRole`.
  * The layout only adds a read-only banner for suspended Business Partners.
  */
 export default function PartnerWorkspaceLayout({
@@ -18,7 +18,7 @@ export default function PartnerWorkspaceLayout({
 }) {
   return (
     <>
-      <PartnerSuspense label="">
+      <PartnerSuspense>
         <PartnerBanner params={params} />
       </PartnerSuspense>
       {children}

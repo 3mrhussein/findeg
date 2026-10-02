@@ -1,4 +1,4 @@
-import { requirePartnerRole } from '@findeg/backend/features/partner-membership';
+import { createPartnerMembershipServices } from '@findeg/backend/features/partner-membership';
 import type {
   PartnerAction,
   PartnerContext,
@@ -27,7 +27,8 @@ export function decidePartnerPageAccess(
   action: PartnerAction,
 ): PartnerPageAccess {
   if (!context.success) return { kind: context.error };
-  const access = requirePartnerRole(context.data, roles, action);
+  const { requireRole } = createPartnerMembershipServices().memberships;
+  const access = requireRole(context.data, roles, action);
   return access.success
     ? { kind: 'allowed', context: context.data }
     : { kind: 'refused', context: context.data, reason: access.error };
