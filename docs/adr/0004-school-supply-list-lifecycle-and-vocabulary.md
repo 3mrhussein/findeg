@@ -22,6 +22,32 @@ This ADR depends on ADR-0003 (Partner Membership Model): the `businessPartnerId`
 
 **Migration is greenfield.** No production data exists for this feature (`ParentListService` and `SchoolAccessService.verifyCode()` are confirmed unimplemented stubs), so the migration drops and recreates `school_lists` → `school_supply_lists`, `school_list_items` → `school_supply_list_items`, drops `school_list_item_alternatives`, and drops `school_list_parent_sessions` (the real name of what was loosely called `school_list_sessions`) along with `cart_kits` and `order_items.cart_kit_id`. No `list_selections` table replaces them: a List Selection is held on the client and posted to checkout as lines (ADR-0011, which superseded the develop-shaped `owner_digest` + `list_id` table first planned here). `ParentListService.addListToCart`'s sketched merge-into-`cart_kit` design is explicitly discarded — it contradicts List Selection never merging with the ordinary Cart. The full vocabulary rename (Parent → Customer, School → Partner School, etc.) happens in this same migration/PR, not as a separate mechanical pass.
 
+## Amendment: staged implementation under #206
+
+The implementation tickets stage the greenfield replacement as expand-then-contract.
+#210 adds `partner_school_profiles`, `school_supply_lists` and
+`school_supply_list_items` alongside the legacy tables and implements the frozen
+lifecycle. #212 introduces the public-code read path, #216 removes the access
+apparatus, and #217 removes the legacy tables and completes the directory and
+vocabulary rewrite. No legacy data is migrated; the target above is unchanged.
+
+**Cloning copies content; replacement retires the current version of the same slot.**
+The slot is `(businessPartnerId, academicYear, grade)`. `sourceListId` records
+which version a draft was copied from. On publication, a clone replaces its
+source only when that source still occupies the clone's target slot; the source
+is archived atomically and both replacement links are recorded. Changing a
+clone's grade or year before publishing into a free slot creates an independent
+current list, retaining `sourceListId` without retiring the source or recording
+a replacement. This preserves #206's ability to keep several grades and years
+published simultaneously. An unrelated or newer occupant is rejected as
+`slot-taken`; cloning an archived list into a free slot creates a fresh published
+version while the source remains archived.
+
+`reorderItems` implements #206's Staff story to reorder draft items. `getById`
+is a Staff-only read of the lifecycle aggregate, authorized by the existing
+school-list read/write permissions; it does not introduce Customer public-code
+access, which remains #212.
+
 ## Considered options
 
 - **Keep main's curated-alternatives table as the runtime source of truth**, modeling Exact Item as an item with exactly one curated alternative. Rejected: it can't express "any variant matching this specification," which is the actual requirement, and it would leave the concept doing something narrower than its name implies.

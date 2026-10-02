@@ -166,7 +166,7 @@ export function customerRole(portalRole?: string | null): boolean {
   return portalRole === 'customer';
 }
 
-export function systemAdmin(session: SessionPayload): boolean {
+export function systemAdmin(session: { activeRoleIds?: readonly string[] }): boolean {
   return session.activeRoleIds?.includes('system_admin') === true;
 }
 

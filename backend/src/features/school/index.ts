@@ -23,3 +23,16 @@ export type {
   EligibilityItem,
   ItemSpecification,
 } from './domain/eligibleVariants';
+export { createSchoolSupplyListService } from './application/services/supply-list-factory';
+export type { SchoolSupplyListDependencies } from './application/services/supply-list-factory';
+export type {
+  CreateSupplyListDraftInput,
+  ISchoolSupplyListService,
+  PublishedSupplyList,
+  SchoolSupplyList,
+  SupplyListError,
+  SupplyListItemInput,
+  SupplyListResult,
+  SupplyListStaffActor,
+  UpdateSupplyListDraftInput,
+} from './application/interfaces/ISchoolSupplyListService';

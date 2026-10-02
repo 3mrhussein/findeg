@@ -12,6 +12,7 @@ export default defineConfig({
     environment: 'node',
     include: ['src/**/*.integration.test.ts'],
     globalSetup: ['./src/testing/postgres/global-setup.ts'],
+    setupFiles: ['./src/testing/postgres/setup.ts'],
     // Every file shares the run's database; running files one at a time keeps
     // one file's rows and locks from interfering with another's assertions.
     fileParallelism: false,

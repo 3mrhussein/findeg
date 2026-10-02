@@ -35,7 +35,7 @@ Any product variant matching a School Supply List Item's frozen specification (c
 _Avoid_: Curated alternative
 
 **List Replacement**:
-A newly published School Supply List that supersedes a previously published one for the same Partner School, via a replacement chain (source → replaces → replaced-by). The superseded list becomes Archived: still viewable, no longer checkoutable.
+A newly published School Supply List that supersedes the currently published source for the same Partner School, academic year and grade, via a replacement chain (source → replaces → replaced-by). The superseded list becomes Archived: still viewable, no longer checkoutable. A clone published for another grade or year copies its source's content without replacing or archiving that source.
 _Avoid_: —
 
 **Draft / Published / Archived** (School Supply List status):
