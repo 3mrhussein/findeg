@@ -226,7 +226,7 @@ export class MembershipService implements IMembershipService {
       const locked = await this.lockMembership(tx, membershipId);
       if (!locked || locked.current.userId !== actor.userId) return fail('forbidden');
       const { partner, current } = locked;
-      // Leaving is open to every member whatever the partner's status (#183).
+      if (!isOpen(partner)) return fail('partner-not-open');
       if (current.status === 'ended') return fail('membership-ended');
       return this.commitChange(tx, actor, partner, current, { status: 'ended' }, [
         'membership.left',
