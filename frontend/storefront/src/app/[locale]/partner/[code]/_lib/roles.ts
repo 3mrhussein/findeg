@@ -11,6 +11,8 @@ export const roleLabel = (value: string) =>
 export interface ActionState {
   status: 'idle' | 'done' | 'error';
   message?: string;
+  /** The edit lost to a newer one; the caller should reload the row. */
+  stale?: boolean;
   /** Invitation link to copy, present after invite and resend. Shown once; the token is not stored. */
   link?: string;
 }

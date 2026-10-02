@@ -39,7 +39,9 @@ export async function updateMemberAction(
     input,
     expectedVersion,
   );
-  if (!result.success) return fail(result.error);
+  if (!result.success) {
+    return { ...fail(result.error), stale: result.error === 'stale-membership' };
+  }
   revalidatePath('/[locale]/partner/[code]', 'layout');
   return { status: 'done' };
 }

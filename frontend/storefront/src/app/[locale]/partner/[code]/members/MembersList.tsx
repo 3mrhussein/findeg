@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@findeg/ui';
 import type { PartnerRole } from '@findeg/backend/features/partner-membership';
 import { PARTNER_ROLES, roleLabel, type ActionState } from '../_lib/roles';
@@ -29,10 +30,15 @@ function MemberItem({
   const [state, setState] = useState<ActionState>({ status: 'idle' });
   const [busy, startTransition] = useTransition();
 
+  const router = useRouter();
+
   const run = (input: Parameters<typeof updateMemberAction>[3]) =>
-    startTransition(async () =>
-      setState(await updateMemberAction(code, member.id, member.authorizationVersion, input)),
-    );
+    startTransition(async () => {
+      const result = await updateMemberAction(code, member.id, member.authorizationVersion, input);
+      setState(result);
+      // A stale edit keeps failing until the row has the current version, so reload it.
+      if (result.status === 'error' && result.stale) router.refresh();
+    });
   const toggle = (role: PartnerRole) =>
     setRoles((current) =>
       current.includes(role) ? current.filter((value) => value !== role) : [...current, role],

@@ -14,7 +14,7 @@ export interface PendingInvitation {
 
 const idle: ActionState = { status: 'idle' };
 
-// Until the Outbox delivers invitation emails, administrators share the link themselves.
+// Until the Outbox delivers invitation emails, Partner Administrators share the link themselves.
 function LinkBox({ link }: { link: string }) {
   const [copied, setCopied] = useState(false);
   return (

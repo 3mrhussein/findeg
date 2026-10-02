@@ -3,6 +3,7 @@ import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle } fro
 import { getCachedPartnerContext } from '@data/partner/queries';
 import { Link } from '@i18n/navigation';
 import { notFound } from 'next/navigation';
+import { isPartnerAdministrator, isPartnerOpen } from './_lib/access';
 import { LeaveButton } from './LeaveButton';
 
 export default async function PartnerWorkspacePage({
@@ -21,7 +22,7 @@ export default async function PartnerWorkspacePage({
 async function PartnerWorkspace({ locale, code }: { locale: string; code: string }) {
   const context = await getCachedPartnerContext(code);
   if (!context.success) notFound();
-  const isAdministrator = context.data.membership.roles.includes('partner-administrator');
+  const isAdministrator = isPartnerAdministrator(context.data);
 
   return (
     <main className="mx-auto min-h-[70vh] max-w-3xl p-6 py-12">
@@ -47,9 +48,11 @@ async function PartnerWorkspace({ locale, code }: { locale: string; code: string
               </Button>
             </nav>
           )}
-          <div className="mt-6">
-            <LeaveButton locale={locale} code={code} membershipId={context.data.membership.id} />
-          </div>
+          {isPartnerOpen(context.data) && (
+            <div className="mt-6">
+              <LeaveButton locale={locale} code={code} membershipId={context.data.membership.id} />
+            </div>
+          )}
         </CardContent>
       </Card>
     </main>
