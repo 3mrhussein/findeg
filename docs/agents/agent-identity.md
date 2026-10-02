@@ -23,7 +23,18 @@ Amr can request either reviewer, or both, with a PR comment:
 @claude review this PR following the Code Review Rules in AGENTS.md
 ```
 
-Both agents run in GitHub Actions with live progress in the PR Checks tab. Only comments from the repository owner start the Claude or Codex comment workflows. Automatic cross-review workflows listen only for a PR being opened or deliberately labeled, not for review comments, so review results do not create a loop.
+Both agents run in GitHub Actions with live progress in the PR Checks tab. Reviews can be triggered manually in 3 ways:
+
+1. Commenting `@claude review` or `@codex review` (only comments from the repository owner run);
+2. Adding label `agent:claude` or `agent:codex` to the PR;
+3. Clicking the **Run workflow** button in the GitHub Actions tab (`workflow_dispatch`).
+
+Automatic review on PR open is disabled by default and controlled by the repo variable `AUTO_AGENT_REVIEW`. Toggle it anytime via:
+
+```bash
+node scripts/auto-review-mode.mjs on   # enable auto-review on PR open
+node scripts/auto-review-mode.mjs off  # disable auto-review (manual only)
+```
 
 ## How it works
 
