@@ -257,6 +257,17 @@ describe('Partner Membership management', () => {
       expect((await reload(target.membership.id)).status).toBe('active');
     });
 
+    it('reports partner-not-open, not last-administrator, for the last administrator of a closed partner', async () => {
+      const partner = await newPartner();
+      const admin = await addMember(partner.id);
+      await setPartnerStatus(partner.id, 'closed');
+
+      expect(await services.memberships.leave(admin.actor, admin.membership.id)).toEqual({
+        success: false,
+        error: 'partner-not-open',
+      });
+    });
+
     it.each(['suspended', 'closed'] as const)(
       'is refused while the Business Partner is %s',
       async (status) => {
@@ -573,7 +584,7 @@ describe('Partner Membership management', () => {
       });
     });
 
-    it('lets a suspended member leave', async () => {
+    it('lets a suspended member leave while the Business Partner is open', async () => {
       const partner = await newPartner();
       const admin = await addMember(partner.id);
       const member = await addMember(partner.id, ['report-viewer']);
@@ -606,15 +617,16 @@ describe('Partner Membership management', () => {
     });
 
     it.each(['suspended', 'closed'] as const)(
-      'is allowed while the Business Partner is %s',
+      'is refused while the Business Partner is %s',
       async (status) => {
         const partner = await newPartner();
         await addMember(partner.id);
         const member = await addMember(partner.id, ['report-viewer']);
         await setPartnerStatus(partner.id, status);
 
-        expect(await services.memberships.leave(member.actor, member.membership.id)).toMatchObject({
-          success: true,
+        expect(await services.memberships.leave(member.actor, member.membership.id)).toEqual({
+          success: false,
+          error: 'partner-not-open',
         });
       },
     );
