@@ -1,14 +1,5 @@
 import { sql } from 'drizzle-orm';
-import {
-  check,
-  index,
-  integer,
-  jsonb,
-  serial,
-  text,
-  timestamp,
-  varchar,
-} from 'drizzle-orm/pg-core';
+import { check, index, integer, jsonb, serial, timestamp, varchar } from 'drizzle-orm/pg-core';
 import { identitySchema } from '../schemas';
 import { users } from './users';
 
