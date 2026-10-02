@@ -3,24 +3,24 @@
 Claude Code and Codex each act on GitHub as their own GitHub App bot. That covers `gh` calls, `git push`, and commit authorship. PRs written by an agent are therefore authored by `findeg-claude[bot]` or `findeg-codex[bot]` rather than by you. This means:
 
 - you can approve agent PRs (GitHub won't let you approve your own);
-- the cross-agent review workflows can tell who opened a PR (`.github/workflows/claude-review.yml`, `.github/workflows/codex-review.yml`);
+- the cross-agent review workflows can tell who opened a PR (`.github/workflows/claude.yml`, `.github/workflows/codex.yml`);
 - each agent's access is limited to this repo and revocable on its own.
 
 ## Request reviews on a human PR
 
-Amr can request either reviewer, or both, with a PR comment:
+Amr can request either reviewer, or both, with a simple PR comment:
+
+```text
+@claude review
+```
 
 ```text
 @codex review
 ```
 
 ```text
-@claude review this PR following the Code Review Rules in AGENTS.md
-```
-
-```text
 @codex review
-@claude review this PR following the Code Review Rules in AGENTS.md
+@claude review
 ```
 
 Both agents run in GitHub Actions with live progress in the PR Checks tab. Reviews can be triggered manually in 3 ways:
@@ -29,11 +29,12 @@ Both agents run in GitHub Actions with live progress in the PR Checks tab. Revie
 2. Adding label `agent:claude` or `agent:codex` to the PR;
 3. Clicking the **Run workflow** button in the GitHub Actions tab (`workflow_dispatch`).
 
-Automatic review on PR open is disabled by default and controlled by the repo variable `AUTO_AGENT_REVIEW`. Toggle it anytime via:
+Automatic review on PR open is controlled by the repo variable `AUTO_REVIEW` (`claude`, `codex`, or `off`, default: `off`). Toggle it anytime via:
 
 ```bash
-node scripts/auto-review-mode.mjs on   # enable auto-review on PR open
-node scripts/auto-review-mode.mjs off  # disable auto-review (manual only)
+node scripts/auto-review-mode.mjs claude # Claude auto-reviews all opened PRs
+node scripts/auto-review-mode.mjs codex  # Codex auto-reviews all opened PRs
+node scripts/auto-review-mode.mjs off    # Disable auto-reviews (manual only)
 ```
 
 ## How it works
@@ -77,10 +78,10 @@ gh variable set CLAUDE_PR_AUTHORS --body 'findeg-claude[bot]'
 gh variable set CODEX_PR_AUTHORS --body 'findeg-codex[bot],chatgpt-codex-connector[bot]'
 ```
 
-Both agent review workflows need their respective API secrets configured in the repository:
+Both agent workflows need their respective API secrets configured in the repository:
 
-- `CLAUDE_CODE_OAUTH_TOKEN` for Claude Code (`claude.yml`, `claude-review.yml`).
-- `OPENAI_API_KEY` for Codex Action (`codex.yml`, `codex-review.yml`).
+- `CLAUDE_CODE_OAUTH_TOKEN` for Claude Code (`claude.yml`).
+- `OPENAI_API_KEY` for Codex Action (`codex.yml`).
 
 ```bash
 gh secret set OPENAI_API_KEY

@@ -5,25 +5,35 @@ on:
     types: [created]
   pull_request_review_comment:
     types: [created]
-  issues:
-    types: [opened, assigned]
   pull_request_review:
     types: [submitted]
+  pull_request:
+    types: [opened, ready_for_review, labeled]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'Pull Request number to review'
+        required: true
+        type: string
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.issue.number || github.event.pull_request.number || github.ref }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.event.issue.number || github.event.inputs.pr_number || github.ref }}
   cancel-in-progress: true
 
 jobs:
   codex:
-    if: |
-      github.actor == github.repository_owner &&
-      !endsWith(github.actor, '[bot]') && (
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'agent:claude') ||
+      (vars.AUTO_REVIEW == 'codex' &&
+        github.event_name == 'pull_request' &&
+        (github.event.action == 'opened' || github.event.action == 'ready_for_review') &&
+        !github.event.pull_request.draft) ||
+      (github.actor == github.repository_owner && !endsWith(github.actor, '[bot]') && (
         (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@codex')) ||
         (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@codex')) ||
-        (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@codex')) ||
-        (github.event_name == 'issues' && (contains(github.event.issue.body, '@codex') || contains(github.event.issue.title, '@codex')))
-      )
+        (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@codex'))
+      ))
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -37,25 +47,25 @@ jobs:
 
       - name: Prepare instructions
         id: prep
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          COMMENT_BODY="${{ github.event.comment.body || github.event.review.body || github.event.issue.body }}"
-          TARGET_ID="${{ github.event.issue.number || github.event.pull_request.number }}"
-          IS_PR="${{ github.event.issue.pull_request != null || github.event.pull_request != null }}"
-
-          cat << 'EOF' > codex-prompt.txt
-          You are assisting in this repository. Follow the repository rules in AGENTS.md.
-          EOF
-
-          if [ "$IS_PR" = "true" ]; then
-            echo "" >> codex-prompt.txt
-            echo "Context: Pull Request #$TARGET_ID." >> codex-prompt.txt
-            echo "Base branch: origin/${{ github.base_ref || 'main' }}." >> codex-prompt.txt
-            echo "If asked to review, follow .agents/skills/code-review/SKILL.md and AGENTS.md (Standards and Spec)." >> codex-prompt.txt
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            PR_NUM="${{ github.event.inputs.pr_number }}"
+            BASE=$(gh pr view "$PR_NUM" --json baseRefName -q .baseRefName)
+            echo "Review PR #$PR_NUM against base origin/$BASE following .agents/skills/bot-pr-review/SKILL.md." > codex-prompt.txt
+            echo "target_id=$PR_NUM" >> $GITHUB_OUTPUT
+          elif [ "${{ github.event_name }}" = "pull_request" ]; then
+            PR_NUM="${{ github.event.pull_request.number }}"
+            BASE="${{ github.base_ref }}"
+            echo "Review PR #$PR_NUM against base origin/$BASE following .agents/skills/bot-pr-review/SKILL.md." > codex-prompt.txt
+            echo "target_id=$PR_NUM" >> $GITHUB_OUTPUT
+          else
+            TARGET_ID="${{ github.event.issue.number || github.event.pull_request.number }}"
+            RAW="${{ github.event.comment.body || github.event.review.body }}"
+            echo "$RAW" > codex-prompt.txt
+            echo "target_id=$TARGET_ID" >> $GITHUB_OUTPUT
           fi
-
-          echo "" >> codex-prompt.txt
-          echo "Instructions from user comment:" >> codex-prompt.txt
-          echo "$COMMENT_BODY" >> codex-prompt.txt
 
       - name: Run Codex
         id: run_codex
@@ -68,7 +78,7 @@ jobs:
         if: steps.run_codex.outputs.final-message != ''
         env:
           GH_TOKEN: ${{ github.token }}
-          TARGET_ID: ${{ github.event.issue.number || github.event.pull_request.number }}
+          TARGET_ID: ${{ steps.prep.outputs.target_id }}
           MESSAGE: ${{ steps.run_codex.outputs.final-message }}
         run: |
           gh issue comment "$TARGET_ID" --body "$MESSAGE"
