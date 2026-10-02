@@ -4,6 +4,8 @@ import type { PartnerResult } from './IPartnerService';
 export interface PartnerSession {
   userId: number;
   user: { email: string };
+  /** Authorization version signed into the session; stale values are rejected at request time. */
+  tokenVersion?: number;
 }
 
 export interface PartnerMembership {

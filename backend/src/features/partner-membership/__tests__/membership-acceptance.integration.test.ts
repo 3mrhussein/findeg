@@ -282,6 +282,38 @@ describe('Partner Invitation acceptance', () => {
     });
   });
 
+  it('revalidates account state on every request after acceptance', async () => {
+    const item = await fixture();
+    const accepted = await services.memberships.acceptInvitation(item.token, item.session);
+    if (!accepted.success) throw new Error(accepted.error);
+    const resolve = (session: PartnerSession) =>
+      services.memberships.resolvePartnerContext(session, item.partner.code);
+
+    expect(
+      await resolve({ ...item.session, tokenVersion: item.user.authorizationVersion }),
+    ).toMatchObject({
+      success: true,
+    });
+    expect(
+      await resolve({ ...item.session, tokenVersion: item.user.authorizationVersion + 1 }),
+    ).toEqual({
+      success: false,
+      error: 'not-found',
+    });
+
+    await testDb.db.update(users).set({ isActive: false }).where(eq(users.id, item.user.id));
+    expect(await resolve(item.session)).toEqual({ success: false, error: 'not-found' });
+  });
+
+  it('rejects acceptance by a deactivated user', async () => {
+    const item = await fixture();
+    await testDb.db.update(users).set({ isActive: false }).where(eq(users.id, item.user.id));
+    expect(await services.memberships.acceptInvitation(item.token, item.session)).toEqual({
+      success: false,
+      error: 'not-authenticated',
+    });
+  });
+
   it('serializes two concurrent accepts to exactly one membership', async () => {
     const item = await fixture();
     const accept = () => async (sql: Sql) =>

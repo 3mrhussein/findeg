@@ -89,7 +89,8 @@ export class MembershipService implements IMembershipService {
       if (normalizeEmail(session.user.email) !== invitation.email) return fail('email-mismatch');
       if (!isOpen(partner)) return fail('partner-not-open');
       const user = await getPartnerUserById(tx, session.userId);
-      if (!user || normalizeEmail(user.email) !== invitation.email) return fail('email-mismatch');
+      if (!user?.isActive) return fail('not-authenticated');
+      if (normalizeEmail(user.email) !== invitation.email) return fail('email-mismatch');
 
       const existing = await getCurrentPartnerMembership(tx, partner.id, session.userId);
       if (existing) return fail('already-member');
@@ -126,6 +127,12 @@ export class MembershipService implements IMembershipService {
   async resolvePartnerContext(session: PartnerSession | null, code: string) {
     if (!session) return fail('not-found');
     const db = await this.getDb();
+    // The signed cookie only proves who logged in; account state is revalidated on every request.
+    const user = await getPartnerUserById(db, session.userId);
+    if (!user?.isActive) return fail('not-found');
+    if (session.tokenVersion !== undefined && session.tokenVersion !== user.authorizationVersion) {
+      return fail('not-found');
+    }
     const partner = await getBusinessPartnerByCode(db, code);
     if (!partner) return fail('not-found');
     const membership = await getCurrentPartnerMembership(db, partner.id, session.userId);

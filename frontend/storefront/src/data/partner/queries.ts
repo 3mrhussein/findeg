@@ -6,7 +6,13 @@ import { getCachedSession } from '@data/auth/queries';
 export const getCachedPartnerContext = cache(async (code: string) => {
   const session = await getCachedSession();
   return createPartnerMembershipServices().memberships.resolvePartnerContext(
-    session ? { userId: session.userId, user: { email: session.user.email } } : null,
+    session
+      ? {
+          userId: session.userId,
+          user: { email: session.user.email },
+          tokenVersion: session.tokenVersion,
+        }
+      : null,
     code,
   );
 });

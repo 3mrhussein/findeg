@@ -264,9 +264,16 @@ export async function verifyUserEmailIfUnset(
 export async function getPartnerUserById(
   executor: PartnerExecutor,
   userId: number,
-): Promise<{ id: number; email: string } | undefined> {
+): Promise<
+  { id: number; email: string; isActive: boolean; authorizationVersion: number } | undefined
+> {
   const [row] = await executor
-    .select({ id: users.id, email: users.email })
+    .select({
+      id: users.id,
+      email: users.email,
+      isActive: users.isActive,
+      authorizationVersion: users.authorizationVersion,
+    })
     .from(users)
     .where(eq(users.id, userId));
   return row;
