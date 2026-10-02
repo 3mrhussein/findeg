@@ -50,6 +50,13 @@
       "when": 1790927771110,
       "tag": "0006_school_supply_list_lifecycle",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1790940769705,
+      "tag": "0007_drop_school_list_access_apparatus",
+      "breakpoints": true
     }
   ]
 }

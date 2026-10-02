@@ -151,7 +151,7 @@ export async function getSchoolFilterOptions() {
 /**
  * Get school profile by slug.
  */
-export async function getSchoolProfile(slug: string, _userId: number | null = null) {
+export async function getSchoolProfile(slug: string) {
   cacheTag(`school-${slug}`);
   cacheLife('hours');
 
@@ -180,32 +180,5 @@ export async function getSchoolProfile(slug: string, _userId: number | null = nu
       ...l,
       name: `${l.grade} - ${l.academicYear}`,
     })),
-  };
-}
-
-/**
- * Get school list page data.
- */
-export async function getSchoolListPageData(slug: string, userId: number | null) {
-  const resLocale = 'en'; // Defaulting to en for lists
-  cacheTag(`school-list-${slug}`);
-  cacheLife('hours');
-
-  const schoolLists = createSchoolListService();
-  const list = await schoolLists.getListBySlug(slug);
-
-  if (!list) return null;
-
-  // Aggregate hydrated products (same logic as getSchoolListData)
-  const fullListDetails = await getSchoolListData(resLocale, slug);
-
-  return {
-    list,
-    accessState: 'public', // TODO: Integrate with schoolAccess service if needed
-    sessionState: userId ? 'has_session' : 'first_visit',
-    fullList: {
-      ...list,
-      ...fullListDetails,
-    },
   };
 }

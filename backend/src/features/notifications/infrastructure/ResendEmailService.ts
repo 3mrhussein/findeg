@@ -1,18 +1,12 @@
 import { Resend } from 'resend';
 import React from 'react';
 import type { Order } from '@findeg/backend/features/order';
-import {
-  AccessRequest,
-  EmailSchoolList,
-  IEmailService,
-} from '../application/services/IEmailService';
+import { IEmailService } from '../application/services/IEmailService';
 
 // Import Templates
 import OrderConfirmationEmail from './templates/OrderConfirmationEmail';
 import OrderStatusUpdateEmail from './templates/OrderStatusUpdateEmail';
 import PasswordResetEmail from './templates/PasswordResetEmail';
-import SchoolListAccessApprovedEmail from './templates/SchoolListAccessApprovedEmail';
-import SchoolListAccessRequestEmail from './templates/SchoolListAccessRequestEmail';
 import AdminInvitationEmail from './templates/AdminInvitationEmail';
 // Helper to format prices
 /**
@@ -147,50 +141,6 @@ export class ResendEmailService implements IEmailService {
     });
 
     await this.sendEmail(user.email, subject, template);
-  }
-
-  /**
-   *
-   */
-  async sendSchoolListAccessApproved(
-    user: { email: string; firstName?: string; lastName?: string; locale?: string | null },
-    list: EmailSchoolList,
-  ): Promise<void> {
-    const locale = parse(user.locale);
-    const subject = locale === 'ar' ? 'تمت الموافقة على وصولك' : 'Access Approved';
-
-    const template = React.createElement(SchoolListAccessApprovedEmail, {
-      customerName: [user.firstName, user.lastName].filter(Boolean).join(' ').trim() || 'Parent',
-      listName: list.listName,
-      schoolName: list.schoolName,
-      listId: list.id,
-      locale,
-    });
-
-    await this.sendEmail(user.email, subject, template);
-  }
-
-  /**
-   *
-   */
-  async sendSchoolListAccessRequest(
-    schoolAdmin: { email: string; firstName?: string; lastName?: string; locale?: string | null },
-    request: AccessRequest,
-  ): Promise<void> {
-    const locale = parse(schoolAdmin.locale);
-    const subject = locale === 'ar' ? 'طلب وصول جديد إلى القائمة' : 'New List Access Request';
-
-    const template = React.createElement(SchoolListAccessRequestEmail, {
-      adminName:
-        [schoolAdmin.firstName, schoolAdmin.lastName].filter(Boolean).join(' ').trim() || 'Admin',
-      requesterName: request.requesterName,
-      requesterEmail: request.requesterEmail,
-      schoolName: request.schoolName,
-      requestId: request.id,
-      locale,
-    });
-
-    await this.sendEmail(schoolAdmin.email, subject, template);
   }
 
   /**

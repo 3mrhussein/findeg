@@ -54,15 +54,15 @@ query). `offer` is reserved and always `null` until the List Offer spec.
 Migration `0006_school_supply_list_lifecycle.sql` adds the new tables beside
 the legacy tables. Apply the migration history, rather than only `db:push`,
 to install the freeze triggers. No development data is copied or removed.
-The legacy directory, access and Parent List interfaces still serve their
-existing callers during this transition. They are replaced by #212 (public
-code read), #216 (ACL removal) and #217 (Partner School directory and legacy
-table removal); the new lifecycle never writes those legacy tables.
+The legacy directory and Parent List interfaces still serve their existing
+callers during this transition. They are replaced by #217 (Partner School
+directory and legacy table removal); the new lifecycle never writes those
+legacy tables. The access/approval apparatus is gone (#216): possession of the
+`publicCode` is the only gate to a list.
 
 The legacy `school_lists`/`school_list_items` rows contain denormalized school
-profiles and curated alternatives. Their access grants, requests, tokens and
-parent-session scaffolding belong to the older interfaces; `verifyCode` and
-Parent List operations remain unfinished stubs. These are retained dependencies
+profiles and curated alternatives. Their parent-session scaffolding belongs to
+the older interfaces; Parent List operations remain unfinished stubs. These are retained dependencies
 of the old callers, rather than behavior provided by the new lifecycle.
 
 The shared pure `eligibleVariants` function and catalog candidate/attribute

@@ -191,4 +191,49 @@ describe('SupplyListView', () => {
     render(<SupplyListView list={list()} locale="ar" />);
     expect(screen.getByText('قلم أزرق')).toBeInTheDocument();
   });
+
+  describe('List Completeness', () => {
+    const twoItems = () => {
+      const base = list().items[0];
+      return list({
+        items: [
+          { ...base, id: 1, label: { en: 'Pen' } },
+          { ...base, id: 2, label: { en: 'Ruler' }, required: false, quantity: 1 },
+        ],
+      });
+    };
+
+    it('shows the progress count over required items, with none missing at the defaults', async () => {
+      render(<SupplyListView list={twoItems()} locale="en" />);
+      expect(await screen.findByText('Progress:{"completed":1,"total":1}')).toBeInTheDocument();
+      expect(screen.queryByRole('list', { name: 'MissingItems' })).not.toBeInTheDocument();
+    });
+
+    it('updates as the selection changes and lists the missing items', async () => {
+      render(<SupplyListView list={twoItems()} locale="en" />);
+      fireEvent.change(screen.getAllByRole('spinbutton')[0], { target: { value: '1' } });
+      expect(await screen.findByText('Progress:{"completed":0,"total":1}')).toBeInTheDocument();
+      expect(screen.getByRole('list', { name: 'MissingItems' })).toHaveTextContent('Pen');
+      fireEvent.change(screen.getAllByRole('spinbutton')[0], { target: { value: '3' } });
+      expect(await screen.findByText('Progress:{"completed":1,"total":1}')).toBeInTheDocument();
+    });
+
+    it('does not block checkout when the list is incomplete', async () => {
+      render(<SupplyListView list={twoItems()} locale="en" />);
+      fireEvent.change(screen.getAllByRole('spinbutton')[0], { target: { value: '1' } });
+      expect(await screen.findByText('Progress:{"completed":0,"total":1}')).toBeInTheDocument();
+      expect(screen.queryByText('CheckoutBlockedByUnavailable')).not.toBeInTheDocument();
+    });
+
+    it('is not shown on an archived, view-only list', () => {
+      render(<SupplyListView list={{ ...twoItems(), status: 'archived' }} locale="en" />);
+      expect(screen.queryByText(/^Progress:/)).not.toBeInTheDocument();
+    });
+
+    it('is not shown when the list has no required items', () => {
+      const l = list({ items: [{ ...list().items[0], required: false }] });
+      render(<SupplyListView list={l} locale="en" />);
+      expect(screen.queryByText(/^Progress:/)).not.toBeInTheDocument();
+    });
+  });
 });

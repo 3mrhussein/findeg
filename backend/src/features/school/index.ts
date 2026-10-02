@@ -1,9 +1,4 @@
 export type {
-  AccessState,
-  VerifyCodeResult,
-  ISchoolAccessService,
-} from './application/interfaces/ISchoolAccessService';
-export type {
   SchoolFilterOptions,
   SchoolProfile,
   SchoolSearchResult,
@@ -13,7 +8,6 @@ export type {
 export type {
   SessionState,
   SessionSummary,
-  SchoolListPageData,
   IParentListService,
 } from './application/interfaces/IParentListService';
 export { createSchoolServices } from './application/services/factory';
