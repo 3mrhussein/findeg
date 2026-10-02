@@ -95,7 +95,10 @@ export class CheckoutService implements ICheckoutService {
       };
     }
 
-    const parsed = CheckoutOrderSchema.safeParse(input);
+    // Signed-in orders ignore guestEmail entirely, so drop it before it can fail validation
+    const parsed = CheckoutOrderSchema.safeParse(
+      context?.userId ? { ...input, guestEmail: undefined } : input,
+    );
     if (!parsed.success) {
       return {
         success: false,
