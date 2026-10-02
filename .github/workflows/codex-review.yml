@@ -60,16 +60,15 @@ jobs:
         with:
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
           prompt: |
-            Review PR #${{ steps.pr_info.outputs.pr_number }} in ${{ github.repository }} by following
-            .agents/skills/code-review/SKILL.md and ## Code Review Rules in AGENTS.md exactly.
+            Review PR #${{ steps.pr_info.outputs.pr_number }} against base origin/${{ steps.pr_info.outputs.base_ref }}.
 
-            - Fixed point: origin/${{ steps.pr_info.outputs.base_ref }}.
-            - Spec: the issue(s) this PR closes. Find them with
-              `gh pr view ${{ steps.pr_info.outputs.pr_number }} --json closingIssuesReferences`,
-              then read each one with `gh issue view`. If none, skip the Spec axis and say "no spec available".
-            - Do both axes yourself in this session: run the Standards pass, then the Spec pass.
-            - This run is non-interactive: never edit files or push.
-            - Post the final report (## Standards, ## Spec, one-line summary) as a single comment.
+            Provide a clear, concise code review. Focus on:
+            - Logic errors, potential bugs, edge cases, and race conditions
+            - Breaking database or API contract changes
+
+            If the code looks good and ready to merge, approve with a brief note.
+            Keep feedback actionable and concise without unnecessary boilerplate.
+            This run is non-interactive: never edit files or push.
 
       - name: Post Review Comment
         if: steps.run_codex.outputs.final-message != ''

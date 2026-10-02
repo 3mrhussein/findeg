@@ -33,12 +33,3 @@ On machines set up per `docs/agents/agent-identity.md`, Claude Code and Codex ac
 - Clicking the **Run workflow** button in GitHub Actions under the review workflows (`workflow_dispatch`).
 
 Automatic review on PR open is controlled by the repo variable `AUTO_AGENT_REVIEW` (default: `false` / off). Toggle it anytime with `node scripts/auto-review-mode.mjs on|off`.
-
-## Code Review Rules
-
-Review the way `.agents/skills/code-review/SKILL.md` describes, on two separate axes:
-
-- **Standards**: does the diff follow this repo's documented standards? Those are this file, `CONTEXT.md`, `docs/adr/`, and `docs/agents/`. Fowler code smells are judgement calls only, and a documented repo standard overrides them.
-- **Spec**: does the diff do what the originating issue asked? The spec is the issue the PR closes (`Closes #N`), plus its parent issue if it has one. Treat an acceptance criterion that is missing, or implemented wrongly, as P1. Flag behaviour the issue didn't ask for.
-
-Keep findings from the two axes apart, and quote the standard or spec line behind each one.
