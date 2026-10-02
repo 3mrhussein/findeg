@@ -201,7 +201,7 @@ export class InvitationService implements IInvitationService {
   private async mintAndEnqueue(tx: PartnerTransaction, invitationId: number): Promise<string> {
     const token = randomBytes(32).toString('base64url');
     await insertPartnerInvitationToken(tx, invitationId, digestToken(token));
-    await this.enqueue({ kind: 'partner-invitation', invitationId }, { token });
+    await this.enqueue(tx, { kind: 'partner-invitation', invitationId }, { token });
     return token;
   }
 

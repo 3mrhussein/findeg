@@ -39,7 +39,7 @@ describe('Partner Invitations (Staff operations)', () => {
     services = createPartnerMembershipServices({
       db: testDb.db,
       clock: () => now,
-      enqueue: (message, { token }) => {
+      enqueue: (_tx, message, { token }) => {
         sent.push({ message, token });
       },
     });

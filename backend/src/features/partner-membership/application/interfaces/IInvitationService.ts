@@ -1,3 +1,4 @@
+import type { PartnerTransaction } from '@findeg/db/queries/partners';
 import type { PartnerInvitationStatus, PartnerRole } from '@findeg/db/schema';
 import type { PartnerResult, StaffActor } from './IPartnerService';
 
@@ -39,10 +40,12 @@ export type ResendError = 'forbidden' | 'not-found' | 'partner-not-open' | 'invi
 export type RevokeError = ResendError;
 
 /**
- * Delivery seam (ADR-0008). The message holds references only; the raw token of
- * this send attempt is passed alongside and never stored. Until the Outbox
- * exists the default implementation does nothing, and Staff copy the link from
- * the token the operation returns.
+ * Delivery seam (ADR-0008). Called on the caller's open transaction `tx`, so an
+ * Outbox implementation can write its row atomically with the invitation. The
+ * message holds references only; the raw token of this send attempt is passed
+ * alongside and never stored. Until the Outbox exists the default
+ * implementation does nothing, and Staff copy the link from the token the
+ * operation returns.
  */
 export interface PartnerInvitationMessage {
   kind: 'partner-invitation';
@@ -50,6 +53,7 @@ export interface PartnerInvitationMessage {
 }
 
 export type EnqueueInvitation = (
+  tx: PartnerTransaction,
   message: PartnerInvitationMessage,
   secret: { token: string },
 ) => Promise<void> | void;
