@@ -40,10 +40,13 @@ function LinkBox({ link }: { link: string }) {
 export function InvitationsPanel({
   locale,
   code,
+  canChange,
   invitations,
 }: {
   locale: string;
   code: string;
+  /** False while the Business Partner is suspended: the list stays readable, changes are refused. */
+  canChange: boolean;
   invitations: PendingInvitation[];
 }) {
   const [inviteState, inviteFormAction, inviting] = useActionState(
@@ -58,30 +61,36 @@ export function InvitationsPanel({
 
   return (
     <div className="space-y-6">
-      <form action={inviteFormAction} className="max-w-xl space-y-4" data-testid="invite-form">
-        <div className="space-y-2">
-          <Label htmlFor="invite-email">Email</Label>
-          <Input id="invite-email" name="email" type="email" required dir="ltr" />
-        </div>
-        <fieldset className="space-y-2">
-          <legend className="text-sm font-medium">Roles</legend>
-          {PARTNER_ROLES.map((role) => (
-            <label key={role} className="flex items-center gap-2 text-sm">
-              <input type="checkbox" name="roles" value={role} />
-              {ROLE_LABELS[role]}
-            </label>
-          ))}
-        </fieldset>
-        {inviteState.status === 'error' && (
-          <p role="alert" className="text-sm text-red-600">
-            {inviteState.message}
-          </p>
-        )}
-        <Button type="submit" disabled={inviting}>
-          Invite
-        </Button>
-        {inviteState.link && <LinkBox link={inviteState.link} />}
-      </form>
+      {canChange ? (
+        <form action={inviteFormAction} className="max-w-xl space-y-4" data-testid="invite-form">
+          <div className="space-y-2">
+            <Label htmlFor="invite-email">Email</Label>
+            <Input id="invite-email" name="email" type="email" required dir="ltr" />
+          </div>
+          <fieldset className="space-y-2">
+            <legend className="text-sm font-medium">Roles</legend>
+            {PARTNER_ROLES.map((role) => (
+              <label key={role} className="flex items-center gap-2 text-sm">
+                <input type="checkbox" name="roles" value={role} />
+                {ROLE_LABELS[role]}
+              </label>
+            ))}
+          </fieldset>
+          {inviteState.status === 'error' && (
+            <p role="alert" className="text-sm text-red-600">
+              {inviteState.message}
+            </p>
+          )}
+          <Button type="submit" disabled={inviting}>
+            Invite
+          </Button>
+          {inviteState.link && <LinkBox link={inviteState.link} />}
+        </form>
+      ) : (
+        <p className="text-sm text-muted-foreground" data-testid="invitations-read-only">
+          Invitations cannot be changed while the Business Partner is suspended.
+        </p>
+      )}
 
       <div>
         <h2 className="mb-2 text-xl font-semibold">Pending invitations</h2>
@@ -100,28 +109,32 @@ export function InvitationsPanel({
                     })}
                   </div>
                 </div>
-                <div className="flex gap-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    disabled={busy}
-                    onClick={() =>
-                      run(invitation.id, () => resendInvitationAction(locale, code, invitation.id))
-                    }
-                  >
-                    Resend &amp; copy link
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    disabled={busy}
-                    onClick={() =>
-                      run(invitation.id, () => revokeInvitationAction(code, invitation.id))
-                    }
-                  >
-                    Revoke
-                  </Button>
-                </div>
+                {canChange && (
+                  <div className="flex gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      disabled={busy}
+                      onClick={() =>
+                        run(invitation.id, () =>
+                          resendInvitationAction(locale, code, invitation.id),
+                        )
+                      }
+                    >
+                      Resend &amp; copy link
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      disabled={busy}
+                      onClick={() =>
+                        run(invitation.id, () => revokeInvitationAction(code, invitation.id))
+                      }
+                    >
+                      Revoke
+                    </Button>
+                  </div>
+                )}
               </div>
               {rowState?.id === invitation.id && rowState.state.status === 'error' && (
                 <p role="alert" className="text-sm text-red-600">

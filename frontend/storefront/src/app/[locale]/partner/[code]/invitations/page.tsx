@@ -5,7 +5,7 @@ import {
 } from '@findeg/backend/features/partner-membership';
 import { Link } from '@i18n/navigation';
 import { PartnerSuspense, requireWorkspaceAccess } from '../../_components/PartnerShell';
-import { partnerActor } from '../_lib/access';
+import { canChangeMembers, partnerActor } from '../_lib/access';
 import { InvitationsPanel } from './InvitationsPanel';
 
 export default async function PartnerInvitationsPage({
@@ -22,9 +22,9 @@ export default async function PartnerInvitationsPage({
 }
 
 async function Invitations({ locale, code }: { locale: string; code: string }) {
-  // Invitations only change while the Business Partner is onboarding or active, so the page is
-  // only shown then (the access check and the service apply the same rule).
-  const access = await requireWorkspaceAccess(code, [PARTNER_ADMINISTRATOR], 'membership-change');
+  // Readable while suspended; changes need an onboarding or active partner (`canChangeMembers`),
+  // which the service enforces again.
+  const access = await requireWorkspaceAccess(code, [PARTNER_ADMINISTRATOR], 'read');
   if (!access.allowed) return access.notice;
   const { context } = access;
 
@@ -45,6 +45,7 @@ async function Invitations({ locale, code }: { locale: string; code: string }) {
       <InvitationsPanel
         locale={locale}
         code={code}
+        canChange={canChangeMembers(context)}
         invitations={result.data.map((invitation) => ({
           id: invitation.id,
           email: invitation.email,
