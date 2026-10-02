@@ -29,6 +29,15 @@ export const MAX_QUANTITY = 999;
 const KEY_PREFIX = 'findeg:list-selection:';
 const INDEX_KEY = 'findeg:list-selection-index';
 
+const clampQuantity = (quantity: number) => {
+  const whole = Number.isFinite(quantity) ? Math.trunc(quantity) : MIN_QUANTITY;
+  return Math.min(MAX_QUANTITY, Math.max(MIN_QUANTITY, whole));
+};
+
+/** Enabled lines are clamped to 1–999; a required line can never be 0, an optional one may be off. */
+const normalizeQuantity = (quantity: number, required: boolean) =>
+  quantity === 0 && !required ? 0 : clampQuantity(quantity);
+
 export const selectionKey = (publicCode: string) => `${KEY_PREFIX}${publicCode}`;
 
 export function seedSelection(list: PublicSupplyList): ListSelection {
@@ -89,8 +98,14 @@ export function loadSelection(
   const flaggedItemIds: number[] = [];
 
   const lines = list.items.map((item, index) => {
-    const line = storedByItem.get(item.id);
-    if (!line) return seeded.lines[index];
+    const stored = storedByItem.get(item.id);
+    if (!stored) return seeded.lines[index];
+    // Exact Items have no Change control, so a stale variant is reset to the default.
+    const line: SelectionLine = {
+      ...stored,
+      variantId: item.exactItem ? item.defaultVariant.variantId : stored.variantId,
+      quantity: normalizeQuantity(stored.quantity, item.required),
+    };
     const eligible =
       line.variantId === item.defaultVariant.variantId ||
       item.eligibleVariants.some((variant) => variant.variantId === line.variantId);
@@ -146,8 +161,7 @@ export function setQuantity(
 ): ListSelection {
   return mapLine(selection, listItemId, (line) => {
     if (line.quantity === 0) return line;
-    const whole = Number.isFinite(quantity) ? Math.trunc(quantity) : MIN_QUANTITY;
-    return { ...line, quantity: Math.min(MAX_QUANTITY, Math.max(MIN_QUANTITY, whole)) };
+    return { ...line, quantity: clampQuantity(quantity) };
   });
 }
 
@@ -162,7 +176,7 @@ export function setEnabled(
   if (!item || item.required) return selection;
   return mapLine(selection, listItemId, (line) => ({
     ...line,
-    quantity: enabled ? Math.min(MAX_QUANTITY, Math.max(MIN_QUANTITY, item.quantity)) : 0,
+    quantity: enabled ? clampQuantity(item.quantity) : 0,
   }));
 }
 

@@ -173,6 +173,35 @@ describe('list selection', () => {
     });
   });
 
+  describe('normalising stored lines', () => {
+    it('clamps stored quantities and lifts required lines off 0', () => {
+      saveSelection(
+        l.publicCode,
+        {
+          v: 1,
+          lines: [
+            { listItemId: 1, variantId: 10, quantity: 0 },
+            { listItemId: 2, variantId: 20, quantity: 5000 },
+          ],
+        },
+        storage,
+      );
+      expect(loadSelection(l, storage).selection.lines.map((x) => x.quantity)).toEqual([1, 999]);
+    });
+
+    it('resets an Exact Item to its default instead of flagging it', () => {
+      const exact = list([item(1, { exactItem: true, eligibleVariants: [] })]);
+      saveSelection(
+        exact.publicCode,
+        { v: 1, lines: [{ listItemId: 1, variantId: 999, quantity: 3 }] },
+        storage,
+      );
+      const { selection, flaggedItemIds } = loadSelection(exact, storage);
+      expect(selection.lines[0].variantId).toBe(10);
+      expect(flaggedItemIds).toEqual([]);
+    });
+  });
+
   describe('editing', () => {
     it('clamps quantity to 1..999 on enabled lines', () => {
       const s = seedSelection(l);
