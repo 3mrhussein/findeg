@@ -3,7 +3,7 @@
 Claude Code and Codex each act on GitHub as their own GitHub App bot. That covers `gh` calls, `git push`, and commit authorship. PRs written by an agent are therefore authored by `findeg-claude[bot]` or `findeg-codex[bot]` rather than by you. This means:
 
 - you can approve agent PRs (GitHub won't let you approve your own);
-- the cross-agent review workflows can tell who opened a PR (`.github/workflows/claude-review.yml`, `codex-review-trigger.yml`);
+- the cross-agent review workflows can tell who opened a PR (`.github/workflows/claude-review.yml`, `.github/workflows/codex-review.yml`);
 - each agent's access is limited to this repo and revocable on its own.
 
 ## Request reviews on a human PR
@@ -23,9 +23,7 @@ Amr can request either reviewer, or both, with a PR comment:
 @claude review this PR following the Code Review Rules in AGENTS.md
 ```
 
-Only comments from the repository owner start the Claude workflow. Automatic
-cross-review workflows listen only for a PR being opened or deliberately
-labeled, not for review comments, so review results do not create a loop.
+Both agents run in GitHub Actions with live progress in the PR Checks tab. Only comments from the repository owner start the Claude or Codex comment workflows. Automatic cross-review workflows listen only for a PR being opened or deliberately labeled, not for review comments, so review results do not create a loop.
 
 ## How it works
 
@@ -68,12 +66,13 @@ gh variable set CLAUDE_PR_AUTHORS --body 'findeg-claude[bot]'
 gh variable set CODEX_PR_AUTHORS --body 'findeg-codex[bot],chatgpt-codex-connector[bot]'
 ```
 
-The Codex trigger also needs a fine-grained PAT belonging to an account that
-has Codex access. Give it access only to `findeg`, with Pull requests read/write,
-then save it without printing it:
+Both agent review workflows need their respective API secrets configured in the repository:
+
+- `CLAUDE_CODE_OAUTH_TOKEN` for Claude Code (`claude.yml`, `claude-review.yml`).
+- `OPENAI_API_KEY` for Codex Action (`codex.yml`, `codex-review.yml`).
 
 ```bash
-gh secret set CODEX_TRIGGER_TOKEN
+gh secret set OPENAI_API_KEY
 ```
 
 ### 3. Install the wrappers (each machine)
