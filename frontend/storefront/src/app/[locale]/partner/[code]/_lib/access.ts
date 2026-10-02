@@ -18,6 +18,12 @@ export const partnerActor = (context: PartnerContext): PartnerActor => ({
   userId: context.membership.userId,
 });
 
+/** What a gated action needs: one of `roles` (or `'any'`) and a status that allows `action`. */
+export interface PartnerGate {
+  roles: readonly PartnerRole[] | 'any';
+  action: PartnerAction;
+}
+
 /**
  * Resolves the signed-in member's access to the Partner Workspace `code` for a Server
  * Action. Account state and membership are read from the database for this request;
@@ -28,7 +34,7 @@ export const partnerActor = (context: PartnerContext): PartnerActor => ({
  */
 export async function resolvePartnerAccess(
   code: string,
-  gate?: { roles: readonly PartnerRole[] | 'any'; action: PartnerAction },
+  gate?: PartnerGate,
 ): Promise<PartnerAccess | null> {
   const context = await getCachedPartnerContext(code);
   if (!context.success) return null;

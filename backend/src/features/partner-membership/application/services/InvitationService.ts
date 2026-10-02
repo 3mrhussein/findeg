@@ -68,8 +68,8 @@ const snapshot = (row: PartnerInvitationRow) => ({
  * changes to one partner run one at a time, authorizes the actor under that
  * lock, and commits its audit row (and delivery enqueue) in the same
  * transaction. `listPendingInvitations` is a read: it authorizes the actor but takes no lock, so
- * a membership changed concurrently can still see one stale list. A partner actor cannot tell a missing record from one it may
- * not touch.
+ * a membership changed concurrently can still see one stale list. A partner actor cannot tell a
+ * missing record from one it may not touch.
  */
 export class InvitationService implements IInvitationService {
   constructor(
@@ -215,9 +215,9 @@ export class InvitationService implements IInvitationService {
   }
 
   /**
-   * The one actor check. Writes run it under the partner lock; the list read does not. Staff need `partners.manage`
-   * and learn when the partner is missing; a partner actor must be an active
-   * Partner Administrator of it and otherwise only learns `forbidden`.
+   * The one actor check. Writes run it under the partner lock; the list read does not. Staff
+   * need `partners.manage` and learn when the partner is missing; a partner actor must be an
+   * active Partner Administrator of it and otherwise only learns `forbidden`.
    */
   private async authorize(
     executor: PartnerExecutor,

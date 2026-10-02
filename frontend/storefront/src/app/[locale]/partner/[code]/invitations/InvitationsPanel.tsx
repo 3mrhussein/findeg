@@ -1,18 +1,16 @@
 'use client';
 
 import { useActionState, useState, useTransition } from 'react';
-import type { PartnerRole } from '@findeg/backend/features/partner-membership';
+import type { PartnerInvitation } from '@findeg/backend/features/partner-membership';
 import { Button, Input, Label } from '@findeg/ui';
 import type { ActionState } from '../_lib/action-state';
 import { PARTNER_ROLES, ROLE_LABELS } from '../_lib/roles';
 import { inviteAction, resendInvitationAction, revokeInvitationAction } from './actions';
 
-export interface PendingInvitation {
-  id: number;
-  email: string;
-  roles: PartnerRole[];
+/** The service's invitation as the page passes it across the client boundary (dates as ISO strings). */
+export type PendingInvitation = Pick<PartnerInvitation, 'id' | 'email' | 'roles'> & {
   expiresAt: string;
-}
+};
 
 const idle: ActionState = { status: 'idle' };
 
@@ -30,13 +28,13 @@ function LinkBox({ link }: { link: string }) {
           setCopied(true);
         }}
       >
-        {copied ? 'Copied' : 'Copy link'}
+        {copied ? 'Copied' : 'Copy invitation link'}
       </Button>
     </div>
   );
 }
 
-/** Pending invitations of one Business Partner, with invite, resend, revoke and copy link. */
+/** Pending invitations of one Business Partner, with invite, resend, revoke and copy invitation link. */
 export function InvitationsPanel({
   locale,
   code,
@@ -55,6 +53,8 @@ export function InvitationsPanel({
   );
   const [rowState, setRowState] = useState<{ id: number; state: ActionState }>();
   const [busy, startTransition] = useTransition();
+  // The service requires at least one role; the form mirrors that so the round trip is avoided.
+  const [hasRole, setHasRole] = useState(false);
 
   const run = (id: number, action: () => Promise<ActionState>) =>
     startTransition(async () => setRowState({ id, state: await action() }));
@@ -62,12 +62,22 @@ export function InvitationsPanel({
   return (
     <div className="space-y-6">
       {canChange ? (
-        <form action={inviteFormAction} className="max-w-xl space-y-4" data-testid="invite-form">
+        <form
+          action={inviteFormAction}
+          onReset={() => setHasRole(false)}
+          className="max-w-xl space-y-4"
+          data-testid="invite-form"
+        >
           <div className="space-y-2">
             <Label htmlFor="invite-email">Email</Label>
             <Input id="invite-email" name="email" type="email" required dir="ltr" />
           </div>
-          <fieldset className="space-y-2">
+          <fieldset
+            className="space-y-2"
+            onChange={(event) =>
+              setHasRole(event.currentTarget.querySelector('input:checked') !== null)
+            }
+          >
             <legend className="text-sm font-medium">Roles</legend>
             {PARTNER_ROLES.map((role) => (
               <label key={role} className="flex items-center gap-2 text-sm">
@@ -81,7 +91,7 @@ export function InvitationsPanel({
               {inviteState.message}
             </p>
           )}
-          <Button type="submit" disabled={inviting}>
+          <Button type="submit" disabled={inviting || !hasRole}>
             Invite
           </Button>
           {inviteState.link && <LinkBox link={inviteState.link} />}
@@ -121,7 +131,7 @@ export function InvitationsPanel({
                         )
                       }
                     >
-                      Resend &amp; copy link
+                      Resend &amp; copy invitation link
                     </Button>
                     <Button
                       type="button"
