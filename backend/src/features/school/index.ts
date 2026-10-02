@@ -18,6 +18,7 @@ export type {
 } from './application/interfaces/IParentListService';
 export { createSchoolServices } from './application/services/factory';
 export { eligibleVariants } from './domain/eligibleVariants';
+export { canReadSupplyLists, canWriteSupplyLists } from './domain/supplyListPermissions';
 export type {
   EligibilityCandidate,
   EligibilityItem,

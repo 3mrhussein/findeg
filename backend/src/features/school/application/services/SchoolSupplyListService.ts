@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
-import { PERMISSION_CODES, systemAdmin } from '@findeg/db';
+import { canReadSupplyLists, canWriteSupplyLists } from '../../domain/supplyListPermissions';
 import {
   CreateSupplyListDraftSchema,
   UpdateSupplyListDraftSchema,
@@ -54,23 +54,8 @@ function fail(error: SupplyListError): { success: false; error: SupplyListError 
   return { success: false, error };
 }
 
-function isStaff(actor: SupplyListStaffActor): boolean {
-  return actor?.kind === 'staff' && SupplyListIdSchema.safeParse(actor.userId).success;
-}
-function canWrite(actor: SupplyListStaffActor): boolean {
-  return (
-    isStaff(actor) &&
-    (systemAdmin(actor) ||
-      actor.permissionCodes?.includes(PERMISSION_CODES.ADMIN_SCHOOL_LISTS_WRITE) === true)
-  );
-}
-function canRead(actor: SupplyListStaffActor): boolean {
-  return (
-    canWrite(actor) ||
-    (isStaff(actor) &&
-      actor.permissionCodes?.includes(PERMISSION_CODES.ADMIN_SCHOOL_LISTS_READ) === true)
-  );
-}
+const canWrite = canWriteSupplyLists;
+const canRead = canReadSupplyLists;
 
 async function aggregate(
   tx: SchoolSupplyListTransaction,
