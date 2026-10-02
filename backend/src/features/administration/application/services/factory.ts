@@ -37,6 +37,10 @@ import {
   listAttributeValuesForCategory,
 } from '@findeg/db/queries/school-supply-lists';
 
+async function loadDb() {
+  return (await import('@findeg/db/connection')).db;
+}
+
 import { IEmailService } from '@findeg/backend/features/notifications';
 
 /**
@@ -68,14 +72,8 @@ export function createAdministrationServices(): AdministrationServices {
   const schoolSupplyListLifecycle = createSchoolSupplyListService();
   const adminSchoolSupplyListService = new AdminSchoolSupplyListService(
     schoolSupplyListLifecycle,
-    async (categoryId) => {
-      const { db } = await import('@findeg/db/connection');
-      return listAttributeValuesForCategory(db, categoryId);
-    },
-    async (categoryId) => {
-      const { db } = await import('@findeg/db/connection');
-      return findVariantCandidates(db, { categoryId });
-    },
+    async (categoryId) => listAttributeValuesForCategory(await loadDb(), categoryId),
+    async (categoryId) => findVariantCandidates(await loadDb(), { categoryId }),
   );
 
   // Create admin services (inject repository dependencies)

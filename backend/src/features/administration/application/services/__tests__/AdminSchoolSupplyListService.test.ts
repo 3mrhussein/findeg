@@ -224,4 +224,47 @@ describe('AdminSchoolSupplyListService', () => {
     expect(mocks.listSpecificationOptions).not.toHaveBeenCalled();
     expect(mocks.listVariantCandidates).not.toHaveBeenCalled();
   });
+
+  it('forwards the actor and arguments to the lifecycle service', async () => {
+    const publish = vi.fn().mockResolvedValue({ success: false, error: 'not-found' });
+    lifecycle.publish = publish;
+
+    await service.publish(writer, 3);
+
+    expect(publish).toHaveBeenCalledWith(writer, 3);
+  });
+
+  it('lets read-only Staff read a list but refuses their writes and authoring queries', async () => {
+    const reader: SupplyListStaffActor = {
+      kind: 'staff',
+      userId: 43,
+      permissionCodes: [PERMISSION_CODES.ADMIN_SCHOOL_LISTS_READ],
+    };
+    const getById = vi.fn().mockResolvedValue({ success: false, error: 'not-found' });
+    lifecycle.getById = getById;
+
+    await expect(service.getById(reader, 3)).resolves.toEqual({
+      success: false,
+      error: 'not-found',
+    });
+    expect(getById).toHaveBeenCalledWith(reader, 3);
+    await expect(service.publish(reader, 3)).resolves.toEqual({
+      success: false,
+      error: 'forbidden',
+    });
+    await expect(service.listVariantCandidates(reader, 7)).resolves.toEqual({
+      success: false,
+      error: 'forbidden',
+    });
+  });
+
+  it('passes a partial patch without a specification to the lifecycle service, which checks it against the stored item', async () => {
+    const updateItem = vi.fn().mockResolvedValue({ success: false, error: 'item-not-found' });
+    lifecycle.updateItem = updateItem;
+
+    await service.updateItem(writer, 3, 9, { exactItem: true });
+
+    expect(updateItem).toHaveBeenCalledWith(writer, 3, 9, { exactItem: true });
+    expect(mocks.listSpecificationOptions).not.toHaveBeenCalled();
+  });
 });
