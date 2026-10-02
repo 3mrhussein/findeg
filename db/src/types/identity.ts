@@ -63,6 +63,9 @@ export const PERMISSION_CODES = {
   ADMIN_SCHOOL_LISTS_WRITE: 'admin.schoollists.write',
   ADMIN_DISCOUNT_RULES_READ: 'admin.discountrules.read',
   ADMIN_DISCOUNT_RULES_WRITE: 'admin.discountrules.write',
+
+  // Partner Membership
+  PARTNERS_MANAGE: 'partners.manage',
 } as const;
 
 /**
