@@ -16,6 +16,7 @@ import {
   type OrderItem as DbOrderItem,
 } from '../../schema';
 import { eq, and, gte, lte, ilike, or, inArray, desc, sql, count as sqlCount } from 'drizzle-orm';
+import { withTransaction, type DbTransaction } from '../transaction';
 import { type ID, type OrderStatus, type PaymentStatus } from '@findeg/db/types';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -268,34 +269,37 @@ export async function count(filters?: OrderFiltersInput): Promise<number> {
 // ─── Order Mutations ────────────────────────────────────────────────────────
 
 /**
- * Create order with items (transactional)
+ * Create order with items (transactional; joins `tx` when given)
  */
-export async function create(data: {
-  userId?: number;
-  guestEmail?: string;
-  status?: OrderStatus;
-  paymentStatus?: PaymentStatus;
-  subtotal: string;
-  shippingCost: string;
-  totalAmount: string;
-  currency?: string;
-  paymentMethod?: string;
-  shippingAddressSnapshot?: typeof orders.$inferInsert.shippingAddressSnapshot;
-  items?: Array<{
-    productId: number;
-    variantId?: number;
-    quantity: number;
-    uomCode?: string;
-    unitPriceSnapshot?: string;
-    totalPrice?: string;
-    productNameSnapshot?: string;
-    productSkuSnapshot?: string;
-    variantSnapshot?: Record<string, unknown>;
-  }>;
-}): Promise<OrderWithItems> {
+export async function create(
+  data: {
+    userId?: number;
+    guestEmail?: string;
+    status?: OrderStatus;
+    paymentStatus?: PaymentStatus;
+    subtotal: string;
+    shippingCost: string;
+    totalAmount: string;
+    currency?: string;
+    paymentMethod?: string;
+    shippingAddressSnapshot?: typeof orders.$inferInsert.shippingAddressSnapshot;
+    items?: Array<{
+      productId: number;
+      variantId?: number;
+      quantity: number;
+      uomCode?: string;
+      unitPriceSnapshot?: string;
+      totalPrice?: string;
+      productNameSnapshot?: string;
+      productSkuSnapshot?: string;
+      variantSnapshot?: Record<string, unknown>;
+    }>;
+  },
+  tx?: DbTransaction,
+): Promise<OrderWithItems> {
   const { items, ...orderData } = data;
 
-  return await db.transaction(async (tx) => {
+  return await withTransaction(tx, async (tx) => {
     const dbOrderData: typeof orders.$inferInsert = {
       userId: orderData.userId,
       guestEmail: orderData.guestEmail,
@@ -342,8 +346,12 @@ export async function create(data: {
 /**
  * Update order status
  */
-export async function updateStatus(id: ID | string, status: OrderStatus): Promise<void> {
-  await db
+export async function updateStatus(
+  id: ID | string,
+  status: OrderStatus,
+  tx?: DbTransaction,
+): Promise<void> {
+  await (tx ?? db)
     .update(orders)
     .set({ status, updatedAt: new Date() })
     .where(eq(orders.id, Number(id)));
@@ -359,6 +367,7 @@ export async function updateStatusWithTracking(
     trackingNumber?: string;
     adminNotes?: string;
   },
+  tx?: DbTransaction,
 ): Promise<void> {
   const updateData: Partial<typeof orders.$inferInsert> = {
     status: data.status,
@@ -368,7 +377,7 @@ export async function updateStatusWithTracking(
   if (data.trackingNumber) updateData.trackingNumber = data.trackingNumber;
   if (data.adminNotes) updateData.adminNotes = data.adminNotes;
 
-  await db
+  await (tx ?? db)
     .update(orders)
     .set(updateData)
     .where(eq(orders.id, Number(id)));
@@ -377,8 +386,12 @@ export async function updateStatusWithTracking(
 /**
  * Update payment status
  */
-export async function updatePaymentStatus(id: ID | string, status: PaymentStatus): Promise<void> {
-  await db
+export async function updatePaymentStatus(
+  id: ID | string,
+  status: PaymentStatus,
+  tx?: DbTransaction,
+): Promise<void> {
+  await (tx ?? db)
     .update(orders)
     .set({ paymentStatus: status, updatedAt: new Date() })
     .where(eq(orders.id, Number(id)));
