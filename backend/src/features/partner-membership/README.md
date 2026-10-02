@@ -32,6 +32,18 @@ All operations return typed results (`{ success: true, data } | { success: false
 actors without `partners.manage` (`forbidden`). Each change commits together with its
 `partner_access_history` row.
 
+## Partner access check
+
+`memberships.resolvePartnerContext(session, code)` returns `{ partner, membership }` for an active
+member, `suspended` for a suspended membership, and `not-found` for no session, an unknown code, no
+membership or an ended one. It reads the database on every call, so role and status changes apply on
+the member's next request; callers may cache it only per request. `memberships.listActiveMemberships`
+backs the `/partner` index and the account menu.
+
+`memberships.requireRole(context, roles, action)` is pure. Action classes: `read` (not when closed),
+`reports` (any status), `membership-change` (onboarding, active) and `business` (active only).
+It never uses the Staff permission service.
+
 ## Adding write paths
 
 Any later operation that changes a Business Partner (status changes, memberships, invitations) must

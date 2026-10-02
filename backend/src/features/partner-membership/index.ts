@@ -29,9 +29,12 @@ export type {
 export type {
   AcceptInvitationError,
   IMembershipService,
+  PartnerAction,
   PartnerContext,
+  PartnerContextError,
   PartnerMembership,
   PartnerSession,
+  RequirePartnerRoleError,
 } from './application/interfaces/IMembershipService';
 export { createPartnerMembershipServices } from './application/services/factory';
 export type {
