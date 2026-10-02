@@ -1,5 +1,7 @@
 import { SchoolProfile } from './ISchoolDirectoryService';
-import { AccessState } from './ISchoolAccessService';
+
+// Only 'public' is produced now; the wider union stays until the access UI is removed.
+export type AccessState = 'public' | 'code_required' | 'private' | 'granted' | 'pending';
 
 export type SessionState = 'first_visit' | 'has_session' | 'completed_order';
 

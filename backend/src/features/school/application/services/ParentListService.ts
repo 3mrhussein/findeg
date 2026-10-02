@@ -1,5 +1,4 @@
 import { ISchoolDirectoryService, SchoolProfile } from '../interfaces/ISchoolDirectoryService';
-import { ISchoolAccessService } from '../interfaces/ISchoolAccessService';
 import {
   IParentListService,
   SchoolListPageData,
@@ -17,7 +16,6 @@ export class ParentListService implements IParentListService {
    */
   constructor(
     private schoolListService: ISchoolDirectoryService,
-    private accessService: ISchoolAccessService,
   ) {}
 
   /**
@@ -104,15 +102,14 @@ export class ParentListService implements IParentListService {
     const list = await this.schoolListService.getBySlug(slug);
     if (!list) return null;
 
-    const [accessState, sessionState, fullList] = await Promise.all([
-      this.accessService.getAccessState(list.id, userId || null),
+    const [sessionState, fullList] = await Promise.all([
       this.getSessionState(list.id, userId),
       this.getListWithDetails(slug),
     ]);
 
     return {
       list,
-      accessState,
+      accessState: 'public',
       sessionState,
       fullList: fullList as SchoolProfile,
     };
