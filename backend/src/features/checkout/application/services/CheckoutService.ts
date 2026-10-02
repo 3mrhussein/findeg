@@ -1,0 +1,304 @@
+import { and, eq, inArray } from 'drizzle-orm';
+import { db } from '@findeg/db/connection';
+import { products, productVariants } from '@findeg/db/schema';
+import { orderQueries, reserveOrderStock, InsufficientStockError } from '@findeg/db/queries';
+import { computeConfirmation } from '../../domain/confirmation';
+import { onOrderAcceptedRewardsHook } from '../../domain/rewards-hook';
+import {
+  CheckoutOrderSchema,
+  CheckoutValidateSchema,
+  type CheckoutOrderInput,
+  type CheckoutQuote,
+  type CheckoutQuoteLine,
+  type CheckoutValidateInput,
+} from '../../schemas';
+import type {
+  CheckoutAcceptResult,
+  CheckoutValidateResult,
+  ICheckoutService,
+} from '../interfaces/ICheckoutService';
+
+export interface CheckoutServiceOptions {
+  shippingFee?: number;
+}
+
+export const DEFAULT_FLAT_SHIPPING_FEE = 50;
+
+export class CheckoutService implements ICheckoutService {
+  private readonly shippingFee: number;
+
+  constructor(options?: CheckoutServiceOptions) {
+    this.shippingFee =
+      options?.shippingFee ??
+      (process.env.CHECKOUT_FLAT_SHIPPING_FEE
+        ? Number(process.env.CHECKOUT_FLAT_SHIPPING_FEE)
+        : DEFAULT_FLAT_SHIPPING_FEE);
+  }
+
+  async validate(input: CheckoutValidateInput): Promise<CheckoutValidateResult> {
+    const parsed = CheckoutValidateSchema.safeParse(input);
+    if (!parsed.success) {
+      return {
+        success: false,
+        status: 400,
+        error: {
+          code: 'validation-error',
+          message: parsed.error.issues[0]?.message || 'Invalid checkout validation input',
+        },
+      };
+    }
+
+    try {
+      const quote = await this.calculateQuote(parsed.data.lines);
+      return { success: true, data: quote };
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to quote checkout';
+      return {
+        success: false,
+        status: 400,
+        error: {
+          code: 'quote-failed',
+          message,
+        },
+      };
+    }
+  }
+
+  async accept(input: CheckoutOrderInput): Promise<CheckoutAcceptResult> {
+    // Check payment method before parsing to return specific error if not COD
+    if (input.paymentMethod !== 'cod') {
+      return {
+        success: false,
+        status: 400,
+        error: {
+          code: 'unsupported-payment-method',
+          message: 'Only Cash on Delivery (cod) is accepted',
+        },
+      };
+    }
+
+    const parsed = CheckoutOrderSchema.safeParse(input);
+    if (!parsed.success) {
+      return {
+        success: false,
+        status: 400,
+        error: {
+          code: 'validation-error',
+          message: parsed.error.issues[0]?.message || 'Invalid checkout order input',
+        },
+      };
+    }
+
+    const { lines, confirmation, address, guestEmail, userId } = parsed.data;
+
+    try {
+      return await db.transaction(async (tx) => {
+        // 1. Re-quote authoritatively under FOR SHARE locks
+        const freshQuote = await this.calculateQuote(lines, tx);
+
+        // 2. Price confirmation check
+        if (freshQuote.confirmation !== confirmation) {
+          return {
+            success: false,
+            status: 409,
+            error: {
+              code: 'reconfirmation-required',
+              message: 'Quote terms have changed; reconfirmation required',
+              quote: freshQuote,
+            },
+          };
+        }
+
+        // Fetch catalog metadata for order item snapshots
+        const variantIds = lines.map((l) => l.variantId);
+        const variants = await tx
+          .select({
+            id: productVariants.id,
+            productId: productVariants.productId,
+            sku: productVariants.sku,
+            localizedLabel: productVariants.localizedLabel,
+            productName: products.localizedName,
+          })
+          .from(productVariants)
+          .innerJoin(products, eq(productVariants.productId, products.id))
+          .where(inArray(productVariants.id, variantIds));
+
+        const variantMap = new Map(variants.map((v) => [v.id, v]));
+
+        // 3. Create the Order and Order Items
+        const { order, items } = await orderQueries.create(
+          {
+            userId,
+            guestEmail: guestEmail?.trim()?.toLowerCase(),
+            status: 'pending',
+            paymentStatus: 'unpaid',
+            subtotal: freshQuote.subtotal.toFixed(2),
+            shippingCost: freshQuote.shipping.toFixed(2),
+            totalAmount: freshQuote.total.toFixed(2),
+            currency: freshQuote.currency,
+            paymentMethod: 'cod',
+            shippingAddressSnapshot: address,
+            items: freshQuote.lines.map((line) => {
+              const meta = variantMap.get(line.variantId);
+              const productName =
+                (meta?.productName as Record<string, string>)?.en ||
+                (meta?.productName as Record<string, string>)?.ar ||
+                '';
+              return {
+                productId: meta?.productId ?? 0,
+                variantId: line.variantId,
+                quantity: line.quantity,
+                unitPriceSnapshot: line.unitPrice.toFixed(2),
+                totalPrice: line.lineTotal.toFixed(2),
+                productNameSnapshot: productName,
+                productSkuSnapshot: meta?.sku ?? '',
+                variantSkuSnapshot: meta?.sku ?? '',
+                variantSnapshot: (meta?.localizedLabel as Record<string, unknown>) ?? {},
+              };
+            }),
+          },
+          tx,
+        );
+
+        // 4. Reserve stock inside the same transaction (throws InsufficientStockError on shortfall)
+        await reserveOrderStock(
+          order.id,
+          lines.map((l) => ({ variantId: l.variantId, quantity: l.quantity })),
+          tx,
+        );
+
+        // 5. Named no-op rewards hook inside acceptance transaction
+        await onOrderAcceptedRewardsHook(
+          tx,
+          {
+            id: order.id,
+            orderReference: order.orderReference,
+            totalAmount: order.totalAmount,
+            currency: order.currency,
+            userId: order.userId,
+            guestEmail: order.guestEmail,
+          },
+          items.map((item) => ({
+            id: item.id,
+            productId: item.productId,
+            variantId: item.variantId,
+            quantity: item.quantity,
+            lineTotal: item.totalPrice,
+          })),
+          null,
+        );
+
+        return {
+          success: true,
+          status: 201,
+          data: {
+            order: {
+              id: order.id,
+              orderReference: order.orderReference,
+              status: order.status,
+              paymentStatus: order.paymentStatus,
+              totalAmount: order.totalAmount,
+              currency: order.currency,
+            },
+            message: 'Order created successfully',
+          },
+        };
+      });
+    } catch (err: unknown) {
+      if (err instanceof InsufficientStockError) {
+        return {
+          success: false,
+          status: 409,
+          error: {
+            code: 'insufficient-stock',
+            message: 'Insufficient stock for requested items',
+            shortfalls: err.shortfalls,
+          },
+        };
+      }
+      throw err;
+    }
+  }
+
+  /**
+   * Re-quotes lines authoritatively from the catalog, optionally locking variants FOR SHARE.
+   */
+  private async calculateQuote(
+    lines: Array<{ variantId: number; quantity: number }>,
+    tx?: Parameters<Parameters<typeof db.transaction>[0]>[0],
+  ): Promise<CheckoutQuote> {
+    const executor = tx ?? db;
+
+    // Aggregate duplicate variant lines
+    const quantitiesByVariant = new Map<number, number>();
+    for (const line of lines) {
+      quantitiesByVariant.set(
+        line.variantId,
+        (quantitiesByVariant.get(line.variantId) ?? 0) + line.quantity,
+      );
+    }
+    const variantIds = [...quantitiesByVariant.keys()];
+
+    let query = executor
+      .select({
+        id: productVariants.id,
+        productId: productVariants.productId,
+        basePrice: productVariants.basePrice,
+        isActive: productVariants.isActive,
+        productIsActive: products.isActive,
+      })
+      .from(productVariants)
+      .innerJoin(products, eq(productVariants.productId, products.id))
+      .where(
+        and(
+          inArray(productVariants.id, variantIds),
+          eq(productVariants.isActive, true),
+          eq(products.isActive, true),
+        ),
+      );
+
+    const availableVariants = tx ? await query.for('share') : await query;
+    if (availableVariants.length !== variantIds.length) {
+      throw new Error('One or more requested variants are inactive or unavailable');
+    }
+
+    const priceMap = new Map(availableVariants.map((v) => [v.id, Number(v.basePrice)]));
+
+    const quoteLines: CheckoutQuoteLine[] = variantIds.map((variantId) => {
+      const quantity = quantitiesByVariant.get(variantId)!;
+      const unitPrice = priceMap.get(variantId)!;
+      const discounts: Array<{ source: string; amount: number }> = [];
+      const discountTotal = discounts.reduce((sum, d) => sum + d.amount, 0);
+      const lineTotal = Number((quantity * unitPrice - discountTotal).toFixed(2));
+      return {
+        variantId,
+        quantity,
+        unitPrice,
+        discounts,
+        lineTotal,
+      };
+    });
+
+    const subtotal = Number(quoteLines.reduce((sum, l) => sum + l.lineTotal, 0).toFixed(2));
+    const shipping = Number(this.shippingFee.toFixed(2));
+    const total = Number((subtotal + shipping).toFixed(2));
+    const currency = 'EGP' as const;
+
+    const confirmation = computeConfirmation({
+      currency,
+      shipping,
+      subtotal,
+      total,
+      lines: quoteLines,
+    });
+
+    return {
+      lines: quoteLines,
+      shipping,
+      subtotal,
+      total,
+      currency,
+      confirmation,
+    };
+  }
+}

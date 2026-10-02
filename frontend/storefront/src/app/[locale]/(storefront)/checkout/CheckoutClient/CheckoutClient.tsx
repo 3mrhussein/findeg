@@ -99,20 +99,44 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
         apartment: formValues.apartment.trim() || undefined,
         notes: formValues.notes.trim() || undefined,
       };
+      const lines = cartItems.map((item) => ({
+        variantId: Number(item.variantId),
+        quantity: item.quantity,
+      }));
+
       const validateResponse = await fetch('/api/v1/checkout/validate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-Guest-Id': guestId },
-        body: JSON.stringify({ address, paymentMethod }),
+        body: JSON.stringify({
+          source: 'cart',
+          lines,
+          address,
+          paymentMethod,
+        }),
       });
       const validateJson = await validateResponse.json();
       if (!validateResponse.ok || !validateJson?.success) {
         throw new Error(validateJson?.error?.message || t('Pages.Checkout.ValidationFailed'));
       }
-      setValidatedTotals(validateJson.data.totals);
+      const quote = validateJson.data;
+      setValidatedTotals({
+        subtotal: quote.subtotal,
+        shippingCost: quote.shipping,
+        total: quote.total,
+        currency: quote.currency,
+      });
+
       const orderResponse = await fetch('/api/v1/checkout/order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'X-Guest-Id': guestId },
-        body: JSON.stringify({ address, paymentMethod, guestEmail: formValues.guestEmail.trim() }),
+        body: JSON.stringify({
+          source: 'cart',
+          lines,
+          confirmation: quote.confirmation,
+          address,
+          paymentMethod,
+          guestEmail: formValues.guestEmail.trim() || undefined,
+        }),
       });
       const orderJson = await orderResponse.json();
       if (!orderResponse.ok || !orderJson?.success) {
@@ -121,6 +145,7 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
       setOrderResult({
         success: true,
         orderId: orderJson?.data?.order?.id,
+        orderReference: orderJson?.data?.order?.orderReference,
         message: orderJson?.data?.message || t('Pages.Checkout.OrderCreatedSuccessfully'),
       });
       clearCart();

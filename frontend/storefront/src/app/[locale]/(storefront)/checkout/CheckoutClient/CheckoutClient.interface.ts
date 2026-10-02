@@ -14,6 +14,7 @@ export interface CheckoutTotals {
 export interface PlaceOrderResult {
   success: boolean;
   orderId?: number;
+  orderReference?: string;
   message?: string;
 }
 

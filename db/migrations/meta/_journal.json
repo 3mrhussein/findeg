@@ -71,6 +71,13 @@
       "when": 1790952442498,
       "tag": "0009_stock_reservations",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1790956000000,
+      "tag": "0010_order_acceptance_and_reference",
+      "breakpoints": true
     }
   ]
 }

@@ -21,3 +21,4 @@ export * as userQueries from './identity/users';
 // Feature-specific queries (admin operations, etc.)
 export * from './products';
 export * from './identity';
+export { withTransaction, type DbTransaction } from './transaction';

@@ -7,6 +7,7 @@
  * Note: Returns raw database rows. Domain mapping handled by OrderService.
  */
 
+import { randomBytes } from 'node:crypto';
 import { db } from '../../connection';
 import {
   orders,
@@ -48,6 +49,39 @@ export interface RevenueDataPoint {
 export interface OrderCountByStatus {
   status: OrderStatus;
   count: number;
+}
+
+// ─── Order Reference & Freeze Guards ──────────────────────────────────────────
+
+const CROCKFORD_BASE32 = '0123456789ABCDEFGHJKMNPQRSTVWXYZ';
+
+export function generateOrderReference(): string {
+  const bytes = randomBytes(6);
+  let code = '';
+  for (let i = 0; i < 6; i++) {
+    code += CROCKFORD_BASE32[bytes[i] % 32];
+  }
+  return `FE-${code}`;
+}
+
+const FROZEN_ORDER_COLUMNS = new Set([
+  'orderReference',
+  'userId',
+  'guestEmail',
+  'subtotal',
+  'shippingCost',
+  'totalAmount',
+  'currency',
+  'paymentMethod',
+  'shippingAddressSnapshot',
+]);
+
+export function assertMutableOrderColumns(update: Record<string, unknown>): void {
+  for (const key of Object.keys(update)) {
+    if (FROZEN_ORDER_COLUMNS.has(key)) {
+      throw new Error(`Cannot update frozen order snapshot column: ${key}`);
+    }
+  }
 }
 
 // ─── Order Retrieval ─────────────────────────────────────────────────────────
@@ -273,6 +307,7 @@ export async function count(filters?: OrderFiltersInput): Promise<number> {
  */
 export async function create(
   data: {
+    orderReference?: string;
     userId?: number;
     guestEmail?: string;
     status?: OrderStatus;
@@ -292,6 +327,7 @@ export async function create(
       totalPrice?: string;
       productNameSnapshot?: string;
       productSkuSnapshot?: string;
+      variantSkuSnapshot?: string;
       variantSnapshot?: Record<string, unknown>;
     }>;
   },
@@ -300,20 +336,52 @@ export async function create(
   const { items, ...orderData } = data;
 
   return await withTransaction(tx, async (tx) => {
-    const dbOrderData: typeof orders.$inferInsert = {
-      userId: orderData.userId,
-      guestEmail: orderData.guestEmail,
-      status: orderData.status || 'pending',
-      paymentStatus: orderData.paymentStatus || 'unpaid',
-      subtotal: orderData.subtotal,
-      shippingCost: orderData.shippingCost,
-      totalAmount: orderData.totalAmount,
-      currency: orderData.currency || 'EGP',
-      paymentMethod: (orderData.paymentMethod as 'cod' | 'card') || null,
-      shippingAddressSnapshot: orderData.shippingAddressSnapshot || null,
-    };
+    let newOrder: DbOrder | null = null;
+    let attempts = 0;
+    const maxAttempts = 5;
 
-    const [newOrder] = await tx.insert(orders).values(dbOrderData).returning();
+    while (!newOrder && attempts < maxAttempts) {
+      attempts++;
+      const candidateReference = data.orderReference ?? generateOrderReference();
+
+      try {
+        newOrder = await tx.transaction(async (sp) => {
+          const [inserted] = await sp
+            .insert(orders)
+            .values({
+              orderReference: candidateReference,
+              userId: orderData.userId,
+              guestEmail: orderData.guestEmail,
+              status: orderData.status || 'pending',
+              paymentStatus: orderData.paymentStatus || 'unpaid',
+              subtotal: orderData.subtotal,
+              shippingCost: orderData.shippingCost,
+              totalAmount: orderData.totalAmount,
+              currency: orderData.currency || 'EGP',
+              paymentMethod: (orderData.paymentMethod as 'cod' | 'card') || null,
+              shippingAddressSnapshot: orderData.shippingAddressSnapshot || null,
+            })
+            .returning();
+          return inserted;
+        });
+      } catch (err: unknown) {
+        const error = err as { code?: string; constraint?: string; message?: string };
+        if (
+          error?.code === '23505' &&
+          (error?.constraint === 'uq_orders_order_reference' ||
+            String(error?.message).includes('order_reference')) &&
+          !data.orderReference &&
+          attempts < maxAttempts
+        ) {
+          continue;
+        }
+        throw err;
+      }
+    }
+
+    if (!newOrder) {
+      throw new Error('Failed to create order: reference collision retry limit reached');
+    }
 
     let newItems: OrderItemRow[] = [];
     if (items && items.length > 0) {
@@ -321,7 +389,7 @@ export async function create(
         .insert(orderItems)
         .values(
           items.map((item) => ({
-            orderId: newOrder.id,
+            orderId: newOrder!.id,
             productId: item.productId,
             variantId: item.variantId,
             quantity: item.quantity,
@@ -330,6 +398,7 @@ export async function create(
             totalPrice: item.totalPrice,
             productNameSnapshot: item.productNameSnapshot,
             productSkuSnapshot: item.productSkuSnapshot,
+            variantSkuSnapshot: item.variantSkuSnapshot,
             variantSnapshot: item.variantSnapshot,
           })),
         )

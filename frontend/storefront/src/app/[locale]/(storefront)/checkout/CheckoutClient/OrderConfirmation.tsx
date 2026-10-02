@@ -28,11 +28,16 @@ export function OrderConfirmation({ result, continueLabel, confirmTitle }: Order
       <p aria-live="polite" className="text-slate-600 dark:text-slate-400 mb-6 text-lg">
         {result.message}
       </p>
-      {result.orderId && (
+      {result.orderReference ? (
+        <div className="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800 rounded-lg px-4 py-2 text-slate-900 dark:text-white font-mono font-medium mb-10">
+          <span className="text-slate-500 font-sans text-sm">Order Reference:</span>{' '}
+          {result.orderReference}
+        </div>
+      ) : result.orderId ? (
         <div className="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800 rounded-lg px-4 py-2 text-slate-900 dark:text-white font-mono font-medium mb-10">
           <span className="text-slate-500 font-sans text-sm">Order ID:</span> #{result.orderId}
         </div>
-      )}
+      ) : null}
       <div>
         <Button
           onClick={() => router.push('/shop')}
