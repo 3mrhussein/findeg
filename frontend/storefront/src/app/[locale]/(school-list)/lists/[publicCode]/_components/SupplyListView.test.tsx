@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { PublicSupplyList } from '@findeg/backend/features/school';
 
 vi.mock('next-intl', () => ({
@@ -52,6 +52,8 @@ const list = (over: Partial<PublicSupplyList> = {}): PublicSupplyList => ({
 });
 
 describe('SupplyListView', () => {
+  afterEach(() => window.localStorage.clear());
+
   it('shows each item at its default, with a disabled checkout button', () => {
     render(<SupplyListView list={list()} locale="en" />);
     expect(screen.getByText('Blue pen')).toBeInTheDocument();
@@ -93,7 +95,28 @@ describe('SupplyListView', () => {
     render(<SupplyListView list={l} locale="en" />);
     expect(await screen.findByRole('alert')).toHaveTextContent('UnavailableChooseAgain');
     expect(screen.getByRole('button', { name: 'Checkout' })).toBeDisabled();
-    window.localStorage.clear();
+  });
+
+  it('does not flag a switched-off optional line with a stale variant until it is turned on', async () => {
+    const l = list({
+      items: [{ ...list().items[0], required: false, exactItem: false, eligibleVariants: [] }],
+    });
+    window.localStorage.setItem(
+      `findeg:list-selection:${l.publicCode}`,
+      JSON.stringify({ v: 1, lines: [{ listItemId: 7, variantId: 999, quantity: 0 }] }),
+    );
+    render(<SupplyListView list={l} locale="en" />);
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('checkbox'));
+    expect(await screen.findByRole('alert')).toHaveTextContent('UnavailableChooseAgain');
+  });
+
+  it('keeps the stored quantity while the quantity field is emptied mid-edit', () => {
+    render(<SupplyListView list={list()} locale="en" />);
+    const input = screen.getByRole('spinbutton');
+    fireEvent.change(input, { target: { value: '' } });
+    fireEvent.blur(input);
+    expect(input).toHaveValue(3);
   });
 
   it('offers Change on non-Exact items only, with out-of-stock options disabled', () => {

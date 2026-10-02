@@ -47,20 +47,25 @@ export function SupplyListView({ list, locale }: { list: PublicSupplyList; local
   const schoolName = locale === 'ar' ? list.school.nameAr : list.school.nameEn;
 
   const [selection, setSelection] = useState<ListSelection>(() => seedSelection(list));
-  const [flagged, setFlagged] = useState<number[]>([]);
+  const [ineligible, setIneligible] = useState<number[]>([]);
   const [changing, setChanging] = useState<number | null>(null);
 
   // Load and reconcile on every load; storage is only readable in the browser.
   useEffect(() => {
     const loaded = loadSelection(list, window.localStorage);
     setSelection(loaded.selection);
-    setFlagged(loaded.flaggedItemIds);
+    setIneligible(loaded.flaggedItemIds);
   }, [list]);
 
   const update = (next: ListSelection) => {
     setSelection(next);
     saveSelection(list.publicCode, next, window.localStorage);
   };
+
+  // A switched-off optional line was never chosen, so it only blocks checkout once turned on.
+  const flagged = ineligible.filter((id) =>
+    selection.lines.some((line) => line.listItemId === id && line.quantity > 0),
+  );
 
   const variantName = (variant: PublicSupplyListVariant) =>
     [pick(variant.name, locale), pick(variant.variantLabel, locale)].filter(Boolean).join(' – ');
@@ -71,7 +76,7 @@ export function SupplyListView({ list, locale }: { list: PublicSupplyList; local
 
   const choose = (item: PublicSupplyListItem, variantId: number) => {
     update(chooseVariant(selection, item.id, variantId));
-    setFlagged((ids) => ids.filter((id) => id !== item.id));
+    setIneligible((ids) => ids.filter((id) => id !== item.id));
     setChanging(null);
   };
 
@@ -154,11 +159,16 @@ export function SupplyListView({ list, locale }: { list: PublicSupplyList; local
                     inputMode="numeric"
                     min={MIN_QUANTITY}
                     max={MAX_QUANTITY}
-                    value={line.quantity}
+                    defaultValue={line.quantity}
                     disabled={archived}
-                    onChange={(event) =>
-                      update(setQuantity(selection, item.id, Number(event.target.value)))
-                    }
+                    onChange={(event) => {
+                      // An empty field is mid-edit: keep the stored quantity until a number is typed.
+                      if (event.target.value === '') return;
+                      update(setQuantity(selection, item.id, Number(event.target.value)));
+                    }}
+                    onBlur={(event) => {
+                      event.target.value = String(line.quantity);
+                    }}
                     className="w-20 rounded border px-2 py-1"
                   />
                   <span className="text-muted-foreground">
