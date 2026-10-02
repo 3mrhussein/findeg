@@ -16,6 +16,7 @@ import {
   updatePartnerMembership,
   verifyUserEmailIfUnset,
   type PartnerDatabase,
+  type PartnerExecutor,
   type PartnerMembershipRow,
   type PartnerTransaction,
 } from '@findeg/db/queries/partners';
@@ -34,9 +35,16 @@ import type {
   UpdateMembershipError,
   UpdateMembershipInput,
 } from '../interfaces/IMembershipService';
-import type { PartnerActor, PartnerResult } from '../interfaces/IPartnerService';
+import type { PartnerActor, PartnerResult, StaffActor } from '../interfaces/IPartnerService';
 import { requirePartnerRole } from './requirePartnerRole';
-import { fail, isActiveAdministrator, isActivePartnerAdministrator, isOpen, ok } from './shared';
+import {
+  canManagePartners,
+  fail,
+  isActiveAdministrator,
+  isActivePartnerAdministrator,
+  isOpen,
+  ok,
+} from './shared';
 
 const updateSchema = z.object({
   roles: z.array(z.enum(PARTNER_ROLES)).min(1).optional(),
@@ -180,7 +188,7 @@ export class MembershipService implements IMembershipService {
   }
 
   async updateMembership(
-    actor: PartnerActor,
+    actor: PartnerActor | StaffActor,
     membershipId: number,
     input: UpdateMembershipInput,
     expectedVersion: number,
@@ -191,9 +199,7 @@ export class MembershipService implements IMembershipService {
       const locked = await this.lockMembership(tx, membershipId);
       if (!locked) return fail('forbidden');
       const { partner, current } = locked;
-      if (!(await isActivePartnerAdministrator(tx, partner.id, actor.userId))) {
-        return fail('forbidden');
-      }
+      if (!(await this.mayManageMembers(tx, actor, partner.id))) return fail('forbidden');
       if (!isOpen(partner)) return fail('partner-not-open');
       if (current.status === 'ended') return fail('membership-ended');
       if (expectedVersion !== current.authorizationVersion) return fail('stale-membership');
@@ -229,13 +235,11 @@ export class MembershipService implements IMembershipService {
   }
 
   async listMembers(
-    actor: PartnerActor,
+    actor: PartnerActor | StaffActor,
     partnerId: number,
   ): Promise<PartnerResult<PartnerMember[], 'forbidden'>> {
     const db = await this.getDb();
-    if (!(await isActivePartnerAdministrator(db, partnerId, actor.userId))) {
-      return fail('forbidden');
-    }
+    if (!(await this.mayManageMembers(db, actor, partnerId))) return fail('forbidden');
     const rows = await listCurrentPartnerMembers(db, partnerId);
     return ok(
       rows.map((row) => ({
@@ -245,6 +249,17 @@ export class MembershipService implements IMembershipService {
         lastName: row.lastName,
       })),
     );
+  }
+
+  /** Staff need `partners.manage`; Partner actors must be an active Partner Administrator of the partner. */
+  private async mayManageMembers(
+    executor: PartnerExecutor,
+    actor: PartnerActor | StaffActor,
+    partnerId: number,
+  ): Promise<boolean> {
+    return actor.kind === 'staff'
+      ? canManagePartners(actor)
+      : isActivePartnerAdministrator(executor, partnerId, actor.userId);
   }
 
   /**
@@ -266,7 +281,7 @@ export class MembershipService implements IMembershipService {
    */
   private async commitChange(
     tx: PartnerTransaction,
-    actor: PartnerActor,
+    actor: PartnerActor | StaffActor,
     partner: BusinessPartnerRow,
     current: PartnerMembershipRow,
     patch: MembershipPatch,
@@ -284,7 +299,7 @@ export class MembershipService implements IMembershipService {
         businessPartnerId: partner.id,
         membershipId: updated.id,
         actorUserId: actor.userId,
-        actorKind: action === 'membership.left' ? 'self' : 'partner',
+        actorKind: action === 'membership.left' ? 'self' : actor.kind,
         action,
         before: snapshot(current),
         after: snapshot(updated),

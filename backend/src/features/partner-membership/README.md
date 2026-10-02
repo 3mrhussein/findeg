@@ -14,8 +14,9 @@ Partner access is a parallel model next to Staff RBAC: this feature never depend
 raw `token` so Staff can copy the link; only its SHA-256 digest is stored.
 
 `memberships.updateMembership(actor, id, { roles?, status? }, expectedVersion)` (partner actor
-`{ kind: 'partner', userId }`; role change, suspend, reactivate, end; the actor must be an active Partner
-Administrator of that partner, which must be `onboarding` or `active`; `stale-membership` on a version
+`{ kind: 'partner', userId }`, or a `StaffActor` holding `partners.manage`, audited `actor_kind = staff`
+and bound by every rule below; role change, suspend, reactivate, end; a partner actor must be an active
+Partner Administrator of that partner, which must be `onboarding` or `active`; `stale-membership` on a version
 mismatch; `ended` is final), `memberships.leave(actor, id)` (a member ends their own membership; audited
 as `membership.left`, `actor_kind = self`; allowed at any partner status) and `memberships.listMembers(actor, partnerId)`. Every change
 bumps `authorization_version` and writes its `membership.*` audit row in the same transaction. Any change

@@ -446,6 +446,111 @@ describe('Partner Membership management', () => {
     });
   });
 
+  describe('Staff actor', () => {
+    const noPermission = (): StaffActor => ({ ...staff, permissionCodes: [] });
+
+    it('changes, suspends, reactivates and ends any membership, audited as staff', async () => {
+      const partner = await newPartner();
+      await addMember(partner.id);
+      const member = await addMember(partner.id, ['list-manager']);
+      const id = member.membership.id;
+
+      const steps: [Parameters<typeof services.memberships.updateMembership>[2], string][] = [
+        [{ roles: ['report-viewer'] }, 'membership.roles_changed'],
+        [{ status: 'suspended' }, 'membership.suspended'],
+        [{ status: 'active' }, 'membership.reactivated'],
+        [{ status: 'ended' }, 'membership.ended'],
+      ];
+      for (const [index, [input]] of steps.entries()) {
+        const result = await services.memberships.updateMembership(staff, id, input, index + 1);
+        expect(result).toMatchObject({ success: true });
+      }
+
+      const rows = (await history(id)).slice(1);
+      expect(rows.map((row) => [row.action, row.actorKind, row.actorUserId])).toEqual(
+        steps.map(([, action]) => [action, 'staff', staff.userId]),
+      );
+    });
+
+    it('refuses actors without partners.manage', async () => {
+      const partner = await newPartner();
+      await addMember(partner.id);
+      const member = await addMember(partner.id, ['list-manager']);
+
+      expect(
+        await services.memberships.updateMembership(
+          noPermission(),
+          member.membership.id,
+          { status: 'suspended' },
+          1,
+        ),
+      ).toEqual({ success: false, error: 'forbidden' });
+      expect(await services.memberships.listMembers(noPermission(), partner.id)).toEqual({
+        success: false,
+        error: 'forbidden',
+      });
+    });
+
+    it('applies the stale, ended and partner-status rules to Staff', async () => {
+      const partner = await newPartner();
+      await addMember(partner.id);
+      const member = await addMember(partner.id, ['list-manager']);
+      const id = member.membership.id;
+
+      expect(
+        await services.memberships.updateMembership(staff, id, { status: 'suspended' }, 9),
+      ).toEqual({ success: false, error: 'stale-membership' });
+
+      await setPartnerStatus(partner.id, 'suspended');
+      expect(
+        await services.memberships.updateMembership(staff, id, { status: 'suspended' }, 1),
+      ).toEqual({ success: false, error: 'partner-not-open' });
+      await setPartnerStatus(partner.id, 'active');
+
+      await services.memberships.updateMembership(staff, id, { status: 'ended' }, 1);
+      expect(
+        await services.memberships.updateMembership(staff, id, { status: 'active' }, 2),
+      ).toEqual({ success: false, error: 'membership-ended' });
+    });
+
+    it('refuses to end, suspend or demote the last Partner Administrator', async () => {
+      const partner = await newPartner();
+      const admin = await addMember(partner.id);
+      const id = admin.membership.id;
+
+      for (const input of [
+        { status: 'ended' as const },
+        { status: 'suspended' as const },
+        { roles: ['list-manager' as const] },
+      ]) {
+        expect(await services.memberships.updateMembership(staff, id, input, 1)).toEqual({
+          success: false,
+          error: 'last-administrator',
+        });
+      }
+      expect((await reload(id)).status).toBe('active');
+    });
+
+    it('replaces an administrator: invite, accept, then end the old one', async () => {
+      const partner = await newPartner();
+      const old = await addMember(partner.id);
+      const replacement = await addMember(partner.id);
+
+      const ended = await services.memberships.updateMembership(
+        staff,
+        old.membership.id,
+        { status: 'ended' },
+        1,
+      );
+
+      expect(ended).toMatchObject({ success: true, data: { status: 'ended' } });
+      expect((await reload(replacement.membership.id)).status).toBe('active');
+      const members = await services.memberships.listMembers(staff, partner.id);
+      if (!members.success) throw new Error(members.error);
+      expect(members.data.map((row) => row.email)).toEqual([replacement.user.email]);
+    });
+  });
+
   describe('leave', () => {
     it('ends the member’s own membership and audits it as left by self', async () => {
       const partner = await newPartner();

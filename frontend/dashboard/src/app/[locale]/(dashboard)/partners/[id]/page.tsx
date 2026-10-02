@@ -5,6 +5,7 @@ import type { Locale } from 'next-intl';
 import { requirePermission } from '@lib/auth-guard';
 import { PERMISSION_CODES } from '@findeg/backend/features/core';
 import { createPartnerMembershipServices } from '@findeg/backend/features/partner-membership';
+import { MembersPanel } from '../_components/MembersPanel';
 import { InvitationsPanel } from '../_components/InvitationsPanel';
 import { StatusActions } from '../_components/StatusActions';
 import { toStaffActor } from '../_lib/toStaffActor';
@@ -27,10 +28,12 @@ export default async function PartnerDetailPage({
   const partnerId = Number(id);
   const actor = toStaffActor(session);
 
-  const { partners, invitations } = createPartnerMembershipServices();
+  const { partners, invitations, memberships } = createPartnerMembershipServices();
   const partner = await partners.getPartner(actor, partnerId);
   if (!partner.success) notFound();
+  const members = await memberships.listMembers(actor, partnerId);
   const pending = await invitations.listPendingInvitations(actor, partnerId);
+  const canChange = partner.data.status === 'onboarding' || partner.data.status === 'active';
 
   return (
     <div className="space-y-6">
@@ -51,9 +54,26 @@ export default async function PartnerDetailPage({
         current={partner.data.status}
         targets={partners.allowedStatusChanges(partner.data.status)}
       />
+      {members.success ? (
+        <MembersPanel
+          canChange={canChange}
+          members={members.data.map((member) => ({
+            id: member.id,
+            email: member.email,
+            name: [member.firstName, member.lastName].filter(Boolean).join(' '),
+            roles: member.roles,
+            status: member.status,
+            authorizationVersion: member.authorizationVersion,
+          }))}
+        />
+      ) : (
+        <p role="alert" className="text-destructive text-sm">
+          Members could not be loaded. You may not have permission to manage this Business Partner.
+        </p>
+      )}
       <InvitationsPanel
         partnerId={partnerId}
-        canChange={partner.data.status === 'onboarding' || partner.data.status === 'active'}
+        canChange={canChange}
         invitations={(pending.success ? pending.data : []).map((invitation) => ({
           id: invitation.id,
           email: invitation.email,

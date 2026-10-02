@@ -9,13 +9,7 @@ import {
   revokeInvitationAction,
   type InvitationActionState,
 } from '../_actions/invitations';
-
-const PARTNER_ROLES = [
-  { value: 'partner-administrator', label: 'Partner Administrator' },
-  { value: 'list-manager', label: 'List manager' },
-  { value: 'collection-staff', label: 'Collection staff' },
-  { value: 'report-viewer', label: 'Report viewer' },
-] as const;
+import { PARTNER_ROLES } from '../_lib/partnerRoles';
 
 export interface PendingInvitation {
   id: number;

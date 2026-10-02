@@ -1,5 +1,5 @@
 import type { PartnerMembershipStatus, PartnerRole } from '@findeg/db/schema';
-import type { PartnerActor, PartnerResult } from './IPartnerService';
+import type { PartnerActor, PartnerResult, StaffActor } from './IPartnerService';
 
 export interface PartnerSession {
   userId: number;
@@ -76,12 +76,13 @@ export type LeaveError = Exclude<
 export interface IMembershipService {
   /**
    * Changes roles and/or status of a membership. The actor must be an active
-   * Partner Administrator of its Business Partner, which must be onboarding or
-   * active. `expectedVersion` is the membership's `authorizationVersion` the
+   * Partner Administrator of its Business Partner, or Staff holding
+   * `partners.manage` (audited as `staff`), and the Business Partner must be
+   * onboarding or active. `expectedVersion` is the membership's `authorizationVersion` the
    * caller loaded; any change bumps it, so a stale edit gets `stale-membership`.
    */
   updateMembership(
-    actor: PartnerActor,
+    actor: PartnerActor | StaffActor,
     membershipId: number,
     input: UpdateMembershipInput,
     expectedVersion: number,
@@ -91,9 +92,9 @@ export interface IMembershipService {
     actor: PartnerActor,
     membershipId: number,
   ): Promise<PartnerResult<PartnerMembership, LeaveError>>;
-  /** Current (non-ended) members of a Business Partner, for its Partner Administrators. */
+  /** Current (non-ended) members of a Business Partner, for its Partner Administrators and Staff. */
   listMembers(
-    actor: PartnerActor,
+    actor: PartnerActor | StaffActor,
     partnerId: number,
   ): Promise<PartnerResult<PartnerMember[], 'forbidden'>>;
   acceptInvitation(
