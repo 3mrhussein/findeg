@@ -38,6 +38,17 @@ index protects concurrent writers. Database triggers freeze non-draft lists
 and their items, including direct SQL inserts, edits, moves and deletes. Only
 the list's archival transition and `updatedAt` remain writable.
 
+## Public read (#212)
+
+`createSchoolSupplyListReader().getByPublicCode(code)` is the anonymous, live
+read behind `/lists/[publicCode]`. Draft, unknown and malformed codes return
+`not-found`; archived lists return `replacementPublicCode` when replaced. Each
+item carries its default and `eligibleVariants` (inactive variants excluded)
+with price, brand, `differingAttributes` against the default and an `inStock`
+flag (available quantity across active warehouses is at least 1, from one batch
+query). `offer` is reserved and always `null` until the List Offer spec.
+`ListCheckoutRequest` records the list-checkout contract for the checkout spec.
+
 ## Migration and remaining slices
 
 Migration `0006_school_supply_list_lifecycle.sql` adds the new tables beside

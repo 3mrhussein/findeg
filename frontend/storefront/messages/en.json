@@ -660,6 +660,21 @@
       "Alternatives": {
         "Title": "Choose Brand",
         "Selected": "Selected"
+      },
+      "PublicList": {
+        "Archived": "This list is no longer current and is view-only.",
+        "ViewReplacement": "View the current list",
+        "NoReplacement": "There is no newer list for this school.",
+        "Default": "School's choice",
+        "ExactItem": "Exact item – cannot be changed",
+        "Optional": "Optional",
+        "Required": "Required",
+        "Quantity": "Quantity: {count}",
+        "OutOfStock": "Out of stock",
+        "PriceNote": "Prices are informational; the checkout quote is final.",
+        "Checkout": "Checkout",
+        "CheckoutSoon": "List checkout is coming soon.",
+        "CheckoutArchived": "Checkout is unavailable for an archived list."
       }
     }
   },

@@ -1,5 +1,7 @@
 import type { SchoolSupplyListDatabase } from '@findeg/db/queries/school-supply-lists';
+import type { ISchoolSupplyListReader } from '../interfaces/ISchoolSupplyListReader';
 import type { ISchoolSupplyListService } from '../interfaces/ISchoolSupplyListService';
+import { SchoolSupplyListReader } from './SchoolSupplyListReader';
 import { SchoolSupplyListService } from './SchoolSupplyListService';
 
 export interface SchoolSupplyListDependencies {
@@ -16,4 +18,14 @@ export function createSchoolSupplyListService({
     ? async () => db
     : async () => (await import('@findeg/db/connection')).db as SchoolSupplyListDatabase;
   return new SchoolSupplyListService(getDb, clock);
+}
+
+/** The anonymous public-code read behind `/lists/[publicCode]`. */
+export function createSchoolSupplyListReader({
+  db,
+}: Pick<SchoolSupplyListDependencies, 'db'> = {}): ISchoolSupplyListReader {
+  const getDb = db
+    ? async () => db
+    : async () => (await import('@findeg/db/connection')).db as SchoolSupplyListDatabase;
+  return new SchoolSupplyListReader(getDb);
 }

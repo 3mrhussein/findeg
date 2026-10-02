@@ -3,6 +3,7 @@ import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import * as schema from '../../schema';
 
 export * from './lifecycle';
+export * from './public-read';
 
 /**
  * School Supply List catalog queries: the candidate variants that feed

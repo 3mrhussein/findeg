@@ -1,13 +1,11 @@
-import { and, asc, eq, inArray, sql } from 'drizzle-orm';
+import { and, asc, eq, inArray } from 'drizzle-orm';
 import {
   businessPartners,
-  inventoryBalances,
   partnerSchoolProfiles,
   products,
   productVariants,
   schoolSupplyListItems,
   schoolSupplyLists,
-  warehouses,
   type SchoolSupplyListItemRow,
   type SchoolSupplyListRow,
 } from '../../schema';
@@ -156,26 +154,6 @@ export async function getSupplyListDefaults(tx: SchoolSupplyListTransaction, var
     .where(inArray(productVariants.id, variantIds))
     .orderBy(asc(productVariants.id))
     .for('share');
-}
-
-/** Available units across operational warehouses; missing balances mean zero stock. */
-export async function getSupplyListDefaultStock(
-  tx: SchoolSupplyListTransaction,
-  variantIds: number[],
-) {
-  if (variantIds.length === 0) return [];
-  return tx
-    .select({
-      variantId: inventoryBalances.variantId,
-      available:
-        sql<number>`coalesce(sum(${inventoryBalances.onHand} - ${inventoryBalances.reserved}), 0)`.mapWith(
-          Number,
-        ),
-    })
-    .from(inventoryBalances)
-    .innerJoin(warehouses, eq(warehouses.id, inventoryBalances.warehouseId))
-    .where(and(inArray(inventoryBalances.variantId, variantIds), eq(warehouses.isActive, true)))
-    .groupBy(inventoryBalances.variantId);
 }
 
 export async function snapshotSupplyListItem(
