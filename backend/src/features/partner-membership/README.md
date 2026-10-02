@@ -18,7 +18,7 @@ raw `token` so Staff can copy the link; only its SHA-256 digest is stored.
 and bound by every rule below; role change, suspend, reactivate, end; a partner actor must be an active
 Partner Administrator of that partner, which must be `onboarding` or `active`; `stale-membership` on a version
 mismatch; `ended` is final), `memberships.leave(actor, id)` (a member ends their own membership; audited
-as `membership.left`, `actor_kind = self`; allowed at any partner status) and `memberships.listMembers(actor, partnerId)`. Every change
+as `membership.left`, `actor_kind = self`; partner must be `onboarding` or `active`) and `memberships.listMembers(actor, partnerId)`. Every change
 bumps `authorization_version` and writes its `membership.*` audit row in the same transaction. Any change
 that would leave the partner without an active Partner Administrator returns `last-administrator`,
 checked under the partner row lock.

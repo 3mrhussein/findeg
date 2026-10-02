@@ -68,10 +68,7 @@ export type UpdateMembershipError =
   | 'stale-membership'
   | 'last-administrator';
 
-export type LeaveError = Exclude<
-  UpdateMembershipError,
-  'invalid-input' | 'stale-membership' | 'partner-not-open'
->;
+export type LeaveError = Exclude<UpdateMembershipError, 'invalid-input' | 'stale-membership'>;
 
 export interface IMembershipService {
   /**

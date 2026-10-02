@@ -606,15 +606,16 @@ describe('Partner Membership management', () => {
     });
 
     it.each(['suspended', 'closed'] as const)(
-      'is allowed while the Business Partner is %s',
+      'is refused while the Business Partner is %s',
       async (status) => {
         const partner = await newPartner();
         await addMember(partner.id);
         const member = await addMember(partner.id, ['report-viewer']);
         await setPartnerStatus(partner.id, status);
 
-        expect(await services.memberships.leave(member.actor, member.membership.id)).toMatchObject({
-          success: true,
+        expect(await services.memberships.leave(member.actor, member.membership.id)).toEqual({
+          success: false,
+          error: 'partner-not-open',
         });
       },
     );

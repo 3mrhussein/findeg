@@ -12,6 +12,7 @@ import { resolvePartnerAccess } from './_lib/access';
 
 const LEAVE_ERRORS: Record<LeaveError, string> = {
   forbidden: 'You cannot leave this Business Partner.',
+  'partner-not-open': 'This Business Partner is not open, so you cannot leave it right now.',
   'membership-ended': 'You have already left this Business Partner.',
   'last-administrator':
     'You are the last active Partner Administrator. Make someone else an administrator first.',
