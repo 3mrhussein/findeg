@@ -8,4 +8,3 @@ export * from './AdminDashboardService';
 export * from './ProductImportService';
 export * from './AdminTagService';
 export * from './AdminCollectionService';
-export * from './AdminSchoolSupplyListService';
