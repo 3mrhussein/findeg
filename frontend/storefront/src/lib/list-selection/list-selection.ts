@@ -1,4 +1,4 @@
-import type { PublicSupplyList } from '@findeg/backend/features/school';
+import type { PublicSupplyList, PublicSupplyListItem } from '@findeg/backend/features/school';
 
 /**
  * A Customer's List Selection: held in the browser per `publicCode`, never
@@ -191,4 +191,33 @@ export function chooseVariant(
 /** The lines that would be posted: switched-off (quantity 0) lines are stripped. */
 export function linesForPost(selection: ListSelection): SelectionLine[] {
   return selection.lines.filter((line) => line.quantity > 0);
+}
+
+export interface ListCompleteness {
+  /** Required items on the list. */
+  total: number;
+  completed: number;
+  missing: PublicSupplyListItem[];
+}
+
+/**
+ * Advisory List Completeness (ADR-0011): a required item is complete when its
+ * chosen variant is eligible and its quantity reaches the prescription. Optional
+ * items never count. Computed on the client only and never stored.
+ */
+export function listCompleteness(
+  list: PublicSupplyList,
+  selection: ListSelection,
+): ListCompleteness {
+  const lineByItem = new Map(selection.lines.map((line) => [line.listItemId, line]));
+  const required = list.items.filter((item) => item.required);
+  const missing = required.filter((item) => {
+    const line = lineByItem.get(item.id);
+    if (!line || line.quantity < item.quantity) return true;
+    const eligible =
+      line.variantId === item.defaultVariant.variantId ||
+      item.eligibleVariants.some((variant) => variant.variantId === line.variantId);
+    return !eligible;
+  });
+  return { total: required.length, completed: required.length - missing.length, missing };
 }
