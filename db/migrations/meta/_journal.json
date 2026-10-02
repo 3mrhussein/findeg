@@ -43,6 +43,13 @@
       "when": 1790905083336,
       "tag": "0005_tranquil_snowbird",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1790927771110,
+      "tag": "0006_school_supply_list_lifecycle",
+      "breakpoints": true
     }
   ]
 }
