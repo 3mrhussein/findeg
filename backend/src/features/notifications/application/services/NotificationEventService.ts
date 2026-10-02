@@ -65,32 +65,6 @@ export class NotificationEventService {
   }
 
   /**
-   * School List Access Approved
-   */
-  async onAccessRequestApproved(
-    user: {
-      id: number;
-      email: string;
-      firstName?: string;
-      lastName?: string;
-      locale?: string | null;
-    },
-    list: { id: string; listName: string; schoolName: string; grade: string; academicYear: string },
-  ) {
-    await this.notificationService.create({
-      userId: user.id,
-      type: 'access.approved',
-      titleEn: `Access approved for ${list.schoolName}`,
-      titleAr: `تمت الموافقة على الدخول لـ ${list.schoolName}`,
-      bodyEn: `You can now view the list for ${list.grade}.`,
-      bodyAr: `يمكنك الآن عرض قائمة ${list.grade}.`,
-      actionUrl: `/lists/${list.id}`, // or slug
-    });
-
-    await this.emailService.sendSchoolListAccessApproved(user, list);
-  }
-
-  /**
    * Low Stock Alert (Admin only)
    */
   async onLowStock(adminId: number, product: { name: string; sku: string }) {
