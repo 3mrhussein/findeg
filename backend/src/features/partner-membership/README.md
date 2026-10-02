@@ -20,15 +20,29 @@ expiry reset to 7 days, new token, older tokens stay valid), `revokeInvitation`,
 
 `partners`:
 
-| Operation                       | Notes                                                                                               |
-| ------------------------------- | --------------------------------------------------------------------------------------------------- |
-| `createPartner(actor, input)`   | New partners start `onboarding`. `code-taken` on a duplicate code.                                  |
-| `updatePartner(actor, id, ...)` | Names any time; `code` only while `onboarding` (`code-locked`). A no-op change writes no audit row. |
-| `listPartners` / `getPartner`   | Staff reads.                                                                                        |
+| Operation                                | Notes                                                                                                                                                                                          |
+| ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `createPartner(actor, input)`            | New partners start `onboarding`. `code-taken` on a duplicate code.                                                                                                                             |
+| `updatePartner(actor, id, ...)`          | Names any time; `code` only while `onboarding` (`code-locked`). A no-op change writes no audit row.                                                                                            |
+| `changePartnerStatus(actor, id, status)` | onboarding→active, active→suspended, suspended→active, non-closed→closed; else `invalid-transition`. `active` needs an active Partner Administrator (`last-administrator`). `closed` is final. |
+| `allowedStatusChanges(status)`           | The targets `changePartnerStatus` accepts from `status`; the dashboard renders its actions from this.                                                                                          |
+| `listPartners` / `getPartner`            | Staff reads.                                                                                                                                                                                   |
 
 All operations return typed results (`{ success: true, data } | { success: false, error }`) and refuse
 actors without `partners.manage` (`forbidden`). Each change commits together with its
 `partner_access_history` row.
+
+## Partner access check
+
+`memberships.resolvePartnerContext(session, code)` returns `{ partner, membership }` for an active
+member, `suspended` for a suspended membership, and `not-found` for no session, an unknown code, no
+membership or an ended one. It reads the database on every call, so role and status changes apply on
+the member's next request; callers may cache it only per request. `memberships.listActiveMemberships`
+backs the `/partner` index and the account menu.
+
+`memberships.requireRole(context, roles, action)` is pure. Action classes: `read` (not when closed),
+`reports` (any status), `membership-change` (onboarding, active) and `business` (active only).
+It never uses the Staff permission service.
 
 ## Adding write paths
 

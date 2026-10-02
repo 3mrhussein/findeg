@@ -40,6 +40,13 @@ export type AcceptInvitationError =
   | 'partner-not-open'
   | 'already-member';
 
+export type PartnerContextError = 'not-found' | 'suspended';
+
+/** Action classes of the partner status table (ADR-0003). */
+export type PartnerAction = 'read' | 'reports' | 'membership-change' | 'business';
+
+export type RequirePartnerRoleError = 'role-not-held' | 'partner-status-not-allowed';
+
 export interface IMembershipService {
   acceptInvitation(
     token: string,
@@ -48,5 +55,16 @@ export interface IMembershipService {
   resolvePartnerContext(
     session: PartnerSession | null,
     code: string,
-  ): Promise<PartnerResult<PartnerContext, 'not-found'>>;
+  ): Promise<PartnerResult<PartnerContext, PartnerContextError>>;
+  /**
+   * Role and Business Partner status check for one action class (ADR-0003 table).
+   * `context` must come from `resolvePartnerContext` in the same request.
+   */
+  requireRole(
+    context: PartnerContext,
+    roles: readonly PartnerRole[] | 'any',
+    action: PartnerAction,
+  ): PartnerResult<PartnerContext, RequirePartnerRoleError>;
+  /** The user's active memberships, for the `/partner` index and the account menu. */
+  listActiveMemberships(session: PartnerSession | null): Promise<PartnerContext[]>;
 }

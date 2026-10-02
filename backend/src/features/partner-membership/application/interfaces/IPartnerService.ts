@@ -44,7 +44,12 @@ export type UpdatePartnerError =
   'forbidden' | 'invalid-input' | 'not-found' | 'code-locked' | 'code-taken';
 export type ReadPartnerError = 'forbidden' | 'not-found';
 
+export type ChangePartnerStatusError =
+  'forbidden' | 'not-found' | 'invalid-transition' | 'last-administrator';
+
 export interface IPartnerService {
+  /** The statuses a Business Partner may move to from `status` (empty once `closed`). */
+  allowedStatusChanges(status: PartnerStatus): readonly PartnerStatus[];
   createPartner(
     actor: StaffActor,
     input: CreatePartnerInput,
@@ -54,6 +59,16 @@ export interface IPartnerService {
     partnerId: number,
     input: UpdatePartnerInput,
   ): Promise<PartnerResult<BusinessPartner, UpdatePartnerError>>;
+  /**
+   * Moves a partner to `status` (onboarding→active, active→suspended,
+   * suspended→active, any non-closed→closed). Moving to `active` needs an active
+   * Partner Administrator, else `last-administrator`.
+   */
+  changePartnerStatus(
+    actor: StaffActor,
+    partnerId: number,
+    status: PartnerStatus,
+  ): Promise<PartnerResult<BusinessPartner, ChangePartnerStatusError>>;
   listPartners(actor: StaffActor): Promise<PartnerResult<BusinessPartner[], 'forbidden'>>;
   getPartner(
     actor: StaffActor,

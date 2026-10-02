@@ -6,6 +6,7 @@ import {
   getPartnerUserById,
   insertPartnerAccessHistory,
   insertPartnerMembership,
+  listActivePartnerMembershipsForUser,
   lockBusinessPartnerById,
   setPartnerInvitationStatus,
   verifyUserEmailIfUnset,
@@ -13,14 +14,18 @@ import {
   type PartnerMembershipRow,
 } from '@findeg/db/queries/partners';
 import type { BusinessPartnerRow } from '@findeg/db/queries/partners';
+import type { PartnerRole } from '@findeg/db/schema';
 import type {
   AcceptInvitationError,
   IMembershipService,
+  PartnerAction,
   PartnerContext,
+  PartnerContextError,
   PartnerMembership,
   PartnerSession,
 } from '../interfaces/IMembershipService';
 import type { PartnerResult } from '../interfaces/IPartnerService';
+import { requirePartnerRole } from './requirePartnerRole';
 import { fail, ok } from './shared';
 
 const digestToken = (token: string) => createHash('sha256').update(token).digest('hex');
@@ -124,19 +129,62 @@ export class MembershipService implements IMembershipService {
     });
   }
 
-  async resolvePartnerContext(session: PartnerSession | null, code: string) {
-    if (!session) return fail('not-found');
+  async resolvePartnerContext(
+    session: PartnerSession | null,
+    code: string,
+  ): Promise<PartnerResult<PartnerContext, PartnerContextError>> {
     const db = await this.getDb();
-    // The signed cookie only proves who logged in; account state is revalidated on every request.
-    const user = await getPartnerUserById(db, session.userId);
-    if (!user?.isActive) return fail('not-found');
-    if (session.tokenVersion !== undefined && session.tokenVersion !== user.authorizationVersion) {
-      return fail('not-found');
-    }
+    const userId = await this.activeSessionUserId(db, session);
+    if (userId === null) return fail('not-found');
     const partner = await getBusinessPartnerByCode(db, code);
     if (!partner) return fail('not-found');
-    const membership = await getCurrentPartnerMembership(db, partner.id, session.userId);
-    if (!membership || membership.status !== 'active') return fail('not-found');
-    return ok(toContext(partner, membership));
+    const membership = await getCurrentPartnerMembership(db, partner.id, userId);
+    if (!membership) return fail('not-found');
+    switch (membership.status) {
+      case 'active':
+        return ok(toContext(partner, membership));
+      case 'suspended':
+        return fail('suspended');
+      case 'ended':
+        return fail('not-found');
+      default: {
+        // Adding a membership status must be a compile error here, not a silent not-found.
+        const unhandled: never = membership.status;
+        throw new Error(`Unhandled membership status: ${String(unhandled)}`);
+      }
+    }
+  }
+
+  requireRole(
+    context: PartnerContext,
+    roles: readonly PartnerRole[] | 'any',
+    action: PartnerAction,
+  ) {
+    return requirePartnerRole(context, roles, action);
+  }
+
+  async listActiveMemberships(session: PartnerSession | null): Promise<PartnerContext[]> {
+    const db = await this.getDb();
+    const userId = await this.activeSessionUserId(db, session);
+    if (userId === null) return [];
+    const rows = await listActivePartnerMembershipsForUser(db, userId);
+    return rows.map(({ partner, membership }) => toContext(partner, membership));
+  }
+
+  /**
+   * The signed cookie only proves who logged in; account state is revalidated on every request.
+   * Returns the user id while the session still belongs to an active account.
+   */
+  private async activeSessionUserId(
+    db: PartnerDatabase,
+    session: PartnerSession | null,
+  ): Promise<number | null> {
+    if (!session) return null;
+    const user = await getPartnerUserById(db, session.userId);
+    if (!user?.isActive) return null;
+    if (session.tokenVersion !== undefined && session.tokenVersion !== user.authorizationVersion) {
+      return null;
+    }
+    return user.id;
   }
 }

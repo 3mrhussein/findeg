@@ -6,6 +6,7 @@ import { requirePermission } from '@lib/auth-guard';
 import { PERMISSION_CODES } from '@findeg/backend/features/core';
 import { createPartnerMembershipServices } from '@findeg/backend/features/partner-membership';
 import { InvitationsPanel } from '../_components/InvitationsPanel';
+import { StatusActions } from '../_components/StatusActions';
 import { toStaffActor } from '../_lib/toStaffActor';
 
 export const metadata = {
@@ -45,6 +46,11 @@ export default async function PartnerDetailPage({
           Edit
         </Link>
       </div>
+      <StatusActions
+        partnerId={partnerId}
+        current={partner.data.status}
+        targets={partners.allowedStatusChanges(partner.data.status)}
+      />
       <InvitationsPanel
         partnerId={partnerId}
         canChange={partner.data.status === 'onboarding' || partner.data.status === 'active'}

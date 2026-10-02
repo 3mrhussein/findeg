@@ -1,4 +1,4 @@
-import { and, asc, eq, isNull, ne } from 'drizzle-orm';
+import { and, asc, eq, isNull, ne, sql } from 'drizzle-orm';
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import * as schema from '../../schema';
 
@@ -103,6 +103,38 @@ export async function updateBusinessPartner(
     .where(eq(businessPartners.id, id))
     .returning();
   return row;
+}
+
+export async function setBusinessPartnerStatus(
+  executor: PartnerTransaction,
+  id: number,
+  status: BusinessPartnerRow['status'],
+): Promise<BusinessPartnerRow> {
+  const [row] = await executor
+    .update(businessPartners)
+    .set({ status, updatedAt: new Date() })
+    .where(eq(businessPartners.id, id))
+    .returning();
+  return row;
+}
+
+/** True when the partner has an active membership holding `partner-administrator`. */
+export async function hasActivePartnerAdministrator(
+  executor: PartnerExecutor,
+  businessPartnerId: number,
+): Promise<boolean> {
+  const [row] = await executor
+    .select({ id: partnerMemberships.id })
+    .from(partnerMemberships)
+    .where(
+      and(
+        eq(partnerMemberships.businessPartnerId, businessPartnerId),
+        eq(partnerMemberships.status, 'active'),
+        sql`'partner-administrator' = any(${partnerMemberships.roles})`,
+      ),
+    )
+    .limit(1);
+  return row !== undefined;
 }
 
 export async function insertPartnerAccessHistory(
@@ -277,4 +309,22 @@ export async function getPartnerUserById(
     .from(users)
     .where(eq(users.id, userId));
   return row;
+}
+
+export type ActivePartnerMembershipRow = {
+  membership: PartnerMembershipRow;
+  partner: BusinessPartnerRow;
+};
+
+/** A user's active memberships with their Business Partners, ordered by partner code. */
+export async function listActivePartnerMembershipsForUser(
+  executor: PartnerExecutor,
+  userId: number,
+): Promise<ActivePartnerMembershipRow[]> {
+  return executor
+    .select({ membership: partnerMemberships, partner: businessPartners })
+    .from(partnerMemberships)
+    .innerJoin(businessPartners, eq(businessPartners.id, partnerMemberships.businessPartnerId))
+    .where(and(eq(partnerMemberships.userId, userId), eq(partnerMemberships.status, 'active')))
+    .orderBy(asc(businessPartners.code));
 }
