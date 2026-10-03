@@ -386,6 +386,30 @@ describe('Checkout feature integration tests on real Postgres', () => {
       expect(acceptResult.error.code).toBe('missing-idempotency-key');
     });
 
+    it('ignores an idempotencyKey supplied in the request body (header only)', async () => {
+      const item = await createVariantWithStock();
+      const quote = await checkoutService.validate({
+        source: 'cart',
+        lines: [{ variantId: item.variantId, quantity: 1 }],
+      });
+      if (!quote.success) return;
+
+      const acceptResult = await checkoutService.accept({
+        source: 'cart',
+        lines: [{ variantId: item.variantId, quantity: 1 }],
+        confirmation: quote.data.confirmation,
+        paymentMethod: 'cod',
+        address: validAddress,
+        guestEmail: 'guest@example.com',
+        idempotencyKey: 'body-supplied-key',
+      } as Parameters<typeof checkoutService.accept>[0]);
+
+      expect(acceptResult.success).toBe(false);
+      if (acceptResult.success) return;
+      expect(acceptResult.status).toBe(400);
+      expect(acceptResult.error.code).toBe('missing-idempotency-key');
+    });
+
     it('returns 409 reconfirmation-required when catalog price changes between quote and accept', async () => {
       const item = await createVariantWithStock({ price: '50.00', onHand: 10 });
 

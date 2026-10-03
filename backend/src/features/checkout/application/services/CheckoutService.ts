@@ -131,9 +131,8 @@ export class CheckoutService implements ICheckoutService {
       };
     }
 
-    const idempotencyKey =
-      context?.idempotencyKey?.trim() ||
-      (input as { idempotencyKey?: string })?.idempotencyKey?.trim();
+    // Header-only (ADR-0005): the key is never read from the request body.
+    const idempotencyKey = context?.idempotencyKey?.trim();
 
     if (!idempotencyKey) {
       return {

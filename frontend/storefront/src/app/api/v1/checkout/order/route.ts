@@ -15,8 +15,7 @@ export async function POST(request: Request) {
 
   delete body.userId;
 
-  const idempotencyKey =
-    request.headers.get('idempotency-key') || request.headers.get('Idempotency-Key') || undefined;
+  const idempotencyKey = request.headers.get('idempotency-key') || undefined;
   if (idempotencyKey && idempotencyKey.length > 255) {
     return Response.json(
       {
