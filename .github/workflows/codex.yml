@@ -16,10 +16,6 @@ on:
         required: true
         type: string
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.event.issue.number || github.event.inputs.pr_number || github.ref }}
-  cancel-in-progress: true
-
 jobs:
   codex:
     if: >-
@@ -35,6 +31,10 @@ jobs:
         (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@codex'))
       ))
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.event.issue.number || github.event.inputs.pr_number || github.ref }}
+      cancel-in-progress: true
     permissions:
       contents: read
       pull-requests: write
@@ -44,28 +44,23 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ github.event_name == 'workflow_dispatch' && format('refs/pull/{0}/head', github.event.inputs.pr_number) || '' }}
 
       - name: Prepare instructions
         id: prep
         env:
           GH_TOKEN: ${{ github.token }}
+          PR_NUM: ${{ github.event.inputs.pr_number || github.event.pull_request.number }}
+          TARGET_ID: ${{ github.event.inputs.pr_number || github.event.pull_request.number || github.event.issue.number }}
+          COMMENT_BODY: ${{ github.event.comment.body || github.event.review.body }}
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            PR_NUM="${{ github.event.inputs.pr_number }}"
+          if [ -n "$PR_NUM" ]; then
             BASE=$(gh pr view "$PR_NUM" --json baseRefName -q .baseRefName)
             echo "Review PR #$PR_NUM against base origin/$BASE following .agents/skills/bot-pr-review/SKILL.md." > codex-prompt.txt
-            echo "target_id=$PR_NUM" >> $GITHUB_OUTPUT
-          elif [ "${{ github.event_name }}" = "pull_request" ]; then
-            PR_NUM="${{ github.event.pull_request.number }}"
-            BASE="${{ github.base_ref }}"
-            echo "Review PR #$PR_NUM against base origin/$BASE following .agents/skills/bot-pr-review/SKILL.md." > codex-prompt.txt
-            echo "target_id=$PR_NUM" >> $GITHUB_OUTPUT
           else
-            TARGET_ID="${{ github.event.issue.number || github.event.pull_request.number }}"
-            RAW="${{ github.event.comment.body || github.event.review.body }}"
-            echo "$RAW" > codex-prompt.txt
-            echo "target_id=$TARGET_ID" >> $GITHUB_OUTPUT
+            printf '%s\n' "$COMMENT_BODY" > codex-prompt.txt
           fi
+          echo "target_id=$TARGET_ID" >> "$GITHUB_OUTPUT"
 
       - name: Run Codex
         id: run_codex
