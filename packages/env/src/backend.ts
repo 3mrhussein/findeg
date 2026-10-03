@@ -13,6 +13,8 @@ const backendSchema = z.object({
   EMAIL_FROM_NAME: z.string().default('Findeg'),
   /** Bearer secret for POST /api/internal/outbox/drain; the sweeper rejects every call when unset. */
   OUTBOX_SWEEPER_SECRET: z.string().min(16).optional(),
+  /** Signs Guest Order Access codes' hashes and the order cookie; guest access fails closed when unset. */
+  GUEST_ACCESS_SECRET: z.string().min(32).optional(),
   NEXT_PUBLIC_APP_URL: z.string().url(),
   NEXT_PUBLIC_SITE_URL: z.string().url(),
 });

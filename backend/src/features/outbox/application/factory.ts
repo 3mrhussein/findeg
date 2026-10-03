@@ -1,6 +1,7 @@
 import { OutboxService } from './OutboxService';
-import { ORDER_ACCEPTED_KIND, type OutboxHandlers } from '../domain/types';
+import { GUEST_ACCESS_KIND, ORDER_ACCEPTED_KIND, type OutboxHandlers } from '../domain/types';
 import { ResendEmailProvider, type EmailProvider } from '../infrastructure/EmailProvider';
+import { createGuestAccessHandler } from '../infrastructure/guest-access-handler';
 import { createOrderAcceptedHandler } from '../infrastructure/order-accepted-handler';
 
 export interface OutboxOptions {
@@ -14,6 +15,7 @@ export function createOutbox(options: OutboxOptions = {}): OutboxService {
   const emailProvider = options.emailProvider ?? new ResendEmailProvider();
   return new OutboxService({
     [ORDER_ACCEPTED_KIND]: createOrderAcceptedHandler(emailProvider),
+    [GUEST_ACCESS_KIND]: createGuestAccessHandler(emailProvider),
     ...options.handlers,
   });
 }

@@ -14,6 +14,7 @@ export default defineConfig({
     env: {
       NEXT_PUBLIC_APP_URL: 'http://localhost:3000',
       NEXT_PUBLIC_SITE_URL: 'http://localhost:3000',
+      GUEST_ACCESS_SECRET: 'test-guest-access-secret-1234567890123456',
     },
     include: ['src/**/*.integration.test.ts'],
     globalSetup: ['./src/testing/postgres/global-setup.ts'],

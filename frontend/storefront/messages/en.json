@@ -524,6 +524,26 @@
         "NeedUserAccount": "Need a user account?",
         "SwitchAccount": "Switch to User Account"
       }
+    },
+    "GuestOrder": {
+      "LookupTitle": "Find your order",
+      "LookupIntro": "Enter your Order Reference and the email you checked out with. We'll email you a 6-digit code.",
+      "ReferenceLabel": "Order Reference",
+      "EmailLabel": "Email",
+      "SendCode": "Email me a code",
+      "LookupError": "Something went wrong. Please try again.",
+      "CodeTitle": "Enter your code",
+      "CodeIntro": "If the details match an order, we've emailed a 6-digit code. It is valid for 15 minutes.",
+      "CodeLabel": "6-digit code",
+      "OpenOrder": "View order",
+      "CodeError": "That code didn't work. Check it and try again, or request a new one.",
+      "RequestAgain": "Request a new code",
+      "OrderTitle": "Order {reference}",
+      "Status": "Status",
+      "Placed": "Placed",
+      "Items": "Items",
+      "Shipping": "Shipping",
+      "Total": "Total"
     }
   },
   "Seo": {
