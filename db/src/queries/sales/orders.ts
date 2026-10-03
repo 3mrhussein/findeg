@@ -56,7 +56,6 @@ export interface OrderCountByStatus {
 export { generateOrderReference };
 
 const ALLOWED_MUTABLE_ORDER_COLUMNS = new Set([
-  'status',
   'paymentStatus',
   'trackingNumber',
   'adminNotes',
@@ -189,16 +188,15 @@ export async function getFiltered(filters: OrderFiltersInput): Promise<{
   if (filters.endDate) conditions.push(lte(orders.createdAt, filters.endDate));
 
   if (filters.search) {
-    if (!isNaN(Number(filters.search))) {
-      conditions.push(eq(orders.id, Number(filters.search)));
+    const textMatches = or(
+      ilike(orders.orderReference, `%${filters.search}%`),
+      ilike(orders.guestEmail, `%${filters.search}%`),
+      ilike(orders.trackingNumber, `%${filters.search}%`),
+    );
+    if (/^\d+$/.test(filters.search)) {
+      conditions.push(or(eq(orders.id, Number(filters.search)), textMatches));
     } else {
-      conditions.push(
-        or(
-          ilike(orders.orderReference, `%${filters.search}%`),
-          ilike(orders.guestEmail, `%${filters.search}%`),
-          ilike(orders.trackingNumber, `%${filters.search}%`),
-        ),
-      );
+      conditions.push(textMatches);
     }
   }
 
@@ -413,20 +411,6 @@ export async function create(
 }
 
 /**
- * Update order status
- */
-export async function updateStatus(
-  id: ID | string,
-  status: OrderStatus,
-  tx?: DbTransaction,
-): Promise<void> {
-  await (tx ?? db)
-    .update(orders)
-    .set({ status, updatedAt: new Date() })
-    .where(eq(orders.id, Number(id)));
-}
-
-/**
  * Update order fields with service-level snapshot immutability check
  */
 export async function updateOrder(
@@ -438,34 +422,6 @@ export async function updateOrder(
   await (tx ?? db)
     .update(orders)
     .set({ ...data, updatedAt: new Date() })
-    .where(eq(orders.id, Number(id)));
-}
-
-/**
- * Update order status with tracking info
- */
-export async function updateStatusWithTracking(
-  id: ID | string,
-  data: {
-    status: OrderStatus;
-    trackingNumber?: string;
-    adminNotes?: string;
-  },
-  tx?: DbTransaction,
-): Promise<void> {
-  const updateData: Partial<typeof orders.$inferInsert> = {
-    status: data.status,
-    updatedAt: new Date(),
-  };
-
-  if (data.trackingNumber) updateData.trackingNumber = data.trackingNumber;
-  if (data.adminNotes) updateData.adminNotes = data.adminNotes;
-
-  assertMutableOrderColumns(updateData as Record<string, unknown>);
-
-  await (tx ?? db)
-    .update(orders)
-    .set(updateData)
     .where(eq(orders.id, Number(id)));
 }
 

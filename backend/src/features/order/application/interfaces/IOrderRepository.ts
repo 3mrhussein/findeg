@@ -1,6 +1,5 @@
 import { ID, OrderStatus, PaymentStatus } from '@findeg/backend/features/core/domain/types/common';
 import { Order } from '../../domain/entities/Order';
-import { OrderStatusUpdate } from '../../../administration/application/dtos/OrderStatusUpdate';
 
 export interface OrderFilters {
   status?: OrderStatus;
@@ -20,8 +19,6 @@ export interface IOrderRepository {
   getAllFiltered(filters: OrderFilters): Promise<{ orders: Order[]; total: number }>;
 
   create(order: Partial<Order>): Promise<Order>;
-  updateStatus(id: ID | string, status: OrderStatus): Promise<void>;
-  updateStatusWithTracking(id: ID | string, update: OrderStatusUpdate): Promise<void>;
   updatePaymentStatus(id: ID | string, status: PaymentStatus): Promise<void>;
 
   getRecent(limit?: number): Promise<Order[]>;

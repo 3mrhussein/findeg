@@ -1,5 +1,8 @@
-import { OrdersTable } from './OrdersTable';
 import { PageHeader } from '@/app/[locale]/_components/shared/PageHeader';
+import { createAdministrationServices } from '@findeg/backend/features/administration';
+import { ORDER_STATUS_OPTIONS, PAYMENT_STATUS_OPTIONS } from '@findeg/backend/features/order';
+import type { OrderStatus, PaymentStatus } from '@findeg/backend/features/core';
+import { OrderTable } from '../OrderTable';
 
 interface OrdersContentProps {
   locale: string;
@@ -19,12 +22,26 @@ interface OrdersContentProps {
  * Separated to allow streaming with Suspense.
  */
 export async function OrdersContent({ locale: _locale, filters }: OrdersContentProps) {
-  const { page, limit, status } = filters;
-
-  // TODO: Replace with data layer query from @data/orders/queries
-  // const { orders, total } = await getOrders({ limit, offset, search, status, paymentStatus, startDate, endDate });
-  const orders: React.ComponentProps<typeof OrdersTable>['orders'] = []; // Stubbed - empty orders list
-  const total = 0;
+  const { page, limit, search, status, paymentStatus, startDate, endDate } = filters;
+  const administration = createAdministrationServices();
+  const normalizedStatus = ORDER_STATUS_OPTIONS.includes(status as OrderStatus)
+    ? (status as OrderStatus)
+    : undefined;
+  const normalizedPaymentStatus = PAYMENT_STATUS_OPTIONS.includes(paymentStatus as PaymentStatus)
+    ? (paymentStatus as PaymentStatus)
+    : undefined;
+  const [{ orders, total }, statusCounts] = await Promise.all([
+    administration.orders.getAll({
+      limit,
+      offset: (page - 1) * limit,
+      search: search || undefined,
+      status: normalizedStatus,
+      paymentStatus: normalizedPaymentStatus,
+      startDate,
+      endDate,
+    }),
+    administration.orders.getStatusCounts(),
+  ]);
 
   return (
     <>
@@ -34,12 +51,13 @@ export async function OrdersContent({ locale: _locale, filters }: OrdersContentP
         count={total}
       />
 
-      <OrdersTable
-        orders={orders}
-        totalCount={total}
-        currentPage={page}
-        pageSize={limit}
-        statusFilter={status}
+      <OrderTable
+        data={orders}
+        page={page}
+        limit={limit}
+        total={total}
+        statusCounts={statusCounts}
+        filters={{ search, status, paymentStatus, startDate, endDate }}
       />
     </>
   );

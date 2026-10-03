@@ -659,8 +659,10 @@ describe('Checkout feature integration tests on real Postgres', () => {
       );
 
       // Service-level check allows mutable columns
+      await expect(orderQueries.updateOrder(orderId, { status: 'shipped' })).rejects.toThrow(
+        /Cannot update frozen order snapshot column: status/,
+      );
       await orderQueries.updateOrder(orderId, {
-        status: 'shipped',
         trackingNumber: 'TRACK-12345',
         adminNotes: 'Packaged with care',
       });
@@ -668,7 +670,7 @@ describe('Checkout feature integration tests on real Postgres', () => {
         .select()
         .from(orders)
         .where(eq(orders.id, orderId));
-      expect(afterServiceUpdate.status).toBe('shipped');
+      expect(afterServiceUpdate.status).toBe('confirmed');
       expect(afterServiceUpdate.trackingNumber).toBe('TRACK-12345');
       expect(afterServiceUpdate.adminNotes).toBe('Packaged with care');
 
