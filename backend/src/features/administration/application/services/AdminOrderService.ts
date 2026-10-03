@@ -104,8 +104,6 @@ export class AdminOrderService implements IAdminOrderService {
       throw new Error(`Order #${id} not found`);
     }
 
-    const order = this.mapToDomain(result.order, result.items);
-
     const transition = await transitionOrderStatus(id, update);
     if (!transition.changed) return;
 
