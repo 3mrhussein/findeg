@@ -14,8 +14,10 @@ import {
   getCategoryProductDistribution,
   getRecentActivity,
 } from '@data/admin/queries';
+import { countExhaustedOutbox, listExhaustedOutbox } from '@findeg/backend/features/outbox';
 import {
   KpiCard,
+  OutboxHealthWidget,
   CatalogCompletionBoard,
   CategoryCoverageWidget,
   QuickActionsWidget,
@@ -130,16 +132,25 @@ export async function MediumDashboardSection({ locale: _locale }: DashboardWidge
  */
 export async function SlowDashboardSection({ locale }: DashboardWidgetProps) {
   // Heavy queries - parallel loading
-  const [categoryDist, recentActivity] = await Promise.all([
+  const [categoryDist, recentActivity, exhaustedOutbox, exhaustedCount] = await Promise.all([
     getCategoryProductDistribution(),
     getRecentActivity({
       limit: 8,
       entityTypes: ['product', 'category', 'brand', 'tag'],
     }),
+    listExhaustedOutbox(),
+    countExhaustedOutbox(),
   ]);
 
   return (
     <>
+      <div id="outbox-health" className="px-1">
+        <OutboxHealthWidget
+          exhaustedCount={exhaustedCount}
+          rows={exhaustedOutbox.map(({ id, kind, lastError }) => ({ id, kind, lastError }))}
+        />
+      </div>
+
       {/* Two Columns: Coverage & Quick Actions */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7 px-1">
         <div id="category-coverage" className="md:col-span-1 lg:col-span-4 h-full">

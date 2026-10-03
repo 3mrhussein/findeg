@@ -254,6 +254,10 @@
       }
     },
     "Dashboard": {
+      "OutboxTitle": "رسائل بريد فشلت",
+      "OutboxExhausted": "{count, plural, =0 {لا توجد رسائل توقفت محاولاتها} one {رسالة واحدة توقفت محاولاتها} other {# رسائل توقفت محاولاتها}}",
+      "OutboxRetry": "إعادة المحاولة",
+      "OutboxRetryFailed": "فشلت إعادة المحاولة",
       "GoodMorning": "صباح الخير",
       "GoodAfternoon": "مساء الخير",
       "GoodEvening": "مساء الخير",
