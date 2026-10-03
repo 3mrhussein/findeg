@@ -29,13 +29,19 @@ Both agents run in GitHub Actions with live progress in the PR Checks tab. Revie
 2. Adding label `review:claude` or `review:codex` to the PR. The label names the reviewer, whoever authored the PR, so an agent that implemented a feature can request either review (or both) when it opens the PR, e.g. `gh pr create --label review:codex`;
 3. Clicking the **Run workflow** button in the GitHub Actions tab (`workflow_dispatch`).
 
-Automatic review on PR open is controlled by the repo variable `AUTO_REVIEW` (`claude`, `codex`, or `off`, default: `off`). Toggle it anytime via:
+Automatic review on PR open is controlled by the repo variable `AUTO_REVIEW` (`claude`, `codex`, or `off`, default: `off`). It is a single repo variable, so every workflow follows it. Change it (e.g. when a bot's subscription limit is hit) any of these ways:
 
 ```bash
-node scripts/auto-review-mode.mjs claude # Claude auto-reviews all opened PRs
-node scripts/auto-review-mode.mjs codex  # Codex auto-reviews all opened PRs
-node scripts/auto-review-mode.mjs off    # Disable auto-reviews (manual only)
+node scripts/auto-review-mode.mjs         # show current
+node scripts/auto-review-mode.mjs codex   # set (claude | codex | off)
 ```
+
+- the `/auto-review-mode [claude|codex|off]` agent skill, which runs the script above;
+- **Actions → Auto review mode → Run workflow** (works from the GitHub mobile app);
+- an owner comment `/auto-review claude|codex|off` on any issue or PR (no argument replies with the current mode);
+- editing the variable under Settings → Secrets and variables → Actions → Variables.
+
+The workflow and comment paths need a secret `AUTO_REVIEW_TOKEN`: a fine-grained PAT for this repo with **Variables: read and write** (the default `GITHUB_TOKEN` can't write variables). Set it with `gh secret set AUTO_REVIEW_TOKEN`.
 
 Notes:
 
