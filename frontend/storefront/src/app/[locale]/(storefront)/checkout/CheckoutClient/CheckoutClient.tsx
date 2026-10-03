@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useCart } from '@hooks/useCart';
 import { Button } from '@findeg/ui';
 import { useTranslations } from 'next-intl';
-import type { CheckoutOrderInput } from '@findeg/backend/features/checkout';
+import type { CheckoutOrderInput, CheckoutReceipt } from '@findeg/backend/features/checkout';
 import { SectionStateEmpty } from '@components/shared/state/SectionStateEmpty';
 import { useCheckoutForm, type CheckoutValidationError } from './useCheckoutForm';
 import { ShippingForm } from '../_components/ShippingForm';
@@ -191,7 +191,9 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
         },
         body: JSON.stringify(orderPayload),
       });
-      const orderJson = await orderResponse.json();
+      const orderJson: { success?: boolean; data?: CheckoutReceipt; error?: { message?: string } } =
+        await orderResponse.json();
+      const receipt = orderJson.data;
       if (!orderResponse.ok || !orderJson?.success) {
         // A definitive 4xx (conflict, stock, reconfirmation, validation) means nothing was committed,
         // so drop the attempt and re-validate with a fresh key on the next submit. 5xx, 408 and 429
@@ -205,9 +207,9 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
       pendingAttemptRef.current = null;
       setOrderResult({
         success: true,
-        orderId: orderJson?.data?.order?.id,
-        orderReference: orderJson?.data?.order?.orderReference,
-        message: orderJson?.data?.message || t('Pages.Checkout.OrderCreatedSuccessfully'),
+        orderId: receipt?.order.id,
+        orderReference: receipt?.order.orderReference,
+        message: receipt?.message || t('Pages.Checkout.OrderCreatedSuccessfully'),
       });
       clearCart();
     } catch (error) {
