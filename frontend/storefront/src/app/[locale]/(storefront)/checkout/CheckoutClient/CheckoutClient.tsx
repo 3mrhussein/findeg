@@ -26,7 +26,17 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderResult, setOrderResult] = useState<PlaceOrderResult | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const attemptIdempotencyKeyRef = useRef<string | null>(null);
+  const pendingAttemptRef = useRef<{
+    idempotencyKey: string;
+    payload: {
+      source: 'cart';
+      lines: Array<{ variantId: number; quantity: number }>;
+      confirmation: string;
+      address: Record<string, unknown>;
+      paymentMethod: string;
+      guestEmail?: string;
+    };
+  } | null>(null);
   const {
     formValues,
     paymentMethod,
@@ -41,9 +51,9 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
     initialValues: initialPrefill || undefined,
   });
 
-  // Reset attempt key if checkout inputs change so modified orders get a fresh key
+  // Reset attempt key and payload if checkout inputs change so modified orders get a fresh key
   useEffect(() => {
-    attemptIdempotencyKeyRef.current = null;
+    pendingAttemptRef.current = null;
   }, [formValues, cartItems, paymentMethod]);
 
   const optimisticShipping = paymentMethod === 'cod' ? 50 : 30;
@@ -94,48 +104,75 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
     setIsSubmitting(true);
     try {
       const guestId = getGuestId();
-      const address = {
-        fullName: formValues.fullName.trim(),
-        phone: formValues.phone.trim(),
-        city: formValues.city.trim(),
-        area: formValues.area.trim(),
-        street: formValues.street.trim(),
-        building: formValues.building.trim() || undefined,
-        floor: formValues.floor.trim() || undefined,
-        apartment: formValues.apartment.trim() || undefined,
-        notes: formValues.notes.trim() || undefined,
+      let idempotencyKey: string;
+      let orderPayload: {
+        source: 'cart';
+        lines: Array<{ variantId: number; quantity: number }>;
+        confirmation: string;
+        address: Record<string, unknown>;
+        paymentMethod: string;
+        guestEmail?: string;
       };
-      const lines = cartItems.map((item) => ({
-        variantId: Number(item.variantId),
-        quantity: item.quantity,
-      }));
 
-      const validateResponse = await fetch('/api/v1/checkout/validate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-Guest-Id': guestId },
-        body: JSON.stringify({
+      if (pendingAttemptRef.current) {
+        // Reuse original key and payload on retry so that matching replays return the stored order
+        // even if price/quote changed in the meantime (per Issue #239).
+        idempotencyKey = pendingAttemptRef.current.idempotencyKey;
+        orderPayload = pendingAttemptRef.current.payload;
+      } else {
+        const address = {
+          fullName: formValues.fullName.trim(),
+          phone: formValues.phone.trim(),
+          city: formValues.city.trim(),
+          area: formValues.area.trim(),
+          street: formValues.street.trim(),
+          building: formValues.building.trim() || undefined,
+          floor: formValues.floor.trim() || undefined,
+          apartment: formValues.apartment.trim() || undefined,
+          notes: formValues.notes.trim() || undefined,
+        };
+        const lines = cartItems.map((item) => ({
+          variantId: Number(item.variantId),
+          quantity: item.quantity,
+        }));
+
+        const validateResponse = await fetch('/api/v1/checkout/validate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Guest-Id': guestId },
+          body: JSON.stringify({
+            source: 'cart',
+            lines,
+            address,
+            paymentMethod,
+          }),
+        });
+        const validateJson = await validateResponse.json();
+        if (!validateResponse.ok || !validateJson?.success) {
+          throw new Error(validateJson?.error?.message || t('Pages.Checkout.ValidationFailed'));
+        }
+        const quote = validateJson.data;
+        setValidatedTotals({
+          subtotal: quote.subtotal,
+          shippingCost: quote.shipping,
+          total: quote.total,
+          currency: quote.currency,
+        });
+
+        idempotencyKey = crypto.randomUUID();
+        orderPayload = {
           source: 'cart',
           lines,
+          confirmation: quote.confirmation,
           address,
           paymentMethod,
-        }),
-      });
-      const validateJson = await validateResponse.json();
-      if (!validateResponse.ok || !validateJson?.success) {
-        throw new Error(validateJson?.error?.message || t('Pages.Checkout.ValidationFailed'));
-      }
-      const quote = validateJson.data;
-      setValidatedTotals({
-        subtotal: quote.subtotal,
-        shippingCost: quote.shipping,
-        total: quote.total,
-        currency: quote.currency,
-      });
+          guestEmail: formValues.guestEmail.trim() || undefined,
+        };
 
-      if (!attemptIdempotencyKeyRef.current) {
-        attemptIdempotencyKeyRef.current = crypto.randomUUID();
+        pendingAttemptRef.current = {
+          idempotencyKey,
+          payload: orderPayload,
+        };
       }
-      const idempotencyKey = attemptIdempotencyKeyRef.current;
 
       const orderResponse = await fetch('/api/v1/checkout/order', {
         method: 'POST',
@@ -144,20 +181,16 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
           'X-Guest-Id': guestId,
           'Idempotency-Key': idempotencyKey,
         },
-        body: JSON.stringify({
-          source: 'cart',
-          lines,
-          confirmation: quote.confirmation,
-          address,
-          paymentMethod,
-          guestEmail: formValues.guestEmail.trim() || undefined,
-        }),
+        body: JSON.stringify(orderPayload),
       });
       const orderJson = await orderResponse.json();
       if (!orderResponse.ok || !orderJson?.success) {
+        if (orderResponse.status === 409 && orderJson?.error?.code === 'reconfirmation-required') {
+          pendingAttemptRef.current = null;
+        }
         throw new Error(orderJson?.error?.message || t('Pages.Checkout.OrderCreationFailed'));
       }
-      attemptIdempotencyKeyRef.current = null;
+      pendingAttemptRef.current = null;
       setOrderResult({
         success: true,
         orderId: orderJson?.data?.order?.id,
