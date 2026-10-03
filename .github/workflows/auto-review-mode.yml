@@ -44,6 +44,9 @@ jobs:
           COMMENT_BODY: ${{ github.event.comment.body }}
           TARGET_ID: ${{ github.event.issue.number }}
         run: |
+          # A retired value (e.g. "codex") counts as off.
+          case "$CURRENT" in claude) ;; *) CURRENT=off ;; esac
+
           if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
             MODE="$INPUT_MODE"
           else
@@ -59,7 +62,7 @@ jobs:
 
           case "$MODE" in
             "")
-              reply "Auto review mode: \`${CURRENT:-off}\`. Use \`/auto-review claude|off\` to change it."
+              reply "Auto review mode: \`$CURRENT\`. Use \`/auto-review claude|off\` to change it."
               exit 0
               ;;
             claude|off) ;;
@@ -75,4 +78,4 @@ jobs:
           fi
 
           gh variable set AUTO_REVIEW --repo "$GITHUB_REPOSITORY" --body "$MODE"
-          reply "Auto review mode set to \`$MODE\` (was \`${CURRENT:-off}\`)."
+          reply "Auto review mode set to \`$MODE\` (was \`$CURRENT\`)."
