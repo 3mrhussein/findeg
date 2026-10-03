@@ -1,5 +1,12 @@
 export { enqueue } from './application/enqueue';
-export { createOutbox, drainOutbox, sweepOutbox } from './application/factory';
+export {
+  createOutbox,
+  drainOutbox,
+  sweepOutbox,
+  listExhaustedOutbox,
+  countExhaustedOutbox,
+  retryOutbox,
+} from './application/factory';
 export type { OutboxOptions } from './application/factory';
 export type { OutboxService, SweepResult } from './application/OutboxService';
 export { isAuthorizedSweeper } from './application/sweeper-auth';
@@ -8,6 +15,9 @@ export {
   guestAccessId,
   ORDER_ACCEPTED_KIND,
   orderAcceptedId,
+  ORDER_STATUS_KIND,
+  orderStatusId,
+  isNotifiedOrderStatus,
 } from './domain/types';
 export type {
   OutboxHandler,

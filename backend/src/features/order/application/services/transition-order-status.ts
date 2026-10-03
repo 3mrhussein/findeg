@@ -5,6 +5,7 @@ import { consumeOrderStock, releaseOrderStock } from '@findeg/db/queries';
 import type { OrderStatus } from '@findeg/backend/features/core';
 import type { OrderStatusUpdate } from '../dtos/OrderStatusUpdate';
 import { getAllowedOrderStatusTransitions } from '../utils/order-status-transitions';
+import { enqueue, isNotifiedOrderStatus, ORDER_STATUS_KIND, orderStatusId } from '../../../outbox';
 import { onOrderStatusRewardsHook } from '../../domain/rewards-hook';
 
 export class OrderNotFoundError extends Error {
@@ -42,7 +43,7 @@ export function transitionOrderStatus(
 ): Promise<OrderStatusTransitionResult> {
   return db.transaction(async (tx) => {
     const [order] = await tx
-      .select({ status: orders.status })
+      .select({ status: orders.status, orderReference: orders.orderReference })
       .from(orders)
       .where(eq(orders.id, orderId))
       .for('update');
@@ -79,6 +80,14 @@ export function transitionOrderStatus(
     if (update.adminNotes !== undefined) fields.adminNotes = update.adminNotes;
 
     await tx.update(orders).set(fields).where(eq(orders.id, orderId));
+
+    // The id carries the status, so a repeated transition can't send the email twice.
+    if (isNotifiedOrderStatus(update.status)) {
+      await enqueue(tx, orderStatusId(order.orderReference, update.status), ORDER_STATUS_KIND, {
+        orderId,
+        status: update.status,
+      });
+    }
     return { changed: true, previousStatus: order.status, status: update.status };
   });
 }

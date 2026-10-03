@@ -254,6 +254,10 @@
       }
     },
     "Dashboard": {
+      "OutboxTitle": "Failed emails",
+      "OutboxExhausted": "{count, plural, =0 {No emails have given up} one {1 email has given up} other {# emails have given up}}",
+      "OutboxRetry": "Retry",
+      "OutboxRetryFailed": "Retry failed",
       "GoodMorning": "Good morning",
       "GoodAfternoon": "Good afternoon",
       "GoodEvening": "Good evening",

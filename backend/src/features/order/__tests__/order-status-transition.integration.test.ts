@@ -4,6 +4,7 @@ import {
   categories,
   inventoryBalances,
   orders,
+  outbox,
   products,
   productVariants,
   stockMovements,
@@ -11,6 +12,7 @@ import {
 } from '@findeg/db/schema';
 import { createCheckoutService } from '../../checkout';
 import { createAdministrationServices } from '../../administration';
+import { createOutbox, retryOutbox, type EmailProvider, type OutgoingEmail } from '../../outbox';
 import {
   InvalidOrderStatusTransitionError,
   transitionOrderStatus,
@@ -258,5 +260,86 @@ describe('transitionOrderStatus on real Postgres', () => {
 
     expect(result.total).toBe(1);
     expect(result.orders).toEqual([expect.objectContaining({ id: orderId, orderReference })]);
+  });
+  describe('status emails', () => {
+    class FakeEmailProvider implements EmailProvider {
+      sent: OutgoingEmail[] = [];
+      failing = false;
+      async send(email: OutgoingEmail) {
+        if (this.failing) throw new Error('provider down');
+        this.sent.push(email);
+      }
+    }
+
+    const statusRowsFor = async (orderReference: string) =>
+      (await testDb.db.select().from(outbox)).filter((row) =>
+        row.id.startsWith(`order-status:${orderReference}:`),
+      );
+
+    it.each([
+      ['shipped', ['confirmed', 'processing', 'shipped']],
+      ['delivered', ['confirmed', 'processing', 'shipped', 'delivered']],
+      ['cancelled', ['cancelled']],
+    ] as const)(
+      'sends exactly one %s email even when the transition is repeated',
+      async (status, path) => {
+        const { orderId, orderReference } = await acceptOrder();
+        for (const step of path) await transitionOrderStatus(orderId, { status: step });
+        await transitionOrderStatus(orderId, { status });
+        await Promise.all([
+          transitionOrderStatus(orderId, { status }),
+          transitionOrderStatus(orderId, { status }),
+        ]);
+
+        const provider = new FakeEmailProvider();
+        await createOutbox({ emailProvider: provider }).drain({ limit: 100 });
+
+        const id = `order-status:${orderReference}:${status}`;
+        const rows = await statusRowsFor(orderReference);
+        expect(rows.filter((row) => row.id === id)).toHaveLength(1);
+        const statusEmails = provider.sent.filter((email) => email.idempotencyKey === id);
+        expect(statusEmails).toHaveLength(1);
+        expect(statusEmails[0].to).toMatch(/^transition-\d+@example\.com$/);
+      },
+    );
+
+    it('does not email for statuses that are not customer-facing', async () => {
+      const { orderId, orderReference } = await acceptOrder();
+      await transitionOrderStatus(orderId, { status: 'confirmed' });
+      await transitionOrderStatus(orderId, { status: 'processing' });
+      expect(await statusRowsFor(orderReference)).toHaveLength(0);
+    });
+
+    it('rolls the email back with a rejected transition', async () => {
+      const { orderId, orderReference } = await acceptOrder();
+      await expect(transitionOrderStatus(orderId, { status: 'delivered' })).rejects.toBeInstanceOf(
+        InvalidOrderStatusTransitionError,
+      );
+      expect(await statusRowsFor(orderReference)).toHaveLength(0);
+    });
+
+    it('exhausts after repeated failures and a Staff retry re-queues and delivers it', async () => {
+      const { orderId, orderReference } = await acceptOrder();
+      await transitionOrderStatus(orderId, { status: 'cancelled' });
+      const id = `order-status:${orderReference}:cancelled`;
+
+      const provider = new FakeEmailProvider();
+      provider.failing = true;
+      const drainer = createOutbox({ emailProvider: provider });
+      await testDb.db
+        .update(outbox)
+        .set({ attempts: 7, nextAttemptAt: new Date(Date.now() - 1000) })
+        .where(eq(outbox.id, id));
+      await drainer.drain({ limit: 100 });
+      expect((await statusRowsFor(orderReference))[0].status).toBe('exhausted');
+
+      expect(await retryOutbox(id)).toBe(true);
+      expect(await retryOutbox(id)).toBe(false);
+      provider.failing = false;
+      await drainer.drain({ limit: 100 });
+
+      expect((await statusRowsFor(orderReference))[0].status).toBe('delivered');
+      expect(provider.sent.filter((email) => email.idempotencyKey === id)).toHaveLength(1);
+    });
   });
 });
