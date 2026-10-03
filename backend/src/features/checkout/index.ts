@@ -28,5 +28,3 @@ export type {
   CheckoutReceipt,
   ShippingAddress,
 } from './schemas';
-
-export { computeOrderFingerprint, type OrderFingerprintInput } from './domain/fingerprint';

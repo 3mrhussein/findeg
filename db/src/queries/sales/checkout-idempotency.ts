@@ -29,10 +29,8 @@ export function isScopeKeyConflict(err: unknown): boolean {
 export async function findByScopeAndKey(
   scope: string,
   key: string,
-  tx?: DbTransaction,
 ): Promise<CheckoutIdempotency | null> {
-  const executor = tx ?? db;
-  const [row] = await executor
+  const [row] = await db
     .select()
     .from(checkoutIdempotency)
     .where(and(eq(checkoutIdempotency.scope, scope), eq(checkoutIdempotency.key, key)))
