@@ -25,5 +25,8 @@ export type {
   CheckoutQuote,
   CheckoutQuoteLine,
   CheckoutAcceptedOrder,
+  CheckoutReceipt,
   ShippingAddress,
 } from './schemas';
+
+export { computeOrderFingerprint, type OrderFingerprintInput } from './domain/fingerprint';

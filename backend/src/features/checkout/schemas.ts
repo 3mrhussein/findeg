@@ -25,6 +25,7 @@ export const CheckoutOrderSchema = z.object({
   lines: z.array(CheckoutLineSchema).min(1, 'At least one line is required'),
   confirmation: z.string().min(1, 'Confirmation digest is required'),
   paymentMethod: z.literal('cod'),
+  deliveryMethod: z.string().optional(),
   address: ShippingAddressSchema,
   guestEmail: z.string().email().optional(),
 });
@@ -33,6 +34,13 @@ export type CheckoutOrderInput = z.infer<typeof CheckoutOrderSchema>;
 
 export interface CheckoutOrderContext {
   userId?: number;
+  guestId?: string;
+  idempotencyKey?: string;
+}
+
+export interface CheckoutReceipt {
+  order: CheckoutAcceptedOrder;
+  message: string;
 }
 
 export interface CheckoutQuoteLine {

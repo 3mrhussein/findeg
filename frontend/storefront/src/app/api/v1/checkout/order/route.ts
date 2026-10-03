@@ -15,8 +15,17 @@ export async function POST(request: Request) {
 
   delete body.userId;
 
+  const idempotencyKey =
+    request.headers.get('idempotency-key') || request.headers.get('Idempotency-Key') || undefined;
+  const guestId =
+    request.headers.get('x-guest-id') || request.headers.get('X-Guest-Id') || undefined;
+
   const checkoutService = createCheckoutService();
-  const result = await checkoutService.accept(body, { userId });
+  const result = await checkoutService.accept(body, {
+    userId,
+    guestId,
+    idempotencyKey,
+  });
 
   if (!result.success) {
     return Response.json({ success: false, error: result.error }, { status: result.status });

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useCart } from '@hooks/useCart';
 import { Button } from '@findeg/ui';
 import { useTranslations } from 'next-intl';
@@ -26,6 +26,7 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderResult, setOrderResult] = useState<PlaceOrderResult | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const attemptIdempotencyKeyRef = useRef<string | null>(null);
   const {
     formValues,
     paymentMethod,
@@ -39,6 +40,11 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
     cartItemsCount: cartItems.length,
     initialValues: initialPrefill || undefined,
   });
+
+  // Reset attempt key if checkout inputs change so modified orders get a fresh key
+  useEffect(() => {
+    attemptIdempotencyKeyRef.current = null;
+  }, [formValues, cartItems, paymentMethod]);
 
   const optimisticShipping = paymentMethod === 'cod' ? 50 : 30;
   const optimisticTotal = cartTotal + optimisticShipping;
@@ -126,9 +132,18 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
         currency: quote.currency,
       });
 
+      if (!attemptIdempotencyKeyRef.current) {
+        attemptIdempotencyKeyRef.current = crypto.randomUUID();
+      }
+      const idempotencyKey = attemptIdempotencyKeyRef.current;
+
       const orderResponse = await fetch('/api/v1/checkout/order', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-Guest-Id': guestId },
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Guest-Id': guestId,
+          'Idempotency-Key': idempotencyKey,
+        },
         body: JSON.stringify({
           source: 'cart',
           lines,
@@ -142,6 +157,7 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
       if (!orderResponse.ok || !orderJson?.success) {
         throw new Error(orderJson?.error?.message || t('Pages.Checkout.OrderCreationFailed'));
       }
+      attemptIdempotencyKeyRef.current = null;
       setOrderResult({
         success: true,
         orderId: orderJson?.data?.order?.id,

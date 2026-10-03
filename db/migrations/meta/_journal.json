@@ -78,6 +78,13 @@
       "when": 1790956000000,
       "tag": "0010_order_acceptance_and_reference",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1790993567430,
+      "tag": "0011_checkout_idempotency",
+      "breakpoints": true
     }
   ]
 }

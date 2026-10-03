@@ -1,10 +1,16 @@
 import { and, eq, inArray } from 'drizzle-orm';
 import { db } from '@findeg/db/connection';
 import { products, productVariants } from '@findeg/db/schema';
-import { orderQueries, reserveOrderStock, InsufficientStockError } from '@findeg/db/queries';
+import {
+  orderQueries,
+  reserveOrderStock,
+  InsufficientStockError,
+  checkoutIdempotencyQueries,
+} from '@findeg/db/queries';
 import { computeConfirmation } from '../../domain/confirmation';
+import { computeOrderFingerprint } from '../../domain/fingerprint';
 import { onOrderAcceptedRewardsHook } from '../../domain/rewards-hook';
-import { UnavailableVariantError } from '../../domain/errors';
+import { UnavailableVariantError, ReconfirmationRequiredError } from '../../domain/errors';
 import {
   CheckoutOrderSchema,
   CheckoutValidateSchema,
@@ -13,6 +19,7 @@ import {
   type CheckoutQuote,
   type CheckoutQuoteLine,
   type CheckoutValidateInput,
+  type CheckoutReceipt,
 } from '../../schemas';
 import type {
   CheckoutAcceptResult,
@@ -124,27 +131,78 @@ export class CheckoutService implements ICheckoutService {
       };
     }
 
+    const idempotencyKey =
+      context?.idempotencyKey?.trim() ||
+      (input as { idempotencyKey?: string })?.idempotencyKey?.trim();
+
+    if (!idempotencyKey) {
+      return {
+        success: false,
+        status: 400,
+        error: {
+          code: 'missing-idempotency-key',
+          message: 'Idempotency-Key is required',
+        },
+      };
+    }
+
+    const scope = effectiveUserId
+      ? `user:${effectiveUserId}`
+      : `guest:${context?.guestId?.trim() || guestEmail}`;
+
     const { lines, confirmation, address } = parsed.data;
+
+    const fingerprint = computeOrderFingerprint({
+      lines,
+      address,
+      paymentMethod: parsed.data.paymentMethod,
+      deliveryMethod: parsed.data.deliveryMethod,
+      confirmation,
+    });
+
+    // Check saved outcome before any re-quote (ADR-0005)
+    const existing = await checkoutIdempotencyQueries.findByScopeAndKey(scope, idempotencyKey);
+    if (existing) {
+      if (existing.fingerprint !== fingerprint) {
+        return {
+          success: false,
+          status: 409,
+          error: {
+            code: 'idempotency-conflict',
+            message: 'Idempotency conflict: payload does not match original request',
+          },
+        };
+      }
+      if (existing.response) {
+        return {
+          success: true,
+          status: 201,
+          data: existing.response,
+        };
+      }
+    }
 
     try {
       return await db.transaction(async (tx) => {
-        // 1. Re-quote authoritatively under FOR SHARE locks (ordered by variant ID to prevent deadlocks)
+        // 1. Insert idempotency row first inside acceptance transaction so concurrent retries serialize
+        const idempotencyRow = await checkoutIdempotencyQueries.createInitial(
+          {
+            scope,
+            key: idempotencyKey,
+            fingerprint,
+          },
+          tx,
+        );
+
+        // 2. Re-quote authoritatively under FOR SHARE locks (ordered by variant ID to prevent deadlocks)
         const { quote: freshQuote, variantMap } = await this.calculateQuote(lines, tx);
 
-        // 2. Price confirmation check
+        // 3. Price confirmation check
         if (freshQuote.confirmation !== confirmation) {
-          return {
-            success: false,
-            status: 409,
-            error: {
-              code: 'reconfirmation-required',
-              message: 'Quote terms have changed; reconfirmation required',
-              quote: freshQuote,
-            },
-          };
+          throw new ReconfirmationRequiredError(freshQuote);
         }
 
-        // 3. Create the Order and Order Items (reuses variantMap without redundant second query)
+        // 4. Create the Order and Order Items (reuses variantMap without redundant second query)
         const { order, items } = await orderQueries.create(
           {
             userId: effectiveUserId,
@@ -184,14 +242,14 @@ export class CheckoutService implements ICheckoutService {
           tx,
         );
 
-        // 4. Reserve stock inside the same transaction (throws InsufficientStockError on shortfall)
+        // 5. Reserve stock inside the same transaction (throws InsufficientStockError on shortfall)
         await reserveOrderStock(
           order.id,
           lines.map((l) => ({ variantId: l.variantId, quantity: l.quantity })),
           tx,
         );
 
-        // 5. Named no-op rewards hook inside acceptance transaction
+        // 6. Named no-op rewards hook inside acceptance transaction
         await onOrderAcceptedRewardsHook(
           tx,
           {
@@ -211,23 +269,83 @@ export class CheckoutService implements ICheckoutService {
           })),
         );
 
+        const receipt: CheckoutReceipt = {
+          order: {
+            id: order.id,
+            orderReference: order.orderReference,
+            status: order.status,
+            paymentStatus: order.paymentStatus,
+            totalAmount: order.totalAmount,
+            currency: order.currency,
+          },
+          message: 'Order created successfully',
+        };
+
+        // 7. Persist outcome on the idempotency row before commit
+        await checkoutIdempotencyQueries.recordSuccess(
+          idempotencyRow.id,
+          {
+            orderId: order.id,
+            orderReference: order.orderReference,
+            response: receipt,
+          },
+          tx,
+        );
+
         return {
           success: true,
           status: 201,
-          data: {
-            order: {
-              id: order.id,
-              orderReference: order.orderReference,
-              status: order.status,
-              paymentStatus: order.paymentStatus,
-              totalAmount: order.totalAmount,
-              currency: order.currency,
-            },
-            message: 'Order created successfully',
-          },
+          data: receipt,
         };
       });
     } catch (err: unknown) {
+      const cause = (
+        err as { cause?: { code?: string; constraint_name?: string; message?: string } }
+      )?.cause;
+      const isUniqueViolation =
+        (err as { code?: string })?.code === '23505' ||
+        cause?.code === '23505' ||
+        cause?.constraint_name === 'uq_checkout_idempotency_scope_key' ||
+        String(err).includes('uq_checkout_idempotency_scope_key') ||
+        String(cause?.message).includes('uq_checkout_idempotency_scope_key');
+
+      if (isUniqueViolation) {
+        for (let attempt = 0; attempt < 10; attempt++) {
+          const saved = await checkoutIdempotencyQueries.findByScopeAndKey(scope, idempotencyKey);
+          if (saved) {
+            if (saved.fingerprint !== fingerprint) {
+              return {
+                success: false,
+                status: 409,
+                error: {
+                  code: 'idempotency-conflict',
+                  message: 'Idempotency conflict: payload does not match original request',
+                },
+              };
+            }
+            if (saved.response) {
+              return {
+                success: true,
+                status: 201,
+                data: saved.response,
+              };
+            }
+          }
+          await new Promise((resolve) => setTimeout(resolve, 50));
+        }
+      }
+
+      if (err instanceof ReconfirmationRequiredError) {
+        return {
+          success: false,
+          status: 409,
+          error: {
+            code: 'reconfirmation-required',
+            message: 'Quote terms have changed; reconfirmation required',
+            quote: err.quote,
+          },
+        };
+      }
       if (err instanceof InsufficientStockError) {
         return {
           success: false,

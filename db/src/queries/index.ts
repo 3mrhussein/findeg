@@ -13,6 +13,7 @@ export * as inventoryQueries from './catalog/inventory';
 export * as tagQueries from './catalog/tags';
 export * as adminSearchAnalyticsQueries from './catalog/admin-search-analytics';
 export * as orderQueries from './sales/orders';
+export * as checkoutIdempotencyQueries from './sales/checkout-idempotency';
 export * as reviewQueries from './review/reviews';
 export * as auditLogQueries from './administration/audit-logs';
 export * as notificationQueries from './notifications/notifications';
