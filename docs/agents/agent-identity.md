@@ -14,6 +14,8 @@ Amr can request a Claude review with a simple PR comment:
 @claude review
 ```
 
+For Codex, comment `@codex review` (optionally with a focus, e.g. `@codex review for migration safety`). The Codex GitHub app (`chatgpt-codex-connector[bot]`) answers it on the ChatGPT plan's Codex limits. There is no Codex workflow, `OPENAI_API_KEY` secret, `AUTO_REVIEW` mode or marker label for it, and it reads review rules from `AGENTS.md`.
+
 The reviewer runs in GitHub Actions with live progress in the PR Checks tab. Reviews can be triggered manually in 3 ways:
 
 1. Commenting `@claude review` (only comments from the repository owner run);
