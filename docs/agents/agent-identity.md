@@ -26,7 +26,7 @@ Amr can request either reviewer, or both, with a simple PR comment:
 Both agents run in GitHub Actions with live progress in the PR Checks tab. Reviews can be triggered manually in 3 ways:
 
 1. Commenting `@claude review` or `@codex review` (only comments from the repository owner run);
-2. Adding label `agent:claude` or `agent:codex` to the PR. The label names the PR's **author**, so the _other_ agent reviews it (`agent:codex` → Claude reviews, `agent:claude` → Codex reviews);
+2. Adding label `review:claude` or `review:codex` to the PR. The label names the reviewer, whoever authored the PR, so an agent that implemented a feature can request either review (or both) when it opens the PR, e.g. `gh pr create --label review:codex`;
 3. Clicking the **Run workflow** button in the GitHub Actions tab (`workflow_dispatch`).
 
 Automatic review on PR open is controlled by the repo variable `AUTO_REVIEW` (`claude`, `codex`, or `off`, default: `off`). Toggle it anytime via:

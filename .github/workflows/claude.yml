@@ -20,7 +20,7 @@ jobs:
   claude:
     if: >-
       github.event_name == 'workflow_dispatch' ||
-      (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'agent:codex') ||
+      (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'review:claude') ||
       (vars.AUTO_REVIEW == 'claude' &&
         github.event_name == 'pull_request' &&
         (github.event.action == 'opened' || github.event.action == 'ready_for_review') &&

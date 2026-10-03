@@ -20,7 +20,7 @@ jobs:
   codex:
     if: >-
       github.event_name == 'workflow_dispatch' ||
-      (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'agent:claude') ||
+      (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'review:codex') ||
       (vars.AUTO_REVIEW == 'codex' &&
         github.event_name == 'pull_request' &&
         (github.event.action == 'opened' || github.event.action == 'ready_for_review') &&
