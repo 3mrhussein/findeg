@@ -9,8 +9,10 @@ import {
   variantAttributes,
 } from '@findeg/db/schema';
 import type { DbTransaction } from '@findeg/db/queries';
+import { getListOffer } from '@findeg/db/queries/school-supply-lists';
 import { eligibleVariants } from '@findeg/backend/features/school';
 import { computeConfirmation } from '../../domain/confirmation';
+import { fromPiasters, isOfferActive, priceLine, toPiasters } from '../../domain/list-offer';
 import { ListUnavailableError, SelectionInvalidError } from '../../domain/errors';
 import type { CheckoutQuote, CheckoutQuoteLine, ListCheckoutLine } from '../../schemas';
 
@@ -30,6 +32,8 @@ export interface ListAttribution {
   schoolSupplyListPublishedAt: Date;
   businessPartnerId: number;
   items: Map<number, { defaultVariantId: number; exactItem: boolean }>;
+  /** Basis points of the List Offer active at acceptance time, or null when none applies. */
+  listOfferBasisPoints: number | null;
 }
 
 export interface ListQuoteCalculation {
@@ -37,6 +41,9 @@ export interface ListQuoteCalculation {
   variantMap: Map<number, CatalogVariantMetadata>;
   attribution: ListAttribution;
 }
+
+/** Tag on the per-line discount entries a List Offer produces. */
+export const LIST_OFFER_SOURCE = 'list-offer';
 
 const invalidIds = (ids: number[]) => [...new Set(ids)].sort((a, b) => a - b);
 
@@ -49,6 +56,7 @@ export async function calculateListQuote(
   input: { publicCode: string; lines: ListCheckoutLine[] },
   shippingFee: number,
   tx?: DbTransaction,
+  now: Date = new Date(),
 ): Promise<ListQuoteCalculation> {
   const executor: Executor = tx ?? db;
   const listQuery = executor
@@ -156,17 +164,26 @@ export async function calculateListQuote(
   }
   if (failures.length > 0) throw new SelectionInvalidError(invalidIds(failures));
 
+  // The offer is read after the list row is locked FOR SHARE. Staff offer edits take the list
+  // FOR UPDATE first, so an offer created or changed mid-acceptance cannot slip past this read.
+  const offer = await getListOffer(executor, list.id, tx ? { lock: 'share' } : {});
+  const listOfferBasisPoints = offer && isOfferActive(offer, now) ? offer.basisPoints : null;
+
   const quoteLines: CheckoutQuoteLine[] = [...input.lines]
     .sort((a, b) => a.listItemId - b.listItemId)
     .map((line) => {
-      const unitPrice = Number(variantById.get(line.variantId)!.basePrice);
+      const unitPrice = toPiasters(variantById.get(line.variantId)!.basePrice);
+      const priced = priceLine(unitPrice, line.quantity, listOfferBasisPoints);
       return {
         listItemId: line.listItemId,
         variantId: line.variantId,
         quantity: line.quantity,
-        unitPrice,
-        discounts: [],
-        lineTotal: Number((unitPrice * line.quantity).toFixed(2)),
+        unitPrice: fromPiasters(unitPrice),
+        discounts:
+          priced.discount > 0n
+            ? [{ source: LIST_OFFER_SOURCE, amount: fromPiasters(priced.discount) }]
+            : [],
+        lineTotal: fromPiasters(priced.lineTotal),
       };
     });
   const subtotal = Number(quoteLines.reduce((sum, line) => sum + line.lineTotal, 0).toFixed(2));
@@ -180,6 +197,7 @@ export async function calculateListQuote(
     shipping,
     subtotal,
     total,
+    listOfferBasisPoints,
     lines: quoteLines,
   });
 
@@ -209,6 +227,7 @@ export async function calculateListQuote(
             : [[item.id, { defaultVariantId: item.variantId, exactItem: item.exactItem }] as const],
         ),
       ),
+      listOfferBasisPoints,
     },
   };
 }

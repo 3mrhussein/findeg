@@ -5,10 +5,12 @@ import type { Locale } from 'next-intl';
 import { requirePermission } from '@lib/auth-guard';
 import { PERMISSION_CODES } from '@findeg/backend/features/core';
 import { createPartnerMembershipServices } from '@findeg/backend/features/partner-membership';
+import { createAdministrationServices } from '@findeg/backend/features/administration';
 import { MembersPanel } from '../_components/MembersPanel';
 import { InvitationsPanel } from '../_components/InvitationsPanel';
 import { StatusActions } from '../_components/StatusActions';
 import { toStaffActor } from '../_lib/toStaffActor';
+import { toListActor } from '../../school-lists/_lib/toListActor';
 
 export const metadata = {
   title: 'Business Partner - FindEg Admins',
@@ -33,6 +35,10 @@ export default async function PartnerDetailPage({
   if (!partner.success) notFound();
   const members = await memberships.listMembers(actor, partnerId);
   const pending = await invitations.listPendingInvitations(actor, partnerId);
+  const lists = await createAdministrationServices().schoolSupplyLists.listForPartner(
+    toListActor(session),
+    partnerId,
+  );
   const canChange = partner.data.status === 'onboarding' || partner.data.status === 'active';
 
   return (
@@ -70,6 +76,27 @@ export default async function PartnerDetailPage({
         <p role="alert" className="text-destructive text-sm">
           Members could not be loaded. You may not have permission to manage this Business Partner.
         </p>
+      )}
+      {lists.success && lists.data.length > 0 && (
+        <section className="space-y-2" data-testid="supply-lists">
+          <h2 className="text-xl font-semibold">School Supply Lists</h2>
+          <ul className="divide-y rounded-lg border">
+            {lists.data.map((list) => (
+              <li key={list.id} className="flex items-center justify-between px-4 py-3">
+                <span>
+                  {list.localizedTitle.en ?? list.localizedTitle.ar ?? `List ${list.id}`} ·{' '}
+                  {list.grade} · {list.academicYear}
+                </span>
+                <span className="flex items-center gap-3">
+                  <Badge variant="outline">{list.status}</Badge>
+                  <Link href={`/school-lists/${list.id}`} className="text-sm underline">
+                    Offer
+                  </Link>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
       <InvitationsPanel
         partnerId={partnerId}

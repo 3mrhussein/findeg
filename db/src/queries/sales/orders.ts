@@ -307,6 +307,8 @@ export async function create(
     schoolSupplyListPublicCode?: string;
     schoolSupplyListPublishedAt?: Date;
     businessPartnerId?: number;
+    listOfferBasisPoints?: number;
+    discountTotal?: string;
     shippingAddressSnapshot?: typeof orders.$inferInsert.shippingAddressSnapshot;
     items?: Array<{
       productId: number;
@@ -315,6 +317,9 @@ export async function create(
       uomCode?: string;
       unitPriceSnapshot?: string;
       totalPrice?: string;
+      unitPrice?: string;
+      discountAmount?: string;
+      lineTotal?: string;
       productNameSnapshot?: string;
       productSkuSnapshot?: string;
       variantSkuSnapshot?: string;
@@ -355,6 +360,8 @@ export async function create(
               schoolSupplyListPublicCode: orderData.schoolSupplyListPublicCode,
               schoolSupplyListPublishedAt: orderData.schoolSupplyListPublishedAt,
               businessPartnerId: orderData.businessPartnerId,
+              listOfferBasisPoints: orderData.listOfferBasisPoints,
+              discountTotal: orderData.discountTotal,
               shippingAddressSnapshot: orderData.shippingAddressSnapshot || null,
             })
             .returning();
@@ -392,6 +399,9 @@ export async function create(
             uomCode: item.uomCode,
             unitPriceSnapshot: item.unitPriceSnapshot,
             totalPrice: item.totalPrice,
+            unitPrice: item.unitPrice,
+            discountAmount: item.discountAmount,
+            lineTotal: item.lineTotal,
             productNameSnapshot: item.productNameSnapshot,
             productSkuSnapshot: item.productSkuSnapshot,
             variantSkuSnapshot: item.variantSkuSnapshot,

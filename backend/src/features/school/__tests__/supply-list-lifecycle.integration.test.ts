@@ -549,6 +549,94 @@ describe('Staff School Supply List lifecycle on real Postgres', () => {
     expect(await service.publish(staff, clone.id)).toEqual({ success: false, error: 'not-draft' });
   });
 
+  describe('List Offer', () => {
+    const offer = {
+      basisPoints: 1500,
+      startsAt: new Date('2026-10-01T00:00:00.000Z'),
+      endsAt: new Date('2026-12-01T00:00:00.000Z'),
+    };
+
+    it('is set, replaced and cleared by Staff on a published list without republishing', async () => {
+      const { list } = await readyDraft();
+      const published = data(await service.publish(staff, list.id)).list;
+      expect(data(await service.getOffer(staff, list.id))).toBeNull();
+
+      const created = data(await service.setOffer(writer, list.id, offer));
+      expect(created).toMatchObject({ listId: list.id, ...offer });
+      const replaced = data(
+        await service.setOffer(writer, list.id, { ...offer, basisPoints: 2000, endsAt: null }),
+      );
+      expect(replaced).toMatchObject({ basisPoints: 2000, endsAt: null });
+      expect(data(await service.getOffer(reader, list.id))).toMatchObject({ basisPoints: 2000 });
+
+      const after = data(await service.getById(staff, list.id));
+      expect(after.publicCode).toBe(published.publicCode);
+      expect(after.status).toBe('published');
+
+      data(await service.clearOffer(writer, list.id));
+      expect(data(await service.getOffer(staff, list.id))).toBeNull();
+    });
+
+    it('is Staff-only and validated', async () => {
+      const { list } = await readyDraft();
+      const outsider = { kind: 'staff' as const, userId: 9, permissionCodes: [] };
+      expect(await service.setOffer(outsider, list.id, offer)).toEqual({
+        success: false,
+        error: 'forbidden',
+      });
+      expect(await service.setOffer(reader, list.id, offer)).toEqual({
+        success: false,
+        error: 'forbidden',
+      });
+      expect(await service.clearOffer(reader, list.id)).toEqual({
+        success: false,
+        error: 'forbidden',
+      });
+      expect(await service.getOffer(outsider, list.id)).toEqual({
+        success: false,
+        error: 'forbidden',
+      });
+      for (const invalid of [
+        { ...offer, basisPoints: 10001 },
+        { ...offer, basisPoints: -1 },
+        { ...offer, basisPoints: 1.5 },
+        { ...offer, endsAt: offer.startsAt },
+        { ...offer, endsAt: new Date(offer.startsAt.getTime() - 1) },
+      ]) {
+        expect(await service.setOffer(writer, list.id, invalid)).toEqual({
+          success: false,
+          error: 'invalid-input',
+        });
+      }
+      expect(await service.setOffer(writer, 999_999, offer)).toEqual({
+        success: false,
+        error: 'not-found',
+      });
+    });
+
+    it('is copied from the list a replacement replaces, then edited independently', async () => {
+      const { list } = await readyDraft();
+      const original = data(await service.publish(staff, list.id)).list;
+      data(await service.setOffer(writer, original.id, offer));
+      const clone = data(await service.cloneToDraft(staff, original.id));
+      expect(data(await service.getOffer(staff, clone.id))).toBeNull();
+
+      const replacement = data(await service.publish(staff, clone.id)).list;
+      expect(data(await service.getOffer(staff, replacement.id))).toMatchObject(offer);
+
+      data(await service.setOffer(writer, replacement.id, { ...offer, basisPoints: 500 }));
+      expect(data(await service.getOffer(staff, original.id))).toMatchObject({ basisPoints: 1500 });
+    });
+
+    it('does not invent an offer for a replacement of a list that had none', async () => {
+      const { list } = await readyDraft();
+      data(await service.publish(staff, list.id));
+      const clone = data(await service.cloneToDraft(staff, list.id));
+      const replacement = data(await service.publish(staff, clone.id)).list;
+      expect(data(await service.getOffer(staff, replacement.id))).toBeNull();
+    });
+  });
+
   it.each<UpdateSupplyListDraftInput>([{ grade: 'Grade 2' }, { academicYear: '2027/2028' }])(
     'a clone edited into another slot preserves its source: %j',
     async (target) => {

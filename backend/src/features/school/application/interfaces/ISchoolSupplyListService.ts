@@ -1,13 +1,15 @@
-import type { SchoolSupplyListItemRow, SchoolSupplyListRow } from '@findeg/db/schema';
+import type { ListOffer, SchoolSupplyListItemRow, SchoolSupplyListRow } from '@findeg/db/schema';
 import type {
   CreateSupplyListDraftInput,
   UpdateSupplyListDraftInput,
   SupplyListItemInput,
+  ListOfferInput,
 } from '@findeg/db/types';
 export type {
   CreateSupplyListDraftInput,
   UpdateSupplyListDraftInput,
   SupplyListItemInput,
+  ListOfferInput,
 } from '@findeg/db/types';
 import type { ServiceResult } from '../../../core';
 
@@ -90,4 +92,21 @@ export interface ISchoolSupplyListService {
   ): Promise<SupplyListResult<PublishedSupplyList>>;
   archive(actor: SupplyListStaffActor, listId: number): Promise<SupplyListResult<SchoolSupplyList>>;
   getById(actor: SupplyListStaffActor, listId: number): Promise<SupplyListResult<SchoolSupplyList>>;
+  /** Every version (draft, published, archived) a Partner School has, for Staff navigation. */
+  listForPartner(
+    actor: SupplyListStaffActor,
+    businessPartnerId: number,
+  ): Promise<SupplyListResult<SchoolSupplyListRow[]>>;
+  /** The list's List Offer, or null when it has none. Offers are not part of the publish freeze. */
+  getOffer(
+    actor: SupplyListStaffActor,
+    listId: number,
+  ): Promise<SupplyListResult<ListOffer | null>>;
+  /** Create or replace the offer on a draft, published or archived list without republishing. */
+  setOffer(
+    actor: SupplyListStaffActor,
+    listId: number,
+    input: ListOfferInput,
+  ): Promise<SupplyListResult<ListOffer>>;
+  clearOffer(actor: SupplyListStaffActor, listId: number): Promise<SupplyListResult<void>>;
 }

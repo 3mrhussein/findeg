@@ -35,6 +35,21 @@ export async function lockSupplyListPartner(tx: SchoolSupplyListTransaction, id:
   return profile ? partner : undefined;
 }
 
+export async function listSupplyListsForPartner(
+  executor: SchoolSupplyListExecutor,
+  businessPartnerId: number,
+) {
+  return executor
+    .select()
+    .from(schoolSupplyLists)
+    .where(eq(schoolSupplyLists.businessPartnerId, businessPartnerId))
+    .orderBy(
+      asc(schoolSupplyLists.academicYear),
+      asc(schoolSupplyLists.grade),
+      asc(schoolSupplyLists.id),
+    );
+}
+
 export async function getSupplyList(executor: SchoolSupplyListExecutor, id: number) {
   const [row] = await executor.select().from(schoolSupplyLists).where(eq(schoolSupplyLists.id, id));
   return row;

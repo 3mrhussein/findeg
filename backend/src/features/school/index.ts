@@ -35,6 +35,7 @@ export type {
 export type { SchoolSupplyListDependencies } from './application/services/supply-list-factory';
 export type {
   CreateSupplyListDraftInput,
+  ListOfferInput,
   ISchoolSupplyListService,
   PublishedSupplyList,
   SchoolSupplyList,

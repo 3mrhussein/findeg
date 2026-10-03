@@ -3,6 +3,7 @@ import { canReadSupplyLists, canWriteSupplyLists } from '../../../school';
 import type {
   CreateSupplyListDraftInput,
   ISchoolSupplyListService,
+  ListOfferInput,
   SupplyListItemInput,
   SupplyListStaffActor,
   UpdateSupplyListDraftInput,
@@ -104,6 +105,26 @@ export class AdminSchoolSupplyListService implements IAdminSchoolSupplyListServi
   async getById(actor: SupplyListStaffActor, listId: number) {
     if (!canReadSupplyLists(actor)) return forbidden();
     return this.lifecycle.getById(actor, listId);
+  }
+
+  async listForPartner(actor: SupplyListStaffActor, businessPartnerId: number) {
+    if (!canReadSupplyLists(actor)) return forbidden();
+    return this.lifecycle.listForPartner(actor, businessPartnerId);
+  }
+
+  async getOffer(actor: SupplyListStaffActor, listId: number) {
+    if (!canReadSupplyLists(actor)) return forbidden();
+    return this.lifecycle.getOffer(actor, listId);
+  }
+
+  async setOffer(actor: SupplyListStaffActor, listId: number, input: ListOfferInput) {
+    if (!canWriteSupplyLists(actor)) return forbidden();
+    return this.lifecycle.setOffer(actor, listId, input);
+  }
+
+  async clearOffer(actor: SupplyListStaffActor, listId: number) {
+    if (!canWriteSupplyLists(actor)) return forbidden();
+    return this.lifecycle.clearOffer(actor, listId);
   }
 
   private async authoringQuery<T>(

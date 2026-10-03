@@ -17,6 +17,8 @@ export interface QuoteConfirmationLine {
 export interface QuoteConfirmationTerms {
   source?: 'cart' | 'list';
   publicCode?: string;
+  /** Active List Offer, so an offer starting, ending or changing invalidates the digest. */
+  listOfferBasisPoints?: number | null;
   currency: string;
   shipping: number;
   subtotal: number;
@@ -51,6 +53,9 @@ export function computeConfirmation(terms: QuoteConfirmationTerms): string {
 
   const payload = {
     ...(terms.source ? { source: terms.source, publicCode: terms.publicCode ?? null } : {}),
+    ...(terms.listOfferBasisPoints === undefined
+      ? {}
+      : { listOfferBasisPoints: terms.listOfferBasisPoints }),
     currency: terms.currency,
     shipping: Number(terms.shipping.toFixed(2)),
     subtotal: Number(terms.subtotal.toFixed(2)),

@@ -14,6 +14,7 @@ import {
   users,
   warehouses,
   checkoutIdempotency,
+  listOffers,
 } from '@findeg/db/schema';
 import { createCheckoutService } from '../index';
 import { isValidOrderReference } from '../domain/order-reference';
@@ -1735,6 +1736,317 @@ describe('Checkout feature integration tests on real Postgres', () => {
       const replay = await acceptFrom(listA);
       expect(replay.success).toBe(true);
       if (replay.success) expect(replay.data.order.id).toBe(first.data.order.id);
+    });
+  });
+  describe('List Offer pricing through the checkout seam', () => {
+    const offerStart = new Date('2026-10-01T00:00:00.000Z');
+    const offerEnd = new Date('2026-11-01T00:00:00.000Z');
+    let clockNow = new Date('2026-10-15T12:00:00.000Z');
+    const offerService = createCheckoutService({ shippingFee: 50, clock: () => clockNow });
+
+    async function setOffer(
+      listId: number,
+      basisPoints: number,
+      window: { startsAt?: Date; endsAt?: Date | null } = {},
+    ) {
+      const values = {
+        basisPoints,
+        startsAt: window.startsAt ?? offerStart,
+        endsAt: window.endsAt === undefined ? offerEnd : window.endsAt,
+        updatedAt: new Date(),
+      };
+      await testDb.db
+        .insert(listOffers)
+        .values({ listId, ...values })
+        .onConflictDoUpdate({ target: listOffers.listId, set: values });
+    }
+
+    async function quoteList(
+      source: Awaited<ReturnType<typeof createPublishedList>>,
+      lines: Array<{ itemIndex: number; variantId: number; quantity: number }>,
+    ) {
+      const input = {
+        source: 'list' as const,
+        publicCode: source.publicCode,
+        lines: lines.map((line) => ({
+          listItemId: source.items[line.itemIndex].id,
+          variantId: line.variantId,
+          quantity: line.quantity,
+        })),
+      };
+      const quote = await offerService.validate(input);
+      if (!quote.success) throw new Error(`quote failed: ${quote.error.code}`);
+      return { input, quote: quote.data };
+    }
+
+    function accept(
+      input: Awaited<ReturnType<typeof quoteList>>['input'],
+      confirmation: string,
+      key: string,
+    ) {
+      return offerService.accept(
+        {
+          ...input,
+          confirmation,
+          paymentMethod: 'cod',
+          address: validAddress,
+          guestEmail: 'offer-customer@example.com',
+        },
+        { idempotencyKey: key, guestId: key },
+      );
+    }
+
+    beforeAll(() => {
+      clockNow = new Date('2026-10-15T12:00:00.000Z');
+    });
+
+    it('prices an active offer per line, rounding half-up once per line', async () => {
+      const a = await createVariantWithStock({ price: '10.05', onHand: 20 });
+      const b = await createVariantWithStock({ price: '3.33', onHand: 20 });
+      const source = await createPublishedList([
+        { variantId: a.variantId },
+        { variantId: b.variantId },
+      ]);
+      await setOffer(source.list.id, 1000);
+
+      const { quote } = await quoteList(source, [
+        { itemIndex: 0, variantId: a.variantId, quantity: 1 },
+        { itemIndex: 1, variantId: b.variantId, quantity: 3 },
+      ]);
+
+      // 1005 x 0.9 = 904.5 -> 905 (half rounds up); 999 x 0.9 = 899.1 -> 899
+      expect(quote.lines).toEqual([
+        expect.objectContaining({
+          unitPrice: 10.05,
+          discounts: [{ source: 'list-offer', amount: 1 }],
+          lineTotal: 9.05,
+        }),
+        expect.objectContaining({
+          unitPrice: 3.33,
+          discounts: [{ source: 'list-offer', amount: 1 }],
+          lineTotal: 8.99,
+        }),
+      ]);
+      expect(quote.subtotal).toBe(18.04);
+      expect(quote.total).toBe(68.04);
+    });
+
+    it('rounds exact half piasters up and 0 and 10000 basis points to the extremes', async () => {
+      const v = await createVariantWithStock({ price: '0.03', onHand: 20 });
+      const source = await createPublishedList([{ variantId: v.variantId }]);
+      const lines = [{ itemIndex: 0, variantId: v.variantId, quantity: 1 }];
+
+      await setOffer(source.list.id, 5000);
+      // 3 x 0.5 = 1.5 piasters -> 2
+      expect((await quoteList(source, lines)).quote.lines[0].lineTotal).toBe(0.02);
+
+      await setOffer(source.list.id, 0);
+      const zero = (await quoteList(source, lines)).quote.lines[0];
+      expect(zero.lineTotal).toBe(0.03);
+      expect(zero.discounts).toEqual([]);
+
+      await setOffer(source.list.id, 10000);
+      const full = (await quoteList(source, lines)).quote.lines[0];
+      expect(full.lineTotal).toBe(0);
+      expect(full.discounts).toEqual([{ source: 'list-offer', amount: 0.03 }]);
+    });
+
+    it('applies only while starts_at <= acceptance time < ends_at', async () => {
+      const v = await createVariantWithStock({ price: '100.00', onHand: 20 });
+      const source = await createPublishedList([{ variantId: v.variantId }]);
+      await setOffer(source.list.id, 2500);
+      const lines = [{ itemIndex: 0, variantId: v.variantId, quantity: 1 }];
+      const totalAt = async (at: Date) => {
+        clockNow = at;
+        return (await quoteList(source, lines)).quote.lines[0].lineTotal;
+      };
+
+      expect(await totalAt(new Date(offerStart.getTime() - 1))).toBe(100);
+      expect(await totalAt(offerStart)).toBe(75);
+      expect(await totalAt(new Date(offerEnd.getTime() - 1))).toBe(75);
+      expect(await totalAt(offerEnd)).toBe(100);
+
+      await setOffer(source.list.id, 2500, { endsAt: null });
+      expect(await totalAt(new Date('2099-01-01T00:00:00.000Z'))).toBe(75);
+      clockNow = new Date('2026-10-15T12:00:00.000Z');
+    });
+
+    it('applies to every line, Exact Item or substitute', async () => {
+      const exact = await createVariantWithStock({ price: '20.00', onHand: 20 });
+      const substitute = await createVariantWithStock({ price: '30.00', onHand: 20 });
+      const source = await createPublishedList([
+        { variantId: exact.variantId },
+        {
+          variantId: exact.variantId,
+          exactItem: false,
+          specification: { categoryId: substitute.categoryId, attributes: {} },
+        },
+      ]);
+      await setOffer(source.list.id, 1000);
+
+      const { quote } = await quoteList(source, [
+        { itemIndex: 0, variantId: exact.variantId, quantity: 1 },
+        { itemIndex: 1, variantId: substitute.variantId, quantity: 1 },
+      ]);
+
+      expect(quote.lines.map((line) => line.lineTotal)).toEqual([18, 27]);
+      expect(quote.lines.every((line) => line.discounts[0]?.source === 'list-offer')).toBe(true);
+    });
+
+    it('forces reconfirmation when the offer changes, starts or ends between Quote and accept', async () => {
+      const v = await createVariantWithStock({ price: '100.00', onHand: 50 });
+      const source = await createPublishedList([{ variantId: v.variantId }]);
+      const lines = [{ itemIndex: 0, variantId: v.variantId, quantity: 1 }];
+      await setOffer(source.list.id, 1000);
+
+      const changed = await quoteList(source, lines);
+      await setOffer(source.list.id, 2000);
+      const afterChange = await accept(changed.input, changed.quote.confirmation, 'offer-changed');
+      expect(afterChange).toMatchObject({
+        success: false,
+        status: 409,
+        error: { code: 'reconfirmation-required' },
+      });
+      if (!afterChange.success) {
+        expect(afterChange.error.quote?.lines[0].lineTotal).toBe(80);
+      }
+
+      // Created after the Quote
+      await testDb.db.delete(listOffers).where(eq(listOffers.listId, source.list.id));
+      const noOffer = await quoteList(source, lines);
+      await setOffer(source.list.id, 1000);
+      expect(
+        await accept(noOffer.input, noOffer.quote.confirmation, 'offer-created'),
+      ).toMatchObject({
+        success: false,
+        error: { code: 'reconfirmation-required' },
+      });
+
+      // Ends between Quote and accept
+      const active = await quoteList(source, lines);
+      clockNow = offerEnd;
+      expect(await accept(active.input, active.quote.confirmation, 'offer-ended')).toMatchObject({
+        success: false,
+        error: { code: 'reconfirmation-required' },
+      });
+      clockNow = new Date('2026-10-15T12:00:00.000Z');
+
+      // Unchanged terms still accept
+      const stable = await quoteList(source, lines);
+      expect((await accept(stable.input, stable.quote.confirmation, 'offer-stable')).success).toBe(
+        true,
+      );
+    });
+
+    it('freezes the discount snapshot on the Order and its lines', async () => {
+      const v = await createVariantWithStock({ price: '10.05', onHand: 20 });
+      const w = await createVariantWithStock({ price: '20.00', onHand: 20 });
+      const source = await createPublishedList([
+        { variantId: v.variantId },
+        { variantId: w.variantId },
+      ]);
+      await setOffer(source.list.id, 1000);
+      const { input, quote } = await quoteList(source, [
+        { itemIndex: 0, variantId: v.variantId, quantity: 1 },
+        { itemIndex: 1, variantId: w.variantId, quantity: 2 },
+      ]);
+
+      const accepted = await accept(input, quote.confirmation, 'offer-snapshot');
+      expect(accepted.success).toBe(true);
+      if (!accepted.success) return;
+
+      const [order] = await testDb.db
+        .select()
+        .from(orders)
+        .where(eq(orders.id, accepted.data.order.id));
+      const items = await testDb.db
+        .select()
+        .from(orderItems)
+        .where(eq(orderItems.orderId, order.id))
+        .orderBy(orderItems.id);
+      expect(order).toMatchObject({
+        listOfferBasisPoints: 1000,
+        discountTotal: '5.00',
+        subtotal: '45.05',
+        totalAmount: '95.05',
+      });
+      expect(items).toEqual([
+        expect.objectContaining({ unitPrice: '10.05', discountAmount: '1.00', lineTotal: '9.05' }),
+        expect.objectContaining({ unitPrice: '20.00', discountAmount: '4.00', lineTotal: '36.00' }),
+      ]);
+
+      await expect(
+        testDb.db.update(orders).set({ discountTotal: '0' }).where(eq(orders.id, order.id)),
+      ).rejects.toThrow();
+      await expect(
+        testDb.db.update(orders).set({ listOfferBasisPoints: 0 }).where(eq(orders.id, order.id)),
+      ).rejects.toThrow();
+      await expect(
+        testDb.db
+          .update(orderItems)
+          .set({ discountAmount: '0' })
+          .where(eq(orderItems.id, items[0].id)),
+      ).rejects.toThrow();
+      await expect(
+        testDb.db.update(orderItems).set({ lineTotal: '1' }).where(eq(orderItems.id, items[0].id)),
+      ).rejects.toThrow();
+    });
+
+    it('records no offer on a list order without an active offer, and on Cart orders', async () => {
+      const v = await createVariantWithStock({ price: '12.00', onHand: 20 });
+      const source = await createPublishedList([{ variantId: v.variantId }]);
+      const { input, quote } = await quoteList(source, [
+        { itemIndex: 0, variantId: v.variantId, quantity: 1 },
+      ]);
+      const accepted = await accept(input, quote.confirmation, 'no-offer-list');
+      expect(accepted.success).toBe(true);
+      if (!accepted.success) return;
+      const [order] = await testDb.db
+        .select()
+        .from(orders)
+        .where(eq(orders.id, accepted.data.order.id));
+      expect(order).toMatchObject({ listOfferBasisPoints: null, discountTotal: '0.00' });
+
+      const cartQuote = await offerService.validate({
+        source: 'cart',
+        lines: [{ variantId: v.variantId, quantity: 2 }],
+      });
+      if (!cartQuote.success) throw new Error('cart quote failed');
+      const cart = await offerService.accept(
+        {
+          source: 'cart',
+          lines: [{ variantId: v.variantId, quantity: 2 }],
+          confirmation: cartQuote.data.confirmation,
+          paymentMethod: 'cod',
+          address: validAddress,
+          guestEmail: 'offer-customer@example.com',
+        },
+        { idempotencyKey: 'cart-no-offer', guestId: 'cart-no-offer' },
+      );
+      expect(cart.success).toBe(true);
+      if (!cart.success) return;
+      const [cartOrder] = await testDb.db
+        .select()
+        .from(orders)
+        .where(eq(orders.id, cart.data.order.id));
+      const [cartLine] = await testDb.db
+        .select()
+        .from(orderItems)
+        .where(eq(orderItems.orderId, cartOrder.id));
+      expect(cartOrder).toMatchObject({ listOfferBasisPoints: null, discountTotal: '0.00' });
+      expect(cartLine).toMatchObject({
+        unitPrice: '12.00',
+        discountAmount: '0.00',
+        lineTotal: '24.00',
+      });
+    });
+
+    it('rejects an inverted or out-of-range offer in the database', async () => {
+      const v = await createVariantWithStock();
+      const source = await createPublishedList([{ variantId: v.variantId }]);
+      await expect(setOffer(source.list.id, 1000, { endsAt: offerStart })).rejects.toThrow();
+      await expect(setOffer(source.list.id, 10001)).rejects.toThrow();
+      await expect(setOffer(source.list.id, -1)).rejects.toThrow();
     });
   });
 });
