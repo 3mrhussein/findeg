@@ -43,6 +43,8 @@ node scripts/auto-review-mode.mjs codex   # set (claude | codex | off)
 
 The workflow and comment paths need a secret `AUTO_REVIEW_TOKEN`: a fine-grained PAT for this repo with **Variables: read and write** (the default `GITHUB_TOKEN` can't write variables). Set it with `gh secret set AUTO_REVIEW_TOKEN`.
 
+Once a bot has run on a PR it adds a marker label (`Claude Reviewed` and/or `Codex Reviewed`, created on first use), so the PR list shows who reviewed it. If both ran, the PR carries both. Labels are never removed automatically, so they mean "reviewed at least once", not "approved".
+
 Notes:
 
 - `AUTO_REVIEW` applies to every non-draft PR on open or ready-for-review, whoever authored it.

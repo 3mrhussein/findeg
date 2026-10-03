@@ -38,6 +38,7 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
+      issues: write # create/apply the "Claude Reviewed" label
       id-token: write
       actions: read
     steps:
@@ -52,7 +53,9 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           PR_NUM: ${{ github.event.inputs.pr_number || github.event.pull_request.number }}
+          COMMENT_PR_NUM: ${{ github.event.issue.pull_request && github.event.issue.number || '' }}
         run: |
+          echo "pr_num=${PR_NUM:-$COMMENT_PR_NUM}" >> "$GITHUB_OUTPUT"
           if [ -n "$PR_NUM" ]; then
             BASE=$(gh pr view "$PR_NUM" --json baseRefName -q .baseRefName)
             echo "prompt=Review PR #$PR_NUM against base origin/$BASE following .agents/skills/bot-pr-review/SKILL.md, then post the verdict with gh pr comment $PR_NUM." >> "$GITHUB_OUTPUT"
@@ -70,3 +73,12 @@ jobs:
             actions: read
           claude_args: >-
             --allowedTools "Read,Grep,Glob,Skill,Bash(git diff:*),Bash(git log:*),Bash(git rev-parse:*),Bash(gh issue view:*),Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh pr comment:*)"
+
+      - name: Mark PR as reviewed by Claude
+        if: success() && steps.prompt_step.outputs.pr_num != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUM: ${{ steps.prompt_step.outputs.pr_num }}
+        run: |
+          gh label create "Claude Reviewed" --color 8250df --description "Reviewed by the Claude bot" --force
+          gh pr edit "$PR_NUM" --add-label "Claude Reviewed"

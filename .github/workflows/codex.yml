@@ -53,6 +53,7 @@ jobs:
           PR_NUM: ${{ github.event.inputs.pr_number || github.event.pull_request.number }}
           TARGET_ID: ${{ github.event.inputs.pr_number || github.event.pull_request.number || github.event.issue.number }}
           COMMENT_BODY: ${{ github.event.comment.body || github.event.review.body }}
+          COMMENT_PR_NUM: ${{ github.event.issue.pull_request && github.event.issue.number || '' }}
         run: |
           if [ -n "$PR_NUM" ]; then
             BASE=$(gh pr view "$PR_NUM" --json baseRefName -q .baseRefName)
@@ -61,6 +62,7 @@ jobs:
             printf '%s\n' "$COMMENT_BODY" > codex-prompt.txt
           fi
           echo "target_id=$TARGET_ID" >> "$GITHUB_OUTPUT"
+          echo "pr_num=${PR_NUM:-$COMMENT_PR_NUM}" >> "$GITHUB_OUTPUT"
 
       - name: Run Codex
         id: run_codex
@@ -77,3 +79,12 @@ jobs:
           MESSAGE: ${{ steps.run_codex.outputs.final-message }}
         run: |
           gh issue comment "$TARGET_ID" --body "$MESSAGE"
+
+      - name: Mark PR as reviewed by Codex
+        if: success() && steps.run_codex.outputs.final-message != '' && steps.prep.outputs.pr_num != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUM: ${{ steps.prep.outputs.pr_num }}
+        run: |
+          gh label create "Codex Reviewed" --color 0e8a16 --description "Reviewed by the Codex bot" --force
+          gh pr edit "$PR_NUM" --add-label "Codex Reviewed"
