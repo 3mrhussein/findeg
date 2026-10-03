@@ -1,24 +1,10 @@
 import { Resend } from 'resend';
 import React from 'react';
-import type { Order } from '@findeg/backend/features/order';
 import { IEmailService } from '../application/services/IEmailService';
 
 // Import Templates
-import OrderConfirmationEmail from './templates/OrderConfirmationEmail';
-import OrderStatusUpdateEmail from './templates/OrderStatusUpdateEmail';
 import PasswordResetEmail from './templates/PasswordResetEmail';
 import AdminInvitationEmail from './templates/AdminInvitationEmail';
-// Helper to format prices
-/**
- *
- */
-const formatCurrency = (amount: number, currency: string | undefined, locale: string) => {
-  return new Intl.NumberFormat(locale === 'ar' ? 'ar-EG' : 'en-EG', {
-    style: 'currency',
-    currency: currency || 'EGP',
-  }).format(amount);
-};
-
 import env from '@findeg/env';
 import { parse } from '../../core/domain/value-objects';
 
@@ -61,65 +47,6 @@ export class ResendEmailService implements IEmailService {
       // Fire-and-forget: we don't want email failures to break business flows
       console.error('[EmailService] Failed to send email:', error);
     }
-  }
-
-  /**
-   *
-   */
-  async sendOrderConfirmation(
-    order: Order,
-    customer: { email: string; firstName?: string; lastName?: string; locale?: string | null },
-  ): Promise<void> {
-    const locale = parse(customer.locale);
-    const subject = locale === 'ar' ? `تأكيد طلبك #${order.id}` : `Order Confirmation #${order.id}`;
-
-    const items = (order.items || []).map((item) => ({
-      name: item.productNameSnapshot || '',
-      quantity: item.quantity,
-      price: formatCurrency(item.totalPrice || 0, order.currency, locale),
-    }));
-
-    const addressParts = [
-      order.shippingAddressSnapshot?.street,
-      order.shippingAddressSnapshot?.area,
-      order.shippingAddressSnapshot?.city,
-    ].filter(Boolean);
-    const address = addressParts.join(', ');
-
-    const template = React.createElement(OrderConfirmationEmail, {
-      orderId: order.id.toString(),
-      customerName:
-        [customer.firstName, customer.lastName].filter(Boolean).join(' ').trim() || 'Customer',
-      items,
-      total: formatCurrency(order.totalAmount || 0, order.currency, locale),
-      deliveryAddress: address,
-      locale,
-    });
-
-    await this.sendEmail(customer.email, subject, template);
-  }
-
-  /**
-   *
-   */
-  async sendOrderStatusUpdate(order: Order, newStatus: string): Promise<void> {
-    if (!order.customerEmail) return;
-
-    const locale = parse(
-      'customerLocale' in order ? (order as { customerLocale?: string }).customerLocale : 'en',
-    );
-    const subject =
-      locale === 'ar' ? `تحديث حالة طلبك #${order.id}` : `Update on your order #${order.id}`;
-
-    const template = React.createElement(OrderStatusUpdateEmail, {
-      orderId: order.id,
-      customerName: order.customerName || 'Customer',
-      newStatus,
-      trackingNumber: order.trackingNumber || undefined,
-      locale,
-    });
-
-    await this.sendEmail(order.customerEmail, subject, template);
   }
 
   /**

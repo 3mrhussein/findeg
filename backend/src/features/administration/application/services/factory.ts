@@ -41,8 +41,6 @@ async function loadDb() {
   return (await import('@findeg/db/connection')).db;
 }
 
-import { IEmailService } from '@findeg/backend/features/notifications';
-
 /**
  * Create administration services with all dependencies wired
  *
@@ -77,8 +75,6 @@ export function createAdministrationServices(): AdministrationServices {
   );
 
   // Create admin services (inject repository dependencies)
-  // Note: Some services have optional dependencies (emailService)
-  // For emailService, we pass a no-op implementation to avoid breaking the build
   return {
     products: adminProductService,
     categories: new AdminCategoryService(auditLogService),
@@ -86,13 +82,7 @@ export function createAdministrationServices(): AdministrationServices {
     tags: new AdminTagService(auditLogService),
     collections: new AdminCollectionService(auditLogService),
     inventory: new AdminInventoryService(auditLogService),
-    orders: new AdminOrderService(auditLogService, {
-      // No-op email service - apps can override with real implementation
-      sendOrderConfirmation: async () => {},
-      sendOrderStatusUpdate: async () => {},
-      sendPasswordReset: async () => {},
-      sendAdminInvitation: async () => {},
-    } as IEmailService),
+    orders: new AdminOrderService(auditLogService),
     dashboard: new AdminDashboardService(),
     auditLog: auditLogService,
     productImport: new ProductImportService(adminProductService),

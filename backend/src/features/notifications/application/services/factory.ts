@@ -4,7 +4,6 @@
 
 import { NotificationService } from './NotificationService';
 import { NotificationEventService } from './NotificationEventService';
-import { ResendEmailService } from '../../infrastructure/ResendEmailService';
 
 /**
  * Create notification services with all dependencies wired
@@ -12,12 +11,11 @@ import { ResendEmailService } from '../../infrastructure/ResendEmailService';
  * @returns Object containing all notification service instances
  */
 export function createNotificationServices() {
-  const emailService = new ResendEmailService();
   const notifications = new NotificationService();
 
   return {
     notifications,
-    events: new NotificationEventService(notifications, emailService),
+    events: new NotificationEventService(notifications),
   };
 }
 

@@ -1,0 +1,33 @@
+# Outbox Feature
+
+One general transactional outbox (`system.outbox`, ADR-0008). A feature writes a message with
+`enqueue(tx, id, kind, payload)` on its own transaction; `drainOutbox({ limit })` delivers it
+afterwards, at least once.
+
+- **Ids** come from the business fact (`order-accepted:<ref>`), so enqueueing twice is a no-op.
+- **Payloads** hold ids only (`{ orderId }`). The email is rendered when it is sent.
+- **Claiming** takes one due row `FOR UPDATE SKIP LOCKED` with a 60 second lease; completion is
+  guarded by the lease token, so an overlapping or stale drain can't overwrite a newer outcome.
+- **Retries** back off 30s × 2^n (capped at 1h) for 8 attempts, then the row is `exhausted` and kept.
+- **Secret-bearing rows** whose request has expired end as `expired` (handler returns `'expired'`)
+  and are never sent.
+- **Email** goes through an injectable `EmailProvider` (Resend by default, passing the row id as
+  `idempotencyKey`).
+
+## Triggers
+
+1. The enqueueing route calls `drainOutbox()` through Next.js `after()` once its response is sent.
+2. The sweeper, `POST /api/internal/outbox/drain` on the storefront, authenticated with
+   `Authorization: Bearer $OUTBOX_SWEEPER_SECRET`. It drains due rows, purges `delivered` rows
+   older than 30 days and checkout idempotency rows older than 24 hours, and returns counts per
+   status. With no secret configured it rejects every call.
+
+## Scheduler requirement
+
+**The host must call the sweeper once a minute** (cron job, scheduled workflow, platform cron).
+Without it, failed deliveries are only retried when new traffic triggers a drain, and purging never
+runs.
+
+```bash
+curl -fsS -X POST -H "Authorization: Bearer $OUTBOX_SWEEPER_SECRET" https://<storefront>/api/internal/outbox/drain
+```

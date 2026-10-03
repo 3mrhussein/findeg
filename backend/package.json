@@ -21,6 +21,8 @@
     "./features/media": "./src/features/media/index.ts",
     "./features/media/*": null,
     "./features/notifications": "./src/features/notifications/index.ts",
+    "./features/outbox": "./src/features/outbox/index.ts",
+    "./features/outbox/*": null,
     "./features/partner-membership": "./src/features/partner-membership/index.ts",
     "./features/partner-membership/*": null,
     "./features/order": "./src/features/order/index.ts",

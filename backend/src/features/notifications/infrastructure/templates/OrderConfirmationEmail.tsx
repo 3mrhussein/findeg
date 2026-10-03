@@ -11,7 +11,7 @@ const colors = {
 };
 
 interface OrderConfirmationEmailProps {
-  orderId: string | number;
+  orderReference: string;
   customerName: string;
   items: Array<{
     name: string;
@@ -31,7 +31,7 @@ const BASE_URL = env.NEXT_PUBLIC_APP_URL;
  *
  */
 export const OrderConfirmationEmail = ({
-  orderId = '10001',
+  orderReference = 'FE-ABC123',
   customerName = 'Customer',
   items = [{ name: 'Sample Item', quantity: 1, price: 'EGP 100.00' }],
   total = 'EGP 100.00',
@@ -44,8 +44,8 @@ export const OrderConfirmationEmail = ({
     title: isRtl ? 'تأكيد الطلب 🧾' : 'Order Confirmation 🧾',
     greeting: isRtl ? `مرحباً ${customerName}،` : `Hello ${customerName},`,
     message: isRtl
-      ? `شكراً لتسوقك من فايند إي جي. لقد استلمنا طلبك (#${orderId}) ونقوم حالياً بتجهيزه. سنرسل لك بريداً إلكترونياً آخر عندما يتم شحن طلبك.`
-      : `Thank you for shopping at FindEg. We've received your order (#${orderId}) and are currently processing it. We'll send you another email when your order has been shipped.`,
+      ? `شكراً لتسوقك من فايند إي جي. لقد استلمنا طلبك (${orderReference}) ونقوم حالياً بتجهيزه. سنرسل لك بريداً إلكترونياً آخر عندما يتم شحن طلبك.`
+      : `Thank you for shopping at FindEg. We've received your order (${orderReference}) and are currently processing it. We'll send you another email when your order has been shipped.`,
     orderSummaryStr: isRtl ? 'ملخص الطلب' : 'Order Summary',
     itemStr: isRtl ? 'العنصر' : 'Item',
     qtyStr: isRtl ? 'الكمية' : 'Qty',
@@ -64,7 +64,7 @@ export const OrderConfirmationEmail = ({
 
       <Section style={orderSummaryBox}>
         <Heading as="h2" style={h2}>
-          {content.orderSummaryStr} #{orderId}
+          {content.orderSummaryStr} {orderReference}
         </Heading>
 
         {/* Table Header */}
@@ -110,7 +110,7 @@ export const OrderConfirmationEmail = ({
       </Section>
 
       <Section style={btnContainer}>
-        <Button style={button} href={`${BASE_URL}/${locale}/my-account/orders/${orderId}`}>
+        <Button style={button} href={`${BASE_URL}/${locale}/my-account/orders`}>
           {content.trackOrderStr}
         </Button>
       </Section>
