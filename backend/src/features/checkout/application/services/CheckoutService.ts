@@ -55,7 +55,7 @@ interface AcceptRequest {
 
 function rejected(
   status: CheckoutAcceptFailure['status'],
-  code: string,
+  code: CheckoutAcceptFailure['error']['code'],
   message: string,
   extra?: Record<string, unknown>,
 ): CheckoutAcceptFailure {
@@ -131,7 +131,7 @@ export class CheckoutService implements ICheckoutService {
     input: CheckoutOrderInput,
     context?: CheckoutOrderContext,
   ): { ok: true; request: AcceptRequest } | { ok: false; failure: CheckoutAcceptFailure } {
-    const reject = (code: string, message: string) => ({
+    const reject = (code: CheckoutAcceptFailure['error']['code'], message: string) => ({
       ok: false as const,
       failure: rejected(400, code, message),
     });
