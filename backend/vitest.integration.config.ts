@@ -10,6 +10,11 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node',
+    // Outbox email code loads `@findeg/env`, which requires the public URLs even in CI.
+    env: {
+      NEXT_PUBLIC_APP_URL: 'http://localhost:3000',
+      NEXT_PUBLIC_SITE_URL: 'http://localhost:3000',
+    },
     include: ['src/**/*.integration.test.ts'],
     globalSetup: ['./src/testing/postgres/global-setup.ts'],
     setupFiles: ['./src/testing/postgres/setup.ts'],
