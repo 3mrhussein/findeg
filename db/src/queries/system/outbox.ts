@@ -6,7 +6,7 @@
  */
 
 import { randomUUID } from 'node:crypto';
-import { and, eq, lt, or, sql } from 'drizzle-orm';
+import { and, desc, eq, lt, or, sql } from 'drizzle-orm';
 import { db } from '../../connection';
 import { outbox, OUTBOX_STATUSES, type OutboxRow, type OutboxStatus } from '../../schema';
 import { withTransaction, type DbTransaction } from '../transaction';
@@ -158,4 +158,24 @@ export async function getById(id: string, tx?: DbTransaction): Promise<OutboxRow
     const [row] = await executor.select().from(outbox).where(eq(outbox.id, id));
     return row ?? null;
   });
+}
+
+/** Exhausted rows, newest first. */
+export async function listExhausted(limit = 50): Promise<OutboxRow[]> {
+  return db
+    .select()
+    .from(outbox)
+    .where(eq(outbox.status, 'exhausted'))
+    .orderBy(desc(outbox.createdAt))
+    .limit(limit);
+}
+
+/** Staff retry: puts an exhausted row back in the queue with a fresh attempt budget. */
+export async function requeueExhausted(id: string): Promise<boolean> {
+  const rows = await db
+    .update(outbox)
+    .set({ status: 'pending', attempts: 0, nextAttemptAt: sql`now()` })
+    .where(and(eq(outbox.id, id), eq(outbox.status, 'exhausted')))
+    .returning({ id: outbox.id });
+  return rows.length > 0;
 }
