@@ -14,6 +14,7 @@ const SCOPE_KEY_INDEX = 'uq_checkout_idempotency_scope_key';
  * Postgres unique violation (SQLSTATE 23505) on the (scope, key) index.
  */
 export function isScopeKeyConflict(err: unknown): boolean {
+  if (err instanceof ScopeKeyConflictError) return true;
   let current: unknown = err;
   for (let depth = 0; depth < 5 && current && typeof current === 'object'; depth++) {
     const e = current as { code?: unknown; constraint_name?: unknown; constraint?: unknown };
@@ -49,6 +50,22 @@ export async function findByScopeAndKey(
   return row ?? null;
 }
 
+/**
+ * Thrown by `createInitial` when a live (unexpired) row already holds the (scope, key).
+ * Treated like a unique violation by `isScopeKeyConflict`.
+ */
+export class ScopeKeyConflictError extends Error {
+  constructor() {
+    super(`Idempotency key already in use (${SCOPE_KEY_INDEX})`);
+    this.name = 'ScopeKeyConflictError';
+  }
+}
+
+/**
+ * Claims (scope, key) in a single atomic statement. An expired row for the same key is recycled in
+ * place (no separate delete, so concurrent claimers can't interleave); a live row, whether
+ * committed or still held by an in-flight transaction, yields `ScopeKeyConflictError`.
+ */
 export async function createInitial(
   data: {
     scope: string;
@@ -58,17 +75,6 @@ export async function createInitial(
   tx?: DbTransaction,
 ): Promise<CheckoutIdempotency> {
   return withTransaction(tx, async (executor) => {
-    // Delete any expired row for this (scope, key) so keys older than 24h can be reused
-    await executor
-      .delete(checkoutIdempotency)
-      .where(
-        and(
-          eq(checkoutIdempotency.scope, data.scope),
-          eq(checkoutIdempotency.key, data.key),
-          sql`${checkoutIdempotency.createdAt} < now() - interval '24 hours'`,
-        ),
-      );
-
     const [row] = await executor
       .insert(checkoutIdempotency)
       .values({
@@ -76,7 +82,19 @@ export async function createInitial(
         key: data.key,
         fingerprint: data.fingerprint,
       })
+      .onConflictDoUpdate({
+        target: [checkoutIdempotency.scope, checkoutIdempotency.key],
+        set: {
+          fingerprint: data.fingerprint,
+          orderId: null,
+          orderReference: null,
+          response: null,
+          createdAt: sql`now()`,
+        },
+        setWhere: sql`${checkoutIdempotency.createdAt} < now() - interval '24 hours'`,
+      })
       .returning();
+    if (!row) throw new ScopeKeyConflictError();
     return row;
   });
 }
