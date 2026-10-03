@@ -10,6 +10,10 @@ import {
 } from '@findeg/db/queries';
 import { computeConfirmation } from '../../domain/confirmation';
 import { computeOrderFingerprint } from '../../domain/fingerprint';
+import {
+  buildIdempotencyScope,
+  MAX_IDEMPOTENCY_SCOPE_LENGTH,
+} from '../../domain/idempotency-scope';
 import { onOrderAcceptedRewardsHook } from '../../domain/rewards-hook';
 import { UnavailableVariantError, ReconfirmationRequiredError } from '../../domain/errors';
 import {
@@ -178,14 +182,9 @@ export class CheckoutService implements ICheckoutService {
       return reject('invalid-guest-id', 'Guest ID must not exceed 200 characters');
     }
 
-    // Scope hierarchy per ADR-0005:
-    // - Authenticated customer: `user:<userId>`
-    // - Guest customer with client session token (e.g. storefront X-Guest-Id): `guest:<guestId>`
-    // - Guest fallback when token omitted (e.g. direct API callers / automated tests): `guest:<guestEmail>`
-    const guestScopeId = guestId || guestEmail;
-    const scope = userId ? `user:${userId}` : `guest:${guestScopeId}`;
+    const scope = buildIdempotencyScope({ userId, guestId, guestEmail });
 
-    if (scope.length > 255) {
+    if (scope.length > MAX_IDEMPOTENCY_SCOPE_LENGTH) {
       return reject('invalid-guest-id', 'Guest identifier is too long');
     }
 

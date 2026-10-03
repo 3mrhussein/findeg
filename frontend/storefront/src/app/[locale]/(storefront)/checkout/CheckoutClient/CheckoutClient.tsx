@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useCart } from '@hooks/useCart';
 import { Button } from '@findeg/ui';
 import { useTranslations } from 'next-intl';
+import type { CheckoutOrderInput } from '@findeg/backend/features/checkout';
 import { SectionStateEmpty } from '@components/shared/state/SectionStateEmpty';
 import { useCheckoutForm, type CheckoutValidationError } from './useCheckoutForm';
 import { ShippingForm } from '../_components/ShippingForm';
@@ -16,6 +17,11 @@ import type {
 } from './CheckoutClient.interface';
 import { getGuestId } from './CheckoutClient.interface';
 import { OrderConfirmation } from './OrderConfirmation';
+
+/** The order body as sent: the form still offers 'card', which the backend rejects until supported. */
+type PendingOrderPayload = Omit<CheckoutOrderInput, 'paymentMethod'> & {
+  paymentMethod: 'cod' | 'card';
+};
 
 /**
  * CheckoutClient — multi-step checkout wizard: shipping → payment → confirmation.
@@ -30,14 +36,7 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
   const pendingAttemptRef = useRef<{
     idempotencyKey: string;
     totals: CheckoutTotals;
-    payload: {
-      source: 'cart';
-      lines: Array<{ variantId: number; quantity: number }>;
-      confirmation: string;
-      address: Record<string, unknown>;
-      paymentMethod: string;
-      guestEmail?: string;
-    };
+    payload: PendingOrderPayload;
   } | null>(null);
   const {
     formValues,
@@ -118,14 +117,7 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
     try {
       const guestId = getGuestId();
       let idempotencyKey: string;
-      let orderPayload: {
-        source: 'cart';
-        lines: Array<{ variantId: number; quantity: number }>;
-        confirmation: string;
-        address: Record<string, unknown>;
-        paymentMethod: string;
-        guestEmail?: string;
-      };
+      let orderPayload: PendingOrderPayload;
 
       if (pendingAttemptRef.current) {
         // Reuse original key and payload on retry so that matching replays return the stored order
