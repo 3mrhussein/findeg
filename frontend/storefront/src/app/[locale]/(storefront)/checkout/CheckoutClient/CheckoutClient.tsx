@@ -192,7 +192,11 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
       });
       const orderJson = await orderResponse.json();
       if (!orderResponse.ok || !orderJson?.success) {
-        if (orderResponse.status === 409 && orderJson?.error?.code === 'reconfirmation-required') {
+        // A definitive 4xx (conflict, stock, reconfirmation, validation) means nothing was committed,
+        // so drop the attempt and re-validate with a fresh key on the next submit. 5xx, 408 and 429
+        // leave the outcome unknown (or retryable), so keep the key and payload for a safe replay.
+        const { status } = orderResponse;
+        if (status >= 400 && status < 500 && status !== 408 && status !== 429) {
           pendingAttemptRef.current = null;
         }
         throw new Error(orderJson?.error?.message || t('Pages.Checkout.OrderCreationFailed'));
