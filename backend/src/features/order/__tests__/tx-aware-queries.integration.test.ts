@@ -121,6 +121,18 @@ describe('tx-aware order and inventory queries on real Postgres', () => {
       );
     });
 
+    it('searches Order Reference even when the search is numeric-looking', async () => {
+      const { productId, variantId } = await stockedVariant();
+      const { order } = await orderQueries.create({
+        ...orderInput(productId, variantId),
+        orderReference: 'FE-123456',
+      });
+
+      const result = await orderQueries.getFiltered({ search: '123456' });
+
+      expect(result.orders.map(({ order }) => order.id)).toContain(order.id);
+    });
+
     it('reserves stock, then releases it', async () => {
       const { variantId, warehouseId } = await stockedVariant(5);
 

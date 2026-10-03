@@ -188,16 +188,15 @@ export async function getFiltered(filters: OrderFiltersInput): Promise<{
   if (filters.endDate) conditions.push(lte(orders.createdAt, filters.endDate));
 
   if (filters.search) {
-    if (!isNaN(Number(filters.search))) {
-      conditions.push(eq(orders.id, Number(filters.search)));
+    const textMatches = or(
+      ilike(orders.orderReference, `%${filters.search}%`),
+      ilike(orders.guestEmail, `%${filters.search}%`),
+      ilike(orders.trackingNumber, `%${filters.search}%`),
+    );
+    if (/^\d+$/.test(filters.search)) {
+      conditions.push(or(eq(orders.id, Number(filters.search)), textMatches));
     } else {
-      conditions.push(
-        or(
-          ilike(orders.orderReference, `%${filters.search}%`),
-          ilike(orders.guestEmail, `%${filters.search}%`),
-          ilike(orders.trackingNumber, `%${filters.search}%`),
-        ),
-      );
+      conditions.push(textMatches);
     }
   }
 

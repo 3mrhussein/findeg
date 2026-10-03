@@ -64,10 +64,23 @@ export async function bulkUpdateOrderStatusAction(ids: number[], status: OrderSt
     }
     const update = OrderStatusUpdateSchema.parse({ status });
     const { orders } = createAdministrationServices();
-    await Promise.all(ids.map((id) => orders.updateStatus(id, update)));
+    const settled = await Promise.allSettled(ids.map((id) => orders.updateStatus(id, update)));
+    const failures = settled.flatMap((result, index) =>
+      result.status === 'rejected'
+        ? [{ orderId: ids[index], error: getErrorMessage(result.reason) }]
+        : [],
+    );
 
     updateTag('orders');
-    return { success: true };
+    return {
+      success: failures.length === 0,
+      updatedCount: ids.length - failures.length,
+      failures,
+      error:
+        failures.length > 0
+          ? failures.map(({ orderId, error }) => `Order #${orderId}: ${error}`).join('; ')
+          : undefined,
+    };
   } catch (error: unknown) {
     console.error('[bulkUpdateOrderStatusAction]', error);
     return { success: false, error: getErrorMessage(error) };

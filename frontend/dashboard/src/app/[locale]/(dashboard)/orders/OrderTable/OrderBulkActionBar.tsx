@@ -39,13 +39,20 @@ export function OrderBulkActionBar({ table }: OrderBulkActionBarProps) {
 
     startTransition(async () => {
       const result = await bulkUpdateOrderStatusAction(ids, status);
+      const updatedCount = 'updatedCount' in result ? (result.updatedCount ?? 0) : 0;
+      if (updatedCount > 0) {
+        table.resetRowSelection();
+        router.refresh();
+      }
       if (!result.success) {
-        toast.error(result.error || `Failed to mark selected Orders ${status}.`);
+        toast.error(
+          updatedCount > 0
+            ? `${updatedCount} updated; ${result.error}`
+            : result.error || `Failed to mark selected Orders ${status}.`,
+        );
         return;
       }
-      table.resetRowSelection();
-      router.refresh();
-      toast.success(`${ids.length} Order${ids.length === 1 ? '' : 's'} marked ${status}.`);
+      toast.success(`${updatedCount} Order${updatedCount === 1 ? '' : 's'} marked ${status}.`);
     });
   };
 
