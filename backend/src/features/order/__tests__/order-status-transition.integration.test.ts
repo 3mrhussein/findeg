@@ -169,6 +169,40 @@ describe('transitionOrderStatus on real Postgres', () => {
     ]);
   });
 
+  it('is idempotent per order and transition, even when repeated concurrently', async () => {
+    const { orderId, variantId } = await acceptOrder(2);
+    await transitionOrderStatus(orderId, { status: 'confirmed' });
+    await transitionOrderStatus(orderId, { status: 'processing' });
+    await transitionOrderStatus(orderId, { status: 'shipped' });
+
+    const results = await Promise.all([
+      transitionOrderStatus(orderId, { status: 'delivered', adminNotes: 'first' }),
+      transitionOrderStatus(orderId, { status: 'delivered', adminNotes: 'second' }),
+      transitionOrderStatus(orderId, { status: 'delivered', adminNotes: 'third' }),
+    ]);
+    expect(results.filter((result) => result.changed)).toHaveLength(1);
+
+    const repeat = await transitionOrderStatus(orderId, {
+      status: 'delivered',
+      adminNotes: 'late repeat',
+    });
+    expect(repeat.changed).toBe(false);
+
+    const [order] = await testDb.db.select().from(orders).where(eq(orders.id, orderId));
+    const [balance] = await testDb.db
+      .select()
+      .from(inventoryBalances)
+      .where(eq(inventoryBalances.variantId, variantId));
+    const movements = await testDb.db
+      .select({ movementType: stockMovements.movementType })
+      .from(stockMovements)
+      .where(eq(stockMovements.referenceId, String(orderId)));
+
+    expect(order.adminNotes).not.toBe('late repeat');
+    expect(balance).toMatchObject({ onHand: 8, reserved: 0 });
+    expect(movements.filter((movement) => movement.movementType === 'consume')).toHaveLength(1);
+  });
+
   it('refunding has no automatic stock effect', async () => {
     const { orderId, variantId } = await acceptOrder(2);
     await transitionOrderStatus(orderId, { status: 'confirmed' });
