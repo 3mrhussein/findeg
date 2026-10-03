@@ -1,8 +1,8 @@
 name: Auto review mode
 
-# Sets or shows the AUTO_REVIEW repo variable (claude | codex | off) that claude.yml and codex.yml read.
+# Sets or shows the AUTO_REVIEW repo variable (claude | off) that claude.yml reads.
 #  - "Run workflow" in the Actions tab / GitHub mobile app (workflow_dispatch)
-#  - Owner comment `/auto-review claude|codex|off` on any issue or PR (no argument shows the current mode)
+#  - Owner comment `/auto-review claude|off` on any issue or PR (no argument shows the current mode)
 # Writing a variable needs a token with "Variables: read and write" on this repo, stored as the AUTO_REVIEW_TOKEN
 # secret (the default GITHUB_TOKEN cannot write variables).
 
@@ -13,7 +13,7 @@ on:
         description: 'Which bot auto-reviews newly opened PRs'
         required: true
         type: choice
-        options: [claude, codex, off]
+        options: [claude, off]
   issue_comment:
     types: [created]
 
@@ -59,12 +59,12 @@ jobs:
 
           case "$MODE" in
             "")
-              reply "Auto review mode: \`${CURRENT:-off}\`. Use \`/auto-review claude|codex|off\` to change it."
+              reply "Auto review mode: \`${CURRENT:-off}\`. Use \`/auto-review claude|off\` to change it."
               exit 0
               ;;
-            claude|codex|off) ;;
+            claude|off) ;;
             *)
-              reply "Unknown mode \`$MODE\`. Use \`/auto-review claude|codex|off\`."
+              reply "Unknown mode \`$MODE\`. Use \`/auto-review claude|off\`."
               exit 1
               ;;
           esac
