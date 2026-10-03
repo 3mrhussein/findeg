@@ -26,8 +26,10 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderResult, setOrderResult] = useState<PlaceOrderResult | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [validatedTotals, setValidatedTotals] = useState<CheckoutTotals | null>(null);
   const pendingAttemptRef = useRef<{
     idempotencyKey: string;
+    totals: CheckoutTotals;
     payload: {
       source: 'cart';
       lines: Array<{ variantId: number; quantity: number }>;
@@ -60,13 +62,17 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
     paymentMethod,
   ]);
   useEffect(() => {
-    pendingAttemptRef.current = null;
+    discardAttempt();
   }, [inputsSignature]);
+
+  /** Drops the pending attempt and the quote it produced, so the summary never shows stale totals. */
+  function discardAttempt() {
+    pendingAttemptRef.current = null;
+    setValidatedTotals(null);
+  }
 
   const optimisticShipping = paymentMethod === 'cod' ? 50 : 30;
   const optimisticTotal = cartTotal + optimisticShipping;
-  const [validatedTotals, setValidatedTotals] = useState<CheckoutTotals | null>(null);
-
   const orderSummary = validatedTotals || {
     subtotal: cartTotal,
     shippingCost: optimisticShipping,
@@ -126,6 +132,7 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
         // even if price/quote changed in the meantime (per Issue #239).
         idempotencyKey = pendingAttemptRef.current.idempotencyKey;
         orderPayload = pendingAttemptRef.current.payload;
+        setValidatedTotals(pendingAttemptRef.current.totals);
       } else {
         const address = {
           fullName: formValues.fullName.trim(),
@@ -158,12 +165,13 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
           throw new Error(validateJson?.error?.message || t('Pages.Checkout.ValidationFailed'));
         }
         const quote = validateJson.data;
-        setValidatedTotals({
+        const totals: CheckoutTotals = {
           subtotal: quote.subtotal,
           shippingCost: quote.shipping,
           total: quote.total,
           currency: quote.currency,
-        });
+        };
+        setValidatedTotals(totals);
 
         idempotencyKey = crypto.randomUUID();
         orderPayload = {
@@ -177,6 +185,7 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
 
         pendingAttemptRef.current = {
           idempotencyKey,
+          totals,
           payload: orderPayload,
         };
       }
@@ -197,7 +206,7 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
         // leave the outcome unknown (or retryable), so keep the key and payload for a safe replay.
         const { status } = orderResponse;
         if (status >= 400 && status < 500 && status !== 408 && status !== 429) {
-          pendingAttemptRef.current = null;
+          discardAttempt();
         }
         throw new Error(orderJson?.error?.message || t('Pages.Checkout.OrderCreationFailed'));
       }
