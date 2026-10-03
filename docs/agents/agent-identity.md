@@ -14,7 +14,7 @@ Amr can request a Claude review with a simple PR comment:
 @claude review
 ```
 
-For Codex, comment `@codex review` (optionally with a focus, e.g. `@codex review for migration safety`). The Codex GitHub app (`chatgpt-codex-connector[bot]`) answers it on the ChatGPT plan's Codex limits. There is no Codex workflow, `OPENAI_API_KEY` secret, `AUTO_REVIEW` mode or marker label for it, and it reads review rules from `AGENTS.md`.
+For Codex, comment `@codex review` (optionally with a focus, e.g. `@codex review for migration safety`). The Codex GitHub app (`chatgpt-codex-connector[bot]`) answers it on the ChatGPT plan's Codex limits. There is no Codex review workflow, `OPENAI_API_KEY` secret or `AUTO_REVIEW` mode for it. It reads review rules from `AGENTS.md`, and `.github/workflows/codex-app-label.yml` adds the `Codex Reviewed` marker label when the bot comments or reviews.
 
 The reviewer runs in GitHub Actions with live progress in the PR Checks tab. Reviews can be triggered manually in 3 ways:
 
@@ -36,7 +36,7 @@ node scripts/auto-review-mode.mjs claude  # set (claude | off)
 
 The workflow and comment paths need a secret `AUTO_REVIEW_TOKEN`: a fine-grained PAT for this repo with **Variables: read and write** (the default `GITHUB_TOKEN` can't write variables). Set it with `gh secret set AUTO_REVIEW_TOKEN`.
 
-Once a bot has run on a PR it adds a marker label (`Claude Reviewed`, created on first use), so the PR list shows who reviewed it. Labels are never removed automatically, so they mean "reviewed at least once", not "approved".
+Once a bot has run on a PR it adds a marker label (`Claude Reviewed`, or `Codex Reviewed` for the Codex app, created on first use), so the PR list shows who reviewed it. Labels are never removed automatically, so they mean "reviewed at least once", not "approved".
 
 Notes:
 
