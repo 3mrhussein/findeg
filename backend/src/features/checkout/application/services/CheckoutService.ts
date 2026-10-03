@@ -14,6 +14,7 @@ import {
   buildIdempotencyScope,
   MAX_IDEMPOTENCY_SCOPE_LENGTH,
 } from '../../domain/idempotency-scope';
+import { enqueue, orderAcceptedId, ORDER_ACCEPTED_KIND } from '../../../outbox';
 import { onOrderAcceptedRewardsHook } from '../../domain/rewards-hook';
 import { UnavailableVariantError, ReconfirmationRequiredError } from '../../domain/errors';
 import {
@@ -328,6 +329,11 @@ export class CheckoutService implements ICheckoutService {
       })),
     );
 
+    // 7. Confirmation email goes to the outbox in this transaction; delivery happens afterwards
+    await enqueue(tx, orderAcceptedId(order.orderReference), ORDER_ACCEPTED_KIND, {
+      orderId: order.id,
+    });
+
     const receipt: CheckoutReceipt = {
       order: {
         id: order.id,
@@ -340,7 +346,7 @@ export class CheckoutService implements ICheckoutService {
       message: 'Order created successfully',
     };
 
-    // 7. Persist outcome on the idempotency row before commit
+    // 8. Persist outcome on the idempotency row before commit
     await checkoutIdempotencyQueries.recordSuccess(
       claim.id,
       {

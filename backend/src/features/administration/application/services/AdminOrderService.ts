@@ -1,6 +1,5 @@
 import { DashboardStats, IAdminOrderService } from '../interfaces/IAdminOrderService';
 import { IAuditLogService } from '../interfaces/IAuditLogService';
-import { IEmailService } from '../../../notifications/application/services/IEmailService';
 import type { OrderStatusUpdate } from '@findeg/backend/features/order';
 import { PaymentStatus, OrderStatus } from '../../../core/domain/types/common';
 import {
@@ -28,12 +27,8 @@ export class AdminOrderService implements IAdminOrderService {
    * Creates an instance of AdminOrderService.
    *
    * @param auditLogService - Service for tracking order modifications.
-   * @param emailService - Service for sending transactional emails.
    */
-  constructor(
-    private auditLogService: IAuditLogService,
-    private emailService: IEmailService,
-  ) {}
+  constructor(private auditLogService: IAuditLogService) {}
 
   private mapToDomain(dbOrder: orderQueries.OrderRow, items: orderQueries.OrderItemRow[]): Order {
     return {
@@ -139,11 +134,6 @@ export class AdminOrderService implements IAdminOrderService {
         trackingNumber: update.trackingNumber,
         adminNotes: update.adminNotes,
       } as Record<string, unknown>,
-    });
-
-    // Send email notification to customer
-    await this.emailService.sendOrderStatusUpdate(order, update.status).catch((err) => {
-      console.error('[AdminOrderService] Failed to send status update email:', err);
     });
   }
 

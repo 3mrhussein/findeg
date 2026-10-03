@@ -22,3 +22,4 @@ export * as userQueries from './identity/users';
 export * from './products';
 export * from './identity';
 export { withTransaction, type DbTransaction } from './transaction';
+export * as outboxQueries from './system/outbox';

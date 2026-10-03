@@ -122,3 +122,12 @@ export async function recordSuccess(
     return row;
   });
 }
+
+/** Deletes rows past the retention window; the Order remains the durable record (ADR-0005). */
+export async function purgeExpired(): Promise<number> {
+  const rows = await db
+    .delete(checkoutIdempotency)
+    .where(sql`${checkoutIdempotency.createdAt} < ${retentionCutoff}`)
+    .returning({ id: checkoutIdempotency.id });
+  return rows.length;
+}
