@@ -48,4 +48,4 @@ fi
 echo
 echo "Check from a findeg checkout:"
 echo "  node scripts/agent-identity/token.mjs claude whoami"
-echo "  FINDEG_AGENT=codex git var GIT_AUTHOR_IDENT   # expect findeg-codex[bot]"
+echo "  FINDEG_AGENT=codex git var GIT_AUTHOR_IDENT   # expect the codex app's bot login"

@@ -129,3 +129,15 @@ test('the gh wrapper fails closed when agent configuration is missing', () => {
     /Command failed/,
   );
 });
+
+test('PR authors variable lists the agent bot first, then extras, without duplicates', async () => {
+  const { authorsValue, authorsVariable, appNameFor } = await import('./agents-config.mjs');
+  assert.equal(authorsVariable('claude'), 'CLAUDE_PR_AUTHORS');
+  assert.equal(authorsValue('codex[bot]', ['other[bot]', 'codex[bot]']), 'codex[bot],other[bot]');
+  assert.equal(appNameFor('claude', { appNamePrefix: '' }, {}), 'claude');
+  assert.equal(appNameFor('claude', { appNamePrefix: 'x-' }, {}), 'x-claude');
+  assert.equal(
+    appNameFor('claude', { appNamePrefix: 'x-' }, { FINDEG_AGENT_APP_PREFIX: '' }),
+    'claude',
+  );
+});

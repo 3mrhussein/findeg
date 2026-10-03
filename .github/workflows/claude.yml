@@ -68,7 +68,7 @@ jobs:
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           prompt: ${{ steps.prompt_step.outputs.prompt }}
-          allowed_bots: findeg-claude,${{ vars.CODEX_PR_AUTHORS }}
+          allowed_bots: ${{ vars.CLAUDE_PR_AUTHORS }},${{ vars.CODEX_PR_AUTHORS }}
           additional_permissions: |
             actions: read
           claude_args: >-
