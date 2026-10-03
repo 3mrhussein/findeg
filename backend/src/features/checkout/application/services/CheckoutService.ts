@@ -247,7 +247,7 @@ export class CheckoutService implements ICheckoutService {
       request;
 
     // 1. Insert idempotency row first inside acceptance transaction so concurrent retries serialize
-    const idempotencyRow = await checkoutIdempotencyQueries.createInitial(
+    const claim = await checkoutIdempotencyQueries.claimKey(
       {
         scope,
         key: idempotencyKey,
@@ -343,7 +343,7 @@ export class CheckoutService implements ICheckoutService {
 
     // 7. Persist outcome on the idempotency row before commit
     await checkoutIdempotencyQueries.recordSuccess(
-      idempotencyRow.id,
+      claim.id,
       {
         orderId: order.id,
         orderReference: order.orderReference,

@@ -43,7 +43,7 @@ export async function findByScopeAndKey(
  * Claims (scope, key). A concurrent holder makes the insert wait on its transaction, then fail with
  * a unique violation (`isScopeKeyConflict`) if it committed, or succeed if it rolled back.
  */
-export async function createInitial(
+export async function claimKey(
   data: {
     scope: string;
     key: string;
