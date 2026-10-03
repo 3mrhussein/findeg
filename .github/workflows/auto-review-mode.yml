@@ -1,0 +1,78 @@
+name: Auto review mode
+
+# Sets or shows the AUTO_REVIEW repo variable (claude | codex | off) that claude.yml and codex.yml read.
+#  - "Run workflow" in the Actions tab / GitHub mobile app (workflow_dispatch)
+#  - Owner comment `/auto-review claude|codex|off` on any issue or PR (no argument shows the current mode)
+# Writing a variable needs a token with "Variables: read and write" on this repo, stored as the AUTO_REVIEW_TOKEN
+# secret (the default GITHUB_TOKEN cannot write variables).
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Which bot auto-reviews newly opened PRs'
+        required: true
+        type: choice
+        options: [claude, codex, off]
+  issue_comment:
+    types: [created]
+
+concurrency:
+  group: auto-review-mode
+  cancel-in-progress: false
+
+jobs:
+  set-mode:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'issue_comment' &&
+        github.actor == github.repository_owner &&
+        !endsWith(github.actor, '[bot]') &&
+        startsWith(github.event.comment.body, '/auto-review'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Apply mode
+        env:
+          GH_TOKEN: ${{ secrets.AUTO_REVIEW_TOKEN }}
+          COMMENT_TOKEN: ${{ github.token }}
+          CURRENT: ${{ vars.AUTO_REVIEW }}
+          INPUT_MODE: ${{ github.event.inputs.mode }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
+          TARGET_ID: ${{ github.event.issue.number }}
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            MODE="$INPUT_MODE"
+          else
+            MODE=$(printf '%s' "$COMMENT_BODY" | head -n1 | awk '{print tolower($2)}')
+          fi
+
+          reply() {
+            if [ -n "$TARGET_ID" ]; then
+              GH_TOKEN="$COMMENT_TOKEN" gh issue comment "$TARGET_ID" --body "$1"
+            fi
+            echo "$1"
+          }
+
+          case "$MODE" in
+            "")
+              reply "Auto review mode: \`${CURRENT:-off}\`. Use \`/auto-review claude|codex|off\` to change it."
+              exit 0
+              ;;
+            claude|codex|off) ;;
+            *)
+              reply "Unknown mode \`$MODE\`. Use \`/auto-review claude|codex|off\`."
+              exit 1
+              ;;
+          esac
+
+          if [ -z "$GH_TOKEN" ]; then
+            reply "Cannot set the mode: the \`AUTO_REVIEW_TOKEN\` secret is missing (fine-grained PAT with Variables read/write)."
+            exit 1
+          fi
+
+          gh variable set AUTO_REVIEW --repo "$GITHUB_REPOSITORY" --body "$MODE"
+          reply "Auto review mode set to \`$MODE\` (was \`${CURRENT:-off}\`)."

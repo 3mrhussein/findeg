@@ -3,38 +3,53 @@
 Claude Code and Codex each act on GitHub as their own GitHub App bot. That covers `gh` calls, `git push`, and commit authorship. PRs written by an agent are therefore authored by `findeg-claude[bot]` or `findeg-codex[bot]` rather than by you. This means:
 
 - you can approve agent PRs (GitHub won't let you approve your own);
-- the cross-agent review workflows can tell who opened a PR (`.github/workflows/claude-review.yml`, `.github/workflows/codex-review.yml`);
+- the cross-agent review workflows can tell who opened a PR (`.github/workflows/claude.yml`, `.github/workflows/codex.yml`);
 - each agent's access is limited to this repo and revocable on its own.
 
 ## Request reviews on a human PR
 
-Amr can request either reviewer, or both, with a PR comment:
+Amr can request either reviewer, or both, with a simple PR comment:
+
+```text
+@claude review
+```
 
 ```text
 @codex review
 ```
 
 ```text
-@claude review this PR following the Code Review Rules in AGENTS.md
-```
-
-```text
 @codex review
-@claude review this PR following the Code Review Rules in AGENTS.md
+@claude review
 ```
 
 Both agents run in GitHub Actions with live progress in the PR Checks tab. Reviews can be triggered manually in 3 ways:
 
 1. Commenting `@claude review` or `@codex review` (only comments from the repository owner run);
-2. Adding label `agent:claude` or `agent:codex` to the PR;
+2. Adding label `review:claude` or `review:codex` to the PR. The label names the reviewer, whoever authored the PR, so an agent that implemented a feature can request either review (or both) when it opens the PR, e.g. `gh pr create --label review:codex`;
 3. Clicking the **Run workflow** button in the GitHub Actions tab (`workflow_dispatch`).
 
-Automatic review on PR open is disabled by default and controlled by the repo variable `AUTO_AGENT_REVIEW`. Toggle it anytime via:
+Automatic review on PR open is controlled by the repo variable `AUTO_REVIEW` (`claude`, `codex`, or `off`, default: `off`). It is a single repo variable, so every workflow follows it. Change it (e.g. when a bot's subscription limit is hit) any of these ways:
 
 ```bash
-node scripts/auto-review-mode.mjs on   # enable auto-review on PR open
-node scripts/auto-review-mode.mjs off  # disable auto-review (manual only)
+node scripts/auto-review-mode.mjs         # show current
+node scripts/auto-review-mode.mjs codex   # set (claude | codex | off)
 ```
+
+- the `/auto-review-mode [claude|codex|off]` agent skill, which runs the script above;
+- **Actions → Auto review mode → Run workflow** (works from the GitHub mobile app);
+- an owner comment `/auto-review claude|codex|off` on any issue or PR (no argument replies with the current mode);
+- editing the variable under Settings → Secrets and variables → Actions → Variables.
+
+The workflow and comment paths need a secret `AUTO_REVIEW_TOKEN`: a fine-grained PAT for this repo with **Variables: read and write** (the default `GITHUB_TOKEN` can't write variables). Set it with `gh secret set AUTO_REVIEW_TOKEN`.
+
+Once a bot has run on a PR it adds a marker label (`Claude Reviewed` and/or `Codex Reviewed`, created on first use), so the PR list shows who reviewed it. If both ran, the PR carries both. Labels are never removed automatically, so they mean "reviewed at least once", not "approved".
+
+Notes:
+
+- `AUTO_REVIEW` applies to every non-draft PR on open or ready-for-review, whoever authored it.
+- Only the auto/label/dispatch paths use `.agents/skills/bot-pr-review`; comment triggers run whatever the comment asks for.
+- A newer run on the same PR cancels the one in progress; skipped runs (e.g. an unrelated label) don't.
 
 ## How it works
 
@@ -77,10 +92,10 @@ gh variable set CLAUDE_PR_AUTHORS --body 'findeg-claude[bot]'
 gh variable set CODEX_PR_AUTHORS --body 'findeg-codex[bot],chatgpt-codex-connector[bot]'
 ```
 
-Both agent review workflows need their respective API secrets configured in the repository:
+Both agent workflows need their respective API secrets configured in the repository:
 
-- `CLAUDE_CODE_OAUTH_TOKEN` for Claude Code (`claude.yml`, `claude-review.yml`).
-- `OPENAI_API_KEY` for Codex Action (`codex.yml`, `codex-review.yml`).
+- `CLAUDE_CODE_OAUTH_TOKEN` for Claude Code (`claude.yml`).
+- `OPENAI_API_KEY` for Codex Action (`codex.yml`).
 
 ```bash
 gh secret set OPENAI_API_KEY
