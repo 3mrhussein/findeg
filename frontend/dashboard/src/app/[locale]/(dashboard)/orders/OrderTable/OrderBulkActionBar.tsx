@@ -5,6 +5,10 @@ import { type Table } from '@tanstack/react-table';
 import { type Order } from '@findeg/backend/features/order';
 import { Button } from '@findeg/ui';
 import { Check, Settings, Printer, X } from 'lucide-react';
+import { toast } from 'sonner';
+import { useRouter } from '@i18n/navigation';
+import { bulkUpdateOrderStatusAction } from '@data/orders/actions';
+import type { OrderStatus } from '@findeg/backend/features/core';
 
 interface OrderBulkActionBarProps {
   table: Table<Order>;
@@ -16,23 +20,48 @@ interface OrderBulkActionBarProps {
 export function OrderBulkActionBar({ table }: OrderBulkActionBarProps) {
   const selectedRows = table.getFilteredSelectedRowModel().rows;
   const count = selectedRows.length;
-  const [isPending] = useTransition();
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   if (count === 0) return null;
 
   /**
    *
    */
-  const handleConfirmSelected = () => {
-    // startTransition => AdminOrderBulkConfirm
+  const updateSelected = (status: OrderStatus, eligibleStatus: OrderStatus) => {
+    const ids = selectedRows
+      .filter((row) => row.original.status === eligibleStatus)
+      .map((row) => Number(row.original.id));
+    if (ids.length === 0) {
+      toast.error(`No selected Orders can be marked ${status}.`);
+      return;
+    }
+
+    startTransition(async () => {
+      const result = await bulkUpdateOrderStatusAction(ids, status);
+      const updatedCount = 'updatedCount' in result ? (result.updatedCount ?? 0) : 0;
+      if (updatedCount > 0) {
+        table.resetRowSelection();
+        router.refresh();
+      }
+      if (!result.success) {
+        toast.error(
+          updatedCount > 0
+            ? `${updatedCount} updated; ${result.error}`
+            : result.error || `Failed to mark selected Orders ${status}.`,
+        );
+        return;
+      }
+      toast.success(`${updatedCount} Order${updatedCount === 1 ? '' : 's'} marked ${status}.`);
+    });
   };
+
+  const handleConfirmSelected = () => updateSelected('confirmed', 'pending');
 
   /**
    *
    */
-  const handleMarkProcessing = () => {
-    // startTransition => AdminOrderBulkProcessing
-  };
+  const handleMarkProcessing = () => updateSelected('processing', 'confirmed');
 
   /**
    *

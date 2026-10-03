@@ -96,9 +96,10 @@ export function buildOrderColumns(): ColumnDef<Order>[] {
        */
       cell: ({ row }) => {
         const id = row.original.id;
+        const orderReference = row.original.orderReference || `#${id}`;
         return (
           <Link href={`/orders/${id}`} className="font-medium hover:underline text-primary">
-            #FE-{String(id).padStart(5, '0')}
+            {orderReference}
           </Link>
         );
       },
