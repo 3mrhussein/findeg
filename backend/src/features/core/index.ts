@@ -46,4 +46,4 @@ export type {
   CurrentSessionIdentity,
   ICurrentSessionIdentityResolver,
 } from './application/services/CurrentSessionProvider';
-export { createCookieSessionProvider, createLogger } from './application/services/factory';
+export { createCookieSessionProvider } from './application/services/factory';

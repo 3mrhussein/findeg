@@ -1,6 +1,6 @@
 import { after } from 'next/server';
 import { createCheckoutService } from '@findeg/backend/features/checkout';
-import { createLogger } from '@findeg/backend/features/core';
+import { createLogger } from '@findeg/backend/features/core/logger';
 import { drainOutbox } from '@findeg/backend/features/outbox';
 import { getSession } from '@lib/session';
 
