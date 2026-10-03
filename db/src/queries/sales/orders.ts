@@ -303,6 +303,10 @@ export async function create(
     totalAmount: string;
     currency?: string;
     paymentMethod?: string;
+    schoolSupplyListId?: number;
+    schoolSupplyListPublicCode?: string;
+    schoolSupplyListPublishedAt?: Date;
+    businessPartnerId?: number;
     shippingAddressSnapshot?: typeof orders.$inferInsert.shippingAddressSnapshot;
     items?: Array<{
       productId: number;
@@ -315,6 +319,8 @@ export async function create(
       productSkuSnapshot?: string;
       variantSkuSnapshot?: string;
       variantSnapshot?: Record<string, unknown>;
+      schoolSupplyListItemId?: number;
+      isSubstitute?: boolean;
     }>;
   },
   tx?: DbTransaction,
@@ -345,6 +351,10 @@ export async function create(
               totalAmount: orderData.totalAmount,
               currency: orderData.currency || 'EGP',
               paymentMethod: (orderData.paymentMethod as 'cod' | 'card') || null,
+              schoolSupplyListId: orderData.schoolSupplyListId,
+              schoolSupplyListPublicCode: orderData.schoolSupplyListPublicCode,
+              schoolSupplyListPublishedAt: orderData.schoolSupplyListPublishedAt,
+              businessPartnerId: orderData.businessPartnerId,
               shippingAddressSnapshot: orderData.shippingAddressSnapshot || null,
             })
             .returning();
@@ -386,6 +396,8 @@ export async function create(
             productSkuSnapshot: item.productSkuSnapshot,
             variantSkuSnapshot: item.variantSkuSnapshot,
             variantSnapshot: item.variantSnapshot,
+            schoolSupplyListItemId: item.schoolSupplyListItemId,
+            isSubstitute: item.isSubstitute,
           })),
         )
         .returning();

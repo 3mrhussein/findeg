@@ -54,11 +54,15 @@ const list = (over: Partial<PublicSupplyList> = {}): PublicSupplyList => ({
 describe('SupplyListView', () => {
   afterEach(() => window.localStorage.clear());
 
-  it('shows each item at its default, with a disabled checkout button', () => {
-    render(<SupplyListView list={list()} locale="en" />);
+  it('shows each item at its default and links its selection to checkout', () => {
+    const source = list();
+    render(<SupplyListView list={source} locale="en" />);
     expect(screen.getByText('Blue pen')).toBeInTheDocument();
     expect(screen.getByText('Pen')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Checkout' })).toBeDisabled();
+    expect(screen.getByRole('link', { name: 'Checkout' })).toHaveAttribute(
+      'href',
+      `/checkout?source=list&publicCode=${source.publicCode}`,
+    );
     expect(screen.queryByRole('status')).not.toBeInTheDocument();
   });
 
@@ -223,6 +227,7 @@ describe('SupplyListView', () => {
       fireEvent.change(screen.getAllByRole('spinbutton')[0], { target: { value: '1' } });
       expect(await screen.findByText('Progress:{"completed":0,"total":1}')).toBeInTheDocument();
       expect(screen.queryByText('CheckoutBlockedByUnavailable')).not.toBeInTheDocument();
+      expect(screen.getByRole('link', { name: 'Checkout' })).toBeInTheDocument();
     });
 
     it('is not shown on an archived, view-only list', () => {

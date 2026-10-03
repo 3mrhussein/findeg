@@ -334,6 +334,7 @@
       "YourSchoolLists": "قوائم مستلزماتي المدرسية"
     },
     "Checkout": {
+      "ListCompleteness": "اكتمال القائمة: {completed} من {total} من العناصر المطلوبة. هذا إرشادي ولا يمنع إتمام الطلب.",
       "Title": "الدفع",
       "ValidationFailed": "فشل التحقق من بيانات الدفع.",
       "OrderCreationFailed": "فشل إنشاء الطلب.",

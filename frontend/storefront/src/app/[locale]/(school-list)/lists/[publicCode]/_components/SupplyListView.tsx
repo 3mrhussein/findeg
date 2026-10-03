@@ -268,20 +268,27 @@ export function SupplyListView({ list, locale }: { list: PublicSupplyList; local
       <p className="text-sm text-muted-foreground">{t('PriceNote')}</p>
 
       <div>
-        <button
-          type="button"
-          disabled
-          className="rounded-xl bg-primary px-6 py-3 font-bold text-white opacity-50"
-        >
-          {t('Checkout')}
-        </button>
-        <p className="mt-2 text-sm text-muted-foreground">
-          {archived
-            ? t('CheckoutArchived')
-            : flagged.length > 0
-              ? t('CheckoutBlockedByUnavailable')
-              : t('CheckoutSoon')}
-        </p>
+        {archived || flagged.length > 0 ? (
+          <>
+            <button
+              type="button"
+              disabled
+              className="rounded-xl bg-primary px-6 py-3 font-bold text-white opacity-50"
+            >
+              {t('Checkout')}
+            </button>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {archived ? t('CheckoutArchived') : t('CheckoutBlockedByUnavailable')}
+            </p>
+          </>
+        ) : (
+          <Link
+            href={`/checkout?source=list&publicCode=${list.publicCode}`}
+            className="inline-block rounded-xl bg-primary px-6 py-3 font-bold text-white"
+          >
+            {t('Checkout')}
+          </Link>
+        )}
       </div>
     </div>
   );

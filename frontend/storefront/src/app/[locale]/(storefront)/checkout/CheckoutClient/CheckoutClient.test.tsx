@@ -1,5 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import type { PublicSupplyList } from '@findeg/backend/features/school';
 
 const cart = vi.hoisted(() => ({
   clearCart: vi.fn(),
@@ -72,6 +73,51 @@ const changedQuote = {
   shipping: 55,
   total: 65,
   confirmation: 'confirmation-changed',
+};
+
+const supplyList: PublicSupplyList = {
+  publicCode: 'a'.repeat(32),
+  status: 'published',
+  grade: 'Grade 1',
+  academicYear: '2026/2027',
+  title: { en: 'Grade 1 supplies' },
+  description: null,
+  heroImageUrl: null,
+  school: { id: 1, nameEn: 'Nile School', nameAr: 'مدرسة النيل', logoUrl: null },
+  replacementPublicCode: null,
+  offer: null,
+  items: [
+    {
+      id: 7,
+      required: true,
+      quantity: 3,
+      exactItem: true,
+      specification: null,
+      label: { en: 'Blue pen' },
+      note: null,
+      defaultVariant: {
+        variantId: 101,
+        sku: 'PEN-BLUE',
+        name: { en: 'Blue pen' },
+        variantLabel: { en: '0.7 mm' },
+        brand: null,
+        price: '10.00',
+        inStock: true,
+      },
+      eligibleVariants: [
+        {
+          variantId: 101,
+          sku: 'PEN-BLUE',
+          name: { en: 'Blue pen' },
+          variantLabel: { en: '0.7 mm' },
+          brand: null,
+          price: '10.00',
+          inStock: true,
+          differingAttributes: {},
+        },
+      ],
+    },
+  ],
 };
 
 function jsonResponse(body: unknown, status = 200): Response {
@@ -191,6 +237,15 @@ describe('CheckoutClient acceptance failures', () => {
             message: 'Checkout accepted successfully',
           },
         }),
+      )
+      .mockResolvedValueOnce(
+        jsonResponse({
+          success: true,
+          data: {
+            order: { id: 25, orderReference: 'FE-LIST25' },
+            message: 'Checkout accepted successfully',
+          },
+        }),
       );
     vi.stubGlobal('fetch', fetchMock);
 
@@ -208,5 +263,151 @@ describe('CheckoutClient acceptance failures', () => {
     expect(retry.headers).toMatchObject({ 'Idempotency-Key': 'key' });
     expect(retry.body).toBe(firstAttempt.body);
     await waitFor(() => expect(cart.clearCart).toHaveBeenCalledOnce());
+  });
+
+  it('accepts the active List Selection without clearing the Cart', async () => {
+    window.localStorage.setItem(
+      `findeg:list-selection:${supplyList.publicCode}`,
+      JSON.stringify({
+        v: 1,
+        lines: [{ listItemId: 7, variantId: 101, quantity: 5 }],
+      }),
+    );
+    const listQuote = {
+      ...originalQuote,
+      lines: [
+        {
+          listItemId: 7,
+          variantId: 101,
+          quantity: 5,
+          unitPrice: 10,
+          discounts: [],
+          lineTotal: 50,
+        },
+      ],
+      subtotal: 50,
+      total: 100,
+    };
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(jsonResponse({ success: true, data: listQuote }))
+      .mockResolvedValueOnce(
+        jsonResponse({
+          success: true,
+          data: {
+            order: { id: 23, orderReference: 'FE-LIST23' },
+            message: 'Checkout accepted successfully',
+          },
+        }),
+      );
+    vi.stubGlobal('fetch', fetchMock);
+
+    render(
+      <CheckoutClient
+        initialPrefill={initialPrefill}
+        checkoutSource={{
+          source: 'list',
+          publicCode: supplyList.publicCode,
+          list: supplyList,
+        }}
+      />,
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Pages.Checkout.PlaceOrder' }));
+
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2));
+    const validate = JSON.parse(fetchMock.mock.calls[0][1]?.body as string);
+    const accept = JSON.parse(fetchMock.mock.calls[1][1]?.body as string);
+    expect(validate).toMatchObject({
+      source: 'list',
+      publicCode: supplyList.publicCode,
+      lines: [{ listItemId: 7, variantId: 101, quantity: 5 }],
+    });
+    expect(accept).toMatchObject({
+      source: 'list',
+      publicCode: supplyList.publicCode,
+      lines: [{ listItemId: 7, variantId: 101, quantity: 5 }],
+      confirmation: originalQuote.confirmation,
+    });
+    expect(cart.clearCart).not.toHaveBeenCalled();
+    expect(
+      window.localStorage.getItem(`findeg:list-selection:${supplyList.publicCode}`),
+    ).toBeNull();
+  });
+
+  it('keeps failed Cart and List attempts under separate idempotency keys', async () => {
+    vi.stubGlobal('crypto', {
+      randomUUID: vi
+        .fn()
+        .mockReturnValueOnce('guest-id')
+        .mockReturnValueOnce('cart-key')
+        .mockReturnValueOnce('list-key'),
+    });
+    const listQuote = {
+      ...originalQuote,
+      lines: [{ ...originalQuote.lines[0], listItemId: 7, quantity: 3, lineTotal: 30 }],
+      subtotal: 30,
+      total: 80,
+    };
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(jsonResponse({ success: true, data: originalQuote }))
+      .mockResolvedValueOnce(
+        jsonResponse({ success: false, error: { message: 'Cart timeout' } }, 500),
+      )
+      .mockResolvedValueOnce(jsonResponse({ success: true, data: listQuote }))
+      .mockResolvedValueOnce(
+        jsonResponse({ success: false, error: { message: 'List timeout' } }, 500),
+      )
+      .mockResolvedValueOnce(
+        jsonResponse({
+          success: true,
+          data: {
+            order: { id: 24, orderReference: 'FE-CART24' },
+            message: 'Checkout accepted successfully',
+          },
+        }),
+      );
+    vi.stubGlobal('fetch', fetchMock);
+
+    const view = render(<CheckoutClient initialPrefill={initialPrefill} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Pages.Checkout.PlaceOrder' }));
+    expect(await screen.findByRole('alert')).toHaveTextContent('Cart timeout');
+
+    view.rerender(
+      <CheckoutClient
+        initialPrefill={initialPrefill}
+        checkoutSource={{ source: 'list', publicCode: supplyList.publicCode, list: supplyList }}
+      />,
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Pages.Checkout.PlaceOrder' }));
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(4));
+
+    view.rerender(<CheckoutClient initialPrefill={initialPrefill} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Pages.Checkout.PlaceOrder' }));
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(5));
+
+    expect(fetchMock.mock.calls[1][1]?.headers).toMatchObject({
+      'Idempotency-Key': 'cart-key',
+    });
+    expect(fetchMock.mock.calls[3][1]?.headers).toMatchObject({
+      'Idempotency-Key': 'list-key',
+    });
+    expect(fetchMock.mock.calls[4][1]?.headers).toMatchObject({
+      'Idempotency-Key': 'cart-key',
+    });
+    expect(fetchMock.mock.calls[4][1]?.body).toBe(fetchMock.mock.calls[1][1]?.body);
+
+    view.rerender(
+      <CheckoutClient
+        initialPrefill={initialPrefill}
+        checkoutSource={{ source: 'list', publicCode: supplyList.publicCode, list: supplyList }}
+      />,
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Pages.Checkout.PlaceOrder' }));
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(6));
+    expect(fetchMock.mock.calls[5][1]?.headers).toMatchObject({
+      'Idempotency-Key': 'list-key',
+    });
+    expect(fetchMock.mock.calls[5][1]?.body).toBe(fetchMock.mock.calls[3][1]?.body);
   });
 });

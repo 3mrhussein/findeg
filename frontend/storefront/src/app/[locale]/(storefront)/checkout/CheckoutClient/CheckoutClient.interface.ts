@@ -3,6 +3,7 @@
  */
 
 import { type CheckoutPrefillData } from '@findeg/backend/features/order';
+import type { PublicSupplyList } from '@findeg/backend/features/school';
 
 export interface CheckoutTotals {
   subtotal: number;
@@ -20,6 +21,8 @@ export interface PlaceOrderResult {
 
 export interface CheckoutClientProps {
   initialPrefill?: CheckoutPrefillData | null;
+  checkoutSource?:
+    { source: 'cart' } | { source: 'list'; publicCode: string; list: PublicSupplyList };
 }
 
 /**

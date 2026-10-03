@@ -6,6 +6,7 @@ export interface QuoteConfirmationDiscount {
 }
 
 export interface QuoteConfirmationLine {
+  listItemId?: number;
   variantId: number;
   quantity: number;
   unitPrice: number;
@@ -14,6 +15,8 @@ export interface QuoteConfirmationLine {
 }
 
 export interface QuoteConfirmationTerms {
+  source?: 'cart' | 'list';
+  publicCode?: string;
   currency: string;
   shipping: number;
   subtotal: number;
@@ -28,8 +31,12 @@ export interface QuoteConfirmationTerms {
  */
 export function computeConfirmation(terms: QuoteConfirmationTerms): string {
   const normalizedLines = [...terms.lines]
-    .sort((a, b) => a.variantId - b.variantId)
+    .sort(
+      (a, b) =>
+        (a.listItemId ?? a.variantId) - (b.listItemId ?? b.variantId) || a.variantId - b.variantId,
+    )
     .map((line) => ({
+      ...(line.listItemId === undefined ? {} : { listItemId: line.listItemId }),
       variantId: line.variantId,
       quantity: line.quantity,
       unitPrice: Number(line.unitPrice.toFixed(2)),
@@ -43,6 +50,7 @@ export function computeConfirmation(terms: QuoteConfirmationTerms): string {
     }));
 
   const payload = {
+    ...(terms.source ? { source: terms.source, publicCode: terms.publicCode ?? null } : {}),
     currency: terms.currency,
     shipping: Number(terms.shipping.toFixed(2)),
     subtotal: Number(terms.subtotal.toFixed(2)),
