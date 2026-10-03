@@ -1,10 +1,8 @@
 import { db } from '../../connection';
 import { checkoutIdempotency, type CheckoutIdempotency } from '../../schema';
-import { eq, and, sql } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 import { withTransaction, type DbTransaction } from '../transaction';
 import type { CheckoutReceipt } from '../../types/sales';
-
-export const IDEMPOTENCY_RETENTION_HOURS = 24;
 
 const UNIQUE_VIOLATION = '23505';
 const SCOPE_KEY_INDEX = 'uq_checkout_idempotency_scope_key';
@@ -14,7 +12,6 @@ const SCOPE_KEY_INDEX = 'uq_checkout_idempotency_scope_key';
  * Postgres unique violation (SQLSTATE 23505) on the (scope, key) index.
  */
 export function isScopeKeyConflict(err: unknown): boolean {
-  if (err instanceof ScopeKeyConflictError) return true;
   let current: unknown = err;
   for (let depth = 0; depth < 5 && current && typeof current === 'object'; depth++) {
     const e = current as { code?: unknown; constraint_name?: unknown; constraint?: unknown };
@@ -38,33 +35,15 @@ export async function findByScopeAndKey(
   const [row] = await executor
     .select()
     .from(checkoutIdempotency)
-    .where(
-      and(
-        eq(checkoutIdempotency.scope, scope),
-        eq(checkoutIdempotency.key, key),
-        sql`${checkoutIdempotency.createdAt} >= now() - interval '24 hours'`,
-      ),
-    )
+    .where(and(eq(checkoutIdempotency.scope, scope), eq(checkoutIdempotency.key, key)))
     .limit(1);
 
   return row ?? null;
 }
 
 /**
- * Thrown by `createInitial` when a live (unexpired) row already holds the (scope, key).
- * Treated like a unique violation by `isScopeKeyConflict`.
- */
-export class ScopeKeyConflictError extends Error {
-  constructor() {
-    super(`Idempotency key already in use (${SCOPE_KEY_INDEX})`);
-    this.name = 'ScopeKeyConflictError';
-  }
-}
-
-/**
- * Claims (scope, key) in a single atomic statement. An expired row for the same key is recycled in
- * place (no separate delete, so concurrent claimers can't interleave); a live row, whether
- * committed or still held by an in-flight transaction, yields `ScopeKeyConflictError`.
+ * Claims (scope, key). A concurrent holder makes the insert wait on its transaction, then fail with
+ * a unique violation (`isScopeKeyConflict`) if it committed, or succeed if it rolled back.
  */
 export async function createInitial(
   data: {
@@ -82,19 +61,7 @@ export async function createInitial(
         key: data.key,
         fingerprint: data.fingerprint,
       })
-      .onConflictDoUpdate({
-        target: [checkoutIdempotency.scope, checkoutIdempotency.key],
-        set: {
-          fingerprint: data.fingerprint,
-          orderId: null,
-          orderReference: null,
-          response: null,
-          createdAt: sql`now()`,
-        },
-        setWhere: sql`${checkoutIdempotency.createdAt} < now() - interval '24 hours'`,
-      })
       .returning();
-    if (!row) throw new ScopeKeyConflictError();
     return row;
   });
 }
@@ -120,13 +87,4 @@ export async function recordSuccess(
       .returning();
     return row;
   });
-}
-
-export async function deleteExpired(tx?: DbTransaction): Promise<number> {
-  const executor = tx ?? db;
-  const deleted = await executor
-    .delete(checkoutIdempotency)
-    .where(sql`${checkoutIdempotency.createdAt} < now() - interval '24 hours'`)
-    .returning({ id: checkoutIdempotency.id });
-  return deleted.length;
 }
