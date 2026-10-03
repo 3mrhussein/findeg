@@ -1,5 +1,5 @@
 {
-  "appNamePrefix": "",
+  "appNamePrefix": "findeg-",
   "agents": {
     "claude": { "extraBots": [] },
     "codex": { "extraBots": ["chatgpt-codex-connector[bot]"] }

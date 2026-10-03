@@ -89,7 +89,7 @@ Each `<AGENT>_PR_AUTHORS` variable is the bot login GitHub reports for that agen
 
 Settings live in `scripts/agent-identity/agents.json` (committed, no secrets):
 
-- `appNamePrefix`: prepended to the agent name when `setup-app.mjs` creates an app (default empty, so the app is named `claude`/`codex`; `--name` or `FINDEG_AGENT_APP_PREFIX` override it). GitHub App names are globally unique, so a bare name may be taken; set a prefix then.
+- `appNamePrefix`: prepended to the agent name when `setup-app.mjs` creates an app (currently `findeg-`, matching the existing `findeg-claude`/`findeg-codex` apps; set it empty to name apps just `claude`/`codex`; `--name` or `FINDEG_AGENT_APP_PREFIX` override it). GitHub App names are globally unique, so a bare name may be taken; set a prefix then.
 - `agents.<name>.extraBots`: other bot logins to allow for that agent, e.g. `chatgpt-codex-connector[bot]` for Codex.
 
 To rename an existing app, change its name under GitHub → Settings → Developer settings → GitHub Apps, then re-run `sync-authors.mjs` (it also refreshes the stored git identity).
