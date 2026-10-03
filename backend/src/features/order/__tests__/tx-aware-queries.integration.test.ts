@@ -93,25 +93,32 @@ describe('tx-aware order and inventory queries on real Postgres', () => {
       expect(items).toHaveLength(1);
     });
 
-    it('updates order and payment status', async () => {
+    it('updates mutable order fields and payment status', async () => {
       const { productId, variantId } = await stockedVariant();
       const { order } = await orderQueries.create(orderInput(productId, variantId));
 
-      await orderQueries.updateStatus(order.id, 'confirmed');
       await orderQueries.updatePaymentStatus(order.id, 'paid');
-      await orderQueries.updateStatusWithTracking(order.id, {
-        status: 'shipped',
+      await orderQueries.updateOrder(order.id, {
         trackingNumber: 'TRK-1',
         adminNotes: 'handed over',
       });
 
       const [row] = await testDb.db.select().from(orders).where(eq(orders.id, order.id));
       expect(row).toMatchObject({
-        status: 'shipped',
+        status: 'pending',
         paymentStatus: 'paid',
         trackingNumber: 'TRK-1',
         adminNotes: 'handed over',
       });
+    });
+
+    it('does not expose status changes through the generic update primitive', async () => {
+      const { productId, variantId } = await stockedVariant();
+      const { order } = await orderQueries.create(orderInput(productId, variantId));
+
+      await expect(orderQueries.updateOrder(order.id, { status: 'confirmed' })).rejects.toThrow(
+        'Cannot update frozen order snapshot column: status',
+      );
     });
 
     it('reserves stock, then releases it', async () => {
@@ -138,12 +145,12 @@ describe('tx-aware order and inventory queries on real Postgres', () => {
   });
 
   describe('with tx', () => {
-    it('composes create, status update and reserve in one transaction that commits together', async () => {
+    it('composes create, metadata update and reserve in one transaction that commits together', async () => {
       const { productId, variantId, warehouseId } = await stockedVariant();
 
       const { order } = await testDb.db.transaction(async (tx) => {
         const created = await orderQueries.create(orderInput(productId, variantId), tx);
-        await orderQueries.updateStatus(created.order.id, 'confirmed', tx);
+        await orderQueries.updateOrder(created.order.id, { adminNotes: 'reserved' }, tx);
         await inventoryQueries.reserveStock(
           variantId,
           warehouseId,
@@ -155,7 +162,7 @@ describe('tx-aware order and inventory queries on real Postgres', () => {
       });
 
       const [row] = await testDb.db.select().from(orders).where(eq(orders.id, order.id));
-      expect(row.status).toBe('confirmed');
+      expect(row).toMatchObject({ status: 'pending', adminNotes: 'reserved' });
       expect(await balance(variantId, warehouseId)).toMatchObject({ reserved: 2 });
     });
 
@@ -189,7 +196,7 @@ describe('tx-aware order and inventory queries on real Postgres', () => {
       expect(await movements(variantId)).toHaveLength(0);
     });
 
-    it('rolls back release, status and payment updates with the caller transaction', async () => {
+    it('rolls back release, metadata and payment updates with the caller transaction', async () => {
       const { productId, variantId, warehouseId } = await stockedVariant();
       const { order } = await orderQueries.create(orderInput(productId, variantId));
       await inventoryQueries.reserveStock(variantId, warehouseId, 2, String(order.id));
@@ -203,15 +210,18 @@ describe('tx-aware order and inventory queries on real Postgres', () => {
             String(order.id),
             tx,
           );
-          await orderQueries.updateStatus(order.id, 'cancelled', tx);
           await orderQueries.updatePaymentStatus(order.id, 'refunded', tx);
-          await orderQueries.updateStatusWithTracking(order.id, { status: 'cancelled' }, tx);
+          await orderQueries.updateOrder(order.id, { adminNotes: 'cancelled' }, tx);
           throw new Rollback();
         }),
       ).rejects.toThrow(Rollback);
 
       const [row] = await testDb.db.select().from(orders).where(eq(orders.id, order.id));
-      expect(row).toMatchObject({ status: 'pending', paymentStatus: 'unpaid' });
+      expect(row).toMatchObject({
+        status: 'pending',
+        paymentStatus: 'unpaid',
+        adminNotes: null,
+      });
       expect(await balance(variantId, warehouseId)).toMatchObject({ reserved: 2 });
     });
   });

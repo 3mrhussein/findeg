@@ -3,11 +3,7 @@ import { IAuditLogService } from '../interfaces/IAuditLogService';
 import { IEmailService } from '../../../notifications/application/services/IEmailService';
 import type { OrderStatusUpdate } from '@findeg/backend/features/order';
 import { PaymentStatus, OrderStatus } from '../../../core/domain/types/common';
-import {
-  canTransitionOrderStatus,
-  getAllowedOrderStatusTransitions,
-  normalizeOrderStatus,
-} from '../../../order/application/utils/order-status-transitions';
+import { transitionOrderStatus } from '../../../order/application/services/transition-order-status';
 import {
   canTransitionPaymentStatus,
   getAllowedPaymentStatusTransitions,
@@ -38,6 +34,7 @@ export class AdminOrderService implements IAdminOrderService {
   private mapToDomain(dbOrder: orderQueries.OrderRow, items: orderQueries.OrderItemRow[]): Order {
     return {
       id: dbOrder.id,
+      orderReference: dbOrder.orderReference,
       userId: dbOrder.userId || undefined,
       guestEmail: dbOrder.guestEmail || undefined,
       status: dbOrder.status,
@@ -114,26 +111,15 @@ export class AdminOrderService implements IAdminOrderService {
 
     const order = this.mapToDomain(result.order, result.items);
 
-    const currentStatus = normalizeOrderStatus(order.status);
-    const nextStatus = normalizeOrderStatus(update.status);
-    const isValidTransition = canTransitionOrderStatus(currentStatus, nextStatus);
-
-    if (!isValidTransition) {
-      const allowedTargets = getAllowedOrderStatusTransitions(currentStatus);
-      const allowedList = allowedTargets.length > 0 ? allowedTargets.join(', ') : 'none';
-      throw new Error(
-        `Invalid status transition from ${currentStatus} to ${nextStatus}. Allowed: ${allowedList}.`,
-      );
-    }
-
-    await orderQueries.updateStatusWithTracking(id, update);
+    const transition = await transitionOrderStatus(id, update);
+    if (!transition.changed) return;
 
     await this.auditLogService.logAction({
       entityType: 'order',
       entityId: String(id),
       action: 'update_status',
       adminUserId: undefined,
-      oldValues: { status: order.status } as Record<string, unknown>,
+      oldValues: { status: transition.previousStatus } as Record<string, unknown>,
       newValues: {
         status: update.status,
         trackingNumber: update.trackingNumber,

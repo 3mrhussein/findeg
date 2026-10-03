@@ -35,7 +35,7 @@ export function OrderTableFilters({
         <div className="relative w-full max-w-sm">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search order #, customer name, email..."
+            placeholder="Search Order Reference, email, or tracking number..."
             className="pl-8 bg-background"
             disabled={isPending}
             defaultValue={filters.search}
