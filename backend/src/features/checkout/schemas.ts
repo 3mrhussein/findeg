@@ -1,7 +1,11 @@
 import { z } from 'zod';
-import { ShippingAddressSchema, type ShippingAddress } from '@findeg/db/types';
+import {
+  ShippingAddressSchema,
+  type CheckoutReceipt,
+  type ShippingAddress,
+} from '@findeg/db/types';
 
-export { ShippingAddressSchema, type ShippingAddress };
+export { ShippingAddressSchema, type CheckoutReceipt, type ShippingAddress };
 
 export const CheckoutLineSchema = z.object({
   variantId: z.number().int().positive(),
@@ -38,11 +42,6 @@ export interface CheckoutOrderContext {
   idempotencyKey?: string;
 }
 
-export interface CheckoutReceipt {
-  order: CheckoutAcceptedOrder;
-  message: string;
-}
-
 export interface CheckoutQuoteLine {
   variantId: number;
   quantity: number;
@@ -60,11 +59,4 @@ export interface CheckoutQuote {
   confirmation: string;
 }
 
-export interface CheckoutAcceptedOrder {
-  id: number;
-  orderReference: string;
-  status: string;
-  paymentStatus: string;
-  totalAmount: string;
-  currency: string;
-}
+export type CheckoutAcceptedOrder = CheckoutReceipt['order'];

@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import {
   categories,
   inventoryBalances,
@@ -14,7 +14,8 @@ import {
 } from '@findeg/db/schema';
 import { createCheckoutService } from '../index';
 import { isValidOrderReference } from '../domain/order-reference';
-import { orderQueries } from '@findeg/db/queries';
+import { computeOrderFingerprint } from '../domain/fingerprint';
+import { checkoutIdempotencyQueries, orderQueries } from '@findeg/db/queries';
 import { connectToTestDatabase, type TestDatabase } from '../../../testing/postgres';
 
 describe('Checkout feature integration tests on real Postgres', () => {
@@ -379,6 +380,30 @@ describe('Checkout feature integration tests on real Postgres', () => {
         address: validAddress,
         guestEmail: 'guest@example.com',
       });
+
+      expect(acceptResult.success).toBe(false);
+      if (acceptResult.success) return;
+      expect(acceptResult.status).toBe(400);
+      expect(acceptResult.error.code).toBe('missing-idempotency-key');
+    });
+
+    it('ignores an idempotencyKey supplied in the request body (header only)', async () => {
+      const item = await createVariantWithStock();
+      const quote = await checkoutService.validate({
+        source: 'cart',
+        lines: [{ variantId: item.variantId, quantity: 1 }],
+      });
+      if (!quote.success) return;
+
+      const acceptResult = await checkoutService.accept({
+        source: 'cart',
+        lines: [{ variantId: item.variantId, quantity: 1 }],
+        confirmation: quote.data.confirmation,
+        paymentMethod: 'cod',
+        address: validAddress,
+        guestEmail: 'guest@example.com',
+        idempotencyKey: 'body-supplied-key',
+      } as Parameters<typeof checkoutService.accept>[0]);
 
       expect(acceptResult.success).toBe(false);
       if (acceptResult.success) return;
@@ -940,6 +965,24 @@ describe('Checkout feature integration tests on real Postgres', () => {
         expect(confirmationConflict.error.code).toBe('idempotency-conflict');
       }
 
+      // 3b. Conflict on different guest email (must never replay another customer's receipt)
+      const guestEmailConflict = await checkoutService.accept(
+        {
+          source: 'cart',
+          lines: [{ variantId: itemA.variantId, quantity: 1 }],
+          confirmation: quote.data.confirmation,
+          paymentMethod: 'cod',
+          address: validAddress,
+          guestEmail: 'someone-else@example.com',
+        },
+        { idempotencyKey, guestId },
+      );
+      expect(guestEmailConflict.success).toBe(false);
+      if (!guestEmailConflict.success) {
+        expect(guestEmailConflict.status).toBe(409);
+        expect(guestEmailConflict.error.code).toBe('idempotency-conflict');
+      }
+
       // 4. Conflict on different delivery method
       const deliveryMethodConflict = await checkoutService.accept(
         {
@@ -1154,6 +1197,265 @@ describe('Checkout feature integration tests on real Postgres', () => {
         .from(checkoutIdempotency)
         .where(eq(checkoutIdempotency.key, idempotencyKey));
       expect(rows).toHaveLength(1);
+    });
+
+    it('lets a concurrent request proceed when the holder of the key rolls back', async () => {
+      const item = await createVariantWithStock({ price: '50.00', onHand: 2 });
+      const quote = await checkoutService.validate({
+        source: 'cart',
+        lines: [{ variantId: item.variantId, quantity: 1 }],
+      });
+      expect(quote.success).toBe(true);
+      if (!quote.success) return;
+
+      const idempotencyKey = `holder-rollback-${++sequence}`;
+      const guestId = `guest-holder-rollback-${sequence}`;
+      const orderPayload = {
+        source: 'cart' as const,
+        lines: [{ variantId: item.variantId, quantity: 1 }],
+        confirmation: quote.data.confirmation,
+        paymentMethod: 'cod' as const,
+        address: validAddress,
+        guestEmail: 'holder-rollback@example.com',
+      };
+
+      // A competing attempt claims the key inside an open transaction...
+      let signalClaimed!: () => void;
+      const claimed = new Promise<void>((resolve) => (signalClaimed = resolve));
+      let releaseHolder!: () => void;
+      const released = new Promise<void>((resolve) => (releaseHolder = resolve));
+      const holder = testDb.db
+        .transaction(async (tx) => {
+          await checkoutIdempotencyQueries.claimKey(
+            { scope: `guest:${guestId}`, key: idempotencyKey, fingerprint: 'holder-fingerprint' },
+            tx,
+          );
+          signalClaimed();
+          await released;
+          throw new Error('holder rolls back');
+        })
+        .catch(() => undefined);
+      await claimed;
+
+      // ...so this request blocks on the unique index instead of failing or double-creating.
+      const pending = checkoutService.accept(orderPayload, { idempotencyKey, guestId });
+      const stillWaiting = await Promise.race([
+        pending.then(() => 'settled'),
+        new Promise((resolve) => setTimeout(() => resolve('waiting'), 300)),
+      ]);
+      expect(stillWaiting).toBe('waiting');
+
+      // Once the holder rolls back its claim vanishes and the waiting request proceeds.
+      releaseHolder();
+      await holder;
+      const result = await pending;
+      expect(result.success).toBe(true);
+      if (!result.success) return;
+      expect(result.status).toBe(201);
+
+      const createdOrders = await testDb.db
+        .select()
+        .from(orders)
+        .where(eq(orders.guestEmail, 'holder-rollback@example.com'));
+      expect(createdOrders).toHaveLength(1);
+    });
+
+    it('returns 409 idempotency-in-progress when a committed claim never records an outcome', async () => {
+      const item = await createVariantWithStock({ price: '25.00', onHand: 10 });
+      const quote = await checkoutService.validate({
+        source: 'cart',
+        lines: [{ variantId: item.variantId, quantity: 1 }],
+      });
+      expect(quote.success).toBe(true);
+      if (!quote.success) return;
+
+      const idempotencyKey = `in-progress-${++sequence}`;
+      const guestId = `guest-in-progress-${sequence}`;
+      const lines = [{ variantId: item.variantId, quantity: 1 }];
+      const guestEmail = 'in-progress@example.com';
+
+      // A claim for the identical request that committed without a recorded response
+      await checkoutIdempotencyQueries.claimKey({
+        scope: `guest:${guestId}`,
+        key: idempotencyKey,
+        fingerprint: computeOrderFingerprint({
+          lines,
+          address: validAddress,
+          paymentMethod: 'cod',
+          confirmation: quote.data.confirmation,
+          guestEmail,
+        }),
+      });
+
+      const result = await checkoutService.accept(
+        {
+          source: 'cart',
+          lines,
+          confirmation: quote.data.confirmation,
+          paymentMethod: 'cod',
+          address: validAddress,
+          guestEmail,
+        },
+        { idempotencyKey, guestId },
+      );
+
+      expect(result.success).toBe(false);
+      if (result.success) return;
+      expect(result.status).toBe(409);
+      expect(result.error.code).toBe('idempotency-in-progress');
+
+      const createdOrders = await testDb.db
+        .select()
+        .from(orders)
+        .where(eq(orders.guestEmail, guestEmail));
+      expect(createdOrders).toHaveLength(0);
+    });
+
+    it('isScopeKeyConflict recognises a live-row conflict and nothing else', async () => {
+      const scope = `guest:conflict-probe-${++sequence}`;
+      const claim = { scope, key: `probe-${sequence}`, fingerprint: 'probe-fingerprint' };
+      await checkoutIdempotencyQueries.claimKey(claim);
+
+      // A real duplicate claim of a live row
+      const duplicate = await checkoutIdempotencyQueries.claimKey(claim).catch((err) => err);
+      expect(checkoutIdempotencyQueries.isScopeKeyConflict(duplicate)).toBe(true);
+
+      // A raw unique violation on the (scope, key) index, including when wrapped in `cause`
+      const driverError = { code: '23505', constraint_name: 'uq_checkout_idempotency_scope_key' };
+      expect(checkoutIdempotencyQueries.isScopeKeyConflict(driverError)).toBe(true);
+      expect(checkoutIdempotencyQueries.isScopeKeyConflict({ cause: driverError })).toBe(true);
+
+      // Unrelated errors and other unique constraints are not idempotency conflicts
+      expect(checkoutIdempotencyQueries.isScopeKeyConflict(new Error('boom'))).toBe(false);
+      expect(
+        checkoutIdempotencyQueries.isScopeKeyConflict({ code: '23505', constraint_name: 'other' }),
+      ).toBe(false);
+      expect(
+        checkoutIdempotencyQueries.isScopeKeyConflict({
+          code: '40001',
+          constraint_name: 'uq_checkout_idempotency_scope_key',
+        }),
+      ).toBe(false);
+      expect(checkoutIdempotencyQueries.isScopeKeyConflict(null)).toBe(false);
+    });
+
+    it('reusing an expired idempotency key (>24h) creates a new order and replaces the expired row', async () => {
+      const item = await createVariantWithStock({ price: '25.00', onHand: 10 });
+      const idempotencyKey = `expired-key-${sequence}`;
+      const guestId = `guest-exp-${sequence}`;
+
+      const quote = await checkoutService.validate({
+        source: 'cart',
+        lines: [{ variantId: item.variantId, quantity: 1 }],
+      });
+      expect(quote.success).toBe(true);
+      if (!quote.success) return;
+
+      const orderPayload = {
+        source: 'cart' as const,
+        lines: [{ variantId: item.variantId, quantity: 1 }],
+        confirmation: quote.data.confirmation,
+        paymentMethod: 'cod' as const,
+        address: validAddress,
+        guestEmail: 'expired-key@example.com',
+      };
+
+      // 1. Initial successful order
+      const firstResult = await checkoutService.accept(orderPayload, { idempotencyKey, guestId });
+      expect(firstResult.success).toBe(true);
+      if (!firstResult.success) return;
+
+      // 2. Age the row to 25 hours ago
+      await testDb.db
+        .update(checkoutIdempotency)
+        .set({ createdAt: sql`now() - interval '25 hours'` })
+        .where(eq(checkoutIdempotency.key, idempotencyKey));
+
+      // 3. New quote and submission with the SAME expired idempotency key
+      const secondQuote = await checkoutService.validate({
+        source: 'cart',
+        lines: [{ variantId: item.variantId, quantity: 1 }],
+      });
+      expect(secondQuote.success).toBe(true);
+      if (!secondQuote.success) return;
+
+      const secondResult = await checkoutService.accept(
+        {
+          ...orderPayload,
+          confirmation: secondQuote.data.confirmation,
+        },
+        { idempotencyKey, guestId },
+      );
+
+      expect(secondResult.success).toBe(true);
+      if (!secondResult.success) return;
+
+      // A fresh order was created with a different reference
+      expect(secondResult.data.order.orderReference).not.toBe(
+        firstResult.data.order.orderReference,
+      );
+
+      // The old expired row was purged, exactly one active row remains in checkout_idempotency
+      const rows = await testDb.db
+        .select()
+        .from(checkoutIdempotency)
+        .where(eq(checkoutIdempotency.key, idempotencyKey));
+      expect(rows).toHaveLength(1);
+      expect(rows[0].orderReference).toBe(secondResult.data.order.orderReference);
+    });
+
+    it('rejects oversized idempotency-key (>255 chars) with 400 invalid-idempotency-key', async () => {
+      const item = await createVariantWithStock({ price: '25.00', onHand: 10 });
+      const quote = await checkoutService.validate({
+        source: 'cart',
+        lines: [{ variantId: item.variantId, quantity: 1 }],
+      });
+      expect(quote.success).toBe(true);
+      if (!quote.success) return;
+
+      const result = await checkoutService.accept(
+        {
+          source: 'cart',
+          lines: [{ variantId: item.variantId, quantity: 1 }],
+          confirmation: quote.data.confirmation,
+          paymentMethod: 'cod',
+          address: validAddress,
+          guestEmail: 'oversized@example.com',
+        },
+        { idempotencyKey: 'x'.repeat(256) },
+      );
+
+      expect(result.success).toBe(false);
+      if (result.success) return;
+      expect(result.status).toBe(400);
+      expect(result.error.code).toBe('invalid-idempotency-key');
+    });
+
+    it('rejects oversized guestId (>200 chars) with 400 invalid-guest-id', async () => {
+      const item = await createVariantWithStock({ price: '25.00', onHand: 10 });
+      const quote = await checkoutService.validate({
+        source: 'cart',
+        lines: [{ variantId: item.variantId, quantity: 1 }],
+      });
+      expect(quote.success).toBe(true);
+      if (!quote.success) return;
+
+      const result = await checkoutService.accept(
+        {
+          source: 'cart',
+          lines: [{ variantId: item.variantId, quantity: 1 }],
+          confirmation: quote.data.confirmation,
+          paymentMethod: 'cod',
+          address: validAddress,
+          guestEmail: 'oversized@example.com',
+        },
+        { idempotencyKey: `valid-key-${sequence}`, guestId: 'g'.repeat(201) },
+      );
+
+      expect(result.success).toBe(false);
+      if (result.success) return;
+      expect(result.status).toBe(400);
+      expect(result.error.code).toBe('invalid-guest-id');
     });
   });
 });

@@ -7,11 +7,14 @@ export interface OrderFingerprintInput {
   paymentMethod: string;
   deliveryMethod?: string;
   confirmation: string;
+  /** Normalized guest email; omit for signed-in orders. */
+  guestEmail?: string;
 }
 
 /**
  * Computes a deterministic SHA-256 fingerprint over normalized checkout terms (ADR-0005).
- * Covers normalized lines, address, payment method, delivery method, and confirmation.
+ * Covers normalized lines, address, payment method, delivery method, confirmation, and guest email
+ * (so a replay under a different email can never return another customer's receipt).
  */
 export function computeOrderFingerprint(input: OrderFingerprintInput): string {
   const quantitiesByVariant = new Map<number, number>();
@@ -44,6 +47,7 @@ export function computeOrderFingerprint(input: OrderFingerprintInput): string {
     paymentMethod: input.paymentMethod,
     deliveryMethod: input.deliveryMethod ?? 'standard',
     confirmation: input.confirmation,
+    guestEmail: input.guestEmail?.trim().toLowerCase() || null,
   };
 
   return createHash('sha256').update(JSON.stringify(payload)).digest('hex');

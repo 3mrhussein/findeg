@@ -61,8 +61,8 @@ export interface CheckoutReceipt {
   order: {
     id: number;
     orderReference: string;
-    status: string;
-    paymentStatus: string;
+    status: OrderStatus;
+    paymentStatus: PaymentStatus;
     totalAmount: string;
     currency: string;
   };

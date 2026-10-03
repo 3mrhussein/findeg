@@ -42,8 +42,10 @@ export interface CheckoutAcceptFailure {
       | 'unsupported-payment-method'
       | 'validation-error'
       | 'missing-idempotency-key'
+      | 'invalid-idempotency-key'
+      | 'invalid-guest-id'
       | 'idempotency-conflict'
-      | string;
+      | 'idempotency-in-progress';
     message: string;
     quote?: CheckoutQuote;
     shortfalls?: Array<{ variantId: number; requested: number; available: number }>;
