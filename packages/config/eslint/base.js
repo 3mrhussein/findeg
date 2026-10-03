@@ -1,7 +1,10 @@
 import js from '@eslint/js';
+import json from '@eslint/json';
+import { requiredPackageScriptsRule } from './rules/required-package-scripts.js';
 
 export const base = [
-  js.configs.recommended,
+  // Scoped to code files so the JSON block below is not run through JS-only core rules.
+  { ...js.configs.recommended, files: ['**/*.{js,jsx,ts,tsx,mjs,cjs,mts,cts}'] },
 
   {
     ignores: ['node_modules/**', '.next/**', 'dist/**', '**/dist/**', '**/.turbo/**'],
@@ -14,5 +17,13 @@ export const base = [
     rules: {
       'no-unused-vars': 'off',
     },
+  },
+
+  {
+    // Every workspace package.json must define the common scripts (see the rule for the list).
+    files: ['package.json'],
+    language: 'json/json',
+    plugins: { json, local: { rules: { 'required-package-scripts': requiredPackageScriptsRule } } },
+    rules: { 'local/required-package-scripts': 'error' },
   },
 ];

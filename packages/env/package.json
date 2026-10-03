@@ -1,21 +1,27 @@
 {
-    "name": "@findeg/env",
-    "version": "0.1.0",
-    "type": "module",
-    "exports": {
-        ".": "./src/index.ts",
-        "./backend": "./src/backend.ts",
-        "./database": "./src/database.ts",
-        "./web": "./src/web.ts"
-    },
-    "scripts": {
-        "type-check": "tsc --noEmit"
-    },
-    "dependencies": {
-        "zod": "^4.3.6"
-    },
-    "devDependencies": {
-        "@types/node": "^25.6.0",
-        "typescript": "^5.7.3"
-    }
+  "name": "@findeg/env",
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./backend": "./src/backend.ts",
+    "./database": "./src/database.ts",
+    "./web": "./src/web.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest --run --passWithNoTests",
+    "clean": "rm -rf node_modules dist .turbo"
+  },
+  "dependencies": {
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@findeg/config": "workspace:*",
+    "@types/node": "^25.6.0",
+    "eslint": "^9.39.5",
+    "typescript": "^5.7.3",
+    "vitest": "^1.6.1"
+  }
 }

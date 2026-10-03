@@ -19,17 +19,17 @@ export const ui = [
           patterns: [
             {
               group: ['@findeg/dashboard', '@findeg/dashboard/**'],
-              message: 'UI components should not import from dashboard app.'
+              message: 'UI components should not import from dashboard app.',
             },
             {
               group: ['@findeg/storefront', '@findeg/storefront/**'],
-              message: 'UI components should not import from storefront app.'
+              message: 'UI components should not import from storefront app.',
             },
             {
               group: ['@findeg/backend', '@findeg/backend/**'],
-              message: 'UI components should not import backend domain logic.'
-            }
-          ]
+              message: 'UI components should not import backend domain logic.',
+            },
+          ],
         },
       ],
     },
