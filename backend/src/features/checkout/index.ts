@@ -12,6 +12,7 @@ export type { CheckoutServiceOptions } from './application/services/CheckoutServ
 
 export {
   CheckoutLineSchema,
+  ListCheckoutLineSchema,
   CheckoutValidateSchema,
   CheckoutOrderSchema,
   ShippingAddressSchema,
@@ -19,6 +20,8 @@ export {
 
 export type {
   CheckoutLine,
+  ListCheckoutLine,
+  CheckoutSourceInput,
   CheckoutValidateInput,
   CheckoutOrderInput,
   CheckoutOrderContext,

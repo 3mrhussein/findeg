@@ -1,5 +1,7 @@
 'use client';
 
+import type { ListCompleteness } from '@/lib/list-selection/list-selection';
+
 interface OrderSummaryProps {
   orderSummary: {
     subtotal: number;
@@ -8,13 +10,19 @@ interface OrderSummaryProps {
     currency: string;
   };
   cartItemsCount: number;
+  listCompleteness?: ListCompleteness;
   t: ReturnType<typeof import('next-intl').useTranslations>;
 }
 
 /**
  *
  */
-export function OrderSummary({ orderSummary, cartItemsCount, t }: OrderSummaryProps) {
+export function OrderSummary({
+  orderSummary,
+  cartItemsCount,
+  listCompleteness,
+  t,
+}: OrderSummaryProps) {
   return (
     <div className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-surface-dark p-6 shadow-sm flex flex-col gap-6 sticky top-24">
       <h2 className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
@@ -41,6 +49,15 @@ export function OrderSummary({ orderSummary, cartItemsCount, t }: OrderSummaryPr
       </div>
 
       <div className="h-px w-full bg-slate-100 dark:bg-slate-800"></div>
+
+      {listCompleteness && (
+        <p className="text-sm text-slate-600 dark:text-slate-400">
+          {t('Pages.Checkout.ListCompleteness', {
+            completed: listCompleteness.completed,
+            total: listCompleteness.total,
+          })}
+        </p>
+      )}
 
       <div className="flex justify-between items-end">
         <span className="text-lg font-bold text-slate-900 dark:text-white">

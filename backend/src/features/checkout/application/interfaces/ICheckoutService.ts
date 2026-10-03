@@ -17,6 +17,7 @@ export interface CheckoutValidateFailure {
   error: {
     code: string;
     message: string;
+    listItemIds?: number[];
   };
 }
 
@@ -45,10 +46,13 @@ export interface CheckoutAcceptFailure {
       | 'invalid-idempotency-key'
       | 'invalid-guest-id'
       | 'idempotency-conflict'
-      | 'idempotency-in-progress';
+      | 'idempotency-in-progress'
+      | 'list-unavailable'
+      | 'selection-invalid';
     message: string;
     quote?: CheckoutQuote;
     shortfalls?: Array<{ variantId: number; requested: number; available: number }>;
+    listItemIds?: number[];
   };
 }
 

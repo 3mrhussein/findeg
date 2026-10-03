@@ -1,6 +1,5 @@
 'use client';
 
-import type { CartItem } from '@findeg/backend/features/cart';
 import type {
   CheckoutAcceptFailure,
   CheckoutQuote,
@@ -17,10 +16,21 @@ export type AcceptanceFailure =
 
 interface AcceptanceFailureNoticeProps {
   failure: AcceptanceFailure;
-  cartItems: CartItem[];
+  items: Array<{
+    listItemId?: number;
+    variantId: number;
+    productName: string;
+    variantLabel?: string;
+  }>;
   isSubmitting: boolean;
   onConfirm: () => void;
   t: ReturnType<typeof import('next-intl').useTranslations>;
+}
+
+function quoteLineKey(line: Pick<CheckoutQuoteLine, 'listItemId' | 'variantId'>) {
+  return line.listItemId === undefined
+    ? `variant:${line.variantId}`
+    : `list-item:${line.listItemId}`;
 }
 
 function money(currency: string, amount: number) {
@@ -60,15 +70,11 @@ function ValueChange({
 /** Shows actionable details for the expected Order Acceptance failures. */
 export function AcceptanceFailureNotice({
   failure,
-  cartItems,
+  items,
   isSubmitting,
   onConfirm,
   t,
 }: AcceptanceFailureNoticeProps) {
-  const cartItemsByVariantId = new Map(
-    cartItems.map((item) => [Number(item.variantId), item] as const),
-  );
-
   if (failure.kind === 'insufficient-stock') {
     return (
       <section
@@ -83,7 +89,7 @@ export function AcceptanceFailureNotice({
         </p>
         <ul className="mt-4 space-y-2">
           {failure.shortfalls.map((shortfall) => {
-            const item = cartItemsByVariantId.get(shortfall.variantId);
+            const item = items.find((candidate) => candidate.variantId === shortfall.variantId);
             return (
               <li
                 key={shortfall.variantId}
@@ -106,12 +112,12 @@ export function AcceptanceFailureNotice({
 
   const { previousQuote, quote } = failure;
   const currency = quote.currency;
-  const previousLines = new Map(previousQuote.lines.map((line) => [line.variantId, line]));
-  const currentLines = new Map(quote.lines.map((line) => [line.variantId, line]));
-  const variantIds = new Set([...previousLines.keys(), ...currentLines.keys()]);
-  const changedVariantIds = [...variantIds].filter((variantId) => {
-    const previous = previousLines.get(variantId);
-    const current = currentLines.get(variantId);
+  const previousLines = new Map(previousQuote.lines.map((line) => [quoteLineKey(line), line]));
+  const currentLines = new Map(quote.lines.map((line) => [quoteLineKey(line), line]));
+  const lineKeys = new Set([...previousLines.keys(), ...currentLines.keys()]);
+  const changedLineKeys = [...lineKeys].filter((key) => {
+    const previous = previousLines.get(key);
+    const current = currentLines.get(key);
     return (
       !previous ||
       !current ||
@@ -132,12 +138,17 @@ export function AcceptanceFailureNotice({
       </h2>
       <p className="mt-1 text-sm">{t('Pages.Checkout.ReconfirmationDescription')}</p>
       <ul className="mt-4 space-y-2">
-        {changedVariantIds.map((variantId) => {
-          const previous = previousLines.get(variantId);
-          const current = currentLines.get(variantId);
-          const item = cartItemsByVariantId.get(variantId);
+        {changedLineKeys.map((key) => {
+          const previous = previousLines.get(key);
+          const current = currentLines.get(key);
+          const representative = current ?? previous!;
+          const item = items.find((candidate) =>
+            representative.listItemId === undefined
+              ? candidate.variantId === representative.variantId
+              : candidate.listItemId === representative.listItemId,
+          );
           return (
-            <li key={variantId} className="rounded-xl bg-white/70 p-3">
+            <li key={key} className="rounded-xl bg-white/70 p-3">
               <span className="block font-semibold">
                 {item?.productName || t('Pages.Checkout.ItemFallback')}
               </span>

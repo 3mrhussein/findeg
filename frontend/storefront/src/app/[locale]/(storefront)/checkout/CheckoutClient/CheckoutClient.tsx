@@ -23,11 +23,27 @@ import type {
 import { getGuestId } from './CheckoutClient.interface';
 import { OrderConfirmation } from './OrderConfirmation';
 import { AcceptanceFailureNotice, type AcceptanceFailure } from './AcceptanceFailureNotice';
+import {
+  linesForPost,
+  listCompleteness,
+  loadSelection,
+  resetSelection,
+  seedSelection,
+  type ListSelection,
+} from '@/lib/list-selection/list-selection';
 
 /** The order body as sent: the form still offers 'card', which the backend rejects until supported. */
 type PendingOrderPayload = Omit<CheckoutOrderInput, 'paymentMethod'> & {
   paymentMethod: 'cod' | 'card';
 };
+
+interface PendingAttempt {
+  signature: string;
+  idempotencyKey: string;
+  totals: CheckoutTotals;
+  quote: CheckoutQuote;
+  payload: PendingOrderPayload;
+}
 
 function toCheckoutTotals(quote: CheckoutQuote): CheckoutTotals {
   return {
@@ -41,20 +57,32 @@ function toCheckoutTotals(quote: CheckoutQuote): CheckoutTotals {
 /**
  * CheckoutClient — multi-step checkout wizard: shipping → payment → confirmation.
  */
-export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
+export function CheckoutClient({
+  initialPrefill,
+  checkoutSource = { source: 'cart' },
+}: CheckoutClientProps) {
   const t = useTranslations();
   const { cartItems, cartTotal, clearCart } = useCart();
+  const list = checkoutSource.source === 'list' ? checkoutSource.list : null;
+  const sourceKey = list ? `list:${list.publicCode}` : 'cart';
+  const [selection, setSelection] = useState<ListSelection | null>(() =>
+    list ? seedSelection(list) : null,
+  );
+  const [hydratedListKey, setHydratedListKey] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderResult, setOrderResult] = useState<PlaceOrderResult | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [acceptanceFailure, setAcceptanceFailure] = useState<AcceptanceFailure | null>(null);
   const [validatedTotals, setValidatedTotals] = useState<CheckoutTotals | null>(null);
-  const pendingAttemptRef = useRef<{
-    idempotencyKey: string;
-    totals: CheckoutTotals;
-    quote: CheckoutQuote;
-    payload: PendingOrderPayload;
-  } | null>(null);
+  const pendingAttemptsRef = useRef(new Map<string, PendingAttempt>());
+  const selectedLines = list && selection ? linesForPost(selection) : [];
+  const checkoutLines = list
+    ? selectedLines
+    : cartItems.map((item) => ({
+        variantId: Number(item.variantId),
+        quantity: item.quantity,
+      }));
+  const hasItems = checkoutLines.length > 0;
   const {
     formValues,
     paymentMethod,
@@ -65,37 +93,92 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
     revealAllErrors,
     getFieldError,
   } = useCheckoutForm({
-    cartItemsCount: cartItems.length,
+    cartItemsCount: checkoutLines.length,
     initialValues: initialPrefill || undefined,
   });
 
   // Reset attempt key and payload if checkout inputs change so modified orders get a fresh key.
   // Keyed on a content signature, not object identity: a cart refetch or re-render that yields
   // equal values must not discard the key mid-retry.
-  const inputsSignature = JSON.stringify([
-    formValues,
-    cartItems.map((item) => [item.variantId, item.quantity]),
-    paymentMethod,
-  ]);
+  const inputsSignature = JSON.stringify([sourceKey, formValues, checkoutLines, paymentMethod]);
+
   useEffect(() => {
-    discardAttempt();
-  }, [inputsSignature]);
+    if (!list) {
+      setSelection(null);
+      setHydratedListKey(null);
+      return;
+    }
+    setSelection(loadSelection(list, window.localStorage).selection);
+    setHydratedListKey(sourceKey);
+  }, [list, sourceKey]);
+
+  useEffect(() => {
+    // A list's persisted selection loads after the first render. Do not compare
+    // against the transient selection left by another source and discard a
+    // perfectly matching retry attempt before hydration finishes.
+    if (list && hydratedListKey !== sourceKey) return;
+    const attempt = pendingAttemptsRef.current.get(sourceKey);
+    if (attempt && attempt.signature !== inputsSignature) {
+      pendingAttemptsRef.current.delete(sourceKey);
+      setValidatedTotals(null);
+      setAcceptanceFailure(null);
+      return;
+    }
+    setValidatedTotals(attempt?.totals ?? null);
+    setAcceptanceFailure(null);
+  }, [hydratedListKey, inputsSignature, list, sourceKey]);
+
+  useEffect(() => {
+    setOrderResult(null);
+    setErrorMessage(null);
+  }, [sourceKey]);
 
   /** Drops the pending attempt and the quote it produced, so the summary never shows stale totals. */
   function discardAttempt() {
-    pendingAttemptRef.current = null;
+    pendingAttemptsRef.current.delete(sourceKey);
     setValidatedTotals(null);
     setAcceptanceFailure(null);
   }
 
   const optimisticShipping = paymentMethod === 'cod' ? 50 : 30;
-  const optimisticTotal = cartTotal + optimisticShipping;
+  const listTotal = list
+    ? selectedLines.reduce((sum, line) => {
+        const item = list.items.find((candidate) => candidate.id === line.listItemId);
+        const variant = item?.eligibleVariants.find(
+          (candidate) => candidate.variantId === line.variantId,
+        );
+        return sum + Number(variant?.price ?? 0) * line.quantity;
+      }, 0)
+    : cartTotal;
+  const optimisticTotal = listTotal + optimisticShipping;
   const orderSummary = validatedTotals || {
-    subtotal: cartTotal,
+    subtotal: listTotal,
     shippingCost: optimisticShipping,
     total: optimisticTotal,
     currency: 'EGP',
   };
+  const acceptanceItems = list
+    ? selectedLines.flatMap((line) => {
+        const item = list.items.find((candidate) => candidate.id === line.listItemId);
+        const variant =
+          item?.eligibleVariants.find((candidate) => candidate.variantId === line.variantId) ??
+          (item?.defaultVariant.variantId === line.variantId ? item.defaultVariant : undefined);
+        if (!item) return [];
+        return [
+          {
+            listItemId: line.listItemId,
+            variantId: line.variantId,
+            productName:
+              variant?.name.en || variant?.name.ar || item.label.en || item.label.ar || '',
+            variantLabel: variant?.variantLabel?.en || variant?.variantLabel?.ar || undefined,
+          },
+        ];
+      })
+    : cartItems.map((item) => ({
+        variantId: Number(item.variantId),
+        productName: item.productName,
+        variantLabel: item.variantLabel || undefined,
+      }));
 
   /**
    *
@@ -138,12 +221,13 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
       let idempotencyKey: string;
       let orderPayload: PendingOrderPayload;
 
-      if (pendingAttemptRef.current) {
+      const pendingAttempt = pendingAttemptsRef.current.get(sourceKey);
+      if (pendingAttempt) {
         // Reuse original key and payload on retry so that matching replays return the stored order
         // even if price/quote changed in the meantime (per Issue #239).
-        idempotencyKey = pendingAttemptRef.current.idempotencyKey;
-        orderPayload = pendingAttemptRef.current.payload;
-        setValidatedTotals(pendingAttemptRef.current.totals);
+        idempotencyKey = pendingAttempt.idempotencyKey;
+        orderPayload = pendingAttempt.payload;
+        setValidatedTotals(pendingAttempt.totals);
       } else {
         const address = {
           fullName: formValues.fullName.trim(),
@@ -156,17 +240,15 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
           apartment: formValues.apartment.trim() || undefined,
           notes: formValues.notes.trim() || undefined,
         };
-        const lines = cartItems.map((item) => ({
-          variantId: Number(item.variantId),
-          quantity: item.quantity,
-        }));
+        const sourceInput = list
+          ? { source: 'list' as const, publicCode: list.publicCode, lines: selectedLines }
+          : { source: 'cart' as const, lines: checkoutLines };
 
         const validateResponse = await fetch('/api/v1/checkout/validate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'X-Guest-Id': guestId },
           body: JSON.stringify({
-            source: 'cart',
-            lines,
+            ...sourceInput,
             address,
             paymentMethod,
           }),
@@ -181,20 +263,20 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
 
         idempotencyKey = crypto.randomUUID();
         orderPayload = {
-          source: 'cart',
-          lines,
+          ...sourceInput,
           confirmation: quote.confirmation,
           address,
           paymentMethod,
           guestEmail: formValues.guestEmail.trim() || undefined,
         };
 
-        pendingAttemptRef.current = {
+        pendingAttemptsRef.current.set(sourceKey, {
+          signature: inputsSignature,
           idempotencyKey,
           totals,
           quote,
           payload: orderPayload,
-        };
+        });
       }
 
       const orderResponse = await fetch('/api/v1/checkout/order', {
@@ -216,23 +298,24 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
         if (
           orderJson.error?.code === 'reconfirmation-required' &&
           orderJson.error.quote &&
-          pendingAttemptRef.current
+          pendingAttemptsRef.current.get(sourceKey)
         ) {
-          const previousQuote = pendingAttemptRef.current.quote;
+          const previousQuote = pendingAttemptsRef.current.get(sourceKey)!.quote;
           const quote = orderJson.error.quote;
           const totals = toCheckoutTotals(quote);
-          pendingAttemptRef.current = {
+          pendingAttemptsRef.current.set(sourceKey, {
+            signature: inputsSignature,
             idempotencyKey: crypto.randomUUID(),
             totals,
             quote,
             payload: { ...orderPayload, confirmation: quote.confirmation },
-          };
+          });
           setValidatedTotals(totals);
           setAcceptanceFailure({ kind: 'reconfirmation-required', previousQuote, quote });
           return;
         }
         if (orderJson.error?.code === 'insufficient-stock' && orderJson.error.shortfalls?.length) {
-          pendingAttemptRef.current = null;
+          pendingAttemptsRef.current.delete(sourceKey);
           setValidatedTotals(null);
           setAcceptanceFailure({
             kind: 'insufficient-stock',
@@ -249,14 +332,19 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
         }
         throw new Error(orderJson?.error?.message || t('Pages.Checkout.OrderCreationFailed'));
       }
-      pendingAttemptRef.current = null;
+      pendingAttemptsRef.current.delete(sourceKey);
       setOrderResult({
         success: true,
         orderId: receipt?.order.id,
         orderReference: receipt?.order.orderReference,
         message: receipt?.message || t('Pages.Checkout.OrderCreatedSuccessfully'),
       });
-      clearCart();
+      if (list) {
+        resetSelection(list.publicCode, window.localStorage);
+        setSelection(seedSelection(list));
+      } else {
+        clearCart();
+      }
     } catch (error) {
       const message =
         error instanceof Error ? error.message : t('Pages.Checkout.FailedToPlaceOrder');
@@ -280,14 +368,14 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
           >
             {t('Pages.Checkout.Title') || 'Secure Checkout'}
           </h1>
-          {!orderResult?.success && cartItems.length > 0 && (
+          {!orderResult?.success && hasItems && (
             <p className="text-lg text-slate-500 max-w-lg mx-auto">
               You&apos;re almost there! Complete your details below to finalize your order.
             </p>
           )}
         </div>
 
-        {cartItems.length === 0 && !orderResult?.success && (
+        {!hasItems && !orderResult?.success && (
           <SectionStateEmpty
             title={t('Pages.Cart.Empty')}
             description={t('Pages.Checkout.EmptyDescription')}
@@ -303,7 +391,7 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
             confirmTitle={t('Pages.Checkout.OrderConfirmed')}
             orderReferenceLabel={t('Pages.Checkout.OrderReference')}
           />
-        ) : cartItems.length > 0 ? (
+        ) : hasItems ? (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-12">
             <form
               className="lg:col-span-2 space-y-10 order-2 lg:order-1"
@@ -364,7 +452,7 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
               {acceptanceFailure && (
                 <AcceptanceFailureNotice
                   failure={acceptanceFailure}
-                  cartItems={cartItems}
+                  items={acceptanceItems}
                   isSubmitting={isSubmitting}
                   onConfirm={() => void handlePlaceOrder()}
                   t={t}
@@ -388,7 +476,12 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
               </Button>
             </form>
             <div className="lg:col-span-1 order-1 lg:order-2">
-              <OrderSummary orderSummary={orderSummary} cartItemsCount={cartItems.length} t={t} />
+              <OrderSummary
+                orderSummary={orderSummary}
+                cartItemsCount={checkoutLines.length}
+                listCompleteness={list && selection ? listCompleteness(list, selection) : undefined}
+                t={t}
+              />
             </div>
           </div>
         ) : null}
