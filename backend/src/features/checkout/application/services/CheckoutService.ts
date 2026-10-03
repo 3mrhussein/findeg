@@ -195,6 +195,7 @@ export class CheckoutService implements ICheckoutService {
       paymentMethod: parsed.data.paymentMethod,
       deliveryMethod: parsed.data.deliveryMethod,
       confirmation,
+      guestEmail: effectiveUserId ? undefined : guestEmail,
     });
 
     // Check saved outcome before any re-quote (ADR-0005)

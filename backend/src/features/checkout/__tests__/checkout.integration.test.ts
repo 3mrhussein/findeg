@@ -940,6 +940,24 @@ describe('Checkout feature integration tests on real Postgres', () => {
         expect(confirmationConflict.error.code).toBe('idempotency-conflict');
       }
 
+      // 3b. Conflict on different guest email (must never replay another customer's receipt)
+      const guestEmailConflict = await checkoutService.accept(
+        {
+          source: 'cart',
+          lines: [{ variantId: itemA.variantId, quantity: 1 }],
+          confirmation: quote.data.confirmation,
+          paymentMethod: 'cod',
+          address: validAddress,
+          guestEmail: 'someone-else@example.com',
+        },
+        { idempotencyKey, guestId },
+      );
+      expect(guestEmailConflict.success).toBe(false);
+      if (!guestEmailConflict.success) {
+        expect(guestEmailConflict.status).toBe(409);
+        expect(guestEmailConflict.error.code).toBe('idempotency-conflict');
+      }
+
       // 4. Conflict on different delivery method
       const deliveryMethodConflict = await checkoutService.accept(
         {

@@ -51,10 +51,17 @@ export function CheckoutClient({ initialPrefill }: CheckoutClientProps) {
     initialValues: initialPrefill || undefined,
   });
 
-  // Reset attempt key and payload if checkout inputs change so modified orders get a fresh key
+  // Reset attempt key and payload if checkout inputs change so modified orders get a fresh key.
+  // Keyed on a content signature, not object identity: a cart refetch or re-render that yields
+  // equal values must not discard the key mid-retry.
+  const inputsSignature = JSON.stringify([
+    formValues,
+    cartItems.map((item) => [item.variantId, item.quantity]),
+    paymentMethod,
+  ]);
   useEffect(() => {
     pendingAttemptRef.current = null;
-  }, [formValues, cartItems, paymentMethod]);
+  }, [inputsSignature]);
 
   const optimisticShipping = paymentMethod === 'cod' ? 50 : 30;
   const optimisticTotal = cartTotal + optimisticShipping;
