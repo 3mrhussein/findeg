@@ -56,3 +56,15 @@ export const VariantSnapshotSchema = z
   .passthrough();
 
 export type VariantSnapshot = z.infer<typeof VariantSnapshotSchema>;
+
+export interface CheckoutReceipt {
+  order: {
+    id: number;
+    orderReference: string;
+    status: OrderStatus;
+    paymentStatus: PaymentStatus;
+    totalAmount: string;
+    currency: string;
+  };
+  message: string;
+}

@@ -15,8 +15,16 @@ export async function POST(request: Request) {
 
   delete body.userId;
 
+  // Length validation of both headers lives in the checkout service.
+  const idempotencyKey = request.headers.get('idempotency-key') || undefined;
+  const guestId = request.headers.get('x-guest-id') || undefined;
+
   const checkoutService = createCheckoutService();
-  const result = await checkoutService.accept(body, { userId });
+  const result = await checkoutService.accept(body, {
+    userId,
+    guestId,
+    idempotencyKey,
+  });
 
   if (!result.success) {
     return Response.json({ success: false, error: result.error }, { status: result.status });

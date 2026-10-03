@@ -41,7 +41,11 @@ export interface CheckoutAcceptFailure {
       | 'unavailable-variant'
       | 'unsupported-payment-method'
       | 'validation-error'
-      | string;
+      | 'missing-idempotency-key'
+      | 'invalid-idempotency-key'
+      | 'invalid-guest-id'
+      | 'idempotency-conflict'
+      | 'idempotency-in-progress';
     message: string;
     quote?: CheckoutQuote;
     shortfalls?: Array<{ variantId: number; requested: number; available: number }>;

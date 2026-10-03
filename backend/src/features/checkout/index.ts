@@ -25,5 +25,6 @@ export type {
   CheckoutQuote,
   CheckoutQuoteLine,
   CheckoutAcceptedOrder,
+  CheckoutReceipt,
   ShippingAddress,
 } from './schemas';
