@@ -17,8 +17,33 @@ export async function POST(request: Request) {
 
   const idempotencyKey =
     request.headers.get('idempotency-key') || request.headers.get('Idempotency-Key') || undefined;
+  if (idempotencyKey && idempotencyKey.length > 255) {
+    return Response.json(
+      {
+        success: false,
+        error: {
+          code: 'invalid-idempotency-key',
+          message: 'Idempotency-Key header must not exceed 255 characters',
+        },
+      },
+      { status: 400 },
+    );
+  }
+
   const guestId =
     request.headers.get('x-guest-id') || request.headers.get('X-Guest-Id') || undefined;
+  if (guestId && guestId.length > 200) {
+    return Response.json(
+      {
+        success: false,
+        error: {
+          code: 'invalid-guest-id',
+          message: 'X-Guest-Id header must not exceed 200 characters',
+        },
+      },
+      { status: 400 },
+    );
+  }
 
   const checkoutService = createCheckoutService();
   const result = await checkoutService.accept(body, {

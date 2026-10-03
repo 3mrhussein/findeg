@@ -42,6 +42,8 @@ export interface CheckoutAcceptFailure {
       | 'unsupported-payment-method'
       | 'validation-error'
       | 'missing-idempotency-key'
+      | 'invalid-idempotency-key'
+      | 'invalid-guest-id'
       | 'idempotency-conflict'
       | string;
     message: string;

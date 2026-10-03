@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import {
   categories,
   inventoryBalances,
@@ -1154,6 +1154,125 @@ describe('Checkout feature integration tests on real Postgres', () => {
         .from(checkoutIdempotency)
         .where(eq(checkoutIdempotency.key, idempotencyKey));
       expect(rows).toHaveLength(1);
+    });
+
+    it('reusing an expired idempotency key (>24h) creates a new order and replaces the expired row', async () => {
+      const item = await createVariantWithStock({ price: '25.00', onHand: 10 });
+      const idempotencyKey = `expired-key-${sequence}`;
+      const guestId = `guest-exp-${sequence}`;
+
+      const quote = await checkoutService.validate({
+        source: 'cart',
+        lines: [{ variantId: item.variantId, quantity: 1 }],
+      });
+      expect(quote.success).toBe(true);
+      if (!quote.success) return;
+
+      const orderPayload = {
+        source: 'cart' as const,
+        lines: [{ variantId: item.variantId, quantity: 1 }],
+        confirmation: quote.data.confirmation,
+        paymentMethod: 'cod' as const,
+        address: validAddress,
+        guestEmail: 'expired-key@example.com',
+      };
+
+      // 1. Initial successful order
+      const firstResult = await checkoutService.accept(orderPayload, { idempotencyKey, guestId });
+      expect(firstResult.success).toBe(true);
+      if (!firstResult.success) return;
+
+      // 2. Age the row to 25 hours ago
+      await testDb.db
+        .update(checkoutIdempotency)
+        .set({ createdAt: sql`now() - interval '25 hours'` })
+        .where(eq(checkoutIdempotency.key, idempotencyKey));
+
+      // 3. New quote and submission with the SAME expired idempotency key
+      const secondQuote = await checkoutService.validate({
+        source: 'cart',
+        lines: [{ variantId: item.variantId, quantity: 1 }],
+      });
+      expect(secondQuote.success).toBe(true);
+      if (!secondQuote.success) return;
+
+      const secondResult = await checkoutService.accept(
+        {
+          ...orderPayload,
+          confirmation: secondQuote.data.confirmation,
+        },
+        { idempotencyKey, guestId },
+      );
+
+      expect(secondResult.success).toBe(true);
+      if (!secondResult.success) return;
+
+      // A fresh order was created with a different reference
+      expect(secondResult.data.order.orderReference).not.toBe(
+        firstResult.data.order.orderReference,
+      );
+
+      // The old expired row was purged, exactly one active row remains in checkout_idempotency
+      const rows = await testDb.db
+        .select()
+        .from(checkoutIdempotency)
+        .where(eq(checkoutIdempotency.key, idempotencyKey));
+      expect(rows).toHaveLength(1);
+      expect(rows[0].orderReference).toBe(secondResult.data.order.orderReference);
+    });
+
+    it('rejects oversized idempotency-key (>255 chars) with 400 invalid-idempotency-key', async () => {
+      const item = await createVariantWithStock({ price: '25.00', onHand: 10 });
+      const quote = await checkoutService.validate({
+        source: 'cart',
+        lines: [{ variantId: item.variantId, quantity: 1 }],
+      });
+      expect(quote.success).toBe(true);
+      if (!quote.success) return;
+
+      const result = await checkoutService.accept(
+        {
+          source: 'cart',
+          lines: [{ variantId: item.variantId, quantity: 1 }],
+          confirmation: quote.data.confirmation,
+          paymentMethod: 'cod',
+          address: validAddress,
+          guestEmail: 'oversized@example.com',
+        },
+        { idempotencyKey: 'x'.repeat(256) },
+      );
+
+      expect(result.success).toBe(false);
+      if (result.success) return;
+      expect(result.status).toBe(400);
+      expect(result.error.code).toBe('invalid-idempotency-key');
+    });
+
+    it('rejects oversized guestId (>200 chars) with 400 invalid-guest-id', async () => {
+      const item = await createVariantWithStock({ price: '25.00', onHand: 10 });
+      const quote = await checkoutService.validate({
+        source: 'cart',
+        lines: [{ variantId: item.variantId, quantity: 1 }],
+      });
+      expect(quote.success).toBe(true);
+      if (!quote.success) return;
+
+      const result = await checkoutService.accept(
+        {
+          source: 'cart',
+          lines: [{ variantId: item.variantId, quantity: 1 }],
+          confirmation: quote.data.confirmation,
+          paymentMethod: 'cod',
+          address: validAddress,
+          guestEmail: 'oversized@example.com',
+        },
+        { idempotencyKey: `valid-key-${sequence}`, guestId: 'g'.repeat(201) },
+      );
+
+      expect(result.success).toBe(false);
+      if (result.success) return;
+      expect(result.status).toBe(400);
+      expect(result.error.code).toBe('invalid-guest-id');
     });
   });
 });

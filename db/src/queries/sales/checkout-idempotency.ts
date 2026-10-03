@@ -36,6 +36,17 @@ export async function createInitial(
   tx?: DbTransaction,
 ): Promise<CheckoutIdempotency> {
   return withTransaction(tx, async (executor) => {
+    // Delete any expired row for this (scope, key) so keys older than 24h can be reused
+    await executor
+      .delete(checkoutIdempotency)
+      .where(
+        and(
+          eq(checkoutIdempotency.scope, data.scope),
+          eq(checkoutIdempotency.key, data.key),
+          sql`${checkoutIdempotency.createdAt} < now() - interval '24 hours'`,
+        ),
+      );
+
     const [row] = await executor
       .insert(checkoutIdempotency)
       .values({

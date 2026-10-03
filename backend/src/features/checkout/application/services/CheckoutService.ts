@@ -146,9 +146,46 @@ export class CheckoutService implements ICheckoutService {
       };
     }
 
-    const scope = effectiveUserId
-      ? `user:${effectiveUserId}`
-      : `guest:${context?.guestId?.trim() || guestEmail}`;
+    if (idempotencyKey.length > 255) {
+      return {
+        success: false,
+        status: 400,
+        error: {
+          code: 'invalid-idempotency-key',
+          message: 'Idempotency-Key must not exceed 255 characters',
+        },
+      };
+    }
+
+    const guestId = context?.guestId?.trim();
+    if (guestId && guestId.length > 200) {
+      return {
+        success: false,
+        status: 400,
+        error: {
+          code: 'invalid-guest-id',
+          message: 'Guest ID must not exceed 200 characters',
+        },
+      };
+    }
+
+    // Scope hierarchy per ADR-0005:
+    // - Authenticated customer: `user:<userId>`
+    // - Guest customer with client session token (e.g. storefront X-Guest-Id): `guest:<guestId>`
+    // - Guest fallback when token omitted (e.g. direct API callers / automated tests): `guest:<guestEmail>`
+    const guestScopeId = guestId || guestEmail;
+    const scope = effectiveUserId ? `user:${effectiveUserId}` : `guest:${guestScopeId}`;
+
+    if (scope.length > 255) {
+      return {
+        success: false,
+        status: 400,
+        error: {
+          code: 'invalid-guest-id',
+          message: 'Guest identifier is too long',
+        },
+      };
+    }
 
     const { lines, confirmation, address } = parsed.data;
 
@@ -299,17 +336,18 @@ export class CheckoutService implements ICheckoutService {
         };
       });
     } catch (err: unknown) {
-      const cause = (
-        err as { cause?: { code?: string; constraint_name?: string; message?: string } }
-      )?.cause;
-      const isUniqueViolation =
-        (err as { code?: string })?.code === '23505' ||
-        cause?.code === '23505' ||
+      const errObj = err as {
+        constraint_name?: string;
+        cause?: { code?: string; constraint_name?: string; message?: string };
+      };
+      const cause = errObj?.cause;
+      const isIdempotencyConflict =
         cause?.constraint_name === 'uq_checkout_idempotency_scope_key' ||
+        errObj?.constraint_name === 'uq_checkout_idempotency_scope_key' ||
         String(err).includes('uq_checkout_idempotency_scope_key') ||
         String(cause?.message).includes('uq_checkout_idempotency_scope_key');
 
-      if (isUniqueViolation) {
+      if (isIdempotencyConflict) {
         for (let attempt = 0; attempt < 10; attempt++) {
           const saved = await checkoutIdempotencyQueries.findByScopeAndKey(scope, idempotencyKey);
           if (saved) {
