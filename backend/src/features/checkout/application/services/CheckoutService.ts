@@ -337,16 +337,7 @@ export class CheckoutService implements ICheckoutService {
         };
       });
     } catch (err: unknown) {
-      const errObj = err as {
-        constraint_name?: string;
-        cause?: { code?: string; constraint_name?: string; message?: string };
-      };
-      const cause = errObj?.cause;
-      const isIdempotencyConflict =
-        cause?.constraint_name === 'uq_checkout_idempotency_scope_key' ||
-        errObj?.constraint_name === 'uq_checkout_idempotency_scope_key' ||
-        String(err).includes('uq_checkout_idempotency_scope_key') ||
-        String(cause?.message).includes('uq_checkout_idempotency_scope_key');
+      const isIdempotencyConflict = checkoutIdempotencyQueries.isScopeKeyConflict(err);
 
       if (isIdempotencyConflict) {
         for (let attempt = 0; attempt < 10; attempt++) {
@@ -372,6 +363,16 @@ export class CheckoutService implements ICheckoutService {
           }
           await new Promise((resolve) => setTimeout(resolve, 50));
         }
+        // The winning attempt hasn't recorded an outcome yet; tell the client to retry the same
+        // key rather than surfacing a 500.
+        return {
+          success: false,
+          status: 409,
+          error: {
+            code: 'idempotency-in-progress',
+            message: 'A request with this Idempotency-Key is still being processed; retry shortly',
+          },
+        };
       }
 
       if (err instanceof ReconfirmationRequiredError) {

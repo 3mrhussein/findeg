@@ -45,6 +45,7 @@ export interface CheckoutAcceptFailure {
       | 'invalid-idempotency-key'
       | 'invalid-guest-id'
       | 'idempotency-conflict'
+      | 'idempotency-in-progress'
       | string;
     message: string;
     quote?: CheckoutQuote;

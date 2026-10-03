@@ -6,6 +6,28 @@ import type { CheckoutReceipt } from '../../types/sales';
 
 export const IDEMPOTENCY_RETENTION_HOURS = 24;
 
+const UNIQUE_VIOLATION = '23505';
+const SCOPE_KEY_INDEX = 'uq_checkout_idempotency_scope_key';
+
+/**
+ * True when `err` (or anything in its `cause` chain, since drizzle wraps driver errors) is a
+ * Postgres unique violation (SQLSTATE 23505) on the (scope, key) index.
+ */
+export function isScopeKeyConflict(err: unknown): boolean {
+  let current: unknown = err;
+  for (let depth = 0; depth < 5 && current && typeof current === 'object'; depth++) {
+    const e = current as { code?: unknown; constraint_name?: unknown; constraint?: unknown };
+    if (
+      e.code === UNIQUE_VIOLATION &&
+      (e.constraint_name === SCOPE_KEY_INDEX || e.constraint === SCOPE_KEY_INDEX)
+    ) {
+      return true;
+    }
+    current = (current as { cause?: unknown }).cause;
+  }
+  return false;
+}
+
 export async function findByScopeAndKey(
   scope: string,
   key: string,
