@@ -15,6 +15,8 @@ interface OrderStatusUpdateEmailProps {
   customerName: string;
   newStatus: string;
   trackingNumber?: string;
+  /** Locale-less path of the order page; defaults to the account page for `orderId`. */
+  orderPath?: string;
   locale?: string;
 }
 
@@ -60,6 +62,7 @@ export const OrderStatusUpdateEmail = ({
   customerName = 'Customer',
   newStatus = 'shipped',
   trackingNumber,
+  orderPath,
   locale = 'en',
 }: OrderStatusUpdateEmailProps) => {
   const isRtl = locale === 'ar';
@@ -95,7 +98,10 @@ export const OrderStatusUpdateEmail = ({
       )}
 
       <Section style={btnContainer}>
-        <Button style={button} href={`${BASE_URL}/${locale}/my-account/orders/${orderId}`}>
+        <Button
+          style={button}
+          href={`${BASE_URL}/${locale}${orderPath ?? `/my-account/orders/${orderId}`}`}
+        >
           {content.trackOrderStr}
         </Button>
       </Section>

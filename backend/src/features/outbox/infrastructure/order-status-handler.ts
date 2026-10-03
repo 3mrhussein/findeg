@@ -35,6 +35,10 @@ export function createOrderStatusHandler(emailProvider: EmailProvider): OutboxHa
         customerName: order.customerName || 'Customer',
         newStatus: status,
         trackingNumber: order.trackingNumber ?? undefined,
+        // Account orders are keyed by id; guests land on their reference page (or the lookup form).
+        orderPath: order.userId
+          ? `/my-account/orders/${order.id}`
+          : `/guest-orders/${encodeURIComponent(order.orderReference)}`,
         locale,
       }),
       idempotencyKey: rowId,

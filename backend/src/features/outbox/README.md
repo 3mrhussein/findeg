@@ -14,6 +14,20 @@ afterwards, at least once.
 - **Email** goes through an injectable `EmailProvider` (Resend by default, passing the row id as
   `idempotencyKey`).
 
+## Kinds
+
+- `order-accepted:<ref>`: confirmation email, enqueued by checkout.
+- `order-status:<ref>:<status>`: `shipped`, `delivered` and `cancelled` emails, enqueued by
+  `transitionOrderStatus` in its own transaction. The id carries the status, so a repeated
+  transition sends nothing new.
+- `guest-access:<requestId>`: guest access code email.
+
+## Exhausted rows
+
+The Dashboard shows the exhausted count (`countExhaustedOutbox`) and lists the rows
+(`listExhaustedOutbox`). Staff retry (`retryOutbox(id)`) puts a row back to `pending` with a fresh
+attempt budget; it returns false if the row is no longer exhausted.
+
 ## Triggers
 
 1. The enqueueing route calls `drainOutbox()` through Next.js `after()` once its response is sent.

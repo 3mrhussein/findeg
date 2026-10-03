@@ -299,6 +299,7 @@ describe('transitionOrderStatus on real Postgres', () => {
         expect(rows.filter((row) => row.id === id)).toHaveLength(1);
         const statusEmails = provider.sent.filter((email) => email.idempotencyKey === id);
         expect(statusEmails).toHaveLength(1);
+        expect(JSON.stringify(statusEmails[0].react)).toContain(`/guest-orders/${orderReference}`);
         expect(statusEmails[0].to).toMatch(/^transition-\d+@example\.com$/);
       },
     );
