@@ -106,6 +106,13 @@
       "when": 1791058226918,
       "tag": "0014_brainy_kulan_gath",
       "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1791066281903,
+      "tag": "0015_list_offers",
+      "breakpoints": true
     }
   ]
 }

@@ -89,6 +89,11 @@ export const orders = salesSchema.table(
       onDelete: 'restrict',
     }),
 
+    /** List Offer basis points applied at acceptance; null when no offer was active. */
+    listOfferBasisPoints: integer('list_offer_basis_points'),
+    /** Sum of every line's discount_amount. */
+    discountTotal: decimal('discount_total', { precision: 10, scale: 2 }).notNull().default('0'),
+
     // Shipping
     /** Frozen address snapshot at time of order */
     shippingAddressSnapshot: jsonb('shipping_address_snapshot').$type<ShippingAddress>(),
@@ -147,7 +152,12 @@ export const orderItems = salesSchema.table(
     variantSkuSnapshot: text('variant_sku_snapshot'),
     /** Price per unit at time of order */
     unitPriceSnapshot: decimal('unit_price_snapshot', { precision: 10, scale: 2 }),
+    /** Gross catalog unit price at acceptance, before any discount. */
     unitPrice: decimal('unit_price', { precision: 10, scale: 2 }).notNull().default('0'),
+    /** Discount applied to the whole line. */
+    discountAmount: decimal('discount_amount', { precision: 10, scale: 2 }).notNull().default('0'),
+    /** Post-discount line total; the Partner Points basis. */
+    lineTotal: decimal('line_total', { precision: 10, scale: 2 }).notNull().default('0'),
 
     /** Selected variant details at time of order */
     variantSnapshot: jsonb('variant_snapshot').$type<VariantSnapshot>(),

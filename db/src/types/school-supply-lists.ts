@@ -42,3 +42,14 @@ export const SupplyListItemSchema = z
 export type CreateSupplyListDraftInput = z.infer<typeof CreateSupplyListDraftSchema>;
 export type UpdateSupplyListDraftInput = z.infer<typeof UpdateSupplyListDraftSchema>;
 export type SupplyListItemInput = z.infer<typeof SupplyListItemSchema>;
+
+/** Staff input for a List Offer: basis points 0 to 10000 and a window with `endsAt` after `startsAt`. */
+export const ListOfferSchema = z
+  .object({
+    basisPoints: z.number().int().min(0).max(10000),
+    startsAt: z.date(),
+    endsAt: z.date().nullable(),
+  })
+  .strict()
+  .refine((offer) => offer.endsAt === null || offer.endsAt > offer.startsAt);
+export type ListOfferInput = z.infer<typeof ListOfferSchema>;

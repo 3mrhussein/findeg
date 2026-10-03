@@ -6,11 +6,15 @@ import {
   UpdateSupplyListDraftSchema,
   SupplyListItemSchema,
   SupplyListIdSchema,
+  ListOfferSchema,
 } from '@findeg/db/types';
 import {
   archiveSupplyList,
+  copyListOffer,
+  deleteListOffer,
   deleteSupplyListItem,
   findVariantCandidates,
+  getListOffer,
   getPublishedSupplyListInSlot,
   getSupplyList,
   getAvailableQuantities,
@@ -19,12 +23,14 @@ import {
   insertSupplyListDraft,
   insertSupplyListItem,
   isSupplyListSlotTakenError,
+  listSupplyListsForPartner,
   lockSupplyList,
   lockSupplyListPartner,
   publishSupplyList,
   snapshotSupplyListItem,
   updateSupplyListDraft,
   updateSupplyListItem,
+  upsertListOffer,
   type SchoolSupplyListDatabase,
   type SchoolSupplyListTransaction,
 } from '@findeg/db/queries/school-supply-lists';
@@ -40,6 +46,7 @@ import type {
   SupplyListResult,
   SupplyListStaffActor,
   UpdateSupplyListDraftInput,
+  ListOfferInput,
 } from '../interfaces/ISchoolSupplyListService';
 
 type ValidatedSupplyListItem = SchoolSupplyListItemRow & {
@@ -226,6 +233,7 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
           now,
           incumbent?.id ?? null,
         );
+        if (incumbent) await copyListOffer(tx, incumbent.id, published.id, now);
         return ok({ list: await aggregate(tx, published), warnings });
       });
     } catch (error) {
@@ -245,6 +253,35 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
   async getById(actor: SupplyListStaffActor, listId: number) {
     if (!canRead(actor)) return fail('forbidden');
     return this.withList(listId, async (tx, list) => ok(await aggregate(tx, list)));
+  }
+
+  async listForPartner(actor: SupplyListStaffActor, businessPartnerId: number) {
+    if (!canRead(actor)) return fail('forbidden');
+    if (!SupplyListIdSchema.safeParse(businessPartnerId).success) return fail('invalid-input');
+    const db = await this.getDb();
+    return ok(await listSupplyListsForPartner(db, businessPartnerId));
+  }
+
+  async getOffer(actor: SupplyListStaffActor, listId: number) {
+    if (!canRead(actor)) return fail('forbidden');
+    return this.withList(listId, async (tx, list) => ok((await getListOffer(tx, list.id)) ?? null));
+  }
+
+  async setOffer(actor: SupplyListStaffActor, listId: number, input: ListOfferInput) {
+    if (!canWrite(actor)) return fail('forbidden');
+    const parsed = ListOfferSchema.safeParse(input);
+    if (!parsed.success) return fail('invalid-input');
+    return this.withList(listId, async (tx, list) =>
+      ok(await upsertListOffer(tx, list.id, parsed.data, this.clock())),
+    );
+  }
+
+  async clearOffer(actor: SupplyListStaffActor, listId: number) {
+    if (!canWrite(actor)) return fail('forbidden');
+    return this.withList(listId, async (tx, list) => {
+      await deleteListOffer(tx, list.id);
+      return ok(undefined);
+    });
   }
 
   /** Validate and narrow catalog facts before any publication or replacement writes. */

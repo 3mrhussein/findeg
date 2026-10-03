@@ -4,6 +4,7 @@ import * as schema from '../../schema';
 
 export * from './lifecycle';
 export * from './public-read';
+export * from './list-offers';
 
 /**
  * School Supply List catalog queries: the candidate variants that feed

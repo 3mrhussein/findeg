@@ -45,6 +45,8 @@ import type {
 
 export interface CheckoutServiceOptions {
   shippingFee?: number;
+  /** Source of the acceptance time that decides whether a List Offer is active. */
+  clock?: () => Date;
 }
 
 export const DEFAULT_FLAT_SHIPPING_FEE = 50;
@@ -63,6 +65,11 @@ type AcceptRequest = (
   fingerprint: string;
 };
 
+/** A line's total discount across every source. */
+function lineDiscount(line: CheckoutQuoteLine): number {
+  return line.discounts.reduce((sum, discount) => sum + discount.amount, 0);
+}
+
 function rejected(
   status: CheckoutAcceptFailure['status'],
   code: CheckoutAcceptFailure['error']['code'],
@@ -74,8 +81,10 @@ function rejected(
 
 export class CheckoutService implements ICheckoutService {
   private readonly shippingFee: number;
+  private readonly clock: () => Date;
 
   constructor(options?: CheckoutServiceOptions) {
+    this.clock = options?.clock ?? (() => new Date());
     this.shippingFee =
       options?.shippingFee ??
       (process.env.CHECKOUT_FLAT_SHIPPING_FEE
@@ -99,7 +108,7 @@ export class CheckoutService implements ICheckoutService {
     try {
       const { quote } =
         parsed.data.source === 'list'
-          ? await calculateListQuote(parsed.data, this.shippingFee)
+          ? await calculateListQuote(parsed.data, this.shippingFee, undefined, this.clock())
           : await this.calculateQuote(parsed.data.lines);
       return { success: true, data: quote };
     } catch (err: unknown) {
@@ -318,6 +327,7 @@ export class CheckoutService implements ICheckoutService {
         { publicCode, lines: lines as ListCheckoutLine[] },
         this.shippingFee,
         tx,
+        this.clock(),
       );
       calculation = listCalculation;
       attribution = listCalculation.attribution;
@@ -341,6 +351,10 @@ export class CheckoutService implements ICheckoutService {
         subtotal: freshQuote.subtotal.toFixed(2),
         shippingCost: freshQuote.shipping.toFixed(2),
         totalAmount: freshQuote.total.toFixed(2),
+        listOfferBasisPoints: attribution?.listOfferBasisPoints ?? undefined,
+        discountTotal: freshQuote.lines
+          .reduce((sum, line) => sum + lineDiscount(line), 0)
+          .toFixed(2),
         currency: freshQuote.currency,
         paymentMethod: 'cod',
         schoolSupplyListId: attribution?.schoolSupplyListId,
@@ -363,6 +377,9 @@ export class CheckoutService implements ICheckoutService {
             quantity: line.quantity,
             unitPriceSnapshot: line.unitPrice.toFixed(2),
             totalPrice: line.lineTotal.toFixed(2),
+            unitPrice: line.unitPrice.toFixed(2),
+            discountAmount: lineDiscount(line).toFixed(2),
+            lineTotal: line.lineTotal.toFixed(2),
             productNameSnapshot: productName,
             productSkuSnapshot: meta.sku,
             variantSkuSnapshot: meta.sku,
@@ -401,7 +418,7 @@ export class CheckoutService implements ICheckoutService {
         productId: item.productId,
         variantId: item.variantId,
         quantity: item.quantity,
-        lineTotal: item.totalPrice,
+        lineTotal: item.lineTotal,
       })),
     );
 
