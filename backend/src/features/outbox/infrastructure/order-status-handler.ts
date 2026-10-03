@@ -1,7 +1,7 @@
 import React from 'react';
 import { orderQueries } from '@findeg/db/queries';
-import { DEFAULT_LOCALE } from '../../core/domain/value-objects';
-import OrderStatusUpdateEmail from '../../notifications/infrastructure/templates/OrderStatusUpdateEmail';
+import { DEFAULT_LOCALE } from '../../core';
+import { OrderStatusUpdateEmail } from '../../notifications';
 import { isNotifiedOrderStatus, type OutboxHandler } from '../domain/types';
 import type { EmailProvider } from './EmailProvider';
 

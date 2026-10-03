@@ -1,5 +1,6 @@
 import { after } from 'next/server';
 import { createGuestAccessService } from '@findeg/backend/features/guest-access';
+import { createLogger } from '@findeg/backend/features/core';
 import { drainOutbox } from '@findeg/backend/features/outbox';
 
 /**
@@ -20,7 +21,10 @@ export async function POST(request: Request) {
   // Always drain, match or not, so the work done doesn't depend on whether an Order matched.
   after(() =>
     drainOutbox().catch((err) => {
-      console.error('[guest-access] outbox drain failed:', err);
+      createLogger().error('Outbox drain failed', {
+        feature: 'guest-access',
+        error: err instanceof Error ? err.message : String(err),
+      });
     }),
   );
 

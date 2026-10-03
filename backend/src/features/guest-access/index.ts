@@ -9,6 +9,7 @@ export type {
   RequestAccessResult,
   VerifyResult,
 } from './application/GuestAccessService';
+export { hashCode, mintCode } from './domain/codes';
 export { GUEST_ORDER_COOKIE, GUEST_ORDER_TOKEN_SECONDS } from './domain/token';
 export {
   GuestAccessRequestSchema,
