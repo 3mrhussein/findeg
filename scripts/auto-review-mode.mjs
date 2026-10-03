@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 // Sets or checks the repo variable AUTO_REVIEW.
-//   node scripts/auto-review-mode.mjs                   -> prints current: claude | codex | off
-//   node scripts/auto-review-mode.mjs claude|codex|off  -> sets which bot automatically reviews PRs on open
+//   node scripts/auto-review-mode.mjs                   -> prints current: claude | off
+//   node scripts/auto-review-mode.mjs claude|off  -> sets which bot automatically reviews PRs on open
 import { execFileSync } from 'node:child_process';
 
-const MODES = ['claude', 'codex', 'off'];
+const MODES = ['claude', 'off'];
 const arg = process.argv[2];
 
 const getMode = () => {
@@ -29,6 +29,6 @@ if (arg === undefined) {
   });
   console.log(`Auto review set to: ${arg}`);
 } else {
-  console.error('usage: auto-review-mode.mjs [claude|codex|off]');
+  console.error('usage: auto-review-mode.mjs [claude|off]');
   process.exit(1);
 }
