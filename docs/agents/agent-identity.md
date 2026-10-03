@@ -1,6 +1,6 @@
 # Agent GitHub identities
 
-Claude Code and Codex each act on GitHub as their own GitHub App bot. That covers `gh` calls, `git push`, and commit authorship. PRs written by an agent are therefore authored by `findeg-claude[bot]` or `findeg-codex[bot]` rather than by you. This means:
+Claude Code and Codex each act on GitHub as their own GitHub App bot. That covers `gh` calls, `git push`, and commit authorship. PRs written by an agent are therefore authored by the agent's own bot (e.g. `claude[bot]`, `codex[bot]`; the name comes from the app, see below) rather than by you. This means:
 
 - you can approve agent PRs (GitHub won't let you approve your own);
 - the cross-agent review workflows can tell who opened a PR (`.github/workflows/claude.yml`);
@@ -78,12 +78,21 @@ Each run opens GitHub with a pre-filled app manifest: private app, no webhook, a
 
 On another machine, copy `~/.config/findeg/agents/` across rather than creating new apps.
 
-### 2. Repo variables the review workflows match PR authors against (once)
+### 2. Repo variables the review workflows match PR authors against (once, and after renaming an app)
 
 ```bash
-gh variable set CLAUDE_PR_AUTHORS --body 'findeg-claude[bot]'
-gh variable set CODEX_PR_AUTHORS --body 'findeg-codex[bot],chatgpt-codex-connector[bot]'
+node scripts/agent-identity/sync-authors.mjs            # sets CLAUDE_PR_AUTHORS and CODEX_PR_AUTHORS
+node scripts/agent-identity/sync-authors.mjs --dry-run  # just print them
 ```
+
+Each `<AGENT>_PR_AUTHORS` variable is the bot login GitHub reports for that agent's app, plus any `extraBots` listed for it. `claude.yml` passes both variables to `allowed_bots`, so no bot name is hardcoded in the workflow.
+
+Settings live in `scripts/agent-identity/agents.json` (committed, no secrets):
+
+- `appNamePrefix`: prepended to the agent name when `setup-app.mjs` creates an app (currently `findeg-`, matching the existing `findeg-claude`/`findeg-codex` apps; set it empty to name apps just `claude`/`codex`; `--name` or `FINDEG_AGENT_APP_PREFIX` override it). GitHub App names are globally unique, so a bare name may be taken; set a prefix then.
+- `agents.<name>.extraBots`: other bot logins to allow for that agent, e.g. `chatgpt-codex-connector[bot]` for Codex.
+
+To rename an existing app, change its name under GitHub → Settings → Developer settings → GitHub Apps, then re-run `sync-authors.mjs` (it also refreshes the stored git identity).
 
 The workflow needs `CLAUDE_CODE_OAUTH_TOKEN` configured in the repository (`claude.yml`).
 
@@ -100,7 +109,7 @@ It warns if a login shell would still find another `gh`/`git` first.
 ```bash
 node scripts/agent-identity/token.mjs claude whoami
 node scripts/agent-identity/token.mjs codex whoami
-FINDEG_AGENT=codex git var GIT_AUTHOR_IDENT   # findeg-codex[bot] <…>
+FINDEG_AGENT=codex git var GIT_AUTHOR_IDENT   # the codex app's bot <…>
 ```
 
 Tests: `node --test scripts/agent-identity/token.test.mjs`.

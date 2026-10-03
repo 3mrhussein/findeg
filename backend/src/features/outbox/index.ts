@@ -3,7 +3,12 @@ export { createOutbox, drainOutbox, sweepOutbox } from './application/factory';
 export type { OutboxOptions } from './application/factory';
 export type { OutboxService, SweepResult } from './application/OutboxService';
 export { isAuthorizedSweeper } from './application/sweeper-auth';
-export { ORDER_ACCEPTED_KIND, orderAcceptedId } from './domain/types';
+export {
+  GUEST_ACCESS_KIND,
+  guestAccessId,
+  ORDER_ACCEPTED_KIND,
+  orderAcceptedId,
+} from './domain/types';
 export type {
   OutboxHandler,
   OutboxHandlers,

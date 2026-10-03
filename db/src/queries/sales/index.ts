@@ -6,3 +6,4 @@ export type { RevenuePeriodRaw } from './revenue';
 
 export { hasPurchasedProduct } from './orders';
 export * as checkoutIdempotencyQueries from './checkout-idempotency';
+export * as guestAccessQueries from './guest-access';

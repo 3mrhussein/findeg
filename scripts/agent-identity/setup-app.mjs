@@ -4,6 +4,7 @@
 // browser: "Create GitHub App", then "Install".
 //
 // Usage: node scripts/agent-identity/setup-app.mjs <agent> [--name <app name>] [--repo owner/name]
+// The default app name is `appNamePrefix` (agents.json) + the agent name.
 // See docs/agents/agent-identity.md.
 import { createServer } from 'node:http';
 import { randomBytes } from 'node:crypto';
@@ -11,6 +12,7 @@ import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { appJwt, configDir as agentConfigDir, session } from './token.mjs';
+import { appNameFor, authorsVariable } from './agents-config.mjs';
 
 const [agent, ...args] = process.argv.slice(2);
 if (!agent || !/^[a-z0-9-]+$/.test(agent)) {
@@ -22,7 +24,7 @@ const option = (flag, fallback) => {
   return index === -1 ? fallback : args[index + 1];
 };
 const repository = option('--repo', 'origin');
-const appName = option('--name', `findeg-${agent}`);
+const appName = option('--name', appNameFor(agent));
 
 const configDir = agentConfigDir();
 const configPath = join(configDir, `${agent}.json`);
@@ -145,6 +147,9 @@ async function confirmInstallation() {
     mode: 0o600,
   });
   console.log(`Installed ${login} <${email}> on ${repo.nameWithOwner}.`);
+  console.log(
+    `Run: node scripts/agent-identity/sync-authors.mjs ${agent}   # sets ${authorsVariable(agent)}`,
+  );
   server.close();
 }
 
