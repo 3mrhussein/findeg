@@ -16,11 +16,18 @@ import {
 } from '../../domain/idempotency-scope';
 import { enqueue, orderAcceptedId, ORDER_ACCEPTED_KIND } from '../../../outbox';
 import { onOrderAcceptedRewardsHook } from '../../domain/rewards-hook';
-import { UnavailableVariantError, ReconfirmationRequiredError } from '../../domain/errors';
+import {
+  ListUnavailableError,
+  ReconfirmationRequiredError,
+  SelectionInvalidError,
+  UnavailableVariantError,
+} from '../../domain/errors';
+import { calculateListQuote, type ListAttribution } from './listCheckout';
 import {
   CheckoutOrderSchema,
   CheckoutValidateSchema,
   type CheckoutLine,
+  type ListCheckoutLine,
   type CheckoutOrderInput,
   type CheckoutOrderContext,
   type ShippingAddress,
@@ -43,8 +50,10 @@ export interface CheckoutServiceOptions {
 export const DEFAULT_FLAT_SHIPPING_FEE = 50;
 
 /** Validated, normalized accept request with its derived idempotency scope and fingerprint. */
-interface AcceptRequest {
-  lines: CheckoutLine[];
+type AcceptRequest = (
+  | { source: 'cart'; lines: CheckoutLine[]; publicCode?: never }
+  | { source: 'list'; publicCode: string; lines: ListCheckoutLine[] }
+) & {
   confirmation: string;
   address: ShippingAddress;
   userId?: number;
@@ -52,7 +61,7 @@ interface AcceptRequest {
   idempotencyKey: string;
   scope: string;
   fingerprint: string;
-}
+};
 
 function rejected(
   status: CheckoutAcceptFailure['status'],
@@ -88,9 +97,30 @@ export class CheckoutService implements ICheckoutService {
     }
 
     try {
-      const { quote } = await this.calculateQuote(parsed.data.lines);
+      const { quote } =
+        parsed.data.source === 'list'
+          ? await calculateListQuote(parsed.data, this.shippingFee)
+          : await this.calculateQuote(parsed.data.lines);
       return { success: true, data: quote };
     } catch (err: unknown) {
+      if (err instanceof ListUnavailableError) {
+        return {
+          success: false,
+          status: 409,
+          error: { code: 'list-unavailable', message: err.message },
+        };
+      }
+      if (err instanceof SelectionInvalidError) {
+        return {
+          success: false,
+          status: 422,
+          error: {
+            code: 'selection-invalid',
+            message: err.message,
+            listItemIds: err.listItemIds,
+          },
+        };
+      }
       if (err instanceof UnavailableVariantError) {
         return {
           success: false,
@@ -183,7 +213,11 @@ export class CheckoutService implements ICheckoutService {
       return reject('invalid-guest-id', 'Guest ID must not exceed 200 characters');
     }
 
-    const scope = buildIdempotencyScope({ userId, guestId, guestEmail });
+    const identityScope = buildIdempotencyScope({ userId, guestId, guestEmail });
+    const scope =
+      parsed.data.source === 'list'
+        ? `${identityScope}:list:${parsed.data.publicCode}`
+        : identityScope;
 
     if (scope.length > MAX_IDEMPOTENCY_SCOPE_LENGTH) {
       return reject('invalid-guest-id', 'Guest identifier is too long');
@@ -193,6 +227,8 @@ export class CheckoutService implements ICheckoutService {
     const effectiveGuestEmail = userId ? undefined : guestEmail;
 
     const fingerprint = computeOrderFingerprint({
+      source: parsed.data.source,
+      publicCode: parsed.data.source === 'list' ? parsed.data.publicCode : undefined,
       lines,
       address,
       paymentMethod: parsed.data.paymentMethod,
@@ -201,18 +237,26 @@ export class CheckoutService implements ICheckoutService {
       guestEmail: effectiveGuestEmail,
     });
 
+    const common = {
+      confirmation,
+      address,
+      userId,
+      guestEmail: effectiveGuestEmail,
+      idempotencyKey,
+      scope,
+      fingerprint,
+    };
     return {
       ok: true,
-      request: {
-        lines,
-        confirmation,
-        address,
-        userId,
-        guestEmail: effectiveGuestEmail,
-        idempotencyKey,
-        scope,
-        fingerprint,
-      },
+      request:
+        parsed.data.source === 'list'
+          ? {
+              ...common,
+              source: 'list',
+              publicCode: parsed.data.publicCode,
+              lines: parsed.data.lines,
+            }
+          : { ...common, source: 'cart', lines: parsed.data.lines },
     };
   }
 
@@ -243,8 +287,18 @@ export class CheckoutService implements ICheckoutService {
     tx: DbTransaction,
     request: AcceptRequest,
   ): Promise<CheckoutAcceptResult> {
-    const { lines, confirmation, address, userId, guestEmail, idempotencyKey, scope, fingerprint } =
-      request;
+    const {
+      source,
+      publicCode,
+      lines,
+      confirmation,
+      address,
+      userId,
+      guestEmail,
+      idempotencyKey,
+      scope,
+      fingerprint,
+    } = request;
 
     // 1. Insert idempotency row first inside acceptance transaction so concurrent retries serialize
     const claim = await checkoutIdempotencyQueries.claimKey(
@@ -257,7 +311,20 @@ export class CheckoutService implements ICheckoutService {
     );
 
     // 2. Re-quote authoritatively under FOR SHARE locks (ordered by variant ID to prevent deadlocks)
-    const { quote: freshQuote, variantMap } = await this.calculateQuote(lines, tx);
+    let attribution: ListAttribution | undefined;
+    let calculation;
+    if (source === 'list') {
+      const listCalculation = await calculateListQuote(
+        { publicCode, lines: lines as ListCheckoutLine[] },
+        this.shippingFee,
+        tx,
+      );
+      calculation = listCalculation;
+      attribution = listCalculation.attribution;
+    } else {
+      calculation = await this.calculateQuote(lines as CheckoutLine[], tx);
+    }
+    const { quote: freshQuote, variantMap } = calculation;
 
     // 3. Price confirmation check
     if (freshQuote.confirmation !== confirmation) {
@@ -276,6 +343,10 @@ export class CheckoutService implements ICheckoutService {
         totalAmount: freshQuote.total.toFixed(2),
         currency: freshQuote.currency,
         paymentMethod: 'cod',
+        schoolSupplyListId: attribution?.schoolSupplyListId,
+        schoolSupplyListPublicCode: attribution?.schoolSupplyListPublicCode,
+        schoolSupplyListPublishedAt: attribution?.schoolSupplyListPublishedAt,
+        businessPartnerId: attribution?.businessPartnerId,
         shippingAddressSnapshot: address,
         items: freshQuote.lines.map((line) => {
           const meta = variantMap.get(line.variantId);
@@ -296,6 +367,11 @@ export class CheckoutService implements ICheckoutService {
             productSkuSnapshot: meta.sku,
             variantSkuSnapshot: meta.sku,
             variantSnapshot: (meta.localizedLabel as Record<string, unknown>) ?? {},
+            schoolSupplyListItemId: line.listItemId,
+            isSubstitute:
+              line.listItemId === undefined
+                ? undefined
+                : attribution?.items.get(line.listItemId)?.defaultVariantId !== line.variantId,
           };
         }),
       },
@@ -395,6 +471,14 @@ export class CheckoutService implements ICheckoutService {
         'Quote terms have changed; reconfirmation required',
         { quote: err.quote },
       );
+    }
+    if (err instanceof ListUnavailableError) {
+      return rejected(409, 'list-unavailable', err.message);
+    }
+    if (err instanceof SelectionInvalidError) {
+      return rejected(422, 'selection-invalid', err.message, {
+        listItemIds: err.listItemIds,
+      });
     }
     if (err instanceof InsufficientStockError) {
       return rejected(409, 'insufficient-stock', 'Insufficient stock for requested items', {

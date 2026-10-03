@@ -334,6 +334,7 @@
       "YourSchoolLists": "Your school supply lists"
     },
     "Checkout": {
+      "ListCompleteness": "List completeness: {completed} of {total} required items. This is advisory and does not block checkout.",
       "Title": "Checkout",
       "ValidationFailed": "Checkout validation failed.",
       "OrderCreationFailed": "Order creation failed.",

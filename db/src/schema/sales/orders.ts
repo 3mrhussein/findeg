@@ -18,12 +18,15 @@ import {
   jsonb,
   uniqueIndex,
   check,
+  boolean,
 } from 'drizzle-orm/pg-core';
 import { relations, sql } from 'drizzle-orm';
 import { salesSchema } from '../schemas';
 import { users } from '../identity/users';
 import { products } from '../catalog/products';
 import { productVariants } from '../catalog/product-variants';
+import { businessPartners } from '../identity/partners';
+import { schoolSupplyListItems, schoolSupplyLists } from '../school-engine/school-supply-lists';
 import { orderStatusEnum, paymentStatusEnum, paymentMethodEnum } from '../enums';
 import { CurrencyCode, ShippingAddress, VariantSnapshot } from '@findeg/db/types';
 
@@ -75,6 +78,17 @@ export const orders = salesSchema.table(
     /** Payment method identifier (e.g., "cod", "paymob_card", "fawry") */
     paymentMethod: paymentMethodEnum('payment_method'),
 
+    // School Supply List attribution is all-null for an ordinary Cart order and
+    // all-present for an order accepted from exactly one published list version.
+    schoolSupplyListId: integer('school_supply_list_id').references(() => schoolSupplyLists.id, {
+      onDelete: 'restrict',
+    }),
+    schoolSupplyListPublicCode: text('school_supply_list_public_code'),
+    schoolSupplyListPublishedAt: timestamp('school_supply_list_published_at'),
+    businessPartnerId: integer('business_partner_id').references(() => businessPartners.id, {
+      onDelete: 'restrict',
+    }),
+
     // Shipping
     /** Frozen address snapshot at time of order */
     shippingAddressSnapshot: jsonb('shipping_address_snapshot').$type<ShippingAddress>(),
@@ -93,42 +107,63 @@ export const orders = salesSchema.table(
       'ck_orders_order_reference',
       sql`${table.orderReference} ~ '^FE-[0123456789ABCDEFGHJKMNPQRSTVWXYZ]{6}$'`,
     ),
+    check(
+      'ck_orders_list_attribution',
+      sql`(${table.schoolSupplyListId} is null and ${table.schoolSupplyListPublicCode} is null and ${table.schoolSupplyListPublishedAt} is null and ${table.businessPartnerId} is null)
+        or (${table.schoolSupplyListId} is not null and ${table.schoolSupplyListPublicCode} is not null and ${table.schoolSupplyListPublishedAt} is not null and ${table.businessPartnerId} is not null)`,
+    ),
   ],
 );
 
 /**
  * Order Items Table
  */
-export const orderItems = salesSchema.table('order_items', {
-  id: serial('id').primaryKey(),
-  orderId: integer('order_id')
-    .notNull()
-    .references(() => orders.id, { onDelete: 'cascade' }),
-  productId: integer('product_id').references(() => products.id, { onDelete: 'set null' }),
+export const orderItems = salesSchema.table(
+  'order_items',
+  {
+    id: serial('id').primaryKey(),
+    orderId: integer('order_id')
+      .notNull()
+      .references(() => orders.id, { onDelete: 'cascade' }),
+    productId: integer('product_id').references(() => products.id, { onDelete: 'set null' }),
 
-  /** FK to the specific variant (SKU) that was purchased */
-  variantId: integer('variant_id').references(() => productVariants.id, { onDelete: 'set null' }),
+    /** FK to the specific variant (SKU) that was purchased */
+    variantId: integer('variant_id').references(() => productVariants.id, { onDelete: 'set null' }),
 
-  quantity: integer('quantity').notNull(),
+    schoolSupplyListItemId: integer('school_supply_list_item_id').references(
+      () => schoolSupplyListItems.id,
+      { onDelete: 'restrict' },
+    ),
+    isSubstitute: boolean('is_substitute'),
 
-  // Snapshot fields — preserve data at time of purchase
-  /** Product name at time of order */
-  productNameSnapshot: text('product_name_snapshot'),
-  /** Product SKU at time of order */
-  productSkuSnapshot: text('product_sku_snapshot'),
-  /** Variant SKU frozen at purchase time */
-  variantSkuSnapshot: text('variant_sku_snapshot'),
-  /** Price per unit at time of order */
-  unitPriceSnapshot: decimal('unit_price_snapshot', { precision: 10, scale: 2 }),
-  unitPrice: decimal('unit_price', { precision: 10, scale: 2 }).notNull().default('0'),
+    quantity: integer('quantity').notNull(),
 
-  /** Selected variant details at time of order */
-  variantSnapshot: jsonb('variant_snapshot').$type<VariantSnapshot>(),
+    // Snapshot fields — preserve data at time of purchase
+    /** Product name at time of order */
+    productNameSnapshot: text('product_name_snapshot'),
+    /** Product SKU at time of order */
+    productSkuSnapshot: text('product_sku_snapshot'),
+    /** Variant SKU frozen at purchase time */
+    variantSkuSnapshot: text('variant_sku_snapshot'),
+    /** Price per unit at time of order */
+    unitPriceSnapshot: decimal('unit_price_snapshot', { precision: 10, scale: 2 }),
+    unitPrice: decimal('unit_price', { precision: 10, scale: 2 }).notNull().default('0'),
 
-  /** Total price: quantity × unitPriceSnapshot */
-  totalPrice: decimal('total_price', { precision: 10, scale: 2 }).notNull().default('0'),
-  totalAmount: decimal('total_amount', { precision: 10, scale: 2 }).notNull().default('0'),
-});
+    /** Selected variant details at time of order */
+    variantSnapshot: jsonb('variant_snapshot').$type<VariantSnapshot>(),
+
+    /** Total price: quantity × unitPriceSnapshot */
+    totalPrice: decimal('total_price', { precision: 10, scale: 2 }).notNull().default('0'),
+    totalAmount: decimal('total_amount', { precision: 10, scale: 2 }).notNull().default('0'),
+  },
+  (table) => [
+    check(
+      'ck_order_items_list_attribution',
+      sql`(${table.schoolSupplyListItemId} is null and ${table.isSubstitute} is null)
+      or (${table.schoolSupplyListItemId} is not null and ${table.isSubstitute} is not null)`,
+    ),
+  ],
+);
 
 /**
  * Order Relations

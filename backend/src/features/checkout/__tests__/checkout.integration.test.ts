@@ -2,9 +2,12 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { eq, sql } from 'drizzle-orm';
 import {
   categories,
+  businessPartners,
   inventoryBalances,
   orders,
   orderItems,
+  schoolSupplyListItems,
+  schoolSupplyLists,
   products,
   productVariants,
   stockReservations,
@@ -83,6 +86,7 @@ describe('Checkout feature integration tests on real Postgres', () => {
     });
 
     return {
+      categoryId: category.id,
       productId: product.id,
       variantId: variant.id,
       warehouseId: warehouse.id,
@@ -100,6 +104,69 @@ describe('Checkout feature integration tests on real Postgres', () => {
     floor: '4',
     apartment: '402',
   };
+
+  async function createPublishedList(
+    lines: Array<{
+      variantId: number;
+      exactItem?: boolean;
+      required?: boolean;
+      quantity?: number;
+      specification?: { categoryId: number; attributes: Record<string, string> } | null;
+    }>,
+    status: 'published' | 'archived' = 'published',
+  ) {
+    sequence += 1;
+    const [partner] = await testDb.db
+      .insert(businessPartners)
+      .values({
+        code: `checkout-school-${sequence}`,
+        nameEn: 'Nile School',
+        nameAr: 'مدرسة النيل',
+      })
+      .returning();
+    const publishedAt = new Date('2026-09-01T08:00:00.000Z');
+    const publicCode = sequence.toString(16).padStart(32, '0');
+    const [draft] = await testDb.db
+      .insert(schoolSupplyLists)
+      .values({
+        businessPartnerId: partner.id,
+        grade: 'Grade 1',
+        academicYear: '2026/2027',
+        localizedTitle: { en: 'Grade 1 supplies' },
+      })
+      .returning();
+    const items = await testDb.db
+      .insert(schoolSupplyListItems)
+      .values(
+        lines.map((line, index) => ({
+          listId: draft.id,
+          variantId: line.variantId,
+          exactItem: line.exactItem ?? true,
+          specification: line.specification ?? null,
+          required: line.required ?? true,
+          quantity: line.quantity ?? 1,
+          localizedLabel: { en: `Supply ${index + 1}` },
+          sortOrder: index,
+          productNameEnSnapshot: `Supply ${index + 1}`,
+          skuSnapshot: `LIST-SKU-${sequence}-${index}`,
+        })),
+      )
+      .returning();
+    const [published] = await testDb.db
+      .update(schoolSupplyLists)
+      .set({ status: 'published', publicCode, publishedAt })
+      .where(eq(schoolSupplyLists.id, draft.id))
+      .returning();
+    const [list] =
+      status === 'archived'
+        ? await testDb.db
+            .update(schoolSupplyLists)
+            .set({ status: 'archived', archivedAt: new Date('2026-09-15T08:00:00.000Z') })
+            .where(eq(schoolSupplyLists.id, draft.id))
+            .returning()
+        : [published];
+    return { list, items, partner, publicCode, publishedAt };
+  }
 
   describe('POST /checkout/validate seam', () => {
     it('returns lines, unit prices, per-line discounts, shipping, total, currency and confirmation', async () => {
@@ -1458,6 +1525,216 @@ describe('Checkout feature integration tests on real Postgres', () => {
       if (result.success) return;
       expect(result.status).toBe(400);
       expect(result.error.code).toBe('invalid-guest-id');
+    });
+  });
+
+  describe('School Supply List checkout through the checkout seam', () => {
+    it('quotes live catalog prices, accepts quantities above the prescription, and omits unposted optional items', async () => {
+      const variant = await createVariantWithStock({ price: '37.50', onHand: 20 });
+      const source = await createPublishedList([
+        { variantId: variant.variantId, quantity: 2 },
+        { variantId: variant.variantId, required: false, quantity: 4 },
+      ]);
+
+      const result = await checkoutService.validate({
+        source: 'list',
+        publicCode: source.publicCode,
+        lines: [{ listItemId: source.items[0].id, variantId: variant.variantId, quantity: 5 }],
+      });
+
+      expect(result.success).toBe(true);
+      if (!result.success) return;
+      expect(result.data.lines).toEqual([
+        expect.objectContaining({
+          listItemId: source.items[0].id,
+          variantId: variant.variantId,
+          quantity: 5,
+          unitPrice: 37.5,
+          lineTotal: 187.5,
+        }),
+      ]);
+    });
+
+    it('returns list-unavailable and selection-invalid for the matching failures', async () => {
+      const variant = await createVariantWithStock();
+      const archived = await createPublishedList([{ variantId: variant.variantId }], 'archived');
+      const available = await createPublishedList([{ variantId: variant.variantId }]);
+
+      const unavailable = await checkoutService.validate({
+        source: 'list',
+        publicCode: archived.publicCode,
+        lines: [{ listItemId: archived.items[0].id, variantId: variant.variantId, quantity: 1 }],
+      });
+      expect(unavailable).toMatchObject({
+        success: false,
+        status: 409,
+        error: { code: 'list-unavailable' },
+      });
+
+      const duplicate = await checkoutService.validate({
+        source: 'list',
+        publicCode: available.publicCode,
+        lines: [
+          { listItemId: available.items[0].id, variantId: variant.variantId, quantity: 1 },
+          { listItemId: available.items[0].id, variantId: variant.variantId, quantity: 2 },
+        ],
+      });
+      expect(duplicate).toMatchObject({
+        success: false,
+        status: 422,
+        error: {
+          code: 'selection-invalid',
+          listItemIds: [available.items[0].id],
+        },
+      });
+
+      const invalidLines = await checkoutService.validate({
+        source: 'list',
+        publicCode: available.publicCode,
+        lines: [
+          { listItemId: available.items[0].id, variantId: variant.variantId, quantity: 1000 },
+          { listItemId: 999_999, variantId: variant.variantId, quantity: 1 },
+        ],
+      });
+      expect(invalidLines).toMatchObject({
+        success: false,
+        status: 422,
+        error: {
+          code: 'selection-invalid',
+          listItemIds: [available.items[0].id, 999_999],
+        },
+      });
+
+      const empty = await checkoutService.validate({
+        source: 'list',
+        publicCode: available.publicCode,
+        lines: [],
+      });
+      expect(empty).toMatchObject({
+        success: false,
+        status: 422,
+        error: { code: 'selection-invalid', listItemIds: [] },
+      });
+    });
+
+    it('snapshots and freezes list and line attribution at Order Acceptance', async () => {
+      const defaultVariant = await createVariantWithStock({ price: '25.00', onHand: 10 });
+      const substitute = await createVariantWithStock({ price: '30.00', onHand: 10 });
+      const source = await createPublishedList([
+        {
+          variantId: defaultVariant.variantId,
+          exactItem: false,
+          specification: { categoryId: substitute.categoryId, attributes: {} },
+        },
+      ]);
+      const input = {
+        source: 'list' as const,
+        publicCode: source.publicCode,
+        lines: [{ listItemId: source.items[0].id, variantId: substitute.variantId, quantity: 1 }],
+      };
+      const quote = await checkoutService.validate(input);
+      expect(quote.success).toBe(true);
+      if (!quote.success) return;
+
+      const accepted = await checkoutService.accept(
+        {
+          ...input,
+          confirmation: quote.data.confirmation,
+          paymentMethod: 'cod',
+          address: validAddress,
+          guestEmail: 'list-customer@example.com',
+        },
+        { idempotencyKey: 'same-key', guestId: 'same-customer' },
+      );
+      expect(accepted.success).toBe(true);
+      if (!accepted.success) return;
+
+      const [order] = await testDb.db
+        .select()
+        .from(orders)
+        .where(eq(orders.id, accepted.data.order.id));
+      const [line] = await testDb.db
+        .select()
+        .from(orderItems)
+        .where(eq(orderItems.orderId, order.id));
+      expect(order).toMatchObject({
+        schoolSupplyListId: source.list.id,
+        schoolSupplyListPublicCode: source.publicCode,
+        schoolSupplyListPublishedAt: source.publishedAt,
+        businessPartnerId: source.partner.id,
+      });
+      expect(line).toMatchObject({
+        schoolSupplyListItemId: source.items[0].id,
+        isSubstitute: true,
+      });
+
+      await expect(
+        testDb.db
+          .update(orders)
+          .set({ schoolSupplyListPublicCode: 'f'.repeat(32) })
+          .where(eq(orders.id, order.id)),
+      ).rejects.toThrow();
+      await expect(
+        testDb.db.update(orderItems).set({ isSubstitute: false }).where(eq(orderItems.id, line.id)),
+      ).rejects.toThrow();
+
+      const cartVariant = await createVariantWithStock({ onHand: 10 });
+      const cartQuote = await checkoutService.validate({
+        source: 'cart',
+        lines: [{ variantId: cartVariant.variantId, quantity: 1 }],
+      });
+      expect(cartQuote.success).toBe(true);
+      if (!cartQuote.success) return;
+      const cartAccepted = await checkoutService.accept(
+        {
+          source: 'cart',
+          lines: [{ variantId: cartVariant.variantId, quantity: 1 }],
+          confirmation: cartQuote.data.confirmation,
+          paymentMethod: 'cod',
+          address: validAddress,
+          guestEmail: 'list-customer@example.com',
+        },
+        { idempotencyKey: 'same-key', guestId: 'same-customer' },
+      );
+      expect(cartAccepted.success).toBe(true);
+    });
+
+    it('scopes idempotency keys independently per list publicCode', async () => {
+      const variant = await createVariantWithStock({ price: '25.00', onHand: 10 });
+      const listA = await createPublishedList([{ variantId: variant.variantId }]);
+      const listB = await createPublishedList([{ variantId: variant.variantId }]);
+
+      const acceptFrom = async (source: typeof listA) => {
+        const input = {
+          source: 'list' as const,
+          publicCode: source.publicCode,
+          lines: [{ listItemId: source.items[0].id, variantId: variant.variantId, quantity: 1 }],
+        };
+        const quote = await checkoutService.validate(input);
+        expect(quote.success).toBe(true);
+        if (!quote.success) throw new Error('quote failed');
+        return checkoutService.accept(
+          {
+            ...input,
+            confirmation: quote.data.confirmation,
+            paymentMethod: 'cod',
+            address: validAddress,
+            guestEmail: 'list-customer@example.com',
+          },
+          { idempotencyKey: 'shared-key', guestId: 'shared-customer' },
+        );
+      };
+
+      const first = await acceptFrom(listA);
+      const second = await acceptFrom(listB);
+      expect(first.success).toBe(true);
+      expect(second.success).toBe(true);
+      if (!first.success || !second.success) return;
+      expect(second.data.order.id).not.toBe(first.data.order.id);
+
+      const replay = await acceptFrom(listA);
+      expect(replay.success).toBe(true);
+      if (replay.success) expect(replay.data.order.id).toBe(first.data.order.id);
     });
   });
 });
