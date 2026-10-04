@@ -345,33 +345,8 @@
     "createdAt": "2026-02-19 10:00:00"
   },
   {
-    "roleId": 1,
-    "permissionId": 26,
-    "createdAt": "2026-02-19 10:00:00"
-  },
-  {
-    "roleId": 1,
-    "permissionId": 27,
-    "createdAt": "2026-02-19 10:00:00"
-  },
-  {
-    "roleId": 1,
-    "permissionId": 28,
-    "createdAt": "2026-02-19 10:00:00"
-  },
-  {
     "roleId": 5,
     "permissionId": 25,
-    "createdAt": "2026-02-19 10:00:00"
-  },
-  {
-    "roleId": 5,
-    "permissionId": 27,
-    "createdAt": "2026-02-19 10:00:00"
-  },
-  {
-    "roleId": 5,
-    "permissionId": 28,
     "createdAt": "2026-02-19 10:00:00"
   },
   {

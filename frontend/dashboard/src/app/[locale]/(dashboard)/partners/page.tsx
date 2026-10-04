@@ -13,7 +13,7 @@ export const metadata = {
 export default async function PartnersPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const session = await requirePermission(locale as Locale, {
-    any: [PERMISSION_CODES.PARTNERS_MANAGE, PERMISSION_CODES.REWARDS_VIEW],
+    any: [PERMISSION_CODES.PARTNERS_MANAGE, PERMISSION_CODES.PARTNER_REPORTS_VIEW],
   });
   const canManage = sessionHasPermission(session, PERMISSION_CODES.PARTNERS_MANAGE);
 
@@ -64,7 +64,7 @@ export default async function PartnersPage({ params }: { params: Promise<{ local
                 </td>
                 <td className="px-6 py-4 text-right">
                   <Link href={`/partners/${partner.id}`} className="text-sm underline mr-4">
-                    {canManage ? 'Open' : 'Rewards'}
+                    {canManage ? 'Open' : 'Sales'}
                   </Link>
                   {canManage && (
                     <Link href={`/partners/${partner.id}/edit`} className="text-sm underline">

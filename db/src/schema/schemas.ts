@@ -13,4 +13,3 @@ export const salesSchema = pgSchema('sales');
 export const inventorySchema = pgSchema('inventory');
 export const schoolEngineSchema = pgSchema('school_engine');
 export const systemSchema = pgSchema('system');
-export const rewardsSchema = pgSchema('rewards');

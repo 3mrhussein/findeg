@@ -134,6 +134,13 @@
       "when": 1791185765910,
       "tag": "0018_partner_reward_views",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1791272165910,
+      "tag": "0019_drop_partner_rewards_ledger",
+      "breakpoints": true
     }
   ]
 }

@@ -7,4 +7,3 @@ export * from './sales';
 export * from './inventory';
 export * from './school-engine';
 export * from './system';
-export * from './rewards';

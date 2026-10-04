@@ -6,41 +6,32 @@ import { requirePermission, sessionHasPermission } from '@lib/auth-guard';
 import { PERMISSION_CODES } from '@findeg/backend/features/core';
 import { createPartnerMembershipServices } from '@findeg/backend/features/partner-membership';
 import {
-  createPartnerRewardsServices,
-  type IRewardStatementService,
-  type RewardsStaffActor,
-} from '@findeg/backend/features/partner-rewards';
+  createPartnerSalesServices,
+  MIN_DISTINCT_ORDERS_PER_SALES_ROW,
+  type IPartnerReportService,
+  type PartnerSalesStaffActor,
+} from '@findeg/backend/features/partner-sales';
 import { createAdministrationServices } from '@findeg/backend/features/administration';
 import { MembersPanel } from '../_components/MembersPanel';
 import { InvitationsPanel } from '../_components/InvitationsPanel';
-import { RewardRatesPanel } from '../_components/RewardRatesPanel';
-import { RewardStatementPanel } from '../_components/RewardStatementPanel';
+import { SalesReportPanel } from '../_components/SalesReportPanel';
 import { StatusActions } from '../_components/StatusActions';
-import { saveRewardRateAction } from '../_actions/reward-rates';
-import { toRewardReportProps } from '../_lib/rewardReport';
+import { toSalesReportProps } from '../_lib/salesReport';
 import { toStaffActor } from '../_lib/toStaffActor';
 import { toListActor } from '../../school-lists/_lib/toListActor';
-
-const piastersToEgp = (piasters: bigint) =>
-  `${piasters / 100n}.${(piasters % 100n).toString().padStart(2, '0')}`;
-
-const toRewardTotals = (totals: { points: bigint; egpValuePiasters: bigint }) => ({
-  points: totals.points.toString(),
-  egp: piastersToEgp(totals.egpValuePiasters),
-});
 
 export const metadata = { title: 'Business Partner - FindEg Admins' };
 
 /** An unknown or out-of-range `?month=` falls back to the current month. */
 async function readReport(
-  statement: IRewardStatementService,
-  session: RewardsStaffActor,
+  reports: IPartnerReportService,
+  session: PartnerSalesStaffActor,
   partnerId: number,
   month: string | undefined,
 ) {
-  const requested = await statement.getStaffReport(session, partnerId, { month });
+  const requested = await reports.getStaffReport(session, partnerId, { month });
   return month !== undefined && !requested.success && requested.error === 'invalid-input'
-    ? statement.getStaffReport(session, partnerId)
+    ? reports.getStaffReport(session, partnerId)
     : requested;
 }
 
@@ -55,42 +46,33 @@ export default async function PartnerDetailPage({
   const { month: monthParam } = await searchParams;
   const month = typeof monthParam === 'string' ? monthParam : undefined;
   const session = await requirePermission(locale as Locale, {
-    any: [PERMISSION_CODES.PARTNERS_MANAGE, PERMISSION_CODES.REWARDS_VIEW],
+    any: [PERMISSION_CODES.PARTNERS_MANAGE, PERMISSION_CODES.PARTNER_REPORTS_VIEW],
   });
   if (!/^\d+$/.test(id)) notFound();
 
   const partnerId = Number(id);
   const actor = toStaffActor(session);
   const canManagePartner = sessionHasPermission(session, PERMISSION_CODES.PARTNERS_MANAGE);
-  const canViewRewards = sessionHasPermission(session, PERMISSION_CODES.REWARDS_VIEW);
-  const canManageRates = sessionHasPermission(session, PERMISSION_CODES.REWARDS_RATES_MANAGE);
+  const canViewReports = sessionHasPermission(session, PERMISSION_CODES.PARTNER_REPORTS_VIEW);
 
   const { partners, invitations, memberships } = createPartnerMembershipServices();
   const partner = await partners.getPartner(actor, partnerId);
   if (!partner.success) notFound();
 
-  const rewardServices = createPartnerRewardsServices();
-  const rewards = rewardServices.rates;
-  const [members, pending, lists, rates, pendingRewards, earnedRewards, reversedRewards, report] =
-    await Promise.all([
-      canManagePartner ? memberships.listMembers(actor, partnerId) : Promise.resolve(null),
-      canManagePartner
-        ? invitations.listPendingInvitations(actor, partnerId)
-        : Promise.resolve(null),
-      canManagePartner
-        ? createAdministrationServices().schoolSupplyLists.listForPartner(
-            toListActor(session),
-            partnerId,
-          )
-        : Promise.resolve(null),
-      canViewRewards ? rewards.getRates(session, partnerId) : Promise.resolve(null),
-      canViewRewards ? rewards.getPending(session, partnerId) : Promise.resolve(null),
-      canViewRewards ? rewards.getEarned(session, partnerId) : Promise.resolve(null),
-      canViewRewards ? rewards.getReversed(session, partnerId) : Promise.resolve(null),
-      canViewRewards ? readReport(rewardServices.statement, session, partnerId, month) : null,
-    ]);
+  const [members, pending, lists, report] = await Promise.all([
+    canManagePartner ? memberships.listMembers(actor, partnerId) : Promise.resolve(null),
+    canManagePartner ? invitations.listPendingInvitations(actor, partnerId) : Promise.resolve(null),
+    canManagePartner
+      ? createAdministrationServices().schoolSupplyLists.listForPartner(
+          toListActor(session),
+          partnerId,
+        )
+      : Promise.resolve(null),
+    canViewReports
+      ? readReport(createPartnerSalesServices().partnerReports, session, partnerId, month)
+      : null,
+  ]);
   const canChange = partner.data.status === 'onboarding' || partner.data.status === 'active';
-  const saveRate = saveRewardRateAction.bind(null, locale as Locale, partnerId);
 
   return (
     <div className="space-y-6">
@@ -109,13 +91,10 @@ export default async function PartnerDetailPage({
         )}
       </div>
 
-      <Tabs
-        defaultValue={canManagePartner && !month ? 'overview' : 'rewards'}
-        className="space-y-6"
-      >
+      <Tabs defaultValue={canManagePartner && !month ? 'overview' : 'sales'} className="space-y-6">
         <TabsList>
           {canManagePartner && <TabsTrigger value="overview">Overview</TabsTrigger>}
-          {canViewRewards && <TabsTrigger value="rewards">Rewards</TabsTrigger>}
+          {canViewReports && <TabsTrigger value="sales">Sales</TabsTrigger>}
         </TabsList>
 
         {canManagePartner && (
@@ -177,40 +156,20 @@ export default async function PartnerDetailPage({
           </TabsContent>
         )}
 
-        {canViewRewards &&
-          rates?.success &&
-          pendingRewards?.success &&
-          earnedRewards?.success &&
-          reversedRewards?.success && (
-            <TabsContent value="rewards" className="space-y-6">
-              {report?.success ? (
-                <RewardStatementPanel report={toRewardReportProps(report.data)} />
-              ) : (
-                <p role="alert" className="text-destructive text-sm">
-                  The Reward Statement could not be loaded.
-                </p>
-              )}
-              <RewardRatesPanel
-                current={
-                  rates.data.current
-                    ? {
-                        ...rates.data.current,
-                        createdAt: rates.data.current.createdAt.toISOString(),
-                      }
-                    : null
-                }
-                history={rates.data.history.map((rate) => ({
-                  ...rate,
-                  createdAt: rate.createdAt.toISOString(),
-                }))}
-                pending={toRewardTotals(pendingRewards.data)}
-                earned={toRewardTotals(earnedRewards.data)}
-                reversed={toRewardTotals(reversedRewards.data)}
-                canManage={canManageRates}
-                save={saveRate}
+        {canViewReports && (
+          <TabsContent value="sales" className="space-y-6">
+            {report?.success ? (
+              <SalesReportPanel
+                report={toSalesReportProps(report.data)}
+                minOrdersPerRow={MIN_DISTINCT_ORDERS_PER_SALES_ROW}
               />
-            </TabsContent>
-          )}
+            ) : (
+              <p role="alert" className="text-destructive text-sm">
+                The sales report could not be loaded.
+              </p>
+            )}
+          </TabsContent>
+        )}
       </Tabs>
     </div>
   );
