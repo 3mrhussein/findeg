@@ -683,6 +683,8 @@
     "otherItemsHint": "العناصر التي لها أقل من {count} طلبات تُجمع هنا لحماية خصوصية العملاء. تظل الإجماليات مطابقة لكشف حسابك.",
     "linkLabel": "التقارير",
     "unnamed": "—",
-    "voidsReference": "إلغاء الدفعة {reference}"
+    "voidsReference": "إلغاء الدفعة {reference}",
+    "egp": "{amount} ج.م",
+    "loading": "جارٍ تحميل التقارير…"
   }
 }

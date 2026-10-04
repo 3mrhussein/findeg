@@ -34,6 +34,8 @@ export {
   type StaffSettlementLineView,
 } from './staff-report';
 export {
+  canReadPartnerReports,
+  PARTNER_REPORT_ROLES,
   MIN_DISTINCT_ORDERS_PER_SALES_ROW,
   type IPartnerRewardReportService,
   type PartnerRewardReportError,

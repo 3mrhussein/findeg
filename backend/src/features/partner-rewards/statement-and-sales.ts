@@ -101,7 +101,7 @@ export async function readStatementAndSales(
   tx: RewardsExecutor,
   businessPartnerId: number,
   input: StatementAndSalesInput,
-  source: StatementAndSalesSource = staffSource,
+  source: StatementAndSalesSource,
 ): Promise<StatementAndSales | undefined> {
   const currentMonth = cairoMonthOf(input.asOf);
   const [movements, firstMonth, pending, availableBalance] = await Promise.all([

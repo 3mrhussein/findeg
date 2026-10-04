@@ -292,6 +292,7 @@ describe('Partner projection of the Reward Statement and sales', () => {
       ['void', -1_000n],
       ['settlement', 1_000n],
     ]);
+    expect(result.data.settlements[0].voidsTransferReference).toBe('TRX-1');
     expect(result.data.settlements[1]).toMatchObject({
       transferReference: 'TRX-1',
       paidAt: '2026-05-08',

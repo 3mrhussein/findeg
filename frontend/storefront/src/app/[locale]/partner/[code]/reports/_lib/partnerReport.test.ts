@@ -39,6 +39,10 @@ describe('toPartnerReportProps', () => {
     expect(props.balanceIsNegative).toBe(true);
     expect(props.availableBalanceEgp).toBe('−120.00');
     expect(toPartnerReportProps(view(), 'en').balanceIsNegative).toBe(false);
+    const pastMonth = view({
+      statement: { ...view().statement, closingEgpPiasters: -1n },
+    });
+    expect(toPartnerReportProps(pastMonth, 'en').balanceIsNegative).toBe(true);
   });
 
   it('marks voids and keeps their amount negative', () => {
@@ -52,13 +56,18 @@ describe('toPartnerReportProps', () => {
             transferReference: null,
             paidAt: null,
             voidsSettlementId: 1,
+            voidsTransferReference: 'TRX-1',
             recordedAt: new Date('2026-05-10T10:00:00Z'),
           },
         ],
       }),
       'ar',
     );
-    expect(props.settlements[0]).toMatchObject({ voided: true, egp: '−10.00' });
+    expect(props.settlements[0]).toMatchObject({
+      voided: true,
+      voidsReference: 'TRX-1',
+      egp: '−10.00',
+    });
   });
 
   it('formats as-of in Cairo time', () => {

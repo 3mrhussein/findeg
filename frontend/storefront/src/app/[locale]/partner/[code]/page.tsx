@@ -1,6 +1,7 @@
 import { Button } from '@findeg/ui';
 import { getTranslations } from 'next-intl/server';
 import { PARTNER_ADMINISTRATOR } from '@findeg/backend/features/partner-membership';
+import { canReadPartnerReports } from '@findeg/backend/features/partner-rewards';
 import { Link } from '@i18n/navigation';
 import {
   PartnerNotice,
@@ -8,8 +9,6 @@ import {
   requireWorkspaceAccess,
 } from '../_components/PartnerShell';
 import { LeaveButton } from './LeaveButton';
-
-const REPORT_ROLES: readonly string[] = [PARTNER_ADMINISTRATOR, 'report-viewer'];
 
 export default async function PartnerWorkspacePage({
   params,
@@ -50,7 +49,7 @@ async function PartnerWorkspace({ code }: { code: string }) {
             </Button>
           </>
         )}
-        {membership.roles.some((role) => REPORT_ROLES.includes(role)) && (
+        {canReadPartnerReports(membership.roles) && (
           <Button asChild variant="outline">
             <Link href={`/partner/${code}/reports`}>{t('linkLabel')}</Link>
           </Button>

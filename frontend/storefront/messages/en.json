@@ -683,6 +683,8 @@
     "otherItemsHint": "Items with fewer than {count} orders are combined here to protect customers' privacy. Totals still match your statement.",
     "linkLabel": "Reports",
     "unnamed": "—",
-    "voidsReference": "Voids payout {reference}"
+    "voidsReference": "Voids payout {reference}",
+    "egp": "{amount} EGP",
+    "loading": "Loading reports…"
   }
 }

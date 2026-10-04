@@ -35,7 +35,8 @@ const amount = { points: '0', egp: '0.00' };
 const report = (over: Partial<PartnerReportProps> = {}): PartnerReportProps => ({
   asOf: 'May 15, 2026',
   month: '2026-05',
-  months: ['2026-05'],
+  monthLabel: 'May 2026',
+  months: [{ value: '2026-05', label: 'May 2026' }],
   statement: {
     openingEgp: '0.00',
     earned: amount,
@@ -68,7 +69,7 @@ describe('PartnerReportView', () => {
     const { unmount } = render_(
       report({ availableBalanceEgp: '−120.00', balanceIsNegative: true }),
     );
-    expect(screen.getByTestId('available-balance').textContent).toContain('−120.00 EGP');
+    expect(screen.getByTestId('available-balance').textContent).toContain('−120.00');
     expect(screen.getByTestId('negative-balance-note')).toBeTruthy();
     unmount();
     render_(report());

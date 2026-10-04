@@ -23,7 +23,9 @@ export interface PartnerReportProps {
   /** Cairo-time, localized. Shown as "as of". */
   readonly asOf: string;
   readonly month: string;
-  readonly months: readonly string[];
+  readonly monthLabel: string;
+  /** The month picker: `value` is `YYYY-MM`, `label` is localized. */
+  readonly months: readonly { readonly value: string; readonly label: string }[];
   readonly statement: {
     readonly openingEgp: string;
     readonly earned: AmountProps;
@@ -68,11 +70,18 @@ export function toPartnerReportProps(
     dateStyle: 'medium',
     timeStyle: 'short',
   });
+  const monthName = new Intl.DateTimeFormat(locale, {
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'UTC',
+  });
+  const monthLabel = (key: string) => monthName.format(new Date(`${key}-01T00:00:00Z`));
   const { statement } = report;
   return {
     asOf: dateTime.format(report.asOf),
     month: statement.month,
-    months: report.months,
+    monthLabel: monthLabel(statement.month),
+    months: report.months.map((value) => ({ value, label: monthLabel(value) })),
     statement: {
       openingEgp: formatEgp(statement.openingEgpPiasters),
       earned: amount(statement.earned),
@@ -83,7 +92,7 @@ export function toPartnerReportProps(
     },
     pending: amount(report.pending),
     availableBalanceEgp: formatEgp(report.availableBalanceEgpPiasters),
-    balanceIsNegative: report.availableBalanceEgpPiasters < 0n,
+    balanceIsNegative: report.availableBalanceEgpPiasters < 0n || statement.closingEgpPiasters < 0n,
     sales: report.sales.map((row, index) => ({
       key: String(index),
       listName: row.listName,
@@ -99,9 +108,7 @@ export function toPartnerReportProps(
     settlements: report.settlements.map((line) => ({
       id: line.id,
       voided: line.kind === 'void',
-      voidsReference:
-        report.settlements.find((other) => other.id === line.voidsSettlementId)
-          ?.transferReference ?? null,
+      voidsReference: line.voidsTransferReference,
       egp: formatEgp(line.amountPiasters),
       transferReference: line.transferReference,
       paidAt: line.paidAt,

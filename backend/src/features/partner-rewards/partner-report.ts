@@ -19,13 +19,20 @@ import { fail, ok, type RewardRateResult } from './staff-access';
 export const MIN_DISTINCT_ORDERS_PER_SALES_ROW = 3;
 
 /** The Partner Roles that read Reports. `list-manager` and `collection-staff` do not. */
-const REPORT_ROLES: readonly PartnerRole[] = [PARTNER_ADMINISTRATOR, 'report-viewer'];
+export const PARTNER_REPORT_ROLES: readonly PartnerRole[] = [
+  PARTNER_ADMINISTRATOR,
+  'report-viewer',
+];
 
 /** A sales row as a Partner sees it: no Order count and no ids. */
 export type PartnerSalesRowView = Omit<
   SalesRowView,
   'month' | 'listId' | 'listItemId' | 'variantId' | 'orderCount'
 >;
+
+/** Whether a member holding `roles` reads Partner Reports. The one definition of that rule. */
+export const canReadPartnerReports = (roles: readonly PartnerRole[]) =>
+  roles.some((role) => PARTNER_REPORT_ROLES.includes(role));
 
 export interface PartnerSettlementLineView {
   readonly id: number;
@@ -36,6 +43,8 @@ export interface PartnerSettlementLineView {
   /** `YYYY-MM-DD`. Shown on the history row only; lines are placed by `recordedAt`. */
   readonly paidAt: string | null;
   readonly voidsSettlementId: number | null;
+  /** For a void: the transfer reference of the payout it voids. */
+  readonly voidsTransferReference: string | null;
   readonly recordedAt: Date;
 }
 
@@ -118,7 +127,7 @@ export class PartnerRewardReportService implements IPartnerRewardReportService {
 
     const db = await this.getDb();
     const roles = await getActiveMembershipRoles(db, businessPartnerId, actor.userId);
-    if (!roles?.some((role) => REPORT_ROLES.includes(role))) return fail('forbidden');
+    if (!roles || !canReadPartnerReports(roles)) return fail('forbidden');
     if (!(await getBusinessPartnerById(db, businessPartnerId))) return fail('not-found');
 
     const asOf = this.now();
@@ -135,7 +144,12 @@ export class PartnerRewardReportService implements IPartnerRewardReportService {
         return ok({
           ...shared,
           ...projectPartnerSales(shared.sales),
-          settlements: settlements.map((row) => ({ ...row })),
+          settlements: settlements.map((row) => ({
+            ...row,
+            voidsTransferReference:
+              settlements.find((other) => other.id === row.voidsSettlementId)?.transferReference ??
+              null,
+          })),
         });
       },
       { isolationLevel: 'repeatable read', accessMode: 'read only' },

@@ -30,7 +30,7 @@ export function PartnerReportView({
   const t = useTranslations('PartnerReports');
   const { statement } = report;
   const hasActivity = report.months.length > 0;
-  const money = (egp: string) => `${egp} EGP`;
+  const money = (egp: string) => t('egp', { amount: egp });
   const withPoints = ({ points, egp }: AmountProps) => `${money(egp)} (${t('points', { points })})`;
   const name = (value: string | null) => value ?? t('unnamed');
 
@@ -60,7 +60,7 @@ export function PartnerReportView({
         <>
           <Card data-testid="reward-statement">
             <CardHeader>
-              <CardTitle>{t('statementTitle', { month: report.month })}</CardTitle>
+              <CardTitle>{t('statementTitle', { month: report.monthLabel })}</CardTitle>
               <form method="get" className="flex items-end gap-2 pt-2">
                 <label className="text-sm" htmlFor="report-month">
                   {t('month')}
@@ -72,8 +72,8 @@ export function PartnerReportView({
                   className="rounded-md border bg-background px-2 py-1 text-sm"
                 >
                   {report.months.map((month) => (
-                    <option key={month} value={month}>
-                      {month}
+                    <option key={month.value} value={month.value}>
+                      {month.label}
                     </option>
                   ))}
                 </select>
@@ -85,12 +85,12 @@ export function PartnerReportView({
             <CardContent>
               <Table>
                 <TableBody>
-                  <Line label={t('opening')} value={money(statement.openingEgp)} />
-                  <Line label={t('earned')} value={withPoints(statement.earned)} />
-                  <Line label={t('reversed')} value={withPoints(statement.reversed)} />
-                  <Line label={t('adjustments')} value={money(statement.adjustmentsEgp)} />
-                  <Line label={t('settled')} value={money(statement.settledEgp)} />
-                  <Line label={t('closing')} value={money(statement.closingEgp)} strong />
+                  <StatementRow label={t('opening')} value={money(statement.openingEgp)} />
+                  <StatementRow label={t('earned')} value={withPoints(statement.earned)} />
+                  <StatementRow label={t('reversed')} value={withPoints(statement.reversed)} />
+                  <StatementRow label={t('adjustments')} value={money(statement.adjustmentsEgp)} />
+                  <StatementRow label={t('settled')} value={money(statement.settledEgp)} />
+                  <StatementRow label={t('closing')} value={money(statement.closingEgp)} strong />
                 </TableBody>
               </Table>
               <p className="mt-4 text-sm">
@@ -191,7 +191,7 @@ export function PartnerReportView({
   );
 }
 
-function Line({
+function StatementRow({
   label,
   value,
   strong = false,
