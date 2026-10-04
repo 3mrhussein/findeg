@@ -5,13 +5,14 @@ export {
   type RewardValuation,
   type RewardValuationInput,
 } from './valuation';
+export { type IRewardRateService, type RewardTotalsView, type RewardRateView } from './rates';
+export { type RewardRateResult, type RewardsStaffActor } from './staff-access';
 export {
-  type IRewardRateService,
-  type RewardTotalsView,
-  type RewardRateResult,
-  type RewardRateView,
-  type RewardsStaffActor,
-} from './rates';
+  type AdjustRewardsError,
+  type IRewardAdjustmentService,
+  type RewardAdjustmentView,
+} from './adjustments';
+export { type AvailableBalanceView, type IRewardStatementService } from './statement';
 export {
   createPartnerRewardsServices,
   type PartnerRewardsDependencies,

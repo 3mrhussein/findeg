@@ -181,3 +181,69 @@ export function getEarnedRewardTotals(executor: RewardsExecutor, businessPartner
 export function getReversedRewardTotals(executor: RewardsExecutor, businessPartnerId: number) {
   return sumRewardEvents(executor, businessPartnerId, 'reversal');
 }
+
+/**
+ * Appends a partner-level `adjustment` event (signed EGP, no entitlement, zero points). Returns
+ * `undefined` when the Business Partner already used this idempotency key; keys are kept forever.
+ */
+export async function insertRewardAdjustment(
+  executor: RewardsExecutor,
+  values: {
+    businessPartnerId: number;
+    egpValuePiasters: bigint;
+    reason: string;
+    idempotencyKey: string;
+    actorUserId: number;
+  },
+) {
+  const [row] = await executor
+    .insert(rewardEvents)
+    .values({ ...values, eventType: 'adjustment', points: 0n })
+    .onConflictDoNothing({
+      target: [rewardEvents.businessPartnerId, rewardEvents.idempotencyKey],
+      where: sql`${rewardEvents.eventType} = 'adjustment'`,
+    })
+    .returning();
+  return row;
+}
+
+/** The adjustment a Business Partner recorded under an idempotency key, if any. */
+export async function findRewardAdjustmentByKey(
+  executor: RewardsExecutor,
+  businessPartnerId: number,
+  idempotencyKey: string,
+) {
+  const [row] = await executor
+    .select()
+    .from(rewardEvents)
+    .where(
+      and(
+        eq(rewardEvents.businessPartnerId, businessPartnerId),
+        eq(rewardEvents.eventType, 'adjustment'),
+        eq(rewardEvents.idempotencyKey, idempotencyKey),
+      ),
+    );
+  return row;
+}
+
+/**
+ * Signed EGP Available Balance in piasters: earned − reversed ± adjustments (ADR-0009). Pending
+ * (`accepted`-only) and voided (`cancellation`) entitlements never count. Settlements will
+ * subtract once they exist.
+ */
+export async function getAvailableRewardBalance(
+  executor: RewardsExecutor,
+  businessPartnerId: number,
+): Promise<bigint> {
+  const [row] = await executor
+    .select({
+      balance: sql<string>`coalesce(sum(case ${rewardEvents.eventType}
+        when 'paid' then ${rewardEvents.egpValuePiasters}
+        when 'reversal' then -${rewardEvents.egpValuePiasters}
+        when 'adjustment' then ${rewardEvents.egpValuePiasters}
+        else 0 end), 0)`,
+    })
+    .from(rewardEvents)
+    .where(eq(rewardEvents.businessPartnerId, businessPartnerId));
+  return BigInt(row.balance);
+}
