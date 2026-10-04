@@ -12,9 +12,16 @@ import type { DbTransaction } from '@findeg/db/queries';
 import { getListOffer } from '@findeg/db/queries/school-supply-lists';
 import { eligibleVariants } from '@findeg/backend/features/school';
 import { computeConfirmation } from '../../domain/confirmation';
-import { fromPiasters, isOfferActive, priceLine, toPiasters } from '../../domain/list-offer';
+import { isOfferActive } from '../../domain/list-offer';
+import {
+  priceLine,
+  sumQuote,
+  toPiasters,
+  type PiasterQuote,
+  type PiasterQuoteLine,
+} from '../../domain/piasters';
 import { ListUnavailableError, SelectionInvalidError } from '../../domain/errors';
-import type { CheckoutQuote, CheckoutQuoteLine, ListCheckoutLine } from '../../schemas';
+import type { ListCheckoutLine } from '../../schemas';
 
 type Executor = typeof db | DbTransaction;
 
@@ -37,7 +44,7 @@ export interface ListAttribution {
 }
 
 export interface ListQuoteCalculation {
-  quote: CheckoutQuote;
+  quote: PiasterQuote;
   variantMap: Map<number, CatalogVariantMetadata>;
   attribution: ListAttribution;
 }
@@ -54,7 +61,7 @@ const invalidIds = (ids: number[]) => [...new Set(ids)].sort((a, b) => a - b);
  */
 export async function calculateListQuote(
   input: { publicCode: string; lines: ListCheckoutLine[] },
-  shippingFee: number,
+  shippingFee: bigint,
   tx?: DbTransaction,
   now: Date = new Date(),
 ): Promise<ListQuoteCalculation> {
@@ -169,7 +176,7 @@ export async function calculateListQuote(
   const offer = await getListOffer(executor, list.id, tx ? { lock: 'share' } : {});
   const listOfferBasisPoints = offer && isOfferActive(offer, now) ? offer.basisPoints : null;
 
-  const quoteLines: CheckoutQuoteLine[] = [...input.lines]
+  const quoteLines: PiasterQuoteLine[] = [...input.lines]
     .sort((a, b) => a.listItemId - b.listItemId)
     .map((line) => {
       const unitPrice = toPiasters(variantById.get(line.variantId)!.basePrice);
@@ -178,17 +185,13 @@ export async function calculateListQuote(
         listItemId: line.listItemId,
         variantId: line.variantId,
         quantity: line.quantity,
-        unitPrice: fromPiasters(unitPrice),
+        unitPrice,
         discounts:
-          priced.discount > 0n
-            ? [{ source: LIST_OFFER_SOURCE, amount: fromPiasters(priced.discount) }]
-            : [],
-        lineTotal: fromPiasters(priced.lineTotal),
+          priced.discount > 0n ? [{ source: LIST_OFFER_SOURCE, amount: priced.discount }] : [],
+        lineTotal: priced.lineTotal,
       };
     });
-  const subtotal = Number(quoteLines.reduce((sum, line) => sum + line.lineTotal, 0).toFixed(2));
-  const shipping = Number(shippingFee.toFixed(2));
-  const total = Number((subtotal + shipping).toFixed(2));
+  const { subtotal, shipping, total } = sumQuote(quoteLines, shippingFee);
   const currency = 'EGP' as const;
   const confirmation = computeConfirmation({
     source: 'list',

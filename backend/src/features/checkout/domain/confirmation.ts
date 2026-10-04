@@ -1,17 +1,18 @@
 import { createHash } from 'node:crypto';
+import { fromPiasters } from './piasters';
 
 export interface QuoteConfirmationDiscount {
   source: string;
-  amount: number;
+  amount: bigint;
 }
 
 export interface QuoteConfirmationLine {
   listItemId?: number;
   variantId: number;
   quantity: number;
-  unitPrice: number;
+  unitPrice: bigint;
   discounts: QuoteConfirmationDiscount[];
-  lineTotal: number;
+  lineTotal: bigint;
 }
 
 export interface QuoteConfirmationTerms {
@@ -20,14 +21,15 @@ export interface QuoteConfirmationTerms {
   /** Active List Offer, so an offer starting, ending or changing invalidates the digest. */
   listOfferBasisPoints?: number | null;
   currency: string;
-  shipping: number;
-  subtotal: number;
-  total: number;
+  shipping: bigint;
+  subtotal: bigint;
+  total: bigint;
   lines: QuoteConfirmationLine[];
 }
 
 /**
- * Computes a deterministic SHA-256 digest of quote terms (ADR-0005).
+ * Computes a deterministic SHA-256 digest of quote terms (ADR-0005). Amounts are piasters; the digest
+ * hashes their decimal form, so it matches the digest produced before Quotes moved to BigInt.
  * Stable for equal inputs regardless of line ordering.
  * Changes if any term (price, variant, quantity, shipping, discount, currency) changes.
  */
@@ -41,14 +43,14 @@ export function computeConfirmation(terms: QuoteConfirmationTerms): string {
       ...(line.listItemId === undefined ? {} : { listItemId: line.listItemId }),
       variantId: line.variantId,
       quantity: line.quantity,
-      unitPrice: Number(line.unitPrice.toFixed(2)),
+      unitPrice: fromPiasters(line.unitPrice),
       discounts: [...line.discounts]
         .sort((a, b) => a.source.localeCompare(b.source))
         .map((d) => ({
           source: d.source,
-          amount: Number(d.amount.toFixed(2)),
+          amount: fromPiasters(d.amount),
         })),
-      lineTotal: Number(line.lineTotal.toFixed(2)),
+      lineTotal: fromPiasters(line.lineTotal),
     }));
 
   const payload = {
@@ -57,9 +59,9 @@ export function computeConfirmation(terms: QuoteConfirmationTerms): string {
       ? {}
       : { listOfferBasisPoints: terms.listOfferBasisPoints }),
     currency: terms.currency,
-    shipping: Number(terms.shipping.toFixed(2)),
-    subtotal: Number(terms.subtotal.toFixed(2)),
-    total: Number(terms.total.toFixed(2)),
+    shipping: fromPiasters(terms.shipping),
+    subtotal: fromPiasters(terms.subtotal),
+    total: fromPiasters(terms.total),
     lines: normalizedLines,
   };
 

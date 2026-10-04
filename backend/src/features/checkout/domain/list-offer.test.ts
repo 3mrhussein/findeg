@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { isOfferActive, priceLine, toPiasters } from './list-offer';
+import { isOfferActive } from './list-offer';
+import { priceLine, toPiasters } from './piasters';
 
 describe('toPiasters', () => {
   it.each([
