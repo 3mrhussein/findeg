@@ -19,7 +19,6 @@ export interface IOrderRepository {
   getAllFiltered(filters: OrderFilters): Promise<{ orders: Order[]; total: number }>;
 
   create(order: Partial<Order>): Promise<Order>;
-  updatePaymentStatus(id: ID | string, status: PaymentStatus): Promise<void>;
 
   getRecent(limit?: number): Promise<Order[]>;
   count(filters?: OrderFilters): Promise<number>;

@@ -1,5 +1,6 @@
 import {
   getCurrentRewardRate,
+  getEarnedRewardTotals,
   getPendingRewardTotals,
   insertRewardRate,
   listRewardRates,
@@ -48,6 +49,11 @@ export interface IRewardRateService {
       'forbidden' | 'not-found'
     >
   >;
+  /** Partner Points and EGP earned (Order delivered and paid) and not since reversed. */
+  getEarned(
+    actor: RewardsStaffActor,
+    businessPartnerId: number,
+  ): Promise<RewardRateResult<PendingRewardsView, 'forbidden' | 'not-found'>>;
   /** Partner Points and EGP accepted on Orders but not yet earned, paid or voided. */
   getPending(
     actor: RewardsStaffActor,
@@ -126,5 +132,17 @@ export class RewardRateService implements IRewardRateService {
     const db = await this.getDb();
     if (!(await getBusinessPartnerById(db, businessPartnerId))) return fail('not-found');
     return ok(await getPendingRewardTotals(db, businessPartnerId));
+  }
+
+  async getEarned(actor: RewardsStaffActor, businessPartnerId: number) {
+    if (
+      !hasPermission(actor, PERMISSION_CODES.REWARDS_VIEW) &&
+      !hasPermission(actor, PERMISSION_CODES.REWARDS_RATES_MANAGE)
+    ) {
+      return fail('forbidden');
+    }
+    const db = await this.getDb();
+    if (!(await getBusinessPartnerById(db, businessPartnerId))) return fail('not-found');
+    return ok(await getEarnedRewardTotals(db, businessPartnerId));
   }
 }

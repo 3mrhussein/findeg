@@ -25,7 +25,7 @@ export interface RewardRateItem {
   readonly createdAt: string;
 }
 
-export interface PendingRewards {
+export interface RewardTotals {
   readonly points: string;
   readonly egp: string;
 }
@@ -46,12 +46,14 @@ export function RewardRatesPanel({
   current,
   history,
   pending,
+  earned,
   canManage,
   save,
 }: {
   current: RewardRateItem | null;
   history: RewardRateItem[];
-  pending: PendingRewards;
+  pending: RewardTotals;
+  earned: RewardTotals;
   canManage: boolean;
   save: SaveRewardRate;
 }) {
@@ -73,6 +75,25 @@ export function RewardRatesPanel({
             <div>
               <dt className="text-sm text-muted-foreground">Pending value (EGP)</dt>
               <dd className="font-mono text-lg font-semibold">{pending.egp}</dd>
+            </div>
+          </dl>
+        </CardContent>
+      </Card>
+
+      <Card data-testid="earned-rewards">
+        <CardHeader>
+          <CardTitle>Earned rewards</CardTitle>
+          <CardDescription>Orders delivered and paid, not since reversed.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <dl className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <dt className="text-sm text-muted-foreground">Earned Partner Points</dt>
+              <dd className="font-mono text-lg font-semibold">{earned.points}</dd>
+            </div>
+            <div>
+              <dt className="text-sm text-muted-foreground">Earned value (EGP)</dt>
+              <dd className="font-mono text-lg font-semibold">{earned.egp}</dd>
             </div>
           </dl>
         </CardContent>

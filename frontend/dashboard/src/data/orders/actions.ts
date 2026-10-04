@@ -13,11 +13,16 @@ import {
   type OrderStatusUpdate,
 } from '@findeg/backend/features/order/schemas';
 import type { OrderStatus } from '@findeg/backend/features/core';
-import { adminSession, hasPermission, PERMISSION_CODES } from '@findeg/backend/features/core';
+import {
+  adminSession,
+  hasPermission,
+  PERMISSION_CODES,
+  type SessionPayload,
+} from '@findeg/backend/features/core';
 import { getErrorMessage } from '@lib/type-guards';
 import { getSession } from '@lib/session';
 
-async function requireOrderWritePermission(): Promise<void> {
+async function requireOrderWritePermission(): Promise<SessionPayload> {
   const session = await getSession();
   if (
     !session ||
@@ -26,6 +31,7 @@ async function requireOrderWritePermission(): Promise<void> {
   ) {
     throw new Error('Unauthorized: Order write permission required');
   }
+  return session;
 }
 
 /**
@@ -97,9 +103,9 @@ export async function updateOrderPaymentStatusAction(
   paymentStatus: 'unpaid' | 'paid' | 'refunded',
 ) {
   try {
-    await requireOrderWritePermission();
+    const session = await requireOrderWritePermission();
     const { orders } = createAdministrationServices();
-    const result = await orders.updatePaymentStatus(id, paymentStatus);
+    const result = await orders.updatePaymentStatus(id, paymentStatus, session.userId);
 
     updateTag('orders');
 

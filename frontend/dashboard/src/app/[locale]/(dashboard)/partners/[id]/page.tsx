@@ -41,7 +41,7 @@ export default async function PartnerDetailPage({
   const partner = await partners.getPartner(actor, partnerId);
   if (!partner.success) notFound();
 
-  const [members, pending, lists, rates, pendingRewards] = await Promise.all([
+  const [members, pending, lists, rates, pendingRewards, earnedRewards] = await Promise.all([
     canManagePartner ? memberships.listMembers(actor, partnerId) : Promise.resolve(null),
     canManagePartner ? invitations.listPendingInvitations(actor, partnerId) : Promise.resolve(null),
     canManagePartner
@@ -55,6 +55,9 @@ export default async function PartnerDetailPage({
       : Promise.resolve(null),
     canViewRewards
       ? createPartnerRewardsServices().rates.getPending(session, partnerId)
+      : Promise.resolve(null),
+    canViewRewards
+      ? createPartnerRewardsServices().rates.getEarned(session, partnerId)
       : Promise.resolve(null),
   ]);
   const canChange = partner.data.status === 'onboarding' || partner.data.status === 'active';
@@ -142,7 +145,7 @@ export default async function PartnerDetailPage({
           </TabsContent>
         )}
 
-        {canViewRewards && rates?.success && pendingRewards?.success && (
+        {canViewRewards && rates?.success && pendingRewards?.success && earnedRewards?.success && (
           <TabsContent value="rewards">
             <RewardRatesPanel
               current={
@@ -157,6 +160,10 @@ export default async function PartnerDetailPage({
               pending={{
                 points: pendingRewards.data.points.toString(),
                 egp: piastersToEgp(pendingRewards.data.egpValuePiasters),
+              }}
+              earned={{
+                points: earnedRewards.data.points.toString(),
+                egp: piastersToEgp(earnedRewards.data.egpValuePiasters),
               }}
               canManage={canManageRates}
               save={saveRate}

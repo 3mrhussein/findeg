@@ -93,11 +93,10 @@ describe('tx-aware order and inventory queries on real Postgres', () => {
       expect(items).toHaveLength(1);
     });
 
-    it('updates mutable order fields and payment status', async () => {
+    it('updates mutable order fields', async () => {
       const { productId, variantId } = await stockedVariant();
       const { order } = await orderQueries.create(orderInput(productId, variantId));
 
-      await orderQueries.updatePaymentStatus(order.id, 'paid');
       await orderQueries.updateOrder(order.id, {
         trackingNumber: 'TRK-1',
         adminNotes: 'handed over',
@@ -106,19 +105,21 @@ describe('tx-aware order and inventory queries on real Postgres', () => {
       const [row] = await testDb.db.select().from(orders).where(eq(orders.id, order.id));
       expect(row).toMatchObject({
         status: 'pending',
-        paymentStatus: 'paid',
         trackingNumber: 'TRK-1',
         adminNotes: 'handed over',
       });
     });
 
-    it('does not expose status changes through the generic update primitive', async () => {
+    it('does not expose status or payment changes through the generic update primitive', async () => {
       const { productId, variantId } = await stockedVariant();
       const { order } = await orderQueries.create(orderInput(productId, variantId));
 
       await expect(orderQueries.updateOrder(order.id, { status: 'confirmed' })).rejects.toThrow(
         'Cannot update frozen order snapshot column: status',
       );
+      await expect(
+        orderQueries.updateOrder(order.id, { paymentStatus: 'paid' } as never),
+      ).rejects.toThrow('Cannot update frozen order snapshot column: paymentStatus');
     });
 
     it('searches Order Reference even when the search is numeric-looking', async () => {
@@ -222,7 +223,6 @@ describe('tx-aware order and inventory queries on real Postgres', () => {
             String(order.id),
             tx,
           );
-          await orderQueries.updatePaymentStatus(order.id, 'refunded', tx);
           await orderQueries.updateOrder(order.id, { adminNotes: 'cancelled' }, tx);
           throw new Rollback();
         }),
