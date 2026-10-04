@@ -410,6 +410,25 @@ describe('settlements, voids and debt forgiveness lines', () => {
     ).resolves.toEqual({ success: false, error: 'idempotency-conflict' });
   });
 
+  it('forgives only part of a debt, leaving the balance negative, then the rest', async () => {
+    const partnerId = await createPartner('-30.00');
+    const forgive = (amountEgp: string, idempotencyKey: string) =>
+      services.settlements.forgiveDebt(settler, partnerId, {
+        amountEgp,
+        reason: 'partial relief',
+        idempotencyKey,
+      });
+
+    await expect(forgive('10.00', 'df-part-1')).resolves.toMatchObject({ success: true });
+    expect(await available(partnerId)).toBe(-2_000n);
+    await expect(forgive('20.01', 'df-part-2')).resolves.toEqual({
+      success: false,
+      error: 'exceeds-debt',
+    });
+    await expect(forgive('20.00', 'df-part-3')).resolves.toMatchObject({ success: true });
+    expect(await available(partnerId)).toBe(0n);
+  });
+
   it('lists a Business Partner’s settlement lines newest first for rewards.view', async () => {
     const partnerId = await createPartner('100.00');
     const recorded = await settle(partnerId, { amountEgp: '10.00' });
