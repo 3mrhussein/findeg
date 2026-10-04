@@ -14,7 +14,7 @@ CREATE TABLE "rewards"."reward_settlements" (
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "uq_reward_settlements_id_kind" UNIQUE("id","kind"),
 	CONSTRAINT "uq_reward_settlements_id_partner" UNIQUE("id","business_partner_id"),
-	CONSTRAINT "ck_reward_settlements_kind" CHECK ("rewards"."reward_settlements"."kind" in ('settlement', 'void', 'write-off')),
+	CONSTRAINT "ck_reward_settlements_kind" CHECK ("rewards"."reward_settlements"."kind" in ('settlement', 'void', 'debt-forgiveness')),
 	CONSTRAINT "ck_reward_settlements_shape" CHECK (("rewards"."reward_settlements"."kind" = 'settlement'
           and "rewards"."reward_settlements"."amount_piasters" >= 1
           and length(trim(coalesce("rewards"."reward_settlements"."transfer_reference", ''))) > 0
@@ -27,7 +27,7 @@ CREATE TABLE "rewards"."reward_settlements" (
           and "rewards"."reward_settlements"."voids_settlement_id" is not null
           and "rewards"."reward_settlements"."transfer_reference" is null
           and "rewards"."reward_settlements"."paid_at" is null)
-        or ("rewards"."reward_settlements"."kind" = 'write-off'
+        or ("rewards"."reward_settlements"."kind" = 'debt-forgiveness'
           and "rewards"."reward_settlements"."amount_piasters" >= 1
           and length(trim(coalesce("rewards"."reward_settlements"."reason", ''))) > 0
           and length(trim(coalesce("rewards"."reward_settlements"."idempotency_key", ''))) > 0

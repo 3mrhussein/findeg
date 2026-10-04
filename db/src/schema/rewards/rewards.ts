@@ -27,7 +27,7 @@ export const REWARD_EVENT_TYPES = [
 ] as const;
 export type RewardEventType = (typeof REWARD_EVENT_TYPES)[number];
 
-export const REWARD_SETTLEMENT_KINDS = ['settlement', 'void', 'write-off'] as const;
+export const REWARD_SETTLEMENT_KINDS = ['settlement', 'void', 'debt-forgiveness'] as const;
 export type RewardSettlementKind = (typeof REWARD_SETTLEMENT_KINDS)[number];
 
 /** Append-only Reward Rate history. The greatest id for a Business Partner is current. */
@@ -144,8 +144,8 @@ export const rewardEvents = rewardsSchema.table(
 /**
  * Partner-level, append-only money lines that are not tied to an entitlement (ADR-0009). A
  * `settlement` records a payout Finance made off-platform, a `void` negates one mistaken
- * settlement, and a `write-off` forgives part of a negative Available Balance. Amounts are
- * piasters: positive for a settlement or write-off, negative for a void.
+ * settlement, and a `debt-forgiveness` forgives part of a negative Available Balance. Amounts are
+ * piasters: positive for a settlement or debt forgiveness, negative for a void.
  */
 export const rewardSettlements = rewardsSchema.table(
   'reward_settlements',
@@ -189,7 +189,10 @@ export const rewardSettlements = rewardsSchema.table(
     uniqueIndex('uq_reward_settlements_idempotency')
       .on(table.businessPartnerId, table.idempotencyKey)
       .where(sql`${table.idempotencyKey} is not null`),
-    check('ck_reward_settlements_kind', sql`${table.kind} in ('settlement', 'void', 'write-off')`),
+    check(
+      'ck_reward_settlements_kind',
+      sql`${table.kind} in ('settlement', 'void', 'debt-forgiveness')`,
+    ),
     check(
       'ck_reward_settlements_shape',
       sql`(${table.kind} = 'settlement'
@@ -204,7 +207,7 @@ export const rewardSettlements = rewardsSchema.table(
           and ${table.voidsSettlementId} is not null
           and ${table.transferReference} is null
           and ${table.paidAt} is null)
-        or (${table.kind} = 'write-off'
+        or (${table.kind} = 'debt-forgiveness'
           and ${table.amountPiasters} >= 1
           and length(trim(coalesce(${table.reason}, ''))) > 0
           and length(trim(coalesce(${table.idempotencyKey}, ''))) > 0

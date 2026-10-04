@@ -19,7 +19,7 @@ import {
   type RewardsStaffActor,
 } from '..';
 
-describe('settlements, voids and write-offs', () => {
+describe('settlements, voids and debt forgiveness lines', () => {
   let testDb: TestDatabase;
   let services: PartnerRewardsServices;
   let sequence = 0;
@@ -120,7 +120,7 @@ describe('settlements, voids and write-offs', () => {
     return result.data;
   }
 
-  it('lets only rewards.settle record, void or write off', async () => {
+  it('lets only rewards.settle record, void or forgive', async () => {
     const partnerId = await createPartner('100.00');
     const adjustOnly: RewardsStaffActor = {
       userId: settler.userId,
@@ -141,7 +141,7 @@ describe('settlements, voids and write-offs', () => {
         services.settlements.void(actor, partnerId, recorded.id, { reason: 'mistake' }),
       ).resolves.toEqual({ success: false, error: 'forbidden' });
       await expect(
-        services.settlements.writeOff(actor, partnerId, {
+        services.settlements.forgiveDebt(actor, partnerId, {
           amountEgp: '1.00',
           reason: 'debt',
           idempotencyKey: 'wo-forbidden',
@@ -309,7 +309,7 @@ describe('settlements, voids and write-offs', () => {
     expect(await available(partnerId)).toBe(10_000n);
   });
 
-  it('cannot void a void, a write-off, another partner’s settlement or a missing one', async () => {
+  it('cannot void a void, a debt forgiveness, another partner’s settlement or a missing one', async () => {
     const partnerId = await createPartner('100.00');
     const recorded = await settle(partnerId);
     const voided = await services.settlements.void(settler, partnerId, recorded.id, {
@@ -375,31 +375,38 @@ describe('settlements, voids and write-offs', () => {
       { amountEgp: '-1.00' },
     ]) {
       await expect(
-        services.settlements.writeOff(settler, partnerId, { ...input, ...bad }),
+        services.settlements.forgiveDebt(settler, partnerId, { ...input, ...bad }),
       ).resolves.toEqual({ success: false, error: 'invalid-input' });
     }
     await expect(
-      services.settlements.writeOff(settler, partnerId, { ...input, amountEgp: '30.01' }),
+      services.settlements.forgiveDebt(settler, partnerId, { ...input, amountEgp: '30.01' }),
     ).resolves.toEqual({ success: false, error: 'exceeds-debt' });
     expect(await available(partnerId)).toBe(-3_000n);
 
-    const written = await services.settlements.writeOff(settler, partnerId, input);
+    const written = await services.settlements.forgiveDebt(settler, partnerId, input);
     expect(written).toMatchObject({
       success: true,
-      data: { kind: 'write-off', amountPiasters: 3_000n, reason: 'uncollectable', replayed: false },
+      data: {
+        kind: 'debt-forgiveness',
+        amountPiasters: 3_000n,
+        reason: 'uncollectable',
+        replayed: false,
+      },
     });
     expect(await available(partnerId)).toBe(0n);
 
-    // Replay returns the original; a settled balance has no debt left to write off.
-    await expect(services.settlements.writeOff(settler, partnerId, input)).resolves.toMatchObject({
+    // Replay returns the original; a settled balance has no debt left to forgive.
+    await expect(
+      services.settlements.forgiveDebt(settler, partnerId, input),
+    ).resolves.toMatchObject({
       success: true,
       data: { replayed: true },
     });
     await expect(
-      services.settlements.writeOff(settler, partnerId, { ...input, idempotencyKey: 'wo-2' }),
+      services.settlements.forgiveDebt(settler, partnerId, { ...input, idempotencyKey: 'wo-2' }),
     ).resolves.toEqual({ success: false, error: 'exceeds-debt' });
     await expect(
-      services.settlements.writeOff(settler, partnerId, { ...input, amountEgp: '5.00' }),
+      services.settlements.forgiveDebt(settler, partnerId, { ...input, amountEgp: '5.00' }),
     ).resolves.toEqual({ success: false, error: 'idempotency-conflict' });
   });
 

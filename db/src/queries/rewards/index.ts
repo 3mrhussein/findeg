@@ -236,8 +236,8 @@ export async function findRewardAdjustmentByKey(
 /**
  * Signed EGP Available Balance in piasters: earned − reversed ± adjustments − settled (ADR-0009).
  * Pending (`accepted`-only) and voided (`cancellation`) entitlements never count. A void line is
- * negative and a write-off positive, so subtracting every settlement-table amount except
- * write-offs, which add, nets out voided settlements and forgiven debt.
+ * negative and a debt forgiveness positive, so subtracting every settlement-table amount except
+ * debt forgiveness lines, which add, nets out voided settlements and forgiven debt.
  */
 export async function getAvailableRewardBalance(
   executor: RewardsExecutor,
@@ -256,7 +256,7 @@ export async function getAvailableRewardBalance(
   const [settlements] = await executor
     .select({
       balance: sql<string>`coalesce(sum(case ${rewardSettlements.kind}
-        when 'write-off' then ${rewardSettlements.amountPiasters}
+        when 'debt-forgiveness' then ${rewardSettlements.amountPiasters}
         else -${rewardSettlements.amountPiasters} end), 0)`,
     })
     .from(rewardSettlements)
@@ -270,7 +270,7 @@ export type NewSettlementLine = Omit<
 >;
 
 /**
- * Appends a settlement, void or write-off line. Returns `undefined` when the partner already used
+ * Appends a settlement, void or debt forgiveness line. Returns `undefined` when the partner already used
  * the idempotency key, or (for a void) the settlement already has one. Callers hold the partner
  * lock and run in a transaction.
  */
@@ -286,7 +286,7 @@ export async function insertRewardSettlementLine(
   return row;
 }
 
-/** The settlement or write-off a Business Partner recorded under an idempotency key, if any. */
+/** The settlement or debt forgiveness a Business Partner recorded under an idempotency key, if any. */
 export async function findRewardSettlementByKey(
   executor: RewardsExecutor,
   businessPartnerId: number,
@@ -326,7 +326,7 @@ export async function findRewardSettlementVoid(executor: RewardsExecutor, settle
   return row;
 }
 
-/** Newest-first settlement, void and write-off lines for one Business Partner. */
+/** Newest-first settlement, void and debt forgiveness lines for one Business Partner. */
 export function listRewardSettlementLines(executor: RewardsExecutor, businessPartnerId: number) {
   return executor
     .select()

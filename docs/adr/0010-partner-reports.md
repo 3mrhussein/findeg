@@ -20,7 +20,7 @@ Depends on ADR-0003 (Partner Membership, `/partner/[code]` in `frontend/storefro
 
 **Negative balance.** The Available Balance is shown signed in EGP, for example "−120.00 EGP", with a fixed EN/AR explanation: reversals after the last payout exceeded the balance, and future earnings offset this first. Points appear only on the pending, earned and reversed lines. There is no points "available" figure and no points on settlements.
 
-**Settlements and adjustments.** Partners see a settlement history with amount, `paid-at` date and transfer reference. A void appears as a negative line marked "Voided" against the original. Staff notes, the Staff actor and void reasons are never shown. Adjustments, including debt write-offs, appear only as one monthly total, with no individual rows or reasons.
+**Settlements and adjustments.** Partners see a settlement history with amount, `paid-at` date and transfer reference. A void appears as a negative line marked "Voided" against the original. Staff notes, the Staff actor and void reasons are never shown. Adjustments, including debt forgiveness, appear only as one monthly total, with no individual rows or reasons.
 
 **Sales table.** The sales table has one row per month × list × list item × Product Variant, with an earned column and a reversed column. Each is placed by its own Reward Event in Cairo time. Pending entitlements are not in the table. Rows are grouped by ID and show live names: the list name, the list item label, the product's `localizedName` in the viewer's locale and the variant label. When the catalog row is gone, the name falls back to the `order_items` snapshot.
 

@@ -24,7 +24,7 @@ export interface RewardSettlementView {
   readonly id: number;
   readonly businessPartnerId: number;
   readonly kind: RewardSettlementKind;
-  /** EGP in piasters: positive for a settlement or write-off, negative for a void. */
+  /** EGP in piasters: positive for a settlement or debt forgiveness, negative for a void. */
   readonly amountPiasters: bigint;
   readonly transferReference: string | null;
   /** `YYYY-MM-DD`: when Finance made the transfer. Only settlements carry it. */
@@ -43,7 +43,7 @@ type SettlementCommonError = 'forbidden' | 'invalid-input' | 'not-found';
 export type SettleRewardsError =
   SettlementCommonError | 'idempotency-conflict' | 'exceeds-available';
 export type VoidSettlementError = SettlementCommonError | 'not-voidable' | 'already-voided';
-export type WriteOffRewardsError = SettlementCommonError | 'idempotency-conflict' | 'exceeds-debt';
+export type ForgiveDebtError = SettlementCommonError | 'idempotency-conflict' | 'exceeds-debt';
 
 export interface IRewardSettlementService {
   /**
@@ -65,12 +65,12 @@ export interface IRewardSettlementService {
     input: unknown,
   ): Promise<RewardRateResult<RewardSettlementView, VoidSettlementError>>;
   /** Forgives up to the current debt of a negative Available Balance. */
-  writeOff(
+  forgiveDebt(
     actor: RewardsStaffActor,
     businessPartnerId: number,
     input: unknown,
-  ): Promise<RewardRateResult<RewardSettlementView, WriteOffRewardsError>>;
-  /** Settlement, void and write-off lines, newest first. */
+  ): Promise<RewardRateResult<RewardSettlementView, ForgiveDebtError>>;
+  /** Settlement, void and debt forgiveness lines, newest first. */
   list(
     actor: RewardsStaffActor,
     businessPartnerId: number,
@@ -129,7 +129,7 @@ function parseSettlement(input: unknown) {
   };
 }
 
-function parseWriteOff(input: unknown) {
+function parseDebtForgiveness(input: unknown) {
   const { amountEgp, reason, idempotencyKey } = record(input);
   const amountPiasters = parseEgpPiasters(amountEgp);
   const trimmedReason = requiredText(reason);
@@ -231,10 +231,10 @@ export class RewardSettlementService implements IRewardSettlementService {
     });
   }
 
-  async writeOff(actor: RewardsStaffActor, businessPartnerId: number, input: unknown) {
+  async forgiveDebt(actor: RewardsStaffActor, businessPartnerId: number, input: unknown) {
     if (!hasPermission(actor, PERMISSION_CODES.REWARDS_SETTLE)) return fail('forbidden');
-    const writeOff = parseWriteOff(input);
-    if (!writeOff || !isPositiveId(businessPartnerId)) return fail('invalid-input');
+    const forgiveness = parseDebtForgiveness(input);
+    if (!forgiveness || !isPositiveId(businessPartnerId)) return fail('invalid-input');
 
     const db = await this.getDb();
     return db.transaction(async (tx) => {
@@ -243,26 +243,27 @@ export class RewardSettlementService implements IRewardSettlementService {
       const existing = await findRewardSettlementByKey(
         tx,
         businessPartnerId,
-        writeOff.idempotencyKey,
+        forgiveness.idempotencyKey,
       );
       if (existing) {
         const same =
-          existing.kind === 'write-off' &&
-          existing.amountPiasters === writeOff.amountPiasters &&
-          existing.reason === writeOff.reason;
+          existing.kind === 'debt-forgiveness' &&
+          existing.amountPiasters === forgiveness.amountPiasters &&
+          existing.reason === forgiveness.reason;
         return same ? ok(toView(existing, true)) : fail('idempotency-conflict');
       }
 
       const debt = -(await getAvailableRewardBalance(tx, businessPartnerId));
-      if (writeOff.amountPiasters > debt) return fail('exceeds-debt');
+      if (forgiveness.amountPiasters > debt) return fail('exceeds-debt');
 
       const inserted = await insertRewardSettlementLine(tx, {
-        ...writeOff,
+        ...forgiveness,
         businessPartnerId,
-        kind: 'write-off',
+        kind: 'debt-forgiveness',
         actorUserId: actor.userId,
       });
-      if (!inserted) throw new Error('Write-off insert conflicted while holding the partner lock');
+      if (!inserted)
+        throw new Error('Debt forgiveness insert conflicted while holding the partner lock');
       return ok(toView(inserted, false));
     });
   }

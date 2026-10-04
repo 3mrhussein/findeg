@@ -17,7 +17,7 @@ export {
   type RewardSettlementView,
   type SettleRewardsError,
   type VoidSettlementError,
-  type WriteOffRewardsError,
+  type ForgiveDebtError,
 } from './settlements';
 export { type AvailableBalanceView, type IRewardStatementService } from './statement';
 export {
