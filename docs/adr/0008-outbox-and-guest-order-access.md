@@ -1,10 +1,10 @@
 ---
-status: proposed
+status: accepted
 ---
 
 # Transactional outbox and guest order access
 
-ADR-0005 keeps side effects out of the Order Acceptance transaction, apart from writing rows. Emails stay best-effort until an outbox exists. Main sends email through Resend, but nothing reliable uses it. `ResendEmailService` swallows every error. `AdminOrderService` is wired to a no-op email service. `NotificationEventService`'s order hooks have no callers. Main also has no worker process: `backend/` is a library imported by two Next.js apps, and there is no queue, cron, or known hosting target. `develop` (reference only) uses a checkout-only `system.checkout_outbox`, a separate Node worker, and plaintext payloads that include the guest's one-time code. It also emails that code at acceptance with a 15-minute expiry, which delivery backoff can outlive. Research: `docs/research/cod-checkout-idempotency.md` (branch `research/cod-checkout-idempotency`).
+ADR-0005 keeps side effects out of the Order Acceptance transaction, apart from writing rows. Emails stay best-effort until an outbox exists. Main sends email through Resend, but nothing reliable uses it. `ResendEmailService` swallows every error. `AdminOrderService` is wired to a no-op email service. `NotificationEventService`'s order hooks have no callers. Main also has no worker process: `backend/` is a library imported by two Next.js apps, and there is no queue, cron, or known hosting target. `develop` (reference only) uses a checkout-only `system.checkout_outbox`, a separate Node worker, and plaintext payloads that include the guest's one-time code. It also emails that code at acceptance with a 15-minute expiry, which delivery backoff can outlive. The research file lives on branch `research/cod-checkout-idempotency`, not on main.
 
 Depends on ADR-0003 (Partner invitations), ADR-0005 (acceptance transaction, `transitionOrderStatus`, Order Reference).
 
@@ -62,6 +62,7 @@ Claiming follows develop's approach: one due row `FOR UPDATE SKIP LOCKED` with a
 ## Consequences
 
 - Hosting must provide a once-a-minute scheduler, such as a cron job or scheduled workflow, that calls the sweeper. Without it, retries only happen when new traffic triggers a drain.
+- **Partially implemented.** Partner invitation delivery is not wired: the `enqueue` seam in `createPartnerMembershipServices` defaults to a no-op, the dashboard actions pass none, and no `partner-invitation` handler exists. The outbox kind is `partner-invitation`, not `partner-invite`.
 - ADR-0003's invitation token must allow several valid hashes per invitation, following the secret-bearing email rule above.
 - The `resend` SDK version must support `idempotencyKey`. Bump it if it doesn't.
 - Guest order lookup and code-entry pages must be added to `frontend/storefront`. The current `OrderConfirmation` shows the serial `#id`, which must be replaced by the Order Reference.

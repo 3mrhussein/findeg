@@ -4,9 +4,9 @@ status: proposed
 
 # Partner Reports
 
-Partner Schools need to see what they have earned and been paid, without learning anything about the Customers who bought from their lists. `develop` (reference only) shipped one Partner report. It had a cumulative Reward Statement with `available` clamped at 0, and a daily table of paid sales in UTC, grouped by list item and variant with raw IDs. Groups under 3 Orders were dropped. Balances were never suppressed, refunded Orders were still counted, and the sales table did not reconcile with the statement. Research: `docs/research/partner-reports.md` (branch `docs/research-partner-reports`).
+Partner Schools need to see what they have earned and been paid, without learning anything about the Customers who bought from their lists. `develop` (reference only) shipped one Partner report. It had a cumulative Reward Statement with `available` clamped at 0, and a daily table of paid sales in UTC, grouped by list item and variant with raw IDs. Groups under 3 Orders were dropped. Balances were never suppressed, refunded Orders were still counted, and the sales table did not reconcile with the statement. The research file lives on branch `docs/research-partner-reports`, not on main.
 
-Depends on ADR-0003 (Partner Membership, `/partner/[partnerId]` in `frontend/storefront`), ADR-0006 (ledger), ADR-0008 (Guest Order Access) and ADR-0009 (settlements, signed Available Balance).
+Depends on ADR-0003 (Partner Membership, `/partner/[code]` in `frontend/storefront`), ADR-0006 (ledger), ADR-0008 (Guest Order Access) and ADR-0009 (settlements, signed Available Balance).
 
 ## Decisions
 

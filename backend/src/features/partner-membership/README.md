@@ -10,7 +10,7 @@ Partner access is a parallel model next to Staff RBAC: this feature never depend
 
 `createPartnerMembershipServices({ db?, clock?, enqueue? })` returns `{ partners, invitations, memberships }`.
 `clock` (default: system time) makes expiry testable; `enqueue` is the invitation delivery seam
-(ADR-0008) and defaults to a no-op until the Outbox exists. `invite` and `resendInvitation` return the
+(ADR-0008) and defaults to a no-op. The Outbox exists, but the dashboard actions do not pass an `enqueue` yet, so invitation emails are not delivered. `invite` and `resendInvitation` return the
 raw `token` so Staff can copy the link; only its SHA-256 digest is stored.
 
 `memberships.updateMembership(actor, id, { roles?, status? }, expectedVersion)` (partner actor

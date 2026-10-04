@@ -1,10 +1,10 @@
 ---
-status: proposed
+status: accepted
 ---
 
 # Atomic COD Order Acceptance
 
-Main has no working checkout: the storefront calls `/api/v1/checkout/{validate,order}` routes that don't exist, the Cart is an in-process `Map`, cart totals use client-held prices, and `orderQueries.create`/`reserveStock` each open their own transaction so they cannot be combined. `develop` (reference only, per the parent map) accepts COD orders in one transaction through a `TransactionRunner` port, a separate immutable `accepted_orders` snapshot, guest-only checkout, and a cart-row lock for idempotency. We adopt develop's _guarantees_ (one transaction, re-quote under locks, reserve-at-accept, idempotent replay) but build them on main's existing order, inventory, and session model rather than lifting develop's structure. Research: `docs/research/cod-checkout-idempotency.md` (branch `research/cod-checkout-idempotency`).
+Main has no working checkout: the storefront calls `/api/v1/checkout/{validate,order}` routes that don't exist, the Cart is an in-process `Map`, cart totals use client-held prices, and `orderQueries.create`/`reserveStock` each open their own transaction so they cannot be combined. `develop` (reference only) accepts COD orders in one transaction through a `TransactionRunner` port, a separate immutable `accepted_orders` snapshot, guest-only checkout, and a cart-row lock for idempotency. We adopt develop's _guarantees_ (one transaction, re-quote under locks, reserve-at-accept, idempotent replay) but build them on main's existing order, inventory, and session model rather than lifting develop's structure. The research file lives on branch `research/cod-checkout-idempotency`, not on main.
 
 This ADR fixes the **Order Acceptance seam** that the Partner Rewards design (next ADR) hooks into.
 
@@ -24,7 +24,7 @@ This ADR fixes the **Order Acceptance seam** that the Partner Rewards design (ne
 
 **Status transitions own stock effects.** Every status change, including Dashboard bulk actions, goes through one `transitionOrderStatus` in the `order` feature with an explicit allowed-transitions table (e.g. nothing returns to `pending`). `delivered` consumes the reservation (`on_hand -= n`, `reserved -= n`); `cancelled` before delivery releases it (`reserved -= n`); `refunded` has no automatic stock effect (physical restock is a manual inventory adjustment). Effects are append-only movements in the same transaction, idempotent per (order, transition). Accepted orders enter as `pending`; Order Acceptance is the atomic moment, not a status value.
 
-**Order Reference.** Every order gets a public, opaque, human-readable reference (8-char Crockford base32, e.g. `FE-7K3Q9M`, unique index), read aloud to couriers and support. It is not a secret; guest order access will require a separate code.
+**Order Reference.** Every order gets a public, opaque, human-readable reference (`FE-` plus 6 characters, e.g. `FE-7K3Q9M`, unique index), read aloud to couriers and support. It is not a secret; guest order access will require a separate code.
 
 **List checkout.** An order is either ordinary or from exactly one School Supply List, never mixed. Attribution is per order: list id, `publicCode`, the published list version, and the Partner School's `businessPartnerId` are snapshotted on the order; each line records its list item and whether it was the exact item or a specification-eligible substitute. Acceptance verifies the list is `published` and each variant eligible per ADR-0004. Reward rate and valuation are written at this same point by the Partner Rewards design.
 

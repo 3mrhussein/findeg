@@ -1,5 +1,5 @@
 ---
-status: proposed
+status: accepted
 ---
 
 # List Offer and School Supply List line pricing
@@ -20,7 +20,7 @@ Depends on ADR-0004 (lists, Exact Items, Specifications), ADR-0005 (Quote, Confi
 
 **Confirmation.** The re-quote reads the offer `FOR SHARE`. If the offer is created, changed, starts or ends between Quote and Order Acceptance, the Confirmation no longer matches and the Customer gets `409 reconfirmation-required`. The Customer is never charged an offer they were not shown, and never silently loses one.
 
-**Snapshot.** `order_items` gains `unit_price` (the gross catalog price), `discount_amount` and `line_total` (the post-discount total, which is the Partner Points basis). `orders` gains `list_offer_basis_points` and `discount_total`. These columns are frozen by ADR-0005's trigger. No per-source discount breakdown table is built until a second source exists.
+**Snapshot.** `order_items.unit_price` holds the gross catalog price (the column already existed, `unit_price_snapshot` is kept for legacy rows, and migration 0015 backfills `unit_price`), and `order_items` gains `discount_amount` and `line_total` (the post-discount total, which is the Partner Points basis). `orders` gains `list_offer_basis_points` and `discount_total`. These columns are frozen by ADR-0005's trigger. No per-source discount breakdown table is built until a second source exists.
 
 ## Considered options
 
