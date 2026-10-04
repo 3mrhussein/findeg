@@ -136,8 +136,12 @@ _Avoid_: Dashboard, analytics
 A FindEg Staff record of an EGP payout already made to a Business Partner outside FindEg, or the void of a mistaken one.
 _Avoid_: Payout, withdrawal, redemption
 
+**Write-off**:
+A FindEg Staff entry with a reason that forgives part or all of a Business Partner's negative Available Balance, so uncollectable debt stops consuming its future earnings. It is stored beside Reward Settlements as its own line type, and raises the balance toward zero.
+_Avoid_: Adjustment, bad debt
+
 **Available Balance**:
-The EGP a Business Partner can still be settled: earned minus reversed, plus adjustments, minus settled. It is negative when reversals follow a settlement, and the debt is offset by later earnings.
+The EGP a Business Partner can still be settled: earned minus reversed, plus adjustments and write-offs, minus settled. It is negative when reversals follow a settlement, and the debt is offset by later earnings.
 _Avoid_: Wallet balance, credit
 
 ### Inventory

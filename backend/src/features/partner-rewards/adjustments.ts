@@ -5,6 +5,7 @@ import {
 } from '@findeg/db/queries/rewards';
 import { getBusinessPartnerById } from '@findeg/db/queries/partners';
 import { PERMISSION_CODES } from '@findeg/db';
+import { parseEgpPiasters } from './money';
 import {
   fail,
   hasPermission,
@@ -48,29 +49,23 @@ interface ParsedAdjustment {
   readonly idempotencyKey: string;
 }
 
-const EGP_AMOUNT = /^(-?)(\d{1,10})(?:\.(\d{1,2}))?$/;
 const MAX_TEXT_LENGTH = 500;
 
-/** Parses a signed EGP decimal string to exact piasters. Never goes through a JS number. */
 function parseAdjustment(input: unknown): ParsedAdjustment | undefined {
   if (typeof input !== 'object' || input === null) return undefined;
   const { amountEgp, reason, idempotencyKey } = input as Record<string, unknown>;
-  if (typeof amountEgp !== 'string' || typeof reason !== 'string') return undefined;
-  if (typeof idempotencyKey !== 'string') return undefined;
+  if (typeof reason !== 'string' || typeof idempotencyKey !== 'string') return undefined;
 
-  const match = EGP_AMOUNT.exec(amountEgp.trim());
+  const egpValuePiasters = parseEgpPiasters(amountEgp);
   const trimmedReason = reason.trim();
   const trimmedKey = idempotencyKey.trim();
-  if (!match || !trimmedReason || !trimmedKey) return undefined;
+  if (!egpValuePiasters || !trimmedReason || !trimmedKey) return undefined;
   if (trimmedReason.length > MAX_TEXT_LENGTH || trimmedKey.length > MAX_TEXT_LENGTH) {
     return undefined;
   }
 
-  const [, sign, pounds, piasters = ''] = match;
-  const magnitude = BigInt(pounds) * 100n + BigInt(piasters.padEnd(2, '0'));
-  if (magnitude === 0n) return undefined;
   return {
-    egpValuePiasters: sign ? -magnitude : magnitude,
+    egpValuePiasters,
     reason: trimmedReason,
     idempotencyKey: trimmedKey,
   };

@@ -5,8 +5,15 @@ import type {
   NewRewardRate,
   RewardEntitlementRow,
   RewardEventType,
+  RewardSettlementRow,
 } from '../../schema';
-import { orderItems, rewardEntitlements, rewardEvents, rewardRates } from '../../schema';
+import {
+  orderItems,
+  rewardEntitlements,
+  rewardEvents,
+  rewardRates,
+  rewardSettlements,
+} from '../../schema';
 import * as schema from '../../schema';
 
 export type RewardsDatabase = PostgresJsDatabase<typeof schema>;
@@ -227,15 +234,16 @@ export async function findRewardAdjustmentByKey(
 }
 
 /**
- * Signed EGP Available Balance in piasters: earned − reversed ± adjustments (ADR-0009). Pending
- * (`accepted`-only) and voided (`cancellation`) entitlements never count. Settlements will
- * subtract once they exist.
+ * Signed EGP Available Balance in piasters: earned − reversed ± adjustments − settled (ADR-0009).
+ * Pending (`accepted`-only) and voided (`cancellation`) entitlements never count. A void line is
+ * negative and a write-off positive, so subtracting every settlement-table amount except
+ * write-offs, which add, nets out voided settlements and forgiven debt.
  */
 export async function getAvailableRewardBalance(
   executor: RewardsExecutor,
   businessPartnerId: number,
 ): Promise<bigint> {
-  const [row] = await executor
+  const [events] = await executor
     .select({
       balance: sql<string>`coalesce(sum(case ${rewardEvents.eventType}
         when 'paid' then ${rewardEvents.egpValuePiasters}
@@ -245,5 +253,84 @@ export async function getAvailableRewardBalance(
     })
     .from(rewardEvents)
     .where(eq(rewardEvents.businessPartnerId, businessPartnerId));
-  return BigInt(row.balance);
+  const [settlements] = await executor
+    .select({
+      balance: sql<string>`coalesce(sum(case ${rewardSettlements.kind}
+        when 'write-off' then ${rewardSettlements.amountPiasters}
+        else -${rewardSettlements.amountPiasters} end), 0)`,
+    })
+    .from(rewardSettlements)
+    .where(eq(rewardSettlements.businessPartnerId, businessPartnerId));
+  return BigInt(events.balance) + BigInt(settlements.balance);
+}
+
+export type NewSettlementLine = Omit<
+  typeof rewardSettlements.$inferInsert,
+  'id' | 'createdAt' | 'voidsKind'
+>;
+
+/**
+ * Appends a settlement, void or write-off line. Returns `undefined` when the partner already used
+ * the idempotency key, or (for a void) the settlement already has one. Callers hold the partner
+ * lock and run in a transaction.
+ */
+export async function insertRewardSettlementLine(
+  executor: RewardsExecutor,
+  values: NewSettlementLine,
+): Promise<RewardSettlementRow | undefined> {
+  const [row] = await executor
+    .insert(rewardSettlements)
+    .values(values)
+    .onConflictDoNothing()
+    .returning();
+  return row;
+}
+
+/** The settlement or write-off a Business Partner recorded under an idempotency key, if any. */
+export async function findRewardSettlementByKey(
+  executor: RewardsExecutor,
+  businessPartnerId: number,
+  idempotencyKey: string,
+) {
+  const [row] = await executor
+    .select()
+    .from(rewardSettlements)
+    .where(
+      and(
+        eq(rewardSettlements.businessPartnerId, businessPartnerId),
+        eq(rewardSettlements.idempotencyKey, idempotencyKey),
+      ),
+    );
+  return row;
+}
+
+export async function findRewardSettlementById(
+  executor: RewardsExecutor,
+  businessPartnerId: number,
+  id: number,
+) {
+  const [row] = await executor
+    .select()
+    .from(rewardSettlements)
+    .where(
+      and(eq(rewardSettlements.businessPartnerId, businessPartnerId), eq(rewardSettlements.id, id)),
+    );
+  return row;
+}
+
+export async function findRewardSettlementVoid(executor: RewardsExecutor, settlementId: number) {
+  const [row] = await executor
+    .select()
+    .from(rewardSettlements)
+    .where(eq(rewardSettlements.voidsSettlementId, settlementId));
+  return row;
+}
+
+/** Newest-first settlement, void and write-off lines for one Business Partner. */
+export function listRewardSettlementLines(executor: RewardsExecutor, businessPartnerId: number) {
+  return executor
+    .select()
+    .from(rewardSettlements)
+    .where(eq(rewardSettlements.businessPartnerId, businessPartnerId))
+    .orderBy(desc(rewardSettlements.id));
 }

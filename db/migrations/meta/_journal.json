@@ -120,6 +120,13 @@
       "when": 1791081864794,
       "tag": "0016_minor_marauders",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1791099365910,
+      "tag": "0017_reward_settlements",
+      "breakpoints": true
     }
   ]
 }
