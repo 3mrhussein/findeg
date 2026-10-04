@@ -6,7 +6,6 @@ export {
   type RewardValuationInput,
 } from './valuation';
 export {
-  RewardRateService,
   type IRewardRateService,
   type RewardRateResult,
   type RewardRateView,

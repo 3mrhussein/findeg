@@ -184,4 +184,24 @@ describe('Reward Rates and immutable ledger foundation', () => {
       cause: { code: '23505' },
     });
   });
+
+  it('requires reasoned, per-partner-idempotent adjustments', async () => {
+    const adjustment = {
+      businessPartnerId: partnerId,
+      eventType: 'adjustment' as const,
+      points: 1n,
+      egpValuePiasters: 1n,
+      idempotencyKey: 'adjustment-1',
+    };
+
+    await expect(testDb.db.insert(rewardEvents).values(adjustment)).rejects.toMatchObject({
+      cause: { code: '23514' },
+    });
+    await testDb.db.insert(rewardEvents).values({ ...adjustment, reason: 'Finance correction' });
+    await expect(
+      testDb.db
+        .insert(rewardEvents)
+        .values({ ...adjustment, reason: 'Retried Finance correction' }),
+    ).rejects.toMatchObject({ cause: { code: '23505' } });
+  });
 });

@@ -5515,6 +5515,28 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "uq_reward_events_adjustment_idempotency": {
+          "name": "uq_reward_events_adjustment_idempotency",
+          "columns": [
+            {
+              "expression": "business_partner_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "idempotency_key",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"rewards\".\"reward_events\".\"event_type\" = 'adjustment'",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -5560,6 +5582,10 @@
         "ck_reward_events_entitlement_shape": {
           "name": "ck_reward_events_entitlement_shape",
           "value": "(\"rewards\".\"reward_events\".\"event_type\" = 'adjustment' and \"rewards\".\"reward_events\".\"entitlement_id\" is null)\n        or (\"rewards\".\"reward_events\".\"event_type\" <> 'adjustment' and \"rewards\".\"reward_events\".\"entitlement_id\" is not null)"
+        },
+        "ck_reward_events_adjustment_audit": {
+          "name": "ck_reward_events_adjustment_audit",
+          "value": "\"rewards\".\"reward_events\".\"event_type\" <> 'adjustment'\n        or (length(trim(coalesce(\"rewards\".\"reward_events\".\"reason\", ''))) > 0\n          and length(trim(coalesce(\"rewards\".\"reward_events\".\"idempotency_key\", ''))) > 0)"
         }
       },
       "isRLSEnabled": false

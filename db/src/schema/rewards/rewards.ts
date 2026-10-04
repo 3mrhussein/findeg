@@ -108,6 +108,12 @@ export const rewardEvents = rewardsSchema.table(
       sql`(${table.eventType} = 'adjustment' and ${table.entitlementId} is null)
         or (${table.eventType} <> 'adjustment' and ${table.entitlementId} is not null)`,
     ),
+    check(
+      'ck_reward_events_adjustment_audit',
+      sql`${table.eventType} <> 'adjustment'
+        or (length(trim(coalesce(${table.reason}, ''))) > 0
+          and length(trim(coalesce(${table.idempotencyKey}, ''))) > 0)`,
+    ),
     foreignKey({
       name: 'fk_reward_events_entitlement_partner',
       columns: [table.entitlementId, table.businessPartnerId],
@@ -125,6 +131,9 @@ export const rewardEvents = rewardsSchema.table(
       .where(
         sql`${table.entitlementId} is not null and ${table.eventType} in ('reversal', 'cancellation')`,
       ),
+    uniqueIndex('uq_reward_events_adjustment_idempotency')
+      .on(table.businessPartnerId, table.idempotencyKey)
+      .where(sql`${table.eventType} = 'adjustment'`),
   ],
 );
 

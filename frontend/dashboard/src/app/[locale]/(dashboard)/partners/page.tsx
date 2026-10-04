@@ -1,7 +1,7 @@
 import { Link } from '@i18n/navigation';
 import { Badge, Button } from '@findeg/ui';
 import type { Locale } from 'next-intl';
-import { requirePermission } from '@lib/auth-guard';
+import { requirePermission, sessionHasPermission } from '@lib/auth-guard';
 import { PERMISSION_CODES } from '@findeg/backend/features/core';
 import { createPartnerMembershipServices } from '@findeg/backend/features/partner-membership';
 import { toStaffActor } from './_lib/toStaffActor';
@@ -15,9 +15,7 @@ export default async function PartnersPage({ params }: { params: Promise<{ local
   const session = await requirePermission(locale as Locale, {
     any: [PERMISSION_CODES.PARTNERS_MANAGE, PERMISSION_CODES.REWARDS_VIEW],
   });
-  const canManage =
-    session.activeRoleIds?.includes('system_admin') === true ||
-    session.permissionCodes?.includes(PERMISSION_CODES.PARTNERS_MANAGE) === true;
+  const canManage = sessionHasPermission(session, PERMISSION_CODES.PARTNERS_MANAGE);
 
   const { partners } = createPartnerMembershipServices();
   const result = await partners.listPartners(toStaffActor(session));

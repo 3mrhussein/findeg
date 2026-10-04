@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { Link } from '@i18n/navigation';
 import { Badge, Tabs, TabsContent, TabsList, TabsTrigger } from '@findeg/ui';
 import type { Locale } from 'next-intl';
-import { requirePermission } from '@lib/auth-guard';
+import { requirePermission, sessionHasPermission } from '@lib/auth-guard';
 import { PERMISSION_CODES } from '@findeg/backend/features/core';
 import { createPartnerMembershipServices } from '@findeg/backend/features/partner-membership';
 import { createPartnerRewardsServices } from '@findeg/backend/features/partner-rewards';
@@ -30,14 +30,9 @@ export default async function PartnerDetailPage({
 
   const partnerId = Number(id);
   const actor = toStaffActor(session);
-  const isSystemAdmin = session.activeRoleIds?.includes('system_admin') === true;
-  const canManagePartner =
-    isSystemAdmin || session.permissionCodes?.includes(PERMISSION_CODES.PARTNERS_MANAGE) === true;
-  const canViewRewards =
-    isSystemAdmin || session.permissionCodes?.includes(PERMISSION_CODES.REWARDS_VIEW) === true;
-  const canManageRates =
-    isSystemAdmin ||
-    session.permissionCodes?.includes(PERMISSION_CODES.REWARDS_RATES_MANAGE) === true;
+  const canManagePartner = sessionHasPermission(session, PERMISSION_CODES.PARTNERS_MANAGE);
+  const canViewRewards = sessionHasPermission(session, PERMISSION_CODES.REWARDS_VIEW);
+  const canManageRates = sessionHasPermission(session, PERMISSION_CODES.REWARDS_RATES_MANAGE);
 
   const { partners, invitations, memberships } = createPartnerMembershipServices();
   const partner = await partners.getPartner(actor, partnerId);

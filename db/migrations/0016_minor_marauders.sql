@@ -29,7 +29,10 @@ CREATE TABLE "rewards"."reward_events" (
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "ck_reward_events_type" CHECK ("rewards"."reward_events"."event_type" in ('accepted', 'paid', 'cancellation', 'reversal', 'adjustment')),
 	CONSTRAINT "ck_reward_events_entitlement_shape" CHECK (("rewards"."reward_events"."event_type" = 'adjustment' and "rewards"."reward_events"."entitlement_id" is null)
-        or ("rewards"."reward_events"."event_type" <> 'adjustment' and "rewards"."reward_events"."entitlement_id" is not null))
+        or ("rewards"."reward_events"."event_type" <> 'adjustment' and "rewards"."reward_events"."entitlement_id" is not null)),
+	CONSTRAINT "ck_reward_events_adjustment_audit" CHECK ("rewards"."reward_events"."event_type" <> 'adjustment'
+        or (length(trim(coalesce("rewards"."reward_events"."reason", ''))) > 0
+          and length(trim(coalesce("rewards"."reward_events"."idempotency_key", ''))) > 0))
 );
 --> statement-breakpoint
 CREATE TABLE "rewards"."reward_rates" (
@@ -57,6 +60,7 @@ CREATE INDEX "idx_reward_events_partner" ON "rewards"."reward_events" USING btre
 CREATE UNIQUE INDEX "uq_reward_events_accepted" ON "rewards"."reward_events" USING btree ("entitlement_id") WHERE "rewards"."reward_events"."entitlement_id" is not null and "rewards"."reward_events"."event_type" = 'accepted';--> statement-breakpoint
 CREATE UNIQUE INDEX "uq_reward_events_paid" ON "rewards"."reward_events" USING btree ("entitlement_id") WHERE "rewards"."reward_events"."entitlement_id" is not null and "rewards"."reward_events"."event_type" = 'paid';--> statement-breakpoint
 CREATE UNIQUE INDEX "uq_reward_events_reversal_or_cancellation" ON "rewards"."reward_events" USING btree ("entitlement_id") WHERE "rewards"."reward_events"."entitlement_id" is not null and "rewards"."reward_events"."event_type" in ('reversal', 'cancellation');--> statement-breakpoint
+CREATE UNIQUE INDEX "uq_reward_events_adjustment_idempotency" ON "rewards"."reward_events" USING btree ("business_partner_id","idempotency_key") WHERE "rewards"."reward_events"."event_type" = 'adjustment';--> statement-breakpoint
 CREATE INDEX "idx_reward_rates_current" ON "rewards"."reward_rates" USING btree ("business_partner_id","id" DESC NULLS LAST);--> statement-breakpoint
 CREATE FUNCTION "rewards"."forbid_reward_mutation"()
 RETURNS trigger

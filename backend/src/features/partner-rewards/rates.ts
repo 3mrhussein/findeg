@@ -6,11 +6,12 @@ import {
   type RewardsDatabase,
 } from '@findeg/db/queries/rewards';
 import { getBusinessPartnerById } from '@findeg/db/queries/partners';
+import { PERMISSION_CODES, type PermissionCode } from '@findeg/db';
 import { parseRewardRateInput, type RewardRateInput } from './valuation';
 
 export interface RewardsStaffActor {
   readonly userId: number;
-  readonly permissionCodes?: readonly string[];
+  readonly permissionCodes?: readonly PermissionCode[];
   readonly activeRoleIds?: readonly string[];
 }
 
@@ -43,13 +44,10 @@ export interface IRewardRateService {
   >;
 }
 
-const VIEW_PERMISSION = 'rewards.view';
-const MANAGE_PERMISSION = 'rewards.rates.manage';
-
 const ok = <T>(data: T) => ({ success: true, data }) as const;
 const fail = <E extends string>(error: E) => ({ success: false, error }) as const;
 
-function hasPermission(actor: RewardsStaffActor, permission: string) {
+function hasPermission(actor: RewardsStaffActor, permission: PermissionCode) {
   if (actor.activeRoleIds?.includes('system_admin')) return true;
   return actor.permissionCodes?.includes(permission) === true;
 }
@@ -69,7 +67,7 @@ export class RewardRateService implements IRewardRateService {
   constructor(private readonly getDb: () => Promise<RewardsDatabase>) {}
 
   async setRate(actor: RewardsStaffActor, businessPartnerId: number, input: unknown) {
-    if (!hasPermission(actor, MANAGE_PERMISSION)) return fail('forbidden');
+    if (!hasPermission(actor, PERMISSION_CODES.REWARDS_RATES_MANAGE)) return fail('forbidden');
     if (!Number.isSafeInteger(businessPartnerId) || businessPartnerId < 1) {
       return fail('invalid-input');
     }
@@ -91,7 +89,10 @@ export class RewardRateService implements IRewardRateService {
   }
 
   async getRates(actor: RewardsStaffActor, businessPartnerId: number) {
-    if (!hasPermission(actor, VIEW_PERMISSION) && !hasPermission(actor, MANAGE_PERMISSION)) {
+    if (
+      !hasPermission(actor, PERMISSION_CODES.REWARDS_VIEW) &&
+      !hasPermission(actor, PERMISSION_CODES.REWARDS_RATES_MANAGE)
+    ) {
       return fail('forbidden');
     }
 
