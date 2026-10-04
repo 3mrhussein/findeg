@@ -1,3 +1,7 @@
+-- Partner-safe views (ADR-0010). The Partner read path selects only from these, by convention in
+-- db/src/queries/rewards/partner-report.ts: there is no restricted database role, so no GRANT
+-- enforces it. The sales view's inner joins drop no `paid` or `reversal` event: those events
+-- require an entitlement, which requires an order item, which requires an order (all NOT NULL FKs).
 CREATE VIEW "rewards"."partner_reward_events" AS
   SELECT "business_partner_id", "entitlement_id", "event_type", "points", "egp_value_piasters", "created_at"
   FROM "rewards"."reward_events";

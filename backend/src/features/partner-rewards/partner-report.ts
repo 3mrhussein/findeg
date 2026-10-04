@@ -1,5 +1,5 @@
 import { PARTNER_ADMINISTRATOR, type PartnerRole } from '@findeg/db/schema';
-import { getBusinessPartnerById, getActiveMembershipRoles } from '@findeg/db/queries/partners';
+import { getActiveMembershipRoles } from '@findeg/db/queries/partners';
 import {
   listPartnerSettlementLines,
   type PartnerSettlementLineRow,
@@ -66,7 +66,8 @@ export interface PartnerRewardReportOptions {
   readonly locale?: ReportLocale;
 }
 
-export type PartnerRewardReportError = 'forbidden' | 'invalid-input' | 'not-found';
+/** An active membership implies the Business Partner exists, so there is no `not-found`. */
+export type PartnerRewardReportError = 'forbidden' | 'invalid-input';
 
 const addAmount = (a: RewardAmount, b: RewardAmount): RewardAmount => ({
   points: a.points + b.points,
@@ -128,7 +129,6 @@ export class PartnerRewardReportService implements IPartnerRewardReportService {
     const db = await this.getDb();
     const roles = await getActiveMembershipRoles(db, businessPartnerId, actor.userId);
     if (!roles || !canReadPartnerReports(roles)) return fail('forbidden');
-    if (!(await getBusinessPartnerById(db, businessPartnerId))) return fail('not-found');
 
     const asOf = this.now();
     return db.transaction(

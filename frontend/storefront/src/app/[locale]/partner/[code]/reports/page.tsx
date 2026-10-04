@@ -46,11 +46,17 @@ async function Reports({
 
   const locale = await getLocale();
   const t = await getTranslations('PartnerReports');
-  const result = await createPartnerRewardsServices().partnerReports.getPartnerReport(
-    { userId: membership.userId },
-    partner.id,
-    { month, locale: locale === 'ar' ? 'ar' : 'en' },
-  );
+  const reports = createPartnerRewardsServices().partnerReports;
+  const read = (selected?: string) =>
+    reports.getPartnerReport({ userId: membership.userId }, partner.id, {
+      month: selected,
+      locale: locale === 'ar' ? 'ar' : 'en',
+    });
+  let result = await read(month);
+  // A hand-edited `?month=` outside the picker falls back to the current month.
+  if (!result.success && result.error === 'invalid-input' && month !== undefined) {
+    result = await read();
+  }
   if (!result.success) notFound();
 
   return (
