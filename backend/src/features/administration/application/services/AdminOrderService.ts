@@ -3,7 +3,7 @@ import {
   IAdminOrderService,
   type OrderStaffActor,
 } from '../interfaces/IAdminOrderService';
-import { canWriteOrders, OrderWriteForbiddenError } from '../../domain/orderWritePermission';
+import { assertCanWriteOrders } from '../../domain/orderWritePermission';
 import { IAuditLogService } from '../interfaces/IAuditLogService';
 import type { OrderStatusUpdate } from '@findeg/backend/features/order';
 import { PaymentStatus, OrderStatus } from '../../../core/domain/types/common';
@@ -99,11 +99,11 @@ export class AdminOrderService implements IAdminOrderService {
    * @param actor - The Staff member making the change, recorded on the audit row.
    * @param id - The order ID.
    * @param update - Status, tracking number, and internal notes.
-   * @throws OrderWriteForbiddenError if the actor lacks order-write access.
+   * @throws NotAuthorizedError if the actor lacks order-write access.
    * @throws Error if the order is not found.
    */
   async updateStatus(actor: OrderStaffActor, id: number, update: OrderStatusUpdate): Promise<void> {
-    if (!canWriteOrders(actor)) throw new OrderWriteForbiddenError();
+    assertCanWriteOrders(actor);
     const result = await orderQueries.getById(id);
     if (!result) {
       throw new Error(`Order #${id} not found`);
@@ -132,7 +132,7 @@ export class AdminOrderService implements IAdminOrderService {
    * @param actor - The Staff member making the change, recorded on the audit row.
    * @param id - The order ID.
    * @param status - The new payment status string.
-   * @throws OrderWriteForbiddenError if the actor lacks order-write access.
+   * @throws NotAuthorizedError if the actor lacks order-write access.
    * @throws Error if the order is not found.
    */
   async updatePaymentStatus(
@@ -140,7 +140,7 @@ export class AdminOrderService implements IAdminOrderService {
     id: number,
     status: PaymentStatus,
   ): Promise<void> {
-    if (!canWriteOrders(actor)) throw new OrderWriteForbiddenError();
+    assertCanWriteOrders(actor);
     // The audit row is written by the transition, in the same transaction as the change.
     await transitionPaymentStatus(id, normalizePaymentStatus(status), { userId: actor.userId });
   }

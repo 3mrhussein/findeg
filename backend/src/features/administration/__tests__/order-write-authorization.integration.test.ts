@@ -19,8 +19,10 @@ import {
 } from '@findeg/db/schema';
 import { PERMISSION_CODES } from '@findeg/db';
 import { createCheckoutService } from '../../checkout';
-import { createAdministrationServices, OrderWriteForbiddenError, type OrderStaffActor } from '..';
+import { createAdministrationServices, type OrderStaffActor } from '..';
 import { connectToTestDatabase, type TestDatabase } from '../../../testing/postgres';
+
+const notAuthorized = { code: 'NOT_AUTHORIZED', message: 'Not authorized to change orders' };
 
 describe('Staff authorization for Dashboard order writes', () => {
   let testDb: TestDatabase;
@@ -197,7 +199,7 @@ describe('Staff authorization for Dashboard order writes', () => {
       createAdministrationServices().orders.updateStatus(readOnlyStaff, orderId, {
         status: 'cancelled',
       }),
-    ).rejects.toBeInstanceOf(OrderWriteForbiddenError);
+    ).rejects.toMatchObject(notAuthorized);
 
     const after = await orderFootprint(orderId, orderReference, variantId);
     expect(after).toEqual(before);
@@ -216,7 +218,7 @@ describe('Staff authorization for Dashboard order writes', () => {
       createAdministrationServices().orders.updateStatus(readOnlyStaff, orderId, {
         status: 'delivered',
       }),
-    ).rejects.toBeInstanceOf(OrderWriteForbiddenError);
+    ).rejects.toMatchObject(notAuthorized);
 
     expect(await orderFootprint(orderId, orderReference, 0)).toEqual(before);
     expect(before.order).toEqual({ status: 'shipped', paymentStatus: 'paid' });
@@ -232,7 +234,7 @@ describe('Staff authorization for Dashboard order writes', () => {
 
     await expect(
       createAdministrationServices().orders.updatePaymentStatus(readOnlyStaff, orderId, 'paid'),
-    ).rejects.toBeInstanceOf(OrderWriteForbiddenError);
+    ).rejects.toMatchObject(notAuthorized);
 
     expect(await orderFootprint(orderId, orderReference, 0)).toEqual(before);
     expect(before.order).toEqual({ status: 'delivered', paymentStatus: 'unpaid' });
@@ -250,7 +252,7 @@ describe('Staff authorization for Dashboard order writes', () => {
       createAdministrationServices().orders.updateStatus(undefined as never, orderId, {
         status: 'delivered',
       }),
-    ).rejects.toBeInstanceOf(OrderWriteForbiddenError);
+    ).rejects.toMatchObject(notAuthorized);
 
     expect(await orderFootprint(orderId, orderReference, 0)).toEqual(before);
     expect(before.order).toEqual({ status: 'shipped', paymentStatus: 'paid' });
@@ -270,7 +272,7 @@ describe('Staff authorization for Dashboard order writes', () => {
         orderId,
         'paid',
       ),
-    ).rejects.toBeInstanceOf(OrderWriteForbiddenError);
+    ).rejects.toMatchObject(notAuthorized);
 
     expect(await orderFootprint(orderId, orderReference, 0)).toEqual(before);
     expect(before.order).toEqual({ status: 'delivered', paymentStatus: 'unpaid' });

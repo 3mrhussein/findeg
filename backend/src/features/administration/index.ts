@@ -9,7 +9,7 @@ export type {
   IAdminOrderService,
   OrderStaffActor,
 } from './application/interfaces/IAdminOrderService';
-export { OrderWriteForbiddenError } from './domain/orderWritePermission';
+export { assertCanWriteOrders } from './domain/orderWritePermission';
 export type {
   ProductListFilters,
   ProductListItem,

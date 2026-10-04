@@ -8,11 +8,14 @@ const { getSession, orders } = vi.hoisted(() => ({
 
 vi.mock('@lib/session', () => ({ getSession }));
 vi.mock('next/cache', () => ({ revalidateTag: vi.fn() }));
-vi.mock('@findeg/backend/features/administration', () => ({
+vi.mock('@findeg/backend/features/administration', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@findeg/backend/features/administration')>()),
   createAdministrationServices: () => ({ orders }),
 }));
 
 import { updateOrderPaymentStatusAction, updateOrderStatusAction } from './order-actions';
+
+const refused = { success: false, error: 'Not authorized to change orders' };
 
 function staffSession(permissionCodes: string[]): SessionPayload {
   return {
@@ -35,10 +38,7 @@ describe('Dashboard order server actions', () => {
 
     const result = await updateOrderStatusAction(7, { status: 'cancelled' });
 
-    expect(result).toEqual({
-      success: false,
-      error: 'Unauthorized: Order write permission required',
-    });
+    expect(result).toEqual(refused);
     expect(orders.updateStatus).not.toHaveBeenCalled();
   });
 
@@ -47,10 +47,7 @@ describe('Dashboard order server actions', () => {
 
     const result = await updateOrderStatusAction(7, { status: 'cancelled' });
 
-    expect(result).toEqual({
-      success: false,
-      error: 'Unauthorized: Order write permission required',
-    });
+    expect(result).toEqual(refused);
     expect(orders.updateStatus).not.toHaveBeenCalled();
   });
 
@@ -59,10 +56,7 @@ describe('Dashboard order server actions', () => {
 
     const result = await updateOrderPaymentStatusAction(7, 'paid');
 
-    expect(result).toEqual({
-      success: false,
-      error: 'Unauthorized: Order write permission required',
-    });
+    expect(result).toEqual(refused);
     expect(orders.updatePaymentStatus).not.toHaveBeenCalled();
   });
 
@@ -71,10 +65,7 @@ describe('Dashboard order server actions', () => {
 
     const result = await updateOrderPaymentStatusAction(7, 'paid');
 
-    expect(result).toEqual({
-      success: false,
-      error: 'Unauthorized: Order write permission required',
-    });
+    expect(result).toEqual(refused);
     expect(orders.updatePaymentStatus).not.toHaveBeenCalled();
   });
 
@@ -87,10 +78,7 @@ describe('Dashboard order server actions', () => {
     const statusResult = await updateOrderStatusAction(7, { status: 'cancelled' });
     const paymentResult = await updateOrderPaymentStatusAction(7, 'paid');
 
-    expect(statusResult).toEqual({
-      success: false,
-      error: 'Unauthorized: Order write permission required',
-    });
+    expect(statusResult).toEqual(refused);
     expect(paymentResult).toEqual(statusResult);
     expect(orders.updateStatus).not.toHaveBeenCalled();
     expect(orders.updatePaymentStatus).not.toHaveBeenCalled();

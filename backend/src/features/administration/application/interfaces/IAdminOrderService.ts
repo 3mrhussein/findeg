@@ -1,17 +1,12 @@
 import type { Order, OrderStatusUpdate, OrderFilters } from '@findeg/backend/features/order';
 import { PaymentStatus, OrderStatus } from '@findeg/backend/features/core/domain/types/common';
+import type { OrderStaffActor } from '../../domain/OrderStaffActor';
+
+export type { OrderStaffActor };
 
 export interface DashboardStats {
   totalRevenue: number;
   ordersByStatus: Partial<Record<OrderStatus, number>>;
-}
-
-/** The signed-in Staff member changing an Order from the Dashboard. */
-export interface OrderStaffActor {
-  kind: 'staff';
-  userId: number;
-  permissionCodes?: readonly string[];
-  activeRoleIds?: readonly string[];
 }
 
 export interface IAdminOrderService {
@@ -27,13 +22,13 @@ export interface IAdminOrderService {
 
   /**
    * Updates the delivery or lifecycle status of an order.
-   * Throws OrderWriteForbiddenError unless the actor has order-write access.
+   * Throws NotAuthorizedError unless the actor has order-write access.
    */
   updateStatus(actor: OrderStaffActor, id: number, update: OrderStatusUpdate): Promise<void>;
 
   /**
    * Updates the financial payment status of an order.
-   * Throws OrderWriteForbiddenError unless the actor has order-write access.
+   * Throws NotAuthorizedError unless the actor has order-write access.
    */
   updatePaymentStatus(actor: OrderStaffActor, id: number, status: PaymentStatus): Promise<void>;
 
