@@ -44,7 +44,8 @@ export interface OrderItem {
 /**
  * Order Domain Interface
  *
- * Lifecycle: status (pending → confirmed → processing → shipped → delivered / cancelled / refunded)
+ * Lifecycle: status (pending → confirmed → processing → shipped → delivered → refunded;
+ * cancelled from any status before delivered)
  * paymentStatus: unpaid → paid → refunded
  */
 export interface Order {

@@ -23,8 +23,10 @@ const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
 const ORDER_STATUS_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
   pending: ['confirmed', 'cancelled'],
   confirmed: ['processing', 'cancelled'],
-  processing: ['shipped', 'refunded', 'cancelled'],
-  shipped: ['delivered', 'refunded'],
+  processing: ['shipped', 'cancelled'],
+  // Staff cancel a shipped Order only once the parcel is back in the warehouse (ADR-0005).
+  shipped: ['delivered', 'cancelled'],
+  // Phase one is cash on delivery, so nothing is refunded before delivery (ADR-0005).
   delivered: ['refunded'],
   cancelled: [],
   refunded: [],

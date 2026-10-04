@@ -8,6 +8,7 @@ import { Button } from '@findeg/ui';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@findeg/ui';
 import { Input } from '@findeg/ui';
 import { Label } from '@findeg/ui';
+import { getAllowedOrderStatusTransitions } from '@findeg/backend/features/order/schemas';
 import { updateOrderStatusAction as adminUpdateOrderStatusAction } from '@actions/order-actions';
 
 import { useToast } from '@hooks/use-toast';
@@ -38,6 +39,9 @@ export function OrderPaymentFulfillment({ order }: OrderPaymentFulfillmentProps)
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
   const [trackingNumber, setTrackingNumber] = useState(order.trackingNumber || '');
+  const allowedTargets = getAllowedOrderStatusTransitions(order.status);
+  // A delivered Order's only next status is refunded, which the header's refund action owns.
+  const hasSelectableTarget = STATUS_FLOW.some((s) => allowedTargets.includes(s.value));
 
   /**
    *
@@ -105,7 +109,7 @@ export function OrderPaymentFulfillment({ order }: OrderPaymentFulfillmentProps)
         <div className="space-y-2">
           <Label className="text-xs uppercase text-muted-foreground">Logistical Status</Label>
           <Select
-            disabled={isPending || order.status === 'cancelled' || order.status === 'refunded'}
+            disabled={isPending || !hasSelectableTarget}
             onValueChange={handleStatusChange}
             defaultValue={order.status}
           >
@@ -114,12 +118,22 @@ export function OrderPaymentFulfillment({ order }: OrderPaymentFulfillmentProps)
             </SelectTrigger>
             <SelectContent>
               {STATUS_FLOW.map((s) => (
-                <SelectItem key={s.value} value={s.value}>
+                <SelectItem
+                  key={s.value}
+                  value={s.value}
+                  disabled={s.value !== order.status && !allowedTargets.includes(s.value)}
+                >
                   {s.label}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
+          {order.status === 'shipped' && (
+            <p className="text-xs text-muted-foreground">
+              Cancel a shipped Order only once the parcel is back in the warehouse: cancelling
+              returns its units to available stock.
+            </p>
+          )}
         </div>
 
         {/* Tracking Number */}

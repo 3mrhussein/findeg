@@ -121,9 +121,9 @@ describe('cancellation and refund', () => {
     expect(await statement(partnerId)).toEqual({ pending: 0n, earned: 0n, reversed: 0n });
   });
 
-  it('voids pending points when an Order is refunded before earning', async () => {
+  it('voids pending points when a shipped Order is cancelled before earning', async () => {
     const { orderId, partnerId } = await createOrder();
-    await transitionOrderStatus(orderId, { status: 'refunded' });
+    await transitionOrderStatus(orderId, { status: 'cancelled' });
     expect(await statement(partnerId)).toEqual({ pending: 0n, earned: 0n, reversed: 0n });
   });
 
@@ -153,10 +153,10 @@ describe('cancellation and refund', () => {
     expect(await closingEvents(entitlementId)).toEqual([{ eventType: 'reversal' }]);
   });
 
-  it('voids pending points when the Order is refunded while paid but not delivered', async () => {
+  it('voids pending points when the Order is cancelled while paid but not delivered', async () => {
     const { orderId, partnerId, entitlementId } = await createOrder();
     await transitionPaymentStatus(orderId, 'paid');
-    await transitionOrderStatus(orderId, { status: 'refunded' });
+    await transitionOrderStatus(orderId, { status: 'cancelled' });
 
     expect(await statement(partnerId)).toEqual({ pending: 0n, earned: 0n, reversed: 0n });
     expect(await closingEvents(entitlementId)).toEqual([{ eventType: 'cancellation' }]);
