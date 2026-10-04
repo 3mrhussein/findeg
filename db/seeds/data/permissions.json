@@ -166,5 +166,33 @@
     "name": "Manage Business Partners",
     "createdAt": "2026-02-19 10:00:00",
     "updatedAt": "2026-02-19 10:00:00"
+  },
+  {
+    "id": 25,
+    "code": "rewards.view",
+    "name": "View Partner Rewards",
+    "createdAt": "2026-02-19 10:00:00",
+    "updatedAt": "2026-02-19 10:00:00"
+  },
+  {
+    "id": 26,
+    "code": "rewards.rates.manage",
+    "name": "Manage Reward Rates",
+    "createdAt": "2026-02-19 10:00:00",
+    "updatedAt": "2026-02-19 10:00:00"
+  },
+  {
+    "id": 27,
+    "code": "rewards.adjust",
+    "name": "Adjust Partner Rewards",
+    "createdAt": "2026-02-19 10:00:00",
+    "updatedAt": "2026-02-19 10:00:00"
+  },
+  {
+    "id": 28,
+    "code": "rewards.settle",
+    "name": "Settle Partner Rewards",
+    "createdAt": "2026-02-19 10:00:00",
+    "updatedAt": "2026-02-19 10:00:00"
   }
 ]

@@ -23,3 +23,10 @@ export * from './products';
 export * from './identity';
 export { withTransaction, type DbTransaction } from './transaction';
 export * as outboxQueries from './system/outbox';
+export * as rewardQueries from './rewards';
+export type {
+  RewardRateRow,
+  RewardsDatabase,
+  RewardsExecutor,
+  RewardsTransaction,
+} from './rewards';

@@ -7,6 +7,7 @@ export interface NavItem {
   href: string;
   icon: string;
   permission?: string;
+  anyPermissions?: string[];
   portalRoles?: PortalRole[];
   children?: NavItem[];
   persistent?: boolean;

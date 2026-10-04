@@ -1,6 +1,6 @@
 import { redirect } from '@i18n/navigation';
-import { adminSession } from '@findeg/backend/features/core';
-import type { SessionPayload } from '@findeg/backend/features/core';
+import { adminSession, hasPermission, systemAdmin } from '@findeg/backend/features/core';
+import type { PermissionCode, SessionPayload } from '@findeg/backend/features/core';
 import type { Locale } from 'next-intl';
 import { getSession } from '@lib/session';
 
@@ -49,6 +49,11 @@ export async function redirectIfAuthenticated(locale: Locale): Promise<void> {
  */
 export async function getOptionalSession(): Promise<SessionPayload | null> {
   return await getSession();
+}
+
+/** Server-side permission policy, including the system-administrator bypass. */
+export function sessionHasPermission(session: SessionPayload, permission: PermissionCode): boolean {
+  return systemAdmin(session) || hasPermission(session, permission);
 }
 /**
  * Require specific permission — redirects to / if unauthorized.

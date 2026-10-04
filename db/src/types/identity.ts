@@ -66,6 +66,12 @@ export const PERMISSION_CODES = {
 
   // Partner Membership
   PARTNERS_MANAGE: 'partners.manage',
+
+  // Partner Rewards
+  REWARDS_VIEW: 'rewards.view',
+  REWARDS_RATES_MANAGE: 'rewards.rates.manage',
+  REWARDS_ADJUST: 'rewards.adjust',
+  REWARDS_SETTLE: 'rewards.settle',
 } as const;
 
 /**

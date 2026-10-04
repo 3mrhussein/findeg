@@ -110,7 +110,7 @@ export const ADMIN_NAV: NavGroup[] = [
         labelAr: 'شركاء الأعمال',
         href: '/partners',
         icon: 'Building2',
-        permission: 'partners.manage',
+        anyPermissions: ['partners.manage', 'rewards.view'],
       },
       {
         label: 'Audit Log',

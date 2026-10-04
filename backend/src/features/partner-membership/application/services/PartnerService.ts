@@ -23,7 +23,7 @@ import type {
   StaffActor,
   UpdatePartnerInput,
 } from '../interfaces/IPartnerService';
-import { canManagePartners, fail, ok } from './shared';
+import { canManagePartners, canViewPartners, fail, ok } from './shared';
 
 const codeSchema = z
   .string()
@@ -173,12 +173,12 @@ export class PartnerService implements IPartnerService {
   }
 
   async listPartners(actor: StaffActor) {
-    if (!canManagePartners(actor)) return fail('forbidden');
+    if (!canViewPartners(actor)) return fail('forbidden');
     return ok((await listBusinessPartners(await this.getDb())).map(toPartner));
   }
 
   async getPartner(actor: StaffActor, partnerId: number) {
-    if (!canManagePartners(actor)) return fail('forbidden');
+    if (!canViewPartners(actor)) return fail('forbidden');
     const row = await getBusinessPartnerById(await this.getDb(), partnerId);
     return row ? ok(toPartner(row)) : fail('not-found');
   }
