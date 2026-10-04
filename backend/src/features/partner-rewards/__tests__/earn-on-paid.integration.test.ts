@@ -8,6 +8,7 @@ import {
   rewardEntitlements,
   rewardEvents,
   rewardRates,
+  users,
 } from '@findeg/db/schema';
 import { connectToTestDatabase, type TestDatabase } from '../../../testing/postgres';
 import { transitionOrderStatus } from '../../order/application/services/transition-order-status';
@@ -15,6 +16,7 @@ import {
   InvalidPaymentStatusTransitionError,
   transitionPaymentStatus,
 } from '../../order/application/services/transition-payment-status';
+import { createAdministrationServices } from '../../administration';
 import { createPartnerRewardsServices } from '..';
 
 describe('earn on delivered and paid', () => {
@@ -136,18 +138,52 @@ describe('earn on delivered and paid', () => {
     );
   });
 
-  it('commits the payment change and its audit row together', async () => {
-    const { orderId } = await createOrder();
-    await transitionPaymentStatus(orderId, 'paid');
-    await transitionPaymentStatus(orderId, 'paid');
-    const logs = await testDb.db
+  async function paymentAuditRows(orderId: number) {
+    return testDb.db
       .select()
       .from(auditLog)
       .where(
         and(eq(auditLog.entityId, String(orderId)), eq(auditLog.action, 'update_payment_status')),
       );
+  }
+
+  it('commits the payment change and its audit row together', async () => {
+    const { orderId } = await createOrder();
+    await transitionPaymentStatus(orderId, 'paid');
+    await transitionPaymentStatus(orderId, 'paid');
+    const logs = await paymentAuditRows(orderId);
     expect(logs).toHaveLength(1);
     expect(logs[0].newValues).toEqual({ paymentStatus: 'paid' });
+  });
+
+  it('rolls back the payment change and earn when the audit row fails', async () => {
+    const { orderId, entitlementId } = await createOrder();
+    await transitionOrderStatus(orderId, { status: 'delivered' });
+
+    // No such user, so the audit row's admin_user_id foreign key rejects the insert.
+    await expect(
+      transitionPaymentStatus(orderId, 'paid', { userId: 2_147_483_647 }),
+    ).rejects.toThrow();
+
+    const [order] = await testDb.db
+      .select({ paymentStatus: orders.paymentStatus })
+      .from(orders)
+      .where(eq(orders.id, orderId));
+    expect(order.paymentStatus).toBe('unpaid');
+    expect(await paymentAuditRows(orderId)).toHaveLength(0);
+    expect(await paidEvents(entitlementId)).toHaveLength(0);
+  });
+
+  it('records the dashboard admin on the payment audit row', async () => {
+    const [admin] = await testDb.db
+      .insert(users)
+      .values({ email: 'payment-admin@example.com', portalRole: 'staff' })
+      .returning();
+    const { orderId } = await createOrder();
+    await createAdministrationServices().orders.updatePaymentStatus(orderId, 'paid', admin.id);
+    const logs = await paymentAuditRows(orderId);
+    expect(logs).toHaveLength(1);
+    expect(logs[0].adminUserId).toBe(admin.id);
   });
 
   it('reports earned points to Staff', async () => {

@@ -25,7 +25,7 @@ export interface IAdminOrderService {
   /**
    * Updates the financial payment status of an order.
    */
-  updatePaymentStatus(id: number, status: PaymentStatus): Promise<void>;
+  updatePaymentStatus(id: number, status: PaymentStatus, adminUserId?: number): Promise<void>;
 
   /**
    * Retrieves high-level order statistics for the dashboard.

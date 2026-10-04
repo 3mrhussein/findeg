@@ -123,11 +123,16 @@ export class AdminOrderService implements IAdminOrderService {
    *
    * @param id - The order ID.
    * @param status - The new payment status string.
+   * @param adminUserId - The admin making the change, recorded on the audit row.
    * @throws Error if the order is not found.
    */
-  async updatePaymentStatus(id: number, status: PaymentStatus): Promise<void> {
+  async updatePaymentStatus(
+    id: number,
+    status: PaymentStatus,
+    adminUserId?: number,
+  ): Promise<void> {
     // The audit row is written by the transition, in the same transaction as the change.
-    await transitionPaymentStatus(id, normalizePaymentStatus(status));
+    await transitionPaymentStatus(id, normalizePaymentStatus(status), { userId: adminUserId });
   }
 
   /**
