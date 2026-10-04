@@ -42,11 +42,45 @@ export type SaveRewardRate = (
 
 const initialState: RewardRateFormState = { status: 'idle' };
 
+function RewardTotalsCard({
+  testId,
+  label,
+  description,
+  totals,
+}: {
+  testId: string;
+  label: string;
+  description: string;
+  totals: RewardTotals;
+}) {
+  return (
+    <Card data-testid={testId}>
+      <CardHeader>
+        <CardTitle>{label} rewards</CardTitle>
+        <CardDescription>{description}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <dl className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <dt className="text-sm text-muted-foreground">{label} Partner Points</dt>
+            <dd className="font-mono text-lg font-semibold">{totals.points}</dd>
+          </div>
+          <div>
+            <dt className="text-sm text-muted-foreground">{label} value (EGP)</dt>
+            <dd className="font-mono text-lg font-semibold">{totals.egp}</dd>
+          </div>
+        </dl>
+      </CardContent>
+    </Card>
+  );
+}
+
 export function RewardRatesPanel({
   current,
   history,
   pending,
   earned,
+  reversed,
   canManage,
   save,
 }: {
@@ -54,6 +88,7 @@ export function RewardRatesPanel({
   history: RewardRateItem[];
   pending: RewardTotals;
   earned: RewardTotals;
+  reversed: RewardTotals;
   canManage: boolean;
   save: SaveRewardRate;
 }) {
@@ -61,43 +96,24 @@ export function RewardRatesPanel({
 
   return (
     <div className="space-y-6" data-testid="reward-rates-panel">
-      <Card data-testid="pending-rewards">
-        <CardHeader>
-          <CardTitle>Pending rewards</CardTitle>
-          <CardDescription>Accepted on Orders and not yet earned, paid or voided.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <dl className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <dt className="text-sm text-muted-foreground">Pending Partner Points</dt>
-              <dd className="font-mono text-lg font-semibold">{pending.points}</dd>
-            </div>
-            <div>
-              <dt className="text-sm text-muted-foreground">Pending value (EGP)</dt>
-              <dd className="font-mono text-lg font-semibold">{pending.egp}</dd>
-            </div>
-          </dl>
-        </CardContent>
-      </Card>
-
-      <Card data-testid="earned-rewards">
-        <CardHeader>
-          <CardTitle>Earned rewards</CardTitle>
-          <CardDescription>Orders delivered and paid, not since reversed.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <dl className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <dt className="text-sm text-muted-foreground">Earned Partner Points</dt>
-              <dd className="font-mono text-lg font-semibold">{earned.points}</dd>
-            </div>
-            <div>
-              <dt className="text-sm text-muted-foreground">Earned value (EGP)</dt>
-              <dd className="font-mono text-lg font-semibold">{earned.egp}</dd>
-            </div>
-          </dl>
-        </CardContent>
-      </Card>
+      <RewardTotalsCard
+        testId="pending-rewards"
+        label="Pending"
+        description="Accepted on Orders and not yet earned, paid or voided."
+        totals={pending}
+      />
+      <RewardTotalsCard
+        testId="earned-rewards"
+        label="Earned"
+        description="Orders delivered and paid, including any since reversed."
+        totals={earned}
+      />
+      <RewardTotalsCard
+        testId="reversed-rewards"
+        label="Reversed"
+        description="Earned, then reversed because the Order was refunded."
+        totals={reversed}
+      />
 
       <Card>
         <CardHeader>

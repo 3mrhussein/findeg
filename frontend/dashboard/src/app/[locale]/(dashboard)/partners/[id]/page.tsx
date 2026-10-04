@@ -18,6 +18,11 @@ import { toListActor } from '../../school-lists/_lib/toListActor';
 const piastersToEgp = (piasters: bigint) =>
   `${piasters / 100n}.${(piasters % 100n).toString().padStart(2, '0')}`;
 
+const toRewardTotals = (totals: { points: bigint; egpValuePiasters: bigint }) => ({
+  points: totals.points.toString(),
+  egp: piastersToEgp(totals.egpValuePiasters),
+});
+
 export const metadata = { title: 'Business Partner - FindEg Admins' };
 
 export default async function PartnerDetailPage({
@@ -41,25 +46,24 @@ export default async function PartnerDetailPage({
   const partner = await partners.getPartner(actor, partnerId);
   if (!partner.success) notFound();
 
-  const [members, pending, lists, rates, pendingRewards, earnedRewards] = await Promise.all([
-    canManagePartner ? memberships.listMembers(actor, partnerId) : Promise.resolve(null),
-    canManagePartner ? invitations.listPendingInvitations(actor, partnerId) : Promise.resolve(null),
-    canManagePartner
-      ? createAdministrationServices().schoolSupplyLists.listForPartner(
-          toListActor(session),
-          partnerId,
-        )
-      : Promise.resolve(null),
-    canViewRewards
-      ? createPartnerRewardsServices().rates.getRates(session, partnerId)
-      : Promise.resolve(null),
-    canViewRewards
-      ? createPartnerRewardsServices().rates.getPending(session, partnerId)
-      : Promise.resolve(null),
-    canViewRewards
-      ? createPartnerRewardsServices().rates.getEarned(session, partnerId)
-      : Promise.resolve(null),
-  ]);
+  const rewards = createPartnerRewardsServices().rates;
+  const [members, pending, lists, rates, pendingRewards, earnedRewards, reversedRewards] =
+    await Promise.all([
+      canManagePartner ? memberships.listMembers(actor, partnerId) : Promise.resolve(null),
+      canManagePartner
+        ? invitations.listPendingInvitations(actor, partnerId)
+        : Promise.resolve(null),
+      canManagePartner
+        ? createAdministrationServices().schoolSupplyLists.listForPartner(
+            toListActor(session),
+            partnerId,
+          )
+        : Promise.resolve(null),
+      canViewRewards ? rewards.getRates(session, partnerId) : Promise.resolve(null),
+      canViewRewards ? rewards.getPending(session, partnerId) : Promise.resolve(null),
+      canViewRewards ? rewards.getEarned(session, partnerId) : Promise.resolve(null),
+      canViewRewards ? rewards.getReversed(session, partnerId) : Promise.resolve(null),
+    ]);
   const canChange = partner.data.status === 'onboarding' || partner.data.status === 'active';
   const saveRate = saveRewardRateAction.bind(null, locale as Locale, partnerId);
 
@@ -145,31 +149,33 @@ export default async function PartnerDetailPage({
           </TabsContent>
         )}
 
-        {canViewRewards && rates?.success && pendingRewards?.success && earnedRewards?.success && (
-          <TabsContent value="rewards">
-            <RewardRatesPanel
-              current={
-                rates.data.current
-                  ? { ...rates.data.current, createdAt: rates.data.current.createdAt.toISOString() }
-                  : null
-              }
-              history={rates.data.history.map((rate) => ({
-                ...rate,
-                createdAt: rate.createdAt.toISOString(),
-              }))}
-              pending={{
-                points: pendingRewards.data.points.toString(),
-                egp: piastersToEgp(pendingRewards.data.egpValuePiasters),
-              }}
-              earned={{
-                points: earnedRewards.data.points.toString(),
-                egp: piastersToEgp(earnedRewards.data.egpValuePiasters),
-              }}
-              canManage={canManageRates}
-              save={saveRate}
-            />
-          </TabsContent>
-        )}
+        {canViewRewards &&
+          rates?.success &&
+          pendingRewards?.success &&
+          earnedRewards?.success &&
+          reversedRewards?.success && (
+            <TabsContent value="rewards">
+              <RewardRatesPanel
+                current={
+                  rates.data.current
+                    ? {
+                        ...rates.data.current,
+                        createdAt: rates.data.current.createdAt.toISOString(),
+                      }
+                    : null
+                }
+                history={rates.data.history.map((rate) => ({
+                  ...rate,
+                  createdAt: rate.createdAt.toISOString(),
+                }))}
+                pending={toRewardTotals(pendingRewards.data)}
+                earned={toRewardTotals(earnedRewards.data)}
+                reversed={toRewardTotals(reversedRewards.data)}
+                canManage={canManageRates}
+                save={saveRate}
+              />
+            </TabsContent>
+          )}
       </Tabs>
     </div>
   );

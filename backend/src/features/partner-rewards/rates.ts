@@ -2,6 +2,7 @@ import {
   getCurrentRewardRate,
   getEarnedRewardTotals,
   getPendingRewardTotals,
+  getReversedRewardTotals,
   insertRewardRate,
   listRewardRates,
   type RewardRateRow,
@@ -26,7 +27,7 @@ export interface RewardRateView {
   readonly createdAt: Date;
 }
 
-export interface PendingRewardsView {
+export interface RewardTotalsView {
   readonly points: bigint;
   readonly egpValuePiasters: bigint;
 }
@@ -49,16 +50,21 @@ export interface IRewardRateService {
       'forbidden' | 'not-found'
     >
   >;
-  /** Partner Points and EGP earned (Order delivered and paid) and not since reversed. */
+  /** Partner Points and EGP ever earned (Order delivered and paid), before any reversal. */
   getEarned(
     actor: RewardsStaffActor,
     businessPartnerId: number,
-  ): Promise<RewardRateResult<PendingRewardsView, 'forbidden' | 'not-found'>>;
+  ): Promise<RewardRateResult<RewardTotalsView, 'forbidden' | 'not-found'>>;
+  /** Partner Points and EGP earned and then reversed by a refund. */
+  getReversed(
+    actor: RewardsStaffActor,
+    businessPartnerId: number,
+  ): Promise<RewardRateResult<RewardTotalsView, 'forbidden' | 'not-found'>>;
   /** Partner Points and EGP accepted on Orders but not yet earned, paid or voided. */
   getPending(
     actor: RewardsStaffActor,
     businessPartnerId: number,
-  ): Promise<RewardRateResult<PendingRewardsView, 'forbidden' | 'not-found'>>;
+  ): Promise<RewardRateResult<RewardTotalsView, 'forbidden' | 'not-found'>>;
 }
 
 const ok = <T>(data: T) => ({ success: true, data }) as const;
@@ -67,6 +73,13 @@ const fail = <E extends string>(error: E) => ({ success: false, error }) as cons
 function hasPermission(actor: RewardsStaffActor, permission: PermissionCode) {
   if (actor.activeRoleIds?.includes('system_admin')) return true;
   return actor.permissionCodes?.includes(permission) === true;
+}
+
+function canViewRewards(actor: RewardsStaffActor) {
+  return (
+    hasPermission(actor, PERMISSION_CODES.REWARDS_VIEW) ||
+    hasPermission(actor, PERMISSION_CODES.REWARDS_RATES_MANAGE)
+  );
 }
 
 function toView(row: RewardRateRow): RewardRateView {
@@ -106,12 +119,7 @@ export class RewardRateService implements IRewardRateService {
   }
 
   async getRates(actor: RewardsStaffActor, businessPartnerId: number) {
-    if (
-      !hasPermission(actor, PERMISSION_CODES.REWARDS_VIEW) &&
-      !hasPermission(actor, PERMISSION_CODES.REWARDS_RATES_MANAGE)
-    ) {
-      return fail('forbidden');
-    }
+    if (!canViewRewards(actor)) return fail('forbidden');
 
     const db = await this.getDb();
     if (!(await getBusinessPartnerById(db, businessPartnerId))) return fail('not-found');
@@ -122,27 +130,26 @@ export class RewardRateService implements IRewardRateService {
     return ok({ current: current ? toView(current) : null, history: history.map(toView) });
   }
 
-  async getPending(actor: RewardsStaffActor, businessPartnerId: number) {
-    if (
-      !hasPermission(actor, PERMISSION_CODES.REWARDS_VIEW) &&
-      !hasPermission(actor, PERMISSION_CODES.REWARDS_RATES_MANAGE)
-    ) {
-      return fail('forbidden');
-    }
-    const db = await this.getDb();
-    if (!(await getBusinessPartnerById(db, businessPartnerId))) return fail('not-found');
-    return ok(await getPendingRewardTotals(db, businessPartnerId));
+  getPending(actor: RewardsStaffActor, businessPartnerId: number) {
+    return this.readTotals(actor, businessPartnerId, getPendingRewardTotals);
   }
 
-  async getEarned(actor: RewardsStaffActor, businessPartnerId: number) {
-    if (
-      !hasPermission(actor, PERMISSION_CODES.REWARDS_VIEW) &&
-      !hasPermission(actor, PERMISSION_CODES.REWARDS_RATES_MANAGE)
-    ) {
-      return fail('forbidden');
-    }
+  getEarned(actor: RewardsStaffActor, businessPartnerId: number) {
+    return this.readTotals(actor, businessPartnerId, getEarnedRewardTotals);
+  }
+
+  getReversed(actor: RewardsStaffActor, businessPartnerId: number) {
+    return this.readTotals(actor, businessPartnerId, getReversedRewardTotals);
+  }
+
+  private async readTotals(
+    actor: RewardsStaffActor,
+    businessPartnerId: number,
+    query: (db: RewardsDatabase, businessPartnerId: number) => Promise<RewardTotalsView>,
+  ): Promise<RewardRateResult<RewardTotalsView, 'forbidden' | 'not-found'>> {
+    if (!canViewRewards(actor)) return fail('forbidden');
     const db = await this.getDb();
     if (!(await getBusinessPartnerById(db, businessPartnerId))) return fail('not-found');
-    return ok(await getEarnedRewardTotals(db, businessPartnerId));
+    return ok(await query(db, businessPartnerId));
   }
 }

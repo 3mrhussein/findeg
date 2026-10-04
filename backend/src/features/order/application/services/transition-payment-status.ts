@@ -3,7 +3,7 @@ import { db } from '@findeg/db/connection';
 import { auditLog, orders } from '@findeg/db/schema';
 import type { PaymentStatus } from '@findeg/backend/features/core/domain/types/common';
 import { getAllowedPaymentStatusTransitions } from '../utils/order-payment-status-transitions';
-import { evaluateEarnEligibility } from '../../../partner-rewards';
+import { closeOrderRewards, evaluateEarnEligibility } from '../../../partner-rewards';
 import { OrderNotFoundError } from './transition-order-status';
 
 export class InvalidPaymentStatusTransitionError extends Error {
@@ -65,6 +65,7 @@ export function transitionPaymentStatus(
       newValues: { paymentStatus: status },
     });
 
+    await closeOrderRewards(orderId, tx);
     await evaluateEarnEligibility(orderId, tx);
     return { changed: true, previousStatus: order.paymentStatus, status };
   });
