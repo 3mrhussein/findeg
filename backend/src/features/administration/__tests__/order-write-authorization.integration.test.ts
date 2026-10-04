@@ -205,6 +205,24 @@ describe('Staff authorization for Dashboard order writes', () => {
     expect(after.balance).toEqual({ onHand: 10, reserved: 2 });
   });
 
+  it('refuses a status change from Staff without order-write permission and earns nothing', async () => {
+    const { orderId, orderReference, entitlementId } = await rewardedOrder({
+      status: 'shipped',
+      paymentStatus: 'paid',
+    });
+    const before = await orderFootprint(orderId, orderReference, 0);
+
+    await expect(
+      createAdministrationServices().orders.updateStatus(readOnlyStaff, orderId, {
+        status: 'delivered',
+      }),
+    ).rejects.toBeInstanceOf(OrderWriteForbiddenError);
+
+    expect(await orderFootprint(orderId, orderReference, 0)).toEqual(before);
+    expect(before.order).toEqual({ status: 'shipped', paymentStatus: 'paid' });
+    expect(await rewardEventTypes(entitlementId)).toEqual(['accepted']);
+  });
+
   it('refuses a payment change from Staff without order-write permission and earns nothing', async () => {
     const { orderId, orderReference, entitlementId } = await rewardedOrder({
       status: 'delivered',
@@ -236,6 +254,26 @@ describe('Staff authorization for Dashboard order writes', () => {
 
     expect(await orderFootprint(orderId, orderReference, 0)).toEqual(before);
     expect(before.order).toEqual({ status: 'shipped', paymentStatus: 'paid' });
+    expect(await rewardEventTypes(entitlementId)).toEqual(['accepted']);
+  });
+
+  it('refuses a payment change with no Staff actor and earns nothing', async () => {
+    const { orderId, orderReference, entitlementId } = await rewardedOrder({
+      status: 'delivered',
+      paymentStatus: 'unpaid',
+    });
+    const before = await orderFootprint(orderId, orderReference, 0);
+
+    await expect(
+      createAdministrationServices().orders.updatePaymentStatus(
+        undefined as never,
+        orderId,
+        'paid',
+      ),
+    ).rejects.toBeInstanceOf(OrderWriteForbiddenError);
+
+    expect(await orderFootprint(orderId, orderReference, 0)).toEqual(before);
+    expect(before.order).toEqual({ status: 'delivered', paymentStatus: 'unpaid' });
     expect(await rewardEventTypes(entitlementId)).toEqual(['accepted']);
   });
 

@@ -42,6 +42,30 @@ describe('Dashboard order server actions', () => {
     expect(orders.updateStatus).not.toHaveBeenCalled();
   });
 
+  it('refuses a status change from Staff without order-write permission', async () => {
+    getSession.mockResolvedValue(staffSession(['admin.orders.read']));
+
+    const result = await updateOrderStatusAction(7, { status: 'cancelled' });
+
+    expect(result).toEqual({
+      success: false,
+      error: 'Unauthorized: Order write permission required',
+    });
+    expect(orders.updateStatus).not.toHaveBeenCalled();
+  });
+
+  it('refuses a payment change without a session and never reaches the order service', async () => {
+    getSession.mockResolvedValue(null);
+
+    const result = await updateOrderPaymentStatusAction(7, 'paid');
+
+    expect(result).toEqual({
+      success: false,
+      error: 'Unauthorized: Order write permission required',
+    });
+    expect(orders.updatePaymentStatus).not.toHaveBeenCalled();
+  });
+
   it('refuses a payment change from Staff without order-write permission', async () => {
     getSession.mockResolvedValue(staffSession(['admin.orders.read']));
 
@@ -51,6 +75,24 @@ describe('Dashboard order server actions', () => {
       success: false,
       error: 'Unauthorized: Order write permission required',
     });
+    expect(orders.updatePaymentStatus).not.toHaveBeenCalled();
+  });
+
+  it('refuses a signed-in Customer even when they hold order-write permission', async () => {
+    getSession.mockResolvedValue({
+      ...staffSession(['admin.orders.write']),
+      portalRole: 'customer',
+    });
+
+    const statusResult = await updateOrderStatusAction(7, { status: 'cancelled' });
+    const paymentResult = await updateOrderPaymentStatusAction(7, 'paid');
+
+    expect(statusResult).toEqual({
+      success: false,
+      error: 'Unauthorized: Order write permission required',
+    });
+    expect(paymentResult).toEqual(statusResult);
+    expect(orders.updateStatus).not.toHaveBeenCalled();
     expect(orders.updatePaymentStatus).not.toHaveBeenCalled();
   });
 
