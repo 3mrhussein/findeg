@@ -36,6 +36,7 @@ import {
 } from '@findeg/db/queries/school-supply-lists';
 import type { SchoolSupplyListRow, SchoolSupplyListItemRow } from '@findeg/db/schema';
 import { eligibleVariants } from '../../domain/eligibleVariants';
+import { partnerStatusAllows, type ListAuthoringAction } from '../../domain/partnerListAuthoring';
 import type {
   CreateSupplyListDraftInput,
   ISchoolSupplyListService,
@@ -73,8 +74,9 @@ async function aggregate(
 
 /**
  * Staff-only School Supply List lifecycle. The Partner School lock serializes
- * slot changes and replacement, the list lock serializes item edits/publication,
- * and database constraints/triggers protect writers outside this service.
+ * slot changes and replacement and pins the status that gates authoring
+ * (ADR-0012), the list lock serializes item edits/publication, and database
+ * constraints/triggers protect writers outside this service.
  */
 export class SchoolSupplyListService implements ISchoolSupplyListService {
   constructor(
@@ -88,8 +90,10 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
     if (!parsed.success) return fail('invalid-input');
     const db = await this.getDb();
     return db.transaction(async (tx): Promise<SupplyListResult<SchoolSupplyList>> => {
-      if (!(await lockSupplyListPartner(tx, parsed.data.businessPartnerId)))
-        return fail('partner-school-not-found');
+      const partner = await lockSupplyListPartner(tx, parsed.data.businessPartnerId);
+      if (!partner) return fail('partner-school-not-found');
+      if (!partnerStatusAllows(partner.status, 'edit-draft'))
+        return fail('partner-status-not-allowed');
       return ok(await aggregate(tx, await insertSupplyListDraft(tx, parsed.data)));
     });
   }
@@ -102,7 +106,7 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
     if (!canWrite(actor)) return fail('forbidden');
     const parsed = UpdateSupplyListDraftSchema.safeParse(input);
     if (!parsed.success) return fail('invalid-input');
-    return this.withList(sourceListId, async (tx, source) => {
+    return this.withList(sourceListId, 'edit-draft', async (tx, source) => {
       if (source.status === 'draft') return fail('invalid-transition');
       const draft = await insertSupplyListDraft(
         tx,
@@ -125,7 +129,7 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
     if (!canWrite(actor)) return fail('forbidden');
     const parsed = UpdateSupplyListDraftSchema.safeParse(input);
     if (!parsed.success) return fail('invalid-input');
-    return this.withDraft(listId, async (tx) =>
+    return this.withDraft(listId, 'edit-draft', async (tx) =>
       ok(await aggregate(tx, await updateSupplyListDraft(tx, listId, parsed.data))),
     );
   }
@@ -134,7 +138,7 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
     if (!canWrite(actor)) return fail('forbidden');
     const parsed = SupplyListItemSchema.safeParse(input);
     if (!parsed.success) return fail('invalid-input');
-    return this.withDraft(listId, async (tx) =>
+    return this.withDraft(listId, 'edit-draft', async (tx) =>
       ok(
         await insertSupplyListItem(
           tx,
@@ -155,7 +159,7 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
     const parsed = SupplyListItemSchema.partial().safeParse(input);
     if (!parsed.success || !SupplyListIdSchema.safeParse(itemId).success)
       return fail('invalid-input');
-    return this.withDraft(listId, async (tx) => {
+    return this.withDraft(listId, 'edit-draft', async (tx) => {
       const current = (await getSupplyListItems(tx, listId)).find((item) => item.id === itemId);
       if (!current) return fail('item-not-found');
       const patch =
@@ -169,7 +173,7 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
   async removeItem(actor: SupplyListStaffActor, listId: number, itemId: number) {
     if (!canWrite(actor)) return fail('forbidden');
     if (!SupplyListIdSchema.safeParse(itemId).success) return fail('invalid-input');
-    return this.withDraft(listId, async (tx) => {
+    return this.withDraft(listId, 'edit-draft', async (tx) => {
       const item = await deleteSupplyListItem(tx, listId, itemId);
       return item ? ok(undefined) : fail('item-not-found');
     });
@@ -180,7 +184,7 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
     const parsed = z.array(SupplyListIdSchema).safeParse(itemIds);
     if (!parsed.success || new Set(parsed.data).size !== parsed.data.length)
       return fail('invalid-input');
-    return this.withDraft(listId, async (tx, list) => {
+    return this.withDraft(listId, 'edit-draft', async (tx, list) => {
       const items = await getSupplyListItems(tx, listId);
       const ids = new Set(items.map((item) => item.id));
       if (items.length !== parsed.data.length || parsed.data.some((id) => !ids.has(id)))
@@ -198,7 +202,7 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
   ): Promise<SupplyListResult<PublishedSupplyList>> {
     if (!canWrite(actor)) return fail('forbidden');
     try {
-      return await this.withDraft(listId, async (tx, list) => {
+      return await this.withDraft(listId, 'publish', async (tx, list) => {
         const validation = await this.validateDefaults(tx, await getSupplyListItems(tx, list.id));
         if (!validation.success) return validation;
         const { variantIds, items } = validation.data;
@@ -244,7 +248,7 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
 
   async archive(actor: SupplyListStaffActor, listId: number) {
     if (!canWrite(actor)) return fail('forbidden');
-    return this.withList(listId, async (tx, list) => {
+    return this.withList(listId, null, async (tx, list) => {
       if (list.status !== 'published') return fail('invalid-transition');
       return ok(await aggregate(tx, await archiveSupplyList(tx, list.id, this.clock())));
     });
@@ -252,7 +256,7 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
 
   async getById(actor: SupplyListStaffActor, listId: number) {
     if (!canRead(actor)) return fail('forbidden');
-    return this.withList(listId, async (tx, list) => ok(await aggregate(tx, list)));
+    return this.withList(listId, null, async (tx, list) => ok(await aggregate(tx, list)));
   }
 
   async listForPartner(actor: SupplyListStaffActor, businessPartnerId: number) {
@@ -264,21 +268,23 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
 
   async getOffer(actor: SupplyListStaffActor, listId: number) {
     if (!canRead(actor)) return fail('forbidden');
-    return this.withList(listId, async (tx, list) => ok((await getListOffer(tx, list.id)) ?? null));
+    return this.withList(listId, null, async (tx, list) =>
+      ok((await getListOffer(tx, list.id)) ?? null),
+    );
   }
 
   async setOffer(actor: SupplyListStaffActor, listId: number, input: ListOfferInput) {
     if (!canWrite(actor)) return fail('forbidden');
     const parsed = ListOfferSchema.safeParse(input);
     if (!parsed.success) return fail('invalid-input');
-    return this.withList(listId, async (tx, list) =>
+    return this.withList(listId, null, async (tx, list) =>
       ok(await upsertListOffer(tx, list.id, parsed.data, this.clock())),
     );
   }
 
   async clearOffer(actor: SupplyListStaffActor, listId: number) {
     if (!canWrite(actor)) return fail('forbidden');
-    return this.withList(listId, async (tx, list) => {
+    return this.withList(listId, null, async (tx, list) => {
       await deleteListOffer(tx, list.id);
       return ok(undefined);
     });
@@ -320,18 +326,21 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
 
   private async withDraft<T>(
     listId: number,
+    action: ListAuthoringAction,
     operation: (
       tx: SchoolSupplyListTransaction,
       list: SchoolSupplyListRow,
     ) => Promise<SupplyListResult<T>>,
   ) {
-    return this.withList(listId, (tx, list) =>
+    return this.withList(listId, action, (tx, list) =>
       list.status === 'draft' ? operation(tx, list) : Promise.resolve(fail('not-draft')),
     );
   }
 
+  /** Locks the Partner School, then the list. A non-null `action` must be allowed by its status. */
   private async withList<T>(
     listId: number,
+    action: ListAuthoringAction | null,
     operation: (
       tx: SchoolSupplyListTransaction,
       list: SchoolSupplyListRow,
@@ -342,8 +351,10 @@ export class SchoolSupplyListService implements ISchoolSupplyListService {
     return db.transaction(async (tx) => {
       const initial = await getSupplyList(tx, listId);
       if (!initial) return fail('not-found');
-      if (!(await lockSupplyListPartner(tx, initial.businessPartnerId)))
-        return fail('partner-school-not-found');
+      const partner = await lockSupplyListPartner(tx, initial.businessPartnerId);
+      if (!partner) return fail('partner-school-not-found');
+      if (action && !partnerStatusAllows(partner.status, action))
+        return fail('partner-status-not-allowed');
       const list = await lockSupplyList(tx, listId);
       if (!list) return fail('not-found');
       return operation(tx, list);

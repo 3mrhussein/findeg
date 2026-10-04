@@ -1,4 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { eq } from 'drizzle-orm';
 import {
   attributes,
   brands,
@@ -327,4 +328,25 @@ describe('public School Supply List read on real Postgres', () => {
       expect(await reader.getByPublicCode(code)).toEqual({ success: false, error: 'not-found' });
     }
   });
+
+  it.each(['suspended', 'closed'] as const)(
+    "reads a %s Business Partner's published list like any other (ADR-0012)",
+    async (status) => {
+      const v = await variant(await category());
+      const list = await publishedList([
+        { variantId: v.id, exactItem: true, localizedLabel: { en: 'Pen' } },
+      ]);
+      await testDb.db
+        .update(businessPartners)
+        .set({ status })
+        .where(eq(businessPartners.id, list.businessPartnerId));
+
+      expect(await read(list.publicCode)).toMatchObject({
+        status: 'published',
+        items: [
+          expect.objectContaining({ defaultVariant: expect.objectContaining({ variantId: v.id }) }),
+        ],
+      });
+    },
+  );
 });
