@@ -22,10 +22,18 @@ const save: SaveRewardRate = async () => ({ status: 'saved' });
 describe('RewardRatesPanel', () => {
   it('shows the current rate and append-only history to a viewer', () => {
     render(
-      <RewardRatesPanel current={history[0]} history={history} canManage={false} save={save} />,
+      <RewardRatesPanel
+        current={history[0]}
+        history={history}
+        pending={{ points: '72', egp: '0.91' }}
+        canManage={false}
+        save={save}
+      />,
     );
 
     expect(screen.getByText('Current Reward Rate')).toBeInTheDocument();
+    expect(screen.getByTestId('pending-rewards')).toHaveTextContent('72');
+    expect(screen.getByTestId('pending-rewards')).toHaveTextContent('0.91');
     expect(screen.getAllByText('2.000000')).not.toHaveLength(0);
     expect(screen.getByText('1.250000')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Set Reward Rate' })).not.toBeInTheDocument();
@@ -33,7 +41,15 @@ describe('RewardRatesPanel', () => {
   });
 
   it('shows the append action only with rate-management permission', () => {
-    render(<RewardRatesPanel current={null} history={[]} canManage save={save} />);
+    render(
+      <RewardRatesPanel
+        current={null}
+        history={[]}
+        pending={{ points: '0', egp: '0.00' }}
+        canManage
+        save={save}
+      />,
+    );
 
     expect(screen.getByLabelText('Partner Points per EGP')).toBeInTheDocument();
     expect(screen.getByLabelText('EGP per Partner Point')).toBeInTheDocument();

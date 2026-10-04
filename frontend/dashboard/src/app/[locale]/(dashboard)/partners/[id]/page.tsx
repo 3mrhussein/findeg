@@ -15,6 +15,9 @@ import { saveRewardRateAction } from '../_actions/reward-rates';
 import { toStaffActor } from '../_lib/toStaffActor';
 import { toListActor } from '../../school-lists/_lib/toListActor';
 
+const piastersToEgp = (piasters: bigint) =>
+  `${piasters / 100n}.${(piasters % 100n).toString().padStart(2, '0')}`;
+
 export const metadata = { title: 'Business Partner - FindEg Admins' };
 
 export default async function PartnerDetailPage({
@@ -38,7 +41,7 @@ export default async function PartnerDetailPage({
   const partner = await partners.getPartner(actor, partnerId);
   if (!partner.success) notFound();
 
-  const [members, pending, lists, rates] = await Promise.all([
+  const [members, pending, lists, rates, pendingRewards] = await Promise.all([
     canManagePartner ? memberships.listMembers(actor, partnerId) : Promise.resolve(null),
     canManagePartner ? invitations.listPendingInvitations(actor, partnerId) : Promise.resolve(null),
     canManagePartner
@@ -49,6 +52,9 @@ export default async function PartnerDetailPage({
       : Promise.resolve(null),
     canViewRewards
       ? createPartnerRewardsServices().rates.getRates(session, partnerId)
+      : Promise.resolve(null),
+    canViewRewards
+      ? createPartnerRewardsServices().rates.getPending(session, partnerId)
       : Promise.resolve(null),
   ]);
   const canChange = partner.data.status === 'onboarding' || partner.data.status === 'active';
@@ -136,7 +142,7 @@ export default async function PartnerDetailPage({
           </TabsContent>
         )}
 
-        {canViewRewards && rates?.success && (
+        {canViewRewards && rates?.success && pendingRewards?.success && (
           <TabsContent value="rewards">
             <RewardRatesPanel
               current={
@@ -148,6 +154,10 @@ export default async function PartnerDetailPage({
                 ...rate,
                 createdAt: rate.createdAt.toISOString(),
               }))}
+              pending={{
+                points: pendingRewards.data.points.toString(),
+                egp: piastersToEgp(pendingRewards.data.egpValuePiasters),
+              }}
               canManage={canManageRates}
               save={saveRate}
             />
