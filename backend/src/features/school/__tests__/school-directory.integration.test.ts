@@ -1,4 +1,5 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { eq } from 'drizzle-orm';
 import {
   businessPartners,
   categories,
@@ -199,23 +200,44 @@ describe('Partner School directory on real Postgres', () => {
     expect(items.map((s) => s.code)).toEqual([withList.code]);
   });
 
-  it('hides Business Partners that are not active Partner Schools', async () => {
-    await school({ nameEn: `${tag}-hidden onboarding`, status: 'onboarding' });
-    await school({ nameEn: `${tag}-hidden suspended`, status: 'suspended' });
-    await school({ nameEn: `${tag}-hidden closed`, status: 'closed' });
-    await school({ nameEn: `${tag}-hidden other partner`, profile: null });
+  it('lists Partner Schools and their published lists in every Business Partner Status', async () => {
+    const statuses = ['onboarding', 'active', 'suspended', 'closed'] as const;
+    const schools: {
+      partner: Awaited<ReturnType<typeof school>>;
+      list: Awaited<ReturnType<typeof publishedList>>;
+    }[] = [];
+    for (const status of statuses) {
+      const partner = await school({ nameEn: `${tag}-status ${status}` });
+      const list = await publishedList(partner.id, 'Grade 1');
+      // Publishing needs an onboarding or active Business Partner (ADR-0012), so set the status after.
+      await testDb.db
+        .update(businessPartners)
+        .set({ status })
+        .where(eq(businessPartners.id, partner.id));
+      schools.push({ partner, list });
+    }
+    await school({ nameEn: `${tag}-status other partner`, profile: null });
 
     const { items, totalCount } = await directory.searchSchools({
-      query: `${tag}-hidden`,
+      query: `${tag}-status`,
+      withPublishedLists: true,
       page: 1,
       pageSize: 10,
     });
 
-    expect(totalCount).toBe(0);
-    expect(items).toEqual([]);
+    expect(totalCount).toBe(4);
+    const byName = [...schools].sort((a, b) => a.partner.nameEn.localeCompare(b.partner.nameEn));
+    expect(items.map((s) => [s.code, s.publishedListCount])).toEqual(
+      byName.map(({ partner }) => [partner.code, 1]),
+    );
+    for (const { partner, list } of schools) {
+      expect((await directory.getByCode(partner.code))?.lists).toEqual([
+        expect.objectContaining({ publicCode: list.publicCode }),
+      ]);
+    }
   });
 
-  it('offers filter options from active Partner School profiles only', async () => {
+  it('offers filter options from Partner School profiles in every status', async () => {
     await school({
       nameEn: `${tag}-options`,
       profile: { governorate: `${tag}-gov`, schoolType: `${tag}-type`, academicSystem: null },
@@ -229,7 +251,7 @@ describe('Partner School directory on real Postgres', () => {
     const options = await directory.getFilterOptions();
 
     expect(options.governorates).toContain(`${tag}-gov`);
-    expect(options.governorates).not.toContain(`${tag}-closed-gov`);
+    expect(options.governorates).toContain(`${tag}-closed-gov`);
     expect(options.schoolTypes).toContain(`${tag}-type`);
     expect([...options.governorates].sort()).toEqual(options.governorates);
   });
@@ -272,12 +294,10 @@ describe('Partner School directory on real Postgres', () => {
     expect((await directory.getByCode(partner.code))?.lists).toEqual([]);
   });
 
-  it('returns null for an unknown code, a hidden partner or a non-school partner', async () => {
-    const closed = await school({ status: 'closed' });
+  it('returns null for an unknown code or a non-school partner', async () => {
     const notSchool = await school({ profile: null });
 
     expect(await directory.getByCode('no-such-school')).toBeNull();
-    expect(await directory.getByCode(closed.code)).toBeNull();
     expect(await directory.getByCode(notSchool.code)).toBeNull();
   });
 });

@@ -1556,6 +1556,56 @@ describe('Checkout feature integration tests on real Postgres', () => {
       ]);
     });
 
+    it.each(['suspended', 'closed'] as const)(
+      "accepts and attributes an Order on a %s Business Partner's list like any other (ADR-0012)",
+      async (status) => {
+        const variant = await createVariantWithStock({ onHand: 5 });
+        const source = await createPublishedList([{ variantId: variant.variantId }]);
+        await testDb.db
+          .update(businessPartners)
+          .set({ status })
+          .where(eq(businessPartners.id, source.partner.id));
+        const input = {
+          source: 'list' as const,
+          publicCode: source.publicCode,
+          lines: [{ listItemId: source.items[0].id, variantId: variant.variantId, quantity: 1 }],
+        };
+
+        const quote = await checkoutService.validate(input);
+        expect(quote.success).toBe(true);
+        if (!quote.success) return;
+        const accepted = await checkoutService.accept(
+          {
+            ...input,
+            confirmation: quote.data.confirmation,
+            paymentMethod: 'cod',
+            address: validAddress,
+            guestEmail: `${status}-partner@example.com`,
+          },
+          { idempotencyKey: `${status}-partner-${sequence}`, guestId: `${status}-guest` },
+        );
+
+        expect(accepted.success).toBe(true);
+        if (!accepted.success) return;
+        const [order] = await testDb.db
+          .select()
+          .from(orders)
+          .where(eq(orders.id, accepted.data.order.id));
+        const [line] = await testDb.db
+          .select()
+          .from(orderItems)
+          .where(eq(orderItems.orderId, order.id));
+        expect(order).toMatchObject({
+          status: 'pending',
+          schoolSupplyListId: source.list.id,
+          schoolSupplyListPublicCode: source.publicCode,
+          schoolSupplyListPublishedAt: source.publishedAt,
+          businessPartnerId: source.partner.id,
+        });
+        expect(line.schoolSupplyListItemId).toBe(source.items[0].id);
+      },
+    );
+
     it('returns list-unavailable and selection-invalid for the matching failures', async () => {
       const variant = await createVariantWithStock();
       const archived = await createPublishedList([{ variantId: variant.variantId }], 'archived');
