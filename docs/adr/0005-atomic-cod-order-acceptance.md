@@ -4,6 +4,8 @@ status: accepted
 
 # Atomic COD Order Acceptance
 
+> **Amended by ADR-0013:** Order Acceptance writes no rewards (no rate, valuation or entitlement); only the attribution snapshot remains. ADR-0012: acceptance never checks Business Partner Status.
+
 Main has no working checkout: the storefront calls `/api/v1/checkout/{validate,order}` routes that don't exist, the Cart is an in-process `Map`, cart totals use client-held prices, and `orderQueries.create`/`reserveStock` each open their own transaction so they cannot be combined. `develop` (reference only) accepts COD orders in one transaction through a `TransactionRunner` port, a separate immutable `accepted_orders` snapshot, guest-only checkout, and a cart-row lock for idempotency. We adopt develop's _guarantees_ (one transaction, re-quote under locks, reserve-at-accept, idempotent replay) but build them on main's existing order, inventory, and session model rather than lifting develop's structure. The research file lives on branch `research/cod-checkout-idempotency`, not on main.
 
 This ADR fixes the **Order Acceptance seam** that the Partner Rewards design (next ADR) hooks into.

@@ -11,8 +11,12 @@ A person who shops on the storefront, whether browsing generally or fulfilling a
 _Avoid_: Parent, buyer, account
 
 **Business Partner**:
-An organization the platform has a commercial relationship with. A Partner School is one kind of Business Partner.
+An organization the platform has a commercial relationship with. A Partner School is one kind of Business Partner. It is always in one Business Partner Status.
 _Avoid_: Partner (ambiguous alone — always qualify: Partner School, etc.)
+
+**Business Partner Status**:
+Where a Business Partner stands in its relationship with FindEg: **Onboarding** (being set up; its code can still change), **Active** (live), **Suspended** (temporarily paused by Staff, reversible) or **Closed** (the relationship has ended, permanently). It governs only the Partner's own access to its Partner Workspace and list publishing; Customers, School Supply Lists and Orders behave the same in every status.
+_Avoid_: Partner state, enabled/disabled
 
 **Partner School**:
 A Business Partner that is a school: the entity a School Supply List is published on behalf of. Modeled as a `businessPartnerId` reference plus school-specific attributes (governorate, area, school type, academic system), not as free-text fields on the list itself.
@@ -103,45 +107,17 @@ The durable record of messages that must be sent because something was committed
 _Avoid_: Queue, notification log, email jobs
 
 **Order Reference**:
-The short, public, human-readable identifier of an Order, used by Customers, couriers, and support. Its format is `FE-` plus 6 characters, and it is not a secret.
-_Avoid_: Order number, order id, tracking code
+The short, public, human-readable identifier of an Order, used by Customers, couriers, and support. Its format is `FE-` plus 6 character### Partner Sales
 
-### Partner Rewards
-
-**Partner Points**:
-The reward a Partner School earns on orders placed from its School Supply Lists.
-_Avoid_: Credits, commission, loyalty points
-
-**Reward Rate**:
-A Business Partner's configured conversion between money charged and Partner Points, and between Partner Points and EGP value.
-_Avoid_: Commission rate, multiplier
-
-**Reward Entitlement**:
-The Partner Points (and their EGP value) fixed for one attributed order line at Order Acceptance.
-_Avoid_: Reward, accrual
-
-**Reward Event**:
-An immutable ledger entry that moves an Entitlement's points between pending, earned, and reversed.
-_Avoid_: Transaction, reward log
-
-**Reward Statement**:
-A Business Partner's pending, earned, reversed, and settled Partner Points and EGP value, and its Available Balance, derived from its Reward Events and Reward Settlements. For a month, it runs from an opening to a closing Available Balance through that month's earned, reversed, adjusted, and settled movements.
-_Avoid_: Balance, wallet
+**Attributed Order**:
+An Order placed from a School Supply List, recording that list and its Partner School's Business Partner. It is the only link between a Business Partner and Orders; rewarding schools is a future FindEg Staff calculation over Attributed Orders.
+_Avoid_: Partner order, referral, commission order
 
 **Partner Report**:
-What a Business Partner's members see of its rewards: the monthly Reward Statement, its Reward Settlements, and the sales from its School Supply Lists in aggregate. It never identifies a Customer or an Order.
-_Avoid_: Dashboard, analytics
+What a Business Partner's members see of the sales from its School Supply Lists, in monthly aggregates. It never identifies a Customer or an Order.
+_Avoid_: Dashboard, analytics, statement
 
-**Reward Settlement**:
-A FindEg Staff record of an EGP payout already made to a Business Partner outside FindEg, or the void of a mistaken one.
-_Avoid_: Payout, withdrawal, redemption
-
-**Debt Forgiveness**:
-A FindEg Staff entry with a reason that forgives part or all of a Business Partner's negative Available Balance, so uncollectable debt stops consuming its future earnings. It is stored beside Reward Settlements as its own line type, and raises the balance toward zero.
-_Avoid_: Write-off, adjustment, bad debt
-
-**Available Balance**:
-The EGP a Business Partner can still be settled: earned minus reversed, plus adjustments and debt forgiveness, minus settled. It is negative when reversals follow a settlement, and the debt is offset by later earnings.
+and the debt is offset by later earnings.
 _Avoid_: Wallet balance, credit
 
 ### Inventory
