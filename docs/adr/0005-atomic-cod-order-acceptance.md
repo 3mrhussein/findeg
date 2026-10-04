@@ -6,6 +6,8 @@ status: accepted
 
 > **Amended by ADR-0013:** Order Acceptance writes no rewards (no rate, valuation or entitlement); only the attribution snapshot remains. ADR-0012: acceptance never checks Business Partner Status.
 
+> **Amended (pre-delivery refunds):** `refunded` follows only `delivered`; an Order stopped before delivery is `cancelled`, including after `shipped`, and releases its reservation. See the Amendment below.
+
 Main has no working checkout: the storefront calls `/api/v1/checkout/{validate,order}` routes that don't exist, the Cart is an in-process `Map`, cart totals use client-held prices, and `orderQueries.create`/`reserveStock` each open their own transaction so they cannot be combined. `develop` (reference only) accepts COD orders in one transaction through a `TransactionRunner` port, a separate immutable `accepted_orders` snapshot, guest-only checkout, and a cart-row lock for idempotency. We adopt develop's _guarantees_ (one transaction, re-quote under locks, reserve-at-accept, idempotent replay) but build them on main's existing order, inventory, and session model rather than lifting develop's structure. The research file lives on branch `research/cod-checkout-idempotency`, not on main.
 
 This ADR fixes the **Order Acceptance seam** that the Partner Rewards design (next ADR) hooks into.
@@ -47,3 +49,16 @@ This ADR fixes the **Order Acceptance seam** that the Partner Rewards design (ne
 - `sales.orders` and `sales.order_items` freeze triggers permit foreign key `ON DELETE SET NULL` transitions (`user_id -> NULL` on user account deletion, `product_id/variant_id -> NULL` on catalog item purge), while strictly freezing all snapshot and price data. Orders and order items are permanent append-only records; deletion of orders (with or without child items) and order items is strictly forbidden at the table level by `freeze_order_snapshots` and `freeze_order_items`.
 - Idempotency tracking via the `Idempotency-Key` header and replay verification is implemented by issue #239 ("Idempotent Order Acceptance"). Guest orders sent without an `X-Guest-Id` token (direct API callers) fall back to scope `guest:<guestEmail>`.
 - List Offer pricing, delivery zones, the transactional outbox, and guest order access are left open; each adds an input to the Quote or a row to the acceptance transaction without changing this seam.
+
+## Amendment: no refund before delivery
+
+The allowed-transitions table let `processing` and `shipped` move to `refunded`, which has no stock effect, so an Order refunded before delivery kept its Stock Reservation forever. `shipped` also had no path to `cancelled`, so a parcel refused at the door could only end as `refunded`.
+
+- **`refunded` only follows `delivered`.** Phase one is cash on delivery, so before delivery no money has been collected and there is nothing to refund. Stopping an Order before delivery is always a Cancellation. Since ADR-0013, rewards no longer tell the two statuses apart, so a pre-delivery `refunded` would only be a mislabelled `cancelled`.
+- **`shipped → cancelled` is allowed** and releases the reservation (`reserved -= n`) like any pre-delivery cancel. Staff cancel a shipped Order only once the parcel is back in the warehouse, so the released units really are available. There is no `returning` status. A parcel that never comes back is still cancelled, and its loss is recorded as a manual inventory adjustment.
+- **`delivered → refunded` is unchanged:** no automatic stock effect, physical restock stays a manual adjustment.
+- **`paymentStatus` is untouched:** it has no stock effect, and nothing ties it to delivery.
+
+The resulting table: `pending → confirmed | cancelled`, `confirmed → processing | cancelled`, `processing → shipped | cancelled`, `shipped → delivered | cancelled`, `delivered → refunded`; `cancelled` and `refunded` are terminal. Phase-one checkout is not live, so no existing Order sits in `refunded` without delivery and no data migration is needed.
+
+Alternatives rejected: having a pre-delivery `refunded` release stock (two statuses with the same meaning, and the stock effect would depend on the source status), and leaving the reservation held for a manual fix (the current leak).

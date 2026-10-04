@@ -107,7 +107,18 @@ The durable record of messages that must be sent because something was committed
 _Avoid_: Queue, notification log, email jobs
 
 **Order Reference**:
-The short, public, human-readable identifier of an Order, used by Customers, couriers, and support. Its format is `FE-` plus 6 character### Partner Sales
+The short, public, human-readable identifier of an Order, used by Customers, couriers, and support. Its format is `FE-` plus 6 characters, and it is not a secret.
+_Avoid_: Order number, order id, tracking code
+
+**Cancellation**:
+Stopping an Order before delivery, including a parcel refused at the door or returned. It releases the Order's Stock Reservation; once the Order has shipped, Staff cancel it only when the parcel is back in the warehouse.
+_Avoid_: Refund (before delivery), void
+
+**Refund**:
+Returning a Customer's money for an Order after it was delivered. It has no stock effect; returned goods are restocked by a manual inventory adjustment.
+_Avoid_: Cancellation, return
+
+### Partner Sales
 
 **Attributed Order**:
 An Order placed from a School Supply List, recording that list and its Partner School's Business Partner. It is the only link between a Business Partner and Orders; rewarding schools is a future FindEg Staff calculation over Attributed Orders.
@@ -116,9 +127,6 @@ _Avoid_: Partner order, referral, commission order
 **Partner Report**:
 What a Business Partner's members see of the sales from its School Supply Lists, in monthly aggregates. It never identifies a Customer or an Order.
 _Avoid_: Dashboard, analytics, statement
-
-and the debt is offset by later earnings.
-_Avoid_: Wallet balance, credit
 
 ### Inventory
 
