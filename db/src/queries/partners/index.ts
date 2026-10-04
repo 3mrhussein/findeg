@@ -433,3 +433,22 @@ export async function updatePartnerMembership(
     .returning();
   return row;
 }
+
+/** Roles of the user's active membership in a Business Partner, or null with none (ADR-0010). */
+export async function getActiveMembershipRoles(
+  executor: PartnerExecutor,
+  businessPartnerId: number,
+  userId: number,
+): Promise<schema.PartnerRole[] | null> {
+  const [row] = await executor
+    .select({ roles: partnerMemberships.roles })
+    .from(partnerMemberships)
+    .where(
+      and(
+        eq(partnerMemberships.businessPartnerId, businessPartnerId),
+        eq(partnerMemberships.userId, userId),
+        eq(partnerMemberships.status, 'active'),
+      ),
+    );
+  return row?.roles ?? null;
+}

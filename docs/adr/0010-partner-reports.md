@@ -1,5 +1,5 @@
 ---
-status: proposed
+status: accepted
 ---
 
 # Partner Reports
@@ -9,6 +9,8 @@ Partner Schools need to see what they have earned and been paid, without learnin
 Depends on ADR-0003 (Partner Membership, `/partner/[code]` in `frontend/storefront`), ADR-0006 (ledger), ADR-0008 (Guest Order Access) and ADR-0009 (settlements, signed Available Balance).
 
 ## Decisions
+
+**Route.** The Reports page lives at `/[locale]/partner/[code]/reports` in `frontend/storefront`. The route segment is `[code]`, as ADR-0003's Amendment decided, not `[partnerId]`.
 
 **Aggregates only.** No Order Reference and no Customer field reaches the Partner read path, and there is no per-Order drill-down. In main an Order Reference plus an email starts Guest Order Access (ADR-0008), so a Partner must never hold references.
 
