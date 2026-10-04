@@ -19,8 +19,12 @@ Where a Business Partner stands in its relationship with FindEg: **Onboarding** 
 _Avoid_: Partner state, enabled/disabled
 
 **Partner School**:
-A Business Partner that is a school: the entity a School Supply List is published on behalf of. Modeled as a `businessPartnerId` reference plus school-specific attributes (governorate, area, school type, academic system), not as free-text fields on the list itself.
+A Business Partner that is a school: the entity a School Supply List is published on behalf of. A Business Partner becomes a Partner School when it is given a Partner School Profile, and stays one.
 _Avoid_: School (ambiguous — a school is always a kind of Business Partner, never a standalone entity)
+
+**Partner School Profile**:
+The school-specific details of a Partner School (governorate, area, school type, academic system, logo) shown in the Partner School directory. Maintained by FindEg Staff.
+_Avoid_: School profile, school record
 
 **School Supply List**:
 A curated list of items a Partner School asks its Customers to purchase, moving through Draft, Published, and Archived states. Customers reach it via a public, unguessable code rather than a login.
