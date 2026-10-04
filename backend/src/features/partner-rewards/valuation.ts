@@ -51,7 +51,8 @@ export function parseRewardRateInput(input: unknown): RewardRateInput | undefine
 
 /**
  * Values one charged order line exactly: Partner Points are floored and their
- * EGP value is rounded half-up to one piaster.
+ * EGP value is rounded half-up to one piaster. A result with zero points is
+ * valid, but callers must not persist a Reward Entitlement for it.
  */
 export function calculateReward(input: RewardValuationInput): RewardValuation {
   if (input.chargedLineTotalPiasters < 0n) {

@@ -25,8 +25,9 @@ export function listRewardRates(executor: RewardsExecutor, businessPartnerId: nu
 }
 
 /**
- * The latest rate is current. The share lock lets Order Acceptance hold the
- * selected rate stable when this query is called with its transaction.
+ * The latest rate visible to this statement is current. Per ADR-0006, Order
+ * Acceptance takes a share lock on that immutable row; this does not block a
+ * newer rate from being appended concurrently.
  */
 export async function getCurrentRewardRate(executor: RewardsExecutor, businessPartnerId: number) {
   const [row] = await executor

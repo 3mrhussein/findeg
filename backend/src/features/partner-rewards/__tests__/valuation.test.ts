@@ -20,6 +20,16 @@ describe('Partner Reward valuation', () => {
     ).toEqual({ points: 1n, egpValuePiasters: 2n });
   });
 
+  it('returns zero points for a line below the earning threshold', () => {
+    expect(
+      calculateReward({
+        chargedLineTotalPiasters: 50n,
+        pointsPerEgp: '1.000000',
+        egpPerPoint: '0.0150',
+      }),
+    ).toEqual({ points: 0n, egpValuePiasters: 0n });
+  });
+
   it('keeps arithmetic exact beyond the JavaScript safe integer range', () => {
     expect(
       calculateReward({
