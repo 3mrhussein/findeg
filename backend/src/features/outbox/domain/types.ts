@@ -52,3 +52,12 @@ export const isNotifiedOrderStatus = (status: string): status is NotifiedOrderSt
 /** Row id for a status email: one per Order Reference and status. */
 export const orderStatusId = (orderReference: string, status: NotifiedOrderStatus) =>
   `${ORDER_STATUS_KIND}:${orderReference}:${status}`;
+
+export const PARTNER_INVITATION_KIND = 'partner-invitation';
+
+/**
+ * Row id for one Partner Invitation email. A resend is a new fact, so `delivery` is unique per
+ * issue or resend (the id alone would be deduplicated against the original invite).
+ */
+export const partnerInvitationId = (invitationId: number, delivery: string) =>
+  `${PARTNER_INVITATION_KIND}:${invitationId}:${delivery}`;

@@ -21,6 +21,12 @@ afterwards, at least once.
   `transitionOrderStatus` in its own transaction. The id carries the status, so a repeated
   transition sends nothing new.
 - `guest-access:<requestId>`: guest access code email.
+- `partner-invitation:<invitationId>:<delivery>`: Partner Invitation email, enqueued by the caller of
+  `invite` / `resendInvitation` (the Dashboard) through the invitation's `enqueue` seam. The
+  payload is `{ invitationId }`; `<delivery>` is unique per issue or resend, so a resend is not
+  deduplicated. The handler mints a fresh token on every attempt (digest stored beside the
+  earlier ones) and ends the row `expired` if the invitation is no longer pending or its Business
+  Partner is no longer open.
 
 ## Exhausted rows
 

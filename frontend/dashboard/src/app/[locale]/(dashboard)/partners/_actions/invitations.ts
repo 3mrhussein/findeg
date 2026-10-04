@@ -7,6 +7,7 @@ import {
   createPartnerMembershipServices,
   type PartnerRole,
 } from '@findeg/backend/features/partner-membership';
+import { createInvitationServices, drainOutboxAfterResponse } from '../_lib/invitationServices';
 import { toStaffActor } from '../_lib/toStaffActor';
 
 export interface InvitationActionState {
@@ -44,12 +45,13 @@ export async function inviteAction(
   formData: FormData,
 ): Promise<InvitationActionState> {
   const actor = toStaffActor(await requireAdmin(locale));
-  const { invitations } = createPartnerMembershipServices();
+  const invitations = createInvitationServices();
   const result = await invitations.invite(actor, partnerId, {
     email: String(formData.get('email') ?? ''),
     roles: formData.getAll('roles').map(String) as PartnerRole[],
   });
   if (!result.success) return fail(result.error);
+  drainOutboxAfterResponse();
   refresh();
   return { status: 'done', link: linkFor(locale, result.data.token) };
 }
@@ -59,9 +61,10 @@ export async function resendInvitationAction(
   invitationId: number,
 ): Promise<InvitationActionState> {
   const actor = toStaffActor(await requireAdmin(locale));
-  const { invitations } = createPartnerMembershipServices();
+  const invitations = createInvitationServices();
   const result = await invitations.resendInvitation(actor, invitationId);
   if (!result.success) return fail(result.error);
+  drainOutboxAfterResponse();
   refresh();
   return { status: 'done', link: linkFor(locale, result.data.token) };
 }

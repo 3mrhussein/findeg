@@ -17,6 +17,8 @@ export {
   orderAcceptedId,
   ORDER_STATUS_KIND,
   orderStatusId,
+  PARTNER_INVITATION_KIND,
+  partnerInvitationId,
   isNotifiedOrderStatus,
 } from './domain/types';
 export type {

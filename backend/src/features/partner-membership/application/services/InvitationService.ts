@@ -24,6 +24,7 @@ import type {
   EnqueueInvitation,
   IInvitationService,
   InvitationActor,
+  InvitationDelivery,
   InvitationView,
   InviteError,
   InviteInput,
@@ -164,6 +165,26 @@ export class InvitationService implements IInvitationService {
     return ok(rows.map(toInvitation));
   }
 
+  async issueDeliveryToken(invitationId: number): Promise<InvitationDelivery | null> {
+    const db = await this.getDb();
+    return db.transaction(async (tx) => {
+      const found = await getPartnerInvitationById(tx, invitationId);
+      const partner = found && (await lockBusinessPartnerById(tx, found.businessPartnerId));
+      if (!partner || !isOpen(partner)) return null;
+      const invitation = await getPartnerInvitationById(tx, invitationId);
+      if (!invitation || invitation.status !== 'pending') return null;
+      if (invitation.expiresAt <= this.clock()) return null;
+
+      const token = await this.mint(tx, invitation.id);
+      return {
+        email: invitation.email,
+        partner: { nameEn: partner.nameEn, nameAr: partner.nameAr },
+        token,
+        expiresAt: invitation.expiresAt,
+      };
+    });
+  }
+
   async getInvitation(token: string): Promise<PartnerResult<InvitationView, 'not-found'>> {
     const db = await this.getDb();
     const invitation = await getPartnerInvitationByTokenDigest(db, digestToken(token));
@@ -207,9 +228,14 @@ export class InvitationService implements IInvitationService {
     return ok({ invitation });
   }
 
-  private async mintAndEnqueue(tx: PartnerTransaction, invitationId: number): Promise<string> {
+  private async mint(tx: PartnerTransaction, invitationId: number): Promise<string> {
     const token = randomBytes(32).toString('base64url');
     await insertPartnerInvitationToken(tx, invitationId, digestToken(token));
+    return token;
+  }
+
+  private async mintAndEnqueue(tx: PartnerTransaction, invitationId: number): Promise<string> {
+    const token = await this.mint(tx, invitationId);
     await this.enqueue(tx, { kind: 'partner-invitation', invitationId }, { token });
     return token;
   }
