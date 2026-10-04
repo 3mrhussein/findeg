@@ -41,6 +41,13 @@ export function NavItem({ item, collapsed = false, locale = 'en', depth = 0 }: N
   if (item.permission && !systemAdmin && !can(item.permission)) {
     return null;
   }
+  if (
+    item.anyPermissions &&
+    !systemAdmin &&
+    !item.anyPermissions.some((permission) => can(permission))
+  ) {
+    return null;
+  }
 
   // Portal role check
   if (item.portalRoles && !systemAdmin) {

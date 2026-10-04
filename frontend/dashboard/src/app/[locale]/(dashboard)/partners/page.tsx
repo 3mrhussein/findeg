@@ -13,8 +13,11 @@ export const metadata = {
 export default async function PartnersPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const session = await requirePermission(locale as Locale, {
-    permission: PERMISSION_CODES.PARTNERS_MANAGE,
+    any: [PERMISSION_CODES.PARTNERS_MANAGE, PERMISSION_CODES.REWARDS_VIEW],
   });
+  const canManage =
+    session.activeRoleIds?.includes('system_admin') === true ||
+    session.permissionCodes?.includes(PERMISSION_CODES.PARTNERS_MANAGE) === true;
 
   const { partners } = createPartnerMembershipServices();
   const result = await partners.listPartners(toStaffActor(session));
@@ -29,9 +32,11 @@ export default async function PartnersPage({ params }: { params: Promise<{ local
             Organizations FindEg has a commercial relationship with, such as Partner Schools.
           </p>
         </div>
-        <Button asChild>
-          <Link href="/partners/new">New Business Partner</Link>
-        </Button>
+        {canManage && (
+          <Button asChild>
+            <Link href="/partners/new">New Business Partner</Link>
+          </Button>
+        )}
       </div>
 
       <div className="bg-white dark:bg-slate-900 shadow rounded-lg overflow-hidden border border-transparent dark:border-slate-800">
@@ -61,11 +66,13 @@ export default async function PartnersPage({ params }: { params: Promise<{ local
                 </td>
                 <td className="px-6 py-4 text-right">
                   <Link href={`/partners/${partner.id}`} className="text-sm underline mr-4">
-                    Invitations
+                    {canManage ? 'Open' : 'Rewards'}
                   </Link>
-                  <Link href={`/partners/${partner.id}/edit`} className="text-sm underline">
-                    Edit
-                  </Link>
+                  {canManage && (
+                    <Link href={`/partners/${partner.id}/edit`} className="text-sm underline">
+                      Edit
+                    </Link>
+                  )}
                 </td>
               </tr>
             ))}
