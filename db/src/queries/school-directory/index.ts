@@ -4,9 +4,10 @@ import { businessPartners, partnerSchoolProfiles, schoolSupplyLists } from '../.
 import type { SchoolSupplyListExecutor } from '../school-supply-lists';
 
 /**
- * Partner School directory: active Business Partners that have a school profile,
- * with their published School Supply Lists. Like the other partner queries these
- * never import `connection.ts`: callers pass the executor.
+ * Partner School directory: Business Partners that have a school profile, with
+ * their published School Supply Lists. The partner's status never filters it
+ * (ADR-0012). Like the other partner queries these never import `connection.ts`:
+ * callers pass the executor.
  */
 
 export interface SearchPartnerSchoolsParams {
@@ -51,8 +52,6 @@ export interface PublishedListRow {
   publicCode: string;
 }
 
-const isActivePartnerSchool = eq(businessPartners.status, 'active');
-
 const publishedListCount = sql<number>`(
   select count(*) from ${schoolSupplyLists}
   where ${schoolSupplyLists.businessPartnerId} = ${businessPartners.id}
@@ -75,7 +74,7 @@ function escapeLike(value: string): string {
 }
 
 function directoryFilter(params: Omit<SearchPartnerSchoolsParams, 'limit' | 'offset'>) {
-  const conditions: (SQL | undefined)[] = [isActivePartnerSchool];
+  const conditions: (SQL | undefined)[] = [];
   if (params.query) {
     const pattern = `%${escapeLike(params.query)}%`;
     conditions.push(
@@ -101,7 +100,7 @@ function directoryFilter(params: Omit<SearchPartnerSchoolsParams, 'limit' | 'off
   return and(...conditions);
 }
 
-/** One page of active Partner Schools sorted by English name, and the total match count. */
+/** One page of Partner Schools sorted by English name, and the total match count. */
 export async function searchPartnerSchools(
   executor: SchoolSupplyListExecutor,
   { limit, offset, ...filter }: SearchPartnerSchoolsParams,
@@ -129,7 +128,7 @@ export async function searchPartnerSchools(
   return { items, totalCount: total };
 }
 
-/** Distinct, sorted filter values of active Partner School profiles. */
+/** Distinct, sorted filter values of Partner School profiles. */
 export async function getPartnerSchoolFilterOptions(
   executor: SchoolSupplyListExecutor,
 ): Promise<PartnerSchoolFilterOptionsRow> {
@@ -137,8 +136,7 @@ export async function getPartnerSchoolFilterOptions(
     const rows = await executor
       .selectDistinct({ value: column })
       .from(partnerSchoolProfiles)
-      .innerJoin(businessPartners, eq(businessPartners.id, partnerSchoolProfiles.businessPartnerId))
-      .where(and(isActivePartnerSchool, sql`${column} is not null`))
+      .where(sql`${column} is not null`)
       .orderBy(asc(column));
     return rows.flatMap((row) => (row.value === null ? [] : [row.value]));
   };
@@ -150,7 +148,7 @@ export async function getPartnerSchoolFilterOptions(
   return { governorates, schoolTypes, academicSystems };
 }
 
-/** An active Partner School by its Business Partner code, with its published lists only. */
+/** A Partner School by its Business Partner code, with its published lists only. */
 export async function getPartnerSchoolByCode(
   executor: SchoolSupplyListExecutor,
   code: string,
@@ -162,7 +160,7 @@ export async function getPartnerSchoolByCode(
       partnerSchoolProfiles,
       eq(partnerSchoolProfiles.businessPartnerId, businessPartners.id),
     )
-    .where(and(isActivePartnerSchool, eq(businessPartners.code, code)))
+    .where(eq(businessPartners.code, code))
     .limit(1);
   if (!school) return null;
 

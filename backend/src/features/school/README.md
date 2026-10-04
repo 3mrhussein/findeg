@@ -29,6 +29,13 @@ Partner. School profile attributes live there, rather than being repeated on lis
   version cannot displace a newer occupant of the slot.
 - `archive` retires a published list without a replacement and frees its slot.
   Archived versions remain readable and cannot be un-archived; clone instead.
+- The owning Business Partner's status gates authoring (ADR-0012): `publish`
+  (including a replacement) needs `onboarding` or `active`; `createDraft`,
+  `cloneToDraft` and every draft edit are refused once it is `closed`. Both
+  return `partner-status-not-allowed`. The check reads the Business Partner row
+  under the lifecycle's Partner School lock, so a concurrent status change
+  waits for it.
+  Archiving, reads and List Offers ignore the status.
 
 Every operation returns a typed `SupplyListResult`: success carries `data`,
 expected business rejections carry `error`, and technical failures throw.
@@ -51,15 +58,15 @@ query). `offer` is reserved and always `null` until the List Offer spec.
 
 ## Partner School directory (#217)
 
-`createSchoolDirectory()` backs `/schools`. It reads active Business Partners
-that have a `partner_school_profiles` row (onboarding, suspended and closed
-partners and non-school partners are hidden). `searchSchools` matches the
+`createSchoolDirectory()` backs `/schools`. It reads Business Partners that
+have a `partner_school_profiles` row, whatever their status (ADR-0012);
+non-school partners are hidden. `searchSchools` matches the
 English or Arabic name, filters by governorate, school type and academic
 system, optionally only schools with a published list, and pages by English
 name. `getByCode(code)` returns the school profile with its published lists
 only, each carrying the `publicCode` behind `/lists/<publicCode>`; drafts and
 archived lists never appear, and a school with none returns an empty `lists`.
-`getFilterOptions` returns the distinct profile values of active schools.
+`getFilterOptions` returns the distinct Partner School profile values.
 
 ## Migration
 
