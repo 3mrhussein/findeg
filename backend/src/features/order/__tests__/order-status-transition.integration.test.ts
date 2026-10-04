@@ -97,6 +97,18 @@ describe('transitionOrderStatus on real Postgres', () => {
     };
   }
 
+  async function stockEffect(orderId: number, variantId: number) {
+    const [balance] = await testDb.db
+      .select()
+      .from(inventoryBalances)
+      .where(eq(inventoryBalances.variantId, variantId));
+    const movements = await testDb.db
+      .select({ movementType: stockMovements.movementType })
+      .from(stockMovements)
+      .where(eq(stockMovements.referenceId, String(orderId)));
+    return { balance, movementTypes: movements.map((movement) => movement.movementType).sort() };
+  }
+
   it('rejects an invalid transition and lists the allowed targets', async () => {
     const { orderId } = await acceptOrder();
 
@@ -213,7 +225,9 @@ describe('transitionOrderStatus on real Postgres', () => {
     const { orderId } = await acceptOrder();
     for (const step of path) await transitionOrderStatus(orderId, { status: step });
 
-    await expect(transitionOrderStatus(orderId, { status: 'refunded' })).rejects.toEqual(
+    const refund = transitionOrderStatus(orderId, { status: 'refunded' });
+    await expect(refund).rejects.toBeInstanceOf(InvalidOrderStatusTransitionError);
+    await expect(refund).rejects.toEqual(
       expect.objectContaining<Partial<InvalidOrderStatusTransitionError>>({
         from,
         to: 'refunded',
@@ -239,20 +253,10 @@ describe('transitionOrderStatus on real Postgres', () => {
       changed: false,
     });
 
-    const [balance] = await testDb.db
-      .select()
-      .from(inventoryBalances)
-      .where(eq(inventoryBalances.variantId, variantId));
-    const movements = await testDb.db
-      .select({ movementType: stockMovements.movementType })
-      .from(stockMovements)
-      .where(eq(stockMovements.referenceId, String(orderId)));
+    const { balance, movementTypes } = await stockEffect(orderId, variantId);
 
     expect(balance).toMatchObject({ onHand: 10, reserved: 0 });
-    expect(movements.map((movement) => movement.movementType).sort()).toEqual([
-      'release',
-      'reserve',
-    ]);
+    expect(movementTypes).toEqual(['release', 'reserve']);
   });
 
   it('refunding a delivered Order has no automatic stock effect', async () => {
@@ -267,20 +271,10 @@ describe('transitionOrderStatus on real Postgres', () => {
       status: 'refunded',
     });
 
-    const [balance] = await testDb.db
-      .select()
-      .from(inventoryBalances)
-      .where(eq(inventoryBalances.variantId, variantId));
-    const movements = await testDb.db
-      .select({ movementType: stockMovements.movementType })
-      .from(stockMovements)
-      .where(eq(stockMovements.referenceId, String(orderId)));
+    const { balance, movementTypes } = await stockEffect(orderId, variantId);
 
     expect(balance).toMatchObject({ onHand: 8, reserved: 0 });
-    expect(movements.map((movement) => movement.movementType).sort()).toEqual([
-      'consume',
-      'reserve',
-    ]);
+    expect(movementTypes).toEqual(['consume', 'reserve']);
   });
 
   it('routes Admin status updates through the transition and retains the audit log', async () => {

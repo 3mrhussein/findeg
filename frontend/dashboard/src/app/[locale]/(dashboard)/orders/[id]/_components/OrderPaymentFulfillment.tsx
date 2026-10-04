@@ -40,6 +40,8 @@ export function OrderPaymentFulfillment({ order }: OrderPaymentFulfillmentProps)
   const { toast } = useToast();
   const [trackingNumber, setTrackingNumber] = useState(order.trackingNumber || '');
   const allowedTargets = getAllowedOrderStatusTransitions(order.status);
+  // A delivered Order's only next status is refunded, which the header's refund action owns.
+  const hasSelectableTarget = STATUS_FLOW.some((s) => allowedTargets.includes(s.value));
 
   /**
    *
@@ -107,7 +109,7 @@ export function OrderPaymentFulfillment({ order }: OrderPaymentFulfillmentProps)
         <div className="space-y-2">
           <Label className="text-xs uppercase text-muted-foreground">Logistical Status</Label>
           <Select
-            disabled={isPending || allowedTargets.length === 0}
+            disabled={isPending || !hasSelectableTarget}
             onValueChange={handleStatusChange}
             defaultValue={order.status}
           >

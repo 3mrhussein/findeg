@@ -26,6 +26,11 @@ describe('Order status actions', () => {
     expect(screen.queryByText(cancelHint)).not.toBeInTheDocument();
   });
 
+  it('leaves a delivered Order no status to pick, since refunding is a separate action', () => {
+    render(<OrderPaymentFulfillment order={order('delivered')} />);
+    expect(screen.getByRole('combobox')).toBeDisabled();
+  });
+
   it.each(['processing', 'shipped'] as const)('offers no refund for a paid %s Order', (status) => {
     render(<OrderHeader order={order(status, 'paid')} />);
     expect(screen.queryByRole('button', { name: /refund/i })).not.toBeInTheDocument();
