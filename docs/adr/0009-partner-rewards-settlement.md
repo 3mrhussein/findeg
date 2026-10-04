@@ -4,7 +4,7 @@ status: proposed
 
 # Partner Rewards settlement
 
-ADR-0006 built the Partner Rewards ledger (accrue, earn, reverse, adjust) and left settlement out, reserving a `settlement` event kind. `develop` (reference only) settled partner-wide through a per-order correction API. It required an `orderReference` that was only a label, a Finance-registered opaque "verified bank account" ID, proportional points/EGP allocation, and an `available = max(earned − settled, 0)` clamp. Research: `docs/research/partner-rewards-attribution.md` (branch `research/partner-rewards-attribution`).
+ADR-0006 built the Partner Rewards ledger (accrue, earn, reverse, adjust) and left settlement out, reserving a `settlement` event kind. `develop` (reference only) settled partner-wide through a per-order correction API. It required an `orderReference` that was only a label, a Finance-registered opaque "verified bank account" ID, proportional points/EGP allocation, and an `available = max(earned − settled, 0)` clamp. The research file lives on branch `research/partner-rewards-attribution`, not on main.
 
 Depends on ADR-0003 (`business_partners`) and ADR-0006 (ledger, `rewards` schema, `partner-rewards` feature). Amends ADR-0006 by dropping the reserved `settlement` event kind.
 

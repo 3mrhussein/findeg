@@ -44,7 +44,7 @@ _Avoid_: Active/inactive (conflates status with visibility)
 
 **List Selection**:
 A Customer's in-progress choices against one published School Supply List (a variant and quantity per list item), kept apart from the Cart and from every other list, and checked out as its own Order.
-_Avoid_: Cart, list cart, cart kit, list session
+_Avoid_: Cart, list cart, cart kit, kit, list session
 
 **List Completeness**:
 Whether a List Selection covers every required list item at its prescribed quantity, with any eligible substitute counting. It is advisory and never blocks checkout.
@@ -75,7 +75,7 @@ _Avoid_: Partner portal, partner dashboard
 ### Checkout
 
 **Quote**:
-The server's authoritative pricing of a set of lines (unit prices, discounts, shipping, total) at a moment in time, carrying a Confirmation.
+The server's authoritative pricing of a set of lines (unit prices, discounts, shipping, total) at a moment in time, carrying a Confirmation. Discounts are per-line entries tagged by their source (currently only the List Offer).
 _Avoid_: Estimate, cart total
 
 **Confirmation**:
@@ -103,7 +103,7 @@ The durable record of messages that must be sent because something was committed
 _Avoid_: Queue, notification log, email jobs
 
 **Order Reference**:
-The short, public, human-readable identifier of an Order, used by Customers, couriers, and support.
+The short, public, human-readable identifier of an Order, used by Customers, couriers, and support. Its format is `FE-` plus 6 characters, and it is not a secret.
 _Avoid_: Order number, order id, tracking code
 
 ### Partner Rewards

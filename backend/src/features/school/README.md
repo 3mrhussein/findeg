@@ -74,7 +74,6 @@ gate to a list.
 
 The shared pure `eligibleVariants` function and catalog candidate/attribute
 queries from #208 serve this lifecycle and the later read/checkout paths.
-Checkout, List Offers and authoring UI are outside the lifecycle (#210).
 
 ## Verification
 
