@@ -14,6 +14,7 @@ import {
   schoolSupplyLists,
   variantAttributes,
   warehouses,
+  type PartnerStatus,
 } from '@findeg/db/schema';
 import {
   connectToTestDatabase,
@@ -850,5 +851,110 @@ describe('Staff School Supply List lifecycle on real Postgres', () => {
       },
     );
     expect(data(await service.getById(staff, list.id)).items[0].quantity).toBe(2);
+  });
+
+  describe('Business Partner Status (ADR-0012)', () => {
+    const statuses = [
+      { status: 'onboarding', canPublish: true, canDraft: true },
+      { status: 'active', canPublish: true, canDraft: true },
+      { status: 'suspended', canPublish: false, canDraft: true },
+      { status: 'closed', canPublish: false, canDraft: false },
+    ] as const;
+    const rejected = { success: false, error: 'partner-status-not-allowed' };
+
+    async function setStatus(businessPartnerId: number, status: PartnerStatus) {
+      await testDb.db
+        .update(businessPartners)
+        .set({ status })
+        .where(eq(businessPartners.id, businessPartnerId));
+    }
+
+    it.each(statuses)('$status: publish allowed is $canPublish', async ({ status, canPublish }) => {
+      const { list } = await readyDraft();
+      await setStatus(list.businessPartnerId, status);
+
+      const result = await service.publish(staff, list.id);
+
+      if (canPublish) {
+        expect(data(result).list.status).toBe('published');
+      } else {
+        expect(result).toEqual(rejected);
+        expect(data(await service.getById(staff, list.id))).toMatchObject({
+          status: 'draft',
+          publicCode: null,
+        });
+      }
+    });
+
+    it.each(statuses)('$status: replace allowed is $canPublish', async ({ status, canPublish }) => {
+      const { list } = await readyDraft();
+      data(await service.publish(staff, list.id));
+      const clone = data(await service.cloneToDraft(staff, list.id));
+      await setStatus(list.businessPartnerId, status);
+
+      const result = await service.publish(staff, clone.id);
+
+      const source = data(await service.getById(staff, list.id));
+      if (canPublish) {
+        expect(data(result).list).toMatchObject({ status: 'published', replacesListId: list.id });
+        expect(source).toMatchObject({ status: 'archived', replacedById: clone.id });
+      } else {
+        expect(result).toEqual(rejected);
+        expect(source).toMatchObject({ status: 'published', replacedById: null });
+        expect(data(await service.getById(staff, clone.id)).status).toBe('draft');
+      }
+    });
+
+    it.each(statuses)(
+      '$status: creating or editing a draft allowed is $canDraft',
+      async ({ status, canDraft }) => {
+        const { list, item, defaultVariant } = await readyDraft();
+        const { list: published } = await readyDraft(list.businessPartnerId, 'Grade 2');
+        data(await service.publish(staff, published.id));
+        await setStatus(list.businessPartnerId, status);
+
+        const results = [
+          await service.createDraft(staff, {
+            businessPartnerId: list.businessPartnerId,
+            grade: 'Grade 3',
+            academicYear: '2026/2027',
+            localizedTitle: { en: 'Grade 3' },
+          }),
+          await service.cloneToDraft(staff, published.id),
+          await service.updateDraft(staff, list.id, { localizedTitle: { en: 'Renamed' } }),
+          await service.updateItem(staff, list.id, item.id, { quantity: 3 }),
+          await service.reorderItems(staff, list.id, [item.id]),
+          await service.addItem(staff, list.id, {
+            variantId: defaultVariant.id,
+            exactItem: true,
+            localizedLabel: { en: 'Second pen' },
+          }),
+          await service.removeItem(staff, list.id, item.id),
+        ];
+
+        if (canDraft) {
+          for (const result of results) expect(result.success).toBe(true);
+        } else {
+          expect(results).toEqual(results.map(() => rejected));
+          expect(data(await service.getById(staff, list.id))).toMatchObject({
+            localizedTitle: list.localizedTitle,
+            items: [expect.objectContaining({ id: item.id, quantity: 2 })],
+          });
+          expect(data(await service.listForPartner(staff, list.businessPartnerId))).toHaveLength(2);
+        }
+      },
+    );
+
+    it("still lets Staff archive, read and set the offer of a closed Business Partner's list", async () => {
+      const { list } = await readyDraft();
+      data(await service.publish(staff, list.id));
+      await setStatus(list.businessPartnerId, 'closed');
+
+      expect(data(await service.getById(staff, list.id)).status).toBe('published');
+      data(
+        await service.setOffer(staff, list.id, { basisPoints: 1000, startsAt: now, endsAt: null }),
+      );
+      expect(data(await service.archive(staff, list.id)).status).toBe('archived');
+    });
   });
 });

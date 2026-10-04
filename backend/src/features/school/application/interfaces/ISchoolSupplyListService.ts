@@ -29,6 +29,8 @@ export type SupplyListError =
   | 'forbidden'
   | 'invalid-input'
   | 'partner-school-not-found'
+  /** The owning Business Partner's status forbids this authoring action (ADR-0012). */
+  | 'partner-status-not-allowed'
   | 'not-found'
   | 'item-not-found'
   | 'not-draft'

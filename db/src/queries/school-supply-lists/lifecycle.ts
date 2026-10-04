@@ -20,7 +20,11 @@ export type SupplyListDraftInput = CreateSupplyListDraftInput;
 export type SupplyListDraftPatch = UpdateSupplyListDraftInput;
 export type { SupplyListItemInput } from '../../types/school-supply-lists';
 
-/** Serialize one school's lifecycle, always before taking list locks. */
+/**
+ * Serialize one school's lifecycle, always before taking list locks. The lock
+ * also pins the returned partner's `status` until commit, so a status check on
+ * it holds for the whole transaction.
+ */
 export async function lockSupplyListPartner(tx: SchoolSupplyListTransaction, id: number) {
   const [partner] = await tx
     .select()
