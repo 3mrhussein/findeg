@@ -24,3 +24,4 @@ export {
   type AcceptedRewardsInput,
   type RewardRateSnapshot,
 } from './acceptance';
+export { evaluateEarnEligibility } from './earn';

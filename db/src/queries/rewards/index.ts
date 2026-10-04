@@ -1,7 +1,7 @@
-import { and, desc, eq, notExists, sql } from 'drizzle-orm';
+import { and, desc, eq, exists, notExists, sql } from 'drizzle-orm';
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import type { NewRewardEntitlement, NewRewardRate } from '../../schema';
-import { rewardEntitlements, rewardEvents, rewardRates } from '../../schema';
+import { orderItems, rewardEntitlements, rewardEvents, rewardRates } from '../../schema';
 import * as schema from '../../schema';
 
 export type RewardsDatabase = PostgresJsDatabase<typeof schema>;
@@ -80,5 +80,76 @@ export async function getPendingRewardTotals(executor: RewardsExecutor, business
     })
     .from(rewardEntitlements)
     .where(and(eq(rewardEntitlements.businessPartnerId, businessPartnerId), notExists(settled)));
+  return { points: BigInt(row.points), egpValuePiasters: BigInt(row.egpValuePiasters) };
+}
+
+/**
+ * Appends a `paid` (earned) event for each of the Order's entitlements that is not already
+ * earned, cancelled or reversed. The unique `paid` index makes concurrent callers earn once.
+ */
+export async function earnOrderRewardEntitlements(executor: RewardsExecutor, orderId: number) {
+  const voided = executor
+    .select({ one: sql`1` })
+    .from(rewardEvents)
+    .where(
+      and(
+        eq(rewardEvents.entitlementId, rewardEntitlements.id),
+        sql`${rewardEvents.eventType} in ('cancellation', 'reversal')`,
+      ),
+    );
+  const eligible = await executor
+    .select({ entitlement: rewardEntitlements })
+    .from(rewardEntitlements)
+    .innerJoin(orderItems, eq(orderItems.id, rewardEntitlements.orderItemId))
+    .where(and(eq(orderItems.orderId, orderId), notExists(voided)));
+  if (eligible.length === 0) return;
+
+  await executor
+    .insert(rewardEvents)
+    .values(
+      eligible.map(({ entitlement }) => ({
+        businessPartnerId: entitlement.businessPartnerId,
+        entitlementId: entitlement.id,
+        eventType: 'paid' as const,
+        points: entitlement.points,
+        egpValuePiasters: entitlement.egpValuePiasters,
+      })),
+    )
+    .onConflictDoNothing();
+}
+
+/** Points and EGP earned (paid event, not since reversed) for a Partner. */
+export async function getEarnedRewardTotals(executor: RewardsExecutor, businessPartnerId: number) {
+  const reversed = executor
+    .select({ one: sql`1` })
+    .from(rewardEvents)
+    .where(
+      and(
+        eq(rewardEvents.entitlementId, rewardEntitlements.id),
+        sql`${rewardEvents.eventType} in ('cancellation', 'reversal')`,
+      ),
+    );
+  const earned = executor
+    .select({ one: sql`1` })
+    .from(rewardEvents)
+    .where(
+      and(
+        eq(rewardEvents.entitlementId, rewardEntitlements.id),
+        eq(rewardEvents.eventType, 'paid'),
+      ),
+    );
+  const [row] = await executor
+    .select({
+      points: sql<string>`coalesce(sum(${rewardEntitlements.points}), 0)`,
+      egpValuePiasters: sql<string>`coalesce(sum(${rewardEntitlements.egpValuePiasters}), 0)`,
+    })
+    .from(rewardEntitlements)
+    .where(
+      and(
+        eq(rewardEntitlements.businessPartnerId, businessPartnerId),
+        exists(earned),
+        notExists(reversed),
+      ),
+    );
   return { points: BigInt(row.points), egpValuePiasters: BigInt(row.egpValuePiasters) };
 }

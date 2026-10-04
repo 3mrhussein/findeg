@@ -55,12 +55,7 @@ export interface OrderCountByStatus {
 
 export { generateOrderReference };
 
-const ALLOWED_MUTABLE_ORDER_COLUMNS = new Set([
-  'paymentStatus',
-  'trackingNumber',
-  'adminNotes',
-  'updatedAt',
-]);
+const ALLOWED_MUTABLE_ORDER_COLUMNS = new Set(['trackingNumber', 'adminNotes', 'updatedAt']);
 
 export function assertMutableOrderColumns(update: Record<string, unknown>): void {
   for (const key of Object.keys(update)) {
@@ -447,21 +442,6 @@ export async function updateOrder(
   await (tx ?? db)
     .update(orders)
     .set({ ...data, updatedAt: new Date() })
-    .where(eq(orders.id, Number(id)));
-}
-
-/**
- * Update payment status
- */
-export async function updatePaymentStatus(
-  id: ID | string,
-  status: PaymentStatus,
-  tx?: DbTransaction,
-): Promise<void> {
-  assertMutableOrderColumns({ paymentStatus: status });
-  await (tx ?? db)
-    .update(orders)
-    .set({ paymentStatus: status, updatedAt: new Date() })
     .where(eq(orders.id, Number(id)));
 }
 

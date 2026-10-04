@@ -3,11 +3,8 @@ import { IAuditLogService } from '../interfaces/IAuditLogService';
 import type { OrderStatusUpdate } from '@findeg/backend/features/order';
 import { PaymentStatus, OrderStatus } from '../../../core/domain/types/common';
 import { transitionOrderStatus } from '../../../order/application/services/transition-order-status';
-import {
-  canTransitionPaymentStatus,
-  getAllowedPaymentStatusTransitions,
-  normalizePaymentStatus,
-} from '../../../order/application/utils/order-payment-status-transitions';
+import { transitionPaymentStatus } from '../../../order/application/services/transition-payment-status';
+import { normalizePaymentStatus } from '../../../order/application/utils/order-payment-status-transitions';
 import { ShippingAddress } from '../../../order/domain/value-objects';
 import { type Order } from '../../../order/domain/entities/Order';
 import { orderQueries } from '@findeg/db/queries';
@@ -129,34 +126,8 @@ export class AdminOrderService implements IAdminOrderService {
    * @throws Error if the order is not found.
    */
   async updatePaymentStatus(id: number, status: PaymentStatus): Promise<void> {
-    const result = await orderQueries.getById(id);
-    if (!result) {
-      throw new Error(`Order #${id} not found`);
-    }
-
-    const order = this.mapToDomain(result.order, result.items);
-
-    const oldStatus = normalizePaymentStatus(order.paymentStatus);
-    const nextStatus = normalizePaymentStatus(status);
-    const isValidTransition = canTransitionPaymentStatus(oldStatus, nextStatus);
-
-    if (!isValidTransition) {
-      const allowedTargets = getAllowedPaymentStatusTransitions(oldStatus);
-      const allowedList = allowedTargets.length > 0 ? allowedTargets.join(', ') : 'none';
-      throw new Error(
-        `Invalid payment status transition from ${oldStatus} to ${nextStatus}. Allowed: ${allowedList}.`,
-      );
-    }
-
-    await orderQueries.updatePaymentStatus(id, status);
-
-    await this.auditLogService.logAction({
-      entityType: 'order',
-      entityId: String(id),
-      action: 'update_payment_status',
-      oldValues: { paymentStatus: oldStatus },
-      newValues: { paymentStatus: nextStatus },
-    });
+    // The audit row is written by the transition, in the same transaction as the change.
+    await transitionPaymentStatus(id, normalizePaymentStatus(status));
   }
 
   /**
