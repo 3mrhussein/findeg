@@ -4,6 +4,8 @@ status: accepted
 
 # Partner Reports
 
+> **Amended by ADR-0013:** only the sales view remains, read from attributed Orders; the Reward Statement, Available Balance and settlement history are removed. ADR-0012 confirms report access in every Business Partner Status.
+
 Partner Schools need to see what they have earned and been paid, without learning anything about the Customers who bought from their lists. `develop` (reference only) shipped one Partner report. It had a cumulative Reward Statement with `available` clamped at 0, and a daily table of paid sales in UTC, grouped by list item and variant with raw IDs. Groups under 3 Orders were dropped. Balances were never suppressed, refunded Orders were still counted, and the sales table did not reconcile with the statement. The research file lives on branch `docs/research-partner-reports`, not on main.
 
 Depends on ADR-0003 (Partner Membership, `/partner/[code]` in `frontend/storefront`), ADR-0006 (ledger), ADR-0008 (Guest Order Access) and ADR-0009 (settlements, signed Available Balance).

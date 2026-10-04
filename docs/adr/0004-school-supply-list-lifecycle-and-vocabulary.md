@@ -4,6 +4,8 @@ status: accepted
 
 # School Supply List: vocabulary rename, lifecycle, and substitution model
 
+> **Amended by ADR-0012:** publishing and replacing need an `onboarding` or `active` Business Partner; drafting is blocked once it is `closed`. Reads and the directory ignore its status.
+
 Main's `school_lists` feature predates issue #50's School Supply List domain and diverges from it structurally, not just terminologically: there is no draft/publish/replace lifecycle (only `isActive`/`publishedAt`), substitution is an admin-curated join table rather than a computed eligibility rule, and "School" is denormalized free text on each list row (`school_lists.schoolName`/`governorate`/`area`/`schoolType`/`academicSystem` — `db/src/schema/school-engine/school-lists.ts:28-66`) rather than a referenced entity. `develop` (mined as reference only) solved the same problem with a different, incompatible mechanism in each case. We decide here how main adopts develop's concepts, translated into main's own feature-barrel/Drizzle conventions, and do the vocabulary rename in the same change as the behavior it belongs to.
 
 This ADR depends on ADR-0003 (Partner Membership Model): the `businessPartnerId` FK below references the `businessPartners` table ADR-0003 introduces, so this work cannot be implemented before that table exists.
