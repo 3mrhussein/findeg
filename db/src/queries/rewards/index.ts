@@ -199,7 +199,10 @@ export async function insertRewardAdjustment(
   const [row] = await executor
     .insert(rewardEvents)
     .values({ ...values, eventType: 'adjustment', points: 0n })
-    .onConflictDoNothing()
+    .onConflictDoNothing({
+      target: [rewardEvents.businessPartnerId, rewardEvents.idempotencyKey],
+      where: sql`${rewardEvents.eventType} = 'adjustment'`,
+    })
     .returning();
   return row;
 }

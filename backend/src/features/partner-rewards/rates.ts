@@ -20,8 +20,6 @@ import {
 } from './staff-access';
 import { parseRewardRateInput, type RewardRateInput } from './valuation';
 
-export type { RewardRateResult, RewardsStaffActor };
-
 export interface RewardRateView {
   readonly id: number;
   readonly businessPartnerId: number;
