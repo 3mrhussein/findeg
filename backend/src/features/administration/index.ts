@@ -5,7 +5,11 @@ export type { IAdminCategoryService } from './application/interfaces/IAdminCateg
 export type { IAdminCollectionService } from './application/interfaces/IAdminCollectionService';
 export type { IAdminDashboardService } from './application/interfaces/IAdminDashboardService';
 export type { IAdminInventoryService } from './application/interfaces/IAdminInventoryService';
-export type { IAdminOrderService } from './application/interfaces/IAdminOrderService';
+export type {
+  IAdminOrderService,
+  OrderStaffActor,
+} from './application/interfaces/IAdminOrderService';
+export { assertCanWriteOrders } from './domain/orderWritePermission';
 export type {
   ProductListFilters,
   ProductListItem,

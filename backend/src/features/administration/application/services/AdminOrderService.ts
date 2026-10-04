@@ -1,4 +1,9 @@
-import { DashboardStats, IAdminOrderService } from '../interfaces/IAdminOrderService';
+import {
+  DashboardStats,
+  IAdminOrderService,
+  type OrderStaffActor,
+} from '../interfaces/IAdminOrderService';
+import { assertCanWriteOrders } from '../../domain/orderWritePermission';
 import { IAuditLogService } from '../interfaces/IAuditLogService';
 import type { OrderStatusUpdate } from '@findeg/backend/features/order';
 import { PaymentStatus, OrderStatus } from '../../../core/domain/types/common';
@@ -91,11 +96,14 @@ export class AdminOrderService implements IAdminOrderService {
    * Updates the logistical status of an order (e.g., 'Shipped') and adds tracking info.
    * Triggers an audit log entry for the status change.
    *
+   * @param actor - The Staff member making the change, recorded on the audit row.
    * @param id - The order ID.
    * @param update - Status, tracking number, and internal notes.
+   * @throws NotAuthorizedError if the actor lacks order-write access.
    * @throws Error if the order is not found.
    */
-  async updateStatus(id: number, update: OrderStatusUpdate): Promise<void> {
+  async updateStatus(actor: OrderStaffActor, id: number, update: OrderStatusUpdate): Promise<void> {
+    assertCanWriteOrders(actor);
     const result = await orderQueries.getById(id);
     if (!result) {
       throw new Error(`Order #${id} not found`);
@@ -108,7 +116,7 @@ export class AdminOrderService implements IAdminOrderService {
       entityType: 'order',
       entityId: String(id),
       action: 'update_status',
-      adminUserId: undefined,
+      adminUserId: actor.userId,
       oldValues: { status: transition.previousStatus } as Record<string, unknown>,
       newValues: {
         status: update.status,
@@ -121,18 +129,20 @@ export class AdminOrderService implements IAdminOrderService {
   /**
    * Updates the payment status for an order (e.g., 'Paid').
    *
+   * @param actor - The Staff member making the change, recorded on the audit row.
    * @param id - The order ID.
    * @param status - The new payment status string.
-   * @param adminUserId - The admin making the change, recorded on the audit row.
+   * @throws NotAuthorizedError if the actor lacks order-write access.
    * @throws Error if the order is not found.
    */
   async updatePaymentStatus(
+    actor: OrderStaffActor,
     id: number,
     status: PaymentStatus,
-    adminUserId?: number,
   ): Promise<void> {
+    assertCanWriteOrders(actor);
     // The audit row is written by the transition, in the same transaction as the change.
-    await transitionPaymentStatus(id, normalizePaymentStatus(status), { userId: adminUserId });
+    await transitionPaymentStatus(id, normalizePaymentStatus(status), { userId: actor.userId });
   }
 
   /**

@@ -13,6 +13,8 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      '@lib': path.resolve(__dirname, './src/lib'),
+      '@findeg/backend': path.resolve(__dirname, '../../backend/src'),
     },
   },
 });
