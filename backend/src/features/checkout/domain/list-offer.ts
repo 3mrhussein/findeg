@@ -1,8 +1,4 @@
-/**
- * List Offer arithmetic (ADR-0007). Money is integer piasters and the per-line
- * rounding uses exact BigInt math, so a Customer can recompute a receipt by hand.
- */
-
+/** List Offer activity window (ADR-0007). Piaster pricing lives in `piasters.ts`. */
 export interface OfferWindow {
   startsAt: Date;
   endsAt: Date | null;

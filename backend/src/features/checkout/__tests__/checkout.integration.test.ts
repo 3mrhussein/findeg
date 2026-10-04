@@ -2171,6 +2171,36 @@ describe('Checkout feature integration tests on real Postgres', () => {
       expect(order.totalAmount).toBe('77.94');
       // gross 3015+30+60 = 3105 piasters, net 2795, discount 310
       expect(order.discountTotal).toBe('3.10');
+      const listItems = await testDb.db
+        .select()
+        .from(orderItems)
+        .where(eq(orderItems.orderId, order.id));
+      expect(listItems.map((i) => [i.unitPrice, i.discountAmount, i.lineTotal]).sort()).toEqual(
+        [
+          ['0.10', '0.03', '0.27'],
+          ['0.20', '0.06', '0.54'],
+          ['10.05', '3.01', '27.14'],
+        ].sort(),
+      );
+    });
+
+    it('reads the CHECKOUT_FLAT_SHIPPING_FEE override once as piasters', async () => {
+      const previous = process.env.CHECKOUT_FLAT_SHIPPING_FEE;
+      process.env.CHECKOUT_FLAT_SHIPPING_FEE = '35.5';
+      try {
+        const service = createCheckoutService();
+        const v = await createVariantWithStock({ price: '1.10', onHand: 5 });
+        const quote = await service.validate({
+          source: 'cart',
+          lines: [{ variantId: v.variantId, quantity: 1 }],
+        });
+        expect(quote.success && quote.data.shipping).toBe(35.5);
+        process.env.CHECKOUT_FLAT_SHIPPING_FEE = '1.005';
+        expect(() => createCheckoutService()).toThrow(/Invalid shipping fee/);
+      } finally {
+        if (previous === undefined) delete process.env.CHECKOUT_FLAT_SHIPPING_FEE;
+        else process.env.CHECKOUT_FLAT_SHIPPING_FEE = previous;
+      }
     });
 
     it('refuses to start with a fractional-piaster or invalid shipping fee', () => {
