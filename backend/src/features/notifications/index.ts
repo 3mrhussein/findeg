@@ -8,4 +8,5 @@ export type { NotificationServices } from './application/services/factory';
 export { default as OrderConfirmationEmail } from './infrastructure/templates/OrderConfirmationEmail';
 export { default as OrderStatusUpdateEmail } from './infrastructure/templates/OrderStatusUpdateEmail';
 export { default as GuestAccessCodeEmail } from './infrastructure/templates/GuestAccessCodeEmail';
+export { default as PartnerInvitationEmail } from './infrastructure/templates/PartnerInvitationEmail';
 export type { IEmailService } from './application/services/IEmailService';

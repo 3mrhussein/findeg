@@ -46,14 +46,22 @@ export type RevokeError = ResendError;
 /**
  * Delivery seam (ADR-0008). Called on the caller's open transaction `tx`, so an
  * Outbox implementation can write its row atomically with the invitation. The
- * message holds references only; the raw token of this send attempt is passed
- * alongside and never stored. Until the Outbox exists the default
- * implementation does nothing, and Staff copy the link from the token the
- * operation returns.
+ * message holds references only; the raw token the operation returns is passed
+ * alongside and an implementation must not store it. Delivery mints its own
+ * token per send attempt (`issueDeliveryToken`). The default implementation does
+ * nothing; Staff can always copy the link from the token the operation returns.
  */
 export interface PartnerInvitationMessage {
   kind: 'partner-invitation';
   invitationId: number;
+}
+
+/** What the Invitation email needs for one send attempt, with that attempt's fresh raw token. */
+export interface InvitationDelivery {
+  email: string;
+  partner: { nameEn: string; nameAr: string };
+  token: string;
+  expiresAt: Date;
 }
 
 export type EnqueueInvitation = (
@@ -87,5 +95,11 @@ export interface IInvitationService {
     actor: InvitationActor,
     partnerId: number,
   ): Promise<PartnerResult<PartnerInvitation[], 'forbidden'>>;
+  /**
+   * For the Outbox handler: mints a fresh token for the invitation and stores its digest beside
+   * the earlier ones. Null when the invitation is no longer pending (accepted, revoked, expired)
+   * or its Business Partner is no longer open; nothing is minted then.
+   */
+  issueDeliveryToken(invitationId: number): Promise<InvitationDelivery | null>;
   getInvitation(token: string): Promise<PartnerResult<InvitationView, 'not-found'>>;
 }

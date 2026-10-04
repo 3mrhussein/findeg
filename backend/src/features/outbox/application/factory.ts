@@ -1,19 +1,24 @@
 import { outboxQueries } from '@findeg/db/queries';
+import { createPartnerMembershipServices, type IInvitationService } from '../../partner-membership';
 import { OutboxService } from './OutboxService';
 import {
   GUEST_ACCESS_KIND,
   ORDER_ACCEPTED_KIND,
   ORDER_STATUS_KIND,
+  PARTNER_INVITATION_KIND,
   type OutboxHandlers,
 } from '../domain/types';
 import { ResendEmailProvider, type EmailProvider } from '../infrastructure/EmailProvider';
 import { createGuestAccessHandler } from '../infrastructure/guest-access-handler';
+import { createPartnerInvitationHandler } from '../infrastructure/partner-invitation-handler';
 import { createOrderStatusHandler } from '../infrastructure/order-status-handler';
 import { createOrderAcceptedHandler } from '../infrastructure/order-accepted-handler';
 
 export interface OutboxOptions {
   /** Defaults to Resend; tests pass a fake. */
   emailProvider?: EmailProvider;
+  /** Partner Invitation source; defaults to the shared database. Tests inject their own. */
+  invitations?: IInvitationService;
   /** Extra or overriding handlers, keyed by row kind. */
   handlers?: OutboxHandlers;
 }
@@ -24,6 +29,10 @@ export function createOutbox(options: OutboxOptions = {}): OutboxService {
     [ORDER_ACCEPTED_KIND]: createOrderAcceptedHandler(emailProvider),
     [ORDER_STATUS_KIND]: createOrderStatusHandler(emailProvider),
     [GUEST_ACCESS_KIND]: createGuestAccessHandler(emailProvider),
+    [PARTNER_INVITATION_KIND]: createPartnerInvitationHandler(
+      emailProvider,
+      () => options.invitations ?? createPartnerMembershipServices().invitations,
+    ),
     ...options.handlers,
   });
 }

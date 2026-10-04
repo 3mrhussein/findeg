@@ -18,8 +18,9 @@ export interface PartnerMembershipDependencies {
   /** Source of "now"; inject a fake to control invitation expiry. Defaults to the system clock. */
   clock?: () => Date;
   /**
-   * Invitation delivery (ADR-0008). Defaults to a no-op: until the Outbox exists
-   * Staff copy the link from the token that `invite` / `resendInvitation` return.
+   * Invitation delivery (ADR-0008). Defaults to a no-op; callers wire it to the Outbox so the
+   * email row commits with the invitation. Staff can always copy the link from the token that
+   * `invite` / `resendInvitation` return.
    */
   enqueue?: EnqueueInvitation;
 }
