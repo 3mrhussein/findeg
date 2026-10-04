@@ -206,12 +206,38 @@ describe('transitionOrderStatus on real Postgres', () => {
     expect(movements.filter((movement) => movement.movementType === 'consume')).toHaveLength(1);
   });
 
-  it('refunding has no automatic stock effect', async () => {
+  it.each([
+    ['processing', ['confirmed', 'processing']],
+    ['shipped', ['confirmed', 'processing', 'shipped']],
+  ] as const)('refuses to refund a %s Order before delivery', async (from, path) => {
+    const { orderId } = await acceptOrder();
+    for (const step of path) await transitionOrderStatus(orderId, { status: step });
+
+    await expect(transitionOrderStatus(orderId, { status: 'refunded' })).rejects.toEqual(
+      expect.objectContaining<Partial<InvalidOrderStatusTransitionError>>({
+        from,
+        to: 'refunded',
+        allowedTargets: expect.not.arrayContaining(['refunded']),
+      }),
+    );
+    const [order] = await testDb.db.select().from(orders).where(eq(orders.id, orderId));
+    expect(order.status).toBe(from);
+  });
+
+  it('cancelling a shipped Order releases the reservation exactly once', async () => {
     const { orderId, variantId } = await acceptOrder(2);
     await transitionOrderStatus(orderId, { status: 'confirmed' });
     await transitionOrderStatus(orderId, { status: 'processing' });
+    await transitionOrderStatus(orderId, { status: 'shipped' });
 
-    await transitionOrderStatus(orderId, { status: 'refunded' });
+    expect(await transitionOrderStatus(orderId, { status: 'cancelled' })).toMatchObject({
+      changed: true,
+      previousStatus: 'shipped',
+      status: 'cancelled',
+    });
+    expect(await transitionOrderStatus(orderId, { status: 'cancelled' })).toMatchObject({
+      changed: false,
+    });
 
     const [balance] = await testDb.db
       .select()
@@ -222,8 +248,39 @@ describe('transitionOrderStatus on real Postgres', () => {
       .from(stockMovements)
       .where(eq(stockMovements.referenceId, String(orderId)));
 
-    expect(balance).toMatchObject({ onHand: 10, reserved: 2 });
-    expect(movements.map((movement) => movement.movementType)).toEqual(['reserve']);
+    expect(balance).toMatchObject({ onHand: 10, reserved: 0 });
+    expect(movements.map((movement) => movement.movementType).sort()).toEqual([
+      'release',
+      'reserve',
+    ]);
+  });
+
+  it('refunding a delivered Order has no automatic stock effect', async () => {
+    const { orderId, variantId } = await acceptOrder(2);
+    for (const step of ['confirmed', 'processing', 'shipped', 'delivered'] as const) {
+      await transitionOrderStatus(orderId, { status: step });
+    }
+
+    expect(await transitionOrderStatus(orderId, { status: 'refunded' })).toMatchObject({
+      changed: true,
+      previousStatus: 'delivered',
+      status: 'refunded',
+    });
+
+    const [balance] = await testDb.db
+      .select()
+      .from(inventoryBalances)
+      .where(eq(inventoryBalances.variantId, variantId));
+    const movements = await testDb.db
+      .select({ movementType: stockMovements.movementType })
+      .from(stockMovements)
+      .where(eq(stockMovements.referenceId, String(orderId)));
+
+    expect(balance).toMatchObject({ onHand: 8, reserved: 0 });
+    expect(movements.map((movement) => movement.movementType).sort()).toEqual([
+      'consume',
+      'reserve',
+    ]);
   });
 
   it('routes Admin status updates through the transition and retains the audit log', async () => {

@@ -5,6 +5,7 @@ import { type Order } from '@findeg/backend/features/order';
 import { Button } from '@findeg/ui';
 import { Badge } from '@findeg/ui';
 import { Printer, RefreshCcw } from 'lucide-react';
+import { getAllowedOrderStatusTransitions } from '@findeg/backend/features/order/schemas';
 import { updateOrderStatusAction as adminUpdateOrderStatusAction } from '@actions/order-actions';
 
 import { useToast } from '@hooks/use-toast';
@@ -60,12 +61,13 @@ export function OrderHeader({ order }: OrderHeaderProps) {
             Print Packing Slip
           </a>
         </Button>
-        {order.paymentStatus === 'paid' && order.status !== 'refunded' && (
-          <Button variant="destructive" size="sm" onClick={handleRefund} disabled={isPending}>
-            <RefreshCcw className="mr-2 h-4 w-4" />
-            Process Refund
-          </Button>
-        )}
+        {order.paymentStatus === 'paid' &&
+          getAllowedOrderStatusTransitions(order.status).includes('refunded') && (
+            <Button variant="destructive" size="sm" onClick={handleRefund} disabled={isPending}>
+              <RefreshCcw className="mr-2 h-4 w-4" />
+              Process Refund
+            </Button>
+          )}
       </div>
     </div>
   );
