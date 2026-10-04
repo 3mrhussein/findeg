@@ -7,7 +7,7 @@ export {
 } from './valuation';
 export {
   type IRewardRateService,
-  type PendingRewardsView,
+  type RewardTotalsView,
   type RewardRateResult,
   type RewardRateView,
   type RewardsStaffActor,
@@ -25,3 +25,4 @@ export {
   type RewardRateSnapshot,
 } from './acceptance';
 export { evaluateEarnEligibility } from './earn';
+export { closeOrderRewards } from './close';

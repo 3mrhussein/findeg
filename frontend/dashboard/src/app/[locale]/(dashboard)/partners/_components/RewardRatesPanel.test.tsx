@@ -27,6 +27,7 @@ describe('RewardRatesPanel', () => {
         history={history}
         pending={{ points: '72', egp: '0.91' }}
         earned={{ points: '40', egp: '0.50' }}
+        reversed={{ points: '15', egp: '0.19' }}
         canManage={false}
         save={save}
       />,
@@ -37,6 +38,8 @@ describe('RewardRatesPanel', () => {
     expect(screen.getByTestId('pending-rewards')).toHaveTextContent('0.91');
     expect(screen.getByTestId('earned-rewards')).toHaveTextContent('40');
     expect(screen.getByTestId('earned-rewards')).toHaveTextContent('0.50');
+    expect(screen.getByTestId('reversed-rewards')).toHaveTextContent('15');
+    expect(screen.getByTestId('reversed-rewards')).toHaveTextContent('0.19');
     expect(screen.getAllByText('2.000000')).not.toHaveLength(0);
     expect(screen.getByText('1.250000')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Set Reward Rate' })).not.toBeInTheDocument();
@@ -50,6 +53,7 @@ describe('RewardRatesPanel', () => {
         history={[]}
         pending={{ points: '0', egp: '0.00' }}
         earned={{ points: '0', egp: '0.00' }}
+        reversed={{ points: '0', egp: '0.00' }}
         canManage
         save={save}
       />,

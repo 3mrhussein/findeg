@@ -6,8 +6,7 @@ import type { OrderStatus } from '@findeg/backend/features/core';
 import type { OrderStatusUpdate } from '../dtos/OrderStatusUpdate';
 import { getAllowedOrderStatusTransitions } from '../utils/order-status-transitions';
 import { enqueue, isNotifiedOrderStatus, ORDER_STATUS_KIND, orderStatusId } from '../../../outbox';
-import { evaluateEarnEligibility } from '../../../partner-rewards';
-import { onOrderStatusRewardsHook } from '../../domain/rewards-hook';
+import { closeOrderRewards, evaluateEarnEligibility } from '../../../partner-rewards';
 
 export class OrderNotFoundError extends Error {
   constructor(readonly orderId: number) {
@@ -65,14 +64,6 @@ export function transitionOrderStatus(
       await releaseOrderStock(orderId, tx);
     }
 
-    if (update.status === 'cancelled' || update.status === 'refunded') {
-      await onOrderStatusRewardsHook(tx, {
-        orderId,
-        previousStatus: order.status,
-        status: update.status,
-      });
-    }
-
     const fields: Partial<typeof orders.$inferInsert> = {
       status: update.status,
       updatedAt: new Date(),
@@ -81,6 +72,7 @@ export function transitionOrderStatus(
     if (update.adminNotes !== undefined) fields.adminNotes = update.adminNotes;
 
     await tx.update(orders).set(fields).where(eq(orders.id, orderId));
+    await closeOrderRewards(orderId, tx);
     await evaluateEarnEligibility(orderId, tx);
 
     // The id carries the status, so a repeated transition can't send the email twice.
