@@ -12,11 +12,13 @@ Depends on ADR-0003 (`business_partners`) and ADR-0006 (ledger, `rewards` schema
 
 **A settlement is a record, not a payment.** Finance pays a Partner School by bank transfer outside FindEg. A Staff member then records a Reward Settlement. FindEg never moves money, never integrates a disbursement provider, and has no in-kind or store-credit redemption.
 
-**Available Balance is EGP only and signed.** Available = earned EGP − reversed EGP ± adjustment EGP − settled EGP, in bigint piasters, computed on read. Pending never counts. Points stay on the Reward Statement for display but never limit a settlement, so develop's proportional allocation is not built.
+**Available Balance is EGP only and signed.** Available = earned EGP − reversed EGP ± adjustment EGP + debt forgiveness EGP − settled EGP, in bigint piasters, computed on read. Pending never counts. Points stay on the Reward Statement for display but never limit a settlement, so develop's proportional allocation is not built.
 
-**Debt nets out.** A reversal after a settlement can make available negative. The statement shows the signed value, and later earnings offset it automatically. There is no clawback, invoicing or refund blocking. Staff can write the debt off with a reason-bearing `adjustment` (ADR-0006).
+**Debt nets out.** A reversal after a settlement can make available negative. The statement shows the signed value, and later earnings offset it automatically. There is no clawback, invoicing or refund blocking. Staff can forgive the debt with a reason-bearing debt forgiveness line (below), a distinct line type rather than an ADR-0006 `adjustment`.
 
 **Partner-level settlement table.** Settlements are stored in `rewards.reward_settlements`, not in `reward_events`, which stay strictly per-entitlement. Each row holds: Business Partner, amount (bigint piasters, > 0 for a settlement), external transfer reference, paid-at date, Staff actor, notes, and an idempotency key. There is no Order Reference and no entitlement. Triggers forbid UPDATE/DELETE. The `settlement` event kind reserved by ADR-0006 is removed.
+
+**Debt forgiveness.** Debt forgiveness is a third line type in `reward_settlements` (`settlement`, `void`, `debt-forgiveness`): partner-level, a positive amount, a required reason and an idempotency key. It takes the partner lock and requires `amount ≤ debt`, so it can only bring a negative balance up to zero, never past it. It is not voidable.
 
 **Voids.** A mistaken settlement is corrected by a void row. It carries `voidsSettlementId`, the negated amount and a required reason. A unique index allows one void per original, and a void cannot itself be voided.
 
@@ -26,7 +28,7 @@ Depends on ADR-0003 (`business_partners`) and ADR-0006 (ledger, `rewards` schema
 
 **Permission.** Recording or voiding a settlement needs a new FindEg-Staff permission, `rewards.settle`, separate from `rewards.adjust`, surfaced in `frontend/dashboard`. One actor is enough, and there is no maker-checker. A settlement requires a caller-supplied idempotency key.
 
-**Concurrency.** A settlement locks the `business_partners` row `FOR UPDATE`, recomputes available in the same transaction, requires `amount ≤ available`, then inserts. Voids and partner-level write-offs take the same lock. Earning and reversals stay order-scoped (ADR-0006) and may push available negative concurrently, which the debt rule allows.
+**Concurrency.** A settlement locks the `business_partners` row `FOR UPDATE`, recomputes available in the same transaction, requires `amount ≤ available`, then inserts. Voids and partner-level debt forgiveness take the same lock. Earning and reversals stay order-scoped (ADR-0006) and may push available negative concurrently, which the debt rule allows.
 
 **Statement.** The computed Reward Statement gains `settled` and `available`. Staff see them in the dashboard. Which Partner Roles see them, and at what detail, is decided with Partner Reports.
 

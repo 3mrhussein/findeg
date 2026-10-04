@@ -12,6 +12,13 @@ export {
   type IRewardAdjustmentService,
   type RewardAdjustmentView,
 } from './adjustments';
+export {
+  type IRewardSettlementService,
+  type RewardSettlementView,
+  type SettleRewardsError,
+  type VoidSettlementError,
+  type ForgiveDebtError,
+} from './settlements';
 export { type AvailableBalanceView, type IRewardStatementService } from './statement';
 export {
   createPartnerRewardsServices,

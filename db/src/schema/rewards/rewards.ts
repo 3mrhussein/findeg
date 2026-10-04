@@ -2,6 +2,7 @@ import { relations, sql } from 'drizzle-orm';
 import {
   bigint,
   check,
+  date,
   foreignKey,
   index,
   integer,
@@ -25,6 +26,9 @@ export const REWARD_EVENT_TYPES = [
   'adjustment',
 ] as const;
 export type RewardEventType = (typeof REWARD_EVENT_TYPES)[number];
+
+export const REWARD_SETTLEMENT_KINDS = ['settlement', 'void', 'debt-forgiveness'] as const;
+export type RewardSettlementKind = (typeof REWARD_SETTLEMENT_KINDS)[number];
 
 /** Append-only Reward Rate history. The greatest id for a Business Partner is current. */
 export const rewardRates = rewardsSchema.table(
@@ -137,6 +141,83 @@ export const rewardEvents = rewardsSchema.table(
   ],
 );
 
+/**
+ * Partner-level, append-only money lines that are not tied to an entitlement (ADR-0009). A
+ * `settlement` records a payout Finance made off-platform, a `void` negates one mistaken
+ * settlement, and a `debt-forgiveness` forgives part of a negative Available Balance. Amounts are
+ * piasters: positive for a settlement or debt forgiveness, negative for a void.
+ */
+export const rewardSettlements = rewardsSchema.table(
+  'reward_settlements',
+  {
+    id: serial('id').primaryKey(),
+    businessPartnerId: integer('business_partner_id')
+      .notNull()
+      .references(() => businessPartners.id, { onDelete: 'restrict' }),
+    kind: text('kind').$type<RewardSettlementKind>().notNull(),
+    amountPiasters: bigint('amount_piasters', { mode: 'bigint' }).notNull(),
+    transferReference: text('transfer_reference'),
+    paidAt: date('paid_at', { mode: 'string' }),
+    notes: text('notes'),
+    reason: text('reason'),
+    voidsSettlementId: integer('voids_settlement_id'),
+    /** Always `settlement` for a void, so the FK below can only target a settlement line. */
+    voidsKind: text('voids_kind').generatedAlwaysAs(
+      sql`case when voids_settlement_id is not null then 'settlement' end`,
+    ),
+    idempotencyKey: text('idempotency_key'),
+    actorUserId: integer('actor_user_id').references(() => users.id, { onDelete: 'restrict' }),
+    createdAt: timestamp('created_at', { withTimezone: true }).defaultNow().notNull(),
+  },
+  (table) => [
+    unique('uq_reward_settlements_id_kind').on(table.id, table.kind),
+    unique('uq_reward_settlements_id_partner').on(table.id, table.businessPartnerId),
+    foreignKey({
+      name: 'fk_reward_settlements_voids_settlement',
+      columns: [table.voidsSettlementId, table.voidsKind],
+      foreignColumns: [table.id, table.kind],
+    }).onDelete('restrict'),
+    foreignKey({
+      name: 'fk_reward_settlements_voids_partner',
+      columns: [table.voidsSettlementId, table.businessPartnerId],
+      foreignColumns: [table.id, table.businessPartnerId],
+    }).onDelete('restrict'),
+    index('idx_reward_settlements_partner').on(table.businessPartnerId, table.id),
+    uniqueIndex('uq_reward_settlements_one_void')
+      .on(table.voidsSettlementId)
+      .where(sql`${table.voidsSettlementId} is not null`),
+    uniqueIndex('uq_reward_settlements_idempotency')
+      .on(table.businessPartnerId, table.idempotencyKey)
+      .where(sql`${table.idempotencyKey} is not null`),
+    check(
+      'ck_reward_settlements_kind',
+      sql`${table.kind} in ('settlement', 'void', 'debt-forgiveness')`,
+    ),
+    check(
+      'ck_reward_settlements_shape',
+      sql`(${table.kind} = 'settlement'
+          and ${table.amountPiasters} >= 1
+          and length(trim(coalesce(${table.transferReference}, ''))) > 0
+          and ${table.paidAt} is not null
+          and length(trim(coalesce(${table.idempotencyKey}, ''))) > 0
+          and ${table.voidsSettlementId} is null)
+        or (${table.kind} = 'void'
+          and ${table.amountPiasters} <= -1
+          and length(trim(coalesce(${table.reason}, ''))) > 0
+          and ${table.voidsSettlementId} is not null
+          and ${table.transferReference} is null
+          and ${table.paidAt} is null)
+        or (${table.kind} = 'debt-forgiveness'
+          and ${table.amountPiasters} >= 1
+          and length(trim(coalesce(${table.reason}, ''))) > 0
+          and length(trim(coalesce(${table.idempotencyKey}, ''))) > 0
+          and ${table.voidsSettlementId} is null
+          and ${table.transferReference} is null
+          and ${table.paidAt} is null)`,
+    ),
+  ],
+);
+
 export const rewardRatesRelations = relations(rewardRates, ({ one, many }) => ({
   businessPartner: one(businessPartners, {
     fields: [rewardRates.businessPartnerId],
@@ -178,3 +259,5 @@ export type RewardEntitlementRow = typeof rewardEntitlements.$inferSelect;
 export type NewRewardEntitlement = typeof rewardEntitlements.$inferInsert;
 export type RewardEventRow = typeof rewardEvents.$inferSelect;
 export type NewRewardEvent = typeof rewardEvents.$inferInsert;
+export type RewardSettlementRow = typeof rewardSettlements.$inferSelect;
+export type NewRewardSettlement = typeof rewardSettlements.$inferInsert;
