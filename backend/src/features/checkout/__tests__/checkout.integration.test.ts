@@ -1,5 +1,6 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { eq, sql } from 'drizzle-orm';
+import { getPendingRewardTotals } from '@findeg/db/queries/rewards';
 import {
   categories,
   businessPartners,
@@ -10,6 +11,9 @@ import {
   schoolSupplyLists,
   products,
   productVariants,
+  rewardEntitlements,
+  rewardEvents,
+  rewardRates,
   stockReservations,
   users,
   warehouses,
@@ -2047,6 +2051,180 @@ describe('Checkout feature integration tests on real Postgres', () => {
       await expect(setOffer(source.list.id, 1000, { endsAt: offerStart })).rejects.toThrow();
       await expect(setOffer(source.list.id, 10001)).rejects.toThrow();
       await expect(setOffer(source.list.id, -1)).rejects.toThrow();
+    });
+  });
+
+  describe('Partner Points through the Order Acceptance seam', () => {
+    it('creates one pending Reward Entitlement per attributed line from its post-discount total', async () => {
+      const exact = await createVariantWithStock({ price: '10.05', onHand: 20 });
+      const substitute = await createVariantWithStock({ price: '30.00', onHand: 20 });
+      const source = await createPublishedList([
+        { variantId: exact.variantId },
+        {
+          variantId: exact.variantId,
+          exactItem: false,
+          specification: { categoryId: substitute.categoryId, attributes: {} },
+        },
+      ]);
+      const [rate] = await testDb.db
+        .insert(rewardRates)
+        .values({
+          businessPartnerId: source.partner.id,
+          pointsPerEgp: '2.000000',
+          egpPerPoint: '0.0125',
+        })
+        .returning();
+      await testDb.db.insert(listOffers).values({
+        listId: source.list.id,
+        basisPoints: 1000,
+        startsAt: new Date('2026-01-01T00:00:00.000Z'),
+        endsAt: null,
+      });
+      const input = {
+        source: 'list' as const,
+        publicCode: source.publicCode,
+        lines: [
+          { listItemId: source.items[0].id, variantId: exact.variantId, quantity: 1 },
+          { listItemId: source.items[1].id, variantId: substitute.variantId, quantity: 1 },
+        ],
+      };
+
+      const quote = await checkoutService.validate(input);
+      expect(quote.success).toBe(true);
+      if (!quote.success) return;
+      expect(Object.keys(quote.data).sort()).toEqual([
+        'confirmation',
+        'currency',
+        'lines',
+        'shipping',
+        'subtotal',
+        'total',
+      ]);
+
+      const accepted = await checkoutService.accept(
+        {
+          ...input,
+          confirmation: quote.data.confirmation,
+          paymentMethod: 'cod',
+          address: validAddress,
+          guestEmail: 'rewards-customer@example.com',
+        },
+        { idempotencyKey: 'rewards-entitlements', guestId: 'rewards-customer' },
+      );
+      expect(accepted.success).toBe(true);
+      if (!accepted.success) return;
+
+      const entitlements = await testDb.db
+        .select()
+        .from(rewardEntitlements)
+        .where(eq(rewardEntitlements.businessPartnerId, source.partner.id))
+        .orderBy(rewardEntitlements.orderItemId);
+      expect(entitlements).toEqual([
+        expect.objectContaining({
+          rewardRateId: rate.id,
+          chargedLineTotalPiasters: 905n,
+          points: 18n,
+          egpValuePiasters: 23n,
+        }),
+        expect.objectContaining({
+          rewardRateId: rate.id,
+          chargedLineTotalPiasters: 2700n,
+          points: 54n,
+          egpValuePiasters: 68n,
+        }),
+      ]);
+      const events = await testDb.db
+        .select()
+        .from(rewardEvents)
+        .where(eq(rewardEvents.businessPartnerId, source.partner.id))
+        .orderBy(rewardEvents.entitlementId);
+      expect(events).toEqual([
+        expect.objectContaining({ eventType: 'accepted', points: 18n, egpValuePiasters: 23n }),
+        expect.objectContaining({ eventType: 'accepted', points: 54n, egpValuePiasters: 68n }),
+      ]);
+      expect(await getPendingRewardTotals(testDb.db, source.partner.id)).toEqual({
+        points: 72n,
+        egpValuePiasters: 91n,
+      });
+    });
+  });
+
+  describe('Partner Points edge cases at acceptance', () => {
+    const accept = (input: Record<string, unknown>, confirmation: string, key: string) =>
+      checkoutService.accept(
+        {
+          ...input,
+          confirmation,
+          paymentMethod: 'cod',
+          address: validAddress,
+          guestEmail: 'rewards-edge@example.com',
+        } as never,
+        { idempotencyKey: key, guestId: key },
+      );
+
+    it('accepts with no entitlement when no rate exists or the line earns zero points', async () => {
+      const cheap = await createVariantWithStock({ price: '0.40', onHand: 5 });
+      const source = await createPublishedList([{ variantId: cheap.variantId }]);
+      const input = {
+        source: 'list' as const,
+        publicCode: source.publicCode,
+        lines: [{ listItemId: source.items[0].id, variantId: cheap.variantId, quantity: 1 }],
+      };
+
+      const noRateQuote = await checkoutService.validate(input);
+      if (!noRateQuote.success) throw new Error('quote failed');
+      expect((await accept(input, noRateQuote.data.confirmation, 'no-rate')).success).toBe(true);
+
+      await testDb.db.insert(rewardRates).values({
+        businessPartnerId: source.partner.id,
+        pointsPerEgp: '1.000000',
+        egpPerPoint: '1.0000',
+      });
+      const zeroQuote = await checkoutService.validate(input);
+      if (!zeroQuote.success) throw new Error('quote failed');
+      expect((await accept(input, zeroQuote.data.confirmation, 'zero-pt')).success).toBe(true);
+
+      expect(
+        await testDb.db
+          .select()
+          .from(rewardEntitlements)
+          .where(eq(rewardEntitlements.businessPartnerId, source.partner.id)),
+      ).toEqual([]);
+    });
+
+    it('requires reconfirmation when the rate changes between Quote and accept', async () => {
+      const item = await createVariantWithStock({ price: '10.00', onHand: 5 });
+      const source = await createPublishedList([{ variantId: item.variantId }]);
+      const input = {
+        source: 'list' as const,
+        publicCode: source.publicCode,
+        lines: [{ listItemId: source.items[0].id, variantId: item.variantId, quantity: 1 }],
+      };
+      const quote = await checkoutService.validate(input);
+      if (!quote.success) throw new Error('quote failed');
+
+      await testDb.db.insert(rewardRates).values({
+        businessPartnerId: source.partner.id,
+        pointsPerEgp: '1.000000',
+        egpPerPoint: '1.0000',
+      });
+
+      const result = await accept(input, quote.data.confirmation, 'rate-change');
+      expect(result.success).toBe(false);
+      if (result.success) return;
+      expect(result.error.code).toBe('reconfirmation-required');
+      expect(Object.keys((result.error as { quote: object }).quote)).not.toContain('rewardRate');
+    });
+
+    it('earns nothing on Cart orders', async () => {
+      const item = await createVariantWithStock({ price: '10.00', onHand: 5 });
+      const input = {
+        source: 'cart' as const,
+        lines: [{ variantId: item.variantId, quantity: 1 }],
+      };
+      const quote = await checkoutService.validate(input);
+      if (!quote.success) throw new Error('quote failed');
+      expect((await accept(input, quote.data.confirmation, 'cart-none')).success).toBe(true);
     });
   });
 

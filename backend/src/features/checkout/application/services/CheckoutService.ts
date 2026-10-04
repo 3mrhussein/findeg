@@ -26,7 +26,7 @@ import {
   MAX_IDEMPOTENCY_SCOPE_LENGTH,
 } from '../../domain/idempotency-scope';
 import { enqueue, orderAcceptedId, ORDER_ACCEPTED_KIND } from '../../../outbox';
-import { onOrderAcceptedRewardsHook } from '../../domain/rewards-hook';
+import { recordAcceptedRewards } from '@findeg/backend/features/partner-rewards';
 import {
   ListUnavailableError,
   ReconfirmationRequiredError,
@@ -404,25 +404,22 @@ export class CheckoutService implements ICheckoutService {
       tx,
     );
 
-    // 6. Named no-op rewards hook inside acceptance transaction
-    await onOrderAcceptedRewardsHook(
-      tx,
-      {
-        id: order.id,
-        orderReference: order.orderReference,
-        totalAmount: order.totalAmount,
-        currency: order.currency,
-        userId: order.userId,
-        guestEmail: order.guestEmail,
-      },
-      items.map((item) => ({
-        id: item.id,
-        productId: item.productId,
-        variantId: item.variantId,
-        quantity: item.quantity,
-        lineTotal: item.lineTotal,
-      })),
-    );
+    // 6. Partner Points: entitlements and `accepted` events, or nothing for Cart orders and
+    // partners without a rate. A failure here rolls the whole acceptance back.
+    const chargedByItemId = new Map(freshQuote.lines.map((line) => [line.listItemId, line]));
+    await recordAcceptedRewards(tx, {
+      businessPartnerId: attribution?.businessPartnerId,
+      rate: attribution?.rewardRate,
+      lines: items.flatMap((item) => {
+        const charged =
+          item.schoolSupplyListItemId == null
+            ? undefined
+            : chargedByItemId.get(item.schoolSupplyListItemId);
+        return charged
+          ? [{ orderItemId: item.id, chargedLineTotalPiasters: charged.lineTotal }]
+          : [];
+      }),
+    });
 
     // 7. Confirmation email goes to the outbox in this transaction; delivery happens afterwards
     await enqueue(tx, orderAcceptedId(order.orderReference), ORDER_ACCEPTED_KIND, {

@@ -1,5 +1,6 @@
 import {
   getCurrentRewardRate,
+  getPendingRewardTotals,
   insertRewardRate,
   listRewardRates,
   type RewardRateRow,
@@ -24,6 +25,11 @@ export interface RewardRateView {
   readonly createdAt: Date;
 }
 
+export interface PendingRewardsView {
+  readonly points: bigint;
+  readonly egpValuePiasters: bigint;
+}
+
 export type RewardRateResult<T, E extends string> =
   { readonly success: true; readonly data: T } | { readonly success: false; readonly error: E };
 
@@ -42,6 +48,11 @@ export interface IRewardRateService {
       'forbidden' | 'not-found'
     >
   >;
+  /** Partner Points and EGP accepted on Orders but not yet earned, paid or voided. */
+  getPending(
+    actor: RewardsStaffActor,
+    businessPartnerId: number,
+  ): Promise<RewardRateResult<PendingRewardsView, 'forbidden' | 'not-found'>>;
 }
 
 const ok = <T>(data: T) => ({ success: true, data }) as const;
@@ -103,5 +114,17 @@ export class RewardRateService implements IRewardRateService {
       listRewardRates(db, businessPartnerId),
     ]);
     return ok({ current: current ? toView(current) : null, history: history.map(toView) });
+  }
+
+  async getPending(actor: RewardsStaffActor, businessPartnerId: number) {
+    if (
+      !hasPermission(actor, PERMISSION_CODES.REWARDS_VIEW) &&
+      !hasPermission(actor, PERMISSION_CODES.REWARDS_RATES_MANAGE)
+    ) {
+      return fail('forbidden');
+    }
+    const db = await this.getDb();
+    if (!(await getBusinessPartnerById(db, businessPartnerId))) return fail('not-found');
+    return ok(await getPendingRewardTotals(db, businessPartnerId));
   }
 }

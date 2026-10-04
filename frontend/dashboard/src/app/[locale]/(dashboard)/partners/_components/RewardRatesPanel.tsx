@@ -25,6 +25,11 @@ export interface RewardRateItem {
   readonly createdAt: string;
 }
 
+export interface PendingRewards {
+  readonly points: string;
+  readonly egp: string;
+}
+
 export interface RewardRateFormState {
   readonly status: 'idle' | 'saved' | 'error';
   readonly message?: string;
@@ -40,11 +45,13 @@ const initialState: RewardRateFormState = { status: 'idle' };
 export function RewardRatesPanel({
   current,
   history,
+  pending,
   canManage,
   save,
 }: {
   current: RewardRateItem | null;
   history: RewardRateItem[];
+  pending: PendingRewards;
   canManage: boolean;
   save: SaveRewardRate;
 }) {
@@ -52,6 +59,25 @@ export function RewardRatesPanel({
 
   return (
     <div className="space-y-6" data-testid="reward-rates-panel">
+      <Card data-testid="pending-rewards">
+        <CardHeader>
+          <CardTitle>Pending rewards</CardTitle>
+          <CardDescription>Accepted on Orders and not yet earned, paid or voided.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <dl className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <dt className="text-sm text-muted-foreground">Pending Partner Points</dt>
+              <dd className="font-mono text-lg font-semibold">{pending.points}</dd>
+            </div>
+            <div>
+              <dt className="text-sm text-muted-foreground">Pending value (EGP)</dt>
+              <dd className="font-mono text-lg font-semibold">{pending.egp}</dd>
+            </div>
+          </dl>
+        </CardContent>
+      </Card>
+
       <Card>
         <CardHeader>
           <CardTitle>Current Reward Rate</CardTitle>
