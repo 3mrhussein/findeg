@@ -10,8 +10,10 @@ import { createAdministrationServices } from '@findeg/backend/features/administr
 import { MembersPanel } from '../_components/MembersPanel';
 import { InvitationsPanel } from '../_components/InvitationsPanel';
 import { RewardRatesPanel } from '../_components/RewardRatesPanel';
+import { RewardStatementPanel } from '../_components/RewardStatementPanel';
 import { StatusActions } from '../_components/StatusActions';
 import { saveRewardRateAction } from '../_actions/reward-rates';
+import { toRewardReportProps } from '../_lib/rewardReport';
 import { toStaffActor } from '../_lib/toStaffActor';
 import { toListActor } from '../../school-lists/_lib/toListActor';
 
@@ -25,12 +27,29 @@ const toRewardTotals = (totals: { points: bigint; egpValuePiasters: bigint }) =>
 
 export const metadata = { title: 'Business Partner - FindEg Admins' };
 
+/** An unknown or out-of-range `?month=` falls back to the current month. */
+async function readReport(
+  statement: ReturnType<typeof createPartnerRewardsServices>['statement'],
+  session: Parameters<typeof statement.getStaffReport>[0],
+  partnerId: number,
+  month: string | undefined,
+) {
+  const requested = await statement.getStaffReport(session, partnerId, { month });
+  return month !== undefined && !requested.success && requested.error === 'invalid-input'
+    ? statement.getStaffReport(session, partnerId)
+    : requested;
+}
+
 export default async function PartnerDetailPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string; id: string }>;
+  searchParams: Promise<{ month?: string | string[] }>;
 }) {
   const { locale, id } = await params;
+  const { month: monthParam } = await searchParams;
+  const month = typeof monthParam === 'string' ? monthParam : undefined;
   const session = await requirePermission(locale as Locale, {
     any: [PERMISSION_CODES.PARTNERS_MANAGE, PERMISSION_CODES.REWARDS_VIEW],
   });
@@ -46,8 +65,9 @@ export default async function PartnerDetailPage({
   const partner = await partners.getPartner(actor, partnerId);
   if (!partner.success) notFound();
 
-  const rewards = createPartnerRewardsServices().rates;
-  const [members, pending, lists, rates, pendingRewards, earnedRewards, reversedRewards] =
+  const rewardServices = createPartnerRewardsServices();
+  const rewards = rewardServices.rates;
+  const [members, pending, lists, rates, pendingRewards, earnedRewards, reversedRewards, report] =
     await Promise.all([
       canManagePartner ? memberships.listMembers(actor, partnerId) : Promise.resolve(null),
       canManagePartner
@@ -63,6 +83,7 @@ export default async function PartnerDetailPage({
       canViewRewards ? rewards.getPending(session, partnerId) : Promise.resolve(null),
       canViewRewards ? rewards.getEarned(session, partnerId) : Promise.resolve(null),
       canViewRewards ? rewards.getReversed(session, partnerId) : Promise.resolve(null),
+      canViewRewards ? readReport(rewardServices.statement, session, partnerId, month) : null,
     ]);
   const canChange = partner.data.status === 'onboarding' || partner.data.status === 'active';
   const saveRate = saveRewardRateAction.bind(null, locale as Locale, partnerId);
@@ -84,7 +105,10 @@ export default async function PartnerDetailPage({
         )}
       </div>
 
-      <Tabs defaultValue={canManagePartner ? 'overview' : 'rewards'} className="space-y-6">
+      <Tabs
+        defaultValue={canManagePartner && !month ? 'overview' : 'rewards'}
+        className="space-y-6"
+      >
         <TabsList>
           {canManagePartner && <TabsTrigger value="overview">Overview</TabsTrigger>}
           {canViewRewards && <TabsTrigger value="rewards">Rewards</TabsTrigger>}
@@ -154,7 +178,14 @@ export default async function PartnerDetailPage({
           pendingRewards?.success &&
           earnedRewards?.success &&
           reversedRewards?.success && (
-            <TabsContent value="rewards">
+            <TabsContent value="rewards" className="space-y-6">
+              {report?.success ? (
+                <RewardStatementPanel report={toRewardReportProps(report.data)} />
+              ) : (
+                <p role="alert" className="text-destructive text-sm">
+                  The Reward Statement could not be loaded.
+                </p>
+              )}
               <RewardRatesPanel
                 current={
                   rates.data.current
