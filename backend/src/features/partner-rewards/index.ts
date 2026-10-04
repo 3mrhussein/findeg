@@ -27,7 +27,6 @@ export {
   type StaffRewardReportView,
 } from './statement';
 export { type MonthlyStatementView, type RewardAmount } from './monthly-statement';
-export { REWARDS_TIME_ZONE } from './months';
 export {
   type StaffActorView,
   type StaffAdjustmentView,

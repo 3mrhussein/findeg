@@ -13,7 +13,7 @@ import {
 } from '@findeg/ui';
 import type { AmountProps, RewardReportProps } from '../_lib/rewardReport';
 
-const when = (iso: string) => iso.slice(0, 16).replace('T', ' ');
+const formatRecordedAt = (iso: string) => iso.slice(0, 16).replace('T', ' ');
 const money = (egp: string) => `${egp} EGP`;
 const withPoints = ({ points, egp }: AmountProps) => `${money(egp)} (${points} pts)`;
 
@@ -42,7 +42,7 @@ export function RewardStatementPanel({ report }: { report: RewardReportProps }) 
         <CardContent>
           <p className="font-mono text-2xl font-semibold">{money(report.availableBalanceEgp)}</p>
           <p className="mt-1 text-xs text-muted-foreground">
-            As of {when(report.asOf)} UTC. Months follow Cairo time.
+            As of {formatRecordedAt(report.asOf)} UTC. Months follow Cairo time.
           </p>
         </CardContent>
       </Card>
@@ -194,7 +194,8 @@ export function RewardStatementPanel({ report }: { report: RewardReportProps }) 
                       <ul className="text-sm text-muted-foreground">
                         {entitlement.events.map((event) => (
                           <li key={`${event.type}-${event.recordedAt}`}>
-                            {when(event.recordedAt)} UTC · {event.type} · {withPoints(event)}
+                            {formatRecordedAt(event.recordedAt)} UTC · {event.type} ·{' '}
+                            {withPoints(event)}
                           </li>
                         ))}
                       </ul>
@@ -208,6 +209,10 @@ export function RewardStatementPanel({ report }: { report: RewardReportProps }) 
           <Card data-testid="reward-adjustments">
             <CardHeader>
               <CardTitle>Adjustments in {report.month}</CardTitle>
+              <CardDescription>
+                Adjustments and debt forgiveness: together they make the statement's adjustments
+                line.
+              </CardDescription>
             </CardHeader>
             <CardContent>
               {report.adjustments.length === 0 ? (
@@ -217,6 +222,7 @@ export function RewardStatementPanel({ report }: { report: RewardReportProps }) 
                   <TableHeader>
                     <TableRow>
                       <TableHead>Recorded</TableHead>
+                      <TableHead>Kind</TableHead>
                       <TableHead className="text-right">Amount</TableHead>
                       <TableHead>Reason</TableHead>
                       <TableHead>Staff</TableHead>
@@ -225,7 +231,8 @@ export function RewardStatementPanel({ report }: { report: RewardReportProps }) 
                   <TableBody>
                     {report.adjustments.map((row) => (
                       <TableRow key={row.id}>
-                        <TableCell>{when(row.recordedAt)} UTC</TableCell>
+                        <TableCell>{formatRecordedAt(row.recordedAt)} UTC</TableCell>
+                        <TableCell>{row.kind}</TableCell>
                         <TableCell className="text-right font-mono">{money(row.egp)}</TableCell>
                         <TableCell>{row.reason}</TableCell>
                         <TableCell>{row.actor}</TableCell>
@@ -264,7 +271,7 @@ export function RewardStatementPanel({ report }: { report: RewardReportProps }) 
                   <TableBody>
                     {report.settlements.map((row) => (
                       <TableRow key={row.id}>
-                        <TableCell>{when(row.recordedAt)} UTC</TableCell>
+                        <TableCell>{formatRecordedAt(row.recordedAt)} UTC</TableCell>
                         <TableCell>{row.kind}</TableCell>
                         <TableCell className="text-right font-mono">{money(row.egp)}</TableCell>
                         <TableCell>{row.paidAt}</TableCell>

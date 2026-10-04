@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, inArray, isNotNull, sql, type AnyColumn } from 'drizzle-orm';
+import { and, asc, eq, inArray, isNotNull, sql, type AnyColumn } from 'drizzle-orm';
 import {
   orderItems,
   orders,
@@ -34,6 +34,10 @@ export interface RewardMovementRow {
 
 const monthOf = (column: AnyColumn, timeZone: string) =>
   sql<string>`to_char(${column} at time zone ${timeZone}::text, 'YYYY-MM')`;
+
+/** True when `column` falls in `month` (`YYYY-MM`) of `timeZone`. */
+const inMonth = (column: AnyColumn, month: string, timeZone: string) =>
+  sql`${monthOf(column, timeZone)} = ${month}`;
 
 /**
  * A Business Partner's balance movements grouped by the month they were recorded in `timeZone`.
@@ -147,7 +151,6 @@ export async function getRewardSalesRows(
   month: string,
   timeZone: string,
 ): Promise<RewardSalesRow[]> {
-  const eventMonth = monthOf(rewardEvents.createdAt, timeZone);
   const sumWhen = (type: 'paid' | 'reversal', column: AnyColumn) =>
     sql<string>`coalesce(sum(case when ${rewardEvents.eventType} = ${type} then ${column} else 0 end), 0)`;
 
@@ -184,7 +187,7 @@ export async function getRewardSalesRows(
       and(
         eq(rewardEvents.businessPartnerId, businessPartnerId),
         inArray(rewardEvents.eventType, ['paid', 'reversal']),
-        sql`${eventMonth} = ${month}`,
+        inMonth(rewardEvents.createdAt, month, timeZone),
       ),
     )
     .groupBy(
@@ -249,7 +252,7 @@ export async function listRewardEntitlementDetails(
       and(
         eq(rewardEvents.businessPartnerId, businessPartnerId),
         isNotNull(rewardEvents.entitlementId),
-        sql`${monthOf(rewardEvents.createdAt, timeZone)} = ${month}`,
+        inMonth(rewardEvents.createdAt, month, timeZone),
       ),
     );
   const entitlements = await executor
@@ -300,17 +303,30 @@ export async function listRewardEntitlementDetails(
   }));
 }
 
-/** Adjustment events recorded in `month`, with the Staff reason and actor. Staff only. */
-export function listRewardAdjustmentsInMonth(
+export interface RewardAdjustmentLineRow {
+  readonly id: number;
+  readonly kind: 'adjustment' | 'debt-forgiveness';
+  /** Signed piasters: both kinds change the Available Balance the way the statement's line does. */
+  readonly egpPiasters: bigint;
+  readonly reason: string | null;
+  readonly actorUserId: number | null;
+  readonly recordedAt: Date;
+}
+
+/**
+ * Everything the statement's adjustments line sums in `month`: adjustment events and debt
+ * forgiveness, newest first, with the Staff reason and actor. Staff only.
+ */
+export async function listRewardAdjustmentLinesInMonth(
   executor: RewardsExecutor,
   businessPartnerId: number,
   month: string,
   timeZone: string,
-) {
-  return executor
+): Promise<RewardAdjustmentLineRow[]> {
+  const events = await executor
     .select({
       id: rewardEvents.id,
-      egpValuePiasters: rewardEvents.egpValuePiasters,
+      egpPiasters: rewardEvents.egpValuePiasters,
       reason: rewardEvents.reason,
       actorUserId: rewardEvents.actorUserId,
       recordedAt: rewardEvents.createdAt,
@@ -320,10 +336,29 @@ export function listRewardAdjustmentsInMonth(
       and(
         eq(rewardEvents.businessPartnerId, businessPartnerId),
         eq(rewardEvents.eventType, 'adjustment'),
-        sql`${monthOf(rewardEvents.createdAt, timeZone)} = ${month}`,
+        inMonth(rewardEvents.createdAt, month, timeZone),
       ),
-    )
-    .orderBy(desc(rewardEvents.id));
+    );
+  const forgiveness = await executor
+    .select({
+      id: rewardSettlements.id,
+      egpPiasters: rewardSettlements.amountPiasters,
+      reason: rewardSettlements.reason,
+      actorUserId: rewardSettlements.actorUserId,
+      recordedAt: rewardSettlements.createdAt,
+    })
+    .from(rewardSettlements)
+    .where(
+      and(
+        eq(rewardSettlements.businessPartnerId, businessPartnerId),
+        eq(rewardSettlements.kind, 'debt-forgiveness'),
+        inMonth(rewardSettlements.createdAt, month, timeZone),
+      ),
+    );
+  return [
+    ...events.map((row) => ({ ...row, kind: 'adjustment' as const })),
+    ...forgiveness.map((row) => ({ ...row, kind: 'debt-forgiveness' as const })),
+  ].sort((a, b) => b.recordedAt.getTime() - a.recordedAt.getTime() || b.id - a.id);
 }
 
 /** Email addresses of Staff actors, for showing who recorded a line. */

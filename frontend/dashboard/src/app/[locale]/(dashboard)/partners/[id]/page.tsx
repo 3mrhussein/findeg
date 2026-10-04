@@ -5,7 +5,11 @@ import type { Locale } from 'next-intl';
 import { requirePermission, sessionHasPermission } from '@lib/auth-guard';
 import { PERMISSION_CODES } from '@findeg/backend/features/core';
 import { createPartnerMembershipServices } from '@findeg/backend/features/partner-membership';
-import { createPartnerRewardsServices } from '@findeg/backend/features/partner-rewards';
+import {
+  createPartnerRewardsServices,
+  type IRewardStatementService,
+  type RewardsStaffActor,
+} from '@findeg/backend/features/partner-rewards';
 import { createAdministrationServices } from '@findeg/backend/features/administration';
 import { MembersPanel } from '../_components/MembersPanel';
 import { InvitationsPanel } from '../_components/InvitationsPanel';
@@ -29,8 +33,8 @@ export const metadata = { title: 'Business Partner - FindEg Admins' };
 
 /** An unknown or out-of-range `?month=` falls back to the current month. */
 async function readReport(
-  statement: ReturnType<typeof createPartnerRewardsServices>['statement'],
-  session: Parameters<typeof statement.getStaffReport>[0],
+  statement: IRewardStatementService,
+  session: RewardsStaffActor,
   partnerId: number,
   month: string | undefined,
 ) {

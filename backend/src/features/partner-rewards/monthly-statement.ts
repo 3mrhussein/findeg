@@ -64,8 +64,3 @@ export function buildMonthlyStatement(
     closingEgpPiasters: openingEgpPiasters + balanceEffect(inMonth),
   };
 }
-
-/** The live Available Balance from the same movements: the current month's closing balance. */
-export function totalBalance(movements: readonly RewardMovementRow[]) {
-  return balanceEffect(movements);
-}

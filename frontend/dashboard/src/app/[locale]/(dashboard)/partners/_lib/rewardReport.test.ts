@@ -64,7 +64,16 @@ const report: StaffRewardReportView = {
       ],
     },
   ],
-  adjustments: [],
+  adjustments: [
+    {
+      id: 1,
+      kind: 'debt-forgiveness',
+      egpPiasters: 400n,
+      reason: 'uncollectable',
+      actor: { userId: 1, email: null },
+      recordedAt: new Date('2026-05-02T10:00:00Z'),
+    },
+  ],
   settlements: [],
 };
 
@@ -90,6 +99,11 @@ describe('toRewardReportProps', () => {
       listName: 'Grade 1 list',
       earned: { points: '7', egp: '7.00' },
       orderCount: 1,
+    });
+    expect(props.adjustments[0]).toMatchObject({
+      kind: 'debt-forgiveness',
+      egp: '4.00',
+      actor: 'User 1',
     });
     expect(props.entitlements[0]).toMatchObject({ orderReference: 'FE-ABC123' });
     expect(props.entitlements[0].events[0]).toMatchObject({ type: 'paid', egp: '7.00' });

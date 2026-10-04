@@ -1,21 +1,10 @@
-import {
-  getAvailableRewardBalance,
-  getFirstRewardEventMonth,
-  getPendingRewardTotals,
-  getRewardMovementsByMonth,
-  getRewardSalesRows,
-  type RewardsDatabase,
-} from '@findeg/db/queries/rewards';
+import { getAvailableRewardBalance, type RewardsDatabase } from '@findeg/db/queries/rewards';
 import { getBusinessPartnerById } from '@findeg/db/queries/partners';
 import { PERMISSION_CODES } from '@findeg/db';
-import {
-  buildMonthlyStatement,
-  type MonthlyStatementView,
-  type RewardAmount,
-} from './monthly-statement';
+import { isMonthKey } from './months';
+import type { ReportLocale } from './sales-table';
+import { readStatementAndSales, type StatementAndSales } from './statement-and-sales';
 import { readStaffReportDetail, type StaffReportDetail } from './staff-report';
-import { toSalesRowView, type ReportLocale, type SalesRowView } from './sales-table';
-import { cairoMonthOf, isMonthKey, monthsBetween, REWARDS_TIME_ZONE } from './months';
 import {
   canViewRewards,
   fail,
@@ -37,23 +26,8 @@ export interface StaffRewardReportOptions {
   readonly locale?: ReportLocale;
 }
 
-/**
- * The Staff projection of the statement-and-sales read (ADR-0010). Every money figure comes from
- * one computation, so any Partner projection built on it cannot disagree.
- */
-export interface StaffRewardReportView extends StaffReportDetail {
-  /** When the figures were read. Everything is computed live, never from a projection. */
-  readonly asOf: Date;
-  /** The month picker: first Reward Event month through the current month, empty before any. */
-  readonly months: readonly string[];
-  readonly statement: MonthlyStatementView;
-  /** Point-in-time, never part of a month's movements or the balance. */
-  readonly pending: RewardAmount;
-  /** Live signed Available Balance. Equals the current month's closing balance. */
-  readonly availableBalanceEgpPiasters: bigint;
-  /** The selected month's sales. Earned and reversed totals equal the statement's movements. */
-  readonly sales: readonly SalesRowView[];
-}
+/** The Staff projection of the statement-and-sales read (ADR-0010): shared figures plus detail. */
+export interface StaffRewardReportView extends StatementAndSales, StaffReportDetail {}
 
 export type StaffRewardReportError = 'forbidden' | 'invalid-input' | 'not-found';
 
@@ -88,32 +62,17 @@ export class RewardStatementService implements IRewardStatementService {
     if (!(await getBusinessPartnerById(db, businessPartnerId))) return fail('not-found');
 
     const asOf = this.now();
-    const currentMonth = cairoMonthOf(asOf);
     // One snapshot, so the statement, pending figure and live balance cannot straddle a write.
     return db.transaction(
       async (tx) => {
-        const [movements, firstMonth, pending, availableBalance] = await Promise.all([
-          getRewardMovementsByMonth(tx, businessPartnerId, REWARDS_TIME_ZONE),
-          getFirstRewardEventMonth(tx, businessPartnerId, REWARDS_TIME_ZONE),
-          getPendingRewardTotals(tx, businessPartnerId),
-          getAvailableRewardBalance(tx, businessPartnerId),
-        ]);
-        const months = firstMonth ? monthsBetween(firstMonth, currentMonth) : [];
-        const month = options.month ?? currentMonth;
-        if (months.length > 0 ? !months.includes(month) : month !== currentMonth) {
-          return fail('invalid-input');
-        }
-        const salesRows = await getRewardSalesRows(tx, businessPartnerId, month, REWARDS_TIME_ZONE);
-        const detail = await readStaffReportDetail(tx, businessPartnerId, month, REWARDS_TIME_ZONE);
-        return ok({
-          ...detail,
+        const shared = await readStatementAndSales(tx, businessPartnerId, {
+          month: options.month,
+          locale: options.locale ?? 'en',
           asOf,
-          months,
-          statement: buildMonthlyStatement(movements, month),
-          pending: { points: pending.points, egpPiasters: pending.egpValuePiasters },
-          availableBalanceEgpPiasters: availableBalance,
-          sales: salesRows.map((row) => toSalesRowView(row, options.locale ?? 'en')),
         });
+        if (!shared) return fail('invalid-input');
+        const detail = await readStaffReportDetail(tx, businessPartnerId, shared.statement.month);
+        return ok({ ...shared, ...detail });
       },
       { isolationLevel: 'repeatable read', accessMode: 'read only' },
     );

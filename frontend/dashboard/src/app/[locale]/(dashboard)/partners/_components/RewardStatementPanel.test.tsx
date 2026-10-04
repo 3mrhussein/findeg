@@ -47,6 +47,7 @@ const report: RewardReportProps = {
   adjustments: [
     {
       id: 1,
+      kind: 'adjustment',
       egp: '4.00',
       reason: 'goodwill bonus',
       actor: 'staff@findeg.test',

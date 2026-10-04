@@ -57,6 +57,7 @@ export interface RewardReportProps {
   }[];
   readonly adjustments: readonly {
     readonly id: number;
+    readonly kind: string;
     readonly egp: string;
     readonly reason: string | null;
     readonly actor: string | null;
@@ -95,8 +96,8 @@ export function toRewardReportProps(report: StaffRewardReportView): RewardReport
     },
     pending: amount(report.pending),
     availableBalanceEgp: formatEgp(report.availableBalanceEgpPiasters),
-    sales: report.sales.map((row) => ({
-      key: `${row.listId}-${row.listItemId}-${row.variantId}`,
+    sales: report.sales.map((row, index) => ({
+      key: `${index}-${row.listId}-${row.listItemId}-${row.variantId}`,
       listName: row.listName,
       listItemLabel: row.listItemLabel,
       productName: row.productName,
@@ -120,6 +121,7 @@ export function toRewardReportProps(report: StaffRewardReportView): RewardReport
     })),
     adjustments: report.adjustments.map((row) => ({
       id: row.id,
+      kind: row.kind,
       egp: formatEgp(row.egpPiasters),
       reason: row.reason,
       actor: actorLabel(row.actor),

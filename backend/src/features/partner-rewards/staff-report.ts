@@ -1,10 +1,11 @@
 import {
   getActorEmails,
-  listRewardAdjustmentsInMonth,
+  listRewardAdjustmentLinesInMonth,
   listRewardEntitlementDetails,
   listRewardSettlementLines,
   type RewardsExecutor,
 } from '@findeg/db/queries/rewards';
+import { REWARDS_TIME_ZONE } from './months';
 import type { RewardEventType, RewardSettlementKind } from '@findeg/db/schema';
 
 /** Staff-only detail the Partner projection never carries: references, notes, reasons, actors. */
@@ -33,6 +34,7 @@ export interface StaffEntitlementView {
 
 export interface StaffAdjustmentView {
   readonly id: number;
+  readonly kind: 'adjustment' | 'debt-forgiveness';
   /** Signed EGP in piasters. */
   readonly egpPiasters: bigint;
   readonly reason: string | null;
@@ -66,11 +68,10 @@ export async function readStaffReportDetail(
   tx: RewardsExecutor,
   businessPartnerId: number,
   month: string,
-  timeZone: string,
 ): Promise<StaffReportDetail> {
   const [entitlements, adjustments, settlements] = await Promise.all([
-    listRewardEntitlementDetails(tx, businessPartnerId, month, timeZone),
-    listRewardAdjustmentsInMonth(tx, businessPartnerId, month, timeZone),
+    listRewardEntitlementDetails(tx, businessPartnerId, month, REWARDS_TIME_ZONE),
+    listRewardAdjustmentLinesInMonth(tx, businessPartnerId, month, REWARDS_TIME_ZONE),
     listRewardSettlementLines(tx, businessPartnerId),
   ]);
   const actorIds = [...adjustments, ...settlements].flatMap((row) =>
@@ -94,7 +95,8 @@ export async function readStaffReportDetail(
     })),
     adjustments: adjustments.map((row) => ({
       id: row.id,
-      egpPiasters: row.egpValuePiasters,
+      kind: row.kind,
+      egpPiasters: row.egpPiasters,
       reason: row.reason,
       actor: actorOf(row.actorUserId),
       recordedAt: row.recordedAt,

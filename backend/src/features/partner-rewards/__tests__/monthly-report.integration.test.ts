@@ -687,11 +687,22 @@ describe('monthly Reward Statement and Staff report projection', () => {
       const { partnerId } = await createPartner();
       await seedAdjustment(partnerId, 1_250n, '2026-05-02T10:00:00Z', 'goodwill bonus');
       await seedAdjustment(partnerId, -300n, '2026-04-02T10:00:00Z', 'other month');
+      await seedDebtForgiveness(partnerId, 400n, '2026-05-20T10:00:00Z');
 
-      const { adjustments } = await report(partnerId, { month: '2026-05' });
+      const { adjustments, statement } = await report(partnerId, { month: '2026-05' });
 
+      // Itemised lines add up to the statement's adjustments line, debt forgiveness included.
+      expect(adjustments.reduce((sum, row) => sum + row.egpPiasters, 0n)).toBe(
+        statement.adjustmentsEgpPiasters,
+      );
       expect(adjustments).toEqual([
         expect.objectContaining({
+          kind: 'debt-forgiveness',
+          egpPiasters: 400n,
+          reason: 'uncollectable',
+        }),
+        expect.objectContaining({
+          kind: 'adjustment',
           egpPiasters: 1_250n,
           reason: 'goodwill bonus',
           actor: { userId: staffUserId, email: 'reward-report-staff@findeg.test' },
