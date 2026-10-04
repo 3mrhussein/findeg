@@ -23,7 +23,8 @@ Depends on ADR-0003 (`business_partners`), ADR-0004 (Partner School on lists), a
 **Lifecycle, all in the transition's transaction:**
 
 - Acceptance writes entitlements + `accepted` events (pending).
-- Earning fires when an order is `delivered` **and** `paymentStatus = paid` with the paid amount equal to the snapshotted total, checked after whichever of the two transitions completes the pair. Payment status changes go through a single `transitionPaymentStatus` alongside `transitionOrderStatus`.
+- Earning fires when an order is `delivered` **and** `paymentStatus = paid`, whichever comes last. Payment status moves independently of order status, and both change only through `transitionPaymentStatus` and `transitionOrderStatus`. After its update, each calls one shared **`evaluateEarnEligibility(orderId, tx)`** inside its own transaction. If the order is then `delivered` and `paid`, it appends a `paid` event for each entitlement not yet earned, cancelled or reversed. The unique `paid` index makes a repeat call a no-op.
+- `paid` means the full snapshotted order total was paid. There is no partial payment and no `paidAmount` column.
 - `cancelled` appends `cancellation` (voids pending). `refunded` (status or payment) voids pending if not yet earned, else appends `reversal` of the earned points; the per-entitlement unique index makes the second refund transition a no-op.
 - Manual `adjustment` events need the `rewards.adjust` Staff permission, a reason, and an idempotency key. Rates need `rewards.rates.manage`. Both are FindEg-Staff surfaces in `frontend/dashboard`; Partners never write to the ledger.
 
