@@ -9,6 +9,17 @@ import {
   checkoutIdempotencyQueries,
 } from '@findeg/db/queries';
 import { computeConfirmation } from '../../domain/confirmation';
+import {
+  lineDiscount,
+  piastersToDecimal,
+  priceLine,
+  shippingFeeToPiasters,
+  sumQuote,
+  toCheckoutQuote,
+  toPiasters,
+  type PiasterQuote,
+  type PiasterQuoteLine,
+} from '../../domain/piasters';
 import { computeOrderFingerprint } from '../../domain/fingerprint';
 import {
   buildIdempotencyScope,
@@ -31,8 +42,6 @@ import {
   type CheckoutOrderInput,
   type CheckoutOrderContext,
   type ShippingAddress,
-  type CheckoutQuote,
-  type CheckoutQuoteLine,
   type CheckoutValidateInput,
   type CheckoutReceipt,
 } from '../../schemas';
@@ -65,11 +74,6 @@ type AcceptRequest = (
   fingerprint: string;
 };
 
-/** A line's total discount across every source. */
-function lineDiscount(line: CheckoutQuoteLine): number {
-  return line.discounts.reduce((sum, discount) => sum + discount.amount, 0);
-}
-
 function rejected(
   status: CheckoutAcceptFailure['status'],
   code: CheckoutAcceptFailure['error']['code'],
@@ -80,16 +84,14 @@ function rejected(
 }
 
 export class CheckoutService implements ICheckoutService {
-  private readonly shippingFee: number;
+  private readonly shippingFee: bigint;
   private readonly clock: () => Date;
 
   constructor(options?: CheckoutServiceOptions) {
     this.clock = options?.clock ?? (() => new Date());
-    this.shippingFee =
-      options?.shippingFee ??
-      (process.env.CHECKOUT_FLAT_SHIPPING_FEE
-        ? Number(process.env.CHECKOUT_FLAT_SHIPPING_FEE)
-        : DEFAULT_FLAT_SHIPPING_FEE);
+    this.shippingFee = shippingFeeToPiasters(
+      options?.shippingFee ?? (process.env.CHECKOUT_FLAT_SHIPPING_FEE || DEFAULT_FLAT_SHIPPING_FEE),
+    );
   }
 
   async validate(input: CheckoutValidateInput): Promise<CheckoutValidateResult> {
@@ -110,7 +112,7 @@ export class CheckoutService implements ICheckoutService {
         parsed.data.source === 'list'
           ? await calculateListQuote(parsed.data, this.shippingFee, undefined, this.clock())
           : await this.calculateQuote(parsed.data.lines);
-      return { success: true, data: quote };
+      return { success: true, data: toCheckoutQuote(quote) };
     } catch (err: unknown) {
       if (err instanceof ListUnavailableError) {
         return {
@@ -338,7 +340,7 @@ export class CheckoutService implements ICheckoutService {
 
     // 3. Price confirmation check
     if (freshQuote.confirmation !== confirmation) {
-      throw new ReconfirmationRequiredError(freshQuote);
+      throw new ReconfirmationRequiredError(toCheckoutQuote(freshQuote));
     }
 
     // 4. Create the Order and Order Items (reuses variantMap without redundant second query)
@@ -348,13 +350,13 @@ export class CheckoutService implements ICheckoutService {
         guestEmail,
         status: 'pending',
         paymentStatus: 'unpaid',
-        subtotal: freshQuote.subtotal.toFixed(2),
-        shippingCost: freshQuote.shipping.toFixed(2),
-        totalAmount: freshQuote.total.toFixed(2),
+        subtotal: piastersToDecimal(freshQuote.subtotal),
+        shippingCost: piastersToDecimal(freshQuote.shipping),
+        totalAmount: piastersToDecimal(freshQuote.total),
         listOfferBasisPoints: attribution?.listOfferBasisPoints ?? undefined,
-        discountTotal: freshQuote.lines
-          .reduce((sum, line) => sum + lineDiscount(line), 0)
-          .toFixed(2),
+        discountTotal: piastersToDecimal(
+          freshQuote.lines.reduce((sum, line) => sum + lineDiscount(line), 0n),
+        ),
         currency: freshQuote.currency,
         paymentMethod: 'cod',
         schoolSupplyListId: attribution?.schoolSupplyListId,
@@ -375,11 +377,11 @@ export class CheckoutService implements ICheckoutService {
             productId: meta.productId,
             variantId: line.variantId,
             quantity: line.quantity,
-            unitPriceSnapshot: line.unitPrice.toFixed(2),
-            totalPrice: line.lineTotal.toFixed(2),
-            unitPrice: line.unitPrice.toFixed(2),
-            discountAmount: lineDiscount(line).toFixed(2),
-            lineTotal: line.lineTotal.toFixed(2),
+            unitPriceSnapshot: piastersToDecimal(line.unitPrice),
+            totalPrice: piastersToDecimal(line.lineTotal),
+            unitPrice: piastersToDecimal(line.unitPrice),
+            discountAmount: piastersToDecimal(lineDiscount(line)),
+            lineTotal: piastersToDecimal(line.lineTotal),
             productNameSnapshot: productName,
             productSkuSnapshot: meta.sku,
             variantSkuSnapshot: meta.sku,
@@ -516,7 +518,7 @@ export class CheckoutService implements ICheckoutService {
     lines: Array<{ variantId: number; quantity: number }>,
     tx?: Parameters<Parameters<typeof db.transaction>[0]>[0],
   ): Promise<{
-    quote: CheckoutQuote;
+    quote: PiasterQuote;
     variantMap: Map<
       number,
       {
@@ -568,27 +570,23 @@ export class CheckoutService implements ICheckoutService {
       throw new UnavailableVariantError();
     }
 
-    const priceMap = new Map(availableVariants.map((v) => [v.id, Number(v.basePrice)]));
+    const priceMap = new Map(availableVariants.map((v) => [v.id, toPiasters(v.basePrice)]));
     const variantMap = new Map(availableVariants.map((v) => [v.id, v]));
 
-    const quoteLines: CheckoutQuoteLine[] = variantIds.map((variantId) => {
+    const quoteLines: PiasterQuoteLine[] = variantIds.map((variantId) => {
       const quantity = quantitiesByVariant.get(variantId)!;
       const unitPrice = priceMap.get(variantId)!;
-      const discounts: Array<{ source: string; amount: number }> = [];
-      const discountTotal = discounts.reduce((sum, d) => sum + d.amount, 0);
-      const lineTotal = Number((quantity * unitPrice - discountTotal).toFixed(2));
+      const priced = priceLine(unitPrice, quantity, null);
       return {
         variantId,
         quantity,
         unitPrice,
-        discounts,
-        lineTotal,
+        discounts: [],
+        lineTotal: priced.lineTotal,
       };
     });
 
-    const subtotal = Number(quoteLines.reduce((sum, l) => sum + l.lineTotal, 0).toFixed(2));
-    const shipping = Number(this.shippingFee.toFixed(2));
-    const total = Number((subtotal + shipping).toFixed(2));
+    const { subtotal, shipping, total } = sumQuote(quoteLines, this.shippingFee);
     const currency = 'EGP' as const;
 
     const confirmation = computeConfirmation({

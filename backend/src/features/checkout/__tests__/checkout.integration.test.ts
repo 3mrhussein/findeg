@@ -2049,4 +2049,135 @@ describe('Checkout feature integration tests on real Postgres', () => {
       await expect(setOffer(source.list.id, -1)).rejects.toThrow();
     });
   });
+
+  describe('Integer-piaster Quote amounts', () => {
+    // Prices where float sums diverge: 0.1 + 0.2 !== 0.3, and ten 0.1 lines sum to 0.9999999999999999.
+    it('quotes and persists exact Cart amounts for float-hostile prices', async () => {
+      const cheap = await createVariantWithStock({ price: '0.10', onHand: 50 });
+      const mid = await createVariantWithStock({ price: '0.20', onHand: 50 });
+      const odd = await createVariantWithStock({ price: '19.99', onHand: 50 });
+      const lines = [
+        { variantId: cheap.variantId, quantity: 3 },
+        { variantId: mid.variantId, quantity: 7 },
+        { variantId: odd.variantId, quantity: 13 },
+      ];
+
+      const quote = await checkoutService.validate({ source: 'cart', lines });
+      expect(quote.success).toBe(true);
+      if (!quote.success) return;
+      // 0.30 + 1.40 + 259.87 = 261.57; +50 shipping
+      expect(quote.data.subtotal).toBe(261.57);
+      expect(quote.data.shipping).toBe(50);
+      expect(quote.data.total).toBe(311.57);
+
+      const accepted = await checkoutService.accept(
+        {
+          source: 'cart',
+          lines,
+          confirmation: quote.data.confirmation,
+          paymentMethod: 'cod',
+          address: validAddress,
+          guestEmail: 'piasters@example.com',
+        },
+        { idempotencyKey: 'piasters-cart-1' },
+      );
+      expect(accepted.success).toBe(true);
+      if (!accepted.success) return;
+
+      const [order] = await testDb.db
+        .select()
+        .from(orders)
+        .where(eq(orders.id, accepted.data.order.id));
+      expect(order.subtotal).toBe('261.57');
+      expect(order.shippingCost).toBe('50.00');
+      expect(order.totalAmount).toBe('311.57');
+      expect(order.discountTotal).toBe('0.00');
+      const items = await testDb.db
+        .select()
+        .from(orderItems)
+        .where(eq(orderItems.orderId, order.id));
+      expect(items.map((i) => i.lineTotal).sort()).toEqual(['0.30', '1.40', '259.87']);
+    });
+
+    it('sums many 0.10 Cart lines exactly', async () => {
+      const lines = [];
+      for (let i = 0; i < 12; i += 1) {
+        const v = await createVariantWithStock({ price: '0.10', onHand: 5 });
+        lines.push({ variantId: v.variantId, quantity: 1 });
+      }
+      const quote = await checkoutService.validate({ source: 'cart', lines });
+      expect(quote.success).toBe(true);
+      if (!quote.success) return;
+      expect(quote.data.subtotal).toBe(1.2);
+      expect(quote.data.total).toBe(51.2);
+    });
+
+    it('persists List amounts exactly as quoted, with a fractional shipping fee and an offer', async () => {
+      const service = createCheckoutService({
+        shippingFee: 49.99,
+        clock: () => new Date('2026-10-15T12:00:00.000Z'),
+      });
+      const a = await createVariantWithStock({ price: '10.05', onHand: 20 });
+      const b = await createVariantWithStock({ price: '0.10', onHand: 20 });
+      const c = await createVariantWithStock({ price: '0.20', onHand: 20 });
+      const source = await createPublishedList([
+        { variantId: a.variantId },
+        { variantId: b.variantId },
+        { variantId: c.variantId },
+      ]);
+      await testDb.db.insert(listOffers).values({
+        listId: source.list.id,
+        basisPoints: 1000,
+        startsAt: new Date('2026-10-01T00:00:00.000Z'),
+        endsAt: new Date('2026-11-01T00:00:00.000Z'),
+      });
+      const input = {
+        source: 'list' as const,
+        publicCode: source.publicCode,
+        lines: [a, b, c].map((v, index) => ({
+          listItemId: source.items[index].id,
+          variantId: v.variantId,
+          quantity: 3,
+        })),
+      };
+
+      const quote = await service.validate(input);
+      expect(quote.success).toBe(true);
+      if (!quote.success) return;
+      // 3015x0.9=2713.5->2714; 30x0.9=27; 60x0.9=54 => 2795 piasters
+      expect(quote.data.subtotal).toBe(27.95);
+      expect(quote.data.shipping).toBe(49.99);
+      expect(quote.data.total).toBe(77.94);
+
+      const accepted = await service.accept(
+        {
+          ...input,
+          confirmation: quote.data.confirmation,
+          paymentMethod: 'cod',
+          address: validAddress,
+          guestEmail: 'piasters-list@example.com',
+        },
+        { idempotencyKey: 'piasters-list-1' },
+      );
+      expect(accepted.success).toBe(true);
+      if (!accepted.success) return;
+
+      const [order] = await testDb.db
+        .select()
+        .from(orders)
+        .where(eq(orders.id, accepted.data.order.id));
+      expect(order.subtotal).toBe('27.95');
+      expect(order.shippingCost).toBe('49.99');
+      expect(order.totalAmount).toBe('77.94');
+      // gross 3015+30+60 = 3105 piasters, net 2795, discount 310
+      expect(order.discountTotal).toBe('3.10');
+    });
+
+    it('refuses to start with a fractional-piaster or invalid shipping fee', () => {
+      expect(() => createCheckoutService({ shippingFee: 10.005 })).toThrow(/Invalid shipping fee/);
+      expect(() => createCheckoutService({ shippingFee: Number.NaN })).toThrow(
+        /Invalid shipping fee/,
+      );
+    });
+  });
 });
