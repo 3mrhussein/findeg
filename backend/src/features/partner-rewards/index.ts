@@ -19,7 +19,21 @@ export {
   type VoidSettlementError,
   type ForgiveDebtError,
 } from './settlements';
-export { type AvailableBalanceView, type IRewardStatementService } from './statement';
+export {
+  type AvailableBalanceView,
+  type IRewardStatementService,
+  type StaffRewardReportError,
+  type StaffRewardReportOptions,
+  type StaffRewardReportView,
+} from './statement';
+export { type MonthlyStatementView, type RewardAmount } from './monthly-statement';
+export {
+  type StaffActorView,
+  type StaffAdjustmentView,
+  type StaffEntitlementView,
+  type StaffSettlementLineView,
+} from './staff-report';
+export { type ReportLocale, type SalesRowView } from './sales-table';
 export {
   createPartnerRewardsServices,
   type PartnerRewardsDependencies,

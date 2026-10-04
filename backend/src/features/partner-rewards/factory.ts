@@ -14,6 +14,8 @@ export interface PartnerRewardsServices {
 export interface PartnerRewardsDependencies {
   /** Defaults to the application's shared database connection. */
   db?: RewardsDatabase;
+  /** Defaults to the system clock. Tests pin it to place the current Cairo month. */
+  now?: () => Date;
 }
 
 export function createPartnerRewardsServices(
@@ -26,6 +28,6 @@ export function createPartnerRewardsServices(
     rates: new RewardRateService(getDb),
     adjustments: new RewardAdjustmentService(getDb),
     settlements: new RewardSettlementService(getDb),
-    statement: new RewardStatementService(getDb),
+    statement: new RewardStatementService(getDb, dependencies.now),
   };
 }
