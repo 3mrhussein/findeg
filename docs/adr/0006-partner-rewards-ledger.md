@@ -4,19 +4,19 @@ status: proposed
 
 # Partner Rewards ledger
 
-Partner Schools earn Partner Points on School Supply List orders. Main has no partner, rate, or reward records; its orders are mutable, money is `decimal(10,2)` mapped through JS `Number()`, and it has whole-order `cancelled`/`refunded` transitions that develop lacks. `develop` (reference only) built an exact, append-only reward ledger but reverses rewards only through manual Finance corrections. We adopt develop's arithmetic and ledger shape, hook it into the Order Acceptance seam from ADR-0005, and drive reversals automatically from main's status transitions. Research: `docs/research/partner-rewards-attribution.md` (branch `research/partner-rewards-attribution`).
+Partner Schools earn Partner Points on School Supply List orders. Main has no partner, rate, or reward records; its orders are mutable, money is `decimal(10,2)` mapped through JS `Number()`, and it has whole-order `cancelled`/`refunded` transitions that develop lacks. `develop` (reference only) built an exact, append-only reward ledger but reverses rewards only through manual Finance corrections. We adopt develop's arithmetic and ledger shape, hook it into the Order Acceptance seam from ADR-0005, and drive reversals automatically from main's status transitions. The research file lives on branch `research/partner-rewards-attribution`, not on main.
 
 Depends on ADR-0003 (`business_partners`), ADR-0004 (Partner School on lists), and ADR-0005 (Order Acceptance, `transitionOrderStatus`, per-order attribution).
 
 ## Decisions
 
-**Scope: ledger only.** Accrue, earn, reverse, adjust, and a computed statement. Settlement/payout (bank accounts, available balance, debt policy) is a separate decision; the `settlement` event kind is reserved so it is additive.
+**Scope: ledger only.** Accrue, earn, reverse, adjust, and a computed statement. Settlement/payout (bank accounts, available balance, debt policy) is a separate decision; a `settlement` event kind was reserved here, but ADR-0009 dropped it and keeps settlements in their own table.
 
 **Rates.** Append-only `reward_rates` rows per Business Partner (current = latest), each carrying `pointsPerEgp` (`numeric(12,6)`) and `egpPerPoint` (`numeric(12,4)`), configured independently. The Quote reads the current rate `FOR SHARE` and both values are snapshotted onto the order and covered by the `confirmation` digest, so a rate change between quote and accept forces reconfirmation. No rate configured: the order is still accepted and attributed, with no entitlement.
 
 **Arithmetic.** Money in integer piasters (`bigint`), exact decimal/BigInt math, never JS `number`. Points = floor(charged line total × `pointsPerEgp`), where the charged line total is the Quote's post-discount line total, delivery excluded. EGP value = points × `egpPerPoint`, half-up to a piaster. Both are computed once at acceptance and stored; nothing is ever recomputed from a later rate. Zero-point entitlements are not stored.
 
-**Ledger shape.** One `reward_entitlements` row per attributed `order_items` row (keyed on `order_items.id`), plus append-only `reward_events` (`accepted | paid | cancellation | reversal | adjustment`; `settlement` reserved). Triggers forbid UPDATE/DELETE on rates, entitlements, and events. Unique indexes allow at most one `accepted`, one `paid`, and one `reversal`/`cancellation` per entitlement. The Reward Statement (pending / earned / reversed, in points and EGP) is computed on read.
+**Ledger shape.** One `reward_entitlements` row per attributed `order_items` row (keyed on `order_items.id`), plus append-only `reward_events` (`accepted | paid | cancellation | reversal | adjustment`; the `settlement` kind reserved here was dropped by ADR-0009). Triggers forbid UPDATE/DELETE on rates, entitlements, and events. Unique indexes allow at most one `accepted`, one `paid`, and one `reversal`/`cancellation` per entitlement. The Reward Statement (pending / earned / reversed, in points and EGP) is computed on read.
 
 **Placement.** A new `partner-rewards` backend feature with tables in a new `rewards` Postgres schema. Its writes take the ADR-0005 transaction and are called by `checkout` (at acceptance) and by the order transition functions.
 
