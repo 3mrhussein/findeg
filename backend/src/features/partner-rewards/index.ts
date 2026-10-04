@@ -13,6 +13,12 @@ export {
   type RewardsStaffActor,
 } from './rates';
 export {
+  type AdjustRewardsError,
+  type IRewardAdjustmentService,
+  type RewardAdjustmentView,
+} from './adjustments';
+export { type AvailableBalanceView, type IRewardStatementService } from './statement';
+export {
   createPartnerRewardsServices,
   type PartnerRewardsDependencies,
   type PartnerRewardsServices,

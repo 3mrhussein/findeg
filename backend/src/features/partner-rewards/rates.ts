@@ -9,14 +9,18 @@ import {
   type RewardsDatabase,
 } from '@findeg/db/queries/rewards';
 import { getBusinessPartnerById } from '@findeg/db/queries/partners';
-import { PERMISSION_CODES, type PermissionCode } from '@findeg/db';
+import { PERMISSION_CODES } from '@findeg/db';
+import {
+  canViewRewards,
+  fail,
+  hasPermission,
+  ok,
+  type RewardRateResult,
+  type RewardsStaffActor,
+} from './staff-access';
 import { parseRewardRateInput, type RewardRateInput } from './valuation';
 
-export interface RewardsStaffActor {
-  readonly userId: number;
-  readonly permissionCodes?: readonly PermissionCode[];
-  readonly activeRoleIds?: readonly string[];
-}
+export type { RewardRateResult, RewardsStaffActor };
 
 export interface RewardRateView {
   readonly id: number;
@@ -31,9 +35,6 @@ export interface RewardTotalsView {
   readonly points: bigint;
   readonly egpValuePiasters: bigint;
 }
-
-export type RewardRateResult<T, E extends string> =
-  { readonly success: true; readonly data: T } | { readonly success: false; readonly error: E };
 
 export interface IRewardRateService {
   setRate(
@@ -65,21 +66,6 @@ export interface IRewardRateService {
     actor: RewardsStaffActor,
     businessPartnerId: number,
   ): Promise<RewardRateResult<RewardTotalsView, 'forbidden' | 'not-found'>>;
-}
-
-const ok = <T>(data: T) => ({ success: true, data }) as const;
-const fail = <E extends string>(error: E) => ({ success: false, error }) as const;
-
-function hasPermission(actor: RewardsStaffActor, permission: PermissionCode) {
-  if (actor.activeRoleIds?.includes('system_admin')) return true;
-  return actor.permissionCodes?.includes(permission) === true;
-}
-
-function canViewRewards(actor: RewardsStaffActor) {
-  return (
-    hasPermission(actor, PERMISSION_CODES.REWARDS_VIEW) ||
-    hasPermission(actor, PERMISSION_CODES.REWARDS_RATES_MANAGE)
-  );
 }
 
 function toView(row: RewardRateRow): RewardRateView {
