@@ -10,7 +10,7 @@
 import { revalidateTag } from 'next/cache';
 import { createAdministrationServices } from '@findeg/backend/features/administration';
 import { getErrorMessage } from '@lib/type-guards';
-import { getSession } from '@lib/session';
+import { requireOrderWriteActor } from '@lib/order-write-access';
 
 /**
  * Server Action: Update order status
@@ -23,8 +23,9 @@ export async function updateOrderStatusAction(
   input: import('@findeg/backend/features/order').OrderStatusUpdate,
 ) {
   try {
+    const actor = await requireOrderWriteActor();
     const { orders } = createAdministrationServices();
-    await orders.updateStatus(orderId, input);
+    await orders.updateStatus(actor, orderId, input);
 
     revalidateTag('orders', 'max');
     return { success: true };
@@ -45,9 +46,9 @@ export async function updateOrderPaymentStatusAction(
   paymentStatus: import('@findeg/backend/features/core').PaymentStatus,
 ) {
   try {
-    const session = await getSession();
+    const actor = await requireOrderWriteActor();
     const { orders } = createAdministrationServices();
-    await orders.updatePaymentStatus(orderId, paymentStatus, session?.userId);
+    await orders.updatePaymentStatus(actor, orderId, paymentStatus);
 
     revalidateTag('orders', 'max');
     return { success: true };

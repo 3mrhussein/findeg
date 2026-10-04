@@ -13,26 +13,8 @@ import {
   type OrderStatusUpdate,
 } from '@findeg/backend/features/order/schemas';
 import type { OrderStatus } from '@findeg/backend/features/core';
-import {
-  adminSession,
-  hasPermission,
-  PERMISSION_CODES,
-  type SessionPayload,
-} from '@findeg/backend/features/core';
 import { getErrorMessage } from '@lib/type-guards';
-import { getSession } from '@lib/session';
-
-async function requireOrderWritePermission(): Promise<SessionPayload> {
-  const session = await getSession();
-  if (
-    !session ||
-    !adminSession(session) ||
-    !hasPermission(session, PERMISSION_CODES.ADMIN_ORDERS_WRITE)
-  ) {
-    throw new Error('Unauthorized: Order write permission required');
-  }
-  return session;
-}
+import { requireOrderWriteActor } from '@lib/order-write-access';
 
 /**
  * Update order status
@@ -41,9 +23,9 @@ async function requireOrderWritePermission(): Promise<SessionPayload> {
  */
 export async function updateOrderStatusAction(id: number, input: OrderStatusUpdate) {
   try {
-    await requireOrderWritePermission();
+    const actor = await requireOrderWriteActor();
     const { orders } = createAdministrationServices();
-    const result = await orders.updateStatus(id, input);
+    const result = await orders.updateStatus(actor, id, input);
 
     updateTag('orders');
 
@@ -60,7 +42,7 @@ export async function updateOrderStatusAction(id: number, input: OrderStatusUpda
  */
 export async function bulkUpdateOrderStatusAction(ids: number[], status: OrderStatus) {
   try {
-    await requireOrderWritePermission();
+    const actor = await requireOrderWriteActor();
     if (
       !Array.isArray(ids) ||
       ids.length === 0 ||
@@ -70,7 +52,9 @@ export async function bulkUpdateOrderStatusAction(ids: number[], status: OrderSt
     }
     const update = OrderStatusUpdateSchema.parse({ status });
     const { orders } = createAdministrationServices();
-    const settled = await Promise.allSettled(ids.map((id) => orders.updateStatus(id, update)));
+    const settled = await Promise.allSettled(
+      ids.map((id) => orders.updateStatus(actor, id, update)),
+    );
     const failures = settled.flatMap((result, index) =>
       result.status === 'rejected'
         ? [{ orderId: ids[index], error: getErrorMessage(result.reason) }]
@@ -103,9 +87,9 @@ export async function updateOrderPaymentStatusAction(
   paymentStatus: 'unpaid' | 'paid' | 'refunded',
 ) {
   try {
-    const session = await requireOrderWritePermission();
+    const actor = await requireOrderWriteActor();
     const { orders } = createAdministrationServices();
-    const result = await orders.updatePaymentStatus(id, paymentStatus, session.userId);
+    const result = await orders.updatePaymentStatus(actor, id, paymentStatus);
 
     updateTag('orders');
 

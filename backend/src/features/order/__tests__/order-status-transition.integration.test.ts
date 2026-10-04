@@ -8,6 +8,7 @@ import {
   products,
   productVariants,
   stockMovements,
+  users,
   warehouses,
 } from '@findeg/db/schema';
 import { createCheckoutService } from '../../checkout';
@@ -228,8 +229,17 @@ describe('transitionOrderStatus on real Postgres', () => {
   it('routes Admin status updates through the transition and retains the audit log', async () => {
     const { orderId } = await acceptOrder();
     const administration = createAdministrationServices();
+    const [admin] = await testDb.db
+      .insert(users)
+      .values({ email: `transition-admin-${orderId}@example.com`, portalRole: 'staff' })
+      .returning();
+    const systemAdministrator = {
+      kind: 'staff' as const,
+      userId: admin.id,
+      activeRoleIds: ['system_admin'],
+    };
 
-    await administration.orders.updateStatus(orderId, {
+    await administration.orders.updateStatus(systemAdministrator, orderId, {
       status: 'confirmed',
       adminNotes: 'Confirmed in the Dashboard',
     });

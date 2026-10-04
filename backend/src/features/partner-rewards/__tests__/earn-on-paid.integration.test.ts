@@ -10,6 +10,7 @@ import {
   rewardRates,
   users,
 } from '@findeg/db/schema';
+import { PERMISSION_CODES } from '@findeg/db';
 import { connectToTestDatabase, type TestDatabase } from '../../../testing/postgres';
 import { transitionOrderStatus } from '../../order/application/services/transition-order-status';
 import {
@@ -180,7 +181,11 @@ describe('earn on delivered and paid', () => {
       .values({ email: 'payment-admin@example.com', portalRole: 'staff' })
       .returning();
     const { orderId } = await createOrder();
-    await createAdministrationServices().orders.updatePaymentStatus(orderId, 'paid', admin.id);
+    await createAdministrationServices().orders.updatePaymentStatus(
+      { kind: 'staff', userId: admin.id, permissionCodes: [PERMISSION_CODES.ADMIN_ORDERS_WRITE] },
+      orderId,
+      'paid',
+    );
     const logs = await paymentAuditRows(orderId);
     expect(logs).toHaveLength(1);
     expect(logs[0].adminUserId).toBe(admin.id);

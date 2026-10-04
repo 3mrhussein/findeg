@@ -6,6 +6,14 @@ export interface DashboardStats {
   ordersByStatus: Partial<Record<OrderStatus, number>>;
 }
 
+/** The signed-in Staff member changing an Order from the Dashboard. */
+export interface OrderStaffActor {
+  kind: 'staff';
+  userId: number;
+  permissionCodes?: readonly string[];
+  activeRoleIds?: readonly string[];
+}
+
 export interface IAdminOrderService {
   /**
    * Retrieves a paginated list of orders matching the given filters.
@@ -19,13 +27,15 @@ export interface IAdminOrderService {
 
   /**
    * Updates the delivery or lifecycle status of an order.
+   * Throws OrderWriteForbiddenError unless the actor has order-write access.
    */
-  updateStatus(id: number, update: OrderStatusUpdate): Promise<void>;
+  updateStatus(actor: OrderStaffActor, id: number, update: OrderStatusUpdate): Promise<void>;
 
   /**
    * Updates the financial payment status of an order.
+   * Throws OrderWriteForbiddenError unless the actor has order-write access.
    */
-  updatePaymentStatus(id: number, status: PaymentStatus, adminUserId?: number): Promise<void>;
+  updatePaymentStatus(actor: OrderStaffActor, id: number, status: PaymentStatus): Promise<void>;
 
   /**
    * Retrieves high-level order statistics for the dashboard.
