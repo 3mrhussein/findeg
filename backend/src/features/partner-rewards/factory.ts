@@ -2,6 +2,7 @@ import type { RewardsDatabase } from '@findeg/db/queries/rewards';
 import { RewardAdjustmentService, type IRewardAdjustmentService } from './adjustments';
 import { RewardSettlementService, type IRewardSettlementService } from './settlements';
 import { RewardStatementService, type IRewardStatementService } from './statement';
+import { PartnerRewardReportService, type IPartnerRewardReportService } from './partner-report';
 import { RewardRateService, type IRewardRateService } from './rates';
 
 export interface PartnerRewardsServices {
@@ -9,6 +10,7 @@ export interface PartnerRewardsServices {
   adjustments: IRewardAdjustmentService;
   settlements: IRewardSettlementService;
   statement: IRewardStatementService;
+  partnerReports: IPartnerRewardReportService;
 }
 
 export interface PartnerRewardsDependencies {
@@ -29,5 +31,6 @@ export function createPartnerRewardsServices(
     adjustments: new RewardAdjustmentService(getDb),
     settlements: new RewardSettlementService(getDb),
     statement: new RewardStatementService(getDb, dependencies.now),
+    partnerReports: new PartnerRewardReportService(getDb, dependencies.now),
   };
 }

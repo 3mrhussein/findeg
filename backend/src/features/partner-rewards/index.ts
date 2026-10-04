@@ -33,6 +33,17 @@ export {
   type StaffEntitlementView,
   type StaffSettlementLineView,
 } from './staff-report';
+export {
+  canReadPartnerReports,
+  PARTNER_REPORT_ROLES,
+  MIN_DISTINCT_ORDERS_PER_SALES_ROW,
+  type IPartnerRewardReportService,
+  type PartnerRewardReportError,
+  type PartnerRewardReportOptions,
+  type PartnerRewardReportView,
+  type PartnerSalesRowView,
+  type PartnerSettlementLineView,
+} from './partner-report';
 export { type ReportLocale, type SalesRowView } from './sales-table';
 export {
   createPartnerRewardsServices,

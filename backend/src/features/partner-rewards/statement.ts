@@ -3,7 +3,7 @@ import { getBusinessPartnerById } from '@findeg/db/queries/partners';
 import { PERMISSION_CODES } from '@findeg/db';
 import { isMonthKey } from './months';
 import type { ReportLocale } from './sales-table';
-import { readStatementAndSales, type StatementAndSales } from './statement-and-sales';
+import { readStatementAndSales, staffSource, type StatementAndSales } from './statement-and-sales';
 import { readStaffReportDetail, type StaffReportDetail } from './staff-report';
 import {
   canViewRewards,
@@ -65,11 +65,16 @@ export class RewardStatementService implements IRewardStatementService {
     // One snapshot, so the statement, pending figure and live balance cannot straddle a write.
     return db.transaction(
       async (tx) => {
-        const shared = await readStatementAndSales(tx, businessPartnerId, {
-          month: options.month,
-          locale: options.locale ?? 'en',
-          asOf,
-        });
+        const shared = await readStatementAndSales(
+          tx,
+          businessPartnerId,
+          {
+            month: options.month,
+            locale: options.locale ?? 'en',
+            asOf,
+          },
+          staffSource,
+        );
         if (!shared) return fail('invalid-input');
         const detail = await readStaffReportDetail(tx, businessPartnerId, shared.statement.month);
         return ok({ ...shared, ...detail });

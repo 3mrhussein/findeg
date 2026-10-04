@@ -127,6 +127,13 @@
       "when": 1791099365910,
       "tag": "0017_reward_settlements",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1791185765910,
+      "tag": "0018_partner_reward_views",
+      "breakpoints": true
     }
   ]
 }
