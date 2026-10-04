@@ -1,6 +1,5 @@
 import { guestAccessQueries, orderQueries, withTransaction } from '@findeg/db/queries';
-import { enqueue } from '../../outbox/application/enqueue';
-import { GUEST_ACCESS_KIND, guestAccessId } from '../../outbox/domain/types';
+import { enqueue, GUEST_ACCESS_KIND, guestAccessId } from '../../outbox';
 import { matchesAnyHash } from '../domain/codes';
 import {
   GUEST_ORDER_TOKEN_SECONDS,

@@ -288,6 +288,28 @@ export async function count(filters?: OrderFiltersInput): Promise<number> {
 
 // ─── Order Mutations ────────────────────────────────────────────────────────
 
+const UNIQUE_VIOLATION = '23505';
+const ORDER_REFERENCE_INDEX = 'uq_orders_order_reference';
+
+/**
+ * True when `err` (or anything in its `cause` chain, since drizzle wraps driver errors) is a
+ * Postgres unique violation on the Order Reference index.
+ */
+export function isOrderReferenceConflict(err: unknown): boolean {
+  let current: unknown = err;
+  for (let depth = 0; depth < 5 && current && typeof current === 'object'; depth++) {
+    const e = current as { code?: unknown; constraint_name?: unknown; constraint?: unknown };
+    if (
+      e.code === UNIQUE_VIOLATION &&
+      (e.constraint_name === ORDER_REFERENCE_INDEX || e.constraint === ORDER_REFERENCE_INDEX)
+    ) {
+      return true;
+    }
+    current = (current as { cause?: unknown }).cause;
+  }
+  return false;
+}
+
 /**
  * Create order with items (transactional; joins `tx` when given)
  */
@@ -368,14 +390,7 @@ export async function create(
           return inserted;
         });
       } catch (err: unknown) {
-        const error = err as { code?: string; constraint?: string; message?: string };
-        if (
-          error?.code === '23505' &&
-          (error?.constraint === 'uq_orders_order_reference' ||
-            String(error?.message).includes('order_reference')) &&
-          !data.orderReference &&
-          attempts < maxAttempts
-        ) {
+        if (!data.orderReference && attempts < maxAttempts && isOrderReferenceConflict(err)) {
           continue;
         }
         throw err;

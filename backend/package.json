@@ -15,6 +15,7 @@
     "./features/catalog/schemas": "./src/features/catalog/schemas.ts",
     "./features/catalog/*": null,
     "./features/core": "./src/features/core/index.ts",
+    "./features/core/logger": "./src/features/core/logger.ts",
     "./features/core/schemas": "./src/features/core/schemas.ts",
     "./features/core/*": null,
     "./features/guest-access": "./src/features/guest-access/index.ts",

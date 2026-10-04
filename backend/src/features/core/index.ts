@@ -24,6 +24,7 @@ export {
   type Locale,
   type TranslationMap,
 } from './domain/value-objects/Locale';
+export { DEFAULT_LOCALE } from './domain/value-objects/Locale';
 export type { PermissionCode } from './domain/value-objects/Identity';
 export { PortalRoleSchema } from './domain/types/common';
 export type { PortalRole, OrderStatus, PaymentStatus } from './domain/types/common';

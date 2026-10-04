@@ -35,6 +35,10 @@ const SCHEMA_EXPORT_NAMES_BY_FEATURE = {
 };
 const FEATURES_WITH_CLIENT_SAFE_SCHEMAS = Object.keys(SCHEMA_EXPORT_NAMES_BY_FEATURE);
 
+// Server-only entry points kept out of the barrel because they reach Node-only modules (e.g.
+// `core/logger` -> node:fs) that must never enter a Client Component bundle.
+const SERVER_ONLY_ENTRY_POINTS_BY_FEATURE = { core: ['logger'] };
+
 export const next = [
   ...base,
   ...shared,
@@ -62,12 +66,15 @@ export const next = [
           patterns: [
             { group: ['@findeg/db/**'] },
             ...BARRELED_BACKEND_FEATURES.map((feature) => ({
-              group: FEATURES_WITH_CLIENT_SAFE_SCHEMAS.includes(feature)
-                ? [
-                    `@findeg/backend/features/${feature}/**`,
-                    `!@findeg/backend/features/${feature}/schemas`,
-                  ]
-                : [`@findeg/backend/features/${feature}/**`],
+              group: [
+                `@findeg/backend/features/${feature}/**`,
+                ...(FEATURES_WITH_CLIENT_SAFE_SCHEMAS.includes(feature)
+                  ? [`!@findeg/backend/features/${feature}/schemas`]
+                  : []),
+                ...(SERVER_ONLY_ENTRY_POINTS_BY_FEATURE[feature] ?? []).map(
+                  (entry) => `!@findeg/backend/features/${feature}/${entry}`,
+                ),
+              ],
               message: `Import from '@findeg/backend/features/${feature}' (the feature barrel) instead of reaching into its internals.`,
             })),
           ],

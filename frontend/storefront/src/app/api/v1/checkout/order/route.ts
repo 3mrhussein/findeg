@@ -1,5 +1,6 @@
 import { after } from 'next/server';
 import { createCheckoutService } from '@findeg/backend/features/checkout';
+import { createLogger } from '@findeg/backend/features/core/logger';
 import { drainOutbox } from '@findeg/backend/features/outbox';
 import { getSession } from '@lib/session';
 
@@ -35,7 +36,10 @@ export async function POST(request: Request) {
   // Deliver the confirmation email once the response is sent; the sweeper retries on failure.
   after(() =>
     drainOutbox().catch((err) => {
-      console.error('[checkout] outbox drain failed:', err);
+      createLogger().error('Outbox drain failed', {
+        feature: 'checkout',
+        error: err instanceof Error ? err.message : String(err),
+      });
     }),
   );
 

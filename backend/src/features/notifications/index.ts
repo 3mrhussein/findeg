@@ -5,4 +5,7 @@
 // internal to the backend package. See docs/adr/0001-backend-feature-barrels.md.
 export { createNotificationServices } from './application/services/factory';
 export type { NotificationServices } from './application/services/factory';
+export { default as OrderConfirmationEmail } from './infrastructure/templates/OrderConfirmationEmail';
+export { default as OrderStatusUpdateEmail } from './infrastructure/templates/OrderStatusUpdateEmail';
+export { default as GuestAccessCodeEmail } from './infrastructure/templates/GuestAccessCodeEmail';
 export type { IEmailService } from './application/services/IEmailService';
