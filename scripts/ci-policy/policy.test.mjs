@@ -179,12 +179,16 @@ test('only the fast tier restores caches, and only a push to develop saves them'
 const FRONTEND_ONLY = ['frontend/storefront/src/app/page.tsx', 'frontend/ui/src/button.tsx'];
 const DOCS_ONLY = ['docs/adr/0014-develop-branch-flow.md', 'README.md'];
 
-test('on the fast tier, integration tests run when the backend, db, env package, lockfile or CI policy changed', () => {
+test('on the fast tier, integration tests run when the backend, db, env package, root tooling or CI policy changed', () => {
   for (const changedPaths of [
     BACKEND_ONLY,
     ['db/schema/orders.ts'],
     ['packages/env/src/core.ts'],
     ['pnpm-lock.yaml'],
+    ['package.json'],
+    ['turbo.json'],
+    ['.nvmrc'],
+    ['docker-compose.yml'],
     ['scripts/ci-policy/policy.mjs'],
     ['.github/workflows/ci.yml'],
     ['.github/workflows/ci-jobs.yml'],
