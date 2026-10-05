@@ -1,0 +1,14 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "storefront",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": [
+        "-c",
+        "set -a; . ./.env; . ./.env.local; set +a; exec pnpm --filter @findeg/storefront dev"
+      ],
+      "port": 3000
+    }
+  ]
+}
