@@ -24,3 +24,6 @@ yarn.lock
 # IDE
 .vscode/
 .idea/
+
+# ESLint bulk-suppressions file: keep ESLint's own format so regenerating it is diff-stable
+**/eslint-suppressions.json

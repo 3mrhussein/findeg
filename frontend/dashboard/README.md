@@ -43,6 +43,7 @@ Built on [shadcn/ui](https://ui.shadcn.com/) and localized via `@findeg/ui`.
 
 The FindEg Dashboard is fully localized into Arabic & English via `next-intl`.
 
+- **No Hard-Coded Copy**: `react/jsx-no-literals` (in `eslint.config.js`) fails lint on literal JSX text in `src/**/*.tsx`; the pre-existing backlog is listed in `eslint-suppressions.json`. After translating backlog strings, run `pnpm exec eslint . --prune-suppressions` here to shrink that file — never regenerate it with `--suppress-rule` to hide new copy.
 - **RTL Integrity**: All Tailwind classes MUST use logical properties. Instead of `ml-4`, you must use `ms-4` (margin-inline-start). This ensures the dashboard physically mirrors perfectly when switching to Arabic.
 - **Dark Mode**: Managed by `next-themes`. Any custom CSS variables must be tracked in the global `globals.css` properly mapped to HSL tokens.
 

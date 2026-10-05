@@ -1,0 +1,607 @@
+{
+  "src/app/[locale]/(dashboard)/_components/DashboardStats.tsx": {
+    "react/jsx-no-literals": {
+      "count": 2
+    }
+  },
+  "src/app/[locale]/(dashboard)/_components/DashboardWidgets.tsx": {
+    "react/jsx-no-literals": {
+      "count": 2
+    }
+  },
+  "src/app/[locale]/(dashboard)/_components/ProductTable.tsx": {
+    "react/jsx-no-literals": {
+      "count": 14
+    }
+  },
+  "src/app/[locale]/(dashboard)/account/_components/ProfileForm.tsx": {
+    "react/jsx-no-literals": {
+      "count": 3
+    }
+  },
+  "src/app/[locale]/(dashboard)/account/loading.tsx": {
+    "react/jsx-no-literals": {
+      "count": 1
+    }
+  },
+  "src/app/[locale]/(dashboard)/account/page.tsx": {
+    "react/jsx-no-literals": {
+      "count": 1
+    }
+  },
+  "src/app/[locale]/(dashboard)/audit-log/page.tsx": {
+    "react/jsx-no-literals": {
+      "count": 20
+    }
+  },
+  "src/app/[locale]/(dashboard)/brands/_components/BrandCard.tsx": {
+    "react/jsx-no-literals": {
+      "count": 3
+    }
+  },
+  "src/app/[locale]/(dashboard)/brands/_components/BrandFormPanel.tsx": {
+    "react/jsx-no-literals": {
+      "count": 2
+    }
+  },
+  "src/app/[locale]/(dashboard)/catalog/_components/CollectionSelect.tsx": {
+    "react/jsx-no-literals": {
+      "count": 1
+    }
+  },
+  "src/app/[locale]/(dashboard)/catalog/_components/SortableCollectionList.tsx": {
+    "react/jsx-no-literals": {
+      "count": 4
+    }
+  },
+  "src/app/[locale]/(dashboard)/catalog/collections/_components/CollectionCard.tsx": {
+    "react/jsx-no-literals": {
+      "count": 3
+    }
+  },
+  "src/app/[locale]/(dashboard)/catalog/collections/_components/CollectionForm.tsx": {
+    "react/jsx-no-literals": {
+      "count": 16
+    }
+  },
+  "src/app/[locale]/(dashboard)/catalog/collections/_components/CollectionGrid.tsx": {
+    "react/jsx-no-literals": {
+      "count": 1
+    }
+  },
+  "src/app/[locale]/(dashboard)/catalog/collections/_components/CollectionsPageClient.tsx": {
+    "react/jsx-no-literals": {
+      "count": 4
+    }
+  },
+  "src/app/[locale]/(dashboard)/catalog/tags/_components/IconPicker.tsx": {
+    "react/jsx-no-literals": {
+      "count": 2
+    }
+  },
+  "src/app/[locale]/(dashboard)/categories/CategoryForm/CategoryBasicFields.tsx": {
+    "react/jsx-no-literals": {
+      "count": 4
+    }
+  },
+  "src/app/[locale]/(dashboard)/categories/CategoryForm/CategoryForm.tsx": {
+    "react/jsx-no-literals": {
+      "count": 1
+    }
+  },
+  "src/app/[locale]/(dashboard)/categories/CategoryForm/CategoryMetaFields.tsx": {
+    "react/jsx-no-literals": {
+      "count": 8
+    }
+  },
+  "src/app/[locale]/(dashboard)/categories/CategoryTable.tsx": {
+    "react/jsx-no-literals": {
+      "count": 4
+    }
+  },
+  "src/app/[locale]/(dashboard)/categories/[id]/edit/page.tsx": {
+    "react/jsx-no-literals": {
+      "count": 2
+    }
+  },
+  "src/app/[locale]/(dashboard)/categories/_components/CategoryDrawer.tsx": {
+    "react/jsx-no-literals": {
+      "count": 2
+    }
+  },
+  "src/app/[locale]/(dashboard)/categories/_components/CategoryFormPanel.tsx": {
+    "react/jsx-no-literals": {
+      "count": 4
+    }
+  },
+  "src/app/[locale]/(dashboard)/categories/_components/CategoryTree.tsx": {
+    "react/jsx-no-literals": {
+      "count": 1
+    }
+  },
+  "src/app/[locale]/(dashboard)/categories/new/page.tsx": {
+    "react/jsx-no-literals": {
+      "count": 2
+    }
+  },
+  "src/app/[locale]/(dashboard)/editorial/search-analytics/_components/SearchAnalyticsView.tsx": {
+    "react/jsx-no-literals": {
+      "count": 51
+    }
+  },
+  "src/app/[locale]/(dashboard)/editorial/search-analytics/page.tsx": {
+    "react/jsx-no-literals": {
+      "count": 2
+    }
+  },
+  "src/app/[locale]/(dashboard)/inventory/_components/InventoryTable/InventoryBatchControls.tsx": {
+    "react/jsx-no-literals": {
+      "count": 5
+    }
+  },
+  "src/app/[locale]/(dashboard)/inventory/_components/InventoryTable/InventoryFilters.tsx": {
+    "react/jsx-no-literals": {
+      "count": 6
+    }
+  },
+  "src/app/[locale]/(dashboard)/inventory/_components/InventoryTable/InventoryRow.tsx": {
+    "react/jsx-no-literals": {
+      "count": 3
+    }
+  },
+  "src/app/[locale]/(dashboard)/inventory/_components/InventoryTable/InventoryTable.tsx": {
+    "react/jsx-no-literals": {
+      "count": 5
+    }
+  },
+  "src/app/[locale]/(dashboard)/inventory/page.tsx": {
+    "react/jsx-no-literals": {
+      "count": 3
+    }
+  },
+  "src/app/[locale]/(dashboard)/media/_components/media-library.tsx": {
+    "react/jsx-no-literals": {
+      "count": 6
+    }
+  },
+  "src/app/[locale]/(dashboard)/media/_components/media-upload-form.tsx": {
+    "react/jsx-no-literals": {
+      "count": 2
+    }
+  },
+  "src/app/[locale]/(dashboard)/media/page.tsx": {
+    "react/jsx-no-literals": {
+      "count": 4
+    }
+  },
+  "src/app/[locale]/(dashboard)/notifications/page.tsx": {
+    "react/jsx-no-literals": {
+      "count": 7
+    }
+  },
+  "src/app/[locale]/(dashboard)/orders/OrderTable/OrderBulkActionBar.tsx": {
+    "react/jsx-no-literals": {
+      "count": 4
+    }
+  },
+  "src/app/[locale]/(dashboard)/orders/OrderTable/OrderTable.tsx": {
+    "react/jsx-no-literals": {
+      "count": 1
+    }
+  },
+  "src/app/[locale]/(dashboard)/orders/OrderTable/OrderTableColumns.tsx": {
+    "react/jsx-no-literals": {
+      "count": 5
+    }
+  },
+  "src/app/[locale]/(dashboard)/orders/OrderTable/OrderTableFilters.tsx": {
+    "react/jsx-no-literals": {
+      "count": 7
+    }
+  },
+  "src/app/[locale]/(dashboard)/orders/OrderTable/OrderTablePagination.tsx": {
+    "react/jsx-no-literals": {
+      "count": 5
+    }
+  },
+  "src/app/[locale]/(dashboard)/orders/[id]/_components/OrderActivityLog.tsx": {
+    "react/jsx-no-literals": {
+      "count": 4
+    }
+  },
+  "src/app/[locale]/(dashboard)/orders/[id]/_components/OrderCustomerInfo.tsx": {
+    "react/jsx-no-literals": {
+      "count": 6
+    }
+  },
+  "src/app/[locale]/(dashboard)/orders/[id]/_components/OrderHeader.tsx": {
+    "react/jsx-no-literals": {
+      "count": 4
+    }
+  },
+  "src/app/[locale]/(dashboard)/orders/[id]/_components/OrderItemsTable.tsx": {
+    "react/jsx-no-literals": {
+      "count": 6
+    }
+  },
+  "src/app/[locale]/(dashboard)/orders/[id]/_components/OrderPaymentFulfillment.tsx": {
+    "react/jsx-no-literals": {
+      "count": 6
+    }
+  },
+  "src/app/[locale]/(dashboard)/orders/[id]/_components/OrderTimeline.tsx": {
+    "react/jsx-no-literals": {
+      "count": 1
+    }
+  },
+  "src/app/[locale]/(dashboard)/orders/[id]/_components/OrderTotals.tsx": {
+    "react/jsx-no-literals": {
+      "count": 5
+    }
+  },
+  "src/app/[locale]/(dashboard)/orders/[id]/page.tsx": {
+    "react/jsx-no-literals": {
+      "count": 2
+    }
+  },
+  "src/app/[locale]/(dashboard)/orders/_components/OrderDetailControls/OrderDetailControls.tsx": {
+    "react/jsx-no-literals": {
+      "count": 7
+    }
+  },
+  "src/app/[locale]/(dashboard)/orders/_components/OrderDetailDrawer.tsx": {
+    "react/jsx-no-literals": {
+      "count": 24
+    }
+  },
+  "src/app/[locale]/(dashboard)/orders/_components/OrderRow.tsx": {
+    "react/jsx-no-literals": {
+      "count": 16
+    }
+  },
+  "src/app/[locale]/(dashboard)/orders/_components/OrderTimeline.tsx": {
+    "react/jsx-no-literals": {
+      "count": 1
+    }
+  },
+  "src/app/[locale]/(dashboard)/orders/_components/order-audit-timeline.tsx": {
+    "react/jsx-no-literals": {
+      "count": 7
+    }
+  },
+  "src/app/[locale]/(dashboard)/orders/_components/orders-table.tsx": {
+    "react/jsx-no-literals": {
+      "count": 8
+    }
+  },
+  "src/app/[locale]/(dashboard)/partners/[id]/edit/page.tsx": {
+    "react/jsx-no-literals": {
+      "count": 1
+    }
+  },
+  "src/app/[locale]/(dashboard)/partners/[id]/page.tsx": {
+    "react/jsx-no-literals": {
+      "count": 5
+    }
+  },
+  "src/app/[locale]/(dashboard)/partners/_components/InvitationsPanel.tsx": {
+    "react/jsx-no-literals": {
+      "count": 9
+    }
+  },
+  "src/app/[locale]/(dashboard)/partners/_components/MembersPanel.tsx": {
+    "react/jsx-no-literals": {
+      "count": 9
+    }
+  },
+  "src/app/[locale]/(dashboard)/partners/_components/PartnerForm.tsx": {
+    "react/jsx-no-literals": {
+      "count": 4
+    }
+  },
+  "src/app/[locale]/(dashboard)/partners/_components/SalesReportPanel.tsx": {
+    "react/jsx-no-literals": {
+      "count": 2
+    }
+  },
+  "src/app/[locale]/(dashboard)/partners/_components/StatusActions.tsx": {
+    "react/jsx-no-literals": {
+      "count": 1
+    }
+  },
+  "src/app/[locale]/(dashboard)/partners/new/page.tsx": {
+    "react/jsx-no-literals": {
+      "count": 1
+    }
+  },
+  "src/app/[locale]/(dashboard)/partners/page.tsx": {
+    "react/jsx-no-literals": {
+      "count": 5
+    }
+  },
+  "src/app/[locale]/(dashboard)/products/ProductTable/ProductBulkActionBar.tsx": {
+    "react/jsx-no-literals": {
+      "count": 5
+    }
+  },
+  "src/app/[locale]/(dashboard)/products/ProductTable/ProductDeleteDialog.tsx": {
+    "react/jsx-no-literals": {
+      "count": 3
+    }
+  },
+  "src/app/[locale]/(dashboard)/products/ProductTable/ProductTable.tsx": {
+    "react/jsx-no-literals": {
+      "count": 1
+    }
+  },
+  "src/app/[locale]/(dashboard)/products/ProductTable/ProductTableColumns.tsx": {
+    "react/jsx-no-literals": {
+      "count": 11
+    }
+  },
+  "src/app/[locale]/(dashboard)/products/ProductTable/ProductTableFilters.tsx": {
+    "react/jsx-no-literals": {
+      "count": 13
+    }
+  },
+  "src/app/[locale]/(dashboard)/products/ProductTable/ProductTablePagination.tsx": {
+    "react/jsx-no-literals": {
+      "count": 4
+    }
+  },
+  "src/app/[locale]/(dashboard)/products/[id]/_components/ProductDetailContent.tsx": {
+    "react/jsx-no-literals": {
+      "count": 1
+    }
+  },
+  "src/app/[locale]/(dashboard)/products/_components/ProductBasicInfo.tsx": {
+    "react/jsx-no-literals": {
+      "count": 4
+    }
+  },
+  "src/app/[locale]/(dashboard)/products/_components/ProductCategoryBrand.tsx": {
+    "react/jsx-no-literals": {
+      "count": 3
+    }
+  },
+  "src/app/[locale]/(dashboard)/products/_components/ProductCompact.tsx": {
+    "react/jsx-no-literals": {
+      "count": 1
+    }
+  },
+  "src/app/[locale]/(dashboard)/products/_components/ProductExpanded.tsx": {
+    "react/jsx-no-literals": {
+      "count": 11
+    }
+  },
+  "src/app/[locale]/(dashboard)/products/_components/ProductForm/shared/PriceInput.tsx": {
+    "react/jsx-no-literals": {
+      "count": 1
+    }
+  },
+  "src/app/[locale]/(dashboard)/products/_components/ProductForm/shared/SkuInput.tsx": {
+    "react/jsx-no-literals": {
+      "count": 1
+    }
+  },
+  "src/app/[locale]/(dashboard)/products/_components/ProductForm/shared/WeightInput.tsx": {
+    "react/jsx-no-literals": {
+      "count": 2
+    }
+  },
+  "src/app/[locale]/(dashboard)/products/_components/ProductForm/tabs/InfoTab.tsx": {
+    "react/jsx-no-literals": {
+      "count": 4
+    }
+  },
+  "src/app/[locale]/(dashboard)/products/_components/ProductForm/tabs/MediaTab.tsx": {
+    "react/jsx-no-literals": {
+      "count": 1
+    }
+  },
+  "src/app/[locale]/(dashboard)/products/_components/ProductForm/tabs/SeoTab.tsx": {
+    "react/jsx-no-literals": {
+      "count": 4
+    }
+  },
+  "src/app/[locale]/(dashboard)/products/_components/ProductForm/tabs/VariantsTab.tsx": {
+    "react/jsx-no-literals": {
+      "count": 11
+    }
+  },
+  "src/app/[locale]/(dashboard)/products/_components/ProductFormSidebar.tsx": {
+    "react/jsx-no-literals": {
+      "count": 7
+    }
+  },
+  "src/app/[locale]/(dashboard)/products/_components/ProductInventory.tsx": {
+    "react/jsx-no-literals": {
+      "count": 7
+    }
+  },
+  "src/app/[locale]/(dashboard)/products/_components/ProductMedia.tsx": {
+    "react/jsx-no-literals": {
+      "count": 3
+    }
+  },
+  "src/app/[locale]/(dashboard)/products/_components/ProductQuickActions.tsx": {
+    "react/jsx-no-literals": {
+      "count": 4
+    }
+  },
+  "src/app/[locale]/(dashboard)/products/_components/ProductRow.tsx": {
+    "react/jsx-no-literals": {
+      "count": 2
+    }
+  },
+  "src/app/[locale]/(dashboard)/products/_components/ProductSEO.tsx": {
+    "react/jsx-no-literals": {
+      "count": 6
+    }
+  },
+  "src/app/[locale]/(dashboard)/products/_components/ProductShipping.tsx": {
+    "react/jsx-no-literals": {
+      "count": 6
+    }
+  },
+  "src/app/[locale]/(dashboard)/products/_components/ProductsFilterBar.tsx": {
+    "react/jsx-no-literals": {
+      "count": 2
+    }
+  },
+  "src/app/[locale]/(dashboard)/products/_components/ProductsTable.tsx": {
+    "react/jsx-no-literals": {
+      "count": 1
+    }
+  },
+  "src/app/[locale]/(dashboard)/school-lists/[id]/page.tsx": {
+    "react/jsx-no-literals": {
+      "count": 3
+    }
+  },
+  "src/app/[locale]/(dashboard)/school-lists/_components/OfferForm.tsx": {
+    "react/jsx-no-literals": {
+      "count": 6
+    }
+  },
+  "src/app/[locale]/(dashboard)/users/_components/AdminUsersList.tsx": {
+    "react/jsx-no-literals": {
+      "count": 7
+    }
+  },
+  "src/app/[locale]/(dashboard)/users/page.tsx": {
+    "react/jsx-no-literals": {
+      "count": 2
+    }
+  },
+  "src/app/[locale]/_components/shared/BulkActionsBar.tsx": {
+    "react/jsx-no-literals": {
+      "count": 2
+    }
+  },
+  "src/app/[locale]/_components/shared/CollectionSelect.tsx": {
+    "react/jsx-no-literals": {
+      "count": 2
+    }
+  },
+  "src/app/[locale]/_components/shared/MediaUpload.tsx": {
+    "react/jsx-no-literals": {
+      "count": 5
+    }
+  },
+  "src/app/[locale]/_components/shared/StockHealthBar.tsx": {
+    "react/jsx-no-literals": {
+      "count": 7
+    }
+  },
+  "src/app/[locale]/_components/shared/TagInput.tsx": {
+    "react/jsx-no-literals": {
+      "count": 2
+    }
+  },
+  "src/app/[locale]/_components/shell/AdminHeader.tsx": {
+    "react/jsx-no-literals": {
+      "count": 6
+    }
+  },
+  "src/app/[locale]/_components/shell/AdminHeaderNotifications.tsx": {
+    "react/jsx-no-literals": {
+      "count": 9
+    }
+  },
+  "src/app/[locale]/_components/shell/AdminHeaderUserClient.tsx": {
+    "react/jsx-no-literals": {
+      "count": 6
+    }
+  },
+  "src/app/[locale]/_components/shell/AdminSidebar.tsx": {
+    "react/jsx-no-literals": {
+      "count": 1
+    }
+  },
+  "src/app/[locale]/_components/shell/AdminSidebarUserClient.tsx": {
+    "react/jsx-no-literals": {
+      "count": 1
+    }
+  },
+  "src/app/[locale]/_components/table/TableFilters.tsx": {
+    "react/jsx-no-literals": {
+      "count": 1
+    }
+  },
+  "src/app/[locale]/_components/table/TablePagination.tsx": {
+    "react/jsx-no-literals": {
+      "count": 7
+    }
+  },
+  "src/app/[locale]/admin/\\(dashboard\\)/error.tsx": {
+    "react/jsx-no-literals": {
+      "count": 6
+    }
+  },
+  "src/app/[locale]/error.tsx": {
+    "react/jsx-no-literals": {
+      "count": 6
+    }
+  },
+  "src/app/[locale]/login/page.tsx": {
+    "react/jsx-no-literals": {
+      "count": 5
+    }
+  },
+  "src/components/error/DashboardErrorBoundary.tsx": {
+    "react/jsx-no-literals": {
+      "count": 4
+    }
+  },
+  "src/components/layout/MegaMenuOverlay.tsx": {
+    "react/jsx-no-literals": {
+      "count": 12
+    }
+  },
+  "src/components/layout/MobileNavSheet.tsx": {
+    "react/jsx-no-literals": {
+      "count": 14
+    }
+  },
+  "src/components/shared/CascadingCategoryPicker.tsx": {
+    "react/jsx-no-literals": {
+      "count": 1
+    }
+  },
+  "src/components/shared/Header.tsx": {
+    "react/jsx-no-literals": {
+      "count": 4
+    }
+  },
+  "src/components/shared/HeaderNavClient.tsx": {
+    "react/jsx-no-literals": {
+      "count": 6
+    }
+  },
+  "src/components/shared/SearchOverlay.tsx": {
+    "react/jsx-no-literals": {
+      "count": 9
+    }
+  },
+  "src/components/shared/TagChips.tsx": {
+    "react/jsx-no-literals": {
+      "count": 1
+    }
+  },
+  "src/components/shared/ToggleLanguage.tsx": {
+    "react/jsx-no-literals": {
+      "count": 4
+    }
+  },
+  "src/components/shared/WebMCPBadge.tsx": {
+    "react/jsx-no-literals": {
+      "count": 3
+    }
+  },
+  "src/lib/internal/Boundary.tsx": {
+    "react/jsx-no-literals": {
+      "count": 1
+    }
+  }
+}
