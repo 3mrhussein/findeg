@@ -156,7 +156,7 @@ export const orderItems = salesSchema.table(
     unitPrice: decimal('unit_price', { precision: 10, scale: 2 }).notNull().default('0'),
     /** Discount applied to the whole line. */
     discountAmount: decimal('discount_amount', { precision: 10, scale: 2 }).notNull().default('0'),
-    /** Post-discount line total; the Partner Points basis. */
+    /** Post-discount line total: what the Customer is charged for the line, before shipping. */
     lineTotal: decimal('line_total', { precision: 10, scale: 2 }).notNull().default('0'),
 
     /** Selected variant details at time of order */

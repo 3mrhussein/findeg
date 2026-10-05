@@ -52,6 +52,10 @@ export const VariantSnapshotSchema = z
 
     /** Attribute key-value pairs at purchase time */
     attributes: z.record(z.string(), z.unknown()).optional(),
+
+    /** Checkout writes the variant's localized label: `{ en, ar }`. */
+    en: z.string().optional(),
+    ar: z.string().optional(),
   })
   .passthrough();
 

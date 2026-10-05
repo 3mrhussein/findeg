@@ -26,7 +26,6 @@ import {
   MAX_IDEMPOTENCY_SCOPE_LENGTH,
 } from '../../domain/idempotency-scope';
 import { enqueue, orderAcceptedId, ORDER_ACCEPTED_KIND } from '../../../outbox';
-import { recordAcceptedRewards } from '@findeg/backend/features/partner-rewards';
 import {
   ListUnavailableError,
   ReconfirmationRequiredError,
@@ -344,7 +343,7 @@ export class CheckoutService implements ICheckoutService {
     }
 
     // 4. Create the Order and Order Items (reuses variantMap without redundant second query)
-    const { order, items } = await orderQueries.create(
+    const { order } = await orderQueries.create(
       {
         userId,
         guestEmail,
@@ -404,24 +403,7 @@ export class CheckoutService implements ICheckoutService {
       tx,
     );
 
-    // 6. Partner Points: entitlements and `accepted` events, or nothing for Cart orders and
-    // partners without a rate. A failure here rolls the whole acceptance back.
-    const chargedByItemId = new Map(freshQuote.lines.map((line) => [line.listItemId, line]));
-    await recordAcceptedRewards(tx, {
-      businessPartnerId: attribution?.businessPartnerId,
-      rate: attribution?.rewardRate,
-      lines: items.flatMap((item) => {
-        const charged =
-          item.schoolSupplyListItemId == null
-            ? undefined
-            : chargedByItemId.get(item.schoolSupplyListItemId);
-        return charged
-          ? [{ orderItemId: item.id, chargedLineTotalPiasters: charged.lineTotal }]
-          : [];
-      }),
-    });
-
-    // 7. Confirmation email goes to the outbox in this transaction; delivery happens afterwards
+    // 6. Confirmation email goes to the outbox in this transaction; delivery happens afterwards
     await enqueue(tx, orderAcceptedId(order.orderReference), ORDER_ACCEPTED_KIND, {
       orderId: order.id,
     });
@@ -438,7 +420,7 @@ export class CheckoutService implements ICheckoutService {
       message: 'Order created successfully',
     };
 
-    // 8. Persist outcome on the idempotency row before commit
+    // 7. Persist outcome on the idempotency row before commit
     await checkoutIdempotencyQueries.recordSuccess(
       claim.id,
       {

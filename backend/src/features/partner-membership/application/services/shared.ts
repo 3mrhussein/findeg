@@ -18,11 +18,11 @@ export function canManagePartners(actor: StaffActor): boolean {
   return actor.permissionCodes?.includes(PERMISSION_CODES.PARTNERS_MANAGE) === true;
 }
 
-/** Staff who manage Business Partners or inspect their rewards may read the directory. */
+/** Staff who manage Business Partners or read their Partner Reports may read the directory. */
 export function canViewPartners(actor: StaffActor): boolean {
   return (
     canManagePartners(actor) ||
-    actor.permissionCodes?.includes(PERMISSION_CODES.REWARDS_VIEW) === true
+    actor.permissionCodes?.includes(PERMISSION_CODES.PARTNER_REPORTS_VIEW) === true
   );
 }
 

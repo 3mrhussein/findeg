@@ -2,7 +2,6 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { eq } from 'drizzle-orm';
 import {
   auditLog,
-  businessPartners,
   categories,
   inventoryBalances,
   orderItems,
@@ -10,9 +9,6 @@ import {
   outbox,
   products,
   productVariants,
-  rewardEntitlements,
-  rewardEvents,
-  rewardRates,
   stockMovements,
   users,
   warehouses,
@@ -35,21 +31,8 @@ describe('Staff authorization for Dashboard order writes', () => {
     activeRoleIds: [],
   };
 
-  let partnerId: number;
-  let rateId: number;
-
-  beforeAll(async () => {
+  beforeAll(() => {
     testDb = connectToTestDatabase();
-    const [partner] = await testDb.db
-      .insert(businessPartners)
-      .values({ code: 'authz-school', nameEn: 'Authz School', nameAr: 'مدرسة' })
-      .returning();
-    partnerId = partner.id;
-    const [rate] = await testDb.db
-      .insert(rewardRates)
-      .values({ businessPartnerId: partnerId, pointsPerEgp: '1.000000', egpPerPoint: '0.0100' })
-      .returning();
-    rateId = rate.id;
   });
   afterAll(async () => testDb.close());
 
@@ -116,8 +99,8 @@ describe('Staff authorization for Dashboard order writes', () => {
     };
   }
 
-  /** An Order holding an accepted reward, one status or payment change away from earning it. */
-  async function rewardedOrder(state: {
+  /** An Order one status or payment change away from delivered and paid. */
+  async function orderInState(state: {
     status: 'shipped' | 'delivered';
     paymentStatus: 'unpaid' | 'paid';
   }) {
@@ -130,41 +113,10 @@ describe('Staff authorization for Dashboard order writes', () => {
         ...state,
       })
       .returning();
-    const [item] = await testDb.db
+    await testDb.db
       .insert(orderItems)
-      .values({ orderId: order.id, quantity: 1, lineTotal: '100.00' })
-      .returning();
-    const [entitlement] = await testDb.db
-      .insert(rewardEntitlements)
-      .values({
-        businessPartnerId: partnerId,
-        orderItemId: item.id,
-        rewardRateId: rateId,
-        chargedLineTotalPiasters: 10_000n,
-        points: 100n,
-        egpValuePiasters: 100n,
-      })
-      .returning();
-    await testDb.db.insert(rewardEvents).values({
-      businessPartnerId: partnerId,
-      entitlementId: entitlement.id,
-      eventType: 'accepted',
-      points: 100n,
-      egpValuePiasters: 100n,
-    });
-    return {
-      orderId: order.id,
-      orderReference: order.orderReference,
-      entitlementId: entitlement.id,
-    };
-  }
-
-  async function rewardEventTypes(entitlementId: number) {
-    const events = await testDb.db
-      .select({ eventType: rewardEvents.eventType })
-      .from(rewardEvents)
-      .where(eq(rewardEvents.entitlementId, entitlementId));
-    return events.map((event) => event.eventType).sort();
+      .values({ orderId: order.id, quantity: 1, lineTotal: '100.00' });
+    return { orderId: order.id, orderReference: order.orderReference };
   }
 
   /** Everything a status or payment change could write for the Order. */
@@ -207,8 +159,8 @@ describe('Staff authorization for Dashboard order writes', () => {
     expect(after.balance).toEqual({ onHand: 10, reserved: 2 });
   });
 
-  it('refuses a status change from Staff without order-write permission and earns nothing', async () => {
-    const { orderId, orderReference, entitlementId } = await rewardedOrder({
+  it('refuses delivering a paid Order for Staff without order-write permission', async () => {
+    const { orderId, orderReference } = await orderInState({
       status: 'shipped',
       paymentStatus: 'paid',
     });
@@ -222,11 +174,10 @@ describe('Staff authorization for Dashboard order writes', () => {
 
     expect(await orderFootprint(orderId, orderReference, 0)).toEqual(before);
     expect(before.order).toEqual({ status: 'shipped', paymentStatus: 'paid' });
-    expect(await rewardEventTypes(entitlementId)).toEqual(['accepted']);
   });
 
-  it('refuses a payment change from Staff without order-write permission and earns nothing', async () => {
-    const { orderId, orderReference, entitlementId } = await rewardedOrder({
+  it('refuses a payment change from Staff without order-write permission and changes nothing', async () => {
+    const { orderId, orderReference } = await orderInState({
       status: 'delivered',
       paymentStatus: 'unpaid',
     });
@@ -238,11 +189,10 @@ describe('Staff authorization for Dashboard order writes', () => {
 
     expect(await orderFootprint(orderId, orderReference, 0)).toEqual(before);
     expect(before.order).toEqual({ status: 'delivered', paymentStatus: 'unpaid' });
-    expect(await rewardEventTypes(entitlementId)).toEqual(['accepted']);
   });
 
-  it('refuses a status change with no Staff actor and earns nothing', async () => {
-    const { orderId, orderReference, entitlementId } = await rewardedOrder({
+  it('refuses a status change with no Staff actor and changes nothing', async () => {
+    const { orderId, orderReference } = await orderInState({
       status: 'shipped',
       paymentStatus: 'paid',
     });
@@ -256,11 +206,10 @@ describe('Staff authorization for Dashboard order writes', () => {
 
     expect(await orderFootprint(orderId, orderReference, 0)).toEqual(before);
     expect(before.order).toEqual({ status: 'shipped', paymentStatus: 'paid' });
-    expect(await rewardEventTypes(entitlementId)).toEqual(['accepted']);
   });
 
-  it('refuses a payment change with no Staff actor and earns nothing', async () => {
-    const { orderId, orderReference, entitlementId } = await rewardedOrder({
+  it('refuses a payment change with no Staff actor and changes nothing', async () => {
+    const { orderId, orderReference } = await orderInState({
       status: 'delivered',
       paymentStatus: 'unpaid',
     });
@@ -276,7 +225,6 @@ describe('Staff authorization for Dashboard order writes', () => {
 
     expect(await orderFootprint(orderId, orderReference, 0)).toEqual(before);
     expect(before.order).toEqual({ status: 'delivered', paymentStatus: 'unpaid' });
-    expect(await rewardEventTypes(entitlementId)).toEqual(['accepted']);
   });
 
   async function orderWriter(): Promise<OrderStaffActor> {

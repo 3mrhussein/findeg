@@ -1,73 +1,55 @@
 import { describe, expect, it } from 'vitest';
-import type { PartnerRewardReportView } from '@findeg/backend/features/partner-rewards';
-import { formatEgp, toPartnerReportProps } from './partnerReport';
+import type { PartnerReportView } from '@findeg/backend/features/partner-sales';
+import { piastersToEgp } from '@findeg/backend/features/partner-sales';
+import { toPartnerReportProps } from './partnerReport';
 
-const zero = { points: 0n, egpPiasters: 0n };
-const view = (over: Partial<PartnerRewardReportView> = {}): PartnerRewardReportView => ({
+const view = (over: Partial<PartnerReportView> = {}): PartnerReportView => ({
   asOf: new Date('2026-05-15T10:00:00Z'),
-  months: ['2026-05'],
-  statement: {
-    month: '2026-05',
-    openingEgpPiasters: 0n,
-    earned: zero,
-    reversed: zero,
-    adjustmentsEgpPiasters: 0n,
-    settledEgpPiasters: 0n,
-    closingEgpPiasters: 0n,
-  },
-  pending: zero,
-  availableBalanceEgpPiasters: 0n,
+  months: ['2026-04', '2026-05'],
+  month: '2026-05',
   sales: [],
   otherItems: null,
-  settlements: [],
   ...over,
 });
 
-describe('formatEgp', () => {
+describe('piastersToEgp', () => {
   it.each([
     [0n, '0.00'],
     [5n, '0.05'],
     [12_345n, '123.45'],
-    [-12_000n, '−120.00'],
-    [-1n, '−0.01'],
-  ])('%s → %s', (piasters, text) => expect(formatEgp(piasters)).toBe(text));
+  ])('%s → %s', (piasters, text) => expect(piastersToEgp(piasters)).toBe(text));
 });
 
 describe('toPartnerReportProps', () => {
-  it('flags a negative balance and signs it', () => {
-    const props = toPartnerReportProps(view({ availableBalanceEgpPiasters: -12_000n }), 'en');
-    expect(props.balanceIsNegative).toBe(true);
-    expect(props.availableBalanceEgp).toBe('−120.00');
-    expect(toPartnerReportProps(view(), 'en').balanceIsNegative).toBe(false);
-    const pastMonth = view({
-      statement: { ...view().statement, closingEgpPiasters: -1n },
-    });
-    expect(toPartnerReportProps(pastMonth, 'en').balanceIsNegative).toBe(true);
-  });
-
-  it('marks voids and keeps their amount negative', () => {
+  it('formats rows and totals the shown rows with Other items', () => {
     const props = toPartnerReportProps(
       view({
-        settlements: [
+        sales: [
           {
-            id: 2,
-            kind: 'void',
-            amountPiasters: -1_000n,
-            transferReference: null,
-            paidAt: null,
-            voidsSettlementId: 1,
-            voidsTransferReference: 'TRX-1',
-            recordedAt: new Date('2026-05-10T10:00:00Z'),
+            listName: 'Grade 1 list',
+            listItemLabel: 'Notebook',
+            productName: 'Notebook',
+            variantLabel: 'Blue',
+            quantity: 4,
+            chargedPiasters: 10_005n,
           },
         ],
+        otherItems: { quantity: 2, chargedPiasters: 5_000n },
       }),
-      'ar',
+      'en',
     );
-    expect(props.settlements[0]).toMatchObject({
-      voided: true,
-      voidsReference: 'TRX-1',
-      egp: '−10.00',
-    });
+    expect(props.sales[0]).toMatchObject({ quantity: 4, egp: '100.05' });
+    expect(props.otherItems).toEqual({ quantity: 2, egp: '50.00' });
+    expect(props.total).toEqual({ quantity: 6, egp: '150.05' });
+  });
+
+  it('labels months in the viewer’s locale', () => {
+    const props = toPartnerReportProps(view(), 'en');
+    expect(props.monthLabel).toBe('May 2026');
+    expect(props.months).toEqual([
+      { value: '2026-04', label: 'April 2026' },
+      { value: '2026-05', label: 'May 2026' },
+    ]);
   });
 
   it('formats as-of in Cairo time', () => {

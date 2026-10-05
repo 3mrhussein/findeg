@@ -3,7 +3,6 @@ import { db } from '@findeg/db/connection';
 import { auditLog, orders } from '@findeg/db/schema';
 import type { PaymentStatus } from '@findeg/backend/features/core/domain/types/common';
 import { getAllowedPaymentStatusTransitions } from '../utils/order-payment-status-transitions';
-import { closeOrderRewards, evaluateEarnEligibility } from '../../../partner-rewards';
 import { OrderNotFoundError } from './transition-order-status';
 
 export class InvalidPaymentStatusTransitionError extends Error {
@@ -25,8 +24,8 @@ export interface PaymentStatusTransitionResult {
 }
 
 /**
- * Owns Order payment changes. Takes the Order row lock, writes the audit row in the same
- * transaction and runs the shared earn check, so payment cannot race a status change.
+ * Owns Order payment changes. Takes the Order row lock and writes the audit row in the same
+ * transaction, so payment cannot race a status change.
  * `paid` means the full snapshotted Order total.
  */
 export function transitionPaymentStatus(
@@ -64,9 +63,6 @@ export function transitionPaymentStatus(
       oldValues: { paymentStatus: order.paymentStatus },
       newValues: { paymentStatus: status },
     });
-
-    await closeOrderRewards(orderId, tx);
-    await evaluateEarnEligibility(orderId, tx);
     return { changed: true, previousStatus: order.paymentStatus, status };
   });
 }

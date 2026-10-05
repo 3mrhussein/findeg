@@ -2,10 +2,10 @@ import { getLocale, getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { Link } from '@i18n/navigation';
 import {
-  createPartnerRewardsServices,
+  createPartnerSalesServices,
   MIN_DISTINCT_ORDERS_PER_SALES_ROW,
   PARTNER_REPORT_ROLES,
-} from '@findeg/backend/features/partner-rewards';
+} from '@findeg/backend/features/partner-sales';
 import {
   PartnerNotice,
   PartnerSuspense,
@@ -39,14 +39,14 @@ async function Reports({
 }) {
   const { month: monthParam } = await searchParams;
   const month = typeof monthParam === 'string' ? monthParam : undefined;
-  // `reports` stays open for every Business Partner status, closed included (ADR-0010).
+  // `reports` stays open for every Business Partner status, closed included (ADR-0012).
   const access = await requireWorkspaceAccess(code, PARTNER_REPORT_ROLES, 'reports');
   if (!access.allowed) return access.notice;
   const { partner, membership } = access.context;
 
   const locale = await getLocale();
   const t = await getTranslations('PartnerReports');
-  const reports = createPartnerRewardsServices().partnerReports;
+  const reports = createPartnerSalesServices().partnerReports;
   const read = (selected?: string) =>
     reports.getPartnerReport({ userId: membership.userId }, partner.id, {
       month: selected,

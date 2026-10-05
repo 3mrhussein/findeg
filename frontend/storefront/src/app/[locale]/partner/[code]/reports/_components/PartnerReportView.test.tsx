@@ -31,26 +31,14 @@ vi.mock('@findeg/ui', () => {
 
 import { PartnerReportView } from './PartnerReportView';
 
-const amount = { points: '0', egp: '0.00' };
 const report = (over: Partial<PartnerReportProps> = {}): PartnerReportProps => ({
   asOf: 'May 15, 2026',
   month: '2026-05',
   monthLabel: 'May 2026',
   months: [{ value: '2026-05', label: 'May 2026' }],
-  statement: {
-    openingEgp: '0.00',
-    earned: amount,
-    reversed: amount,
-    adjustmentsEgp: '0.00',
-    settledEgp: '0.00',
-    closingEgp: '0.00',
-  },
-  pending: amount,
-  availableBalanceEgp: '0.00',
-  balanceIsNegative: false,
   sales: [],
   otherItems: null,
-  settlements: [],
+  total: { quantity: 0, egp: '0.00' },
   ...over,
 });
 
@@ -58,61 +46,55 @@ const render_ = (props: PartnerReportProps) =>
   render(<PartnerReportView report={props} minOrdersPerRow={3} />);
 
 describe('PartnerReportView', () => {
-  it('shows only the empty state before the first event', () => {
+  it('shows only the empty state before the first Attributed Order', () => {
     render_(report({ months: [] }));
-    expect(screen.getByText('empty')).toBeTruthy();
-    expect(screen.queryByTestId('reward-statement')).toBeNull();
+    expect(screen.getByTestId('partner-report-empty').textContent).toBe('empty');
     expect(screen.queryByTestId('sales-table')).toBeNull();
   });
 
-  it('shows the signed balance with the explanation only when negative', () => {
-    const { unmount } = render_(
-      report({ availableBalanceEgp: '−120.00', balanceIsNegative: true }),
-    );
-    expect(screen.getByTestId('available-balance').textContent).toContain('−120.00');
-    expect(screen.getByTestId('negative-balance-note')).toBeTruthy();
-    unmount();
+  it('shows no-sales for a month without orders', () => {
     render_(report());
-    expect(screen.queryByTestId('negative-balance-note')).toBeNull();
+    expect(screen.getByText('noSales')).toBeTruthy();
+    expect(screen.queryByTestId('sales-total-row')).toBeNull();
   });
 
-  it('marks voided settlements and shows the Other items roll-up', () => {
+  it('shows rows, the Other items roll-up and their total', () => {
     render_(
       report({
-        settlements: [
+        sales: [
           {
-            id: 2,
-            voided: true,
-            voidsReference: null,
-            egp: '−10.00',
-            transferReference: null,
-            paidAt: null,
-            recordedAt: 'x',
-          },
-          {
-            id: 1,
-            voided: false,
-            voidsReference: null,
-            egp: '10.00',
-            transferReference: 'TRX',
-            paidAt: '2026-05-08',
-            recordedAt: 'y',
+            key: '0',
+            listName: 'Grade 1 list',
+            listItemLabel: 'Notebook',
+            productName: null,
+            variantLabel: 'Blue',
+            quantity: 4,
+            egp: '100.00',
           },
         ],
-        otherItems: { earned: { points: '9', egp: '9.00' }, reversed: amount },
+        otherItems: { quantity: 2, egp: '50.00' },
+        total: { quantity: 6, egp: '150.00' },
       }),
     );
-    expect(screen.getAllByTestId('voided-label')).toHaveLength(1);
+    const table = screen.getByTestId('sales-table');
+    expect(table.textContent).toContain('Grade 1 list');
+    expect(table.textContent).toContain('unnamed');
     expect(screen.getByTestId('other-items-row').textContent).toContain(
       'otherItemsHint:{"count":3}',
     );
+    expect(screen.getByTestId('sales-total-row').textContent).toContain('egp:{"amount":"150.00"}');
+  });
+
+  it('shows sales figures only', () => {
+    render_(report());
+    const text = document.body.textContent ?? '';
+    expect(text).not.toMatch(/balance|statement|settlement|payout|points/i);
   });
 });
 
 describe('PartnerReports messages', () => {
-  it('has the same keys in English and Arabic, with the negative-balance explanation', () => {
+  it('has the same keys and placeholders in English and Arabic', () => {
     expect(Object.keys(ar.PartnerReports).sort()).toEqual(Object.keys(en.PartnerReports).sort());
-    expect(ar.PartnerReports.negativeBalanceNote).not.toBe(en.PartnerReports.negativeBalanceNote);
     for (const key of Object.keys(en.PartnerReports) as (keyof typeof en.PartnerReports)[]) {
       const placeholders = (text: string) => (text.match(/\{\w+\}/g) ?? []).sort();
       expect(placeholders(ar.PartnerReports[key])).toEqual(placeholders(en.PartnerReports[key]));

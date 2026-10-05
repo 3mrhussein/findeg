@@ -11,10 +11,6 @@ import {
 import type { DbTransaction } from '@findeg/db/queries';
 import { getListOffer } from '@findeg/db/queries/school-supply-lists';
 import { eligibleVariants } from '@findeg/backend/features/school';
-import {
-  readRewardRateSnapshot,
-  type RewardRateSnapshot,
-} from '@findeg/backend/features/partner-rewards';
 import { computeConfirmation } from '../../domain/confirmation';
 import { isOfferActive } from '../../domain/list-offer';
 import {
@@ -45,8 +41,6 @@ export interface ListAttribution {
   items: Map<number, { defaultVariantId: number; exactItem: boolean }>;
   /** Basis points of the List Offer active at acceptance time, or null when none applies. */
   listOfferBasisPoints: number | null;
-  /** The Partner's Reward Rate read FOR SHARE with the quote, or null when none is configured. */
-  rewardRate: RewardRateSnapshot | null;
 }
 
 export interface ListQuoteCalculation {
@@ -182,8 +176,6 @@ export async function calculateListQuote(
   const offer = await getListOffer(executor, list.id, tx ? { lock: 'share' } : {});
   const listOfferBasisPoints = offer && isOfferActive(offer, now) ? offer.basisPoints : null;
 
-  const rewardRate = await readRewardRateSnapshot(executor, list.businessPartnerId);
-
   const quoteLines: PiasterQuoteLine[] = [...input.lines]
     .sort((a, b) => a.listItemId - b.listItemId)
     .map((line) => {
@@ -209,7 +201,6 @@ export async function calculateListQuote(
     subtotal,
     total,
     listOfferBasisPoints,
-    rewardRate,
     lines: quoteLines,
   });
 
@@ -240,7 +231,6 @@ export async function calculateListQuote(
         ),
       ),
       listOfferBasisPoints,
-      rewardRate,
     },
   };
 }

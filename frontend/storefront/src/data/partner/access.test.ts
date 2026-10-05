@@ -1,15 +1,20 @@
 import { describe, expect, it } from 'vitest';
-import type { PartnerContext } from '@findeg/backend/features/partner-membership';
+import type { PartnerContext, PartnerRole } from '@findeg/backend/features/partner-membership';
+import { PARTNER_REPORT_ROLES } from '@findeg/backend/features/partner-sales';
 import { decidePartnerPageAccess, partnerIndexDestination } from './access';
 
-const context = (status: PartnerContext['partner']['status'], code = 'school'): PartnerContext => ({
+const context = (
+  status: PartnerContext['partner']['status'],
+  code = 'school',
+  roles: PartnerRole[] = ['list-manager'],
+): PartnerContext => ({
   partner: { id: 1, code, nameEn: 'School', nameAr: 'مدرسة', status },
   membership: {
     id: 1,
     businessPartnerId: 1,
     userId: 1,
     invitationId: 1,
-    roles: ['list-manager'],
+    roles,
     status: 'active',
     authorizationVersion: 1,
     createdAt: new Date(0),
@@ -52,6 +57,52 @@ describe('decidePartnerPageAccess', () => {
         'read',
       ),
     ).toMatchObject({ kind: 'refused', reason: 'role-not-held' });
+  });
+});
+
+describe('Partner Reports page access (ADR-0010, ADR-0012)', () => {
+  const statuses = ['onboarding', 'active', 'suspended', 'closed'] as const;
+
+  it.each(
+    statuses.flatMap((status) =>
+      (['partner-administrator', 'report-viewer'] as const).map((role) => [role, status] as const),
+    ),
+  )('allows %s while the Business Partner is %s', (role, status) => {
+    const reader = context(status, 'school', [role]);
+    expect(
+      decidePartnerPageAccess({ success: true, data: reader }, PARTNER_REPORT_ROLES, 'reports'),
+    ).toEqual({ kind: 'allowed', context: reader });
+  });
+
+  it.each(
+    statuses.flatMap((status) =>
+      (['list-manager', 'collection-staff'] as const).map((role) => [role, status] as const),
+    ),
+  )('refuses %s while the Business Partner is %s', (role, status) => {
+    expect(
+      decidePartnerPageAccess(
+        { success: true, data: context(status, 'school', [role]) },
+        PARTNER_REPORT_ROLES,
+        'reports',
+      ),
+    ).toMatchObject({ kind: 'refused', reason: 'role-not-held' });
+  });
+
+  it('refuses suspended and ended memberships before roles are considered', () => {
+    expect(
+      decidePartnerPageAccess(
+        { success: false, error: 'suspended' },
+        PARTNER_REPORT_ROLES,
+        'reports',
+      ),
+    ).toEqual({ kind: 'suspended' });
+    expect(
+      decidePartnerPageAccess(
+        { success: false, error: 'not-found' },
+        PARTNER_REPORT_ROLES,
+        'reports',
+      ),
+    ).toEqual({ kind: 'not-found' });
   });
 });
 

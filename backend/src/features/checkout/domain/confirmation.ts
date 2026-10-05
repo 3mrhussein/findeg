@@ -20,11 +20,6 @@ export interface QuoteConfirmationTerms {
   publicCode?: string;
   /** Active List Offer, so an offer starting, ending or changing invalidates the digest. */
   listOfferBasisPoints?: number | null;
-  /**
-   * The Partner's current Reward Rate (null when none). Only List checkout supplies it, so a rate
-   * change between Quote and acceptance forces reconfirmation without appearing in the Quote DTO.
-   */
-  rewardRate?: { id: number; pointsPerEgp: string; egpPerPoint: string } | null;
   currency: string;
   shipping: bigint;
   subtotal: bigint;
@@ -63,7 +58,6 @@ export function computeConfirmation(terms: QuoteConfirmationTerms): string {
     ...(terms.listOfferBasisPoints === undefined
       ? {}
       : { listOfferBasisPoints: terms.listOfferBasisPoints }),
-    ...(terms.rewardRate === undefined ? {} : { rewardRate: terms.rewardRate }),
     currency: terms.currency,
     shipping: fromPiasters(terms.shipping),
     subtotal: fromPiasters(terms.subtotal),
