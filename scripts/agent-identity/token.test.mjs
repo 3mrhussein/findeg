@@ -75,6 +75,13 @@ function testerEnv(extra = {}) {
     FINDEG_AGENT_CONFIG_DIR: configDir,
     FINDEG_AGENT_CACHE_DIR: cacheDir,
     GIT_TERMINAL_PROMPT: '0',
+    // A human identity, so "plain git" has one to report on machines without a
+    // global git config (CI runners). The agent's GIT_AUTHOR_* env overrides it.
+    GIT_CONFIG_COUNT: '2',
+    GIT_CONFIG_KEY_0: 'user.name',
+    GIT_CONFIG_VALUE_0: 'Human Tester',
+    GIT_CONFIG_KEY_1: 'user.email',
+    GIT_CONFIG_VALUE_1: 'human@example.com',
     ...extra,
   };
   delete env.CLAUDECODE;
