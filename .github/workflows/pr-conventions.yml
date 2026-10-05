@@ -1,16 +1,20 @@
-name: Branch and PR naming
+name: PR conventions
 
+# `edited` also fires when the PR's base branch changes, so the branch policy
+# is re-judged against the new base.
 on:
   pull_request:
     types: [opened, edited, synchronize, reopened]
 
 permissions:
+  contents: read
   pull-requests: read
 
 jobs:
   pr-title:
-    name: PR title (Conventional Commits)
+    name: PR title
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - uses: amannn/action-semantic-pull-request@v6
         env:
@@ -29,15 +33,17 @@ jobs:
             chore
             revert
 
-  branch-name:
-    name: Branch name (<type>/<slug>)
+  # Same rules as the local pre-push hook: both call scripts/ci-policy.
+  branch-policy:
+    name: Branch policy
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
-      - name: Validate head branch name
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout: scripts/ci-policy
+      - name: Check branch name and release source
         env:
           HEAD_REF: ${{ github.head_ref }}
-        run: |
-          if ! [[ "$HEAD_REF" =~ ^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)/[a-z0-9]+(-[a-z0-9]+)*$ ]]; then
-            echo "::error::Branch \"$HEAD_REF\" doesn't match <type>/<kebab-case-slug> (types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert)."
-            exit 1
-          fi
+          BASE_REF: ${{ github.base_ref }}
+        run: node scripts/ci-policy/cli.mjs branch-policy --head "$HEAD_REF" --base "$BASE_REF"
