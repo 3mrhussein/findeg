@@ -1,7 +1,7 @@
 # Partner Membership Feature
 
 Business Partners and (in later tickets) who may work inside their Partner Workspace. See
-[ADR-0003](../../../../docs/adr/0003-partner-membership-model.md) and the terms in `CONTEXT.md`.
+[ADR-0003](../../../../docs/adr/0003-partner-membership-model.md) and the terms in `GLOSSARY.md`.
 
 Partner access is a parallel model next to Staff RBAC: this feature never depends on
 `PermissionService`; Staff operations take an explicit `StaffActor` and require `partners.manage`.

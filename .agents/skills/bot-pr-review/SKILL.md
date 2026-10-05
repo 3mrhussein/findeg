@@ -23,7 +23,7 @@ Review a pull request focusing on **business logic correctness** against the res
    - **Code Quality & Safety**:
      - Check for logic bugs, race conditions, and unhandled edge cases.
      - Check for breaking database migrations or contract changes.
-     - Check compliance with repository architecture rules (`CONTEXT.md`, `docs/adr/`).
+   - Check compliance with repository architecture rules (`GLOSSARY.md`, `docs/adr/`).
 
 4. **Output Standards**:
    - **Concise & Direct**: Do not lecture on theoretical refactoring smells (Primitive Obsession, Feature Envy, naming opinions).
