@@ -12,6 +12,7 @@
     "type-check": "turbo run type-check",
     "test": "turbo run test",
     "test:integration": "pnpm --filter @findeg/backend test:integration",
+    "test:scripts": "node --test 'scripts/**/*.test.mjs'",
     "db:run": "docker compose up -d postgres",
     "db:reset": "docker compose down -v ",
     "db:rebuild": "pnpm db:reset && pnpm db:run && pnpm --filter @findeg/db db:setup",
