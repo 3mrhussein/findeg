@@ -170,7 +170,6 @@ export function decidePlan({ event, target, expectedTier, changedPaths }) {
 //
 // Skipped jobs pass: the plan skips jobs a change can't affect. Anything else
 // that isn't a success fails, including results this rule doesn't recognise.
-// Tier-specific rules (e.g. a skipped E2E on strict) belong here too.
 export function decideVerdict({ tier, results }) {
   const bad = Object.entries(results).filter(
     ([, result]) => result !== 'success' && result !== 'skipped',
