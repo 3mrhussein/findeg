@@ -282,11 +282,11 @@ test('on the fast tier, any code, config or CI change runs the code checks', () 
 
 // --- CI OK verdict ---
 
+// CI OK's needs, by job id. `checks` is the Lint / Type check / Unit tests
+// matrix, whose result is a failure when any leg failed.
 const ALL_PASSED = {
   plan: 'success',
-  lint: 'success',
-  'type-check': 'success',
-  'unit-tests': 'success',
+  checks: 'success',
   build: 'success',
   integration: 'success',
 };
@@ -302,9 +302,9 @@ test('CI OK passes when every job passed, on either tier', () => {
 test('CI OK fails when a job failed or was cancelled, naming the job', () => {
   for (const tier of ['fast', 'strict']) {
     for (const result of ['failure', 'cancelled']) {
-      const verdict = decideVerdict({ tier, results: { ...ALL_PASSED, lint: result } });
-      assert.equal(verdict.ok, false, `${tier}: lint ${result}`);
-      assert.match(verdict.reason, /lint/);
+      const verdict = decideVerdict({ tier, results: { ...ALL_PASSED, checks: result } });
+      assert.equal(verdict.ok, false, `${tier}: checks ${result}`);
+      assert.match(verdict.reason, /checks/);
       assert.match(verdict.reason, new RegExp(result));
     }
   }
@@ -320,9 +320,7 @@ test('CI OK fails when the plan itself failed, even though everything after it w
 test('CI OK passes on the fast tier when irrelevant jobs were skipped', () => {
   const docsOnly = {
     ...ALL_PASSED,
-    lint: 'skipped',
-    'type-check': 'skipped',
-    'unit-tests': 'skipped',
+    checks: 'skipped',
     build: 'skipped',
     integration: 'skipped',
   };

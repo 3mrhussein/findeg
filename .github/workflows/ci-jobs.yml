@@ -34,6 +34,8 @@ jobs:
     timeout-minutes: 5
     outputs:
       tier: ${{ steps.plan.outputs.tier }}
+      turbo_flags: ${{ steps.plan.outputs.turbo_flags }}
+      fetch_depth: ${{ steps.plan.outputs.fetch_depth }}
       use_cache: ${{ steps.plan.outputs.use_cache }}
       save_cache: ${{ steps.plan.outputs.save_cache }}
       run_checks: ${{ steps.plan.outputs.run_checks }}
@@ -76,76 +78,45 @@ jobs:
           --expect-tier "$EXPECTED_TIER"
           ${CHANGED_FILES:+--changed-files "$CHANGED_FILES"}
 
-  # The code checks below share one shape: a full-history checkout on the fast
-  # tier (Turbo's --affected diffs against the PR base or the previous push),
-  # the shared setup, one Turbo command, then a cache save on producer runs.
-  lint:
-    name: Lint
-    needs: plan
-    if: needs.plan.outputs.run_checks == 'true'
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    env:
-      TURBO_FLAGS: ${{ needs.plan.outputs.tier == 'strict' && '--force' || '--affected' }}
-      TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
-      TURBO_SCM_HEAD: ${{ github.sha }}
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          fetch-depth: ${{ needs.plan.outputs.tier == 'fast' && '0' || '1' }}
-      - uses: ./.github/actions/setup
-        with:
-          cache: ${{ needs.plan.outputs.use_cache }}
-          turbo-cache-key: lint
-      - run: pnpm exec turbo run lint $TURBO_FLAGS
-      - if: needs.plan.outputs.save_cache == 'true'
-        uses: ./.github/actions/save-cache
-
-  type-check:
-    name: Type check
-    needs: plan
-    if: needs.plan.outputs.run_checks == 'true'
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    env:
-      TURBO_FLAGS: ${{ needs.plan.outputs.tier == 'strict' && '--force' || '--affected' }}
-      TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
-      TURBO_SCM_HEAD: ${{ github.sha }}
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          fetch-depth: ${{ needs.plan.outputs.tier == 'fast' && '0' || '1' }}
-      - uses: ./.github/actions/setup
-        with:
-          cache: ${{ needs.plan.outputs.use_cache }}
-          turbo-cache-key: type-check
-      - run: pnpm exec turbo run type-check $TURBO_FLAGS
-      - if: needs.plan.outputs.save_cache == 'true'
-        uses: ./.github/actions/save-cache
-
-  unit-tests:
-    name: Unit tests
+  # The code checks share one shape: a full-history checkout on the fast tier
+  # (Turbo's --affected diffs against the PR base or the previous push), the
+  # shared setup, one Turbo task, then a cache save on producer runs. Lint,
+  # Type check and Unit tests are one job, a leg per task; Build adds a
+  # database. TURBO_FLAGS is split into an array: it may hold several flags.
+  checks:
+    name: ${{ matrix.name }}
     needs: plan
     if: needs.plan.outputs.run_checks == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: Lint, task: lint }
+          - { name: Type check, task: type-check }
+          - { name: Unit tests, task: test }
     env:
-      TURBO_FLAGS: ${{ needs.plan.outputs.tier == 'strict' && '--force' || '--affected' }}
+      TURBO_FLAGS: ${{ needs.plan.outputs.turbo_flags }}
       TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
       TURBO_SCM_HEAD: ${{ github.sha }}
+      TASK: ${{ matrix.task }}
     steps:
       - uses: actions/checkout@v7
         with:
-          fetch-depth: ${{ needs.plan.outputs.tier == 'fast' && '0' || '1' }}
+          fetch-depth: ${{ needs.plan.outputs.fetch_depth }}
       - uses: ./.github/actions/setup
         with:
           cache: ${{ needs.plan.outputs.use_cache }}
-          turbo-cache-key: test
-      - name: Workspace package tests
-        run: pnpm exec turbo run test $TURBO_FLAGS
+          turbo-cache-key: ${{ matrix.task }}
+      - name: Workspace package ${{ matrix.task }}
+        run: |
+          read -ra flags <<< "$TURBO_FLAGS"
+          pnpm exec turbo run "$TASK" "${flags[@]}"
       # Root scripts (CI policy, agent identity) aren't a workspace package,
       # so Turbo doesn't see them; they're quick, so they always run.
       - name: Repo script tests
+        if: matrix.task == 'test'
         run: pnpm test:scripts
       - if: needs.plan.outputs.save_cache == 'true'
         uses: ./.github/actions/save-cache
@@ -175,13 +146,13 @@ jobs:
           --health-timeout 5s
           --health-retries 10
     env:
-      TURBO_FLAGS: ${{ needs.plan.outputs.tier == 'strict' && '--force' || '--affected' }}
+      TURBO_FLAGS: ${{ needs.plan.outputs.turbo_flags }}
       TURBO_SCM_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
       TURBO_SCM_HEAD: ${{ github.sha }}
     steps:
       - uses: actions/checkout@v7
         with:
-          fetch-depth: ${{ needs.plan.outputs.tier == 'fast' && '0' || '1' }}
+          fetch-depth: ${{ needs.plan.outputs.fetch_depth }}
       - uses: ./.github/actions/setup
         with:
           cache: ${{ needs.plan.outputs.use_cache }}
@@ -201,7 +172,10 @@ jobs:
           pnpm --filter @findeg/db run db:seed
       # --only: the Type check job already covers type-check, which build
       # otherwise depends on.
-      - run: pnpm exec turbo run build --only $TURBO_FLAGS
+      - name: Workspace package build
+        run: |
+          read -ra flags <<< "$TURBO_FLAGS"
+          pnpm exec turbo run build --only "${flags[@]}"
       - if: needs.plan.outputs.save_cache == 'true'
         uses: ./.github/actions/save-cache
 
@@ -242,7 +216,7 @@ jobs:
   # can't leave it pending; the policy decides whether the results pass.
   ci-ok:
     name: CI OK
-    needs: [plan, lint, type-check, unit-tests, build, integration]
+    needs: [plan, checks, build, integration]
     if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 5
