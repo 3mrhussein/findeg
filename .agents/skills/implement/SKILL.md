@@ -13,10 +13,3 @@ Run typechecking regularly, single test files regularly, and the full test suite
 Once done, use /code-review to review the work.
 
 Commit your work to the current branch.
-
-Then run `node scripts/implement-pr-mode.mjs`:
-
-- `auto`: push the branch and open a PR (repo naming rules; `Closes #<ticket>` for ticket-backed work).
-- `ask`: ask “Do you want me to push this branch and open a PR?” and pause.
-
-An explicit PR instruction in the current request overrides the mode.
