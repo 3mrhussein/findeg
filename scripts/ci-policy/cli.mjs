@@ -3,12 +3,14 @@
 // All decisions live in policy.mjs; this file only parses arguments and reports.
 //
 //   node scripts/ci-policy/cli.mjs branch-policy --head <branch> [--base <branch>]
-//   node scripts/ci-policy/cli.mjs plan --event <pull_request|push> --target <branch> [--changed-files <file>]
+//   node scripts/ci-policy/cli.mjs plan --event <pull_request|push> --target <branch> --expect-tier <fast|strict> [--changed-files <file>]
 //   node scripts/ci-policy/cli.mjs verdict --needs <json> [--tier <fast|strict>]
 //
 // branch-policy: omit --base when the PR's target branch isn't known (e.g. the
 //   pre-push hook).
-// plan: --changed-files is a file with one repo-relative path per line; omit it
+// plan: --expect-tier is the tier the calling workflow runs; the plan exits
+//   non-zero, writing no outputs, when the target gets a different tier.
+//   --changed-files is a file with one repo-relative path per line; omit it
 //   when the changes can't be determined, and every job runs. The decisions are
 //   printed and, inside GitHub Actions, written to $GITHUB_OUTPUT as
 //   tier, use_cache, save_cache, run_checks and run_integration.
@@ -49,9 +51,11 @@ function readChangedPaths(file) {
     .filter(Boolean);
 }
 
-function plan({ event, target, changedFiles }) {
+function plan({ event, target, expectedTier, changedFiles }) {
   const changedPaths = readChangedPaths(changedFiles);
-  const decision = decidePlan({ event, target, changedPaths });
+  const decision = decidePlan({ event, target, expectedTier, changedPaths });
+  report('Tier', decision);
+  if (!decision.ok) return 1;
   const outputs = {
     tier: decision.tier,
     use_cache: decision.useCache,
@@ -81,7 +85,7 @@ function verdict({ needs, tier }) {
 
 const USAGE = `Usage:
   cli.mjs branch-policy --head <branch> [--base <branch>]
-  cli.mjs plan --event <pull_request|push> --target <branch> [--changed-files <file>]
+  cli.mjs plan --event <pull_request|push> --target <branch> --expect-tier <fast|strict> [--changed-files <file>]
   cli.mjs verdict --needs <json> [--tier <fast|strict>]`;
 
 function main(argv) {
@@ -94,6 +98,7 @@ function main(argv) {
       event: { type: 'string' },
       target: { type: 'string' },
       'changed-files': { type: 'string' },
+      'expect-tier': { type: 'string' },
       needs: { type: 'string' },
       tier: { type: 'string' },
     },
@@ -102,10 +107,11 @@ function main(argv) {
   if (command === 'branch-policy' && values.head) {
     return checkBranchPolicy({ head: values.head, base: values.base }) ? 0 : 1;
   }
-  if (command === 'plan' && values.event && values.target) {
+  if (command === 'plan' && values.event && values.target && values['expect-tier']) {
     return plan({
       event: values.event,
       target: values.target,
+      expectedTier: values['expect-tier'],
       changedFiles: values['changed-files'],
     });
   }
