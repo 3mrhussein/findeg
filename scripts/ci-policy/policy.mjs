@@ -1,6 +1,6 @@
 // CI policy: pure decisions about branches, CI tiers and the CI OK gate.
-// No I/O here: callers (the pre-push hook, the PR conventions and CI
-// workflows, via cli.mjs) pass plain values in and act on the decisions that
+// No I/O here: callers (the pre-push hook directly, the PR conventions and CI
+// workflows via cli.mjs) pass plain values in and act on the decisions that
 // come out.
 
 // Conventional Commits types, matching commitlint.config.js and the PR title check.
@@ -56,7 +56,11 @@ export function decideBranchName({ head, base }) {
 
 // Only releases (develop), urgent production fixes (hotfix/*) and release-please's
 // Release PR may target main; everything else goes through develop first.
+// With no base (the pre-push hook) there's no PR to judge yet.
 export function decideReleaseSource({ head, base }) {
+  if (base === undefined) {
+    return { ok: true, reason: "Skipped: the PR's base branch isn't known yet." };
+  }
   if (base !== 'main') {
     return { ok: true, reason: 'Only PRs into main have restricted sources.' };
   }

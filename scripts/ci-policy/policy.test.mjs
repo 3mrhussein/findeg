@@ -88,10 +88,15 @@ test('a PR into main from any other branch is rejected, with a reason naming the
   }
 });
 
-test('the release-source rule does not restrict PRs into other branches, or an unknown base', () => {
+test('the release-source rule does not restrict PRs into other branches', () => {
   assert.equal(decideReleaseSource({ head: 'feat/new-cart', base: 'develop' }).ok, true);
   assert.equal(decideReleaseSource({ head: 'feat/new-cart', base: 'feat/big-epic' }).ok, true);
-  assert.equal(decideReleaseSource({ head: 'feat/new-cart' }).ok, true);
+});
+
+test('the release-source rule is skipped, saying so, when the base is not known yet (a push before any PR)', () => {
+  const decision = decideReleaseSource({ head: 'feat/new-cart' });
+  assert.equal(decision.ok, true);
+  assert.match(decision.reason, /skipped/i);
 });
 
 // --- CI plan: tier, caches, which jobs run ---

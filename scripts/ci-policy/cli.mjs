@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Thin CLI over policy.mjs, the entry point for workflows and git hooks.
+// Thin CLI over policy.mjs, the entry point for workflows.
 // All decisions live in policy.mjs; this file only parses arguments and reports.
 //
 //   node scripts/ci-policy/cli.mjs branch-policy --head <branch> [--base <branch>]
@@ -34,7 +34,7 @@ function report(title, { ok, reason }) {
 // Runs the branch-name and release-source rules and prints each verdict.
 // Returns true when both pass. Inside GitHub Actions, failures are emitted as
 // error annotations so they show on the PR's checks page.
-export function checkBranchPolicy({ head, base }) {
+function checkBranchPolicy({ head, base }) {
   const checks = [
     ['Branch name', decideBranchName({ head, base })],
     ['Release source', decideReleaseSource({ head, base })],
