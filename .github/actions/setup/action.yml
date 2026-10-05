@@ -1,0 +1,92 @@
+name: Setup
+description: >-
+  Install pnpm (version from packageManager) and Node (from .nvmrc), restore
+  caches when asked, and run a frozen install. Pair with ./.github/actions/save-cache
+  at the end of the job: composite actions have no post step, so saving is
+  explicit and happens only in the plan's save_cache runs.
+
+inputs:
+  cache:
+    description: >-
+      'true' restores the pnpm store, this job's Turbo cache and (with
+      next-cache) the Next.js build caches. 'false' restores nothing.
+    required: true
+  turbo-cache-key:
+    description: Namespace for this job's Turbo cache, e.g. the job id. Empty means the job has no Turbo cache.
+    default: ''
+  next-cache:
+    description: "'true' if the job builds the Next.js apps and should restore (and later save) their .next/cache."
+    default: 'false'
+
+runs:
+  using: composite
+  steps:
+    - name: Install pnpm
+      uses: pnpm/action-setup@v6
+
+    # No package-manager cache here: setup-node's built-in cache always saves
+    # in its post step, which would make every PR a cache producer.
+    - name: Install Node
+      uses: actions/setup-node@v7
+      with:
+        node-version-file: .nvmrc
+        package-manager-cache: false
+
+    # Keys and paths go to the job env so save-cache saves the same paths under
+    # the same keys. Saved keys are immutable, so the Turbo key is unique per
+    # commit and restored by prefix; the pnpm and Next keys change with the
+    # lockfile and sources.
+    - name: Compute cache keys and paths
+      shell: bash
+      env:
+        LOCK_HASH: ${{ hashFiles('pnpm-lock.yaml') }}
+        SOURCES_HASH: ${{ inputs.next-cache == 'true' && hashFiles('frontend/*/src/**', 'backend/src/**') || '' }}
+        TURBO_NAMESPACE: ${{ inputs.turbo-cache-key }}
+        NEXT_CACHE: ${{ inputs.next-cache }}
+        OS: ${{ runner.os }}
+        SHA: ${{ github.sha }}
+      run: |
+        {
+          echo "CI_PNPM_STORE=$(pnpm store path --silent)"
+          echo "CI_PNPM_PREFIX=pnpm-store-$OS-"
+          echo "CI_PNPM_KEY=pnpm-store-$OS-$LOCK_HASH"
+          if [ -n "$TURBO_NAMESPACE" ]; then
+            echo "CI_TURBO_PATH=.turbo/cache"
+            echo "CI_TURBO_PREFIX=turbo-$OS-$TURBO_NAMESPACE-"
+            echo "CI_TURBO_KEY=turbo-$OS-$TURBO_NAMESPACE-$SHA"
+          fi
+          if [ "$NEXT_CACHE" = 'true' ]; then
+            printf '%s\n' 'CI_NEXT_PATHS<<EOF' \
+              frontend/storefront/.next/cache frontend/dashboard/.next/cache EOF
+            echo "CI_NEXT_PREFIX=nextjs-$OS-$LOCK_HASH-"
+            echo "CI_NEXT_KEY=nextjs-$OS-$LOCK_HASH-$SOURCES_HASH"
+          fi
+        } >> "$GITHUB_ENV"
+
+    - name: Restore pnpm store
+      if: inputs.cache == 'true'
+      uses: actions/cache/restore@v6
+      with:
+        path: ${{ env.CI_PNPM_STORE }}
+        key: ${{ env.CI_PNPM_KEY }}
+        restore-keys: ${{ env.CI_PNPM_PREFIX }}
+
+    - name: Restore Turbo cache
+      if: inputs.cache == 'true' && env.CI_TURBO_KEY != ''
+      uses: actions/cache/restore@v6
+      with:
+        path: ${{ env.CI_TURBO_PATH }}
+        key: ${{ env.CI_TURBO_KEY }}
+        restore-keys: ${{ env.CI_TURBO_PREFIX }}
+
+    - name: Restore Next.js build cache
+      if: inputs.cache == 'true' && env.CI_NEXT_KEY != ''
+      uses: actions/cache/restore@v6
+      with:
+        path: ${{ env.CI_NEXT_PATHS }}
+        key: ${{ env.CI_NEXT_KEY }}
+        restore-keys: ${{ env.CI_NEXT_PREFIX }}
+
+    - name: Install dependencies
+      shell: bash
+      run: pnpm install --frozen-lockfile

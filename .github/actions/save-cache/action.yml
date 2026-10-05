@@ -1,0 +1,49 @@
+name: Save caches
+description: >-
+  Save the caches ./.github/actions/setup restored, under the keys and paths it
+  computed. Call it last in a job, only when the plan's save_cache is true (a
+  push to develop, the single cache producer). A key that already exists is
+  skipped with a warning, never an error.
+
+inputs:
+  pnpm-store:
+    description: >-
+      'true' also saves the pnpm store. Every job installs the same lockfile,
+      so exactly one job per run should pass it.
+    default: 'false'
+
+runs:
+  using: composite
+  steps:
+    - name: Save pnpm store
+      if: inputs.pnpm-store == 'true'
+      uses: actions/cache/save@v6
+      with:
+        path: ${{ env.CI_PNPM_STORE }}
+        key: ${{ env.CI_PNPM_KEY }}
+
+    # The Turbo cache is restored from the newest key and saved under a new one
+    # each run, so without pruning it would carry every entry ever written.
+    # Entries keep their write time through a save and restore; dropping those
+    # older than a week bounds it to recent work.
+    - name: Prune Turbo cache
+      if: env.CI_TURBO_KEY != ''
+      shell: bash
+      run: |
+        if [ -d "$CI_TURBO_PATH" ]; then
+          find "$CI_TURBO_PATH" -type f -mtime +7 -delete
+        fi
+
+    - name: Save Turbo cache
+      if: env.CI_TURBO_KEY != ''
+      uses: actions/cache/save@v6
+      with:
+        path: ${{ env.CI_TURBO_PATH }}
+        key: ${{ env.CI_TURBO_KEY }}
+
+    - name: Save Next.js build cache
+      if: env.CI_NEXT_KEY != ''
+      uses: actions/cache/save@v6
+      with:
+        path: ${{ env.CI_NEXT_PATHS }}
+        key: ${{ env.CI_NEXT_KEY }}

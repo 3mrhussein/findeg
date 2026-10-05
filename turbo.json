@@ -21,22 +21,41 @@
     // ----------------------------
     // TYPE CHECKING
     // ----------------------------
+    // Type-check and lint are cacheable with explicit inputs. Their
+    // `transit` edge folds upstream workspace packages' files into the hash:
+    // the frontends type-check backend sources through path aliases, and
+    // every package lints with @findeg/config's rules (a package with no
+    // scripts, so only a transit node reaches it).
+    "transit": {
+      "dependsOn": ["^transit"]
+    },
     "type-check": {
-      "cache": false
+      "dependsOn": ["transit"],
+      "inputs": ["$TURBO_DEFAULT$", "!**/*.md"],
+      "outputs": []
     },
     // ----------------------------
     // LINT
     // ----------------------------
     "lint": {
-      "outputs": [],
-      "cache": false
+      "dependsOn": ["transit"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!**/*.md",
+        "$TURBO_ROOT$/.prettierrc",
+        "$TURBO_ROOT$/.prettierignore"
+      ],
+      "outputs": []
     },
     // ----------------------------
     // TESTING
     // ----------------------------
+    // No package's tests read another package's build output, so tests don't
+    // wait on builds (which would also re-run every type-check). The transit
+    // edge still re-runs them when an upstream package changes.
     "test": {
-      "dependsOn": ["^build"],
-      "outputs": ["coverage/**"]
+      "dependsOn": ["transit"],
+      "outputs": []
     },
     "test:unit": {
       "outputs": ["coverage/**"]

@@ -1,0 +1,25 @@
+name: CI · Release
+
+# The strict tier, for main: every PR into main (from develop, hotfix/* or
+# release-please--*) and every push to main. The jobs live in ci-jobs.yml; the
+# required check is `Strict / CI OK`, so a fast run can never satisfy main.
+# No secrets are passed: the jobs use none (GITHUB_TOKEN reaches them anyway).
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-release-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  strict:
+    name: Strict
+    uses: ./.github/workflows/ci-jobs.yml
+    with:
+      tier: strict
