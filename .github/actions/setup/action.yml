@@ -32,10 +32,11 @@ runs:
         node-version-file: .nvmrc
         package-manager-cache: false
 
-    # Keys go to the job env so save-cache saves under the same keys. Saved
-    # keys are immutable, so the Turbo key is unique per commit and restored by
-    # prefix; the pnpm and Next keys change with the lockfile and sources.
-    - name: Compute cache keys
+    # Keys and paths go to the job env so save-cache saves the same paths under
+    # the same keys. Saved keys are immutable, so the Turbo key is unique per
+    # commit and restored by prefix; the pnpm and Next keys change with the
+    # lockfile and sources.
+    - name: Compute cache keys and paths
       shell: bash
       env:
         LOCK_HASH: ${{ hashFiles('pnpm-lock.yaml') }}
@@ -50,10 +51,13 @@ runs:
           echo "CI_PNPM_PREFIX=pnpm-store-$OS-"
           echo "CI_PNPM_KEY=pnpm-store-$OS-$LOCK_HASH"
           if [ -n "$TURBO_NAMESPACE" ]; then
+            echo "CI_TURBO_PATH=.turbo/cache"
             echo "CI_TURBO_PREFIX=turbo-$OS-$TURBO_NAMESPACE-"
             echo "CI_TURBO_KEY=turbo-$OS-$TURBO_NAMESPACE-$SHA"
           fi
           if [ "$NEXT_CACHE" = 'true' ]; then
+            printf '%s\n' 'CI_NEXT_PATHS<<EOF' \
+              frontend/storefront/.next/cache frontend/dashboard/.next/cache EOF
             echo "CI_NEXT_PREFIX=nextjs-$OS-$LOCK_HASH-"
             echo "CI_NEXT_KEY=nextjs-$OS-$LOCK_HASH-$SOURCES_HASH"
           fi
@@ -71,7 +75,7 @@ runs:
       if: inputs.cache == 'true' && env.CI_TURBO_KEY != ''
       uses: actions/cache/restore@v6
       with:
-        path: .turbo/cache
+        path: ${{ env.CI_TURBO_PATH }}
         key: ${{ env.CI_TURBO_KEY }}
         restore-keys: ${{ env.CI_TURBO_PREFIX }}
 
@@ -79,9 +83,7 @@ runs:
       if: inputs.cache == 'true' && env.CI_NEXT_KEY != ''
       uses: actions/cache/restore@v6
       with:
-        path: |
-          frontend/storefront/.next/cache
-          frontend/dashboard/.next/cache
+        path: ${{ env.CI_NEXT_PATHS }}
         key: ${{ env.CI_NEXT_KEY }}
         restore-keys: ${{ env.CI_NEXT_PREFIX }}
 

@@ -123,8 +123,12 @@ jobs:
       - name: Repo script tests
         if: matrix.task == 'test'
         run: pnpm test:scripts
+      # Only the Lint leg saves the pnpm store: every job installs the same
+      # lockfile, and a lockfile change always runs the code checks.
       - if: needs.plan.outputs.save_cache == 'true'
         uses: ./.github/actions/save-cache
+        with:
+          pnpm-store: ${{ matrix.task == 'lint' }}
 
   # The Next.js builds prerender from the database, so Build needs a migrated,
   # seeded Postgres. Turbo's strict env mode strips job env from tasks, so the
