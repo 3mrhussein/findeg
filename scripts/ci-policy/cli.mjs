@@ -13,7 +13,8 @@
 //   --changed-files is a file with one repo-relative path per line; omit it
 //   when the changes can't be determined, and every job runs. The decisions are
 //   printed and, inside GitHub Actions, written to $GITHUB_OUTPUT as
-//   tier, use_cache, save_cache, run_checks and run_integration.
+//   tier, turbo_flags, fetch_depth, use_cache, save_cache, run_checks and
+//   run_integration.
 // verdict: --needs is the CI OK job's `toJSON(needs)`; exits non-zero when CI
 //   OK must fail.
 import { appendFileSync, readFileSync } from 'node:fs';
@@ -58,6 +59,8 @@ function plan({ event, target, expectedTier, changedFiles }) {
   if (!decision.ok) return 1;
   const outputs = {
     tier: decision.tier,
+    turbo_flags: decision.turboFlags,
+    fetch_depth: decision.fetchDepth,
     use_cache: decision.useCache,
     save_cache: decision.saveCache,
     run_checks: decision.runChecks,

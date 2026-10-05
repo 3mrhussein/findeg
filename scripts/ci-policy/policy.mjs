@@ -141,8 +141,10 @@ function guardTier({ event, target, tier, expectedTier }) {
 // workflow runs; `ok` is false (and `reason` says why) when it isn't the tier
 // `target` gets, and the plan must then fail.
 //
-// - strict (main): everything runs, from scratch, with no caches.
-// - fast (develop and anything else): caches are restored; a push to develop
+// - strict (main): everything runs, from scratch (Turbo --force, a shallow
+//   clone), with no caches.
+// - fast (develop and anything else): Turbo runs only affected packages, which
+//   needs full history to diff against; caches are restored; a push to develop
 //   is the single cache producer; the code checks (lint, type-check, unit
 //   tests, build) are skipped for non-code changes, and integration tests run
 //   only when what they exercise changed.
@@ -153,6 +155,8 @@ export function decidePlan({ event, target, expectedTier, changedPaths }) {
   return {
     ...guardTier({ event, target, tier, expectedTier }),
     tier,
+    turboFlags: tier === 'strict' ? '--force' : '--affected',
+    fetchDepth: tier === 'strict' ? 1 : 0,
     useCache: tier === 'fast',
     saveCache: event === 'push' && target === 'develop',
     runChecks: strictOrUnknown || !changedPaths.every(isNonCode),

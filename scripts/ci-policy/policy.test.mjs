@@ -176,6 +176,21 @@ test('only the fast tier restores caches, and only a push to develop saves them'
   }
 });
 
+test('the fast tier runs Turbo on affected packages over full history; strict forces every task on a shallow clone', () => {
+  const cases = [
+    // [event, target, turboFlags, fetchDepth]
+    ['pull_request', 'develop', '--affected', 0],
+    ['push', 'develop', '--affected', 0],
+    ['pull_request', 'main', '--force', 1],
+    ['push', 'main', '--force', 1],
+  ];
+  for (const [event, target, turboFlags, fetchDepth] of cases) {
+    const plan = decidePlan({ event, target, changedPaths: BACKEND_ONLY });
+    assert.equal(plan.turboFlags, turboFlags, `${event} to ${target}: turboFlags`);
+    assert.equal(plan.fetchDepth, fetchDepth, `${event} to ${target}: fetchDepth`);
+  }
+});
+
 const FRONTEND_ONLY = ['frontend/storefront/src/app/page.tsx', 'frontend/ui/src/button.tsx'];
 const DOCS_ONLY = ['docs/adr/0014-develop-branch-flow.md', 'README.md'];
 
