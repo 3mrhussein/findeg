@@ -24,7 +24,8 @@ export const connectionOptions = {
  *
  * `INTEGRATION_DATABASE_URL` wins when set (CI sets it). Otherwise the
  * docker-compose `postgres` service is used, via the `DB_*` variables from the
- * repo-root `.env`.
+ * repo-root `.env`. Failing those, `DATABASE_URL` is used as the server URL
+ * (worktrees often only have that); `withDatabase()` swaps its database.
  */
 export function resolveServerUrl(): string {
   if (process.env.INTEGRATION_DATABASE_URL) return process.env.INTEGRATION_DATABASE_URL;
@@ -37,9 +38,10 @@ export function resolveServerUrl(): string {
 
   const { DB_HOST = 'localhost', DB_PORT = '5432', DB_USER, DB_PASSWORD, DB_NAME } = process.env;
   if (!DB_USER || !DB_NAME) {
+    if (process.env.DATABASE_URL) return process.env.DATABASE_URL;
     throw new Error(
-      'Integration tests need Postgres: set INTEGRATION_DATABASE_URL, or DB_USER/DB_PASSWORD/DB_NAME ' +
-        '(from the repo-root .env) and start it with `pnpm db:run`.',
+      'Integration tests need Postgres: set INTEGRATION_DATABASE_URL, DB_USER/DB_PASSWORD/DB_NAME ' +
+        '(from the repo-root .env), or DATABASE_URL, and start it with `pnpm db:run`.',
     );
   }
 
