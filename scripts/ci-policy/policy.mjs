@@ -1,6 +1,7 @@
-// CI policy: pure decisions about branches (and, later, CI tiers and gates).
-// No I/O here: callers (the pre-push hook, the PR conventions workflow) pass
-// plain values in and act on the { ok, reason } decisions that come out.
+// CI policy: pure decisions about branches, CI tiers and the CI OK gate.
+// No I/O here: callers (the pre-push hook, the PR conventions and CI
+// workflows, via cli.mjs) pass plain values in and act on the decisions that
+// come out.
 
 // Conventional Commits types, matching commitlint.config.js and the PR title check.
 const COMMIT_TYPES = [
@@ -67,5 +68,80 @@ export function decideReleaseSource({ head, base }) {
   return {
     ok: false,
     reason: `PRs into main must come from develop, hotfix/* or release-please--*, not "${head}".`,
+  };
+}
+
+// Paths the Postgres-backed integration suite depends on, plus the CI
+// definition itself (this policy, the CI workflow and its shared actions).
+const INTEGRATION_PATHS = [
+  'backend/',
+  'db/',
+  'packages/env/',
+  'pnpm-lock.yaml',
+  'scripts/ci-policy/',
+  '.github/workflows/ci.yml',
+  '.github/actions/',
+];
+
+// The CI workflow's own files: they always count as code, even under .github/.
+const CI_PATHS = ['.github/workflows/ci.yml', '.github/actions/'];
+
+// Paths no lint, type-check, unit test or build reads: prose, agent tooling and
+// the other workflows. A change touching only these skips the code checks.
+function isNonCode(path) {
+  if (CI_PATHS.some((prefix) => path.startsWith(prefix))) return false;
+  return (
+    path.endsWith('.md') ||
+    ['docs/', '.github/', '.claude/', '.agents/', '.agent/'].some((prefix) =>
+      path.startsWith(prefix),
+    )
+  );
+}
+
+function touchesAny(changedPaths, prefixes) {
+  return changedPaths.some((path) => prefixes.some((prefix) => path.startsWith(prefix)));
+}
+
+// Decides how CI runs for a change landing on `target`: the PR's base branch,
+// or the branch that was pushed to. `changedPaths` is the list of
+// repo-relative paths the change touches, or undefined when it can't be
+// determined (then every job runs).
+//
+// - strict (main): everything runs, from scratch, with no caches.
+// - fast (develop and anything else): caches are restored; a push to develop
+//   is the single cache producer; the code checks (lint, type-check, unit
+//   tests, build) are skipped for non-code changes, and integration tests run
+//   only when what they exercise changed.
+export function decidePlan({ event, target, changedPaths }) {
+  const tier = target === 'main' ? 'strict' : 'fast';
+  const known = Array.isArray(changedPaths);
+  const strictOrUnknown = tier === 'strict' || !known;
+  return {
+    tier,
+    useCache: tier === 'fast',
+    saveCache: event === 'push' && target === 'develop',
+    runChecks: strictOrUnknown || !changedPaths.every(isNonCode),
+    runIntegration: strictOrUnknown || touchesAny(changedPaths, INTEGRATION_PATHS),
+  };
+}
+
+// Decides whether the aggregate `CI OK` check passes, given every CI job's
+// result (`success`, `failure`, `cancelled` or `skipped`, keyed by job id) and
+// the tier the plan chose (undefined when the plan itself didn't finish).
+//
+// Skipped jobs pass: the plan skips jobs a change can't affect. Anything else
+// that isn't a success fails, including results this rule doesn't recognise.
+// Tier-specific rules (e.g. a skipped E2E on strict) belong here too.
+export function decideVerdict({ tier, results }) {
+  const bad = Object.entries(results).filter(
+    ([, result]) => result !== 'success' && result !== 'skipped',
+  );
+  if (bad.length > 0) {
+    const list = bad.map(([job, result]) => `${job} (${result || 'no result'})`).join(', ');
+    return { ok: false, reason: `Not every CI job passed: ${list}.` };
+  }
+  return {
+    ok: true,
+    reason: `Every CI job passed or was skipped as irrelevant${tier ? ` (${tier} tier)` : ''}.`,
   };
 }
