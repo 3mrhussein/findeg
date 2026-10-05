@@ -32,6 +32,7 @@ export {
   type StaffPartnerReportView,
 } from './partner-report';
 export { PARTNER_SALES_TIME_ZONE } from './time';
+export { piastersToEgp, sumSalesFigures } from './money';
 export {
   createPartnerSalesServices,
   type PartnerSalesDependencies,

@@ -214,7 +214,7 @@ export interface IPartnerReportService {
     businessPartnerId: number,
     options?: PartnerReportOptions,
   ): Promise<PartnerSalesResult<PartnerReportView, PartnerReportError>>;
-  /** The same monthly sales, unsuppressed, for Staff holding `partner-reports.view`. */
+  /** The same monthly sales, unsuppressed, for Staff holding `partner.reports.view`. */
   getStaffReport(
     actor: PartnerSalesStaffActor,
     businessPartnerId: number,

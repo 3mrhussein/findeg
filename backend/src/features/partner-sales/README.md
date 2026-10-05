@@ -11,7 +11,7 @@ writes; checkout and order transitions never call into this feature.
 (default: system time) places the current Cairo month in tests.
 
 - `attributedOrders.getAttributedOrders(actor, partnerId, { from, to, orderStatuses?, paymentStatuses? })`:
-  Staff holding `partner-reports.view` (or `system_admin`). Returns the partner's Attributed Orders
+  Staff holding `partner.reports.view` (or `system_admin`). Returns the Business Partner's Attributed Orders
   accepted between two Cairo calendar days (both inclusive), oldest first, with totals. Money is in
   piasters: gross, discount and charged (gross minus discount, without shipping). No Customer field
   is returned. There is no UI on it yet.
@@ -21,7 +21,7 @@ writes; checkout and order transitions never call into this feature.
   `MIN_DISTINCT_ORDERS_PER_SALES_ROW` distinct Orders roll up into `otherItems`. No Order Reference,
   Order count, id or Customer field.
 - `partnerReports.getStaffReport(actor, partnerId, { month?, locale? })`: the same rows for Staff
-  holding `partner-reports.view`, unsuppressed, with ids and Order counts.
+  holding `partner.reports.view`, unsuppressed, with ids and Order counts.
 
 ## Rules
 

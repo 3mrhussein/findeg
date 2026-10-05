@@ -1,9 +1,8 @@
-import type { StaffPartnerReportView } from '@findeg/backend/features/partner-sales';
-
-/** Exact piasters as EGP text, never through a JS number. */
-export function formatEgp(piasters: bigint): string {
-  return `${piasters / 100n}.${(piasters % 100n).toString().padStart(2, '0')}`;
-}
+import {
+  piastersToEgp,
+  sumSalesFigures,
+  type StaffPartnerReportView,
+} from '@findeg/backend/features/partner-sales';
 
 export interface SalesReportProps {
   readonly asOf: string;
@@ -24,6 +23,7 @@ export interface SalesReportProps {
 
 /** Serializable props for the Sales tab. Bigints never cross the server/client boundary. */
 export function toSalesReportProps(report: StaffPartnerReportView): SalesReportProps {
+  const total = sumSalesFigures(report.sales);
   return {
     asOf: report.asOf.toISOString(),
     month: report.month,
@@ -35,12 +35,12 @@ export function toSalesReportProps(report: StaffPartnerReportView): SalesReportP
       productName: row.productName,
       variantLabel: row.variantLabel,
       quantity: row.quantity,
-      egp: formatEgp(row.chargedPiasters),
+      egp: piastersToEgp(row.chargedPiasters),
       orderCount: row.orderCount,
     })),
     total: {
-      quantity: report.sales.reduce((sum, row) => sum + row.quantity, 0),
-      egp: formatEgp(report.sales.reduce((sum, row) => sum + row.chargedPiasters, 0n)),
+      quantity: total.quantity,
+      egp: piastersToEgp(total.chargedPiasters),
     },
   };
 }

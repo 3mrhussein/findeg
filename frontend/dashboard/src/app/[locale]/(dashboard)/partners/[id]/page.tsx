@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { Link } from '@i18n/navigation';
 import { Badge, Tabs, TabsContent, TabsList, TabsTrigger } from '@findeg/ui';
 import type { Locale } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { requirePermission, sessionHasPermission } from '@lib/auth-guard';
 import { PERMISSION_CODES } from '@findeg/backend/features/core';
 import { createPartnerMembershipServices } from '@findeg/backend/features/partner-membership';
@@ -43,6 +44,7 @@ export default async function PartnerDetailPage({
   searchParams: Promise<{ month?: string | string[] }>;
 }) {
   const { locale, id } = await params;
+  const t = await getTranslations({ locale, namespace: 'PartnerSales' });
   const { month: monthParam } = await searchParams;
   const month = typeof monthParam === 'string' ? monthParam : undefined;
   const session = await requirePermission(locale as Locale, {
@@ -94,7 +96,7 @@ export default async function PartnerDetailPage({
       <Tabs defaultValue={canManagePartner && !month ? 'overview' : 'sales'} className="space-y-6">
         <TabsList>
           {canManagePartner && <TabsTrigger value="overview">Overview</TabsTrigger>}
-          {canViewReports && <TabsTrigger value="sales">Sales</TabsTrigger>}
+          {canViewReports && <TabsTrigger value="sales">{t('Tab')}</TabsTrigger>}
         </TabsList>
 
         {canManagePartner && (
@@ -162,10 +164,27 @@ export default async function PartnerDetailPage({
               <SalesReportPanel
                 report={toSalesReportProps(report.data)}
                 minOrdersPerRow={MIN_DISTINCT_ORDERS_PER_SALES_ROW}
+                messages={{
+                  empty: t('Empty'),
+                  title: (selectedMonth) => t('Title', { month: selectedMonth }),
+                  description: (minOrders) => t('Description', { minOrdersPerRow: minOrders }),
+                  month: t('Month'),
+                  show: t('Show'),
+                  noSales: t('NoSales'),
+                  list: t('List'),
+                  listItem: t('ListItem'),
+                  product: t('Product'),
+                  variant: t('Variant'),
+                  orders: t('Orders'),
+                  units: t('Units'),
+                  sales: t('Sales'),
+                  total: t('Total'),
+                  asOf: (date) => t('AsOf', { date }),
+                }}
               />
             ) : (
               <p role="alert" className="text-destructive text-sm">
-                The sales report could not be loaded.
+                {t('LoadError')}
               </p>
             )}
           </TabsContent>

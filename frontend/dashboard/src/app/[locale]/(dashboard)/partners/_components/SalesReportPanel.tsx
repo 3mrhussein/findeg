@@ -15,6 +15,24 @@ import type { SalesReportProps } from '../_lib/salesReport';
 
 const formatAsOf = (iso: string) => iso.slice(0, 16).replace('T', ' ');
 
+export interface SalesReportMessages {
+  readonly empty: string;
+  readonly title: (month: string) => string;
+  readonly description: (minOrdersPerRow: number) => string;
+  readonly month: string;
+  readonly show: string;
+  readonly noSales: string;
+  readonly list: string;
+  readonly listItem: string;
+  readonly product: string;
+  readonly variant: string;
+  readonly orders: string;
+  readonly units: string;
+  readonly sales: string;
+  readonly total: string;
+  readonly asOf: (date: string) => string;
+}
+
 /**
  * The Staff projection of a Business Partner's monthly sales (ADR-0010, ADR-0013): every row,
  * with its Order count and no suppression. Server-renderable: the month picker is a plain GET form.
@@ -22,16 +40,17 @@ const formatAsOf = (iso: string) => iso.slice(0, 16).replace('T', ' ');
 export function SalesReportPanel({
   report,
   minOrdersPerRow,
+  messages,
 }: {
   report: SalesReportProps;
-  /** The Partner projection's suppression threshold, named in the description. */
+  /** The Business Partner projection's suppression threshold, named in the description. */
   minOrdersPerRow: number;
+  messages: SalesReportMessages;
 }) {
   if (report.months.length === 0) {
     return (
       <p className="text-sm text-muted-foreground" data-testid="sales-report-empty">
-        No Attributed Orders yet. Sales appear after the first Order from one of this partner’s
-        lists.
+        {messages.empty}
       </p>
     );
   }
@@ -39,15 +58,11 @@ export function SalesReportPanel({
   return (
     <Card data-testid="sales-report">
       <CardHeader>
-        <CardTitle>Sales for {report.month}</CardTitle>
-        <CardDescription>
-          Attributed Orders by the month they were accepted, in Cairo time. Cancelled and refunded
-          Orders are not counted. The Partner sees rows under {minOrdersPerRow} Orders combined as
-          “Other items”.
-        </CardDescription>
+        <CardTitle>{messages.title(report.month)}</CardTitle>
+        <CardDescription>{messages.description(minOrdersPerRow)}</CardDescription>
         <form method="get" className="flex items-end gap-2 pt-2">
           <label className="text-sm" htmlFor="sales-month">
-            Month
+            {messages.month}
           </label>
           <select
             id="sales-month"
@@ -62,24 +77,24 @@ export function SalesReportPanel({
             ))}
           </select>
           <button type="submit" className="rounded-md border px-3 py-1 text-sm">
-            Show
+            {messages.show}
           </button>
         </form>
       </CardHeader>
       <CardContent>
         {report.sales.length === 0 ? (
-          <p className="text-sm text-muted-foreground">No sales this month.</p>
+          <p className="text-sm text-muted-foreground">{messages.noSales}</p>
         ) : (
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>List</TableHead>
-                <TableHead>List item</TableHead>
-                <TableHead>Product</TableHead>
-                <TableHead>Variant</TableHead>
-                <TableHead>Orders</TableHead>
-                <TableHead>Units</TableHead>
-                <TableHead>Sales</TableHead>
+                <TableHead>{messages.list}</TableHead>
+                <TableHead>{messages.listItem}</TableHead>
+                <TableHead>{messages.product}</TableHead>
+                <TableHead>{messages.variant}</TableHead>
+                <TableHead>{messages.orders}</TableHead>
+                <TableHead>{messages.units}</TableHead>
+                <TableHead>{messages.sales}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -95,14 +110,16 @@ export function SalesReportPanel({
                 </TableRow>
               ))}
               <TableRow className="font-semibold" data-testid="sales-report-total">
-                <TableCell colSpan={5}>Total</TableCell>
+                <TableCell colSpan={5}>{messages.total}</TableCell>
                 <TableCell>{report.total.quantity}</TableCell>
                 <TableCell className="font-mono">{report.total.egp} EGP</TableCell>
               </TableRow>
             </TableBody>
           </Table>
         )}
-        <p className="mt-2 text-xs text-muted-foreground">As of {formatAsOf(report.asOf)} UTC.</p>
+        <p className="mt-2 text-xs text-muted-foreground">
+          {messages.asOf(formatAsOf(report.asOf))}
+        </p>
       </CardContent>
     </Card>
   );

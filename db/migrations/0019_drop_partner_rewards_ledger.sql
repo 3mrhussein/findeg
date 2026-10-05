@@ -14,5 +14,5 @@ DROP SCHEMA "rewards";--> statement-breakpoint
 DELETE FROM "identity"."permissions"
 WHERE "code" IN ('rewards.rates.manage', 'rewards.adjust', 'rewards.settle');--> statement-breakpoint
 UPDATE "identity"."permissions"
-SET "code" = 'partner-reports.view', "name" = 'View Partner Reports', "updated_at" = now()
+SET "code" = 'partner.reports.view', "name" = 'View Partner Reports', "updated_at" = now()
 WHERE "code" = 'rewards.view';

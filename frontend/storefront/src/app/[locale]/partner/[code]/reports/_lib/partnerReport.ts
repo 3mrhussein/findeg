@@ -1,9 +1,8 @@
-import type { PartnerReportView } from '@findeg/backend/features/partner-sales';
-
-/** Exact piasters as EGP text, never through a JS number. */
-export function formatEgp(piasters: bigint): string {
-  return `${piasters / 100n}.${(piasters % 100n).toString().padStart(2, '0')}`;
-}
+import {
+  piastersToEgp,
+  sumSalesFigures,
+  type PartnerReportView,
+} from '@findeg/backend/features/partner-sales';
 
 export interface SalesFigureProps {
   readonly quantity: number;
@@ -46,6 +45,7 @@ export function toPartnerReportProps(
   });
   const monthLabel = (key: string) => monthName.format(new Date(`${key}-01T00:00:00Z`));
   const rows = [...report.sales, ...(report.otherItems ? [report.otherItems] : [])];
+  const total = sumSalesFigures(rows);
   return {
     asOf: dateTime.format(report.asOf),
     month: report.month,
@@ -58,14 +58,17 @@ export function toPartnerReportProps(
       productName: row.productName,
       variantLabel: row.variantLabel,
       quantity: row.quantity,
-      egp: formatEgp(row.chargedPiasters),
+      egp: piastersToEgp(row.chargedPiasters),
     })),
     otherItems: report.otherItems
-      ? { quantity: report.otherItems.quantity, egp: formatEgp(report.otherItems.chargedPiasters) }
+      ? {
+          quantity: report.otherItems.quantity,
+          egp: piastersToEgp(report.otherItems.chargedPiasters),
+        }
       : null,
     total: {
-      quantity: rows.reduce((sum, row) => sum + row.quantity, 0),
-      egp: formatEgp(rows.reduce((sum, row) => sum + row.chargedPiasters, 0n)),
+      quantity: total.quantity,
+      egp: piastersToEgp(total.chargedPiasters),
     },
   };
 }

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { PartnerReportView } from '@findeg/backend/features/partner-sales';
-import { formatEgp, toPartnerReportProps } from './partnerReport';
+import { piastersToEgp } from '@findeg/backend/features/partner-sales';
+import { toPartnerReportProps } from './partnerReport';
 
 const view = (over: Partial<PartnerReportView> = {}): PartnerReportView => ({
   asOf: new Date('2026-05-15T10:00:00Z'),
@@ -11,12 +12,12 @@ const view = (over: Partial<PartnerReportView> = {}): PartnerReportView => ({
   ...over,
 });
 
-describe('formatEgp', () => {
+describe('piastersToEgp', () => {
   it.each([
     [0n, '0.00'],
     [5n, '0.05'],
     [12_345n, '123.45'],
-  ])('%s → %s', (piasters, text) => expect(formatEgp(piasters)).toBe(text));
+  ])('%s → %s', (piasters, text) => expect(piastersToEgp(piasters)).toBe(text));
 });
 
 describe('toPartnerReportProps', () => {

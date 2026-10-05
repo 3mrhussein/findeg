@@ -12,7 +12,7 @@ export type PartnerSalesResult<T, E extends string> =
 export const ok = <T>(data: T) => ({ success: true, data }) as const;
 export const fail = <E extends string>(error: E) => ({ success: false, error }) as const;
 
-/** Staff read Attributed Orders and Partner Reports with `partner-reports.view`. */
+/** Staff read Attributed Orders and Partner Reports with `partner.reports.view`. */
 export function canViewPartnerReports(actor: PartnerSalesStaffActor): boolean {
   return (
     systemAdmin(actor) ||

@@ -68,7 +68,7 @@ export const PERMISSION_CODES = {
   PARTNERS_MANAGE: 'partners.manage',
 
   // Partner Sales
-  PARTNER_REPORTS_VIEW: 'partner-reports.view',
+  PARTNER_REPORTS_VIEW: 'partner.reports.view',
 } as const;
 
 /**

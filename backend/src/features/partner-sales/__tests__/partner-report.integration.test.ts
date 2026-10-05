@@ -224,7 +224,7 @@ describe('Partner Reports sales view', () => {
       },
     );
 
-    it('gives Staff the report with partner-reports.view or system_admin only', async () => {
+    it('gives Staff the report with partner.reports.view or system_admin only', async () => {
       const partnerId = await fixtures.createPartner();
       const get = (actor: PartnerSalesStaffActor) =>
         services.partnerReports.getStaffReport(actor, partnerId);

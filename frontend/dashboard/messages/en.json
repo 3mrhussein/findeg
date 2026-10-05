@@ -10,6 +10,25 @@
     "Search": "Search",
     "Actions": "Actions"
   },
+  "PartnerSales": {
+    "Tab": "Sales",
+    "LoadError": "The sales report could not be loaded.",
+    "Empty": "No Attributed Orders yet. Sales appear after the first Order from one of this Business Partner’s lists.",
+    "Title": "Sales for {month}",
+    "Description": "Attributed Orders by the month they were accepted, in Cairo time. Cancelled and refunded Orders are not counted. The Business Partner sees rows under {minOrdersPerRow} Orders combined as “Other items”.",
+    "Month": "Month",
+    "Show": "Show",
+    "NoSales": "No sales this month.",
+    "List": "List",
+    "ListItem": "List item",
+    "Product": "Product",
+    "Variant": "Variant",
+    "Orders": "Orders",
+    "Units": "Units",
+    "Sales": "Sales",
+    "Total": "Total",
+    "AsOf": "As of {date} UTC."
+  },
   "Pages": {
     "Dashboard": {
       "Title": "Dashboard",

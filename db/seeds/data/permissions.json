@@ -169,7 +169,7 @@
   },
   {
     "id": 25,
-    "code": "partner-reports.view",
+    "code": "partner.reports.view",
     "name": "View Partner Reports",
     "createdAt": "2026-02-19 10:00:00",
     "updatedAt": "2026-02-19 10:00:00"

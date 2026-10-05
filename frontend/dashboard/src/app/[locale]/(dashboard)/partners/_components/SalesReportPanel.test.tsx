@@ -1,7 +1,25 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import type { SalesReportProps } from '../_lib/salesReport';
-import { SalesReportPanel } from './SalesReportPanel';
+import { SalesReportPanel, type SalesReportMessages } from './SalesReportPanel';
+
+const messages: SalesReportMessages = {
+  empty: 'No Attributed Orders yet.',
+  title: (month) => `Sales for ${month}`,
+  description: (minOrders) => `Rows under ${minOrders} Orders are combined.`,
+  month: 'Month',
+  show: 'Show',
+  noSales: 'No sales this month.',
+  list: 'List',
+  listItem: 'List item',
+  product: 'Product',
+  variant: 'Variant',
+  orders: 'Orders',
+  units: 'Units',
+  sales: 'Sales',
+  total: 'Total',
+  asOf: (date) => `As of ${date} UTC.`,
+};
 
 const report = (over: Partial<SalesReportProps> = {}): SalesReportProps => ({
   asOf: '2026-05-15T10:00:00.000Z',
@@ -25,7 +43,7 @@ const report = (over: Partial<SalesReportProps> = {}): SalesReportProps => ({
 
 describe('SalesReportPanel', () => {
   it('shows every row unsuppressed, with its Order count and the total', () => {
-    render(<SalesReportPanel report={report()} minOrdersPerRow={3} />);
+    render(<SalesReportPanel report={report()} minOrdersPerRow={3} messages={messages} />);
     const panel = screen.getByTestId('sales-report');
     expect(panel.textContent).toContain('Spiral notebook');
     expect(panel.textContent).toContain('—');
@@ -37,13 +55,19 @@ describe('SalesReportPanel', () => {
   });
 
   it('shows the empty state before the first Attributed Order', () => {
-    render(<SalesReportPanel report={report({ months: [], sales: [] })} minOrdersPerRow={3} />);
+    render(
+      <SalesReportPanel
+        report={report({ months: [], sales: [] })}
+        minOrdersPerRow={3}
+        messages={messages}
+      />,
+    );
     expect(screen.getByTestId('sales-report-empty')).toBeTruthy();
     expect(screen.queryByTestId('sales-report')).toBeNull();
   });
 
   it('shows sales figures only', () => {
-    render(<SalesReportPanel report={report()} minOrdersPerRow={3} />);
+    render(<SalesReportPanel report={report()} minOrdersPerRow={3} messages={messages} />);
     expect(document.body.textContent).not.toMatch(/balance|statement|settle|payout|points|reward/i);
   });
 });
