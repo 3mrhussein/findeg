@@ -112,6 +112,50 @@ test('changes landing on develop (PR into develop, push to develop) run the fast
   }
 });
 
+// The tier guard: each CI workflow states the tier it expects (CI → fast,
+// CI · Release → strict), so a mis-set trigger fails the plan instead of
+// running the wrong tier.
+
+test('the plan passes when the workflow expects the tier the target gets', () => {
+  const cases = [
+    // [event, target, expectedTier]
+    ['pull_request', 'develop', 'fast'],
+    ['push', 'develop', 'fast'],
+    ['pull_request', 'main', 'strict'],
+    ['push', 'main', 'strict'],
+  ];
+  for (const [event, target, expectedTier] of cases) {
+    const plan = decidePlan({ event, target, expectedTier, changedPaths: BACKEND_ONLY });
+    assert.equal(plan.ok, true, `${event} to ${target}, expecting ${expectedTier}`);
+  }
+});
+
+test('the plan fails, naming both tiers, when the workflow expects a different tier', () => {
+  const cases = [
+    // [event, target, expectedTier, computedTier]
+    ['pull_request', 'develop', 'strict', 'fast'],
+    ['push', 'develop', 'strict', 'fast'],
+    ['pull_request', 'main', 'fast', 'strict'],
+    ['push', 'main', 'fast', 'strict'],
+  ];
+  for (const [event, target, expectedTier, computedTier] of cases) {
+    const plan = decidePlan({ event, target, expectedTier, changedPaths: BACKEND_ONLY });
+    const label = `${event} to ${target}, expecting ${expectedTier}`;
+    assert.equal(plan.ok, false, label);
+    assert.match(plan.reason, new RegExp(expectedTier), label);
+    assert.match(plan.reason, new RegExp(computedTier), label);
+    assert.match(plan.reason, new RegExp(target), label);
+  }
+});
+
+test('the plan fails when the workflow does not state the tier it expects', () => {
+  for (const target of ['develop', 'main']) {
+    const plan = decidePlan({ event: 'push', target, changedPaths: BACKEND_ONLY });
+    assert.equal(plan.ok, false, target);
+    assert.doesNotMatch(plan.reason, /undefined/, target);
+  }
+});
+
 test('only the fast tier restores caches, and only a push to develop saves them', () => {
   const cases = [
     // [event, target, useCache, saveCache]
@@ -138,6 +182,8 @@ test('on the fast tier, integration tests run when the backend, db, env package,
     ['pnpm-lock.yaml'],
     ['scripts/ci-policy/policy.mjs'],
     ['.github/workflows/ci.yml'],
+    ['.github/workflows/ci-jobs.yml'],
+    ['.github/workflows/ci-release.yml'],
     ['.github/actions/setup/action.yml'],
     ['README.md', 'backend/package.json'],
   ]) {
@@ -198,6 +244,8 @@ test('on the fast tier, any code, config or CI change runs the code checks', () 
     ['.prettierrc'],
     ['scripts/ci-policy/policy.mjs'],
     ['.github/workflows/ci.yml'],
+    ['.github/workflows/ci-jobs.yml'],
+    ['.github/workflows/ci-release.yml'],
     ['.github/actions/setup/action.yml'],
     ['README.md', 'frontend/ui/src/button.tsx'],
   ]) {

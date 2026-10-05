@@ -71,20 +71,25 @@ export function decideReleaseSource({ head, base }) {
   };
 }
 
+// The CI workflows' own files: the CI and CI · Release callers, the CI jobs
+// they share, and its actions. They always count as code, even under .github/.
+const CI_PATHS = [
+  '.github/workflows/ci.yml',
+  '.github/workflows/ci-release.yml',
+  '.github/workflows/ci-jobs.yml',
+  '.github/actions/',
+];
+
 // Paths the Postgres-backed integration suite depends on, plus the CI
-// definition itself (this policy, the CI workflow and its shared actions).
+// definition itself (this policy and the CI workflow files).
 const INTEGRATION_PATHS = [
   'backend/',
   'db/',
   'packages/env/',
   'pnpm-lock.yaml',
   'scripts/ci-policy/',
-  '.github/workflows/ci.yml',
-  '.github/actions/',
+  ...CI_PATHS,
 ];
-
-// The CI workflow's own files: they always count as code, even under .github/.
-const CI_PATHS = ['.github/workflows/ci.yml', '.github/actions/'];
 
 // Paths no lint, type-check, unit test or build reads: prose, agent tooling and
 // the other workflows. A change touching only these skips the code checks.
@@ -102,21 +107,41 @@ function touchesAny(changedPaths, prefixes) {
   return changedPaths.some((path) => prefixes.some((prefix) => path.startsWith(prefix)));
 }
 
+// The tier guard. Each CI workflow states the tier it expects (CI → fast,
+// CI · Release → strict); a mismatch means its triggers are wrong, so the plan
+// fails rather than run the wrong tier.
+function guardTier({ event, target, tier, expectedTier }) {
+  const runs = `${event} to ${target} runs the ${tier} tier`;
+  if (expectedTier === undefined) {
+    return { ok: false, reason: `${runs}, but this workflow doesn't state the tier it expects.` };
+  }
+  if (expectedTier !== tier) {
+    return {
+      ok: false,
+      reason: `${runs}, but this workflow expects the ${expectedTier} tier. Check its triggers.`,
+    };
+  }
+  return { ok: true, reason: `${runs}, as this workflow expects.` };
+}
+
 // Decides how CI runs for a change landing on `target`: the PR's base branch,
 // or the branch that was pushed to. `changedPaths` is the list of
 // repo-relative paths the change touches, or undefined when it can't be
-// determined (then every job runs).
+// determined (then every job runs). `expectedTier` is the tier the calling
+// workflow runs; `ok` is false (and `reason` says why) when it isn't the tier
+// `target` gets, and the plan must then fail.
 //
 // - strict (main): everything runs, from scratch, with no caches.
 // - fast (develop and anything else): caches are restored; a push to develop
 //   is the single cache producer; the code checks (lint, type-check, unit
 //   tests, build) are skipped for non-code changes, and integration tests run
 //   only when what they exercise changed.
-export function decidePlan({ event, target, changedPaths }) {
+export function decidePlan({ event, target, expectedTier, changedPaths }) {
   const tier = target === 'main' ? 'strict' : 'fast';
   const known = Array.isArray(changedPaths);
   const strictOrUnknown = tier === 'strict' || !known;
   return {
+    ...guardTier({ event, target, tier, expectedTier }),
     tier,
     useCache: tier === 'fast',
     saveCache: event === 'push' && target === 'develop',
