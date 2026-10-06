@@ -20,14 +20,14 @@ jobs:
     steps:
       - name: Mint release-bot token
         id: bot
-        uses: actions/create-github-app-token@v3
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
         with:
           app-id: ${{ secrets.RELEASE_APP_ID }}
           private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
 
       - name: Update Release PR or publish release
         id: release
-        uses: googleapis/release-please-action@v5
+        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5
         with:
           token: ${{ steps.bot.outputs.token }}
           target-branch: main
@@ -44,8 +44,10 @@ jobs:
             gh pr merge "$number" --auto --merge
           done < <(jq -r '.[].number' <<< "$RELEASE_PRS")
 
+      # Runs even when enabling Release PR auto-merge fails: a published
+      # release must still sync back to develop.
       - name: Open or update main to develop sync PR
-        if: steps.release.outputs.release_created == 'true'
+        if: ${{ !cancelled() && steps.release.outputs.release_created == 'true' }}
         env:
           GH_TOKEN: ${{ steps.bot.outputs.token }}
           GH_REPO: ${{ github.repository }}
