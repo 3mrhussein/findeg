@@ -52,6 +52,12 @@ function readChangedPaths(file) {
     .filter(Boolean);
 }
 
+/**
+ * Report the CI plan and append its outputs when GITHUB_OUTPUT is set.
+ * `changedFiles` names a file of newline-separated repository-relative paths; omitting it
+ * treats the changed paths as unknown. Returns 0 on success or 1 for a tier guard failure,
+ * which writes no plan outputs. File read and append errors propagate to the caller.
+ */
 function plan({ event, target, expectedTier, changedFiles }) {
   const changedPaths = readChangedPaths(changedFiles);
   const decision = decidePlan({ event, target, expectedTier, changedPaths });

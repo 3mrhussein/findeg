@@ -8,6 +8,11 @@ if (!env.DB_SEEDING) {
   throw new Error("You must set DB_SEEDING to 'true' when running seeds.");
 }
 
+/**
+ * Replace managed seed data, synchronize its sequences, and close the database connection.
+ * Attempts to close the connection even if seeding fails; seed and cleanup errors reject
+ * the promise for the entry point to report with exit code 1.
+ */
 async function main() {
   console.log('🌱 Starting Database Seed Process...');
   const startedAt = Date.now();
