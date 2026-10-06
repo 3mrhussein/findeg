@@ -16,20 +16,30 @@ describe('School Supply List completeness', () => {
     cy.visit(fixture.publishedUrl);
     cy.contains('1 of 1 required items covered').should('be.visible');
 
-    cy.contains('li', 'Cypress pen item').within(() => {
-      cy.get('input[type="number"]').clear().type('1');
-    });
+    cy.contains('h2', 'Cypress pen item')
+      .closest('li')
+      .within(() => {
+        cy.get('input[type="number"]').clear().type('1');
+      });
     cy.contains('0 of 1 required items covered').should('be.visible');
     cy.contains('[aria-label="Still needed"] li', 'Cypress pen item').should('be.visible');
 
-    cy.contains('li', 'Cypress pen item').within(() => {
-      cy.contains('button', 'Change').click();
-      cy.contains('button', /12\.00/).click();
-      cy.get('input[type="number"]').clear().type('2');
-    });
+    cy.contains('h2', 'Cypress pen item')
+      .closest('li')
+      .within(() => {
+        cy.contains('button', 'Change').click();
+        cy.contains('button', /12\.00/).click();
+        cy.get('input[type="number"]').clear().type('2');
+      });
     cy.contains('1 of 1 required items covered').should('be.visible');
     cy.contains('Still needed').should('not.exist');
-    cy.contains('button', 'Checkout').should('be.disabled');
+    cy.contains('a', 'Checkout')
+      .should('be.visible')
+      .and(
+        'have.attr',
+        'href',
+        `/en/checkout?source=list&publicCode=${fixture.publishedUrl.split('/').at(-1)}`,
+      );
   });
 
   it('shows the archived banner with checkout disabled', () => {

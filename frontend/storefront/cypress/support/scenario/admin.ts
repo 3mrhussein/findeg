@@ -148,7 +148,7 @@ function waitForAdminCategoryIdBySlug(slug: string, attempts = 12): Cypress.Chai
     .then((response) => {
       const categories = (response.body?.data?.categories || []) as AdminCategoryApiSnapshot[];
       const category = categories.find((item) => item.slug === slug);
-      if (category?.id) return category.id;
+      if (category?.id) return cy.wrap(category.id, { log: false });
 
       if (attempts <= 1) {
         expect(category?.id, `admin category id for slug ${slug}`).to.be.a('number');
@@ -172,7 +172,7 @@ function waitForAdminBrandIdBySlug(slug: string, attempts = 12): Cypress.Chainab
     .then((response) => {
       const brands = (response.body?.data?.brands || []) as AdminBrandApiSnapshot[];
       const brand = brands.find((item) => item.slug === slug);
-      if (brand?.id) return brand.id;
+      if (brand?.id) return cy.wrap(brand.id, { log: false });
 
       if (attempts <= 1) {
         expect(brand?.id, `admin brand id for slug ${slug}`).to.be.a('number');

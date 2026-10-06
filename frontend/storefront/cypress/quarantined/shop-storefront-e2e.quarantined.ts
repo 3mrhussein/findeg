@@ -1,3 +1,4 @@
+// Quarantined pending https://github.com/3mrhussein/findeg/issues/346
 import {
   shouldAddProductFromShopGridCardIntoCartDrawer,
   shouldAddProductFromDetailIntoCartDrawer,
@@ -19,7 +20,7 @@ import {
   shouldSortAndPaginateShopResults,
   shouldSupportCartItemQuantityAndRemovalOperations,
   shouldValidateCheckoutFormFieldsBeforeSubmission,
-} from '../../support/scenario/shop';
+} from '../support/scenario/shop';
 
 describe('Shop Storefront E2E', () => {
   beforeEach(() => {

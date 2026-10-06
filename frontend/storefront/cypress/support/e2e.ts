@@ -1,10 +1,5 @@
 import './commands';
 
-Cypress.on('uncaught:exception', () => {
-  // Keep e2e stable while app still emits known runtime warnings in dev.
-  return false;
-});
-
 // Inject CSS to disable animations globally in Cypress tests
 Cypress.Commands.add('disableAnimations', () => {
   cy.document().then((doc) => {

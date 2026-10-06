@@ -1,4 +1,6 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { hydrateRoot } from 'react-dom/client';
+import { renderToString } from 'react-dom/server';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { PublicSupplyList } from '@findeg/backend/features/school';
 
@@ -138,6 +140,30 @@ describe('CheckoutClient acceptance failures', () => {
 
   afterEach(() => {
     vi.unstubAllGlobals();
+  });
+
+  it('hydrates server-empty checkout when the Cart has already loaded before the page hydrates', async () => {
+    const loadedItems = cart.cartItems;
+    const container = document.createElement('div');
+    const recoverableError = vi.fn();
+    let root: ReturnType<typeof hydrateRoot> | undefined;
+    try {
+      cart.cartItems = [];
+      container.innerHTML = renderToString(<CheckoutClient initialPrefill={initialPrefill} />);
+      document.body.appendChild(container);
+      cart.cartItems = loadedItems;
+      await act(async () => {
+        root = hydrateRoot(container, <CheckoutClient initialPrefill={initialPrefill} />, {
+          onRecoverableError: recoverableError,
+        });
+      });
+      expect(recoverableError).not.toHaveBeenCalled();
+      expect(container.querySelector('#fullName')).not.toBeNull();
+    } finally {
+      cart.cartItems = loadedItems;
+      await act(async () => root?.unmount());
+      container.remove();
+    }
   });
 
   it('shows a changed Quote and resubmits its new Confirmation only after the Customer confirms', async () => {
