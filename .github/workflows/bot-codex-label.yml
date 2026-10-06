@@ -1,4 +1,4 @@
-name: Codex app label
+name: Bot · Codex label
 
 # The Codex GitHub app reviews on its own (no workflow run, no API key), so label its PRs here.
 

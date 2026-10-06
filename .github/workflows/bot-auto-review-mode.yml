@@ -1,6 +1,6 @@
-name: Auto review mode
+name: Bot · Auto review mode
 
-# Sets or shows the AUTO_REVIEW repo variable (claude | off) that claude.yml reads.
+# Sets or shows the AUTO_REVIEW repo variable (claude | off) that bot-claude-review.yml reads.
 #  - "Run workflow" in the Actions tab / GitHub mobile app (workflow_dispatch)
 #  - Owner comment `/auto-review claude|off` on any issue or PR (no argument shows the current mode)
 # Writing a variable needs a token with "Variables: read and write" on this repo, stored as the AUTO_REVIEW_TOKEN
