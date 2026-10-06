@@ -38,6 +38,19 @@ describe('Dashboard Current Session', () => {
     cy.contains('Admin Login').should('be.visible');
   });
 
+  it('submits logout from the header dropdown and invalidates the Current Session', () => {
+    signInToDashboard();
+    cy.get('header button[aria-haspopup="menu"]').click();
+    cy.contains('[role="menuitem"]', 'Logout')
+      .should('be.visible')
+      .and('have.attr', 'type', 'submit')
+      .click();
+    cy.location('pathname').should('eq', '/en/login');
+    cy.getCookie('admin_session').should('not.exist');
+    cy.visit('/en/account');
+    cy.location('pathname').should('eq', '/en/login');
+  });
+
   it('logs out and denies subsequent protected navigation', () => {
     signInToDashboard();
     cy.contains('button', 'Logout').click();

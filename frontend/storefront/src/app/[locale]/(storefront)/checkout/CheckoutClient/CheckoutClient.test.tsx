@@ -129,12 +129,15 @@ function jsonResponse(body: unknown, status = 200): Response {
   });
 }
 
-describe('CheckoutClient acceptance failures', () => {
+describe('CheckoutClient hydration and acceptance failures', () => {
+  const loadedCartItems = cart.cartItems;
+
   beforeEach(() => {
     vi.stubGlobal('crypto', {
       randomUUID: vi.fn().mockReturnValueOnce('guest-id').mockReturnValue('key'),
     });
     window.localStorage.clear();
+    cart.cartItems = loadedCartItems;
     cart.clearCart.mockReset();
   });
 
@@ -164,6 +167,77 @@ describe('CheckoutClient acceptance failures', () => {
       await act(async () => root?.unmount());
       container.remove();
     }
+  });
+
+  it('renders an empty cart on the server even when cart data is already available', () => {
+    const container = document.createElement('div');
+    container.innerHTML = renderToString(<CheckoutClient initialPrefill={initialPrefill} />);
+    expect(container).toHaveTextContent('Pages.Cart.Empty');
+    expect(container.querySelector('#fullName')).toBeNull();
+  });
+
+  it('shows items arriving after hydration and returns to the empty state when removed', () => {
+    cart.cartItems = [];
+    const view = render(<CheckoutClient initialPrefill={initialPrefill} />);
+    expect(screen.getByText('Pages.Cart.Empty')).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Pages.Checkout.PlaceOrder' }),
+    ).not.toBeInTheDocument();
+    cart.cartItems = loadedCartItems;
+    view.rerender(<CheckoutClient initialPrefill={initialPrefill} />);
+    expect(screen.getByRole('button', { name: 'Pages.Checkout.PlaceOrder' })).toBeEnabled();
+    expect(screen.queryByText('Pages.Cart.Empty')).not.toBeInTheDocument();
+    cart.cartItems = [];
+    view.rerender(<CheckoutClient initialPrefill={initialPrefill} />);
+    expect(screen.getByText('Pages.Cart.Empty')).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Pages.Checkout.PlaceOrder' }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('preserves the server-rendered list checkout through hydration with an empty cart', async () => {
+    cart.cartItems = [];
+    const checkout = (
+      <CheckoutClient
+        initialPrefill={initialPrefill}
+        checkoutSource={{ source: 'list', publicCode: supplyList.publicCode, list: supplyList }}
+      />
+    );
+    const container = document.createElement('div');
+    const onRecoverableError = vi.fn();
+    let root: ReturnType<typeof hydrateRoot> | undefined;
+    try {
+      container.innerHTML = renderToString(checkout);
+      expect(container.querySelector('#fullName')).toHaveValue(initialPrefill.fullName);
+      expect(container).not.toHaveTextContent('Pages.Cart.Empty');
+      document.body.appendChild(container);
+      await act(async () => {
+        root = hydrateRoot(container, checkout, { onRecoverableError });
+      });
+      expect(onRecoverableError).not.toHaveBeenCalled();
+      expect(screen.getByRole('button', { name: 'Pages.Checkout.PlaceOrder' })).toBeEnabled();
+    } finally {
+      await act(async () => root?.unmount());
+      container.remove();
+    }
+  });
+
+  it('keeps an empty supply list empty even when the ordinary cart has items', () => {
+    const emptyList = { ...supplyList, items: [] };
+    const checkout = (
+      <CheckoutClient
+        initialPrefill={initialPrefill}
+        checkoutSource={{ source: 'list', publicCode: emptyList.publicCode, list: emptyList }}
+      />
+    );
+    const container = document.createElement('div');
+    container.innerHTML = renderToString(checkout);
+    expect(container).toHaveTextContent('Pages.Cart.Empty');
+    render(checkout);
+    expect(screen.getByText('Pages.Cart.Empty')).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Pages.Checkout.PlaceOrder' }),
+    ).not.toBeInTheDocument();
   });
 
   it('shows a changed Quote and resubmits its new Confirmation only after the Customer confirms', async () => {

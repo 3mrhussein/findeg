@@ -391,3 +391,19 @@ test('fast CI OK permits skipped E2E on a feature PR', () => {
     true,
   );
 });
+
+test('a failed or cancelled E2E job cannot pass fast CI even though E2E is optional', () => {
+  for (const result of ['failure', 'cancelled', 'timed_out', '']) {
+    const verdict = decideVerdict({ tier: 'fast', results: { ...ALL_PASSED, e2e: result } });
+    assert.equal(verdict.ok, false, `e2e: ${result}`);
+    assert.match(verdict.reason, /e2e/);
+  }
+});
+
+test('successful E2E cannot conceal another failed strict CI job', () => {
+  for (const job of ['plan', 'checks', 'build', 'integration']) {
+    const verdict = decideVerdict({ tier: 'strict', results: { ...ALL_PASSED, [job]: 'failure' } });
+    assert.equal(verdict.ok, false, job);
+    assert.match(verdict.reason, new RegExp(job));
+  }
+});
