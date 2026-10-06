@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Sets each agent's `<AGENT>_PR_AUTHORS` repo variable (read by .github/workflows/claude.yml) from
+// Sets each agent's `<AGENT>_PR_AUTHORS` repo variable (read by .github/workflows/bot-claude-review.yml) from
 // the bot login GitHub reports for its app, plus `extraBots` from agents.json. Re-run it after
 // renaming an app. Runs `gh` as you (FINDEG_AGENT=none), since the agent bots can't write variables.
 //

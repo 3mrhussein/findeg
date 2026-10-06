@@ -243,9 +243,9 @@ Local persistence uses `docker-compose.yml` to orchestrate a PostgreSQL 16 Alpin
 
 ### Deployment & CI Validation
 
-The CI Pipeline acts as a strict gateway:
+CI gates every merge:
 
-1. `backend-validation.yml`: Builds backend, tests exports against dashboard and storefront to prevent API leakage, checks strictly for package version bumping using Node script introspection on `package.json`.
+1. `CI` (`ci.yml`) runs the fast tier on PRs into and pushes to `develop`; `CI · Release` (`ci-release.yml`) runs the strict tier on PRs into and pushes to `main`. Both call the jobs in `ci-jobs.yml` (lint, type check, unit tests, build, integration tests) behind one `CI OK` gate.
 2. Vercel automatically deploys based on application boundaries.
 
 ---
