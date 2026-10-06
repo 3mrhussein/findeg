@@ -38,7 +38,7 @@ export function validateEnv<T extends ZodRawShape>(schema: ZodObject<T>) {
         '❌ Invalid environment variables:\n' +
         error.issues.map((i) => ` - ${i.path.join('.')}: ${i.message}`).join('\n');
 
-      throw new Error(message);
+      throw new Error(message, { cause: error });
     }
 
     return process.env as unknown as ReturnType<ZodObject<T>['parse']>;

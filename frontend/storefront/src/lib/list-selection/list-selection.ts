@@ -89,7 +89,7 @@ export function loadSelection(
   list: PublicSupplyList,
   storage: SelectionStorage,
 ): { selection: ListSelection; flaggedItemIds: number[] } {
-  let stored: ListSelection | null = null;
+  let stored: ListSelection | null;
   try {
     stored = parseSelection(storage.getItem(selectionKey(list.publicCode)));
   } catch {
