@@ -28,10 +28,6 @@ export function AdminSidebarUserClient({
 }: AdminSidebarUserClientProps) {
   const { isCollapsed } = useSidebar();
 
-  const handleLogout = async () => {
-    await logout();
-  };
-
   const initials = getInitials(userName, userEmail);
   const avatarBgClass = getAvatarColorClass(userName || userEmail || 'A');
 
@@ -58,13 +54,15 @@ export function AdminSidebarUserClient({
             </div>
           </div>
 
-          <button
-            onClick={handleLogout}
-            className="w-full h-[32px] flex items-center justify-center gap-2 rounded-md text-[12px] text-gray-500 bg-transparent hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-150"
-          >
-            <LogOut className="h-[14px] w-[14px]" />
-            <span>Logout</span>
-          </button>
+          <form action={logout}>
+            <button
+              type="submit"
+              className="w-full h-[32px] flex items-center justify-center gap-2 rounded-md text-[12px] text-gray-500 bg-transparent hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-150"
+            >
+              <LogOut className="h-[14px] w-[14px]" />
+              <span>Logout</span>
+            </button>
+          </form>
         </div>
       ) : (
         <TooltipProvider delayDuration={0}>

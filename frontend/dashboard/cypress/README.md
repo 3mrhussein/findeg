@@ -33,11 +33,12 @@ Configured in `cypress.config.ts` (override through CLI/CI env):
 
 - `LOCALE` (default `en`)
 - `ADMIN_EMAIL` (default `admin@findeg.com`)
-- `ADMIN_PASSWORD` (default `admin`)
+- `ADMIN_PASSWORD` (default `password123`)
 
 ## Strict release baseline (#323)
 
-The active suite runs real seeded staff authentication, Current Session persistence,
+The active `auth/identity-phase-3.cy.ts` and `dashboard-journeys-e2e.cy.ts` specs
+run real seeded staff authentication, Current Session persistence,
 logout, unauthenticated and invalid-session redirects, and English/Arabic catalog
 search and order filtering against the production dashboard. The seeded default
 staff password is `password123`. Run `pnpm --filter @findeg/dashboard e2e:run:ci`.
