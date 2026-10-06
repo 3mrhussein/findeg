@@ -5,16 +5,19 @@ This project uses Docker to run a PostgreSQL database for development.
 ## Quick Start
 
 1. **Start the database:**
+
    ```bash
    npm run db:start
    ```
 
 2. **Update your `.env.local` file:**
+
    ```bash
    cp .env.example .env.local
    ```
 
 3. **Run database migrations:**
+
    ```bash
    npm run db:push
    ```
@@ -23,6 +26,13 @@ This project uses Docker to run a PostgreSQL database for development.
    ```bash
    npm run db:seed
    ```
+
+Seeding truncates the managed application schemas before loading fixtures. After
+fixtures are inserted, their serial sequences are synchronized with the highest
+stored IDs, so creating a user or catalog item cannot collide with a fixture ID.
+Empty tables retain their first generated ID. Schemas outside the application
+seed set are untouched. A failed truncate, insert or sequence update makes the
+seed command exit unsuccessfully after closing its database connection.
 
 ## Available Scripts
 
@@ -47,22 +57,28 @@ This project uses Docker to run a PostgreSQL database for development.
 ## Troubleshooting
 
 ### Port 5432 already in use
+
 If you have PostgreSQL installed locally, it might be using port 5432. You can either:
+
 1. Stop your local PostgreSQL service
 2. Change the port mapping in `docker-compose.yml` (e.g., `5433:5432`)
 
 ### Container won't start
+
 Make sure Docker is running:
+
 ```bash
 docker info
 ```
 
 ### View container status
+
 ```bash
 docker-compose ps
 ```
 
 ### Access database directly
+
 ```bash
 docker-compose exec postgres psql -U findeg_user -d findeg_dev
 ```

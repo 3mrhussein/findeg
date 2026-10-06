@@ -1,7 +1,7 @@
 import env from '@findeg/env/database';
 import { db, connection } from './src/connection.ts';
 import * as seeds from './seeds/index.ts';
-import { truncateTables } from './seeds/helpers/index.ts';
+import { synchronizeSeedSequences, truncateTables } from './seeds/helpers/index.ts';
 import process from 'process';
 
 if (!env.DB_SEEDING) {
@@ -22,17 +22,17 @@ async function main() {
     await seeds.seedSales(db);
     await seeds.seedInventory(db);
     await seeds.seedSystem(db);
+    await synchronizeSeedSequences(db);
 
     const duration = Date.now() - startedAt;
     console.log(`🎉 Seeding completed successfully in ${duration}ms!`);
-  } catch (error) {
-    console.error('❌ Seeding failed:', error);
-    process.exit(1);
   } finally {
     // Ensure postgres connection terminates so the terminal script finishes
     await connection.end();
-    process.exit(0);
   }
 }
 
-main();
+main().catch((error) => {
+  console.error('❌ Seeding failed:', error);
+  process.exitCode = 1;
+});
