@@ -15,7 +15,7 @@
     "clean": "rm -rf node_modules dist .turbo"
   },
   "dependencies": {
-    "zod": "^4.3.6"
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@findeg/config": "workspace:*",
