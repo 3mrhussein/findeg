@@ -22,8 +22,8 @@ export default defineConfig({
         async createSupplyLists() {
           const { randomUUID } = await import('node:crypto');
           const [{ db }, schema, { createSchoolSupplyListService }] = await Promise.all([
-            import('@findeg/db/connection'),
-            import('@findeg/db/schema'),
+            import('../../db/src/connection'),
+            import('../../db/src/schema/index'),
             import('@findeg/backend/features/school'),
           ]);
           const suffix = randomUUID().slice(0, 8);
@@ -143,8 +143,8 @@ export default defineConfig({
         async createPartnerInvitation() {
           const { randomUUID } = await import('node:crypto');
           const [{ db }, { users }, { createPartnerMembershipServices }] = await Promise.all([
-            import('@findeg/db/connection'),
-            import('@findeg/db/schema'),
+            import('../../db/src/connection'),
+            import('../../db/src/schema/index'),
             import('@findeg/backend/features/partner-membership'),
           ]);
           const suffix = randomUUID().slice(0, 8);

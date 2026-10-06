@@ -289,6 +289,7 @@ const ALL_PASSED = {
   checks: 'success',
   build: 'success',
   integration: 'success',
+  e2e: 'success',
 };
 
 test('CI OK passes when every job passed, on either tier', () => {
@@ -323,10 +324,31 @@ test('CI OK passes on the fast tier when irrelevant jobs were skipped', () => {
     checks: 'skipped',
     build: 'skipped',
     integration: 'skipped',
+    e2e: 'skipped',
   };
   assert.equal(decideVerdict({ tier: 'fast', results: docsOnly }).ok, true);
   const frontendOnly = { ...ALL_PASSED, integration: 'skipped' };
   assert.equal(decideVerdict({ tier: 'fast', results: frontendOnly }).ok, true);
+});
+
+test('CI OK fails when the plan was skipped or its result is absent', () => {
+  for (const tier of ['fast', 'strict', undefined]) {
+    for (const result of ['skipped', undefined]) {
+      const results = { ...ALL_PASSED, plan: result };
+      if (result === undefined) delete results.plan;
+      const verdict = decideVerdict({ tier, results });
+      assert.equal(verdict.ok, false);
+      assert.match(verdict.reason, /plan/);
+    }
+  }
+});
+
+test('CI OK fails when a successful plan has no recognised tier', () => {
+  for (const tier of [undefined, '', 'strcit']) {
+    const verdict = decideVerdict({ tier, results: ALL_PASSED });
+    assert.equal(verdict.ok, false);
+    assert.match(verdict.reason, /tier/);
+  }
 });
 
 test('CI OK fails on an unrecognised job result rather than letting it through', () => {
@@ -338,5 +360,50 @@ test('CI OK fails on an unrecognised job result rather than letting it through',
 test('on the strict tier, the code checks always run, even for docs-only changes', () => {
   for (const event of ['pull_request', 'push']) {
     assert.equal(decidePlan({ event, target: 'main', changedPaths: DOCS_ONLY }).runChecks, true);
+  }
+});
+
+test('E2E runs only on strict, for every change and even unknown paths', () => {
+  for (const event of ['pull_request', 'push']) {
+    for (const changedPaths of [BACKEND_ONLY, FRONTEND_ONLY, DOCS_ONLY, [], undefined]) {
+      for (const target of ['main', 'develop']) {
+        const expectedTier = target === 'main' ? 'strict' : 'fast';
+        const plan = decidePlan({ event, target, expectedTier, changedPaths });
+        assert.equal(plan.runE2e, target === 'main', `${event} to ${target}`);
+      }
+    }
+  }
+});
+
+test('strict CI OK requires E2E to succeed, including when its result is missing', () => {
+  for (const result of ['skipped', 'failure', 'cancelled', '', undefined]) {
+    const results = { ...ALL_PASSED, e2e: result };
+    if (result === undefined) delete results.e2e;
+    const verdict = decideVerdict({ tier: 'strict', results });
+    assert.equal(verdict.ok, false, `e2e: ${result}`);
+    assert.match(verdict.reason, /e2e/i);
+  }
+});
+
+test('fast CI OK permits skipped E2E on a feature PR', () => {
+  assert.equal(
+    decideVerdict({ tier: 'fast', results: { ...ALL_PASSED, e2e: 'skipped' } }).ok,
+    true,
+  );
+});
+
+test('a failed or cancelled E2E job cannot pass fast CI even though E2E is optional', () => {
+  for (const result of ['failure', 'cancelled', 'timed_out', '']) {
+    const verdict = decideVerdict({ tier: 'fast', results: { ...ALL_PASSED, e2e: result } });
+    assert.equal(verdict.ok, false, `e2e: ${result}`);
+    assert.match(verdict.reason, /e2e/);
+  }
+});
+
+test('successful E2E cannot conceal another failed strict CI job', () => {
+  for (const job of ['plan', 'checks', 'build', 'integration']) {
+    const verdict = decideVerdict({ tier: 'strict', results: { ...ALL_PASSED, [job]: 'failure' } });
+    assert.equal(verdict.ok, false, job);
+    assert.match(verdict.reason, new RegExp(job));
   }
 });

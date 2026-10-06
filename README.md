@@ -245,8 +245,10 @@ Local persistence uses `docker-compose.yml` to orchestrate a PostgreSQL 16 Alpin
 
 CI gates every merge:
 
-1. `CI` (`ci.yml`) runs the fast tier on PRs into and pushes to `develop`; `CI · Release` (`ci-release.yml`) runs the strict tier on PRs into and pushes to `main`. Both call the jobs in `ci-jobs.yml` (lint, type check, unit tests, build, integration tests) behind one `CI OK` gate.
+1. `CI` (`ci.yml`) runs the fast tier on PRs into and pushes to `develop`; `CI · Release` (`ci-release.yml`) runs the strict tier on PRs into and pushes to `main`. Both call the jobs in `ci-jobs.yml` (lint, type check, unit tests, build, integration tests, and strict-only E2E) behind one `CI OK` gate.
 2. Vercel automatically deploys based on application boundaries.
+
+`Release` runs on pushes to `main`: release-please maintains a bot-authored Release PR, enables merge-commit auto-merge, publishes the version tag and GitHub Release, then opens or updates a `main → develop` sync PR with merge-commit auto-merge. The root package and manifest share one product version. See [automated releases](docs/operations/releases.md) for configuration, recovery and the first-release acceptance checklist.
 
 ---
 
@@ -300,7 +302,7 @@ import { T } from "@i18n/content";
 
 - **Unit (Vitest)**: Every exported catalog service, checkout compute engine, and validation module is independently tested. Mocks are isolated.
 - **Integration (Vitest + Postgres 16)**: `backend/src/**/*.integration.test.ts` run against a real database, for behaviour mocks can't reproduce (row locks, unique indexes, races). See [Running integration tests](#running-integration-tests).
-- **E2E (Cypress)**: The monorepo uses `cypress` and `cypress run --browser chrome --headless` mapped recursively as `npm run e2e:run:ci`. Do not commit brittle selector targeting; use proper `data-cy` attributes.
+- **E2E (Cypress)**: Run `pnpm --filter @findeg/storefront e2e:run:ci` and `pnpm --filter @findeg/dashboard e2e:run:ci` against built apps on ports 3000 and 3001. Install the binary explicitly with `pnpm --filter @findeg/storefront exec cypress install` (pnpm disables its postinstall). The strict tier builds both apps without caches against a freshly migrated, seeded PostgreSQL database and runs both suites; the fast tier skips E2E. `Strict / CI OK` requires E2E success, rejecting skipped or missing results. Failed runs upload screenshots, videos and app logs as `e2e-failure-evidence`. Do not commit brittle selector targeting; use proper `data-cy` attributes.
 
 ### Running integration tests
 

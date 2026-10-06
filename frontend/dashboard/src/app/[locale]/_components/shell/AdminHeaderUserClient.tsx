@@ -30,10 +30,6 @@ export function AdminHeaderUserClient({
 }: AdminHeaderUserClientProps) {
   const router = useRouter();
 
-  const handleLogout = async () => {
-    await logout();
-  };
-
   const initials = getInitials(userName, userEmail);
   const avatarBgClass = getAvatarColorClass(userName || userEmail || 'A');
 
@@ -76,14 +72,16 @@ export function AdminHeaderUserClient({
           </DropdownMenuItem>
         </div>
         <DropdownMenuSeparator className="bg-gray-100 dark:bg-slate-800" />
-        <div className="py-1">
+        <form action={logout} className="py-1">
           <DropdownMenuItem
-            onClick={handleLogout}
+            asChild
             className="text-[13px] text-red-600 font-medium cursor-pointer focus:bg-red-50 focus:text-red-700"
           >
-            <span className="mr-2 text-current">→</span> Logout
+            <button type="submit">
+              <span className="mr-2 text-current">→</span> Logout
+            </button>
           </DropdownMenuItem>
-        </div>
+        </form>
       </DropdownMenuContent>
     </DropdownMenu>
   );

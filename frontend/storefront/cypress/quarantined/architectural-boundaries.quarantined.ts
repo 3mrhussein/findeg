@@ -1,3 +1,4 @@
+// Quarantined pending https://github.com/3mrhussein/findeg/issues/347
 /**
  * Storefront Architectural Boundary Enforcement - E2E Tests
  *

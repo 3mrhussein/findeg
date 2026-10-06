@@ -10,7 +10,8 @@
     "lint": "eslint .",
     "type-check": "tsc --noEmit",
     "test": "vitest --run",
-    "clean": " rm -rf node_modules dist .turbo .next"
+    "clean": " rm -rf node_modules dist .turbo .next",
+    "e2e:run:ci": "cypress run --browser chrome --headless"
   },
   "dependencies": {
     "@findeg/backend": "workspace:*",

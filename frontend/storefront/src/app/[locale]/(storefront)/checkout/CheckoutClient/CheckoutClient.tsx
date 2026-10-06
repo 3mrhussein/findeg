@@ -55,7 +55,11 @@ function toCheckoutTotals(quote: CheckoutQuote): CheckoutTotals {
 }
 
 /**
- * CheckoutClient — multi-step checkout wizard: shipping → payment → confirmation.
+ * Render shipping and payment forms followed by order confirmation for a cart or supply list.
+ * Cart checkout shows the empty state until hydration; list checkout starts from its default
+ * selection, then loads the saved selection. Successful orders clear the cart or reset the
+ * list selection. Submission failures are displayed in the checkout.
+ * @throws {Error} If rendered outside a CartProvider.
  */
 export function CheckoutClient({
   initialPrefill,
@@ -69,6 +73,8 @@ export function CheckoutClient({
     list ? seedSelection(list) : null,
   );
   const [hydratedListKey, setHydratedListKey] = useState<string | null>(null);
+  const [hasHydrated, setHasHydrated] = useState(false);
+  useEffect(() => setHasHydrated(true), []);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderResult, setOrderResult] = useState<PlaceOrderResult | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -82,7 +88,9 @@ export function CheckoutClient({
         variantId: Number(item.variantId),
         quantity: item.quantity,
       }));
-  const hasItems = checkoutLines.length > 0;
+  // The Cart provider can load before this streamed page hydrates. Match the
+  // server's empty Cart on the first render, then show the loaded checkout.
+  const hasItems = (list !== null || hasHydrated) && checkoutLines.length > 0;
   const {
     formValues,
     paymentMethod,

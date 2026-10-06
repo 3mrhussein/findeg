@@ -1,0 +1,79 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+# Mutations use the release App token, so bot PRs and tags trigger workflows.
+permissions:
+  contents: read
+
+concurrency:
+  group: release-main
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Release and sync
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Mint release-bot token
+        id: bot
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
+        with:
+          app-id: ${{ secrets.RELEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+
+      - name: Update Release PR or publish release
+        id: release
+        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5
+        with:
+          token: ${{ steps.bot.outputs.token }}
+          target-branch: main
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+      - name: Enable merge-commit auto-merge for Release PRs
+        env:
+          GH_TOKEN: ${{ steps.bot.outputs.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_PRS: ${{ steps.release.outputs.prs || '[]' }}
+        run: |
+          while read -r number; do
+            gh pr merge "$number" --auto --merge
+          done < <(jq -r '.[].number' <<< "$RELEASE_PRS")
+
+      # Runs even when enabling Release PR auto-merge fails: a published
+      # release must still sync back to develop.
+      - name: Open or update main to develop sync PR
+        if: ${{ !cancelled() && steps.release.outputs.release_created == 'true' }}
+        env:
+          GH_TOKEN: ${{ steps.bot.outputs.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ steps.release.outputs.tag_name }}
+        run: |
+          # Compare ancestry, not file differences: a merge commit preserves
+          # released commits even when develop already has equivalent content.
+          ahead=$(gh api "repos/$GH_REPO/compare/develop...main" --jq '.ahead_by')
+          if [ "$ahead" -eq 0 ]; then
+            echo 'develop already contains main.'
+            exit 0
+          fi
+
+          title="chore: sync main into develop after $RELEASE_TAG"
+          body="$RUNNER_TEMP/release-sync.md"
+          cat > "$body" <<EOF
+          Sync main into develop after release $RELEASE_TAG, including the root
+          version, generated changelog and any hotfixes. Merge with a merge commit
+          to preserve the shared history (ADR-0015).
+          EOF
+
+          number=$(gh pr list --base develop --head main --state open --json number --jq '.[0].number // empty')
+          if [ -n "$number" ]; then
+            gh pr edit "$number" --title "$title" --body-file "$body"
+          else
+            url=$(gh pr create --base develop --head main --title "$title" --body-file "$body")
+            number="$url"
+          fi
+          gh pr merge "$number" --auto --merge
