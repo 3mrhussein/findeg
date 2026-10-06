@@ -50,6 +50,12 @@ Every PR used to go straight to `main` behind CI that had grown piecemeal: two o
 - **The changelog has Added, Fixed, Changed, Reverted and Breaking sections.** docs, style, test, build, ci and chore commits are left out, and the hand-written history stays below the generated entries.
 - **A dedicated release-bot GitHub App opens the Release and sync PRs**, so they trigger CI like any other PR, and the rulesets keep zero bypass actors. Only the bot can create `v*` tags, and no one can update or delete them.
 
+### Dependency updates
+
+- **Dependabot checks GitHub Actions and npm weekly, targeting `develop`.** `.github/dependabot.yml` covers Actions and the root pnpm workspace with its shared lockfile.
+- **npm patch and minor updates share one group; major updates arrive as individual PRs.** Production and development dependencies use the same `chore(deps)` prefix; Actions use `ci(deps)`. These Conventional Commit types pass `PR title` and stay out of the release changelog.
+- **Dependabot PRs follow the ordinary fast-tier checks.** The existing `dependabot/*` exemption passes `Branch policy`; dependency changes run the code checks. After the config lands on `develop`, verify the first bot PR passes `PR title`, `Branch policy` and `Fast / CI OK` before considering the live acceptance check complete.
+
 ## Considered options
 
 - **Keep every PR on `main`, with one CI tier.** Rejected: features would wait on release-grade validation (E2E, no caches), or releases would ship with fast-tier checks only.

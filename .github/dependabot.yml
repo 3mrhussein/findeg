@@ -1,0 +1,27 @@
+version: 2
+
+updates:
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    target-branch: 'develop'
+    schedule:
+      interval: 'weekly'
+    commit-message:
+      prefix: 'ci(deps)'
+
+  # The root pnpm workspace includes all packages and shares one lockfile.
+  - package-ecosystem: 'npm'
+    directory: '/'
+    target-branch: 'develop'
+    schedule:
+      interval: 'weekly'
+    commit-message:
+      prefix: 'chore(deps)'
+    groups:
+      npm-patch-minor:
+        patterns:
+          - '*'
+        update-types:
+          - 'patch'
+          - 'minor'
+    # Major npm updates stay ungrouped and arrive as individual PRs.
