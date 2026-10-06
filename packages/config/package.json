@@ -17,7 +17,7 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jsdoc": "^62.9.0",
     "eslint-plugin-prettier": "^5.5.5",
-    "globals": "^17.6.0",
-    "typescript-eslint": "^8.58.2"
+    "globals": "^17.13.0",
+    "typescript-eslint": "^8.71.0"
   }
 }
