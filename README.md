@@ -248,6 +248,8 @@ CI gates every merge:
 1. `CI` (`ci.yml`) runs the fast tier on PRs into and pushes to `develop`; `CI · Release` (`ci-release.yml`) runs the strict tier on PRs into and pushes to `main`. Both call the jobs in `ci-jobs.yml` (lint, type check, unit tests, build, integration tests, and strict-only E2E) behind one `CI OK` gate.
 2. Vercel automatically deploys based on application boundaries.
 
+`Release` runs on pushes to `main`: release-please maintains a bot-authored Release PR, enables merge-commit auto-merge, publishes the version tag and GitHub Release, then opens or updates a `main → develop` sync PR with merge-commit auto-merge. The root package and manifest share one product version. See [automated releases](docs/operations/releases.md) for configuration, recovery and the first-release acceptance checklist.
+
 ---
 
 ## 🔧 Quick Start & Environment Setup
