@@ -159,6 +159,7 @@ export function decidePlan({ event, target, expectedTier, changedPaths }) {
     fetchDepth: tier === 'strict' ? 1 : 0,
     useCache: tier === 'fast',
     saveCache: event === 'push' && target === 'develop',
+    runE2e: tier === 'strict',
     runChecks: strictOrUnknown || !changedPaths.every(isNonCode),
     runIntegration: strictOrUnknown || touchesAny(changedPaths, INTEGRATION_PATHS),
   };
@@ -168,9 +169,13 @@ export function decidePlan({ event, target, expectedTier, changedPaths }) {
 // result (`success`, `failure`, `cancelled` or `skipped`, keyed by job id) and
 // the tier the plan chose (undefined when the plan itself didn't finish).
 //
-// Skipped jobs pass: the plan skips jobs a change can't affect. Anything else
+// Strict requires E2E success; fast skips it. Other skipped jobs pass:
+// the plan skips jobs a change can't affect. Anything else
 // that isn't a success fails, including results this rule doesn't recognise.
 export function decideVerdict({ tier, results }) {
+  if (tier === 'strict' && results.e2e !== 'success') {
+    return { ok: false, reason: `Strict CI requires e2e success (${results.e2e || 'no result'}).` };
+  }
   const bad = Object.entries(results).filter(
     ([, result]) => result !== 'success' && result !== 'skipped',
   );

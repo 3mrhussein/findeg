@@ -14,7 +14,7 @@
 //   when the changes can't be determined, and every job runs. The decisions are
 //   printed and, inside GitHub Actions, written to $GITHUB_OUTPUT as
 //   tier, turbo_flags, fetch_depth, use_cache, save_cache, run_checks and
-//   run_integration.
+//   run_integration and run_e2e.
 // verdict: --needs is the CI OK job's `toJSON(needs)`; exits non-zero when CI
 //   OK must fail.
 import { appendFileSync, readFileSync } from 'node:fs';
@@ -65,6 +65,7 @@ function plan({ event, target, expectedTier, changedFiles }) {
     save_cache: decision.saveCache,
     run_checks: decision.runChecks,
     run_integration: decision.runIntegration,
+    run_e2e: decision.runE2e,
   };
   const lines = Object.entries(outputs).map(([key, value]) => `${key}=${value}`);
   console.log(
