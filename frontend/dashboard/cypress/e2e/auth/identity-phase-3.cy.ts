@@ -46,4 +46,14 @@ describe('Dashboard Current Session', () => {
     cy.visit('/en/account');
     cy.location('pathname').should('eq', '/en/login');
   });
+
+  it('submits logout from the header menu and invalidates the Current Session', () => {
+    signInToDashboard();
+    cy.get('header button[aria-haspopup="menu"]').click();
+    cy.contains('[role="menuitem"]', 'Logout').should('have.attr', 'type', 'submit').click();
+    cy.location('pathname').should('eq', '/en/login');
+    cy.getCookie('admin_session').should('not.exist');
+    cy.visit('/en/account');
+    cy.location('pathname').should('eq', '/en/login');
+  });
 });

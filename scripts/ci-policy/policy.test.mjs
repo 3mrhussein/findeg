@@ -391,3 +391,22 @@ test('fast CI OK permits skipped E2E on a feature PR', () => {
     true,
   );
 });
+
+test('fast CI still rejects E2E failures if that job ran unexpectedly', () => {
+  for (const result of ['failure', 'cancelled', 'timed_out']) {
+    const verdict = decideVerdict({ tier: 'fast', results: { ...ALL_PASSED, e2e: result } });
+    assert.equal(verdict.ok, false, result);
+    assert.match(verdict.reason, /e2e/);
+    assert.ok(verdict.reason.includes(result));
+  }
+});
+
+test('E2E success cannot mask a failed or cancelled plan on either tier', () => {
+  for (const tier of ['fast', 'strict']) {
+    for (const result of ['failure', 'cancelled', 'skipped', undefined]) {
+      const verdict = decideVerdict({ tier, results: { ...ALL_PASSED, plan: result } });
+      assert.equal(verdict.ok, false, `${tier}: ${result}`);
+      assert.match(verdict.reason, /plan/);
+    }
+  }
+});

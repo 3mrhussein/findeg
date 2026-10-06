@@ -166,6 +166,66 @@ describe('CheckoutClient acceptance failures', () => {
     }
   });
 
+  it('renders ordinary checkout as empty on the server even with a populated Cart', () => {
+    const container = document.createElement('div');
+    container.innerHTML = renderToString(<CheckoutClient initialPrefill={initialPrefill} />);
+    expect(container).toHaveTextContent('Pages.Cart.Empty');
+    expect(container.querySelector('#fullName')).toBeNull();
+  });
+
+  it('renders server-provided List checkout immediately and hydrates without an empty-state flash', async () => {
+    const element = (
+      <CheckoutClient
+        initialPrefill={initialPrefill}
+        checkoutSource={{ source: 'list', publicCode: supplyList.publicCode, list: supplyList }}
+      />
+    );
+    const container = document.createElement('div');
+    const onRecoverableError = vi.fn();
+    let root: ReturnType<typeof hydrateRoot> | undefined;
+    try {
+      container.innerHTML = renderToString(element);
+      document.body.appendChild(container);
+      expect(container.querySelector('#fullName')).toHaveValue(initialPrefill.fullName);
+      expect(container).not.toHaveTextContent('Pages.Cart.Empty');
+      await act(async () => {
+        root = hydrateRoot(container, element, { onRecoverableError });
+      });
+      expect(onRecoverableError).not.toHaveBeenCalled();
+      expect(container.querySelector('#fullName')).toHaveValue(initialPrefill.fullName);
+    } finally {
+      await act(async () => root?.unmount());
+      container.remove();
+    }
+  });
+
+  it('shows an empty Cart after hydration, then follows Cart additions and removals', () => {
+    const loadedItems = cart.cartItems;
+    try {
+      cart.cartItems = [];
+      const view = render(<CheckoutClient initialPrefill={initialPrefill} />);
+      expect(screen.getByText('Pages.Cart.Empty')).toBeInTheDocument();
+      expect(
+        screen.queryByRole('button', { name: 'Pages.Checkout.PlaceOrder' }),
+      ).not.toBeInTheDocument();
+
+      cart.cartItems = loadedItems;
+      view.rerender(<CheckoutClient initialPrefill={initialPrefill} />);
+      expect(screen.queryByText('Pages.Cart.Empty')).not.toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Pages.Checkout.PlaceOrder' })).toBeInTheDocument();
+
+      cart.cartItems = [];
+      view.rerender(<CheckoutClient initialPrefill={initialPrefill} />);
+      expect(screen.getByText('Pages.Cart.Empty')).toBeInTheDocument();
+      expect(
+        screen.queryByRole('button', { name: 'Pages.Checkout.PlaceOrder' }),
+      ).not.toBeInTheDocument();
+      expect(cart.clearCart).not.toHaveBeenCalled();
+    } finally {
+      cart.cartItems = loadedItems;
+    }
+  });
+
   it('shows a changed Quote and resubmits its new Confirmation only after the Customer confirms', async () => {
     const fetchMock = vi
       .fn()
