@@ -4,6 +4,38 @@ import { z } from 'zod';
 import { sql, type Table, type InferInsertModel } from 'drizzle-orm';
 import type { Db } from '../../src/connection';
 
+const managedSchemas = ['identity', 'catalog', 'sales', 'inventory', 'school_engine', 'system'];
+
+/** Explicit fixture IDs do not advance PostgreSQL sequences. Repair them after all fixtures. */
+export async function synchronizeSeedSequences(db: Db): Promise<void> {
+  const columns = (await db.execute(sql`
+    SELECT table_schema AS "schemaName", table_name AS "tableName", column_name AS "columnName",
+      pg_get_serial_sequence(format('%I.%I', table_schema, table_name), column_name) AS "sequenceName"
+    FROM information_schema.columns
+    WHERE table_schema IN (${sql.join(
+      managedSchemas.map((name) => sql`${name}`),
+      sql`, `,
+    )})
+  `)) as {
+    schemaName: string;
+    tableName: string;
+    columnName: string;
+    sequenceName: string | null;
+  }[];
+
+  for (const column of columns) {
+    if (!column.sequenceName) continue;
+    const [{ maximum }] = (await db.execute(sql`
+      SELECT max(${sql.identifier(column.columnName)}) AS maximum
+      FROM ${sql.identifier(column.schemaName)}.${sql.identifier(column.tableName)}
+    `)) as { maximum: number | null }[];
+    // Empty tables retain the first value (1); populated tables allocate max + 1 next.
+    await db.execute(sql`
+      SELECT setval(${column.sequenceName}::regclass, ${maximum ?? 1}, ${maximum !== null})
+    `);
+  }
+}
+
 export async function hashPassword(plain: string): Promise<string> {
   return await bcrypt.hash(plain, 12);
 }
@@ -85,25 +117,20 @@ export function prepareSeedData<TTable extends Table>(
 export async function truncateTables(db: Db) {
   console.log('🧹 Truncating tables securely across all schemas...');
 
-  const schemas = ['identity', 'catalog', 'sales', 'inventory', 'school_engine', 'system'];
+  for (const schemaName of managedSchemas) {
+    // A missing schema has no rows; permission and truncation failures must propagate.
+    const tables = (await db.execute(sql`
+      SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname = ${schemaName}
+    `)) as { tablename: string }[];
 
-  for (const schemaName of schemas) {
-    try {
-      // Get all table names in the schema
-      const tables = (await db.execute(
-        sql.raw(`
-        SELECT tablename FROM pg_catalog.pg_tables 
-        WHERE schemaname = '${schemaName}';
-      `),
-      )) as { tablename: string }[];
-
-      if (tables.length > 0) {
-        const tableNames = tables.map((t) => `"${schemaName}"."${t.tablename}"`).join(', ');
-        console.log(`  - Truncating ${tables.length} tables in schema "${schemaName}"...`);
-        await db.execute(sql.raw(`TRUNCATE TABLE ${tableNames} RESTART IDENTITY CASCADE;`));
-      }
-    } catch (e) {
-      console.warn(`⚠️ Failed to truncate schema "${schemaName}" (it might not exist yet):`, e);
+    if (tables.length > 0) {
+      const tableNames = tables.map(
+        (table) => sql`${sql.identifier(schemaName)}.${sql.identifier(table.tablename)}`,
+      );
+      console.log(`  - Truncating ${tables.length} tables in schema "${schemaName}"...`);
+      await db.execute(
+        sql`TRUNCATE TABLE ${sql.join(tableNames, sql`, `)} RESTART IDENTITY CASCADE`,
+      );
     }
   }
 
