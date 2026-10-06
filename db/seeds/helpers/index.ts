@@ -4,10 +4,12 @@ import { z } from 'zod';
 import { sql, type Table, type InferInsertModel } from 'drizzle-orm';
 import type { Db } from '../../src/connection';
 
+type SeedDatabase = Pick<Db, 'execute'>;
+
 const managedSchemas = ['identity', 'catalog', 'sales', 'inventory', 'school_engine', 'system'];
 
 /** Explicit fixture IDs do not advance PostgreSQL sequences. Repair them after all fixtures. */
-export async function synchronizeSeedSequences(db: Db): Promise<void> {
+export async function synchronizeSeedSequences(db: SeedDatabase): Promise<void> {
   const columns = (await db.execute(sql`
     SELECT table_schema AS "schemaName", table_name AS "tableName", column_name AS "columnName",
       pg_get_serial_sequence(format('%I.%I', table_schema, table_name), column_name) AS "sequenceName"
@@ -41,7 +43,7 @@ export async function hashPassword(plain: string): Promise<string> {
 }
 
 export async function ensureParents(
-  db: Db,
+  db: SeedDatabase,
   parents: { name: string; table?: Table }[],
 ): Promise<void> {
   for (const parent of parents) {
@@ -114,7 +116,7 @@ export function prepareSeedData<TTable extends Table>(
   });
 }
 
-export async function truncateTables(db: Db) {
+export async function truncateTables(db: SeedDatabase) {
   console.log('🧹 Truncating tables securely across all schemas...');
 
   for (const schemaName of managedSchemas) {
