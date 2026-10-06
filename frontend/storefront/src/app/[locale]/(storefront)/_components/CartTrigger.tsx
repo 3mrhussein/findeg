@@ -9,6 +9,8 @@ import { useTranslations } from 'next-intl';
 
 /**
  * Trigger button for the cart drawer with item count badge.
+ * Shows the badge only for a positive count after hydration.
+ * @throws {Error} If rendered outside a CartProvider.
  */
 export function CartTrigger() {
   const { cartCount, setIsCartOpen } = useCart();

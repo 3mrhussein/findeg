@@ -43,6 +43,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   );
 }
 
+/**
+ * Wrap page content in a document using the resolved locale, with right-to-left layout
+ * and the Arabic font for `ar`, and left-to-right layout and Inter for other locales.
+ */
 async function LocalizedDocument({ children }: { children: ReactNode }) {
   const locale = await getLocale();
   const direction = locale === 'ar' ? 'rtl' : 'ltr';

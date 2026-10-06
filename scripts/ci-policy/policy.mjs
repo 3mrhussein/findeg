@@ -134,20 +134,22 @@ function guardTier({ event, target, tier, expectedTier }) {
   return { ok: true, reason: `${runs}, as this workflow expects.` };
 }
 
-// Decides how CI runs for a change landing on `target`: the PR's base branch,
-// or the branch that was pushed to. `changedPaths` is the list of
-// repo-relative paths the change touches, or undefined when it can't be
-// determined (then every job runs). `expectedTier` is the tier the calling
-// workflow runs; `ok` is false (and `reason` says why) when it isn't the tier
-// `target` gets, and the plan must then fail.
-//
-// - strict (main): everything runs, from scratch (Turbo --force, a shallow
-//   clone), with no caches.
-// - fast (develop and anything else): Turbo runs only affected packages, which
-//   needs full history to diff against; caches are restored; a push to develop
-//   is the single cache producer; the code checks (lint, type-check, unit
-//   tests, build) are skipped for non-code changes, and integration tests run
-//   only when what they exercise changed.
+/**
+ * Decides how CI runs for a change landing on `target`: the PR's base branch,
+ * or the branch that was pushed to. `changedPaths` is the list of
+ * repo-relative paths the change touches, or undefined when it can't be
+ * determined (then code checks and integration tests run). `expectedTier` is the tier
+ * the calling workflow runs; `ok` is false (and `reason` says why) when `expectedTier`
+ * is omitted or differs from the tier `target` gets, and the plan must then fail.
+ *
+ * - strict (main): everything runs, from scratch (Turbo --force, a shallow
+ *   clone), with no caches.
+ * - fast (develop and anything else): Turbo runs only affected packages, which
+ *   needs full history to diff against; caches are restored; a push to develop
+ *   is the single cache producer; the code checks (lint, type-check, unit
+ *   tests, build) are skipped for non-code changes, and integration tests run
+ *   only when what they exercise changed. E2E never runs on fast.
+ */
 export function decidePlan({ event, target, expectedTier, changedPaths }) {
   const tier = target === 'main' ? 'strict' : 'fast';
   const known = Array.isArray(changedPaths);
@@ -165,13 +167,15 @@ export function decidePlan({ event, target, expectedTier, changedPaths }) {
   };
 }
 
-// Decides whether the aggregate `CI OK` check passes, given every CI job's
-// result (`success`, `failure`, `cancelled` or `skipped`, keyed by job id) and
-// the tier the plan chose (undefined when the plan itself didn't finish).
-//
-// Strict requires E2E success; fast skips it. Other skipped jobs pass:
-// the plan skips jobs a change can't affect. Anything else
-// that isn't a success fails, including results this rule doesn't recognise.
+/**
+ * Decides whether the aggregate `CI OK` check passes, given every CI job's
+ * result (`success`, `failure`, `cancelled` or `skipped`, keyed by job id) and
+ * the tier the plan chose (undefined when the plan itself didn't finish).
+ *
+ * Requires plan success and a known tier; strict also requires E2E success.
+ * All other supplied results must be success or skipped, including E2E on fast.
+ * Returns `ok` with a `reason` explaining the verdict.
+ */
 export function decideVerdict({ tier, results }) {
   if (results.plan !== 'success') {
     return { ok: false, reason: `CI requires plan success (${results.plan || 'no result'}).` };
