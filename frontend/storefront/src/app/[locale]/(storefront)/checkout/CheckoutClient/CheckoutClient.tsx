@@ -69,6 +69,8 @@ export function CheckoutClient({
     list ? seedSelection(list) : null,
   );
   const [hydratedListKey, setHydratedListKey] = useState<string | null>(null);
+  const [hasHydrated, setHasHydrated] = useState(false);
+  useEffect(() => setHasHydrated(true), []);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderResult, setOrderResult] = useState<PlaceOrderResult | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -82,7 +84,9 @@ export function CheckoutClient({
         variantId: Number(item.variantId),
         quantity: item.quantity,
       }));
-  const hasItems = checkoutLines.length > 0;
+  // The Cart provider can load before this streamed page hydrates. Match the
+  // server's empty Cart on the first render, then show the loaded checkout.
+  const hasItems = (list !== null || hasHydrated) && checkoutLines.length > 0;
   const {
     formValues,
     paymentMethod,

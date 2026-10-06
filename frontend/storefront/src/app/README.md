@@ -126,3 +126,26 @@ export default async function DashboardPage({ params }: { params: { locale: stri
 
 - **Queries (`queries.ts`)**: Use `"use cache"` and `cacheTag()`/`cacheLife()`.
 - **Actions (`actions.ts`)**: Use `"use server"` and `updateTag()` to invalidate related caches after mutations.
+
+## Document stylesheet resources
+
+The root Material Symbols stylesheet declares `precedence="default"` so React
+manages it as a stylesheet resource during streaming and hydration. Without it,
+Cypress exposed a head-element mismatch on catalog and authentication routes.
+Keep explicit precedence when adding document stylesheets; see
+[React's stylesheet resource behavior](https://react.dev/reference/react-dom/components/link#special-rendering-behavior).
+
+The storefront Tailwind entry scans `frontend/ui/src` explicitly with `@source`
+so workspace UI utilities (including Sheet edge positioning) reach production CSS.
+Without it, an open Cart drawer was positioned below the viewport instead of at
+the screen edge.
+
+Ordinary checkout initially renders the server-empty Cart until the checkout page
+hydrates. The Cart provider can finish loading before a streamed checkout boundary
+hydrates, so immediately rendering its loaded form would mismatch the server HTML.
+List checkout retains its server-provided selection on the first render.
+
+The header Cart badge also waits for its own hydration before displaying client Cart
+data. Navbar is streamed in Suspense, so CartProvider may resolve the guest Cart before
+the header hydrates. Rendering its badge immediately would differ from the server
+snapshot. CartTrigger.test.tsx retains this SSR-empty/client-populated regression.
