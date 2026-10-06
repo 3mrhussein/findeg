@@ -5,6 +5,7 @@
   "include-component-in-tag": false,
   "include-v-in-tag": true,
   "always-update": true,
+  "commit-search-depth": 1000,
   "changelog-sections": [
     {
       "type": "feat",
