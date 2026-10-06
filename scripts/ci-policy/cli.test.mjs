@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -40,4 +40,45 @@ test('the verdict CLI rejects a skipped E2E result on strict but accepts it on f
     });
     assert.equal(result.status, expectedStatus, result.stdout + result.stderr);
   }
+});
+
+test('a tier mismatch leaves existing workflow outputs untouched', () => {
+  const directory = mkdtempSync(join(tmpdir(), 'findeg-ci-plan-'));
+  try {
+    for (const [target, tier] of [
+      ['main', 'fast'],
+      ['develop', 'strict'],
+    ]) {
+      const output = join(directory, target);
+      writeFileSync(output, 'previous=value\n');
+      const result = spawnSync(
+        process.execPath,
+        [cli, 'plan', '--event', 'push', '--target', target, '--expect-tier', tier],
+        { encoding: 'utf8', timeout: 5000, env: { ...process.env, GITHUB_OUTPUT: output } },
+      );
+      assert.equal(result.status, 1, result.stdout + result.stderr);
+      assert.equal(readFileSync(output, 'utf8'), 'previous=value\n');
+      assert.doesNotMatch(result.stdout, /^\s*run_e2e=/m);
+    }
+  } finally {
+    rmSync(directory, { recursive: true, force: true });
+  }
+});
+
+test('the verdict CLI fails strict CI when E2E is absent despite all other jobs passing', () => {
+  const needs = JSON.stringify(
+    Object.fromEntries(
+      ['plan', 'checks', 'build', 'integration'].map((job) => [job, { result: 'success' }]),
+    ),
+  );
+  const result = spawnSync(
+    process.execPath,
+    [cli, 'verdict', '--tier', 'strict', '--needs', needs],
+    {
+      encoding: 'utf8',
+      timeout: 5000,
+    },
+  );
+  assert.equal(result.status, 1, result.stdout + result.stderr);
+  assert.match(result.stdout + result.stderr, /e2e/);
 });
