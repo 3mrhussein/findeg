@@ -52,6 +52,12 @@ function readChangedPaths(file) {
     .filter(Boolean);
 }
 
+/**
+ * Print the CI plan and append its outputs to GITHUB_OUTPUT when set.
+ * `changedFiles` names a file of repo-relative paths, one per line; omit it when
+ * paths are unknown. Return 0 on success or 1 for a rejected tier, with no plan
+ * outputs written on rejection. File read and append errors propagate.
+ */
 function plan({ event, target, expectedTier, changedFiles }) {
   const changedPaths = readChangedPaths(changedFiles);
   const decision = decidePlan({ event, target, expectedTier, changedPaths });

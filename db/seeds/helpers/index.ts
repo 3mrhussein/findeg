@@ -8,7 +8,12 @@ type SeedDatabase = Pick<Db, 'execute'>;
 
 const managedSchemas = ['identity', 'catalog', 'sales', 'inventory', 'school_engine', 'system'];
 
-/** Explicit fixture IDs do not advance PostgreSQL sequences. Repair them after all fixtures. */
+/**
+ * Explicit fixture IDs do not advance PostgreSQL sequences. Repair them after all fixtures.
+ * In the managed seed schemas, set each column's sequence to its maximum stored value;
+ * empty columns use 1 as the next value. Columns without a sequence are skipped.
+ * Database errors propagate to the caller.
+ */
 export async function synchronizeSeedSequences(db: SeedDatabase): Promise<void> {
   const columns = (await db.execute(sql`
     SELECT table_schema AS "schemaName", table_name AS "tableName", column_name AS "columnName",
@@ -42,6 +47,12 @@ export async function hashPassword(plain: string): Promise<string> {
   return await bcrypt.hash(plain, 12);
 }
 
+/**
+ * Require at least one row in each parent table before seeding dependent data.
+ * Parent names are trusted SQL table references, including any schema and quoting;
+ * the optional table objects are unused. An empty parent list requires no checks.
+ * Rejects if a parent is empty or a database query fails.
+ */
 export async function ensureParents(
   db: SeedDatabase,
   parents: { name: string; table?: Table }[],
@@ -116,6 +127,11 @@ export function prepareSeedData<TTable extends Table>(
   });
 }
 
+/**
+ * Empty tables in the managed seed schemas and restart their owned sequences.
+ * Cascades to referencing tables, including those outside the managed schemas.
+ * Missing or empty schemas are skipped; database errors propagate to the caller.
+ */
 export async function truncateTables(db: SeedDatabase) {
   console.log('🧹 Truncating tables securely across all schemas...');
 

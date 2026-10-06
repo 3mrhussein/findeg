@@ -55,7 +55,13 @@ function toCheckoutTotals(quote: CheckoutQuote): CheckoutTotals {
 }
 
 /**
- * CheckoutClient — multi-step checkout wizard: shipping → payment → confirmation.
+ * Render shipping and payment fields for cart or supply-list checkout, then an order confirmation.
+ * Cart checkout shows the empty state until hydration; list checkout starts with the
+ * default selection and restores any saved selection after mounting.
+ * Submission failures are shown in the page. A successful order clears the cart
+ * or resets the list selection, depending on the checkout source.
+ *
+ * @throws {Error} If rendered outside a CartProvider.
  */
 export function CheckoutClient({
   initialPrefill,
