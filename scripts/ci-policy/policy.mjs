@@ -173,6 +173,12 @@ export function decidePlan({ event, target, expectedTier, changedPaths }) {
 // the plan skips jobs a change can't affect. Anything else
 // that isn't a success fails, including results this rule doesn't recognise.
 export function decideVerdict({ tier, results }) {
+  if (results.plan !== 'success') {
+    return { ok: false, reason: `CI requires plan success (${results.plan || 'no result'}).` };
+  }
+  if (tier !== 'fast' && tier !== 'strict') {
+    return { ok: false, reason: `CI requires a known tier (${tier || 'no tier'}).` };
+  }
   if (tier === 'strict' && results.e2e !== 'success') {
     return { ok: false, reason: `Strict CI requires e2e success (${results.e2e || 'no result'}).` };
   }

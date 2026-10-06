@@ -331,6 +331,26 @@ test('CI OK passes on the fast tier when irrelevant jobs were skipped', () => {
   assert.equal(decideVerdict({ tier: 'fast', results: frontendOnly }).ok, true);
 });
 
+test('CI OK fails when the plan was skipped or its result is absent', () => {
+  for (const tier of ['fast', 'strict', undefined]) {
+    for (const result of ['skipped', undefined]) {
+      const results = { ...ALL_PASSED, plan: result };
+      if (result === undefined) delete results.plan;
+      const verdict = decideVerdict({ tier, results });
+      assert.equal(verdict.ok, false);
+      assert.match(verdict.reason, /plan/);
+    }
+  }
+});
+
+test('CI OK fails when a successful plan has no recognised tier', () => {
+  for (const tier of [undefined, '', 'strcit']) {
+    const verdict = decideVerdict({ tier, results: ALL_PASSED });
+    assert.equal(verdict.ok, false);
+    assert.match(verdict.reason, /tier/);
+  }
+});
+
 test('CI OK fails on an unrecognised job result rather than letting it through', () => {
   const verdict = decideVerdict({ tier: 'fast', results: { ...ALL_PASSED, build: '' } });
   assert.equal(verdict.ok, false);
