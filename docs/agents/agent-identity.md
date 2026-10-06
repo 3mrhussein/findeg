@@ -3,7 +3,7 @@
 Claude Code and Codex each act on GitHub as their own GitHub App bot. That covers `gh` calls, `git push`, and commit authorship. PRs written by an agent are therefore authored by the agent's own bot (e.g. `claude[bot]`, `codex[bot]`; the name comes from the app, see below) rather than by you. This means:
 
 - you can approve agent PRs (GitHub won't let you approve your own);
-- the cross-agent review workflows can tell who opened a PR (`.github/workflows/claude.yml`);
+- the cross-agent review workflows can tell who opened a PR (`.github/workflows/bot-claude-review.yml`);
 - each agent's access is limited to this repo and revocable on its own.
 
 ## Request reviews on a human PR
@@ -14,7 +14,7 @@ Amr can request a Claude review with a simple PR comment:
 @claude review
 ```
 
-For Codex, comment `@codex review` (optionally with a focus, e.g. `@codex review for migration safety`). The Codex GitHub app (`chatgpt-codex-connector[bot]`) answers it on the ChatGPT plan's Codex limits. There is no Codex review workflow, `OPENAI_API_KEY` secret or `AUTO_REVIEW` mode for it. It reads review rules from `AGENTS.md`, and `.github/workflows/codex-app-label.yml` adds the `Codex Reviewed` marker label when the bot comments or reviews.
+For Codex, comment `@codex review` (optionally with a focus, e.g. `@codex review for migration safety`). The Codex GitHub app (`chatgpt-codex-connector[bot]`) answers it on the ChatGPT plan's Codex limits. There is no Codex review workflow, `OPENAI_API_KEY` secret or `AUTO_REVIEW` mode for it. It reads review rules from `AGENTS.md`, and `.github/workflows/bot-codex-label.yml` adds the `Codex Reviewed` marker label when the bot comments or reviews.
 
 The reviewer runs in GitHub Actions with live progress in the PR Checks tab. Reviews can be triggered manually in 3 ways:
 
@@ -30,7 +30,7 @@ node scripts/auto-review-mode.mjs claude  # set (claude | off)
 ```
 
 - the `/auto-review-mode [claude|off]` agent skill, which runs the script above;
-- **Actions → Auto review mode → Run workflow** (works from the GitHub mobile app);
+- **Actions → Bot · Auto review mode → Run workflow** (works from the GitHub mobile app);
 - an owner comment `/auto-review claude|off` on any issue or PR (no argument replies with the current mode);
 - editing the variable under Settings → Secrets and variables → Actions → Variables.
 
@@ -85,7 +85,7 @@ node scripts/agent-identity/sync-authors.mjs            # sets CLAUDE_PR_AUTHORS
 node scripts/agent-identity/sync-authors.mjs --dry-run  # just print them
 ```
 
-Each `<AGENT>_PR_AUTHORS` variable is the bot login GitHub reports for that agent's app, plus any `extraBots` listed for it. `claude.yml` passes both variables to `allowed_bots`, so no bot name is hardcoded in the workflow.
+Each `<AGENT>_PR_AUTHORS` variable is the bot login GitHub reports for that agent's app, plus any `extraBots` listed for it. `bot-claude-review.yml` passes both variables to `allowed_bots`, so no bot name is hardcoded in the workflow.
 
 Settings live in `scripts/agent-identity/agents.json` (committed, no secrets):
 
@@ -94,7 +94,7 @@ Settings live in `scripts/agent-identity/agents.json` (committed, no secrets):
 
 To rename an existing app, change its name under GitHub → Settings → Developer settings → GitHub Apps, then re-run `sync-authors.mjs` (it also refreshes the stored git identity).
 
-The workflow needs `CLAUDE_CODE_OAUTH_TOKEN` configured in the repository (`claude.yml`).
+The workflow needs `CLAUDE_CODE_OAUTH_TOKEN` configured in the repository (`bot-claude-review.yml`).
 
 ### 3. Install the wrappers (each machine)
 

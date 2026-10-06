@@ -245,7 +245,7 @@ test('on the fast tier, docs-only, agent-tooling and other-workflow changes skip
   for (const changedPaths of [
     DOCS_ONLY,
     ['frontend/dashboard/README.md', '.github/PULL_REQUEST_TEMPLATE.md'],
-    ['.github/workflows/claude.yml', '.github/workflows/pr-conventions.yml'],
+    ['.github/workflows/bot-claude-review.yml', '.github/workflows/pr-conventions.yml'],
     [
       '.claude/skills/tdd/SKILL.md',
       '.agents/skills/pr/agents/openai.yaml',
