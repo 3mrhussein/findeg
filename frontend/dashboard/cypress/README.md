@@ -34,3 +34,24 @@ Configured in `cypress.config.ts` (override through CLI/CI env):
 - `LOCALE` (default `en`)
 - `ADMIN_EMAIL` (default `admin@findeg.com`)
 - `ADMIN_PASSWORD` (default `admin`)
+
+## Strict release baseline (#323)
+
+The active suite runs real seeded staff authentication, Current Session persistence,
+logout, unauthenticated and invalid-session redirects, and English/Arabic catalog
+search and order filtering against the production dashboard. The seeded default
+staff password is `password123`. Run `pnpm --filter @findeg/dashboard e2e:run:ci`.
+
+Four legacy specs are explicitly excluded by `excludeSpecPattern`, retained in
+source, and tracked individually:
+
+| Spec | Reason | Restore coverage |
+| --- | --- | --- |
+| `admin/admin-dashboard-e2e.cy.ts` | Uses retired `/admin` routes and dashboard CRUD APIs; shopper navigation belongs to the other app. | [#342](https://github.com/3mrhussein/findeg/issues/342) |
+| `cache-invalidation.cy.ts` | Uses removed catalog CRUD APIs and numeric catalog IDs; cache mutation assertions need current server actions. | [#343](https://github.com/3mrhussein/findeg/issues/343) |
+| `orders/order-operations-phase-4.cy.ts` | Uses retired routes, assumed first-order state, and nonexistent mutation HTTP endpoints. | [#344](https://github.com/3mrhussein/findeg/issues/344) |
+| `architectural-boundaries.cy.ts` | Retired routes and inline-script scans do not inspect actual bundles; several cases only log assertions. | [#345](https://github.com/3mrhussein/findeg/issues/345) |
+
+Remove each exclusion when the replacement spec passes against a production build
+and freshly migrated/seeded PostgreSQL. These exclusions do not suppress failures
+or exceptions from the active suite.
