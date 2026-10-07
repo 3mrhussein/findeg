@@ -56,10 +56,7 @@ describe('AdminSchoolSupplyListService', () => {
   });
 
   it('rejects a free-typed specification value when adding an item', async () => {
-    const addItem = vi.fn<
-      Parameters<ISchoolSupplyListService['addItem']>,
-      ReturnType<ISchoolSupplyListService['addItem']>
-    >();
+    const addItem = vi.fn<ISchoolSupplyListService['addItem']>();
     lifecycle.addItem = addItem;
     mocks.listSpecificationOptions.mockResolvedValue([
       { attributeKey: 'color', values: ['blue', 'red'] },
@@ -79,10 +76,7 @@ describe('AdminSchoolSupplyListService', () => {
   });
 
   it('rejects a free-typed attribute when editing an item', async () => {
-    const updateItem = vi.fn<
-      Parameters<ISchoolSupplyListService['updateItem']>,
-      ReturnType<ISchoolSupplyListService['updateItem']>
-    >();
+    const updateItem = vi.fn<ISchoolSupplyListService['updateItem']>();
     lifecycle.updateItem = updateItem;
     mocks.listSpecificationOptions.mockResolvedValue([
       { attributeKey: 'color', values: ['blue', 'red'] },
@@ -110,10 +104,7 @@ describe('AdminSchoolSupplyListService', () => {
 
   it('accepts a specification made entirely from catalog options', async () => {
     const addItem = vi
-      .fn<
-        Parameters<ISchoolSupplyListService['addItem']>,
-        ReturnType<ISchoolSupplyListService['addItem']>
-      >()
+      .fn<ISchoolSupplyListService['addItem']>()
       .mockResolvedValue({ success: false, error: 'item-not-found' });
     lifecycle.addItem = addItem;
     mocks.listSpecificationOptions.mockResolvedValue([
@@ -179,10 +170,7 @@ describe('AdminSchoolSupplyListService', () => {
 
   it('rejects a non-null specification submitted for an Exact Item', async () => {
     const addItem = vi
-      .fn<
-        Parameters<ISchoolSupplyListService['addItem']>,
-        ReturnType<ISchoolSupplyListService['addItem']>
-      >()
+      .fn<ISchoolSupplyListService['addItem']>()
       .mockResolvedValue({ success: false, error: 'item-not-found' });
     lifecycle.addItem = addItem;
 
