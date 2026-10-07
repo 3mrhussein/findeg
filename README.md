@@ -22,7 +22,7 @@ This project is structured as a **Turborepo monorepo** with three main folders:
 
 ### Prerequisites
 
-- **Node.js** (v18 or higher)
+- **Node.js** (v20, v22, or v24+)
 - **pnpm** (v8 or higher) - Required for workspace management
 - **Docker** (for database)
 
@@ -254,7 +254,7 @@ CI gates every merge:
 
 ## 🔧 Quick Start & Environment Setup
 
-Ensure you have `Node.js 18+`, `pnpm 10`, and `Docker` installed.
+Ensure you have `Node.js 20, 22, or 24+`, `pnpm 10`, and `Docker` installed.
 
 1. **Setup Environment**:
    ```bash

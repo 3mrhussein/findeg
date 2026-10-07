@@ -2,7 +2,7 @@ import { randomBytes } from 'node:crypto';
 import postgres, { type Sql } from 'postgres';
 import { drizzle } from 'drizzle-orm/postgres-js';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
-import type { GlobalSetupContext } from 'vitest/node';
+import type { TestProject } from 'vitest/node';
 import {
   connectionOptions,
   initScript,
@@ -26,7 +26,7 @@ const staleAfterMs = 6 * 60 * 60 * 1000;
  * and drops it once the run finishes. Each run gets its own database, so runs
  * never share state.
  */
-export default async function setup({ provide }: GlobalSetupContext) {
+export default async function setup({ provide }: TestProject) {
   const serverUrl = resolveServerUrl();
   const database = `${testDatabasePrefix}${Date.now()}_${randomBytes(4).toString('hex')}`;
   const databaseUrl = withDatabase(serverUrl, database);
