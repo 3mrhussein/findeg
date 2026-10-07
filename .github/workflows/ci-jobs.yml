@@ -1,8 +1,8 @@
 name: CI jobs
 
 # Every CI job, defined once, behind one gate job: `CI OK`. Two workflows call
-# it and hold only their triggers: CI (develop, caller job `Fast`, gate
-# `Fast / CI OK`) and CI · Release (main, caller job `Strict`, gate
+# it and hold only their triggers: CI · Feature (develop, caller job `Feature`,
+# gate `Feature / CI OK`) and CI · Release (main, caller job `Strict`, gate
 # `Strict / CI OK`). Every decision (tier, caches, which jobs run, the verdict)
 # comes from scripts/ci-policy; this file only wires its outputs to jobs.
 #

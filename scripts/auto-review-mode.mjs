@@ -1,10 +1,15 @@
 #!/usr/bin/env node
 // Sets or checks the repo variable AUTO_REVIEW.
-//   node scripts/auto-review-mode.mjs                   -> prints current: claude | off
-//   node scripts/auto-review-mode.mjs claude|off  -> sets which bot automatically reviews PRs on open
+//   node scripts/auto-review-mode.mjs                        -> prints current: claude | codex | off
+//   node scripts/auto-review-mode.mjs claude|codex|off  -> sets which bot automatically reviews PRs on open
+//
+// Values:
+//   claude  - Claude Code auto-reviews every new non-draft PR via bots.yml
+//   codex   - Codex GitHub app reviews on its own; bots.yml just manages labels
+//   off     - No auto-review; use review:claude or review:codex labels manually
 import { execFileSync } from 'node:child_process';
 
-const MODES = ['claude', 'off'];
+const MODES = ['claude', 'codex', 'off'];
 const arg = process.argv[2];
 
 const getMode = () => {
@@ -29,6 +34,6 @@ if (arg === undefined) {
   });
   console.log(`Auto review set to: ${arg}`);
 } else {
-  console.error('usage: auto-review-mode.mjs [claude|off]');
+  console.error(`usage: auto-review-mode.mjs [${MODES.join('|')}]`);
   process.exit(1);
 }

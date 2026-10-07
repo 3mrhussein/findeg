@@ -1,5 +1,16 @@
 name: Release
 
+# Runs on every push to main. release-please either:
+#   1. Opens/updates a Release PR accumulating changelog + version bump from
+#      Conventional Commits on main since the last release, then auto-merges it
+#      once Strict / CI OK passes, or
+#   2. When the Release PR merges, creates the vX.Y.Z tag and GitHub Release.
+# After a release is published, a sync PR (main → develop) is opened
+# automatically so develop gets the version bump and changelog.
+#
+# Uses a dedicated GitHub App (release-bot) so bot-opened PRs and tags trigger
+# CI and workflows normally. The default GITHUB_TOKEN can't trigger workflow
+# runs on its own push events.
 on:
   push:
     branches: [main]

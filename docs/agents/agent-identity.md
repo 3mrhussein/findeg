@@ -3,7 +3,7 @@
 Claude Code and Codex each act on GitHub as their own GitHub App bot. That covers `gh` calls, `git push`, and commit authorship. PRs written by an agent are therefore authored by the agent's own bot (e.g. `claude[bot]`, `codex[bot]`; the name comes from the app, see below) rather than by you. This means:
 
 - you can approve agent PRs (GitHub won't let you approve your own);
-- the cross-agent review workflows can tell who opened a PR (`.github/workflows/bot-claude-review.yml`);
+- the cross-agent review workflows can tell who opened a PR (`.github/workflows/bots.yml`);
 - each agent's access is limited to this repo and revocable on its own.
 
 ## Request reviews on a human PR
@@ -14,33 +14,45 @@ Amr can request a Claude review with a simple PR comment:
 @claude review
 ```
 
-For Codex, comment `@codex review` (optionally with a focus, e.g. `@codex review for migration safety`). The Codex GitHub app (`chatgpt-codex-connector[bot]`) answers it on the ChatGPT plan's Codex limits. There is no Codex review workflow, `OPENAI_API_KEY` secret or `AUTO_REVIEW` mode for it. It reads review rules from `AGENTS.md`, and `.github/workflows/bot-codex-label.yml` adds the `Codex Reviewed` marker label when the bot comments or reviews.
+For Codex, comment `@codex review` (optionally with a focus). The Codex GitHub app (`chatgpt-codex-connector[bot]`) answers it on the ChatGPT plan's Codex limits. There is no Codex review workflow run or `OPENAI_API_KEY` secret — `.github/workflows/bots.yml` (`codex-label` job) adds the `reviewed:codex` state label when the bot comments or reviews.
 
-The reviewer runs in GitHub Actions with live progress in the PR Checks tab. Reviews can be triggered manually in 3 ways:
+The reviewer runs in GitHub Actions with live progress in the PR Checks tab. Claude reviews can be triggered in 3 ways:
 
 1. Commenting `@claude review` (only comments from the repository owner run);
 2. Adding label `review:claude` to the PR, whoever authored it, e.g. `gh pr create --label review:claude`;
-3. Clicking the **Run workflow** button in the GitHub Actions tab (`workflow_dispatch`).
+3. Clicking **Run workflow** in the Actions tab → Bots → action: `claude` (`workflow_dispatch`).
 
-Automatic review on PR open is controlled by the repo variable `AUTO_REVIEW` (`claude` or `off`, default: `off`). Change it any of these ways:
+Automatic review on PR open is controlled by the repo variable `AUTO_REVIEW` (`claude`, `codex`, or `off`, default: `off`). Change it any of these ways:
 
 ```bash
 node scripts/auto-review-mode.mjs         # show current
-node scripts/auto-review-mode.mjs claude  # set (claude | off)
+node scripts/auto-review-mode.mjs claude  # set (claude | codex | off)
 ```
 
-- the `/auto-review-mode [claude|off]` agent skill, which runs the script above;
-- **Actions → Bot · Auto review mode → Run workflow** (works from the GitHub mobile app);
-- an owner comment `/auto-review claude|off` on any issue or PR (no argument replies with the current mode);
+- the `/auto-review-mode [claude|codex|off]` agent skill;
+- **Actions → Bots → Run workflow → action: review-mode** (works from the GitHub mobile app);
+- an owner comment `/auto-review claude|codex|off` on any issue or PR (no argument replies with the current mode);
 - editing the variable under Settings → Secrets and variables → Actions → Variables.
 
 The workflow and comment paths need a secret `AUTO_REVIEW_TOKEN`: a fine-grained PAT for this repo with **Variables: read and write** (the default `GITHUB_TOKEN` can't write variables). Set it with `gh secret set AUTO_REVIEW_TOKEN`.
 
-Once a bot has run on a PR it adds a marker label (`Claude Reviewed`, or `Codex Reviewed` for the Codex app, created on first use), so the PR list shows who reviewed it. Labels are never removed automatically, so they mean "reviewed at least once", not "approved".
+Once a bot has run on a PR it adds a marker label, so the PR list shows who reviewed it:
+
+| Label                | Meaning                                                 |
+| -------------------- | ------------------------------------------------------- |
+| `review:queued`      | PR is open and waiting for agent pick-up                |
+| `review:in-progress` | An agent is currently running (prevents double pick-up) |
+| `review:claude`      | Manually request Claude to review this PR               |
+| `review:codex`       | Manually request Codex to review this PR                |
+| `reviewed:claude`    | Claude completed at least one review pass               |
+| `reviewed:codex`     | Codex completed at least one review pass                |
+
+Labels are never removed on PR close, so they mean "reviewed at least once". A new push to the PR re-adds `review:queued` to signal unreviewed changes.
 
 Notes:
 
-- `AUTO_REVIEW` applies to every non-draft PR on open or ready-for-review, whoever authored it.
+- `AUTO_REVIEW == 'claude'` applies to every new non-draft PR on open or ready-for-review, whoever authored it.
+- `AUTO_REVIEW == 'codex'` means the Codex app reviews on its own; `bots.yml` only manages state labels.
 - Only the auto/label/dispatch paths use `.agents/skills/bot-pr-review`; comment triggers run whatever the comment asks for.
 - A newer run on the same PR cancels the one in progress; skipped runs (e.g. an unrelated label) don't.
 

@@ -1,7 +1,10 @@
-name: CI
+name: CI · Feature
 
-# The fast tier, for develop. The jobs live in ci-jobs.yml; the required check
-# is `Fast / CI OK`. PRs into main run CI · Release (ci-release.yml) instead.
+# Guards feature → develop PRs and pushes (the fast tier).
+# Affected packages only, caches restored, integration tests only on relevant
+# changes, no E2E. Jobs live in ci-jobs.yml.
+# Required check: `Feature / CI OK`.
+# PRs into main run CI · Release (ci-release.yml) instead.
 # No secrets are passed: the jobs use none (GITHUB_TOKEN reaches them anyway).
 on:
   pull_request:
@@ -19,8 +22,8 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  fast:
-    name: Fast
+  feature:
+    name: Feature
     uses: ./.github/workflows/ci-jobs.yml
     with:
-      tier: fast
+      tier: fast # policy tier stays "fast"; only the display name changes
