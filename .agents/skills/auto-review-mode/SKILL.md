@@ -10,7 +10,7 @@ description: 'Show or set which bot (claude, codex, or off) auto-reviews newly o
 Valid values:
 
 - **`claude`** — Claude Code auto-reviews every new non-draft PR automatically.
-- **`codex`** — The Codex GitHub app reviews on its own (no workflow run needed); `bots.yml` only manages the state labels.
+- **`codex`** — The Codex GitHub app reviews on its own (no workflow run needed); `bots.yml` only posts the `@codex review` comment.
 - **`off`** — No auto-review; use the `review:claude` or `review:codex` labels to request a review manually.
 
 ## Usage
@@ -34,4 +34,4 @@ The same variable can be changed without a terminal:
 - An owner comment `/auto-review claude|codex|off` on any issue or PR (no argument replies with the current mode).
 - Editing the variable under Settings → Secrets and variables → Actions → Variables.
 
-See `docs/agents/agent-identity.md` for setup details and the full PR state label lifecycle.
+See `docs/agents/agent-identity.md` for setup details.

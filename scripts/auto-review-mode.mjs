@@ -6,7 +6,7 @@
 // Values:
 //   claude  - Claude Code auto-reviews every new non-draft PR via bots.yml
 //   codex   - Codex GitHub app reviews on its own; bots.yml just manages labels
-//   off     - No auto-review; use review:claude or review:codex labels manually
+//   off     - No auto-review; use the review:claude or review:codex labels manually
 import { execFileSync } from 'node:child_process';
 
 const MODES = ['claude', 'codex', 'off'];

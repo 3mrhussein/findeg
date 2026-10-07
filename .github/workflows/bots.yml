@@ -1,9 +1,8 @@
 name: Bots
 
-# All automated bot integrations in one place. Four jobs:
-#
-#   queue-pr     — adds `review:queued` when a non-draft PR opens or becomes
-#                  ready for review. Re-queues when a new push arrives.
+# Automated review bots. Stateless: no label lifecycle, no review state to keep
+# in sync. GitHub already tracks checks, conversations and commits; a human
+# merges. Three jobs:
 #
 #   review-mode  — sets the AUTO_REVIEW repo variable (claude | codex | off).
 #                  Controls which agent auto-reviews newly opened PRs.
@@ -12,22 +11,17 @@ name: Bots
 #
 #   claude       — runs a Claude Code PR review. Triggered by:
 #                    • AUTO_REVIEW == 'claude' on PR open/ready_for_review
-#                    • label `review:claude` added to any PR
+#                    • label `review:claude` (consumed once the run starts)
 #                    • @claude mention in a comment or review (owner only)
 #                    • workflow_dispatch
-#                  Manages the full PR state label lifecycle.
+#                  Reads the PR through `gh`; it never checks out PR code.
 #
-#   codex-label  — the Codex GitHub app (chatgpt-codex-connector[bot]) reviews
-#                  on its own with no workflow run. This job just updates state
-#                  labels when Codex posts a comment or review.
+#   codex-trigger — posts `@codex review` so the Codex GitHub app reviews. It
+#                  runs on Codex's side and needs no secrets here.
 #
-# PR state labels (managed here, created on first use):
-#   review:queued       — PR opened or updated; waiting for agent pick-up
-#   review:in-progress  — an agent has claimed this PR (prevents double pick-up)
-#   review:claude       — manual: request Claude specifically
-#   review:codex        — manual: request Codex specifically
-#   reviewed:claude     — Claude completed at least one review pass
-#   reviewed:codex      — Codex completed at least one review pass
+# Request labels (created on first use, removed when the run starts):
+#   review:claude  — request a Claude review
+#   review:codex   — request a Codex review
 
 on:
   workflow_dispatch:
@@ -58,49 +52,7 @@ on:
 env:
   GH_REPO: ${{ github.repository }}
 
-# ── queue-pr ──────────────────────────────────────────────────────────────────
-# Adds review:queued to every non-draft PR that opens, becomes ready, or gets a
-# new push — so the label always reflects "has unreviewed changes".
 jobs:
-  queue-pr:
-    name: Queue for review
-    if: >-
-      github.event_name == 'pull_request' &&
-      (github.event.action == 'opened' ||
-       github.event.action == 'ready_for_review' ||
-       github.event.action == 'synchronize') &&
-      !github.event.pull_request.draft
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    permissions:
-      pull-requests: write
-      issues: write
-    steps:
-      - name: Add review:queued label
-        env:
-          GH_TOKEN: ${{ github.token }}
-          PR_NUM: ${{ github.event.pull_request.number }}
-          ACTION: ${{ github.event.action }}
-        run: |
-          gh label create "review:queued" \
-            --color "e4e669" \
-            --description "Waiting for agent review" \
-            --force
-
-          # Only queue if no review is already in-progress or done on this push.
-          LABELS=$(gh pr view "$PR_NUM" --json labels -q '.labels[].name' | tr '\n' ' ')
-          # A push always re-queues: a stale in-progress label (e.g. Codex never
-          # answered) must not block review of new commits.
-          if [ "$ACTION" != "synchronize" ] && echo "$LABELS" | grep -qE 'review:in-progress'; then
-            echo "Review already in progress, skipping re-queue."
-          else
-            gh pr edit "$PR_NUM" \
-              --remove-label "reviewed:claude" 2>/dev/null || true
-            gh pr edit "$PR_NUM" \
-              --remove-label "reviewed:codex"  2>/dev/null || true
-            gh pr edit "$PR_NUM" --add-label "review:queued"
-          fi
-
   # ── review-mode ───────────────────────────────────────────────────────────────
   # Sets or shows the AUTO_REVIEW repo variable that the `claude` job reads.
   # Valid values: claude | codex | off (anything else is treated as off).
@@ -196,46 +148,26 @@ jobs:
       id-token: write
       actions: read
     steps:
+      # The default branch only: PR code is never checked out in this privileged job.
       - name: Checkout repository
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
-          ref: ${{ github.event_name == 'workflow_dispatch' && format('refs/pull/{0}/head', github.event.inputs.pr_number) || '' }}
           persist-credentials: false
 
-      - name: Mark review in-progress
+      - name: Determine PR
         id: pr
         env:
           GH_TOKEN: ${{ github.token }}
           PR_NUM: ${{ github.event.inputs.pr_number || github.event.pull_request.number || (github.event.issue.pull_request && github.event.issue.number) || '' }}
+          LABEL: ${{ github.event.label.name }}
         run: |
           echo "num=$PR_NUM" >> "$GITHUB_OUTPUT"
-          [ -z "$PR_NUM" ] && exit 0
-          # Pin the commit this run reviews; a later push must not inherit the verdict.
-          echo "sha=$(gh pr view "$PR_NUM" --json headRefOid -q .headRefOid)" >> "$GITHUB_OUTPUT"
-          # Ensure all state labels exist.
-          gh label create "review:queued"       --color "e4e669" --description "Waiting for agent review"   --force
-          gh label create "review:in-progress"  --color "d93f0b" --description "Agent review in progress"   --force
-          gh label create "review:claude"       --color "a371f7" --description "Request Claude review"       --force
-          gh label create "reviewed:claude"     --color "8250df" --description "Reviewed by Claude"          --force
-          # Transition: queued → in-progress
-          gh pr edit "$PR_NUM" --remove-label "review:queued"   2>/dev/null || true
-          gh pr edit "$PR_NUM" --remove-label "review:claude"   2>/dev/null || true
-          gh pr edit "$PR_NUM" --add-label    "review:in-progress"
-
-      - name: Determine prompt
-        id: prompt_step
-        env:
-          GH_TOKEN: ${{ github.token }}
-          PR_NUM: ${{ steps.pr.outputs.num }}
-        run: |
-          echo "pr_num=$PR_NUM" >> "$GITHUB_OUTPUT"
-          if [ -n "$PR_NUM" ]; then
-            BASE=$(gh pr view "$PR_NUM" --json baseRefName -q .baseRefName)
-            echo "prompt=Review PR #$PR_NUM against base origin/$BASE following .agents/skills/bot-pr-review/SKILL.md, then post the verdict with gh pr comment $PR_NUM." >> "$GITHUB_OUTPUT"
-          else
-            echo "prompt=" >> "$GITHUB_OUTPUT"
-          fi
+          [ -z "$PR_NUM" ] && { echo "prompt=" >> "$GITHUB_OUTPUT"; exit 0; }
+          # Consume the request label so it can be re-applied for another pass.
+          [ "$LABEL" = "review:claude" ] && gh pr edit "$PR_NUM" --remove-label "review:claude" || true
+          BASE=$(gh pr view "$PR_NUM" --json baseRefName -q .baseRefName)
+          echo "prompt=Review PR #$PR_NUM against base origin/$BASE following .agents/skills/bot-pr-review/SKILL.md, then post the verdict with gh pr comment $PR_NUM." >> "$GITHUB_OUTPUT"
 
       - name: Run Claude Code
         id: claude
@@ -245,29 +177,12 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          prompt: ${{ steps.prompt_step.outputs.prompt }}
+          prompt: ${{ steps.pr.outputs.prompt }}
           allowed_bots: ${{ vars.CLAUDE_PR_AUTHORS }},${{ vars.CODEX_PR_AUTHORS }}
           additional_permissions: |
             actions: read
           claude_args: >-
             --allowedTools "Read,Grep,Glob,Skill,Bash(git diff:*),Bash(git log:*),Bash(git rev-parse:*),Bash(gh issue view:*),Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh pr comment:*)"
-
-      - name: Update PR state labels
-        if: always() && steps.prompt_step.outputs.pr_num != ''
-        env:
-          GH_TOKEN: ${{ github.token }}
-          PR_NUM: ${{ steps.prompt_step.outputs.pr_num }}
-          OUTCOME: ${{ steps.claude.outcome }}
-          REVIEWED_SHA: ${{ steps.pr.outputs.sha }}
-        run: |
-          gh pr edit "$PR_NUM" --remove-label "review:in-progress" 2>/dev/null || true
-          HEAD_SHA=$(gh pr view "$PR_NUM" --json headRefOid -q .headRefOid)
-          if [ "$OUTCOME" = "success" ] && [ "$HEAD_SHA" = "$REVIEWED_SHA" ]; then
-            gh pr edit "$PR_NUM" --add-label "reviewed:claude"
-          else
-            # Re-queue so the PR can be retried.
-            gh pr edit "$PR_NUM" --add-label "review:queued"
-          fi
 
       - name: Report Claude failure
         if: steps.claude.outcome == 'failure'
@@ -301,36 +216,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           PR_NUM: ${{ github.event.pull_request.number }}
+          LABEL: ${{ github.event.label.name }}
         run: |
-          gh label create "review:queued"       --color "e4e669" --description "Waiting for agent review"   --force
-          gh label create "review:in-progress"  --color "d93f0b" --description "Agent review in progress"   --force
-          gh label create "review:codex"        --color "2ea44f" --description "Request Codex review"       --force
-          gh pr edit "$PR_NUM" --remove-label "review:queued" 2>/dev/null || true
-          gh pr edit "$PR_NUM" --add-label "review:in-progress"
+          # Consume the request label so it can be re-applied for another pass.
+          [ "$LABEL" = "review:codex" ] && gh pr edit "$PR_NUM" --remove-label "review:codex" || true
           gh pr comment "$PR_NUM" --body "@codex review"
-
-  # ── codex-label ───────────────────────────────────────────────────────────────
-  # The Codex GitHub app (chatgpt-codex-connector[bot]) reviews on its own — no
-  # workflow run, no API key. This job only updates state labels when it posts.
-  codex-label:
-    name: Codex label
-    if: >-
-      github.actor == 'chatgpt-codex-connector[bot]' &&
-      (github.event_name != 'issue_comment' || github.event.issue.pull_request)
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    permissions:
-      pull-requests: write
-      issues: write
-    steps:
-      - name: Update PR state labels for Codex review
-        env:
-          GH_TOKEN: ${{ github.token }}
-          PR_NUM: ${{ github.event.pull_request.number || github.event.issue.number }}
-        run: |
-          gh label create "review:codex"   --color "2ea44f" --description "Request Codex review"  --force
-          gh label create "reviewed:codex" --color "0e8a16" --description "Reviewed by Codex"      --force
-          gh pr edit "$PR_NUM" --remove-label "review:queued"      2>/dev/null || true
-          gh pr edit "$PR_NUM" --remove-label "review:in-progress" 2>/dev/null || true
-          gh pr edit "$PR_NUM" --remove-label "review:codex"       2>/dev/null || true
-          gh pr edit "$PR_NUM" --add-label    "reviewed:codex"
