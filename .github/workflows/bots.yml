@@ -1,0 +1,223 @@
+name: Bots
+
+# Automated review bots. Stateless: no label lifecycle, no review state to keep
+# in sync. GitHub already tracks checks, conversations and commits; a human
+# merges. Three jobs:
+#
+#   review-mode  — sets the AUTO_REVIEW repo variable (claude | codex | off).
+#                  Controls which agent auto-reviews newly opened PRs.
+#                  Requires the AUTO_REVIEW_TOKEN secret (fine-grained PAT
+#                  with Variables: read and write).
+#
+#   claude       — runs a Claude Code PR review. Triggered by:
+#                    • AUTO_REVIEW == 'claude' on PR open/ready_for_review
+#                    • label `review:claude` (consumed once the run starts)
+#                    • @claude mention in a comment or review (owner only)
+#                    • workflow_dispatch
+#                  Reads the PR through `gh`; it never checks out PR code.
+#
+#   codex-trigger — posts `@codex review` so the Codex GitHub app reviews. It
+#                  runs on Codex's side and needs no secrets here.
+#
+# Request labels (created on first use, removed when the run starts):
+#   review:claude  — request a Claude review
+#   review:codex   — request a Codex review
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'review-mode: change AUTO_REVIEW; claude: review a PR'
+        required: true
+        type: choice
+        options: [review-mode, claude]
+      mode:
+        description: '[review-mode] Which bot auto-reviews new PRs'
+        required: false
+        type: choice
+        options: [claude, codex, 'off']
+      pr_number:
+        description: '[claude] Pull Request number to review'
+        required: false
+        type: string
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  pull_request_review:
+    types: [submitted]
+  pull_request:
+    types: [opened, ready_for_review, synchronize, labeled]
+
+env:
+  GH_REPO: ${{ github.repository }}
+
+jobs:
+  # ── review-mode ───────────────────────────────────────────────────────────────
+  # Sets or shows the AUTO_REVIEW repo variable that the `claude` job reads.
+  # Valid values: claude | codex | off (anything else is treated as off).
+  review-mode:
+    name: Review mode
+    if: >-
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'review-mode') ||
+      (github.event_name == 'issue_comment' &&
+        github.actor == github.repository_owner &&
+        !endsWith(github.actor, '[bot]') &&
+        startsWith(github.event.comment.body, '/auto-review'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    concurrency:
+      group: auto-review-mode
+      cancel-in-progress: false
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Apply mode
+        env:
+          GH_TOKEN: ${{ secrets.AUTO_REVIEW_TOKEN }}
+          COMMENT_TOKEN: ${{ github.token }}
+          CURRENT: ${{ vars.AUTO_REVIEW }}
+          INPUT_MODE: ${{ github.event.inputs.mode }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
+          TARGET_ID: ${{ github.event.issue.number }}
+        run: |
+          # Normalise legacy/unknown values to off.
+          case "$CURRENT" in claude|codex) ;; *) CURRENT=off ;; esac
+
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            MODE="$INPUT_MODE"
+          else
+            MODE=$(printf '%s' "$COMMENT_BODY" | head -n1 | awk '{print tolower($2)}')
+          fi
+
+          reply() {
+            if [ -n "$TARGET_ID" ]; then
+              GH_TOKEN="$COMMENT_TOKEN" gh issue comment "$TARGET_ID" --body "$1"
+            fi
+            echo "$1"
+          }
+
+          case "$MODE" in
+            "")
+              reply "Auto review mode: \`$CURRENT\`. Use \`/auto-review claude|codex|off\` to change it."
+              exit 0
+              ;;
+            claude|codex|off) ;;
+            *)
+              reply "Unknown mode \`$MODE\`. Use \`/auto-review claude|codex|off\`."
+              exit 1
+              ;;
+          esac
+
+          if [ -z "$GH_TOKEN" ]; then
+            reply "Cannot set mode: the \`AUTO_REVIEW_TOKEN\` secret is missing (fine-grained PAT with Variables read/write)."
+            exit 1
+          fi
+
+          gh variable set AUTO_REVIEW --repo "$GITHUB_REPOSITORY" --body "$MODE"
+          reply "Auto review mode set to \`$MODE\` (was \`$CURRENT\`)."
+
+  # ── claude ────────────────────────────────────────────────────────────────────
+  # Runs a Claude Code PR review. Manages the full PR state label lifecycle:
+  #   review:queued → review:in-progress → reviewed:claude (or back to queued on failure).
+  claude:
+    name: Claude review
+    if: >-
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.action == 'claude') ||
+      (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'review:claude') ||
+      (vars.AUTO_REVIEW == 'claude' &&
+        github.event_name == 'pull_request' &&
+        (github.event.action == 'opened' || github.event.action == 'ready_for_review') &&
+        !github.event.pull_request.draft &&
+        !contains(github.event.pull_request.labels.*.name, 'review:codex')) ||
+      (github.actor == github.repository_owner && !endsWith(github.actor, '[bot]') && (
+        (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
+        (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
+        (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude'))
+      ))
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    concurrency:
+      group: claude-review-${{ github.event.pull_request.number || github.event.issue.number || github.event.inputs.pr_number || github.ref }}
+      cancel-in-progress: true
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+      id-token: write
+      actions: read
+    steps:
+      # The default branch only: PR code is never checked out in this privileged job.
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Determine PR
+        id: pr
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUM: ${{ github.event.inputs.pr_number || github.event.pull_request.number || (github.event.issue.pull_request && github.event.issue.number) || '' }}
+          LABEL: ${{ github.event.label.name }}
+        run: |
+          echo "num=$PR_NUM" >> "$GITHUB_OUTPUT"
+          [ -z "$PR_NUM" ] && { echo "prompt=" >> "$GITHUB_OUTPUT"; exit 0; }
+          # Consume the request label so it can be re-applied for another pass.
+          [ "$LABEL" = "review:claude" ] && gh pr edit "$PR_NUM" --remove-label "review:claude" || true
+          BASE=$(gh pr view "$PR_NUM" --json baseRefName -q .baseRefName)
+          echo "prompt=Review PR #$PR_NUM against base origin/$BASE following .agents/skills/bot-pr-review/SKILL.md, then post the verdict with gh pr comment $PR_NUM." >> "$GITHUB_OUTPUT"
+
+      - name: Run Claude Code
+        id: claude
+        # The review is advisory: a failed run (expired token, usage limit, outage)
+        # is reported as a warning instead of failing the check.
+        continue-on-error: true
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: ${{ steps.pr.outputs.prompt }}
+          allowed_bots: ${{ vars.CLAUDE_PR_AUTHORS }},${{ vars.CODEX_PR_AUTHORS }}
+          additional_permissions: |
+            actions: read
+          claude_args: >-
+            --allowedTools "Read,Grep,Glob,Skill,Bash(git diff:*),Bash(git log:*),Bash(git rev-parse:*),Bash(gh issue view:*),Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh pr comment:*)"
+
+      - name: Report Claude failure
+        if: steps.claude.outcome == 'failure'
+        run: |
+          msg="Claude did not complete (non-blocking). Check that CLAUDE_CODE_OAUTH_TOKEN is valid and the account has not hit a usage limit."
+          echo "::warning title=Claude review did not run::$msg"
+          {
+            echo "### ⚠️ Claude review did not run"
+            echo
+            echo "$msg"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  # ── codex-trigger ─────────────────────────────────────────────────────────────
+  # When AUTO_REVIEW == 'codex' or label 'review:codex' is added, trigger Codex
+  # by posting an `@codex review` comment so the Codex GitHub App starts reviewing.
+  codex-trigger:
+    name: Codex trigger
+    if: >-
+      (github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'review:codex') ||
+      (vars.AUTO_REVIEW == 'codex' &&
+        github.event_name == 'pull_request' &&
+        (github.event.action == 'opened' || github.event.action == 'ready_for_review') &&
+        !github.event.pull_request.draft)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      pull-requests: write
+      issues: write
+    steps:
+      - name: Trigger Codex review
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUM: ${{ github.event.pull_request.number }}
+          LABEL: ${{ github.event.label.name }}
+        run: |
+          # Consume the request label so it can be re-applied for another pass.
+          [ "$LABEL" = "review:codex" ] && gh pr edit "$PR_NUM" --remove-label "review:codex" || true
+          gh pr comment "$PR_NUM" --body "@codex review"

@@ -7,7 +7,14 @@ export const base = [
   { ...js.configs.recommended, files: ['**/*.{js,jsx,ts,tsx,mjs,cjs,mts,cts}'] },
 
   {
-    ignores: ['node_modules/**', '.next/**', 'dist/**', '**/dist/**', '**/.turbo/**'],
+    ignores: [
+      'node_modules/**',
+      '.next/**',
+      'dist/**',
+      '**/dist/**',
+      '**/.turbo/**',
+      '**/next-env.d.ts',
+    ],
   },
 
   {

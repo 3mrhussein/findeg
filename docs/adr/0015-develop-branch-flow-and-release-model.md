@@ -22,8 +22,8 @@ Every PR used to go straight to `main` behind CI that had grown piecemeal: two o
 
 ### Two workflows, one job definition, one gate each
 
-- **`CI` (fast, `develop`) and `CI · Release` (strict, `main`) hold only their triggers.** Both call the reusable `CI jobs` workflow from a caller job named `Fast` or `Strict`, so every job is defined once and the strict run is the same steps, stricter.
-- **Each run feeds one aggregate `CI OK` job, reported as `Fast / CI OK` or `Strict / CI OK`.** These are the only code checks the rulesets require. Adding, splitting, renaming or skipping a job never touches a ruleset, and docs-only PRs pass because skipped jobs count as passing.
+- **`CI · Feature` (fast, `develop`) and `CI · Release` (strict, `main`) hold only their triggers.** Both call the reusable `CI jobs` workflow from a caller job named `Feature` or `Strict`, so every job is defined once and the strict run is the same steps, stricter.
+- **Each run feeds one aggregate `CI OK` job, reported as `Feature / CI OK` or `Strict / CI OK`.** These are the only code checks the rulesets require. Adding, splitting, renaming or skipping a job never touches a ruleset, and docs-only PRs pass because skipped jobs count as passing.
 - **A tier guard fails `Plan` when a workflow's triggers would run the other tier**, so a mis-set trigger can't run fast CI on a PR into `main`.
 - **`PR conventions`** runs `PR title` and `Branch policy` on every PR, whatever its base.
 
@@ -37,7 +37,7 @@ Every PR used to go straight to `main` behind CI that had grown piecemeal: two o
 ### Rulesets and merge methods
 
 - **`main`:** requires `Strict / CI OK`, `PR title` and `Branch policy` (GitHub Actions source), up to date before merging, resolved conversations, **merge commits only**, blocks force-push and deletion, and has no bypass actors.
-- **`develop`:** requires `Fast / CI OK`, `PR title` and `Branch policy`, not up to date (feature PRs merge without rebasing on each other), resolved conversations, squash and merge commits allowed, blocks force-push and deletion, and has no bypass actors.
+- **`develop`:** requires `Feature / CI OK`, `PR title` and `Branch policy`, not up to date (feature PRs merge without rebasing on each other), resolved conversations, squash and merge commits allowed, blocks force-push and deletion, and has no bypass actors.
 - **Feature PRs into `develop` are squashed, and the squash commit's title is always the PR title.** The title `PR title` validated is what lands, and it is what release-please reads.
 - **`develop → main`, hotfix, release and sync PRs use merge commits.** This is load-bearing. A squash would hide the per-feature Conventional Commits from release-please. It would also put a commit on `main` that `develop` never has, so the branches would diverge on every release.
 
