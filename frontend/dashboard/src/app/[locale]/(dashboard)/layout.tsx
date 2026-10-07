@@ -1,21 +1,17 @@
-import { Suspense } from 'react';
 import { setRequestLocale } from 'next-intl/server';
-import { AdminSessionGate } from '../_components/AdminSessionGate';
+import { requireAdmin } from '@lib/auth-guard';
+import { SessionProvider } from '@providers/SessionProvider';
+import { PermissionsProvider } from '@providers/PermissionsProvider';
 import { AdminShell } from '../_components/shell/AdminShell';
-
-/**
- * Generate static params for supported locales
- */
-export async function generateStaticParams() {
-  return [{ locale: 'en' }, { locale: 'ar' }];
-}
+import type { Locale } from '@findeg/backend/features/core';
 
 /**
  * Protected Admin Dashboard Layout
  *
- * Uses the new AdminShell component for consistent admin navigation and layout.
- * The Shell is rendered outside the SessionGate to allow for PPR (Partial Prerendering).
+ * Enforces admin authentication at layout root, redirecting unauthenticated
+ * users cleanly to /login without rendering a hollow shell or throwing Suspense errors.
  */
+export const instant = false;
 
 export default async function AdminDashboardLayout({
   children,
@@ -27,15 +23,13 @@ export default async function AdminDashboardLayout({
   const { locale } = await params;
   setRequestLocale(locale);
 
+  const session = await requireAdmin(locale as Locale);
+
   return (
-    <AdminShell locale={locale}>
-      <Suspense
-        fallback={
-          <div className="flex-1 animate-pulse bg-gray-50 dark:bg-slate-900 rounded-lg h-full w-full" />
-        }
-      >
-        <AdminSessionGate locale={locale}>{children}</AdminSessionGate>
-      </Suspense>
-    </AdminShell>
+    <SessionProvider session={session}>
+      <PermissionsProvider session={session}>
+        <AdminShell locale={locale}>{children}</AdminShell>
+      </PermissionsProvider>
+    </SessionProvider>
   );
 }

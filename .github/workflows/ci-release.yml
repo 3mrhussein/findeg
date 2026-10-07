@@ -1,8 +1,9 @@
 name: CI · Release
 
-# The strict tier, for main: every PR into main (from develop, hotfix/* or
-# release-please--*) and every push to main. The jobs live in ci-jobs.yml; the
-# required check is `Strict / CI OK`, so a fast run can never satisfy main.
+# Guards PRs targeting main and pushes to main (the strict tier).
+# Every job runs from scratch: Turbo --force, no cache restore/save,
+# integration tests always, E2E required. Jobs live in ci-jobs.yml.
+# Required check: `Strict / CI OK`.
 # No secrets are passed: the jobs use none (GITHUB_TOKEN reaches them anyway).
 on:
   pull_request:

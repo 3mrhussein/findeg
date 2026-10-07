@@ -1,5 +1,11 @@
 name: PR conventions
 
+# Runs on every PR, whatever its base branch.
+# Required checks (by job name, referenced in both branch rulesets):
+#   `PR title`      — validates Conventional Commits format via amannn/action-semantic-pull-request
+#   `Branch policy` — validates branch name and release source via scripts/ci-policy
+# Do NOT rename these jobs without updating the rulesets in Settings → Rules.
+#
 # `edited` also fires when the PR's base branch changes, so the branch policy
 # is re-judged against the new base.
 on:

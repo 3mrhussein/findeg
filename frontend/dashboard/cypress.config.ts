@@ -1,8 +1,12 @@
+import path from 'node:path';
 import { defineConfig } from 'cypress';
+
+const artifactsBase = process.env.TEST_ARTIFACTS_DIR
+  ? path.join(process.env.TEST_ARTIFACTS_DIR, 'dashboard')
+  : 'cypress/coverage';
 
 export default defineConfig({
   reporter: 'spec',
-  reporterOptions: {},
   allowCypressEnv: false,
   viewportWidth: 1280,
   viewportHeight: 800,
@@ -21,9 +25,9 @@ export default defineConfig({
     video: true,
     screenshotOnRunFailure: true,
     trashAssetsBeforeRuns: true,
-    screenshotsFolder: 'cypress/screenshots',
-    videosFolder: 'cypress/videos',
-    downloadsFolder: 'cypress/downloads',
+    screenshotsFolder: path.join(artifactsBase, 'screenshots'),
+    videosFolder: path.join(artifactsBase, 'videos'),
+    downloadsFolder: path.join(artifactsBase, 'downloads'),
     setupNodeEvents(on, config) {
       return config;
     },

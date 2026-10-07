@@ -39,7 +39,8 @@ export class BrandService implements IBrandService {
 
   async getAll(activeOnly?: boolean, language?: Locale): Promise<Brand[]> {
     const rows = await brandQueries.getAll();
-    return rows.map((row) => this.mapToDomain(row, language));
+    const visible = activeOnly ? rows.filter((row) => row.isActive) : rows;
+    return visible.map((row) => this.mapToDomain(row, language));
   }
 
   async getById(id: ID, language?: Locale): Promise<Brand | null> {
